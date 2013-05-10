@@ -22,6 +22,7 @@ public abstract class GenericTumOnlineActivity extends Activity implements TUMOn
 	protected RelativeLayout errorLayout;
 	protected RelativeLayout failedLayout;
 	private TUMOnlineRequest requestHandler;
+	/** The method which should be invoked by the TUmOnline Fetcher */
 	private String method;
 
 	public GenericTumOnlineActivity(String method) {
