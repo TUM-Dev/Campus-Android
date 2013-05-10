@@ -17,6 +17,7 @@ import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequestFetchListener;
 
 public abstract class GenericTumOnlineActivity extends Activity implements TUMOnlineRequestFetchListener{
 	private String accessToken;
+	/** Default layouts for user interaction */
 	protected RelativeLayout noTokenLayout;
 	protected RelativeLayout progressLayout;
 	protected RelativeLayout errorLayout;
