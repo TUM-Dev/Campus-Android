@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="#0065BD"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/lectureText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:paddingLeft="2dip"
+            android:text="@string/next_lectures"
+            android:textColor="#FFFFFF" />
+
+        <TextView
+            android:id="@+id/moduleText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+           	android:layout_toRightOf="@id/lectureText"
+            android:text=""
+            android:textColorLink="#FFFFFF" />
+    </RelativeLayout>
+
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_marginBottom="33dip"
+            android:background="#0065BD"
+            android:orientation="vertical" >
+
+            <ListView
+                android:id="@+id/listView"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_marginBottom="6.5dip"
+                android:layout_weight="51"
+                android:background="#FFFFFF"
+                android:padding="4dip"
+                android:scrollbars="vertical" />
+
+            <ListView
+                android:id="@+id/listView2"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="49"
+                android:background="#FFFFFF"
+                android:padding="4dip"
+                android:scrollbars="vertical" />
+        </LinearLayout>
+
+        <SlidingDrawer
+            android:id="@+id/slider"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:content="@+id/slide"
+            android:handle="@+id/handle" >
+
+            <Button
+                android:id="@+id/handle"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="#0065BD"
+                android:height="33dip"
+                android:text="@string/slide_lectures"
+                android:textColor="#FFFFFF" />
+
+            <LinearLayout
+                android:id="@+id/slide"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:background="#F1FFFFFF"
+                android:orientation="vertical" >
+
+                <Button
+                    android:id="@+id/slide_my_lectures"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/my_lectures"
+                    android:layout_marginTop="3dip"
+                    android:textColor="#FF2546A4" />
+                
+                <Button
+                    android:id="@+id/slide_search_lectures"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/search_lectures"
+                    android:textColor="#FF2546A4" />
+            </LinearLayout>
+        </SlidingDrawer>
+    </FrameLayout>
+</LinearLayout>

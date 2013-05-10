@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#0065BD"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/search_caption"
+        android:textColor="#FFFFFF" />
+
+    <EditText
+        android:id="@+id/etFindQuery"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/insert_search"
+        android:imeActionLabel="Search"
+        android:imeOptions="actionSearch"
+        android:singleLine="true" >
+
+        <requestFocus />
+    </EditText>
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/lectures_found"
+        android:textColor="#FFFFFF" />
+
+    <ListView
+        android:id="@+id/lvFound"
+        android:layout_width="fill_parent"
+        android:layout_height="0dip"
+        android:layout_marginBottom="6dip"
+        android:layout_weight="51"
+        android:background="#FFFFFF"
+        android:padding="4dip"
+        android:scrollbars="vertical" />
+
+</LinearLayout>

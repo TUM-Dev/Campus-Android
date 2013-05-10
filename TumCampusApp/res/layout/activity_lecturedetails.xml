@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/scroll"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="#0065BD"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/tvLDetailsName"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:autoLink="none"
+            android:inputType="textMultiLine|textNoSuggestions"
+            android:padding="4dip"
+            android:scrollHorizontally="false"
+            android:text="@string/lec_details_title"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/btnLDetailsTermine"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/lec_dates"
+            android:textColor="#0065BD"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/TextView04"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:autoLink="none"
+            android:background="#FFFFFF"
+            android:inputType="textMultiLine|textNoSuggestions"
+            android:padding="4dip"
+            android:scrollHorizontally="false"
+            android:text="@string/lec_details"
+            android:textColor="#0065BD"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/tvLDetailsSemester"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:autoLink="all"
+            android:background="#FFFFFF"
+            android:inputType="textMultiLine|textNoSuggestions"
+            android:padding="4dip"
+            android:scrollHorizontally="false"
+            android:text="@string/semester_data"
+            android:textColor="#000000"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/tvLDetailsSWS"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:autoLink="none"
+            android:background="#FFFFFF"
+            android:inputType="textMultiLine|textNoSuggestions"
+            android:padding="4dip"
+            android:scrollHorizontally="false"
+            android:text="@string/sws_number"
+            android:textColor="#000000"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/TextView01"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:autoLink="none"
+            android:background="#FFFFFF"
+            android:inputType="textMultiLine|textNoSuggestions"
+            android:padding="4dip"
+            android:scrollHorizontally="false"
+            android:text="@string/lecture_begin"
+            android:textColor="#0065BD"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/tvLDetailsTermin"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:autoLink="none"
+            android:background="#FFFFFF"
+            android:inputType="textMultiLine|textNoSuggestions"
+            android:padding="4dip"
+            android:scrollHorizontally="false"
+            android:text="@string/first_date"
+            android:textColor="#000000"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/tvLDHeadDetais"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:autoLink="none"
+            android:background="#FFFFFF"
+            android:inputType="textMultiLine|textNoSuggestions"
+            android:padding="4dip"
+            android:scrollHorizontally="false"
+            android:text="@string/lec_contributors"
+            android:textColor="#0065BD"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/tvLDetailsDozent"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:autoLink="none"
+            android:background="#FFFFFF"
+            android:inputType="textMultiLine|textNoSuggestions"
+            android:padding="4dip"
+            android:scrollHorizontally="false"
+            android:text="@string/lecturer"
+            android:textColor="#000000"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/tvLDetailsOrg"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:autoLink="none"
+            android:background="#FFFFFF"
+            android:inputType="textMultiLine|textNoSuggestions"
+            android:padding="4dip"
+            android:paddingTop="2dip"
+            android:scrollHorizontally="false"
+            android:text="@string/organisation_of_lecture"
+            android:textColor="#000000"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/TextView03"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:autoLink="none"
+            android:background="#FFFFFF"
+            android:inputType="textMultiLine|textNoSuggestions"
+            android:padding="4dip"
+            android:scrollHorizontally="false"
+            android:text="@string/lec_content"
+            android:textColor="#0065BD"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/tvLDetailInhalt"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:autoLink="none"
+            android:background="#FFFFFF"
+            android:inputType="textMultiLine|textNoSuggestions"
+            android:padding="4dip"
+            android:scrollHorizontally="false"
+            android:text="@string/teaching_content"
+            android:textColor="#000000"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/TextView02M"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:autoLink="none"
+            android:background="#FFFFFF"
+            android:inputType="textMultiLine|textNoSuggestions"
+            android:padding="4dip"
+            android:scrollHorizontally="false"
+            android:text="@string/lec_method"
+            android:textColor="#0065BD"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/tvLDetailsMethode"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:autoLink="none"
+            android:background="#FFFFFF"
+            android:inputType="textMultiLine|textNoSuggestions"
+            android:padding="4dip"
+            android:scrollHorizontally="false"
+            android:text="@string/lec_method_details"
+            android:textColor="#000000"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/TextView05"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:autoLink="none"
+            android:background="#FFFFFF"
+            android:inputType="textMultiLine|textNoSuggestions"
+            android:padding="4dip"
+            android:scrollHorizontally="false"
+            android:text="@string/lec_target"
+            android:textColor="#0065BD"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/tvLDetailsZiele"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:autoLink="none"
+            android:background="#FFFFFF"
+            android:inputType="textMultiLine|textNoSuggestions"
+            android:padding="4dip"
+            android:scrollHorizontally="false"
+            android:text="@string/teaching_target"
+            android:textColor="#000000"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/TextView02"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:autoLink="none"
+            android:background="#FFFFFF"
+            android:inputType="textMultiLine|textNoSuggestions"
+            android:padding="4dip"
+            android:scrollHorizontally="false"
+            android:text="@string/examination_aids"
+            android:textColor="#0065BD"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/tvLDetailsLiteratur"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="#FFFFFF"
+            android:inputType="textMultiLine|textNoSuggestions"
+            android:padding="4dip"
+            android:scrollHorizontally="false"
+            android:text="@string/literature"
+            android:textColor="#000000"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+</ScrollView>

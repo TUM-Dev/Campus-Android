@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activity_transport_main_layout"
+    android:focusableInTouchMode="true"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal" >
+
+        <ImageButton
+            android:id="@+id/activity_transport_domore"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:background="@android:color/transparent"
+            android:onClick="onClick"
+            android:scaleType="fitCenter"
+            android:src="@android:drawable/ic_menu_more" />
+
+        <EditText
+            android:id="@+id/activity_transport_searchfield"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:ems="10"
+            android:hint="@string/search_station"
+            android:imeOptions="actionSearch"
+            android:singleLine="true" />
+
+        <ImageButton
+            android:id="@+id/activity_transport_dosearch"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:background="@android:color/transparent"
+            android:onClick="onClick"
+            android:scaleType="fitCenter"
+            android:src="@android:drawable/ic_menu_search" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/activity_transportation_progress_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:visibility="gone" >
+
+        <ProgressBar
+            android:id="@+id/progressBar1"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/progressBar1"
+            android:layout_below="@+id/progressBar1"
+            android:text="@string/loading"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/activity_transport_textview_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:text="activity_transport_textview_info"
+        android:textStyle="bold"
+        android:visibility="gone" >
+    </TextView>
+
+    <ListView
+        android:id="@+id/activity_transport_listview_result"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:padding="8dp"
+        android:scrollbars="vertical" />
+
+    <ListView
+        android:id="@+id/activity_transport_listview_suggestionsandsaved"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:scrollbars="vertical"
+        android:visibility="gone" />
+
+</LinearLayout>

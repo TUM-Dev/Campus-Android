@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+ 
+    <PreferenceCategory android:title="@string/tumonline_settings" >
+        <EditTextPreference
+                android:title="@string/lrz_id"
+                android:summary="@string/lrz_id_detail"
+                android:key="lrz_id"/>
+        
+        <Preference android:title="@string/generate_tumonline_token"
+                android:key="button"
+                android:summary="@string/generate_tumonline_token_detail"/>
+    </PreferenceCategory>
+      
+</PreferenceScreen>
