@@ -6,10 +6,8 @@ import java.util.List;
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -17,13 +15,11 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.adapters.LecturesSearchListAdapter;
 import de.tum.in.tumcampusapp.auxiliary.Const;
-import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.managers.LecturesSearchRow;
 import de.tum.in.tumcampusapp.models.managers.LecturesSearchRowSet;
 import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequest;
@@ -46,7 +42,12 @@ import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequestFetchListener;
  * @solves [M1] Meine Lehrveranstaltungen
  * @author Daniel G. Mayr
  */
-public class LecturesPersonalActivity extends Activity implements TUMOnlineRequestFetchListener {
+public class LecturesPersonalActivity extends GenericTumOnlineActivity implements TUMOnlineRequestFetchListener {
+	
+	public LecturesPersonalActivity() {
+		super(Const.LECTURES);
+	}
+
 	private static final String VERANSTALTUNGEN_EIGENE = "veranstaltungenEigene";
 
 	/** filtered list which will be shown */
@@ -58,13 +59,6 @@ public class LecturesPersonalActivity extends Activity implements TUMOnlineReque
 	private TUMOnlineRequest requestHandler;
 
 	private Spinner spFilter;
-	private RelativeLayout progressLayout;
-
-	@Override
-	public void onCommonError(String errorReason) {
-		Toast.makeText(this, errorReason, Toast.LENGTH_SHORT).show();
-		progressLayout.setVisibility(View.GONE);
-	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -74,7 +68,6 @@ public class LecturesPersonalActivity extends Activity implements TUMOnlineReque
 		// bind UI elements
 		lvMyLecturesList = (ListView) findViewById(R.id.lvMyLecturesList);
 		spFilter = (Spinner) findViewById(R.id.spFilter);
-		progressLayout = (RelativeLayout) findViewById(R.id.activity_lecturespersonal_progress_layout);
 	}
 
 	@Override
@@ -142,7 +135,6 @@ public class LecturesPersonalActivity extends Activity implements TUMOnlineReque
 			});
 
 			setListView(lecturesList.getLehrveranstaltungen());
-			progressLayout.setVisibility(View.GONE);
 
 		} catch (Exception e) { // NTK quickfix
 			Log.e("TumCampus", "No lectures available - Error: " + e.getMessage());
@@ -150,34 +142,6 @@ public class LecturesPersonalActivity extends Activity implements TUMOnlineReque
 			err.show();
 		}
 
-	}
-
-	@Override
-	public void onFetchCancelled() {
-		progressLayout.setVisibility(View.GONE);
-	}
-
-	/**
-	 * while fetching a TUMOnline Request an error occurred this will show the
-	 * error message in a toast
-	 */
-	@Override
-	public void onFetchError(String errorReason) {
-		Utils.showLongCenteredToast(this, errorReason);
-		progressLayout.setVisibility(View.GONE);
-	}
-
-	@Override
-	public void onStart() {
-		super.onStart();
-		// preparing the TUMOnline web service request
-		requestHandler = new TUMOnlineRequest(VERANSTALTUNGEN_EIGENE, this);
-
-		String accessToken = PreferenceManager.getDefaultSharedPreferences(this).getString(Const.ACCESS_TOKEN, null);
-		if (accessToken != null) {
-			progressLayout.setVisibility(View.VISIBLE);
-			requestHandler.fetchInteractive(this, this);
-		}
 	}
 
 	/**

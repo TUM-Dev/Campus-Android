@@ -34,19 +34,18 @@ public class GradesActivity extends Activity implements TUMOnlineRequestFetchLis
 	public final static int MENU_REFRESH = 0;
 	private String accessToken;
 
-	private RelativeLayout errorLayout;
-
 	/**
 	 * List with all exams passed (including grades)
 	 */
 	private ExamList examList;
-	private RelativeLayout failedLayout;
 	/**
 	 * List view to display all exams/grades
 	 */
 	private ListView lvGrades;
 	private RelativeLayout noTokenLayout;
 	private RelativeLayout progressLayout;
+	private RelativeLayout errorLayout;
+	private RelativeLayout failedLayout;
 	/**
 	 * HTTP request handler to handle requests to TUMOnline
 	 */
