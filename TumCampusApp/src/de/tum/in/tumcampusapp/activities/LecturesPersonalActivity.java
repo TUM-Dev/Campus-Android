@@ -15,6 +15,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 import de.tum.in.tumcampusapp.R;
@@ -23,7 +24,6 @@ import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.models.managers.LecturesSearchRow;
 import de.tum.in.tumcampusapp.models.managers.LecturesSearchRowSet;
 import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequest;
-import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequestFetchListener;
 
 /**
  * This activity presents the users' lectures using the TUMOnline web service
@@ -42,7 +42,7 @@ import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequestFetchListener;
  * @solves [M1] Meine Lehrveranstaltungen
  * @author Daniel G. Mayr
  */
-public class LecturesPersonalActivity extends GenericTumOnlineActivity implements TUMOnlineRequestFetchListener {
+public class LecturesPersonalActivity extends GenericTumOnlineActivity {
 	
 	public LecturesPersonalActivity() {
 		super(Const.LECTURES);
@@ -64,6 +64,11 @@ public class LecturesPersonalActivity extends GenericTumOnlineActivity implement
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_lecturespersonal);
+		
+		progressLayout = (RelativeLayout) findViewById(R.id.progress_layout);
+		failedLayout = (RelativeLayout) findViewById(R.id.failed_layout);
+		noTokenLayout = (RelativeLayout) findViewById(R.id.no_token_layout);
+		errorLayout = (RelativeLayout) findViewById(R.id.error_layout);
 
 		// bind UI elements
 		lvMyLecturesList = (ListView) findViewById(R.id.lvMyLecturesList);

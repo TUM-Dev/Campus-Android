@@ -17,10 +17,10 @@ import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequestFetchListener;
 
 public abstract class GenericTumOnlineActivity extends Activity implements TUMOnlineRequestFetchListener{
 	private String accessToken;
-	private RelativeLayout noTokenLayout;
-	private RelativeLayout progressLayout;
-	private RelativeLayout errorLayout;
-	private RelativeLayout failedLayout;
+	protected RelativeLayout noTokenLayout;
+	protected RelativeLayout progressLayout;
+	protected RelativeLayout errorLayout;
+	protected RelativeLayout failedLayout;
 	private TUMOnlineRequest requestHandler;
 	private String method;
 
@@ -57,11 +57,6 @@ public abstract class GenericTumOnlineActivity extends Activity implements TUMOn
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
-		progressLayout = (RelativeLayout) findViewById(R.id.progress_layout);
-		failedLayout = (RelativeLayout) findViewById(R.id.failed_layout);
-		noTokenLayout = (RelativeLayout) findViewById(R.id.no_token_layout);
-		errorLayout = (RelativeLayout) findViewById(R.id.error_layout);
 	}
 	
 	@Override
