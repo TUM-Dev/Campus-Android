@@ -62,6 +62,7 @@ public class LecturesPersonalActivity extends Activity implements TUMOnlineReque
 
 	@Override
 	public void onCommonError(String errorReason) {
+		Toast.makeText(this, errorReason, Toast.LENGTH_SHORT).show();
 		progressLayout.setVisibility(View.GONE);
 	}
 
