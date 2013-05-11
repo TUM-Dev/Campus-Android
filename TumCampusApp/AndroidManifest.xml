@@ -97,7 +97,8 @@
         </activity>
         <activity
             android:name=".activities.LecturesPersonalActivity"
-            android:label="@string/lectures" >
+            android:label="@string/lectures" 
+            android:configChanges="orientation|screenSize">
         </activity>
         <activity
             android:name=".activities.LecturesSearchActivity"

@@ -19,6 +19,7 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.activities.generic.TumOnlineActivity;
 import de.tum.in.tumcampusapp.adapters.LecturesSearchListAdapter;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.models.managers.LecturesSearchRow;
@@ -42,37 +43,28 @@ import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequest;
  * @solves [M1] Meine Lehrveranstaltungen
  * @author Daniel G. Mayr
  */
-public class LecturesPersonalActivity extends GenericTumOnlineActivity {
+public class LecturesPersonalActivity extends TumOnlineActivity {
 	
 	public LecturesPersonalActivity() {
-		super(Const.LECTURES);
+		super(Const.LECTURES_PERSONAL, R.layout.activity_lecturespersonal);
 	}
-
-	private static final String VERANSTALTUNGEN_EIGENE = "veranstaltungenEigene";
 
 	/** filtered list which will be shown */
 	LecturesSearchRowSet lecturesList = null;
 
 	/** UI elements */
 	private ListView lvMyLecturesList;
-	/** Handler to send request to TUMOnline */
-	private TUMOnlineRequest requestHandler;
-
 	private Spinner spFilter;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_lecturespersonal);
 		
-		progressLayout = (RelativeLayout) findViewById(R.id.progress_layout);
-		failedLayout = (RelativeLayout) findViewById(R.id.failed_layout);
-		noTokenLayout = (RelativeLayout) findViewById(R.id.no_token_layout);
-		errorLayout = (RelativeLayout) findViewById(R.id.error_layout);
-
 		// bind UI elements
 		lvMyLecturesList = (ListView) findViewById(R.id.lvMyLecturesList);
 		spFilter = (Spinner) findViewById(R.id.spFilter);
+		
+		requestFetch();
 	}
 
 	@Override
@@ -84,6 +76,8 @@ public class LecturesPersonalActivity extends GenericTumOnlineActivity {
 			lecturesList = serializer.read(LecturesSearchRowSet.class, rawResponse);
 		} catch (Exception e) {
 			Log.d("SIMPLEXML", "wont work: " + e.getMessage());
+			errorLayout.setVisibility(View.VISIBLE);
+			progressLayout.setVisibility(View.GONE);
 			e.printStackTrace();
 		}
 
@@ -140,13 +134,13 @@ public class LecturesPersonalActivity extends GenericTumOnlineActivity {
 			});
 
 			setListView(lecturesList.getLehrveranstaltungen());
+			progressLayout.setVisibility(View.GONE);
 
 		} catch (Exception e) { // NTK quickfix
 			Log.e("TumCampus", "No lectures available - Error: " + e.getMessage());
 			Toast err = Toast.makeText(this, "No lectures available - press back-button", Toast.LENGTH_LONG);
 			err.show();
 		}
-
 	}
 
 	/**

@@ -110,6 +110,8 @@ public final class Const {
 
 	/** Action value "lectures" */
 	public static final String LECTURES = "lectures";
+	
+	public static final String LECTURES_PERSONAL = "veranstaltungenEigene";
 
 	/** Action value "lecturesTUMOnline" */
 	public static final String LECTURES_TUM_ONLINE = "lecturesTUMOnline";

@@ -5,7 +5,7 @@
     android:orientation="vertical" >
 
     <RelativeLayout
-        android:id="@+id/activity_grades_progress_layout"
+        android:id="@+id/progress_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
@@ -28,7 +28,7 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/activity_grades_failed_layout"
+        android:id="@+id/failed_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
@@ -57,7 +57,7 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/activity_grades_no_token_layout"
+        android:id="@+id/no_token_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
@@ -86,7 +86,7 @@
     </RelativeLayout>
     
         <RelativeLayout
-        android:id="@+id/activity_grades_error_layout"
+        android:id="@+id/error_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"

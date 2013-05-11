@@ -1,4 +1,4 @@
-package de.tum.in.tumcampusapp.activities;
+package de.tum.in.tumcampusapp.activities.generic;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -15,7 +15,7 @@ import de.tum.in.tumcampusapp.preferences.UserPreferencesActivity;
 import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequest;
 import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequestFetchListener;
 
-public abstract class GenericTumOnlineActivity extends Activity implements TUMOnlineRequestFetchListener{
+public abstract class TumOnlineActivity extends Activity implements TUMOnlineRequestFetchListener{
 	private String accessToken;
 	/** Default layouts for user interaction */
 	protected RelativeLayout noTokenLayout;
@@ -25,9 +25,11 @@ public abstract class GenericTumOnlineActivity extends Activity implements TUMOn
 	private TUMOnlineRequest requestHandler;
 	/** The method which should be invoked by the TUmOnline Fetcher */
 	private String method;
+	private int layoutId;
 
-	public GenericTumOnlineActivity(String method) {
+	public TumOnlineActivity(String method, int layoutIt) {
 		this.method = method;
+		this.layoutId = layoutIt;
 	}
 	
 	public void onClick(View view) {
@@ -59,6 +61,12 @@ public abstract class GenericTumOnlineActivity extends Activity implements TUMOn
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setContentView(layoutId);
+		
+		progressLayout = (RelativeLayout) findViewById(R.id.progress_layout);
+		failedLayout = (RelativeLayout) findViewById(R.id.failed_layout);
+		noTokenLayout = (RelativeLayout) findViewById(R.id.no_token_layout);
+		errorLayout = (RelativeLayout) findViewById(R.id.error_layout);
 	}
 	
 	@Override
@@ -66,12 +74,6 @@ public abstract class GenericTumOnlineActivity extends Activity implements TUMOn
 		finish();
 	}
 	
-	@Override
-	public void onResume() {
-		super.onResume();
-		requestFetch();
-	}
-
 	@Override
 	public void onFetchError(String errorReason) {
 		Log.e(getClass().getSimpleName(), errorReason);

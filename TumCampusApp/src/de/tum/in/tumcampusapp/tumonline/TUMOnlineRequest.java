@@ -10,6 +10,8 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
 
 import android.app.Activity;
@@ -29,85 +31,50 @@ import de.tum.in.tumcampusapp.auxiliary.Utils;
  */
 public class TUMOnlineRequest {
 
+	public static final int TUM_ONLINE_TIMEOUT = 60000;
 	// login service address
 	public static final String LOGIN_SERVICE_URL = "https://campus.tum.de/tumonline/anmeldung.durchfuehren";
-
 	// logout service address
 	public static final String LOGOUT_SERVICE_URL = "https://campus.tum.de/tumonline/anmeldung.beenden";
-
 	// server address
 	public static final String SERVICE_BASE_URL = "https://campus.tum.de/tumonline/wbservicesbasic.";
-
 	// set to null, if not needed
 	private String accessToken = null;
-
 	/** asynchronous task for interactive fetch */
 	AsyncTask<Void, Void, String> backgroundTask = null;
-
 	/** http client instance for fetching */
-	private final HttpClient client = new DefaultHttpClient();
-
+	private HttpClient client = new DefaultHttpClient();
 	/** method to call */
-	private final String method;
-
+	private String method = null;
 	/** a list/map for the needed parameters */
 	private Map<String, String> parameters;
 
-	// constructor without accessToken
-	/**
-	 * this constructor generates an empty request call for the TUMOnline
-	 * webservice without setting any parameters or the access token to use
-	 * access token see the other constructors
-	 * 
-	 * @author Daniel G. Mayr
-	 * @param method
-	 *            the function name to which we are calling
-	 */
-	public TUMOnlineRequest(String method) {
-		this.method = method;
+	
+	public TUMOnlineRequest() {
 		resetParameters();
+		HttpParams params = client.getParams();
+		HttpConnectionParams.setSoTimeout(params, TUM_ONLINE_TIMEOUT);
+		HttpConnectionParams.setConnectionTimeout(params, TUM_ONLINE_TIMEOUT);
+	}
+	
+	public TUMOnlineRequest(String method) {
+		this();
+		this.method = method;
 	}
 
-	/**
-	 * this constructor will try to load the access token from preferences. if
-	 * this is not possible, a dialog will prompt the user to generate the
-	 * access token via the settings menu
-	 * 
-	 * @param method
-	 *            function name, which is the last part of the core URL
-	 * @param callingActivity
-	 *            the activity from which the constructor will be called (mostly
-	 *            this)
-	 */
 	public TUMOnlineRequest(String method, Activity callingActivity) {
+		this();
 		this.method = method;
-
-		resetParameters();
-
+		
 		if (!loadAccessTokenFromPreferences(callingActivity)) {
-			// no access token found
 			// TODO show a dialog for the user
 		}
-
-		// rest parameters and set the access token
-		resetParameters();
 	}
 
-	/**
-	 * this constructor generates an request to the given method. you can also
-	 * provide an access token. if you want to use the stored access token and
-	 * show a dialog if this one is not set, take {@link TUMOnlineRequest(String
-	 * method, Activity callingActivity)}
-	 * 
-	 * @param method
-	 *            facing web service function
-	 * @param accessToken
-	 *            user's access token to the webservice
-	 */
 	public TUMOnlineRequest(String method, String accessToken) {
+		this();
 		this.method = method;
 		this.accessToken = accessToken;
-		resetParameters();
 	}
 
 	/**
@@ -119,20 +86,18 @@ public class TUMOnlineRequest {
 	 * @see getRequestURL
 	 */
 	public String fetch() {
+		String result = "";
 		String url = getRequestURL();
 		Log.d("TUMOnlineXMLRequest", "fetching URL " + url);
 
 		try {
 			HttpGet request = new HttpGet(url);
-
 			HttpResponse response = client.execute(request);
 			HttpEntity responseEntity = response.getEntity();
 
 			if (responseEntity != null) {
 				// do something with the response
-				String result = EntityUtils.toString(responseEntity);
-				// Log.d("FETCH", result);
-				return result;
+				result = EntityUtils.toString(responseEntity);
 			}
 
 		} catch (Exception e) {
@@ -140,8 +105,7 @@ public class TUMOnlineRequest {
 			e.printStackTrace();
 			return e.getMessage();
 		}
-		return null;
-
+		return result;
 	}
 
 	/**
