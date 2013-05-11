@@ -31,13 +31,13 @@ import de.tum.in.tumcampusapp.auxiliary.Utils;
  */
 public class TUMOnlineRequest {
 
-	public static final int TUM_ONLINE_TIMEOUT = 60000;
 	// login service address
 	public static final String LOGIN_SERVICE_URL = "https://campus.tum.de/tumonline/anmeldung.durchfuehren";
 	// logout service address
 	public static final String LOGOUT_SERVICE_URL = "https://campus.tum.de/tumonline/anmeldung.beenden";
 	// server address
 	public static final String SERVICE_BASE_URL = "https://campus.tum.de/tumonline/wbservicesbasic.";
+	public static final int TUM_ONLINE_TIMEOUT = 15000;
 	// set to null, if not needed
 	private String accessToken = null;
 	/** asynchronous task for interactive fetch */
@@ -49,14 +49,13 @@ public class TUMOnlineRequest {
 	/** a list/map for the needed parameters */
 	private Map<String, String> parameters;
 
-	
 	public TUMOnlineRequest() {
 		resetParameters();
 		HttpParams params = client.getParams();
 		HttpConnectionParams.setSoTimeout(params, TUM_ONLINE_TIMEOUT);
 		HttpConnectionParams.setConnectionTimeout(params, TUM_ONLINE_TIMEOUT);
 	}
-	
+
 	public TUMOnlineRequest(String method) {
 		this();
 		this.method = method;
@@ -65,7 +64,7 @@ public class TUMOnlineRequest {
 	public TUMOnlineRequest(String method, Activity callingActivity) {
 		this();
 		this.method = method;
-		
+
 		if (!loadAccessTokenFromPreferences(callingActivity)) {
 			// TODO show a dialog for the user
 		}

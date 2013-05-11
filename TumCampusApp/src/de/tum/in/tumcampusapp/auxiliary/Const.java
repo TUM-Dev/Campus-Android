@@ -110,8 +110,11 @@ public final class Const {
 
 	/** Action value "lectures" */
 	public static final String LECTURES = "lectures";
-	
+
 	public static final String LECTURES_PERSONAL = "veranstaltungenEigene";
+
+	/** Identifier of the Location column */
+	public static final String LECTURES_SEARCH = "veranstaltungenSuche";
 
 	/** Action value "lecturesTUMOnline" */
 	public static final String LECTURES_TUM_ONLINE = "lecturesTUMOnline";

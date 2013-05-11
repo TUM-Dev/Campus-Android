@@ -1,4 +1,4 @@
-package de.tum.in.tumcampusapp.activities;
+package de.tum.in.tumcampusapp.activities.generic;
 
 import android.app.Activity;
 import android.os.Bundle;

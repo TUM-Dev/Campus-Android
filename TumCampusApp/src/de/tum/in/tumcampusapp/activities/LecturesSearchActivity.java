@@ -3,7 +3,6 @@ package de.tum.in.tumcampusapp.activities;
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,13 +14,14 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
+import android.widget.Toast;
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.activities.generic.TumOnlineActivity;
 import de.tum.in.tumcampusapp.adapters.LecturesSearchListAdapter;
+import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.managers.LecturesSearchRow;
 import de.tum.in.tumcampusapp.models.managers.LecturesSearchRowSet;
-import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequest;
-import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequestFetchListener;
 
 /**
  * This activity represents a small find box to query through the TUMOnline web
@@ -43,53 +43,45 @@ import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequestFetchListener;
  * @author Daniel Mayr
  * @review Thomas Behrens
  */
-public class LecturesSearchActivity extends Activity implements OnEditorActionListener, TUMOnlineRequestFetchListener {
+public class LecturesSearchActivity extends TumOnlineActivity implements OnEditorActionListener {
 
 	private static String P_SUCHE = "pSuche";
-	private static String VERANSTALTUNGENSUCHE = "veranstaltungenSuche";
 
 	/** UI Elements */
 	EditText etFindQuery;
-
 	ListView lvFound;
 
-	/** Handler to send request to TUMOnline */
-	private TUMOnlineRequest requestHandler;
+	public LecturesSearchActivity() {
+		super(Const.LECTURES_SEARCH, R.layout.activity_lecturessearch);
+	}
 
 	@Override
-	public void onCommonError(String errorReason) {
-		// TODO Auto-generated method stub
+	public void onClick(View view) {
+		super.onClick(view);
+
+		int viewId = view.getId();
+		switch (viewId) {
+		case R.id.activity_lecturesearch_dosearch:
+			searchForLectures();
+			break;
+		}
 	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_lecturessearch);
 
 		// bind GUI elements
 		etFindQuery = (EditText) findViewById(R.id.etFindQuery);
 		etFindQuery.setOnEditorActionListener(this);
-
 		lvFound = (ListView) findViewById(R.id.lvFound);
+
+		findViewById(R.id.activity_lecturesearch_main_layout).requestFocus();
 	}
 
 	@Override
 	public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-
-		if (etFindQuery.getText().length() < 2) {
-			Utils.showLongCenteredToast(this, getString(R.string.please_insert_at_least_two_chars));
-			return false;
-		}
-
-		// set the query string as parameter for the TUMOnline request
-		requestHandler.setParameter(P_SUCHE, etFindQuery.getText().toString());
-
-		Utils.hideKeyboard(this, etFindQuery);
-
-		// do the TUMOnline request (implement listener here)
-		requestHandler.fetchInteractive(this, this);
-
-		return true;
+		return searchForLectures();
 	}
 
 	@Override
@@ -107,6 +99,8 @@ public class LecturesSearchActivity extends Activity implements OnEditorActionLi
 
 		} catch (Exception e) {
 			Log.d("SIMPLEXML", "wont work: " + e.getMessage());
+			errorLayout.setVisibility(View.VISIBLE);
+			progressLayout.setVisibility(View.GONE);
 			e.printStackTrace();
 		}
 
@@ -137,28 +131,20 @@ public class LecturesSearchActivity extends Activity implements OnEditorActionLi
 				startActivity(i);
 			}
 		});
-	}
+		progressLayout.setVisibility(View.GONE);
+	};
 
-	@Override
-	public void onFetchCancelled() {
-		// show toast to notice cancel
-		Utils.showLongCenteredToast(this, getString(R.string.cancel));
-	}
+	private boolean searchForLectures() {
+		if (etFindQuery.getText().length() <= 3) {
+			Toast.makeText(this, R.string.please_insert_at_least_four_chars, Toast.LENGTH_SHORT).show();
+			return false;
+		}
+		// set the query string as parameter for the TUMOnline request
+		requestHandler.setParameter(P_SUCHE, etFindQuery.getText().toString());
+		Utils.hideKeyboard(this, etFindQuery);
 
-	/**
-	 * while fetching a TUMOnline Request an error occurred this will show the
-	 * error message in a toast
-	 */
-	@Override
-	public void onFetchError(String errorReason) {
-		Utils.showLongCenteredToast(this, errorReason);
-	}
-
-	@Override
-	public void onStart() {
-		super.onStart();
-
-		// prepare the TUMOnlineRequest and check if the access token is set
-		requestHandler = new TUMOnlineRequest(VERANSTALTUNGENSUCHE, this);
+		// do the TUMOnline request (implement listener here)
+		super.requestFetch();
+		return true;
 	}
 }

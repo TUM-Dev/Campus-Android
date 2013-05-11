@@ -1,44 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activity_lecturesearch_main_layout"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="#0065BD"
+    android:focusableInTouchMode="true"
     android:orientation="vertical" >
 
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/search_caption"
-        android:textColor="#FFFFFF" />
+    <RelativeLayout
+        android:id="@+id/progress_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:visibility="gone" >
 
-    <EditText
-        android:id="@+id/etFindQuery"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/insert_search"
-        android:imeActionLabel="Search"
-        android:imeOptions="actionSearch"
-        android:singleLine="true" >
+        <ProgressBar
+            android:id="@+id/progressBar1"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
 
-        <requestFocus />
-    </EditText>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/progressBar1"
+            android:layout_below="@+id/progressBar1"
+            android:text="@string/loading"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+    </RelativeLayout>
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/lectures_found"
-        android:textColor="#FFFFFF" />
+    <RelativeLayout
+        android:id="@+id/error_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:visibility="gone" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/error_sorry"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal" >
+
+        <EditText
+            android:id="@+id/etFindQuery"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:hint="@string/insert_search"
+            android:imeActionLabel="Search"
+            android:imeOptions="actionSearch"
+            android:singleLine="true" >
+        </EditText>
+
+        <ImageButton
+            android:id="@+id/activity_lecturesearch_dosearch"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:background="@android:color/transparent"
+            android:onClick="onClick"
+            android:scaleType="fitCenter"
+            android:src="@android:drawable/ic_menu_search" />
+    </LinearLayout>
 
     <ListView
         android:id="@+id/lvFound"
         android:layout_width="fill_parent"
-        android:layout_height="0dip"
-        android:layout_marginBottom="6dip"
-        android:layout_weight="51"
-        android:background="#FFFFFF"
-        android:padding="4dip"
+        android:layout_height="fill_parent"
         android:scrollbars="vertical" />
 
 </LinearLayout>

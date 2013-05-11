@@ -15,7 +15,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 import de.tum.in.tumcampusapp.R;
@@ -24,7 +23,6 @@ import de.tum.in.tumcampusapp.adapters.LecturesSearchListAdapter;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.models.managers.LecturesSearchRow;
 import de.tum.in.tumcampusapp.models.managers.LecturesSearchRowSet;
-import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequest;
 
 /**
  * This activity presents the users' lectures using the TUMOnline web service
@@ -44,27 +42,27 @@ import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequest;
  * @author Daniel G. Mayr
  */
 public class LecturesPersonalActivity extends TumOnlineActivity {
-	
-	public LecturesPersonalActivity() {
-		super(Const.LECTURES_PERSONAL, R.layout.activity_lecturespersonal);
-	}
 
 	/** filtered list which will be shown */
 	LecturesSearchRowSet lecturesList = null;
 
 	/** UI elements */
 	private ListView lvMyLecturesList;
+
 	private Spinner spFilter;
+	public LecturesPersonalActivity() {
+		super(Const.LECTURES_PERSONAL, R.layout.activity_lecturespersonal);
+	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		// bind UI elements
 		lvMyLecturesList = (ListView) findViewById(R.id.lvMyLecturesList);
 		spFilter = (Spinner) findViewById(R.id.spFilter);
-		
-		requestFetch();
+
+		super.requestFetchRequiresToken();
 	}
 
 	@Override
@@ -76,8 +74,8 @@ public class LecturesPersonalActivity extends TumOnlineActivity {
 			lecturesList = serializer.read(LecturesSearchRowSet.class, rawResponse);
 		} catch (Exception e) {
 			Log.d("SIMPLEXML", "wont work: " + e.getMessage());
-			errorLayout.setVisibility(View.VISIBLE);
 			progressLayout.setVisibility(View.GONE);
+			failedLayout.setVisibility(View.VISIBLE);
 			e.printStackTrace();
 		}
 

@@ -24,19 +24,18 @@ public class GradesActivity extends TumOnlineActivity {
 
 	private ExamList examList;
 	private ListView lvGrades;
-	
+
 	public GradesActivity() {
 		super(Const.NOTEN, R.layout.activity_grades);
 	}
 
-	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		lvGrades = (ListView) findViewById(R.id.lstGrades);
-		
-		requestFetch();
+
+		super.requestFetchRequiresToken();
 	}
 
 	/**

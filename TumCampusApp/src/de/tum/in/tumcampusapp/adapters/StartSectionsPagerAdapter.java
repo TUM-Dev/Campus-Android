@@ -13,14 +13,13 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.CurriculaActivity;
 import de.tum.in.tumcampusapp.activities.GalleryActivity;
 import de.tum.in.tumcampusapp.activities.GradesActivity;
-import de.tum.in.tumcampusapp.activities.LecturesActivity;
 import de.tum.in.tumcampusapp.activities.LecturesPersonalActivity;
 import de.tum.in.tumcampusapp.activities.LecturesSearchActivity;
-import de.tum.in.tumcampusapp.activities.MockActivity;
 import de.tum.in.tumcampusapp.activities.NewsActivity;
 import de.tum.in.tumcampusapp.activities.OpeningHoursListActivity;
 import de.tum.in.tumcampusapp.activities.PlansActivity;
 import de.tum.in.tumcampusapp.activities.TransportationActivity;
+import de.tum.in.tumcampusapp.activities.generic.MockActivity;
 import de.tum.in.tumcampusapp.auxiliary.ListMenuEntry;
 import de.tum.in.tumcampusapp.fragments.StartSectionFragment;
 
@@ -32,10 +31,10 @@ public class StartSectionsPagerAdapter extends FragmentPagerAdapter {
 
 	public static final String LIST_ENTRY_SET = "list_entry_set";
 	public static final int NUMBER_OF_PAGES = 4;
+	public static final int SECTION_CONVENIENCE = 3;
 	public static final int SECTION_GENERAL_TUM = 0;
 	public static final int SECTION_MY_TUM = 1;
 	public static final int SECTION_NEWS = 2;
-	public static final int SECTION_CONVENIENCE = 3;
 	private final Activity activity;
 
 	public StartSectionsPagerAdapter(Activity mainActivity, FragmentManager fm) {
@@ -73,8 +72,8 @@ public class StartSectionsPagerAdapter extends FragmentPagerAdapter {
 					OpeningHoursListActivity.class)));
 			break;
 		case SECTION_MY_TUM:
-			listMenuEntrySet.add(new ListMenuEntry(R.drawable.calculator, R.string.lectures, R.string.lectures_addinfo,
-					new Intent(activity, LecturesPersonalActivity.class)));
+			listMenuEntrySet.add(new ListMenuEntry(R.drawable.calculator, R.string.lectures, R.string.lectures_addinfo, new Intent(activity,
+					LecturesPersonalActivity.class)));
 			listMenuEntrySet.add(new ListMenuEntry(R.drawable.chart, R.string.grades, R.string.grades_addinfo, new Intent(activity, GradesActivity.class)));
 			listMenuEntrySet.add(new ListMenuEntry(R.drawable.calendar, R.string.timetable, R.string.timetable_addinfo,
 					new Intent(activity, MockActivity.class)));
