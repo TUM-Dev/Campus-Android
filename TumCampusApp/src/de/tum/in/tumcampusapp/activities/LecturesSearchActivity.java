@@ -145,7 +145,7 @@ public class LecturesSearchActivity extends TumOnlineActivity implements OnEdito
 		Utils.hideKeyboard(this, etFindQuery);
 
 		// do the TUMOnline request (implement listener here)
-		super.requestFetch();
+		super.requestFetchRequiresToken();
 		return true;
 	}
 }

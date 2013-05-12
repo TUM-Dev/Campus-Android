@@ -16,7 +16,6 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
-import android.widget.Toast;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.TumOnlineActivity;
 import de.tum.in.tumcampusapp.adapters.LecturesSearchListAdapter;
@@ -136,9 +135,7 @@ public class LecturesPersonalActivity extends TumOnlineActivity {
 			progressLayout.setVisibility(View.GONE);
 
 		} catch (Exception e) { // NTK quickfix
-			Log.e("TumCampus", "No lectures available - Error: " + e.getMessage());
-			Toast err = Toast.makeText(this, "No lectures available - press back-button", Toast.LENGTH_LONG);
-			err.show();
+			Log.e("TumCampus", "No lectures available" + e.getMessage());
 		}
 	}
 

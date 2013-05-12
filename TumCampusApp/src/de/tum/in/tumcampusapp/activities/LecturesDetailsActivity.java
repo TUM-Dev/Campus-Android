@@ -92,7 +92,7 @@ public class LecturesDetailsActivity extends TumOnlineActivity implements OnClic
 		Bundle bundle = this.getIntent().getExtras();
 		requestHandler.setParameter("pLVNr", bundle.getString("stp_sp_nr"));
 
-		super.requestFetch();
+		super.requestFetchRequiresToken();
 	}
 
 	/**

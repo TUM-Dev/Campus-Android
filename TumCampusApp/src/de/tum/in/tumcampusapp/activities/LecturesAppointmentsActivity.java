@@ -53,7 +53,7 @@ public class LecturesAppointmentsActivity extends TumOnlineActivity {
 		tvTermineLectureName.setText(bundle.getString(Const.TITLE_EXTRA));
 		requestHandler.setParameter("pLVNr", bundle.getString("stp_sp_nr"));
 
-		super.requestFetch();
+		super.requestFetchRequiresToken();
 
 	}
 
