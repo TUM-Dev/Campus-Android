@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.activities.generic.TumOnlineActivity;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.LectureDetailsRow;
@@ -38,7 +39,7 @@ import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequestFetchListener;
  * @author Daniel G. Mayr
  * @review Thomas Behrens // i found nothing tbd.
  */
-public class LecturesDetailsActivity extends Activity implements OnClickListener, TUMOnlineRequestFetchListener {
+public class LecturesDetailsActivity extends TumOnlineActivity implements OnClickListener {
 
 	private static final String VERANSTALTUNGEN_DETAILS = "veranstaltungenDetails";
 
@@ -46,8 +47,6 @@ public class LecturesDetailsActivity extends Activity implements OnClickListener
 	private Button btnLDetailsTermine;
 	/** the current processing Lecture item (model: LectureDetailsRow) */
 	private LectureDetailsRow currentitem;
-	/** Handler to send request to TUMOnline */
-	private TUMOnlineRequest requestHandler;
 	private TextView tvLDetailsDozent;
 	private TextView tvLDetailsInhalt;
 	private TextView tvLDetailsLiteratur;
@@ -56,14 +55,17 @@ public class LecturesDetailsActivity extends Activity implements OnClickListener
 	private TextView tvLDetailsOrg;
 	private TextView tvLDetailsSemester;
 	private TextView tvLDetailsSWS;
-
 	private TextView tvLDetailsTermin;
-
 	private TextView tvLDetailsZiele;
 
+	public LecturesDetailsActivity() {
+		super(VERANSTALTUNGEN_DETAILS, R.layout.activity_lecturedetails);
+	}
+	
 	@Override
-	public void onClick(View v) {
-		if (v.getId() == btnLDetailsTermine.getId()) {
+	public void onClick(View view) {
+		super.onClick(view);
+		if (view.getId() == btnLDetailsTermine.getId()) {
 			// start LectureAppointments
 			Bundle bundle = new Bundle();
 			// LectureAppointments need the name and id of the facing lecture
@@ -77,16 +79,9 @@ public class LecturesDetailsActivity extends Activity implements OnClickListener
 	}
 
 	@Override
-	public void onCommonError(String errorReason) {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_lecturedetails);
 
-		// bind UI elements
 		tvLDetailsName = (TextView) findViewById(R.id.tvLDetailsName);
 		tvLDetailsSWS = (TextView) findViewById(R.id.tvLDetailsSWS);
 		tvLDetailsSemester = (TextView) findViewById(R.id.tvLDetailsSemester);
@@ -97,11 +92,14 @@ public class LecturesDetailsActivity extends Activity implements OnClickListener
 		tvLDetailsZiele = (TextView) findViewById(R.id.tvLDetailsZiele);
 		tvLDetailsTermin = (TextView) findViewById(R.id.tvLDetailsTermin);
 		tvLDetailsLiteratur = (TextView) findViewById(R.id.tvLDetailsLiteratur);
-
 		btnLDetailsTermine = (Button) findViewById(R.id.btnLDetailsTermine);
 		btnLDetailsTermine.setOnClickListener(this);
-		// Linkify.addLinks(tvLDetailsDozent, Pattern.compile("00.00.000"),
-		// "tel:");
+		
+		// Reads lecture id from bundle
+		Bundle bundle = this.getIntent().getExtras();
+		requestHandler.setParameter("pLVNr", bundle.getString("stp_sp_nr"));
+
+		super.requestFetch();
 	}
 
 	/**
@@ -143,37 +141,9 @@ public class LecturesDetailsActivity extends Activity implements OnClickListener
 		} catch (Exception e) {
 			// well, something went obviously wrong
 			Log.d("conv", "wont work: " + e.toString());
+			errorLayout.setVisibility(View.VISIBLE);
+			progressLayout.setVisibility(View.GONE);
 			e.printStackTrace();
-			Toast.makeText(this, "An error occured: " + e.getMessage(), 20000).show();
 		}
 	}
-
-	@Override
-	public void onFetchCancelled() {
-		// ignore
-	}
-
-	/**
-	 * while fetching a TUMOnline Request an error occurred this will show the
-	 * error message in a toast
-	 */
-	@Override
-	public void onFetchError(String errorReason) {
-		Utils.showLongCenteredToast(this, errorReason);
-	}
-
-	@Override
-	public void onStart() {
-		super.onStart();
-
-		// the usual one: prepare the request to TUMOnline web service
-		requestHandler = new TUMOnlineRequest(VERANSTALTUNGEN_DETAILS, this);
-
-		// read lecture id from bundle
-		Bundle bundle = this.getIntent().getExtras();
-		requestHandler.setParameter("pLVNr", bundle.getString("stp_sp_nr"));
-
-		requestHandler.fetchInteractive(this, this);
-	}
-
 }

@@ -116,12 +116,12 @@ public final class R {
         public static final int zoom_out=0x7f020057;
     }
     public static final class id {
-        public static final int TextView01=0x7f0a001c;
-        public static final int TextView02=0x7f0a0027;
-        public static final int TextView02M=0x7f0a0023;
-        public static final int TextView03=0x7f0a0021;
-        public static final int TextView04=0x7f0a0019;
-        public static final int TextView05=0x7f0a0025;
+        public static final int TextView01=0x7f0a001b;
+        public static final int TextView02=0x7f0a0026;
+        public static final int TextView02M=0x7f0a0022;
+        public static final int TextView03=0x7f0a0020;
+        public static final int TextView04=0x7f0a0018;
+        public static final int TextView05=0x7f0a0024;
         public static final int action_settings=0x7f0a005e;
         public static final int activity_curricula_error_layout=0x7f0a0003;
         public static final int activity_curricula_list_view=0x7f0a0000;
@@ -150,7 +150,7 @@ public final class R {
         public static final int activity_transport_textview_info=0x7f0a0055;
         public static final int activity_transportation_progress_layout=0x7f0a0054;
         public static final int analogClock1=0x7f0a004f;
-        public static final int btnLDetailsTermine=0x7f0a0018;
+        public static final int btnLDetailsTermine=0x7f0a0028;
         public static final int date=0x7f0a0045;
         public static final int error_layout=0x7f0a0010;
         public static final int etFindQuery=0x7f0a003d;
@@ -194,17 +194,17 @@ public final class R {
         public static final int tv1=0x7f0a0014;
         public static final int tv2=0x7f0a0015;
         public static final int tvDozent=0x7f0a0034;
-        public static final int tvLDHeadDetais=0x7f0a001e;
-        public static final int tvLDetailInhalt=0x7f0a0022;
-        public static final int tvLDetailsDozent=0x7f0a001f;
-        public static final int tvLDetailsLiteratur=0x7f0a0028;
-        public static final int tvLDetailsMethode=0x7f0a0024;
+        public static final int tvLDHeadDetais=0x7f0a001d;
+        public static final int tvLDetailInhalt=0x7f0a0021;
+        public static final int tvLDetailsDozent=0x7f0a001e;
+        public static final int tvLDetailsLiteratur=0x7f0a0027;
+        public static final int tvLDetailsMethode=0x7f0a0023;
         public static final int tvLDetailsName=0x7f0a0017;
-        public static final int tvLDetailsOrg=0x7f0a0020;
-        public static final int tvLDetailsSWS=0x7f0a001b;
-        public static final int tvLDetailsSemester=0x7f0a001a;
-        public static final int tvLDetailsTermin=0x7f0a001d;
-        public static final int tvLDetailsZiele=0x7f0a0026;
+        public static final int tvLDetailsOrg=0x7f0a001f;
+        public static final int tvLDetailsSWS=0x7f0a001a;
+        public static final int tvLDetailsSemester=0x7f0a0019;
+        public static final int tvLDetailsTermin=0x7f0a001c;
+        public static final int tvLDetailsZiele=0x7f0a0025;
         public static final int tvLectureName=0x7f0a0032;
         public static final int tvTerminBetreff=0x7f0a0037;
         public static final int tvTerminOrt=0x7f0a0036;
