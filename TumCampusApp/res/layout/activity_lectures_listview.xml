@@ -3,18 +3,14 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical"
-    android:paddingBottom="10dp"
-    android:paddingLeft="10dp"
-    android:paddingRight="10dp"
-    android:paddingTop="10dp" >
+    android:padding="5dp" >
 
     <TextView
         android:id="@+id/tvLectureName"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="4dip"
         android:text="tvLectureName"
-        android:textColor="#0065BD"
+        android:textColor="@color/text_light_blue"
         android:textSize="18sp"
         android:textStyle="bold" />
 

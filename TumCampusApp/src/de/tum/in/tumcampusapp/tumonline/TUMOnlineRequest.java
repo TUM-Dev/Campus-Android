@@ -37,7 +37,7 @@ public class TUMOnlineRequest {
 	public static final String LOGOUT_SERVICE_URL = "https://campus.tum.de/tumonline/anmeldung.beenden";
 	// server address
 	public static final String SERVICE_BASE_URL = "https://campus.tum.de/tumonline/wbservicesbasic.";
-	public static final int TUM_ONLINE_TIMEOUT = 15000;
+	public static final int TUM_ONLINE_TIMEOUT = 30000;
 	// set to null, if not needed
 	private String accessToken = null;
 	/** asynchronous task for interactive fetch */

@@ -101,9 +101,10 @@
 
     <Spinner
         android:id="@+id/spFilter"
-        android:background="@color/sections"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:background="@color/sections"
+        android:drawSelectorOnTop="true" />
 
     <ListView
         android:id="@+id/lvMyLecturesList"

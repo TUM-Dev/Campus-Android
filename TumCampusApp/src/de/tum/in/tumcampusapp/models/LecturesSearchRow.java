@@ -1,4 +1,4 @@
-package de.tum.in.tumcampusapp.models.managers;
+package de.tum.in.tumcampusapp.models;
 
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.Root;

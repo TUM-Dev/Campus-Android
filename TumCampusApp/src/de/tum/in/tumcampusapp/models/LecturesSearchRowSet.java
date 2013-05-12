@@ -1,4 +1,4 @@
-package de.tum.in.tumcampusapp.models.managers;
+package de.tum.in.tumcampusapp.models;
 
 import java.util.List;
 

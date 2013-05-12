@@ -21,8 +21,8 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.TumOnlineActivity;
 import de.tum.in.tumcampusapp.adapters.LecturesSearchListAdapter;
 import de.tum.in.tumcampusapp.auxiliary.Const;
-import de.tum.in.tumcampusapp.models.managers.LecturesSearchRow;
-import de.tum.in.tumcampusapp.models.managers.LecturesSearchRowSet;
+import de.tum.in.tumcampusapp.models.LecturesSearchRow;
+import de.tum.in.tumcampusapp.models.LecturesSearchRowSet;
 
 /**
  * This activity presents the users' lectures using the TUMOnline web service
@@ -50,6 +50,7 @@ public class LecturesPersonalActivity extends TumOnlineActivity {
 	private ListView lvMyLecturesList;
 
 	private Spinner spFilter;
+
 	public LecturesPersonalActivity() {
 		super(Const.LECTURES_PERSONAL, R.layout.activity_lecturespersonal);
 	}

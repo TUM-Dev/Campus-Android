@@ -10,7 +10,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.LecturesSearchActivity;
-import de.tum.in.tumcampusapp.models.managers.LecturesSearchRow;
+import de.tum.in.tumcampusapp.models.LecturesSearchRow;
 
 /**
  * This class handles the view output of the results for finding lectures via

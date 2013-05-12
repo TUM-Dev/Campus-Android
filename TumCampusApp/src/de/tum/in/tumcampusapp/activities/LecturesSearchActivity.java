@@ -20,8 +20,8 @@ import de.tum.in.tumcampusapp.activities.generic.TumOnlineActivity;
 import de.tum.in.tumcampusapp.adapters.LecturesSearchListAdapter;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
-import de.tum.in.tumcampusapp.models.managers.LecturesSearchRow;
-import de.tum.in.tumcampusapp.models.managers.LecturesSearchRowSet;
+import de.tum.in.tumcampusapp.models.LecturesSearchRow;
+import de.tum.in.tumcampusapp.models.LecturesSearchRowSet;
 
 /**
  * This activity represents a small find box to query through the TUMOnline web
@@ -61,6 +61,9 @@ public class LecturesSearchActivity extends TumOnlineActivity implements OnEdito
 
 		int viewId = view.getId();
 		switch (viewId) {
+		case R.id.activity_lecturesearch_clear:
+			etFindQuery.setText("");
+			break;
 		case R.id.activity_lecturesearch_dosearch:
 			searchForLectures();
 			break;
@@ -75,8 +78,6 @@ public class LecturesSearchActivity extends TumOnlineActivity implements OnEdito
 		etFindQuery = (EditText) findViewById(R.id.etFindQuery);
 		etFindQuery.setOnEditorActionListener(this);
 		lvFound = (ListView) findViewById(R.id.lvFound);
-
-		findViewById(R.id.activity_lecturesearch_main_layout).requestFocus();
 	}
 
 	@Override

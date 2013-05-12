@@ -57,7 +57,18 @@
             android:imeActionLabel="Search"
             android:imeOptions="actionSearch"
             android:singleLine="true" >
+
+            <requestFocus />
         </EditText>
+
+        <ImageButton
+            android:id="@+id/activity_lecturesearch_clear"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:background="@android:color/transparent"
+            android:onClick="onClick"
+            android:scaleType="fitCenter"
+            android:src="@android:drawable/ic_menu_close_clear_cancel" />
 
         <ImageButton
             android:id="@+id/activity_lecturesearch_dosearch"

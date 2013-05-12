@@ -23,6 +23,8 @@ import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.LectureAppointmentsRow;
 import de.tum.in.tumcampusapp.models.LectureAppointmentsRowSet;
 import de.tum.in.tumcampusapp.models.LectureItem;
+import de.tum.in.tumcampusapp.models.LecturesSearchRow;
+import de.tum.in.tumcampusapp.models.LecturesSearchRowSet;
 import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequest;
 
 /**

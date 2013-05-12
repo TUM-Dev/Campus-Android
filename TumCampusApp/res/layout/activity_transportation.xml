@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/activity_transport_main_layout"
-    android:focusableInTouchMode="true"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:focusableInTouchMode="true"
     android:orientation="vertical" >
 
     <LinearLayout
@@ -28,7 +28,19 @@
             android:ems="10"
             android:hint="@string/search_station"
             android:imeOptions="actionSearch"
-            android:singleLine="true" />
+            android:singleLine="true" >
+
+            <requestFocus />
+        </EditText>
+
+        <ImageButton
+            android:id="@+id/activity_transport_clear"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:background="@android:color/transparent"
+            android:onClick="onClick"
+            android:scaleType="fitCenter"
+            android:src="@android:drawable/ic_menu_close_clear_cancel" />
 
         <ImageButton
             android:id="@+id/activity_transport_dosearch"
@@ -38,6 +50,7 @@
             android:onClick="onClick"
             android:scaleType="fitCenter"
             android:src="@android:drawable/ic_menu_search" />
+
     </LinearLayout>
 
     <RelativeLayout

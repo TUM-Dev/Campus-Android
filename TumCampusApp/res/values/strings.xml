@@ -101,7 +101,7 @@
     <string name="choose_feed">Choose feed</string>
 
     <!-- findlectures.xml -->
-    <string name="insert_search">Insert search text</string>
+    <string name="insert_search">Search lectures</string>
     <string name="search">Search</string>
 
     <!-- grades.xml -->

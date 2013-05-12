@@ -3,7 +3,6 @@ package de.tum.in.tumcampusapp.activities;
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,15 +10,11 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.TumOnlineActivity;
 import de.tum.in.tumcampusapp.auxiliary.Const;
-import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.LectureDetailsRow;
 import de.tum.in.tumcampusapp.models.LectureDetailsRowSet;
-import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequest;
-import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequestFetchListener;
 
 /**
  * This Activity will show all details found on the TUMOnline web service
@@ -41,8 +36,6 @@ import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequestFetchListener;
  */
 public class LecturesDetailsActivity extends TumOnlineActivity implements OnClickListener {
 
-	private static final String VERANSTALTUNGEN_DETAILS = "veranstaltungenDetails";
-
 	/** UI elements */
 	private Button btnLDetailsTermine;
 	/** the current processing Lecture item (model: LectureDetailsRow) */
@@ -59,9 +52,9 @@ public class LecturesDetailsActivity extends TumOnlineActivity implements OnClic
 	private TextView tvLDetailsZiele;
 
 	public LecturesDetailsActivity() {
-		super(VERANSTALTUNGEN_DETAILS, R.layout.activity_lecturedetails);
+		super(Const.LECTURES_DETAILS, R.layout.activity_lecturedetails);
 	}
-	
+
 	@Override
 	public void onClick(View view) {
 		super.onClick(view);
@@ -94,7 +87,7 @@ public class LecturesDetailsActivity extends TumOnlineActivity implements OnClic
 		tvLDetailsLiteratur = (TextView) findViewById(R.id.tvLDetailsLiteratur);
 		btnLDetailsTermine = (Button) findViewById(R.id.btnLDetailsTermine);
 		btnLDetailsTermine.setOnClickListener(this);
-		
+
 		// Reads lecture id from bundle
 		Bundle bundle = this.getIntent().getExtras();
 		requestHandler.setParameter("pLVNr", bundle.getString("stp_sp_nr"));
@@ -114,30 +107,26 @@ public class LecturesDetailsActivity extends TumOnlineActivity implements OnClic
 		Serializer serializer = new Persister();
 		try {
 			LectureDetailsRowSet xmllv = serializer.read(LectureDetailsRowSet.class, rawResponse);
-			// only take first one (there should only be one)
-			if (xmllv.getLehrveranstaltungenDetails().size() != 1) {
-				Toast.makeText(this,
-						getString(R.string.something_wrong) + ": " + xmllv.getLehrveranstaltungenDetails().size() + " " + getString(R.string.elements_found),
-						10000).show();
-			} else {
-				// we got exactly one row, thats fine
-				currentitem = xmllv.getLehrveranstaltungenDetails().get(0);
-				tvLDetailsName.setText(currentitem.getStp_sp_titel());
+			// we got exactly one row, thats fine
+			currentitem = xmllv.getLehrveranstaltungenDetails().get(0);
+			tvLDetailsName.setText(currentitem.getStp_sp_titel());
 
-				String strLectureLanguage = currentitem.getSemester_name();
-				if (currentitem.getHaupt_unterrichtssprache() != null) {
-					strLectureLanguage += " - " + currentitem.getHaupt_unterrichtssprache();
-				}
-				tvLDetailsSemester.setText(strLectureLanguage);
-				tvLDetailsSWS.setText(currentitem.getStp_lv_art_name() + " - " + currentitem.getDauer_info() + " SWS");
-				tvLDetailsDozent.setText(currentitem.getVortragende_mitwirkende());
-				tvLDetailsOrg.setText(currentitem.getOrg_name_betreut());
-				tvLDetailsInhalt.setText(currentitem.getLehrinhalt());
-				tvLDetailsMethode.setText(currentitem.getLehrmethode());
-				tvLDetailsZiele.setText(currentitem.getLehrziel());
-				tvLDetailsLiteratur.setText(currentitem.getStudienbehelfe());
-				tvLDetailsTermin.setText(currentitem.getErsttermin());
+			String strLectureLanguage = currentitem.getSemester_name();
+			if (currentitem.getHaupt_unterrichtssprache() != null) {
+				strLectureLanguage += " - " + currentitem.getHaupt_unterrichtssprache();
 			}
+			tvLDetailsSemester.setText(strLectureLanguage);
+			tvLDetailsSWS.setText(currentitem.getStp_lv_art_name() + " - " + currentitem.getDauer_info() + " SWS");
+			tvLDetailsDozent.setText(currentitem.getVortragende_mitwirkende());
+			tvLDetailsOrg.setText(currentitem.getOrg_name_betreut());
+			tvLDetailsInhalt.setText(currentitem.getLehrinhalt());
+			tvLDetailsMethode.setText(currentitem.getLehrmethode());
+			tvLDetailsZiele.setText(currentitem.getLehrziel());
+			tvLDetailsLiteratur.setText(currentitem.getStudienbehelfe());
+			tvLDetailsTermin.setText(currentitem.getErsttermin());
+
+			progressLayout.setVisibility(View.GONE);
+
 		} catch (Exception e) {
 			// well, something went obviously wrong
 			Log.d("conv", "wont work: " + e.toString());

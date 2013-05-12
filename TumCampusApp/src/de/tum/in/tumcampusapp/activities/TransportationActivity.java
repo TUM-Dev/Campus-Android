@@ -67,6 +67,9 @@ public class TransportationActivity extends Activity implements OnItemClickListe
 			searchForStations(searchTextField.getText().toString());
 			hideKeyboard();
 			break;
+		case R.id.activity_transport_clear:
+			searchTextField.setText("");
+			break;
 		case R.id.activity_transport_domore:
 			Cursor stationCursor = transportaionManager.getAllFromDb();
 
@@ -103,8 +106,6 @@ public class TransportationActivity extends Activity implements OnItemClickListe
 		listViewSuggestionsAndSaved = (ListView) findViewById(R.id.activity_transport_listview_suggestionsandsaved);
 		progressLayout = (RelativeLayout) findViewById(R.id.activity_transportation_progress_layout);
 		infoTextView = (TextView) findViewById(R.id.activity_transport_textview_info);
-
-		findViewById(R.id.activity_transport_main_layout).requestFocus();
 
 		@SuppressWarnings("deprecation")
 		ListAdapter adapterSuggestionsAndSaved = new SimpleCursorAdapter(this, android.R.layout.simple_list_item_1, stationCursor,
@@ -232,11 +233,15 @@ public class TransportationActivity extends Activity implements OnItemClickListe
 	 * @param inputText
 	 * @return
 	 */
-	public boolean searchForStations(final String inputText) {
+	public boolean searchForStations(String inputTextRaw) {
 		final Activity activity = this;
 		progressLayout.setVisibility(View.VISIBLE);
 
 		listViewSuggestionsAndSaved.setEnabled(true);
+
+		// TODO: Workaround, because MVV does not find a station with the full
+		// name as a text input
+		final String inputText = inputTextRaw = inputTextRaw.substring(0, inputTextRaw.length() - 1);
 
 		new Thread(new Runnable() {
 			String message;
