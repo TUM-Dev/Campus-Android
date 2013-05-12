@@ -1,1 +1,1 @@
-https://github.com/Moecker/TumCapusApp.git
+https://github.com/TCA-Team/TumCampusApp.git
