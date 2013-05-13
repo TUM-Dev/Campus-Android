@@ -17,7 +17,7 @@ public class GalleryActivityDetails extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_gallery_details);
+		setContentView(R.layout.activity_gallerydetails);
 
 		// get gallery item details from db
 		GalleryManager gm = new GalleryManager(this);

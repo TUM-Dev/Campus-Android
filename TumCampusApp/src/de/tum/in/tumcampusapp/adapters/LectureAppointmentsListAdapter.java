@@ -65,7 +65,7 @@ public class LectureAppointmentsListAdapter extends BaseAdapter {
 	public View getView(int position, View convertView, ViewGroup parent) {
 		ViewHolder holder;
 		if (convertView == null) {
-			convertView = mInflater.inflate(R.layout.activity_lectures_termine_listview, null);
+			convertView = mInflater.inflate(R.layout.activity_lecturesappointments_listview, null);
 			holder = new ViewHolder();
 
 			// set UI elements

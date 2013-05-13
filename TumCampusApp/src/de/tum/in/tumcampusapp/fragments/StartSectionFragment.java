@@ -34,7 +34,7 @@ public class StartSectionFragment extends Fragment implements OnItemClickListene
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		listMenuEntrySet = (ArrayList<ListMenuEntry>) getArguments().getSerializable(StartSectionsPagerAdapter.LIST_ENTRY_SET);
-		View rootView = inflater.inflate(R.layout.activity_start_fragment_section, container, false);
+		View rootView = inflater.inflate(R.layout.fragment_start_section, container, false);
 
 		// Builds the list according to the list items in listMenuEntrySet
 		ListView list = (ListView) rootView.findViewById(R.id.list_view);

@@ -21,7 +21,7 @@ public class OpeningHoursDetailActivity extends FragmentActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_openinghours_detail);
+		setContentView(R.layout.activity_openinghoursdetail);
 
 		// savedInstanceState is non-null when there is fragment state
 		// saved from previous configurations of this activity

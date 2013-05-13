@@ -1,10 +1,14 @@
 ﻿package de.tum.in.tumcampusapp.services;
 
+import java.util.List;
+
 import android.app.IntentService;
 import android.content.Intent;
 import android.util.Log;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
+import de.tum.in.tumcampusapp.models.managers.FeedItemManager;
+import de.tum.in.tumcampusapp.models.managers.FeedManager;
 import de.tum.in.tumcampusapp.models.managers.GalleryManager;
 import de.tum.in.tumcampusapp.models.managers.NewsManager;
 import de.tum.in.tumcampusapp.models.managers.SyncManager;
@@ -67,6 +71,22 @@ public class DownloadService extends IntentService {
 		return true;
 	}
 
+	public boolean downloadFeeds() {
+		FeedManager fm = new FeedManager(this);
+		List<Integer> list = fm.getAllIdsFromDb();
+
+		FeedItemManager fim = new FeedItemManager(this);
+		for (int id : list) {
+			try {
+				fim.downloadFromExternal(id, false);
+			} catch (Exception e) {
+				Log.e(getClass().getSimpleName(), e.getMessage());
+				return false;
+			}
+		}
+		return true;
+	}
+
 	@Override
 	public void onCreate() {
 		super.onCreate();
@@ -107,6 +127,9 @@ public class DownloadService extends IntentService {
 		}
 		if ((action.equals(Const.GALLERY)) && !isDestroyed) {
 			scucessfull = downloadGallery();
+		}
+		if ((action.equals(Const.FEEDS)) && !isDestroyed) {
+			scucessfull = downloadFeeds();
 		}
 
 		// After done the job, create an broadcast intent and send it. The

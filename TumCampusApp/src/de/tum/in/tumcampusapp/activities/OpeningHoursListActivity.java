@@ -34,7 +34,7 @@ public class OpeningHoursListActivity extends FragmentActivity implements Openin
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_openinghours_list);
+		setContentView(R.layout.activity_openinghourslist);
 
 		if (findViewById(R.id.item_detail_container) != null) {
 			// The detail container view will be present only in the

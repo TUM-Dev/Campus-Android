@@ -129,7 +129,7 @@ public class CurriculaActivityDetails extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_curricula_details);
+		setContentView(R.layout.activity_curriculadetails);
 
 		httpClient = new DefaultHttpClient();
 

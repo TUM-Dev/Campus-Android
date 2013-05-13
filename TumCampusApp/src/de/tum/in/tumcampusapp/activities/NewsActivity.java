@@ -31,7 +31,6 @@ import de.tum.in.tumcampusapp.services.DownloadService;
  */
 public class NewsActivity extends Activity implements OnItemClickListener, ViewBinder {
 	public final static int MENU_REFRESH = 0;
-
 	Activity activity = this;
 	private RelativeLayout errorLayout;
 	private RelativeLayout progressLayout;
