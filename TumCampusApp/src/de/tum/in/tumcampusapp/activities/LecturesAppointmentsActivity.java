@@ -62,9 +62,9 @@ public class LecturesAppointmentsActivity extends TumOnlineActivity {
 	public void onFetch(String rawResponse) {
 		// deserialize xml
 		Serializer serializer = new Persister();
-		LectureAppointmentsRowSet LecturesList = null;
+		LectureAppointmentsRowSet lecturesList = null;
 		try {
-			LecturesList = serializer.read(LectureAppointmentsRowSet.class, rawResponse);
+			lecturesList = serializer.read(LectureAppointmentsRowSet.class, rawResponse);
 		} catch (Exception e) {
 			Log.d("SIMPLEXML", "wont work: " + e.getMessage());
 			errorLayout.setVisibility(View.VISIBLE);
@@ -73,7 +73,7 @@ public class LecturesAppointmentsActivity extends TumOnlineActivity {
 		}
 
 		// may happen if there are no appointments for the lecture
-		if (LecturesList == null) {
+		if (lecturesList == null || lecturesList.getLehrveranstaltungenTermine() == null) {
 			errorLayout.setVisibility(View.VISIBLE);
 			progressLayout.setVisibility(View.GONE);
 			Toast.makeText(this, "No appointsments available", Toast.LENGTH_SHORT).show();
@@ -82,7 +82,7 @@ public class LecturesAppointmentsActivity extends TumOnlineActivity {
 
 		// set data to the ListView object
 		// nothing to click (yet)
-		lvTermine.setAdapter(new LectureAppointmentsListAdapter(this, LecturesList.getLehrveranstaltungenTermine()));
+		lvTermine.setAdapter(new LectureAppointmentsListAdapter(this, lecturesList.getLehrveranstaltungenTermine()));
 		progressLayout.setVisibility(View.GONE);
 	}
 }
