@@ -77,7 +77,10 @@ public class TUMOnlineRequest {
 	}
 
 	public void cancelRequest(boolean mayInterruptIfRunning) {
-		backgroundTask.cancel(mayInterruptIfRunning);
+		// Cancel background task just if one has been established
+		if (backgroundTask != null) {
+			backgroundTask.cancel(mayInterruptIfRunning);
+		}
 	}
 
 	/**
