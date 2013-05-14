@@ -85,7 +85,7 @@ public class FeedsActivity extends Activity implements OnItemClickListener, OnIt
 			feedName = c.getString(c.getColumnIndex(Const.NAME_COLUMN));
 		}
 
-		Intent intent = new Intent(this, FeedsActivityDetails.class);
+		Intent intent = new Intent(this, FeedsDetailsActivity.class);
 		intent.putExtra(Const.FEED_ID, feedId);
 		intent.putExtra(Const.FEED_NAME, feedName);
 		startActivity(intent);

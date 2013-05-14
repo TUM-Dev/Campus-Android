@@ -45,7 +45,7 @@
             android:label="@string/plans" >
         </activity>
         <activity
-            android:name=".activities.PlansActivityDetails"
+            android:name=".activities.PlansDetailsActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/plans" >
         </activity>
@@ -65,7 +65,7 @@
             android:label="@string/gallery" >
         </activity>
         <activity
-            android:name=".activities.GalleryActivityDetails"
+            android:name=".activities.GalleryDetailsActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/gallery" >
         </activity>
@@ -75,7 +75,7 @@
             android:label="@string/study_plans" >
         </activity>
         <activity
-            android:name=".activities.CurriculaActivityDetails"
+            android:name=".activities.CurriculaDetailsActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/study_plans" >
         </activity>
@@ -120,7 +120,7 @@
             android:label="@string/lectures" >
         </activity>
         <activity
-            android:name=".activities.FeedsActivityDetails"
+            android:name=".activities.FeedsDetailsActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/rss_feeds" >
         </activity>
@@ -128,6 +128,16 @@
             android:name=".activities.FeedsActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/rss_feeds" >
+        </activity>
+        <activity
+            android:name=".activities.CafeteriaActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/cafeterias" >
+        </activity>
+        <activity
+            android:name=".activities.CafeteriaDetailsActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/cafeterias" >
         </activity>
 
         <service

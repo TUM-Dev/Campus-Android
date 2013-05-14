@@ -75,7 +75,7 @@ public class CurriculaActivity extends Activity implements OnItemClickListener {
 	public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
 		String curriculumName = ((TextView) view).getText().toString();
 
-		Intent intent = new Intent(this, CurriculaActivityDetails.class);
+		Intent intent = new Intent(this, CurriculaDetailsActivity.class);
 		intent.putExtra(URL, options.get(curriculumName));
 		intent.putExtra(NAME, curriculumName);
 		startActivity(intent);

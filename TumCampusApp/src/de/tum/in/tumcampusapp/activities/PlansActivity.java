@@ -42,7 +42,7 @@ public class PlansActivity extends Activity implements OnItemClickListener {
 
 	@Override
 	public void onItemClick(AdapterView<?> aview, View view, int pos, long id) {
-		Intent intent = new Intent(this, PlansActivityDetails.class);
+		Intent intent = new Intent(this, PlansDetailsActivity.class);
 		intent.putExtra("Plan", pos);
 		startActivity(intent);
 	}

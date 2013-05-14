@@ -25,7 +25,7 @@ import de.tum.in.tumcampusapp.auxiliary.Utils;
  * @review Daniel G. Mayr
  * @review Thomas Behrens
  */
-public class CurriculaActivityDetails extends Activity {
+public class CurriculaDetailsActivity extends Activity {
 
 	// fetch information in a background task and show progress dialog in
 	// meantime

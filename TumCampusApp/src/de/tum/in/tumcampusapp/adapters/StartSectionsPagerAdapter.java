@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.activities.CafeteriaActivity;
 import de.tum.in.tumcampusapp.activities.CurriculaActivity;
 import de.tum.in.tumcampusapp.activities.FeedsActivity;
 import de.tum.in.tumcampusapp.activities.GalleryActivity;
@@ -91,7 +92,8 @@ public class StartSectionsPagerAdapter extends FragmentPagerAdapter {
 		case SECTION_CONVENIENCE:
 			listMenuEntrySet
 					.add(new ListMenuEntry(R.drawable.show_info, R.string.mvv, R.string.mvv_addinfo, new Intent(activity, TransportationActivity.class)));
-			listMenuEntrySet.add(new ListMenuEntry(R.drawable.notepad, R.string.menues, R.string.cafeteria_addinfo, new Intent(activity, MockActivity.class)));
+			listMenuEntrySet.add(new ListMenuEntry(R.drawable.notepad, R.string.menues, R.string.cafeteria_addinfo, new Intent(activity,
+					CafeteriaActivity.class)));
 			break;
 		}
 		args.putSerializable(LIST_ENTRY_SET, listMenuEntrySet);

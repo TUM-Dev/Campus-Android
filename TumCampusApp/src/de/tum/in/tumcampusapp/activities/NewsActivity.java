@@ -71,11 +71,6 @@ public class NewsActivity extends ActivityForDownloadingExternal implements OnIt
 	}
 
 	@Override
-	protected void onStart() {
-		super.onStart();
-	}
-
-	@Override
 	public boolean setViewValue(View view, Cursor cursor, int index) {
 		// Adds url (domain only) to date
 		if (view.getId() == R.id.date) {

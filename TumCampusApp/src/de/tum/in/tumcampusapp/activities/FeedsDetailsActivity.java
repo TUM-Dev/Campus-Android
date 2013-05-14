@@ -19,11 +19,11 @@ import de.tum.in.tumcampusapp.models.managers.FeedItemManager;
 /**
  * Activity to show RSS-feeds and their news items
  */
-public class FeedsActivityDetails extends ActivityForDownloadingExternal implements ViewBinder, OnItemClickListener {
+public class FeedsDetailsActivity extends ActivityForDownloadingExternal implements ViewBinder, OnItemClickListener {
 	private static String feedId;
 	private static String feedName;
 
-	public FeedsActivityDetails() {
+	public FeedsDetailsActivity() {
 		super(Const.FEEDS, R.layout.activity_feedsdetails);
 	}
 

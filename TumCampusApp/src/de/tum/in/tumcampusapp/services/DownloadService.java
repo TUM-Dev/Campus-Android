@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.util.Log;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
+import de.tum.in.tumcampusapp.models.managers.CafeteriaManager;
+import de.tum.in.tumcampusapp.models.managers.CafeteriaMenuManager;
 import de.tum.in.tumcampusapp.models.managers.FeedItemManager;
 import de.tum.in.tumcampusapp.models.managers.GalleryManager;
 import de.tum.in.tumcampusapp.models.managers.NewsManager;
@@ -78,6 +80,20 @@ public class DownloadService extends IntentService {
 		}
 		return true;
 	}
+	
+	public boolean downloadCafeterias() {
+		CafeteriaManager cm = new CafeteriaManager(this);
+		CafeteriaMenuManager cmm = new CafeteriaMenuManager(this);
+		try {
+			cm.downloadFromExternal();
+			cmm.downloadFromExternal();
+		} catch (Exception e) {
+			Log.e(getClass().getSimpleName(), e.getMessage());
+			return false;
+		}
+		return true;
+	}
+
 
 	@Override
 	public void onCreate() {
@@ -123,6 +139,9 @@ public class DownloadService extends IntentService {
 		if ((action.equals(Const.FEEDS)) && !isDestroyed) {
 			int feedId = intent.getExtras().getInt(Const.FEED_ID);
 			scucessfull = downloadFeed(feedId);
+		}
+		if ((action.equals(Const.CAFETERIAS)) && !isDestroyed) {
+			scucessfull = downloadCafeterias();
 		}
 
 		// After done the job, create an broadcast intent and send it. The

@@ -12,7 +12,7 @@ import de.tum.in.tumcampusapp.models.managers.GalleryManager;
 /**
  * Activity to show event details (name, location, image, description, etc.)
  */
-public class GalleryActivityDetails extends Activity {
+public class GalleryDetailsActivity extends Activity {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {

@@ -8,7 +8,7 @@ import de.tum.in.tumcampusapp.R;
 /**
  * Activity to show plans
  */
-public class PlansActivityDetails extends Activity {
+public class PlansDetailsActivity extends Activity {
 
 	private static int position;
 

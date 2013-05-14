@@ -33,7 +33,7 @@ public class GalleryActivity extends ActivityForDownloadingExternal implements O
 		Cursor c = (Cursor) av.getAdapter().getItem(position);
 
 		// Opens gallery details when clicking an item in the list
-		Intent intent = new Intent(this, GalleryActivityDetails.class);
+		Intent intent = new Intent(this, GalleryDetailsActivity.class);
 		intent.putExtra("id", c.getString(c.getColumnIndex("id")));
 		startActivity(intent);
 	}
