@@ -107,6 +107,10 @@ public class TUMOnlineRequest {
 		return result;
 	}
 
+	public void cancelRequest(boolean mayInterruptIfRunning) {
+		backgroundTask.cancel(mayInterruptIfRunning);
+	}
+
 	/**
 	 * this fetch method will fetch the data from the TUMOnline Request and will
 	 * address the listeners onFetch if the fetch succeeded, else the

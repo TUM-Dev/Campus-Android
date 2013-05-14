@@ -1,9 +1,5 @@
 package de.tum.in.tumcampusapp.activities.generic;
 
-import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.auxiliary.Const;
-import de.tum.in.tumcampusapp.auxiliary.Utils;
-import de.tum.in.tumcampusapp.services.DownloadService;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -16,6 +12,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
+import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.auxiliary.Const;
+import de.tum.in.tumcampusapp.auxiliary.Utils;
+import de.tum.in.tumcampusapp.services.DownloadService;
 
 public class DownloadExternalActivity extends Activity {
 
@@ -57,12 +57,16 @@ public class DownloadExternalActivity extends Activity {
 	}
 
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
 		setContentView(layoutId);
+		
 		progressLayout = (RelativeLayout) findViewById(R.id.progress_layout);
 		errorLayout = (RelativeLayout) findViewById(R.id.error_layout);
-
+		
+		if (progressLayout == null || errorLayout == null) {
+			Log.e(getClass().getSimpleName(), "Cannot find layouts, did you forget to provide error and progress layouts?");
+		} 
 		registerReceiver(receiver, new IntentFilter(DownloadService.broadcast));
 	}
 
@@ -78,6 +82,8 @@ public class DownloadExternalActivity extends Activity {
 	protected void onDestroy() {
 		super.onDestroy();
 		unregisterReceiver(receiver);
+		Intent service = new Intent(this, DownloadService.class);
+		stopService(service);
 	}
 
 	@Override
@@ -95,7 +101,7 @@ public class DownloadExternalActivity extends Activity {
 	public void requestDownload() {
 		if (Utils.isConnected(this)) {
 			Intent service = new Intent(this, DownloadService.class);
-			service.putExtra(Const.ACTION_EXTRA, Const.FEEDS);
+			service.putExtra(Const.ACTION_EXTRA, method);
 			progressLayout.setVisibility(View.VISIBLE);
 			startService(service);
 		} else {

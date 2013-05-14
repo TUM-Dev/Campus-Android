@@ -70,6 +70,12 @@ public abstract class TumOnlineActivity extends Activity implements TUMOnlineReq
 
 		requestHandler = new TUMOnlineRequest(method, this);
 	}
+	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		requestHandler.cancelRequest(true);
+	}
 
 	@Override
 	public void onFetchCancelled() {

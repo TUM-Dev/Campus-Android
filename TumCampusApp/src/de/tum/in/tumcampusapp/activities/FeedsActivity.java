@@ -28,7 +28,6 @@ import de.tum.in.tumcampusapp.models.managers.FeedManager;
  * Activity to show RSS-feeds and their news items
  */
 public class FeedsActivity extends DownloadExternalActivity implements OnItemClickListener, ViewBinder, OnItemLongClickListener, View.OnClickListener {
-
 	private static String feedId;
 	private static String feedName;
 	private SimpleCursorAdapter adapter;
@@ -65,7 +64,6 @@ public class FeedsActivity extends DownloadExternalActivity implements OnItemCli
 		save.setOnClickListener(this);
 		
 		super.requestDownload();
-
 	}
 
 	@Override

@@ -6,72 +6,6 @@
     android:focusableInTouchMode="true"
     android:orientation="vertical" >
 
-    <RelativeLayout
-        android:id="@+id/progress_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:visibility="gone" >
-
-        <ProgressBar
-            android:id="@+id/progressBar1"
-            style="?android:attr/progressBarStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/progressBar1"
-            android:layout_below="@+id/progressBar1"
-            android:text="@string/loading"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/error_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:visibility="gone" >
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/error_sorry"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/no_token_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:onClick="onClick"
-        android:visibility="gone" >
-
-        <TextView
-            android:id="@+id/textView1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/imageView1"
-            android:layout_centerHorizontal="true"
-            android:gravity="center"
-            android:text="@string/error_no_token_setup"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textSize="12sp" />
-
-        <ImageView
-            android:id="@+id/imageView1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:alpha="0.5"
-            android:src="@drawable/exclamation" />
-    </RelativeLayout>
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
@@ -108,6 +42,72 @@
             android:scaleType="fitCenter"
             android:src="@android:drawable/ic_menu_search" />
     </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/no_token_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:onClick="onClick"
+        android:visibility="gone" >
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/imageView1"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:text="@string/error_no_token_setup"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textSize="12sp" />
+                   
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:alpha="0.5"
+            android:src="@drawable/exclamation" />
+    </RelativeLayout>
+    
+    <RelativeLayout
+            android:id="@+id/progress_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:visibility="gone" >
+
+            <ProgressBar
+                android:id="@+id/progressBar1"
+                style="?android:attr/progressBarStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/progressBar1"
+                android:layout_below="@+id/progressBar1"
+                android:text="@string/loading"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/error_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:visibility="gone" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/error_sorry"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+        </RelativeLayout>
 
     <ListView
         android:id="@+id/lvFound"
