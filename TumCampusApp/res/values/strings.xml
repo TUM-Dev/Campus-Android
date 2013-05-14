@@ -15,12 +15,13 @@
     <string name="empty_string"></string>
     <string name="tum_news">TUM-News</string>
     <string name="timetable">Timetable</string>
-    <string name="result_extra">Result:</string>
+    <string name="result_extra">Result:&#160;</string>
     <string name="error_fetching_grades">Error fetching your grades.\nPlease make sure your TUMOnline Token has been\nactivated and the corresponding rights are set.\n\n<b>Click here for retry.</b></string>
     <string name="error_no_token_setup">No TUMOnline Token was set.\nPlease set your TUMOnline Token in the\n<i>Settings</i> screen to access TUMOnline features.\n\n<b>Click here for the <i>Settings</i> screen.</b></string>
     <string name="convenience">Convenience</string>
     <string name="error_sorry">Sorry, an error appeared.</string>
     <string name="lecture_search">Lectures Search</string>
+    <string name="add_rss_feed">Add RSS-Feed</string>
 
     <string name="personsearch_addinfo">Search persons at TUM</string>
     <string name="lecturessearch_addinfo">Search lectures at TUM</string>

@@ -10,19 +10,9 @@ import de.tum.in.tumcampusapp.auxiliary.Utils;
 public class FeedItem {
 
 	/**
-	 * Feed ID
+	 * DateTime
 	 */
-	public int feedId;
-
-	/**
-	 * Item title
-	 */
-	public String title;
-
-	/**
-	 * Item link, e.g. http://www.heise.de/...
-	 */
-	public String link;
+	public Date date;
 
 	/**
 	 * description Item description
@@ -30,14 +20,24 @@ public class FeedItem {
 	public String description;
 
 	/**
-	 * DateTime
+	 * Feed ID
 	 */
-	public Date date;
+	public int feedId;
 
 	/**
 	 * image Local image, e.g. /mnt/sdcard/tumcampus/feeds/cache/xy.jpg
 	 */
 	public String image;
+
+	/**
+	 * Item link, e.g. http://www.heise.de/...
+	 */
+	public String link;
+
+	/**
+	 * Item title
+	 */
+	public String title;
 
 	/**
 	 * New Feed item (news)
@@ -63,7 +63,7 @@ public class FeedItem {
 
 	@Override
 	public String toString() {
-		return "feedId=" + feedId + " title=" + title + " link=" + link + " description=" + description + " date="
-				+ Utils.getDateString(date) + " image=" + image;
+		return "feedId=" + feedId + " title=" + title + " link=" + link + " description=" + description + " date=" + Utils.getDateString(date) + " image="
+				+ image;
 	}
 }

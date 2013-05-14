@@ -10,7 +10,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.activities.generic.TumOnlineActivity;
+import de.tum.in.tumcampusapp.activities.generic.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampusapp.adapters.LectureAppointmentsListAdapter;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.models.LectureAppointmentsRowSet;
@@ -30,7 +30,7 @@ import de.tum.in.tumcampusapp.models.LectureAppointmentsRowSet;
  * @author Daniel G. Mayr
  * @review Thomas Behrens // i found nothing tbd.
  */
-public class LecturesAppointmentsActivity extends TumOnlineActivity {
+public class LecturesAppointmentsActivity extends ActivityForAccessingTumOnline {
 
 	/** UI elements */
 	private ListView lvTermine;

@@ -21,14 +21,53 @@ import de.tum.in.tumcampusapp.models.FeedItem;
 public class FeedItemManager {
 
 	/**
-	 * Database connection
-	 */
-	private SQLiteDatabase db;
-
-	/**
 	 * Last insert counter
 	 */
 	public static int lastInserted = 0;
+
+	/**
+	 * Convert JSON to FeedItem and download feed item iamge
+	 * 
+	 * Example JSON: e.g. { "title":
+	 * "US-Truppenabzug aus Afghanistan: \"Verlogen und verkorkst\"",
+	 * "description": "..." , "link":
+	 * "http://www.n-tv.de/politik/pressestimmen/Verlogen-und-verkorkst-article3650731.html"
+	 * , "pubDate": "Thu, 23 Jun 2011 20:06:53 GMT", "enclosure": { "url":
+	 * "http://www.n-tv.de/img/30/304801/Img_4_3_220_Pressestimmen.jpg" }
+	 * 
+	 * <pre>
+	 * @param feedId Feed ID
+	 * @param json see above
+	 * @return Feeds
+	 * @throws Exception
+	 * </pre>
+	 */
+	public static FeedItem getFromJson(int feedId, JSONObject json) throws Exception {
+
+		String target = "";
+		if (json.has(JsonConst.JSON_ENCLOSURE)) {
+			final String enclosure = json.getJSONObject(JsonConst.JSON_ENCLOSURE).getString(Const.URL);
+
+			target = Utils.getCacheDir("rss/cache") + Utils.md5(enclosure) + ".jpg";
+			Utils.downloadFileThread(enclosure, target);
+		}
+		Date pubDate = new Date();
+		if (json.has(JsonConst.JSON_PUB_DATE)) {
+			pubDate = Utils.getDateTimeRfc822(json.getString(JsonConst.JSON_PUB_DATE));
+		}
+		String description = "";
+		if (json.has(JsonConst.JSON_DESCRIPTION) && !json.isNull(JsonConst.JSON_DESCRIPTION)) {
+			// decode HTML entites, remove links, images, etc.
+			description = Html.fromHtml(json.getString(JsonConst.JSON_DESCRIPTION).replaceAll("\\<.*?\\>", "")).toString();
+		}
+		return new FeedItem(feedId, json.getString(JsonConst.JSON_TITLE).replaceAll("\n", ""), json.getString(JsonConst.JSON_LINK), description, pubDate,
+				target);
+	}
+
+	/**
+	 * Database connection
+	 */
+	private SQLiteDatabase db;
 
 	/**
 	 * Additional information for exception messages
@@ -46,9 +85,24 @@ public class FeedItemManager {
 		db = DatabaseManager.getDb(context);
 
 		// create table if needed
-		db.execSQL("CREATE TABLE IF NOT EXISTS feeds_items ("
-				+ "id INTEGER PRIMARY KEY AUTOINCREMENT, feedId INTEGER, "
+		db.execSQL("CREATE TABLE IF NOT EXISTS feeds_items (" + "id INTEGER PRIMARY KEY AUTOINCREMENT, feedId INTEGER, "
 				+ "title VARCHAR, link VARCHAR, description VARCHAR, date VARCHAR, image VARCHAR)");
+	}
+
+	/** Removes all old items (older than 7 days) */
+	public void cleanupDb() {
+		db.execSQL("DELETE FROM feeds_items WHERE date < date('now','-7 day')");
+	}
+
+	/**
+	 * Deletes feed items from the database
+	 * 
+	 * <pre>
+	 * @param feedId Feed ID
+	 * </pre>
+	 */
+	public void deleteFromDb(int feedId) {
+		db.execSQL("DELETE FROM feeds_items WHERE feedId = ?", new String[] { String.valueOf(feedId) });
 	}
 
 	/**
@@ -77,8 +131,9 @@ public class FeedItemManager {
 
 		lastInfo = feedUrl;
 		String baseUrl = "http://query.yahooapis.com/v1/public/yql?format=json&q=";
-		String query = URLEncoder.encode("SELECT title, link, description, pubDate, enclosure.url "
-				+ "FROM rss WHERE url=\"" + feedUrl + "\" LIMIT 25");
+
+		@SuppressWarnings("deprecation")
+		String query = URLEncoder.encode("SELECT title, link, description, pubDate, enclosure.url " + "FROM rss WHERE url=\"" + feedUrl + "\" LIMIT 25");
 
 		JSONObject jsonObj = Utils.downloadJson(baseUrl + query).getJSONObject("query");
 
@@ -116,19 +171,6 @@ public class FeedItemManager {
 	}
 
 	/**
-	 * Get all feed items for a feed from the database
-	 * 
-	 * <pre>
-	 * @param feedId Feed ID
-	 * @return Database cursor (image, title, description, link, _id)
-	 * </pre>
-	 */
-	public Cursor getAllFromDb(String feedId) {
-		return db.rawQuery("SELECT image, title, description, link, id as _id "
-				+ "FROM feeds_items WHERE feedId = ? ORDER BY date DESC", new String[] { feedId });
-	}
-
-	/**
 	 * Checks if the feeds_items table is empty
 	 * 
 	 * @return true if no feed items are available, else false
@@ -144,41 +186,16 @@ public class FeedItemManager {
 	}
 
 	/**
-	 * Convert JSON to FeedItem and download feed item iamge
-	 * 
-	 * Example JSON: e.g. { "title": "US-Truppenabzug aus Afghanistan: \"Verlogen und verkorkst\"", "description": "..."
-	 * , "link": "http://www.n-tv.de/politik/pressestimmen/Verlogen-und-verkorkst-article3650731.html" , "pubDate":
-	 * "Thu, 23 Jun 2011 20:06:53 GMT", "enclosure": { "url":
-	 * "http://www.n-tv.de/img/30/304801/Img_4_3_220_Pressestimmen.jpg" }
+	 * Get all feed items for a feed from the database
 	 * 
 	 * <pre>
 	 * @param feedId Feed ID
-	 * @param json see above
-	 * @return Feeds
-	 * @throws Exception
+	 * @return Database cursor (image, title, description, link, _id)
 	 * </pre>
 	 */
-	public static FeedItem getFromJson(int feedId, JSONObject json) throws Exception {
-
-		String target = "";
-		if (json.has(JsonConst.JSON_ENCLOSURE)) {
-			final String enclosure = json.getJSONObject(JsonConst.JSON_ENCLOSURE).getString(Const.URL);
-
-			target = Utils.getCacheDir("rss/cache") + Utils.md5(enclosure) + ".jpg";
-			Utils.downloadFileThread(enclosure, target);
-		}
-		Date pubDate = new Date();
-		if (json.has(JsonConst.JSON_PUB_DATE)) {
-			pubDate = Utils.getDateTimeRfc822(json.getString(JsonConst.JSON_PUB_DATE));
-		}
-		String description = "";
-		if (json.has(JsonConst.JSON_DESCRIPTION) && !json.isNull(JsonConst.JSON_DESCRIPTION)) {
-			// decode HTML entites, remove links, images, etc.
-			description = Html.fromHtml(json.getString(JsonConst.JSON_DESCRIPTION).replaceAll("\\<.*?\\>", ""))
-					.toString();
-		}
-		return new FeedItem(feedId, json.getString(JsonConst.JSON_TITLE).replaceAll("\n", ""),
-				json.getString(JsonConst.JSON_LINK), description, pubDate, target);
+	public Cursor getAllFromDb(String feedId) {
+		return db.rawQuery("SELECT image, title, description, link, id as _id " + "FROM feeds_items WHERE feedId = ? ORDER BY date DESC",
+				new String[] { feedId });
 	}
 
 	/**
@@ -199,30 +216,13 @@ public class FeedItemManager {
 		if (n.title.length() == 0) {
 			throw new Exception("Invalid title.");
 		}
-		db.execSQL("INSERT INTO feeds_items (feedId, title, link, description, "
-				+ "date, image) VALUES (?, ?, ?, ?, ?, ?)", new String[] { String.valueOf(n.feedId), n.title, n.link,
-				n.description, Utils.getDateTimeString(n.date), n.image });
+		db.execSQL("INSERT INTO feeds_items (feedId, title, link, description, " + "date, image) VALUES (?, ?, ?, ?, ?, ?)",
+				new String[] { String.valueOf(n.feedId), n.title, n.link, n.description, Utils.getDateTimeString(n.date), n.image });
 	}
 
 	/** Removes all cache items */
 	public void removeCache() {
 		db.execSQL("DELETE FROM feeds_items");
 		Utils.emptyCacheDir("rss/cache");
-	}
-
-	/**
-	 * Deletes feed items from the database
-	 * 
-	 * <pre>
-	 * @param feedId Feed ID
-	 * </pre>
-	 */
-	public void deleteFromDb(int feedId) {
-		db.execSQL("DELETE FROM feeds_items WHERE feedId = ?", new String[] { String.valueOf(feedId) });
-	}
-
-	/** Removes all old items (older than 7 days) */
-	public void cleanupDb() {
-		db.execSQL("DELETE FROM feeds_items WHERE date < date('now','-7 day')");
 	}
 }

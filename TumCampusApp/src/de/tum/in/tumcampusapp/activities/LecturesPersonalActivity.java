@@ -17,7 +17,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.activities.generic.TumOnlineActivity;
+import de.tum.in.tumcampusapp.activities.generic.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampusapp.adapters.LecturesSearchListAdapter;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.models.LecturesSearchRow;
@@ -40,7 +40,7 @@ import de.tum.in.tumcampusapp.models.LecturesSearchRowSet;
  * @solves [M1] Meine Lehrveranstaltungen
  * @author Daniel G. Mayr
  */
-public class LecturesPersonalActivity extends TumOnlineActivity {
+public class LecturesPersonalActivity extends ActivityForAccessingTumOnline {
 
 	/** filtered list which will be shown */
 	LecturesSearchRowSet lecturesList = null;

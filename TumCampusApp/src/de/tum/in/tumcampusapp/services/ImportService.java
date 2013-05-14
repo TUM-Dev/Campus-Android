@@ -23,8 +23,8 @@ public class ImportService extends IntentService {
 	 * Import broadcast identifier
 	 */
 	public final static String broadcast = "de.tum.in.newtumcampus.intent.action.BROADCAST_IMPORT";
-	public static final String CSV_LOCATIONS = "locations.csv";
 	public static final String CSV_FEEDS = "feeds.csv";
+	public static final String CSV_LOCATIONS = "locations.csv";
 	public static final String IMPORT_SERVICE = "ImportService";
 	public static final String ISO = "ISO-8859-1";
 
@@ -33,6 +33,23 @@ public class ImportService extends IntentService {
 	 */
 	public ImportService() {
 		super(IMPORT_SERVICE);
+	}
+
+	/**
+	 * Import default feeds from assets
+	 * 
+	 * @throws Exception
+	 */
+	public void importFeedsDefaults() throws Exception {
+
+		FeedManager nm = new FeedManager(this);
+		if (nm.empty()) {
+			List<String[]> rows = Utils.readCsv(getAssets().open(CSV_FEEDS), ISO);
+
+			for (String[] row : rows) {
+				nm.insertUpdateIntoDb(new Feed(row[0], row[1]));
+			}
+		}
 	}
 
 	/**
@@ -51,23 +68,6 @@ public class ImportService extends IntentService {
 
 			for (String[] row : rows) {
 				lm.replaceIntoDb(new Location(Integer.parseInt(row[0]), row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8]));
-			}
-		}
-	}
-	
-	/**
-	 * Import default feeds from assets
-	 * 
-	 * @throws Exception
-	 */
-	public void importFeedsDefaults() throws Exception {
-
-		FeedManager nm = new FeedManager(this);
-		if (nm.empty()) {
-			List<String[]> rows = Utils.readCsv(getAssets().open(CSV_FEEDS), ISO);
-
-			for (String[] row : rows) {
-				nm.insertUpdateIntoDb(new Feed(row[0], row[1]));
 			}
 		}
 	}

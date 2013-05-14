@@ -51,7 +51,7 @@ import android.widget.Toast;
 /** Class for helper functions */
 public class Utils {
 
-	// Set JSON HTTP timeout to 12 seconds
+	// Set JSON HTTP timeout to 30 seconds
 	private static final int JSON_HTTP_TIMEOUT = 30000;
 	/** Counter for unfinished downloads */
 	public static int openDownloads = 0;

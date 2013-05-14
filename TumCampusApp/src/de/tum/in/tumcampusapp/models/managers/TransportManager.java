@@ -89,6 +89,7 @@ public class TransportManager {
 		// ISO needed for mvv
 		String lookupUrl = "http://www.mvg-live.de/ims/dfiStaticAnzeige.svc?haltestelle=" + URLEncoder.encode(location, "ISO-8859-1");
 
+		@SuppressWarnings("deprecation")
 		String query = URLEncoder.encode("select content from html where url=\"" + lookupUrl + "\" and xpath=\"//td[contains(@class,'Column')]/p\"");
 		Utils.log(query);
 
@@ -123,6 +124,7 @@ public class TransportManager {
 
 		String lookupUrl = "http://www.mvg-live.de/ims/dfiStaticAuswahl.svc?haltestelle=" + URLEncoder.encode(location, "ISO-8859-1");
 
+		@SuppressWarnings("deprecation")
 		String query = URLEncoder.encode("select content from html where url=\"" + lookupUrl + "\" and xpath=\"//a[contains(@href,'haltestelle')]\"");
 		Utils.log(query);
 

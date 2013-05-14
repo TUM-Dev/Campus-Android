@@ -76,6 +76,10 @@ public class TUMOnlineRequest {
 		this.accessToken = accessToken;
 	}
 
+	public void cancelRequest(boolean mayInterruptIfRunning) {
+		backgroundTask.cancel(mayInterruptIfRunning);
+	}
+
 	/**
 	 * Fetches the result of the HTTPRequest (which can be seen by using
 	 * getRequestURL)
@@ -105,10 +109,6 @@ public class TUMOnlineRequest {
 			return e.getMessage();
 		}
 		return result;
-	}
-
-	public void cancelRequest(boolean mayInterruptIfRunning) {
-		backgroundTask.cancel(mayInterruptIfRunning);
 	}
 
 	/**

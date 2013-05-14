@@ -8,7 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.activities.generic.TumOnlineActivity;
+import de.tum.in.tumcampusapp.activities.generic.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampusapp.adapters.ExamListAdapter;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.models.ExamList;
@@ -20,7 +20,7 @@ import de.tum.in.tumcampusapp.models.ExamList;
  * @review Daniel G. Mayr
  * @review Thomas Behrens
  */
-public class GradesActivity extends TumOnlineActivity {
+public class GradesActivity extends ActivityForAccessingTumOnline {
 
 	private ExamList examList;
 	private ListView lvGrades;

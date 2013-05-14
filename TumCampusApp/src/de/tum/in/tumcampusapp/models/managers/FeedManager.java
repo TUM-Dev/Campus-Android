@@ -16,14 +16,14 @@ import de.tum.in.tumcampusapp.models.Feed;
 public class FeedManager {
 
 	/**
-	 * Database connection
-	 */
-	private SQLiteDatabase db;
-
-	/**
 	 * Last insert counter
 	 */
 	public static int lastInserted = 0;
+
+	/**
+	 * Database connection
+	 */
+	private SQLiteDatabase db;
 
 	/**
 	 * Additional information for exception messages
@@ -41,8 +41,58 @@ public class FeedManager {
 		db = DatabaseManager.getDb(context);
 
 		// create table if needed
-		db.execSQL("CREATE TABLE IF NOT EXISTS feeds ("
-				+ "id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR, feedUrl VARCHAR)");
+		db.execSQL("CREATE TABLE IF NOT EXISTS feeds (" + "id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR, feedUrl VARCHAR)");
+	}
+
+	/**
+	 * Delete feed from database
+	 * 
+	 * <pre>
+	 * @param id Feed ID
+	 * </pre>
+	 */
+	public void deleteFromDb(int id) {
+		db.execSQL("DELETE FROM feeds WHERE id = ?", new String[] { String.valueOf(id) });
+	}
+
+	/**
+	 * Checks if the feeds table is empty
+	 * 
+	 * @return true if no feeds are available, else false
+	 */
+	public boolean empty() {
+		boolean result = true;
+		Cursor c = db.rawQuery("SELECT id FROM feeds LIMIT 1", null);
+		if (c.moveToNext()) {
+			result = false;
+		}
+		c.close();
+		return result;
+	}
+
+	/**
+	 * Get all feeds from the database
+	 * 
+	 * @return Database cursor (name, feedUrl, _id)
+	 */
+	public Cursor getAllFromDb() {
+		return db.rawQuery("SELECT name, feedUrl, id as _id FROM feeds ORDER BY name", null);
+	}
+
+	/**
+	 * Get all Feed IDs from the database
+	 * 
+	 * @return List of feed IDs
+	 */
+	public List<Integer> getAllIdsFromDb() {
+		List<Integer> list = new ArrayList<Integer>();
+
+		Cursor c = db.rawQuery("SELECT id FROM feeds ORDER BY id", null);
+		while (c.moveToNext()) {
+			list.add(c.getInt(0));
+		}
+		c.close();
+		return list;
 	}
 
 	/**
@@ -76,46 +126,6 @@ public class FeedManager {
 	}
 
 	/**
-	 * Get all feeds from the database
-	 * 
-	 * @return Database cursor (name, feedUrl, _id)
-	 */
-	public Cursor getAllFromDb() {
-		return db.rawQuery("SELECT name, feedUrl, id as _id FROM feeds ORDER BY name", null);
-	}
-
-	/**
-	 * Checks if the feeds table is empty
-	 * 
-	 * @return true if no feeds are available, else false
-	 */
-	public boolean empty() {
-		boolean result = true;
-		Cursor c = db.rawQuery("SELECT id FROM feeds LIMIT 1", null);
-		if (c.moveToNext()) {
-			result = false;
-		}
-		c.close();
-		return result;
-	}
-
-	/**
-	 * Get all Feed IDs from the database
-	 * 
-	 * @return List of feed IDs
-	 */
-	public List<Integer> getAllIdsFromDb() {
-		List<Integer> list = new ArrayList<Integer>();
-
-		Cursor c = db.rawQuery("SELECT id FROM feeds ORDER BY id", null);
-		while (c.moveToNext()) {
-			list.add(c.getInt(0));
-		}
-		c.close();
-		return list;
-	}
-
-	/**
 	 * Insert or Update a feed in the database
 	 * 
 	 * <pre>
@@ -140,8 +150,7 @@ public class FeedManager {
 		Cursor c = db.rawQuery("SELECT id FROM feeds WHERE name = ?", new String[] { f.name });
 
 		if (c.moveToNext()) {
-			db.execSQL("UPDATE feeds SET name=?, feedUrl=? WHERE id=?",
-					new String[] { f.name, f.feedUrl, c.getString(0) });
+			db.execSQL("UPDATE feeds SET name=?, feedUrl=? WHERE id=?", new String[] { f.name, f.feedUrl, c.getString(0) });
 			return c.getInt(0);
 		}
 		db.execSQL("INSERT INTO feeds (name, feedUrl) VALUES (?, ?)", new String[] { f.name, f.feedUrl });
@@ -149,16 +158,5 @@ public class FeedManager {
 		c = db.rawQuery("SELECT last_insert_rowid()", null);
 		c.moveToNext();
 		return c.getInt(0);
-	}
-
-	/**
-	 * Delete feed from database
-	 * 
-	 * <pre>
-	 * @param id Feed ID
-	 * </pre>
-	 */
-	public void deleteFromDb(int id) {
-		db.execSQL("DELETE FROM feeds WHERE id = ?", new String[] { String.valueOf(id) });
 	}
 }

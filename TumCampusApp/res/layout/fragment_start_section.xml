@@ -7,9 +7,7 @@
     <ListView
         android:id="@+id/list_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignLeft="@+id/section_label"
-        android:layout_alignTop="@+id/section_label" >
+        android:layout_height="match_parent">
     </ListView>
 
 </RelativeLayout>

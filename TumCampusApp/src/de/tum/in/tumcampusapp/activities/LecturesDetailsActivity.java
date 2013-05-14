@@ -11,7 +11,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.activities.generic.TumOnlineActivity;
+import de.tum.in.tumcampusapp.activities.generic.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.models.LectureDetailsRow;
 import de.tum.in.tumcampusapp.models.LectureDetailsRowSet;
@@ -34,7 +34,7 @@ import de.tum.in.tumcampusapp.models.LectureDetailsRowSet;
  * @author Daniel G. Mayr
  * @review Thomas Behrens // i found nothing tbd.
  */
-public class LecturesDetailsActivity extends TumOnlineActivity implements OnClickListener {
+public class LecturesDetailsActivity extends ActivityForAccessingTumOnline implements OnClickListener {
 
 	/** UI elements */
 	private Button btnLDetailsTermine;

@@ -13,19 +13,19 @@ import android.widget.SimpleCursorAdapter.ViewBinder;
 import android.widget.TextView;
 import android.widget.Toast;
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.activities.generic.DownloadExternalActivity;
+import de.tum.in.tumcampusapp.activities.generic.ActivityForDownloadingExternal;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.models.managers.NewsManager;
 
 /**
  * Activity to show News (message, image, date)
  */
-public class NewsActivity extends DownloadExternalActivity implements OnItemClickListener, ViewBinder {
+public class NewsActivity extends ActivityForDownloadingExternal implements OnItemClickListener, ViewBinder {
 
 	public NewsActivity() {
 		super(Const.NEWS, R.layout.activity_news);
 	}
-	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

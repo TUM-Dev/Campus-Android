@@ -15,7 +15,7 @@ import de.tum.in.tumcampusapp.preferences.UserPreferencesActivity;
 import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequest;
 import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequestFetchListener;
 
-public abstract class TumOnlineActivity extends Activity implements TUMOnlineRequestFetchListener {
+public abstract class ActivityForAccessingTumOnline extends Activity implements TUMOnlineRequestFetchListener {
 	private String accessToken;
 	protected RelativeLayout errorLayout;
 	protected RelativeLayout failedLayout;
@@ -27,7 +27,7 @@ public abstract class TumOnlineActivity extends Activity implements TUMOnlineReq
 	protected RelativeLayout progressLayout;
 	protected TUMOnlineRequest requestHandler;
 
-	public TumOnlineActivity(String method, int layoutIt) {
+	public ActivityForAccessingTumOnline(String method, int layoutIt) {
 		this.method = method;
 		this.layoutId = layoutIt;
 	}
@@ -70,7 +70,7 @@ public abstract class TumOnlineActivity extends Activity implements TUMOnlineReq
 
 		requestHandler = new TUMOnlineRequest(method, this);
 	}
-	
+
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();

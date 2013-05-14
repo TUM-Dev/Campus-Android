@@ -6,14 +6,14 @@
 public class Feed {
 
 	/**
-	 * Feed name, e.g. Spiegel
-	 */
-	public String name;
-
-	/**
 	 * Feed Url, e.g. http://www.spiegel.de/schlagzeilen/index.rss
 	 */
 	public String feedUrl;
+
+	/**
+	 * Feed name, e.g. Spiegel
+	 */
+	public String name;
 
 	/**
 	 * New Feed

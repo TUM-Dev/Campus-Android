@@ -9,19 +9,18 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 import android.widget.SimpleCursorAdapter;
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.activities.generic.DownloadExternalActivity;
+import de.tum.in.tumcampusapp.activities.generic.ActivityForDownloadingExternal;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.models.managers.GalleryManager;
 
 /**
  * Activity to show gallery items (name, image, etc.)
  */
-public class GalleryActivity extends DownloadExternalActivity implements OnItemClickListener {
+public class GalleryActivity extends ActivityForDownloadingExternal implements OnItemClickListener {
 
 	public GalleryActivity() {
 		super(Const.GALLERY, R.layout.activity_gallery);
 	}
-
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {

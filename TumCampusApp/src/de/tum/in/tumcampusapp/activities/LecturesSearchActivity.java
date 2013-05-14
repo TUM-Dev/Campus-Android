@@ -16,7 +16,7 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.activities.generic.TumOnlineActivity;
+import de.tum.in.tumcampusapp.activities.generic.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampusapp.adapters.LecturesSearchListAdapter;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
@@ -43,7 +43,7 @@ import de.tum.in.tumcampusapp.models.LecturesSearchRowSet;
  * @author Daniel Mayr
  * @review Thomas Behrens
  */
-public class LecturesSearchActivity extends TumOnlineActivity implements OnEditorActionListener {
+public class LecturesSearchActivity extends ActivityForAccessingTumOnline implements OnEditorActionListener {
 
 	private static String P_SUCHE = "pSuche";
 
@@ -116,6 +116,7 @@ public class LecturesSearchActivity extends TumOnlineActivity implements OnEdito
 
 		// deal with clicks on items in the ListView
 		lvFound.setOnItemClickListener(new OnItemClickListener() {
+			@SuppressWarnings("static-access")
 			@Override
 			public void onItemClick(AdapterView<?> a, View v, int position, long id) {
 				// each item represents the current FindLecturesRow

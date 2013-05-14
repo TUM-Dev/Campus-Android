@@ -123,6 +123,7 @@ public class LecturesActivity extends Activity implements OnItemClickListener, O
 		LectureItemManager lim = new LectureItemManager(this);
 		Cursor c = lim.getRecentFromDb();
 
+		@SuppressWarnings("deprecation")
 		SimpleCursorAdapter adapter = new SimpleCursorAdapter(this, android.R.layout.two_line_list_item, c, c.getColumnNames(), new int[] { android.R.id.text1,
 				android.R.id.text2 });
 
@@ -137,6 +138,7 @@ public class LecturesActivity extends Activity implements OnItemClickListener, O
 		LectureManager lm = new LectureManager(this);
 		Cursor c2 = lm.getAllFromDb();
 
+		@SuppressWarnings("deprecation")
 		SimpleCursorAdapter adapter2 = new SimpleCursorAdapter(this, android.R.layout.simple_list_item_1, c2, c2.getColumnNames(),
 				new int[] { android.R.id.text1 });
 

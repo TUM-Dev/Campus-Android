@@ -4,91 +4,57 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <RelativeLayout
-        android:id="@+id/progress_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:visibility="gone" >
-
-        <ProgressBar
-            android:id="@+id/progressBar1"
-            style="?android:attr/progressBarStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/progressBar1"
-            android:layout_below="@+id/progressBar1"
-            android:text="@string/loading"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/error_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:visibility="gone" >
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/error_sorry"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
-    </RelativeLayout>
-
-    <FrameLayout
+    <ListView
+        android:id="@+id/listView"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent" >
+        android:layout_height="fill_parent"
+        android:layout_weight="1"
+        android:scrollbars="vertical" />
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="match_parent"
+        android:paddingLeft="5dip"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/white"
+        android:textStyle="bold"
+        android:background="@color/sections"
+        android:text="@string/add_rss_feed" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingLeft="5dip"
+        android:paddingRight="5dip"
+        android:paddingTop="5dip" >
+
+        <EditText
+            android:id="@+id/url"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/url" />
 
         <LinearLayout
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:orientation="vertical" >
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
 
-            <ListView
-                android:id="@+id/listView2"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:layout_marginBottom="33dip"
-                android:background="#FFFFFF"
-                android:scrollbars="vertical" />
-        </LinearLayout>
-
-        <SlidingDrawer
-            android:id="@+id/slider"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:content="@+id/slide"
-            android:handle="@+id/handle" >
-
-            <Button
-                android:id="@+id/handle"
+            <EditText
+                android:id="@+id/name"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:background="#0065BD"
-                android:height="33dip"
-                android:text="@string/choose_feed"
-                android:textColor="#FFFFFF" />
+                android:layout_marginTop="1dip"
+                android:layout_weight="35"
+                android:hint="@string/name" />
 
-            <LinearLayout
-                android:id="@+id/slide"
+            <Button
+                android:id="@+id/save"
                 android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:background="#F1FFFFFF"
-                android:orientation="vertical" >
-
-                <ListView
-                    android:id="@+id/listView"
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
-                    android:scrollbars="vertical" />
-            </LinearLayout>
-        </SlidingDrawer>
-    </FrameLayout>
+                android:layout_height="wrap_content"
+                android:layout_weight="65"
+                android:text="@string/add" />
+        </LinearLayout>
+    </LinearLayout>
 
 </LinearLayout>

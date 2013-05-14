@@ -5,6 +5,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -61,6 +62,8 @@ public class LectureAppointmentsListAdapter extends BaseAdapter {
 		return position;
 	}
 
+	@SuppressLint("SimpleDateFormat")
+	@SuppressWarnings("deprecation")
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		ViewHolder holder;

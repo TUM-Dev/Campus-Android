@@ -1,6 +1,5 @@
 package de.tum.in.tumcampusapp.preferences;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
@@ -8,23 +7,6 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.auxiliary.AccessTokenManager;
 
 public class UserPreferencesActivity extends PreferenceActivity {
-	private class SetupAccessToken extends AsyncTask<Void, Integer, Long> {
-
-		@Override
-		protected Long doInBackground(Void... params) {
-			accessTokenManager.setupAccessToken();
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(Long result) {
-		}
-
-		@Override
-		protected void onPreExecute() {
-		}
-	}
-
 	private AccessTokenManager accessTokenManager = new AccessTokenManager(this);
 
 	@SuppressWarnings("deprecation")
