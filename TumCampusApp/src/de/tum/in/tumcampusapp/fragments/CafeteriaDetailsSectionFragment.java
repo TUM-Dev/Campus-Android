@@ -36,7 +36,7 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
 
 		activity = getActivity();
 		listViewMenu = (ListView) rootView.findViewById(R.id.listView);
-		
+
 		date = getArguments().getString(Const.DATE);
 		cafeteriaId = getArguments().getString(Const.CAFETERIA_ID);
 		cafeteriaName = getArguments().getString(Const.CAFETERIA_NAME);
@@ -44,11 +44,12 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
 		// initialize listview footer for opening hours
 		footer = getLayoutInflater(savedInstanceState).inflate(android.R.layout.two_line_list_item, null, false);
 
-		listViewMenu.addFooterView(footer);
+		listViewMenu.addFooterView(footer, null, false);
 		showMenueForDay();
 		return rootView;
 	}
 
+	@SuppressWarnings("deprecation")
 	private void showMenueForDay() {
 		TextView textView;
 
@@ -59,10 +60,11 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
 
 		// menus
 		CafeteriaMenuManager cmm = new CafeteriaMenuManager(getActivity());
-		Cursor cursorMenu = cmm.getTypeNameFromDb(cafeteriaId, date);
+		Cursor cursorCafeteriaMenu = cmm.getTypeNameFromDb(cafeteriaId, date);
+		activity.startManagingCursor(cursorCafeteriaMenu);
 
 		textView = (TextView) footer.findViewById(android.R.id.text1);
-		if (cursorMenu.getCount() == 0) {
+		if (cursorCafeteriaMenu.getCount() == 0) {
 			textView.setText(getString(R.string.opening_hours));
 		} else {
 			textView.setText(getString(R.string.kitchen_opening));
@@ -70,8 +72,8 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
 
 		// no onclick for items, no separator line
 		@SuppressWarnings("deprecation")
-		SimpleCursorAdapter adapterMenue = new SimpleCursorAdapter(activity, android.R.layout.two_line_list_item, cursorMenu, cursorMenu.getColumnNames(),
-				new int[] { android.R.id.text1, android.R.id.text2 }) {
+		SimpleCursorAdapter adapterMenue = new SimpleCursorAdapter(activity, android.R.layout.two_line_list_item, cursorCafeteriaMenu,
+				cursorCafeteriaMenu.getColumnNames(), new int[] { android.R.id.text1, android.R.id.text2 }) {
 
 			@Override
 			public boolean areAllItemsEnabled() {

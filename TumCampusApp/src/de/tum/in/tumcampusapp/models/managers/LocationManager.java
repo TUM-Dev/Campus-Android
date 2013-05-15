@@ -69,12 +69,14 @@ public class LocationManager {
 	 * </pre>
 	 */
 	public String getHoursById(String id) {
+		String result = "";
 		Cursor c = db.rawQuery("SELECT hours FROM locations WHERE id=?", new String[] { id });
 
 		if (c.moveToNext()) {
-			return c.getString(0);
+			result= c.getString(0);
 		}
-		return "";
+		c.close();
+		return result;
 	}
 
 	/**

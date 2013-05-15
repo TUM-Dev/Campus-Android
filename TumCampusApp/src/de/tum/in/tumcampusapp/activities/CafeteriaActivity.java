@@ -2,9 +2,7 @@
 
 import android.content.Intent;
 import android.database.Cursor;
-import android.database.DatabaseUtils;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -41,9 +39,11 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
 		super.requestDownload();
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void onItemClick(AdapterView<?> av, View v, int position, long id) {
 		Cursor cursorCafeterias = (Cursor) listCafeterias.getAdapter().getItem(position);
+		startManagingCursor(cursorCafeterias);
 
 		cafeteriaId = cursorCafeterias.getString(cursorCafeterias.getColumnIndex(Const.ID_COLUMN));
 		cafeteriaName = cursorCafeterias.getString(cursorCafeterias.getColumnIndex(Const.NAME_COLUMN));
@@ -54,12 +54,14 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
 		startActivity(intent);
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	protected void onResume() {
 		super.onResume();
 
 		CafeteriaManager cm = new CafeteriaManager(this);
 		Cursor cursorCafeterias = cm.getAllFromDb("% %");
+		startManagingCursor(cursorCafeterias);
 
 		@SuppressWarnings("deprecation")
 		SimpleCursorAdapter adapterCafeterias = new SimpleCursorAdapter(this, android.R.layout.two_line_list_item, cursorCafeterias, cursorCafeterias.getColumnNames(), new int[] {
