@@ -11,7 +11,7 @@ public class MockActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_template);
+		setContentView(R.layout.activity_mock);
 	}
 
 	@Override

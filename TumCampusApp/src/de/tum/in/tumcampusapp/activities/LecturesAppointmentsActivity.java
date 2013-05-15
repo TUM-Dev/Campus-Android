@@ -3,6 +3,7 @@ package de.tum.in.tumcampusapp.activities;
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -30,6 +31,7 @@ import de.tum.in.tumcampusapp.models.LectureAppointmentsRowSet;
  * @author Daniel G. Mayr
  * @review Thomas Behrens // i found nothing tbd.
  */
+@SuppressLint("DefaultLocale")
 public class LecturesAppointmentsActivity extends ActivityForAccessingTumOnline {
 
 	/** UI elements */
@@ -50,10 +52,10 @@ public class LecturesAppointmentsActivity extends ActivityForAccessingTumOnline 
 
 		Bundle bundle = this.getIntent().getExtras();
 		// set Lecture Name (depends on bundle data)
-		tvTermineLectureName.setText(bundle.getString(Const.TITLE_EXTRA));
+		tvTermineLectureName.setText(bundle.getString(Const.TITLE_EXTRA).toUpperCase());
 		requestHandler.setParameter("pLVNr", bundle.getString("stp_sp_nr"));
 
-		super.requestFetchRequiresToken();
+		super.requestFetch();
 
 	}
 

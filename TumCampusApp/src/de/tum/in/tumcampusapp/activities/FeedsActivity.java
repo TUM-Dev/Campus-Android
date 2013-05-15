@@ -2,10 +2,14 @@
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -21,39 +25,66 @@ import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.models.Feed;
 import de.tum.in.tumcampusapp.models.managers.FeedManager;
 
-public class FeedsActivity extends Activity implements OnItemClickListener, OnItemLongClickListener, OnClickListener {
+public class FeedsActivity extends Activity implements OnItemClickListener, OnItemLongClickListener {
+	public final static int MENU_ADD = 0;
 	private static String feedId;
 	private static String feedName;
 	private SimpleCursorAdapter adapter;
-
+	
 	@Override
-	public void onClick(View v) {
-		// add a new feed
-		EditText editName = (EditText) findViewById(R.id.name);
-		EditText editUrl = (EditText) findViewById(R.id.url);
-
-		String name = editName.getText().toString();
-		String url = editUrl.getText().toString();
-
-		// prepend http:// if needed
-		if (url.length() > 0 && !url.contains(":")) {
-			url = "http://" + url;
-		}
-		FeedManager fm = new FeedManager(this);
-		try {
-			Feed feed = new Feed(name, url);
-			fm.insertUpdateIntoDb(feed);
-		} catch (Exception e) {
-			Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
-		}
-
-		// refresh feed list
-		adapter.changeCursor(fm.getAllFromDb());
-
-		// clear form
-		editName.setText("");
-		editUrl.setText("");
+	public boolean onCreateOptionsMenu(Menu menu) {
+		super.onCreateOptionsMenu(menu);
+		MenuItem m = menu.add(0, MENU_ADD, 0, getString(R.string.add));
+		m.setIcon(android.R.drawable.ic_menu_add);
+		return true;
 	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case MENU_ADD:
+			final Dialog dialog = new Dialog(this);
+			dialog.setContentView(R.layout.dialog_feeds_add);
+			dialog.setTitle("Add RSS-Feed");
+			Button saveButton = (Button) dialog.findViewById(R.id.save);
+			saveButton.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					// add a new feed
+					EditText editName = (EditText) dialog.findViewById(R.id.name);
+					EditText editUrl = (EditText) dialog.findViewById(R.id.url);
+
+					String name = editName.getText().toString();
+					String url = editUrl.getText().toString();
+
+					// prepend http:// if needed
+					if (url.length() > 0 && !url.contains(":")) {
+						url = "http://" + url;
+					}
+					FeedManager fm = new FeedManager(getParent());
+					try {
+						Feed feed = new Feed(name, url);
+						fm.insertUpdateIntoDb(feed);
+					} catch (Exception e) {
+						Log.e(getClass().getSimpleName(),  e.getMessage());
+					}
+
+					// refresh feed list
+					adapter.changeCursor(fm.getAllFromDb());
+
+					// clear form
+					editName.setText("");
+					editUrl.setText("");
+					dialog.dismiss();
+				}
+			});
+			dialog.show();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
+
 
 	@SuppressWarnings("deprecation")
 	@Override
@@ -70,9 +101,6 @@ public class FeedsActivity extends Activity implements OnItemClickListener, OnIt
 		lv.setAdapter(adapter);
 		lv.setOnItemClickListener(this);
 		lv.setOnItemLongClickListener(this);
-
-		Button save = (Button) findViewById(R.id.save);
-		save.setOnClickListener(this);
 	}
 
 	@Override

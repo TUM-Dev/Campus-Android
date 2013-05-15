@@ -16,18 +16,23 @@ public final class R {
         public static final int text_light_gray=0x7f050001;
     }
     public static final class dimen {
-        /**  Default screen margins, per the Android Design guidelines. 
-
+        /** 
          Customize dimensions originally defined in res/values/dimens.xml (such as
          screen margins) for sw720dp devices (e.g. 10" tablets) in landscape here.
     
          */
         public static final int activity_horizontal_margin=0x7f060000;
         public static final int activity_vertical_margin=0x7f060001;
-        public static final int large_text_size=0x7f060005;
-        public static final int mid_text_size=0x7f060004;
+        public static final int large_text_size=0x7f060007;
+        public static final int mid_text_size=0x7f060006;
         public static final int padding_default=0x7f060002;
-        public static final int small_text_size=0x7f060003;
+        public static final int padding_to_above_text=0x7f060003;
+        public static final int rythm_48dp=0x7f06000b;
+        public static final int section_height=0x7f060008;
+        public static final int section_padding=0x7f06000a;
+        public static final int section_text_size=0x7f060009;
+        public static final int small_text_size=0x7f060005;
+        public static final int spacing_grid_view=0x7f060004;
     }
     public static final class drawable {
         public static final int about=0x7f020000;
@@ -91,131 +96,136 @@ public final class R {
         public static final int pause=0x7f02003a;
         public static final int phone=0x7f02003b;
         public static final int pictures=0x7f02003c;
-        public static final int play=0x7f02003d;
-        public static final int preferences=0x7f02003e;
-        public static final int print=0x7f02003f;
-        public static final int redo=0x7f020040;
-        public static final int refresh=0x7f020041;
-        public static final int remove=0x7f020042;
-        public static final int rewind=0x7f020043;
-        public static final int save=0x7f020044;
-        public static final int save_as=0x7f020045;
-        public static final int shopping_cart=0x7f020046;
-        public static final int show_info=0x7f020047;
-        public static final int skip_backward=0x7f020048;
-        public static final int skip_forward=0x7f020049;
-        public static final int sound=0x7f02004a;
-        public static final int stop=0x7f02004b;
-        public static final int stop_playing=0x7f02004c;
-        public static final int tools=0x7f02004d;
-        public static final int trash=0x7f02004e;
-        public static final int undo=0x7f02004f;
-        public static final int unlock=0x7f020050;
-        public static final int up=0x7f020051;
-        public static final int user=0x7f020052;
-        public static final int users=0x7f020053;
-        public static final int web=0x7f020054;
-        public static final int zoom=0x7f020055;
-        public static final int zoom_in=0x7f020056;
-        public static final int zoom_out=0x7f020057;
+        public static final int plan_campus_garching_icon=0x7f02003d;
+        public static final int plan_campus_klinikum_icon=0x7f02003e;
+        public static final int plan_campus_olympiapark_hallenplan_icon=0x7f02003f;
+        public static final int plan_campus_olympiapark_icon=0x7f020040;
+        public static final int plan_campus_stammgelaende__icon=0x7f020041;
+        public static final int plan_campus_weihenstephan_icon=0x7f020042;
+        public static final int plan_mvv_icon=0x7f020043;
+        public static final int plan_mvv_night_icon=0x7f020044;
+        public static final int play=0x7f020045;
+        public static final int preferences=0x7f020046;
+        public static final int print=0x7f020047;
+        public static final int redo=0x7f020048;
+        public static final int refresh=0x7f020049;
+        public static final int remove=0x7f02004a;
+        public static final int rewind=0x7f02004b;
+        public static final int save=0x7f02004c;
+        public static final int save_as=0x7f02004d;
+        public static final int shopping_cart=0x7f02004e;
+        public static final int show_info=0x7f02004f;
+        public static final int skip_backward=0x7f020050;
+        public static final int skip_forward=0x7f020051;
+        public static final int sound=0x7f020052;
+        public static final int stop=0x7f020053;
+        public static final int stop_playing=0x7f020054;
+        public static final int tools=0x7f020055;
+        public static final int trash=0x7f020056;
+        public static final int undo=0x7f020057;
+        public static final int unlock=0x7f020058;
+        public static final int up=0x7f020059;
+        public static final int user=0x7f02005a;
+        public static final int users=0x7f02005b;
+        public static final int web=0x7f02005c;
+        public static final int zoom=0x7f02005d;
+        public static final int zoom_in=0x7f02005e;
+        public static final int zoom_out=0x7f02005f;
     }
     public static final class id {
-        public static final int TextView01=0x7f0a0021;
-        public static final int TextView02=0x7f0a002c;
-        public static final int TextView02M=0x7f0a0028;
-        public static final int TextView03=0x7f0a0026;
-        public static final int TextView04=0x7f0a001e;
-        public static final int TextView05=0x7f0a002a;
-        public static final int action_settings=0x7f0a005f;
-        public static final int activity_curricula_error_layout=0x7f0a0006;
+        public static final int TextView01=0x7f0a0019;
+        public static final int TextView02=0x7f0a0024;
+        public static final int TextView02M=0x7f0a0020;
+        public static final int TextView03=0x7f0a001e;
+        public static final int TextView04=0x7f0a0016;
+        public static final int TextView05=0x7f0a0022;
+        public static final int action_settings=0x7f0a005c;
         public static final int activity_curricula_list_view=0x7f0a0003;
-        public static final int activity_curricula_progress_layout=0x7f0a0004;
-        public static final int activity_curricula_web_view=0x7f0a0007;
-        public static final int activity_gallery_details_infos=0x7f0a0013;
-        public static final int activity_gallery_details_webView=0x7f0a0014;
-        public static final int activity_gallery_gridview=0x7f0a0011;
-        public static final int activity_gallery_image=0x7f0a0012;
-        public static final int activity_lecturesearch_clear=0x7f0a0043;
-        public static final int activity_lecturesearch_dosearch=0x7f0a0044;
-        public static final int activity_lecturesearch_main_layout=0x7f0a0041;
-        public static final int activity_news_list_view=0x7f0a0046;
-        public static final int activity_plans_list_view=0x7f0a004c;
-        public static final int activity_plans_web_view=0x7f0a004d;
-        public static final int activity_transport_clear=0x7f0a0052;
-        public static final int activity_transport_domore=0x7f0a0050;
-        public static final int activity_transport_dosearch=0x7f0a0053;
-        public static final int activity_transport_listview_result=0x7f0a0056;
-        public static final int activity_transport_listview_suggestionsandsaved=0x7f0a0057;
-        public static final int activity_transport_main_layout=0x7f0a004f;
-        public static final int activity_transport_searchfield=0x7f0a0051;
-        public static final int activity_transport_textview_info=0x7f0a0055;
-        public static final int activity_transportation_progress_layout=0x7f0a0054;
-        public static final int analogClock1=0x7f0a004e;
-        public static final int btnLDetailsTermine=0x7f0a002e;
-        public static final int date=0x7f0a0049;
-        public static final int description=0x7f0a000e;
-        public static final int error_layout=0x7f0a0010;
-        public static final int etFindQuery=0x7f0a0042;
-        public static final int failed_layout=0x7f0a0015;
-        public static final int fragment_item_detail_listview=0x7f0a0058;
-        public static final int grade=0x7f0a0019;
-        public static final int handle=0x7f0a0034;
-        public static final int icon=0x7f0a000d;
-        public static final int image=0x7f0a0048;
-        public static final int imageView1=0x7f0a0016;
-        public static final int item_detail=0x7f0a0059;
-        public static final int item_detail_container=0x7f0a004b;
-        public static final int item_list=0x7f0a004a;
-        public static final int lectureText=0x7f0a002f;
+        public static final int activity_curricula_web_view=0x7f0a0004;
+        public static final int activity_gallery_details_infos=0x7f0a000a;
+        public static final int activity_gallery_details_webView=0x7f0a000b;
+        public static final int activity_gallery_gridview=0x7f0a0008;
+        public static final int activity_gallery_image=0x7f0a0009;
+        public static final int activity_lecturesearch_clear=0x7f0a003b;
+        public static final int activity_lecturesearch_dosearch=0x7f0a003c;
+        public static final int activity_lecturesearch_main_layout=0x7f0a0039;
+        public static final int activity_news_list_view=0x7f0a003f;
+        public static final int activity_plans_list_view=0x7f0a0045;
+        public static final int activity_plans_web_view=0x7f0a0046;
+        public static final int activity_transport_clear=0x7f0a004a;
+        public static final int activity_transport_domore=0x7f0a0048;
+        public static final int activity_transport_dosearch=0x7f0a004b;
+        public static final int activity_transport_listview_result=0x7f0a004d;
+        public static final int activity_transport_listview_suggestionsandsaved=0x7f0a004e;
+        public static final int activity_transport_main_layout=0x7f0a0047;
+        public static final int activity_transport_searchfield=0x7f0a0049;
+        public static final int activity_transport_textview_info=0x7f0a004c;
+        public static final int analogClock1=0x7f0a003e;
+        public static final int btnLDetailsTermine=0x7f0a0026;
+        public static final int date=0x7f0a0042;
+        public static final int description=0x7f0a0007;
+        public static final int error_layout=0x7f0a0054;
+        public static final int etFindQuery=0x7f0a003a;
+        public static final int failed_layout=0x7f0a0055;
+        public static final int fragment_item_detail_listview=0x7f0a0051;
+        public static final int grade=0x7f0a000e;
+        public static final int handle=0x7f0a002c;
+        public static final int icon=0x7f0a0006;
+        public static final int image=0x7f0a0041;
+        public static final int imageView1=0x7f0a0013;
+        public static final int item_detail=0x7f0a0052;
+        public static final int item_detail_container=0x7f0a0044;
+        public static final int item_list=0x7f0a0043;
+        public static final int lectureText=0x7f0a0027;
         public static final int listView=0x7f0a0002;
-        public static final int listView2=0x7f0a0031;
-        public static final int list_menu_detail=0x7f0a005e;
-        public static final int list_menu_entry=0x7f0a005b;
-        public static final int list_menu_icon=0x7f0a005c;
-        public static final int list_menu_title=0x7f0a005d;
-        public static final int list_view=0x7f0a005a;
-        public static final int lstGrades=0x7f0a0018;
-        public static final int lvFound=0x7f0a0045;
-        public static final int lvMyLecturesList=0x7f0a0040;
-        public static final int lvTerminList=0x7f0a003b;
-        public static final int message=0x7f0a0047;
-        public static final int moduleText=0x7f0a0030;
-        public static final int name=0x7f0a000a;
-        public static final int no_token_layout=0x7f0a0017;
+        public static final int listView2=0x7f0a0029;
+        public static final int list_menu_detail=0x7f0a005b;
+        public static final int list_menu_entry=0x7f0a0058;
+        public static final int list_menu_icon=0x7f0a0059;
+        public static final int list_menu_title=0x7f0a005a;
+        public static final int list_view=0x7f0a0053;
+        public static final int lstGrades=0x7f0a000c;
+        public static final int lvFound=0x7f0a003d;
+        public static final int lvMyLecturesList=0x7f0a0038;
+        public static final int lvTerminList=0x7f0a0033;
+        public static final int message=0x7f0a0040;
+        public static final int moduleText=0x7f0a0028;
+        public static final int name=0x7f0a000d;
+        public static final int no_token_layout=0x7f0a0011;
         public static final int pager=0x7f0a0000;
         public static final int pager_title_strip=0x7f0a0001;
-        public static final int progressBar1=0x7f0a0005;
-        public static final int progress_layout=0x7f0a000f;
-        public static final int save=0x7f0a000b;
-        public static final int scroll=0x7f0a001d;
-        public static final int slide=0x7f0a0033;
-        public static final int slide_my_lectures=0x7f0a0035;
-        public static final int slide_search_lectures=0x7f0a0036;
-        public static final int slider=0x7f0a0032;
-        public static final int spFilter=0x7f0a003f;
-        public static final int textView1=0x7f0a0008;
-        public static final int title=0x7f0a000c;
-        public static final int tv1=0x7f0a001a;
-        public static final int tv2=0x7f0a001b;
-        public static final int tvDozent=0x7f0a0039;
-        public static final int tvLDHeadDetais=0x7f0a0023;
-        public static final int tvLDetailInhalt=0x7f0a0027;
-        public static final int tvLDetailsDozent=0x7f0a0024;
-        public static final int tvLDetailsLiteratur=0x7f0a002d;
-        public static final int tvLDetailsMethode=0x7f0a0029;
-        public static final int tvLDetailsName=0x7f0a001c;
-        public static final int tvLDetailsOrg=0x7f0a0025;
-        public static final int tvLDetailsSWS=0x7f0a0020;
-        public static final int tvLDetailsSemester=0x7f0a001f;
-        public static final int tvLDetailsTermin=0x7f0a0022;
-        public static final int tvLDetailsZiele=0x7f0a002b;
-        public static final int tvLectureName=0x7f0a0037;
-        public static final int tvTerminBetreff=0x7f0a003e;
-        public static final int tvTerminOrt=0x7f0a003d;
-        public static final int tvTerminZeit=0x7f0a003c;
-        public static final int tvTermineLectureName=0x7f0a003a;
-        public static final int tvTypeSWSSemester=0x7f0a0038;
-        public static final int url=0x7f0a0009;
+        public static final int progressBar1=0x7f0a0057;
+        public static final int progress_layout=0x7f0a0056;
+        public static final int save=0x7f0a0050;
+        public static final int scroll=0x7f0a0015;
+        public static final int slide=0x7f0a002b;
+        public static final int slide_my_lectures=0x7f0a002d;
+        public static final int slide_search_lectures=0x7f0a002e;
+        public static final int slider=0x7f0a002a;
+        public static final int spFilter=0x7f0a0037;
+        public static final int textView1=0x7f0a0012;
+        public static final int title=0x7f0a0005;
+        public static final int tv1=0x7f0a000f;
+        public static final int tv2=0x7f0a0010;
+        public static final int tvDozent=0x7f0a0031;
+        public static final int tvLDHeadDetais=0x7f0a001b;
+        public static final int tvLDetailInhalt=0x7f0a001f;
+        public static final int tvLDetailsDozent=0x7f0a001c;
+        public static final int tvLDetailsLiteratur=0x7f0a0025;
+        public static final int tvLDetailsMethode=0x7f0a0021;
+        public static final int tvLDetailsName=0x7f0a0014;
+        public static final int tvLDetailsOrg=0x7f0a001d;
+        public static final int tvLDetailsSWS=0x7f0a0018;
+        public static final int tvLDetailsSemester=0x7f0a0017;
+        public static final int tvLDetailsTermin=0x7f0a001a;
+        public static final int tvLDetailsZiele=0x7f0a0023;
+        public static final int tvLectureName=0x7f0a002f;
+        public static final int tvTerminBetreff=0x7f0a0036;
+        public static final int tvTerminOrt=0x7f0a0035;
+        public static final int tvTerminZeit=0x7f0a0034;
+        public static final int tvTermineLectureName=0x7f0a0032;
+        public static final int tvTypeSWSSemester=0x7f0a0030;
+        public static final int url=0x7f0a004f;
     }
     public static final class layout {
         public static final int activity_cafeteriadetails=0x7f030000;
@@ -237,10 +247,11 @@ public final class R {
         public static final int activity_lecturesappointments_listview=0x7f030010;
         public static final int activity_lecturespersonal=0x7f030011;
         public static final int activity_lecturessearch=0x7f030012;
-        public static final int activity_news=0x7f030013;
-        public static final int activity_news_listview=0x7f030014;
-        public static final int activity_openinghours_twopane=0x7f030015;
-        public static final int activity_openinghoursdetail=0x7f030016;
+        public static final int activity_mock=0x7f030013;
+        public static final int activity_news=0x7f030014;
+        public static final int activity_news_listview=0x7f030015;
+        public static final int activity_openinghours_twopane=0x7f030016;
+        public static final int activity_openinghoursdetail=0x7f030017;
         /** 
     Layout alias to replace the single-pane version of the layout with a
     two-pane version on Large screens.
@@ -256,21 +267,23 @@ public final class R {
     http://developer.android.com/training/multiscreen/screensizes.html#TaskUseAliasFilters
     
          */
-        public static final int activity_openinghourslist=0x7f030017;
-        public static final int activity_plans=0x7f030018;
-        public static final int activity_plans_details=0x7f030019;
-        public static final int activity_start=0x7f03001a;
-        public static final int activity_template=0x7f03001b;
+        public static final int activity_openinghourslist=0x7f030018;
+        public static final int activity_plans=0x7f030019;
+        public static final int activity_plans_details=0x7f03001a;
+        public static final int activity_start=0x7f03001b;
         public static final int activity_transportation=0x7f03001c;
-        public static final int error_layout=0x7f03001d;
+        public static final int dialog_feeds_add=0x7f03001d;
         public static final int fragment_cafeteriadetails_section=0x7f03001e;
         public static final int fragment_item_detail=0x7f03001f;
         public static final int fragment_item_detail_text=0x7f030020;
         public static final int fragment_start_section=0x7f030021;
-        public static final int list_layout_complex_large=0x7f030022;
-        public static final int list_layout_complex_small=0x7f030023;
-        public static final int list_layout_two_line_item=0x7f030024;
-        public static final int progress_layout=0x7f030025;
+        public static final int layout_error=0x7f030022;
+        public static final int layout_failed=0x7f030023;
+        public static final int layout_no_token=0x7f030024;
+        public static final int layout_progress=0x7f030025;
+        public static final int list_layout_complex_large=0x7f030026;
+        public static final int list_layout_complex_small=0x7f030027;
+        public static final int list_layout_two_line_item=0x7f030028;
     }
     public static final class menu {
         public static final int main=0x7f090000;
@@ -700,11 +713,13 @@ public final class R {
         /** 
         Base application theme, dependent on API level. This theme is replaced
         by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
+
     
 
             Theme customizations available in newer API levels can go in
             res/values-vXX/styles.xml, while customizations related to
             backward-compatibility can go here.
+
         
 
         Base application theme for API 11+. This theme completely replaces
@@ -723,6 +738,7 @@ public final class R {
  All customizations that are NOT specific to a particular API-level can go here. 
          */
         public static final int AppTheme=0x7f080001;
+        public static final int SectionHeadline=0x7f080002;
     }
     public static final class xml {
         public static final int settings=0x7f040000;

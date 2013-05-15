@@ -134,8 +134,8 @@ public class CurriculaDetailsActivity extends Activity {
 		httpClient = new DefaultHttpClient();
 
 		browser = (WebView) findViewById(R.id.activity_curricula_web_view);
-		progressLayout = (RelativeLayout) findViewById(R.id.activity_curricula_progress_layout);
-		errorLayout = (RelativeLayout) findViewById(R.id.activity_curricula_error_layout);
+		progressLayout = (RelativeLayout) findViewById(R.id.progress_layout);
+		errorLayout = (RelativeLayout) findViewById(R.id.error_layout);
 
 		browser.getSettings().setBuiltInZoomControls(true);
 		browser.getSettings().setDefaultZoom(WebSettings.ZoomDensity.FAR);

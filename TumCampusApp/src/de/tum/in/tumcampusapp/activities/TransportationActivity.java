@@ -104,7 +104,7 @@ public class TransportationActivity extends Activity implements OnItemClickListe
 		searchTextField = (EditText) findViewById(R.id.activity_transport_searchfield);
 		listViewResults = (ListView) findViewById(R.id.activity_transport_listview_result);
 		listViewSuggestionsAndSaved = (ListView) findViewById(R.id.activity_transport_listview_suggestionsandsaved);
-		progressLayout = (RelativeLayout) findViewById(R.id.activity_transportation_progress_layout);
+		progressLayout = (RelativeLayout) findViewById(R.id.progress_layout);
 		infoTextView = (TextView) findViewById(R.id.activity_transport_textview_info);
 
 		@SuppressWarnings("deprecation")
@@ -241,7 +241,11 @@ public class TransportationActivity extends Activity implements OnItemClickListe
 
 		// TODO: Workaround, because MVV does not find a station with the full
 		// name as a text input
-		final String inputText = inputTextRaw = inputTextRaw.substring(0, inputTextRaw.length() - 1);
+		String inputTextToCheck = inputTextRaw;
+		if (inputTextRaw.length() > 2) {
+			inputTextToCheck = inputTextRaw.substring(0, inputTextRaw.length() - 1);
+		}
+		final String inputText = inputTextToCheck;
 
 		new Thread(new Runnable() {
 			String message;

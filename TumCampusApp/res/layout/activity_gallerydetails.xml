@@ -6,16 +6,9 @@
 
     <TextView
         android:id="@+id/activity_gallery_details_infos"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:autoLink="web|email"
-        android:background="@color/sections"
-        android:paddingLeft="5dp"
-        android:paddingRight="5dp"
+        style="@style/SectionHeadline"
         android:text="activity_gallery_details_infos"
-        android:textColor="@android:color/white"
-        android:textColorLink="@android:color/background_light"
-        android:textStyle="bold" />
+        android:textColorLink="@android:color/background_light" />
 
     <WebView
         android:id="@+id/activity_gallery_details_webView"

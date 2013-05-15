@@ -62,7 +62,7 @@ public class LecturesPersonalActivity extends ActivityForAccessingTumOnline {
 		lvMyLecturesList = (ListView) findViewById(R.id.lvMyLecturesList);
 		spFilter = (Spinner) findViewById(R.id.spFilter);
 
-		super.requestFetchRequiresToken();
+		super.requestFetch();
 	}
 
 	@Override
@@ -93,7 +93,7 @@ public class LecturesPersonalActivity extends ActivityForAccessingTumOnline {
 			}
 
 			// simple adapter for the spinner
-			ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, filters);
+			ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_checked, filters);
 			spFilter.setAdapter(spinnerArrayAdapter);
 			spFilter.setOnItemSelectedListener(new OnItemSelectedListener() {
 

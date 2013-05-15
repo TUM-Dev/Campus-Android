@@ -6,6 +6,8 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -16,6 +18,8 @@ import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequest;
 import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequestFetchListener;
 
 public abstract class ActivityForAccessingTumOnline extends Activity implements TUMOnlineRequestFetchListener {
+	public final static int MENU_REFRESH = 0;
+
 	private String accessToken;
 	protected RelativeLayout errorLayout;
 	protected RelativeLayout failedLayout;
@@ -37,12 +41,31 @@ public abstract class ActivityForAccessingTumOnline extends Activity implements 
 		switch (viewId) {
 		case R.id.failed_layout:
 			failedLayout.setVisibility(View.GONE);
-			requestFetchRequiresToken();
+			requestFetch();
 			break;
 		case R.id.no_token_layout:
 			Intent intent = new Intent(this, UserPreferencesActivity.class);
 			startActivity(intent);
 			break;
+		}
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		super.onCreateOptionsMenu(menu);
+		MenuItem m = menu.add(0, MENU_REFRESH, 0, getString(R.string.update));
+		m.setIcon(android.R.drawable.ic_menu_rotate);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case MENU_REFRESH:
+			requestFetch();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
 		}
 	}
 
@@ -93,17 +116,13 @@ public abstract class ActivityForAccessingTumOnline extends Activity implements 
 	}
 
 	public void requestFetch() {
-		progressLayout.setVisibility(View.VISIBLE);
-		errorLayout.setVisibility(View.GONE);
-		requestHandler.fetchInteractive(this, this);
-	}
-
-	public void requestFetchRequiresToken() {
 		accessToken = PreferenceManager.getDefaultSharedPreferences(this).getString(Const.ACCESS_TOKEN, null);
 		if (accessToken != null) {
 			Log.i(getClass().getSimpleName(), "TUMOnline token is <" + accessToken + ">");
 			noTokenLayout.setVisibility(View.GONE);
-			requestFetch();
+			progressLayout.setVisibility(View.VISIBLE);
+			errorLayout.setVisibility(View.GONE);
+			requestHandler.fetchInteractive(this, this);
 		} else {
 			Log.i(getClass().getSimpleName(), "No token was set");
 			noTokenLayout.setVisibility(View.VISIBLE);

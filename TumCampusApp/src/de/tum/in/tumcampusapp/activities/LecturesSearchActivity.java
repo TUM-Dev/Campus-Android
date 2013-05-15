@@ -146,7 +146,7 @@ public class LecturesSearchActivity extends ActivityForAccessingTumOnline implem
 		Utils.hideKeyboard(this, etFindQuery);
 
 		// do the TUMOnline request (implement listener here)
-		super.requestFetchRequiresToken();
+		super.requestFetch();
 		return true;
 	}
 }

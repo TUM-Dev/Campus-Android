@@ -35,7 +35,7 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 
 		lvGrades = (ListView) findViewById(R.id.lstGrades);
 
-		super.requestFetchRequiresToken();
+		super.requestFetch();
 	}
 
 	/**

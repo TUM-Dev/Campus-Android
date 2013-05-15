@@ -26,14 +26,14 @@ public class PlansActivity extends Activity implements OnItemClickListener {
 		ListView list = (ListView) findViewById(R.id.activity_plans_list_view);
 
 		ArrayList<ListMenuEntry> listMenuEntrySet = new ArrayList<ListMenuEntry>();
-		listMenuEntrySet.add(new ListMenuEntry(R.drawable.ic_launcher, R.string.campus_garching, R.string.campus_garching_adress, null));
-		listMenuEntrySet.add(new ListMenuEntry(R.drawable.ic_launcher, R.string.campus_klinikum, R.string.campus_klinikum_adress, null));
-		listMenuEntrySet.add(new ListMenuEntry(R.drawable.ic_launcher, R.string.campus_olympiapark, R.string.campus_olympiapark_adress, null));
-		listMenuEntrySet.add(new ListMenuEntry(R.drawable.ic_launcher, R.string.campus_olympiapark_gyms, R.string.campus_olympiapark_adress, null));
-		listMenuEntrySet.add(new ListMenuEntry(R.drawable.ic_launcher, R.string.campus_main, R.string.campus_main_adress, null));
-		listMenuEntrySet.add(new ListMenuEntry(R.drawable.ic_launcher, R.string.campus_weihenstephan, R.string.campus_weihenstephan_adress, null));
-		listMenuEntrySet.add(new ListMenuEntry(R.drawable.ic_launcher, R.string.mvv_fast_train_net, R.string.empty_string, null));
-		listMenuEntrySet.add(new ListMenuEntry(R.drawable.ic_launcher, R.string.mvv_nightlines, R.string.empty_string, null));
+		listMenuEntrySet.add(new ListMenuEntry(R.drawable.plan_campus_garching_icon, R.string.campus_garching, R.string.campus_garching_adress, null));
+		listMenuEntrySet.add(new ListMenuEntry(R.drawable.plan_campus_klinikum_icon, R.string.campus_klinikum, R.string.campus_klinikum_adress, null));
+		listMenuEntrySet.add(new ListMenuEntry(R.drawable.plan_campus_olympiapark_icon, R.string.campus_olympiapark, R.string.campus_olympiapark_adress, null));
+		listMenuEntrySet.add(new ListMenuEntry(R.drawable.plan_campus_olympiapark_hallenplan_icon, R.string.campus_olympiapark_gyms, R.string.campus_olympiapark_adress, null));
+		listMenuEntrySet.add(new ListMenuEntry(R.drawable.plan_campus_stammgelaende__icon, R.string.campus_main, R.string.campus_main_adress, null));
+		listMenuEntrySet.add(new ListMenuEntry(R.drawable.plan_campus_weihenstephan_icon, R.string.campus_weihenstephan, R.string.campus_weihenstephan_adress, null));
+		listMenuEntrySet.add(new ListMenuEntry(R.drawable.plan_mvv_icon, R.string.mvv_fast_train_net, R.string.empty_string, null));
+		listMenuEntrySet.add(new ListMenuEntry(R.drawable.plan_mvv_night_icon, R.string.mvv_nightlines, R.string.empty_string, null));
 
 		ListMenuAdapter adapter = new ListMenuAdapter(this, R.layout.list_layout_complex_small, listMenuEntrySet);
 		list.setAdapter(adapter);

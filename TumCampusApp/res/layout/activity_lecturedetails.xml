@@ -4,42 +4,17 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <RelativeLayout
-        android:id="@+id/progress_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:visibility="gone" >
+    <include
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        layout="@layout/layout_progress"
+        android:visibility="gone" />
 
-        <ProgressBar
-            android:id="@+id/progressBar1"
-            style="?android:attr/progressBarStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/progressBar1"
-            android:layout_below="@+id/progressBar1"
-            android:text="@string/loading"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/error_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:visibility="gone" >
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/error_sorry"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
-    </RelativeLayout>
+    <include
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        layout="@layout/layout_error"
+        android:visibility="gone" />
 
     <RelativeLayout
         android:id="@+id/no_token_layout"
@@ -58,7 +33,7 @@
             android:gravity="center"
             android:text="@string/error_no_token_setup"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textSize="12sp" />
+            android:textSize="@dimen/small_text_size" />
 
         <ImageView
             android:id="@+id/imageView1"
@@ -72,17 +47,8 @@
 
     <TextView
         android:id="@+id/tvLDetailsName"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:autoLink="none"
-        android:background="@color/sections"
-        android:inputType="textMultiLine|textNoSuggestions"
-        android:paddingLeft="5dp"
-        android:paddingRight="5dp"
-        android:scrollHorizontally="false"
-        android:text="@string/lec_details_title"
-        android:textColor="@android:color/white"
-        android:textStyle="bold" />
+        style="@style/SectionHeadline"
+        android:text="lec_details_title" />
 
     <ScrollView
         android:id="@+id/scroll"
@@ -93,15 +59,13 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp" >
+            android:padding="@dimen/padding_default" >
 
             <TextView
                 android:id="@+id/TextView04"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:autoLink="none"
-                android:inputType="textMultiLine|textNoSuggestions"
                 android:scrollHorizontally="false"
                 android:text="@string/lec_details"
                 android:textColor="@color/text_light_blue"
@@ -112,7 +76,6 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:autoLink="all"
-                android:inputType="textMultiLine|textNoSuggestions"
                 android:scrollHorizontally="false"
                 android:text="@string/semester_data" />
 
@@ -121,7 +84,6 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:autoLink="none"
-                android:inputType="textMultiLine|textNoSuggestions"
                 android:scrollHorizontally="false"
                 android:text="@string/sws_number" />
 
@@ -130,7 +92,6 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:autoLink="none"
-                android:inputType="textMultiLine|textNoSuggestions"
                 android:scrollHorizontally="false"
                 android:text="@string/lecture_begin"
                 android:textColor="@color/text_light_blue"
@@ -141,7 +102,6 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:autoLink="none"
-                android:inputType="textMultiLine|textNoSuggestions"
                 android:scrollHorizontally="false"
                 android:text="@string/first_date" />
 
@@ -150,7 +110,6 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:autoLink="none"
-                android:inputType="textMultiLine|textNoSuggestions"
                 android:scrollHorizontally="false"
                 android:text="@string/lec_contributors"
                 android:textColor="@color/text_light_blue"
@@ -161,7 +120,6 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:autoLink="none"
-                android:inputType="textMultiLine|textNoSuggestions"
                 android:scrollHorizontally="false"
                 android:text="@string/lecturer" />
 
@@ -170,7 +128,6 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:autoLink="none"
-                android:inputType="textMultiLine|textNoSuggestions"
                 android:scrollHorizontally="false"
                 android:text="@string/organisation_of_lecture" />
 
@@ -179,7 +136,6 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:autoLink="none"
-                android:inputType="textMultiLine|textNoSuggestions"
                 android:scrollHorizontally="false"
                 android:text="@string/lec_content"
                 android:textColor="@color/text_light_blue"
@@ -190,7 +146,6 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:autoLink="none"
-                android:inputType="textMultiLine|textNoSuggestions"
                 android:scrollHorizontally="false"
                 android:text="@string/teaching_content" />
 
@@ -199,7 +154,6 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:autoLink="none"
-                android:inputType="textMultiLine|textNoSuggestions"
                 android:scrollHorizontally="false"
                 android:text="@string/lec_method"
                 android:textColor="@color/text_light_blue"
@@ -210,7 +164,6 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:autoLink="none"
-                android:inputType="textMultiLine|textNoSuggestions"
                 android:scrollHorizontally="false"
                 android:text="@string/lec_method_details" />
 
@@ -219,7 +172,6 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:autoLink="none"
-                android:inputType="textMultiLine|textNoSuggestions"
                 android:scrollHorizontally="false"
                 android:text="@string/lec_target"
                 android:textColor="@color/text_light_blue"
@@ -230,7 +182,6 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:autoLink="none"
-                android:inputType="textMultiLine|textNoSuggestions"
                 android:scrollHorizontally="false"
                 android:text="@string/teaching_target" />
 
@@ -239,7 +190,6 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:autoLink="none"
-                android:inputType="textMultiLine|textNoSuggestions"
                 android:scrollHorizontally="false"
                 android:text="@string/examination_aids"
                 android:textColor="@color/text_light_blue"
@@ -249,7 +199,6 @@
                 android:id="@+id/tvLDetailsLiteratur"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textMultiLine|textNoSuggestions"
                 android:scrollHorizontally="false"
                 android:text="@string/literature" />
 

@@ -3,6 +3,7 @@ package de.tum.in.tumcampusapp.activities;
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -34,6 +35,7 @@ import de.tum.in.tumcampusapp.models.LectureDetailsRowSet;
  * @author Daniel G. Mayr
  * @review Thomas Behrens // i found nothing tbd.
  */
+@SuppressLint("DefaultLocale")
 public class LecturesDetailsActivity extends ActivityForAccessingTumOnline implements OnClickListener {
 
 	/** UI elements */
@@ -92,7 +94,7 @@ public class LecturesDetailsActivity extends ActivityForAccessingTumOnline imple
 		Bundle bundle = this.getIntent().getExtras();
 		requestHandler.setParameter("pLVNr", bundle.getString("stp_sp_nr"));
 
-		super.requestFetchRequiresToken();
+		super.requestFetch();
 	}
 
 	/**
@@ -109,7 +111,7 @@ public class LecturesDetailsActivity extends ActivityForAccessingTumOnline imple
 			LectureDetailsRowSet xmllv = serializer.read(LectureDetailsRowSet.class, rawResponse);
 			// we got exactly one row, thats fine
 			currentitem = xmllv.getLehrveranstaltungenDetails().get(0);
-			tvLDetailsName.setText(currentitem.getStp_sp_titel());
+			tvLDetailsName.setText(currentitem.getStp_sp_titel().toUpperCase());
 
 			String strLectureLanguage = currentitem.getSemester_name();
 			if (currentitem.getHaupt_unterrichtssprache() != null) {
