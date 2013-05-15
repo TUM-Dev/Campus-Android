@@ -24,8 +24,10 @@ public final class R {
          */
         public static final int activity_horizontal_margin=0x7f060000;
         public static final int activity_vertical_margin=0x7f060001;
-        public static final int large_text_size=0x7f060003;
-        public static final int small_text_size=0x7f060002;
+        public static final int large_text_size=0x7f060005;
+        public static final int mid_text_size=0x7f060004;
+        public static final int padding_default=0x7f060002;
+        public static final int small_text_size=0x7f060003;
     }
     public static final class drawable {
         public static final int about=0x7f020000;
@@ -267,7 +269,8 @@ public final class R {
         public static final int fragment_start_section=0x7f030021;
         public static final int list_layout_complex_large=0x7f030022;
         public static final int list_layout_complex_small=0x7f030023;
-        public static final int progress_layout=0x7f030024;
+        public static final int list_layout_two_line_item=0x7f030024;
+        public static final int progress_layout=0x7f030025;
     }
     public static final class menu {
         public static final int main=0x7f090000;

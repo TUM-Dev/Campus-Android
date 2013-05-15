@@ -64,7 +64,7 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
 		startManagingCursor(cursorCafeterias);
 
 		@SuppressWarnings("deprecation")
-		SimpleCursorAdapter adapterCafeterias = new SimpleCursorAdapter(this, android.R.layout.two_line_list_item, cursorCafeterias, cursorCafeterias.getColumnNames(), new int[] {
+		SimpleCursorAdapter adapterCafeterias = new SimpleCursorAdapter(this, R.layout.list_layout_two_line_item, cursorCafeterias, cursorCafeterias.getColumnNames(), new int[] {
 				android.R.id.text1, android.R.id.text2 });
 
 		listCafeterias.setAdapter(adapterCafeterias);

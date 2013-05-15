@@ -1,14 +1,19 @@
 package de.tum.in.tumcampusapp.adapters;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Locale;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.text.format.DateFormat;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.fragments.CafeteriaDetailsSectionFragment;
 import de.tum.in.tumcampusapp.models.managers.CafeteriaMenuManager;
@@ -17,6 +22,7 @@ import de.tum.in.tumcampusapp.models.managers.CafeteriaMenuManager;
  * A {@link FragmentPagerAdapter} that returns a fragment corresponding to one
  * of the sections/tabs/pages.
  */
+@SuppressLint("SimpleDateFormat")
 public class CafeteriaDetailsSectionsPagerAdapter extends FragmentPagerAdapter {
 	/** Current Date selected (ISO format) */
 	private ArrayList<String> dates = new ArrayList<String>();
@@ -67,7 +73,24 @@ public class CafeteriaDetailsSectionsPagerAdapter extends FragmentPagerAdapter {
 
 	@Override
 	public CharSequence getPageTitle(int position) {
+		Date date = null;
+		
 		Locale l = Locale.getDefault();
-		return String.valueOf(dates.get(position)).toUpperCase(l);
+
+		String input_date = dates.get(position);
+		SimpleDateFormat formatYMD = new SimpleDateFormat("yyyy-MM-dd");
+		try {
+			date = formatYMD.parse(input_date);
+		} catch (ParseException e) {
+			e.printStackTrace();
+			return "";
+		}
+		SimpleDateFormat formatEE = new SimpleDateFormat("EEEE");
+		String finalDay = formatEE.format(date);
+		
+		SimpleDateFormat formatDefaultStyle = new SimpleDateFormat("dd.MM.yyy");
+		String dateDefaultStyle = formatDefaultStyle.format(date);
+
+		return (finalDay + ", " + dateDefaultStyle).toUpperCase(l);
 	}
 }
