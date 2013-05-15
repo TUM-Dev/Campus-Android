@@ -13,7 +13,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.text.format.DateFormat;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.fragments.CafeteriaDetailsSectionFragment;
 import de.tum.in.tumcampusapp.models.managers.CafeteriaMenuManager;
@@ -24,12 +23,12 @@ import de.tum.in.tumcampusapp.models.managers.CafeteriaMenuManager;
  */
 @SuppressLint("SimpleDateFormat")
 public class CafeteriaDetailsSectionsPagerAdapter extends FragmentPagerAdapter {
-	/** Current Date selected (ISO format) */
-	private ArrayList<String> dates = new ArrayList<String>();
 	private final Activity activity;
-	private Cursor cursorCafeteriaDates;
 	private String cafeteriaId;
 	private String cafeteriaName;
+	private Cursor cursorCafeteriaDates;
+	/** Current Date selected (ISO format) */
+	private ArrayList<String> dates = new ArrayList<String>();
 
 	@SuppressWarnings("deprecation")
 	public CafeteriaDetailsSectionsPagerAdapter(Activity mainActivity, FragmentManager fm, String cafeteriaId, String cafeteriaName) {
@@ -74,7 +73,7 @@ public class CafeteriaDetailsSectionsPagerAdapter extends FragmentPagerAdapter {
 	@Override
 	public CharSequence getPageTitle(int position) {
 		Date date = null;
-		
+
 		Locale l = Locale.getDefault();
 
 		String input_date = dates.get(position);
@@ -87,7 +86,7 @@ public class CafeteriaDetailsSectionsPagerAdapter extends FragmentPagerAdapter {
 		}
 		SimpleDateFormat formatEE = new SimpleDateFormat("EEEE");
 		String finalDay = formatEE.format(date);
-		
+
 		SimpleDateFormat formatDefaultStyle = new SimpleDateFormat("dd.MM.yyy");
 		String dateDefaultStyle = formatDefaultStyle.format(date);
 

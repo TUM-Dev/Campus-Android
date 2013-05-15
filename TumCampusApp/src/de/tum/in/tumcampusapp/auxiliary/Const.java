@@ -15,9 +15,9 @@ public final class Const {
 	public static final String ACCESS_TOKEN = "access_token";
 	public static final String ACTION_EXTRA = "action";
 	public static final String ADDRESS_COLUMN = "address";
-	public static final String CAFETERIAS = "cafeterias";
 	public static final String CAFETERIA_ID = "cafeteriasId";
 	public static final String CAFETERIA_NAME = "cafeteriasName";
+	public static final String CAFETERIAS = "cafeterias";
 	public static final String COMPLETED = "completed";
 	public static final String CURRICULA = "curricula";
 	public static final String DATE = "date";

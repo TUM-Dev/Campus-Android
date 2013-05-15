@@ -5,6 +5,11 @@
  */
 public class Cafeteria {
 	/**
+	 * Address, e.g. Boltzmannstr. 3
+	 */
+	public String address;
+
+	/**
 	 * Cafeteria ID, e.g. 412
 	 */
 	public int id;
@@ -13,11 +18,6 @@ public class Cafeteria {
 	 * Name, e.g. MensaX
 	 */
 	public String name;
-
-	/**
-	 * Address, e.g. Boltzmannstr. 3
-	 */
-	public String address;
 
 	/**
 	 * new Cafeteria

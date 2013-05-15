@@ -73,7 +73,7 @@ public class LocationManager {
 		Cursor c = db.rawQuery("SELECT hours FROM locations WHERE id=?", new String[] { id });
 
 		if (c.moveToNext()) {
-			result= c.getString(0);
+			result = c.getString(0);
 		}
 		c.close();
 		return result;

@@ -14,14 +14,53 @@ import de.tum.in.tumcampusapp.auxiliary.Utils;
 public class CafeteriaMenuManager {
 
 	/**
-	 * Database connection
-	 */
-	private SQLiteDatabase db;
-
-	/**
 	 * Last insert counter
 	 */
 	public static int lastInserted = 0;
+
+	/**
+	 * Convert JSON object to CafeteriaMenu
+	 * 
+	 * Example JSON: e.g.
+	 * {"id":"25544","mensa_id":"411","date":"2011-06-20","type_short"
+	 * :"tg","type_long":"Tagesgericht 3","type_nr":"3","name":
+	 * "Cordon bleu vom Schwein (mit Formfleischhinterschinken) (S) (1,2,3,8)"}
+	 * 
+	 * <pre>
+	 * @param json see above
+	 * @return CafeteriaMenu
+	 * @throws Exception
+	 * </pre>
+	 */
+	public static CafeteriaMenu getFromJson(JSONObject json) throws Exception {
+
+		return new CafeteriaMenu(json.getInt("id"), json.getInt("mensa_id"), Utils.getDate(json.getString("date")), json.getString("type_short"),
+				json.getString("type_long"), json.getInt("type_nr"), json.getString("name"));
+	}
+
+	/**
+	 * Convert JSON object to CafeteriaMenu (addendum)
+	 * 
+	 * Example JSON: e.g.
+	 * {"mensa_id":"411","date":"2011-07-29","name":"Pflaumenkompott"
+	 * ,"type_short":"bei","type_long":"Beilagen"}
+	 * 
+	 * <pre>
+	 * @param json see above
+	 * @return CafeteriaMenu
+	 * @throws Exception
+	 * </pre>
+	 */
+	public static CafeteriaMenu getFromJsonAddendum(JSONObject json) throws Exception {
+
+		return new CafeteriaMenu(0, json.getInt("mensa_id"), Utils.getDate(json.getString("date")), json.getString("type_short"), json.getString("type_long"),
+				10, json.getString("name"));
+	}
+
+	/**
+	 * Database connection
+	 */
+	private SQLiteDatabase db;
 
 	/**
 	 * Constructor, open/create database, create table if necessary
@@ -34,9 +73,15 @@ public class CafeteriaMenuManager {
 		db = DatabaseManager.getDb(context);
 
 		// create table if needed
-		db.execSQL("CREATE TABLE IF NOT EXISTS cafeterias_menus ("
-				+ "id INTEGER, mensaId INTEGER KEY, date VARCHAR, typeShort VARCHAR, "
+		db.execSQL("CREATE TABLE IF NOT EXISTS cafeterias_menus (" + "id INTEGER, mensaId INTEGER KEY, date VARCHAR, typeShort VARCHAR, "
 				+ "typeLong VARCHAR, typeNr INTEGER, name VARCHAR)");
+	}
+
+	/**
+	 * Removes all old items (older than 7 days)
+	 */
+	public void cleanupDb() {
+		db.execSQL("DELETE FROM cafeterias_menus WHERE date < date('now','-7 day')");
 	}
 
 	/**
@@ -94,12 +139,13 @@ public class CafeteriaMenuManager {
 	 * @return Database cursor (date_de, _id)
 	 */
 	public Cursor getDatesFromDb() {
-		return db.rawQuery("SELECT DISTINCT strftime('%d.%m.%Y', date) as date_de, date as _id "
-				+ "FROM cafeterias_menus WHERE date >= date() ORDER BY date", null);
+		return db.rawQuery("SELECT DISTINCT strftime('%d.%m.%Y', date) as date_de, date as _id " + "FROM cafeterias_menus WHERE date >= date() ORDER BY date",
+				null);
 	}
 
 	/**
-	 * Get all types and names from the database for a special date and a special cafeteria
+	 * Get all types and names from the database for a special date and a
+	 * special cafeteria
 	 * 
 	 * <pre>
 	 * @param mensaId Mensa ID, e.g. 411
@@ -108,47 +154,15 @@ public class CafeteriaMenuManager {
 	 * </pre>
 	 */
 	public Cursor getTypeNameFromDb(String mensaId, String date) {
-		return db.rawQuery("SELECT typeLong, group_concat(name, '\n') as names, id as _id "
-				+ "FROM cafeterias_menus WHERE mensaId = ? AND "
+		return db.rawQuery("SELECT typeLong, group_concat(name, '\n') as names, id as _id " + "FROM cafeterias_menus WHERE mensaId = ? AND "
 				+ "date = ? GROUP BY typeLong ORDER BY typeNr, typeLong, name", new String[] { mensaId, date });
 	}
 
 	/**
-	 * Convert JSON object to CafeteriaMenu
-	 * 
-	 * Example JSON: e.g. {"id":"25544","mensa_id":"411","date":"2011-06-20","type_short"
-	 * :"tg","type_long":"Tagesgericht 3","type_nr":"3","name":
-	 * "Cordon bleu vom Schwein (mit Formfleischhinterschinken) (S) (1,2,3,8)"}
-	 * 
-	 * <pre>
-	 * @param json see above
-	 * @return CafeteriaMenu
-	 * @throws Exception
-	 * </pre>
+	 * Removes all cache items
 	 */
-	public static CafeteriaMenu getFromJson(JSONObject json) throws Exception {
-
-		return new CafeteriaMenu(json.getInt("id"), json.getInt("mensa_id"), Utils.getDate(json.getString("date")),
-				json.getString("type_short"), json.getString("type_long"), json.getInt("type_nr"),
-				json.getString("name"));
-	}
-
-	/**
-	 * Convert JSON object to CafeteriaMenu (addendum)
-	 * 
-	 * Example JSON: e.g. {"mensa_id":"411","date":"2011-07-29","name":"Pflaumenkompott"
-	 * ,"type_short":"bei","type_long":"Beilagen"}
-	 * 
-	 * <pre>
-	 * @param json see above
-	 * @return CafeteriaMenu
-	 * @throws Exception
-	 * </pre>
-	 */
-	public static CafeteriaMenu getFromJsonAddendum(JSONObject json) throws Exception {
-
-		return new CafeteriaMenu(0, json.getInt("mensa_id"), Utils.getDate(json.getString("date")),
-				json.getString("type_short"), json.getString("type_long"), 10, json.getString("name"));
+	public void removeCache() {
+		db.execSQL("DELETE FROM cafeterias_menus");
 	}
 
 	/**
@@ -175,23 +189,7 @@ public class CafeteriaMenuManager {
 		if (c.date.before(Utils.getDate("2012-01-01"))) {
 			throw new Exception("Invalid date.");
 		}
-		db.execSQL("REPLACE INTO cafeterias_menus (id, mensaId, date, typeShort, "
-				+ "typeLong, typeNr, name) VALUES (?, ?, ?, ?, ?, ?, ?)",
-				new String[] { String.valueOf(c.id), String.valueOf(c.cafeteriaId), Utils.getDateString(c.date),
-						c.typeShort, c.typeLong, String.valueOf(c.typeNr), c.name });
-	}
-
-	/**
-	 * Removes all cache items
-	 */
-	public void removeCache() {
-		db.execSQL("DELETE FROM cafeterias_menus");
-	}
-
-	/**
-	 * Removes all old items (older than 7 days)
-	 */
-	public void cleanupDb() {
-		db.execSQL("DELETE FROM cafeterias_menus WHERE date < date('now','-7 day')");
+		db.execSQL("REPLACE INTO cafeterias_menus (id, mensaId, date, typeShort, " + "typeLong, typeNr, name) VALUES (?, ?, ?, ?, ?, ?, ?)", new String[] {
+				String.valueOf(c.id), String.valueOf(c.cafeteriaId), Utils.getDateString(c.date), c.typeShort, c.typeLong, String.valueOf(c.typeNr), c.name });
 	}
 }

@@ -10,11 +10,6 @@ import de.tum.in.tumcampusapp.auxiliary.Utils;
 public class CafeteriaMenu {
 
 	/**
-	 * CafeteriaMenu Id (empty for addendum)
-	 */
-	int id;
-
-	/**
 	 * Cafeteria ID
 	 */
 	int cafeteriaId;
@@ -25,9 +20,14 @@ public class CafeteriaMenu {
 	Date date;
 
 	/**
-	 * Short type, e.g. tg
+	 * CafeteriaMenu Id (empty for addendum)
 	 */
-	String typeShort;
+	int id;
+
+	/**
+	 * Menu name
+	 */
+	String name;
 
 	/**
 	 * Long type, e.g. Tagesgericht 1
@@ -40,9 +40,9 @@ public class CafeteriaMenu {
 	int typeNr;
 
 	/**
-	 * Menu name
+	 * Short type, e.g. tg
 	 */
-	String name;
+	String typeShort;
 
 	/**
 	 * New CafeteriaMenu
@@ -70,8 +70,7 @@ public class CafeteriaMenu {
 
 	@Override
 	public String toString() {
-		return "id=" + this.id + " cafeteriaId=" + this.cafeteriaId + " date=" + Utils.getDateString(this.date)
-				+ " typeShort=" + this.typeShort + " typeLong=" + this.typeLong + " typeNr=" + this.typeNr + " name="
-				+ this.name;
+		return "id=" + this.id + " cafeteriaId=" + this.cafeteriaId + " date=" + Utils.getDateString(this.date) + " typeShort=" + this.typeShort + " typeLong="
+				+ this.typeLong + " typeNr=" + this.typeNr + " name=" + this.name;
 	}
 }

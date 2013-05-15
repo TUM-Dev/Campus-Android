@@ -9,10 +9,10 @@ import de.tum.in.tumcampusapp.auxiliary.Const;
 
 public class CafeteriaDetailsActivity extends FragmentActivity {
 
-	private CafeteriaDetailsSectionsPagerAdapter mSectionsPagerAdapter;
-	private ViewPager mViewPager;
 	private String cafeteriaId;
 	private String cafeteriaName;
+	private CafeteriaDetailsSectionsPagerAdapter mSectionsPagerAdapter;
+	private ViewPager mViewPager;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

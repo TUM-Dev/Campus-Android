@@ -48,6 +48,19 @@ public class DownloadService extends IntentService {
 		sendBroadcast(intentSend);
 	}
 
+	public boolean downloadCafeterias() {
+		CafeteriaManager cm = new CafeteriaManager(this);
+		CafeteriaMenuManager cmm = new CafeteriaMenuManager(this);
+		try {
+			cm.downloadFromExternal();
+			cmm.downloadFromExternal();
+		} catch (Exception e) {
+			Log.e(getClass().getSimpleName(), e.getMessage());
+			return false;
+		}
+		return true;
+	}
+
 	public boolean downloadFeed(int feedId) {
 		FeedItemManager fim = new FeedItemManager(this);
 		try {
@@ -80,20 +93,6 @@ public class DownloadService extends IntentService {
 		}
 		return true;
 	}
-	
-	public boolean downloadCafeterias() {
-		CafeteriaManager cm = new CafeteriaManager(this);
-		CafeteriaMenuManager cmm = new CafeteriaMenuManager(this);
-		try {
-			cm.downloadFromExternal();
-			cmm.downloadFromExternal();
-		} catch (Exception e) {
-			Log.e(getClass().getSimpleName(), e.getMessage());
-			return false;
-		}
-		return true;
-	}
-
 
 	@Override
 	public void onCreate() {

@@ -17,6 +17,24 @@ import de.tum.in.tumcampusapp.models.Cafeteria;
 public class CafeteriaManager {
 
 	/**
+	 * Get Cafeteria object by JSON object
+	 * 
+	 * Example JSON: e.g.
+	 * {"id":"411","name":"Mensa Leopoldstra\u00dfe","anschrift"
+	 * :"Leopoldstra\u00dfe 13a, M\u00fcnchen"}
+	 * 
+	 * <pre>
+	 * @param json See example
+	 * @return Cafeteria object
+	 * @throws JSONException
+	 * </pre>
+	 */
+	public static Cafeteria getFromJson(JSONObject json) throws JSONException {
+
+		return new Cafeteria(json.getInt(JsonConst.JSON_ID), json.getString(JsonConst.JSON_NAME), json.getString(JsonConst.JSON_ANSCHRIFT));
+	}
+
+	/**
 	 * Database connection
 	 */
 	private SQLiteDatabase db;
@@ -82,21 +100,10 @@ public class CafeteriaManager {
 	}
 
 	/**
-	 * Get Cafeteria object by JSON object
-	 * 
-	 * Example JSON: e.g. {"id":"411","name":"Mensa Leopoldstra\u00dfe","anschrift"
-	 * :"Leopoldstra\u00dfe 13a, M\u00fcnchen"}
-	 * 
-	 * <pre>
-	 * @param json See example
-	 * @return Cafeteria object
-	 * @throws JSONException
-	 * </pre>
+	 * Removes all cache items
 	 */
-	public static Cafeteria getFromJson(JSONObject json) throws JSONException {
-
-		return new Cafeteria(json.getInt(JsonConst.JSON_ID), json.getString(JsonConst.JSON_NAME),
-				json.getString(JsonConst.JSON_ANSCHRIFT));
+	public void removeCache() {
+		db.execSQL("DELETE FROM cafeterias");
 	}
 
 	/**
@@ -117,14 +124,6 @@ public class CafeteriaManager {
 			throw new Exception("Invalid name.");
 		}
 
-		db.execSQL("REPLACE INTO cafeterias (id, name, address) VALUES (?, ?, ?)", new String[] { String.valueOf(c.id),
-				c.name, c.address });
-	}
-
-	/**
-	 * Removes all cache items
-	 */
-	public void removeCache() {
-		db.execSQL("DELETE FROM cafeterias");
+		db.execSQL("REPLACE INTO cafeterias (id, name, address) VALUES (?, ?, ?)", new String[] { String.valueOf(c.id), c.name, c.address });
 	}
 }

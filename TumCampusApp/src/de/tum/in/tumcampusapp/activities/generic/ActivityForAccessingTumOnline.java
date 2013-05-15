@@ -51,25 +51,6 @@ public abstract class ActivityForAccessingTumOnline extends Activity implements 
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		super.onCreateOptionsMenu(menu);
-		MenuItem m = menu.add(0, MENU_REFRESH, 0, getString(R.string.update));
-		m.setIcon(android.R.drawable.ic_menu_rotate);
-		return true;
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case MENU_REFRESH:
-			requestFetch();
-			return true;
-		default:
-			return super.onOptionsItemSelected(item);
-		}
-	}
-
-	@Override
 	public void onCommonError(String errorReason) {
 		Toast.makeText(this, errorReason, Toast.LENGTH_SHORT).show();
 		progressLayout.setVisibility(View.GONE);
@@ -95,6 +76,14 @@ public abstract class ActivityForAccessingTumOnline extends Activity implements 
 	}
 
 	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		super.onCreateOptionsMenu(menu);
+		MenuItem m = menu.add(0, MENU_REFRESH, 0, getString(R.string.update));
+		m.setIcon(android.R.drawable.ic_menu_rotate);
+		return true;
+	}
+
+	@Override
 	protected void onDestroy() {
 		super.onDestroy();
 		requestHandler.cancelRequest(true);
@@ -112,6 +101,17 @@ public abstract class ActivityForAccessingTumOnline extends Activity implements 
 		// TODO Change errors to Exceptions
 		if (failedLayout != null) {
 			failedLayout.setVisibility(View.VISIBLE);
+		}
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case MENU_REFRESH:
+			requestFetch();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
 		}
 	}
 

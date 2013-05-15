@@ -19,12 +19,12 @@ import de.tum.in.tumcampusapp.models.managers.LocationManager;
  * Fragment for each category-page.
  */
 public class CafeteriaDetailsSectionFragment extends Fragment {
-	private View footer;
-	private ListView listViewMenu;
 	private Activity activity;
-	private String date;
 	private String cafeteriaId;
 	private String cafeteriaName;
+	private String date;
+	private View footer;
+	private ListView listViewMenu;
 
 	public CafeteriaDetailsSectionFragment() {
 	}

@@ -23,7 +23,7 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
 
 	/** Current Cafeteria name selected */
 	private String cafeteriaName;
-	
+
 	private ListView listCafeterias;
 
 	public CafeteriaActivity() {
@@ -33,9 +33,9 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		listCafeterias = (ListView) findViewById(R.id.listView);
-		
+
 		super.requestDownload();
 	}
 
@@ -64,8 +64,8 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
 		startManagingCursor(cursorCafeterias);
 
 		@SuppressWarnings("deprecation")
-		SimpleCursorAdapter adapterCafeterias = new SimpleCursorAdapter(this, R.layout.list_layout_two_line_item, cursorCafeterias, cursorCafeterias.getColumnNames(), new int[] {
-				android.R.id.text1, android.R.id.text2 });
+		SimpleCursorAdapter adapterCafeterias = new SimpleCursorAdapter(this, R.layout.list_layout_two_line_item, cursorCafeterias,
+				cursorCafeterias.getColumnNames(), new int[] { android.R.id.text1, android.R.id.text2 });
 
 		listCafeterias.setAdapter(adapterCafeterias);
 		listCafeterias.setOnItemClickListener(this);
