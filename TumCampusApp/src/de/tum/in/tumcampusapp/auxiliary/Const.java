@@ -20,6 +20,7 @@ public final class Const {
 	public static final String CAFETERIA_NAME = "cafeteriasName";
 	public static final String COMPLETED = "completed";
 	public static final String CURRICULA = "curricula";
+	public static final String DATE = "date";
 	public static final String DATE_COLUMN_DE = "date_de";
 	public final static String db = "database.db";
 	public final static int dbVersion = 1;

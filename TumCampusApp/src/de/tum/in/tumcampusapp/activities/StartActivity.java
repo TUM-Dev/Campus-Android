@@ -11,8 +11,6 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.ImageView;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.adapters.StartSectionsPagerAdapter;
 import de.tum.in.tumcampusapp.auxiliary.Const;
@@ -23,8 +21,6 @@ public class StartActivity extends FragmentActivity {
 
 	public static final int DEFAULT_SECTION = 1;
 	public static final String LAST_CHOOSEN_SECTION = "last_choosen_section";
-
-	ImageView mImageView;
 
 	/**
 	 * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -62,8 +58,6 @@ public class StartActivity extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_start);
 
-		mImageView = (ImageView) findViewById(R.id.activity_start_loading_image);
-		mImageView.setVisibility(View.VISIBLE);
 		// Workaround for new API version. There was a security update which
 		// disallows applications to execute HTTP request in the GUI main
 		// thread.
@@ -120,6 +114,5 @@ public class StartActivity extends FragmentActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		mImageView.setVisibility(View.GONE);
 	}
 }

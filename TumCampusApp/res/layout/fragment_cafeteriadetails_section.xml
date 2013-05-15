@@ -9,13 +9,7 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_weight="1"
-        android:scrollbars="vertical" />
-    
-    <ListView
-        android:id="@+id/listView_DELETE"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_weight="1"
+        android:padding="5dp"
         android:scrollbars="vertical" />
 
 </LinearLayout>
