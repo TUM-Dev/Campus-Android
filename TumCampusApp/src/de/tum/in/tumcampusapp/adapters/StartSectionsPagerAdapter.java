@@ -19,7 +19,9 @@ import de.tum.in.tumcampusapp.activities.LecturesPersonalActivity;
 import de.tum.in.tumcampusapp.activities.LecturesSearchActivity;
 import de.tum.in.tumcampusapp.activities.NewsActivity;
 import de.tum.in.tumcampusapp.activities.OpeningHoursListActivity;
+import de.tum.in.tumcampusapp.activities.PersonsActivity;
 import de.tum.in.tumcampusapp.activities.PlansActivity;
+import de.tum.in.tumcampusapp.activities.RoomfinderActivity;
 import de.tum.in.tumcampusapp.activities.TransportationActivity;
 import de.tum.in.tumcampusapp.activities.generic.MockActivity;
 import de.tum.in.tumcampusapp.auxiliary.ListMenuEntry;
@@ -64,10 +66,10 @@ public class StartSectionsPagerAdapter extends FragmentPagerAdapter {
 			listMenuEntrySet.add(new ListMenuEntry(R.drawable.zoom, R.string.lecture_search, R.string.lecturessearch_addinfo, new Intent(activity,
 					LecturesSearchActivity.class)));
 			listMenuEntrySet.add(new ListMenuEntry(R.drawable.users, R.string.person_search, R.string.personsearch_addinfo, new Intent(activity,
-					MockActivity.class)));
+					PersonsActivity.class)));
 			listMenuEntrySet.add(new ListMenuEntry(R.drawable.web, R.string.plans, R.string.plans_addinfo, new Intent(activity, PlansActivity.class)));
 			listMenuEntrySet
-					.add(new ListMenuEntry(R.drawable.home, R.string.roomfinder, R.string.roomfinder_addinfo, new Intent(activity, MockActivity.class)));
+					.add(new ListMenuEntry(R.drawable.home, R.string.roomfinder, R.string.roomfinder_addinfo, new Intent(activity, RoomfinderActivity.class)));
 			listMenuEntrySet.add(new ListMenuEntry(R.drawable.documents, R.string.study_plans, R.string.studyplans_addinfo, new Intent(activity,
 					CurriculaActivity.class)));
 			listMenuEntrySet.add(new ListMenuEntry(R.drawable.unlock, R.string.opening_hours, R.string.openinghours_addinfo, new Intent(activity,

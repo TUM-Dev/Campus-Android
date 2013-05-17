@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="de.tum.in.tumcampusapp"
-    android:versionCode="7"
-    android:versionName="0.2.3" >
+    android:versionCode="8"
+    android:versionName="0.2.4" >
 
     <uses-sdk
         android:minSdkVersion="8"
@@ -138,6 +138,21 @@
             android:name=".activities.CafeteriaDetailsActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/cafeterias" >
+        </activity>
+        <activity
+            android:name=".activities.PersonsActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/person_search" >
+        </activity>
+        <activity
+            android:name=".activities.PersonsDetailsActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/person_information" >
+        </activity>
+        <activity
+            android:name=".activities.RoomfinderActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/roomfinder" >
         </activity>
 
         <service
