@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/scrollView"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="#FFFFFF"
+        android:orientation="vertical" >
+
+        <ImageView
+            android:id="@+id/ivImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:contentDescription="@string/tum_logo"
+            android:padding="7dip"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_launcher" />
+
+        <TextView
+            android:id="@+id/tvDetails1"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:padding="4dip"
+            android:textColor="#0065BD"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvDetails2"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:autoLink="all"
+            android:inputType="textMultiLine|textNoSuggestions"
+            android:padding="4dip"
+            android:scrollHorizontally="false"
+            android:textColor="#0065BD"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/tvDetails3"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:autoLink="all"
+            android:inputType="textMultiLine|textNoSuggestions"
+            android:padding="4dip"
+            android:scrollHorizontally="false"
+            android:textColor="#0065BD"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/tvDetails4"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:autoLink="none"
+            android:inputType="textMultiLine|textNoSuggestions"
+            android:padding="4dip"
+            android:scrollHorizontally="false"
+            android:textColor="#0065BD"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+</ScrollView>

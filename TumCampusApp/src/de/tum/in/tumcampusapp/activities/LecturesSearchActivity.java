@@ -137,8 +137,8 @@ public class LecturesSearchActivity extends ActivityForAccessingTumOnline implem
 	};
 
 	private boolean searchForLectures() {
-		if (etFindQuery.getText().length() <= 3) {
-			Toast.makeText(this, R.string.please_insert_at_least_four_chars, Toast.LENGTH_SHORT).show();
+		if (etFindQuery.getText().length() < 3) {
+			Toast.makeText(this, R.string.please_insert_at_least_three_chars, Toast.LENGTH_SHORT).show();
 			return false;
 		}
 		// set the query string as parameter for the TUMOnline request

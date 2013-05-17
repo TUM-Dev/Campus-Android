@@ -12,7 +12,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.adapters.ListMenuAdapter;
+import de.tum.in.tumcampusapp.adapters.StartListAdapter;
 import de.tum.in.tumcampusapp.adapters.StartSectionsPagerAdapter;
 import de.tum.in.tumcampusapp.auxiliary.ListMenuEntry;
 
@@ -38,7 +38,7 @@ public class StartSectionFragment extends Fragment implements OnItemClickListene
 
 		// Builds the list according to the list items in listMenuEntrySet
 		ListView list = (ListView) rootView.findViewById(R.id.list_view);
-		ListMenuAdapter adapter = new ListMenuAdapter(getActivity(), R.layout.list_layout_complex_large, listMenuEntrySet);
+		StartListAdapter adapter = new StartListAdapter(getActivity(), R.layout.list_layout_complex_large, listMenuEntrySet);
 		list.setAdapter(adapter);
 		list.setOnItemClickListener(this);
 		return rootView;

@@ -10,7 +10,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.adapters.ListMenuAdapter;
+import de.tum.in.tumcampusapp.adapters.StartListAdapter;
 import de.tum.in.tumcampusapp.auxiliary.ListMenuEntry;
 
 /**
@@ -37,7 +37,7 @@ public class PlansActivity extends Activity implements OnItemClickListener {
 		listMenuEntrySet.add(new ListMenuEntry(R.drawable.plan_mvv_icon, R.string.mvv_fast_train_net, R.string.empty_string, null));
 		listMenuEntrySet.add(new ListMenuEntry(R.drawable.plan_mvv_night_icon, R.string.mvv_nightlines, R.string.empty_string, null));
 
-		ListMenuAdapter adapter = new ListMenuAdapter(this, R.layout.list_layout_complex_small, listMenuEntrySet);
+		StartListAdapter adapter = new StartListAdapter(this, R.layout.list_layout_complex_small, listMenuEntrySet);
 		list.setAdapter(adapter);
 		list.setOnItemClickListener(this);
 	}

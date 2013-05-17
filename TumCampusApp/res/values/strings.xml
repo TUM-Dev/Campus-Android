@@ -318,7 +318,7 @@
     <string name="campus_weihenstephan_adress">Liesel-Beckmann-Straße 6, 85354 Freising</string>
 
     <!-- Staff.java -->
-    <string name="please_insert_at_least_four_chars">Please insert at least four characters</string>
+    <string name="please_insert_at_least_three_chars">Please insert at least three characters</string>
     <string name="search_is_running">Search is running …</string>
     <string name="personinformation_are_getting_fetched"> personal information were fetched …</string>
     <string name="no_entries">no entries</string>

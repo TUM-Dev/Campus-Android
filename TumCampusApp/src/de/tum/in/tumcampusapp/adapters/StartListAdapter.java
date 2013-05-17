@@ -19,7 +19,7 @@ import de.tum.in.tumcampusapp.auxiliary.ListMenuEntry;
  * @author Sascha
  * 
  */
-public class ListMenuAdapter extends BaseAdapter {
+public class StartListAdapter extends BaseAdapter {
 
 	public static class ViewHolder {
 		public TextView detail;
@@ -32,7 +32,7 @@ public class ListMenuAdapter extends BaseAdapter {
 	private int layoutId;
 	private ArrayList<ListMenuEntry> listMenuEntrySet;
 
-	public ListMenuAdapter(Activity activity, int layoutId, ArrayList<ListMenuEntry> listMenuEntrySet) {
+	public StartListAdapter(Activity activity, int layoutId, ArrayList<ListMenuEntry> listMenuEntrySet) {
 		this.activity = activity;
 		this.layoutId = layoutId;
 		this.listMenuEntrySet = listMenuEntrySet;
