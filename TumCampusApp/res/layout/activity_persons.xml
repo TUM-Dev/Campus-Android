@@ -4,39 +4,64 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <TextView
-        android:id="@+id/txtCaption"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:background="#0065BD"
-        android:text="@string/search_caption"
-        android:textColor="#FFFFFF" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/rythm_48dp"
+        android:orientation="horizontal" >
 
-    <EditText
-        android:id="@+id/etSearch"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/search_help"
-        android:imeActionLabel="Search"
-        android:imeOptions="actionSearch"
-        android:singleLine="true" >
+        <EditText
+            android:id="@+id/etSearch"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:hint="@string/insert_search"
+            android:imeActionLabel="Search"
+            android:imeOptions="actionSearch"
+            android:singleLine="true" >
 
-        <requestFocus />
-    </EditText>
+            <requestFocus />
+        </EditText>
 
-    <TextView
-        android:id="@+id/txtResult"
+        <ImageButton
+            android:id="@+id/clear"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:background="@android:color/transparent"
+            android:onClick="onClick"
+            android:scaleType="fitCenter"
+            android:src="@android:drawable/ic_menu_close_clear_cancel" />
+
+        <ImageButton
+            android:id="@+id/dosearch"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:background="@android:color/transparent"
+            android:onClick="onClick"
+            android:scaleType="fitCenter"
+            android:src="@android:drawable/ic_menu_search" />
+    </LinearLayout>
+
+    <include
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:background="#0065BD"
-        android:text="@string/choose_person"
-        android:textColor="#FFFFFF" />
+        android:layout_height="fill_parent"
+        layout="@layout/layout_no_token"
+        android:visibility="gone" />
+
+    <include
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        layout="@layout/layout_progress"
+        android:visibility="gone" />
+
+    <include
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        layout="@layout/layout_error"
+        android:visibility="gone" />
 
     <ListView
         android:id="@+id/lstPersons"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="fill_parent" />
 
 </LinearLayout>

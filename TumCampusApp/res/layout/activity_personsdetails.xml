@@ -7,7 +7,7 @@
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="#FFFFFF"
+        android:padding="@dimen/padding_default"
         android:orientation="vertical" >
 
         <ImageView
@@ -15,8 +15,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:paddingBottom="10dp"
             android:contentDescription="@string/tum_logo"
-            android:padding="7dip"
             android:scaleType="fitXY"
             android:src="@drawable/ic_launcher" />
 
@@ -24,9 +24,9 @@
             android:id="@+id/tvDetails1"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:padding="4dip"
-            android:textColor="#0065BD"
-            android:textSize="18sp"
+            android:text="tvDetails1"
+            android:textColor="@color/text_light_blue"
+            android:textSize="@dimen/large_text_size"
             android:textStyle="bold" />
 
         <TextView
@@ -35,10 +35,10 @@
             android:layout_height="wrap_content"
             android:autoLink="all"
             android:inputType="textMultiLine|textNoSuggestions"
-            android:padding="4dip"
             android:scrollHorizontally="false"
-            android:textColor="#0065BD"
-            android:textSize="16sp" />
+            android:text="tvDetails2"
+            android:textColor="@color/text_light_blue"
+            android:textSize="@dimen/semilarge_text_size" />
 
         <TextView
             android:id="@+id/tvDetails3"
@@ -46,10 +46,10 @@
             android:layout_height="wrap_content"
             android:autoLink="all"
             android:inputType="textMultiLine|textNoSuggestions"
-            android:padding="4dip"
             android:scrollHorizontally="false"
-            android:textColor="#0065BD"
-            android:textSize="16sp" />
+            android:text="tvDetails3"
+            android:textColor="@color/text_light_blue"
+            android:textSize="@dimen/semilarge_text_size" />
 
         <TextView
             android:id="@+id/tvDetails4"
@@ -57,10 +57,10 @@
             android:layout_height="wrap_content"
             android:autoLink="none"
             android:inputType="textMultiLine|textNoSuggestions"
-            android:padding="4dip"
             android:scrollHorizontally="false"
-            android:textColor="#0065BD"
-            android:textSize="16sp" />
+            android:text="tvDetails4"
+            android:textColor="@color/text_light_blue"
+            android:textSize="@dimen/semilarge_text_size" />
     </LinearLayout>
 
 </ScrollView>

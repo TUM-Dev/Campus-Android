@@ -65,6 +65,23 @@ public class PersonsActivity extends Activity implements OnEditorActionListener,
 
 		lvPersons = (ListView) findViewById(R.id.lstPersons);
 	}
+	
+	public void onClick(View view) {
+		int viewId = view.getId();
+		switch (viewId) {
+		case R.id.clear:
+			etSearch.setText("");
+			break;
+		case R.id.dosearch:
+			searchForPersons();
+			break;
+		}
+	}
+	
+	private void searchForPersons() {
+		requestHandler.setParameter("pSuche", etSearch.getText().toString());
+		requestHandler.fetchInteractive(this, this);
+	}
 
 	@Override
 	public void onStart() {
