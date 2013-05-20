@@ -28,12 +28,12 @@ public class Room implements Serializable {
 		return location;
 	}
 
-	public void setLocation(String location) {
-		this.location = location;
-	}
-
 	public String getNumber() {
 		return number;
+	}
+
+	public void setLocation(String location) {
+		this.location = location;
 	}
 
 	public void setNumber(String number) {

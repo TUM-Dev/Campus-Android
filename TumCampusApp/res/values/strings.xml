@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    
+    <string name="search_rooms">Search rooms</string>
     <string name="lang">eng</string>
-
-    <!-- StartActivity.java -->
     <string name="app_name">TUM Campus App</string>
     <string name="action_settings">Settings</string>
     <string name="generate_tumonline_token">Generate TUMOnline Token</string>
@@ -22,7 +22,6 @@
     <string name="error_sorry">Sorry, an error appeared.</string>
     <string name="lecture_search">Lectures Search</string>
     <string name="add_rss_feed">Add RSS-Feed</string>
-
     <string name="personsearch_addinfo">Search persons at TUM</string>
     <string name="lecturessearch_addinfo">Search lectures at TUM</string>
     <string name="plans_addinfo">Plans for TUM campi and MVV</string>
@@ -39,18 +38,11 @@
     <string name="gallery_addinfo">Event announcements</string>
     <string name="mvv_addinfo">Departures of MVV</string>
     <string name="cafeteria_addinfo">Dishes at all TUM cafeterias</string>
-    
-    
-    <!-- ###### LAYOUT FILES ####### -->
-    <!-- appinfo.xml -->
+    <string name="search_persons">Search persons</string>
     <string name="app_info_text">App-Info goes here</string>
-
-    <!-- tumonline_settings -->
     <string name="tumonline_password_word">TUMOnline Password</string>
     <string name="tumonline_lrz_id">LRZ Identification</string>
     <string name="tumonline_access_token_word">TUMOnline Token</string>
-
-    <!-- settings.xml -->
     <string name="modules">Modules</string>
     <string name="modules_act_deact">activate, deactivate</string>
     <string name="tumonline_summary">e.g. access token settings</string>
@@ -64,15 +56,9 @@
     <string name="market_info">Rate or update TUM Campus</string>
     <string name="app_management">App management</string>
     <string name="app_management_info">Delete data or deinstall app</string>
-
-    <!-- cafeterias_horizontal.xml & cafeterias.xml -->
     <string name="choose_mensa">Please select a university canteen.</string>
     <string name="choose_date">Choose date</string>
-
-    <!-- curricula.xml -->
     <string name="choose_study_plan">Choose study plan</string>
-
-    <!-- debug.xml -->
     <string name="debug_syncs">syncs</string>
     <string name="debug_cafeterias">cafeterias</string>
     <string name="debug_cafeterias_menus">cafeterias_menus</string>
@@ -86,35 +72,19 @@
     <string name="debug_locations">locations</string>
     <string name="debug_time">time</string>
     <string name="debug_master">master</string>
-
-    <!-- documents.xml -->
     <string name="choose_doc">Choose document:</string>
-
-    <!-- evemts.xml -->
     <string name="past_events">Past events</string>
-
-    <!-- feeds_footer.xml -->
     <string name="url">URL</string>
     <string name="name">Name</string>
     <string name="add">Add</string>
-
-    <!-- feeds.xml -->
     <string name="choose_feed">Choose feed</string>
-
-    <!-- findlectures.xml -->
     <string name="insert_search">Search lectures</string>
     <string name="search">Search</string>
-
-    <!-- grades.xml -->
     <string name="grade_overview">List of all exams with grades:</string>
     <string name="semester">Semester</string>
     <string name="examiner">Examiner</string>
     <string name="mode">Mode</string>
-
-    <!-- hours.xml -->
     <string name="choose_category">Select category</string>
-
-    <!-- lecture_details.xml & lectures_termine.xml -->
     <string name="lec_details_title">Introduction into course title</string>
     <string name="lec_dates">Lecture dates</string>
     <string name="lec_details">Details</string>
@@ -133,56 +103,35 @@
     <string name="teaching_target">Teaching target</string>
     <string name="examination_aids">Examination aids</string>
     <string name="literature">Literature</string>
-
-    <!-- lectures_horizontal.xml & lectures.xml -->
     <string name="next_lectures">Next lectures:</string>
     <string name="slide_lectures">Lectures</string>
-
-    <!-- main_import.xml -->
     <string name="tumonline_settings">TUMOnline settings</string>
     <string name="import_lectures_from_sd_card">Import lectures from SD-card</string>
     <string name="import_lectures_from_tumonline">Import lectures from TUMOnline</string>
     <string name="import_links">Import links</string>
     <string name="import_rss_feed">Import RSS-Feeds</string>
-    <string name="import_hint">Warning: existing data won\'t be\n
-		deleted, but possibly overwritten!</string>
-
-    <!-- main.xml & several listview/details.xml containing TUM-logo -->
+    <string name="import_hint">Warning: existing data won\'t be\ndeleted, but possibly overwritten!</string>
     <string name="data_and_settings">Data and settings</string>
     <string name="tum_logo">TUM Logo</string>
     <string name="initial_download">Start: First time data download!</string>
-
-    <!-- organisation.xml & organisation_details.xml -->
     <string name="organisation_caption">organization</string>
-
-    <!-- plans.xml -->
     <string name="zoom_hint">tap two times on the plan to zoom in</string>
     <string name="choose_plan">Choose plan</string>
-
-    <!-- staff.xml -->
     <string name="search_caption">Search term:</string>
     <string name="search_help">Name or Keyword</string>
     <string name="choose_person">Select a person:</string>
-
-    <!-- transports_horizontal.xml & transports.xml -->
     <string name="choose_station">Please choose a station.</string>
     <string name="saved_stations">Saved stations:</string>
     <string name="search_station">Search station</string>
-
-    <!-- tumonline.xml -->
     <string name="generate_token">Manually Generate Access Token</string>
     <string name="howto">HowTo</string>
-
-    <!-- ###### JAVA FILES ####### -->
-    <!-- CampusApplication.java -->
     <string name="crash_notif_ticker_text">Unexpected error, please send a report!</string>
     <string name="crash_notif_title">TUMCampus has crashed!</string>
     <string name="crash_notif_text">Please click here to help fix the issue.</string>
     <string name="crash_dialog_text">Please send an report to the developers!</string>
-    <string name="crash_dialog_title">An error occured.</string>
+    <string name="crash_dialog_title">An error occurred.</string>
     <string name="crash_dialog_comment_prompt">You might add your comments about the problem below:</string>
     <string name="crash_dialog_ok_toast">Thank you!</string>
-    <!-- TumCampus.java -->
     <string name="roomfinder_install">Please install the TUM Roomfinder App!</string>
     <string name="update">Update</string>
     <string name="cancel">Cancel</string>
@@ -206,26 +155,16 @@
     <string name="gallery">Gallery</string>
     <string name="app_info">App-Info</string>
     <string name="debug">Debug</string>
-
-    <!-- Grades.java -->
     <string name="all">All</string>
     <string name="all_programs">All programs</string>
     <string name="grades_get_fetched">Fetching grades…</string>
-
-    <!-- ExamListAdapter.java -->
     <string name="semester_w">Winter semester</string>
     <string name="semester_s">Summer semester</string>
     <string name="semester_n">Not found</string>
     <string name="date">Date</string>
-
-    <!-- StaffDetails.java -->
     <string name="no_person_set">No person set!</string>
-
-    <!-- Cafeterias.java -->
     <string name="kitchen_opening">Kitchen opening</string>
     <string name="prices">Prices</string>
-
-    <!-- Curricula.java -->
     <string name="open_study_plan_for">Open study plan for</string>
     <string name="informatics_bachelor">Informatics Bachelor</string>
     <string name="business_informatics_bachelor_1112">Business Informatics Bachelor WS1112</string>
@@ -237,8 +176,6 @@
     <string name="bioinformatics_master">Bioinformatics Master</string>
     <string name="automotive_master">Automotive SE Master</string>
     <string name="computational_science_master">Computational Science and Engineering</string>
-
-    <!-- Documents.java -->
     <string name="certificate_of_matriculation">Confirmation of enrollment</string>
     <string name="study_status">Study status</string>
     <string name="confirmation_about_payment">Confirmation about payment</string>
@@ -248,8 +185,6 @@
     <string name="please_choose_doc">Please choose document!</string>
     <string name="load">Load</string>
     <string name="tumonline_settings_error">Error occurred while fetching document: TUMOnline credentials set correctly?</string>
-
-    <!-- Hours.java -->
     <string name="libraries">Libraries</string>
     <string name="information">Information</string>
     <string name="mensa_garching">Cafeteria Garching</string>
@@ -257,25 +192,13 @@
     <string name="mensa_city">Cafeteria Main Campus</string>
     <string name="mensa_pasing">Cafeteria Pasing</string>
     <string name="mensa_weihenstephan">Cafeteria Weihenstephan</string>
-
-    <!-- MyLectures.java -->
     <string name="my_lectures">My Lectures</string>
     <string name="roomfinder">Roomfinder</string>
-
-    <!-- LectureDetails.java -->
     <string name="no_existing_data">No existing data.</string>
-
-    <!-- LectureItem.java -->
     <string name="holidays">holidays</string>
     <string name="vacation">vacations</string>
-
-    <!-- News.java -->
     <string name="no_link_existing">No link existing.</string>
-
-    <!-- Organisation.java -->
     <string name="tum">Technische Universität München</string>
-
-    <!-- OrganisationDetails.java -->
     <string name="invalid_organisation">Invalid organization!</string>
     <string name="loading_organisation_details">Loading organization details …</string>
     <string name="abbreviation">Abbreviation</string>
@@ -297,8 +220,6 @@
     <string name="tumonline_link">TUMOnline Link</string>
     <string name="tumcampus_link">TUMCampus Link</string>
     <string name="googlemaps_link">Googlemaps Link</string>
-
-    <!-- Plans.java -->
     <string name="campus_garching">Campus Garching</string>
     <string name="campus_klinikum">Campus Klinikum</string>
     <string name="campus_olympiapark">Campus Olympiapark</string>
@@ -316,14 +237,10 @@
     <string name="campus_olympiapark_gyms_adress">Connollystraße 32, 80809 Munich</string>
     <string name="campus_main_adress">Arcisstraße 21, 80333 Munich</string>
     <string name="campus_weihenstephan_adress">Liesel-Beckmann-Straße 6, 85354 Freising</string>
-
-    <!-- Staff.java -->
     <string name="please_insert_at_least_three_chars">Please insert at least three characters</string>
     <string name="search_is_running">Search is running …</string>
     <string name="personinformation_are_getting_fetched"> personal information were fetched …</string>
     <string name="no_entries">no entries</string>
-
-    <!-- StaffDetails.java -->
     <string name="mr">Mr.</string>
     <string name="mrs">Mrs.</string>
     <string name="function">Function</string>
@@ -332,28 +249,16 @@
     <string name="add_info">Additional infos</string>
     <string name="office_hours">Office hours</string>
     <string name="room">Room</string>
-
-    <!-- Roomfinder -->
     <string name="roomfinder_results">Results:</string>
-
-    <!-- TuitionFees.java -->
     <string name="fetching_document">Fetching document …</string>
-    <!-- <string name="forgotten_password">Forgot password?</string> -->
-
-
-    <!-- Transports.java -->
     <string name="departure">Departure</string>
     <string name="saved_station">Saved Stations</string>
     <string name="loading">Loading …</string>
     <string name="search_result">Search results:</string>
     <string name="mvv_efa">MVV EFA:</string>
-
-    <!-- TumCampus.java -->
     <string name="manual">Manual</string>
     <string name="manualpdf">manual_eng.pdf</string>
     <string name="empty_cache">Empty cache</string>
-
-    <!-- TumOnlineSettings.java -->
     <string name="dialog_new_token">Your TUMOnline Token is already set. Click <i>Yes</i> to generate a new one. As a result the old Token becomes useless.</string>
     <string name="error_lrz_wrong">Your LRZ Identification is invalid</string>
     <string name="access_token_generated">TUMOnline Token scucessfully generated</string>
@@ -363,23 +268,15 @@
     <string name="tumonline_access_token">Access token for TUMOnline</string>
     <string name="lrz_id_detail">Your LRZ Identification e.g. go42tum"</string>
     <string name="lrz_id">LRZ Identification"</string>
-
-    <!-- DownloadService.java -->
     <string name="updating">Updating …</string>
     <string name="tum_campus_download">TUMCampus download …</string>
     <string name="cafeterias">Cafeterias</string>
     <string name="completed">Completed</string>
-
-    <!-- ImportService.java -->
     <string name="importing">Importing…</string>
     <string name="tum_campus_import">TUMCampus import …</string>
     <string name="service">Service</string>
     <string name="import_from_tumonline">import from TUMOnline</string>
-
-    <!-- SilenceService -->
     <string name="set_ringer_mode">set ringer mode: </string>
-
-    <!-- ###### MANIFEST ####### -->
     <string name="current_events">Current Events</string>
     <string name="event_details">Event Details</string>
     <string name="tumonline_connection">TUMOnline-Connection</string>
@@ -394,8 +291,6 @@
     <string name="full_app_info">TUM Campus App for Android</string>
     <string name="debug_sqllite">Debug SQLite</string>
     <string name="settings">Settings</string>
-
-    <!-- ###### OTHER ####### -->
     <string name="week_splitted">Su,Mo,Tu,We,Th,Fr,Sa</string>
     <string name="facility_categories_splitted">library,info,cafeteria_gar,cafeteria_grh,cafeteria,cafeteria_pas,cafeteria_wst</string>
     <string name="access_token">AccessToken</string>

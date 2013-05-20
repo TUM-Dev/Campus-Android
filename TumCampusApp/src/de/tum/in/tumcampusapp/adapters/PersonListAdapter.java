@@ -21,6 +21,12 @@ import de.tum.in.tumcampusapp.models.Person;
  * @review Thomas Behrens
  */
 public class PersonListAdapter extends BaseAdapter {
+	static class ViewHolder {
+		TextView tvDetails1;
+		TextView tvDetails2;
+		TextView tvName;
+	}
+
 	private static List<Person> employees;
 
 	private final LayoutInflater mInflater;
@@ -91,11 +97,5 @@ public class PersonListAdapter extends BaseAdapter {
 		}
 
 		return convertView;
-	}
-
-	static class ViewHolder {
-		TextView tvName;
-		TextView tvDetails1;
-		TextView tvDetails2;
 	}
 }

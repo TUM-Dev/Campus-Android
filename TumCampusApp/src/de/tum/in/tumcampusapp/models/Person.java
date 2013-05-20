@@ -17,10 +17,13 @@ import org.simpleframework.xml.Root;
 @Root(name = "row", strict = false)
 public class Person implements Serializable {
 
-	private static final long serialVersionUID = -5210814076506102292L;
+	public static final String FEMALE = "W";
 
 	public static final String MALE = "M";
-	public static final String FEMALE = "W";
+	private static final long serialVersionUID = -5210814076506102292L;
+
+	@Element(name = "geschlecht", required = false)
+	private String gender;
 
 	@Element(name = "obfuscated_id")
 	private String id;
@@ -31,15 +34,12 @@ public class Person implements Serializable {
 	@Element(name = "familienname")
 	private String surname;
 
-	@Element(name = "geschlecht", required = false)
-	private String gender;
+	public String getGender() {
+		return gender;
+	}
 
 	public String getId() {
 		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
 	}
 
 	public String getName() {
@@ -49,10 +49,6 @@ public class Person implements Serializable {
 		return name;
 	}
 
-	public void setName(String name) {
-		this.name = name;
-	}
-
 	public String getSurname() {
 		if (surname == null) {
 			return "";
@@ -60,15 +56,19 @@ public class Person implements Serializable {
 		return surname;
 	}
 
-	public void setSurname(String surname) {
-		this.surname = surname;
-	}
-
-	public String getGender() {
-		return gender;
-	}
-
 	public void setGender(String gender) {
 		this.gender = gender;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public void setSurname(String surname) {
+		this.surname = surname;
 	}
 }

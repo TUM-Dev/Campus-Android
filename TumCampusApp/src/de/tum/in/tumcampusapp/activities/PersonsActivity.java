@@ -38,152 +38,8 @@ import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequestFetchListener;
 public class PersonsActivity extends Activity implements OnEditorActionListener, TUMOnlineRequestFetchListener {
 
 	/**
-	 * Handler to send request to TUMOnline
-	 */
-	private TUMOnlineRequest requestHandler;
-
-	/**
-	 * Text field for the search tokens.
-	 */
-	private EditText etSearch;
-
-	/**
-	 * List to display the results
-	 */
-	private ListView lvPersons;
-
-	private static final String PERSONEN_SUCHE = "personenSuche";
-
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-
-		setContentView(R.layout.activity_persons);
-
-		etSearch = (EditText) findViewById(R.id.etSearch);
-		etSearch.setOnEditorActionListener(this);
-
-		lvPersons = (ListView) findViewById(R.id.lstPersons);
-	}
-	
-	public void onClick(View view) {
-		int viewId = view.getId();
-		switch (viewId) {
-		case R.id.clear:
-			etSearch.setText("");
-			break;
-		case R.id.dosearch:
-			searchForPersons();
-			break;
-		}
-	}
-	
-	private void searchForPersons() {
-		requestHandler.setParameter("pSuche", etSearch.getText().toString());
-		requestHandler.fetchInteractive(this, this);
-	}
-
-	@Override
-	public void onStart() {
-		super.onStart();
-
-		requestHandler = new TUMOnlineRequest(PERSONEN_SUCHE, this);
-
-	}
-
-	@Override
-	public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-
-		if (etSearch.getText().length() < 2) {
-			Utils.showLongCenteredToast(this, getString(R.string.please_insert_at_least_three_chars));
-			return false;
-		}
-
-		Utils.hideKeyboard(this, etSearch);
-
-		requestHandler.setParameter("pSuche", etSearch.getText().toString());
-
-		// do the TUMOnline request (implement listener here)
-		requestHandler.fetchInteractive(this, this);
-		return true;
-	}
-
-	/**
-	 * Handles the XML response from TUMOnline by deserializing the information to model entities.
-	 * 
-	 * @param rawResp The XML data from TUMOnline.
-	 */
-	@Override
-	public void onFetch(String rawResp) {
-
-		// test by sample element "familienname" (required field)
-		if (!rawResp.contains("familienname")) {
-			lvPersons.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,
-					new String[] { "keine Ergebnisse" }));
-		}
-
-		Serializer serializer = new Persister();
-
-		// Lists of employees
-		PersonList personList = null;
-
-		// deserialize the XML to model entities
-		try {
-			personList = serializer.read(PersonList.class, rawResp);
-		} catch (Exception e) {
-			Log.d("SIMPLEXML", "wont work: " + e.getMessage());
-			e.printStackTrace();
-			return;
-		}
-
-		// fetch details about all employees separately
-		EmploymentDetailsFetcher detailsFetchListener = new EmploymentDetailsFetcher(this, personList);
-		detailsFetchListener.fetchEmploymentDetails();
-	}
-
-	@Override
-	public void onFetchError(String errorReason) {
-		Utils.showLongCenteredToast(PersonsActivity.this, errorReason);
-		lvPersons.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,
-		// TODO Check Vasyl - to string.xml
-				new String[] { getString(R.string.no_entries) }));
-	}
-
-	@Override
-	public void onFetchCancelled() {
-		// ignore
-	}
-
-	/**
-	 * Displays the employees searched for.
-	 * 
-	 * @param employees The search results enriched with some additional information.
-	 */
-	private void displayResults(List<Person> employees) {
-		final ListView lvStaff = (ListView) findViewById(R.id.lstPersons);
-
-		lvStaff.setAdapter(new PersonListAdapter(PersonsActivity.this, employees));
-
-		lvStaff.setOnItemClickListener(new OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> a, View v, int position, long id) {
-				Object listViewItem = lvStaff.getItemAtPosition(position);
-				Person person = (Person) listViewItem;
-
-				// store selected person ID in bundle to get in in StaffDetails
-				Bundle bundle = new Bundle();
-				bundle.putSerializable("personObject", person);
-
-				// show detailed information in new activity
-				Intent intent = new Intent(PersonsActivity.this, PersonsDetailsActivity.class);
-				intent.putExtras(bundle);
-				startActivity(intent);
-			}
-		});
-	}
-
-	/**
-	 * Helper class that successively fetches detail information for a list of employees.
+	 * Helper class that successively fetches detail information for a list of
+	 * employees.
 	 * 
 	 * @author Vincenz Doelle
 	 * @review Daniel G. Mayr
@@ -192,16 +48,16 @@ public class PersonsActivity extends Activity implements OnEditorActionListener,
 		// Context activity (Staff.class)
 		private final Activity context;
 
-		// list of person IDs to be processed, used as a queue
-		private final ArrayList<String> personIds;
-
-		// number of persons to be processed
-		private final int numberOfEmployees;
+		private final ArrayList<Person> employees;
 
 		// current number of persons processed
 		private int numberEmployeesProcessed;
 
-		private final ArrayList<Person> employees;
+		// number of persons to be processed
+		private final int numberOfEmployees;
+
+		// list of person IDs to be processed, used as a queue
+		private final ArrayList<String> personIds;
 
 		// HTTP request handler to handle requests to TUMOnline
 		@SuppressWarnings("hiding")
@@ -223,7 +79,8 @@ public class PersonsActivity extends Activity implements OnEditorActionListener,
 		}
 
 		/**
-		 * Fetch all persons whose IDs are given. Use personIds as a queue that is emptied successively.
+		 * Fetch all persons whose IDs are given. Use personIds as a queue that
+		 * is emptied successively.
 		 */
 		private void fetchEmploymentDetails() {
 
@@ -240,11 +97,18 @@ public class PersonsActivity extends Activity implements OnEditorActionListener,
 
 			// initialize request handler and update message for progress dialog
 			// TODO Progress View
-			// requestHandler.setProgressDialogMessage(numberEmployeesProcessed + "/" + numberOfEmployees
-			// 		+ getString(R.string.personinformation_are_getting_fetched));
+			// requestHandler.setProgressDialogMessage(numberEmployeesProcessed
+			// + "/" + numberOfEmployees
+			// + getString(R.string.personinformation_are_getting_fetched));
 			requestHandler.setParameter("pIdentNr", parameterValue);
 			requestHandler.fetchInteractive(context, this);
 			numberEmployeesProcessed++;
+		}
+
+		@Override
+		public void onCommonError(String errorReason) {
+			// TODO Auto-generated method stub
+
 		}
 
 		@Override
@@ -269,27 +133,162 @@ public class PersonsActivity extends Activity implements OnEditorActionListener,
 		}
 
 		@Override
-		public void onFetchError(String errorReason) {
-			Utils.showLongCenteredToast(PersonsActivity.this, errorReason);
-		}
-
-		@Override
 		public void onFetchCancelled() {
 			// if user cancels the operation, display all results we have so far
 			displayResults(employees);
 		}
 
 		@Override
-		public void onCommonError(String errorReason) {
-			// TODO Auto-generated method stub
-			
+		public void onFetchError(String errorReason) {
+			Utils.showLongCenteredToast(PersonsActivity.this, errorReason);
 		}
 
+	}
+
+	private static final String PERSONEN_SUCHE = "personenSuche";
+
+	/**
+	 * Text field for the search tokens.
+	 */
+	private EditText etSearch;
+
+	/**
+	 * List to display the results
+	 */
+	private ListView lvPersons;
+
+	/**
+	 * Handler to send request to TUMOnline
+	 */
+	private TUMOnlineRequest requestHandler;
+
+	/**
+	 * Displays the employees searched for.
+	 * 
+	 * @param employees
+	 *            The search results enriched with some additional information.
+	 */
+	private void displayResults(List<Person> employees) {
+		final ListView lvStaff = (ListView) findViewById(R.id.lstPersons);
+
+		lvStaff.setAdapter(new PersonListAdapter(PersonsActivity.this, employees));
+
+		lvStaff.setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> a, View v, int position, long id) {
+				Object listViewItem = lvStaff.getItemAtPosition(position);
+				Person person = (Person) listViewItem;
+
+				// store selected person ID in bundle to get in in StaffDetails
+				Bundle bundle = new Bundle();
+				bundle.putSerializable("personObject", person);
+
+				// show detailed information in new activity
+				Intent intent = new Intent(PersonsActivity.this, PersonsDetailsActivity.class);
+				intent.putExtras(bundle);
+				startActivity(intent);
+			}
+		});
+	}
+
+	public void onClick(View view) {
+		int viewId = view.getId();
+		switch (viewId) {
+		case R.id.clear:
+			etSearch.setText("");
+			break;
+		case R.id.dosearch:
+			searchForPersons();
+			break;
+		}
 	}
 
 	@Override
 	public void onCommonError(String errorReason) {
 		// TODO Auto-generated method stub
-		
+
+	}
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+
+		setContentView(R.layout.activity_persons);
+
+		etSearch = (EditText) findViewById(R.id.etSearch);
+		etSearch.setOnEditorActionListener(this);
+
+		lvPersons = (ListView) findViewById(R.id.lstPersons);
+	}
+
+	@Override
+	public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+		if (etSearch.getText().length() < 2) {
+			Utils.showLongCenteredToast(this, getString(R.string.please_insert_at_least_three_chars));
+			return false;
+		}
+
+		Utils.hideKeyboard(this, etSearch);
+
+		requestHandler.setParameter("pSuche", etSearch.getText().toString());
+
+		// do the TUMOnline request (implement listener here)
+		requestHandler.fetchInteractive(this, this);
+		return true;
+	}
+
+	/**
+	 * Handles the XML response from TUMOnline by deserializing the information
+	 * to model entities.
+	 * 
+	 * @param rawResp
+	 *            The XML data from TUMOnline.
+	 */
+	@Override
+	public void onFetch(String rawResp) {
+
+		// test by sample element "familienname" (required field)
+		if (!rawResp.contains("familienname")) {
+			lvPersons.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, new String[] { "keine Ergebnisse" }));
+		}
+
+		Serializer serializer = new Persister();
+
+		// Lists of employees
+		PersonList personList = null;
+
+		// deserialize the XML to model entities
+		try {
+			personList = serializer.read(PersonList.class, rawResp);
+		} catch (Exception e) {
+			Log.d("SIMPLEXML", "wont work: " + e.getMessage());
+			e.printStackTrace();
+			return;
+		}
+		// fetch details about all employees separately
+		EmploymentDetailsFetcher detailsFetchListener = new EmploymentDetailsFetcher(this, personList);
+		detailsFetchListener.fetchEmploymentDetails();
+	}
+
+	@Override
+	public void onFetchCancelled() {
+		// ignore
+	}
+
+	@Override
+	public void onFetchError(String errorReason) {
+		Utils.showLongCenteredToast(PersonsActivity.this, errorReason);
+		lvPersons.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, new String[] { getString(R.string.no_entries) }));
+	}
+
+	@Override
+	public void onStart() {
+		super.onStart();
+		requestHandler = new TUMOnlineRequest(PERSONEN_SUCHE, this);
+	}
+
+	private void searchForPersons() {
+		requestHandler.setParameter("pSuche", etSearch.getText().toString());
+		requestHandler.fetchInteractive(this, this);
 	}
 }

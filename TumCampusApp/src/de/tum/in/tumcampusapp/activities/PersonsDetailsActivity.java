@@ -30,31 +30,6 @@ public class PersonsDetailsActivity extends Activity {
 	 */
 	private Person personObject;
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-
-		setContentView(R.layout.activity_personsdetails);
-
-		// get person ID and/or object from Staff activity
-		Bundle bundle = this.getIntent().getExtras();
-		personObject = (Person) bundle.getSerializable("personObject");
-	}
-
-	@Override
-	public void onStart() {
-		super.onStart();
-
-		// make sure not both person is not null (error occurred)
-		if (personObject == null) {
-			// no query text specified
-			Toast.makeText(this, getString(R.string.no_person_set), Toast.LENGTH_LONG).show();
-			return;
-		}
-
-		initUI((Employee) personObject);
-	}
-
 	/**
 	 * Displays all relevant information about the given employee in the user interface (UI).
 	 * 
@@ -146,5 +121,30 @@ public class PersonsDetailsActivity extends Activity {
 
 		tvDetails4.setText(Html.fromHtml(contentText.toString()), TextView.BufferType.SPANNABLE);
 
+	}
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+
+		setContentView(R.layout.activity_personsdetails);
+
+		// get person ID and/or object from Staff activity
+		Bundle bundle = this.getIntent().getExtras();
+		personObject = (Person) bundle.getSerializable("personObject");
+	}
+
+	@Override
+	public void onStart() {
+		super.onStart();
+
+		// make sure not both person is not null (error occurred)
+		if (personObject == null) {
+			// no query text specified
+			Toast.makeText(this, getString(R.string.no_person_set), Toast.LENGTH_LONG).show();
+			return;
+		}
+
+		initUI((Employee) personObject);
 	}
 }

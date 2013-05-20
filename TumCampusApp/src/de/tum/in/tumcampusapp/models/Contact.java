@@ -15,59 +15,59 @@ import org.simpleframework.xml.Element;
 public class Contact implements Serializable {
 
 	private static final long serialVersionUID = 4413581972047241018L;
-	// TODO Think of exporting to string.xml or constants
-	@Element(name = "telefon", required = false)
-	private String telefon;
+	@Element(name = "zusatz_info", required = false)
+	private String addInfo;
 
 	@Element(name = "fax", required = false)
 	private String fax;
 
-	@Element(name = "mobiltelefon", required = false)
-	private String mobilephone;
-
-	@Element(name = "zusatz_info", required = false)
-	private String addInfo;
-
 	@Element(name = "www_homepage", required = false)
 	private String homepage;
 
-	public String getTelefon() {
-		return telefon;
-	}
+	@Element(name = "mobiltelefon", required = false)
+	private String mobilephone;
 
-	public void setTelefon(String telefon) {
-		this.telefon = telefon;
+	// TODO Think of exporting to string.xml or constants
+	@Element(name = "telefon", required = false)
+	private String telefon;
+
+	public String getAdditionalInfo() {
+		return addInfo;
 	}
 
 	public String getFax() {
 		return fax;
 	}
 
-	public void setFax(String fax) {
-		this.fax = fax;
+	public String getHomepage() {
+		return homepage;
 	}
 
 	public String getMobilephone() {
 		return mobilephone;
 	}
 
-	public void setMobilephone(String mobilephone) {
-		this.mobilephone = mobilephone;
-	}
-
-	public String getAdditionalInfo() {
-		return addInfo;
+	public String getTelefon() {
+		return telefon;
 	}
 
 	public void setAdditionalInfo(String addInfo) {
 		this.addInfo = addInfo;
 	}
 
-	public String getHomepage() {
-		return homepage;
+	public void setFax(String fax) {
+		this.fax = fax;
 	}
 
 	public void setHomepage(String homepage) {
 		this.homepage = homepage;
+	}
+
+	public void setMobilephone(String mobilephone) {
+		this.mobilephone = mobilephone;
+	}
+
+	public void setTelefon(String telefon) {
+		this.telefon = telefon;
 	}
 }

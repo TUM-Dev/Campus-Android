@@ -7,6 +7,8 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -19,6 +21,7 @@ import org.apache.http.util.EntityUtils;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 import de.tum.in.tumcampusapp.R;
@@ -178,6 +181,28 @@ public class FileUtils {
 	public static String sendGetRequest(DefaultHttpClient httpClient, String url) {
 		return sendRequest(httpClient, new HttpGet(url));
 
+	}
+
+	public static String sendAsynchGetRequest(final DefaultHttpClient httpClient, final String url) {
+		class SendHttpRequest extends AsyncTask<URL, Integer, Long> {
+			String result;
+
+			@Override
+			protected Long doInBackground(URL... urls) {
+				result = sendRequest(httpClient, new HttpGet(url));
+				return null;
+			}
+			@Override
+			protected void onPostExecute(Long result) {
+				Log.d(getClass().getSimpleName(), this.result);
+			}
+		}
+		try {
+			new SendHttpRequest().execute(new URL(url));
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
+		return "TODO: Return the String containing the Information";
 	}
 
 	/**
