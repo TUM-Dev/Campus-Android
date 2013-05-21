@@ -10,9 +10,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.auxiliary.HTMLStringBuffer;
+import de.tum.in.tumcampusapp.auxiliary.EmploymentDetailsFetcher;
 import de.tum.in.tumcampusapp.models.Employee;
 import de.tum.in.tumcampusapp.models.Group;
 import de.tum.in.tumcampusapp.models.Person;
+import de.tum.in.tumcampusapp.models.PersonList;
 import de.tum.in.tumcampusapp.models.Room;
 import de.tum.in.tumcampusapp.models.TelSubstation;
 
@@ -144,7 +146,10 @@ public class PersonsDetailsActivity extends Activity {
 			Toast.makeText(this, getString(R.string.no_person_set), Toast.LENGTH_LONG).show();
 			return;
 		}
-
+		// fetch details about all employees separately
+		PersonList personList = null;
+		EmploymentDetailsFetcher detailsFetchListener = new EmploymentDetailsFetcher(this, personList);
+		detailsFetchListener.fetchEmploymentDetails();
 		initUI((Employee) personObject);
 	}
 }

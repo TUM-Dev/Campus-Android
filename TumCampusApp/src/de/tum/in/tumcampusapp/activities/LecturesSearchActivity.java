@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -53,6 +54,11 @@ public class LecturesSearchActivity extends ActivityForAccessingTumOnline implem
 
 	public LecturesSearchActivity() {
 		super(Const.LECTURES_SEARCH, R.layout.activity_lecturessearch);
+	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		return true;
 	}
 
 	@Override

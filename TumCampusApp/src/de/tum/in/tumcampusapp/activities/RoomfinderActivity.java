@@ -38,34 +38,6 @@ public class RoomfinderActivity extends ActivityForSearching implements OnEditor
 		super(R.layout.activity_roomfinder);
 	}
 
-	/**
-	 * Extract the results from the URL's document.
-	 * 
-	 * @return The extracted results.
-	 */
-	private String extractResultsFromURL() {
-		String param1 = "searchstring=" + URLEncoder.encode(searchField.getText().toString());
-		String param2 = "building=Alle";
-		String param3 = "search=Suche+starten";
-
-		String query = SERVICE_URL + "?" + param1 + "&" + param2 + "&" + param3;
-
-		// download file
-		String text = FileUtils.sendGetRequest(httpClient, query);
-
-		if (text == null) {
-			return getString(R.string.something_wrong);
-		}
-
-		text = Utils.cutText(text, "<div id=\"maincontentwrapper\">", "<div class=\"documentActions\">");
-
-		// fit all links
-		text = text.replace("<a href=\"search_room_form\">", "<a href=\"" + SERVICE_BASE_URL + "search_room_form\">");
-		text = text.replace("<a href=\"search_room_results", "<a href=\"" + SERVICE_BASE_URL + "search_room_results");
-
-		return text;
-	}
-
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -76,14 +48,34 @@ public class RoomfinderActivity extends ActivityForSearching implements OnEditor
 
 	@Override
 	public boolean performSearchAlgorithm() {
-		FileUtils.sendAsynchGetRequest(httpClient, "http://portal.mytum.de/layout.css", this);
+		@SuppressWarnings("deprecation")
+		String param1 = "searchstring=" + URLEncoder.encode(searchField.getText().toString());
+		String param2 = "building=Alle";
+		String param3 = "search=Suche+starten";
+
+		String queryCss = "http://portal.mytum.de/layout.css";
+		String queryExtraction = SERVICE_URL + "?" + param1 + "&" + param2 + "&" + param3;
+
+		FileUtils.sendAsynchGetRequest(httpClient, this, queryCss, queryExtraction);
 		return true;
 	}
 
 	@Override
-	public void onSearchResult(String result) {
-		// TODO This is also asynch!
-		String text = Utils.buildHTMLDocument(result,  extractResultsFromURL());
+	public void onSearchResult(String[] results) {
+		// Get my results and give them semantics
+		String resultCss = results[0];
+		String resultExtraction = results[1];
+
+		// Cut the results from the webpage
+		resultExtraction = Utils.cutText(resultExtraction, "<div id=\"maincontentwrapper\">", "<div class=\"documentActions\">");
+		// fit all links
+		resultExtraction = resultExtraction.replace("<a href=\"search_room_form\">", "<a href=\"" + SERVICE_BASE_URL + "search_room_form\">");
+		resultExtraction = resultExtraction.replace("<a href=\"search_room_results", "<a href=\"" + SERVICE_BASE_URL + "search_room_results");
+
+		// This buidl the actual html document using the css file and the
+		// extracetd results.
+		String text = Utils.buildHTMLDocument(resultCss, resultExtraction);
+
 		// write resulting document to temporary file on SD-card
 		File file = null;
 		try {
@@ -94,13 +86,13 @@ public class RoomfinderActivity extends ActivityForSearching implements OnEditor
 			FileUtils.getFileFromURL(httpClient, SERVICE_BASE_URL + "/default.gif", FileUtils.getFileOnSD(Const.ROOMFINDER, "default.gif"));
 
 			webView.loadUrl("file://" + file.getPath());
-			
+
 			errorLayout.setVisibility(View.GONE);
 			progressLayout.setVisibility(View.GONE);
 		} catch (Exception e) {
 			Toast.makeText(this, R.string.no_sd_card, Toast.LENGTH_SHORT).show();
 			Log.e(getClass().getSimpleName(), e.getMessage());
-			
+
 			errorLayout.setVisibility(View.VISIBLE);
 			progressLayout.setVisibility(View.GONE);
 		}

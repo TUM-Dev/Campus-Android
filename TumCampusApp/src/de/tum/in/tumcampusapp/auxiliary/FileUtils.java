@@ -7,8 +7,6 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -182,19 +180,32 @@ public class FileUtils {
 		return sendRequest(httpClient, new HttpGet(url));
 	}
 
-	public static void sendAsynchGetRequest(final DefaultHttpClient httpClient, final String url, final SearchResultListener listener) {
-		AsyncTask<Void, Void, String> backgroundTask;
+	/**
+	 * Sends an asynch http reqeust using a asynchTask. The method takes the
+	 * httpClient, the Listener for the results and a variable argumentlist of
+	 * to be fetched urls. The result are stored in a string array in the same
+	 * order as the urls were requested.
+	 * 
+	 */
+	public static void sendAsynchGetRequest(final DefaultHttpClient httpClient, final SearchResultListener listener, final String... urls) {
+		AsyncTask<Void, Void, String[]> backgroundTask;
 
-		backgroundTask = new AsyncTask<Void, Void, String>() {
+		backgroundTask = new AsyncTask<Void, Void, String[]>() {
 			@Override
-			protected String doInBackground(Void... params) {
-				String result = sendRequest(httpClient, new HttpGet(url));
+			protected String[] doInBackground(Void... params) {
+				// Fetches all urls and stores them in the same orde rinto the result string array
+				String[] result = new String[urls.length];
+				int i = 0;
+				for (String url : urls) {
+					result[i] = sendRequest(httpClient, new HttpGet(url));
+					i++;
+				}
 				return result;
 			}
 
 			@Override
-			protected void onPostExecute(String result) {
-				Log.d(getClass().getSimpleName(), result);
+			protected void onPostExecute(String[] result) {
+				// Invokes the listener 
 				listener.onSearchResult(result);
 			}
 		};
