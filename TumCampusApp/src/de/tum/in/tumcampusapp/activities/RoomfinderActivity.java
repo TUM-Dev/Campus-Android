@@ -7,6 +7,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.webkit.WebView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
@@ -14,6 +15,7 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.ActivityForSearching;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.FileUtils;
+import de.tum.in.tumcampusapp.auxiliary.SearchResultListener;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 
 /**
@@ -21,7 +23,7 @@ import de.tum.in.tumcampusapp.auxiliary.Utils;
  * 
  * @author Vincenz Doelle
  */
-public class RoomfinderActivity extends ActivityForSearching implements OnEditorActionListener {
+public class RoomfinderActivity extends ActivityForSearching implements OnEditorActionListener, SearchResultListener {
 
 	// HTTP client for sending requests to MyTUM roomfinder
 	private DefaultHttpClient httpClient;
@@ -31,7 +33,7 @@ public class RoomfinderActivity extends ActivityForSearching implements OnEditor
 	private final String SERVICE_URL = SERVICE_BASE_URL + "search_room_results";
 
 	private WebView webView;
-	
+
 	public RoomfinderActivity() {
 		super(R.layout.activity_roomfinder);
 	}
@@ -74,11 +76,14 @@ public class RoomfinderActivity extends ActivityForSearching implements OnEditor
 
 	@Override
 	public boolean performSearchAlgorithm() {
-		// fetch css styles and build HTML document together with results
-		// TODO
-		//String text = Utils.buildHTMLDocument(FileUtils.sendGetRequest(httpClient, "http://portal.mytum.de/layout.css"), extractResultsFromURL());
-		String text = FileUtils.sendAsynchGetRequest(httpClient, "http://portal.mytum.de/layout.css");
+		FileUtils.sendAsynchGetRequest(httpClient, "http://portal.mytum.de/layout.css", this);
+		return true;
+	}
 
+	@Override
+	public void onSearchResult(String result) {
+		// TODO This is also asynch!
+		String text = Utils.buildHTMLDocument(result,  extractResultsFromURL());
 		// write resulting document to temporary file on SD-card
 		File file = null;
 		try {
@@ -89,11 +94,15 @@ public class RoomfinderActivity extends ActivityForSearching implements OnEditor
 			FileUtils.getFileFromURL(httpClient, SERVICE_BASE_URL + "/default.gif", FileUtils.getFileOnSD(Const.ROOMFINDER, "default.gif"));
 
 			webView.loadUrl("file://" + file.getPath());
-			return true;
+			
+			errorLayout.setVisibility(View.GONE);
+			progressLayout.setVisibility(View.GONE);
 		} catch (Exception e) {
 			Toast.makeText(this, R.string.no_sd_card, Toast.LENGTH_SHORT).show();
 			Log.e(getClass().getSimpleName(), e.getMessage());
+			
+			errorLayout.setVisibility(View.VISIBLE);
+			progressLayout.setVisibility(View.GONE);
 		}
-		return false;
 	}
 }

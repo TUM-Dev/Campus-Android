@@ -8,7 +8,6 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
@@ -88,14 +87,7 @@ public abstract class ActivityForSearching extends Activity implements OnEditorA
 		}
 		// set the query string as parameter for the TUMOnline request
 		Utils.hideKeyboard(this, searchField);
-		boolean searchSucceeded;
-		searchSucceeded= performSearchAlgorithm();
-		
-		if (searchSucceeded) {
-			errorLayout.setVisibility(View.GONE);
-			progressLayout.setVisibility(View.GONE);
-			return true;
-		}
-		return false;
+		performSearchAlgorithm();
+		return true;
 	}
 }

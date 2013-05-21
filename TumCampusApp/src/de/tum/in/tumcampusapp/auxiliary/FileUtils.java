@@ -78,7 +78,7 @@ public class FileUtils {
 			return targetFile;
 
 		} catch (/* ClientProtocolException, IOException */Exception e) {
-			Log.e("EXCEPTION", e.getMessage());
+			Log.e("FileUtils.getFileFromURL", e.getMessage());
 		}
 
 		return null;
@@ -162,7 +162,7 @@ public class FileUtils {
 				input.close();
 			}
 		} catch (IOException e) {
-			Log.e("EXCEPTION", e.getMessage());
+			Log.e("FileUtils.readFile", e.getMessage());
 		}
 
 		return contents.toString();
@@ -180,29 +180,25 @@ public class FileUtils {
 	 */
 	public static String sendGetRequest(DefaultHttpClient httpClient, String url) {
 		return sendRequest(httpClient, new HttpGet(url));
-
 	}
 
-	public static String sendAsynchGetRequest(final DefaultHttpClient httpClient, final String url) {
-		class SendHttpRequest extends AsyncTask<URL, Integer, Long> {
-			String result;
+	public static void sendAsynchGetRequest(final DefaultHttpClient httpClient, final String url, final SearchResultListener listener) {
+		AsyncTask<Void, Void, String> backgroundTask;
+
+		backgroundTask = new AsyncTask<Void, Void, String>() {
+			@Override
+			protected String doInBackground(Void... params) {
+				String result = sendRequest(httpClient, new HttpGet(url));
+				return result;
+			}
 
 			@Override
-			protected Long doInBackground(URL... urls) {
-				result = sendRequest(httpClient, new HttpGet(url));
-				return null;
+			protected void onPostExecute(String result) {
+				Log.d(getClass().getSimpleName(), result);
+				listener.onSearchResult(result);
 			}
-			@Override
-			protected void onPostExecute(Long result) {
-				Log.d(getClass().getSimpleName(), this.result);
-			}
-		}
-		try {
-			new SendHttpRequest().execute(new URL(url));
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		}
-		return "TODO: Return the String containing the Information";
+		};
+		backgroundTask.execute();
 	}
 
 	/**
@@ -240,7 +236,7 @@ public class FileUtils {
 				entity.consumeContent();
 			}
 		} catch (Exception /* ClientProtocolException, IOException */e) {
-			Log.e("EXCEPTION", e.getMessage());
+			Log.e("FileUtils.sendRequest", e.getMessage());
 		}
 		return respContent;
 	}
@@ -270,7 +266,7 @@ public class FileUtils {
 
 			fos.close();
 		} catch (Exception e) {
-			Log.e("EXCEPTION", e.getMessage());
+			Log.e("FileUtils.writeFile", e.getMessage());
 		}
 	}
 }
