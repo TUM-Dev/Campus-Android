@@ -50,9 +50,6 @@ import android.widget.Toast;
 
 /** Class for helper functions */
 public class Utils {
-
-	// Set JSON HTTP timeout to 30 seconds
-	private static final int JSON_HTTP_TIMEOUT = 30000;
 	/** Counter for unfinished downloads */
 	public static int openDownloads = 0;
 
@@ -86,6 +83,7 @@ public class Utils {
 		StringBuilder sb = new StringBuilder();
 
 		String line = null;
+		// TODO Who handles exception?
 		try {
 			while ((line = reader.readLine()) != null) {
 				sb.append(line + "\n");
@@ -156,6 +154,7 @@ public class Utils {
 	 * </pre>
 	 */
 	public static boolean dbTableExists(SQLiteDatabase db, String table) {
+		// TODO Who handles exception?
 		try {
 			Cursor c = db.rawQuery("SELECT 1 FROM " + table + " LIMIT 1", null);
 			if (c.moveToNext()) {
@@ -214,6 +213,7 @@ public class Utils {
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
+				// TODO Who handles exception?
 				try {
 					Utils.log(url);
 					downloadFile(url, target);
@@ -296,6 +296,7 @@ public class Utils {
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
+				// TODO Who handles exception?
 				try {
 					Utils.log(url);
 					downloadIconFile(url, target);
@@ -320,14 +321,14 @@ public class Utils {
 
 		HttpClient httpclient = new DefaultHttpClient();
 		HttpParams params = httpclient.getParams();
-		HttpConnectionParams.setSoTimeout(params, JSON_HTTP_TIMEOUT);
-		HttpConnectionParams.setConnectionTimeout(params, JSON_HTTP_TIMEOUT);
+		HttpConnectionParams.setSoTimeout(params, Const.HTTP_TIMEOUT);
+		HttpConnectionParams.setConnectionTimeout(params, Const.HTTP_TIMEOUT);
 
 		HttpEntity entity = null;
 		try {
 			entity = httpclient.execute(new HttpGet(url)).getEntity();
 		} catch (Exception e) {
-			throw new Exception("Sorry, there was a timeout processing your request");
+			throw new Exception("There was a timeout processing your request");
 		}
 
 		String data = "";
@@ -373,6 +374,7 @@ public class Utils {
 	 * </pre>
 	 */
 	public static void emptyCacheDir(String directory) {
+		// TODO Who handles exception?
 		try {
 			File dir = new File(getCacheDir(directory));
 			if (dir.isDirectory() && dir.canWrite()) {
@@ -430,10 +432,10 @@ public class Utils {
 			f.mkdirs();
 		}
 		if (!f.canRead()) {
-			throw new Exception("Problem mit dem lesen der SD-Karte/ Problem with reading the SD-Card :" + "<sd>/tumcampus/" + directory);
+			throw new Exception("Problem reading from SD-Card");
 		}
 		if (!f.canWrite()) {
-			throw new Exception("Problem mit dem schreiben auf der SD-Karte/ Problem with writing on the SD-Card :" + "<sd>/tumcampus/" + directory);
+			throw new Exception("Problem writing to SD-Card");
 		}
 		return f.getPath() + "/";
 	}
@@ -447,6 +449,7 @@ public class Utils {
 	 * </pre>
 	 */
 	public static Date getDate(String str) {
+		// TODO Who handles exception?
 		try {
 			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 			return dateFormat.parse(str);
@@ -491,6 +494,7 @@ public class Utils {
 	 * </pre>
 	 */
 	public static Date getDateTime(String str) {
+		// TODO Who handles exception?
 		try {
 			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 			return dateFormat.parse(str);
@@ -509,6 +513,7 @@ public class Utils {
 	 * </pre>
 	 */
 	public static Date getDateTimeDe(String str) {
+		// TODO Who handles exception?
 		try {
 			SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm");
 			return dateFormat.parse(str);
@@ -527,6 +532,7 @@ public class Utils {
 	 * </pre>
 	 */
 	public static Date getDateTimeRfc822(String str) {
+		// TODO Who handles exception?
 		try {
 			SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss", Locale.US);
 			return dateFormat.parse(str);
@@ -576,6 +582,7 @@ public class Utils {
 	 * </pre>
 	 */
 	public static String getLinkFromUrlFile(File file) {
+		// TODO Who handles exception?
 		try {
 			byte[] buffer = new byte[(int) file.length()];
 			FileInputStream in = new FileInputStream(file.getAbsolutePath());
@@ -605,6 +612,7 @@ public class Utils {
 		Utils.log(url);
 
 		String result = url;
+		// TODO Who handles exception?
 		try {
 			HttpClient httpclient = new DefaultHttpClient();
 			HttpEntity entity = httpclient.execute(new HttpGet(url)).getEntity();
@@ -772,6 +780,7 @@ public class Utils {
 	 * </pre>
 	 */
 	public static String md5(String str) {
+		// TODO Who handles exception?
 		try {
 			MessageDigest md = MessageDigest.getInstance("MD5");
 			md.reset();
@@ -795,6 +804,7 @@ public class Utils {
 	 */
 	public static List<String[]> readCsv(InputStream fin, String charset) {
 		List<String[]> list = new ArrayList<String[]>();
+		// TODO Who handles exception?
 		try {
 			BufferedReader in = new BufferedReader(new InputStreamReader(fin, charset));
 			String reader = "";

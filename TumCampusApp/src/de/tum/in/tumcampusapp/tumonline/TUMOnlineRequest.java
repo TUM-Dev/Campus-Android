@@ -22,6 +22,7 @@ import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 
 /**
@@ -39,7 +40,6 @@ public class TUMOnlineRequest {
 	public static final String LOGOUT_SERVICE_URL = "https://campus.tum.de/tumonline/anmeldung.beenden";
 	// server address
 	public static final String SERVICE_BASE_URL = "https://campus.tum.de/tumonline/wbservicesbasic.";
-	public static final int TUM_ONLINE_TIMEOUT = 30000;
 	// set to null, if not needed
 	private String accessToken = null;
 	/** asynchronous task for interactive fetch */
@@ -55,8 +55,8 @@ public class TUMOnlineRequest {
 		client = getThreadSafeClient();
 		resetParameters();
 		HttpParams params = client.getParams();
-		HttpConnectionParams.setSoTimeout(params, TUM_ONLINE_TIMEOUT);
-		HttpConnectionParams.setConnectionTimeout(params, TUM_ONLINE_TIMEOUT);
+		HttpConnectionParams.setSoTimeout(params, Const.HTTP_TIMEOUT);
+		HttpConnectionParams.setConnectionTimeout(params, Const.HTTP_TIMEOUT);
 	}
 
 	public TUMOnlineRequest(String method) {

@@ -41,56 +41,38 @@ public class DownloadService extends IntentService {
 		sendBroadcast(intentSend);
 	}
 
-	private void broadcastError() {
+	private void broadcastError(String message) {
 		Intent intentSend = new Intent();
 		intentSend.setAction(broadcast);
 		intentSend.putExtra(Const.ACTION_EXTRA, Const.ERROR);
+		intentSend.putExtra(Const.ERROR_MESSAGE, message);
 		sendBroadcast(intentSend);
 	}
 
-	public boolean downloadCafeterias() {
+	public boolean downloadCafeterias() throws Exception {
 		CafeteriaManager cm = new CafeteriaManager(this);
 		CafeteriaMenuManager cmm = new CafeteriaMenuManager(this);
-		try {
-			cm.downloadFromExternal();
-			cmm.downloadFromExternal();
-		} catch (Exception e) {
-			Log.e(getClass().getSimpleName(), e.getMessage());
-			return false;
-		}
+		cm.downloadFromExternal();
+		cmm.downloadFromExternal();
 		return true;
 	}
 
-	public boolean downloadFeed(int feedId) {
+	public boolean downloadFeed(int feedId) throws Exception {
 		FeedItemManager fim = new FeedItemManager(this);
-		try {
-			fim.downloadFromExternal(feedId, false);
-		} catch (Exception e) {
-			Log.e(getClass().getSimpleName(), e.getMessage());
-			return false;
-		}
+		fim.downloadFromExternal(feedId, false);
 		return true;
 	}
 
-	public boolean downloadGallery() {
+	public boolean downloadGallery() throws Exception {
 		GalleryManager gm = new GalleryManager(this);
-		try {
-			gm.downloadFromExternal();
-		} catch (Exception e) {
-			Log.e(getClass().getSimpleName(), e.getMessage());
-			return false;
-		}
+		gm.downloadFromExternal();
 		return true;
 	}
 
-	public boolean downloadNews() {
+	public boolean downloadNews() throws Exception {
 		NewsManager nm = new NewsManager(this);
-		try {
-			nm.downloadFromExternal();
-		} catch (Exception e) {
-			Log.e(getClass().getSimpleName(), e.getMessage());
-			return false;
-		}
+		nm.downloadFromExternal();
+
 		return true;
 	}
 
@@ -104,7 +86,7 @@ public class DownloadService extends IntentService {
 			new SyncManager(this);
 		} catch (Exception e) {
 			Log.e(getClass().getSimpleName(), e.getMessage());
-			broadcastError();
+			broadcastError(e.getMessage());
 			// Don't start new downloads
 			isDestroyed = true;
 		}
@@ -129,27 +111,30 @@ public class DownloadService extends IntentService {
 
 		Log.i(getClass().getSimpleName(), "Handle action <" + action + ">");
 
-		if ((action.equals(Const.NEWS)) && !isDestroyed) {
-			scucessfull = downloadNews();
-		}
-		if ((action.equals(Const.GALLERY)) && !isDestroyed) {
-			scucessfull = downloadGallery();
-		}
-		if ((action.equals(Const.FEEDS)) && !isDestroyed) {
-			int feedId = intent.getExtras().getInt(Const.FEED_ID);
-			scucessfull = downloadFeed(feedId);
-		}
-		if ((action.equals(Const.CAFETERIAS)) && !isDestroyed) {
-			scucessfull = downloadCafeterias();
+		try {
+			if ((action.equals(Const.NEWS)) && !isDestroyed) {
+				scucessfull = downloadNews();
+			}
+			if ((action.equals(Const.GALLERY)) && !isDestroyed) {
+				scucessfull = downloadGallery();
+			}
+			if ((action.equals(Const.FEEDS)) && !isDestroyed) {
+				int feedId = intent.getExtras().getInt(Const.FEED_ID);
+				scucessfull = downloadFeed(feedId);
+			}
+			if ((action.equals(Const.CAFETERIAS)) && !isDestroyed) {
+				scucessfull = downloadCafeterias();
+			}
+		} catch (Exception e) {
+			Log.e(getClass().getSimpleName(), "Error while handling action <" + action + ">");
+			Log.e(getClass().getSimpleName(), "Problem Message: " + e.getMessage());
+			broadcastError(e.getMessage());
 		}
 
 		// After done the job, create an broadcast intent and send it. The
 		// receivers will be informed that the download service has finished.
 		if (scucessfull) {
 			broadcastDownloadCompleted();
-		} else {
-			Log.e(getClass().getSimpleName(), "Error while handling action <" + action + ">");
-			broadcastError();
 		}
 	}
 }

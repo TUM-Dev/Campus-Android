@@ -2,6 +2,7 @@
 <resources>
 
     
+    <string name="no_search_result">No search result</string>
     <string name="search_rooms">Search rooms</string>
     <string name="lang">eng</string>
     <string name="app_name">TUM Campus App</string>

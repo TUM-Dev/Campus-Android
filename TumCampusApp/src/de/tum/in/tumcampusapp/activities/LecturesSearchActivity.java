@@ -108,7 +108,7 @@ public class LecturesSearchActivity extends ActivityForAccessingTumOnline implem
 			Log.d("SIMPLEXML", "wont work: " + e.getMessage());
 			errorLayout.setVisibility(View.VISIBLE);
 			progressLayout.setVisibility(View.GONE);
-			e.printStackTrace();
+			Toast.makeText(this, R.string.no_search_result, Toast.LENGTH_SHORT).show();
 		}
 
 		if (lecturesList == null) {

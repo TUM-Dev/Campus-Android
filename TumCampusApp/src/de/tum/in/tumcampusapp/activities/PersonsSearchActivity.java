@@ -35,7 +35,7 @@ import de.tum.in.tumcampusapp.models.PersonList;
  * @review Thomas Behrens
  * @redesign Sascha Moecker
  */
-public class PersonsActivity extends ActivityForAccessingTumOnline implements OnEditorActionListener {
+public class PersonsSearchActivity extends ActivityForAccessingTumOnline implements OnEditorActionListener {
 	private static final String PERSONEN_SUCHE = "personenSuche";
 
 	private Context context;
@@ -50,7 +50,7 @@ public class PersonsActivity extends ActivityForAccessingTumOnline implements On
 	 */
 	private ListView lvPersons;
 
-	public PersonsActivity() {
+	public PersonsSearchActivity() {
 		super(PERSONEN_SUCHE, R.layout.activity_persons);
 		context = this;
 	}
@@ -146,9 +146,9 @@ public class PersonsActivity extends ActivityForAccessingTumOnline implements On
 			personList = serializer.read(PersonList.class, rawResp);
 		} catch (Exception e) {
 			Log.d("SIMPLEXML", "wont work: " + e.getMessage());
-			e.printStackTrace();
 			progressLayout.setVisibility(View.GONE);
 			errorLayout.setVisibility(View.VISIBLE);
+			Toast.makeText(this, R.string.no_search_result, Toast.LENGTH_SHORT).show();
 			return;
 		}
 		displayResults(personList.getPersons());

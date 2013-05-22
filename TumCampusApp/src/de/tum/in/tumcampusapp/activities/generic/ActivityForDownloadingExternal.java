@@ -35,15 +35,17 @@ public class ActivityForDownloadingExternal extends Activity {
 				return;
 			}
 
-			String message = intent.getStringExtra(Const.ACTION_EXTRA);
-			if (message.length() != 0) {
-				Log.i(activity.getClass().getSimpleName(), "Broadcast received  <" + message + ">");
-				if (message.equals(Const.COMPLETED)) {
+			String action = intent.getStringExtra(Const.ACTION_EXTRA);
+			if (action.length() != 0) {
+				Log.i(activity.getClass().getSimpleName(), "Broadcast received  <" + action + ">");
+				if (action.equals(Const.COMPLETED)) {
 					progressLayout.setVisibility(View.GONE);
 					errorLayout.setVisibility(View.GONE);
 					onResume();
 				}
-				if (message.equals(Const.ERROR)) {
+				if (action.equals(Const.ERROR)) {
+					String message = intent.getStringExtra(Const.ERROR_MESSAGE);
+					Toast.makeText(activity, message, Toast.LENGTH_SHORT).show();
 					progressLayout.setVisibility(View.GONE);
 					errorLayout.setVisibility(View.VISIBLE);
 				}

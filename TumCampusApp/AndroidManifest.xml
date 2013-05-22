@@ -140,7 +140,7 @@
             android:label="@string/cafeterias" >
         </activity>
         <activity
-            android:name=".activities.PersonsActivity"
+            android:name=".activities.PersonsSearchActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/person_search" >
         </activity>
