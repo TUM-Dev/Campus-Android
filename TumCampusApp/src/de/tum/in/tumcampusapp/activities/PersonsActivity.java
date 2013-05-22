@@ -5,12 +5,12 @@ import java.util.List;
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -18,16 +18,14 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.TextView.OnEditorActionListener;
+import android.widget.Toast;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampusapp.adapters.PersonListAdapter;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.Person;
 import de.tum.in.tumcampusapp.models.PersonList;
-import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequest;
-import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequestFetchListener;
 
 /**
  * Activity to search for employees.
@@ -37,10 +35,12 @@ import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequestFetchListener;
  * @review Thomas Behrens
  * @redesign Sascha Moecker
  */
-public class PersonsActivity extends ActivityForAccessingTumOnline implements OnEditorActionListener, TUMOnlineRequestFetchListener {
+public class PersonsActivity extends ActivityForAccessingTumOnline implements OnEditorActionListener {
+	private Context context;
 
 	public PersonsActivity() {
 		super(PERSONEN_SUCHE, R.layout.activity_persons);
+		context = this;
 	}
 	
 	@Override
@@ -149,7 +149,7 @@ public class PersonsActivity extends ActivityForAccessingTumOnline implements On
 				bundle.putSerializable("personObject", person);
 
 				// show detailed information in new activity
-				Intent intent = new Intent(getParent(), PersonsDetailsActivity.class);
+				Intent intent = new Intent(context, PersonsDetailsActivity.class);
 				intent.putExtras(bundle);
 				startActivity(intent);
 			}

@@ -9,7 +9,9 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
@@ -43,13 +45,14 @@ public class TUMOnlineRequest {
 	/** asynchronous task for interactive fetch */
 	AsyncTask<Void, Void, String> backgroundTask = null;
 	/** http client instance for fetching */
-	private HttpClient client = new DefaultHttpClient();
+	private HttpClient client;
 	/** method to call */
 	private String method = null;
 	/** a list/map for the needed parameters */
 	private Map<String, String> parameters;
 
 	public TUMOnlineRequest() {
+		client = getThreadSafeClient();
 		resetParameters();
 		HttpParams params = client.getParams();
 		HttpConnectionParams.setSoTimeout(params, TUM_ONLINE_TIMEOUT);
@@ -74,6 +77,16 @@ public class TUMOnlineRequest {
 		this();
 		this.method = method;
 		this.accessToken = accessToken;
+	}
+
+	private DefaultHttpClient getThreadSafeClient() {
+		DefaultHttpClient client = new DefaultHttpClient();
+		ClientConnectionManager mgr = client.getConnectionManager();
+		HttpParams params = client.getParams();
+
+		client = new DefaultHttpClient(new ThreadSafeClientConnManager(params, mgr.getSchemeRegistry()), params);
+
+		return client;
 	}
 
 	public void cancelRequest(boolean mayInterruptIfRunning) {

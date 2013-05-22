@@ -6,20 +6,13 @@ import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.AdapterView.OnItemClickListener;
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.adapters.PersonListAdapter;
-import de.tum.in.tumcampusapp.auxiliary.EmploymentDetailsFetcher;
 import de.tum.in.tumcampusapp.auxiliary.HTMLStringBuffer;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.Employee;
@@ -199,7 +192,7 @@ public class PersonsDetailsActivity extends Activity implements TUMOnlineRequest
 
 	@Override
 	public void onFetchCancelled() {
-		// TODO
+		requestHandler.cancelRequest(true);
 	}
 
 	@Override
