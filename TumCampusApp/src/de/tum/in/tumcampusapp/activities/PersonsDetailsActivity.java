@@ -2,21 +2,33 @@ package de.tum.in.tumcampusapp.activities;
 
 import java.util.List;
 
+import org.simpleframework.xml.Serializer;
+import org.simpleframework.xml.core.Persister;
+
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
+import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.AdapterView.OnItemClickListener;
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.auxiliary.HTMLStringBuffer;
+import de.tum.in.tumcampusapp.adapters.PersonListAdapter;
 import de.tum.in.tumcampusapp.auxiliary.EmploymentDetailsFetcher;
+import de.tum.in.tumcampusapp.auxiliary.HTMLStringBuffer;
+import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.Employee;
 import de.tum.in.tumcampusapp.models.Group;
 import de.tum.in.tumcampusapp.models.Person;
-import de.tum.in.tumcampusapp.models.PersonList;
 import de.tum.in.tumcampusapp.models.Room;
 import de.tum.in.tumcampusapp.models.TelSubstation;
+import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequest;
+import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequestFetchListener;
 
 /**
  * Activity to show information about an employee.
@@ -25,17 +37,20 @@ import de.tum.in.tumcampusapp.models.TelSubstation;
  * @review Daniel G. Mayr
  * @review Thomas Behrens
  */
-public class PersonsDetailsActivity extends Activity {
+public class PersonsDetailsActivity extends Activity implements TUMOnlineRequestFetchListener {
 
 	/**
 	 * The employee
 	 */
-	private Person personObject;
+	private Person person;
+	TUMOnlineRequest requestHandler;
 
 	/**
-	 * Displays all relevant information about the given employee in the user interface (UI).
+	 * Displays all relevant information about the given employee in the user
+	 * interface (UI).
 	 * 
-	 * @param employee The employee whose information should be displayed.
+	 * @param employee
+	 *            The employee whose information should be displayed.
 	 */
 	private void initUI(Employee employee) {
 
@@ -43,7 +58,8 @@ public class PersonsDetailsActivity extends Activity {
 		ImageView image = (ImageView) this.findViewById(R.id.ivImage);
 		image.setImageBitmap(employee.getImage());
 
-		// use a custom string buffer that helps us with line feeds and formatting
+		// use a custom string buffer that helps us with line feeds and
+		// formatting
 		HTMLStringBuffer contentText = new HTMLStringBuffer();
 
 		TextView tvDetails1 = (TextView) findViewById(R.id.tvDetails1);
@@ -76,8 +92,7 @@ public class PersonsDetailsActivity extends Activity {
 			for (int i = 0; i < groups.size(); i++) {
 				if (groups.get(i) != null) {
 					contentText.appendField(getString(R.string.function), groups.get(i).getTitle());
-					contentText.appendField(getString(R.string.group), groups.get(i).getOrg() + " ("
-							+ groups.get(i).getId() + ")" + "<br />");
+					contentText.appendField(getString(R.string.group), groups.get(i).getOrg() + " (" + groups.get(i).getId() + ")" + "<br />");
 				}
 			}
 		}
@@ -117,8 +132,7 @@ public class PersonsDetailsActivity extends Activity {
 		// add all rooms
 		List<Room> rooms = employee.getRooms();
 		if (rooms != null && rooms.size() > 0) {
-			contentText.appendField(getString(R.string.room), rooms.get(0).getLocation() + " ("
-					+ rooms.get(0).getNumber() + ")");
+			contentText.appendField(getString(R.string.room), rooms.get(0).getLocation() + " (" + rooms.get(0).getNumber() + ")");
 		}
 
 		tvDetails4.setText(Html.fromHtml(contentText.toString()), TextView.BufferType.SPANNABLE);
@@ -133,7 +147,7 @@ public class PersonsDetailsActivity extends Activity {
 
 		// get person ID and/or object from Staff activity
 		Bundle bundle = this.getIntent().getExtras();
-		personObject = (Person) bundle.getSerializable("personObject");
+		person = (Person) bundle.getSerializable("personObject");
 	}
 
 	@Override
@@ -141,15 +155,55 @@ public class PersonsDetailsActivity extends Activity {
 		super.onStart();
 
 		// make sure not both person is not null (error occurred)
-		if (personObject == null) {
+		if (person == null) {
 			// no query text specified
 			Toast.makeText(this, getString(R.string.no_person_set), Toast.LENGTH_LONG).show();
 			return;
 		}
-		// fetch details about all employees separately
-		PersonList personList = null;
-		EmploymentDetailsFetcher detailsFetchListener = new EmploymentDetailsFetcher(this, personList);
-		detailsFetchListener.fetchEmploymentDetails();
-		initUI((Employee) personObject);
+		requestFetch();
+	}
+
+	private void requestFetch() {
+		// create new request handler
+		requestHandler = new TUMOnlineRequest("personenDetails", this);
+		
+		// initialize request handler and update message for progress dialog
+		// TODO Progress View
+		// requestHandler.setProgressDialogMessage(numberEmployeesProcessed
+		// + "/" + numberOfEmployees
+		// + getString(R.string.personinformation_are_getting_fetched));
+		requestHandler.setParameter("pIdentNr", person.getId());
+		requestHandler.fetchInteractive(this, this);
+	}
+
+	@Override
+	public void onCommonError(String errorReason) {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void onFetch(String rawResp) {
+		// deserialize XML response to model entities
+		Serializer serializer = new Persister();
+		try {
+			Employee employee = serializer.read(Employee.class, rawResp);
+
+			if (employee != null) {
+				initUI(employee);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			Log.d("EXCEPTION", e.getMessage());
+		}
+	}
+
+	@Override
+	public void onFetchCancelled() {
+		// TODO
+	}
+
+	@Override
+	public void onFetchError(String errorReason) {
+		Utils.showLongCenteredToast(this, errorReason);
 	}
 }

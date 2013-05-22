@@ -31,32 +31,22 @@ import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequestFetchListener;
  * @author Vincenz Doelle
  * @review Daniel G. Mayr
  */
-public class EmploymentDetailsFetcher extends Activity implements TUMOnlineRequestFetchListener {
+public class EmploymentDetailsFetcher implements TUMOnlineRequestFetchListener {
 	// Context activity (Staff.class)
 	private final Activity context;
-
-	private final ArrayList<Person> employees;
-
-	// current number of persons processed
-	private int numberEmployeesProcessed;
-
-	// number of persons to be processed
-	private final int numberOfEmployees;
-
-	// list of person IDs to be processed, used as a queue
-	private final ArrayList<String> personIds;
+	private Person person;
 
 	// HTTP request handler to handle requests to TUMOnline
 	@SuppressWarnings("hiding")
 	TUMOnlineRequest requestHandler;
-	
+
 	/**
 	 * Displays the employees searched for.
 	 * 
 	 * @param employees
 	 *            The search results enriched with some additional information.
 	 */
-	private void displayResults(List<Person> employees) {
+	private void displayResults(Person employees) {
 		final ListView lvStaff = (ListView) findViewById(R.id.lstPersons);
 
 		lvStaff.setAdapter(new PersonListAdapter(this, employees));
@@ -79,19 +69,11 @@ public class EmploymentDetailsFetcher extends Activity implements TUMOnlineReque
 		});
 	}
 
-	public EmploymentDetailsFetcher(Activity context, PersonList personList) {
+	public EmploymentDetailsFetcher(Activity context, Person person) {
 		// create new request handler
 		requestHandler = new TUMOnlineRequest("personenDetails", context);
 		this.context = context;
-		this.employees = new ArrayList<Person>();
-
-		personIds = new ArrayList<String>();
-		for (Person person : personList.getPersons()) {
-			personIds.add(person.getId());
-		}
-
-		numberOfEmployees = personList.getPersons().size();
-		numberEmployeesProcessed = 0;
+		this.person = person;
 	}
 
 	/**
@@ -99,32 +81,19 @@ public class EmploymentDetailsFetcher extends Activity implements TUMOnlineReque
 	 * emptied successively.
 	 */
 	public void fetchEmploymentDetails() {
-
-		// if all persons' details are fetched, display results and finish
-		if (personIds.size() == 0) {
-			displayResults(employees);
-			return;
-		}
-
-		// get next person ID as parameter
-		String parameterValue = personIds.listIterator().next();
-		// remove this ID from the queue
-		personIds.remove(parameterValue);
-
 		// initialize request handler and update message for progress dialog
 		// TODO Progress View
 		// requestHandler.setProgressDialogMessage(numberEmployeesProcessed
 		// + "/" + numberOfEmployees
 		// + getString(R.string.personinformation_are_getting_fetched));
-		requestHandler.setParameter("pIdentNr", parameterValue);
+		requestHandler.setParameter("pIdentNr", person.getId());
 		requestHandler.fetchInteractive(context, this);
-		numberEmployeesProcessed++;
+
 	}
 
 	@Override
 	public void onCommonError(String errorReason) {
 		// TODO Auto-generated method stub
-
 	}
 
 	@Override
@@ -135,13 +104,8 @@ public class EmploymentDetailsFetcher extends Activity implements TUMOnlineReque
 			Employee employee = serializer.read(Employee.class, rawResp);
 
 			if (employee != null) {
-				employees.add(employee);
-				displayResults(employees);
+				displayResults(employee);
 			}
-
-			// fetch next employment details
-			fetchEmploymentDetails();
-
 		} catch (Exception e) {
 			e.printStackTrace();
 			Log.d("EXCEPTION", e.getMessage());
@@ -150,13 +114,11 @@ public class EmploymentDetailsFetcher extends Activity implements TUMOnlineReque
 
 	@Override
 	public void onFetchCancelled() {
-		// if user cancels the operation, display all results we have so far
-		displayResults(employees);
+		// TODO
 	}
 
 	@Override
 	public void onFetchError(String errorReason) {
-		Utils.showLongCenteredToast(this, errorReason);
+		Utils.showLongCenteredToast(this.context, errorReason);
 	}
-
 }

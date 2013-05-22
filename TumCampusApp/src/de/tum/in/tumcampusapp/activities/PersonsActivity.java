@@ -18,6 +18,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.TextView.OnEditorActionListener;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.ActivityForAccessingTumOnline;
@@ -84,8 +85,8 @@ public class PersonsActivity extends ActivityForAccessingTumOnline implements On
 
 	@Override
 	public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-		if (etSearch.getText().length() < 2) {
-			Utils.showLongCenteredToast(this, getString(R.string.please_insert_at_least_three_chars));
+		if (etSearch.getText().length() < 3) {
+			Toast.makeText(this, R.string.please_insert_at_least_three_chars, Toast.LENGTH_SHORT).show();
 			return false;
 		}
 		searchForPersons();
@@ -129,13 +130,13 @@ public class PersonsActivity extends ActivityForAccessingTumOnline implements On
 	/**
 	 * Displays the employees searched for.
 	 * 
-	 * @param employees
+	 * @param persons
 	 *            The search results enriched with some additional information.
 	 */
-	private void displayResults(List<Person> employees) {
+	private void displayResults(List<Person> persons) {
 		final ListView lvStaff = (ListView) findViewById(R.id.lstPersons);
 
-		lvStaff.setAdapter(new PersonListAdapter(this, employees));
+		lvStaff.setAdapter(new PersonListAdapter(this, persons));
 
 		lvStaff.setOnItemClickListener(new OnItemClickListener() {
 			@Override
