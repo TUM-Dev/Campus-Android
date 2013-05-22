@@ -34,6 +34,7 @@ import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequestFetchListener;
  * @author Vincenz Doelle
  * @review Daniel G. Mayr
  * @review Thomas Behrens
+ * @redesign Sascha Moecker
  */
 public class PersonsActivity extends ActivityForAccessingTumOnline implements OnEditorActionListener, TUMOnlineRequestFetchListener {
 
