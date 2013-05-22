@@ -8,7 +8,8 @@ import org.simpleframework.xml.Root;
 /**
  * A person, often an {@link Employee} working at TUM.
  * <p>
- * Note: This model is based on the TUMOnline web service response format for a corresponding request.
+ * Note: This model is based on the TUMOnline web service response format for a
+ * corresponding request.
  * 
  * @author Vincenz Doelle
  * @review Daniel G. Mayr

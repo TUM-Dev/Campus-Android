@@ -1,66 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/scrollView"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent" >
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
 
-    <LinearLayout
+    <include
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/padding_default"
-        android:orientation="vertical" >
+        android:layout_height="fill_parent"
+        layout="@layout/layout_no_token"
+        android:visibility="gone" />
 
-        <ImageView
-            android:id="@+id/ivImage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:paddingBottom="10dp"
-            android:contentDescription="@string/tum_logo"
-            android:scaleType="fitXY"
-            android:src="@drawable/ic_launcher" />
+    <include
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        layout="@layout/layout_progress"
+        android:visibility="gone" />
 
-        <TextView
-            android:id="@+id/tvDetails1"
+    <include
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        layout="@layout/layout_error"
+        android:visibility="gone" />
+
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
+
+        <LinearLayout
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="tvDetails1"
-            android:textColor="@color/text_light_blue"
-            android:textSize="@dimen/large_text_size"
-            android:textStyle="bold" />
+            android:layout_height="fill_parent"
+            android:orientation="vertical"
+            android:padding="@dimen/padding_default" >
 
-        <TextView
-            android:id="@+id/tvDetails2"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:autoLink="all"
-            android:inputType="textMultiLine|textNoSuggestions"
-            android:scrollHorizontally="false"
-            android:text="tvDetails2"
-            android:textColor="@color/text_light_blue"
-            android:textSize="@dimen/semilarge_text_size" />
+            <ImageView
+                android:id="@+id/ivImage"
+                android:layout_width="150dp"
+                android:layout_height="180dp"
+                android:layout_gravity="center"
+                android:contentDescription="@string/tum_logo"
+                android:paddingBottom="10dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/ic_launcher" />
 
-        <TextView
-            android:id="@+id/tvDetails3"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:autoLink="all"
-            android:inputType="textMultiLine|textNoSuggestions"
-            android:scrollHorizontally="false"
-            android:text="tvDetails3"
-            android:textColor="@color/text_light_blue"
-            android:textSize="@dimen/semilarge_text_size" />
+            <TextView
+                android:id="@+id/tvDetails1"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="tvDetails1"
+                android:textColor="@color/text_light_blue"
+                android:textSize="@dimen/large_text_size"
+                android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/tvDetails4"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:autoLink="none"
-            android:inputType="textMultiLine|textNoSuggestions"
-            android:scrollHorizontally="false"
-            android:text="tvDetails4"
-            android:textColor="@color/text_light_blue"
-            android:textSize="@dimen/semilarge_text_size" />
-    </LinearLayout>
+            <TextView
+                android:id="@+id/tvDetails2"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:autoLink="all"
+                android:inputType="textMultiLine|textNoSuggestions"
+                android:scrollHorizontally="false"
+                android:text="tvDetails2"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/semilarge_text_size" />
 
-</ScrollView>
+            <TextView
+                android:id="@+id/tvDetails3"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:autoLink="all"
+                android:inputType="textMultiLine|textNoSuggestions"
+                android:scrollHorizontally="false"
+                android:text="tvDetails3"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/semilarge_text_size" />
+
+            <TextView
+                android:id="@+id/tvDetails4"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:autoLink="none"
+                android:inputType="textMultiLine|textNoSuggestions"
+                android:scrollHorizontally="false"
+                android:text="tvDetails4"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/semilarge_text_size" />
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

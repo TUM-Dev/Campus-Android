@@ -79,16 +79,6 @@ public class TUMOnlineRequest {
 		this.accessToken = accessToken;
 	}
 
-	private DefaultHttpClient getThreadSafeClient() {
-		DefaultHttpClient client = new DefaultHttpClient();
-		ClientConnectionManager mgr = client.getConnectionManager();
-		HttpParams params = client.getParams();
-
-		client = new DefaultHttpClient(new ThreadSafeClientConnManager(params, mgr.getSchemeRegistry()), params);
-
-		return client;
-	}
-
 	public void cancelRequest(boolean mayInterruptIfRunning) {
 		// Cancel background task just if one has been established
 		if (backgroundTask != null) {
@@ -208,6 +198,16 @@ public class TUMOnlineRequest {
 			url += pairs.getKey() + "=" + pairs.getValue() + "&";
 		}
 		return url;
+	}
+
+	private DefaultHttpClient getThreadSafeClient() {
+		DefaultHttpClient client = new DefaultHttpClient();
+		ClientConnectionManager mgr = client.getConnectionManager();
+		HttpParams params = client.getParams();
+
+		client = new DefaultHttpClient(new ThreadSafeClientConnManager(params, mgr.getSchemeRegistry()), params);
+
+		return client;
 	}
 
 	/**

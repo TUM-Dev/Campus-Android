@@ -5,22 +5,24 @@ import java.util.List;
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
 
-import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.activities.generic.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampusapp.auxiliary.HTMLStringBuffer;
-import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.Employee;
 import de.tum.in.tumcampusapp.models.Group;
 import de.tum.in.tumcampusapp.models.Person;
 import de.tum.in.tumcampusapp.models.Room;
 import de.tum.in.tumcampusapp.models.TelSubstation;
-import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequest;
 import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequestFetchListener;
 
 /**
@@ -30,13 +32,18 @@ import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequestFetchListener;
  * @review Daniel G. Mayr
  * @review Thomas Behrens
  */
-public class PersonsDetailsActivity extends Activity implements TUMOnlineRequestFetchListener {
+public class PersonsDetailsActivity extends ActivityForAccessingTumOnline implements TUMOnlineRequestFetchListener {
+
+	private static final String PERSONEN_DETAILS = "personenDetails";
 
 	/**
 	 * The employee
 	 */
 	private Person person;
-	TUMOnlineRequest requestHandler;
+
+	public PersonsDetailsActivity() {
+		super(PERSONEN_DETAILS, R.layout.activity_personsdetails);
+	}
 
 	/**
 	 * Displays all relevant information about the given employee in the user
@@ -45,11 +52,16 @@ public class PersonsDetailsActivity extends Activity implements TUMOnlineRequest
 	 * @param employee
 	 *            The employee whose information should be displayed.
 	 */
-	private void initUI(Employee employee) {
+	private void displayResults(Employee employee) {
 
 		// add the employee's counterfeit
-		ImageView image = (ImageView) this.findViewById(R.id.ivImage);
-		image.setImageBitmap(employee.getImage());
+		ImageView imageView = (ImageView) this.findViewById(R.id.ivImage);
+
+		Bitmap image = employee.getImage();
+		if (image == null) {
+			image = BitmapFactory.decodeResource(getResources(), R.drawable.photo_not_available);
+		}
+		imageView.setImageBitmap(image);
 
 		// use a custom string buffer that helps us with line feeds and
 		// formatting
@@ -136,42 +148,17 @@ public class PersonsDetailsActivity extends Activity implements TUMOnlineRequest
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		setContentView(R.layout.activity_personsdetails);
-
 		// get person ID and/or object from Staff activity
 		Bundle bundle = this.getIntent().getExtras();
 		person = (Person) bundle.getSerializable("personObject");
-	}
-
-	@Override
-	public void onStart() {
-		super.onStart();
-
 		// make sure not both person is not null (error occurred)
 		if (person == null) {
 			// no query text specified
 			Toast.makeText(this, getString(R.string.no_person_set), Toast.LENGTH_LONG).show();
 			return;
 		}
-		requestFetch();
-	}
-
-	private void requestFetch() {
-		// create new request handler
-		requestHandler = new TUMOnlineRequest("personenDetails", this);
-		
-		// initialize request handler and update message for progress dialog
-		// TODO Progress View
-		// requestHandler.setProgressDialogMessage(numberEmployeesProcessed
-		// + "/" + numberOfEmployees
-		// + getString(R.string.personinformation_are_getting_fetched));
 		requestHandler.setParameter("pIdentNr", person.getId());
-		requestHandler.fetchInteractive(this, this);
-	}
-
-	@Override
-	public void onCommonError(String errorReason) {
-		// TODO Auto-generated method stub
+		super.requestFetch();
 	}
 
 	@Override
@@ -182,21 +169,14 @@ public class PersonsDetailsActivity extends Activity implements TUMOnlineRequest
 			Employee employee = serializer.read(Employee.class, rawResp);
 
 			if (employee != null) {
-				initUI(employee);
+				displayResults(employee);
+				progressLayout.setVisibility(View.GONE);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			Log.d("EXCEPTION", e.getMessage());
+			progressLayout.setVisibility(View.GONE);
+			errorLayout.setVisibility(View.VISIBLE);
 		}
-	}
-
-	@Override
-	public void onFetchCancelled() {
-		requestHandler.cancelRequest(true);
-	}
-
-	@Override
-	public void onFetchError(String errorReason) {
-		Utils.showLongCenteredToast(this, errorReason);
 	}
 }

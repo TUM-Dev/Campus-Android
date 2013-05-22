@@ -55,11 +55,6 @@ public class LecturesSearchActivity extends ActivityForAccessingTumOnline implem
 	public LecturesSearchActivity() {
 		super(Const.LECTURES_SEARCH, R.layout.activity_lecturessearch);
 	}
-	
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		return true;
-	}
 
 	@Override
 	public void onClick(View view) {
@@ -84,6 +79,11 @@ public class LecturesSearchActivity extends ActivityForAccessingTumOnline implem
 		etFindQuery = (EditText) findViewById(R.id.etFindQuery);
 		etFindQuery.setOnEditorActionListener(this);
 		lvFound = (ListView) findViewById(R.id.lvFound);
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		return true;
 	}
 
 	@Override

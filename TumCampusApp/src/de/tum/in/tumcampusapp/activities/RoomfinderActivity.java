@@ -47,20 +47,6 @@ public class RoomfinderActivity extends ActivityForSearching implements OnEditor
 	}
 
 	@Override
-	public boolean performSearchAlgorithm() {
-		@SuppressWarnings("deprecation")
-		String param1 = "searchstring=" + URLEncoder.encode(searchField.getText().toString());
-		String param2 = "building=Alle";
-		String param3 = "search=Suche+starten";
-
-		String queryCss = "http://portal.mytum.de/layout.css";
-		String queryExtraction = SERVICE_URL + "?" + param1 + "&" + param2 + "&" + param3;
-
-		FileUtils.sendAsynchGetRequest(httpClient, this, queryCss, queryExtraction);
-		return true;
-	}
-
-	@Override
 	public void onSearchResult(String[] results) {
 		// Get my results and give them semantics
 		String resultCss = results[0];
@@ -96,5 +82,19 @@ public class RoomfinderActivity extends ActivityForSearching implements OnEditor
 			errorLayout.setVisibility(View.VISIBLE);
 			progressLayout.setVisibility(View.GONE);
 		}
+	}
+
+	@Override
+	public boolean performSearchAlgorithm() {
+		@SuppressWarnings("deprecation")
+		String param1 = "searchstring=" + URLEncoder.encode(searchField.getText().toString());
+		String param2 = "building=Alle";
+		String param3 = "search=Suche+starten";
+
+		String queryCss = "http://portal.mytum.de/layout.css";
+		String queryExtraction = SERVICE_URL + "?" + param1 + "&" + param2 + "&" + param3;
+
+		FileUtils.sendAsynchGetRequest(httpClient, this, queryCss, queryExtraction);
+		return true;
 	}
 }

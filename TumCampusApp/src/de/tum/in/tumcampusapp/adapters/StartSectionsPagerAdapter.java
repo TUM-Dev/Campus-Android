@@ -68,8 +68,8 @@ public class StartSectionsPagerAdapter extends FragmentPagerAdapter {
 			listMenuEntrySet.add(new ListMenuEntry(R.drawable.users, R.string.person_search, R.string.personsearch_addinfo, new Intent(activity,
 					PersonsActivity.class)));
 			listMenuEntrySet.add(new ListMenuEntry(R.drawable.web, R.string.plans, R.string.plans_addinfo, new Intent(activity, PlansActivity.class)));
-			listMenuEntrySet
-					.add(new ListMenuEntry(R.drawable.home, R.string.roomfinder, R.string.roomfinder_addinfo, new Intent(activity, RoomfinderActivity.class)));
+			listMenuEntrySet.add(new ListMenuEntry(R.drawable.home, R.string.roomfinder, R.string.roomfinder_addinfo, new Intent(activity,
+					RoomfinderActivity.class)));
 			listMenuEntrySet.add(new ListMenuEntry(R.drawable.documents, R.string.study_plans, R.string.studyplans_addinfo, new Intent(activity,
 					CurriculaActivity.class)));
 			listMenuEntrySet.add(new ListMenuEntry(R.drawable.unlock, R.string.opening_hours, R.string.openinghours_addinfo, new Intent(activity,

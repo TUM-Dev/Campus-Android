@@ -36,19 +36,9 @@ import de.tum.in.tumcampusapp.models.PersonList;
  * @redesign Sascha Moecker
  */
 public class PersonsActivity extends ActivityForAccessingTumOnline implements OnEditorActionListener {
-	private Context context;
-
-	public PersonsActivity() {
-		super(PERSONEN_SUCHE, R.layout.activity_persons);
-		context = this;
-	}
-	
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		return true;
-	}
-
 	private static final String PERSONEN_SUCHE = "personenSuche";
+
+	private Context context;
 
 	/**
 	 * Text field for the search tokens.
@@ -60,6 +50,39 @@ public class PersonsActivity extends ActivityForAccessingTumOnline implements On
 	 */
 	private ListView lvPersons;
 
+	public PersonsActivity() {
+		super(PERSONEN_SUCHE, R.layout.activity_persons);
+		context = this;
+	}
+
+	/**
+	 * Displays the employees searched for.
+	 * 
+	 * @param persons
+	 *            The search results enriched with some additional information.
+	 */
+	private void displayResults(List<Person> persons) {
+		final ListView lvStaff = (ListView) findViewById(R.id.lstPersons);
+
+		lvStaff.setAdapter(new PersonListAdapter(this, persons));
+
+		lvStaff.setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> a, View v, int position, long id) {
+				Object listViewItem = lvStaff.getItemAtPosition(position);
+				Person person = (Person) listViewItem;
+
+				// store selected person ID in bundle to get in in StaffDetails
+				Bundle bundle = new Bundle();
+				bundle.putSerializable("personObject", person);
+
+				// show detailed information in new activity
+				Intent intent = new Intent(context, PersonsDetailsActivity.class);
+				intent.putExtras(bundle);
+				startActivity(intent);
+			}
+		});
+	}
 
 	public void onClick(View view) {
 		int viewId = view.getId();
@@ -81,6 +104,11 @@ public class PersonsActivity extends ActivityForAccessingTumOnline implements On
 		etSearch.setOnEditorActionListener(this);
 
 		lvPersons = (ListView) findViewById(R.id.lstPersons);
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		return true;
 	}
 
 	@Override
@@ -125,35 +153,6 @@ public class PersonsActivity extends ActivityForAccessingTumOnline implements On
 		}
 		displayResults(personList.getPersons());
 		progressLayout.setVisibility(View.GONE);
-	}
-
-	/**
-	 * Displays the employees searched for.
-	 * 
-	 * @param persons
-	 *            The search results enriched with some additional information.
-	 */
-	private void displayResults(List<Person> persons) {
-		final ListView lvStaff = (ListView) findViewById(R.id.lstPersons);
-
-		lvStaff.setAdapter(new PersonListAdapter(this, persons));
-
-		lvStaff.setOnItemClickListener(new OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> a, View v, int position, long id) {
-				Object listViewItem = lvStaff.getItemAtPosition(position);
-				Person person = (Person) listViewItem;
-
-				// store selected person ID in bundle to get in in StaffDetails
-				Bundle bundle = new Bundle();
-				bundle.putSerializable("personObject", person);
-
-				// show detailed information in new activity
-				Intent intent = new Intent(context, PersonsDetailsActivity.class);
-				intent.putExtras(bundle);
-				startActivity(intent);
-			}
-		});
 	}
 
 	private void searchForPersons() {

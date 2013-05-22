@@ -13,7 +13,8 @@ import android.util.Base64;
 /**
  * An employee of the TUM.
  * <p>
- * Note: This model is based on the TUMOnline web service response format for a corresponding request.
+ * Note: This model is based on the TUMOnline web service response format for a
+ * corresponding request.
  * 
  * @author Vincenz Doelle
  * @review Daniel G. Mayr

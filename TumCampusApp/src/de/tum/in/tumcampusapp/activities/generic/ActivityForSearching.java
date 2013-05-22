@@ -17,17 +17,30 @@ import de.tum.in.tumcampusapp.auxiliary.Utils;
 
 public abstract class ActivityForSearching extends Activity implements OnEditorActionListener {
 
-	protected RelativeLayout progressLayout;
 	protected RelativeLayout errorLayout;
-	protected EditText searchField;
 	private int layoutId;
-
-	// Abstract method for the search algorithm, has to be implemented by the
-	// inheriting class
-	public abstract boolean performSearchAlgorithm();
+	protected RelativeLayout progressLayout;
+	protected EditText searchField;
 
 	public ActivityForSearching(int layoutIt) {
 		this.layoutId = layoutIt;
+	}
+
+	private void hideKeyboard() {
+		((InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(searchField.getWindowToken(), 0);
+	}
+
+	public void onClick(View view) {
+		int viewId = view.getId();
+		switch (viewId) {
+		case R.id.dosearch:
+			requestSearch();
+			hideKeyboard();
+			break;
+		case R.id.clear:
+			searchField.setText("");
+			break;
+		}
 	}
 
 	@Override
@@ -47,28 +60,15 @@ public abstract class ActivityForSearching extends Activity implements OnEditorA
 		searchField.setOnEditorActionListener(this);
 	}
 
-	public void onClick(View view) {
-		int viewId = view.getId();
-		switch (viewId) {
-		case R.id.dosearch:
-			requestSearch();
-			hideKeyboard();
-			break;
-		case R.id.clear:
-			searchField.setText("");
-			break;
-		}
-	}
-
 	@Override
 	public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
 		requestSearch();
 		return false;
 	}
 
-	private void hideKeyboard() {
-		((InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(searchField.getWindowToken(), 0);
-	}
+	// Abstract method for the search algorithm, has to be implemented by the
+	// inheriting class
+	public abstract boolean performSearchAlgorithm();
 
 	private boolean requestSearch() {
 		progressLayout.setVisibility(View.VISIBLE);

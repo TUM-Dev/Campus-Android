@@ -6,8 +6,8 @@ import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.Root;
 
 /**
- * Wrapper class holding a list of persons. Note: This model is based on the TUMOnline web service response format for a
- * corresponding request.
+ * Wrapper class holding a list of persons. Note: This model is based on the
+ * TUMOnline web service response format for a corresponding request.
  * 
  * @author Vincenz Doelle
  * @review Daniel G. Mayr

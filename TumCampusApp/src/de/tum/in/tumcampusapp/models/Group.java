@@ -6,8 +6,9 @@ import org.simpleframework.xml.Element;
 import org.simpleframework.xml.Root;
 
 /**
- * Group that describes some organizational entity a person/employee can belong to. Note: This model is based on the
- * TUMOnline web service response format for a corresponding request.
+ * Group that describes some organizational entity a person/employee can belong
+ * to. Note: This model is based on the TUMOnline web service response format
+ * for a corresponding request.
  * 
  * @author Vincenz Doelle
  * @review Daniel G. Mayr

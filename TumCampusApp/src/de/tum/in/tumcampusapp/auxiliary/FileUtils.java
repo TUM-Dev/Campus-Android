@@ -167,20 +167,6 @@ public class FileUtils {
 	}
 
 	/**
-	 * Gets a document from a URL and returns the source code as text.
-	 * 
-	 * @param httpClient
-	 *            HTTP client used to fetch the document.
-	 * @param url
-	 *            The documents URL
-	 * 
-	 * @return The document's source/the requests response
-	 */
-	public static String sendGetRequest(DefaultHttpClient httpClient, String url) {
-		return sendRequest(httpClient, new HttpGet(url));
-	}
-
-	/**
 	 * Sends an asynch http reqeust using a asynchTask. The method takes the
 	 * httpClient, the Listener for the results and a variable argumentlist of
 	 * to be fetched urls. The result are stored in a string array in the same
@@ -193,7 +179,8 @@ public class FileUtils {
 		backgroundTask = new AsyncTask<Void, Void, String[]>() {
 			@Override
 			protected String[] doInBackground(Void... params) {
-				// Fetches all urls and stores them in the same orde rinto the result string array
+				// Fetches all urls and stores them in the same orde rinto the
+				// result string array
 				String[] result = new String[urls.length];
 				int i = 0;
 				for (String url : urls) {
@@ -205,11 +192,25 @@ public class FileUtils {
 
 			@Override
 			protected void onPostExecute(String[] result) {
-				// Invokes the listener 
+				// Invokes the listener
 				listener.onSearchResult(result);
 			}
 		};
 		backgroundTask.execute();
+	}
+
+	/**
+	 * Gets a document from a URL and returns the source code as text.
+	 * 
+	 * @param httpClient
+	 *            HTTP client used to fetch the document.
+	 * @param url
+	 *            The documents URL
+	 * 
+	 * @return The document's source/the requests response
+	 */
+	public static String sendGetRequest(DefaultHttpClient httpClient, String url) {
+		return sendRequest(httpClient, new HttpGet(url));
 	}
 
 	/**

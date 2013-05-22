@@ -72,6 +72,10 @@ public abstract class ActivityForAccessingTumOnline extends Activity implements 
 		noTokenLayout = (RelativeLayout) findViewById(R.id.no_token_layout);
 		errorLayout = (RelativeLayout) findViewById(R.id.error_layout);
 
+		if (progressLayout == null || errorLayout == null || noTokenLayout == null) {
+			Log.e(getClass().getSimpleName(), "Cannot find layouts, did you forget to provide error and progress layouts?");
+		}
+
 		requestHandler = new TUMOnlineRequest(method, this);
 	}
 
