@@ -67,6 +67,7 @@ public class LecturesPersonalActivity extends ActivityForAccessingTumOnline {
 
 	@Override
 	public void onFetch(String rawResponse) {
+		Log.d(getClass().getSimpleName(), rawResponse);
 
 		// deserialize the XML
 		Serializer serializer = new Persister();
@@ -75,7 +76,7 @@ public class LecturesPersonalActivity extends ActivityForAccessingTumOnline {
 		} catch (Exception e) {
 			Log.d("SIMPLEXML", "wont work: " + e.getMessage());
 			progressLayout.setVisibility(View.GONE);
-			failedLayout.setVisibility(View.VISIBLE);
+			failedTokenLayout.setVisibility(View.VISIBLE);
 			e.printStackTrace();
 		}
 

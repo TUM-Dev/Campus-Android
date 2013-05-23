@@ -161,12 +161,14 @@ public class TUMOnlineRequest {
 				}
 				if (result == null) {
 					listener.onFetchError(context.getString(R.string.empty_result));
+					return;
 					// TODO Check whether to move to string.xml
 				} else if (result.contains(TUMOnlineConst.TOKEN_NICHT_BESTAETIGT)) {
 					// TODO Token is not valid
 					listener.onFetchError(context.getString(R.string.dialog_access_token_invalid));
+					return;
 				}
-
+				// If there could not be found any problems return usual on Fetch method
 				listener.onFetch(result);
 			}
 

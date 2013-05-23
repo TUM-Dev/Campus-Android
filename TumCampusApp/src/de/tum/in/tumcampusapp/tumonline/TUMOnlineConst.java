@@ -13,5 +13,5 @@ public class TUMOnlineConst {
 	public static final String P_TOKEN = "pToken";
 
 	/** String possibly contained in response from server */
-	public static final String TOKEN_NICHT_BESTAETIGT = "Token ist nicht bestÃ¤tigt oder ungÃ¼ltig";
+	public static final String TOKEN_NICHT_BESTAETIGT = "Token ist nicht bestätigt oder ungültig!";
 }

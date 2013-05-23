@@ -104,6 +104,7 @@ public class LecturesDetailsActivity extends ActivityForAccessingTumOnline imple
 	 */
 	@Override
 	public void onFetch(String rawResponse) {
+		Log.d(getClass().getSimpleName(), rawResponse);
 
 		// deserialize
 		Serializer serializer = new Persister();

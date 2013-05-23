@@ -19,7 +19,7 @@
     <include
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        layout="@layout/layout_failed"
+        layout="@layout/layout_failed_token"
         android:visibility="gone" />
 
     <include

@@ -62,6 +62,8 @@ public class LecturesAppointmentsActivity extends ActivityForAccessingTumOnline 
 	/** process data got from TUMOnline request and show the listview */
 	@Override
 	public void onFetch(String rawResponse) {
+		Log.d(getClass().getSimpleName(), rawResponse);
+		
 		// deserialize xml
 		Serializer serializer = new Persister();
 		LectureAppointmentsRowSet lecturesList = null;

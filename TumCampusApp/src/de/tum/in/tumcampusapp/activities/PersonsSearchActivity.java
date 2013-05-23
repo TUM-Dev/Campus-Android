@@ -125,14 +125,15 @@ public class PersonsSearchActivity extends ActivityForAccessingTumOnline impleme
 	 * Handles the XML response from TUMOnline by deserializing the information
 	 * to model entities.
 	 * 
-	 * @param rawResp
+	 * @param rawResponse
 	 *            The XML data from TUMOnline.
 	 */
 	@Override
-	public void onFetch(String rawResp) {
+	public void onFetch(String rawResponse) {
+		Log.d(getClass().getSimpleName(), rawResponse);
 
 		// test by sample element "familienname" (required field)
-		if (!rawResp.contains("familienname")) {
+		if (!rawResponse.contains("familienname")) {
 			lvPersons.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, new String[] { "keine Ergebnisse" }));
 		}
 
@@ -143,7 +144,7 @@ public class PersonsSearchActivity extends ActivityForAccessingTumOnline impleme
 
 		// deserialize the XML to model entities
 		try {
-			personList = serializer.read(PersonList.class, rawResp);
+			personList = serializer.read(PersonList.class, rawResponse);
 		} catch (Exception e) {
 			Log.d("SIMPLEXML", "wont work: " + e.getMessage());
 			progressLayout.setVisibility(View.GONE);

@@ -162,11 +162,13 @@ public class PersonsDetailsActivity extends ActivityForAccessingTumOnline implem
 	}
 
 	@Override
-	public void onFetch(String rawResp) {
+	public void onFetch(String rawResponse) {
+		Log.d(getClass().getSimpleName(), rawResponse);
+		
 		// deserialize XML response to model entities
 		Serializer serializer = new Persister();
 		try {
-			Employee employee = serializer.read(Employee.class, rawResp);
+			Employee employee = serializer.read(Employee.class, rawResponse);
 
 			if (employee != null) {
 				displayResults(employee);

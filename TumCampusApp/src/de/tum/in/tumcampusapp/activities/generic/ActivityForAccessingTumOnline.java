@@ -22,7 +22,7 @@ public abstract class ActivityForAccessingTumOnline extends Activity implements 
 
 	private String accessToken;
 	protected RelativeLayout errorLayout;
-	protected RelativeLayout failedLayout;
+	protected RelativeLayout failedTokenLayout;
 	private int layoutId;
 	/** The method which should be invoked by the TUmOnline Fetcher */
 	private String method;
@@ -40,7 +40,7 @@ public abstract class ActivityForAccessingTumOnline extends Activity implements 
 		int viewId = view.getId();
 		switch (viewId) {
 		case R.id.failed_layout:
-			failedLayout.setVisibility(View.GONE);
+			failedTokenLayout.setVisibility(View.GONE);
 			requestFetch();
 			break;
 		case R.id.no_token_layout:
@@ -68,7 +68,7 @@ public abstract class ActivityForAccessingTumOnline extends Activity implements 
 		setContentView(layoutId);
 
 		progressLayout = (RelativeLayout) findViewById(R.id.progress_layout);
-		failedLayout = (RelativeLayout) findViewById(R.id.failed_layout);
+		failedTokenLayout = (RelativeLayout) findViewById(R.id.failed_layout);
 		noTokenLayout = (RelativeLayout) findViewById(R.id.no_token_layout);
 		errorLayout = (RelativeLayout) findViewById(R.id.error_layout);
 
@@ -97,14 +97,18 @@ public abstract class ActivityForAccessingTumOnline extends Activity implements 
 	public void onFetchCancelled() {
 		finish();
 	}
-
+	
 	@Override
 	public void onFetchError(String errorReason) {
 		Log.e(getClass().getSimpleName(), errorReason);
 		progressLayout.setVisibility(View.GONE);
 		// TODO Change errors to Exceptions
-		if (failedLayout != null) {
-			failedLayout.setVisibility(View.VISIBLE);
+		// If there is a failed token layout show this
+		if (failedTokenLayout != null) {
+			failedTokenLayout.setVisibility(View.VISIBLE);
+		} else {
+			// Else just use the common error layout
+			errorLayout.setVisibility(View.VISIBLE);
 		}
 	}
 

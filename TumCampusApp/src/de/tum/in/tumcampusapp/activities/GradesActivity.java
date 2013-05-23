@@ -41,17 +41,18 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 	/**
 	 * Handle the response by deserializing it into model entities.
 	 * 
-	 * @param rawResp
+	 * @param rawResponse
 	 */
 	@Override
-	public void onFetch(String rawResp) {
+	public void onFetch(String rawResponse) {
+		Log.d(getClass().getSimpleName(), rawResponse);
 
 		Serializer serializer = new Persister();
 		examList = null;
 
 		try {
 			// Deserializes XML response
-			examList = serializer.read(ExamList.class, rawResp);
+			examList = serializer.read(ExamList.class, rawResponse);
 
 			// Displays results in view
 			lvGrades.setAdapter(new ExamListAdapter(GradesActivity.this, examList.getExams()));
@@ -60,7 +61,7 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 		} catch (Exception e) {
 			Log.d("SIMPLEXML", "wont work: " + e.getMessage());
 			progressLayout.setVisibility(View.GONE);
-			failedLayout.setVisibility(View.VISIBLE);
+			failedTokenLayout.setVisibility(View.VISIBLE);
 			e.printStackTrace();
 		}
 	}
