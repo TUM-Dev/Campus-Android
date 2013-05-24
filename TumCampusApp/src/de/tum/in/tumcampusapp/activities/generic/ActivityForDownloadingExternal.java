@@ -41,7 +41,10 @@ public class ActivityForDownloadingExternal extends Activity {
 				if (action.equals(Const.COMPLETED)) {
 					progressLayout.setVisibility(View.GONE);
 					errorLayout.setVisibility(View.GONE);
-					onResume();
+					// Calls onStart() to simulate a new start of the activity
+					// without downloading new data, since thits receiver
+					// receives data from a new download
+					onStart();
 				}
 				if (action.equals(Const.ERROR)) {
 					String message = intent.getStringExtra(Const.ERROR_MESSAGE);
@@ -86,8 +89,8 @@ public class ActivityForDownloadingExternal extends Activity {
 	}
 
 	@Override
-	protected void onDestroy() {
-		super.onDestroy();
+	protected void onStop() {
+		super.onStop();
 		unregisterReceiver(receiver);
 		Intent service = new Intent(this, DownloadService.class);
 		stopService(service);

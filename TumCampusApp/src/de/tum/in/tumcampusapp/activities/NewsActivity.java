@@ -32,11 +32,15 @@ public class NewsActivity extends ActivityForDownloadingExternal implements OnIt
 		super.requestDownload();
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void onItemClick(AdapterView<?> aview, View view, int position, long id) {
 		ListView lv = (ListView) findViewById(R.id.activity_news_list_view);
-		Cursor c = (Cursor) lv.getAdapter().getItem(position);
-		String url = c.getString(c.getColumnIndex(Const.LINK_COLUMN));
+		
+		Cursor cursor = (Cursor) lv.getAdapter().getItem(position);
+		startManagingCursor(cursor);
+		
+		String url = cursor.getString(cursor.getColumnIndex(Const.LINK_COLUMN));
 
 		if (url.length() == 0) {
 			Toast.makeText(this, getString(R.string.no_link_existing), Toast.LENGTH_LONG).show();
@@ -48,16 +52,17 @@ public class NewsActivity extends ActivityForDownloadingExternal implements OnIt
 		startActivity(viewIntent);
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
-	protected void onResume() {
-		super.onResume();
+	protected void onStart() {
+		super.onStart();
 
 		// Gets all news from database
 		NewsManager nm = new NewsManager(this);
-		Cursor c = nm.getAllFromDb();
+		Cursor cursor = nm.getAllFromDb();
+		startManagingCursor(cursor);
 
-		@SuppressWarnings("deprecation")
-		SimpleCursorAdapter adapter = new SimpleCursorAdapter(this, R.layout.activity_news_listview, c, c.getColumnNames(), new int[] { R.id.image,
+		SimpleCursorAdapter adapter = new SimpleCursorAdapter(this, R.layout.activity_news_listview, cursor, cursor.getColumnNames(), new int[] { R.id.image,
 				R.id.message, R.id.date });
 
 		adapter.setViewBinder(this);

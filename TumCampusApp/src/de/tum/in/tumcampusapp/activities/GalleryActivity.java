@@ -28,26 +28,29 @@ public class GalleryActivity extends ActivityForDownloadingExternal implements O
 		super.requestDownload();
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void onItemClick(AdapterView<?> av, View v, int position, long id) {
-		Cursor c = (Cursor) av.getAdapter().getItem(position);
+		Cursor cursor = (Cursor) av.getAdapter().getItem(position);
+		startManagingCursor(cursor);
 
 		// Opens gallery details when clicking an item in the list
 		Intent intent = new Intent(this, GalleryDetailsActivity.class);
-		intent.putExtra("id", c.getString(c.getColumnIndex("id")));
+		intent.putExtra("id", cursor.getString(cursor.getColumnIndex("id")));
 		startActivity(intent);
 	}
 
 	@SuppressWarnings("deprecation")
 	@Override
-	protected void onResume() {
-		super.onResume();
+	protected void onStart() {
+		super.onStart();
 
 		// Gets images from database
 		GalleryManager gm = new GalleryManager(this);
-		Cursor c = gm.getFromDb();
-
-		SimpleCursorAdapter adapter = new SimpleCursorAdapter(this, R.layout.activity_gallery_image, c, c.getColumnNames(),
+		Cursor cursor = gm.getFromDb();
+		startManagingCursor(cursor);
+		
+		SimpleCursorAdapter adapter = new SimpleCursorAdapter(this, R.layout.activity_gallery_image, cursor, cursor.getColumnNames(),
 				new int[] { R.id.activity_gallery_image });
 
 		GridView gridview = (GridView) findViewById(R.id.activity_gallery_gridview);

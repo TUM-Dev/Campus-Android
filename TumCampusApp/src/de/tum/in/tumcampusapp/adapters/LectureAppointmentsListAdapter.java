@@ -131,7 +131,6 @@ public class LectureAppointmentsListAdapter extends BaseAdapter {
 			}
 
 		}
-
 		return convertView;
 	}
 }

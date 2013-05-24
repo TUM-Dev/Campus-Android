@@ -36,24 +36,27 @@ public class FeedsDetailsActivity extends ActivityForDownloadingExternal impleme
 
 		Bundle extras = new Bundle();
 		extras.putInt(Const.FEED_ID, Integer.valueOf(feedId));
+		
 		super.requestDownloadWithExtras(extras);
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void onItemClick(AdapterView<?> av, View v, int position, long id) {
 		// click on feed item in list, open URL in browser
 		if (av.getId() == R.id.listView) {
-			Cursor c = (Cursor) av.getAdapter().getItem(position);
-			String link = c.getString(c.getColumnIndex(Const.LINK_COLUMN));
+			Cursor cursor = (Cursor) av.getAdapter().getItem(position);
+			startManagingCursor(cursor);
+			
+			String link = cursor.getString(cursor.getColumnIndex(Const.LINK_COLUMN));
 
 			Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
 			startActivity(intent);
-			return;
 		}
 	}
 
-	// Override this method, because an update requires some more information in
-	// a bundle.
+	// Override this method, because an update requires some more information
+	// (the feed id) in a bundle.
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
@@ -67,24 +70,25 @@ public class FeedsDetailsActivity extends ActivityForDownloadingExternal impleme
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
-	protected void onResume() {
-		super.onResume();
+	protected void onStart() {
+		super.onStart();
 
 		setTitle(getString(R.string.rss_feeds) + " for " + feedName);
 
-		// get all feed items for a feed
+		// Gets all feed items for the chosen feed
 		FeedItemManager fim = new FeedItemManager(this);
 		Cursor cursor = fim.getAllFromDb(feedId);
+		startManagingCursor(cursor);
 
-		@SuppressWarnings("deprecation")
 		SimpleCursorAdapter adapter = new SimpleCursorAdapter(this, R.layout.activity_feeds_listview, cursor, cursor.getColumnNames(), new int[] { R.id.icon,
 				R.id.title, R.id.description });
 
 		adapter.setViewBinder(this);
-		ListView lv = (ListView) findViewById(R.id.listView);
-		lv.setAdapter(adapter);
-		lv.setOnItemClickListener(this);
+		ListView list = (ListView) findViewById(R.id.listView);
+		list.setAdapter(adapter);
+		list.setOnItemClickListener(this);
 	}
 
 	@Override

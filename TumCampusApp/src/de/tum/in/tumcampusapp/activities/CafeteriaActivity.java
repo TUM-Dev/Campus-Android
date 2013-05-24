@@ -52,21 +52,22 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
 		Intent intent = new Intent(this, CafeteriaDetailsActivity.class);
 		intent.putExtra(Const.CAFETERIA_ID, cafeteriaId);
 		intent.putExtra(Const.CAFETERIA_NAME, cafeteriaName);
+		
 		startActivity(intent);
 	}
 
 	@SuppressWarnings("deprecation")
 	@Override
-	protected void onResume() {
-		super.onResume();
+	protected void onStart() {
+		super.onStart();
 
 		CafeteriaManager cm = new CafeteriaManager(this);
-		Cursor cursorCafeterias = cm.getAllFromDb("% %");
-		startManagingCursor(cursorCafeterias);
+		
+		Cursor cursor = cm.getAllFromDb("% %");
+		startManagingCursor(cursor);
 
-		@SuppressWarnings("deprecation")
-		SimpleCursorAdapter adapterCafeterias = new SimpleCursorAdapter(this, R.layout.list_layout_two_line_item, cursorCafeterias,
-				cursorCafeterias.getColumnNames(), new int[] { android.R.id.text1, android.R.id.text2 });
+		SimpleCursorAdapter adapterCafeterias = new SimpleCursorAdapter(this, R.layout.list_layout_two_line_item, cursor,
+				cursor.getColumnNames(), new int[] { android.R.id.text1, android.R.id.text2 });
 
 		listCafeterias.setAdapter(adapterCafeterias);
 		listCafeterias.setOnItemClickListener(this);

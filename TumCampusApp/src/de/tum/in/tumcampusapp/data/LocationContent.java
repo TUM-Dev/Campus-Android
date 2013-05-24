@@ -44,10 +44,6 @@ public class LocationContent {
 	 */
 	public static List<Location> ITEMS = new ArrayList<Location>();
 
-	static {
-		// addItem(new Location("1", "Item 1"));
-	}
-
 	public static void addItem(Location item) {
 		ITEMS.add(item);
 		ITEM_MAP.put(item.id, item);

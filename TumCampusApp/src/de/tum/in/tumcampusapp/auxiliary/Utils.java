@@ -30,6 +30,7 @@ import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -49,6 +50,7 @@ import android.webkit.WebView;
 import android.widget.Toast;
 
 /** Class for helper functions */
+@SuppressLint("SimpleDateFormat")
 public class Utils {
 	/** Counter for unfinished downloads */
 	public static int openDownloads = 0;
