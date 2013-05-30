@@ -19,7 +19,7 @@ import de.tum.in.tumcampusapp.services.ImportService;
 
 /**
  * 
- * @author Sascha
+ * @author Sascha Moecker
  */
 public class StartActivity extends FragmentActivity {
 
