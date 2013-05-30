@@ -17,7 +17,7 @@ import de.tum.in.tumcampusapp.models.managers.CafeteriaManager;
  * Activity to show cafeterias and meals selected by date
  * @author TCA Team
  * hello world
- * Sascha
+ * Anas
  */
  //Anas Chakfeh
 public class CafeteriaActivity extends ActivityForDownloadingExternal implements OnItemClickListener {
