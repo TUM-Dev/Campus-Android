@@ -17,6 +17,10 @@ import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.preferences.UserPreferencesActivity;
 import de.tum.in.tumcampusapp.services.ImportService;
 
+/**
+ * 
+ * @author Sascha
+ */
 public class StartActivity extends FragmentActivity {
 
 	public static final int DEFAULT_SECTION = 1;
