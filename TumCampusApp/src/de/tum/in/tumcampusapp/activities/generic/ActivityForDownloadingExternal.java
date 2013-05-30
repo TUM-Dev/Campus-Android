@@ -77,6 +77,11 @@ public class ActivityForDownloadingExternal extends Activity {
 		if (progressLayout == null || errorLayout == null) {
 			Log.e(getClass().getSimpleName(), "Cannot find layouts, did you forget to provide error and progress layouts?");
 		}
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
 		registerReceiver(receiver, new IntentFilter(DownloadService.broadcast));
 	}
 
