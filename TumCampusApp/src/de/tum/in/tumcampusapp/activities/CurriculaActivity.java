@@ -16,7 +16,7 @@ import android.widget.TextView;
 import de.tum.in.tumcampusapp.R;
 
 /**
- * Activity to fetch and display the curricula of different programs.
+ * Activity to fetch and display the curricula of different programs..
  * 
  * @author Vincenz Doelle
  * @review Daniel G. Mayr
