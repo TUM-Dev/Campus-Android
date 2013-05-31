@@ -51,8 +51,7 @@ public class PersonsDetailsActivity extends ActivityForAccessingTumOnline implem
 	 * @param employee
 	 *            The employee whose information should be displayed.
 	 */
-	private void displayResults(Employee employee) {
-
+	private void displayResults(Employee employee) {		
 		// add the employee's counterfeit
 		ImageView imageView = (ImageView) this.findViewById(R.id.ivImage);
 
@@ -156,6 +155,8 @@ public class PersonsDetailsActivity extends ActivityForAccessingTumOnline implem
 			Toast.makeText(this, getString(R.string.no_person_set), Toast.LENGTH_LONG).show();
 			return;
 		}
+		// Sets the current name as a title
+		setTitle(getResources().getString(R.string.person_information) + " for " + person.getName() + " " + person.getSurname());
 		requestHandler.setParameter("pIdentNr", person.getId());
 		super.requestFetch();
 	}

@@ -1,5 +1,7 @@
 package de.tum.in.tumcampusapp.activities;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.simpleframework.xml.Serializer;
@@ -17,6 +19,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
@@ -37,6 +40,7 @@ import de.tum.in.tumcampusapp.models.PersonList;
  */
 public class PersonsSearchActivity extends ActivityForAccessingTumOnline implements OnEditorActionListener {
 	private static final String PERSONEN_SUCHE = "personenSuche";
+	private static final int MIN_SEARCH_LENGTH = 3;
 
 	private Context context;
 
@@ -113,7 +117,7 @@ public class PersonsSearchActivity extends ActivityForAccessingTumOnline impleme
 
 	@Override
 	public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-		if (etSearch.getText().length() < 3) {
+		if (etSearch.getText().length() < MIN_SEARCH_LENGTH) {
 			Toast.makeText(this, R.string.please_insert_at_least_three_chars, Toast.LENGTH_SHORT).show();
 			return false;
 		}

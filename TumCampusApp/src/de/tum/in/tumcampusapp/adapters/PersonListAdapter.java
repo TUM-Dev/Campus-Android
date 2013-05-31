@@ -33,7 +33,7 @@ public class PersonListAdapter extends BaseAdapter {
 
 	public PersonListAdapter(Context context, List<Person> results) {
 		employees = results;
-		mInflater = LayoutInflater.from(context);
+		mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
 
 	@Override
@@ -55,11 +55,9 @@ public class PersonListAdapter extends BaseAdapter {
 	public View getView(int position, View convertView, ViewGroup parent) {
 		ViewHolder holder;
 		if (convertView == null) {
-			convertView = mInflater.inflate(R.layout.activity_persons_listview, null);
+			convertView = mInflater.inflate(android.R.layout.simple_list_item_1, null);
 			holder = new ViewHolder();
-			holder.tvName = (TextView) convertView.findViewById(R.id.name);
-			holder.tvDetails1 = (TextView) convertView.findViewById(R.id.tv1);
-			holder.tvDetails2 = (TextView) convertView.findViewById(R.id.tv2);
+			holder.tvName = (TextView) convertView.findViewById(android.R.id.text1);
 
 			convertView.setTag(holder);
 		} else {
@@ -79,23 +77,8 @@ public class PersonListAdapter extends BaseAdapter {
 			}
 
 			infoText += p.getName() + " " + p.getSurname();
-
 			holder.tvName.setText(infoText);
-
-			if (p instanceof Employee) {
-				Employee e = ((Employee) p);
-				List<Group> groups = e.getGroups();
-				if (groups != null && groups.size() > 0) {
-					holder.tvDetails1.setText(groups.get(0).getOrg() + " (" + groups.get(0).getId() + ")");
-					holder.tvDetails2.setText("(" + groups.get(0).getTitle() + ")");
-				} else {
-					holder.tvDetails1.setText("");
-					holder.tvDetails2.setText("");
-				}
-			}
-
 		}
-
 		return convertView;
 	}
 }

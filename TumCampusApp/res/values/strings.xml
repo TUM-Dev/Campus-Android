@@ -240,6 +240,7 @@
     <string name="campus_main_adress">Arcisstraße 21, 80333 Munich</string>
     <string name="campus_weihenstephan_adress">Liesel-Beckmann-Straße 6, 85354 Freising</string>
     <string name="please_insert_at_least_three_chars">Please insert at least three characters</string>
+    <string name="please_insert_at_least_four_chars">Please insert at least four characters</string>
     <string name="search_is_running">Search is running …</string>
     <string name="personinformation_are_getting_fetched"> personal information were fetched …</string>
     <string name="no_entries">no entries</string>
@@ -287,7 +288,7 @@
     <string name="lecture_dates">Lecture Dates</string>
     <string name="own_lectures">My Lectures (TUMOnline)</string>
     <string name="access_token_settings">TUMOnline-Access-Token-Settings</string>
-    <string name="person_information">Personal Information</string>
+    <string name="person_information">Person Information</string>
     <string name="organisation_details">Organization Details</string>
     <string name="mvv_live">MVV Live</string>
     <string name="full_app_info">TUM Campus App for Android</string>

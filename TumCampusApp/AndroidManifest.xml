@@ -112,12 +112,12 @@
         <activity
             android:name=".activities.LecturesPersonalActivity"
             android:configChanges="orientation|screenSize"
-            android:label="@string/lectures" >
+            android:label="@string/my_lectures" >
         </activity>
         <activity
             android:name=".activities.LecturesSearchActivity"
             android:configChanges="orientation|screenSize"
-            android:label="@string/lectures" >
+            android:label="@string/lecture_search" >
         </activity>
         <activity
             android:name=".activities.FeedsDetailsActivity"
