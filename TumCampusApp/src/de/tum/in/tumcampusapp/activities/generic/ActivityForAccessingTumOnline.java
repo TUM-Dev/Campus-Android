@@ -18,7 +18,6 @@ import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequest;
 import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequestFetchListener;
 
 public abstract class ActivityForAccessingTumOnline extends Activity implements TUMOnlineRequestFetchListener {
-	public final static int MENU_REFRESH = 0;
 
 	private String accessToken;
 	protected RelativeLayout errorLayout;
@@ -82,8 +81,8 @@ public abstract class ActivityForAccessingTumOnline extends Activity implements 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
-		MenuItem m = menu.add(0, MENU_REFRESH, 0, getString(R.string.update));
-		m.setIcon(android.R.drawable.ic_menu_rotate);
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.menu_activity_for_downloading_external, menu);
 		return true;
 	}
 
@@ -115,7 +114,7 @@ public abstract class ActivityForAccessingTumOnline extends Activity implements 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case MENU_REFRESH:
+		case R.id.action_update:
 			requestFetch();
 			return true;
 		default:

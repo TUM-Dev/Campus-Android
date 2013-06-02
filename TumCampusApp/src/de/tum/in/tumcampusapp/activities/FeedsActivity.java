@@ -27,7 +27,6 @@ import de.tum.in.tumcampusapp.models.managers.FeedManager;
 public class FeedsActivity extends Activity implements OnItemClickListener, OnItemLongClickListener {
 	private static String feedId;
 	private static String feedName;
-	public final static int MENU_ADD = 0;
 	private SimpleCursorAdapter adapter;
 
 	@SuppressWarnings("deprecation")
@@ -50,8 +49,8 @@ public class FeedsActivity extends Activity implements OnItemClickListener, OnIt
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
-		MenuItem m = menu.add(0, MENU_ADD, 0, getString(R.string.add));
-		m.setIcon(android.R.drawable.ic_menu_add);
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.menu_feeds, menu);
 		return true;
 	}
 
@@ -103,7 +102,7 @@ public class FeedsActivity extends Activity implements OnItemClickListener, OnIt
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case MENU_ADD:
+		case R.id.action_add:
 			final Dialog dialog = new Dialog(this);
 			dialog.setContentView(R.layout.dialog_feeds_add);
 			dialog.setTitle("Add RSS-Feed");

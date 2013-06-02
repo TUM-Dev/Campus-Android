@@ -19,7 +19,6 @@ import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.services.DownloadService;
 
 public class ActivityForDownloadingExternal extends Activity {
-	public final static int MENU_REFRESH = 0;
 	private Activity activity = this;
 
 	private RelativeLayout errorLayout;
@@ -88,8 +87,8 @@ public class ActivityForDownloadingExternal extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
-		MenuItem m = menu.add(0, MENU_REFRESH, 0, getString(R.string.update));
-		m.setIcon(android.R.drawable.ic_menu_rotate);
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.menu_activity_for_accessing_tum_online, menu);
 		return true;
 	}
 
@@ -104,7 +103,7 @@ public class ActivityForDownloadingExternal extends Activity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case MENU_REFRESH:
+		case R.id.action_update:
 			requestDownload();
 			return true;
 		default:

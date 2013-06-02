@@ -60,7 +60,7 @@ public class FeedsDetailsActivity extends ActivityForDownloadingExternal impleme
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case MENU_REFRESH:
+		case R.id.action_update:
 			Bundle extras = new Bundle();
 			extras.putInt(Const.FEED_ID, Integer.valueOf(feedId));
 			super.requestDownloadWithExtras(extras);
