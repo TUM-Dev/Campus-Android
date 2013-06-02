@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="color_schemes">
+        <item>Blue (Default)</item>
+        <item>Red</item>
+        <item>Green</item>
+    </string-array>
+    <string-array name="color_schemes_values">
+        <item>#0000FF</item>
+        <item>#FF0000</item>
+        <item>#00FF00</item>
+    </string-array>
+
+</resources>
