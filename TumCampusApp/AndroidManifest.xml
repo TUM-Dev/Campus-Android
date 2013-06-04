@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="de.tum.in.tumcampusapp"
-    android:versionCode="9"
-    android:versionName="0.3.0" >
+    android:versionCode="10"
+    android:versionName="0.3.1" >
 
     <uses-sdk
         android:minSdkVersion="8"
@@ -153,6 +153,11 @@
             android:name=".activities.RoomfinderActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/roomfinder" >
+        </activity>
+        <activity
+            android:name=".activities.TuitionFeesActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/tuition_fees" >
         </activity>
 
         <service

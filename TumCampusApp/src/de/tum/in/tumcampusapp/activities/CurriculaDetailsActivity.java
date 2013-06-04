@@ -144,7 +144,7 @@ public class CurriculaDetailsActivity extends Activity {
 		String url = getIntent().getExtras().getString(CurriculaActivity.URL);
 		String name = getIntent().getExtras().getString(CurriculaActivity.NAME);
 
-		setTitle(getTitle() + " for " + name);
+		setTitle(getResources().getString(R.string.study_plan) + " for " + name);
 
 		progressLayout.setVisibility(View.VISIBLE);
 		getCurriculum(name, url);

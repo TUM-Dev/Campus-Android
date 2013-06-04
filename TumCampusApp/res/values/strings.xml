@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+	<string name="amount">Amount</string>
+	<string name="deadline">Deadline</string>
 	<string name="color_scheme">Color Scheme</string>
 	<string name="color_scheme_summary">Set your desired color scheme for this App</string>
 	<string name="layout">Layout</string>
@@ -50,7 +52,7 @@
 	<string name="lectures_addinfo">List of your lectures</string>
 	<string name="grades_addinfo">List of your grades</string>
 	<string name="timetable_addinfo">Your current timetable</string>
-	<string name="studyfee_addinfo">Information about the study fee</string>
+	<string name="tuitionfee_addinfo">Information about the tuition fees</string>
 	<string name="rssfeed_addinfo">Famous RSS-Feeds</string>
 	<string name="tumnews_addinfo">News about TUM</string>
 	<string name="events_addinfo">Events at TUM</string>
@@ -163,6 +165,7 @@
 	<string name="grades">Grades</string>
 	<string name="documents">Documents</string>
 	<string name="study_plans">Study Plans</string>
+	<string name="study_plan">Study Plan</string>
 	<string name="tuition_fees">Tuition Fees</string>
 	<string name="menues">Cafeterias</string>
 	<string name="mvv">MVV</string>
@@ -350,6 +353,5 @@
 	<string name="chooseReminder">choose a reminder:</string>
 	<string name="deactivated">deactivated</string>
 	<string name="error">Error</string>
-	<string name="study_fee">Study fee</string>
 
 </resources>

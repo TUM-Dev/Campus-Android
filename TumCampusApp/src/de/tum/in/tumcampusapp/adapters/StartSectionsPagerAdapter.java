@@ -23,6 +23,7 @@ import de.tum.in.tumcampusapp.activities.PersonsSearchActivity;
 import de.tum.in.tumcampusapp.activities.PlansActivity;
 import de.tum.in.tumcampusapp.activities.RoomfinderActivity;
 import de.tum.in.tumcampusapp.activities.TransportationActivity;
+import de.tum.in.tumcampusapp.activities.TuitionFeesActivity;
 import de.tum.in.tumcampusapp.activities.generic.MockActivity;
 import de.tum.in.tumcampusapp.auxiliary.ListMenuEntry;
 import de.tum.in.tumcampusapp.fragments.StartSectionFragment;
@@ -81,8 +82,8 @@ public class StartSectionsPagerAdapter extends FragmentPagerAdapter {
 			listMenuEntrySet.add(new ListMenuEntry(R.drawable.chart, R.string.grades, R.string.grades_addinfo, new Intent(activity, GradesActivity.class)));
 			listMenuEntrySet.add(new ListMenuEntry(R.drawable.calendar, R.string.timetable, R.string.timetable_addinfo,
 					new Intent(activity, MockActivity.class)));
-			listMenuEntrySet
-					.add(new ListMenuEntry(R.drawable.finance, R.string.study_fee, R.string.studyfee_addinfo, new Intent(activity, MockActivity.class)));
+			listMenuEntrySet.add(new ListMenuEntry(R.drawable.finance, R.string.tuition_fees, R.string.tuitionfee_addinfo, new Intent(activity,
+					TuitionFeesActivity.class)));
 			break;
 		case SECTION_NEWS:
 			listMenuEntrySet.add(new ListMenuEntry(R.drawable.fax, R.string.rss_feeds, R.string.rssfeed_addinfo, new Intent(activity, FeedsActivity.class)));
