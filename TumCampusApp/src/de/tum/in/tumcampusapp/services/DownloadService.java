@@ -72,7 +72,6 @@ public class DownloadService extends IntentService {
 	public boolean downloadNews() throws Exception {
 		NewsManager nm = new NewsManager(this);
 		nm.downloadFromExternal();
-
 		return true;
 	}
 

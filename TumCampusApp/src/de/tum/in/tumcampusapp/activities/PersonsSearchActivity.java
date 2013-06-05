@@ -1,7 +1,5 @@
 package de.tum.in.tumcampusapp.activities;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import org.simpleframework.xml.Serializer;
@@ -19,7 +17,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
@@ -89,6 +86,8 @@ public class PersonsSearchActivity extends ActivityForAccessingTumOnline impleme
 	}
 
 	public void onClick(View view) {
+		super.onClick(view);
+		
 		int viewId = view.getId();
 		switch (viewId) {
 		case R.id.clear:
@@ -106,7 +105,6 @@ public class PersonsSearchActivity extends ActivityForAccessingTumOnline impleme
 
 		etSearch = (EditText) findViewById(R.id.etSearch);
 		etSearch.setOnEditorActionListener(this);
-
 		lvPersons = (ListView) findViewById(R.id.lstPersons);
 	}
 

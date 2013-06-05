@@ -45,7 +45,7 @@ import de.tum.in.tumcampusapp.models.LecturesSearchRowSet;
  * @review Thomas Behrens
  */
 public class LecturesSearchActivity extends ActivityForAccessingTumOnline implements OnEditorActionListener {
-
+	private static final int MIN_SEARCH_LENGTH = 3;
 	private static String P_SUCHE = "pSuche";
 
 	/** UI Elements */
@@ -143,7 +143,7 @@ public class LecturesSearchActivity extends ActivityForAccessingTumOnline implem
 	};
 
 	private boolean searchForLectures() {
-		if (etFindQuery.getText().length() < 3) {
+		if (etFindQuery.getText().length() < MIN_SEARCH_LENGTH) {
 			Toast.makeText(this, R.string.please_insert_at_least_three_chars, Toast.LENGTH_SHORT).show();
 			return false;
 		}
