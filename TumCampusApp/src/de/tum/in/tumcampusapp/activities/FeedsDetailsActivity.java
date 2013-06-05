@@ -36,7 +36,7 @@ public class FeedsDetailsActivity extends ActivityForDownloadingExternal impleme
 
 		Bundle extras = new Bundle();
 		extras.putInt(Const.FEED_ID, Integer.valueOf(feedId));
-		
+
 		super.requestDownloadWithExtras(extras);
 	}
 
@@ -47,7 +47,7 @@ public class FeedsDetailsActivity extends ActivityForDownloadingExternal impleme
 		if (av.getId() == R.id.listView) {
 			Cursor cursor = (Cursor) av.getAdapter().getItem(position);
 			startManagingCursor(cursor);
-			
+
 			String link = cursor.getString(cursor.getColumnIndex(Const.LINK_COLUMN));
 
 			Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));

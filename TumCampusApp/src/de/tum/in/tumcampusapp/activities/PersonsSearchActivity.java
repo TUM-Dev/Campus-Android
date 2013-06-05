@@ -36,8 +36,8 @@ import de.tum.in.tumcampusapp.models.PersonList;
  * @redesign Sascha Moecker
  */
 public class PersonsSearchActivity extends ActivityForAccessingTumOnline implements OnEditorActionListener {
-	private static final String PERSONEN_SUCHE = "personenSuche";
 	private static final int MIN_SEARCH_LENGTH = 3;
+	private static final String PERSONEN_SUCHE = "personenSuche";
 
 	private Context context;
 
@@ -87,7 +87,7 @@ public class PersonsSearchActivity extends ActivityForAccessingTumOnline impleme
 
 	public void onClick(View view) {
 		super.onClick(view);
-		
+
 		int viewId = view.getId();
 		switch (viewId) {
 		case R.id.clear:

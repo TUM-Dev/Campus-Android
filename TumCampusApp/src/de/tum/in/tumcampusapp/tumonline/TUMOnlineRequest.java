@@ -168,7 +168,8 @@ public class TUMOnlineRequest {
 					listener.onFetchError(context.getString(R.string.dialog_access_token_invalid));
 					return;
 				}
-				// If there could not be found any problems return usual on Fetch method
+				// If there could not be found any problems return usual on
+				// Fetch method
 				listener.onFetch(result);
 			}
 

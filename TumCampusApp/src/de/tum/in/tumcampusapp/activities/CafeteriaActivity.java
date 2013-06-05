@@ -15,8 +15,9 @@ import de.tum.in.tumcampusapp.models.managers.CafeteriaManager;
 
 /**
  * Activity to show cafeterias and meals selected by date
+ * 
  * @author TCA Team
-*/
+ */
 
 public class CafeteriaActivity extends ActivityForDownloadingExternal implements OnItemClickListener {
 
@@ -38,7 +39,7 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
 
 		listCafeterias = (ListView) findViewById(R.id.listView);
 
-		super.requestDownload();
+		super.requestDownload(false);
 	}
 
 	@SuppressWarnings("deprecation")
@@ -53,7 +54,7 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
 		Intent intent = new Intent(this, CafeteriaDetailsActivity.class);
 		intent.putExtra(Const.CAFETERIA_ID, cafeteriaId);
 		intent.putExtra(Const.CAFETERIA_NAME, cafeteriaName);
-		
+
 		startActivity(intent);
 	}
 
@@ -63,12 +64,12 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
 		super.onStart();
 
 		CafeteriaManager cm = new CafeteriaManager(this);
-		
+
 		Cursor cursor = cm.getAllFromDb("% %");
 		startManagingCursor(cursor);
 
-		SimpleCursorAdapter adapterCafeterias = new SimpleCursorAdapter(this, R.layout.list_layout_two_line_item, cursor,
-				cursor.getColumnNames(), new int[] { android.R.id.text1, android.R.id.text2 });
+		SimpleCursorAdapter adapterCafeterias = new SimpleCursorAdapter(this, R.layout.list_layout_two_line_item, cursor, cursor.getColumnNames(), new int[] {
+				android.R.id.text1, android.R.id.text2 });
 
 		listCafeterias.setAdapter(adapterCafeterias);
 		listCafeterias.setOnItemClickListener(this);

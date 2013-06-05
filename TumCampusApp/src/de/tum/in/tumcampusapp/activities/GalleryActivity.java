@@ -22,10 +22,26 @@ public class GalleryActivity extends ActivityForDownloadingExternal implements O
 		super(Const.GALLERY, R.layout.activity_gallery);
 	}
 
+	// TODO Implement that as a sliding tab
+	private void getPastGallery() {
+		GalleryManager gm = new GalleryManager(this);
+		SimpleCursorAdapter adapter;
+		Cursor cursor;
+
+		cursor = gm.getFromDbArchive();
+		startManagingCursor(cursor);
+
+		adapter = new SimpleCursorAdapter(this, R.layout.activity_gallery_image, cursor, cursor.getColumnNames(), new int[] { R.id.activity_gallery_image });
+
+		GridView gridview2 = (GridView) findViewById(R.id.activity_gallery_gridview);
+		gridview2.setAdapter(adapter);
+		gridview2.setOnItemClickListener(this);
+	}
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		super.requestDownload();
+		super.requestDownload(false);
 	}
 
 	@SuppressWarnings("deprecation")
@@ -47,11 +63,13 @@ public class GalleryActivity extends ActivityForDownloadingExternal implements O
 
 		// Gets images from database
 		GalleryManager gm = new GalleryManager(this);
-		Cursor cursor = gm.getFromDb();
+		SimpleCursorAdapter adapter;
+		Cursor cursor;
+
+		cursor = gm.getFromDb();
 		startManagingCursor(cursor);
-		
-		SimpleCursorAdapter adapter = new SimpleCursorAdapter(this, R.layout.activity_gallery_image, cursor, cursor.getColumnNames(),
-				new int[] { R.id.activity_gallery_image });
+
+		adapter = new SimpleCursorAdapter(this, R.layout.activity_gallery_image, cursor, cursor.getColumnNames(), new int[] { R.id.activity_gallery_image });
 
 		GridView gridview = (GridView) findViewById(R.id.activity_gallery_gridview);
 		gridview.setAdapter(adapter);

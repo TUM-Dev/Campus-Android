@@ -16,6 +16,11 @@
         layout="@layout/layout_error"
         android:visibility="gone" />
 
+    <TextView
+        android:id="@+id/tvLDetailsName"
+        style="@style/SectionHeadline"
+        android:text="@string/latest_gallery" />
+
     <GridView
         android:id="@+id/activity_gallery_gridview"
         android:layout_width="fill_parent"

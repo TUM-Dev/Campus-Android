@@ -7,6 +7,7 @@ import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.managers.CafeteriaManager;
 import de.tum.in.tumcampusapp.models.managers.CafeteriaMenuManager;
+import de.tum.in.tumcampusapp.models.managers.EventManager;
 import de.tum.in.tumcampusapp.models.managers.FeedItemManager;
 import de.tum.in.tumcampusapp.models.managers.GalleryManager;
 import de.tum.in.tumcampusapp.models.managers.NewsManager;
@@ -57,6 +58,12 @@ public class DownloadService extends IntentService {
 		return true;
 	}
 
+	public boolean downloadEvents(boolean force) throws Exception {
+		EventManager em = new EventManager(this);
+		em.downloadFromExternal(force);
+		return true;
+	}
+
 	public boolean downloadFeed(int feedId) throws Exception {
 		FeedItemManager fim = new FeedItemManager(this);
 		fim.downloadFromExternal(feedId, false);
@@ -102,6 +109,7 @@ public class DownloadService extends IntentService {
 	protected void onHandleIntent(Intent intent) {
 		boolean scucessfull = false;
 		String action = intent.getStringExtra(Const.ACTION_EXTRA);
+		boolean force = intent.getBooleanExtra(Const.FORCE_DOWNLOAD, false);
 
 		if (action == null) {
 			// No action: leave service
@@ -123,6 +131,9 @@ public class DownloadService extends IntentService {
 			}
 			if ((action.equals(Const.CAFETERIAS)) && !isDestroyed) {
 				scucessfull = downloadCafeterias();
+			}
+			if ((action.equals(Const.EVENTS)) && !isDestroyed) {
+				scucessfull = downloadEvents(force);
 			}
 		} catch (Exception e) {
 			Log.e(getClass().getSimpleName(), "Error while handling action <" + action + ">");

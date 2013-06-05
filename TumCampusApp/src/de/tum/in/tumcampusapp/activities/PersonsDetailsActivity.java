@@ -51,7 +51,7 @@ public class PersonsDetailsActivity extends ActivityForAccessingTumOnline implem
 	 * @param employee
 	 *            The employee whose information should be displayed.
 	 */
-	private void displayResults(Employee employee) {		
+	private void displayResults(Employee employee) {
 		// add the employee's counterfeit
 		ImageView imageView = (ImageView) this.findViewById(R.id.ivImage);
 
@@ -164,7 +164,7 @@ public class PersonsDetailsActivity extends ActivityForAccessingTumOnline implem
 	@Override
 	public void onFetch(String rawResponse) {
 		Log.d(getClass().getSimpleName(), rawResponse);
-		
+
 		// deserialize XML response to model entities
 		Serializer serializer = new Persister();
 		try {

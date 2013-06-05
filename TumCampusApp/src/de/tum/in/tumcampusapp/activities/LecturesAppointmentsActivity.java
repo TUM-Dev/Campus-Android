@@ -63,7 +63,7 @@ public class LecturesAppointmentsActivity extends ActivityForAccessingTumOnline 
 	@Override
 	public void onFetch(String rawResponse) {
 		Log.d(getClass().getSimpleName(), rawResponse);
-		
+
 		// deserialize xml
 		Serializer serializer = new Persister();
 		LectureAppointmentsRowSet lecturesList = null;
@@ -80,7 +80,7 @@ public class LecturesAppointmentsActivity extends ActivityForAccessingTumOnline 
 		if (lecturesList == null || lecturesList.getLehrveranstaltungenTermine() == null) {
 			errorLayout.setVisibility(View.VISIBLE);
 			progressLayout.setVisibility(View.GONE);
-			Toast.makeText(this, "No appointsments available", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, R.string.no_appointments, Toast.LENGTH_SHORT).show();
 			return;
 		}
 

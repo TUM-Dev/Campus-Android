@@ -96,7 +96,7 @@ public abstract class ActivityForAccessingTumOnline extends Activity implements 
 	public void onFetchCancelled() {
 		finish();
 	}
-	
+
 	@Override
 	public void onFetchError(String errorReason) {
 		Log.e(getClass().getSimpleName(), errorReason);

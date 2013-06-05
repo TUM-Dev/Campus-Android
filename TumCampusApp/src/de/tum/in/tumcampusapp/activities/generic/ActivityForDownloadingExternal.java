@@ -41,7 +41,7 @@ public class ActivityForDownloadingExternal extends Activity {
 					progressLayout.setVisibility(View.GONE);
 					errorLayout.setVisibility(View.GONE);
 					// Calls onStart() to simulate a new start of the activity
-					// without downloading new data, since thits receiver
+					// without downloading new data, since this receiver
 					// receives data from a new download
 					onStart();
 				}
@@ -77,12 +77,6 @@ public class ActivityForDownloadingExternal extends Activity {
 			Log.e(getClass().getSimpleName(), "Cannot find layouts, did you forget to provide error and progress layouts?");
 		}
 	}
-	
-	@Override
-	protected void onResume() {
-		super.onResume();
-		registerReceiver(receiver, new IntentFilter(DownloadService.broadcast));
-	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -93,6 +87,23 @@ public class ActivityForDownloadingExternal extends Activity {
 	}
 
 	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.action_update:
+			requestDownload(true);
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		registerReceiver(receiver, new IntentFilter(DownloadService.broadcast));
+	}
+
+	@Override
 	protected void onStop() {
 		super.onStop();
 		unregisterReceiver(receiver);
@@ -100,22 +111,12 @@ public class ActivityForDownloadingExternal extends Activity {
 		stopService(service);
 	}
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case R.id.action_update:
-			requestDownload();
-			return true;
-		default:
-			return super.onOptionsItemSelected(item);
-		}
-	}
-
-	public void requestDownload() {
+	public void requestDownload(boolean forceDownload) {
 		if (Utils.isConnected(this)) {
 			progressLayout.setVisibility(View.VISIBLE);
 			Intent service = new Intent(this, DownloadService.class);
 			service.putExtra(Const.ACTION_EXTRA, method);
+			service.putExtra(Const.FORCE_DOWNLOAD, forceDownload);
 			startService(service);
 		} else {
 			errorLayout.setVisibility(View.VISIBLE);

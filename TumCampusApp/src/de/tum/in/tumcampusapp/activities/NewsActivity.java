@@ -29,17 +29,17 @@ public class NewsActivity extends ActivityForDownloadingExternal implements OnIt
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		super.requestDownload();
+		super.requestDownload(false);
 	}
 
 	@SuppressWarnings("deprecation")
 	@Override
 	public void onItemClick(AdapterView<?> aview, View view, int position, long id) {
 		ListView lv = (ListView) findViewById(R.id.activity_news_list_view);
-		
+
 		Cursor cursor = (Cursor) lv.getAdapter().getItem(position);
 		startManagingCursor(cursor);
-		
+
 		String url = cursor.getString(cursor.getColumnIndex(Const.LINK_COLUMN));
 
 		if (url.length() == 0) {

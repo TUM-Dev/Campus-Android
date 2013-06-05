@@ -8,9 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
-import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.models.Employee;
-import de.tum.in.tumcampusapp.models.Group;
 import de.tum.in.tumcampusapp.models.Person;
 
 /**

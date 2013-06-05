@@ -12,7 +12,6 @@ public final class Const {
 		public static final String TUMONLINE_SETTINGS_KEY = "tumonline";
 	}
 
-	public static final int HTTP_TIMEOUT = 25000;
 	public static final String ACCESS_TOKEN = "access_token";
 	public static final String ACTION_EXTRA = "action";
 	public static final String ADDRESS_COLUMN = "address";
@@ -39,9 +38,11 @@ public final class Const {
 	public static final String FEED_ID = "feedId";
 	public static final String FEED_NAME = "feedName";
 	public static final String FEEDS = "feeds";
+	public static final String FORCE_DOWNLOAD = "force_download";
 	public static final String GALLERY = "gallery";
 	public static final String HOLIDAY = "holiday";
 	public static final String HOURS_COLUMN = "hours";
+	public static final int HTTP_TIMEOUT = 25000;
 	public static final String ID_COLUMN = "_id";
 	public static final String ID_EXTRA = "id";
 	public static final String IMAGE_COLUMN = "image";

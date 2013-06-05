@@ -49,15 +49,6 @@ public abstract class ActivityForSearching extends Activity implements OnEditorA
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
 	}
-	
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		super.onCreateOptionsMenu(menu);
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.menu_activity_for_searching, menu);
-		return true;
-	}
-
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -72,11 +63,19 @@ public abstract class ActivityForSearching extends Activity implements OnEditorA
 	}
 
 	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		super.onCreateOptionsMenu(menu);
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.menu_activity_for_searching, menu);
+		return true;
+	}
+
+	@Override
 	public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
 		requestSearch();
 		return false;
 	}
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {

@@ -12,9 +12,11 @@ import android.support.v4.app.FragmentPagerAdapter;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.CafeteriaActivity;
 import de.tum.in.tumcampusapp.activities.CurriculaActivity;
+import de.tum.in.tumcampusapp.activities.EventsActivity;
 import de.tum.in.tumcampusapp.activities.FeedsActivity;
 import de.tum.in.tumcampusapp.activities.GalleryActivity;
 import de.tum.in.tumcampusapp.activities.GradesActivity;
+import de.tum.in.tumcampusapp.activities.InformationActivity;
 import de.tum.in.tumcampusapp.activities.LecturesPersonalActivity;
 import de.tum.in.tumcampusapp.activities.LecturesSearchActivity;
 import de.tum.in.tumcampusapp.activities.NewsActivity;
@@ -87,16 +89,18 @@ public class StartSectionsPagerAdapter extends FragmentPagerAdapter {
 			break;
 		case SECTION_NEWS:
 			listMenuEntrySet.add(new ListMenuEntry(R.drawable.fax, R.string.rss_feeds, R.string.rssfeed_addinfo, new Intent(activity, FeedsActivity.class)));
-			listMenuEntrySet.add(new ListMenuEntry(R.drawable.news, R.string.tum_news, R.string.tumnews_addinfo, new Intent(activity, NewsActivity.class)));
-			listMenuEntrySet.add(new ListMenuEntry(R.drawable.music, R.string.events, R.string.events_addinfo, new Intent(activity, MockActivity.class)));
+			listMenuEntrySet.add(new ListMenuEntry(R.drawable.mail, R.string.tum_news, R.string.tumnews_addinfo, new Intent(activity, NewsActivity.class)));
+			listMenuEntrySet.add(new ListMenuEntry(R.drawable.camera, R.string.events, R.string.events_addinfo, new Intent(activity, EventsActivity.class)));
 			listMenuEntrySet
 					.add(new ListMenuEntry(R.drawable.pictures, R.string.gallery, R.string.gallery_addinfo, new Intent(activity, GalleryActivity.class)));
 			break;
 		case SECTION_CONVENIENCE:
 			listMenuEntrySet
 					.add(new ListMenuEntry(R.drawable.show_info, R.string.mvv, R.string.mvv_addinfo, new Intent(activity, TransportationActivity.class)));
-			listMenuEntrySet.add(new ListMenuEntry(R.drawable.notepad, R.string.menues, R.string.cafeteria_addinfo, new Intent(activity,
+			listMenuEntrySet.add(new ListMenuEntry(R.drawable.shopping_cart, R.string.menues, R.string.cafeteria_addinfo, new Intent(activity,
 					CafeteriaActivity.class)));
+			listMenuEntrySet.add(new ListMenuEntry(R.drawable.about, R.string.information, R.string.information_addinfo, new Intent(activity,
+					InformationActivity.class)));
 			break;
 		}
 		args.putSerializable(LIST_ENTRY_SET, listMenuEntrySet);

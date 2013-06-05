@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="de.tum.in.tumcampusapp"
-    android:versionCode="10"
-    android:versionName="0.3.1" >
+    android:versionCode="11"
+    android:versionName="0.3.2" >
 
     <uses-sdk
         android:minSdkVersion="8"
@@ -158,6 +158,21 @@
             android:name=".activities.TuitionFeesActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/tuition_fees" >
+        </activity>
+        <activity
+            android:name=".activities.InformationActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/information" >
+        </activity>
+        <activity
+            android:name=".activities.EventsActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/events" >
+        </activity>
+        <activity
+            android:name=".activities.EventsDetailsActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/event_details" >
         </activity>
 
         <service
