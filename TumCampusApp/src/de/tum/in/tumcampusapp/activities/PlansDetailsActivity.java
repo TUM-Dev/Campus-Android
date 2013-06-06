@@ -34,42 +34,42 @@ public class PlansDetailsActivity extends Activity {
 
 		if (position == 0) {
 			file = "plans/CampusGarching.jpg";
-			setTitle(getString(R.string.plan_for) + " " + getString(R.string.campus_garching));
+			setTitle(getString(R.string.campus_garching));
 			browser.setInitialScale(100 * width / 1024);
 
 		} else if (position == 1) {
 			file = "plans/CampusKlinikum.jpg";
-			setTitle(getString(R.string.plan_for) + " " + getString(R.string.campus_klinikum));
+			setTitle(getString(R.string.campus_klinikum));
 			browser.setInitialScale(100 * width / 1024);
 
 		} else if (position == 2) {
 			file = "plans/CampusOlympiapark.jpg";
-			setTitle(getString(R.string.plan_for) + " " + getString(R.string.campus_olympiapark));
+			setTitle(getString(R.string.campus_olympiapark));
 			browser.setInitialScale(100 * width / 900);
 
 		} else if (position == 3) {
 			file = "plans/CampusOlympiaparkHallenplan.jpg";
-			setTitle(getString(R.string.plan_for) + " " + getString(R.string.campus_olympiapark_gyms));
+			setTitle(getString(R.string.campus_olympiapark_gyms));
 			browser.setInitialScale(100 * width / 800);
 
 		} else if (position == 4) {
 			file = "plans/CampusStammgelaende.jpg";
-			setTitle(getString(R.string.plan_for) + " " + getString(R.string.campus_main));
+			setTitle(getString(R.string.campus_main));
 			browser.setInitialScale(100 * width / 1024);
 
 		} else if (position == 5) {
 			file = "plans/CampusWeihenstephan.jpg";
-			setTitle(getString(R.string.plan_for) + " " + getString(R.string.campus_weihenstephan));
+			setTitle(getString(R.string.campus_weihenstephan));
 			browser.setInitialScale(100 * width / 1110);
 
 		} else if (position == 6) {
 			file = "plans/mvv.jpg";
-			setTitle(getString(R.string.plan_for) + " " + getString(R.string.mvv_fast_train_net));
+			setTitle(getString(R.string.mvv_fast_train_net));
 			browser.setInitialScale(100 * width / 1454);
 
 		} else {
 			file = "plans/mvv_night.jpg";
-			setTitle(getString(R.string.plan_for) + " " + getString(R.string.mvv_nightlines));
+			setTitle(getString(R.string.mvv_nightlines));
 			browser.setInitialScale(100 * width / 1480);
 		}
 

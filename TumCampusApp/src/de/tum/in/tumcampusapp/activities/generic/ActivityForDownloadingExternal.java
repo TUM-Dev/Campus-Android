@@ -125,7 +125,7 @@ public class ActivityForDownloadingExternal extends Activity {
 	}
 
 	// TODO: Make this nicer
-	public void requestDownloadWithExtras(Bundle extras) {
+	public void requestDownloadWithExtras(Bundle extras, boolean forceDownload) {
 		if (Utils.isConnected(this)) {
 			progressLayout.setVisibility(View.VISIBLE);
 			Intent service = new Intent(this, DownloadService.class);

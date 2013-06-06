@@ -50,7 +50,7 @@ public class DownloadService extends IntentService {
 		sendBroadcast(intentSend);
 	}
 
-	public boolean downloadCafeterias() throws Exception {
+	public boolean downloadCafeterias(boolean force) throws Exception {
 		CafeteriaManager cm = new CafeteriaManager(this);
 		CafeteriaMenuManager cmm = new CafeteriaMenuManager(this);
 		cm.downloadFromExternal();
@@ -64,19 +64,19 @@ public class DownloadService extends IntentService {
 		return true;
 	}
 
-	public boolean downloadFeed(int feedId) throws Exception {
+	public boolean downloadFeed(int feedId, boolean force) throws Exception {
 		FeedItemManager fim = new FeedItemManager(this);
 		fim.downloadFromExternal(feedId, false);
 		return true;
 	}
 
-	public boolean downloadGallery() throws Exception {
+	public boolean downloadGallery(boolean force) throws Exception {
 		GalleryManager gm = new GalleryManager(this);
 		gm.downloadFromExternal();
 		return true;
 	}
 
-	public boolean downloadNews() throws Exception {
+	public boolean downloadNews(boolean force) throws Exception {
 		NewsManager nm = new NewsManager(this);
 		nm.downloadFromExternal();
 		return true;
@@ -120,17 +120,17 @@ public class DownloadService extends IntentService {
 
 		try {
 			if ((action.equals(Const.NEWS)) && !isDestroyed) {
-				scucessfull = downloadNews();
+				scucessfull = downloadNews(force);
 			}
 			if ((action.equals(Const.GALLERY)) && !isDestroyed) {
-				scucessfull = downloadGallery();
+				scucessfull = downloadGallery(force);
 			}
 			if ((action.equals(Const.FEEDS)) && !isDestroyed) {
 				int feedId = intent.getExtras().getInt(Const.FEED_ID);
-				scucessfull = downloadFeed(feedId);
+				scucessfull = downloadFeed(feedId, force);
 			}
 			if ((action.equals(Const.CAFETERIAS)) && !isDestroyed) {
-				scucessfull = downloadCafeterias();
+				scucessfull = downloadCafeterias(force);
 			}
 			if ((action.equals(Const.EVENTS)) && !isDestroyed) {
 				scucessfull = downloadEvents(force);

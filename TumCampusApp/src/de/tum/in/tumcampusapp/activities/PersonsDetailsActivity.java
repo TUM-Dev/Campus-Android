@@ -156,7 +156,7 @@ public class PersonsDetailsActivity extends ActivityForAccessingTumOnline implem
 			return;
 		}
 		// Sets the current name as a title
-		setTitle(getResources().getString(R.string.person_information) + " for " + person.getName() + " " + person.getSurname());
+		setTitle(person.getName() + " " + person.getSurname());
 		requestHandler.setParameter("pIdentNr", person.getId());
 		super.requestFetch();
 	}

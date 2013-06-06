@@ -57,7 +57,7 @@ public class OpeningHoursDetailFragment extends Fragment implements ViewBinder {
 		}
 		if (getArguments().containsKey(TWO_PANE)) {
 			if (!getArguments().getBoolean(TWO_PANE)) {
-				getActivity().setTitle(getActivity().getTitle() + " for " + mItem.content);
+				getActivity().setTitle(mItem.content);
 			}
 		}
 	}

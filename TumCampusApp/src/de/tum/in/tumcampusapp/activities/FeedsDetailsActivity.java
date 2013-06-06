@@ -37,7 +37,7 @@ public class FeedsDetailsActivity extends ActivityForDownloadingExternal impleme
 		Bundle extras = new Bundle();
 		extras.putInt(Const.FEED_ID, Integer.valueOf(feedId));
 
-		super.requestDownloadWithExtras(extras);
+		super.requestDownloadWithExtras(extras, false);
 	}
 
 	@SuppressWarnings("deprecation")
@@ -63,7 +63,7 @@ public class FeedsDetailsActivity extends ActivityForDownloadingExternal impleme
 		case R.id.action_update:
 			Bundle extras = new Bundle();
 			extras.putInt(Const.FEED_ID, Integer.valueOf(feedId));
-			super.requestDownloadWithExtras(extras);
+			super.requestDownloadWithExtras(extras, true);
 			return true;
 		default:
 			return false;
@@ -75,7 +75,7 @@ public class FeedsDetailsActivity extends ActivityForDownloadingExternal impleme
 	protected void onStart() {
 		super.onStart();
 
-		setTitle(getString(R.string.rss_feeds) + " for " + feedName);
+		setTitle(feedName);
 
 		// Gets all feed items for the chosen feed
 		FeedItemManager fim = new FeedItemManager(this);

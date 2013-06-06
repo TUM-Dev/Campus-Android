@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string name="lectures_information">Lecture Information</string>
+    <string name="lectures_appointments">Lecture Appointments</string>
     <string name="latest_events">Latest Events</string>
     <string name="archived_events">Archived Events</string>
     <string name="no_appointments">"No appointments available"</string>
@@ -213,6 +215,7 @@
     <string name="mensa_pasing">Cafeteria Pasing</string>
     <string name="mensa_weihenstephan">Cafeteria Weihenstephan</string>
     <string name="my_lectures">My Lectures</string>
+    <string name="my_grades">My Grades</string>
     <string name="roomfinder">Roomfinder</string>
     <string name="no_existing_data">No existing data.</string>
     <string name="holidays">holidays</string>

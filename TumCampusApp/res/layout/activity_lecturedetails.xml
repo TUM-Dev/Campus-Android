@@ -189,7 +189,7 @@
                 android:id="@+id/btnLDetailsTermine"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/lec_dates" />
+                android:text="@string/lectures_appointments" />
         </LinearLayout>
     </ScrollView>
 

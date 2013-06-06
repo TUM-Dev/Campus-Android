@@ -79,9 +79,9 @@ public class StartSectionsPagerAdapter extends FragmentPagerAdapter {
 					OpeningHoursListActivity.class)));
 			break;
 		case SECTION_MY_TUM:
-			listMenuEntrySet.add(new ListMenuEntry(R.drawable.calculator, R.string.lectures, R.string.lectures_addinfo, new Intent(activity,
+			listMenuEntrySet.add(new ListMenuEntry(R.drawable.calculator, R.string.my_lectures, R.string.lectures_addinfo, new Intent(activity,
 					LecturesPersonalActivity.class)));
-			listMenuEntrySet.add(new ListMenuEntry(R.drawable.chart, R.string.grades, R.string.grades_addinfo, new Intent(activity, GradesActivity.class)));
+			listMenuEntrySet.add(new ListMenuEntry(R.drawable.chart, R.string.my_grades, R.string.grades_addinfo, new Intent(activity, GradesActivity.class)));
 			listMenuEntrySet.add(new ListMenuEntry(R.drawable.calendar, R.string.timetable, R.string.timetable_addinfo,
 					new Intent(activity, MockActivity.class)));
 			listMenuEntrySet.add(new ListMenuEntry(R.drawable.finance, R.string.tuition_fees, R.string.tuitionfee_addinfo, new Intent(activity,

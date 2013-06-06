@@ -37,7 +37,7 @@
         <activity
             android:name=".activities.NewsActivity"
             android:configChanges="orientation|screenSize"
-            android:label="@string/news" >
+            android:label="@string/tum_news" >
         </activity>
         <activity
             android:name=".activities.PlansActivity"
@@ -52,7 +52,7 @@
         <activity
             android:name=".activities.GradesActivity"
             android:configChanges="orientation|screenSize"
-            android:label="@string/grades" >
+            android:label="@string/my_grades" >
         </activity>
         <activity
             android:name=".preferences.UserPreferencesActivity"
@@ -97,17 +97,17 @@
         <activity
             android:name=".activities.LecturesActivity"
             android:configChanges="orientation|screenSize"
-            android:label="@string/lectures" >
+            android:label="@string/my_lectures" >
         </activity>
         <activity
             android:name=".activities.LecturesAppointmentsActivity"
             android:configChanges="orientation|screenSize"
-            android:label="@string/lectures" >
+            android:label="@string/lectures_appointments" >
         </activity>
         <activity
             android:name=".activities.LecturesDetailsActivity"
             android:configChanges="orientation|screenSize"
-            android:label="@string/lectures" >
+            android:label="@string/lectures_information" >
         </activity>
         <activity
             android:name=".activities.LecturesPersonalActivity"
