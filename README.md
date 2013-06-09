@@ -9,8 +9,7 @@ Kein Support/Haftung durch die TU München.
 
 Features:
 
-persönliche Vorlesungstermine
-
+persönliche Vorlesungstermine,
 Nachrichten,
 Veranstaltungen,
 Mensa Speiseplan,
