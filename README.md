@@ -11,15 +11,16 @@ Features:
 
 persönliche Vorlesungstermine
 
-Nachrichten
-Veranstaltungen
-Mensa Speiseplan
-MVV Abfahrtszeiten
-Umgebungspläne
-Öffnungszeiten
-RSS-Feeds
-Offline-Modus
-automatische Stummschaltung während der Vorlesung
+Nachrichten,
+Veranstaltungen,
+Mensa Speiseplan,
+MVV Abfahrtszeiten,
+Umgebungspläne,
+Öffnungszeiten,
+RSS-Feeds,
+Offline-Modus,
+automatische Stummschaltung während der Vorlesung, 
+und weitere.
    
 Datenschutz:
 Die Anwendung speichert nur personenbezogene Daten, wenn der Benutzer diese explizit eingibt oder über die SD-Karte manuell importiert.
