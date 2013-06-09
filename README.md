@@ -12,23 +12,13 @@ Features:
 persönliche Vorlesungstermine
 
 Nachrichten
-
 Veranstaltungen
-
 Mensa Speiseplan
-
-MVV Abfahrtszeiten (live!)
-
+MVV Abfahrtszeiten
 Umgebungspläne
-
 Öffnungszeiten
-
-Wichtige Links
-
 RSS-Feeds
-
 Offline-Modus
-
 automatische Stummschaltung während der Vorlesung
    
 Datenschutz:
