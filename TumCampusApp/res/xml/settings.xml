@@ -12,13 +12,23 @@
             android:summary="@string/generate_tumonline_token_detail"
             android:title="@string/generate_tumonline_token" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="@string/layout" >
+    <PreferenceCategory android:title="@string/layout_settings" >
         <ListPreference
-            android:key="color_scheme"
-            android:summary="@string/color_scheme_summary"
+            android:defaultValue="0"
             android:entries="@array/color_schemes"
             android:entryValues="@array/color_schemes_values"
+            android:key="color_scheme"
+            android:summary="@string/color_scheme_summary"
             android:title="@string/color_scheme" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/personal_settings" >
+        <ListPreference
+            android:defaultValue="0"
+            android:entries="@array/roles"
+            android:entryValues="@array/roles_values"
+            android:key="role"
+            android:summary="@string/role_summary"
+            android:title="@string/role" />
     </PreferenceCategory>
 
 </PreferenceScreen>

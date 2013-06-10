@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.auxiliary.Const;
+import de.tum.in.tumcampusapp.auxiliary.PersonalLayoutManager;
 import de.tum.in.tumcampusapp.models.managers.EventManager;
 
 /**
@@ -58,5 +59,11 @@ public class EventsDetailsActivity extends Activity {
 		ImageView iv = (ImageView) findViewById(R.id.image);
 		Bitmap b = BitmapFactory.decodeFile(image);
 		iv.setImageBitmap(Bitmap.createScaledBitmap(b, 360, (b.getHeight() * 360) / b.getWidth(), true));
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		PersonalLayoutManager.setColorForId(this, R.id.infos);
 	}
 }

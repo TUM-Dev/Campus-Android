@@ -16,6 +16,7 @@ import de.tum.in.tumcampusapp.models.Event;
  * Event Manager, handles database stuff, external imports
  */
 public class EventManager {
+	public static int TIME_TO_SYNC = 21600; // 6 hours
 
 	/**
 	 * Last insert counter
@@ -100,7 +101,7 @@ public class EventManager {
 	 */
 	public void downloadFromExternal(boolean force) throws Exception {
 
-		if (!force && !SyncManager.needSync(db, this, 21600)) { // 6h
+		if (!force && !SyncManager.needSync(db, this, TIME_TO_SYNC)) {
 			return;
 		}
 

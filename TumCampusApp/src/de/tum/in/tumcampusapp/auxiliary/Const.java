@@ -12,6 +12,7 @@ public final class Const {
 		public static final String TUMONLINE_SETTINGS_KEY = "tumonline";
 	}
 
+	public static final String PREFS_HAVE_CHANGED = "prefs_have_changed";
 	public static final String ACCESS_TOKEN = "access_token";
 	public static final String ACTION_EXTRA = "action";
 	public static final String ADDRESS_COLUMN = "address";

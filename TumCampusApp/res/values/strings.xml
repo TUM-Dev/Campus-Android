@@ -1,6 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string name="action_prices">Prices</string>
+    <string name="personal_settings">Personal Settings</string>
+    <string name="cafeteria_ingredients">(f) fleischloses Gericht
+        \n(v) veganes Gericht
+		\n(S) Gericht mit Schweinefleisch
+		\n(R) Gericht mit Rindfleisch
+		\n(GQB) Geprüfte Qualität - Bayern
+		\n(99) Gericht mit Alkohol
+		\n\n1 mit Farbstoff
+		\n2 mit Konservierungsstoff
+		\n3 mit Antioxidationsmittel
+		\n4 mit Geschmacksverstärker
+		\n5 geschwefelt
+		\n6 geschwärzt (Oliven)
+		\n8 mit Phosphat
+		\n9 mit Süßungsmitteln
+		\n10 enthält eine Phenylalaninquelle
+		\n11 mit einer Zuckerart und Süßungsmitteln
+		\n99 mit Alkohol</string>
+    <string name="action_ingredients">Ingredients</string>
+    <string name="role_summary">Your role at TUM. Either student, employee or guest.</string>
+    <string name="role">Role</string>
     <string name="lectures_information">Lecture Information</string>
     <string name="lectures_appointments">Lecture Appointments</string>
     <string name="latest_events">Latest Events</string>
@@ -10,8 +32,8 @@
     <string name="amount_dots">Amount:</string>
     <string name="deadline_dots">Deadline:</string>
     <string name="color_scheme">Color Scheme</string>
-    <string name="color_scheme_summary">Set your desired color scheme for this App</string>
-    <string name="layout">Layout</string>
+    <string name="color_scheme_summary">Your desired color scheme for this App.</string>
+    <string name="layout_settings">Layout Settings</string>
     <string name="no_search_result">No search result</string>
     <string name="search_rooms">Search rooms</string>
     <string name="lang">eng</string>
@@ -20,7 +42,7 @@
     <string name="generate_tumonline_token">Generate TUMOnline Token</string>
     <string name="generate_tumonline_token_detail">Generates a token for using TUMOnline features. You
 		have to accept the token and set the corresponding permissions in
-		TUMOnline by yourself</string>
+		TUMOnline by yourself.</string>
     <string name="action_clear_cache">Clear cache</string>
     <string name="tum_common">General TUM</string>
     <string name="my_tum">My TUM</string>
@@ -290,7 +312,7 @@
     <string name="user_data">User data</string>
     <string name="tumonline_password">Password for TUMOnline</string>
     <string name="tumonline_access_token">Access token for TUMOnline</string>
-    <string name="lrz_id_detail">Your LRZ Identification e.g. go42tum"</string>
+    <string name="lrz_id_detail">Your LRZ Identification e.g. go42tum".</string>
     <string name="lrz_id">LRZ Identification"</string>
     <string name="updating">Updating …</string>
     <string name="tum_campus_download">TUMCampus download …</string>

@@ -15,6 +15,7 @@ import de.tum.in.tumcampusapp.models.Cafeteria;
  * Cafeteria Manager, handles database stuff, external imports
  */
 public class CafeteriaManager {
+	public static int TIME_TO_SYNC = 604800; // 1 week
 
 	/**
 	 * Get Cafeteria object by JSON object
@@ -61,10 +62,9 @@ public class CafeteriaManager {
 	 * @throws Exception
 	 * </pre>
 	 */
-	public void downloadFromExternal() throws Exception {
+	public void downloadFromExternal(boolean force) throws Exception {
 
-		// sync only once per week
-		if (!SyncManager.needSync(db, this, 604800)) {
+		if (!force && !SyncManager.needSync(db, this, TIME_TO_SYNC)) {
 			return;
 		}
 

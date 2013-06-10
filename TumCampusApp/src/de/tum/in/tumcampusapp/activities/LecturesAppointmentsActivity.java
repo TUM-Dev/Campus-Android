@@ -14,6 +14,7 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampusapp.adapters.LectureAppointmentsListAdapter;
 import de.tum.in.tumcampusapp.auxiliary.Const;
+import de.tum.in.tumcampusapp.auxiliary.PersonalLayoutManager;
 import de.tum.in.tumcampusapp.models.LectureAppointmentsRowSet;
 
 /**
@@ -88,5 +89,11 @@ public class LecturesAppointmentsActivity extends ActivityForAccessingTumOnline 
 		// nothing to click (yet)
 		lvTermine.setAdapter(new LectureAppointmentsListAdapter(this, lecturesList.getLehrveranstaltungenTermine()));
 		progressLayout.setVisibility(View.GONE);
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		PersonalLayoutManager.setColorForId(this, R.id.tvTermineLectureName);
 	}
 }

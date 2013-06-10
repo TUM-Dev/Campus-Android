@@ -2,6 +2,9 @@
 <resources>
     <color name="text_light_blue">#0065BD</color>
     <color name="text_light_gray">#C0C0C0</color>
-    <color name="sections">#33b5e5</color>
+    <color name="sections_blue">#33b5e5</color>
+    <color name="sections_red">#EF5E5B</color>
+    <color name="sections_green">#89C35C</color>
+    <color name="sections_gray">#a5a5a5</color>
     
 </resources>

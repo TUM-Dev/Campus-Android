@@ -64,6 +64,11 @@ public class ActivityForDownloadingExternal extends Activity {
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
 	}
+	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -104,8 +109,8 @@ public class ActivityForDownloadingExternal extends Activity {
 	}
 
 	@Override
-	protected void onStop() {
-		super.onStop();
+	protected void onPause() {
+		super.onPause();
 		unregisterReceiver(receiver);
 		Intent service = new Intent(this, DownloadService.class);
 		stopService(service);
@@ -137,5 +142,4 @@ public class ActivityForDownloadingExternal extends Activity {
 			Toast.makeText(this, R.string.no_internet_connection, Toast.LENGTH_SHORT).show();
 		}
 	}
-
 }

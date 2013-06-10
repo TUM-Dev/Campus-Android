@@ -2,14 +2,27 @@
 <resources>
 
     <string-array name="color_schemes">
-        <item>Blue (Default)</item>
+        <item>Blue</item>
         <item>Red</item>
         <item>Green</item>
+        <item>Gray</item>
     </string-array>
     <string-array name="color_schemes_values">
-        <item>#0000FF</item>
-        <item>#FF0000</item>
-        <item>#00FF00</item>
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+    
+    <string-array name="roles">
+        <item>Student</item>
+        <item>Employee</item>
+        <item>Guest</item>
+    </string-array>
+    <string-array name="roles_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
     </string-array>
 
 </resources>

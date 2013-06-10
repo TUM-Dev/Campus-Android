@@ -32,7 +32,7 @@
         android:id="@+id/spFilter"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="@color/sections"
+        android:background="@color/sections_blue"
         android:drawSelectorOnTop="true" />
 
     <ListView

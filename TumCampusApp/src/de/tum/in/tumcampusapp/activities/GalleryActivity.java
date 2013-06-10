@@ -11,6 +11,7 @@ import android.widget.SimpleCursorAdapter;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.ActivityForDownloadingExternal;
 import de.tum.in.tumcampusapp.auxiliary.Const;
+import de.tum.in.tumcampusapp.auxiliary.PersonalLayoutManager;
 import de.tum.in.tumcampusapp.models.managers.GalleryManager;
 
 /**
@@ -77,5 +78,11 @@ public class GalleryActivity extends ActivityForDownloadingExternal implements O
 
 		// Resets new items counter
 		GalleryManager.lastInserted = 0;
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		PersonalLayoutManager.setColorForId(this, R.id.tvLDetailsName);
 	}
 }

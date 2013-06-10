@@ -12,6 +12,7 @@ import de.tum.in.tumcampusapp.auxiliary.Utils;
  * Cafeteria Menu Manager, handles database stuff, external imports
  */
 public class CafeteriaMenuManager {
+	public static int TIME_TO_SYNC = 86400; // 1 day
 
 	/**
 	 * Last insert counter
@@ -93,9 +94,9 @@ public class CafeteriaMenuManager {
 	 * @throws Exception
 	 * </pre>
 	 */
-	public void downloadFromExternal() throws Exception {
+	public void downloadFromExternal(boolean force) throws Exception {
 
-		if (!SyncManager.needSync(db, this, 86400)) {
+		if (!force && !SyncManager.needSync(db, this, TIME_TO_SYNC)) {
 			return;
 		}
 		cleanupDb();

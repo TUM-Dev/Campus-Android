@@ -21,7 +21,7 @@
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:autoLink">none</item>
-        <item name="android:background">@color/sections</item>
+        <item name="android:background">@color/sections_blue</item>
         <item name="android:gravity">center</item>
         <item name="android:padding">@dimen/section_padding</item>
         <item name="android:scrollHorizontally">false</item>

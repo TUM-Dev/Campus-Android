@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.auxiliary.ListMenuEntry;
+import de.tum.in.tumcampusapp.auxiliary.PersonalLayoutManager;
 
 /**
  * Adapter to combine own layouts with the list view.
@@ -31,11 +32,13 @@ public class StartListAdapter extends BaseAdapter {
 	private LayoutInflater inflater = null;
 	private int layoutId;
 	private ArrayList<ListMenuEntry> listMenuEntrySet;
+	private boolean usesColorFilter;
 
-	public StartListAdapter(Activity activity, int layoutId, ArrayList<ListMenuEntry> listMenuEntrySet) {
+	public StartListAdapter(Activity activity, int layoutId, ArrayList<ListMenuEntry> listMenuEntrySet, boolean usesColorFilter) {
 		this.activity = activity;
 		this.layoutId = layoutId;
 		this.listMenuEntrySet = listMenuEntrySet;
+		this.usesColorFilter = usesColorFilter;
 		inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
 
@@ -64,6 +67,10 @@ public class StartListAdapter extends BaseAdapter {
 
 			holder = new ViewHolder();
 			holder.icon = (ImageView) vi.findViewById(R.id.list_menu_icon);
+			// Apply a color filter on the images when requested
+			if (usesColorFilter) {
+				holder.icon.setColorFilter(PersonalLayoutManager.getColorFilter(activity));
+			}
 			holder.title = (TextView) vi.findViewById(R.id.list_menu_title);
 			holder.detail = (TextView) vi.findViewById(R.id.list_menu_detail);
 			vi.setTag(holder);

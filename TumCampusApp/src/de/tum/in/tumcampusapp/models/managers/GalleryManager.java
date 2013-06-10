@@ -15,6 +15,7 @@ import de.tum.in.tumcampusapp.models.Gallery;
  * Gallery Manager, handles database stuff, external imports
  */
 public class GalleryManager {
+	public static int TIME_TO_SYNC = 21600; // 6 hours
 
 	/**
 	 * Last insert counter
@@ -83,9 +84,9 @@ public class GalleryManager {
 	 * </pre>
 	 */
 	@SuppressWarnings("deprecation")
-	public void downloadFromExternal() throws Exception {
+	public void downloadFromExternal(boolean force) throws Exception {
 
-		if (!SyncManager.needSync(db, this, 21600)) { // 6h
+		if (!force && !SyncManager.needSync(db, this, TIME_TO_SYNC)) {
 			return;
 		}
 

@@ -14,6 +14,7 @@ import android.widget.TextView;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampusapp.auxiliary.Const;
+import de.tum.in.tumcampusapp.auxiliary.PersonalLayoutManager;
 import de.tum.in.tumcampusapp.models.LectureDetailsRow;
 import de.tum.in.tumcampusapp.models.LectureDetailsRowSet;
 
@@ -137,5 +138,11 @@ public class LecturesDetailsActivity extends ActivityForAccessingTumOnline imple
 			progressLayout.setVisibility(View.GONE);
 			e.printStackTrace();
 		}
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		PersonalLayoutManager.setColorForId(this, R.id.tvLDetailsName);
 	}
 }

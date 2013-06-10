@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.adapters.StartSectionsPagerAdapter;
 import de.tum.in.tumcampusapp.auxiliary.Const;
+import de.tum.in.tumcampusapp.auxiliary.PersonalLayoutManager;
 import de.tum.in.tumcampusapp.preferences.UserPreferencesActivity;
 import de.tum.in.tumcampusapp.services.ImportService;
 
@@ -109,14 +110,26 @@ public class StartActivity extends FragmentActivity {
 		case R.id.action_settings:
 			// Opens the preferences screen
 			Intent intent = new Intent(this, UserPreferencesActivity.class);
-			startActivity(intent);
+			startActivityForResult(intent, 0);
 			break;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// Check if there is a result key in an intent
+		if (data != null && data.hasExtra(Const.PREFS_HAVE_CHANGED) && data.getBooleanExtra(Const.PREFS_HAVE_CHANGED, false)) {
+			// Restart the Activity if prefs have changed
+			Intent intent = getIntent();
+			finish();
+			startActivity(intent);
+		}
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
+		PersonalLayoutManager.setColorForId(this, R.id.pager_title_strip);
 	}
 }

@@ -28,6 +28,7 @@ import de.tum.in.tumcampusapp.activities.TransportationActivity;
 import de.tum.in.tumcampusapp.activities.TuitionFeesActivity;
 import de.tum.in.tumcampusapp.activities.generic.MockActivity;
 import de.tum.in.tumcampusapp.auxiliary.ListMenuEntry;
+import de.tum.in.tumcampusapp.auxiliary.PersonalLayoutManager;
 import de.tum.in.tumcampusapp.fragments.StartSectionFragment;
 
 /**
@@ -65,7 +66,7 @@ public class StartSectionsPagerAdapter extends FragmentPagerAdapter {
 		// listMenuEntrySet. Each ListMenuEntry contains a image, some text and
 		// the intent which coresponses to the activity which should be started
 		switch (position) {
-		case SECTION_GENERAL_TUM:
+		case SECTION_GENERAL_TUM:			
 			listMenuEntrySet.add(new ListMenuEntry(R.drawable.zoom, R.string.lecture_search, R.string.lecturessearch_addinfo, new Intent(activity,
 					LecturesSearchActivity.class)));
 			listMenuEntrySet.add(new ListMenuEntry(R.drawable.users, R.string.person_search, R.string.personsearch_addinfo, new Intent(activity,

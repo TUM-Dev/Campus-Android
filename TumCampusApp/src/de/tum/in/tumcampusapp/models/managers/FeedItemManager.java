@@ -19,7 +19,8 @@ import de.tum.in.tumcampusapp.models.FeedItem;
  * Feed item Manager, handles database stuff, external imports
  */
 public class FeedItemManager {
-
+	public static int TIME_TO_SYNC = 3600; // 1 hour
+	
 	/**
 	 * Last insert counter
 	 */
@@ -115,9 +116,9 @@ public class FeedItemManager {
 	 * @throws Exception
 	 * </pre>
 	 */
-	public void downloadFromExternal(int id, boolean retry) throws Exception {
+	public void downloadFromExternal(int id, boolean retry, boolean force) throws Exception {
 		String syncId = "feeditem" + id;
-		if (!SyncManager.needSync(db, syncId, 900)) {
+		if (!force && !SyncManager.needSync(db, syncId, TIME_TO_SYNC)) {
 			return;
 		}
 
@@ -142,7 +143,7 @@ public class FeedItemManager {
 
 			if (!url.equals(feedUrl)) {
 				db.execSQL("UPDATE feeds SET feedUrl=? WHERE id = ?", new String[] { url, String.valueOf(id) });
-				downloadFromExternal(id, true);
+				downloadFromExternal(id, true, force);
 				return;
 			}
 		}

@@ -53,8 +53,8 @@ public class DownloadService extends IntentService {
 	public boolean downloadCafeterias(boolean force) throws Exception {
 		CafeteriaManager cm = new CafeteriaManager(this);
 		CafeteriaMenuManager cmm = new CafeteriaMenuManager(this);
-		cm.downloadFromExternal();
-		cmm.downloadFromExternal();
+		cm.downloadFromExternal(force);
+		cmm.downloadFromExternal(force);
 		return true;
 	}
 
@@ -66,19 +66,19 @@ public class DownloadService extends IntentService {
 
 	public boolean downloadFeed(int feedId, boolean force) throws Exception {
 		FeedItemManager fim = new FeedItemManager(this);
-		fim.downloadFromExternal(feedId, false);
+		fim.downloadFromExternal(feedId, false, force);
 		return true;
 	}
 
 	public boolean downloadGallery(boolean force) throws Exception {
 		GalleryManager gm = new GalleryManager(this);
-		gm.downloadFromExternal();
+		gm.downloadFromExternal(force);
 		return true;
 	}
 
 	public boolean downloadNews(boolean force) throws Exception {
 		NewsManager nm = new NewsManager(this);
-		nm.downloadFromExternal();
+		nm.downloadFromExternal(force);
 		return true;
 	}
 
@@ -101,7 +101,6 @@ public class DownloadService extends IntentService {
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		// Don't start new downloads
 		isDestroyed = true;
 	}
 
@@ -138,12 +137,14 @@ public class DownloadService extends IntentService {
 		} catch (Exception e) {
 			Log.e(getClass().getSimpleName(), "Error while handling action <" + action + ">");
 			Log.e(getClass().getSimpleName(), "Problem Message: " + e.getMessage());
-			broadcastError(e.getMessage());
+			if (!isDestroyed) {
+				broadcastError(e.getMessage());
+			}
 		}
 
 		// After done the job, create an broadcast intent and send it. The
 		// receivers will be informed that the download service has finished.
-		if (scucessfull) {
+		if (scucessfull && !isDestroyed) {
 			broadcastDownloadCompleted();
 		}
 	}

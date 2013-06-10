@@ -15,6 +15,7 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.adapters.StartListAdapter;
 import de.tum.in.tumcampusapp.adapters.StartSectionsPagerAdapter;
 import de.tum.in.tumcampusapp.auxiliary.ListMenuEntry;
+import de.tum.in.tumcampusapp.auxiliary.PersonalLayoutManager;
 
 /**
  * Fragment for each category-page.
@@ -38,9 +39,10 @@ public class StartSectionFragment extends Fragment implements OnItemClickListene
 
 		// Builds the list according to the list items in listMenuEntrySet
 		ListView list = (ListView) rootView.findViewById(R.id.list_view);
-		StartListAdapter adapter = new StartListAdapter(getActivity(), R.layout.list_layout_complex_large, listMenuEntrySet);
+		StartListAdapter adapter = new StartListAdapter(getActivity(), R.layout.list_layout_complex_large, listMenuEntrySet, true);
 		list.setAdapter(adapter);
 		list.setOnItemClickListener(this);
+			
 		return rootView;
 	}
 

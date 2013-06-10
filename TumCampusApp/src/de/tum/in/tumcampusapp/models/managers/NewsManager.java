@@ -20,7 +20,8 @@ import de.tum.in.tumcampusapp.models.News;
  * News Manager, handles database stuff, external imports
  */
 public class NewsManager {
-
+	public static int TIME_TO_SYNC = 86400; // 1 day
+	
 	/**
 	 * Last insert counter
 	 */
@@ -115,9 +116,9 @@ public class NewsManager {
 	 * @throws Exception
 	 * </pre>
 	 */
-	public void downloadFromExternal() throws Exception {
+	public void downloadFromExternal(boolean force) throws Exception {
 
-		if (!SyncManager.needSync(db, this, 86400)) {
+		if (!force && !SyncManager.needSync(db, this, TIME_TO_SYNC)) {
 			return;
 		}
 
