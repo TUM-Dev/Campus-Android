@@ -60,7 +60,7 @@ public class EventsDetailsActivity extends Activity {
 		Bitmap b = BitmapFactory.decodeFile(image);
 		iv.setImageBitmap(Bitmap.createScaledBitmap(b, 360, (b.getHeight() * 360) / b.getWidth(), true));
 	}
-	
+
 	@Override
 	protected void onResume() {
 		super.onResume();

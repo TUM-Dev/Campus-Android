@@ -2,17 +2,6 @@
 
 public final class Const {
 
-	public static final class Settings {
-		public static final String APP_DETAILS_SETTINGS_KEY = "app_details";
-		public final static String cafeteriaFilter = "cafeteriaFilter";
-		public final static String debug = "debug";
-		public static final String MARKET_SETTINGS_KEY = "market";
-		public final static String silence = "silence";
-		public final static String silence_on = "silence_on";
-		public static final String TUMONLINE_SETTINGS_KEY = "tumonline";
-	}
-
-	public static final String PREFS_HAVE_CHANGED = "prefs_have_changed";
 	public static final String ACCESS_TOKEN = "access_token";
 	public static final String ACTION_EXTRA = "action";
 	public static final String ADDRESS_COLUMN = "address";
@@ -21,10 +10,9 @@ public final class Const {
 	public static final String CAFETERIAS = "cafeterias";
 	public static final String COMPLETED = "completed";
 	public static final String CURRICULA = "curricula";
+	public final static String DATABASE_NAME = "database.db";
 	public static final String DATE = "date";
 	public static final String DATE_COLUMN_DE = "date_de";
-	public final static String db = "database.db";
-	public final static int dbVersion = 1;
 	public static final String DE = "de";
 	public static final String DEFAULTS = "defaults";
 	public static final String DESCRIPTION_COLUMN = "description";
@@ -35,7 +23,7 @@ public final class Const {
 	public static final String ERROR = "error";
 	public static final String ERROR_MESSAGE = "error_message";
 	public static final String EVENTS = "events";
-	public static final String FACEBOOK = "www.facebook.com";
+	public static final String FACEBOOK_URL = "www.facebook.com";
 	public static final String FEED_ID = "feedId";
 	public static final String FEED_NAME = "feedName";
 	public static final String FEEDS = "feeds";
@@ -47,6 +35,26 @@ public final class Const {
 	public static final String ID_COLUMN = "_id";
 	public static final String ID_EXTRA = "id";
 	public static final String IMAGE_COLUMN = "image";
+	public static final String JSON_ANSCHRIFT = "anschrift";
+	public static final String JSON_CAPTION = "caption";
+	public static final String JSON_CREATED_TIME = "created_time";
+	public static final String JSON_DATA = "data";
+	public static final String JSON_DESCRIPTION = "description";
+	public static final String JSON_ENCLOSURE = "enclosure";
+	public static final String JSON_END_TIME = "end_time";
+	public static final String JSON_FROM = "from";
+	public static final String JSON_ID = "id";
+	public static final String JSON_LINK = "link";
+	public static final String JSON_LOCATION = "location";
+	public static final String JSON_MENSA_MENSEN = "mensa_mensen";
+	public static final String JSON_MESSAGE = "message";
+	public static final String JSON_NAME = "name";
+	public static final String JSON_OBJECT_ID = "object_id";
+	public static final String JSON_PICTURE = "picture";
+	public static final String JSON_PUB_DATE = "pubDate";
+	public static final String JSON_RESULTS = "results";
+	public static final String JSON_START_TIME = "start_time";
+	public static final String JSON_TITLE = "title";
 	public static final String LECTURE_ID_COLUMN = "lectureId";
 	public static final String LECTURES = "lectures";
 	public static final String LECTURES_APPOINTMENTS = "veranstaltungenTermine";
@@ -68,17 +76,21 @@ public final class Const {
 	public static final String ORG_NAME = "orgName";
 	public static final String ORG_PARENT_ID = "orgParentId";
 	public static final String ORGANISATIONS = "organisations";
+	public static final String PREFS_HAVE_CHANGED = "prefs_have_changed";
 	public static final String REMARK_COLUMN = "remark";
 	public static final String ROOM_COLUMN = "room";
 	public static final String ROOMFINDER = "roomfinder";
 	public static final String START_DE_COLUMN = "start_de";
 	public static final String START_DT_COLUMN = "start_dt";
 	public static final String STUDIENBEITRAGSTATUS = "studienbeitragsstatus";
+	public static final String KALENDER = "kalender";
 	public static final String TITLE_EXTRA = "title";
 	public static final String TRANSPORT_COLUMN = "transport";
 	public static final String TUMONLINE_PASSWORD = "tumonline_password";
 	public static final String URL = "url";
 	public static final String URL_COLUMN = "url";
 	public static final String VACATION = "vacation";
+	public static final String WARNING = "warning";
+	public static final String WARNING_MESSAGE = "warning_message";
 	public static final String WEEKDAY_COLUMN = "weekday";
 }

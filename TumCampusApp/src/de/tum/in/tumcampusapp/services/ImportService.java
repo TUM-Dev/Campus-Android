@@ -87,9 +87,6 @@ public class ImportService extends IntentService {
 		e.printStackTrace(new PrintWriter(sw));
 
 		String message = e.getMessage();
-		if (Utils.getSettingBool(this, Const.Settings.debug)) {
-			message += sw.toString();
-		}
 		message(info + " " + message, getString(R.string.error));
 	}
 

@@ -10,7 +10,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.database.sqlite.SQLiteDatabase;
-import de.tum.in.tumcampusapp.auxiliary.JsonConst;
+import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 
 /**
@@ -132,7 +132,7 @@ public class TransportManager {
 
 		JSONArray jsonArray = new JSONArray();
 		try {
-			Object obj = jsonObj.getJSONObject(JsonConst.JSON_RESULTS).get("a");
+			Object obj = jsonObj.getJSONObject(Const.JSON_RESULTS).get("a");
 			if (obj instanceof JSONArray) {
 				jsonArray = (JSONArray) obj;
 			} else {

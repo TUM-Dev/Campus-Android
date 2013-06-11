@@ -12,12 +12,12 @@ import de.tum.in.tumcampusapp.auxiliary.Utils;
  * Cafeteria Menu Manager, handles database stuff, external imports
  */
 public class CafeteriaMenuManager {
-	public static int TIME_TO_SYNC = 86400; // 1 day
-
 	/**
 	 * Last insert counter
 	 */
 	public static int lastInserted = 0;
+
+	public static int TIME_TO_SYNC = 86400; // 1 day
 
 	/**
 	 * Convert JSON object to CafeteriaMenu

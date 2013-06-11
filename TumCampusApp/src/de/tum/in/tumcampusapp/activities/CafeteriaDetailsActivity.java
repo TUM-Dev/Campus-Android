@@ -2,16 +2,11 @@ package de.tum.in.tumcampusapp.activities;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.adapters.CafeteriaDetailsSectionsPagerAdapter;
 import de.tum.in.tumcampusapp.auxiliary.Const;
@@ -67,7 +62,7 @@ public class CafeteriaDetailsActivity extends FragmentActivity {
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	
+
 	@Override
 	protected void onResume() {
 		super.onResume();

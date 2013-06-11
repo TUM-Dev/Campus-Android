@@ -61,18 +61,21 @@ public class NewsActivity extends ActivityForDownloadingExternal implements OnIt
 		NewsManager nm = new NewsManager(this);
 		Cursor cursor = nm.getAllFromDb();
 		startManagingCursor(cursor);
+		if (cursor.getCount() > 0) {
+			SimpleCursorAdapter adapter = new SimpleCursorAdapter(this, R.layout.activity_news_listview, cursor, cursor.getColumnNames(), new int[] {
+					R.id.image, R.id.message, R.id.date });
 
-		SimpleCursorAdapter adapter = new SimpleCursorAdapter(this, R.layout.activity_news_listview, cursor, cursor.getColumnNames(), new int[] { R.id.image,
-				R.id.message, R.id.date });
+			adapter.setViewBinder(this);
 
-		adapter.setViewBinder(this);
+			ListView lv = (ListView) findViewById(R.id.activity_news_list_view);
+			lv.setAdapter(adapter);
+			lv.setOnItemClickListener(this);
 
-		ListView lv = (ListView) findViewById(R.id.activity_news_list_view);
-		lv.setAdapter(adapter);
-		lv.setOnItemClickListener(this);
-
-		// Resets new items counter
-		NewsManager.lastInserted = 0;
+			// Resets new items counter
+			NewsManager.lastInserted = 0;
+		} else {
+			super.showErrorLayout();
+		}
 	}
 
 	@Override

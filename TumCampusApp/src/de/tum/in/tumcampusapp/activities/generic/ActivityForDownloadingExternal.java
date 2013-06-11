@@ -45,6 +45,11 @@ public class ActivityForDownloadingExternal extends Activity {
 					// receives data from a new download
 					onStart();
 				}
+				if (action.equals(Const.WARNING)) {
+					String message = intent.getStringExtra(Const.WARNING_MESSAGE);
+					Toast.makeText(activity, message, Toast.LENGTH_SHORT).show();
+					progressLayout.setVisibility(View.GONE);
+				}
 				if (action.equals(Const.ERROR)) {
 					String message = intent.getStringExtra(Const.ERROR_MESSAGE);
 					Toast.makeText(activity, message, Toast.LENGTH_SHORT).show();
@@ -63,11 +68,6 @@ public class ActivityForDownloadingExternal extends Activity {
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
-	}
-	
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
 	}
 
 	@Override
@@ -92,6 +92,11 @@ public class ActivityForDownloadingExternal extends Activity {
 	}
 
 	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+	}
+
+	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.action_update:
@@ -103,17 +108,17 @@ public class ActivityForDownloadingExternal extends Activity {
 	}
 
 	@Override
-	protected void onResume() {
-		super.onResume();
-		registerReceiver(receiver, new IntentFilter(DownloadService.broadcast));
-	}
-
-	@Override
 	protected void onPause() {
 		super.onPause();
 		unregisterReceiver(receiver);
 		Intent service = new Intent(this, DownloadService.class);
 		stopService(service);
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		registerReceiver(receiver, new IntentFilter(DownloadService.broadcast));
 	}
 
 	public void requestDownload(boolean forceDownload) {
@@ -124,12 +129,10 @@ public class ActivityForDownloadingExternal extends Activity {
 			service.putExtra(Const.FORCE_DOWNLOAD, forceDownload);
 			startService(service);
 		} else {
-			errorLayout.setVisibility(View.VISIBLE);
 			Toast.makeText(this, R.string.no_internet_connection, Toast.LENGTH_SHORT).show();
 		}
 	}
 
-	// TODO: Make this nicer
 	public void requestDownloadWithExtras(Bundle extras, boolean forceDownload) {
 		if (Utils.isConnected(this)) {
 			progressLayout.setVisibility(View.VISIBLE);
@@ -138,8 +141,11 @@ public class ActivityForDownloadingExternal extends Activity {
 			service.putExtras(extras);
 			startService(service);
 		} else {
-			errorLayout.setVisibility(View.VISIBLE);
 			Toast.makeText(this, R.string.no_internet_connection, Toast.LENGTH_SHORT).show();
 		}
+	}
+
+	public void showErrorLayout() {
+		errorLayout.setVisibility(View.VISIBLE);
 	}
 }

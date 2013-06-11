@@ -11,7 +11,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.text.Html;
 import de.tum.in.tumcampusapp.auxiliary.Const;
-import de.tum.in.tumcampusapp.auxiliary.JsonConst;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.FeedItem;
 
@@ -19,12 +18,12 @@ import de.tum.in.tumcampusapp.models.FeedItem;
  * Feed item Manager, handles database stuff, external imports
  */
 public class FeedItemManager {
-	public static int TIME_TO_SYNC = 3600; // 1 hour
-	
 	/**
 	 * Last insert counter
 	 */
 	public static int lastInserted = 0;
+
+	public static int TIME_TO_SYNC = 3600; // 1 hour
 
 	/**
 	 * Convert JSON to FeedItem and download feed item iamge
@@ -46,23 +45,22 @@ public class FeedItemManager {
 	public static FeedItem getFromJson(int feedId, JSONObject json) throws Exception {
 
 		String target = "";
-		if (json.has(JsonConst.JSON_ENCLOSURE)) {
-			final String enclosure = json.getJSONObject(JsonConst.JSON_ENCLOSURE).getString(Const.URL);
+		if (json.has(Const.JSON_ENCLOSURE)) {
+			final String enclosure = json.getJSONObject(Const.JSON_ENCLOSURE).getString(Const.URL);
 
 			target = Utils.getCacheDir("rss/cache") + Utils.md5(enclosure) + ".jpg";
 			Utils.downloadFileThread(enclosure, target);
 		}
 		Date pubDate = new Date();
-		if (json.has(JsonConst.JSON_PUB_DATE)) {
-			pubDate = Utils.getDateTimeRfc822(json.getString(JsonConst.JSON_PUB_DATE));
+		if (json.has(Const.JSON_PUB_DATE)) {
+			pubDate = Utils.getDateTimeRfc822(json.getString(Const.JSON_PUB_DATE));
 		}
 		String description = "";
-		if (json.has(JsonConst.JSON_DESCRIPTION) && !json.isNull(JsonConst.JSON_DESCRIPTION)) {
+		if (json.has(Const.JSON_DESCRIPTION) && !json.isNull(Const.JSON_DESCRIPTION)) {
 			// decode HTML entites, remove links, images, etc.
-			description = Html.fromHtml(json.getString(JsonConst.JSON_DESCRIPTION).replaceAll("\\<.*?\\>", "")).toString();
+			description = Html.fromHtml(json.getString(Const.JSON_DESCRIPTION).replaceAll("\\<.*?\\>", "")).toString();
 		}
-		return new FeedItem(feedId, json.getString(JsonConst.JSON_TITLE).replaceAll("\n", ""), json.getString(JsonConst.JSON_LINK), description, pubDate,
-				target);
+		return new FeedItem(feedId, json.getString(Const.JSON_TITLE).replaceAll("\n", ""), json.getString(Const.JSON_LINK), description, pubDate, target);
 	}
 
 	/**

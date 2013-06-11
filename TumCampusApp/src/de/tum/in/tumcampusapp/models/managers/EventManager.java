@@ -8,7 +8,7 @@ import org.json.JSONObject;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import de.tum.in.tumcampusapp.auxiliary.JsonConst;
+import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.Event;
 
@@ -16,12 +16,12 @@ import de.tum.in.tumcampusapp.models.Event;
  * Event Manager, handles database stuff, external imports
  */
 public class EventManager {
-	public static int TIME_TO_SYNC = 21600; // 6 hours
-
 	/**
 	 * Last insert counter
 	 */
 	public static int lastInserted = 0;
+
+	public static int TIME_TO_SYNC = 21600; // 6 hours
 
 	/**
 	 * Convert JSON object to Event, download event picture
@@ -42,7 +42,7 @@ public class EventManager {
 	 */
 	public static Event getFromJson(JSONObject json) throws Exception {
 
-		String eventId = json.getString(JsonConst.JSON_ID);
+		String eventId = json.getString(Const.JSON_ID);
 
 		String picture = "http://graph.facebook.com/" + eventId + "/Picture?type=large";
 
@@ -50,18 +50,18 @@ public class EventManager {
 		Utils.downloadFileThread(picture, target);
 
 		String description = "";
-		if (json.has(JsonConst.JSON_DESCRIPTION)) {
-			description = json.getString(JsonConst.JSON_DESCRIPTION);
+		if (json.has(Const.JSON_DESCRIPTION)) {
+			description = json.getString(Const.JSON_DESCRIPTION);
 		}
 		String location = "";
-		if (json.has(JsonConst.JSON_LOCATION)) {
-			location = json.getString(JsonConst.JSON_LOCATION);
+		if (json.has(Const.JSON_LOCATION)) {
+			location = json.getString(Const.JSON_LOCATION);
 		}
 		// Link only available in event/feed
 		String link = "";
 
-		return new Event(eventId, json.getString(JsonConst.JSON_NAME), Utils.getDateTime(json.getString(JsonConst.JSON_START_TIME)), Utils.getDateTime(json
-				.getString(JsonConst.JSON_END_TIME)), location, description, link, target);
+		return new Event(eventId, json.getString(Const.JSON_NAME), Utils.getDateTime(json.getString(Const.JSON_START_TIME)), Utils.getDateTime(json
+				.getString(Const.JSON_END_TIME)), location, description, link, target);
 	}
 
 	/**

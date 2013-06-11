@@ -141,6 +141,12 @@ public class LecturesPersonalActivity extends ActivityForAccessingTumOnline {
 		}
 	}
 
+	@Override
+	protected void onResume() {
+		super.onResume();
+		PersonalLayoutManager.setColorForId(this, R.id.spFilter);
+	}
+
 	/**
 	 * Sets all data concerning the FindLecturesListView.
 	 * 
@@ -168,11 +174,5 @@ public class LecturesPersonalActivity extends ActivityForAccessingTumOnline {
 				startActivity(i);
 			}
 		});
-	}
-	
-	@Override
-	protected void onResume() {
-		super.onResume();
-		PersonalLayoutManager.setColorForId(this, R.id.spFilter);
 	}
 }

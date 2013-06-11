@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string name="exception_unknown">Unknown error.</string>
+    <string name="exception_sdcard">Error accessing the SD-Card.</string>
+    <string name="exception_timeout">Timeout in internet connection. Please try later.</string>
     <string name="action_prices">Prices</string>
     <string name="personal_settings">Personal Settings</string>
     <string name="cafeteria_ingredients">(f) fleischloses Gericht
@@ -177,6 +180,7 @@
     <string name="cancel">Cancel</string>
     <string name="lectures">Lectures</string>
     <string name="person_search">Person Search</string>
+    <string name="organisations_addinfo">Skim thorugh the TUM orga-tree</string>
     <string name="organisations">Organizations</string>
     <string name="grades">Grades</string>
     <string name="documents">Documents</string>
@@ -341,7 +345,6 @@
     <string name="facility_categories_splitted">library,info,cafeteria_gar,cafeteria_grh,cafeteria,cafeteria_pas,cafeteria_wst</string>
     <string name="access_token">AccessToken</string>
     <string name="dialog_access_token_missing">TUMOnline-Access-Token not set</string>
-    <string name="dialog_access_token_missing2">TUMOnline-Access-Token not set</string>
     <string name="dialog_access_token_invalid">TUMOnline-Access-Token is invalid!</string>
     <string name="dialog_username_not_set">TUMOnline-Username is not set</string>
     <string name="dialog_password_not_set">TUMOnline-Password is not set</string>
@@ -367,17 +370,17 @@
     <string name="chooseReminder">choose a reminder:</string>
     <string name="deactivated">deactivated</string>
     <string name="error">Error</string>
-    <string name="app_info_text"><b>TUM Campus App</b>        \n\nThe TUM Campus App is developed by students of the Android practical course, other voluntary freelancers and chair members.
-        \n\n<b>Project Management:</b>        \nTUM - Computer Science/F13 Prof.Dr.Uwe Baumgarten
+    <string name="app_info_text"><b>TUM Campus App</b>\n\nThe TUM Campus App is developed by students of the Android practical course, other voluntary freelancers and chair members.
+        \n\n<b>Project Management:</b>\nTUM - Computer Science/F13 Prof.Dr.Uwe Baumgarten
         \nNils T. Kannengiesser
-        \n\n<b>Current Developers:</b>        \n<i>Sascha Moecker,</i>        \n<i>Haris Iltifat,</i>        \n<i>Anas Chakfeh,</i>        \n<i>Thomas Krex,</i>        \nMarius Muntean,
+        \n\n<b>Current Developers:</b>\nSascha Moecker,\nHaris Iltifat,\nAnas Chakfeh,\nThomas Krex,\nMarius Muntean,
         \nAndreas Bernhofer (IT-Support/TUMonline)
         \nNils T. Kannengiesser (F13)
-        \n\n<b>Important information:</b>        \nThis App is not published by the Technical University Muenchen officially. It is a project by and for students. The software is used at your own risk. We are not responsible for any damage that might be caused by using this app or its presented information. For security reasons the access to private information of TUMOnline is regulated by using tokens. You need to enable different features within TUMOnline for a certain token to be able to use those information within the app.
-        \n\n<b>Privacy information:</b>		\nThe application stores data on request only. Critical information requires the users permission (clearance by token) and is stored locally or received from TUMOnline directly. Crash reports can be sent manually. Crash reports contain detailed technical information on the phone, the operating system and the error itself. This information is helpfull for the developers in order to improve the App. We do not collect any statistics except the general ones collected by Google automatically. We would appreciate your support!
-		\n\n<b>Support:</b>		\nhttps://www.facebook.com/TUMCampus
+        \n\n<b>Important information:</b>\nThis App is not published by the Technical University Muenchen officially. It is a project by and for students. The software is used at your own risk. We are not responsible for any damage that might be caused by using this app or its presented information. For security reasons the access to private information of TUMOnline is regulated by using tokens. You need to enable different features within TUMOnline for a certain token to be able to use those information within the app.
+        \n\n<b>Privacy information:</b>\nThe application stores data on request only. Critical information requires the users permission (clearance by token) and is stored locally or received from TUMOnline directly. Crash reports can be sent manually. Crash reports contain detailed technical information on the phone, the operating system and the error itself. This information is helpfull for the developers in order to improve the App. We do not collect any statistics except the general ones collected by Google automatically. We would appreciate your support!
+		\n\n<b>Support:</b>\nhttps://www.facebook.com/TUMCampus
 		\nPlease take a look at the offered manual as well. Please also contact us at admin.os.in@tum.de for any special requests.
-		\n\n<b>Licenses:</b>		\nGNU GPL v3 - http://www.gnu.org/licenses/gpl.html or
+		\n\n<b>Licenses:</b>\nGNU GPL v3 - http://www.gnu.org/licenses/gpl.html or
 		\nNew BSD License - http://www.opensource.org/licenses/bsd-license.php
 		\n\nThe source code is available through Github and may be requested from the project manager in the most recent version.
 		\n\n22th July 2013\n</string>

@@ -90,7 +90,7 @@ public class LecturesAppointmentsActivity extends ActivityForAccessingTumOnline 
 		lvTermine.setAdapter(new LectureAppointmentsListAdapter(this, lecturesList.getLehrveranstaltungenTermine()));
 		progressLayout.setVisibility(View.GONE);
 	}
-	
+
 	@Override
 	protected void onResume() {
 		super.onResume();

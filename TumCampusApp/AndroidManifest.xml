@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="de.tum.in.tumcampusapp"
-    android:versionCode="11"
-    android:versionName="0.3.2" >
+    android:versionCode="12"
+    android:versionName="0.3.3" >
 
     <uses-sdk
         android:minSdkVersion="8"
@@ -173,6 +173,21 @@
             android:name=".activities.EventsDetailsActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/event_details" >
+        </activity>
+        <activity
+            android:name=".activities.TimetableActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/timetable" >
+        </activity>
+        <activity
+            android:name=".activities.OrganisationActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/organisations" >
+        </activity>
+        <activity
+            android:name=".activities.OrganisationDetailsActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/organisation_details" >
         </activity>
 
         <service

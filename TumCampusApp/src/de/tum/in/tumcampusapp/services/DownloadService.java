@@ -1,8 +1,13 @@
 ﻿package de.tum.in.tumcampusapp.services;
 
+import java.io.IOException;
+import java.util.concurrent.TimeoutException;
+
 import android.app.IntentService;
 import android.content.Intent;
+import android.preference.PreferenceManager;
 import android.util.Log;
+import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.managers.CafeteriaManager;
@@ -11,6 +16,7 @@ import de.tum.in.tumcampusapp.models.managers.EventManager;
 import de.tum.in.tumcampusapp.models.managers.FeedItemManager;
 import de.tum.in.tumcampusapp.models.managers.GalleryManager;
 import de.tum.in.tumcampusapp.models.managers.NewsManager;
+import de.tum.in.tumcampusapp.models.managers.OrganisationManager;
 import de.tum.in.tumcampusapp.models.managers.SyncManager;
 
 /**
@@ -50,6 +56,14 @@ public class DownloadService extends IntentService {
 		sendBroadcast(intentSend);
 	}
 
+	private void broadcastWarning(String message) {
+		Intent intentSend = new Intent();
+		intentSend.setAction(broadcast);
+		intentSend.putExtra(Const.ACTION_EXTRA, Const.WARNING);
+		intentSend.putExtra(Const.WARNING_MESSAGE, message);
+		sendBroadcast(intentSend);
+	}
+
 	public boolean downloadCafeterias(boolean force) throws Exception {
 		CafeteriaManager cm = new CafeteriaManager(this);
 		CafeteriaMenuManager cmm = new CafeteriaMenuManager(this);
@@ -81,6 +95,21 @@ public class DownloadService extends IntentService {
 		nm.downloadFromExternal(force);
 		return true;
 	}
+	
+	public boolean downloadOrganisations(boolean force) throws Exception{
+		OrganisationManager lm = new OrganisationManager(this);
+		String accessToken = PreferenceManager.getDefaultSharedPreferences(this).getString(Const.ACCESS_TOKEN, null);
+
+		if (accessToken == null) {
+			throw new Exception("No Access Token");
+		}
+		try {
+			lm.downloadFromExternal(force, accessToken);
+		} catch (Exception e) {
+			Log.e(getClass().getSimpleName(), e.getMessage());
+		}
+		return true;
+	}
 
 	@Override
 	public void onCreate() {
@@ -90,9 +119,9 @@ public class DownloadService extends IntentService {
 			Utils.getCacheDir("");
 			// Init sync table
 			new SyncManager(this);
-		} catch (Exception e) {
+		} catch (IOException e) {
 			Log.e(getClass().getSimpleName(), e.getMessage());
-			broadcastError(e.getMessage());
+			broadcastError(getResources().getString(R.string.exception_sdcard));
 			// Don't start new downloads
 			isDestroyed = true;
 		}
@@ -134,11 +163,24 @@ public class DownloadService extends IntentService {
 			if ((action.equals(Const.EVENTS)) && !isDestroyed) {
 				scucessfull = downloadEvents(force);
 			}
-		} catch (Exception e) {
-			Log.e(getClass().getSimpleName(), "Error while handling action <" + action + ">");
-			Log.e(getClass().getSimpleName(), "Problem Message: " + e.getMessage());
+			if ((action.equals(Const.ORGANISATIONS)) && !isDestroyed) {
+				scucessfull = downloadOrganisations(force);
+			}
+		} catch (TimeoutException e) {
 			if (!isDestroyed) {
-				broadcastError(e.getMessage());
+				Log.e(getClass().getSimpleName(), e.getMessage());
+				broadcastWarning(getResources().getString(R.string.exception_timeout));
+			}
+		} catch (IOException e) {
+			if (!isDestroyed) {
+				Log.e(getClass().getSimpleName(), e.getMessage());
+				broadcastError(getResources().getString(R.string.exception_sdcard));
+			}
+		} catch (Exception e) {
+			Log.e(getClass().getSimpleName(), "Unkown error while handling action <" + action + ">");
+			Log.e(getClass().getSimpleName(), e.getMessage());
+			if (!isDestroyed) {
+				broadcastError(getResources().getString(R.string.exception_unknown));
 			}
 		}
 

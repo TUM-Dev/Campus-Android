@@ -3,7 +3,6 @@ package de.tum.in.tumcampusapp.activities;
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
 
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -23,13 +22,14 @@ import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequestFetchListener;
 public class TuitionFeesActivity extends ActivityForAccessingTumOnline implements TUMOnlineRequestFetchListener {
 
 	private TextView amountTextView;
-
 	private TextView deadlineTextView;
 	private TextView semesterTextView;
+	
 	/**
 	 * tuition information
 	 */
 	private TuitionList tuitionList;
+
 	public TuitionFeesActivity() {
 		super(Const.STUDIENBEITRAGSTATUS, R.layout.activity_tuitionfees);
 	}
@@ -37,7 +37,7 @@ public class TuitionFeesActivity extends ActivityForAccessingTumOnline implement
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		amountTextView = (TextView) findViewById(R.id.soll);
 		deadlineTextView = (TextView) findViewById(R.id.frist);
 		semesterTextView = (TextView) findViewById(R.id.semester);
@@ -71,12 +71,12 @@ public class TuitionFeesActivity extends ActivityForAccessingTumOnline implement
 		}
 		progressLayout.setVisibility(View.GONE);
 	}
-	
+
 	@Override
 	protected void onResume() {
 		super.onResume();
 		PersonalLayoutManager.setColorForId(this, R.id.semester);
-	    PersonalLayoutManager.setDrawableColorForId(this, R.drawable.finance);
+		PersonalLayoutManager.setDrawableColorForId(this, R.drawable.finance);
 		PersonalLayoutManager.setDrawableColorForId(this, R.drawable.go);
 	}
 }

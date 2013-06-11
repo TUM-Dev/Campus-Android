@@ -57,6 +57,12 @@ public class EventsActivity extends ActivityForDownloadingExternal implements On
 		startActivity(intent);
 	}
 
+	@Override
+	protected void onResume() {
+		super.onResume();
+		PersonalLayoutManager.setColorForId(this, R.id.tvLDetailsName);
+	}
+
 	@SuppressWarnings("deprecation")
 	@Override
 	protected void onStart() {
@@ -68,18 +74,23 @@ public class EventsActivity extends ActivityForDownloadingExternal implements On
 		SimpleCursorAdapter adapter;
 
 		cursor = em.getNextFromDb();
+		startManagingCursor(cursor);
 
-		adapter = new SimpleCursorAdapter(this, R.layout.activity_events_listview, cursor, cursor.getColumnNames(), new int[] { R.id.icon, R.id.name,
-				R.id.infos });
+		if (cursor.getCount() > 0) {
+			adapter = new SimpleCursorAdapter(this, R.layout.activity_events_listview, cursor, cursor.getColumnNames(), new int[] { R.id.icon, R.id.name,
+					R.id.infos });
 
-		adapter.setViewBinder(this);
+			adapter.setViewBinder(this);
 
-		ListView lv = (ListView) findViewById(R.id.listView);
-		lv.setAdapter(adapter);
-		lv.setOnItemClickListener(this);
+			ListView lv = (ListView) findViewById(R.id.listView);
+			lv.setAdapter(adapter);
+			lv.setOnItemClickListener(this);
 
-		// reset new items counter
-		EventManager.lastInserted = 0;
+			// reset new items counter
+			EventManager.lastInserted = 0;
+		} else {
+			super.showErrorLayout();
+		}
 	}
 
 	@Override
@@ -101,11 +112,5 @@ public class EventsActivity extends ActivityForDownloadingExternal implements On
 			return true;
 		}
 		return false;
-	}
-	
-	@Override
-	protected void onResume() {
-		super.onResume();
-		PersonalLayoutManager.setColorForId(this, R.id.tvLDetailsName);
 	}
 }

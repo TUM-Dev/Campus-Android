@@ -57,6 +57,12 @@ public class GalleryActivity extends ActivityForDownloadingExternal implements O
 		startActivity(intent);
 	}
 
+	@Override
+	protected void onResume() {
+		super.onResume();
+		PersonalLayoutManager.setColorForId(this, R.id.tvLDetailsName);
+	}
+
 	@SuppressWarnings("deprecation")
 	@Override
 	protected void onStart() {
@@ -70,19 +76,17 @@ public class GalleryActivity extends ActivityForDownloadingExternal implements O
 		cursor = gm.getFromDb();
 		startManagingCursor(cursor);
 
-		adapter = new SimpleCursorAdapter(this, R.layout.activity_gallery_image, cursor, cursor.getColumnNames(), new int[] { R.id.activity_gallery_image });
+		if (cursor.getCount() > 0) {
+			adapter = new SimpleCursorAdapter(this, R.layout.activity_gallery_image, cursor, cursor.getColumnNames(), new int[] { R.id.activity_gallery_image });
 
-		GridView gridview = (GridView) findViewById(R.id.activity_gallery_gridview);
-		gridview.setAdapter(adapter);
-		gridview.setOnItemClickListener(this);
+			GridView gridview = (GridView) findViewById(R.id.activity_gallery_gridview);
+			gridview.setAdapter(adapter);
+			gridview.setOnItemClickListener(this);
 
-		// Resets new items counter
-		GalleryManager.lastInserted = 0;
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-		PersonalLayoutManager.setColorForId(this, R.id.tvLDetailsName);
+			// Resets new items counter
+			GalleryManager.lastInserted = 0;
+		} else {
+			super.showErrorLayout();
+		}
 	}
 }

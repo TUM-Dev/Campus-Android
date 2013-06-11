@@ -21,14 +21,15 @@ import de.tum.in.tumcampusapp.activities.LecturesPersonalActivity;
 import de.tum.in.tumcampusapp.activities.LecturesSearchActivity;
 import de.tum.in.tumcampusapp.activities.NewsActivity;
 import de.tum.in.tumcampusapp.activities.OpeningHoursListActivity;
+import de.tum.in.tumcampusapp.activities.OrganisationActivity;
 import de.tum.in.tumcampusapp.activities.PersonsSearchActivity;
 import de.tum.in.tumcampusapp.activities.PlansActivity;
 import de.tum.in.tumcampusapp.activities.RoomfinderActivity;
+import de.tum.in.tumcampusapp.activities.TimetableActivity;
 import de.tum.in.tumcampusapp.activities.TransportationActivity;
 import de.tum.in.tumcampusapp.activities.TuitionFeesActivity;
 import de.tum.in.tumcampusapp.activities.generic.MockActivity;
 import de.tum.in.tumcampusapp.auxiliary.ListMenuEntry;
-import de.tum.in.tumcampusapp.auxiliary.PersonalLayoutManager;
 import de.tum.in.tumcampusapp.fragments.StartSectionFragment;
 
 /**
@@ -66,7 +67,7 @@ public class StartSectionsPagerAdapter extends FragmentPagerAdapter {
 		// listMenuEntrySet. Each ListMenuEntry contains a image, some text and
 		// the intent which coresponses to the activity which should be started
 		switch (position) {
-		case SECTION_GENERAL_TUM:			
+		case SECTION_GENERAL_TUM:
 			listMenuEntrySet.add(new ListMenuEntry(R.drawable.zoom, R.string.lecture_search, R.string.lecturessearch_addinfo, new Intent(activity,
 					LecturesSearchActivity.class)));
 			listMenuEntrySet.add(new ListMenuEntry(R.drawable.users, R.string.person_search, R.string.personsearch_addinfo, new Intent(activity,
@@ -78,13 +79,15 @@ public class StartSectionsPagerAdapter extends FragmentPagerAdapter {
 					CurriculaActivity.class)));
 			listMenuEntrySet.add(new ListMenuEntry(R.drawable.unlock, R.string.opening_hours, R.string.openinghours_addinfo, new Intent(activity,
 					OpeningHoursListActivity.class)));
+			listMenuEntrySet.add(new ListMenuEntry(R.drawable.chat, R.string.organisations, R.string.organisations_addinfo, new Intent(activity,
+					OrganisationActivity.class)));
 			break;
 		case SECTION_MY_TUM:
 			listMenuEntrySet.add(new ListMenuEntry(R.drawable.calculator, R.string.my_lectures, R.string.lectures_addinfo, new Intent(activity,
 					LecturesPersonalActivity.class)));
 			listMenuEntrySet.add(new ListMenuEntry(R.drawable.chart, R.string.my_grades, R.string.grades_addinfo, new Intent(activity, GradesActivity.class)));
 			listMenuEntrySet.add(new ListMenuEntry(R.drawable.calendar, R.string.timetable, R.string.timetable_addinfo,
-					new Intent(activity, MockActivity.class)));
+					new Intent(activity, TimetableActivity.class)));
 			listMenuEntrySet.add(new ListMenuEntry(R.drawable.finance, R.string.tuition_fees, R.string.tuitionfee_addinfo, new Intent(activity,
 					TuitionFeesActivity.class)));
 			break;

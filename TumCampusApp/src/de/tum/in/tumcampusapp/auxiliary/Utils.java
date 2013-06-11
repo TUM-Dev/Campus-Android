@@ -18,6 +18,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.TimeoutException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -330,7 +331,8 @@ public class Utils {
 		try {
 			entity = httpclient.execute(new HttpGet(url)).getEntity();
 		} catch (Exception e) {
-			throw new Exception("There was a timeout processing your request");
+			// Throw a new TimeputException which is treted later
+			throw new TimeoutException("HTTP Timeout");
 		}
 
 		String data = "";
@@ -428,16 +430,16 @@ public class Utils {
 	 * </pre>
 	 */
 	// TODO Think how not to hardcode Exception text.
-	public static String getCacheDir(String directory) throws Exception {
+	public static String getCacheDir(String directory) throws IOException {
 		File f = new File(Environment.getExternalStorageDirectory().getPath() + "/tumcampus/" + directory);
 		if (!f.exists()) {
 			f.mkdirs();
 		}
 		if (!f.canRead()) {
-			throw new Exception("Problem reading from SD-Card");
+			throw new IOException("Cannot read from SD-Card");
 		}
 		if (!f.canWrite()) {
-			throw new Exception("Problem writing to SD-Card");
+			throw new IOException("Cannot write to SD-Card");
 		}
 		return f.getPath() + "/";
 	}

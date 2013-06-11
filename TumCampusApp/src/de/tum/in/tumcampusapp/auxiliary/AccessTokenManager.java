@@ -11,6 +11,7 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequest;
 
 public class AccessTokenManager implements OnClickListener {
+	public static final int MIN_LRZ_LENGTH = 7;
 
 	/**
 	 * get a new access token for TUMOnline by passing the lrz ID due to the
@@ -29,7 +30,7 @@ public class AccessTokenManager implements OnClickListener {
 		// add lrz_id to parameters
 		request.setParameter("pUsername", lrz_id);
 		// add readable name for TUMOnline
-		request.setParameter("pTokenName", "TUMCampusApp");
+		request.setParameter("pTokenName", "TUMCampusApp-" + android.os.Build.PRODUCT);
 
 		// fetch the xml response of requestToken
 		String strTokenXml = request.fetch();
@@ -37,9 +38,17 @@ public class AccessTokenManager implements OnClickListener {
 		// it is only one tag in that xml, let's do a regex pattern
 		return strTokenXml.substring(strTokenXml.indexOf("<token>") + "<token>".length(), strTokenXml.indexOf("</token>"));
 	}
+	
+	// TODO Test this method
+	private static boolean isAccessTokenConfirmed(String lrz_id) {
+		TUMOnlineRequest request = new TUMOnlineRequest("isTokenConfirmed");
+		request.setParameter("pToken", lrz_id);
+		String strTokenXml = request.fetch();
+		Log.d("RAWOUTPUT", strTokenXml);
+		return Boolean.parseBoolean(strTokenXml.substring(strTokenXml.indexOf("<confirmed>") + "<confirmed>".length(), strTokenXml.indexOf("</confirmed>")));
+	}
 
 	private Context context;
-
 	private String lrzId;
 
 	public AccessTokenManager(Context context) {
@@ -92,7 +101,7 @@ public class AccessTokenManager implements OnClickListener {
 	public void setupAccessToken() {
 		lrzId = PreferenceManager.getDefaultSharedPreferences(context).getString(Const.LRZ_ID, "");
 		// check if lrz could be valid?
-		if (lrzId.length() == 7) {
+		if (lrzId.length() == MIN_LRZ_LENGTH) {
 			// is access token already set?
 			String oldaccesstoken = PreferenceManager.getDefaultSharedPreferences(context).getString(Const.ACCESS_TOKEN, "");
 			if (oldaccesstoken.length() > 2) {
@@ -107,5 +116,4 @@ public class AccessTokenManager implements OnClickListener {
 			Toast.makeText(context, context.getString(R.string.error_lrz_wrong), Toast.LENGTH_LONG).show();
 		}
 	}
-
 }

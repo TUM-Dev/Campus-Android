@@ -139,7 +139,7 @@ public class LecturesDetailsActivity extends ActivityForAccessingTumOnline imple
 			e.printStackTrace();
 		}
 	}
-	
+
 	@Override
 	protected void onResume() {
 		super.onResume();

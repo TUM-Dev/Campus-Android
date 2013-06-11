@@ -42,7 +42,7 @@ public class GalleryDetailsActivity extends Activity {
 		String data = "<body style='margin:0px;'><img src='" + image + "'/></body>";
 		browser.loadDataWithBaseURL("file:///android_asset/", data, "text/html", "UTF-8", null);
 	}
-	
+
 	@Override
 	protected void onResume() {
 		super.onResume();

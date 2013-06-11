@@ -13,7 +13,6 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
@@ -25,6 +24,7 @@ import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.auxiliary.Const;
+import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.managers.TransportManager;
 
 /**
@@ -54,10 +54,6 @@ public class TransportationActivity extends Activity implements OnItemClickListe
 		return false;
 	}
 
-	private void hideKeyboard() {
-		((InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(searchTextField.getWindowToken(), 0);
-	}
-
 	public void onClick(View view) {
 		infoTextView.setVisibility(View.GONE);
 
@@ -65,7 +61,7 @@ public class TransportationActivity extends Activity implements OnItemClickListe
 		switch (viewId) {
 		case R.id.activity_transport_dosearch:
 			searchForStations(searchTextField.getText().toString());
-			hideKeyboard();
+			Utils.hideKeyboard(this, searchTextField);
 			break;
 		case R.id.activity_transport_clear:
 			searchTextField.setText("");
@@ -82,7 +78,7 @@ public class TransportationActivity extends Activity implements OnItemClickListe
 			}
 			listViewSuggestionsAndSaved.setVisibility(View.VISIBLE);
 			listViewResults.setVisibility(View.GONE);
-			hideKeyboard();
+			Utils.hideKeyboard(this, searchTextField);
 			break;
 		}
 	}

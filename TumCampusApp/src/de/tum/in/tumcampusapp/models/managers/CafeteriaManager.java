@@ -7,7 +7,7 @@ import org.json.JSONObject;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import de.tum.in.tumcampusapp.auxiliary.JsonConst;
+import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.Cafeteria;
 
@@ -32,7 +32,7 @@ public class CafeteriaManager {
 	 */
 	public static Cafeteria getFromJson(JSONObject json) throws JSONException {
 
-		return new Cafeteria(json.getInt(JsonConst.JSON_ID), json.getString(JsonConst.JSON_NAME), json.getString(JsonConst.JSON_ANSCHRIFT));
+		return new Cafeteria(json.getInt(Const.JSON_ID), json.getString(Const.JSON_NAME), json.getString(Const.JSON_ANSCHRIFT));
 	}
 
 	/**
@@ -70,7 +70,7 @@ public class CafeteriaManager {
 
 		String url = "http://lu32kap.typo3.lrz.de/mensaapp/exportDB.php";
 
-		JSONArray jsonArray = Utils.downloadJson(url).getJSONArray(JsonConst.JSON_MENSA_MENSEN);
+		JSONArray jsonArray = Utils.downloadJson(url).getJSONArray(Const.JSON_MENSA_MENSEN);
 		removeCache();
 
 		// write cafeterias into database, transaction = speedup

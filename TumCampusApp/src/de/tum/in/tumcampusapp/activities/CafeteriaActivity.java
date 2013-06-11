@@ -68,10 +68,14 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
 		Cursor cursor = cm.getAllFromDb("% %");
 		startManagingCursor(cursor);
 
-		SimpleCursorAdapter adapterCafeterias = new SimpleCursorAdapter(this, R.layout.list_layout_two_line_item, cursor, cursor.getColumnNames(), new int[] {
-				android.R.id.text1, android.R.id.text2 });
+		if (cursor.getCount() > 0) {
+			SimpleCursorAdapter adapterCafeterias = new SimpleCursorAdapter(this, R.layout.list_layout_two_line_item, cursor, cursor.getColumnNames(),
+					new int[] { android.R.id.text1, android.R.id.text2 });
 
-		listCafeterias.setAdapter(adapterCafeterias);
-		listCafeterias.setOnItemClickListener(this);
+			listCafeterias.setAdapter(adapterCafeterias);
+			listCafeterias.setOnItemClickListener(this);
+		} else {
+			super.showErrorLayout();
+		}
 	}
 }

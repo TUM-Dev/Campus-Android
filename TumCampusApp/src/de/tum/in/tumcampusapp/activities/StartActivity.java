@@ -59,6 +59,17 @@ public class StartActivity extends FragmentActivity {
 	};
 
 	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// Check if there is a result key in an intent
+		if (data != null && data.hasExtra(Const.PREFS_HAVE_CHANGED) && data.getBooleanExtra(Const.PREFS_HAVE_CHANGED, false)) {
+			// Restart the Activity if prefs have changed
+			Intent intent = getIntent();
+			finish();
+			startActivity(intent);
+		}
+	}
+
+	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_start);
@@ -114,17 +125,6 @@ public class StartActivity extends FragmentActivity {
 			break;
 		}
 		return super.onOptionsItemSelected(item);
-	}
-	
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		// Check if there is a result key in an intent
-		if (data != null && data.hasExtra(Const.PREFS_HAVE_CHANGED) && data.getBooleanExtra(Const.PREFS_HAVE_CHANGED, false)) {
-			// Restart the Activity if prefs have changed
-			Intent intent = getIntent();
-			finish();
-			startActivity(intent);
-		}
 	}
 
 	@Override

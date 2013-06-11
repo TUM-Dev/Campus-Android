@@ -12,7 +12,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import de.tum.in.tumcampusapp.auxiliary.Const;
-import de.tum.in.tumcampusapp.auxiliary.JsonConst;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.News;
 
@@ -20,12 +19,12 @@ import de.tum.in.tumcampusapp.models.News;
  * News Manager, handles database stuff, external imports
  */
 public class NewsManager {
-	public static int TIME_TO_SYNC = 86400; // 1 day
-	
 	/**
 	 * Last insert counter
 	 */
 	public static int lastInserted = 0;
+
+	public static int TIME_TO_SYNC = 86400; // 1 day
 
 	/**
 	 * Convert JSON object to News and download news image
@@ -50,26 +49,26 @@ public class NewsManager {
 
 		String target = "";
 		if (json.has("picture")) {
-			String picture = json.getString(JsonConst.JSON_PICTURE);
+			String picture = json.getString(Const.JSON_PICTURE);
 			target = Utils.getCacheDir("news/cache") + Utils.md5(picture) + ".jpg";
 			Utils.downloadFileThread(picture, target);
 		}
 		String link = "";
-		if (json.has(JsonConst.JSON_LINK) && !json.getString(JsonConst.JSON_LINK).contains(Const.FACEBOOK)) {
-			link = json.getString(JsonConst.JSON_LINK);
+		if (json.has(Const.JSON_LINK) && !json.getString(Const.JSON_LINK).contains(Const.FACEBOOK_URL)) {
+			link = json.getString(Const.JSON_LINK);
 		}
-		if (link.length() == 0 && json.has(JsonConst.JSON_OBJECT_ID)) {
-			link = "http://graph.facebook.com/" + json.getString(JsonConst.JSON_OBJECT_ID) + "/Picture?type=normal";
+		if (link.length() == 0 && json.has(Const.JSON_OBJECT_ID)) {
+			link = "http://graph.facebook.com/" + json.getString(Const.JSON_OBJECT_ID) + "/Picture?type=normal";
 		}
 
 		// message empty => description empty => caption
 		String message = "";
-		if (json.has(JsonConst.JSON_MESSAGE)) {
-			message = json.getString(JsonConst.JSON_MESSAGE);
-		} else if (json.has(JsonConst.JSON_DESCRIPTION)) {
-			message = json.getString(JsonConst.JSON_DESCRIPTION);
-		} else if (json.has(JsonConst.JSON_CAPTION)) {
-			message = json.getString(JsonConst.JSON_CAPTION);
+		if (json.has(Const.JSON_MESSAGE)) {
+			message = json.getString(Const.JSON_MESSAGE);
+		} else if (json.has(Const.JSON_DESCRIPTION)) {
+			message = json.getString(Const.JSON_DESCRIPTION);
+		} else if (json.has(Const.JSON_CAPTION)) {
+			message = json.getString(Const.JSON_CAPTION);
 		} else if (json.has("name")) {
 			message = json.getString("name");
 		} else if (json.has("story")) { // NTK
@@ -77,9 +76,9 @@ public class NewsManager {
 		} else
 			Log.e("TumCampus", "No message / json object error - FB changed something?"); // NTK
 
-		Date date = Utils.getDate(json.getString(JsonConst.JSON_CREATED_TIME));
+		Date date = Utils.getDate(json.getString(Const.JSON_CREATED_TIME));
 
-		return new News(json.getString(JsonConst.JSON_ID), message, link, target, date);
+		return new News(json.getString(Const.JSON_ID), message, link, target, date);
 	}
 
 	/**
@@ -126,7 +125,7 @@ public class NewsManager {
 		String token = "141869875879732|FbjTXY-wtr06A18W9wfhU8GCkwU";
 
 		@SuppressWarnings("deprecation")
-		JSONArray jsonArray = Utils.downloadJson(url + URLEncoder.encode(token)).getJSONArray(JsonConst.JSON_DATA);
+		JSONArray jsonArray = Utils.downloadJson(url + URLEncoder.encode(token)).getJSONArray(Const.JSON_DATA);
 
 		cleanupDb();
 		int count = Utils.dbGetTableCount(db, "news");
@@ -143,7 +142,7 @@ public class NewsManager {
 
 				// filter out events, empty items
 				if ((!Arrays.asList(types).contains(obj.getString("type")) && !Arrays.asList(ids).contains(obj.getString("id")))
-						|| !obj.getJSONObject(JsonConst.JSON_FROM).getString(JsonConst.JSON_ID).equals("162327853831856")) {
+						|| !obj.getJSONObject(Const.JSON_FROM).getString(Const.JSON_ID).equals("162327853831856")) {
 					continue;
 				}
 				// NTK added Kurz notiert Archiv ---> ignore in news

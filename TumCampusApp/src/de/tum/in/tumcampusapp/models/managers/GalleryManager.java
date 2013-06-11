@@ -15,8 +15,6 @@ import de.tum.in.tumcampusapp.models.Gallery;
  * Gallery Manager, handles database stuff, external imports
  */
 public class GalleryManager {
-	public static int TIME_TO_SYNC = 21600; // 6 hours
-
 	/**
 	 * Last insert counter
 	 */
@@ -27,6 +25,8 @@ public class GalleryManager {
 	 */
 	// TODO Review Vasyl: Changed 25.10.2012 by Florian Schulz (thx to Mr. Bley)
 	public static int position = 0;
+
+	public static int TIME_TO_SYNC = 21600; // 6 hours
 
 	/**
 	 * Convert JSON object to Gallery, download gallery picture

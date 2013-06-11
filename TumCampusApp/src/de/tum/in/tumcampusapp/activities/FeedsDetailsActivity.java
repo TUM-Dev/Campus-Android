@@ -82,13 +82,17 @@ public class FeedsDetailsActivity extends ActivityForDownloadingExternal impleme
 		Cursor cursor = fim.getAllFromDb(feedId);
 		startManagingCursor(cursor);
 
-		SimpleCursorAdapter adapter = new SimpleCursorAdapter(this, R.layout.activity_feeds_listview, cursor, cursor.getColumnNames(), new int[] { R.id.icon,
-				R.id.title, R.id.description });
+		if (cursor.getCount() > 0) {
+			SimpleCursorAdapter adapter = new SimpleCursorAdapter(this, R.layout.activity_feeds_listview, cursor, cursor.getColumnNames(), new int[] {
+					R.id.icon, R.id.title, R.id.description });
 
-		adapter.setViewBinder(this);
-		ListView list = (ListView) findViewById(R.id.listView);
-		list.setAdapter(adapter);
-		list.setOnItemClickListener(this);
+			adapter.setViewBinder(this);
+			ListView list = (ListView) findViewById(R.id.listView);
+			list.setAdapter(adapter);
+			list.setOnItemClickListener(this);
+		} else {
+			super.showErrorLayout();
+		}
 	}
 
 	@Override
