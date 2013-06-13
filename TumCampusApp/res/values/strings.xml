@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="exception_unknown">Unknown error.</string>
-    <string name="exception_sdcard">Error accessing the SD-Card.</string>
-    <string name="exception_timeout">Timeout in internet connection. Please try later.</string>
+    <string name="no_station_found">No station found</string>
+    <string name="exception_unknown">Unknown error</string>
+    <string name="exception_sdcard">Error accessing the SD-Card</string>
+    <string name="exception_timeout">Problems with internet connection, please try later</string>
     <string name="action_prices">Prices</string>
     <string name="personal_settings">Personal Settings</string>
     <string name="cafeteria_ingredients">(f) fleischloses Gericht

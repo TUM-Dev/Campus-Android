@@ -74,13 +74,13 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:padding="8dp"
-        android:scrollbars="vertical" />
+        android:scrollbars="vertical" 
+        android:visibility="gone"/>
 
     <ListView
         android:id="@+id/activity_transport_listview_suggestionsandsaved"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:scrollbars="vertical"
-        android:visibility="gone" />
+        android:scrollbars="vertical"/>
 
 </LinearLayout>

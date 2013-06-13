@@ -47,20 +47,31 @@ public class RoomfinderActivity extends ActivityForSearching implements OnEditor
 	}
 
 	@Override
-	public void onSearchResult(String[] results) {
-		// Get my results and give them semantics
-		String resultCss = results[0];
-		String resultExtraction = results[1];
+	public void onSearchResults(String[] results) {
+		String text = "";
+		
+		try {
+			// Get my results and give them semantics
+			String resultCss = results[0];
+			String resultExtraction = results[1];
+	
+			// Cut the results from the webpage
+			resultExtraction = Utils.cutText(resultExtraction, "<div id=\"maincontentwrapper\">", "<div class=\"documentActions\">");
+			// fit all links
+			resultExtraction = resultExtraction.replace("<a href=\"search_room_form\">", "<a href=\"" + SERVICE_BASE_URL + "search_room_form\">");
+			resultExtraction = resultExtraction.replace("<a href=\"search_room_results", "<a href=\"" + SERVICE_BASE_URL + "search_room_results");
+	
+			// This buidl the actual html document using the css file and the
+			// extracetd results.
+			text = Utils.buildHTMLDocument(resultCss, resultExtraction);
+		
+		} catch (Exception e) {
+			Toast.makeText(this, R.string.exception_unknown, Toast.LENGTH_SHORT).show();
+			Log.e(getClass().getSimpleName(), e.getMessage());
 
-		// Cut the results from the webpage
-		resultExtraction = Utils.cutText(resultExtraction, "<div id=\"maincontentwrapper\">", "<div class=\"documentActions\">");
-		// fit all links
-		resultExtraction = resultExtraction.replace("<a href=\"search_room_form\">", "<a href=\"" + SERVICE_BASE_URL + "search_room_form\">");
-		resultExtraction = resultExtraction.replace("<a href=\"search_room_results", "<a href=\"" + SERVICE_BASE_URL + "search_room_results");
-
-		// This buidl the actual html document using the css file and the
-		// extracetd results.
-		String text = Utils.buildHTMLDocument(resultCss, resultExtraction);
+			errorLayout.setVisibility(View.VISIBLE);
+			progressLayout.setVisibility(View.GONE);
+		}
 
 		// write resulting document to temporary file on SD-card
 		File file = null;
@@ -73,7 +84,7 @@ public class RoomfinderActivity extends ActivityForSearching implements OnEditor
 
 			webView.loadUrl("file://" + file.getPath());
 
-			errorLayout.setVisibility(View.GONE);
+			errorLayout.setVisibility(View.VISIBLE);
 			progressLayout.setVisibility(View.GONE);
 		} catch (Exception e) {
 			Toast.makeText(this, R.string.no_sd_card, Toast.LENGTH_SHORT).show();
@@ -96,5 +107,10 @@ public class RoomfinderActivity extends ActivityForSearching implements OnEditor
 
 		FileUtils.sendAsynchGetRequest(httpClient, this, queryCss, queryExtraction);
 		return true;
+	}
+
+	@Override
+	public void onSearchError(String message) {
+		// TODO Auto-generated method stub
 	}
 }

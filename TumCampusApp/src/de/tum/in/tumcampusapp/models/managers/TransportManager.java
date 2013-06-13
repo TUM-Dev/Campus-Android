@@ -142,7 +142,7 @@ public class TransportManager {
 				jsonArray.put(obj);
 			}
 		} catch (JSONException e) {
-			throw new Exception("Sorry, no station could be found");
+			throw new Exception("No station found");
 		}
 
 		MatrixCursor mc = new MatrixCursor(new String[] { "name", "_id" });

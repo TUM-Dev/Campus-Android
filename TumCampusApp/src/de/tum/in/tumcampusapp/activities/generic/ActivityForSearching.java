@@ -1,14 +1,12 @@
 package de.tum.in.tumcampusapp.activities.generic;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -28,16 +26,12 @@ public abstract class ActivityForSearching extends Activity implements OnEditorA
 		this.layoutId = layoutIt;
 	}
 
-	private void hideKeyboard() {
-		((InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(searchField.getWindowToken(), 0);
-	}
-
 	public void onClick(View view) {
 		int viewId = view.getId();
 		switch (viewId) {
 		case R.id.dosearch:
 			requestSearch();
-			hideKeyboard();
+			Utils.hideKeyboard(this, searchField);
 			break;
 		case R.id.clear:
 			searchField.setText("");

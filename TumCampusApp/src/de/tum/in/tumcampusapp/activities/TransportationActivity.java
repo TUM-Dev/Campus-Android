@@ -139,6 +139,8 @@ public class TransportationActivity extends Activity implements OnItemClickListe
 	@Override
 	public void onItemClick(final AdapterView<?> av, View v, int position, long id) {
 		// click on station in list
+		Utils.hideKeyboard(this, searchTextField);
+		
 		Cursor departureCursor = (Cursor) av.getAdapter().getItem(position);
 		final String location = departureCursor.getString(departureCursor.getColumnIndex(Const.NAME_COLUMN));
 

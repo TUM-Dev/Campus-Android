@@ -193,7 +193,7 @@ public class FileUtils {
 			@Override
 			protected void onPostExecute(String[] result) {
 				// Invokes the listener
-				listener.onSearchResult(result);
+				listener.onSearchResults(result);
 			}
 		};
 		backgroundTask.execute();
