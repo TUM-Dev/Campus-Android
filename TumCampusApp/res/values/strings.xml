@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string name="no_departures_found">No departures available</string>
     <string name="no_station_found">No station found</string>
     <string name="exception_unknown">Unknown error</string>
     <string name="exception_sdcard">Error accessing the SD-Card</string>

@@ -1,6 +1,7 @@
 ﻿package de.tum.in.tumcampusapp.models.managers;
 
 import java.net.URLEncoder;
+import java.util.NoSuchElementException;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -84,8 +85,8 @@ public class TransportManager {
 	 * </pre>
 	 */
 	public Cursor getDeparturesFromExternal(String location) throws Exception {
+		
 		String baseUrl = "http://query.yahooapis.com/v1/public/yql?format=json&q=";
-
 		// ISO needed for mvv
 		String lookupUrl = "http://www.mvg-live.de/ims/dfiStaticAnzeige.svc?haltestelle=" + URLEncoder.encode(location, "ISO-8859-1");
 
@@ -96,7 +97,7 @@ public class TransportManager {
 		JSONArray jsonArray = Utils.downloadJson(baseUrl + query).getJSONObject("query").getJSONObject("results").getJSONArray("p");
 
 		if (jsonArray.length() < 3) {
-			throw new Exception("Sorry, no departures could be found");
+			throw new NoSuchElementException("No departures found");
 		}
 
 		MatrixCursor mc = new MatrixCursor(new String[] { "name", "desc", "_id" });
@@ -121,7 +122,6 @@ public class TransportManager {
 	public Cursor getStationsFromExternal(String location) throws Exception {
 
 		String baseUrl = "http://query.yahooapis.com/v1/public/yql?format=json&q=";
-
 		String lookupUrl = "http://www.mvg-live.de/ims/dfiStaticAuswahl.svc?haltestelle=" + URLEncoder.encode(location, "ISO-8859-1");
 
 		@SuppressWarnings("deprecation")
@@ -129,20 +129,20 @@ public class TransportManager {
 		Utils.log(query);
 
 		JSONObject jsonObj = Utils.downloadJson(baseUrl + query).getJSONObject("query");
-
 		JSONArray jsonArray = new JSONArray();
+		
 		try {
 			Object obj = jsonObj.getJSONObject(Const.JSON_RESULTS).get("a");
 			if (obj instanceof JSONArray) {
 				jsonArray = (JSONArray) obj;
 			} else {
 				if (obj.toString().contains("aktualisieren")) {
-					throw new JSONException("Unkown error");
+					throw new NoSuchElementException("No station found");
 				}
 				jsonArray.put(obj);
 			}
-		} catch (JSONException e) {
-			throw new Exception("No station found");
+		} catch (Exception e) {
+			throw new NoSuchElementException("No station found");
 		}
 
 		MatrixCursor mc = new MatrixCursor(new String[] { "name", "_id" });

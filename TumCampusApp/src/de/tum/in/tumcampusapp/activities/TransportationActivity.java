@@ -1,5 +1,8 @@
 ﻿package de.tum.in.tumcampusapp.activities;
 
+import java.util.NoSuchElementException;
+import java.util.concurrent.TimeoutException;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -22,6 +25,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
@@ -35,7 +39,10 @@ public class TransportationActivity extends Activity implements OnItemClickListe
 	private TextView infoTextView;
 	private ListView listViewResults;
 	private ListView listViewSuggestionsAndSaved = null;
+	
 	private RelativeLayout progressLayout;
+	private RelativeLayout errorLayout;
+	
 	private EditText searchTextField;
 	private TransportManager transportaionManager;
 
@@ -78,6 +85,7 @@ public class TransportationActivity extends Activity implements OnItemClickListe
 			}
 			listViewSuggestionsAndSaved.setVisibility(View.VISIBLE);
 			listViewResults.setVisibility(View.GONE);
+			errorLayout.setVisibility(View.GONE);
 			Utils.hideKeyboard(this, searchTextField);
 			break;
 		}
@@ -101,6 +109,7 @@ public class TransportationActivity extends Activity implements OnItemClickListe
 		listViewResults = (ListView) findViewById(R.id.activity_transport_listview_result);
 		listViewSuggestionsAndSaved = (ListView) findViewById(R.id.activity_transport_listview_suggestionsandsaved);
 		progressLayout = (RelativeLayout) findViewById(R.id.progress_layout);
+		errorLayout = (RelativeLayout) findViewById(R.id.error_layout);
 		infoTextView = (TextView) findViewById(R.id.activity_transport_textview_info);
 
 		@SuppressWarnings("deprecation")
@@ -134,13 +143,14 @@ public class TransportationActivity extends Activity implements OnItemClickListe
 				return false;
 			}
 		});
+		listViewSuggestionsAndSaved.requestFocus();
 	}
 
 	@Override
 	public void onItemClick(final AdapterView<?> av, View v, int position, long id) {
 		// click on station in list
 		Utils.hideKeyboard(this, searchTextField);
-		
+
 		Cursor departureCursor = (Cursor) av.getAdapter().getItem(position);
 		final String location = departureCursor.getString(departureCursor.getColumnIndex(Const.NAME_COLUMN));
 
@@ -156,9 +166,16 @@ public class TransportationActivity extends Activity implements OnItemClickListe
 
 		progressLayout.setVisibility(View.VISIBLE);
 		infoTextView.setVisibility(View.GONE);
+		
+		if (!Utils.isConnected(this)) {
+			progressLayout.setVisibility(View.GONE);
+			errorLayout.setVisibility(View.VISIBLE);
+			Toast.makeText(this, R.string.no_internet_connection, Toast.LENGTH_SHORT).show();
+			return;
+		}
 
 		new Thread(new Runnable() {
-			String message;
+			int message;
 
 			@Override
 			public void run() {
@@ -166,18 +183,18 @@ public class TransportationActivity extends Activity implements OnItemClickListe
 				TransportManager tm = new TransportManager(av.getContext());
 				Cursor departureCursor = null;
 				try {
-					if (!connected()) {
-						throw new Exception(getString(R.string.no_internet_connection));
-					}
 					departureCursor = tm.getDeparturesFromExternal(location);
-
+				} catch (NoSuchElementException e) {
+					message = R.string.no_departures_found;
+				} catch (TimeoutException e) {
+					message = R.string.exception_timeout;
 				} catch (Exception e) {
-					message = e.getMessage();
+					message = R.string.exception_unknown;
 				}
 
 				// show departures in list
 				final Cursor finalDepartureCursor = departureCursor;
-				final String showMessage = message;
+				final int showMessage = message;
 				runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
@@ -186,9 +203,10 @@ public class TransportationActivity extends Activity implements OnItemClickListe
 
 						listViewResults.setVisibility(View.VISIBLE);
 						progressLayout.setVisibility(View.GONE);
+						errorLayout.setVisibility(View.GONE);
 						listViewSuggestionsAndSaved.setVisibility(View.GONE);
 
-						if (showMessage != null) {
+						if (showMessage != 0) {
 							infoTextView.setText(showMessage);
 							infoTextView.setVisibility(View.VISIBLE);
 						}
@@ -231,7 +249,7 @@ public class TransportationActivity extends Activity implements OnItemClickListe
 	 * @param inputText
 	 * @return
 	 */
-	public boolean searchForStations(String inputTextRaw) {
+	public void searchForStations(String inputTextRaw) {
 		final Activity activity = this;
 		progressLayout.setVisibility(View.VISIBLE);
 
@@ -245,24 +263,32 @@ public class TransportationActivity extends Activity implements OnItemClickListe
 		}
 		final String inputText = inputTextToCheck;
 
+		if (!Utils.isConnected(this)) {
+			progressLayout.setVisibility(View.GONE);
+			errorLayout.setVisibility(View.VISIBLE);
+			Toast.makeText(this, R.string.no_internet_connection, Toast.LENGTH_SHORT).show();
+			return;
+		}
+		
 		new Thread(new Runnable() {
-			String message;
+			int message;
 
 			@Override
 			public void run() {
 				TransportManager tm = new TransportManager(activity);
 				Cursor stationCursor = null;
 				try {
-					if (!connected()) {
-						throw new Exception(getString(R.string.no_internet_connection));
-					}
 					stationCursor = tm.getStationsFromExternal(inputText);
+				} catch (NoSuchElementException e) {
+					message = R.string.no_station_found;
+				} catch (TimeoutException e) {
+					message = R.string.exception_timeout;
 				} catch (Exception e) {
-					message = e.getMessage();
+					message = R.string.exception_unknown;
 				}
 
 				final Cursor finalStationCursor = stationCursor;
-				final String showMessage = message;
+				final int showMessage = message;
 				// show stations from search result in station list
 				// show error message if necessary
 				runOnUiThread(new Runnable() {
@@ -273,9 +299,10 @@ public class TransportationActivity extends Activity implements OnItemClickListe
 
 						listViewSuggestionsAndSaved.setVisibility(View.VISIBLE);
 						progressLayout.setVisibility(View.GONE);
+						errorLayout.setVisibility(View.GONE);
 						listViewResults.setVisibility(View.GONE);
 
-						if (showMessage != null) {
+						if (showMessage != 0) {
 							infoTextView.setText(showMessage);
 							infoTextView.setVisibility(View.VISIBLE);
 						}
@@ -283,6 +310,5 @@ public class TransportationActivity extends Activity implements OnItemClickListe
 				});
 			}
 		}).start();
-		return false;
 	}
 }

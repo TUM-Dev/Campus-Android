@@ -50,13 +50,18 @@
             android:onClick="onClick"
             android:scaleType="fitCenter"
             android:src="@android:drawable/ic_menu_search" />
-
     </LinearLayout>
 
     <include
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         layout="@layout/layout_progress"
+        android:visibility="gone" />
+
+    <include
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        layout="@layout/layout_error"
         android:visibility="gone" />
 
     <TextView
@@ -74,13 +79,13 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:padding="8dp"
-        android:scrollbars="vertical" 
-        android:visibility="gone"/>
+        android:scrollbars="vertical"
+        android:visibility="gone" />
 
     <ListView
         android:id="@+id/activity_transport_listview_suggestionsandsaved"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:scrollbars="vertical"/>
+        android:scrollbars="vertical" />
 
 </LinearLayout>
