@@ -350,6 +350,7 @@ public final class R {
         public static final int crash_notif_text=0x7f080095;
         public static final int crash_notif_ticker_text=0x7f080093;
         public static final int crash_notif_title=0x7f080094;
+        public static final int credits=0x7f080159;
         public static final int current_events=0x7f080131;
         public static final int data_and_settings=0x7f080085;
         public static final int date=0x7f0800bb;

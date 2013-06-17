@@ -37,6 +37,9 @@ public class Exam {
 	@Element(name = "lv_semester")
 	private String semester;
 
+	@Element(name = "lv_credits")
+	private String credits;
+
 	public String getCourse() {
 		return course;
 	}
@@ -65,6 +68,10 @@ public class Exam {
 		return semester;
 	}
 
+	public String getCredits() {
+		return credits;
+	}
+
 	public void setCourse(String course) {
 		this.course = course;
 	}
@@ -91,5 +98,9 @@ public class Exam {
 
 	public void setSemester(String semester) {
 		this.semester = semester;
+	}
+
+	public void setCredits(String credits) {
+		this.credits = credits;
 	}
 }
