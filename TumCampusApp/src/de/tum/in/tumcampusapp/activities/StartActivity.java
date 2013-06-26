@@ -74,14 +74,6 @@ public class StartActivity extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_start);
 
-		// Workaround for new API version. There was a security update which
-		// disallows applications to execute HTTP request in the GUI main
-		// thread.
-		if (android.os.Build.VERSION.SDK_INT > 9) {
-			StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-			StrictMode.setThreadPolicy(policy);
-		}
-
 		// Create the adapter that will return a fragment for each of the
 		// primary sections of the app.
 		mSectionsPagerAdapter = new StartSectionsPagerAdapter(this, getSupportFragmentManager());

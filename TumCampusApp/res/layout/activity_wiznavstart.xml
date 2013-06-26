@@ -1,0 +1,54 @@
+<TableLayout  
+    xmlns:android="http://schemas.android.com/apk/res/android"  
+    android:id="@+id/tableLayout1"  
+    android:layout_width="match_parent"  
+    android:layout_height="match_parent"  
+    android:shrinkColumns="*"  
+    android:stretchColumns="*">
+	 <TableRow  
+        android:id="@+id/tableRow4"  
+        android:layout_height="wrap_content"  
+        android:layout_width="match_parent"  
+        android:gravity="center_horizontal">  
+    <TextView
+        android:id="@+id/textViewWel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/welcome_msg"
+        />
+    </TableRow> 
+    <TableRow  
+        android:id="@+id/tableRow1"  
+        android:layout_height="wrap_content"  
+        android:layout_width="match_parent">  
+    <EditText android:id="@+id/lrd_id"
+     android:layout_width="wrap_content"
+     android:layout_height="wrap_content"   
+        />
+    </TableRow> 
+      <TableRow  
+        android:id="@+id/tableRow1"  
+        android:layout_height="wrap_content"  
+        android:layout_width="match_parent"> 
+    <TextView
+        android:id="@+id/textViewErr"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        />
+     </TableRow> 
+     <TableRow  
+        android:layout_height="wrap_content"  
+        android:id="@+id/tableRow2"  
+        android:layout_width="match_parent">
+    <Button android:text="@string/button_next"
+        android:onClick="onClickNext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        />
+     <Button android:text="@string/button_close"
+        android:onClick="onClickClose"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        />
+    </TableRow> 
+</TableLayout>  

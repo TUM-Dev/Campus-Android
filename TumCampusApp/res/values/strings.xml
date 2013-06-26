@@ -387,5 +387,13 @@
 		\n\nThe source code is available through Github and may be requested from the project manager in the most recent version.
 		\n\n22th July 2013\n</string>
     <string name="credits">Credits</string>
+    
+    <!-- Startup Wizard Strings -->
+	<string name="welcome_msg">Welcome to TUM campus app, in order to setup the app you need to provide your LRZ ID.  This ID has the following format:
+	xx00xxx (2 letters, 2 digits, 3 letters)</string>
+	<string name="button_next">Next</string>
+	<string name="button_done">Done</string>
+	<string name="button_close">Close</string>
+	<string name="configured">TUM Campus App Configured Successfully</string>
 
 </resources>
