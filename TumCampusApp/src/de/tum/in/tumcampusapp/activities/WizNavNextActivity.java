@@ -35,7 +35,7 @@ public class WizNavNextActivity extends ActivityForAccessingTumOnline {
 		 TextView textView =(TextView)findViewById(R.id.tvBrowse);
 	        textView.setClickable(true);
 	        textView.setMovementMethod(LinkMovementMethod.getInstance());
-	        String text = "<a href='http://campus.tum.de'> Enable Token through TUM campus portal </a>";
+	        String text = "<a href='http://campus.tum.de'> Enable Token through TUM campus portal using Token-Management </a>";
 	        textView.setText(Html.fromHtml(text));
 	 }
 
