@@ -74,11 +74,12 @@ public final class R {
         public static final int plan_mvv_night_icon=0x7f020019;
         public static final int shopping_cart=0x7f02001a;
         public static final int show_info=0x7f02001b;
-        public static final int trash=0x7f02001c;
-        public static final int unlock=0x7f02001d;
-        public static final int users=0x7f02001e;
-        public static final int web=0x7f02001f;
-        public static final int zoom=0x7f020020;
+        public static final int tokenmanagement=0x7f02001c;
+        public static final int trash=0x7f02001d;
+        public static final int unlock=0x7f02001e;
+        public static final int users=0x7f02001f;
+        public static final int web=0x7f020020;
+        public static final int zoom=0x7f020021;
     }
     public static final class id {
         public static final int TextView01=0x7f0b0019;
@@ -87,10 +88,10 @@ public final class R {
         public static final int TextView03=0x7f0b001e;
         public static final int TextView04=0x7f0b0016;
         public static final int TextView05=0x7f0b0022;
-        public static final int action_add=0x7f0b006d;
-        public static final int action_ingredients=0x7f0b006e;
-        public static final int action_settings=0x7f0b006f;
-        public static final int action_update=0x7f0b006c;
+        public static final int action_add=0x7f0b0075;
+        public static final int action_ingredients=0x7f0b0076;
+        public static final int action_settings=0x7f0b0077;
+        public static final int action_update=0x7f0b0074;
         public static final int activity_curricula_list_view=0x7f0b0003;
         public static final int activity_curricula_web_view=0x7f0b0004;
         public static final int activity_gallery_details_infos=0x7f0b000e;
@@ -117,28 +118,29 @@ public final class R {
         public static final int date=0x7f0b0039;
         public static final int description=0x7f0b000a;
         public static final int dosearch=0x7f0b0042;
-        public static final int error_layout=0x7f0b0062;
+        public static final int error_layout=0x7f0b006b;
         public static final int etFindQuery=0x7f0b0032;
         public static final int etSearch=0x7f0b0040;
-        public static final int failed_layout=0x7f0b0064;
-        public static final int fragment_item_detail_listview=0x7f0b005f;
+        public static final int failed_layout=0x7f0b006c;
+        public static final int fragment_item_detail_listview=0x7f0b0068;
         public static final int frist=0x7f0b005b;
         public static final int grade=0x7f0b0011;
         public static final int icon=0x7f0b0006;
         public static final int image=0x7f0b0009;
-        public static final int imageView1=0x7f0b0063;
+        public static final int imageView1=0x7f0b0060;
         public static final int infos=0x7f0b0008;
-        public static final int item_detail=0x7f0b0060;
+        public static final int item_detail=0x7f0b0069;
         public static final int item_detail_container=0x7f0b003b;
         public static final int item_list=0x7f0b003a;
         public static final int ivImage=0x7f0b0045;
         public static final int linearLayout1=0x7f0b003c;
         public static final int listView=0x7f0b0002;
-        public static final int list_menu_detail=0x7f0b006b;
-        public static final int list_menu_entry=0x7f0b0068;
-        public static final int list_menu_icon=0x7f0b0069;
-        public static final int list_menu_title=0x7f0b006a;
-        public static final int list_view=0x7f0b0061;
+        public static final int list_menu_detail=0x7f0b0073;
+        public static final int list_menu_entry=0x7f0b0070;
+        public static final int list_menu_icon=0x7f0b0071;
+        public static final int list_menu_title=0x7f0b0072;
+        public static final int list_view=0x7f0b006a;
+        public static final int lrd_id=0x7f0b0063;
         public static final int lstGrades=0x7f0b0010;
         public static final int lstOrganisations=0x7f0b003e;
         public static final int lstPersons=0x7f0b0043;
@@ -147,12 +149,12 @@ public final class R {
         public static final int lvTerminList=0x7f0b002b;
         public static final int message=0x7f0b0038;
         public static final int name=0x7f0b0007;
-        public static final int no_token_layout=0x7f0b0065;
+        public static final int no_token_layout=0x7f0b006d;
         public static final int pager=0x7f0b0000;
         public static final int pager_title_strip=0x7f0b0001;
-        public static final int progressBar1=0x7f0b0067;
-        public static final int progress_layout=0x7f0b0066;
-        public static final int save=0x7f0b005e;
+        public static final int progressBar1=0x7f0b006f;
+        public static final int progress_layout=0x7f0b006e;
+        public static final int save=0x7f0b0067;
         public static final int scroll=0x7f0b0015;
         public static final int scrollView=0x7f0b0044;
         public static final int search_field=0x7f0b004c;
@@ -161,12 +163,18 @@ public final class R {
         public static final int spFilter=0x7f0b002f;
         public static final int tableLayout1=0x7f0b0058;
         public static final int tableRow1=0x7f0b0059;
-        public static final int text1=0x7f0b005c;
+        public static final int tableRow2=0x7f0b005e;
+        public static final int tableRow3=0x7f0b005d;
+        public static final int tableRow4=0x7f0b0061;
+        public static final int text1=0x7f0b0065;
         public static final int textView1=0x7f0b0014;
+        public static final int textViewErr=0x7f0b0064;
+        public static final int textViewWel=0x7f0b0062;
         public static final int timetable=0x7f0b004e;
         public static final int title=0x7f0b000b;
         public static final int tv1=0x7f0b0012;
         public static final int tv2=0x7f0b0013;
+        public static final int tvBrowse=0x7f0b005f;
         public static final int tvCaption=0x7f0b003d;
         public static final int tvDetails1=0x7f0b0046;
         public static final int tvDetails2=0x7f0b0047;
@@ -186,12 +194,13 @@ public final class R {
         public static final int tvLDetailsZiele=0x7f0b0023;
         public static final int tvLectureName=0x7f0b0027;
         public static final int tvOrgDetails=0x7f0b003f;
+        public static final int tvSucc=0x7f0b005c;
         public static final int tvTerminBetreff=0x7f0b002e;
         public static final int tvTerminOrt=0x7f0b002d;
         public static final int tvTerminZeit=0x7f0b002c;
         public static final int tvTermineLectureName=0x7f0b002a;
         public static final int tvTypeSWSSemester=0x7f0b0028;
-        public static final int url=0x7f0b005d;
+        public static final int url=0x7f0b0066;
         public static final int webview_results=0x7f0b004d;
     }
     public static final class layout {
@@ -250,19 +259,22 @@ public final class R {
         public static final int activity_timetable=0x7f030025;
         public static final int activity_transportation=0x7f030026;
         public static final int activity_tuitionfees=0x7f030027;
-        public static final int dialog_cafeteria_prices=0x7f030028;
-        public static final int dialog_feeds_add=0x7f030029;
-        public static final int fragment_cafeteriadetails_section=0x7f03002a;
-        public static final int fragment_item_detail=0x7f03002b;
-        public static final int fragment_item_detail_text=0x7f03002c;
-        public static final int fragment_start_section=0x7f03002d;
-        public static final int layout_error=0x7f03002e;
-        public static final int layout_failed_token=0x7f03002f;
-        public static final int layout_no_token=0x7f030030;
-        public static final int layout_progress=0x7f030031;
-        public static final int list_layout_complex_large=0x7f030032;
-        public static final int list_layout_complex_small=0x7f030033;
-        public static final int list_layout_two_line_item=0x7f030034;
+        public static final int activity_wiznavdone=0x7f030028;
+        public static final int activity_wiznavnext=0x7f030029;
+        public static final int activity_wiznavstart=0x7f03002a;
+        public static final int dialog_cafeteria_prices=0x7f03002b;
+        public static final int dialog_feeds_add=0x7f03002c;
+        public static final int fragment_cafeteriadetails_section=0x7f03002d;
+        public static final int fragment_item_detail=0x7f03002e;
+        public static final int fragment_item_detail_text=0x7f03002f;
+        public static final int fragment_start_section=0x7f030030;
+        public static final int layout_error=0x7f030031;
+        public static final int layout_failed_token=0x7f030032;
+        public static final int layout_no_token=0x7f030033;
+        public static final int layout_progress=0x7f030034;
+        public static final int list_layout_complex_large=0x7f030035;
+        public static final int list_layout_complex_small=0x7f030036;
+        public static final int list_layout_two_line_item=0x7f030037;
     }
     public static final class menu {
         public static final int menu_activity_for_accessing_tum_online=0x7f0a0000;
@@ -305,6 +317,9 @@ public final class R {
         public static final int business_informatics_bachelor_0809=0x7f0800c2;
         public static final int business_informatics_bachelor_1112=0x7f0800c1;
         public static final int business_informatics_master=0x7f0800c6;
+        public static final int button_close=0x7f08015d;
+        public static final int button_done=0x7f08015c;
+        public static final int button_next=0x7f08015b;
         public static final int cafeteria_addinfo=0x7f08003b;
         public static final int cafeteria_ingredients=0x7f080007;
         public static final int cafeterias=0x7f08012a;
@@ -338,6 +353,7 @@ public final class R {
         public static final int color_scheme_summary=0x7f080014;
         public static final int completed=0x7f08012b;
         public static final int computational_science_master=0x7f0800c9;
+        public static final int configured=0x7f08015e;
         public static final int confirmation_about_payment=0x7f0800cc;
         public static final int contact_details=0x7f0800e6;
         public static final int contact_person=0x7f0800e5;
@@ -617,6 +633,9 @@ public final class R {
         public static final int vacation=0x7f0800df;
         public static final int warning_no_internet_connection_for_organisation_details=0x7f08014d;
         public static final int week_splitted=0x7f08013f;
+        /**  Startup Wizard Strings 
+         */
+        public static final int welcome_msg=0x7f08015a;
         public static final int yes=0x7f080149;
         public static final int zoom_hint=0x7f080089;
     }

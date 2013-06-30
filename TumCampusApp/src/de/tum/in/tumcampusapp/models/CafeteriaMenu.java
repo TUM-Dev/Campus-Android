@@ -12,37 +12,39 @@ public class CafeteriaMenu {
 	/**
 	 * Cafeteria ID
 	 */
-	int cafeteriaId;
+	public int cafeteriaId;
 
 	/**
 	 * Menu date
 	 */
-	Date date;
+	public Date date;
 
 	/**
 	 * CafeteriaMenu Id (empty for addendum)
 	 */
-	int id;
+	public int id;
 
 	/**
 	 * Menu name
 	 */
-	String name;
+	public String name;
 
 	/**
 	 * Long type, e.g. Tagesgericht 1
 	 */
-	String typeLong;
+	public String typeLong;
 
 	/**
 	 * Type ID
 	 */
-	int typeNr;
+	public int typeNr;
 
 	/**
 	 * Short type, e.g. tg
 	 */
-	String typeShort;
+	public String typeShort;
+
+	// public String prize;
 
 	/**
 	 * New CafeteriaMenu
@@ -57,7 +59,8 @@ public class CafeteriaMenu {
 	 * @param name Menu name
 	 * </pre>
 	 */
-	public CafeteriaMenu(int id, int cafeteriaId, Date date, String typeShort, String typeLong, int typeNr, String name) {
+	public CafeteriaMenu(int id, int cafeteriaId, Date date, String typeShort,
+			String typeLong, int typeNr, String name) {
 
 		this.id = id;
 		this.cafeteriaId = cafeteriaId;
@@ -66,11 +69,14 @@ public class CafeteriaMenu {
 		this.typeLong = typeLong;
 		this.typeNr = typeNr;
 		this.name = name;
+		// this.prize = prize;
 	}
 
 	@Override
 	public String toString() {
-		return "id=" + this.id + " cafeteriaId=" + this.cafeteriaId + " date=" + Utils.getDateString(this.date) + " typeShort=" + this.typeShort + " typeLong="
-				+ this.typeLong + " typeNr=" + this.typeNr + " name=" + this.name;
+		return "id=" + this.id + " cafeteriaId=" + this.cafeteriaId + " date="
+				+ Utils.getDateString(this.date) + " typeShort="
+				+ this.typeShort + " typeLong=" + this.typeLong + " typeNr="
+				+ this.typeNr + " name=" + this.name;
 	}
 }

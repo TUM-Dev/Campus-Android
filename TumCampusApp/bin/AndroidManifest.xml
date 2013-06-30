@@ -23,6 +23,11 @@
         <activity
             android:name=".activities.StartActivity"
             android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".activities.generic.MockActivity"
@@ -184,30 +189,6 @@
             android:configChanges="orientation|screenSize"
             android:label="@string/organisation_details" >
         </activity>
-         <activity
-            android:name=".activities.StartupActivity"
-            android:label="@string/app_name" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".activities.WizNavNextActivity"
-            android:label="@string/app_name" >
-            
-        </activity>
-          <activity
-            android:name=".activities.WizNavDoneActivity"
-            android:label="@string/app_name" >
-            
-        </activity>
-        <activity
-            android:name=".activities.WizNavStartActivity"
-            android:label="@string/app_name" >
-            
-        </activity>
 
         <service
             android:name=".services.DownloadService"
@@ -215,8 +196,6 @@
         <service
             android:name=".services.ImportService"
             android:exported="false" />
-        
-        
     </application>
 
 </manifest>
