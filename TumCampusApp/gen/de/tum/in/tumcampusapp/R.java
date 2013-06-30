@@ -272,9 +272,10 @@ public final class R {
         public static final int layout_failed_token=0x7f030032;
         public static final int layout_no_token=0x7f030033;
         public static final int layout_progress=0x7f030034;
-        public static final int list_layout_complex_large=0x7f030035;
-        public static final int list_layout_complex_small=0x7f030036;
-        public static final int list_layout_two_line_item=0x7f030037;
+        public static final int list_layout_cafeteriamenu=0x7f030035;
+        public static final int list_layout_complex_large=0x7f030036;
+        public static final int list_layout_complex_small=0x7f030037;
+        public static final int list_layout_two_line_item=0x7f030038;
     }
     public static final class menu {
         public static final int menu_activity_for_accessing_tum_online=0x7f0a0000;

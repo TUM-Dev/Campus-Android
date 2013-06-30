@@ -76,7 +76,7 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
 		// no onclick for items, no separator line
 		@SuppressWarnings("deprecation")
 		SimpleCursorAdapter adapterMenue = new SimpleCursorAdapter(activity,
-				R.layout.list_layout_two_line_item, cursorCafeteriaMenu, // android.R.layout.two_line_list_item
+				R.layout.list_layout_cafeteriamenu, cursorCafeteriaMenu, // android.R.layout.two_line_list_item
 				cursorCafeteriaMenu.getColumnNames(), new int[] {
 						android.R.id.text1, android.R.id.text2 }) {
 
