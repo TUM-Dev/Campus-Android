@@ -28,7 +28,6 @@ import de.tum.in.tumcampusapp.activities.RoomfinderActivity;
 import de.tum.in.tumcampusapp.activities.TimetableActivity;
 import de.tum.in.tumcampusapp.activities.TransportationActivity;
 import de.tum.in.tumcampusapp.activities.TuitionFeesActivity;
-import de.tum.in.tumcampusapp.activities.generic.MockActivity;
 import de.tum.in.tumcampusapp.auxiliary.ListMenuEntry;
 import de.tum.in.tumcampusapp.fragments.StartSectionFragment;
 
@@ -86,8 +85,8 @@ public class StartSectionsPagerAdapter extends FragmentPagerAdapter {
 			listMenuEntrySet.add(new ListMenuEntry(R.drawable.calculator, R.string.my_lectures, R.string.lectures_addinfo, new Intent(activity,
 					LecturesPersonalActivity.class)));
 			listMenuEntrySet.add(new ListMenuEntry(R.drawable.chart, R.string.my_grades, R.string.grades_addinfo, new Intent(activity, GradesActivity.class)));
-			listMenuEntrySet.add(new ListMenuEntry(R.drawable.calendar, R.string.timetable, R.string.timetable_addinfo,
-					new Intent(activity, TimetableActivity.class)));
+			listMenuEntrySet.add(new ListMenuEntry(R.drawable.calendar, R.string.timetable, R.string.timetable_addinfo, new Intent(activity,
+					TimetableActivity.class)));
 			listMenuEntrySet.add(new ListMenuEntry(R.drawable.finance, R.string.tuition_fees, R.string.tuitionfee_addinfo, new Intent(activity,
 					TuitionFeesActivity.class)));
 			break;

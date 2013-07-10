@@ -1,12 +1,9 @@
 package de.tum.in.tumcampusapp.auxiliary;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
-import android.preference.PreferenceManager;
 import android.util.Log;
-import android.widget.Toast;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequest;
 
@@ -22,8 +19,9 @@ public class WizAccessTokenManager implements OnClickListener {
 	 *            lrz user id
 	 * @return the access token
 	 */
-	public boolean isFine=true;
+	public boolean isFine = true;
 	public String message;
+
 	private static String generateAccessToken(String lrz_id) {
 		// we don't have an access token yet, though we take the constructor
 		// with only one parameter to set the method
@@ -73,8 +71,8 @@ public class WizAccessTokenManager implements OnClickListener {
 	private void requestAccessToken(String stringLRZID) {
 		try {
 			if (!Utils.isConnected(context)) {
-				 message=context.getString(R.string.no_internet_connection);
-				isFine=false;
+				message = context.getString(R.string.no_internet_connection);
+				isFine = false;
 				return;
 			}
 			// ok, do the request now
@@ -83,26 +81,26 @@ public class WizAccessTokenManager implements OnClickListener {
 
 			// save access token to preferences
 			Utils.setSetting(context, Const.ACCESS_TOKEN, strAccessToken);
-			 message=context.getString(R.string.access_token_wasnt_generated);
-			 isFine=true;
+			message = context.getString(R.string.access_token_wasnt_generated);
+			isFine = true;
 
 		} catch (Exception ex) {
 			// set access token to null
 			Utils.setSetting(context, Const.ACCESS_TOKEN, null);
-			isFine=false;
-			 message=context.getString(R.string.access_token_wasnt_generated);
+			isFine = false;
+			message = context.getString(R.string.access_token_wasnt_generated);
 		}
 	}
 
 	public void setupAccessToken(String lrzID) {
-		this.lrzId=lrzID;
+		this.lrzId = lrzID;
 		// check if lrz could be valid?
 		if (lrzId.length() == 7) {
-				 message="Requesting Access Token:"+lrzId;
-				 requestAccessToken(lrzId);
+			message = "Requesting Access Token:" + lrzId;
+			requestAccessToken(lrzId);
 		} else {
-			isFine=false;
-			message=context.getString(R.string.error_lrz_wrong);
+			isFine = false;
+			message = context.getString(R.string.error_lrz_wrong);
 		}
 	}
 

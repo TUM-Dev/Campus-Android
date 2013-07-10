@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string name="open_wizzard">Open Startup-Wizzard</string>
+    <string name="open_wizzard_detail">The Startup-Wizzard help you in order to set the basic preferences for accessing TUMOnline services and the layout of this App.</string>
+    <string name="extras">Extras</string>
     <string name="no_departures_found">No departures available</string>
     <string name="no_station_found">No station found</string>
     <string name="exception_unknown">Unknown error</string>
@@ -388,12 +391,12 @@
 		\n\n22th July 2013\n</string>
     <string name="credits">Credits</string>
     
-    <!-- Startup Wizard Strings -->
-	<string name="welcome_msg">Welcome to TUM campus app, in order to setup the app you need to provide your LRZ ID.  This ID has the following format:
-	xx00xxx (2 letters, 2 digits, 3 letters)</string>
+    <string name="startup_wizzard">Startup Wizzard</string>
+	<string name="welcome_msg">Welcome to <b>TUM Campus App!</b>\nIn order to setup the app you need to provide your LRZ Id.  This Id has the following format:\n<i>xx00xxx</i> (2 letters, 2 digits, 3 letters)</string>
 	<string name="button_next">Next</string>
 	<string name="button_done">Done</string>
 	<string name="button_close">Close</string>
-	<string name="configured">TUM Campus App Configured Successfully</string>
+	<string name="exit">Exit</string>
+	<string name="configured">TUM Campus App configuration successfull</string>
 
 </resources>

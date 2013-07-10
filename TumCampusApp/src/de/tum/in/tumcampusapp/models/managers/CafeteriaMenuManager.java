@@ -36,10 +36,8 @@ public class CafeteriaMenuManager {
 	 */
 	public static CafeteriaMenu getFromJson(JSONObject json) throws Exception {
 
-		return new CafeteriaMenu(json.getInt("id"), json.getInt("mensa_id"),
-				Utils.getDate(json.getString("date")),
-				json.getString("type_short"), json.getString("type_long"),
-				json.getInt("type_nr"), json.getString("name"));
+		return new CafeteriaMenu(json.getInt("id"), json.getInt("mensa_id"), Utils.getDate(json.getString("date")), json.getString("type_short"),
+				json.getString("type_long"), json.getInt("type_nr"), json.getString("name"));
 	}
 
 	/**
@@ -55,12 +53,10 @@ public class CafeteriaMenuManager {
 	 * @throws Exception
 	 * </pre>
 	 */
-	public static CafeteriaMenu getFromJsonAddendum(JSONObject json)
-			throws Exception {
+	public static CafeteriaMenu getFromJsonAddendum(JSONObject json) throws Exception {
 
-		return new CafeteriaMenu(0, json.getInt("mensa_id"), Utils.getDate(json
-				.getString("date")), json.getString("type_short"),
-				json.getString("type_long"), 10, json.getString("name"));
+		return new CafeteriaMenu(0, json.getInt("mensa_id"), Utils.getDate(json.getString("date")), json.getString("type_short"), json.getString("type_long"),
+				10, json.getString("name"));
 	}
 
 	/**
@@ -79,8 +75,7 @@ public class CafeteriaMenuManager {
 		db = DatabaseManager.getDb(context);
 
 		// create table if needed
-		db.execSQL("CREATE TABLE IF NOT EXISTS cafeterias_menus ("
-				+ "id INTEGER, mensaId INTEGER KEY, date VARCHAR, typeShort VARCHAR, "
+		db.execSQL("CREATE TABLE IF NOT EXISTS cafeterias_menus (" + "id INTEGER, mensaId INTEGER KEY, date VARCHAR, typeShort VARCHAR, "
 				+ "typeLong VARCHAR, typeNr INTEGER, name VARCHAR)");
 	}
 
@@ -108,10 +103,7 @@ public class CafeteriaMenuManager {
 		cleanupDb();
 		int count = Utils.dbGetTableCount(db, "cafeterias_menus");
 
-		Cursor c = db
-				.rawQuery(
-						"SELECT 1 FROM cafeterias_menus WHERE date > date('now', '+6 day') LIMIT 1",
-						null);
+		Cursor c = db.rawQuery("SELECT 1 FROM cafeterias_menus WHERE date > date('now', '+6 day') LIMIT 1", null);
 		if (c.getCount() > 0) {
 			c.close();
 			return;
@@ -153,11 +145,8 @@ public class CafeteriaMenuManager {
 	 * @return Database cursor (date_de, _id)
 	 */
 	public Cursor getDatesFromDb() {
-		return db
-				.rawQuery(
-						"SELECT DISTINCT strftime('%d.%m.%Y', date) as date_de, date as _id "
-								+ "FROM cafeterias_menus WHERE date >= date() ORDER BY date",
-						null);
+		return db.rawQuery("SELECT DISTINCT strftime('%d.%m.%Y', date) as date_de, date as _id " + "FROM cafeterias_menus WHERE date >= date() ORDER BY date",
+				null);
 	}
 
 	/**
@@ -171,12 +160,8 @@ public class CafeteriaMenuManager {
 	 * </pre>
 	 */
 	public Cursor getTypeNameFromDb(String mensaId, String date) {
-		return db
-				.rawQuery(
-						"SELECT typeLong, group_concat(name, '\n') as names, id as _id "
-								+ "FROM cafeterias_menus WHERE mensaId = ? AND "
-								+ "date = ? GROUP BY typeLong ORDER BY typeNr, typeLong, name",
-						new String[] { mensaId, date });
+		return db.rawQuery("SELECT typeLong, group_concat(name, '\n') as names, id as _id " + "FROM cafeterias_menus WHERE mensaId = ? AND "
+				+ "date = ? GROUP BY typeLong ORDER BY typeNr, typeLong, name", new String[] { mensaId, date });
 	}
 
 	/**
@@ -210,12 +195,7 @@ public class CafeteriaMenuManager {
 		if (c.date.before(Utils.getDate("2012-01-01"))) {
 			throw new Exception("Invalid date.");
 		}
-		db.execSQL(
-				"REPLACE INTO cafeterias_menus (id, mensaId, date, typeShort, "
-						+ "typeLong, typeNr, name) VALUES (?, ?, ?, ?, ?, ?, ?)",
-				new String[] { String.valueOf(c.id),
-						String.valueOf(c.cafeteriaId),
-						Utils.getDateString(c.date), c.typeShort, c.typeLong,
-						String.valueOf(c.typeNr), c.name });
+		db.execSQL("REPLACE INTO cafeterias_menus (id, mensaId, date, typeShort, " + "typeLong, typeNr, name) VALUES (?, ?, ?, ?, ?, ?, ?)", new String[] {
+				String.valueOf(c.id), String.valueOf(c.cafeteriaId), Utils.getDateString(c.date), c.typeShort, c.typeLong, String.valueOf(c.typeNr), c.name });
 	}
 }

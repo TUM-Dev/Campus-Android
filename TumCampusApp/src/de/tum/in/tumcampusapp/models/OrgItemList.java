@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * An List of Elements of the Organisation Tree. One element is the ({@link OrgItem}).
+ * An List of Elements of the Organisation Tree. One element is the (
+ * {@link OrgItem}).
  * 
  * @author Thomas Behrens
  * @review Vincez Doelle, Daniel G. Mayr

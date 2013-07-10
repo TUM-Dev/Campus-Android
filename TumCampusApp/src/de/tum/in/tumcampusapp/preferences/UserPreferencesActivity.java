@@ -7,6 +7,7 @@ import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.activities.WizNavStartActivity;
 import de.tum.in.tumcampusapp.auxiliary.AccessTokenManager;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 
@@ -21,12 +22,22 @@ public class UserPreferencesActivity extends PreferenceActivity implements Share
 
 		// Click listener for preference list entries. Used to simulate a button
 		// (since it is not possible to add a button to the preferences screen)
-		Preference button = (Preference) findPreference("button");
-		button.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+		Preference buttonToken = (Preference) findPreference("button_token");
+		buttonToken.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference arg0) {
 				// Querys for a access token from TUMOnline
 				accessTokenManager.setupAccessToken();
+				return true;
+			}
+		});
+		Preference buttonWizzard = (Preference) findPreference("button_wizzard");
+		buttonWizzard.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+			@Override
+			public boolean onPreferenceClick(Preference arg0) {
+				finish();
+				Intent intent = new Intent(UserPreferencesActivity.this, WizNavStartActivity.class);
+				startActivity(intent);
 				return true;
 			}
 		});

@@ -21,13 +21,18 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".activities.StartActivity"
+            android:name=".activities.StartupActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".activities.StartActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/app_name" >
         </activity>
         <activity
             android:name=".activities.generic.MockActivity"
@@ -188,6 +193,21 @@
             android:name=".activities.OrganisationDetailsActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/organisation_details" >
+        </activity>
+        <activity
+            android:name=".activities.WizNavStartActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/startup_wizzard" >
+        </activity>
+        <activity
+            android:name=".activities.WizNavNextActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/startup_wizzard" >
+        </activity>
+        <activity
+            android:name=".activities.WizNavDoneActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/startup_wizzard" >
         </activity>
 
         <service

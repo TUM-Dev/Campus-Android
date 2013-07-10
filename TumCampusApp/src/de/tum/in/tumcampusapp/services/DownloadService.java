@@ -95,8 +95,8 @@ public class DownloadService extends IntentService {
 		nm.downloadFromExternal(force);
 		return true;
 	}
-	
-	public boolean downloadOrganisations(boolean force) throws Exception{
+
+	public boolean downloadOrganisations(boolean force) throws Exception {
 		OrganisationManager lm = new OrganisationManager(this);
 		String accessToken = PreferenceManager.getDefaultSharedPreferences(this).getString(Const.ACCESS_TOKEN, null);
 

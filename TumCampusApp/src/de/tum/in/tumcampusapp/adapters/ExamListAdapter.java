@@ -59,8 +59,7 @@ public class ExamListAdapter extends BaseAdapter {
 
 		// find and init UI
 		if (convertView == null) {
-			convertView = mInflater.inflate(R.layout.activity_grades_listview,
-					null);
+			convertView = mInflater.inflate(R.layout.activity_grades_listview, null);
 			holder = new ViewHolder();
 			holder.tvName = (TextView) convertView.findViewById(R.id.name);
 			holder.tvGrade = (TextView) convertView.findViewById(R.id.grade);
@@ -76,17 +75,10 @@ public class ExamListAdapter extends BaseAdapter {
 		if (exam != null) {
 			holder.tvName.setText(exam.getCourse());
 			holder.tvGrade.setText(exam.getGrade());
-			holder.tvDetails1.setText(context.getString(R.string.date) + ": "
-					+ exam.getDate() + ", "
-					+ context.getString(R.string.semester) + ": "
-					+ exam.getSemester() + ", "
-					+ context.getString(R.string.credits) + ": "
-					+ exam.getCredits());
-			holder.tvDetails2
-					.setText(context.getString(R.string.examiner) + ": "
-							+ exam.getExaminer() + ", "
-							+ context.getString(R.string.mode) + ": "
-							+ exam.getModus());
+			holder.tvDetails1.setText(context.getString(R.string.date) + ": " + exam.getDate() + ", " + context.getString(R.string.semester) + ": "
+					+ exam.getSemester() + ", " + context.getString(R.string.credits) + ": " + exam.getCredits());
+			holder.tvDetails2.setText(context.getString(R.string.examiner) + ": " + exam.getExaminer() + ", " + context.getString(R.string.mode) + ": "
+					+ exam.getModus());
 		}
 
 		return convertView;

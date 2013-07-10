@@ -36,7 +36,8 @@ public class OrganisationManager {
 	/**
 	 * Look if the xml-File has to get updated
 	 * 
-	 * @return true (if xml-File is older than 1 week or doesn't exist), false (if xml-File is newer than 1 week)
+	 * @return true (if xml-File is older than 1 week or doesn't exist), false
+	 *         (if xml-File is newer than 1 week)
 	 */
 	public boolean needSync() {
 
@@ -48,7 +49,8 @@ public class OrganisationManager {
 			return true;
 		}
 
-		// does file exist? is it a file? is it a xml token error or the real wanted file?
+		// does file exist? is it a file? is it a xml token error or the real
+		// wanted file?
 		if (!xmlOrgFile.exists() || !xmlOrgFile.isFile() || !(xmlOrgFile.length() > 100000)) {
 			return true;
 		}

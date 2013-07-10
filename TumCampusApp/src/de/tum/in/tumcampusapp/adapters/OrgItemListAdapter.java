@@ -12,8 +12,8 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.models.OrgItem;
 
 /**
- * Adapterclass for {@OrgItemList}. The purpose is to get Items from the list and set them into the
- * Textview
+ * Adapterclass for {@OrgItemList}. The purpose is to get Items
+ * from the list and set them into the Textview
  * 
  * @author Thomas Behrens
  * @review Vincez Doelle, Daniel G. Mayr

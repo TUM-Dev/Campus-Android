@@ -18,7 +18,7 @@ public class TimetableActivity extends ActivityForAccessingTumOnline {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		timetable = (TextView) findViewById(R.id.timetable);
-		
+
 		super.requestFetch();
 	}
 

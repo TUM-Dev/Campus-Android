@@ -1,32 +1,27 @@
-<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/tableLayout1"
     android:layout_width="match_parent"
+    android:padding="@dimen/padding_default"
     android:layout_height="match_parent"
-    android:shrinkColumns="*"
-    android:stretchColumns="*" >
-
-    <TableRow
-        android:id="@+id/tableRow1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal" >
+    android:orientation="vertical" >
 
         <TextView
-            android:id="@+id/tvSucc"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/configured" />
-    </TableRow>
-
-     <TableRow
-        android:id="@+id/tableRow3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-		 
-         <Button android:text="@string/button_done"
-        android:onClick="onClickDone"
+        style="?android:attr/listSeparatorTextViewStyle"
+        android:layout_height="wrap_content"
+        android:text="Finish"
+        android:textColor="@color/text_light_gray" />
+        
+    <TextView
+        android:id="@+id/tvSucc"
+        android:padding="@dimen/padding_default"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        />
-     </TableRow>
-</TableLayout>
+        android:text="@string/configured" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="onClickDone"
+        android:text="Go to TUM Campus App" />
+
+</LinearLayout>

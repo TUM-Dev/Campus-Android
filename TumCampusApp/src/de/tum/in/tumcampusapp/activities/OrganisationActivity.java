@@ -49,16 +49,25 @@ import de.tum.in.tumcampusapp.preferences.UserPreferencesActivity;
  */
 public class OrganisationActivity extends Activity implements OnClickListener {
 
-	/** To show at start the highest Organisation level (The highest Organisations are child of "Organisation 1" = TUM) */
+	/**
+	 * To show at start the highest Organisation level (The highest
+	 * Organisations are child of "Organisation 1" = TUM)
+	 */
 	private static final String TOP_LEVEL_ORG = "1";
 
-	/** language is "de"->German or "en"->English depending on the system language */
+	/**
+	 * language is "de"->German or "en"->English depending on the system
+	 * language
+	 */
 	private static String language;
 
 	/** orgId is the ID of the organisation you click on */
 	private String orgId;
 
-	/** parentId is the ID of the parent organisation, of which the sub-organisations are showed */
+	/**
+	 * parentId is the ID of the parent organisation, of which the
+	 * sub-organisations are showed
+	 */
 	private String parentId;
 
 	/** orgName is the name of the parent organisation, whose folder is showed */
@@ -121,10 +130,10 @@ public class OrganisationActivity extends Activity implements OnClickListener {
 		// first: show the first level of the tree (including the faculties)
 		showItems(parentId);
 
-		// check if internet is connected, show warning, that details cannot be shown
+		// check if internet is connected, show warning, that details cannot be
+		// shown
 		if (!Utils.isConnected(this)) {
-			Utils.showLongCenteredToast(this,
-					getString(R.string.warning_no_internet_connection_for_organisation_details));
+			Utils.showLongCenteredToast(this, getString(R.string.warning_no_internet_connection_for_organisation_details));
 		}
 
 	}
@@ -132,7 +141,8 @@ public class OrganisationActivity extends Activity implements OnClickListener {
 	private File getOrgFile() {
 
 		if (xmlOrgFile == null) {
-			// File linking to SD-card to a xml, that contains the whole organisation-tree
+			// File linking to SD-card to a xml, that contains the whole
+			// organisation-tree
 			try {
 				xmlOrgFile = FileUtils.getFileOnSD(Const.ORGANISATIONS, "org.xml");
 			} catch (Exception e) {
@@ -141,19 +151,19 @@ public class OrganisationActivity extends Activity implements OnClickListener {
 				return null;
 			}
 
-			// check if XML file exists and if it is bigger than 100kB (it is approximately 317kb, if the import isn't
+			// check if XML file exists and if it is bigger than 100kB (it is
+			// approximately 317kb, if the import isn't
 			// "wrong token")
-			// if no valid XML file -> set Token, Download XML data and start 'Organisations' again
+			// if no valid XML file -> set Token, Download XML data and start
+			// 'Organisations' again
 			if (!xmlOrgFile.exists() || !xmlOrgFile.isFile() || !(xmlOrgFile.length() > 100000)) {
 
 				// accessToken for download access
-				String accessToken = PreferenceManager.getDefaultSharedPreferences(this).getString(Const.ACCESS_TOKEN,
-						null);
+				String accessToken = PreferenceManager.getDefaultSharedPreferences(this).getString(Const.ACCESS_TOKEN, null);
 
 				// if no token show toast
 				if (accessToken == null) {
-					Dialogs.showIntentSwitchDialog(this, this, getString(R.string.dialog_access_token_missing),
-							new Intent(this, UserPreferencesActivity.class));
+					Dialogs.showIntentSwitchDialog(this, this, getString(R.string.dialog_access_token_missing), new Intent(this, UserPreferencesActivity.class));
 				}
 
 				// if not connected show toast
@@ -163,21 +173,26 @@ public class OrganisationActivity extends Activity implements OnClickListener {
 				}
 
 				try {
-					// download xml file to "#sd-card#/tumcampus/organisations/org.xml"
+					// download xml file to
+					// "#sd-card#/tumcampus/organisations/org.xml"
 					OrganisationManager orgManager = new OrganisationManager(this);
 					orgManager.downloadFromExternal(false, accessToken);
 				} catch (Exception e) {
 					Log.d("EXCEPTION", e.getMessage());
 					e.printStackTrace();
 				}
-				// call this function recursive, so it should not be null and return the file
+				// call this function recursive, so it should not be null and
+				// return the file
 				return getOrgFile();
 			}
 		}
 		return xmlOrgFile;
 	}
 
-	/** SAX-Parsing the org.xml-File to get Information for the Jump in the Organisation Structure */
+	/**
+	 * SAX-Parsing the org.xml-File to get Information for the Jump in the
+	 * Organisation Structure
+	 */
 	private void buildDocument() {
 		// (sax) dom parsing
 		DocumentBuilderFactory docBuilderFactory;
@@ -195,9 +210,11 @@ public class OrganisationActivity extends Activity implements OnClickListener {
 	}
 
 	/**
-	 * Show all items in a certain layer having a parent element with parent_id = parent.
+	 * Show all items in a certain layer having a parent element with parent_id
+	 * = parent.
 	 * 
-	 * @param parent all items with the same parent
+	 * @param parent
+	 *            all items with the same parent
 	 * @throws ParserConfigurationException
 	 * @throws IOException
 	 * @throws SAXException
@@ -220,7 +237,8 @@ public class OrganisationActivity extends Activity implements OnClickListener {
 
 		OrgItemList organisationList = new OrgItemList();
 
-		// go through the XML file and give each organisation its Id, German name, English name and parent-Id
+		// go through the XML file and give each organisation its Id, German
+		// name, English name and parent-Id
 		for (int i = 0; i < nodeList.getLength(); i++) {
 
 			Node node = nodeList.item(i);
@@ -229,10 +247,12 @@ public class OrganisationActivity extends Activity implements OnClickListener {
 			// get the parent ID of the current item
 			String itemParentId = getValue(node, "parent");
 
-			// is this element one we are searching for? (has the parentId of the clicked Element)
+			// is this element one we are searching for? (has the parentId of
+			// the clicked Element)
 			if (itemParentId.contentEquals(parent)) {
 
-				// get the value of the name_de, name_en and nr element and save them in the current oItem
+				// get the value of the name_de, name_en and nr element and save
+				// them in the current oItem
 				oItem.setId(getValue(node, "nr"));
 				oItem.setNameDe(getValue(node, "name_de"));
 				oItem.setNameEn(getValue(node, "name_en"));
@@ -252,7 +272,8 @@ public class OrganisationActivity extends Activity implements OnClickListener {
 				Object o = lvOrg.getItemAtPosition(position);
 				OrgItem org = (OrgItem) o;
 
-				// look if no suborganisation exists, and if not make bundle and start OrganisationDetails
+				// look if no suborganisation exists, and if not make bundle and
+				// start OrganisationDetails
 				if (!existSuborganisation(org.getId())) {
 					Bundle bundle = new Bundle();
 					bundle.putString(Const.ORG_PARENT_ID, org.getParentId());
@@ -287,7 +308,8 @@ public class OrganisationActivity extends Activity implements OnClickListener {
 	}
 
 	/**
-	 * Returns true if there are one or more elements in the organisation tree inside this organisation
+	 * Returns true if there are one or more elements in the organisation tree
+	 * inside this organisation
 	 * 
 	 * @param organisationId
 	 * @return
@@ -306,7 +328,8 @@ public class OrganisationActivity extends Activity implements OnClickListener {
 			// get the parentId of the element
 			String itemParentId = getValue(organisationItem, "parent");
 
-			// if there is any item with the parentId of the id return true --> there is at least one suborganisation
+			// if there is any item with the parentId of the id return true -->
+			// there is at least one suborganisation
 			// existing
 			if (itemParentId.contentEquals(organisationId)) {
 				return true;
@@ -330,8 +353,10 @@ public class OrganisationActivity extends Activity implements OnClickListener {
 	/**
 	 * Function that gets the Value out of a Node with a special name
 	 * 
-	 * @param item = Node that gets evaluated
-	 * @param type = Type of node (e.g. parent, id, nameDe)
+	 * @param item
+	 *            = Node that gets evaluated
+	 * @param type
+	 *            = Type of node (e.g. parent, id, nameDe)
 	 */
 	public String getValue(Node item, String type) {
 		Element elem = (Element) item;
@@ -345,7 +370,8 @@ public class OrganisationActivity extends Activity implements OnClickListener {
 	}
 
 	/**
-	 * Searches for the parentId of an element, if it is already in the highest layer, it returns 1.
+	 * Searches for the parentId of an element, if it is already in the highest
+	 * layer, it returns 1.
 	 * 
 	 * @param parentId
 	 * @return
@@ -367,10 +393,12 @@ public class OrganisationActivity extends Activity implements OnClickListener {
 		for (int i = 0; i < organisationList.getLength(); i++) {
 			Node organisationItem = organisationList.item(i);
 
-			// go through every id and look if it there is any equal in any parent-Id field
+			// go through every id and look if it there is any equal in any
+			// parent-Id field
 			String itemId = getValue(organisationItem, "nr");
 
-			// if there is an organisation that has the given parentId as organisationId
+			// if there is an organisation that has the given parentId as
+			// organisationId
 			// make a parent element and return it
 			if (itemId.equals(parentId)) {
 
@@ -409,7 +437,8 @@ public class OrganisationActivity extends Activity implements OnClickListener {
 	}
 
 	/**
-	 * A click on the BackButton should show the parent class or go back to the main menu
+	 * A click on the BackButton should show the parent class or go back to the
+	 * main menu
 	 * 
 	 * @see android.app.Activity#onKeyDown(int, android.view.KeyEvent)
 	 */

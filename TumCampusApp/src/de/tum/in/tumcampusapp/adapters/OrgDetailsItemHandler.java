@@ -8,8 +8,9 @@ import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.OrgDetailsItem;
 
 /**
- * Class that handles an OrgDetailsObject and SAX-Parses the XML containing such Objects The parsed Object has no child
- * Objects (but can be implemented also with child Objects)
+ * Class that handles an OrgDetailsObject and SAX-Parses the XML containing such
+ * Objects The parsed Object has no child Objects (but can be implemented also
+ * with child Objects)
  * 
  * @author Thomas Behrens
  * @review Vincenz Doelle, Daniel G. Mayr
@@ -36,11 +37,10 @@ public class OrgDetailsItemHandler extends DefaultHandler {
 	@Override
 	public void startElement(String namespaceURI, String localName, String qName, Attributes atts) {
 		// only buffer interesting tags
-		if (localName.equals("orgUnitID") || localName.equals("orgUnitName") || localName.equals("orgUnitCode")
-				|| localName.equals("orgUnitDescription") || localName.equals("contactName")
-				|| localName.equals("street") || localName.equals("locality") || localName.equals("pcode")
-				|| localName.equals("country") || localName.equals("telephone") || localName.equals("fax")
-				|| localName.equals("email") || localName.equals("webLink") || localName.equals("subBlock")) {
+		if (localName.equals("orgUnitID") || localName.equals("orgUnitName") || localName.equals("orgUnitCode") || localName.equals("orgUnitDescription")
+				|| localName.equals("contactName") || localName.equals("street") || localName.equals("locality") || localName.equals("pcode")
+				|| localName.equals("country") || localName.equals("telephone") || localName.equals("fax") || localName.equals("email")
+				|| localName.equals("webLink") || localName.equals("subBlock")) {
 			buff = new StringBuffer("");
 			buffering = true;
 			// to store first attribute till end tag
@@ -51,11 +51,10 @@ public class OrgDetailsItemHandler extends DefaultHandler {
 	@Override
 	public void endElement(String namespaceURI, String localName, String qName) {
 		// end buffer of interesting tags to handle their content
-		if (localName.equals("orgUnitID") || localName.equals("orgUnitName") || localName.equals("orgUnitCode")
-				|| localName.equals("orgUnitDescription") || localName.equals("contactName")
-				|| localName.equals("street") || localName.equals("locality") || localName.equals("pcode")
-				|| localName.equals("country") || localName.equals("telephone") || localName.equals("fax")
-				|| localName.equals("email") || localName.equals("webLink") || localName.equals("subBlock")) {
+		if (localName.equals("orgUnitID") || localName.equals("orgUnitName") || localName.equals("orgUnitCode") || localName.equals("orgUnitDescription")
+				|| localName.equals("contactName") || localName.equals("street") || localName.equals("locality") || localName.equals("pcode")
+				|| localName.equals("country") || localName.equals("telephone") || localName.equals("fax") || localName.equals("email")
+				|| localName.equals("webLink") || localName.equals("subBlock")) {
 			buffering = false;
 
 			// String-Switch:

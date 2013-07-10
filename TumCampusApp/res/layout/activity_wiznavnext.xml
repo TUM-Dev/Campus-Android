@@ -1,9 +1,9 @@
-<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/tableLayout1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:shrinkColumns="*"
-    android:stretchColumns="*" >
+    android:orientation="vertical"
+    android:padding="@dimen/padding_default" >
 
     <include
         android:layout_width="fill_parent"
@@ -29,55 +29,36 @@
         layout="@layout/layout_no_token"
         android:visibility="gone" />
 
-    <TableRow
-        android:id="@+id/tableRow1"
+    <TextView
+        style="?android:attr/listSeparatorTextViewStyle"
+        android:layout_height="wrap_content"
+        android:text="Step 2"
+        android:textColor="@color/text_light_gray" />
+
+    <TextView
+        android:id="@+id/tvSucc"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal" >
+        android:padding="@dimen/padding_default"
+        android:text="@string/access_token_generated" />
 
-        <TextView
-            android:id="@+id/tvSucc"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/access_token_generated" />
-    </TableRow>
-
-    <TableRow
-        android:id="@+id/tableRow2"
+    <TextView
+        android:id="@+id/tvBrowse"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:padding="@dimen/padding_default"
+        android:text="link" />
 
-        <TextView
-            android:id="@+id/tvBrowse"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/access_token_generated" />
-
-    </TableRow>
-     <TableRow
-        android:id="@+id/tableRow3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
     <ImageView
         android:id="@+id/imageView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/tokenmanagement" />
-    </TableRow>
-     <TableRow
-        android:id="@+id/tableRow4"
+
+    <Button
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-		 
-         <Button android:text="@string/button_next"
+        android:layout_height="wrap_content"
         android:onClick="onClickNext"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        />
-         <Button android:text="@string/button_close"
-        android:onClick="onClickClose"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        />
-     </TableRow>
-</TableLayout>
+        android:text="@string/button_next" />
+
+</LinearLayout>

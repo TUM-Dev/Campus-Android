@@ -32,9 +32,7 @@ public class CafeteriaManager {
 	 */
 	public static Cafeteria getFromJson(JSONObject json) throws JSONException {
 
-		return new Cafeteria(json.getInt(Const.JSON_ID),
-				json.getString(Const.JSON_NAME),
-				json.getString(Const.JSON_ANSCHRIFT));
+		return new Cafeteria(json.getInt(Const.JSON_ID), json.getString(Const.JSON_NAME), json.getString(Const.JSON_ANSCHRIFT));
 	}
 
 	/**
@@ -72,8 +70,7 @@ public class CafeteriaManager {
 
 		String url = "http://lu32kap.typo3.lrz.de/mensaapp/exportDB.php";
 
-		JSONArray jsonArray = Utils.downloadJson(url).getJSONArray(
-				Const.JSON_MENSA_MENSEN);
+		JSONArray jsonArray = Utils.downloadJson(url).getJSONArray(Const.JSON_MENSA_MENSEN);
 		removeCache();
 
 		// write cafeterias into database, transaction = speedup
@@ -98,11 +95,8 @@ public class CafeteriaManager {
 	 * </pre>
 	 */
 	public Cursor getAllFromDb(String filter) {
-		return db
-				.rawQuery(
-						"SELECT name, address, id as _id FROM cafeterias WHERE name LIKE ? OR address LIKE ? "
-								+ "ORDER BY address like '%Garching%' DESC, name",
-						new String[] { filter, filter });
+		return db.rawQuery("SELECT name, address, id as _id FROM cafeterias WHERE name LIKE ? OR address LIKE ? "
+				+ "ORDER BY address like '%Garching%' DESC, name", new String[] { filter, filter });
 	}
 
 	/**
@@ -130,8 +124,6 @@ public class CafeteriaManager {
 			throw new Exception("Invalid name.");
 		}
 
-		db.execSQL(
-				"REPLACE INTO cafeterias (id, name, address) VALUES (?, ?, ?)",
-				new String[] { String.valueOf(c.id), c.name, c.address });
+		db.execSQL("REPLACE INTO cafeterias (id, name, address) VALUES (?, ?, ?)", new String[] { String.valueOf(c.id), c.name, c.address });
 	}
 }

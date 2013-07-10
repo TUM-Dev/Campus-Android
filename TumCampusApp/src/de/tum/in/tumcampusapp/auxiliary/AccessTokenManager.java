@@ -38,7 +38,7 @@ public class AccessTokenManager implements OnClickListener {
 		// it is only one tag in that xml, let's do a regex pattern
 		return strTokenXml.substring(strTokenXml.indexOf("<token>") + "<token>".length(), strTokenXml.indexOf("</token>"));
 	}
-	
+
 	// TODO Test this method
 	private static boolean isAccessTokenConfirmed(String lrz_id) {
 		TUMOnlineRequest request = new TUMOnlineRequest("isTokenConfirmed");

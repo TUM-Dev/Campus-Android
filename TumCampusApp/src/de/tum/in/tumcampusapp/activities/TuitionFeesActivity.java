@@ -24,7 +24,7 @@ public class TuitionFeesActivity extends ActivityForAccessingTumOnline implement
 	private TextView amountTextView;
 	private TextView deadlineTextView;
 	private TextView semesterTextView;
-	
+
 	/**
 	 * tuition information
 	 */

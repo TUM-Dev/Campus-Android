@@ -8,7 +8,7 @@
             android:title="@string/lrz_id" />
 
         <Preference
-            android:key="button"
+            android:key="button_token"
             android:summary="@string/generate_tumonline_token_detail"
             android:title="@string/generate_tumonline_token" />
     </PreferenceCategory>
@@ -29,6 +29,12 @@
             android:key="role"
             android:summary="@string/role_summary"
             android:title="@string/role" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/extras" >
+        <Preference
+            android:key="button_wizzard"
+            android:summary="@string/open_wizzard_detail"
+            android:title="@string/open_wizzard" />
     </PreferenceCategory>
 
 </PreferenceScreen>

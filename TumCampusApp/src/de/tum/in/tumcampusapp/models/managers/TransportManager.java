@@ -4,7 +4,6 @@ import java.net.URLEncoder;
 import java.util.NoSuchElementException;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
@@ -85,7 +84,7 @@ public class TransportManager {
 	 * </pre>
 	 */
 	public Cursor getDeparturesFromExternal(String location) throws Exception {
-		
+
 		String baseUrl = "http://query.yahooapis.com/v1/public/yql?format=json&q=";
 		// ISO needed for mvv
 		String lookupUrl = "http://www.mvg-live.de/ims/dfiStaticAnzeige.svc?haltestelle=" + URLEncoder.encode(location, "ISO-8859-1");
@@ -130,7 +129,7 @@ public class TransportManager {
 
 		JSONObject jsonObj = Utils.downloadJson(baseUrl + query).getJSONObject("query");
 		JSONArray jsonArray = new JSONArray();
-		
+
 		try {
 			Object obj = jsonObj.getJSONObject(Const.JSON_RESULTS).get("a");
 			if (obj instanceof JSONArray) {

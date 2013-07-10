@@ -39,10 +39,10 @@ public class TransportationActivity extends Activity implements OnItemClickListe
 	private TextView infoTextView;
 	private ListView listViewResults;
 	private ListView listViewSuggestionsAndSaved = null;
-	
+
 	private RelativeLayout progressLayout;
 	private RelativeLayout errorLayout;
-	
+
 	private EditText searchTextField;
 	private TransportManager transportaionManager;
 
@@ -166,7 +166,7 @@ public class TransportationActivity extends Activity implements OnItemClickListe
 
 		progressLayout.setVisibility(View.VISIBLE);
 		infoTextView.setVisibility(View.GONE);
-		
+
 		if (!Utils.isConnected(this)) {
 			progressLayout.setVisibility(View.GONE);
 			errorLayout.setVisibility(View.VISIBLE);
@@ -269,7 +269,7 @@ public class TransportationActivity extends Activity implements OnItemClickListe
 			Toast.makeText(this, R.string.no_internet_connection, Toast.LENGTH_SHORT).show();
 			return;
 		}
-		
+
 		new Thread(new Runnable() {
 			int message;
 

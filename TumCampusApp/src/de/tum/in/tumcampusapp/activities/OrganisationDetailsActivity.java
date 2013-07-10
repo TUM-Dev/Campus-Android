@@ -62,21 +62,24 @@ public class OrganisationDetailsActivity extends Activity implements TUMOnlineRe
 	@Override
 	public void onStart() {
 		super.onStart();
-		// if there is a call of OrganisationDetails without an id (should not be possible)
+		// if there is a call of OrganisationDetails without an id (should not
+		// be possible)
 		if (orgId == null) {
 			Toast.makeText(this, getString(R.string.invalid_organisation), Toast.LENGTH_LONG).show();
 			return;
 		}
 
 		// set the name of the organisation as heading (TextView tvCaption)
-		// only load the details if the details page is new and it isn't a return from a link
+		// only load the details if the details page is new and it isn't a
+		// return from a link
 		TextView tvCaption = (TextView) findViewById(R.id.tvCaption);
 		if (tvCaption.getText().toString().compareTo(orgName) != 0) {
 
 			// set the new organisation name in the heading
 			tvCaption.setText(orgName);
 
-			// Initialise the request handler and append the orgUnitID to the URL
+			// Initialise the request handler and append the orgUnitID to the
+			// URL
 			requestHandler = new TUMCampusRequest("");
 			requestHandler.setParameter("orgUnitID", orgId);
 
@@ -90,9 +93,11 @@ public class OrganisationDetailsActivity extends Activity implements TUMOnlineRe
 	}
 
 	/**
-	 * When the data has arrived call this function, parse the Data and Update the UserInterface
+	 * When the data has arrived call this function, parse the Data and Update
+	 * the UserInterface
 	 * 
-	 * @param rawResp = XML-TUMCampus-Response (String)
+	 * @param rawResp
+	 *            = XML-TUMCampus-Response (String)
 	 */
 	@Override
 	public void onFetch(String rawResponse) {
@@ -104,7 +109,8 @@ public class OrganisationDetailsActivity extends Activity implements TUMOnlineRe
 	}
 
 	/**
-	 * while fetching a TUMOnline Request an error occured this will show the error message in a toast
+	 * while fetching a TUMOnline Request an error occured this will show the
+	 * error message in a toast
 	 */
 	@Override
 	public void onFetchError(String errorReason) {
@@ -119,7 +125,8 @@ public class OrganisationDetailsActivity extends Activity implements TUMOnlineRe
 	/**
 	 * Parse XML-String into one OrgDetails-Object
 	 * 
-	 * @param rawResp = XML-String to parse
+	 * @param rawResp
+	 *            = XML-String to parse
 	 * @return OrgDetailsItem (OrgDetails Object)
 	 */
 	private static OrgDetailsItem parseOrgDetails(String rawResp) {
@@ -152,8 +159,10 @@ public class OrganisationDetailsActivity extends Activity implements TUMOnlineRe
 	/**
 	 * Helper Class that brings the Strings+Values in a GUI polished format
 	 * 
-	 * @param name Name of the Attribute
-	 * @param value Value of the Attribute
+	 * @param name
+	 *            Name of the Attribute
+	 * @param value
+	 *            Value of the Attribute
 	 * @return line with name and value
 	 */
 	private static String makeStringShowable(String name, String value) {
@@ -175,9 +184,11 @@ public class OrganisationDetailsActivity extends Activity implements TUMOnlineRe
 	}
 
 	/**
-	 * Remove various signs out of a number -> Reason: To make a direct call possible
+	 * Remove various signs out of a number -> Reason: To make a direct call
+	 * possible
 	 * 
-	 * @param punctedNumber = String can contain not numbers
+	 * @param punctedNumber
+	 *            = String can contain not numbers
 	 * @return number without special characters
 	 */
 	private static String removePunctuation(String punctedNumber) {
@@ -196,7 +207,8 @@ public class OrganisationDetailsActivity extends Activity implements TUMOnlineRe
 	/**
 	 * Show the Organisation Details to the user
 	 * 
-	 * @param organisation (= organisation detail object)
+	 * @param organisation
+	 *            (= organisation detail object)
 	 */
 	private void updateUI(OrgDetailsItem organisation) {
 
@@ -213,15 +225,19 @@ public class OrganisationDetailsActivity extends Activity implements TUMOnlineRe
 		/** organisation code */
 		stringBuffer.append(makeStringShowable(getString(R.string.abbreviation), organisation.getCode()));
 		/** description */
-		stringBuffer.append(makeStringShowable(getString(R.string.description),
-				organisation.getDescription().replace("\n", "<br>"))); // replace \n with <br> to keep passages
+		stringBuffer.append(makeStringShowable(getString(R.string.description), organisation.getDescription().replace("\n", "<br>"))); // replace
+																																		// \n
+																																		// with
+																																		// <br>
+																																		// to
+																																		// keep
+																																		// passages
 
 		/** >>Caption - Contact Data<< */
 		if ((organisation.getContactName().length() != 0) || (organisation.getContactEmail().length() != 0)
 				|| (organisation.getContactTelephone().length() != 0) || (organisation.getContactFax().length() != 0)
 				|| (organisation.getContactStreet().length() != 0) || (organisation.getContactPLZ().length() != 0)
-				|| (organisation.getContactLocality().length() != 0)
-				|| (organisation.getContactCountry().length() != 0)) {
+				|| (organisation.getContactLocality().length() != 0) || (organisation.getContactCountry().length() != 0)) {
 
 			stringBuffer.append("<br><u><b>" + getString(R.string.contact_details) + "</b></u><br>");
 		}
@@ -266,8 +282,7 @@ public class OrganisationDetailsActivity extends Activity implements TUMOnlineRe
 		/** TUMCampus link */
 		stringBuffer.append(makeStringShowable(getString(R.string.tumcampus_link), organisation.getTumCampusLink()));
 		/** GoogleMaps link */
-		stringBuffer.append(makeStringShowable(getString(R.string.googlemaps_link),
-				organisation.getContactLocationURL()));
+		stringBuffer.append(makeStringShowable(getString(R.string.googlemaps_link), organisation.getContactLocationURL()));
 
 		/** Additional information */
 		if (organisation.getAdditionalInfoCaption().length() != 0) {
@@ -284,14 +299,16 @@ public class OrganisationDetailsActivity extends Activity implements TUMOnlineRe
 	}
 
 	/**
-	 * Initialize BackButton -> On Click: Go to Organisation.java and show the Organisation Tree
+	 * Initialize BackButton -> On Click: Go to Organisation.java and show the
+	 * Organisation Tree
 	 * 
 	 * @see android.app.Activity#onKeyDown(int, android.view.KeyEvent)
 	 */
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 
-		// if button "back" is clicked -> make a new Bundle with the orgId and start Organisation-Activity
+		// if button "back" is clicked -> make a new Bundle with the orgId and
+		// start Organisation-Activity
 		if ((keyCode == KeyEvent.KEYCODE_BACK)) {
 			Bundle bundle = new Bundle();
 			bundle.putString(Const.ORG_ID, orgId);
@@ -306,6 +323,6 @@ public class OrganisationDetailsActivity extends Activity implements TUMOnlineRe
 	@Override
 	public void onCommonError(String errorReason) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }
