@@ -129,3 +129,16 @@ org.eclipse.ui.PartInitException: Could not create view: com.android.ide.eclipse
 !MESSAGE OK
 !SUBENTRY 1 unknown 0 0 2013-06-05 10:33:25.742
 !MESSAGE OK
+!SESSION 2013-07-10 08:36:48.434 -----------------------------------------------
+eclipse.buildId=v21.0.0-519525
+java.version=1.7.0_09
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=de_DE
+Framework arguments:  -product com.android.ide.eclipse.adt.package.product
+Command-line arguments:  -data C:\Users\Sascha\git\TCA-Team_NEU -os win32 -ws win32 -arch x86_64 -product com.android.ide.eclipse.adt.package.product
+
+!ENTRY com.android.ide.eclipse.adt 4 0 2013-07-10 08:37:14.433
+!MESSAGE projectOpenedWithWorkspace: failed to find manifest package for project TumCampusApp
+
+!ENTRY com.android.ide.eclipse.adt 4 0 2013-07-10 08:37:50.561
+!MESSAGE fileChanged: failed to find manifest package for project TumCampusApp
