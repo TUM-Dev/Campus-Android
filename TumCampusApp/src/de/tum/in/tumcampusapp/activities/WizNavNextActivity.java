@@ -38,7 +38,6 @@ public class WizNavNextActivity extends ActivityForAccessingTumOnline {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		super.onCreateOptionsMenu(menu);
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.menu_activity_wizzard, menu);
 		return true;
@@ -49,8 +48,8 @@ public class WizNavNextActivity extends ActivityForAccessingTumOnline {
 		switch (item.getItemId()) {
 		case R.id.action_exit:
 			finish();
-			Intent startAct = new Intent(this, StartActivity.class);
-			startActivity(startAct);
+			Intent intent = new Intent(this, StartActivity.class);
+			startActivity(intent);
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -73,5 +72,12 @@ public class WizNavNextActivity extends ActivityForAccessingTumOnline {
 		}
 
 		progressLayout.setVisibility(View.GONE);
+	}
+	
+	@Override
+	public void onBackPressed() {
+		finish();
+		Intent intent = new Intent(this, WizNavStartActivity.class);
+		startActivity(intent);
 	}
 }

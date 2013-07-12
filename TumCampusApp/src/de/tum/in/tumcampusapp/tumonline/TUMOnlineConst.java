@@ -14,4 +14,7 @@ public class TUMOnlineConst {
 
 	/** String possibly contained in response from server */
 	public static final String TOKEN_NICHT_BESTAETIGT = "Token ist nicht bestätigt oder ungültig!";
+	
+	/** String possibly contained in response from server */
+	public static final String NO_FUNCTION_RIGHTS = "Keine Rechte für Funktion";
 }

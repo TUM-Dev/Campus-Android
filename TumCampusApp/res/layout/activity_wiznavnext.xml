@@ -40,7 +40,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="@dimen/padding_default"
-        android:text="@string/access_token_generated" />
+        android:text="@string/need_to_enable" />
 
     <TextView
         android:id="@+id/tvBrowse"
@@ -51,8 +51,10 @@
 
     <ImageView
         android:id="@+id/imageView1"
-        android:layout_width="wrap_content"
+        android:paddingTop="@dimen/padding_default"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:src="@drawable/tokenmanagement" />
 
     <Button

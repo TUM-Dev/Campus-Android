@@ -16,6 +16,7 @@ public class WizNavDoneActivity extends Activity {
 	}
 
 	public void onClickDone(View view) {
+		finish();
 		Intent strtActivity = new Intent(this, StartActivity.class);
 		startActivity(strtActivity);
 	}
@@ -39,5 +40,12 @@ public class WizNavDoneActivity extends Activity {
 		default:
 			return super.onOptionsItemSelected(item);
 		}
+	}
+	
+	@Override
+	public void onBackPressed() {
+		finish();
+		Intent intent = new Intent(this, WizNavNextActivity.class);
+		startActivity(intent);
 	}
 }

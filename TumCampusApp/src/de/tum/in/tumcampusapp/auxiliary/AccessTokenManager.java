@@ -23,7 +23,7 @@ public class AccessTokenManager implements OnClickListener {
 	 *            lrz user id
 	 * @return the access token
 	 */
-	private static String generateAccessToken(String lrz_id) {
+	public String generateAccessToken(String lrz_id) {
 		// we don't have an access token yet, though we take the constructor
 		// with only one parameter to set the method
 		TUMOnlineRequest request = new TUMOnlineRequest("requestToken");
@@ -40,7 +40,7 @@ public class AccessTokenManager implements OnClickListener {
 	}
 
 	// TODO Test this method
-	private static boolean isAccessTokenConfirmed(String lrz_id) {
+	public  boolean isAccessTokenConfirmed(String lrz_id) {
 		TUMOnlineRequest request = new TUMOnlineRequest("isTokenConfirmed");
 		request.setParameter("pToken", lrz_id);
 		String strTokenXml = request.fetch();
@@ -77,11 +77,11 @@ public class AccessTokenManager implements OnClickListener {
 	 * 
 	 * @param stringLRZID
 	 */
-	private void requestAccessToken(String stringLRZID) {
+	public boolean requestAccessToken(String stringLRZID) {
 		try {
 			if (!Utils.isConnected(context)) {
 				Toast.makeText(context, R.string.no_internet_connection, Toast.LENGTH_LONG).show();
-				return;
+				return false;
 			}
 			// ok, do the request now
 			String strAccessToken = generateAccessToken(stringLRZID);
@@ -90,14 +90,25 @@ public class AccessTokenManager implements OnClickListener {
 			// save access token to preferences
 			Utils.setSetting(context, Const.ACCESS_TOKEN, strAccessToken);
 			Toast.makeText(context, context.getString(R.string.access_token_generated), Toast.LENGTH_LONG).show();
+			return true;
 
 		} catch (Exception ex) {
 			// set access token to null
 			Utils.setSetting(context, Const.ACCESS_TOKEN, null);
 			Toast.makeText(context, context.getString(R.string.access_token_wasnt_generated), Toast.LENGTH_LONG).show();
 		}
+		return false;
 	}
-
+	
+	public boolean hasValidAccessToken() {
+		String oldaccesstoken = PreferenceManager.getDefaultSharedPreferences(context).getString(Const.ACCESS_TOKEN, "");
+		if (oldaccesstoken != null && oldaccesstoken.length() > 2) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
 	public void setupAccessToken() {
 		lrzId = PreferenceManager.getDefaultSharedPreferences(context).getString(Const.LRZ_ID, "");
 		// check if lrz could be valid?

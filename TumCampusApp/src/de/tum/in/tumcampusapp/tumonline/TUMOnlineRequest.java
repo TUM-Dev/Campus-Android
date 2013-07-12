@@ -154,6 +154,7 @@ public class TUMOnlineRequest {
 
 			@Override
 			protected void onPostExecute(String result) {
+				Log.d("Result: ", result);
 				// handle result
 				if (isOnline == false) {
 					listener.onCommonError(context.getString(R.string.no_internet_connection));
@@ -166,6 +167,10 @@ public class TUMOnlineRequest {
 				} else if (result.contains(TUMOnlineConst.TOKEN_NICHT_BESTAETIGT)) {
 					// TODO Token is not valid
 					listener.onFetchError(context.getString(R.string.dialog_access_token_invalid));
+					return;
+				} else if (result.contains(TUMOnlineConst.NO_FUNCTION_RIGHTS)) {
+					// TODO Token is not valid
+					listener.onFetchError(context.getString(R.string.dialog_no_rights_function));
 					return;
 				}
 				// If there could not be found any problems return usual on

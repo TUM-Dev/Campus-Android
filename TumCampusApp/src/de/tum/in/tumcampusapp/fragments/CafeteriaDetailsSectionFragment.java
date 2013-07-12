@@ -24,7 +24,6 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
 	private String cafeteriaName;
 	private String date;
 	private View footer;
-	private TextView price;
 	private ListView listViewMenu;
 
 	public CafeteriaDetailsSectionFragment() {
@@ -37,7 +36,6 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
 
 		activity = getActivity();
 		listViewMenu = (ListView) rootView.findViewById(R.id.listView);
-		price = (TextView) rootView.findViewById(R.id.tx_price);
 
 		date = getArguments().getString(Const.DATE);
 		cafeteriaId = getArguments().getString(Const.CAFETERIA_ID);
@@ -55,8 +53,11 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
 	private void showMenueForDay() {
 		TextView textView;
 		
-		price.setText("0,00€");
-		
+		// TODO: This does not work, but the price should also be stored in the
+		// database and then added through the SimpleCursorAdapter (see
+		// underneath)
+		// price.setText("0,00€");
+
 		// opening hours
 		LocationManager lm = new LocationManager(activity);
 		textView = (TextView) footer.findViewById(android.R.id.text2);

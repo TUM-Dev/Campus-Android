@@ -101,6 +101,8 @@ public abstract class ActivityForAccessingTumOnline extends Activity implements 
 	public void onFetchError(String errorReason) {
 		Log.e(getClass().getSimpleName(), errorReason);
 		progressLayout.setVisibility(View.GONE);
+		Toast.makeText(this, errorReason, Toast.LENGTH_SHORT).show();
+		
 		// TODO Change errors to Exceptions
 		// If there is a failed token layout show this
 		if (failedTokenLayout != null) {

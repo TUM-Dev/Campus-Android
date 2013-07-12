@@ -2,7 +2,7 @@
 <resources>
 
     <string name="open_wizzard">Open Startup-Wizzard</string>
-    <string name="open_wizzard_detail">The Startup-Wizzard help you in order to set the basic preferences for accessing TUMOnline services and the layout of this App.</string>
+    <string name="open_wizzard_detail">The Startup-Wizzard helps you in order to set the basic preferences for accessing TUMOnline services and the layout of this App.</string>
     <string name="extras">Extras</string>
     <string name="no_departures_found">No departures available</string>
     <string name="no_station_found">No station found</string>
@@ -47,7 +47,7 @@
     <string name="lang">eng</string>
     <string name="app_name">TUM Campus App</string>
     <string name="action_settings">Settings</string>
-    <string name="generate_tumonline_token">Generate TUMOnline Token</string>
+    <string name="generate_tumonline_token">Generate TUMOnline-Access-Token</string>
     <string name="generate_tumonline_token_detail">Generates a token for using TUMOnline features. You
 		have to accept the token and set the corresponding permissions in
 		TUMOnline by yourself.</string>
@@ -59,9 +59,9 @@
     <string name="tum_news">TUM-News</string>
     <string name="timetable">Timetable</string>
     <string name="result_extra">Result:&#160;</string>
-    <string name="error_fetching_tumonline">		Error accessing TUMOnline.\nPlease make sure your TUMOnline Token has
+    <string name="error_fetching_tumonline">Error accessing TUMOnline.\nPlease make sure your TUMOnline-Access-Token has
 		been\nactivated and the corresponding rights are set.\n\n<b>Click here for retry.</b></string>
-    <string name="error_no_token_setup">		No TUMOnline Token was set.\nPlease set your TUMOnline Token in the\n<i>Settings</i>		screen to access TUMOnline features.\n\n<b>			Click here for the<i>Settings</i>			screen.</b></string>
+    <string name="error_no_token_setup">No TUMOnline-Access-Token was set.\nPlease set your TUMOnline-Access-Token in the\n<i>Settings</i>screen to access TUMOnline features.\n\n<b>Click here for the<i>Settings</i>screen.</b></string>
     <string name="convenience">Convenience</string>
     <string name="error_sorry">Sorry, an error appeared.</string>
     <string name="error_something_wrong">Sorry, something went wrong.</string>
@@ -86,7 +86,7 @@
     <string name="search_persons">Search persons</string>
     <string name="tumonline_password_word">TUMOnline Password</string>
     <string name="tumonline_lrz_id">LRZ Identification</string>
-    <string name="tumonline_access_token_word">TUMOnline Token</string>
+    <string name="tumonline_access_token_word">TUMOnline-Access-Token</string>
     <string name="modules">Modules</string>
     <string name="modules_act_deact">activate, deactivate</string>
     <string name="tumonline_summary">e.g. access token settings</string>
@@ -170,7 +170,7 @@
     <string name="choose_station">Please choose a station.</string>
     <string name="saved_stations">Saved stations:</string>
     <string name="search_station">Search station</string>
-    <string name="generate_token">Manually Generate Access Token</string>
+    <string name="generate_token">Manually Generate TUMOnline-Access-Token</string>
     <string name="howto">HowTo</string>
     <string name="crash_notif_ticker_text">Unexpected error, please send a report!</string>
     <string name="crash_notif_title">TUMCampus has crashed!</string>
@@ -314,10 +314,10 @@
     <string name="manual">Manual</string>
     <string name="manualpdf">manual_eng.pdf</string>
     <string name="empty_cache">Empty cache</string>
-    <string name="dialog_new_token">		Your TUMOnline Token is already set. Click<i>Yes</i>		to generate a new one. As a result the old Token becomes useless.</string>
+    <string name="dialog_new_token">Your TUMOnline-Access-Token is already set.\nClick <i>Yes</i> to generate a new one. As a result, the old Token becomes useless.</string>
     <string name="error_lrz_wrong">Your LRZ Identification is invalid</string>
-    <string name="access_token_generated">TUMOnline Token scucessfully generated</string>
-    <string name="access_token_wasnt_generated">TUMOnline Token could not be generated</string>
+    <string name="access_token_generated">TUMOnline-Access-Token successfully generated</string>
+    <string name="access_token_wasnt_generated">TUMOnline-Access-Token could not be generated</string>
     <string name="user_data">User data</string>
     <string name="tumonline_password">Password for TUMOnline</string>
     <string name="tumonline_access_token">Access token for TUMOnline</string>
@@ -350,7 +350,8 @@
     <string name="facility_categories_splitted">library,info,cafeteria_gar,cafeteria_grh,cafeteria,cafeteria_pas,cafeteria_wst</string>
     <string name="access_token">AccessToken</string>
     <string name="dialog_access_token_missing">TUMOnline-Access-Token not set</string>
-    <string name="dialog_access_token_invalid">TUMOnline-Access-Token is invalid!</string>
+    <string name="dialog_access_token_invalid">TUMOnline-Access-Token not confirmed</string>
+    <string name="dialog_no_rights_function">No rights accessing this function.</string>
     <string name="dialog_username_not_set">TUMOnline-Username is not set</string>
     <string name="dialog_password_not_set">TUMOnline-Password is not set</string>
     <string name="something_wrong">An unkown error occurred</string>
@@ -392,11 +393,12 @@
     <string name="credits">Credits</string>
     
     <string name="startup_wizzard">Startup Wizzard</string>
-	<string name="welcome_msg">Welcome to <b>TUM Campus App!</b>\nIn order to setup the app you need to provide your LRZ Id.  This Id has the following format:\n<i>xx00xxx</i> (2 letters, 2 digits, 3 letters)</string>
+	<string name="welcome_msg">Welcome to <b>TUM Campus App!</b>\n\nIn order to setup the TUMOnline access, you need to provide your <b>LRZ Identification</b>.\nThis Id has the following format:\n<i>xx00xxx</i> (2 letters, 2 digits, 3 letters)</string>
 	<string name="button_next">Next</string>
 	<string name="button_done">Done</string>
 	<string name="button_close">Close</string>
 	<string name="exit">Exit</string>
-	<string name="configured">TUM Campus App configuration successfull</string>
+	<string name="configured">TUM Campus App configuration finished successfully!</string>
+	<string name="need_to_enable">The TUMOnline-Access-Token was successfully generated. You can now enable the Token in TUMOnline.</string>
 
 </resources>
