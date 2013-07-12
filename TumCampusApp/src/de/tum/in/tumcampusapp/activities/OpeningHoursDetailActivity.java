@@ -36,11 +36,18 @@ public class OpeningHoursDetailActivity extends FragmentActivity {
 			// Create the detail fragment and add it to the activity
 			// using a fragment transaction.
 			Bundle arguments = new Bundle();
-			arguments.putString(OpeningHoursDetailFragment.ARG_ITEM_ID, getIntent().getStringExtra(OpeningHoursDetailFragment.ARG_ITEM_ID));
-			arguments.putBoolean(OpeningHoursDetailFragment.TWO_PANE, getIntent().getBooleanExtra(OpeningHoursDetailFragment.TWO_PANE, false));
+			arguments.putString(
+					OpeningHoursDetailFragment.ARG_ITEM_ID,
+					getIntent().getStringExtra(
+							OpeningHoursDetailFragment.ARG_ITEM_ID));
+			arguments.putBoolean(
+					OpeningHoursDetailFragment.TWO_PANE,
+					getIntent().getBooleanExtra(
+							OpeningHoursDetailFragment.TWO_PANE, false));
 			OpeningHoursDetailFragment fragment = new OpeningHoursDetailFragment();
 			fragment.setArguments(arguments);
-			getSupportFragmentManager().beginTransaction().add(R.id.item_detail_container, fragment).commit();
+			getSupportFragmentManager().beginTransaction()
+					.add(R.id.item_detail_container, fragment).commit();
 		}
 	}
 
@@ -55,7 +62,8 @@ public class OpeningHoursDetailActivity extends FragmentActivity {
 			//
 			// http://developer.android.com/design/patterns/navigation.html#up-vs-back
 			//
-			NavUtils.navigateUpTo(this, new Intent(this, OpeningHoursListActivity.class));
+			NavUtils.navigateUpTo(this, new Intent(this,
+					OpeningHoursListActivity.class));
 			return true;
 		}
 		return super.onOptionsItemSelected(item);

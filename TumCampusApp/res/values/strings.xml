@@ -280,8 +280,10 @@
     <string name="campus_olympiapark_gyms">Campus Olympiapark hall plan</string>
     <string name="campus_main">Main Campus</string>
     <string name="campus_weihenstephan">Campus Weihenstephan</string>
-    <string name="mvv_fast_train_net">MVV-Train-Net</string>
-    <string name="mvv_nightlines">MVV-Nightlines</string>
+    <string name="mvv_fast_train_net">MVV Train-Network</string>
+    <string name="mvv_tram">MVV Tram-Network</string>
+    <string name="mvv_entire_net">MVV Overall-Network</string>
+    <string name="mvv_nightlines">MVV Nightlines</string>
     <string name="plan_for">Plan for</string>
     <string name="plan">Plan</string>
     <string name="plans">Plans</string>
@@ -350,7 +352,7 @@
     <string name="facility_categories_splitted">library,info,cafeteria_gar,cafeteria_grh,cafeteria,cafeteria_pas,cafeteria_wst</string>
     <string name="access_token">AccessToken</string>
     <string name="dialog_access_token_missing">TUMOnline-Access-Token not set</string>
-    <string name="dialog_access_token_invalid">TUMOnline-Access-Token not confirmed</string>
+    <string name="dialog_access_token_invalid">TUMOnline-Access-Token not enabled</string>
     <string name="dialog_no_rights_function">No rights accessing this function.</string>
     <string name="dialog_username_not_set">TUMOnline-Username is not set</string>
     <string name="dialog_password_not_set">TUMOnline-Password is not set</string>
@@ -376,7 +378,7 @@
     <string name="chooseReminder">choose a reminder:</string>
     <string name="deactivated">deactivated</string>
     <string name="error">Error</string>
-    <string name="app_info_text"><b>TUM Campus App</b>\n\nThe TUM Campus App is developed by students of the Android practical course, other voluntary freelancers and chair members.
+    <string name="app_info_text"><b>TUM Campus App</b>\nThe TUM Campus App is developed by students of the Android practical course, other voluntary freelancers and chair members.
         \n\n<b>Project Management:</b>\nTUM - Computer Science/F13 Prof.Dr.Uwe Baumgarten
         \nNils T. Kannengiesser
         \n\n<b>Current Developers:</b>\nSascha Moecker,\nHaris Iltifat,\nAnas Chakfeh,\nThomas Krex,\nMarius Muntean,
@@ -390,15 +392,25 @@
 		\nNew BSD License - http://www.opensource.org/licenses/bsd-license.php
 		\n\nThe source code is available through Github and may be requested from the project manager in the most recent version.
 		\n\n22th July 2013\n</string>
-    <string name="credits">Credits</string>
+    <string name="credits">ECTS</string>
     
+    <string name="token_not_enabled">TUMOnline-Access-Token is not enabled</string>
     <string name="startup_wizzard">Startup Wizzard</string>
-	<string name="welcome_msg">Welcome to <b>TUM Campus App!</b>\n\nIn order to setup the TUMOnline access, you need to provide your <b>LRZ Identification</b>.\nThis Id has the following format:\n<i>xx00xxx</i> (2 letters, 2 digits, 3 letters)</string>
+	<string name="welcome_msg"><b>Welcome to TUM Campus App!</b>\n\nIn order to setup the TUMOnline access, you need to provide your <b>LRZ Identification</b>.\nThis Id has the following format:\n<i>xx00xxx</i> (2 letters, 2 digits, 3 letters)</string>
 	<string name="button_next">Next</string>
 	<string name="button_done">Done</string>
 	<string name="button_close">Close</string>
 	<string name="exit">Exit</string>
-	<string name="configured">TUM Campus App configuration finished successfully!</string>
-	<string name="need_to_enable">The TUMOnline-Access-Token was successfully generated. You can now enable the Token in TUMOnline.</string>
+	<string name="configured"><b>TUM Campus App configuration finished successfully</b>\n\nYou can start exploring the app now.</string>
+	<string name="need_to_enable"><b>The TUMOnline-Access-Token was successfully generated</b>\n\nYou can now enable the Token in TUMOnline.</string>
+	<string name="choose_color"><b>Choose you favorite color</b>\n\nYou can choose a color scheme for the TUM Campus App.</string>
+	<string name="blue">Blue</string>
+	<string name="red">Red</string>
+	<string name="green">Green</string>
+	<string name="gray">Gray</string>
+	<string name="step_1">Step 1</string>
+	<string name="step_2">Step 2</string>
+	<string name="step_3">Step 3</string>
+	<string name="finish">Finish</string>
 
 </resources>

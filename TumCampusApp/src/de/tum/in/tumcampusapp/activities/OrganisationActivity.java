@@ -133,7 +133,9 @@ public class OrganisationActivity extends Activity implements OnClickListener {
 		// check if internet is connected, show warning, that details cannot be
 		// shown
 		if (!Utils.isConnected(this)) {
-			Utils.showLongCenteredToast(this, getString(R.string.warning_no_internet_connection_for_organisation_details));
+			Utils.showLongCenteredToast(
+					this,
+					getString(R.string.warning_no_internet_connection_for_organisation_details));
 		}
 
 	}
@@ -144,9 +146,11 @@ public class OrganisationActivity extends Activity implements OnClickListener {
 			// File linking to SD-card to a xml, that contains the whole
 			// organisation-tree
 			try {
-				xmlOrgFile = FileUtils.getFileOnSD(Const.ORGANISATIONS, "org.xml");
+				xmlOrgFile = FileUtils.getFileOnSD(Const.ORGANISATIONS,
+						"org.xml");
 			} catch (Exception e) {
-				Utils.showLongCenteredToast(this, getString(R.string.no_sd_card));
+				Utils.showLongCenteredToast(this,
+						getString(R.string.no_sd_card));
 				Log.d("EXCEPTION", e.getMessage());
 				return null;
 			}
@@ -156,26 +160,33 @@ public class OrganisationActivity extends Activity implements OnClickListener {
 			// "wrong token")
 			// if no valid XML file -> set Token, Download XML data and start
 			// 'Organisations' again
-			if (!xmlOrgFile.exists() || !xmlOrgFile.isFile() || !(xmlOrgFile.length() > 100000)) {
+			if (!xmlOrgFile.exists() || !xmlOrgFile.isFile()
+					|| !(xmlOrgFile.length() > 100000)) {
 
 				// accessToken for download access
-				String accessToken = PreferenceManager.getDefaultSharedPreferences(this).getString(Const.ACCESS_TOKEN, null);
+				String accessToken = PreferenceManager
+						.getDefaultSharedPreferences(this).getString(
+								Const.ACCESS_TOKEN, null);
 
 				// if no token show toast
 				if (accessToken == null) {
-					Dialogs.showIntentSwitchDialog(this, this, getString(R.string.dialog_access_token_missing), new Intent(this, UserPreferencesActivity.class));
+					Dialogs.showIntentSwitchDialog(this, this,
+							getString(R.string.dialog_access_token_missing),
+							new Intent(this, UserPreferencesActivity.class));
 				}
 
 				// if not connected show toast
 				if (!Utils.isConnected(this)) {
-					Utils.showLongCenteredToast(this, getString(R.string.no_internet_connection));
+					Utils.showLongCenteredToast(this,
+							getString(R.string.no_internet_connection));
 					return null;
 				}
 
 				try {
 					// download xml file to
 					// "#sd-card#/tumcampus/organisations/org.xml"
-					OrganisationManager orgManager = new OrganisationManager(this);
+					OrganisationManager orgManager = new OrganisationManager(
+							this);
 					orgManager.downloadFromExternal(false, accessToken);
 				} catch (Exception e) {
 					Log.d("EXCEPTION", e.getMessage());
@@ -263,12 +274,14 @@ public class OrganisationActivity extends Activity implements OnClickListener {
 			}
 		}
 
-		lvOrg.setAdapter(new OrgItemListAdapter(OrganisationActivity.this, organisationList.getGroups()));
+		lvOrg.setAdapter(new OrgItemListAdapter(OrganisationActivity.this,
+				organisationList.getGroups()));
 
 		// action for clicks on a list-item
 		lvOrg.setOnItemClickListener(new OnItemClickListener() {
 			@Override
-			public void onItemClick(AdapterView<?> a, View v, int position, long id) {
+			public void onItemClick(AdapterView<?> a, View v, int position,
+					long id) {
 				Object o = lvOrg.getItemAtPosition(position);
 				OrgItem org = (OrgItem) o;
 
@@ -287,7 +300,8 @@ public class OrganisationActivity extends Activity implements OnClickListener {
 					}
 
 					// show organisation details
-					Intent i = new Intent(OrganisationActivity.this, OrganisationDetailsActivity.class);
+					Intent i = new Intent(OrganisationActivity.this,
+							OrganisationDetailsActivity.class);
 					i.putExtras(bundle);
 					startActivity(i);
 
@@ -318,7 +332,8 @@ public class OrganisationActivity extends Activity implements OnClickListener {
 
 		// get list of all organisations
 		NodeList organisationList = getDocument().getElementsByTagName("row");
-		Log.d("PARSING", "parsing " + organisationList.getLength() + " elements...");
+		Log.d("PARSING", "parsing " + organisationList.getLength()
+				+ " elements...");
 
 		// go through each organisation
 		for (int i = 0; i < organisationList.getLength(); i++) {
@@ -387,7 +402,8 @@ public class OrganisationActivity extends Activity implements OnClickListener {
 
 		// get all elements to parse and count them
 		NodeList organisationList = getDocument().getElementsByTagName("row");
-		Log.d("PARSING", "parsing " + organisationList.getLength() + " elements...");
+		Log.d("PARSING", "parsing " + organisationList.getLength()
+				+ " elements...");
 
 		// parse xml tree (org.xml) to find parent of an element
 		for (int i = 0; i < organisationList.getLength(); i++) {
@@ -450,7 +466,8 @@ public class OrganisationActivity extends Activity implements OnClickListener {
 			// go back to the main menu, if the user is in the highest level
 			if (parentId.equals(TOP_LEVEL_ORG)) {
 				Intent intent = new Intent(this, StartActivity.class);
-				intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+				intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+						| Intent.FLAG_ACTIVITY_SINGLE_TOP);
 				startActivity(intent);
 				return false;
 			}

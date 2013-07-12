@@ -19,7 +19,8 @@ import de.tum.in.tumcampusapp.models.managers.EventManager;
 /**
  * Activity to show events (name, location, image, etc.)
  */
-public class EventsActivity extends ActivityForDownloadingExternal implements OnItemClickListener, ViewBinder {
+public class EventsActivity extends ActivityForDownloadingExternal implements
+		OnItemClickListener, ViewBinder {
 
 	public EventsActivity() {
 		super(Const.EVENTS, R.layout.activity_events);
@@ -32,8 +33,10 @@ public class EventsActivity extends ActivityForDownloadingExternal implements On
 		SimpleCursorAdapter adapter;
 		cursor = em.getPastFromDb();
 
-		adapter = new SimpleCursorAdapter(EventsActivity.this, R.layout.activity_events_listview, cursor, cursor.getColumnNames(), new int[] { R.id.icon,
-				R.id.name, R.id.infos });
+		adapter = new SimpleCursorAdapter(EventsActivity.this,
+				R.layout.activity_events_listview, cursor,
+				cursor.getColumnNames(), new int[] { R.id.icon, R.id.name,
+						R.id.infos });
 		adapter.setViewBinder(EventsActivity.this);
 
 		ListView lv2 = (ListView) findViewById(R.id.listView);
@@ -53,7 +56,8 @@ public class EventsActivity extends ActivityForDownloadingExternal implements On
 
 		// open event details when clicking an event in the list
 		Intent intent = new Intent(this, EventsDetailsActivity.class);
-		intent.putExtra(Const.ID_EXTRA, c.getString(c.getColumnIndex(Const.ID_COLUMN)));
+		intent.putExtra(Const.ID_EXTRA,
+				c.getString(c.getColumnIndex(Const.ID_COLUMN)));
 		startActivity(intent);
 	}
 
@@ -77,8 +81,10 @@ public class EventsActivity extends ActivityForDownloadingExternal implements On
 		startManagingCursor(cursor);
 
 		if (cursor.getCount() > 0) {
-			adapter = new SimpleCursorAdapter(this, R.layout.activity_events_listview, cursor, cursor.getColumnNames(), new int[] { R.id.icon, R.id.name,
-					R.id.infos });
+			adapter = new SimpleCursorAdapter(this,
+					R.layout.activity_events_listview, cursor,
+					cursor.getColumnNames(), new int[] { R.id.icon, R.id.name,
+							R.id.infos });
 
 			adapter.setViewBinder(this);
 
@@ -107,8 +113,14 @@ public class EventsActivity extends ActivityForDownloadingExternal implements On
 			String[] weekDays = getString(R.string.week_splitted).split(",");
 
 			TextView infos = (TextView) view;
-			infos.setText(weekDays[c.getInt(c.getColumnIndex(Const.WEEKDAY_COLUMN))] + ", " + c.getString(c.getColumnIndex(Const.START_DE_COLUMN)) + " - "
-					+ c.getString(c.getColumnIndex(Const.END_DE_COLUMN)) + "\n" + c.getString(c.getColumnIndex(Const.LOCATION_COLUMN)));
+			infos.setText(weekDays[c.getInt(c
+					.getColumnIndex(Const.WEEKDAY_COLUMN))]
+					+ ", "
+					+ c.getString(c.getColumnIndex(Const.START_DE_COLUMN))
+					+ " - "
+					+ c.getString(c.getColumnIndex(Const.END_DE_COLUMN))
+					+ "\n"
+					+ c.getString(c.getColumnIndex(Const.LOCATION_COLUMN)));
 			return true;
 		}
 		return false;

@@ -21,7 +21,8 @@ public class PersonalLayoutManager {
 		float g = Color.green(colorKey) / 255f;
 		float b = Color.blue(colorKey) / 255f;
 
-		ColorMatrix cm = new ColorMatrix(new float[] { r, 0, 0, 0, 0, 0, g, 0, 0, 0, 0, 0, b, 0, 0, 0, 0, 0, 0.75f, 0, });
+		ColorMatrix cm = new ColorMatrix(new float[] { r, 0, 0, 0, 0, 0, g, 0,
+				0, 0, 0, 0, b, 0, 0, 0, 0, 0, 0.75f, 0, });
 		ColorMatrixColorFilter cf = new ColorMatrixColorFilter(cm);
 		return cf;
 	}

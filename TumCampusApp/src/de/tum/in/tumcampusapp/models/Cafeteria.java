@@ -36,6 +36,7 @@ public class Cafeteria {
 
 	@Override
 	public String toString() {
-		return "id=" + this.id + " name=" + this.name + " address=" + this.address;
+		return "id=" + this.id + " name=" + this.name + " address="
+				+ this.address;
 	}
 }

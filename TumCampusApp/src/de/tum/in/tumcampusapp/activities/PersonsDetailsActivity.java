@@ -31,7 +31,8 @@ import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequestFetchListener;
  * @review Daniel G. Mayr
  * @review Thomas Behrens
  */
-public class PersonsDetailsActivity extends ActivityForAccessingTumOnline implements TUMOnlineRequestFetchListener {
+public class PersonsDetailsActivity extends ActivityForAccessingTumOnline
+		implements TUMOnlineRequestFetchListener {
 
 	private static final String PERSONEN_DETAILS = "personenDetails";
 
@@ -57,7 +58,8 @@ public class PersonsDetailsActivity extends ActivityForAccessingTumOnline implem
 
 		Bitmap image = employee.getImage();
 		if (image == null) {
-			image = BitmapFactory.decodeResource(getResources(), R.drawable.photo_not_available);
+			image = BitmapFactory.decodeResource(getResources(),
+					R.drawable.photo_not_available);
 		}
 		imageView.setImageBitmap(image);
 
@@ -68,9 +70,11 @@ public class PersonsDetailsActivity extends ActivityForAccessingTumOnline implem
 		TextView tvDetails1 = (TextView) findViewById(R.id.tvDetails1);
 
 		// get the right gender
-		if (employee.getGender() != null && employee.getGender().equals(Person.MALE)) {
+		if (employee.getGender() != null
+				&& employee.getGender().equals(Person.MALE)) {
 			contentText.append(getString(R.string.mr) + " ");
-		} else if (employee.getGender() != null && employee.getGender().equals(Person.FEMALE)) {
+		} else if (employee.getGender() != null
+				&& employee.getGender().equals(Person.FEMALE)) {
 			contentText.append(getString(R.string.mrs) + " ");
 		}
 
@@ -94,12 +98,18 @@ public class PersonsDetailsActivity extends ActivityForAccessingTumOnline implem
 		if (groups != null) {
 			for (int i = 0; i < groups.size(); i++) {
 				if (groups.get(i) != null) {
-					contentText.appendField(getString(R.string.function), groups.get(i).getTitle());
-					contentText.appendField(getString(R.string.group), groups.get(i).getOrg() + " (" + groups.get(i).getId() + ")" + "<br />");
+					contentText.appendField(getString(R.string.function),
+							groups.get(i).getTitle());
+					contentText.appendField(getString(R.string.group), groups
+							.get(i).getOrg()
+							+ " ("
+							+ groups.get(i).getId()
+							+ ")" + "<br />");
 				}
 			}
 		}
-		tvDetails2.setText(Html.fromHtml(contentText.toString()), TextView.BufferType.SPANNABLE);
+		tvDetails2.setText(Html.fromHtml(contentText.toString()),
+				TextView.BufferType.SPANNABLE);
 
 		// start new section
 
@@ -110,35 +120,43 @@ public class PersonsDetailsActivity extends ActivityForAccessingTumOnline implem
 		// add contact information, if available
 
 		contentText.appendField(getString(R.string.email), employee.getEmail());
-		contentText.appendField(getString(R.string.homepage), employee.getBusinessContact().getHomepage());
+		contentText.appendField(getString(R.string.homepage), employee
+				.getBusinessContact().getHomepage());
 
 		List<TelSubstation> substations = employee.getTelSubstations();
 		if (substations != null) {
 			for (int i = 0; i < substations.size(); i++) {
 				if (substations.get(i) != null) {
-					contentText.appendField(getString(R.string.phone) + " " + (i + 1), substations.get(i).getNumber());
+					contentText.appendField(getString(R.string.phone) + " "
+							+ (i + 1), substations.get(i).getNumber());
 				}
 
 			}
 		}
-		contentText.appendField(getString(R.string.mobile_phone), employee.getBusinessContact().getMobilephone());
-		contentText.appendField(getString(R.string.add_info), employee.getBusinessContact().getAdditionalInfo());
-		tvDetails3.setText(Html.fromHtml(contentText.toString()), TextView.BufferType.SPANNABLE);
+		contentText.appendField(getString(R.string.mobile_phone), employee
+				.getBusinessContact().getMobilephone());
+		contentText.appendField(getString(R.string.add_info), employee
+				.getBusinessContact().getAdditionalInfo());
+		tvDetails3.setText(Html.fromHtml(contentText.toString()),
+				TextView.BufferType.SPANNABLE);
 
 		// start new section
 		contentText.clear();
 
 		TextView tvDetails4 = (TextView) findViewById(R.id.tvDetails4);
 
-		contentText.appendField(getString(R.string.office_hours), employee.getConsultationHours());
+		contentText.appendField(getString(R.string.office_hours),
+				employee.getConsultationHours());
 
 		// add all rooms
 		List<Room> rooms = employee.getRooms();
 		if (rooms != null && rooms.size() > 0) {
-			contentText.appendField(getString(R.string.room), rooms.get(0).getLocation() + " (" + rooms.get(0).getNumber() + ")");
+			contentText.appendField(getString(R.string.room), rooms.get(0)
+					.getLocation() + " (" + rooms.get(0).getNumber() + ")");
 		}
 
-		tvDetails4.setText(Html.fromHtml(contentText.toString()), TextView.BufferType.SPANNABLE);
+		tvDetails4.setText(Html.fromHtml(contentText.toString()),
+				TextView.BufferType.SPANNABLE);
 
 	}
 
@@ -152,7 +170,8 @@ public class PersonsDetailsActivity extends ActivityForAccessingTumOnline implem
 		// make sure not both person is not null (error occurred)
 		if (person == null) {
 			// no query text specified
-			Toast.makeText(this, getString(R.string.no_person_set), Toast.LENGTH_LONG).show();
+			Toast.makeText(this, getString(R.string.no_person_set),
+					Toast.LENGTH_LONG).show();
 			return;
 		}
 		// Sets the current name as a title

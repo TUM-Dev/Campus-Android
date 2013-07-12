@@ -76,8 +76,10 @@ public class Employee extends Person implements Serializable {
 	}
 
 	public Bitmap getImage() {
-		byte[] imageAsBytes = Base64.decode(imageData.getBytes(), Base64.DEFAULT);
-		return BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length);
+		byte[] imageAsBytes = Base64.decode(imageData.getBytes(),
+				Base64.DEFAULT);
+		return BitmapFactory.decodeByteArray(imageAsBytes, 0,
+				imageAsBytes.length);
 	}
 
 	public String getImageData() {

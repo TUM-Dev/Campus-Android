@@ -19,7 +19,8 @@ import de.tum.in.tumcampusapp.models.managers.FeedItemManager;
 /**
  * Activity to show RSS-feeds and their news items
  */
-public class FeedsDetailsActivity extends ActivityForDownloadingExternal implements ViewBinder, OnItemClickListener {
+public class FeedsDetailsActivity extends ActivityForDownloadingExternal
+		implements ViewBinder, OnItemClickListener {
 	private static String feedId;
 	private static String feedName;
 
@@ -48,7 +49,8 @@ public class FeedsDetailsActivity extends ActivityForDownloadingExternal impleme
 			Cursor cursor = (Cursor) av.getAdapter().getItem(position);
 			startManagingCursor(cursor);
 
-			String link = cursor.getString(cursor.getColumnIndex(Const.LINK_COLUMN));
+			String link = cursor.getString(cursor
+					.getColumnIndex(Const.LINK_COLUMN));
 
 			Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
 			startActivity(intent);
@@ -83,8 +85,10 @@ public class FeedsDetailsActivity extends ActivityForDownloadingExternal impleme
 		startManagingCursor(cursor);
 
 		if (cursor.getCount() > 0) {
-			SimpleCursorAdapter adapter = new SimpleCursorAdapter(this, R.layout.activity_feeds_listview, cursor, cursor.getColumnNames(), new int[] {
-					R.id.icon, R.id.title, R.id.description });
+			SimpleCursorAdapter adapter = new SimpleCursorAdapter(this,
+					R.layout.activity_feeds_listview, cursor,
+					cursor.getColumnNames(), new int[] { R.id.icon, R.id.title,
+							R.id.description });
 
 			adapter.setViewBinder(this);
 			ListView list = (ListView) findViewById(R.id.listView);

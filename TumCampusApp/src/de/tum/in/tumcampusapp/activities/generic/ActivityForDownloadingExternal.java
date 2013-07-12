@@ -36,7 +36,8 @@ public class ActivityForDownloadingExternal extends Activity {
 
 			String action = intent.getStringExtra(Const.ACTION_EXTRA);
 			if (action.length() != 0) {
-				Log.i(activity.getClass().getSimpleName(), "Broadcast received  <" + action + ">");
+				Log.i(activity.getClass().getSimpleName(),
+						"Broadcast received  <" + action + ">");
 				if (action.equals(Const.COMPLETED)) {
 					progressLayout.setVisibility(View.GONE);
 					errorLayout.setVisibility(View.GONE);
@@ -46,13 +47,16 @@ public class ActivityForDownloadingExternal extends Activity {
 					onStart();
 				}
 				if (action.equals(Const.WARNING)) {
-					String message = intent.getStringExtra(Const.WARNING_MESSAGE);
-					Toast.makeText(activity, message, Toast.LENGTH_SHORT).show();
+					String message = intent
+							.getStringExtra(Const.WARNING_MESSAGE);
+					Toast.makeText(activity, message, Toast.LENGTH_SHORT)
+							.show();
 					progressLayout.setVisibility(View.GONE);
 				}
 				if (action.equals(Const.ERROR)) {
 					String message = intent.getStringExtra(Const.ERROR_MESSAGE);
-					Toast.makeText(activity, message, Toast.LENGTH_SHORT).show();
+					Toast.makeText(activity, message, Toast.LENGTH_SHORT)
+							.show();
 					progressLayout.setVisibility(View.GONE);
 					errorLayout.setVisibility(View.VISIBLE);
 				}
@@ -79,7 +83,8 @@ public class ActivityForDownloadingExternal extends Activity {
 		errorLayout = (RelativeLayout) findViewById(R.id.error_layout);
 
 		if (progressLayout == null || errorLayout == null) {
-			Log.e(getClass().getSimpleName(), "Cannot find layouts, did you forget to provide error and progress layouts?");
+			Log.e(getClass().getSimpleName(),
+					"Cannot find layouts, did you forget to provide error and progress layouts?");
 		}
 	}
 
@@ -87,7 +92,8 @@ public class ActivityForDownloadingExternal extends Activity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.menu_activity_for_accessing_tum_online, menu);
+		getMenuInflater().inflate(
+				R.menu.menu_activity_for_accessing_tum_online, menu);
 		return true;
 	}
 
@@ -129,7 +135,8 @@ public class ActivityForDownloadingExternal extends Activity {
 			service.putExtra(Const.FORCE_DOWNLOAD, forceDownload);
 			startService(service);
 		} else {
-			Toast.makeText(this, R.string.no_internet_connection, Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, R.string.no_internet_connection,
+					Toast.LENGTH_SHORT).show();
 		}
 	}
 
@@ -141,7 +148,8 @@ public class ActivityForDownloadingExternal extends Activity {
 			service.putExtras(extras);
 			startService(service);
 		} else {
-			Toast.makeText(this, R.string.no_internet_connection, Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, R.string.no_internet_connection,
+					Toast.LENGTH_SHORT).show();
 		}
 	}
 

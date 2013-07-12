@@ -39,13 +39,16 @@ public class GalleryDetailsActivity extends Activity {
 		browser.getSettings().setDefaultZoom(WebSettings.ZoomDensity.FAR);
 		browser.getSettings().setUseWideViewPort(true);
 
-		String data = "<body style='margin:0px;'><img src='" + image + "'/></body>";
-		browser.loadDataWithBaseURL("file:///android_asset/", data, "text/html", "UTF-8", null);
+		String data = "<body style='margin:0px;'><img src='" + image
+				+ "'/></body>";
+		browser.loadDataWithBaseURL("file:///android_asset/", data,
+				"text/html", "UTF-8", null);
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		PersonalLayoutManager.setColorForId(this, R.id.activity_gallery_details_infos);
+		PersonalLayoutManager.setColorForId(this,
+				R.id.activity_gallery_details_infos);
 	}
 }

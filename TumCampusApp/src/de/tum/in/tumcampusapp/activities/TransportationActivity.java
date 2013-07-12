@@ -34,7 +34,8 @@ import de.tum.in.tumcampusapp.models.managers.TransportManager;
 /**
  * Activity to show transport stations and departures
  */
-public class TransportationActivity extends Activity implements OnItemClickListener, OnItemLongClickListener {
+public class TransportationActivity extends Activity implements
+		OnItemClickListener, OnItemLongClickListener {
 
 	private TextView infoTextView;
 	private ListView listViewResults;
@@ -77,7 +78,8 @@ public class TransportationActivity extends Activity implements OnItemClickListe
 			Cursor stationCursor = transportaionManager.getAllFromDb();
 
 			if (!transportaionManager.empty()) {
-				SimpleCursorAdapter adapter = (SimpleCursorAdapter) listViewSuggestionsAndSaved.getAdapter();
+				SimpleCursorAdapter adapter = (SimpleCursorAdapter) listViewSuggestionsAndSaved
+						.getAdapter();
 				adapter.changeCursor(stationCursor);
 			} else {
 				infoTextView.setText("No stored search requests");
@@ -113,18 +115,23 @@ public class TransportationActivity extends Activity implements OnItemClickListe
 		infoTextView = (TextView) findViewById(R.id.activity_transport_textview_info);
 
 		@SuppressWarnings("deprecation")
-		ListAdapter adapterSuggestionsAndSaved = new SimpleCursorAdapter(this, android.R.layout.simple_list_item_1, stationCursor,
-				stationCursor.getColumnNames(), new int[] { android.R.id.text1 });
+		ListAdapter adapterSuggestionsAndSaved = new SimpleCursorAdapter(this,
+				android.R.layout.simple_list_item_1, stationCursor,
+				stationCursor.getColumnNames(),
+				new int[] { android.R.id.text1 });
 
 		listViewSuggestionsAndSaved.setAdapter(adapterSuggestionsAndSaved);
 		listViewSuggestionsAndSaved.setOnItemClickListener(this);
 		listViewSuggestionsAndSaved.setOnItemLongClickListener(this);
 
 		// initialize empty departure list, disable on click in list
-		MatrixCursor departureCursor = new MatrixCursor(new String[] { "name", "desc", "_id" });
+		MatrixCursor departureCursor = new MatrixCursor(new String[] { "name",
+				"desc", "_id" });
 		@SuppressWarnings("deprecation")
-		SimpleCursorAdapter adapterResults = new SimpleCursorAdapter(this, android.R.layout.two_line_list_item, departureCursor,
-				departureCursor.getColumnNames(), new int[] { android.R.id.text1, android.R.id.text2 }) {
+		SimpleCursorAdapter adapterResults = new SimpleCursorAdapter(this,
+				android.R.layout.two_line_list_item, departureCursor,
+				departureCursor.getColumnNames(), new int[] {
+						android.R.id.text1, android.R.id.text2 }) {
 
 			@Override
 			public boolean isEnabled(int position) {
@@ -133,26 +140,31 @@ public class TransportationActivity extends Activity implements OnItemClickListe
 		};
 		listViewResults.setAdapter(adapterResults);
 
-		searchTextField.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-			@Override
-			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-				if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-					searchForStations(searchTextField.getText().toString());
-					return true;
-				}
-				return false;
-			}
-		});
+		searchTextField
+				.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+					@Override
+					public boolean onEditorAction(TextView v, int actionId,
+							KeyEvent event) {
+						if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+							searchForStations(searchTextField.getText()
+									.toString());
+							return true;
+						}
+						return false;
+					}
+				});
 		listViewSuggestionsAndSaved.requestFocus();
 	}
 
 	@Override
-	public void onItemClick(final AdapterView<?> av, View v, int position, long id) {
+	public void onItemClick(final AdapterView<?> av, View v, int position,
+			long id) {
 		// click on station in list
 		Utils.hideKeyboard(this, searchTextField);
 
 		Cursor departureCursor = (Cursor) av.getAdapter().getItem(position);
-		final String location = departureCursor.getString(departureCursor.getColumnIndex(Const.NAME_COLUMN));
+		final String location = departureCursor.getString(departureCursor
+				.getColumnIndex(Const.NAME_COLUMN));
 
 		listViewResults.setEnabled(true);
 		searchTextField.setText(location);
@@ -170,7 +182,8 @@ public class TransportationActivity extends Activity implements OnItemClickListe
 		if (!Utils.isConnected(this)) {
 			progressLayout.setVisibility(View.GONE);
 			errorLayout.setVisibility(View.VISIBLE);
-			Toast.makeText(this, R.string.no_internet_connection, Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, R.string.no_internet_connection,
+					Toast.LENGTH_SHORT).show();
 			return;
 		}
 
@@ -198,7 +211,8 @@ public class TransportationActivity extends Activity implements OnItemClickListe
 				runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
-						SimpleCursorAdapter adapter = (SimpleCursorAdapter) listViewResults.getAdapter();
+						SimpleCursorAdapter adapter = (SimpleCursorAdapter) listViewResults
+								.getAdapter();
 						adapter.changeCursor(finalDepartureCursor);
 
 						listViewResults.setVisibility(View.VISIBLE);
@@ -217,7 +231,8 @@ public class TransportationActivity extends Activity implements OnItemClickListe
 	}
 
 	@Override
-	public boolean onItemLongClick(final AdapterView<?> av, View v, final int position, long id) {
+	public boolean onItemLongClick(final AdapterView<?> av, View v,
+			final int position, long id) {
 
 		// confirm and delete station
 		DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
@@ -226,12 +241,14 @@ public class TransportationActivity extends Activity implements OnItemClickListe
 
 				// delete station from list, refresh station list
 				Cursor c = (Cursor) av.getAdapter().getItem(position);
-				String location = c.getString(c.getColumnIndex(Const.NAME_COLUMN));
+				String location = c.getString(c
+						.getColumnIndex(Const.NAME_COLUMN));
 
 				TransportManager tm = new TransportManager(av.getContext());
 				tm.deleteFromDb(location);
 
-				SimpleCursorAdapter adapter = (SimpleCursorAdapter) av.getAdapter();
+				SimpleCursorAdapter adapter = (SimpleCursorAdapter) av
+						.getAdapter();
 				adapter.changeCursor(tm.getAllFromDb());
 			}
 		};
@@ -259,14 +276,16 @@ public class TransportationActivity extends Activity implements OnItemClickListe
 		// name as a text input
 		String inputTextToCheck = inputTextRaw;
 		if (inputTextRaw.length() > 2) {
-			inputTextToCheck = inputTextRaw.substring(0, inputTextRaw.length() - 1);
+			inputTextToCheck = inputTextRaw.substring(0,
+					inputTextRaw.length() - 1);
 		}
 		final String inputText = inputTextToCheck;
 
 		if (!Utils.isConnected(this)) {
 			progressLayout.setVisibility(View.GONE);
 			errorLayout.setVisibility(View.VISIBLE);
-			Toast.makeText(this, R.string.no_internet_connection, Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, R.string.no_internet_connection,
+					Toast.LENGTH_SHORT).show();
 			return;
 		}
 
@@ -294,7 +313,8 @@ public class TransportationActivity extends Activity implements OnItemClickListe
 				runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
-						SimpleCursorAdapter adapter = (SimpleCursorAdapter) listViewSuggestionsAndSaved.getAdapter();
+						SimpleCursorAdapter adapter = (SimpleCursorAdapter) listViewSuggestionsAndSaved
+								.getAdapter();
 						adapter.changeCursor(finalStationCursor);
 
 						listViewSuggestionsAndSaved.setVisibility(View.VISIBLE);

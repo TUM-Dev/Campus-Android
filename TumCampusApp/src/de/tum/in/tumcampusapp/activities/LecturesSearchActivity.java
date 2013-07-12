@@ -44,8 +44,9 @@ import de.tum.in.tumcampusapp.models.LecturesSearchRowSet;
  * @author Daniel Mayr
  * @review Thomas Behrens
  */
-public class LecturesSearchActivity extends ActivityForAccessingTumOnline implements OnEditorActionListener {
-	private static final int MIN_SEARCH_LENGTH = 3;
+public class LecturesSearchActivity extends ActivityForAccessingTumOnline
+		implements OnEditorActionListener {
+	private static final int MIN_SEARCH_LENGTH = 4;
 	private static String P_SUCHE = "pSuche";
 
 	/** UI Elements */
@@ -102,13 +103,15 @@ public class LecturesSearchActivity extends ActivityForAccessingTumOnline implem
 		LecturesSearchRowSet lecturesList = null;
 
 		try {
-			lecturesList = serializer.read(LecturesSearchRowSet.class, rawResponse);
+			lecturesList = serializer.read(LecturesSearchRowSet.class,
+					rawResponse);
 
 		} catch (Exception e) {
 			Log.d("SIMPLEXML", "wont work: " + e.getMessage());
 			errorLayout.setVisibility(View.VISIBLE);
 			progressLayout.setVisibility(View.GONE);
-			Toast.makeText(this, R.string.no_search_result, Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, R.string.no_search_result, Toast.LENGTH_SHORT)
+					.show();
 		}
 
 		if (lecturesList == null) {
@@ -118,13 +121,15 @@ public class LecturesSearchActivity extends ActivityForAccessingTumOnline implem
 
 		// make some customizations to the ListView
 		// provide data via the FindLecturesListAdapter
-		lvFound.setAdapter(new LecturesSearchListAdapter(this, lecturesList.getLehrveranstaltungen()));
+		lvFound.setAdapter(new LecturesSearchListAdapter(this, lecturesList
+				.getLehrveranstaltungen()));
 
 		// deal with clicks on items in the ListView
 		lvFound.setOnItemClickListener(new OnItemClickListener() {
 			@SuppressWarnings("static-access")
 			@Override
-			public void onItemClick(AdapterView<?> a, View v, int position, long id) {
+			public void onItemClick(AdapterView<?> a, View v, int position,
+					long id) {
 				// each item represents the current FindLecturesRow
 				// item
 				Object o = lvFound.getItemAtPosition(position);
@@ -133,7 +138,8 @@ public class LecturesSearchActivity extends ActivityForAccessingTumOnline implem
 				// bundle data for the LectureDetails Activity
 				Bundle bundle = new Bundle();
 				bundle.putString(item.STP_SP_NR, item.getStp_sp_nr());
-				Intent i = new Intent(LecturesSearchActivity.this, LecturesDetailsActivity.class);
+				Intent i = new Intent(LecturesSearchActivity.this,
+						LecturesDetailsActivity.class);
 				i.putExtras(bundle);
 				// load LectureDetails
 				startActivity(i);
@@ -144,7 +150,8 @@ public class LecturesSearchActivity extends ActivityForAccessingTumOnline implem
 
 	private boolean searchForLectures() {
 		if (etFindQuery.getText().length() < MIN_SEARCH_LENGTH) {
-			Toast.makeText(this, R.string.please_insert_at_least_three_chars, Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, R.string.please_insert_at_least_four_chars,
+					Toast.LENGTH_SHORT).show();
 			return false;
 		}
 		// set the query string as parameter for the TUMOnline request

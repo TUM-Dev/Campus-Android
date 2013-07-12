@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,13 +12,14 @@ import android.widget.Toast;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.ActivityForAccessingTumOnline;
 
-public class WizNavNextActivity extends ActivityForAccessingTumOnline {
-	
-	public WizNavNextActivity() {
-		super("isTokenConfirmed", R.layout.activity_wiznavnext);
+public class WizNavCheckTokenActivity extends ActivityForAccessingTumOnline {
+
+	public WizNavCheckTokenActivity() {
+		super("isTokenConfirmed", R.layout.activity_wiznav_checktoken);
 	}
 
 	public void onCreate(Bundle savedInstanceState) {
+		overridePendingTransition(R.anim.fadein, R.anim.fadeout);
 		super.onCreate(savedInstanceState);
 	}
 
@@ -58,22 +58,18 @@ public class WizNavNextActivity extends ActivityForAccessingTumOnline {
 
 	@Override
 	public void onFetch(String rawResponse) {
-		Log.d("Wizard response:", rawResponse);
 		if (rawResponse.contains("true")) {
 			finish();
-			Intent intent = new Intent(this, WizNavDoneActivity.class);
+			Intent intent = new Intent(this, WizNavColorActivity.class);
 			startActivity(intent);
 
 		} else if (rawResponse.contains("false")) {
-			Toast.makeText(this, "Token is not enabled", Toast.LENGTH_LONG).show();
-		} else {
-
-			Toast.makeText(this, "Please check your internet connectivity", Toast.LENGTH_LONG).show();
+			Toast.makeText(this, R.string.token_not_enabled, Toast.LENGTH_SHORT)
+					.show();
 		}
-
 		progressLayout.setVisibility(View.GONE);
 	}
-	
+
 	@Override
 	public void onBackPressed() {
 		finish();

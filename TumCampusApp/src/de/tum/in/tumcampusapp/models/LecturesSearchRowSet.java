@@ -24,7 +24,8 @@ public class LecturesSearchRowSet {
 		return lehrveranstaltungen;
 	}
 
-	public void setLehrveranstaltungen(List<LecturesSearchRow> lehrveranstaltungen) {
+	public void setLehrveranstaltungen(
+			List<LecturesSearchRow> lehrveranstaltungen) {
 		this.lehrveranstaltungen = lehrveranstaltungen;
 	}
 

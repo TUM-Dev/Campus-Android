@@ -37,7 +37,8 @@ import de.tum.in.tumcampusapp.models.LectureDetailsRowSet;
  * @review Thomas Behrens // i found nothing tbd.
  */
 @SuppressLint("DefaultLocale")
-public class LecturesDetailsActivity extends ActivityForAccessingTumOnline implements OnClickListener {
+public class LecturesDetailsActivity extends ActivityForAccessingTumOnline
+		implements OnClickListener {
 
 	/** UI elements */
 	private Button btnLDetailsTermine;
@@ -110,17 +111,20 @@ public class LecturesDetailsActivity extends ActivityForAccessingTumOnline imple
 		// deserialize
 		Serializer serializer = new Persister();
 		try {
-			LectureDetailsRowSet xmllv = serializer.read(LectureDetailsRowSet.class, rawResponse);
+			LectureDetailsRowSet xmllv = serializer.read(
+					LectureDetailsRowSet.class, rawResponse);
 			// we got exactly one row, thats fine
 			currentitem = xmllv.getLehrveranstaltungenDetails().get(0);
 			tvLDetailsName.setText(currentitem.getStp_sp_titel().toUpperCase());
 
 			String strLectureLanguage = currentitem.getSemester_name();
 			if (currentitem.getHaupt_unterrichtssprache() != null) {
-				strLectureLanguage += " - " + currentitem.getHaupt_unterrichtssprache();
+				strLectureLanguage += " - "
+						+ currentitem.getHaupt_unterrichtssprache();
 			}
 			tvLDetailsSemester.setText(strLectureLanguage);
-			tvLDetailsSWS.setText(currentitem.getStp_lv_art_name() + " - " + currentitem.getDauer_info() + " SWS");
+			tvLDetailsSWS.setText(currentitem.getStp_lv_art_name() + " - "
+					+ currentitem.getDauer_info() + " SWS");
 			tvLDetailsDozent.setText(currentitem.getVortragende_mitwirkende());
 			tvLDetailsOrg.setText(currentitem.getOrg_name_betreut());
 			tvLDetailsInhalt.setText(currentitem.getLehrinhalt());

@@ -17,7 +17,8 @@ import de.tum.in.tumcampusapp.preferences.UserPreferencesActivity;
 import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequest;
 import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequestFetchListener;
 
-public abstract class ActivityForAccessingTumOnline extends Activity implements TUMOnlineRequestFetchListener {
+public abstract class ActivityForAccessingTumOnline extends Activity implements
+		TUMOnlineRequestFetchListener {
 
 	private String accessToken;
 	protected RelativeLayout errorLayout;
@@ -71,8 +72,10 @@ public abstract class ActivityForAccessingTumOnline extends Activity implements 
 		noTokenLayout = (RelativeLayout) findViewById(R.id.no_token_layout);
 		errorLayout = (RelativeLayout) findViewById(R.id.error_layout);
 
-		if (progressLayout == null || errorLayout == null || noTokenLayout == null) {
-			Log.e(getClass().getSimpleName(), "Cannot find layouts, did you forget to provide error and progress layouts?");
+		if (progressLayout == null || errorLayout == null
+				|| noTokenLayout == null) {
+			Log.e(getClass().getSimpleName(),
+					"Cannot find layouts, did you forget to provide error and progress layouts?");
 		}
 
 		requestHandler = new TUMOnlineRequest(method, this);
@@ -82,7 +85,8 @@ public abstract class ActivityForAccessingTumOnline extends Activity implements 
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.menu_activity_for_downloading_external, menu);
+		getMenuInflater().inflate(
+				R.menu.menu_activity_for_downloading_external, menu);
 		return true;
 	}
 
@@ -102,7 +106,7 @@ public abstract class ActivityForAccessingTumOnline extends Activity implements 
 		Log.e(getClass().getSimpleName(), errorReason);
 		progressLayout.setVisibility(View.GONE);
 		Toast.makeText(this, errorReason, Toast.LENGTH_SHORT).show();
-		
+
 		// TODO Change errors to Exceptions
 		// If there is a failed token layout show this
 		if (failedTokenLayout != null) {
@@ -125,9 +129,11 @@ public abstract class ActivityForAccessingTumOnline extends Activity implements 
 	}
 
 	public void requestFetch() {
-		accessToken = PreferenceManager.getDefaultSharedPreferences(this).getString(Const.ACCESS_TOKEN, null);
+		accessToken = PreferenceManager.getDefaultSharedPreferences(this)
+				.getString(Const.ACCESS_TOKEN, null);
 		if (accessToken != null) {
-			Log.i(getClass().getSimpleName(), "TUMOnline token is <" + accessToken + ">");
+			Log.i(getClass().getSimpleName(), "TUMOnline token is <"
+					+ accessToken + ">");
 			noTokenLayout.setVisibility(View.GONE);
 			progressLayout.setVisibility(View.VISIBLE);
 			errorLayout.setVisibility(View.GONE);

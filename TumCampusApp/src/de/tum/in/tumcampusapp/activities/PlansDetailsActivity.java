@@ -63,18 +63,31 @@ public class PlansDetailsActivity extends Activity {
 			browser.setInitialScale(100 * width / 1110);
 
 		} else if (position == 6) {
-			file = "plans/mvv.jpg";
+			file = "plans/mvv.png";
 			setTitle(getString(R.string.mvv_fast_train_net));
 			browser.setInitialScale(100 * width / 1454);
 
-		} else {
-			file = "plans/mvv_night.jpg";
+		} else if (position == 7) {
+			file = "plans/mvv_night.png";
 			setTitle(getString(R.string.mvv_nightlines));
+			browser.setInitialScale(100 * width / 1480);
+			
+		} else if (position == 8) {
+			file = "plans/tram.png";
+			setTitle(getString(R.string.mvv_tram));
+			browser.setInitialScale(100 * width / 1480);
+			
+		} else if (position == 9) {
+			file = "plans/mvv_entire_net.png";
+			setTitle(getString(R.string.mvv_entire_net));
 			browser.setInitialScale(100 * width / 1480);
 		}
 
-		String data = "<body style='margin:0px;'><img src='" + file + "'/></body>";
-		browser.loadDataWithBaseURL("file:///android_asset/", data, "text/html", "UTF-8", null);
+
+		String data = "<body style='margin:0px;'><img src='" + file
+				+ "'/></body>";
+		browser.loadDataWithBaseURL("file:///android_asset/", data,
+				"text/html", "UTF-8", null);
 		browser.forceLayout();
 
 	}

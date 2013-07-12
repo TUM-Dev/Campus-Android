@@ -24,12 +24,14 @@ public class EventsDetailsActivity extends Activity {
 
 		// get event details from db
 		EventManager em = new EventManager(this);
-		Cursor c = em.getDetailsFromDb(getIntent().getStringExtra(Const.ID_EXTRA));
+		Cursor c = em.getDetailsFromDb(getIntent().getStringExtra(
+				Const.ID_EXTRA));
 
 		if (!c.moveToNext())
 			return;
 
-		String description = c.getString(c.getColumnIndex(Const.DESCRIPTION_COLUMN));
+		String description = c.getString(c
+				.getColumnIndex(Const.DESCRIPTION_COLUMN));
 		String image = c.getString(c.getColumnIndex(Const.IMAGE_COLUMN));
 
 		String[] weekDays = getString(R.string.week_splitted).split(",");
@@ -44,8 +46,10 @@ public class EventsDetailsActivity extends Activity {
 		 * Link
 		 * </pre>
 		 */
-		String infos = weekDays[c.getInt(c.getColumnIndex(Const.WEEKDAY_COLUMN))] + ", ";
-		infos += c.getString(c.getColumnIndex(Const.START_DE_COLUMN)) + " - " + c.getString(c.getColumnIndex(Const.END_DE_COLUMN)) + "\n";
+		String infos = weekDays[c
+				.getInt(c.getColumnIndex(Const.WEEKDAY_COLUMN))] + ", ";
+		infos += c.getString(c.getColumnIndex(Const.START_DE_COLUMN)) + " - "
+				+ c.getString(c.getColumnIndex(Const.END_DE_COLUMN)) + "\n";
 
 		infos += c.getString(c.getColumnIndex(Const.LOCATION_COLUMN)) + "\n";
 		infos += c.getString(c.getColumnIndex(Const.LINK_COLUMN));
@@ -58,7 +62,8 @@ public class EventsDetailsActivity extends Activity {
 
 		ImageView iv = (ImageView) findViewById(R.id.image);
 		Bitmap b = BitmapFactory.decodeFile(image);
-		iv.setImageBitmap(Bitmap.createScaledBitmap(b, 360, (b.getHeight() * 360) / b.getWidth(), true));
+		iv.setImageBitmap(Bitmap.createScaledBitmap(b, 360,
+				(b.getHeight() * 360) / b.getWidth(), true));
 	}
 
 	@Override

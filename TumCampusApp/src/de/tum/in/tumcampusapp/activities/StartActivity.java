@@ -60,7 +60,8 @@ public class StartActivity extends FragmentActivity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		// Check if there is a result key in an intent
-		if (data != null && data.hasExtra(Const.PREFS_HAVE_CHANGED) && data.getBooleanExtra(Const.PREFS_HAVE_CHANGED, false)) {
+		if (data != null && data.hasExtra(Const.PREFS_HAVE_CHANGED)
+				&& data.getBooleanExtra(Const.PREFS_HAVE_CHANGED, false)) {
 			// Restart the Activity if prefs have changed
 			Intent intent = getIntent();
 			finish();
@@ -75,7 +76,8 @@ public class StartActivity extends FragmentActivity {
 
 		// Create the adapter that will return a fragment for each of the
 		// primary sections of the app.
-		mSectionsPagerAdapter = new StartSectionsPagerAdapter(this, getSupportFragmentManager());
+		mSectionsPagerAdapter = new StartSectionsPagerAdapter(this,
+				getSupportFragmentManager());
 
 		// Set up the ViewPager with the sections adapter.
 		mViewPager = (ViewPager) findViewById(R.id.pager);

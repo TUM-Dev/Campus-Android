@@ -98,7 +98,9 @@ public class DownloadService extends IntentService {
 
 	public boolean downloadOrganisations(boolean force) throws Exception {
 		OrganisationManager lm = new OrganisationManager(this);
-		String accessToken = PreferenceManager.getDefaultSharedPreferences(this).getString(Const.ACCESS_TOKEN, null);
+		String accessToken = PreferenceManager
+				.getDefaultSharedPreferences(this).getString(
+						Const.ACCESS_TOKEN, null);
 
 		if (accessToken == null) {
 			throw new Exception("No Access Token");
@@ -169,18 +171,22 @@ public class DownloadService extends IntentService {
 		} catch (TimeoutException e) {
 			if (!isDestroyed) {
 				Log.e(getClass().getSimpleName(), e.getMessage());
-				broadcastWarning(getResources().getString(R.string.exception_timeout));
+				broadcastWarning(getResources().getString(
+						R.string.exception_timeout));
 			}
 		} catch (IOException e) {
 			if (!isDestroyed) {
 				Log.e(getClass().getSimpleName(), e.getMessage());
-				broadcastError(getResources().getString(R.string.exception_sdcard));
+				broadcastError(getResources().getString(
+						R.string.exception_sdcard));
 			}
 		} catch (Exception e) {
-			Log.e(getClass().getSimpleName(), "Unkown error while handling action <" + action + ">");
+			Log.e(getClass().getSimpleName(),
+					"Unkown error while handling action <" + action + ">");
 			Log.e(getClass().getSimpleName(), e.getMessage());
 			if (!isDestroyed) {
-				broadcastError(getResources().getString(R.string.exception_unknown));
+				broadcastError(getResources().getString(
+						R.string.exception_unknown));
 			}
 		}
 

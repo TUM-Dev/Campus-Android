@@ -19,7 +19,8 @@ import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequestFetchListener;
  * 
  * @author NTK
  */
-public class TuitionFeesActivity extends ActivityForAccessingTumOnline implements TUMOnlineRequestFetchListener {
+public class TuitionFeesActivity extends ActivityForAccessingTumOnline
+		implements TUMOnlineRequestFetchListener {
 
 	private TextView amountTextView;
 	private TextView deadlineTextView;
@@ -59,9 +60,12 @@ public class TuitionFeesActivity extends ActivityForAccessingTumOnline implement
 		try {
 			tuitionList = serializer.read(TuitionList.class, rawResp);
 
-			amountTextView.setText(tuitionList.getTuitions().get(0).getSoll() + "€");
-			deadlineTextView.setText(tuitionList.getTuitions().get(0).getFrist());
-			semesterTextView.setText(tuitionList.getTuitions().get(0).getSemesterBez());
+			amountTextView.setText(tuitionList.getTuitions().get(0).getSoll()
+					+ "€");
+			deadlineTextView.setText(tuitionList.getTuitions().get(0)
+					.getFrist());
+			semesterTextView.setText(tuitionList.getTuitions().get(0)
+					.getSemesterBez());
 
 		} catch (Exception e) {
 			Log.d("SIMPLEXML", "wont work: " + e.getMessage());

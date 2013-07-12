@@ -26,7 +26,7 @@ public class GalleryManager {
 	// TODO Review Vasyl: Changed 25.10.2012 by Florian Schulz (thx to Mr. Bley)
 	public static int position = 0;
 
-	public static int TIME_TO_SYNC = 21600; // 6 hours
+	public static int TIME_TO_SYNC = 86400; // 1 day
 
 	/**
 	 * Convert JSON object to Gallery, download gallery picture
@@ -53,7 +53,8 @@ public class GalleryManager {
 
 		Utils.downloadFileThread(json.getString("source"), target);
 
-		return new Gallery(id, json.getString("name"), target, String.valueOf(position++), json.has("archive"));
+		return new Gallery(id, json.getString("name"), target,
+				String.valueOf(position++), json.has("archive"));
 	}
 
 	/**
@@ -72,7 +73,8 @@ public class GalleryManager {
 		db = DatabaseManager.getDb(context);
 
 		// create table if needed
-		db.execSQL("CREATE TABLE IF NOT EXISTS gallery (id VARCHAR PRIMARY KEY, name VARCHAR, image VARCHAR, " + "position INTEGER, archive VARCHAR(1))");
+		db.execSQL("CREATE TABLE IF NOT EXISTS gallery (id VARCHAR PRIMARY KEY, name VARCHAR, image VARCHAR, "
+				+ "position INTEGER, archive VARCHAR(1))");
 	}
 
 	/**
@@ -90,12 +92,17 @@ public class GalleryManager {
 			return;
 		}
 
-		String url = "https://graph.facebook.com/280074732057167/photos?" + "fields=id,name,source,position&limit=25&access_token=";
-		String urlArchive = "https://graph.facebook.com/291553714242602/photos?" + "fields=id,name,source,position&limit=25&access_token=";
+		String url = "https://graph.facebook.com/280074732057167/photos?"
+				+ "fields=id,name,source,position&limit=25&access_token=";
+		String urlArchive = "https://graph.facebook.com/291553714242602/photos?"
+				+ "fields=id,name,source,position&limit=25&access_token=";
 		String token = "141869875879732|FbjTXY-wtr06A18W9wfhU8GCkwU";
 
-		JSONArray jsonArray = Utils.downloadJson(url + URLEncoder.encode(token)).getJSONArray("data");
-		JSONArray jsonArrayArchive = Utils.downloadJson(urlArchive + URLEncoder.encode(token)).getJSONArray("data");
+		JSONArray jsonArray = Utils
+				.downloadJson(url + URLEncoder.encode(token)).getJSONArray(
+						"data");
+		JSONArray jsonArrayArchive = Utils.downloadJson(
+				urlArchive + URLEncoder.encode(token)).getJSONArray("data");
 
 		int count = Utils.dbGetTableCount(db, "gallery");
 
@@ -126,7 +133,8 @@ public class GalleryManager {
 	 * </pre>
 	 */
 	public Cursor getDetailsFromDb(String id) {
-		return db.rawQuery("SELECT * FROM gallery WHERE id=?", new String[] { id });
+		return db.rawQuery("SELECT * FROM gallery WHERE id=?",
+				new String[] { id });
 	}
 
 	/**
@@ -135,7 +143,10 @@ public class GalleryManager {
 	 * @return Database cursor (_id, id)
 	 */
 	public Cursor getFromDb() {
-		return db.rawQuery("SELECT image as _id, id FROM gallery WHERE archive='0' ORDER BY position LIMIT 50", null);
+		return db
+				.rawQuery(
+						"SELECT image as _id, id FROM gallery WHERE archive='0' ORDER BY position LIMIT 50",
+						null);
 	}
 
 	/**
@@ -144,7 +155,10 @@ public class GalleryManager {
 	 * @return Database cursor (_id, id)
 	 */
 	public Cursor getFromDbArchive() {
-		return db.rawQuery("SELECT image as _id, id FROM gallery WHERE archive='1' ORDER BY position LIMIT 50", null);
+		return db
+				.rawQuery(
+						"SELECT image as _id, id FROM gallery WHERE archive='1' ORDER BY position LIMIT 50",
+						null);
 	}
 
 	/**
@@ -170,8 +184,10 @@ public class GalleryManager {
 		if (g.name.length() == 0) {
 			throw new Exception("Invalid name.");
 		}
-		db.execSQL("REPLACE INTO gallery (id, name, image, position, archive) VALUES (?, ?, ?, ?, ?)", new String[] { g.id, g.name, g.image, g.position,
-				g.archive ? "1" : "0" });
+		db.execSQL(
+				"REPLACE INTO gallery (id, name, image, position, archive) VALUES (?, ?, ?, ?, ?)",
+				new String[] { g.id, g.name, g.image, g.position,
+						g.archive ? "1" : "0" });
 	}
 
 	/**

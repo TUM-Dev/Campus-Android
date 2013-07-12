@@ -42,25 +42,34 @@ public class FeedItemManager {
 	 * @throws Exception
 	 * </pre>
 	 */
-	public static FeedItem getFromJson(int feedId, JSONObject json) throws Exception {
+	public static FeedItem getFromJson(int feedId, JSONObject json)
+			throws Exception {
 
 		String target = "";
 		if (json.has(Const.JSON_ENCLOSURE)) {
-			final String enclosure = json.getJSONObject(Const.JSON_ENCLOSURE).getString(Const.URL);
+			final String enclosure = json.getJSONObject(Const.JSON_ENCLOSURE)
+					.getString(Const.URL);
 
-			target = Utils.getCacheDir("rss/cache") + Utils.md5(enclosure) + ".jpg";
+			target = Utils.getCacheDir("rss/cache") + Utils.md5(enclosure)
+					+ ".jpg";
 			Utils.downloadFileThread(enclosure, target);
 		}
 		Date pubDate = new Date();
 		if (json.has(Const.JSON_PUB_DATE)) {
-			pubDate = Utils.getDateTimeRfc822(json.getString(Const.JSON_PUB_DATE));
+			pubDate = Utils.getDateTimeRfc822(json
+					.getString(Const.JSON_PUB_DATE));
 		}
 		String description = "";
-		if (json.has(Const.JSON_DESCRIPTION) && !json.isNull(Const.JSON_DESCRIPTION)) {
+		if (json.has(Const.JSON_DESCRIPTION)
+				&& !json.isNull(Const.JSON_DESCRIPTION)) {
 			// decode HTML entites, remove links, images, etc.
-			description = Html.fromHtml(json.getString(Const.JSON_DESCRIPTION).replaceAll("\\<.*?\\>", "")).toString();
+			description = Html.fromHtml(
+					json.getString(Const.JSON_DESCRIPTION).replaceAll(
+							"\\<.*?\\>", "")).toString();
 		}
-		return new FeedItem(feedId, json.getString(Const.JSON_TITLE).replaceAll("\n", ""), json.getString(Const.JSON_LINK), description, pubDate, target);
+		return new FeedItem(feedId, json.getString(Const.JSON_TITLE)
+				.replaceAll("\n", ""), json.getString(Const.JSON_LINK),
+				description, pubDate, target);
 	}
 
 	/**
@@ -84,7 +93,8 @@ public class FeedItemManager {
 		db = DatabaseManager.getDb(context);
 
 		// create table if needed
-		db.execSQL("CREATE TABLE IF NOT EXISTS feeds_items (" + "id INTEGER PRIMARY KEY AUTOINCREMENT, feedId INTEGER, "
+		db.execSQL("CREATE TABLE IF NOT EXISTS feeds_items ("
+				+ "id INTEGER PRIMARY KEY AUTOINCREMENT, feedId INTEGER, "
 				+ "title VARCHAR, link VARCHAR, description VARCHAR, date VARCHAR, image VARCHAR)");
 	}
 
@@ -101,7 +111,8 @@ public class FeedItemManager {
 	 * </pre>
 	 */
 	public void deleteFromDb(int feedId) {
-		db.execSQL("DELETE FROM feeds_items WHERE feedId = ?", new String[] { String.valueOf(feedId) });
+		db.execSQL("DELETE FROM feeds_items WHERE feedId = ?",
+				new String[] { String.valueOf(feedId) });
 	}
 
 	/**
@@ -114,7 +125,8 @@ public class FeedItemManager {
 	 * @throws Exception
 	 * </pre>
 	 */
-	public void downloadFromExternal(int id, boolean retry, boolean force) throws Exception {
+	public void downloadFromExternal(int id, boolean retry, boolean force)
+			throws Exception {
 		String syncId = "feeditem" + id;
 		if (!force && !SyncManager.needSync(db, syncId, TIME_TO_SYNC)) {
 			return;
@@ -123,7 +135,8 @@ public class FeedItemManager {
 		cleanupDb();
 		int count = Utils.dbGetTableCount(db, "feeds_items");
 
-		Cursor feed = db.rawQuery("SELECT feedUrl FROM feeds WHERE id = ?", new String[] { String.valueOf(id) });
+		Cursor feed = db.rawQuery("SELECT feedUrl FROM feeds WHERE id = ?",
+				new String[] { String.valueOf(id) });
 		feed.moveToNext();
 		String feedUrl = feed.getString(0);
 		feed.close();
@@ -132,15 +145,19 @@ public class FeedItemManager {
 		String baseUrl = "http://query.yahooapis.com/v1/public/yql?format=json&q=";
 
 		@SuppressWarnings("deprecation")
-		String query = URLEncoder.encode("SELECT title, link, description, pubDate, enclosure.url " + "FROM rss WHERE url=\"" + feedUrl + "\" LIMIT 25");
+		String query = URLEncoder
+				.encode("SELECT title, link, description, pubDate, enclosure.url "
+						+ "FROM rss WHERE url=\"" + feedUrl + "\" LIMIT 25");
 
-		JSONObject jsonObj = Utils.downloadJson(baseUrl + query).getJSONObject("query");
+		JSONObject jsonObj = Utils.downloadJson(baseUrl + query).getJSONObject(
+				"query");
 
 		if (jsonObj.isNull("results") && !retry) {
 			String url = Utils.getRssLinkFromUrl(feedUrl);
 
 			if (!url.equals(feedUrl)) {
-				db.execSQL("UPDATE feeds SET feedUrl=? WHERE id = ?", new String[] { url, String.valueOf(id) });
+				db.execSQL("UPDATE feeds SET feedUrl=? WHERE id = ?",
+						new String[] { url, String.valueOf(id) });
 				downloadFromExternal(id, true, force);
 				return;
 			}
@@ -193,7 +210,8 @@ public class FeedItemManager {
 	 * </pre>
 	 */
 	public Cursor getAllFromDb(String feedId) {
-		return db.rawQuery("SELECT image, title, description, link, id as _id " + "FROM feeds_items WHERE feedId = ? ORDER BY date DESC",
+		return db.rawQuery("SELECT image, title, description, link, id as _id "
+				+ "FROM feeds_items WHERE feedId = ? ORDER BY date DESC",
 				new String[] { feedId });
 	}
 
@@ -215,8 +233,11 @@ public class FeedItemManager {
 		if (n.title.length() == 0) {
 			throw new Exception("Invalid title.");
 		}
-		db.execSQL("INSERT INTO feeds_items (feedId, title, link, description, " + "date, image) VALUES (?, ?, ?, ?, ?, ?)",
-				new String[] { String.valueOf(n.feedId), n.title, n.link, n.description, Utils.getDateTimeString(n.date), n.image });
+		db.execSQL(
+				"INSERT INTO feeds_items (feedId, title, link, description, "
+						+ "date, image) VALUES (?, ?, ?, ?, ?, ?)",
+				new String[] { String.valueOf(n.feedId), n.title, n.link,
+						n.description, Utils.getDateTimeString(n.date), n.image });
 	}
 
 	/** Removes all cache items */

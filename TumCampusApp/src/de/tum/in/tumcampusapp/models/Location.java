@@ -65,7 +65,9 @@ public class Location {
 	 * @param url Location URL, e.g. http://stud.ub.uni-muenchen.de/
 	 * </pre>
 	 */
-	public Location(int id, String category, String name, String address, String room, String transport, String hours, String remark, String url) {
+	public Location(int id, String category, String name, String address,
+			String room, String transport, String hours, String remark,
+			String url) {
 		this.id = id;
 		this.category = category;
 		this.name = name;
@@ -79,7 +81,9 @@ public class Location {
 
 	@Override
 	public String toString() {
-		return "id=" + id + ", category=" + category + ", name=" + name + ", address=" + address + ", room=" + room + ", transport=" + transport + ", hours="
-				+ hours + ", remark=" + remark + ", url=" + url;
+		return "id=" + id + ", category=" + category + ", name=" + name
+				+ ", address=" + address + ", room=" + room + ", transport="
+				+ transport + ", hours=" + hours + ", remark=" + remark
+				+ ", url=" + url;
 	}
 }

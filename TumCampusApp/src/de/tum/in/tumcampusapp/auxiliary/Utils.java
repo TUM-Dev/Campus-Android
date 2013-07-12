@@ -114,7 +114,8 @@ public class Utils {
 	 *            End string where the cutting ends.
 	 * @return The cut text.
 	 */
-	public static String cutText(String text, String startString, String endString) {
+	public static String cutText(String text, String startString,
+			String endString) {
 		int startPos = text.indexOf(startString);
 		int endPos = text.indexOf(endString, startPos) - endString.length();
 
@@ -178,7 +179,8 @@ public class Utils {
 	 * @throws Exception
 	 * </pre>
 	 */
-	private static void downloadFile(String url, String target) throws Exception {
+	private static void downloadFile(String url, String target)
+			throws Exception {
 		File f = new File(target);
 		if (f.exists()) {
 			return;
@@ -237,7 +239,8 @@ public class Utils {
 	 * @throws Exception
 	 * </pre>
 	 */
-	private static void downloadIconFile(String url, String target) throws Exception {
+	private static void downloadIconFile(String url, String target)
+			throws Exception {
 		File f = new File(target);
 		if (f.exists()) {
 			return;
@@ -246,7 +249,8 @@ public class Utils {
 		HttpGet httpget = new HttpGet(url);
 
 		// force mobile version of a web page
-		httpget.addHeader("User-Agent", "Mozilla/5.0 (iPhone; de-de) AppleWebKit/528.18 Safari/528.16");
+		httpget.addHeader("User-Agent",
+				"Mozilla/5.0 (iPhone; de-de) AppleWebKit/528.18 Safari/528.16");
 
 		HttpEntity entity = httpclient.execute(httpget).getEntity();
 		if (entity == null) {
@@ -295,7 +299,8 @@ public class Utils {
 	 * @param target Target filename in local file system
 	 * </pre>
 	 */
-	public static void downloadIconFileThread(final String url, final String target) {
+	public static void downloadIconFileThread(final String url,
+			final String target) {
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -405,7 +410,9 @@ public class Utils {
 		// directoriesNotToIndex.add("rss/cache");
 		// directoriesNotToIndex.add("feeds/cache");
 		// directoriesNotToIndex.add("gallery/cache");
-		String[] directoriesNotToIndex = { "organisations/cache", "links/cache", "rss/cache", "feeds/cache", "gallery/cache", "news/cache" };
+		String[] directoriesNotToIndex = { "organisations/cache",
+				"links/cache", "rss/cache", "feeds/cache", "gallery/cache",
+				"news/cache" };
 		for (String directory : directoriesNotToIndex) {
 			File file = new File(getCacheDir(directory) + ".nomedia");
 			if (!file.exists()) {
@@ -431,7 +438,8 @@ public class Utils {
 	 */
 	// TODO Think how not to hardcode Exception text.
 	public static String getCacheDir(String directory) throws IOException {
-		File f = new File(Environment.getExternalStorageDirectory().getPath() + "/tumcampus/" + directory);
+		File f = new File(Environment.getExternalStorageDirectory().getPath()
+				+ "/tumcampus/" + directory);
 		if (!f.exists()) {
 			f.mkdirs();
 		}
@@ -500,7 +508,8 @@ public class Utils {
 	public static Date getDateTime(String str) {
 		// TODO Who handles exception?
 		try {
-			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+			SimpleDateFormat dateFormat = new SimpleDateFormat(
+					"yyyy-MM-dd'T'HH:mm:ss");
 			return dateFormat.parse(str);
 		} catch (Exception e) {
 			log(e, str);
@@ -519,7 +528,8 @@ public class Utils {
 	public static Date getDateTimeDe(String str) {
 		// TODO Who handles exception?
 		try {
-			SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+			SimpleDateFormat dateFormat = new SimpleDateFormat(
+					"dd.MM.yyyy HH:mm");
 			return dateFormat.parse(str);
 		} catch (Exception e) {
 			log(e, str);
@@ -538,7 +548,8 @@ public class Utils {
 	public static Date getDateTimeRfc822(String str) {
 		// TODO Who handles exception?
 		try {
-			SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss", Locale.US);
+			SimpleDateFormat dateFormat = new SimpleDateFormat(
+					"EEE, dd MMM yyyy HH:mm:ss", Locale.US);
 			return dateFormat.parse(str);
 		} catch (Exception e) {
 			log(e, str);
@@ -555,7 +566,8 @@ public class Utils {
 	 * </pre>
 	 */
 	public static String getDateTimeString(Date d) {
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		SimpleDateFormat dateFormat = new SimpleDateFormat(
+				"yyyy-MM-dd HH:mm:ss");
 		return dateFormat.format(d);
 	}
 
@@ -619,7 +631,8 @@ public class Utils {
 		// TODO Who handles exception?
 		try {
 			HttpClient httpclient = new DefaultHttpClient();
-			HttpEntity entity = httpclient.execute(new HttpGet(url)).getEntity();
+			HttpEntity entity = httpclient.execute(new HttpGet(url))
+					.getEntity();
 			if (entity == null) {
 				return result;
 			}
@@ -637,7 +650,9 @@ public class Utils {
 				String match = matcher.group(0);
 
 				Matcher href_match = href.matcher(match);
-				if (href_match.find() && (match.contains("application/rss+xml") || match.contains("application/atom+xml"))) {
+				if (href_match.find()
+						&& (match.contains("application/rss+xml") || match
+								.contains("application/atom+xml"))) {
 					result = href_match.group(1);
 				}
 			}
@@ -723,7 +738,8 @@ public class Utils {
 	 *            The view where the keyboard is bind to.
 	 */
 	public static void hideKeyboard(Activity activity, View binder) {
-		InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+		InputMethodManager imm = (InputMethodManager) activity
+				.getSystemService(Context.INPUT_METHOD_SERVICE);
 		imm.hideSoftInputFromWindow(binder.getWindowToken(), 0);
 	}
 
@@ -740,7 +756,8 @@ public class Utils {
 	 * @return true if available
 	 */
 	public static boolean isConnected(Context con) {
-		ConnectivityManager cm = (ConnectivityManager) con.getSystemService(Context.CONNECTIVITY_SERVICE);
+		ConnectivityManager cm = (ConnectivityManager) con
+				.getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo netInfo = cm.getActiveNetworkInfo();
 
 		if (netInfo != null && netInfo.isConnectedOrConnecting()) {
@@ -810,7 +827,8 @@ public class Utils {
 		List<String[]> list = new ArrayList<String[]>();
 		// TODO Who handles exception?
 		try {
-			BufferedReader in = new BufferedReader(new InputStreamReader(fin, charset));
+			BufferedReader in = new BufferedReader(new InputStreamReader(fin,
+					charset));
 			String reader = "";
 			while ((reader = in.readLine()) != null) {
 				list.add(splitCsvLine(reader));
@@ -847,7 +865,8 @@ public class Utils {
 	 * Manually added to Utils by Florian Schulz
 	 */
 	public static void setSettingBool(Context c, String name, boolean value) {
-		SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(c).edit();
+		SharedPreferences.Editor editor = PreferenceManager
+				.getDefaultSharedPreferences(c).edit();
 		editor.putBoolean(name, value);
 		editor.commit();
 	}
@@ -862,7 +881,8 @@ public class Utils {
 	 *            The view where the keyboard is bind to.
 	 */
 	public static void showKeyboard(Activity activity, View binder) {
-		InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+		InputMethodManager imm = (InputMethodManager) activity
+				.getSystemService(Context.INPUT_METHOD_SERVICE);
 		imm.showSoftInput(binder, 0);
 	}
 

@@ -19,7 +19,8 @@ import de.tum.in.tumcampusapp.models.managers.CafeteriaManager;
  * @author TCA Team
  */
 
-public class CafeteriaActivity extends ActivityForDownloadingExternal implements OnItemClickListener {
+public class CafeteriaActivity extends ActivityForDownloadingExternal implements
+		OnItemClickListener {
 
 	/** Current Cafeteria selected */
 	private String cafeteriaId;
@@ -45,11 +46,14 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
 	@SuppressWarnings("deprecation")
 	@Override
 	public void onItemClick(AdapterView<?> av, View v, int position, long id) {
-		Cursor cursorCafeterias = (Cursor) listCafeterias.getAdapter().getItem(position);
+		Cursor cursorCafeterias = (Cursor) listCafeterias.getAdapter().getItem(
+				position);
 		startManagingCursor(cursorCafeterias);
 
-		cafeteriaId = cursorCafeterias.getString(cursorCafeterias.getColumnIndex(Const.ID_COLUMN));
-		cafeteriaName = cursorCafeterias.getString(cursorCafeterias.getColumnIndex(Const.NAME_COLUMN));
+		cafeteriaId = cursorCafeterias.getString(cursorCafeterias
+				.getColumnIndex(Const.ID_COLUMN));
+		cafeteriaName = cursorCafeterias.getString(cursorCafeterias
+				.getColumnIndex(Const.NAME_COLUMN));
 
 		Intent intent = new Intent(this, CafeteriaDetailsActivity.class);
 		intent.putExtra(Const.CAFETERIA_ID, cafeteriaId);
@@ -69,8 +73,10 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
 		startManagingCursor(cursor);
 
 		if (cursor.getCount() > 0) {
-			SimpleCursorAdapter adapterCafeterias = new SimpleCursorAdapter(this, R.layout.list_layout_two_line_item, cursor, cursor.getColumnNames(),
-					new int[] { android.R.id.text1, android.R.id.text2 });
+			SimpleCursorAdapter adapterCafeterias = new SimpleCursorAdapter(
+					this, R.layout.list_layout_two_line_item, cursor,
+					cursor.getColumnNames(), new int[] { android.R.id.text1,
+							android.R.id.text2 });
 
 			listCafeterias.setAdapter(adapterCafeterias);
 			listCafeterias.setOnItemClickListener(this);

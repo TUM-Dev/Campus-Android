@@ -15,7 +15,8 @@ import android.widget.Toast;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 
-public abstract class ActivityForSearching extends Activity implements OnEditorActionListener {
+public abstract class ActivityForSearching extends Activity implements
+		OnEditorActionListener {
 
 	protected RelativeLayout errorLayout;
 	private int layoutId;
@@ -85,14 +86,16 @@ public abstract class ActivityForSearching extends Activity implements OnEditorA
 	private boolean requestSearch() {
 		progressLayout.setVisibility(View.VISIBLE);
 		if (searchField.getText().length() < 3) {
-			Toast.makeText(this, R.string.please_insert_at_least_three_chars, Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, R.string.please_insert_at_least_three_chars,
+					Toast.LENGTH_SHORT).show();
 			errorLayout.setVisibility(View.VISIBLE);
 			progressLayout.setVisibility(View.GONE);
 			return false;
 		}
 
 		if (!Utils.isConnected(this)) {
-			Toast.makeText(this, R.string.no_internet_connection, Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, R.string.no_internet_connection,
+					Toast.LENGTH_SHORT).show();
 			errorLayout.setVisibility(View.VISIBLE);
 			progressLayout.setVisibility(View.GONE);
 			return false;

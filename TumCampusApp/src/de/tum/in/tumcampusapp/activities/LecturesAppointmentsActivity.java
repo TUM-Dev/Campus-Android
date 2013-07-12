@@ -40,7 +40,8 @@ public class LecturesAppointmentsActivity extends ActivityForAccessingTumOnline 
 	private TextView tvTermineLectureName;
 
 	public LecturesAppointmentsActivity() {
-		super(Const.LECTURES_APPOINTMENTS, R.layout.activity_lecturesappointments);
+		super(Const.LECTURES_APPOINTMENTS,
+				R.layout.activity_lecturesappointments);
 	}
 
 	@Override
@@ -53,7 +54,8 @@ public class LecturesAppointmentsActivity extends ActivityForAccessingTumOnline 
 
 		Bundle bundle = this.getIntent().getExtras();
 		// set Lecture Name (depends on bundle data)
-		tvTermineLectureName.setText(bundle.getString(Const.TITLE_EXTRA).toUpperCase());
+		tvTermineLectureName.setText(bundle.getString(Const.TITLE_EXTRA)
+				.toUpperCase());
 		requestHandler.setParameter("pLVNr", bundle.getString("stp_sp_nr"));
 
 		super.requestFetch();
@@ -69,7 +71,8 @@ public class LecturesAppointmentsActivity extends ActivityForAccessingTumOnline 
 		Serializer serializer = new Persister();
 		LectureAppointmentsRowSet lecturesList = null;
 		try {
-			lecturesList = serializer.read(LectureAppointmentsRowSet.class, rawResponse);
+			lecturesList = serializer.read(LectureAppointmentsRowSet.class,
+					rawResponse);
 		} catch (Exception e) {
 			Log.d("SIMPLEXML", "wont work: " + e.getMessage());
 			errorLayout.setVisibility(View.VISIBLE);
@@ -78,16 +81,19 @@ public class LecturesAppointmentsActivity extends ActivityForAccessingTumOnline 
 		}
 
 		// may happen if there are no appointments for the lecture
-		if (lecturesList == null || lecturesList.getLehrveranstaltungenTermine() == null) {
+		if (lecturesList == null
+				|| lecturesList.getLehrveranstaltungenTermine() == null) {
 			errorLayout.setVisibility(View.VISIBLE);
 			progressLayout.setVisibility(View.GONE);
-			Toast.makeText(this, R.string.no_appointments, Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, R.string.no_appointments, Toast.LENGTH_SHORT)
+					.show();
 			return;
 		}
 
 		// set data to the ListView object
 		// nothing to click (yet)
-		lvTermine.setAdapter(new LectureAppointmentsListAdapter(this, lecturesList.getLehrveranstaltungenTermine()));
+		lvTermine.setAdapter(new LectureAppointmentsListAdapter(this,
+				lecturesList.getLehrveranstaltungenTermine()));
 		progressLayout.setVisibility(View.GONE);
 	}
 

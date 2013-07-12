@@ -24,7 +24,8 @@ import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.models.Feed;
 import de.tum.in.tumcampusapp.models.managers.FeedManager;
 
-public class FeedsActivity extends Activity implements OnItemClickListener, OnItemLongClickListener {
+public class FeedsActivity extends Activity implements OnItemClickListener,
+		OnItemLongClickListener {
 	private static String feedId;
 	private static String feedName;
 	private SimpleCursorAdapter adapter;
@@ -38,7 +39,9 @@ public class FeedsActivity extends Activity implements OnItemClickListener, OnIt
 		FeedManager fm = new FeedManager(this);
 		Cursor c = fm.getAllFromDb();
 
-		adapter = new SimpleCursorAdapter(this, android.R.layout.simple_list_item_1, c, c.getColumnNames(), new int[] { android.R.id.text1 });
+		adapter = new SimpleCursorAdapter(this,
+				android.R.layout.simple_list_item_1, c, c.getColumnNames(),
+				new int[] { android.R.id.text1 });
 
 		ListView lv = (ListView) findViewById(R.id.listView);
 		lv.setAdapter(adapter);
@@ -71,7 +74,8 @@ public class FeedsActivity extends Activity implements OnItemClickListener, OnIt
 	}
 
 	@Override
-	public boolean onItemLongClick(final AdapterView<?> av, View v, final int position, long id) {
+	public boolean onItemLongClick(final AdapterView<?> av, View v,
+			final int position, long id) {
 		if (id == -1) {
 			return false;
 		}
@@ -111,7 +115,8 @@ public class FeedsActivity extends Activity implements OnItemClickListener, OnIt
 				@Override
 				public void onClick(View v) {
 					// add a new feed
-					EditText editName = (EditText) dialog.findViewById(R.id.name);
+					EditText editName = (EditText) dialog
+							.findViewById(R.id.name);
 					EditText editUrl = (EditText) dialog.findViewById(R.id.url);
 
 					String name = editName.getText().toString();

@@ -17,7 +17,8 @@ import de.tum.in.tumcampusapp.models.managers.GalleryManager;
 /**
  * Activity to show gallery items (name, image, etc.)
  */
-public class GalleryActivity extends ActivityForDownloadingExternal implements OnItemClickListener {
+public class GalleryActivity extends ActivityForDownloadingExternal implements
+		OnItemClickListener {
 
 	public GalleryActivity() {
 		super(Const.GALLERY, R.layout.activity_gallery);
@@ -32,7 +33,10 @@ public class GalleryActivity extends ActivityForDownloadingExternal implements O
 		cursor = gm.getFromDbArchive();
 		startManagingCursor(cursor);
 
-		adapter = new SimpleCursorAdapter(this, R.layout.activity_gallery_image, cursor, cursor.getColumnNames(), new int[] { R.id.activity_gallery_image });
+		adapter = new SimpleCursorAdapter(this,
+				R.layout.activity_gallery_image, cursor,
+				cursor.getColumnNames(),
+				new int[] { R.id.activity_gallery_image });
 
 		GridView gridview2 = (GridView) findViewById(R.id.activity_gallery_gridview);
 		gridview2.setAdapter(adapter);
@@ -77,7 +81,10 @@ public class GalleryActivity extends ActivityForDownloadingExternal implements O
 		startManagingCursor(cursor);
 
 		if (cursor.getCount() > 0) {
-			adapter = new SimpleCursorAdapter(this, R.layout.activity_gallery_image, cursor, cursor.getColumnNames(), new int[] { R.id.activity_gallery_image });
+			adapter = new SimpleCursorAdapter(this,
+					R.layout.activity_gallery_image, cursor,
+					cursor.getColumnNames(),
+					new int[] { R.id.activity_gallery_image });
 
 			GridView gridview = (GridView) findViewById(R.id.activity_gallery_gridview);
 			gridview.setAdapter(adapter);

@@ -20,7 +20,8 @@ import de.tum.in.tumcampusapp.models.managers.NewsManager;
 /**
  * Activity to show News (message, image, date)
  */
-public class NewsActivity extends ActivityForDownloadingExternal implements OnItemClickListener, ViewBinder {
+public class NewsActivity extends ActivityForDownloadingExternal implements
+		OnItemClickListener, ViewBinder {
 
 	public NewsActivity() {
 		super(Const.NEWS, R.layout.activity_news);
@@ -34,7 +35,8 @@ public class NewsActivity extends ActivityForDownloadingExternal implements OnIt
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public void onItemClick(AdapterView<?> aview, View view, int position, long id) {
+	public void onItemClick(AdapterView<?> aview, View view, int position,
+			long id) {
 		ListView lv = (ListView) findViewById(R.id.activity_news_list_view);
 
 		Cursor cursor = (Cursor) lv.getAdapter().getItem(position);
@@ -43,7 +45,8 @@ public class NewsActivity extends ActivityForDownloadingExternal implements OnIt
 		String url = cursor.getString(cursor.getColumnIndex(Const.LINK_COLUMN));
 
 		if (url.length() == 0) {
-			Toast.makeText(this, getString(R.string.no_link_existing), Toast.LENGTH_LONG).show();
+			Toast.makeText(this, getString(R.string.no_link_existing),
+					Toast.LENGTH_LONG).show();
 			return;
 		}
 
@@ -62,8 +65,10 @@ public class NewsActivity extends ActivityForDownloadingExternal implements OnIt
 		Cursor cursor = nm.getAllFromDb();
 		startManagingCursor(cursor);
 		if (cursor.getCount() > 0) {
-			SimpleCursorAdapter adapter = new SimpleCursorAdapter(this, R.layout.activity_news_listview, cursor, cursor.getColumnNames(), new int[] {
-					R.id.image, R.id.message, R.id.date });
+			SimpleCursorAdapter adapter = new SimpleCursorAdapter(this,
+					R.layout.activity_news_listview, cursor,
+					cursor.getColumnNames(), new int[] { R.id.image,
+							R.id.message, R.id.date });
 
 			adapter.setViewBinder(this);
 
@@ -83,7 +88,8 @@ public class NewsActivity extends ActivityForDownloadingExternal implements OnIt
 		// Adds url (domain only) to date
 		if (view.getId() == R.id.date) {
 			String date = cursor.getString(index);
-			String link = cursor.getString(cursor.getColumnIndex(Const.LINK_COLUMN));
+			String link = cursor.getString(cursor
+					.getColumnIndex(Const.LINK_COLUMN));
 
 			if (link.length() > 0) {
 				TextView tv = (TextView) view;

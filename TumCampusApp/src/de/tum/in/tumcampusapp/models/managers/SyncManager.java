@@ -36,7 +36,9 @@ public class SyncManager {
 	 */
 	public static boolean needSync(SQLiteDatabase db, String id, int seconds) {
 		boolean result = true;
-		Cursor c = db.rawQuery("SELECT lastSync FROM syncs WHERE lastSync > datetime('now', '-" + seconds + " second') AND id=?", new String[] { id });
+		Cursor c = db.rawQuery(
+				"SELECT lastSync FROM syncs WHERE lastSync > datetime('now', '-"
+						+ seconds + " second') AND id=?", new String[] { id });
 		if (c.getCount() == 1) {
 			result = false;
 		}
@@ -71,7 +73,8 @@ public class SyncManager {
 		if (id.length() == 0) {
 			return;
 		}
-		db.execSQL("REPLACE INTO syncs (id, lastSync) VALUES (?, datetime())", new String[] { id });
+		db.execSQL("REPLACE INTO syncs (id, lastSync) VALUES (?, datetime())",
+				new String[] { id });
 	}
 
 	/**

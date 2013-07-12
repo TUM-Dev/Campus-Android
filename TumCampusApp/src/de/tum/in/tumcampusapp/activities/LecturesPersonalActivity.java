@@ -73,7 +73,8 @@ public class LecturesPersonalActivity extends ActivityForAccessingTumOnline {
 		// deserialize the XML
 		Serializer serializer = new Persister();
 		try {
-			lecturesList = serializer.read(LecturesSearchRowSet.class, rawResponse);
+			lecturesList = serializer.read(LecturesSearchRowSet.class,
+					rawResponse);
 		} catch (Exception e) {
 			Log.d("SIMPLEXML", "wont work: " + e.getMessage());
 			progressLayout.setVisibility(View.GONE);
@@ -88,14 +89,16 @@ public class LecturesPersonalActivity extends ActivityForAccessingTumOnline {
 
 			filters.add(getString(R.string.all));
 			for (int i = 0; i < lecturesList.getLehrveranstaltungen().size(); i++) {
-				String item = lecturesList.getLehrveranstaltungen().get(i).getSemester_id();
+				String item = lecturesList.getLehrveranstaltungen().get(i)
+						.getSemester_id();
 				if (filters.indexOf(item) == -1) {
 					filters.add(item);
 				}
 			}
 
 			// simple adapter for the spinner
-			ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_checked, filters);
+			ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(
+					this, android.R.layout.simple_list_item_checked, filters);
 			spFilter.setAdapter(spinnerArrayAdapter);
 			spFilter.setOnItemSelectedListener(new OnItemSelectedListener() {
 
@@ -107,15 +110,18 @@ public class LecturesPersonalActivity extends ActivityForAccessingTumOnline {
 				 * FindLecturesListAdapter
 				 */
 				@Override
-				public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+				public void onItemSelected(AdapterView<?> arg0, View arg1,
+						int arg2, long arg3) {
 					String filter = spFilter.getItemAtPosition(arg2).toString();
 					if (filter == getString(R.string.all)) {
 						setListView(lecturesList.getLehrveranstaltungen());
 					} else {
 						// do filtering for the given semester
 						List<LecturesSearchRow> filteredList = new ArrayList<LecturesSearchRow>();
-						for (int i = 0; i < lecturesList.getLehrveranstaltungen().size(); i++) {
-							LecturesSearchRow item = lecturesList.getLehrveranstaltungen().get(i);
+						for (int i = 0; i < lecturesList
+								.getLehrveranstaltungen().size(); i++) {
+							LecturesSearchRow item = lecturesList
+									.getLehrveranstaltungen().get(i);
 							if (item.getSemester_id().equals(filter)) {
 								filteredList.add(item);
 							}
@@ -155,12 +161,14 @@ public class LecturesPersonalActivity extends ActivityForAccessingTumOnline {
 	 */
 	private void setListView(List<LecturesSearchRow> lecturesList) {
 		// set ListView to data via the FindLecturesListAdapter
-		lvMyLecturesList.setAdapter(new LecturesSearchListAdapter(this, lecturesList));
+		lvMyLecturesList.setAdapter(new LecturesSearchListAdapter(this,
+				lecturesList));
 
 		// handle on click events by showing its LectureDetails
 		lvMyLecturesList.setOnItemClickListener(new OnItemClickListener() {
 			@Override
-			public void onItemClick(AdapterView<?> a, View v, int position, long id) {
+			public void onItemClick(AdapterView<?> a, View v, int position,
+					long id) {
 				Object o = lvMyLecturesList.getItemAtPosition(position);
 				LecturesSearchRow item = (LecturesSearchRow) o;
 
@@ -168,7 +176,8 @@ public class LecturesPersonalActivity extends ActivityForAccessingTumOnline {
 				Bundle bundle = new Bundle();
 				// we need the stp_sp_nr
 				bundle.putString("stp_sp_nr", item.getStp_sp_nr());
-				Intent i = new Intent(LecturesPersonalActivity.this, LecturesDetailsActivity.class);
+				Intent i = new Intent(LecturesPersonalActivity.this,
+						LecturesDetailsActivity.class);
 				i.putExtras(bundle);
 				// start LectureDetails for given stp_sp_nr
 				startActivity(i);

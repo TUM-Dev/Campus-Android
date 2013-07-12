@@ -45,7 +45,8 @@ public class TransportManager {
 	 * </pre>
 	 */
 	public void deleteFromDb(String name) {
-		db.execSQL("DELETE FROM transports WHERE name = ?", new String[] { name });
+		db.execSQL("DELETE FROM transports WHERE name = ?",
+				new String[] { name });
 	}
 
 	/**
@@ -69,7 +70,8 @@ public class TransportManager {
 	 * @return Database cursor (name, _id)
 	 */
 	public Cursor getAllFromDb() {
-		return db.rawQuery("SELECT name, name as _id FROM transports ORDER BY name", null);
+		return db.rawQuery(
+				"SELECT name, name as _id FROM transports ORDER BY name", null);
 	}
 
 	/**
@@ -87,22 +89,29 @@ public class TransportManager {
 
 		String baseUrl = "http://query.yahooapis.com/v1/public/yql?format=json&q=";
 		// ISO needed for mvv
-		String lookupUrl = "http://www.mvg-live.de/ims/dfiStaticAnzeige.svc?haltestelle=" + URLEncoder.encode(location, "ISO-8859-1");
+		String lookupUrl = "http://www.mvg-live.de/ims/dfiStaticAnzeige.svc?haltestelle="
+				+ URLEncoder.encode(location, "ISO-8859-1");
 
 		@SuppressWarnings("deprecation")
-		String query = URLEncoder.encode("select content from html where url=\"" + lookupUrl + "\" and xpath=\"//td[contains(@class,'Column')]/p\"");
+		String query = URLEncoder
+				.encode("select content from html where url=\"" + lookupUrl
+						+ "\" and xpath=\"//td[contains(@class,'Column')]/p\"");
 		Utils.log(query);
 
-		JSONArray jsonArray = Utils.downloadJson(baseUrl + query).getJSONObject("query").getJSONObject("results").getJSONArray("p");
+		JSONArray jsonArray = Utils.downloadJson(baseUrl + query)
+				.getJSONObject("query").getJSONObject("results")
+				.getJSONArray("p");
 
 		if (jsonArray.length() < 3) {
 			throw new NoSuchElementException("No departures found");
 		}
 
-		MatrixCursor mc = new MatrixCursor(new String[] { "name", "desc", "_id" });
+		MatrixCursor mc = new MatrixCursor(
+				new String[] { "name", "desc", "_id" });
 
 		for (int j = 2; j < jsonArray.length(); j = j + 3) {
-			String name = jsonArray.getString(j) + " " + jsonArray.getString(j + 1).trim();
+			String name = jsonArray.getString(j) + " "
+					+ jsonArray.getString(j + 1).trim();
 			String desc = jsonArray.getString(j + 2) + " min";
 			mc.addRow(new String[] { name, desc, String.valueOf(j) });
 		}
@@ -121,13 +130,17 @@ public class TransportManager {
 	public Cursor getStationsFromExternal(String location) throws Exception {
 
 		String baseUrl = "http://query.yahooapis.com/v1/public/yql?format=json&q=";
-		String lookupUrl = "http://www.mvg-live.de/ims/dfiStaticAuswahl.svc?haltestelle=" + URLEncoder.encode(location, "ISO-8859-1");
+		String lookupUrl = "http://www.mvg-live.de/ims/dfiStaticAuswahl.svc?haltestelle="
+				+ URLEncoder.encode(location, "ISO-8859-1");
 
 		@SuppressWarnings("deprecation")
-		String query = URLEncoder.encode("select content from html where url=\"" + lookupUrl + "\" and xpath=\"//a[contains(@href,'haltestelle')]\"");
+		String query = URLEncoder
+				.encode("select content from html where url=\"" + lookupUrl
+						+ "\" and xpath=\"//a[contains(@href,'haltestelle')]\"");
 		Utils.log(query);
 
-		JSONObject jsonObj = Utils.downloadJson(baseUrl + query).getJSONObject("query");
+		JSONObject jsonObj = Utils.downloadJson(baseUrl + query).getJSONObject(
+				"query");
 		JSONArray jsonArray = new JSONArray();
 
 		try {
@@ -167,6 +180,7 @@ public class TransportManager {
 		if (name.length() == 0) {
 			return;
 		}
-		db.execSQL("REPLACE INTO transports (name) VALUES (?)", new String[] { name });
+		db.execSQL("REPLACE INTO transports (name) VALUES (?)",
+				new String[] { name });
 	}
 }

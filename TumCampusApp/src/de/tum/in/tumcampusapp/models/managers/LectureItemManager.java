@@ -59,8 +59,10 @@ public class LectureItemManager {
 		db = DatabaseManager.getDb(context);
 
 		// create table if needed
-		db.execSQL("CREATE TABLE IF NOT EXISTS lectures_items (" + "id VARCHAR PRIMARY KEY, lectureId VARCHAR, start VARCHAR, "
-				+ "end VARCHAR, name VARCHAR, module VARCHAR, location VARCHAR, " + "note VARCHAR, url VARCHAR, seriesId VARCHAR)");
+		db.execSQL("CREATE TABLE IF NOT EXISTS lectures_items ("
+				+ "id VARCHAR PRIMARY KEY, lectureId VARCHAR, start VARCHAR, "
+				+ "end VARCHAR, name VARCHAR, module VARCHAR, location VARCHAR, "
+				+ "note VARCHAR, url VARCHAR, seriesId VARCHAR)");
 	}
 
 	/**
@@ -71,7 +73,8 @@ public class LectureItemManager {
 	 * </pre>
 	 */
 	public void deleteItemFromDb(String id) {
-		db.execSQL("DELETE FROM lectures_items WHERE id = ?", new String[] { id });
+		db.execSQL("DELETE FROM lectures_items WHERE id = ?",
+				new String[] { id });
 	}
 
 	/**
@@ -82,7 +85,8 @@ public class LectureItemManager {
 	 * </pre>
 	 */
 	public void deleteLectureFromDb(String id) {
-		db.execSQL("DELETE FROM lectures_items WHERE lectureId = ?", new String[] { id });
+		db.execSQL("DELETE FROM lectures_items WHERE lectureId = ?",
+				new String[] { id });
 	}
 
 	/**
@@ -110,10 +114,13 @@ public class LectureItemManager {
 	 * </pre>
 	 */
 	public Cursor getAllFromDb(String lectureId) {
-		return db.rawQuery("SELECT name, note, location, strftime('%w', start) as weekday, "
-				+ "strftime('%d.%m.%Y %H:%M', start) as start_de, strftime('%H:%M', end) as end_de, "
-				+ "strftime('%d.%m.%Y', start) as start_dt, strftime('%d.%m.%Y', end) as end_dt, "
-				+ "url, lectureId, id as _id FROM lectures_items WHERE lectureId = ? ORDER BY start", new String[] { lectureId });
+		return db
+				.rawQuery(
+						"SELECT name, note, location, strftime('%w', start) as weekday, "
+								+ "strftime('%d.%m.%Y %H:%M', start) as start_de, strftime('%H:%M', end) as end_de, "
+								+ "strftime('%d.%m.%Y', start) as start_dt, strftime('%d.%m.%Y', end) as end_dt, "
+								+ "url, lectureId, id as _id FROM lectures_items WHERE lectureId = ? ORDER BY start",
+						new String[] { lectureId });
 	}
 
 	/**
@@ -122,8 +129,12 @@ public class LectureItemManager {
 	 * @return Database cursor (name, location, _id)
 	 */
 	public Cursor getCurrentFromDb() {
-		return db.rawQuery("SELECT name, location, id as _id " + "FROM lectures_items WHERE datetime('now', 'localtime') BETWEEN start AND end AND "
-				+ "lectureId NOT IN ('holiday', 'vacation') LIMIT 1", null);
+		return db
+				.rawQuery(
+						"SELECT name, location, id as _id "
+								+ "FROM lectures_items WHERE datetime('now', 'localtime') BETWEEN start AND end AND "
+								+ "lectureId NOT IN ('holiday', 'vacation') LIMIT 1",
+						null);
 	}
 
 	/**
@@ -132,8 +143,11 @@ public class LectureItemManager {
 	 * @return Database cursor (name, note, location, start, end, url)
 	 */
 	public Cursor getFutureFromDb() {
-		return db.rawQuery("SELECT name, note, location, start, end, url FROM lectures_items " + "WHERE end > datetime('now', 'localtime') ORDER BY start",
-				null);
+		return db
+				.rawQuery(
+						"SELECT name, note, location, start, end, url FROM lectures_items "
+								+ "WHERE end > datetime('now', 'localtime') ORDER BY start",
+						null);
 	}
 
 	/**
@@ -143,11 +157,14 @@ public class LectureItemManager {
 	 *         start_dt, end_dt, url, lectureId, _id)
 	 */
 	public Cursor getRecentFromDb() {
-		return db.rawQuery("SELECT name, note, location, strftime('%w', start) as weekday, "
-				+ "strftime('%H:%M', start) as start_de, strftime('%H:%M', end) as end_de, "
-				+ "strftime('%d.%m.%Y', start) as start_dt, strftime('%d.%m.%Y', end) as end_dt, "
-				+ "url, lectureId, id as _id FROM lectures_items WHERE end > datetime('now', 'localtime') AND "
-				+ "start < date('now', '+7 day') ORDER BY start", null);
+		return db
+				.rawQuery(
+						"SELECT name, note, location, strftime('%w', start) as weekday, "
+								+ "strftime('%H:%M', start) as start_de, strftime('%H:%M', end) as end_de, "
+								+ "strftime('%d.%m.%Y', start) as start_dt, strftime('%d.%m.%Y', end) as end_dt, "
+								+ "url, lectureId, id as _id FROM lectures_items WHERE end > datetime('now', 'localtime') AND "
+								+ "start < date('now', '+7 day') ORDER BY start",
+						null);
 	}
 
 	/**
@@ -157,7 +174,8 @@ public class LectureItemManager {
 	 */
 	public boolean hasLectures() {
 		boolean result = false;
-		Cursor c = db.rawQuery("SELECT id FROM lectures_items WHERE " + "lectureId NOT IN ('holiday', 'vacation') LIMIT 1", null);
+		Cursor c = db.rawQuery("SELECT id FROM lectures_items WHERE "
+				+ "lectureId NOT IN ('holiday', 'vacation') LIMIT 1", null);
 		if (c.moveToNext()) {
 			result = true;
 		}
@@ -178,7 +196,8 @@ public class LectureItemManager {
 	 * </pre>
 	 */
 	public void importCsv(File file, String encoding) throws Exception {
-		List<String[]> list = Utils.readCsv(new FileInputStream(file), encoding);
+		List<String[]> list = Utils
+				.readCsv(new FileInputStream(file), encoding);
 
 		if (list.size() == 0) {
 			return;
@@ -190,7 +209,8 @@ public class LectureItemManager {
 
 			// skip canceled events on import
 			int terminTypId = headers.indexOf("TERMIN_TYP");
-			if (terminTypId != -1 && row.length > terminTypId && row[terminTypId].contains("abgesagt")) {
+			if (terminTypId != -1 && row.length > terminTypId
+					&& row[terminTypId].contains("abgesagt")) {
 				continue;
 			}
 
@@ -200,7 +220,8 @@ public class LectureItemManager {
 
 			String module = "";
 			if (name.contains("(") && name.contains(")")) {
-				module = name.substring(name.indexOf("(") + 1, name.indexOf(")"));
+				module = name.substring(name.indexOf("(") + 1,
+						name.indexOf(")"));
 				name = name.substring(0, name.indexOf("(")).trim();
 			}
 
@@ -211,9 +232,12 @@ public class LectureItemManager {
 			Date start = Utils.getDateTimeDe(datum + " " + von);
 			Date end = Utils.getDateTimeDe(datum + " " + bis);
 
-			String id = row[headers.indexOf("LV_NUMMER")] + "_" + String.valueOf(start.getTime());
+			String id = row[headers.indexOf("LV_NUMMER")] + "_"
+					+ String.valueOf(start.getTime());
 
-			String seriesId = row[headers.indexOf("LV_NUMMER")] + "_" + row[headers.indexOf("WOCHENTAG")] + "_" + row[headers.indexOf("VON")];
+			String seriesId = row[headers.indexOf("LV_NUMMER")] + "_"
+					+ row[headers.indexOf("WOCHENTAG")] + "_"
+					+ row[headers.indexOf("VON")];
 
 			String note = "";
 			int noteId = headers.indexOf("ANMERKUNG");
@@ -229,7 +253,8 @@ public class LectureItemManager {
 				lectureId = Utils.md5(name);
 			}
 
-			replaceIntoDb(new LectureItem(id, lectureId, start, end, name, module, location, note, url, seriesId));
+			replaceIntoDb(new LectureItem(id, lectureId, start, end, name,
+					module, location, note, url, seriesId));
 		}
 	}
 
@@ -275,24 +300,28 @@ public class LectureItemManager {
 
 			// acquire access token
 			String accessToken = null;
-			accessToken = PreferenceManager.getDefaultSharedPreferences(con).getString(Const.ACCESS_TOKEN, null);
+			accessToken = PreferenceManager.getDefaultSharedPreferences(con)
+					.getString(Const.ACCESS_TOKEN, null);
 
 			if (accessToken == null || accessToken == "") {
 				throw new Exception("no access token set");
 			}
 
 			// get my lectures
-			TUMOnlineRequest requestHandler = new TUMOnlineRequest("veranstaltungenEigene", accessToken);
+			TUMOnlineRequest requestHandler = new TUMOnlineRequest(
+					"veranstaltungenEigene", accessToken);
 			String strMine = requestHandler.fetch();
 			// deserialize
 			Serializer serializer = new Persister();
 
 			// define it this way to get at least an empty list
 			LecturesSearchRowSet MyLecturesList = new LecturesSearchRowSet();
-			MyLecturesList.setLehrveranstaltungen(new ArrayList<LecturesSearchRow>());
+			MyLecturesList
+					.setLehrveranstaltungen(new ArrayList<LecturesSearchRow>());
 
 			try {
-				MyLecturesList = serializer.read(LecturesSearchRowSet.class, strMine);
+				MyLecturesList = serializer.read(LecturesSearchRowSet.class,
+						strMine);
 			} catch (Exception e) {
 				Log.d("SIMPLEXML", "wont work: " + e.getMessage());
 				e.printStackTrace();
@@ -300,34 +329,44 @@ public class LectureItemManager {
 
 			// get schedule for my lectures
 			for (int i = 0; i < MyLecturesList.getLehrveranstaltungen().size(); i++) {
-				LecturesSearchRow currentLecture = MyLecturesList.getLehrveranstaltungen().get(i);
+				LecturesSearchRow currentLecture = MyLecturesList
+						.getLehrveranstaltungen().get(i);
 
 				// now, get termine for each lecture
-				TUMOnlineRequest req = new TUMOnlineRequest("veranstaltungenTermine", accessToken);
+				TUMOnlineRequest req = new TUMOnlineRequest(
+						"veranstaltungenTermine", accessToken);
 				req.setParameter("pLVNr", currentLecture.getStp_sp_nr());
 				String strTermine = req.fetch();
 
 				// define it this way to assert that there is an empty list
 				LectureAppointmentsRowSet MyLectureTerminList = new LectureAppointmentsRowSet();
-				MyLectureTerminList.setLehrveranstaltungenTermine(new ArrayList<LectureAppointmentsRow>());
+				MyLectureTerminList
+						.setLehrveranstaltungenTermine(new ArrayList<LectureAppointmentsRow>());
 				try {
-					MyLectureTerminList = serializer.read(LectureAppointmentsRowSet.class, strTermine);
+					MyLectureTerminList = serializer.read(
+							LectureAppointmentsRowSet.class, strTermine);
 				} catch (Exception e) {
 					Log.d("SIMPLEXML", "wont work: " + e.getMessage());
 					e.printStackTrace();
 				}
 
 				// now, enter each task date to the current Lecture
-				if (MyLectureTerminList != null && MyLectureTerminList.getLehrveranstaltungenTermine() != null)
-					for (int y = 0; y < MyLectureTerminList.getLehrveranstaltungenTermine().size(); y++) {
+				if (MyLectureTerminList != null
+						&& MyLectureTerminList.getLehrveranstaltungenTermine() != null)
+					for (int y = 0; y < MyLectureTerminList
+							.getLehrveranstaltungenTermine().size(); y++) {
 						try {
 							// set currentTask
-							LectureAppointmentsRow currentTask = MyLectureTerminList.getLehrveranstaltungenTermine().get(y);
+							LectureAppointmentsRow currentTask = MyLectureTerminList
+									.getLehrveranstaltungenTermine().get(y);
 
 							// parse dates
-							SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-							Date start = formatter.parse(currentTask.getBeginn_datum_zeitpunkt());
-							Date end = formatter.parse(currentTask.getEnde_datum_zeitpunkt());
+							SimpleDateFormat formatter = new SimpleDateFormat(
+									"yyyy-MM-dd HH:mm");
+							Date start = formatter.parse(currentTask
+									.getBeginn_datum_zeitpunkt());
+							Date end = formatter.parse(currentTask
+									.getEnde_datum_zeitpunkt());
 
 							// check if the task is in the future
 							Calendar cnow = Calendar.getInstance();
@@ -350,20 +389,27 @@ public class LectureItemManager {
 
 								String module = "";
 								if (name.contains("(") && name.contains(")")) {
-									module = name.substring(name.indexOf("(") + 1, name.indexOf(")"));
-									name = name.substring(0, name.indexOf("(")).trim();
+									module = name.substring(
+											name.indexOf("(") + 1,
+											name.indexOf(")"));
+									name = name.substring(0, name.indexOf("("))
+											.trim();
 								}
 
 								// set id
-								String id = lectureId + "_" + String.valueOf(start.getTime());
+								String id = lectureId + "_"
+										+ String.valueOf(start.getTime());
 
 								// set wochentag
-								String wochentag = Utils.getWeekDayByDate(start).toUpperCase();
+								String wochentag = Utils
+										.getWeekDayByDate(start).toUpperCase();
 
-								SimpleDateFormat sdfvon = new SimpleDateFormat("HH:mm");
+								SimpleDateFormat sdfvon = new SimpleDateFormat(
+										"HH:mm");
 								String von = sdfvon.format(start);
 
-								String seriesId = lectureId + "_" + wochentag + "_" + von;
+								String seriesId = lectureId + "_" + wochentag
+										+ "_" + von;
 
 								// set note and url
 								String note = "";
@@ -375,11 +421,14 @@ public class LectureItemManager {
 								}
 
 								// now, make entry to database
-								replaceIntoDb(new LectureItem(id, lectureId, start, end, name, module, location, note, url, seriesId));
+								replaceIntoDb(new LectureItem(id, lectureId,
+										start, end, name, module, location,
+										note, url, seriesId));
 
 							}
 						} catch (Exception ex) {
-							Log.d("TUMOnlineParseATask", "the task could not be parsed");
+							Log.d("TUMOnlineParseATask",
+									"the task could not be parsed");
 							ex.printStackTrace();
 						}
 					}
@@ -418,9 +467,12 @@ public class LectureItemManager {
 			throw new Exception("Invalid id.");
 		}
 
-		db.execSQL("REPLACE INTO lectures_items (id, lectureId, start, end, "
-				+ "name, module, location, note, url, seriesId) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-				new String[] { l.id, l.lectureId, Utils.getDateTimeString(l.start), Utils.getDateTimeString(l.end), l.name, l.module, l.location, l.note,
-						l.url, l.seriesId });
+		db.execSQL(
+				"REPLACE INTO lectures_items (id, lectureId, start, end, "
+						+ "name, module, location, note, url, seriesId) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+				new String[] { l.id, l.lectureId,
+						Utils.getDateTimeString(l.start),
+						Utils.getDateTimeString(l.end), l.name, l.module,
+						l.location, l.note, l.url, l.seriesId });
 	}
 }

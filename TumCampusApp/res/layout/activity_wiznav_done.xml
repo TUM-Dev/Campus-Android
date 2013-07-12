@@ -8,7 +8,7 @@
         <TextView
         style="?android:attr/listSeparatorTextViewStyle"
         android:layout_height="wrap_content"
-        android:text="Finish"
+        android:text="@string/finish"
         android:textColor="@color/text_light_gray" />
         
     <TextView

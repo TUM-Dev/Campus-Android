@@ -44,7 +44,8 @@ public class ImportService extends IntentService {
 
 		FeedManager nm = new FeedManager(this);
 		if (nm.empty()) {
-			List<String[]> rows = Utils.readCsv(getAssets().open(CSV_FEEDS), ISO);
+			List<String[]> rows = Utils.readCsv(getAssets().open(CSV_FEEDS),
+					ISO);
 
 			for (String[] row : rows) {
 				nm.insertUpdateIntoDb(new Feed(row[0], row[1]));
@@ -64,10 +65,12 @@ public class ImportService extends IntentService {
 
 		LocationManager lm = new LocationManager(this);
 		if (lm.empty() || force) {
-			List<String[]> rows = Utils.readCsv(getAssets().open(CSV_LOCATIONS), ISO);
+			List<String[]> rows = Utils.readCsv(
+					getAssets().open(CSV_LOCATIONS), ISO);
 
 			for (String[] row : rows) {
-				lm.replaceIntoDb(new Location(Integer.parseInt(row[0]), row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8]));
+				lm.replaceIntoDb(new Location(Integer.parseInt(row[0]), row[1],
+						row[2], row[3], row[4], row[5], row[6], row[7], row[8]));
 			}
 		}
 	}
@@ -127,7 +130,8 @@ public class ImportService extends IntentService {
 		if (action.equals(Const.DEFAULTS)) {
 			try {
 				// get current app version
-				int version = getPackageManager().getPackageInfo(this.getPackageName(), 0).versionCode;
+				int version = getPackageManager().getPackageInfo(
+						this.getPackageName(), 0).versionCode;
 
 				// check if database update is needed
 				boolean update = false;

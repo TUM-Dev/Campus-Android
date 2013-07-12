@@ -31,7 +31,8 @@ public class PersonListAdapter extends BaseAdapter {
 
 	public PersonListAdapter(Context context, List<Person> results) {
 		employees = results;
-		mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		mInflater = (LayoutInflater) context
+				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
 
 	@Override
@@ -53,9 +54,11 @@ public class PersonListAdapter extends BaseAdapter {
 	public View getView(int position, View convertView, ViewGroup parent) {
 		ViewHolder holder;
 		if (convertView == null) {
-			convertView = mInflater.inflate(android.R.layout.simple_list_item_1, null);
+			convertView = mInflater.inflate(
+					android.R.layout.simple_list_item_1, null);
 			holder = new ViewHolder();
-			holder.tvName = (TextView) convertView.findViewById(android.R.id.text1);
+			holder.tvName = (TextView) convertView
+					.findViewById(android.R.id.text1);
 
 			convertView.setTag(holder);
 		} else {

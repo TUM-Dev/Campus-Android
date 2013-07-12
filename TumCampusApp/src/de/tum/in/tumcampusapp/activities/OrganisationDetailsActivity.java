@@ -31,7 +31,8 @@ import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequestFetchListener;
  * @author Thomas Behrens
  * @review Vincenz Doelle, Daniel G. Mayr
  */
-public class OrganisationDetailsActivity extends Activity implements TUMOnlineRequestFetchListener {
+public class OrganisationDetailsActivity extends Activity implements
+		TUMOnlineRequestFetchListener {
 
 	/**
 	 * To fetch the Details from the TUMCampus interface
@@ -65,7 +66,8 @@ public class OrganisationDetailsActivity extends Activity implements TUMOnlineRe
 		// if there is a call of OrganisationDetails without an id (should not
 		// be possible)
 		if (orgId == null) {
-			Toast.makeText(this, getString(R.string.invalid_organisation), Toast.LENGTH_LONG).show();
+			Toast.makeText(this, getString(R.string.invalid_organisation),
+					Toast.LENGTH_LONG).show();
 			return;
 		}
 
@@ -84,7 +86,8 @@ public class OrganisationDetailsActivity extends Activity implements TUMOnlineRe
 			requestHandler.setParameter("orgUnitID", orgId);
 
 			// set loading text
-			requestHandler.setProgressDialogMessage(getString(R.string.loading_organisation_details));
+			requestHandler
+					.setProgressDialogMessage(getString(R.string.loading_organisation_details));
 
 			// do the TUMCampus request
 			requestHandler.fetchInteractive(this, this);
@@ -223,29 +226,37 @@ public class OrganisationDetailsActivity extends Activity implements TUMOnlineRe
 
 		// must-have data:
 		/** organisation code */
-		stringBuffer.append(makeStringShowable(getString(R.string.abbreviation), organisation.getCode()));
+		stringBuffer.append(makeStringShowable(
+				getString(R.string.abbreviation), organisation.getCode()));
 		/** description */
-		stringBuffer.append(makeStringShowable(getString(R.string.description), organisation.getDescription().replace("\n", "<br>"))); // replace
-																																		// \n
-																																		// with
-																																		// <br>
-																																		// to
-																																		// keep
-																																		// passages
+		stringBuffer.append(makeStringShowable(getString(R.string.description),
+				organisation.getDescription().replace("\n", "<br>"))); // replace
+																		// \n
+																		// with
+																		// <br>
+																		// to
+																		// keep
+																		// passages
 
 		/** >>Caption - Contact Data<< */
-		if ((organisation.getContactName().length() != 0) || (organisation.getContactEmail().length() != 0)
-				|| (organisation.getContactTelephone().length() != 0) || (organisation.getContactFax().length() != 0)
-				|| (organisation.getContactStreet().length() != 0) || (organisation.getContactPLZ().length() != 0)
-				|| (organisation.getContactLocality().length() != 0) || (organisation.getContactCountry().length() != 0)) {
+		if ((organisation.getContactName().length() != 0)
+				|| (organisation.getContactEmail().length() != 0)
+				|| (organisation.getContactTelephone().length() != 0)
+				|| (organisation.getContactFax().length() != 0)
+				|| (organisation.getContactStreet().length() != 0)
+				|| (organisation.getContactPLZ().length() != 0)
+				|| (organisation.getContactLocality().length() != 0)
+				|| (organisation.getContactCountry().length() != 0)) {
 
-			stringBuffer.append("<br><u><b>" + getString(R.string.contact_details) + "</b></u><br>");
+			stringBuffer.append("<br><u><b>"
+					+ getString(R.string.contact_details) + "</b></u><br>");
 		}
 
 		/** organisation name */
 		stringBuffer.append(organisation.getContactName() + "<br>");
 		/** email */
-		stringBuffer.append(makeStringShowable(getString(R.string.email), organisation.getContactEmail()));
+		stringBuffer.append(makeStringShowable(getString(R.string.email),
+				organisation.getContactEmail()));
 		/** phone */
 		if (organisation.getContactTelephone().length() != 0) {
 			stringBuffer.append("<b>" + getString(R.string.phone) + "\t</b>");
@@ -253,7 +264,8 @@ public class OrganisationDetailsActivity extends Activity implements TUMOnlineRe
 			tempPhoneNumber = removePunctuation(tempPhoneNumber);
 			stringBuffer.append(tempPhoneNumber);
 			if (organisation.getContactTelephoneType().length() != 0) {
-				stringBuffer.append(" &nbsp;(" + organisation.getContactTelephoneType() + ") <br>");
+				stringBuffer.append(" &nbsp;("
+						+ organisation.getContactTelephoneType() + ") <br>");
 			} else {
 				stringBuffer.append(" <br>");
 			}
@@ -262,35 +274,51 @@ public class OrganisationDetailsActivity extends Activity implements TUMOnlineRe
 		/** fax */
 		String tempFaxNumber = organisation.getContactFax();
 		tempFaxNumber = removePunctuation(tempFaxNumber);
-		stringBuffer.append(makeStringShowable(getString(R.string.fax), tempFaxNumber));
+		stringBuffer.append(makeStringShowable(getString(R.string.fax),
+				tempFaxNumber));
 		/** street */
-		stringBuffer.append(makeStringShowable(getString(R.string.street), organisation.getContactStreet()));
+		stringBuffer.append(makeStringShowable(getString(R.string.street),
+				organisation.getContactStreet()));
 		/** plz */
-		stringBuffer.append(makeStringShowable(getString(R.string.plz), organisation.getContactPLZ()));
+		stringBuffer.append(makeStringShowable(getString(R.string.plz),
+				organisation.getContactPLZ()));
 		/** town */
-		stringBuffer.append(makeStringShowable(getString(R.string.town), organisation.getContactLocality()));
+		stringBuffer.append(makeStringShowable(getString(R.string.town),
+				organisation.getContactLocality()));
 		/** country */
-		stringBuffer.append(makeStringShowable(getString(R.string.country), organisation.getContactCountry()));
+		stringBuffer.append(makeStringShowable(getString(R.string.country),
+				organisation.getContactCountry()));
 
 		/** >>Caption - Links<< */
-		if ((organisation.getContactLink().length() != 0) || (organisation.getContactLocationURL().length() != 0)
+		if ((organisation.getContactLink().length() != 0)
+				|| (organisation.getContactLocationURL().length() != 0)
 				|| (organisation.getTumCampusLink().length() != 0)) {
-			stringBuffer.append("<br><u><b>" + getString(R.string.links) + ":</b></u><br>");
+			stringBuffer.append("<br><u><b>" + getString(R.string.links)
+					+ ":</b></u><br>");
 		}
 		/** TUMOnline link */
-		stringBuffer.append(makeStringShowable(getString(R.string.tumonline_link), organisation.getContactLink()));
+		stringBuffer.append(makeStringShowable(
+				getString(R.string.tumonline_link),
+				organisation.getContactLink()));
 		/** TUMCampus link */
-		stringBuffer.append(makeStringShowable(getString(R.string.tumcampus_link), organisation.getTumCampusLink()));
+		stringBuffer.append(makeStringShowable(
+				getString(R.string.tumcampus_link),
+				organisation.getTumCampusLink()));
 		/** GoogleMaps link */
-		stringBuffer.append(makeStringShowable(getString(R.string.googlemaps_link), organisation.getContactLocationURL()));
+		stringBuffer.append(makeStringShowable(
+				getString(R.string.googlemaps_link),
+				organisation.getContactLocationURL()));
 
 		/** Additional information */
 		if (organisation.getAdditionalInfoCaption().length() != 0) {
-			stringBuffer.append("<br><u><b>" + getString(R.string.add_info) + ":</b></u><br>");
+			stringBuffer.append("<br><u><b>" + getString(R.string.add_info)
+					+ ":</b></u><br>");
 			// first letter of additional info in upper case
 			String addInfoCaption = organisation.getAdditionalInfoCaption();
-			addInfoCaption = Character.toUpperCase(addInfoCaption.charAt(0)) + addInfoCaption.substring(1);
-			stringBuffer.append("<b>" + addInfoCaption + ":</b> " + organisation.getAdditionalInfoText() + "<br>");
+			addInfoCaption = Character.toUpperCase(addInfoCaption.charAt(0))
+					+ addInfoCaption.substring(1);
+			stringBuffer.append("<b>" + addInfoCaption + ":</b> "
+					+ organisation.getAdditionalInfoText() + "<br>");
 		}
 
 		// show text in html
@@ -312,7 +340,8 @@ public class OrganisationDetailsActivity extends Activity implements TUMOnlineRe
 		if ((keyCode == KeyEvent.KEYCODE_BACK)) {
 			Bundle bundle = new Bundle();
 			bundle.putString(Const.ORG_ID, orgId);
-			Intent i = new Intent(OrganisationDetailsActivity.this, OrganisationActivity.class);
+			Intent i = new Intent(OrganisationDetailsActivity.this,
+					OrganisationActivity.class);
 			i.putExtras(bundle);
 			startActivity(i);
 			return true;

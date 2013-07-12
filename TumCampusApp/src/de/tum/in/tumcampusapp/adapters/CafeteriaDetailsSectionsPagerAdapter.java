@@ -31,7 +31,8 @@ public class CafeteriaDetailsSectionsPagerAdapter extends FragmentPagerAdapter {
 	private ArrayList<String> dates = new ArrayList<String>();
 
 	@SuppressWarnings("deprecation")
-	public CafeteriaDetailsSectionsPagerAdapter(Activity mainActivity, FragmentManager fm, String cafeteriaId, String cafeteriaName) {
+	public CafeteriaDetailsSectionsPagerAdapter(Activity mainActivity,
+			FragmentManager fm, String cafeteriaId, String cafeteriaName) {
 		super(fm);
 		this.activity = mainActivity;
 		this.cafeteriaId = cafeteriaId;
@@ -46,7 +47,8 @@ public class CafeteriaDetailsSectionsPagerAdapter extends FragmentPagerAdapter {
 
 		for (int position = 0; position < getCount(); position++) {
 			cursorCafeteriaDates.moveToPosition(position);
-			dates.add(cursorCafeteriaDates.getString(cursorCafeteriaDates.getColumnIndex(Const.ID_COLUMN)));
+			dates.add(cursorCafeteriaDates.getString(cursorCafeteriaDates
+					.getColumnIndex(Const.ID_COLUMN)));
 		}
 
 		// reset new items counter

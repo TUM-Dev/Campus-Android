@@ -35,7 +35,8 @@ import de.tum.in.tumcampusapp.models.PersonList;
  * @review Thomas Behrens
  * @redesign Sascha Moecker
  */
-public class PersonsSearchActivity extends ActivityForAccessingTumOnline implements OnEditorActionListener {
+public class PersonsSearchActivity extends ActivityForAccessingTumOnline
+		implements OnEditorActionListener {
 	private static final int MIN_SEARCH_LENGTH = 3;
 	private static final String PERSONEN_SUCHE = "personenSuche";
 
@@ -69,7 +70,8 @@ public class PersonsSearchActivity extends ActivityForAccessingTumOnline impleme
 
 		lvStaff.setOnItemClickListener(new OnItemClickListener() {
 			@Override
-			public void onItemClick(AdapterView<?> a, View v, int position, long id) {
+			public void onItemClick(AdapterView<?> a, View v, int position,
+					long id) {
 				Object listViewItem = lvStaff.getItemAtPosition(position);
 				Person person = (Person) listViewItem;
 
@@ -78,7 +80,8 @@ public class PersonsSearchActivity extends ActivityForAccessingTumOnline impleme
 				bundle.putSerializable("personObject", person);
 
 				// show detailed information in new activity
-				Intent intent = new Intent(context, PersonsDetailsActivity.class);
+				Intent intent = new Intent(context,
+						PersonsDetailsActivity.class);
 				intent.putExtras(bundle);
 				startActivity(intent);
 			}
@@ -116,7 +119,8 @@ public class PersonsSearchActivity extends ActivityForAccessingTumOnline impleme
 	@Override
 	public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
 		if (etSearch.getText().length() < MIN_SEARCH_LENGTH) {
-			Toast.makeText(this, R.string.please_insert_at_least_three_chars, Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, R.string.please_insert_at_least_three_chars,
+					Toast.LENGTH_SHORT).show();
 			return false;
 		}
 		searchForPersons();
@@ -136,7 +140,9 @@ public class PersonsSearchActivity extends ActivityForAccessingTumOnline impleme
 
 		// test by sample element "familienname" (required field)
 		if (!rawResponse.contains("familienname")) {
-			lvPersons.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, new String[] { "keine Ergebnisse" }));
+			lvPersons.setAdapter(new ArrayAdapter<String>(this,
+					android.R.layout.simple_list_item_1,
+					new String[] { "keine Ergebnisse" }));
 		}
 
 		Serializer serializer = new Persister();
@@ -151,7 +157,8 @@ public class PersonsSearchActivity extends ActivityForAccessingTumOnline impleme
 			Log.d("SIMPLEXML", "wont work: " + e.getMessage());
 			progressLayout.setVisibility(View.GONE);
 			errorLayout.setVisibility(View.VISIBLE);
-			Toast.makeText(this, R.string.no_search_result, Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, R.string.no_search_result, Toast.LENGTH_SHORT)
+					.show();
 			return;
 		}
 		displayResults(personList.getPersons());

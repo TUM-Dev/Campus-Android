@@ -23,7 +23,8 @@ import de.tum.in.tumcampusapp.auxiliary.Utils;
  * 
  * @author Vincenz Doelle
  */
-public class RoomfinderActivity extends ActivityForSearching implements OnEditorActionListener, SearchResultListener {
+public class RoomfinderActivity extends ActivityForSearching implements
+		OnEditorActionListener, SearchResultListener {
 
 	// HTTP client for sending requests to MyTUM roomfinder
 	private DefaultHttpClient httpClient;
@@ -56,17 +57,24 @@ public class RoomfinderActivity extends ActivityForSearching implements OnEditor
 			String resultExtraction = results[1];
 
 			// Cut the results from the webpage
-			resultExtraction = Utils.cutText(resultExtraction, "<div id=\"maincontentwrapper\">", "<div class=\"documentActions\">");
+			resultExtraction = Utils.cutText(resultExtraction,
+					"<div id=\"maincontentwrapper\">",
+					"<div class=\"documentActions\">");
 			// fit all links
-			resultExtraction = resultExtraction.replace("<a href=\"search_room_form\">", "<a href=\"" + SERVICE_BASE_URL + "search_room_form\">");
-			resultExtraction = resultExtraction.replace("<a href=\"search_room_results", "<a href=\"" + SERVICE_BASE_URL + "search_room_results");
+			resultExtraction = resultExtraction.replace(
+					"<a href=\"search_room_form\">", "<a href=\""
+							+ SERVICE_BASE_URL + "search_room_form\">");
+			resultExtraction = resultExtraction.replace(
+					"<a href=\"search_room_results", "<a href=\""
+							+ SERVICE_BASE_URL + "search_room_results");
 
 			// This buidl the actual html document using the css file and the
 			// extracetd results.
 			text = Utils.buildHTMLDocument(resultCss, resultExtraction);
 
 		} catch (Exception e) {
-			Toast.makeText(this, R.string.exception_unknown, Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, R.string.exception_unknown, Toast.LENGTH_SHORT)
+					.show();
 			Log.e(getClass().getSimpleName(), e.getMessage());
 
 			errorLayout.setVisibility(View.VISIBLE);
@@ -80,14 +88,17 @@ public class RoomfinderActivity extends ActivityForSearching implements OnEditor
 			FileUtils.writeFile(file, text);
 
 			// get image and save it in the same folder as the document
-			FileUtils.getFileFromURL(httpClient, SERVICE_BASE_URL + "/default.gif", FileUtils.getFileOnSD(Const.ROOMFINDER, "default.gif"));
+			FileUtils.getFileFromURL(httpClient, SERVICE_BASE_URL
+					+ "/default.gif",
+					FileUtils.getFileOnSD(Const.ROOMFINDER, "default.gif"));
 
 			webView.loadUrl("file://" + file.getPath());
 
 			errorLayout.setVisibility(View.VISIBLE);
 			progressLayout.setVisibility(View.GONE);
 		} catch (Exception e) {
-			Toast.makeText(this, R.string.no_sd_card, Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, R.string.no_sd_card, Toast.LENGTH_SHORT)
+					.show();
 			Log.e(getClass().getSimpleName(), e.getMessage());
 
 			errorLayout.setVisibility(View.VISIBLE);
@@ -98,14 +109,17 @@ public class RoomfinderActivity extends ActivityForSearching implements OnEditor
 	@Override
 	public boolean performSearchAlgorithm() {
 		@SuppressWarnings("deprecation")
-		String param1 = "searchstring=" + URLEncoder.encode(searchField.getText().toString());
+		String param1 = "searchstring="
+				+ URLEncoder.encode(searchField.getText().toString());
 		String param2 = "building=Alle";
 		String param3 = "search=Suche+starten";
 
 		String queryCss = "http://portal.mytum.de/layout.css";
-		String queryExtraction = SERVICE_URL + "?" + param1 + "&" + param2 + "&" + param3;
+		String queryExtraction = SERVICE_URL + "?" + param1 + "&" + param2
+				+ "&" + param3;
 
-		FileUtils.sendAsynchGetRequest(httpClient, this, queryCss, queryExtraction);
+		FileUtils.sendAsynchGetRequest(httpClient, this, queryCss,
+				queryExtraction);
 		return true;
 	}
 

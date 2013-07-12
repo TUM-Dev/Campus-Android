@@ -23,7 +23,8 @@ public class LectureDetailsRowSet {
 		return lehrveranstaltungenDetails;
 	}
 
-	public void setLehrveranstaltungenDetails(List<LectureDetailsRow> lehrveranstaltungenDetails) {
+	public void setLehrveranstaltungenDetails(
+			List<LectureDetailsRow> lehrveranstaltungenDetails) {
 		this.lehrveranstaltungenDetails = lehrveranstaltungenDetails;
 	}
 }

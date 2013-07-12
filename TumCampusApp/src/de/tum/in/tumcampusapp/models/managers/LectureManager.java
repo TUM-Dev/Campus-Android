@@ -45,13 +45,16 @@ public class LectureManager {
 	 * @return Database cursor (name, module, _id)
 	 */
 	public Cursor getAllFromDb() {
-		return db.rawQuery("SELECT name, module, id as _id FROM lectures ORDER BY name", null);
+		return db.rawQuery(
+				"SELECT name, module, id as _id FROM lectures ORDER BY name",
+				null);
 	}
 
 	/**
 	 * Refresh lectures from the lectures_items table
 	 */
 	public void updateLectures() {
-		db.execSQL("REPLACE INTO lectures (id, name, module) " + "SELECT DISTINCT lectureId, name, module FROM lectures_items");
+		db.execSQL("REPLACE INTO lectures (id, name, module) "
+				+ "SELECT DISTINCT lectureId, name, module FROM lectures_items");
 	}
 }

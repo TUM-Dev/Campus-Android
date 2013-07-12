@@ -75,7 +75,8 @@ public class OpeningHoursListFragment extends ListFragment {
 
 		// Activities containing this fragment must implement its callbacks.
 		if (!(activity instanceof Callbacks)) {
-			throw new IllegalStateException("Activity must implement fragment's callbacks.");
+			throw new IllegalStateException(
+					"Activity must implement fragment's callbacks.");
 		}
 
 		mCallbacks = (Callbacks) activity;
@@ -89,18 +90,25 @@ public class OpeningHoursListFragment extends ListFragment {
 		int layout = (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) ? android.R.layout.simple_list_item_activated_1
 				: android.R.layout.simple_list_item_1;
 
-		String[] names = new String[] { getString(R.string.libraries), getString(R.string.information), getString(R.string.mensa_garching),
-				getString(R.string.mensa_grosshadern), getString(R.string.mensa_city), getString(R.string.mensa_pasing),
+		String[] names = new String[] { getString(R.string.libraries),
+				getString(R.string.information),
+				getString(R.string.mensa_garching),
+				getString(R.string.mensa_grosshadern),
+				getString(R.string.mensa_city),
+				getString(R.string.mensa_pasing),
 				getString(R.string.mensa_weihenstephan) };
 
 		LocationContent.clear();
 		int position = 0;
 		for (String name : names) {
-			LocationContent.addItem(new Location(String.valueOf(position), name));
+			LocationContent
+					.addItem(new Location(String.valueOf(position), name));
 			position++;
 		}
 
-		setListAdapter(new ArrayAdapter<LocationContent.Location>(getActivity(), layout, android.R.id.text1, LocationContent.ITEMS));
+		setListAdapter(new ArrayAdapter<LocationContent.Location>(
+				getActivity(), layout, android.R.id.text1,
+				LocationContent.ITEMS));
 	}
 
 	@Override
@@ -112,7 +120,8 @@ public class OpeningHoursListFragment extends ListFragment {
 	}
 
 	@Override
-	public void onListItemClick(ListView listView, View view, int position, long id) {
+	public void onListItemClick(ListView listView, View view, int position,
+			long id) {
 		super.onListItemClick(listView, view, position, id);
 
 		// Notify the active callbacks interface (the activity, if the
@@ -134,8 +143,10 @@ public class OpeningHoursListFragment extends ListFragment {
 		super.onViewCreated(view, savedInstanceState);
 
 		// Restore the previously serialized activated item position.
-		if (savedInstanceState != null && savedInstanceState.containsKey(STATE_ACTIVATED_POSITION)) {
-			setActivatedPosition(savedInstanceState.getInt(STATE_ACTIVATED_POSITION));
+		if (savedInstanceState != null
+				&& savedInstanceState.containsKey(STATE_ACTIVATED_POSITION)) {
+			setActivatedPosition(savedInstanceState
+					.getInt(STATE_ACTIVATED_POSITION));
 		}
 	}
 
@@ -156,6 +167,8 @@ public class OpeningHoursListFragment extends ListFragment {
 	public void setActivateOnItemClick(boolean activateOnItemClick) {
 		// When setting CHOICE_MODE_SINGLE, ListView will automatically
 		// give items the 'activated' state when touched.
-		getListView().setChoiceMode(activateOnItemClick ? ListView.CHOICE_MODE_SINGLE : ListView.CHOICE_MODE_NONE);
+		getListView().setChoiceMode(
+				activateOnItemClick ? ListView.CHOICE_MODE_SINGLE
+						: ListView.CHOICE_MODE_NONE);
 	}
 }

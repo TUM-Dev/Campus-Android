@@ -42,7 +42,8 @@ public class LectureAppointmentsListAdapter extends BaseAdapter {
 
 	private final LayoutInflater mInflater;
 
-	public LectureAppointmentsListAdapter(Context context, List<LectureAppointmentsRow> results) {
+	public LectureAppointmentsListAdapter(Context context,
+			List<LectureAppointmentsRow> results) {
 		terminList = results;
 		mInflater = LayoutInflater.from(context);
 	}
@@ -68,13 +69,17 @@ public class LectureAppointmentsListAdapter extends BaseAdapter {
 	public View getView(int position, View convertView, ViewGroup parent) {
 		ViewHolder holder;
 		if (convertView == null) {
-			convertView = mInflater.inflate(R.layout.activity_lecturesappointments_listview, null);
+			convertView = mInflater.inflate(
+					R.layout.activity_lecturesappointments_listview, null);
 			holder = new ViewHolder();
 
 			// set UI elements
-			holder.tvTerminZeit = (TextView) convertView.findViewById(R.id.tvTerminZeit);
-			holder.tvTerminOrt = (TextView) convertView.findViewById(R.id.tvTerminOrt);
-			holder.tvTerminBetreff = (TextView) convertView.findViewById(R.id.tvTerminBetreff);
+			holder.tvTerminZeit = (TextView) convertView
+					.findViewById(R.id.tvTerminZeit);
+			holder.tvTerminOrt = (TextView) convertView
+					.findViewById(R.id.tvTerminOrt);
+			holder.tvTerminBetreff = (TextView) convertView
+					.findViewById(R.id.tvTerminBetreff);
 
 			convertView.setTag(holder);
 		} else {
@@ -96,9 +101,11 @@ public class LectureAppointmentsListAdapter extends BaseAdapter {
 			// zeitdarstellung setzen
 			// parse dates
 			// this is the template for the date in the xml file
-			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+			SimpleDateFormat formatter = new SimpleDateFormat(
+					"yyyy-MM-dd HH:mm");
 			try {
-				Date start = formatter.parse(lvItem.getBeginn_datum_zeitpunkt());
+				Date start = formatter
+						.parse(lvItem.getBeginn_datum_zeitpunkt());
 				Date ende = formatter.parse(lvItem.getEnde_datum_zeitpunkt());
 
 				// make two calendar instances
@@ -108,15 +115,21 @@ public class LectureAppointmentsListAdapter extends BaseAdapter {
 
 				// date formats for the day output
 				SimpleDateFormat endHoursOutput = new SimpleDateFormat("HH:mm");
-				SimpleDateFormat DateOutput = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+				SimpleDateFormat DateOutput = new SimpleDateFormat(
+						"dd.MM.yyyy HH:mm");
 				String output = "";
 
 				// output if same day: we only show the date once
-				if (start.getMonth() == ende.getMonth() && start.getDate() == ende.getDate()) {
-					output = Utils.getWeekDayByDate(start) + " " + DateOutput.format(start) + " - " + endHoursOutput.format(ende);
+				if (start.getMonth() == ende.getMonth()
+						&& start.getDate() == ende.getDate()) {
+					output = Utils.getWeekDayByDate(start) + " "
+							+ DateOutput.format(start) + " - "
+							+ endHoursOutput.format(ende);
 				} else {
 					// show it normally
-					output = Utils.getWeekDayByDate(start) + " " + DateOutput.format(start) + " - " + DateOutput.format(ende);
+					output = Utils.getWeekDayByDate(start) + " "
+							+ DateOutput.format(start) + " - "
+							+ DateOutput.format(ende);
 				}
 
 				// grey it, if in past
@@ -127,7 +140,8 @@ public class LectureAppointmentsListAdapter extends BaseAdapter {
 				holder.tvTerminZeit.setText(Html.fromHtml(output));
 
 			} catch (Exception ex) {
-				holder.tvTerminZeit.setText(lvItem.getBeginn_datum_zeitpunkt() + " - " + lvItem.getEnde_datum_zeitpunkt());
+				holder.tvTerminZeit.setText(lvItem.getBeginn_datum_zeitpunkt()
+						+ " - " + lvItem.getEnde_datum_zeitpunkt());
 			}
 
 		}

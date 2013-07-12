@@ -32,7 +32,8 @@ public class LectureItem {
 			 * String module, String location, String note, String url, String
 			 * seriesId
 			 */
-			super(id, "holiday", date, date, "Feiertage", "", "", name, "about:blank", id);
+			super(id, "holiday", date, date, "Feiertage", "", "", name,
+					"about:blank", id);
 		}
 	}
 
@@ -52,7 +53,8 @@ public class LectureItem {
 		 * </pre>
 		 */
 		public Vacation(String id, Date start, Date end, String name) {
-			super(id, "vacation", start, end, "Ferien", "", "", name, "about:blank", id);
+			super(id, "vacation", start, end, "Ferien", "", "", name,
+					"about:blank", id);
 		}
 	}
 
@@ -122,7 +124,9 @@ public class LectureItem {
 	 * @param seriesId Lecture item series ID (LectureID_Week-Day_Start-Time)
 	 * </pre>
 	 */
-	public LectureItem(String id, String lectureId, Date start, Date end, String name, String module, String location, String note, String url, String seriesId) {
+	public LectureItem(String id, String lectureId, Date start, Date end,
+			String name, String module, String location, String note,
+			String url, String seriesId) {
 		this.id = id;
 		this.lectureId = lectureId;
 		this.start = start;
@@ -137,7 +141,10 @@ public class LectureItem {
 
 	@Override
 	public String toString() {
-		return "id=" + id + ", lectureId=" + lectureId + ", start=" + Utils.getDateTimeString(start) + ", end=" + Utils.getDateTimeString(end) + ", name="
-				+ name + ", module=" + module + ", location=" + location + ", note=" + note + ", seriesId=" + seriesId + ", url=" + url;
+		return "id=" + id + ", lectureId=" + lectureId + ", start="
+				+ Utils.getDateTimeString(start) + ", end="
+				+ Utils.getDateTimeString(end) + ", name=" + name + ", module="
+				+ module + ", location=" + location + ", note=" + note
+				+ ", seriesId=" + seriesId + ", url=" + url;
 	}
 }

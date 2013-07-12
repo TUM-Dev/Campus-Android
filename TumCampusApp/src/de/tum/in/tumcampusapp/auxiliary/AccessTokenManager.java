@@ -30,22 +30,27 @@ public class AccessTokenManager implements OnClickListener {
 		// add lrz_id to parameters
 		request.setParameter("pUsername", lrz_id);
 		// add readable name for TUMOnline
-		request.setParameter("pTokenName", "TUMCampusApp-" + android.os.Build.PRODUCT);
+		request.setParameter("pTokenName", "TUMCampusApp-"
+				+ android.os.Build.PRODUCT);
 
 		// fetch the xml response of requestToken
 		String strTokenXml = request.fetch();
 		Log.d("RAWOUTPUT", strTokenXml);
 		// it is only one tag in that xml, let's do a regex pattern
-		return strTokenXml.substring(strTokenXml.indexOf("<token>") + "<token>".length(), strTokenXml.indexOf("</token>"));
+		return strTokenXml.substring(
+				strTokenXml.indexOf("<token>") + "<token>".length(),
+				strTokenXml.indexOf("</token>"));
 	}
 
 	// TODO Test this method
-	public  boolean isAccessTokenConfirmed(String lrz_id) {
+	public boolean isAccessTokenConfirmed(String lrz_id) {
 		TUMOnlineRequest request = new TUMOnlineRequest("isTokenConfirmed");
 		request.setParameter("pToken", lrz_id);
 		String strTokenXml = request.fetch();
 		Log.d("RAWOUTPUT", strTokenXml);
-		return Boolean.parseBoolean(strTokenXml.substring(strTokenXml.indexOf("<confirmed>") + "<confirmed>".length(), strTokenXml.indexOf("</confirmed>")));
+		return Boolean.parseBoolean(strTokenXml.substring(
+				strTokenXml.indexOf("<confirmed>") + "<confirmed>".length(),
+				strTokenXml.indexOf("</confirmed>")));
 	}
 
 	private Context context;
@@ -80,7 +85,8 @@ public class AccessTokenManager implements OnClickListener {
 	public boolean requestAccessToken(String stringLRZID) {
 		try {
 			if (!Utils.isConnected(context)) {
-				Toast.makeText(context, R.string.no_internet_connection, Toast.LENGTH_LONG).show();
+				Toast.makeText(context, R.string.no_internet_connection,
+						Toast.LENGTH_LONG).show();
 				return false;
 			}
 			// ok, do the request now
@@ -89,42 +95,55 @@ public class AccessTokenManager implements OnClickListener {
 
 			// save access token to preferences
 			Utils.setSetting(context, Const.ACCESS_TOKEN, strAccessToken);
-			Toast.makeText(context, context.getString(R.string.access_token_generated), Toast.LENGTH_LONG).show();
+			Toast.makeText(context,
+					context.getString(R.string.access_token_generated),
+					Toast.LENGTH_LONG).show();
 			return true;
 
 		} catch (Exception ex) {
 			// set access token to null
 			Utils.setSetting(context, Const.ACCESS_TOKEN, null);
-			Toast.makeText(context, context.getString(R.string.access_token_wasnt_generated), Toast.LENGTH_LONG).show();
+			Toast.makeText(context,
+					context.getString(R.string.access_token_wasnt_generated),
+					Toast.LENGTH_LONG).show();
 		}
 		return false;
 	}
-	
+
 	public boolean hasValidAccessToken() {
-		String oldaccesstoken = PreferenceManager.getDefaultSharedPreferences(context).getString(Const.ACCESS_TOKEN, "");
+		String oldaccesstoken = PreferenceManager.getDefaultSharedPreferences(
+				context).getString(Const.ACCESS_TOKEN, "");
 		if (oldaccesstoken != null && oldaccesstoken.length() > 2) {
 			return true;
 		} else {
 			return false;
 		}
 	}
-	
+
 	public void setupAccessToken() {
-		lrzId = PreferenceManager.getDefaultSharedPreferences(context).getString(Const.LRZ_ID, "");
+		lrzId = PreferenceManager.getDefaultSharedPreferences(context)
+				.getString(Const.LRZ_ID, "");
 		// check if lrz could be valid?
 		if (lrzId.length() == MIN_LRZ_LENGTH) {
 			// is access token already set?
-			String oldaccesstoken = PreferenceManager.getDefaultSharedPreferences(context).getString(Const.ACCESS_TOKEN, "");
+			String oldaccesstoken = PreferenceManager
+					.getDefaultSharedPreferences(context).getString(
+							Const.ACCESS_TOKEN, "");
 			if (oldaccesstoken.length() > 2) {
 				// show Dialog first
 				AlertDialog.Builder builder = new AlertDialog.Builder(context);
-				builder.setMessage(context.getString(R.string.dialog_new_token)).setPositiveButton(context.getString(R.string.yes), this)
-						.setNegativeButton(context.getString(R.string.no), this).show();
+				builder.setMessage(context.getString(R.string.dialog_new_token))
+						.setPositiveButton(context.getString(R.string.yes),
+								this)
+						.setNegativeButton(context.getString(R.string.no), this)
+						.show();
 			} else {
 				requestAccessToken(lrzId);
 			}
 		} else {
-			Toast.makeText(context, context.getString(R.string.error_lrz_wrong), Toast.LENGTH_LONG).show();
+			Toast.makeText(context,
+					context.getString(R.string.error_lrz_wrong),
+					Toast.LENGTH_LONG).show();
 		}
 	}
 }

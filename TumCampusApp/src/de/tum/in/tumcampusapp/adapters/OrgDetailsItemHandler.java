@@ -35,12 +35,18 @@ public class OrgDetailsItemHandler extends DefaultHandler {
 
 	// TODO Check whether refactor list of interesting tags
 	@Override
-	public void startElement(String namespaceURI, String localName, String qName, Attributes atts) {
+	public void startElement(String namespaceURI, String localName,
+			String qName, Attributes atts) {
 		// only buffer interesting tags
-		if (localName.equals("orgUnitID") || localName.equals("orgUnitName") || localName.equals("orgUnitCode") || localName.equals("orgUnitDescription")
-				|| localName.equals("contactName") || localName.equals("street") || localName.equals("locality") || localName.equals("pcode")
-				|| localName.equals("country") || localName.equals("telephone") || localName.equals("fax") || localName.equals("email")
-				|| localName.equals("webLink") || localName.equals("subBlock")) {
+		if (localName.equals("orgUnitID") || localName.equals("orgUnitName")
+				|| localName.equals("orgUnitCode")
+				|| localName.equals("orgUnitDescription")
+				|| localName.equals("contactName")
+				|| localName.equals("street") || localName.equals("locality")
+				|| localName.equals("pcode") || localName.equals("country")
+				|| localName.equals("telephone") || localName.equals("fax")
+				|| localName.equals("email") || localName.equals("webLink")
+				|| localName.equals("subBlock")) {
 			buff = new StringBuffer("");
 			buffering = true;
 			// to store first attribute till end tag
@@ -51,10 +57,15 @@ public class OrgDetailsItemHandler extends DefaultHandler {
 	@Override
 	public void endElement(String namespaceURI, String localName, String qName) {
 		// end buffer of interesting tags to handle their content
-		if (localName.equals("orgUnitID") || localName.equals("orgUnitName") || localName.equals("orgUnitCode") || localName.equals("orgUnitDescription")
-				|| localName.equals("contactName") || localName.equals("street") || localName.equals("locality") || localName.equals("pcode")
-				|| localName.equals("country") || localName.equals("telephone") || localName.equals("fax") || localName.equals("email")
-				|| localName.equals("webLink") || localName.equals("subBlock")) {
+		if (localName.equals("orgUnitID") || localName.equals("orgUnitName")
+				|| localName.equals("orgUnitCode")
+				|| localName.equals("orgUnitDescription")
+				|| localName.equals("contactName")
+				|| localName.equals("street") || localName.equals("locality")
+				|| localName.equals("pcode") || localName.equals("country")
+				|| localName.equals("telephone") || localName.equals("fax")
+				|| localName.equals("email") || localName.equals("webLink")
+				|| localName.equals("subBlock")) {
 			buffering = false;
 
 			// String-Switch:
@@ -70,7 +81,8 @@ public class OrgDetailsItemHandler extends DefaultHandler {
 				odo.setDescription(buff.toString());
 			} else if (localName.equals("contactName")) {
 				// additionally cut <text> and </text>
-				odo.setContactName(Utils.cutText(buff.toString(), "<text>", "</text>"));
+				odo.setContactName(Utils.cutText(buff.toString(), "<text>",
+						"</text>"));
 			} else if (localName.equals("street")) {
 				odo.setContactStreet(buff.toString());
 			} else if (localName.equals("locality")) {
@@ -109,7 +121,8 @@ public class OrgDetailsItemHandler extends DefaultHandler {
 				if (isInsideAdditionalInformation == true) {
 					odo.setAdditionalInfoCaption(tempAtt);
 					int offset = odo.getAdditionalInfoCaption().length();
-					odo.setAdditionalInfoText(buff.toString().substring(25 + offset, buff.toString().length() - 11));
+					odo.setAdditionalInfoText(buff.toString().substring(
+							25 + offset, buff.toString().length() - 11));
 					isInsideAdditionalInformation = false;
 				} else if (tempAtt == null) {
 					return;

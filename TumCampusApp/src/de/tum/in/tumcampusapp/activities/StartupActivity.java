@@ -16,12 +16,14 @@ public class StartupActivity extends Activity {
 		// disallows applications to execute HTTP request in the GUI main
 		// thread.
 		if (android.os.Build.VERSION.SDK_INT > 9) {
-			StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+			StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
+					.permitAll().build();
 			StrictMode.setThreadPolicy(policy);
 
 		}
 
-		String oldaccesstoken = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(Const.ACCESS_TOKEN, "");
+		String oldaccesstoken = PreferenceManager.getDefaultSharedPreferences(
+				getApplicationContext()).getString(Const.ACCESS_TOKEN, "");
 		if (oldaccesstoken.length() > 2) {
 			intent = new Intent(this, StartActivity.class);
 		} else {

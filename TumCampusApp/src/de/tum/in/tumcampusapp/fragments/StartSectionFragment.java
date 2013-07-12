@@ -19,7 +19,8 @@ import de.tum.in.tumcampusapp.auxiliary.ListMenuEntry;
 /**
  * Fragment for each category-page.
  */
-public class StartSectionFragment extends Fragment implements OnItemClickListener {
+public class StartSectionFragment extends Fragment implements
+		OnItemClickListener {
 
 	/**
 	 * Contains all list items
@@ -32,13 +33,17 @@ public class StartSectionFragment extends Fragment implements OnItemClickListene
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		listMenuEntrySet = (ArrayList<ListMenuEntry>) getArguments().getSerializable(StartSectionsPagerAdapter.LIST_ENTRY_SET);
-		View rootView = inflater.inflate(R.layout.fragment_start_section, container, false);
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		listMenuEntrySet = (ArrayList<ListMenuEntry>) getArguments()
+				.getSerializable(StartSectionsPagerAdapter.LIST_ENTRY_SET);
+		View rootView = inflater.inflate(R.layout.fragment_start_section,
+				container, false);
 
 		// Builds the list according to the list items in listMenuEntrySet
 		ListView list = (ListView) rootView.findViewById(R.id.list_view);
-		StartListAdapter adapter = new StartListAdapter(getActivity(), R.layout.list_layout_complex_large, listMenuEntrySet, true);
+		StartListAdapter adapter = new StartListAdapter(getActivity(),
+				R.layout.list_layout_complex_large, listMenuEntrySet, true);
 		list.setAdapter(adapter);
 		list.setOnItemClickListener(this);
 
@@ -46,7 +51,8 @@ public class StartSectionFragment extends Fragment implements OnItemClickListene
 	}
 
 	@Override
-	public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
+	public void onItemClick(AdapterView<?> arg0, View arg1, int position,
+			long arg3) {
 		// Starts the corresponding activity via intent
 		Intent intent = listMenuEntrySet.get(position).intent;
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

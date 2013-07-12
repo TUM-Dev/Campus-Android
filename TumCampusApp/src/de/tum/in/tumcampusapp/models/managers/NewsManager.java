@@ -50,15 +50,20 @@ public class NewsManager {
 		String target = "";
 		if (json.has("picture")) {
 			String picture = json.getString(Const.JSON_PICTURE);
-			target = Utils.getCacheDir("news/cache") + Utils.md5(picture) + ".jpg";
+			target = Utils.getCacheDir("news/cache") + Utils.md5(picture)
+					+ ".jpg";
 			Utils.downloadFileThread(picture, target);
 		}
 		String link = "";
-		if (json.has(Const.JSON_LINK) && !json.getString(Const.JSON_LINK).contains(Const.FACEBOOK_URL)) {
+		if (json.has(Const.JSON_LINK)
+				&& !json.getString(Const.JSON_LINK)
+						.contains(Const.FACEBOOK_URL)) {
 			link = json.getString(Const.JSON_LINK);
 		}
 		if (link.length() == 0 && json.has(Const.JSON_OBJECT_ID)) {
-			link = "http://graph.facebook.com/" + json.getString(Const.JSON_OBJECT_ID) + "/Picture?type=normal";
+			link = "http://graph.facebook.com/"
+					+ json.getString(Const.JSON_OBJECT_ID)
+					+ "/Picture?type=normal";
 		}
 
 		// message empty => description empty => caption
@@ -74,11 +79,13 @@ public class NewsManager {
 		} else if (json.has("story")) { // NTK
 			message = json.getString("story"); // NTK
 		} else
-			Log.e("TumCampus", "No message / json object error - FB changed something?"); // NTK
+			Log.e("TumCampus",
+					"No message / json object error - FB changed something?"); // NTK
 
 		Date date = Utils.getDate(json.getString(Const.JSON_CREATED_TIME));
 
-		return new News(json.getString(Const.JSON_ID), message, link, target, date);
+		return new News(json.getString(Const.JSON_ID), message, link, target,
+				date);
 	}
 
 	/**
@@ -97,7 +104,8 @@ public class NewsManager {
 		db = DatabaseManager.getDb(context);
 
 		// create table if needed
-		db.execSQL("CREATE TABLE IF NOT EXISTS news (id VARCHAR PRIMARY KEY, message VARCHAR, link VARCHAR, " + "image VARCHAR, date VARCHAR)");
+		db.execSQL("CREATE TABLE IF NOT EXISTS news (id VARCHAR PRIMARY KEY, message VARCHAR, link VARCHAR, "
+				+ "image VARCHAR, date VARCHAR)");
 	}
 
 	/**
@@ -125,7 +133,9 @@ public class NewsManager {
 		String token = "141869875879732|FbjTXY-wtr06A18W9wfhU8GCkwU";
 
 		@SuppressWarnings("deprecation")
-		JSONArray jsonArray = Utils.downloadJson(url + URLEncoder.encode(token)).getJSONArray(Const.JSON_DATA);
+		JSONArray jsonArray = Utils
+				.downloadJson(url + URLEncoder.encode(token)).getJSONArray(
+						Const.JSON_DATA);
 
 		cleanupDb();
 		int count = Utils.dbGetTableCount(db, "news");
@@ -138,20 +148,31 @@ public class NewsManager {
 
 				String[] types = new String[] { "photo", "link", "video" };
 
-				String[] ids = new String[] { "162327853831856_228060957258545", "162327853831856_228060957258545", "162327853831856_224344127630228" };
+				String[] ids = new String[] {
+						"162327853831856_228060957258545",
+						"162327853831856_228060957258545",
+						"162327853831856_224344127630228" };
 
 				// filter out events, empty items
-				if ((!Arrays.asList(types).contains(obj.getString("type")) && !Arrays.asList(ids).contains(obj.getString("id")))
-						|| !obj.getJSONObject(Const.JSON_FROM).getString(Const.JSON_ID).equals("162327853831856")) {
+				if ((!Arrays.asList(types).contains(obj.getString("type")) && !Arrays
+						.asList(ids).contains(obj.getString("id")))
+						|| !obj.getJSONObject(Const.JSON_FROM)
+								.getString(Const.JSON_ID)
+								.equals("162327853831856")) {
 					continue;
 				}
 				// NTK added Kurz notiert Archiv ---> ignore in news
-				if (obj.has("name") && (obj.getString("name").equals("Kurz notiert") || obj.getString("name").equals("Kurz notiert Archiv"))) {
+				if (obj.has("name")
+						&& (obj.getString("name").equals("Kurz notiert") || obj
+								.getString("name")
+								.equals("Kurz notiert Archiv"))) {
 					continue;
 				}
 
 				// NTK added ignore events
-				if (obj.has("story") && (obj.getString("story").equals("TUM Campus App created an event."))) {
+				if (obj.has("story")
+						&& (obj.getString("story")
+								.equals("TUM Campus App created an event."))) {
 					continue;
 				}
 
@@ -176,7 +197,10 @@ public class NewsManager {
 	 * @return Database cursor (image, message, date_de, link, _id)
 	 */
 	public Cursor getAllFromDb() {
-		return db.rawQuery("SELECT image, message, strftime('%d.%m.%Y', date) as date_de, link, id as _id " + "FROM news ORDER BY date DESC", null);
+		return db
+				.rawQuery(
+						"SELECT image, message, strftime('%d.%m.%Y', date) as date_de, link, id as _id "
+								+ "FROM news ORDER BY date DESC", null);
 	}
 
 	/**
@@ -205,7 +229,9 @@ public class NewsManager {
 			Log.e("TumCampus", n.toString());
 			throw new Exception("Invalid message.");
 		}
-		db.execSQL("REPLACE INTO news (id, message, link, image, date) VALUES (?, ?, ?, ?, ?)",
-				new String[] { n.id, n.message, n.link, n.image, Utils.getDateString(n.date) });
+		db.execSQL(
+				"REPLACE INTO news (id, message, link, image, date) VALUES (?, ?, ?, ?, ?)",
+				new String[] { n.id, n.message, n.link, n.image,
+						Utils.getDateString(n.date) });
 	}
 }

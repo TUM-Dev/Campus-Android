@@ -38,26 +38,36 @@ public class CurriculaActivity extends Activity implements OnItemClickListener {
 		ListView list = (ListView) findViewById(R.id.activity_curricula_list_view);
 
 		options = new Hashtable<String, String>();
-		options.put(getString(R.string.informatics_bachelor),
+		options.put(
+				getString(R.string.informatics_bachelor),
 				"http://www.in.tum.de/fuer-studierende-der-tum/bachelor-studiengaenge/informatik/studienplan/studienbeginn-ab-ws-20072008.html");
-		options.put(getString(R.string.business_informatics_bachelor_0809),
+		options.put(
+				getString(R.string.business_informatics_bachelor_0809),
 				"http://www.in.tum.de/fuer-studierende-der-tum/bachelor-studiengaenge/wirtschaftsinformatik/studienplan/studienbeginn-ab-ws-20112012.html");
-		options.put(getString(R.string.business_informatics_bachelor_1112),
+		options.put(
+				getString(R.string.business_informatics_bachelor_1112),
 				"http://www.in.tum.de/fuer-studierende-der-tum/bachelor-studiengaenge/wirtschaftsinformatik/studienplan/studienbeginn-ab-ws-20082009.html");
-		options.put(getString(R.string.bioinformatics_bachelor),
+		options.put(
+				getString(R.string.bioinformatics_bachelor),
 				"http://www.in.tum.de/fuer-studierende-der-tum/bachelor-studiengaenge/bioinformatik/studienplan/ws-20072008.html");
-		options.put(getString(R.string.games_engineering_bachelor),
+		options.put(
+				getString(R.string.games_engineering_bachelor),
 				"http://www.in.tum.de/fuer-studierende-der-tum/bachelor-studiengaenge/informatik-games-engineering/studienplan-games.html");
-		options.put(getString(R.string.informatics_master),
+		options.put(
+				getString(R.string.informatics_master),
 				"http://www.in.tum.de/fuer-studierende-der-tum/master-studiengaenge/informatik/studienplan/studienplan-fpo-2007.html");
-		options.put(getString(R.string.business_informatics_master),
+		options.put(
+				getString(R.string.business_informatics_master),
 				"http://www.in.tum.de/fuer-studierende-der-tum/master-studiengaenge/wirtschaftsinformatik/studienplan");
 
-		options.put(getString(R.string.bioinformatics_master),
+		options.put(
+				getString(R.string.bioinformatics_master),
 				"http://www.in.tum.de/fuer-studierende-der-tum/master-studiengaenge/bioinformatik/studienplan/ws-20072008.html");
-		options.put(getString(R.string.automotive_master),
+		options.put(
+				getString(R.string.automotive_master),
 				"http://www.in.tum.de/fuer-studierende-der-tum/master-studiengaenge/automotive-software-engineering/studienplanung.html");
-		options.put(getString(R.string.computational_science_master),
+		options.put(
+				getString(R.string.computational_science_master),
 				"http://www.in.tum.de/fuer-studieninteressierte/master-studiengaenge/computational-science-and-engineering/course/course-plan.html");
 
 		// sort curricula options and attach them to the list
@@ -65,7 +75,8 @@ public class CurriculaActivity extends Activity implements OnItemClickListener {
 		Collections.sort(sortedOptions);
 		String[] optionsArray = sortedOptions.toArray(new String[0]);
 
-		ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, optionsArray);
+		ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this,
+				android.R.layout.simple_list_item_1, optionsArray);
 		list = (ListView) findViewById(R.id.activity_curricula_list_view);
 		list.setAdapter(arrayAdapter);
 		list.setOnItemClickListener(this);

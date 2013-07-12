@@ -53,7 +53,8 @@ public class OpeningHoursDetailFragment extends Fragment implements ViewBinder {
 			// Load the dummy content specified by the fragment
 			// arguments. In a real-world scenario, use a Loader
 			// to load content from a content provider.
-			mItem = LocationContent.ITEM_MAP.get(getArguments().getString(ARG_ITEM_ID));
+			mItem = LocationContent.ITEM_MAP.get(getArguments().getString(
+					ARG_ITEM_ID));
 		}
 		if (getArguments().containsKey(TWO_PANE)) {
 			if (!getArguments().getBoolean(TWO_PANE)) {
@@ -63,17 +64,21 @@ public class OpeningHoursDetailFragment extends Fragment implements ViewBinder {
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View rootView = inflater.inflate(R.layout.fragment_item_detail, container, false);
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		View rootView = inflater.inflate(R.layout.fragment_item_detail,
+				container, false);
 
 		// click on category in list
 		LocationManager lm = new LocationManager(getActivity());
-		String[] categories = getString(R.string.facility_categories_splitted).split(",");
+		String[] categories = getString(R.string.facility_categories_splitted)
+				.split(",");
 		Cursor c = lm.getAllHoursFromDb(categories[Integer.valueOf(mItem.id)]);
 
 		@SuppressWarnings("deprecation")
-		SimpleCursorAdapter adapter = new SimpleCursorAdapter(getActivity(), android.R.layout.two_line_list_item, c, c.getColumnNames(), new int[] {
-				android.R.id.text1, android.R.id.text2 }) {
+		SimpleCursorAdapter adapter = new SimpleCursorAdapter(getActivity(),
+				android.R.layout.two_line_list_item, c, c.getColumnNames(),
+				new int[] { android.R.id.text1, android.R.id.text2 }) {
 
 			@Override
 			public boolean isEnabled(int position) {
@@ -83,7 +88,8 @@ public class OpeningHoursDetailFragment extends Fragment implements ViewBinder {
 		};
 		adapter.setViewBinder(this);
 
-		ListView lv2 = (ListView) rootView.findViewById(R.id.fragment_item_detail_listview);
+		ListView lv2 = (ListView) rootView
+				.findViewById(R.id.fragment_item_detail_listview);
 		lv2.setAdapter(adapter);
 
 		return rootView;
@@ -95,8 +101,10 @@ public class OpeningHoursDetailFragment extends Fragment implements ViewBinder {
 	@Override
 	public boolean setViewValue(View view, Cursor c, int index) {
 		if (view.getId() == android.R.id.text2) {
-			String transport = c.getString(c.getColumnIndex(Const.TRANSPORT_COLUMN));
-			String address = c.getString(c.getColumnIndex(Const.ADDRESS_COLUMN));
+			String transport = c.getString(c
+					.getColumnIndex(Const.TRANSPORT_COLUMN));
+			String address = c
+					.getString(c.getColumnIndex(Const.ADDRESS_COLUMN));
 
 			String hours = c.getString(c.getColumnIndex(Const.HOURS_COLUMN));
 			String remark = c.getString(c.getColumnIndex(Const.REMARK_COLUMN));

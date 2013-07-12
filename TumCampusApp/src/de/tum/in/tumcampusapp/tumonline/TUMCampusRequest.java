@@ -105,9 +105,11 @@ public class TUMCampusRequest {
 	 * @param listener
 	 *            the listener, which takes the result
 	 */
-	public void fetchInteractive(final Context context, final TUMOnlineRequestFetchListener listener) {
+	public void fetchInteractive(final Context context,
+			final TUMOnlineRequestFetchListener listener) {
 		// start the progress dialog
-		progressDialog = ProgressDialog.show(context, "", getProgressDialogMessage());
+		progressDialog = ProgressDialog.show(context, "",
+				getProgressDialogMessage());
 		progressDialog.setCancelable(true);
 
 		// terminate background task if running
@@ -148,15 +150,19 @@ public class TUMCampusRequest {
 
 				// handle result
 				if (isOnline == false) {
-					listener.onFetchError(context.getString(R.string.no_internet_connection));
+					listener.onFetchError(context
+							.getString(R.string.no_internet_connection));
 					return;
 				}
 				if (result == null) {
-					listener.onFetchError(context.getString(R.string.empty_result));
+					listener.onFetchError(context
+							.getString(R.string.empty_result));
 					// TODO Check whether to move to string.xml
-				} else if (result.contains(TUMOnlineConst.TOKEN_NICHT_BESTAETIGT)) {
+				} else if (result
+						.contains(TUMOnlineConst.TOKEN_NICHT_BESTAETIGT)) {
 					// TODO Token is not valid
-					listener.onFetchError(context.getString(R.string.dialog_access_token_invalid));
+					listener.onFetchError(context
+							.getString(R.string.dialog_access_token_invalid));
 				}
 
 				listener.onFetch(result);
@@ -188,7 +194,8 @@ public class TUMCampusRequest {
 	 */
 	public String getRequestURL() {
 		String url = serviceBaseURL + method + "/xml?";
-		Iterator<Entry<String, String>> itMapIterator = parameters.entrySet().iterator();
+		Iterator<Entry<String, String>> itMapIterator = parameters.entrySet()
+				.iterator();
 		while (itMapIterator.hasNext()) {
 			Entry<String, String> pairs = itMapIterator.next();
 			url += pairs.getKey() + "=" + pairs.getValue() + "&";

@@ -28,7 +28,8 @@ public class LocationManager {
 
 		// create table if needed
 		db.execSQL("CREATE TABLE IF NOT EXISTS locations (id INTEGER PRIMARY KEY, category VARCHAR, "
-				+ "name VARCHAR, address VARCHAR, room VARCHAR, transport VARCHAR, " + "hours VARCHAR, remark VARCHAR, url VARCHAR)");
+				+ "name VARCHAR, address VARCHAR, room VARCHAR, transport VARCHAR, "
+				+ "hours VARCHAR, remark VARCHAR, url VARCHAR)");
 	}
 
 	/**
@@ -56,7 +57,9 @@ public class LocationManager {
 	 * </pre>
 	 */
 	public Cursor getAllHoursFromDb(String category) {
-		return db.rawQuery("SELECT name, address, room, transport, hours, remark, url, id as _id " + "FROM locations WHERE category=? ORDER BY name",
+		return db.rawQuery(
+				"SELECT name, address, room, transport, hours, remark, url, id as _id "
+						+ "FROM locations WHERE category=? ORDER BY name",
 				new String[] { category });
 	}
 
@@ -70,7 +73,8 @@ public class LocationManager {
 	 */
 	public String getHoursById(String id) {
 		String result = "";
-		Cursor c = db.rawQuery("SELECT hours FROM locations WHERE id=?", new String[] { id });
+		Cursor c = db.rawQuery("SELECT hours FROM locations WHERE id=?",
+				new String[] { id });
 
 		if (c.moveToNext()) {
 			result = c.getString(0);
@@ -96,7 +100,11 @@ public class LocationManager {
 		if (l.name.length() == 0) {
 			throw new Exception("Invalid name.");
 		}
-		db.execSQL("REPLACE INTO locations (id, category, name, address, room, " + "transport, hours, remark, url) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-				new String[] { String.valueOf(l.id), l.category, l.name, l.address, l.room, l.transport, l.hours, l.remark, l.url });
+		db.execSQL(
+				"REPLACE INTO locations (id, category, name, address, room, "
+						+ "transport, hours, remark, url) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+				new String[] { String.valueOf(l.id), l.category, l.name,
+						l.address, l.room, l.transport, l.hours, l.remark,
+						l.url });
 	}
 }

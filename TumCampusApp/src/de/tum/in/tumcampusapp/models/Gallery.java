@@ -41,7 +41,8 @@ public class Gallery {
 	 * @param archive Image is archived
 	 * </pre>
 	 */
-	public Gallery(String id, String name, String image, String position, boolean archive) {
+	public Gallery(String id, String name, String image, String position,
+			boolean archive) {
 
 		this.id = id;
 		this.name = name;
@@ -52,6 +53,7 @@ public class Gallery {
 
 	@Override
 	public String toString() {
-		return "id=" + id + " name=" + name + " image=" + image + " position=" + position;
+		return "id=" + id + " name=" + name + " image=" + image + " position="
+				+ position;
 	}
 }

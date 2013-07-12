@@ -29,7 +29,8 @@ public class CafeteriaDetailsActivity extends FragmentActivity {
 
 		// Create the adapter that will return a fragment for each of the
 		// primary sections of the app.
-		mSectionsPagerAdapter = new CafeteriaDetailsSectionsPagerAdapter(this, getSupportFragmentManager(), cafeteriaId, cafeteriaName);
+		mSectionsPagerAdapter = new CafeteriaDetailsSectionsPagerAdapter(this,
+				getSupportFragmentManager(), cafeteriaId, cafeteriaName);
 
 		// Set up the ViewPager with the sections adapter.
 		mViewPager = (ViewPager) findViewById(R.id.pager);
@@ -39,7 +40,8 @@ public class CafeteriaDetailsActivity extends FragmentActivity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.menu_section_fragment_cafeteria_details, menu);
+		getMenuInflater().inflate(
+				R.menu.menu_section_fragment_cafeteria_details, menu);
 		return true;
 	}
 
@@ -50,12 +52,15 @@ public class CafeteriaDetailsActivity extends FragmentActivity {
 		case R.id.action_ingredients:
 			AlertDialog alertDialog = new AlertDialog.Builder(this).create();
 			alertDialog.setTitle("Ingredients");
-			alertDialog.setMessage(getResources().getString(R.string.cafeteria_ingredients));
-			alertDialog.setButton(getResources().getString(android.R.string.ok), new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int which) {
-					// here you can add functions
-				}
-			});
+			alertDialog.setMessage(getResources().getString(
+					R.string.cafeteria_ingredients));
+			alertDialog.setButton(
+					getResources().getString(android.R.string.ok),
+					new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int which) {
+							// here you can add functions
+						}
+					});
 			alertDialog.setIcon(android.R.drawable.ic_menu_info_details);
 			alertDialog.show();
 			return true;

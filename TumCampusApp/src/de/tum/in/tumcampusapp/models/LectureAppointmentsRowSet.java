@@ -23,7 +23,8 @@ public class LectureAppointmentsRowSet {
 		return lehrveranstaltungenTermine;
 	}
 
-	public void setLehrveranstaltungenTermine(List<LectureAppointmentsRow> lehrveranstaltungenTermine) {
+	public void setLehrveranstaltungenTermine(
+			List<LectureAppointmentsRow> lehrveranstaltungenTermine) {
 		this.lehrveranstaltungenTermine = lehrveranstaltungenTermine;
 	}
 }

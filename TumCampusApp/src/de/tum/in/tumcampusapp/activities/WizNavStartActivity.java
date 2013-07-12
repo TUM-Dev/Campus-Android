@@ -25,11 +25,13 @@ public class WizNavStartActivity extends Activity implements OnClickListener {
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_wiznavstart);
-		
+		overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+		setContentView(R.layout.activity_wiznav_start);
+
 		editText = (EditText) findViewById(R.id.lrd_id);
-		
-		lrzId = PreferenceManager.getDefaultSharedPreferences(this).getString(Const.LRZ_ID, "");
+
+		lrzId = PreferenceManager.getDefaultSharedPreferences(this).getString(
+				Const.LRZ_ID, "");
 		if (lrzId != null) {
 			editText.setText(lrzId);
 		}
@@ -39,32 +41,39 @@ public class WizNavStartActivity extends Activity implements OnClickListener {
 
 		String lrz_id = editText.getText().toString();
 
-		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+		SharedPreferences sp = PreferenceManager
+				.getDefaultSharedPreferences(getApplicationContext());
 		Editor editor = sp.edit();
 		editor.putString(Const.LRZ_ID, lrz_id);
 		editor.commit();
-		
+
 		if (setupAccessToken()) {
 			startWizNavNextActivity();
 		}
 	}
-	
+
 	public boolean setupAccessToken() {
-		lrzId = PreferenceManager.getDefaultSharedPreferences(this).getString(Const.LRZ_ID, "");
+		lrzId = PreferenceManager.getDefaultSharedPreferences(this).getString(
+				Const.LRZ_ID, "");
 		// check if lrz could be valid?
 		if (lrzId.length() == AccessTokenManager.MIN_LRZ_LENGTH) {
 			// is access token already set?
-			String oldaccesstoken = PreferenceManager.getDefaultSharedPreferences(this).getString(Const.ACCESS_TOKEN, "");
+			String oldaccesstoken = PreferenceManager
+					.getDefaultSharedPreferences(this).getString(
+							Const.ACCESS_TOKEN, "");
 			if (oldaccesstoken.length() > 2) {
 				// show Dialog first
 				AlertDialog.Builder builder = new AlertDialog.Builder(this);
-				builder.setMessage(this.getString(R.string.dialog_new_token)).setPositiveButton(this.getString(R.string.yes), this)
-						.setNegativeButton(this.getString(R.string.no), this).show();
+				builder.setMessage(this.getString(R.string.dialog_new_token))
+						.setPositiveButton(this.getString(R.string.yes), this)
+						.setNegativeButton(this.getString(R.string.no), this)
+						.show();
 			} else {
 				return accessTokenManager.requestAccessToken(lrzId);
 			}
 		} else {
-			Toast.makeText(this, this.getString(R.string.error_lrz_wrong), Toast.LENGTH_LONG).show();
+			Toast.makeText(this, this.getString(R.string.error_lrz_wrong),
+					Toast.LENGTH_LONG).show();
 		}
 		return false;
 	}
@@ -93,18 +102,18 @@ public class WizNavStartActivity extends Activity implements OnClickListener {
 	@Override
 	public void onClick(DialogInterface dialog, int which) {
 		if (which == DialogInterface.BUTTON_POSITIVE) {
-			if(accessTokenManager.requestAccessToken(lrzId)) {
+			if (accessTokenManager.requestAccessToken(lrzId)) {
 				startWizNavNextActivity();
 			}
-		} 
+		}
 		if (which == DialogInterface.BUTTON_NEGATIVE) {
 			startWizNavNextActivity();
-		} 
+		}
 	}
-	
+
 	public void startWizNavNextActivity() {
 		finish();
-		Intent intent = new Intent(this, WizNavNextActivity.class);
+		Intent intent = new Intent(this, WizNavCheckTokenActivity.class);
 		startActivity(intent);
 	}
 }

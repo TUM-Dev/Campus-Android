@@ -127,7 +127,8 @@ public class TUMOnlineRequest {
 	 * @param listener
 	 *            the listener, which takes the result
 	 */
-	public void fetchInteractive(final Context context, final TUMOnlineRequestFetchListener listener) {
+	public void fetchInteractive(final Context context,
+			final TUMOnlineRequestFetchListener listener) {
 
 		if (!loadAccessTokenFromPreferences(context)) {
 			listener.onFetchCancelled();
@@ -155,22 +156,24 @@ public class TUMOnlineRequest {
 			@Override
 			protected void onPostExecute(String result) {
 				Log.d("Result: ", result);
-				// handle result
+				// Handles result
 				if (isOnline == false) {
-					listener.onCommonError(context.getString(R.string.no_internet_connection));
+					listener.onCommonError(context
+							.getString(R.string.no_internet_connection));
 					return;
 				}
 				if (result == null) {
-					listener.onFetchError(context.getString(R.string.empty_result));
+					listener.onFetchError(context
+							.getString(R.string.empty_result));
 					return;
-					// TODO Check whether to move to string.xml
-				} else if (result.contains(TUMOnlineConst.TOKEN_NICHT_BESTAETIGT)) {
-					// TODO Token is not valid
-					listener.onFetchError(context.getString(R.string.dialog_access_token_invalid));
+				} else if (result
+						.contains(TUMOnlineConst.TOKEN_NICHT_BESTAETIGT)) {
+					listener.onFetchError(context
+							.getString(R.string.dialog_access_token_invalid));
 					return;
 				} else if (result.contains(TUMOnlineConst.NO_FUNCTION_RIGHTS)) {
-					// TODO Token is not valid
-					listener.onFetchError(context.getString(R.string.dialog_no_rights_function));
+					listener.onFetchError(context
+							.getString(R.string.dialog_no_rights_function));
 					return;
 				}
 				// If there could not be found any problems return usual on
@@ -200,7 +203,8 @@ public class TUMOnlineRequest {
 	 */
 	public String getRequestURL() {
 		String url = SERVICE_BASE_URL + method + "?";
-		Iterator<Entry<String, String>> itMapIterator = parameters.entrySet().iterator();
+		Iterator<Entry<String, String>> itMapIterator = parameters.entrySet()
+				.iterator();
 		while (itMapIterator.hasNext()) {
 			Entry<String, String> pairs = itMapIterator.next();
 			url += pairs.getKey() + "=" + pairs.getValue() + "&";
@@ -213,7 +217,8 @@ public class TUMOnlineRequest {
 		ClientConnectionManager mgr = client.getConnectionManager();
 		HttpParams params = client.getParams();
 
-		client = new DefaultHttpClient(new ThreadSafeClientConnManager(params, mgr.getSchemeRegistry()), params);
+		client = new DefaultHttpClient(new ThreadSafeClientConnManager(params,
+				mgr.getSchemeRegistry()), params);
 
 		return client;
 	}
@@ -226,7 +231,8 @@ public class TUMOnlineRequest {
 	 * @return true if access token is available; false otherwise
 	 */
 	private boolean loadAccessTokenFromPreferences(Context context) {
-		accessToken = PreferenceManager.getDefaultSharedPreferences(context).getString(TUMOnlineConst.ACCESS_TOKEN, null);
+		accessToken = PreferenceManager.getDefaultSharedPreferences(context)
+				.getString(TUMOnlineConst.ACCESS_TOKEN, null);
 
 		// no access token set, or it is obviously wrong
 		if (accessToken == null || accessToken.length() < 1) {

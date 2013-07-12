@@ -51,7 +51,8 @@ public class OrganisationManager {
 
 		// does file exist? is it a file? is it a xml token error or the real
 		// wanted file?
-		if (!xmlOrgFile.exists() || !xmlOrgFile.isFile() || !(xmlOrgFile.length() > 100000)) {
+		if (!xmlOrgFile.exists() || !xmlOrgFile.isFile()
+				|| !(xmlOrgFile.length() > 100000)) {
 			return true;
 		}
 
@@ -73,7 +74,8 @@ public class OrganisationManager {
 	 * @throws Exception
 	 * </pre>
 	 */
-	public void downloadFromExternal(boolean force, String token) throws Exception {
+	public void downloadFromExternal(boolean force, String token)
+			throws Exception {
 
 		// cancel, if it has been updated in the last 5 days
 		if (!force && !this.needSync()) {
@@ -83,7 +85,8 @@ public class OrganisationManager {
 		DefaultHttpClient client = new DefaultHttpClient();
 
 		// build url
-		String url = "https://campus.tum.de/tumonline/wbservicesbasic.orgBaum?pToken=" + token;
+		String url = "https://campus.tum.de/tumonline/wbservicesbasic.orgBaum?pToken="
+				+ token;
 
 		// delete and create new file if there is already an old one existing
 		File xmlOrgFile = FileUtils.getFileOnSD(Const.ORGANISATIONS, "org.xml");

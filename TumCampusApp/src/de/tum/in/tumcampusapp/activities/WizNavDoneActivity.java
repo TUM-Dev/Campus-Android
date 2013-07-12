@@ -12,7 +12,8 @@ public class WizNavDoneActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_wiznavdone);
+		overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+		setContentView(R.layout.activity_wiznav_done);
 	}
 
 	public void onClickDone(View view) {
@@ -41,11 +42,11 @@ public class WizNavDoneActivity extends Activity {
 			return super.onOptionsItemSelected(item);
 		}
 	}
-	
+
 	@Override
 	public void onBackPressed() {
 		finish();
-		Intent intent = new Intent(this, WizNavNextActivity.class);
+		Intent intent = new Intent(this, WizNavColorActivity.class);
 		startActivity(intent);
 	}
 }

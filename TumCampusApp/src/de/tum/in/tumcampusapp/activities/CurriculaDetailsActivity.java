@@ -64,7 +64,8 @@ public class CurriculaDetailsActivity extends Activity {
 		if (text == null) {
 			return getString(R.string.something_wrong);
 		}
-		return Utils.cutText(text, "<!--TYPO3SEARCH_begin-->", "<!--TYPO3SEARCH_end-->");
+		return Utils.cutText(text, "<!--TYPO3SEARCH_begin-->",
+				"<!--TYPO3SEARCH_end-->");
 	}
 
 	/**
@@ -76,10 +77,13 @@ public class CurriculaDetailsActivity extends Activity {
 	 *            Target where the results should be written to
 	 */
 	private void fetchCurriculum(String url, File targetFile) {
-		String text = Utils.buildHTMLDocument(FileUtils.sendGetRequest(httpClient, "http://www.in.tum.de/fileadmin/_src/add.css"),
-				"<div id=\"maincontent\"><div class=\"inner\">" + extractResultsFromURL(url) + "</div></div>");
+		String text = Utils.buildHTMLDocument(FileUtils.sendGetRequest(
+				httpClient, "http://www.in.tum.de/fileadmin/_src/add.css"),
+				"<div id=\"maincontent\"><div class=\"inner\">"
+						+ extractResultsFromURL(url) + "</div></div>");
 
-		text = text.replace("href=\"fuer-studierende-der-tum", "href=\"http://www.in.tum.de/fuer-studierende-der-tum");
+		text = text.replace("href=\"fuer-studierende-der-tum",
+				"href=\"http://www.in.tum.de/fuer-studierende-der-tum");
 
 		FileUtils.writeFile(targetFile, text);
 	}
@@ -113,7 +117,8 @@ public class CurriculaDetailsActivity extends Activity {
 		// if file does not exist download it again
 		if (!file.exists()) {
 			if (!Utils.isConnected(this)) {
-				Toast.makeText(this, R.string.no_internet_connection, Toast.LENGTH_SHORT).show();
+				Toast.makeText(this, R.string.no_internet_connection,
+						Toast.LENGTH_SHORT).show();
 				progressLayout.setVisibility(View.GONE);
 				errorLayout.setVisibility(View.VISIBLE);
 				return;

@@ -47,7 +47,8 @@ public class FileUtils {
 	 * 
 	 * @return The target file or null if error occurred.
 	 */
-	public static File getFileFromURL(DefaultHttpClient httpClient, String url, File targetFile) {
+	public static File getFileFromURL(DefaultHttpClient httpClient, String url,
+			File targetFile) {
 		// check required variables
 		if (url == null || httpClient == null) {
 			return targetFile;
@@ -108,7 +109,8 @@ public class FileUtils {
 	 * @throws Exception
 	 *             If SD-card does not exist
 	 */
-	public static File getFileOnSD(String folder, String filename) throws Exception {
+	public static File getFileOnSD(String folder, String filename)
+			throws Exception {
 		// Save the file to/open from SD
 		File path = new File(Utils.getCacheDir(folder));
 
@@ -132,7 +134,9 @@ public class FileUtils {
 			intent.setDataAndType(Uri.fromFile(file), mimeType);
 			context.startActivity(intent);
 		} else {
-			Toast.makeText(context, context.getString(R.string.error_occurred_while_opening), Toast.LENGTH_LONG).show();
+			Toast.makeText(context,
+					context.getString(R.string.error_occurred_while_opening),
+					Toast.LENGTH_LONG).show();
 		}
 	}
 
@@ -173,7 +177,8 @@ public class FileUtils {
 	 * order as the urls were requested.
 	 * 
 	 */
-	public static void sendAsynchGetRequest(final DefaultHttpClient httpClient, final SearchResultListener listener, final String... urls) {
+	public static void sendAsynchGetRequest(final DefaultHttpClient httpClient,
+			final SearchResultListener listener, final String... urls) {
 		AsyncTask<Void, Void, String[]> backgroundTask;
 
 		backgroundTask = new AsyncTask<Void, Void, String[]>() {
@@ -221,7 +226,8 @@ public class FileUtils {
 	 * @param url
 	 *            The request URL.
 	 */
-	public static String sendPostRequest(DefaultHttpClient httpClient, String url) {
+	public static String sendPostRequest(DefaultHttpClient httpClient,
+			String url) {
 		return sendRequest(httpClient, new HttpPost(url));
 	}
 
@@ -234,7 +240,8 @@ public class FileUtils {
 	 *            The request to be send.
 	 * @return The response as String.
 	 */
-	public static String sendRequest(DefaultHttpClient httpClient, HttpRequestBase request) {
+	public static String sendRequest(DefaultHttpClient httpClient,
+			HttpRequestBase request) {
 		HttpResponse response;
 		String respContent = "";
 

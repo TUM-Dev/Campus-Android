@@ -23,7 +23,8 @@ import de.tum.in.tumcampusapp.fragments.OpeningHoursListFragment;
  * {@link OpeningHoursListFragment.Callbacks} interface to listen for item
  * selections.
  */
-public class OpeningHoursListActivity extends FragmentActivity implements OpeningHoursListFragment.Callbacks {
+public class OpeningHoursListActivity extends FragmentActivity implements
+		OpeningHoursListFragment.Callbacks {
 
 	/**
 	 * Whether or not the activity is in two-pane mode, i.e. running on a tablet
@@ -45,7 +46,9 @@ public class OpeningHoursListActivity extends FragmentActivity implements Openin
 
 			// In two-pane mode, list items should be given the
 			// 'activated' state when touched.
-			((OpeningHoursListFragment) getSupportFragmentManager().findFragmentById(R.id.item_list)).setActivateOnItemClick(true);
+			((OpeningHoursListFragment) getSupportFragmentManager()
+					.findFragmentById(R.id.item_list))
+					.setActivateOnItemClick(true);
 		}
 
 		// TODO: If exposing deep links into your app, handle intents here.
@@ -65,14 +68,17 @@ public class OpeningHoursListActivity extends FragmentActivity implements Openin
 			arguments.putString(OpeningHoursDetailFragment.ARG_ITEM_ID, id);
 			OpeningHoursDetailFragment fragment = new OpeningHoursDetailFragment();
 			fragment.setArguments(arguments);
-			getSupportFragmentManager().beginTransaction().replace(R.id.item_detail_container, fragment).commit();
+			getSupportFragmentManager().beginTransaction()
+					.replace(R.id.item_detail_container, fragment).commit();
 
 		} else {
 			// In single-pane mode, simply start the detail activity
 			// for the selected item ID.
-			Intent detailIntent = new Intent(this, OpeningHoursDetailActivity.class);
+			Intent detailIntent = new Intent(this,
+					OpeningHoursDetailActivity.class);
 			detailIntent.putExtra(OpeningHoursDetailFragment.ARG_ITEM_ID, id);
-			detailIntent.putExtra(OpeningHoursDetailFragment.TWO_PANE, mTwoPane);
+			detailIntent
+					.putExtra(OpeningHoursDetailFragment.TWO_PANE, mTwoPane);
 			startActivity(detailIntent);
 		}
 	}

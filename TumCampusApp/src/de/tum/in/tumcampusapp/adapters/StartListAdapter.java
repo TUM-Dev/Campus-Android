@@ -34,12 +34,14 @@ public class StartListAdapter extends BaseAdapter {
 	private ArrayList<ListMenuEntry> listMenuEntrySet;
 	private boolean usesColorFilter;
 
-	public StartListAdapter(Activity activity, int layoutId, ArrayList<ListMenuEntry> listMenuEntrySet, boolean usesColorFilter) {
+	public StartListAdapter(Activity activity, int layoutId,
+			ArrayList<ListMenuEntry> listMenuEntrySet, boolean usesColorFilter) {
 		this.activity = activity;
 		this.layoutId = layoutId;
 		this.listMenuEntrySet = listMenuEntrySet;
 		this.usesColorFilter = usesColorFilter;
-		inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		inflater = (LayoutInflater) activity
+				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
 
 	@Override
@@ -69,7 +71,8 @@ public class StartListAdapter extends BaseAdapter {
 			holder.icon = (ImageView) vi.findViewById(R.id.list_menu_icon);
 			// Apply a color filter on the images when requested
 			if (usesColorFilter) {
-				holder.icon.setColorFilter(PersonalLayoutManager.getColorFilter(activity));
+				holder.icon.setColorFilter(PersonalLayoutManager
+						.getColorFilter(activity));
 			}
 			holder.title = (TextView) vi.findViewById(R.id.list_menu_title);
 			holder.detail = (TextView) vi.findViewById(R.id.list_menu_detail);
@@ -79,8 +82,10 @@ public class StartListAdapter extends BaseAdapter {
 		}
 
 		holder.icon.setImageResource(listMenuEntrySet.get(position).imageId);
-		holder.title.setText(activity.getResources().getText(listMenuEntrySet.get(position).titleId));
-		holder.detail.setText(activity.getResources().getText(listMenuEntrySet.get(position).detailId));
+		holder.title.setText(activity.getResources().getText(
+				listMenuEntrySet.get(position).titleId));
+		holder.detail.setText(activity.getResources().getText(
+				listMenuEntrySet.get(position).detailId));
 		return vi;
 	}
 }

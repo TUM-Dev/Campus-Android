@@ -21,7 +21,7 @@ public class EventManager {
 	 */
 	public static int lastInserted = 0;
 
-	public static int TIME_TO_SYNC = 21600; // 6 hours
+	public static int TIME_TO_SYNC = 86400; // 1 day
 
 	/**
 	 * Convert JSON object to Event, download event picture
@@ -44,7 +44,8 @@ public class EventManager {
 
 		String eventId = json.getString(Const.JSON_ID);
 
-		String picture = "http://graph.facebook.com/" + eventId + "/Picture?type=large";
+		String picture = "http://graph.facebook.com/" + eventId
+				+ "/Picture?type=large";
 
 		String target = Utils.getCacheDir("events/cache") + eventId + ".jpg";
 		Utils.downloadFileThread(picture, target);
@@ -60,8 +61,10 @@ public class EventManager {
 		// Link only available in event/feed
 		String link = "";
 
-		return new Event(eventId, json.getString(Const.JSON_NAME), Utils.getDateTime(json.getString(Const.JSON_START_TIME)), Utils.getDateTime(json
-				.getString(Const.JSON_END_TIME)), location, description, link, target);
+		return new Event(eventId, json.getString(Const.JSON_NAME),
+				Utils.getDateTime(json.getString(Const.JSON_START_TIME)),
+				Utils.getDateTime(json.getString(Const.JSON_END_TIME)),
+				location, description, link, target);
 	}
 
 	/**
@@ -107,10 +110,13 @@ public class EventManager {
 
 		// https://graph.facebook.com/162327853831856/events?fields=id,name,start_time,end_time,location,description&limit=50&access_token=141869875879732|FbjTXY-wtr06A18W9wfhU8GCkwU
 
-		String url = "https://graph.facebook.com/162327853831856/events?" + "fields=id,name,start_time,end_time,location,description&limit=50&access_token=";
+		String url = "https://graph.facebook.com/162327853831856/events?"
+				+ "fields=id,name,start_time,end_time,location,description&limit=50&access_token=";
 		String token = "141869875879732|FbjTXY-wtr06A18W9wfhU8GCkwU";
 
-		JSONArray jsonArray = Utils.downloadJson(url + URLEncoder.encode(token)).getJSONArray("data");
+		JSONArray jsonArray = Utils
+				.downloadJson(url + URLEncoder.encode(token)).getJSONArray(
+						"data");
 
 		cleanupDb();
 		int count = Utils.dbGetTableCount(db, "events");
@@ -138,9 +144,12 @@ public class EventManager {
 	 * </pre>
 	 */
 	public Cursor getDetailsFromDb(String id) {
-		return db.rawQuery("SELECT image, name, strftime('%w', start) as weekday, "
-				+ "strftime('%d.%m.%Y %H:%M', start) as start_de, strftime('%H:%M', end) as end_de, "
-				+ "location, description, link, id as _id FROM events WHERE id = ?", new String[] { id });
+		return db
+				.rawQuery(
+						"SELECT image, name, strftime('%w', start) as weekday, "
+								+ "strftime('%d.%m.%Y %H:%M', start) as start_de, strftime('%H:%M', end) as end_de, "
+								+ "location, description, link, id as _id FROM events WHERE id = ?",
+						new String[] { id });
 	}
 
 	/**
@@ -150,9 +159,12 @@ public class EventManager {
 	 *         location, _id)
 	 */
 	public Cursor getNextFromDb() {
-		return db.rawQuery("SELECT image, name, strftime('%w', start) as weekday, "
-				+ "strftime('%d.%m.%Y %H:%M', start) as start_de, strftime('%H:%M', end) as end_de, "
-				+ "location, id as _id FROM events WHERE end > datetime('now', 'localtime') " + "ORDER BY start ASC LIMIT 25", null);
+		return db
+				.rawQuery(
+						"SELECT image, name, strftime('%w', start) as weekday, "
+								+ "strftime('%d.%m.%Y %H:%M', start) as start_de, strftime('%H:%M', end) as end_de, "
+								+ "location, id as _id FROM events WHERE end > datetime('now', 'localtime') "
+								+ "ORDER BY start ASC LIMIT 25", null);
 	}
 
 	/**
@@ -162,9 +174,12 @@ public class EventManager {
 	 *         location, _id)
 	 */
 	public Cursor getPastFromDb() {
-		return db.rawQuery("SELECT image, name, strftime('%w', start) as weekday, "
-				+ "strftime('%d.%m.%Y %H:%M', start) as start_de, strftime('%H:%M', end) as end_de, "
-				+ "location, id as _id FROM events WHERE end <= datetime('now', 'localtime') " + "ORDER BY start DESC LIMIT 50", null);
+		return db
+				.rawQuery(
+						"SELECT image, name, strftime('%w', start) as weekday, "
+								+ "strftime('%d.%m.%Y %H:%M', start) as start_de, strftime('%H:%M', end) as end_de, "
+								+ "location, id as _id FROM events WHERE end <= datetime('now', 'localtime') "
+								+ "ORDER BY start DESC LIMIT 50", null);
 	}
 
 	/**
@@ -190,7 +205,11 @@ public class EventManager {
 		if (e.name.length() == 0) {
 			throw new Exception("Invalid name.");
 		}
-		db.execSQL("REPLACE INTO events (id, name, start, end, location, description, link, image) " + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)", new String[] { e.id,
-				e.name, Utils.getDateTimeString(e.start), Utils.getDateTimeString(e.end), e.location, e.description, e.link, e.image });
+		db.execSQL(
+				"REPLACE INTO events (id, name, start, end, location, description, link, image) "
+						+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+				new String[] { e.id, e.name, Utils.getDateTimeString(e.start),
+						Utils.getDateTimeString(e.end), e.location,
+						e.description, e.link, e.image });
 	}
 }
