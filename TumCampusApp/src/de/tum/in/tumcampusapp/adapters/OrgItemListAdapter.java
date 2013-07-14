@@ -21,6 +21,12 @@ import de.tum.in.tumcampusapp.models.OrgItem;
 
 public class OrgItemListAdapter extends BaseAdapter {
 
+	static class ViewHolder {
+		TextView tvMainField;
+		TextView tvSubField1;
+		TextView tvSubField2;
+	}
+
 	/**
 	 * Organisation list, that is getting shown
 	 */
@@ -95,11 +101,5 @@ public class OrgItemListAdapter extends BaseAdapter {
 		}
 
 		return convertView;
-	}
-
-	static class ViewHolder {
-		TextView tvMainField;
-		TextView tvSubField1;
-		TextView tvSubField2;
 	}
 }

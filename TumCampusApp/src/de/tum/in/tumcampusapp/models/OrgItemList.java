@@ -19,6 +19,13 @@ public class OrgItemList {
 	private List<OrgItem> groups = new ArrayList<OrgItem>();
 
 	/**
+	 * add an element to the list
+	 */
+	public void add(OrgItem o) {
+		this.groups.add(o);
+	}
+
+	/**
 	 * getter
 	 */
 	public List<OrgItem> getGroups() {
@@ -30,13 +37,6 @@ public class OrgItemList {
 	 */
 	public void setGroups(List<OrgItem> groups) {
 		this.groups = groups;
-	}
-
-	/**
-	 * add an element to the list
-	 */
-	public void add(OrgItem o) {
-		this.groups.add(o);
 	}
 
 }

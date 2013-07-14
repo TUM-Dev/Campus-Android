@@ -37,12 +37,12 @@ import de.tum.in.tumcampusapp.models.managers.TransportManager;
 public class TransportationActivity extends Activity implements
 		OnItemClickListener, OnItemLongClickListener {
 
+	private RelativeLayout errorLayout;
 	private TextView infoTextView;
 	private ListView listViewResults;
-	private ListView listViewSuggestionsAndSaved = null;
 
+	private ListView listViewSuggestionsAndSaved = null;
 	private RelativeLayout progressLayout;
-	private RelativeLayout errorLayout;
 
 	private EditText searchTextField;
 	private TransportManager transportaionManager;

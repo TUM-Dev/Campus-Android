@@ -17,11 +17,6 @@ public class OrgItem {
 	private String id;
 
 	/**
-	 * Organisation ID of the parent Organisation
-	 */
-	private String parentId;
-
-	/**
 	 * German Description of the Organisation
 	 */
 	private String nameDe;
@@ -31,36 +26,41 @@ public class OrgItem {
 	 */
 	private String nameEn;
 
+	/**
+	 * Organisation ID of the parent Organisation
+	 */
+	private String parentId;
+
 	// Getter and Setter Functions
 	public String getId() {
 		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
-	}
-
-	public String getParentId() {
-		return parentId;
-	}
-
-	public void setParentId(String id) {
-		this.parentId = id;
 	}
 
 	public String getNameDe() {
 		return nameDe;
 	}
 
-	public void setNameDe(String name) {
-		this.nameDe = name;
-	}
-
 	public String getNameEn() {
 		return nameEn;
 	}
 
+	public String getParentId() {
+		return parentId;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public void setNameDe(String name) {
+		this.nameDe = name;
+	}
+
 	public void setNameEn(String nameEn) {
 		this.nameEn = nameEn;
+	}
+
+	public void setParentId(String id) {
+		this.parentId = id;
 	}
 }

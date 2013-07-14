@@ -1,33 +1,37 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/tableLayout1"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="@dimen/padding_default" >
+    android:layout_height="match_parent" >
 
-    <TextView
-        style="?android:attr/listSeparatorTextViewStyle"
-        android:layout_height="wrap_content"
-        android:text="@string/step_1"
-        android:textColor="@color/text_light_gray" />
-
-    <TextView
-        android:id="@+id/textViewWel"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/padding_default"
-        android:text="@string/welcome_msg" />
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="@dimen/padding_default" >
 
-    <EditText
-        android:id="@+id/lrd_id"
-        android:padding="@dimen/padding_default"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        <TextView
+            style="?android:attr/listSeparatorTextViewStyle"
+            android:layout_height="wrap_content"
+            android:text="@string/step_1"
+            android:textColor="@color/text_light_gray" />
 
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:onClick="onClickNext"
-        android:text="@string/button_next" />
+        <TextView
+            android:id="@+id/textViewWel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/padding_default"
+            android:text="@string/welcome_msg" />
 
-</LinearLayout>
+        <EditText
+            android:id="@+id/lrd_id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/padding_default" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onClickNext"
+            android:text="@string/button_next" />
+    </LinearLayout>
+
+</ScrollView>

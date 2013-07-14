@@ -61,7 +61,7 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 			// Displays results in view
 			lvGrades.setAdapter(new ExamListAdapter(GradesActivity.this,
 					examList.getExams()));
-			
+
 			// handle on click events by showing its LectureDetails
 			lvGrades.setOnItemClickListener(new OnItemClickListener() {
 				@Override
@@ -71,7 +71,7 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 					Exam item = (Exam) o;
 					String progId = item.getProgramID();
 					Log.d(getClass().getSimpleName(), progId);
-					
+
 					// set bundle for LectureDetails and show it
 					Bundle bundle = new Bundle();
 					// we need the stp_sp_nr
@@ -82,10 +82,9 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 					// start LectureDetails for given stp_sp_nr
 					startActivity(i);
 				}
-			});	
-			
+			});
+
 			progressLayout.setVisibility(View.GONE);
-			
 
 		} catch (Exception e) {
 			Log.d("SIMPLEXML", "wont work: " + e.getMessage());

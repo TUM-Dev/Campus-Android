@@ -16,21 +16,20 @@
         layout="@layout/layout_error"
         android:visibility="gone" />
 
-    <TextView
-        android:id="@+id/tvLDetailsName"
-        style="@style/SectionHeadline"
-        android:text="@string/latest_gallery" />
+    <android.support.v4.view.ViewPager
+        android:id="@+id/pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
 
-    <GridView
-        android:id="@+id/activity_gallery_gridview"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:columnWidth="100dp"
-        android:gravity="center"
-        android:horizontalSpacing="@dimen/spacing_grid_view"
-        android:numColumns="auto_fit"
-        android:paddingTop="@dimen/padding_to_above_text"
-        android:stretchMode="columnWidth"
-        android:verticalSpacing="@dimen/spacing_grid_view" />
+        <android.support.v4.view.PagerTitleStrip
+            android:id="@+id/pager_title_strip"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:background="@color/sections_blue"
+            android:paddingBottom="4dp"
+            android:paddingTop="4dp"
+            android:textColor="#fff" />
+    </android.support.v4.view.ViewPager>
 
 </LinearLayout>

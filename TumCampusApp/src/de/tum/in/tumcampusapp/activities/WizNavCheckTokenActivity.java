@@ -18,22 +18,20 @@ public class WizNavCheckTokenActivity extends ActivityForAccessingTumOnline {
 		super("isTokenConfirmed", R.layout.activity_wiznav_checktoken);
 	}
 
-	public void onCreate(Bundle savedInstanceState) {
-		overridePendingTransition(R.anim.fadein, R.anim.fadeout);
-		super.onCreate(savedInstanceState);
-	}
-
-	protected void onStart() {
-		super.onStart();
-		TextView textView = (TextView) findViewById(R.id.tvBrowse);
-		textView.setClickable(true);
-		textView.setMovementMethod(LinkMovementMethod.getInstance());
-		String text = "<a href='http://campus.tum.de'> Enable Token through TUM campus portal using Token-Management </a>";
-		textView.setText(Html.fromHtml(text));
+	@Override
+	public void onBackPressed() {
+		finish();
+		Intent intent = new Intent(this, WizNavStartActivity.class);
+		startActivity(intent);
 	}
 
 	public void onClickNext(View view) {
 		super.requestFetch();
+	}
+
+	public void onCreate(Bundle savedInstanceState) {
+		overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+		super.onCreate(savedInstanceState);
 	}
 
 	@Override
@@ -41,19 +39,6 @@ public class WizNavCheckTokenActivity extends ActivityForAccessingTumOnline {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.menu_activity_wizzard, menu);
 		return true;
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case R.id.action_exit:
-			finish();
-			Intent intent = new Intent(this, StartActivity.class);
-			startActivity(intent);
-			return true;
-		default:
-			return super.onOptionsItemSelected(item);
-		}
 	}
 
 	@Override
@@ -71,9 +56,24 @@ public class WizNavCheckTokenActivity extends ActivityForAccessingTumOnline {
 	}
 
 	@Override
-	public void onBackPressed() {
-		finish();
-		Intent intent = new Intent(this, WizNavStartActivity.class);
-		startActivity(intent);
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.action_exit:
+			finish();
+			Intent intent = new Intent(this, StartActivity.class);
+			startActivity(intent);
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
+
+	protected void onStart() {
+		super.onStart();
+		TextView textView = (TextView) findViewById(R.id.tvBrowse);
+		textView.setClickable(true);
+		textView.setMovementMethod(LinkMovementMethod.getInstance());
+		String text = "<a href='http://campus.tum.de'> Enable Token through TUM campus portal using Token-Management </a>";
+		textView.setText(Html.fromHtml(text));
 	}
 }

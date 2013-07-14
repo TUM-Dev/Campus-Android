@@ -12,16 +12,17 @@
         <TextView
             android:id="@+id/tx_category"
             style="?android:attr/listSeparatorTextViewStyle"
-            android:layout_weight="1"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="category"
             android:textColor="@color/text_light_gray" />
+
         <TextView
             android:id="@+id/tx_price"
             style="?android:attr/listSeparatorTextViewStyle"
             android:layout_width="match_parent"
-            android:layout_weight="3"
             android:layout_height="wrap_content"
+            android:layout_weight="3"
             android:text="price"
             android:textColor="@color/text_light_gray" />
     </LinearLayout>

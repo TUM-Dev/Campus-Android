@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string name="today">Today</string>
     <string name="open_wizzard">Open Startup-Wizzard</string>
     <string name="open_wizzard_detail">The Startup-Wizzard helps you in order to set the basic preferences for accessing TUMOnline services and the layout of this App.</string>
     <string name="extras">Extras</string>
@@ -67,11 +68,11 @@
     <string name="error_something_wrong">Sorry, something went wrong.</string>
     <string name="lecture_search">Lectures Search</string>
     <string name="add_rss_feed">Add RSS-Feed</string>
-    <string name="personsearch_addinfo">Search persons at TUM</string>
-    <string name="lecturessearch_addinfo">Search lectures at TUM</string>
-    <string name="plans_addinfo">Plans for TUM campi and MVV</string>
-    <string name="roomfinder_addinfo">Search rooms at TUM</string>
-    <string name="studyplans_addinfo">Studyplans for all study programs</string>
+    <string name="personsearch_addinfo">Search for persons at TUM</string>
+    <string name="lecturessearch_addinfo">Search for lectures at TUM</string>
+    <string name="plans_addinfo">Plans for TUM campus and MVV</string>
+    <string name="roomfinder_addinfo">Search for rooms at TUM</string>
+    <string name="studyplans_addinfo">Studyplans for study programs</string>
     <string name="openinghours_addinfo">Times for important institutions</string>
     <string name="lectures_addinfo">List of your lectures</string>
     <string name="grades_addinfo">List of your grades</string>
@@ -185,7 +186,7 @@
     <string name="cancel">Cancel</string>
     <string name="lectures">Lectures</string>
     <string name="person_search">Person Search</string>
-    <string name="organisations_addinfo">Skim thorugh the TUM orga-tree</string>
+    <string name="organisations_addinfo">Skim through the TUM orga-tree</string>
     <string name="organisations">Organizations</string>
     <string name="grades">Grades</string>
     <string name="documents">Documents</string>
@@ -204,6 +205,7 @@
     <string name="facebook_link">https://m.facebook.com/TUMCampus</string>
     <string name="gallery">Gallery</string>
     <string name="latest_gallery">Latest Gallery</string>
+    <string name="past_gallery">Past Gallery</string>
     <string name="archived_gallery">Archived Gallery</string>
     <string name="app_info">App-Info</string>
     <string name="debug">Debug</string>
@@ -378,6 +380,7 @@
     <string name="chooseReminder">choose a reminder:</string>
     <string name="deactivated">deactivated</string>
     <string name="error">Error</string>
+    <string name="app_short_description">TUM information platform - from students for students</string>
     <string name="app_info_text"><b>TUM Campus App</b>\nThe TUM Campus App is developed by students of the Android practical course, other voluntary freelancers and chair members.
         \n\n<b>Project Management:</b>\nTUM - Computer Science/F13 Prof.Dr.Uwe Baumgarten
         \nNils T. Kannengiesser

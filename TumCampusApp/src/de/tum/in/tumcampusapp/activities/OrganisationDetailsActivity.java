@@ -8,6 +8,7 @@ import javax.xml.parsers.SAXParserFactory;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -20,9 +21,10 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.adapters.OrgDetailsItemHandler;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.HTMLStringBuffer;
+import de.tum.in.tumcampusapp.auxiliary.PersonalLayoutManager;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.OrgDetailsItem;
-import de.tum.in.tumcampusapp.tumonline.TUMCampusRequest;
+import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequest;
 import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequestFetchListener;
 
 /**
@@ -31,98 +33,35 @@ import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequestFetchListener;
  * @author Thomas Behrens
  * @review Vincenz Doelle, Daniel G. Mayr
  */
+@SuppressLint("DefaultLocale")
 public class OrganisationDetailsActivity extends Activity implements
 		TUMOnlineRequestFetchListener {
 
 	/**
-	 * To fetch the Details from the TUMCampus interface
-	 */
-	private TUMCampusRequest requestHandler;
-
-	/**
-	 * Id of the organisation of which the details should be shown
-	 */
-	private String orgId;
-
-	/**
-	 * Only for setting it in the caption at the top
-	 */
-	private String orgName;
-
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_organisationdetails);
-
-		// get the submitted (bundle) data
-		Bundle bundle = this.getIntent().getExtras();
-		orgId = bundle.getString(Const.ORG_ID);
-		orgName = bundle.getString(Const.ORG_NAME);
-	}
-
-	@Override
-	public void onStart() {
-		super.onStart();
-		// if there is a call of OrganisationDetails without an id (should not
-		// be possible)
-		if (orgId == null) {
-			Toast.makeText(this, getString(R.string.invalid_organisation),
-					Toast.LENGTH_LONG).show();
-			return;
-		}
-
-		// set the name of the organisation as heading (TextView tvCaption)
-		// only load the details if the details page is new and it isn't a
-		// return from a link
-		TextView tvCaption = (TextView) findViewById(R.id.tvCaption);
-		if (tvCaption.getText().toString().compareTo(orgName) != 0) {
-
-			// set the new organisation name in the heading
-			tvCaption.setText(orgName);
-
-			// Initialise the request handler and append the orgUnitID to the
-			// URL
-			requestHandler = new TUMCampusRequest("");
-			requestHandler.setParameter("orgUnitID", orgId);
-
-			// set loading text
-			requestHandler
-					.setProgressDialogMessage(getString(R.string.loading_organisation_details));
-
-			// do the TUMCampus request
-			requestHandler.fetchInteractive(this, this);
-
-		}
-	}
-
-	/**
-	 * When the data has arrived call this function, parse the Data and Update
-	 * the UserInterface
+	 * Helper Class that brings the Strings+Values in a GUI polished format
 	 * 
-	 * @param rawResp
-	 *            = XML-TUMCampus-Response (String)
+	 * @param name
+	 *            Name of the Attribute
+	 * @param value
+	 *            Value of the Attribute
+	 * @return line with name and value
 	 */
-	@Override
-	public void onFetch(String rawResponse) {
-		Log.d("RESPONSE", rawResponse);
+	private static String makeStringShowable(String name, String value) {
 
-		// parse XML into one OrgDetailsItem
-		OrgDetailsItem o = parseOrgDetails(rawResponse);
-		updateUI(o);
-	}
+		// if value has length 0 => do nothing
+		if (value.length() == 0) {
+			return "";
+		}
 
-	/**
-	 * while fetching a TUMOnline Request an error occured this will show the
-	 * error message in a toast
-	 */
-	@Override
-	public void onFetchError(String errorReason) {
-		Utils.showLongCenteredToast(this, "Error: " + errorReason);
-	}
-
-	@Override
-	public void onFetchCancelled() {
-		// do nothing
+		// attribute name in bold
+		String outputLine = "<b>" + name + "</b>";
+		// if (name + blank + value) > 36 then write value in the second line
+		if (name.length() + value.length() > 35) {
+			outputLine += "<br>" + value + "<br>";
+		} else {
+			outputLine += "\t" + value + "<br>";
+		}
+		return outputLine;
 	}
 
 	/**
@@ -160,33 +99,6 @@ public class OrganisationDetailsActivity extends Activity implements
 	}
 
 	/**
-	 * Helper Class that brings the Strings+Values in a GUI polished format
-	 * 
-	 * @param name
-	 *            Name of the Attribute
-	 * @param value
-	 *            Value of the Attribute
-	 * @return line with name and value
-	 */
-	private static String makeStringShowable(String name, String value) {
-
-		// if value has length 0 => do nothing
-		if (value.length() == 0) {
-			return "";
-		}
-
-		// attribute name in bold
-		String outputLine = "<b>" + name + "</b>";
-		// if (name + blank + value) > 36 then write value in the second line
-		if (name.length() + value.length() > 35) {
-			outputLine += "<br>" + value + "<br>";
-		} else {
-			outputLine += "\t" + value + "<br>";
-		}
-		return outputLine;
-	}
-
-	/**
 	 * Remove various signs out of a number -> Reason: To make a direct call
 	 * possible
 	 * 
@@ -205,6 +117,128 @@ public class OrganisationDetailsActivity extends Activity implements
 		// to hold the number together
 		punctedNumber = punctedNumber.replace("\\", "-");
 		return punctedNumber;
+	}
+
+	/**
+	 * Id of the organisation of which the details should be shown
+	 */
+	private String orgId;
+
+	/**
+	 * Only for setting it in the caption at the top
+	 */
+	private String orgName;
+
+	/**
+	 * To fetch the Details from the TUMCampus interface
+	 */
+	private TUMOnlineRequest requestHandler;
+
+	@Override
+	public void onCommonError(String errorReason) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_organisationdetails);
+
+		// get the submitted (bundle) data
+		Bundle bundle = this.getIntent().getExtras();
+		orgId = bundle.getString(Const.ORG_ID);
+		orgName = bundle.getString(Const.ORG_NAME);
+	}
+
+	/**
+	 * When the data has arrived call this function, parse the Data and Update
+	 * the UserInterface
+	 * 
+	 * @param rawResp
+	 *            = XML-TUMCampus-Response (String)
+	 */
+	@Override
+	public void onFetch(String rawResponse) {
+		Log.d("RESPONSE", rawResponse);
+
+		// parse XML into one OrgDetailsItem
+		OrgDetailsItem o = parseOrgDetails(rawResponse);
+		updateUI(o);
+	}
+
+	@Override
+	public void onFetchCancelled() {
+		// do nothing
+	}
+
+	/**
+	 * while fetching a TUMOnline Request an error occured this will show the
+	 * error message in a toast
+	 */
+	@Override
+	public void onFetchError(String errorReason) {
+		Utils.showLongCenteredToast(this, "Error: " + errorReason);
+	}
+
+	/**
+	 * Initialize BackButton -> On Click: Go to Organisation.java and show the
+	 * Organisation Tree
+	 * 
+	 * @see android.app.Activity#onKeyDown(int, android.view.KeyEvent)
+	 */
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+
+		// if button "back" is clicked -> make a new Bundle with the orgId and
+		// start Organisation-Activity
+		if ((keyCode == KeyEvent.KEYCODE_BACK)) {
+			Bundle bundle = new Bundle();
+			bundle.putString(Const.ORG_ID, orgId);
+			Intent i = new Intent(OrganisationDetailsActivity.this,
+					OrganisationActivity.class);
+			i.putExtras(bundle);
+			startActivity(i);
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		PersonalLayoutManager.setColorForId(this, R.id.tvCaption);
+	}
+
+	@Override
+	public void onStart() {
+		super.onStart();
+		// if there is a call of OrganisationDetails without an id (should not
+		// be possible)
+		if (orgId == null) {
+			Toast.makeText(this, getString(R.string.invalid_organisation),
+					Toast.LENGTH_LONG).show();
+			return;
+		}
+
+		// set the name of the organisation as heading (TextView tvCaption)
+		// only load the details if the details page is new and it isn't a
+		// return from a link
+		TextView tvCaption = (TextView) findViewById(R.id.tvCaption);
+		if (tvCaption.getText().toString().compareTo(orgName) != 0) {
+
+			// set the new organisation name in the heading
+			tvCaption.setText(orgName.toUpperCase());
+
+			// Initialise the request handler and append the orgUnitID to the
+			// URL
+			requestHandler = new TUMOnlineRequest("");
+			requestHandler.setParameter("orgUnitID", orgId);
+
+			// do the TUMCampus request
+			requestHandler.fetchInteractive(this, this);
+
+		}
 	}
 
 	/**
@@ -323,35 +357,6 @@ public class OrganisationDetailsActivity extends Activity implements
 
 		// show text in html
 		tvOrgDetails.setText(Html.fromHtml(stringBuffer.toString()));
-
-	}
-
-	/**
-	 * Initialize BackButton -> On Click: Go to Organisation.java and show the
-	 * Organisation Tree
-	 * 
-	 * @see android.app.Activity#onKeyDown(int, android.view.KeyEvent)
-	 */
-	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-
-		// if button "back" is clicked -> make a new Bundle with the orgId and
-		// start Organisation-Activity
-		if ((keyCode == KeyEvent.KEYCODE_BACK)) {
-			Bundle bundle = new Bundle();
-			bundle.putString(Const.ORG_ID, orgId);
-			Intent i = new Intent(OrganisationDetailsActivity.this,
-					OrganisationActivity.class);
-			i.putExtras(bundle);
-			startActivity(i);
-			return true;
-		}
-		return false;
-	}
-
-	@Override
-	public void onCommonError(String errorReason) {
-		// TODO Auto-generated method stub
 
 	}
 }

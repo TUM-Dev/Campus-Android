@@ -1,8 +1,8 @@
 package de.tum.in.tumcampusapp.activities.generic;
 
-import android.app.Activity;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,7 +15,7 @@ import android.widget.Toast;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 
-public abstract class ActivityForSearching extends Activity implements
+public abstract class ActivityForSearching extends FragmentActivity implements
 		OnEditorActionListener {
 
 	protected RelativeLayout errorLayout;

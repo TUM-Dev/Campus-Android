@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.fragments.CafeteriaDetailsSectionFragment;
 import de.tum.in.tumcampusapp.models.managers.CafeteriaMenuManager;
@@ -21,7 +22,7 @@ import de.tum.in.tumcampusapp.models.managers.CafeteriaMenuManager;
  * A {@link FragmentPagerAdapter} that returns a fragment corresponding to one
  * of the sections/tabs/pages.
  */
-@SuppressLint("SimpleDateFormat")
+@SuppressLint({ "SimpleDateFormat", "DefaultLocale" })
 public class CafeteriaDetailsSectionsPagerAdapter extends FragmentPagerAdapter {
 	private final Activity activity;
 	private String cafeteriaId;
@@ -92,6 +93,8 @@ public class CafeteriaDetailsSectionsPagerAdapter extends FragmentPagerAdapter {
 		SimpleDateFormat formatDefaultStyle = new SimpleDateFormat("dd.MM.yyy");
 		String dateDefaultStyle = formatDefaultStyle.format(date);
 
-		return (finalDay + ", " + dateDefaultStyle).toUpperCase(l);
+		String pageTitleToShow = finalDay + ", " + dateDefaultStyle;
+
+		return (pageTitleToShow).toUpperCase(l);
 	}
 }

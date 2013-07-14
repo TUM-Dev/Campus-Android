@@ -71,18 +71,17 @@ public class PlansDetailsActivity extends Activity {
 			file = "plans/mvv_night.png";
 			setTitle(getString(R.string.mvv_nightlines));
 			browser.setInitialScale(100 * width / 1480);
-			
+
 		} else if (position == 8) {
 			file = "plans/tram.png";
 			setTitle(getString(R.string.mvv_tram));
 			browser.setInitialScale(100 * width / 1480);
-			
+
 		} else if (position == 9) {
 			file = "plans/mvv_entire_net.png";
 			setTitle(getString(R.string.mvv_entire_net));
 			browser.setInitialScale(100 * width / 1480);
 		}
-
 
 		String data = "<body style='margin:0px;'><img src='" + file
 				+ "'/></body>";

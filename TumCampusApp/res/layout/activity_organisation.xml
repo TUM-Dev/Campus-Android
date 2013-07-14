@@ -2,22 +2,24 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="#FFFFFF"
     android:orientation="vertical" >
 
-    <LinearLayout
-        android:id="@+id/linearLayout1"
+    <include
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="fill_parent"
+        layout="@layout/layout_progress"
+        android:visibility="gone" />
 
-        <TextView
-            android:id="@+id/tvCaption"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:background="#0065BD"
-            android:text="@string/organisation_caption"
-            android:textColor="#FFFFFF" />
-    </LinearLayout>
+    <include
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        layout="@layout/layout_error"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/tvCaption"
+        style="@style/SectionHeadline"
+        android:text="headline" />
 
     <ListView
         android:id="@+id/lstOrganisations"

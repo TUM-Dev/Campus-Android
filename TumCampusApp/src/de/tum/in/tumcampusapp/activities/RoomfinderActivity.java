@@ -48,6 +48,11 @@ public class RoomfinderActivity extends ActivityForSearching implements
 	}
 
 	@Override
+	public void onSearchError(String message) {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
 	public void onSearchResults(String[] results) {
 		String text = "";
 
@@ -121,10 +126,5 @@ public class RoomfinderActivity extends ActivityForSearching implements
 		FileUtils.sendAsynchGetRequest(httpClient, this, queryCss,
 				queryExtraction);
 		return true;
-	}
-
-	@Override
-	public void onSearchError(String message) {
-		// TODO Auto-generated method stub
 	}
 }

@@ -1,67 +1,72 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/tableLayout1"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="@dimen/padding_default" >
+    android:layout_height="match_parent" >
 
-    <include
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        layout="@layout/layout_progress"
-        android:visibility="gone" />
-
-    <include
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        layout="@layout/layout_error"
-        android:visibility="gone" />
-
-    <include
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        layout="@layout/layout_failed_token"
-        android:visibility="gone" />
-
-    <include
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        layout="@layout/layout_no_token"
-        android:visibility="gone" />
-
-    <TextView
-        style="?android:attr/listSeparatorTextViewStyle"
-        android:layout_height="wrap_content"
-        android:text="@string/step_2"
-        android:textColor="@color/text_light_gray" />
-
-    <TextView
-        android:id="@+id/tvSucc"
+    <LinearLayout
+        android:id="@+id/tableLayout1"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/padding_default"
-        android:text="@string/need_to_enable" />
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="@dimen/padding_default" >
 
-    <TextView
-        android:id="@+id/tvBrowse"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/padding_default"
-        android:text="link" />
+        <TextView
+            style="?android:attr/listSeparatorTextViewStyle"
+            android:layout_height="wrap_content"
+            android:text="@string/step_2"
+            android:textColor="@color/text_light_gray" />
 
-    <ImageView
-        android:id="@+id/imageView1"
-        android:paddingTop="@dimen/padding_default"
-        android:paddingBottom="@dimen/padding_default"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:src="@drawable/tokenmanagement" />
+        <TextView
+            android:id="@+id/tvSucc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/padding_default"
+            android:text="@string/need_to_enable" />
 
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:onClick="onClickNext"
-        android:text="@string/button_next" />
+        <TextView
+            android:id="@+id/tvBrowse"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/padding_default"
+            android:text="link" />
 
-</LinearLayout>
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:paddingBottom="@dimen/padding_default"
+            android:paddingTop="@dimen/padding_default"
+            android:src="@drawable/tokenmanagement" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onClickNext"
+            android:text="@string/button_next" />
+
+        <include
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            layout="@layout/layout_progress"
+            android:visibility="gone" />
+
+        <include
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            layout="@layout/layout_error"
+            android:visibility="gone" />
+
+        <include
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            layout="@layout/layout_failed_token"
+            android:visibility="gone" />
+
+        <include
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            layout="@layout/layout_no_token"
+            android:visibility="gone" />
+    </LinearLayout>
+
+</ScrollView>

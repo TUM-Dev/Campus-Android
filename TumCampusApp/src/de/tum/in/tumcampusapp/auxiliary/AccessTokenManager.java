@@ -13,6 +13,13 @@ import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequest;
 public class AccessTokenManager implements OnClickListener {
 	public static final int MIN_LRZ_LENGTH = 7;
 
+	private Context context;
+
+	private String lrzId;
+
+	public AccessTokenManager(Context context) {
+		this.context = context;
+	}
 	/**
 	 * get a new access token for TUMOnline by passing the lrz ID due to the
 	 * simplicity of the given xml file we only need to parse the <token>
@@ -42,6 +49,23 @@ public class AccessTokenManager implements OnClickListener {
 				strTokenXml.indexOf("</token>"));
 	}
 
+	private String getLrzId() {
+		if (lrzId == null || lrzId == "") {
+			lrzId = Utils.getSetting(context, Const.LRZ_ID);
+		}
+		return lrzId;
+	}
+
+	public boolean hasValidAccessToken() {
+		String oldaccesstoken = PreferenceManager.getDefaultSharedPreferences(
+				context).getString(Const.ACCESS_TOKEN, "");
+		if (oldaccesstoken != null && oldaccesstoken.length() > 2) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	// TODO Test this method
 	public boolean isAccessTokenConfirmed(String lrz_id) {
 		TUMOnlineRequest request = new TUMOnlineRequest("isTokenConfirmed");
@@ -51,20 +75,6 @@ public class AccessTokenManager implements OnClickListener {
 		return Boolean.parseBoolean(strTokenXml.substring(
 				strTokenXml.indexOf("<confirmed>") + "<confirmed>".length(),
 				strTokenXml.indexOf("</confirmed>")));
-	}
-
-	private Context context;
-	private String lrzId;
-
-	public AccessTokenManager(Context context) {
-		this.context = context;
-	}
-
-	private String getLrzId() {
-		if (lrzId == null || lrzId == "") {
-			lrzId = Utils.getSetting(context, Const.LRZ_ID);
-		}
-		return lrzId;
 	}
 
 	@Override
@@ -108,16 +118,6 @@ public class AccessTokenManager implements OnClickListener {
 					Toast.LENGTH_LONG).show();
 		}
 		return false;
-	}
-
-	public boolean hasValidAccessToken() {
-		String oldaccesstoken = PreferenceManager.getDefaultSharedPreferences(
-				context).getString(Const.ACCESS_TOKEN, "");
-		if (oldaccesstoken != null && oldaccesstoken.length() > 2) {
-			return true;
-		} else {
-			return false;
-		}
 	}
 
 	public void setupAccessToken() {

@@ -18,40 +18,31 @@ import de.tum.in.tumcampusapp.models.OrgDetailsItem;
 
 public class OrgDetailsItemHandler extends DefaultHandler {
 
-	// OrganisationDetails Object to load parsed data into
-	private final OrgDetailsItem odo = new OrgDetailsItem();
-
 	// Buffer for parsing
 	StringBuffer buff;
+
 	boolean buffering = false;
+	// save if the parser is inside Additional Information
+	// to handle those another way
+	boolean isInsideAdditionalInformation = false;
+
+	// OrganisationDetails Object to load parsed data into
+	private final OrgDetailsItem odo = new OrgDetailsItem();
 
 	// stores temporarily the attribute of the tag,
 	// to have access to it at the end tag
 	public String tempAtt;
 
-	// save if the parser is inside Additional Information
-	// to handle those another way
-	boolean isInsideAdditionalInformation = false;
-
-	// TODO Check whether refactor list of interesting tags
 	@Override
-	public void startElement(String namespaceURI, String localName,
-			String qName, Attributes atts) {
-		// only buffer interesting tags
-		if (localName.equals("orgUnitID") || localName.equals("orgUnitName")
-				|| localName.equals("orgUnitCode")
-				|| localName.equals("orgUnitDescription")
-				|| localName.equals("contactName")
-				|| localName.equals("street") || localName.equals("locality")
-				|| localName.equals("pcode") || localName.equals("country")
-				|| localName.equals("telephone") || localName.equals("fax")
-				|| localName.equals("email") || localName.equals("webLink")
-				|| localName.equals("subBlock")) {
-			buff = new StringBuffer("");
-			buffering = true;
-			// to store first attribute till end tag
-			tempAtt = atts.getValue(0);
+	public void characters(char ch[], int start, int length) {
+		if (buffering) {
+			buff.append(ch, start, length);
 		}
+	}
+
+	@Override
+	public void endDocument() {
+		Log.d("sax-parser", "end sax-parsing XML-document");
 	}
 
 	@Override
@@ -138,23 +129,6 @@ public class OrgDetailsItemHandler extends DefaultHandler {
 		}
 	}
 
-	@Override
-	public void startDocument() {
-		Log.d("sax-parser", "start sax-parsing XML-document");
-	}
-
-	@Override
-	public void endDocument() {
-		Log.d("sax-parser", "end sax-parsing XML-document");
-	}
-
-	@Override
-	public void characters(char ch[], int start, int length) {
-		if (buffering) {
-			buff.append(ch, start, length);
-		}
-	}
-
 	/**
 	 * Returns the collected Organisation Details to the Calling Class
 	 * 
@@ -162,6 +136,32 @@ public class OrgDetailsItemHandler extends DefaultHandler {
 	 */
 	public OrgDetailsItem getDetails() {
 		return odo;
+	}
+
+	@Override
+	public void startDocument() {
+		Log.d("sax-parser", "start sax-parsing XML-document");
+	}
+
+	// TODO Check whether refactor list of interesting tags
+	@Override
+	public void startElement(String namespaceURI, String localName,
+			String qName, Attributes atts) {
+		// only buffer interesting tags
+		if (localName.equals("orgUnitID") || localName.equals("orgUnitName")
+				|| localName.equals("orgUnitCode")
+				|| localName.equals("orgUnitDescription")
+				|| localName.equals("contactName")
+				|| localName.equals("street") || localName.equals("locality")
+				|| localName.equals("pcode") || localName.equals("country")
+				|| localName.equals("telephone") || localName.equals("fax")
+				|| localName.equals("email") || localName.equals("webLink")
+				|| localName.equals("subBlock")) {
+			buff = new StringBuffer("");
+			buffering = true;
+			// to store first attribute till end tag
+			tempAtt = atts.getValue(0);
+		}
 	}
 
 }

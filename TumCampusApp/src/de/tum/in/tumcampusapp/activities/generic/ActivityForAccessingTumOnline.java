@@ -1,10 +1,10 @@
 package de.tum.in.tumcampusapp.activities.generic;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,8 +17,8 @@ import de.tum.in.tumcampusapp.preferences.UserPreferencesActivity;
 import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequest;
 import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequestFetchListener;
 
-public abstract class ActivityForAccessingTumOnline extends Activity implements
-		TUMOnlineRequestFetchListener {
+public abstract class ActivityForAccessingTumOnline extends FragmentActivity
+		implements TUMOnlineRequestFetchListener {
 
 	private String accessToken;
 	protected RelativeLayout errorLayout;

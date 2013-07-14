@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,7 +19,7 @@ import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.services.DownloadService;
 
-public class ActivityForDownloadingExternal extends Activity {
+public class ActivityForDownloadingExternal extends FragmentActivity {
 	private Activity activity = this;
 
 	private RelativeLayout errorLayout;
@@ -75,7 +76,7 @@ public class ActivityForDownloadingExternal extends Activity {
 	}
 
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(layoutId);
 

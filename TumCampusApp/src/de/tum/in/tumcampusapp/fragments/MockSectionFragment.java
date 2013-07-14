@@ -29,8 +29,10 @@ public class MockSectionFragment extends Fragment {
 		activity = getActivity();
 		listViewMenu = (ListView) rootView.findViewById(R.id.listView);
 
+		getArguments().getInt("key");
+
 		// Do something with the list
-		
+
 		return rootView;
 	}
 }

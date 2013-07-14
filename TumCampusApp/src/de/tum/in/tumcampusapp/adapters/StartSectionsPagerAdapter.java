@@ -28,7 +28,6 @@ import de.tum.in.tumcampusapp.activities.RoomfinderActivity;
 import de.tum.in.tumcampusapp.activities.TimetableActivity;
 import de.tum.in.tumcampusapp.activities.TransportationActivity;
 import de.tum.in.tumcampusapp.activities.TuitionFeesActivity;
-import de.tum.in.tumcampusapp.activities.generic.MockSlidingTabActivity;
 import de.tum.in.tumcampusapp.auxiliary.ListMenuEntry;
 import de.tum.in.tumcampusapp.fragments.StartSectionFragment;
 

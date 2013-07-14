@@ -55,6 +55,7 @@ public final class Const {
 	public static final String JSON_RESULTS = "results";
 	public static final String JSON_START_TIME = "start_time";
 	public static final String JSON_TITLE = "title";
+	public static final String KALENDER = "kalender";
 	public static final String LECTURE_ID_COLUMN = "lectureId";
 	public static final String LECTURES = "lectures";
 	public static final String LECTURES_APPOINTMENTS = "veranstaltungenTermine";
@@ -83,7 +84,6 @@ public final class Const {
 	public static final String START_DE_COLUMN = "start_de";
 	public static final String START_DT_COLUMN = "start_dt";
 	public static final String STUDIENBEITRAGSTATUS = "studienbeitragsstatus";
-	public static final String KALENDER = "kalender";
 	public static final String TITLE_EXTRA = "title";
 	public static final String TRANSPORT_COLUMN = "transport";
 	public static final String TUMONLINE_PASSWORD = "tumonline_password";

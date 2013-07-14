@@ -1,27 +1,32 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/tableLayout1"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:padding="@dimen/padding_default"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:layout_height="match_parent" >
+
+    <LinearLayout
+        android:id="@+id/tableLayout1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="@dimen/padding_default" >
 
         <TextView
-        style="?android:attr/listSeparatorTextViewStyle"
-        android:layout_height="wrap_content"
-        android:text="@string/finish"
-        android:textColor="@color/text_light_gray" />
-        
-    <TextView
-        android:id="@+id/tvSucc"
-        android:padding="@dimen/padding_default"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/configured" />
+            style="?android:attr/listSeparatorTextViewStyle"
+            android:layout_height="wrap_content"
+            android:text="@string/finish"
+            android:textColor="@color/text_light_gray" />
 
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:onClick="onClickDone"
-        android:text="Go to TUM Campus App" />
+        <TextView
+            android:id="@+id/tvSucc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/padding_default"
+            android:text="@string/configured" />
 
-</LinearLayout>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onClickDone"
+            android:text="Go to TUM Campus App" />
+    </LinearLayout>
+
+</ScrollView>

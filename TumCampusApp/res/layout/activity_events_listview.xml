@@ -3,9 +3,7 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:paddingBottom="6dip"
-    android:paddingLeft="4dip"
-    android:paddingTop="6dip" >
+    android:padding="@dimen/padding_default" >
 
     <ImageView
         android:id="@+id/icon"
@@ -22,22 +20,22 @@
 
         <TextView
             android:id="@+id/name"
-            android:text="name"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:paddingLeft="@dimen/padding_to_image"
             android:paddingRight="@dimen/padding_to_image"
+            android:text="name"
             android:textSize="@dimen/large_text_size" />
 
         <TextView
             android:id="@+id/infos"
-            android:text="infos"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:paddingBottom="2dp"
             android:paddingLeft="@dimen/padding_to_image"
             android:paddingRight="@dimen/padding_to_image"
             android:paddingTop="2dp"
+            android:text="infos"
             android:textColor="@color/text_light_blue"
             android:textSize="@dimen/small_text_size" />
     </LinearLayout>

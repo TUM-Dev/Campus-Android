@@ -9,17 +9,24 @@ import android.view.View;
 import de.tum.in.tumcampusapp.R;
 
 public class WizNavDoneActivity extends Activity {
-	public void onCreate(Bundle savedInstanceState) {
-
-		super.onCreate(savedInstanceState);
-		overridePendingTransition(R.anim.fadein, R.anim.fadeout);
-		setContentView(R.layout.activity_wiznav_done);
+	@Override
+	public void onBackPressed() {
+		finish();
+		Intent intent = new Intent(this, WizNavColorActivity.class);
+		startActivity(intent);
 	}
 
 	public void onClickDone(View view) {
 		finish();
 		Intent strtActivity = new Intent(this, StartActivity.class);
 		startActivity(strtActivity);
+	}
+
+	public void onCreate(Bundle savedInstanceState) {
+
+		super.onCreate(savedInstanceState);
+		overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+		setContentView(R.layout.activity_wiznav_done);
 	}
 
 	@Override
@@ -41,12 +48,5 @@ public class WizNavDoneActivity extends Activity {
 		default:
 			return super.onOptionsItemSelected(item);
 		}
-	}
-
-	@Override
-	public void onBackPressed() {
-		finish();
-		Intent intent = new Intent(this, WizNavColorActivity.class);
-		startActivity(intent);
 	}
 }

@@ -47,7 +47,9 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
 		footer = getLayoutInflater(savedInstanceState).inflate(
 				android.R.layout.two_line_list_item, null, false);
 
-		listViewMenu.addFooterView(footer, null, false);
+		// TODO make this look nicer :)
+		// listViewMenu.addFooterView(footer, null, false);
+
 		showMenueForDay();
 		return rootView;
 	}

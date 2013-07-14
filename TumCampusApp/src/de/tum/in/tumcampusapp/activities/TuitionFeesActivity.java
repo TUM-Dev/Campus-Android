@@ -3,6 +3,7 @@ package de.tum.in.tumcampusapp.activities;
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -51,6 +52,7 @@ public class TuitionFeesActivity extends ActivityForAccessingTumOnline
 	 * 
 	 * @param rawResp
 	 */
+	@SuppressLint("DefaultLocale")
 	@Override
 	public void onFetch(String rawResp) {
 
@@ -65,7 +67,7 @@ public class TuitionFeesActivity extends ActivityForAccessingTumOnline
 			deadlineTextView.setText(tuitionList.getTuitions().get(0)
 					.getFrist());
 			semesterTextView.setText(tuitionList.getTuitions().get(0)
-					.getSemesterBez());
+					.getSemesterBez().toUpperCase());
 
 		} catch (Exception e) {
 			Log.d("SIMPLEXML", "wont work: " + e.getMessage());

@@ -34,8 +34,8 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:autoLink="web"
-                android:text="description"
-                android:padding="@dimen/padding_default" />
+                android:padding="@dimen/padding_default"
+                android:text="description" />
         </LinearLayout>
     </ScrollView>
 

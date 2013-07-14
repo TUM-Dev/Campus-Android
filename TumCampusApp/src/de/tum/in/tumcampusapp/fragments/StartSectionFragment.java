@@ -35,6 +35,7 @@ public class StartSectionFragment extends Fragment implements
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+
 		listMenuEntrySet = (ArrayList<ListMenuEntry>) getArguments()
 				.getSerializable(StartSectionsPagerAdapter.LIST_ENTRY_SET);
 		View rootView = inflater.inflate(R.layout.fragment_start_section,

@@ -13,23 +13,25 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.adapters.OrgItemListAdapter;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Dialogs;
 import de.tum.in.tumcampusapp.auxiliary.FileUtils;
+import de.tum.in.tumcampusapp.auxiliary.PersonalLayoutManager;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.OrgItem;
 import de.tum.in.tumcampusapp.models.OrgItemList;
@@ -47,13 +49,8 @@ import de.tum.in.tumcampusapp.preferences.UserPreferencesActivity;
  * @author Thomas Behrens
  * @review Vincenz Doelle, Daniel G. Mayr
  */
+@SuppressLint("DefaultLocale")
 public class OrganisationActivity extends Activity implements OnClickListener {
-
-	/**
-	 * To show at start the highest Organisation level (The highest
-	 * Organisations are child of "Organisation 1" = TUM)
-	 */
-	private static final String TOP_LEVEL_ORG = "1";
 
 	/**
 	 * language is "de"->German or "en"->English depending on the system
@@ -61,8 +58,25 @@ public class OrganisationActivity extends Activity implements OnClickListener {
 	 */
 	private static String language;
 
+	/**
+	 * To show at start the highest Organisation level (The highest
+	 * Organisations are child of "Organisation 1" = TUM)
+	 */
+	private static final String TOP_LEVEL_ORG = "1";
+
+	/** The document is used to access and parse the xml.org file on the SD-card */
+	private Document doc;
+
+	protected RelativeLayout errorLayout;
+
+	/** List of Organisations shown on the Display */
+	private ListView lvOrg;
+
 	/** orgId is the ID of the organisation you click on */
 	private String orgId;
+
+	/** orgName is the name of the parent organisation, whose folder is showed */
+	private String orgName;
 
 	/**
 	 * parentId is the ID of the parent organisation, of which the
@@ -70,74 +84,72 @@ public class OrganisationActivity extends Activity implements OnClickListener {
 	 */
 	private String parentId;
 
-	/** orgName is the name of the parent organisation, whose folder is showed */
-	private String orgName;
-
+	protected RelativeLayout progressLayout;
 	/** The org.xml File on the SD-card */
 	private File xmlOrgFile;
 
-	/** List of Organisations shown on the Display */
-	private ListView lvOrg;
-
-	/** The document is used to access and parse the xml.org file on the SD-card */
-	private Document doc;
-
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-
-		setContentView(R.layout.activity_organisation);
-
-		// list of organizations
-		lvOrg = (ListView) findViewById(R.id.lstOrganisations);
-
-		// start at the top level
-		this.orgId = TOP_LEVEL_ORG;
-		this.parentId = TOP_LEVEL_ORG;
-		// TODO Check for rightful checking. Check in the whole class.
-		// set language = German if system language is German else set English
-		if (System.getProperty("user.language").compareTo(Const.DE) == 0) {
-			language = Const.DE;
-		} else {
-			language = Const.EN;
+	/**
+	 * SAX-Parsing the org.xml-File to get Information for the Jump in the
+	 * Organisation Structure
+	 */
+	private void buildDocument() {
+		// (sax) dom parsing
+		DocumentBuilderFactory docBuilderFactory;
+		DocumentBuilder docBuilder;
+		doc = null;
+		try {
+			docBuilderFactory = DocumentBuilderFactory.newInstance();
+			docBuilder = docBuilderFactory.newDocumentBuilder();
+			doc = docBuilder.parse(getOrgFile());
+		} catch (Exception e) {
+			Log.d("EXCEPTION", e.getMessage());
+			e.printStackTrace();
 		}
+		doc.getDocumentElement().normalize();
 	}
 
-	@Override
-	public void onStart() {
-		super.onStart();
+	/**
+	 * Returns true if there are one or more elements in the organisation tree
+	 * inside this organisation
+	 * 
+	 * @param organisationId
+	 * @return
+	 */
+	private boolean existSuborganisation(String organisationId) {
 
-		// get transmitted data of the last activity (e.g. OrganisationDetails)
-		if (this.getIntent().hasExtra(Const.ORG_ID)) {
-			Bundle bundle = this.getIntent().getExtras();
-			orgId = bundle.getString(Const.ORG_ID);
-			parentId = getParent(orgId).getId();
+		// get list of all organisations
+		NodeList organisationList = getDocument().getElementsByTagName("row");
+		Log.d("PARSING", "parsing " + organisationList.getLength()
+				+ " elements...");
+
+		// go through each organisation
+		for (int i = 0; i < organisationList.getLength(); i++) {
+
+			// extract one organisation to an element
+			Node organisationItem = organisationList.item(i);
+			// get the parentId of the element
+			String itemParentId = getValue(organisationItem, "parent");
+
+			// if there is any item with the parentId of the id return true -->
+			// there is at least one suborganisation
+			// existing
+			if (itemParentId.contentEquals(organisationId)) {
+				return true;
+			}
 		}
+		return false;
+	}
 
-		// get the XML file containing all organisations information
-		getOrgFile();
-
-		// be careful! this takes a lot of time on older devices!
-		buildDocument();
-
-		// set orgName depending on language
-		if (language.equals(Const.DE)) {
-			orgName = getParent(parentId).getNameDe();
-		} else {
-			orgName = getParent(parentId).getNameEn();
+	/**
+	 * Return the private Document if existing, else build a new one
+	 * 
+	 * @return
+	 */
+	private Document getDocument() {
+		if (this.doc == null) {
+			buildDocument();
 		}
-
-		// first: show the first level of the tree (including the faculties)
-		showItems(parentId);
-
-		// check if internet is connected, show warning, that details cannot be
-		// shown
-		if (!Utils.isConnected(this)) {
-			Utils.showLongCenteredToast(
-					this,
-					getString(R.string.warning_no_internet_connection_for_organisation_details));
-		}
-
+		return doc;
 	}
 
 	private File getOrgFile() {
@@ -201,23 +213,192 @@ public class OrganisationActivity extends Activity implements OnClickListener {
 	}
 
 	/**
-	 * SAX-Parsing the org.xml-File to get Information for the Jump in the
-	 * Organisation Structure
+	 * Searches for the parentId of an element, if it is already in the highest
+	 * layer, it returns 1.
+	 * 
+	 * @param parentId
+	 * @return
 	 */
-	private void buildDocument() {
-		// (sax) dom parsing
-		DocumentBuilderFactory docBuilderFactory;
-		DocumentBuilder docBuilder;
-		doc = null;
-		try {
-			docBuilderFactory = DocumentBuilderFactory.newInstance();
-			docBuilder = docBuilderFactory.newDocumentBuilder();
-			doc = docBuilder.parse(getOrgFile());
-		} catch (Exception e) {
-			Log.d("EXCEPTION", e.getMessage());
-			e.printStackTrace();
+	public OrgItem getParent(String parentId) {
+
+		// if already in highest layer => create OrgItem of highest layer
+		if (parentId.equals(TOP_LEVEL_ORG)) {
+			OrgItem topObject = new OrgItem();
+			topObject.setId(TOP_LEVEL_ORG);
+			return topObject;
 		}
-		doc.getDocumentElement().normalize();
+
+		// get all elements to parse and count them
+		NodeList organisationList = getDocument().getElementsByTagName("row");
+		Log.d("PARSING", "parsing " + organisationList.getLength()
+				+ " elements...");
+
+		// parse xml tree (org.xml) to find parent of an element
+		for (int i = 0; i < organisationList.getLength(); i++) {
+			Node organisationItem = organisationList.item(i);
+
+			// go through every id and look if it there is any equal in any
+			// parent-Id field
+			String itemId = getValue(organisationItem, "nr");
+
+			// if there is an organisation that has the given parentId as
+			// organisationId
+			// make a parent element and return it
+			if (itemId.equals(parentId)) {
+
+				// set the Name depending on the system language
+				String itemName;
+				if (language.equals("de")) {
+					itemName = getValue(organisationItem, "name_de");
+				} else {
+					itemName = getValue(organisationItem, "name_en");
+				}
+
+				// get the parentId of the Item
+				String itemParentId = getValue(organisationItem, "parent");
+
+				// create new Organisation (OrgItem) and instantiate it
+				// with the data of the found parent Object
+				OrgItem parentObject = new OrgItem();
+				parentObject.setId(itemParentId);
+				if (language.equals(Const.DE)) {
+					parentObject.setNameDe(itemName);
+				} else {
+					parentObject.setNameEn(itemName);
+				}
+				return parentObject;
+			}
+		}
+		// if no parent found => jump to start layer
+		OrgItem parentObject = new OrgItem();
+		parentObject.setId(TOP_LEVEL_ORG);
+		if (language.equals(Const.DE)) {
+			parentObject.setNameDe(getString(R.string.tum));
+		} else {
+			parentObject.setNameEn(getString(R.string.tum));
+		}
+		return parentObject;
+	}
+
+	/**
+	 * Function that gets the Value out of a Node with a special name
+	 * 
+	 * @param item
+	 *            = Node that gets evaluated
+	 * @param type
+	 *            = Type of node (e.g. parent, id, nameDe)
+	 */
+	public String getValue(Node item, String type) {
+		Element elem = (Element) item;
+		// filter the item with a special tag
+		NodeList list = elem.getElementsByTagName(type);
+		// take first list element (list only has one element)
+		Element elem2 = (Element) list.item(0);
+		// now get the value out of the childnode nr. 1
+		list = elem2.getChildNodes();
+		return list.item(0).getNodeValue();
+	}
+
+	/**
+	 * A click on the BackButton should show the parent class or go back to the
+	 * main menu
+	 */
+	@Override
+	public void onBackPressed() {
+		// go back to the main menu, if the user is in the highest level
+		if (orgId.equals(TOP_LEVEL_ORG)) {
+			Intent intent = new Intent(this, StartActivity.class);
+			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+					| Intent.FLAG_ACTIVITY_SINGLE_TOP);
+			startActivity(intent);
+			return;
+		}
+
+		// get one layer up
+		orgId = parentId;
+		OrgItem p = getParent(orgId);
+		parentId = p.getId();
+
+		// Switch language
+		// -> German if German is system language
+		// if not German -> English
+		if (language.equals(Const.DE)) {
+			orgName = getParent(parentId).getNameDe();
+		} else {
+			orgName = getParent(parentId).getNameEn();
+		}
+		showItems(parentId);
+	}
+
+	@Override
+	public void onClick(View v) {
+		// do nothing
+	}
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+
+		setContentView(R.layout.activity_organisation);
+		progressLayout = (RelativeLayout) findViewById(R.id.progress_layout);
+		errorLayout = (RelativeLayout) findViewById(R.id.error_layout);
+
+		// list of organizations
+		lvOrg = (ListView) findViewById(R.id.lstOrganisations);
+
+		// start at the top level
+		this.orgId = TOP_LEVEL_ORG;
+		this.parentId = TOP_LEVEL_ORG;
+		// TODO Check for rightful checking. Check in the whole class.
+		// set language = German if system language is German else set English
+		if (System.getProperty("user.language").compareTo(Const.DE) == 0) {
+			language = Const.DE;
+		} else {
+			language = Const.EN;
+		}
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		PersonalLayoutManager.setColorForId(this, R.id.tvCaption);
+	}
+
+	@Override
+	public void onStart() {
+		super.onStart();
+
+		// get transmitted data of the last activity (e.g. OrganisationDetails)
+		if (this.getIntent().hasExtra(Const.ORG_ID)) {
+			Bundle bundle = this.getIntent().getExtras();
+			orgId = bundle.getString(Const.ORG_ID);
+			parentId = getParent(orgId).getId();
+		}
+
+		// get the XML file containing all organisations information
+		getOrgFile();
+
+		// be careful! this takes a lot of time on older devices!
+		buildDocument();
+
+		// set orgName depending on language
+		if (language.equals(Const.DE)) {
+			orgName = getParent(parentId).getNameDe();
+		} else {
+			orgName = getParent(parentId).getNameEn();
+		}
+
+		// first: show the first level of the tree (including the faculties)
+		showItems(parentId);
+
+		// check if internet is connected, show warning, that details cannot be
+		// shown
+		if (!Utils.isConnected(this)) {
+			Utils.showLongCenteredToast(
+					this,
+					getString(R.string.warning_no_internet_connection_for_organisation_details));
+		}
+
 	}
 
 	/**
@@ -241,7 +422,7 @@ public class OrganisationActivity extends Activity implements OnClickListener {
 		}
 
 		// set caption (organisation "folder" name)
-		tvCaption.setText(orgName + ":");
+		tvCaption.setText(orgName.toUpperCase());
 
 		NodeList nodeList = getDocument().getElementsByTagName("row");
 		Log.d("PARSING", "parsing " + nodeList.getLength() + " elements...");
@@ -319,181 +500,5 @@ public class OrganisationActivity extends Activity implements OnClickListener {
 				}
 			}
 		});
-	}
-
-	/**
-	 * Returns true if there are one or more elements in the organisation tree
-	 * inside this organisation
-	 * 
-	 * @param organisationId
-	 * @return
-	 */
-	private boolean existSuborganisation(String organisationId) {
-
-		// get list of all organisations
-		NodeList organisationList = getDocument().getElementsByTagName("row");
-		Log.d("PARSING", "parsing " + organisationList.getLength()
-				+ " elements...");
-
-		// go through each organisation
-		for (int i = 0; i < organisationList.getLength(); i++) {
-
-			// extract one organisation to an element
-			Node organisationItem = organisationList.item(i);
-			// get the parentId of the element
-			String itemParentId = getValue(organisationItem, "parent");
-
-			// if there is any item with the parentId of the id return true -->
-			// there is at least one suborganisation
-			// existing
-			if (itemParentId.contentEquals(organisationId)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	/**
-	 * Return the private Document if existing, else build a new one
-	 * 
-	 * @return
-	 */
-	private Document getDocument() {
-		if (this.doc == null) {
-			buildDocument();
-		}
-		return doc;
-	}
-
-	/**
-	 * Function that gets the Value out of a Node with a special name
-	 * 
-	 * @param item
-	 *            = Node that gets evaluated
-	 * @param type
-	 *            = Type of node (e.g. parent, id, nameDe)
-	 */
-	public String getValue(Node item, String type) {
-		Element elem = (Element) item;
-		// filter the item with a special tag
-		NodeList list = elem.getElementsByTagName(type);
-		// take first list element (list only has one element)
-		Element elem2 = (Element) list.item(0);
-		// now get the value out of the childnode nr. 1
-		list = elem2.getChildNodes();
-		return list.item(0).getNodeValue();
-	}
-
-	/**
-	 * Searches for the parentId of an element, if it is already in the highest
-	 * layer, it returns 1.
-	 * 
-	 * @param parentId
-	 * @return
-	 */
-	public OrgItem getParent(String parentId) {
-
-		// if already in highest layer => create OrgItem of highest layer
-		if (parentId.equals(TOP_LEVEL_ORG)) {
-			OrgItem topObject = new OrgItem();
-			topObject.setId(TOP_LEVEL_ORG);
-			return topObject;
-		}
-
-		// get all elements to parse and count them
-		NodeList organisationList = getDocument().getElementsByTagName("row");
-		Log.d("PARSING", "parsing " + organisationList.getLength()
-				+ " elements...");
-
-		// parse xml tree (org.xml) to find parent of an element
-		for (int i = 0; i < organisationList.getLength(); i++) {
-			Node organisationItem = organisationList.item(i);
-
-			// go through every id and look if it there is any equal in any
-			// parent-Id field
-			String itemId = getValue(organisationItem, "nr");
-
-			// if there is an organisation that has the given parentId as
-			// organisationId
-			// make a parent element and return it
-			if (itemId.equals(parentId)) {
-
-				// set the Name depending on the system language
-				String itemName;
-				if (language.equals("de")) {
-					itemName = getValue(organisationItem, "name_de");
-				} else {
-					itemName = getValue(organisationItem, "name_en");
-				}
-
-				// get the parentId of the Item
-				String itemParentId = getValue(organisationItem, "parent");
-
-				// create new Organisation (OrgItem) and instantiate it
-				// with the data of the found parent Object
-				OrgItem parentObject = new OrgItem();
-				parentObject.setId(itemParentId);
-				if (language.equals(Const.DE)) {
-					parentObject.setNameDe(itemName);
-				} else {
-					parentObject.setNameEn(itemName);
-				}
-				return parentObject;
-			}
-		}
-		// if no parent found => jump to start layer
-		OrgItem parentObject = new OrgItem();
-		parentObject.setId(TOP_LEVEL_ORG);
-		if (language.equals(Const.DE)) {
-			parentObject.setNameDe(getString(R.string.tum));
-		} else {
-			parentObject.setNameEn(getString(R.string.tum));
-		}
-		return parentObject;
-	}
-
-	/**
-	 * A click on the BackButton should show the parent class or go back to the
-	 * main menu
-	 * 
-	 * @see android.app.Activity#onKeyDown(int, android.view.KeyEvent)
-	 */
-	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-
-		// if backbutton clicked
-		if ((keyCode == KeyEvent.KEYCODE_BACK)) {
-			// go back to the main menu, if the user is in the highest level
-			if (parentId.equals(TOP_LEVEL_ORG)) {
-				Intent intent = new Intent(this, StartActivity.class);
-				intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
-						| Intent.FLAG_ACTIVITY_SINGLE_TOP);
-				startActivity(intent);
-				return false;
-			}
-
-			// get one layer up
-			orgId = parentId;
-			OrgItem p = getParent(parentId);
-			parentId = p.getId();
-
-			// Switch language
-			// -> German if German is system language
-			// if not German -> English
-			if (language.equals(Const.DE)) {
-				orgName = getParent(parentId).getNameDe();
-			} else {
-				orgName = getParent(parentId).getNameEn();
-			}
-			showItems(parentId);
-			return true;
-		}
-		return false;
-
-	}
-
-	@Override
-	public void onClick(View v) {
-		// do nothing
 	}
 }

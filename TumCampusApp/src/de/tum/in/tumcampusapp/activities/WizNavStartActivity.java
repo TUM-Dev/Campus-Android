@@ -20,20 +20,18 @@ import de.tum.in.tumcampusapp.auxiliary.Const;
 
 public class WizNavStartActivity extends Activity implements OnClickListener {
 	private AccessTokenManager accessTokenManager = new AccessTokenManager(this);
-	private String lrzId;
 	EditText editText;
+	private String lrzId;
 
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		overridePendingTransition(R.anim.fadein, R.anim.fadeout);
-		setContentView(R.layout.activity_wiznav_start);
-
-		editText = (EditText) findViewById(R.id.lrd_id);
-
-		lrzId = PreferenceManager.getDefaultSharedPreferences(this).getString(
-				Const.LRZ_ID, "");
-		if (lrzId != null) {
-			editText.setText(lrzId);
+	@Override
+	public void onClick(DialogInterface dialog, int which) {
+		if (which == DialogInterface.BUTTON_POSITIVE) {
+			if (accessTokenManager.requestAccessToken(lrzId)) {
+				startWizNavNextActivity();
+			}
+		}
+		if (which == DialogInterface.BUTTON_NEGATIVE) {
+			startWizNavNextActivity();
 		}
 	}
 
@@ -49,6 +47,41 @@ public class WizNavStartActivity extends Activity implements OnClickListener {
 
 		if (setupAccessToken()) {
 			startWizNavNextActivity();
+		}
+	}
+
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+		setContentView(R.layout.activity_wiznav_start);
+
+		editText = (EditText) findViewById(R.id.lrd_id);
+
+		lrzId = PreferenceManager.getDefaultSharedPreferences(this).getString(
+				Const.LRZ_ID, "");
+		if (lrzId != null) {
+			editText.setText(lrzId);
+		}
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		super.onCreateOptionsMenu(menu);
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.menu_activity_wizzard, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.action_exit:
+			finish();
+			Intent intent = new Intent(this, StartActivity.class);
+			startActivity(intent);
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
 		}
 	}
 
@@ -76,39 +109,6 @@ public class WizNavStartActivity extends Activity implements OnClickListener {
 					Toast.LENGTH_LONG).show();
 		}
 		return false;
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		super.onCreateOptionsMenu(menu);
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.menu_activity_wizzard, menu);
-		return true;
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case R.id.action_exit:
-			finish();
-			Intent intent = new Intent(this, StartActivity.class);
-			startActivity(intent);
-			return true;
-		default:
-			return super.onOptionsItemSelected(item);
-		}
-	}
-
-	@Override
-	public void onClick(DialogInterface dialog, int which) {
-		if (which == DialogInterface.BUTTON_POSITIVE) {
-			if (accessTokenManager.requestAccessToken(lrzId)) {
-				startWizNavNextActivity();
-			}
-		}
-		if (which == DialogInterface.BUTTON_NEGATIVE) {
-			startWizNavNextActivity();
-		}
 	}
 
 	public void startWizNavNextActivity() {
