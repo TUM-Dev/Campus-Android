@@ -1,64 +1,75 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
 
-    <LinearLayout
-        android:id="@+id/tableLayout1"
+    <TextView
+        android:id="@+id/pager_title_strip"
+        style="@style/SectionHeadline"
+        android:text="@string/startup_wizzard_uppercase" />
+
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:padding="@dimen/padding_default" >
+        android:layout_height="match_parent" >
 
-        <TextView
-            style="?android:attr/listSeparatorTextViewStyle"
+        <LinearLayout
+            android:id="@+id/tableLayout1"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/step_3"
-            android:textColor="@color/text_light_gray" />
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="@dimen/padding_default" >
 
-        <TextView
-            android:id="@+id/tvSucc"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/padding_default"
-            android:text="@string/choose_color" />
-
-        <RadioGroup
-            android:id="@+id/radiogroupColorScheme"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
-
-            <RadioButton
-                android:id="@+id/radioBlue"
-                android:layout_width="wrap_content"
+            <TextView
+                style="?android:attr/listSeparatorTextViewStyle"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:checked="true"
-                android:text="@string/blue" />
+                android:text="@string/step_3"
+                android:textColor="@color/text_light_gray" />
 
-            <RadioButton
-                android:id="@+id/radioRed"
-                android:layout_width="wrap_content"
+            <TextView
+                android:id="@+id/tvSucc"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/red" />
+                android:padding="@dimen/padding_default"
+                android:text="@string/choose_color" />
 
-            <RadioButton
-                android:id="@+id/radioGreen"
-                android:layout_width="wrap_content"
+            <RadioGroup
+                android:id="@+id/radiogroupColorScheme"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <RadioButton
+                    android:id="@+id/radioBlue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="@string/blue" />
+
+                <RadioButton
+                    android:id="@+id/radioRed"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/red" />
+
+                <RadioButton
+                    android:id="@+id/radioGreen"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/green" />
+
+                <RadioButton
+                    android:id="@+id/radioGray"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/gray" />
+            </RadioGroup>
+
+            <Button
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/green" />
+                android:onClick="onClickNext"
+                android:text="@string/button_next" />
+        </LinearLayout>
+    </ScrollView>
 
-            <RadioButton
-                android:id="@+id/radioGray"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/gray" />
-        </RadioGroup>
-
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:onClick="onClickNext"
-            android:text="@string/button_next" />
-    </LinearLayout>
-
-</ScrollView>
+</LinearLayout>

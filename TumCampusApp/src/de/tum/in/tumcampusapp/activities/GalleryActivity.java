@@ -22,11 +22,6 @@ public class GalleryActivity extends ActivityForDownloadingExternal {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		super.requestDownload(false);
-
-		mSectionsPagerAdapter = new GallerySectionsPagerAdapter(this,
-				getSupportFragmentManager());
-
-		mViewPager = (ViewPager) findViewById(R.id.pager);
 	}
 
 	@Override
@@ -38,6 +33,12 @@ public class GalleryActivity extends ActivityForDownloadingExternal {
 	@Override
 	protected void onStart() {
 		super.onStart();
+		mSectionsPagerAdapter = new GallerySectionsPagerAdapter(this,
+				getSupportFragmentManager());
+
+		mViewPager = (ViewPager) findViewById(R.id.pager);
+		mViewPager
+				.setCurrentItem(GallerySectionsPagerAdapter.PAGE_LATESTS_GALLERY);
 		mViewPager.setAdapter(mSectionsPagerAdapter);
 	}
 }

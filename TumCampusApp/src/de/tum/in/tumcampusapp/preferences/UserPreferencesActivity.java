@@ -7,7 +7,7 @@ import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.activities.WizNavStartActivity;
+import de.tum.in.tumcampusapp.activities.wizzard.WizNavStartActivity;
 import de.tum.in.tumcampusapp.auxiliary.AccessTokenManager;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 

@@ -13,7 +13,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.fragments.CafeteriaDetailsSectionFragment;
 import de.tum.in.tumcampusapp.models.managers.CafeteriaMenuManager;

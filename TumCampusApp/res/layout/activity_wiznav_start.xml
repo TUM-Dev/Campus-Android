@@ -1,37 +1,58 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/pager_title_strip"
+        style="@style/SectionHeadline"
+        android:text="@string/startup_wizzard_uppercase" >
+    </TextView>
+
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:padding="@dimen/padding_default" >
+        android:layout_height="match_parent" >
 
-        <TextView
-            style="?android:attr/listSeparatorTextViewStyle"
-            android:layout_height="wrap_content"
-            android:text="@string/step_1"
-            android:textColor="@color/text_light_gray" />
-
-        <TextView
-            android:id="@+id/textViewWel"
+        <LinearLayout
+            android:id="@+id/wizstart_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/padding_default"
-            android:text="@string/welcome_msg" />
+            android:layout_height="match_parent"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:orientation="vertical"
+            android:padding="@dimen/padding_default" >
 
-        <EditText
-            android:id="@+id/lrd_id"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/padding_default" />
+            <TextView
+                style="?android:attr/listSeparatorTextViewStyle"
+                android:layout_height="wrap_content"
+                android:text="@string/step_1"
+                android:textColor="@color/text_light_gray" />
 
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:onClick="onClickNext"
-            android:text="@string/button_next" />
-    </LinearLayout>
+            <TextView
+                android:id="@+id/textViewWel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/padding_default"
+                android:text="@string/welcome_msg" />
 
-</ScrollView>
+            <EditText
+                android:id="@+id/lrd_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/padding_default" />
+
+            <CheckBox
+                android:id="@+id/chk_start_wizzard_on_startup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/wizzard_on_startup" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="onClickNext"
+                android:text="@string/button_next" />
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

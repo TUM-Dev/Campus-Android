@@ -29,6 +29,7 @@ public final class Const {
 	public static final String FEEDS = "feeds";
 	public static final String FORCE_DOWNLOAD = "force_download";
 	public static final String GALLERY = "gallery";
+	public static final String HIDE_WIZZARD_ON_STARTUP = "hide_wizzard_on_startup";
 	public static final String HOLIDAY = "holiday";
 	public static final String HOURS_COLUMN = "hours";
 	public static final int HTTP_TIMEOUT = 25000;
@@ -93,4 +94,5 @@ public final class Const {
 	public static final String WARNING = "warning";
 	public static final String WARNING_MESSAGE = "warning_message";
 	public static final String WEEKDAY_COLUMN = "weekday";
+	public static final String COLOR_SCHEME = "color_scheme";
 }

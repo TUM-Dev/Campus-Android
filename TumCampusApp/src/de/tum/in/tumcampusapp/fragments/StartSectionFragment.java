@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ImageView;
 import android.widget.ListView;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.adapters.StartListAdapter;
@@ -22,6 +23,7 @@ import de.tum.in.tumcampusapp.auxiliary.ListMenuEntry;
 public class StartSectionFragment extends Fragment implements
 		OnItemClickListener {
 
+	private int imageId;
 	/**
 	 * Contains all list items
 	 */
@@ -38,11 +40,17 @@ public class StartSectionFragment extends Fragment implements
 
 		listMenuEntrySet = (ArrayList<ListMenuEntry>) getArguments()
 				.getSerializable(StartSectionsPagerAdapter.LIST_ENTRY_SET);
+		imageId = getArguments().getInt(
+				StartSectionsPagerAdapter.IMAGE_FOR_CATEGORY);
+
 		View rootView = inflater.inflate(R.layout.fragment_start_section,
 				container, false);
 
 		// Builds the list according to the list items in listMenuEntrySet
 		ListView list = (ListView) rootView.findViewById(R.id.list_view);
+		ImageView image = (ImageView) rootView.findViewById(R.id.img_category);
+		image.setImageResource(imageId);
+
 		StartListAdapter adapter = new StartListAdapter(getActivity(),
 				R.layout.list_layout_complex_large, listMenuEntrySet, true);
 		list.setAdapter(adapter);

@@ -20,6 +20,7 @@ public class AccessTokenManager implements OnClickListener {
 	public AccessTokenManager(Context context) {
 		this.context = context;
 	}
+
 	/**
 	 * get a new access token for TUMOnline by passing the lrz ID due to the
 	 * simplicity of the given xml file we only need to parse the <token>

@@ -4,13 +4,18 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.StrictMode;
+import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.activities.wizzard.WizNavColorActivity;
+import de.tum.in.tumcampusapp.activities.wizzard.WizNavStartActivity;
 import de.tum.in.tumcampusapp.adapters.StartSectionsPagerAdapter;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.PersonalLayoutManager;
@@ -22,9 +27,9 @@ import de.tum.in.tumcampusapp.services.ImportService;
  * @author Sascha Moecker
  */
 public class StartActivity extends FragmentActivity {
-
 	public static final int DEFAULT_SECTION = 1;
 	public static final String LAST_CHOOSEN_SECTION = "last_choosen_section";
+	public static final int REQ_CODE_COLOR_CHANGE = 0;
 
 	/**
 	 * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -39,14 +44,13 @@ public class StartActivity extends FragmentActivity {
 	 * The {@link ViewPager} that will host the section contents.
 	 */
 	ViewPager mViewPager;
-
 	/**
 	 * Receiver for Services
 	 */
 	private final BroadcastReceiver receiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			if (intent.getAction().equals(ImportService.broadcast)) {
+			if (intent.getAction().equals(ImportService.BROADCAST_NAME)) {
 				String message = intent.getStringExtra(Const.MESSAGE_EXTRA);
 				String action = intent.getStringExtra(Const.ACTION_EXTRA);
 
@@ -54,8 +58,14 @@ public class StartActivity extends FragmentActivity {
 					Log.i(getClass().getSimpleName(), message);
 				}
 			}
+			if (intent.getAction().equals(WizNavColorActivity.BROADCAST_NAME)) {
+				Log.i(getClass().getSimpleName(), "Color has changed");
+				shouldRestartOnResume = true;
+			}
 		}
 	};
+
+	boolean shouldRestartOnResume;
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -70,9 +80,24 @@ public class StartActivity extends FragmentActivity {
 	}
 
 	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		super.onConfigurationChanged(newConfig);
+	}
+
+	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_start);
+
+		// Workaround for new API version. There was a security update which
+		// disallows applications to execute HTTP request in the GUI main
+		// thread.
+		if (android.os.Build.VERSION.SDK_INT > 9) {
+			StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
+					.permitAll().build();
+			StrictMode.setThreadPolicy(policy);
+
+		}
 
 		// Create the adapter that will return a fragment for each of the
 		// primary sections of the app.
@@ -86,13 +111,22 @@ public class StartActivity extends FragmentActivity {
 
 		// Registers receiver for download and import
 		IntentFilter intentFilter = new IntentFilter();
-		intentFilter.addAction(ImportService.broadcast);
+		intentFilter.addAction(ImportService.BROADCAST_NAME);
+		intentFilter.addAction(WizNavColorActivity.BROADCAST_NAME);
 		registerReceiver(receiver, intentFilter);
 
 		// Imports default values into database
 		Intent service = new Intent(this, ImportService.class);
 		service.putExtra(Const.ACTION_EXTRA, Const.DEFAULTS);
 		startService(service);
+
+		Boolean hideWizzardOnStartup = PreferenceManager
+				.getDefaultSharedPreferences(this).getBoolean(
+						Const.HIDE_WIZZARD_ON_STARTUP, false);
+		if (!hideWizzardOnStartup) {
+			Intent intent = new Intent(this, WizNavStartActivity.class);
+			startActivity(intent);
+		}
 	}
 
 	@Override
@@ -114,7 +148,7 @@ public class StartActivity extends FragmentActivity {
 		case R.id.action_settings:
 			// Opens the preferences screen
 			Intent intent = new Intent(this, UserPreferencesActivity.class);
-			startActivityForResult(intent, 0);
+			startActivityForResult(intent, REQ_CODE_COLOR_CHANGE);
 			break;
 		}
 		return super.onOptionsItemSelected(item);
@@ -124,5 +158,11 @@ public class StartActivity extends FragmentActivity {
 	protected void onResume() {
 		super.onResume();
 		PersonalLayoutManager.setColorForId(this, R.id.pager_title_strip);
+		if (shouldRestartOnResume) {
+			// finsih and restart myself
+			finish();
+			Intent intent = new Intent(this, this.getClass());
+			startActivity(intent);
+		}
 	}
 }

@@ -27,7 +27,7 @@ public class DownloadService extends IntentService {
 	/**
 	 * Download broadcast identifier
 	 */
-	public final static String broadcast = "de.tum.in.newtumcampus.intent.action.BROADCAST_DOWNLOAD";
+	public final static String BROADCAST_NAME = "de.tum.in.newtumcampus.intent.action.BROADCAST_DOWNLOAD";
 	private static final String DOWNLOAD_SERVICE = "DownloadService";
 	/**
 	 * Indicator to avoid starting new downloads
@@ -43,14 +43,14 @@ public class DownloadService extends IntentService {
 
 	private void broadcastDownloadCompleted() {
 		Intent intentSend = new Intent();
-		intentSend.setAction(broadcast);
+		intentSend.setAction(BROADCAST_NAME);
 		intentSend.putExtra(Const.ACTION_EXTRA, Const.COMPLETED);
 		sendBroadcast(intentSend);
 	}
 
 	private void broadcastError(String message) {
 		Intent intentSend = new Intent();
-		intentSend.setAction(broadcast);
+		intentSend.setAction(BROADCAST_NAME);
 		intentSend.putExtra(Const.ACTION_EXTRA, Const.ERROR);
 		intentSend.putExtra(Const.ERROR_MESSAGE, message);
 		sendBroadcast(intentSend);
@@ -58,7 +58,7 @@ public class DownloadService extends IntentService {
 
 	private void broadcastWarning(String message) {
 		Intent intentSend = new Intent();
-		intentSend.setAction(broadcast);
+		intentSend.setAction(BROADCAST_NAME);
 		intentSend.putExtra(Const.ACTION_EXTRA, Const.WARNING);
 		intentSend.putExtra(Const.WARNING_MESSAGE, message);
 		sendBroadcast(intentSend);

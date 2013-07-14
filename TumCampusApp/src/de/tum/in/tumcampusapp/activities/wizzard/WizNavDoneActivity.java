@@ -1,4 +1,4 @@
-package de.tum.in.tumcampusapp.activities;
+package de.tum.in.tumcampusapp.activities.wizzard;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.auxiliary.PersonalLayoutManager;
 
 public class WizNavDoneActivity extends Activity {
 	@Override
@@ -18,8 +19,6 @@ public class WizNavDoneActivity extends Activity {
 
 	public void onClickDone(View view) {
 		finish();
-		Intent strtActivity = new Intent(this, StartActivity.class);
-		startActivity(strtActivity);
 	}
 
 	public void onCreate(Bundle savedInstanceState) {
@@ -42,11 +41,15 @@ public class WizNavDoneActivity extends Activity {
 		switch (item.getItemId()) {
 		case R.id.action_exit:
 			finish();
-			Intent startAct = new Intent(this, StartActivity.class);
-			startActivity(startAct);
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		PersonalLayoutManager.setColorForId(this, R.id.pager_title_strip);
 	}
 }

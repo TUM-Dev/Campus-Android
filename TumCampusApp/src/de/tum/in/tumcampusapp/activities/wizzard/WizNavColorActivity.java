@@ -1,4 +1,4 @@
-package de.tum.in.tumcampusapp.activities;
+package de.tum.in.tumcampusapp.activities.wizzard;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -13,10 +13,15 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.auxiliary.Const;
+import de.tum.in.tumcampusapp.auxiliary.PersonalLayoutManager;
 
 public class WizNavColorActivity extends Activity implements
 		OnCheckedChangeListener {
-	String colorValue = "0";
+	public final static String BROADCAST_NAME = "de.tum.in.newtumcampus.intent.action.BROADCAST_COLOR_CHANGED";
+	public final static String DEFAULT_COLOR_VALUE = "0";
+
+	String colorValue = DEFAULT_COLOR_VALUE;
 	RadioButton radioBlue;
 	RadioButton radioGray;
 	RadioButton radioGreen;
@@ -47,18 +52,29 @@ public class WizNavColorActivity extends Activity implements
 			colorValue = "3";
 			break;
 		}
+		PersonalLayoutManager.setColorForId(this, R.id.pager_title_strip);
 	}
 
 	public void onClickNext(View view) {
 		SharedPreferences sp = PreferenceManager
 				.getDefaultSharedPreferences(getApplicationContext());
+		
+		String oldColorValue = sp.getString(Const.COLOR_SCHEME, DEFAULT_COLOR_VALUE);
+		
 		Editor editor = sp.edit();
-		editor.putString("color_scheme", colorValue);
+		editor.putString(Const.COLOR_SCHEME, colorValue);
 		editor.commit();
+		
+		// Inform calling activity via broadcast, that the color has changed
+		if (!oldColorValue.equals(colorValue)) {
+			Intent intentSend = new Intent();
+			intentSend.setAction(BROADCAST_NAME);
+			sendBroadcast(intentSend);
+		}
 
 		finish();
-		Intent strtActivity = new Intent(this, WizNavDoneActivity.class);
-		startActivity(strtActivity);
+		Intent intent = new Intent(this, WizNavDoneActivity.class);
+		startActivity(intent);
 	}
 
 	public void onCreate(Bundle savedInstanceState) {
@@ -75,7 +91,7 @@ public class WizNavColorActivity extends Activity implements
 		radioGray = (RadioButton) findViewById(R.id.radioGray);
 
 		colorValue = PreferenceManager.getDefaultSharedPreferences(this)
-				.getString("color_scheme", "0");
+				.getString(Const.COLOR_SCHEME, DEFAULT_COLOR_VALUE);
 		if (colorValue != null) {
 			if (colorValue.equals("0")) {
 				radioBlue.setChecked(true);
@@ -102,11 +118,15 @@ public class WizNavColorActivity extends Activity implements
 		switch (item.getItemId()) {
 		case R.id.action_exit:
 			finish();
-			Intent startAct = new Intent(this, StartActivity.class);
-			startActivity(startAct);
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		PersonalLayoutManager.setColorForId(this, R.id.pager_title_strip);
 	}
 }

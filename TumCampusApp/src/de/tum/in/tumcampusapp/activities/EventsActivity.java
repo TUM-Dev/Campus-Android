@@ -22,11 +22,6 @@ public class EventsActivity extends ActivityForDownloadingExternal {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		super.requestDownload(false);
-
-		mSectionsPagerAdapter = new EventsSectionsPagerAdapter(this,
-				getSupportFragmentManager());
-
-		mViewPager = (ViewPager) findViewById(R.id.pager);
 	}
 
 	@Override
@@ -38,6 +33,12 @@ public class EventsActivity extends ActivityForDownloadingExternal {
 	@Override
 	protected void onStart() {
 		super.onStart();
+		mSectionsPagerAdapter = new EventsSectionsPagerAdapter(this,
+				getSupportFragmentManager());
+
+		mViewPager = (ViewPager) findViewById(R.id.pager);
+		mViewPager
+				.setCurrentItem(EventsSectionsPagerAdapter.PAGE_LATESTS_EVENTS);
 		mViewPager.setAdapter(mSectionsPagerAdapter);
 	}
 }

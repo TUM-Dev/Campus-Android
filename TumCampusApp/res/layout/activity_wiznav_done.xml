@@ -1,32 +1,43 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
 
-    <LinearLayout
-        android:id="@+id/tableLayout1"
+    <TextView
+        android:id="@+id/pager_title_strip"
+        style="@style/SectionHeadline"
+        android:text="@string/startup_wizzard_uppercase" />
+
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:padding="@dimen/padding_default" >
+        android:layout_height="match_parent" >
 
-        <TextView
-            style="?android:attr/listSeparatorTextViewStyle"
-            android:layout_height="wrap_content"
-            android:text="@string/finish"
-            android:textColor="@color/text_light_gray" />
-
-        <TextView
-            android:id="@+id/tvSucc"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/padding_default"
-            android:text="@string/configured" />
-
-        <Button
+        <LinearLayout
+            android:id="@+id/tableLayout1"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:onClick="onClickDone"
-            android:text="Go to TUM Campus App" />
-    </LinearLayout>
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="@dimen/padding_default" >
 
-</ScrollView>
+            <TextView
+                style="?android:attr/listSeparatorTextViewStyle"
+                android:layout_height="wrap_content"
+                android:text="@string/finish"
+                android:textColor="@color/text_light_gray" />
+
+            <TextView
+                android:id="@+id/tvSucc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/padding_default"
+                android:text="@string/configured" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="onClickDone"
+                android:text="Go to TUM Campus App" />
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

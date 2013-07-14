@@ -31,7 +31,7 @@ public class ActivityForDownloadingExternal extends FragmentActivity {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 
-			if (!intent.getAction().equals(DownloadService.broadcast)) {
+			if (!intent.getAction().equals(DownloadService.BROADCAST_NAME)) {
 				return;
 			}
 
@@ -125,7 +125,8 @@ public class ActivityForDownloadingExternal extends FragmentActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		registerReceiver(receiver, new IntentFilter(DownloadService.broadcast));
+		registerReceiver(receiver, new IntentFilter(
+				DownloadService.BROADCAST_NAME));
 	}
 
 	public void requestDownload(boolean forceDownload) {

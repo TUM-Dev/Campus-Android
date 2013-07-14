@@ -1,4 +1,4 @@
-package de.tum.in.tumcampusapp.activities;
+package de.tum.in.tumcampusapp.activities.wizzard;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -12,16 +12,31 @@ import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.auxiliary.AccessTokenManager;
 import de.tum.in.tumcampusapp.auxiliary.Const;
+import de.tum.in.tumcampusapp.auxiliary.PersonalLayoutManager;
 
-public class WizNavStartActivity extends Activity implements OnClickListener {
+public class WizNavStartActivity extends Activity implements OnClickListener,
+		OnCheckedChangeListener {
 	private AccessTokenManager accessTokenManager = new AccessTokenManager(this);
-	EditText editText;
+	private CheckBox checkBox;
+	private EditText editText;
 	private String lrzId;
+	private SharedPreferences sharedPrefs;
+
+	@Override
+	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+		Editor editor = sharedPrefs.edit();
+		editor.putBoolean(Const.HIDE_WIZZARD_ON_STARTUP, isChecked);
+		editor.commit();
+	}
 
 	@Override
 	public void onClick(DialogInterface dialog, int which) {
@@ -38,10 +53,7 @@ public class WizNavStartActivity extends Activity implements OnClickListener {
 	public void onClickNext(View view) {
 
 		String lrz_id = editText.getText().toString();
-
-		SharedPreferences sp = PreferenceManager
-				.getDefaultSharedPreferences(getApplicationContext());
-		Editor editor = sp.edit();
+		Editor editor = sharedPrefs.edit();
 		editor.putString(Const.LRZ_ID, lrz_id);
 		editor.commit();
 
@@ -55,10 +67,25 @@ public class WizNavStartActivity extends Activity implements OnClickListener {
 		overridePendingTransition(R.anim.fadein, R.anim.fadeout);
 		setContentView(R.layout.activity_wiznav_start);
 
-		editText = (EditText) findViewById(R.id.lrd_id);
+		sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
 
-		lrzId = PreferenceManager.getDefaultSharedPreferences(this).getString(
-				Const.LRZ_ID, "");
+		LinearLayout layout = (LinearLayout) findViewById(R.id.wizstart_layout);
+		layout.requestFocus();
+
+		editText = (EditText) findViewById(R.id.lrd_id);
+		checkBox = (CheckBox) findViewById(R.id.chk_start_wizzard_on_startup);
+		checkBox.requestFocus();
+
+		checkBox.setOnCheckedChangeListener(this);
+		checkBox.setChecked(sharedPrefs.getBoolean(
+				Const.HIDE_WIZZARD_ON_STARTUP, true));
+
+		// commit the received value to the prefs
+		Editor editor = sharedPrefs.edit();
+		editor.putBoolean(Const.HIDE_WIZZARD_ON_STARTUP, checkBox.isChecked());
+		editor.commit();
+
+		lrzId = sharedPrefs.getString(Const.LRZ_ID, "");
 		if (lrzId != null) {
 			editText.setText(lrzId);
 		}
@@ -77,12 +104,16 @@ public class WizNavStartActivity extends Activity implements OnClickListener {
 		switch (item.getItemId()) {
 		case R.id.action_exit:
 			finish();
-			Intent intent = new Intent(this, StartActivity.class);
-			startActivity(intent);
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		PersonalLayoutManager.setColorForId(this, R.id.pager_title_strip);
 	}
 
 	public boolean setupAccessToken() {

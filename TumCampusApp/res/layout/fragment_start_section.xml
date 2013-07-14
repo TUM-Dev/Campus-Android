@@ -4,10 +4,20 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity$DummySectionFragment" >
 
+    <ImageView
+        android:id="@+id/img_category"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/img_tum_flags" />
+
     <ListView
         android:id="@+id/list_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/img_category" >
+
     </ListView>
 
 </RelativeLayout>

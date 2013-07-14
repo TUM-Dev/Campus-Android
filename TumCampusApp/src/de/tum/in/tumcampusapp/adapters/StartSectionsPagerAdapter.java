@@ -36,8 +36,9 @@ import de.tum.in.tumcampusapp.fragments.StartSectionFragment;
  * of the sections/tabs/pages.
  */
 public class StartSectionsPagerAdapter extends FragmentPagerAdapter {
-
+	public static final String IMAGE_FOR_CATEGORY = "image_for_category";
 	public static final String LIST_ENTRY_SET = "list_entry_set";
+
 	public static final int NUMBER_OF_PAGES = 4;
 	public static final int SECTION_CONVENIENCE = 3;
 	public static final int SECTION_GENERAL_TUM = 0;
@@ -67,6 +68,7 @@ public class StartSectionsPagerAdapter extends FragmentPagerAdapter {
 		// the intent which coresponses to the activity which should be started
 		switch (position) {
 		case SECTION_GENERAL_TUM:
+			args.putInt(IMAGE_FOR_CATEGORY, R.drawable.img_tum_building);
 			listMenuEntrySet.add(new ListMenuEntry(R.drawable.zoom,
 					R.string.lecture_search, R.string.lecturessearch_addinfo,
 					new Intent(activity, LecturesSearchActivity.class)));
@@ -90,6 +92,7 @@ public class StartSectionsPagerAdapter extends FragmentPagerAdapter {
 					new Intent(activity, OrganisationActivity.class)));
 			break;
 		case SECTION_MY_TUM:
+			args.putInt(IMAGE_FOR_CATEGORY, R.drawable.img_tum_flags);
 			listMenuEntrySet.add(new ListMenuEntry(R.drawable.calculator,
 					R.string.my_lectures, R.string.lectures_addinfo,
 					new Intent(activity, LecturesPersonalActivity.class)));
@@ -104,6 +107,7 @@ public class StartSectionsPagerAdapter extends FragmentPagerAdapter {
 					new Intent(activity, TuitionFeesActivity.class)));
 			break;
 		case SECTION_NEWS:
+			args.putInt(IMAGE_FOR_CATEGORY, R.drawable.img_tum_building_main);
 			listMenuEntrySet.add(new ListMenuEntry(R.drawable.fax,
 					R.string.rss_feeds, R.string.rssfeed_addinfo, new Intent(
 							activity, FeedsActivity.class)));
@@ -118,6 +122,7 @@ public class StartSectionsPagerAdapter extends FragmentPagerAdapter {
 							activity, GalleryActivity.class)));
 			break;
 		case SECTION_CONVENIENCE:
+			args.putInt(IMAGE_FOR_CATEGORY, R.drawable.img_tum_parabel);
 			listMenuEntrySet.add(new ListMenuEntry(R.drawable.show_info,
 					R.string.mvv, R.string.mvv_addinfo, new Intent(activity,
 							TransportationActivity.class)));
@@ -145,7 +150,7 @@ public class StartSectionsPagerAdapter extends FragmentPagerAdapter {
 		case 2:
 			return activity.getString(R.string.news).toUpperCase(l);
 		case 3:
-			return activity.getString(R.string.convenience).toUpperCase(l);
+			return activity.getString(R.string.extras).toUpperCase(l);
 		}
 		return null;
 	}

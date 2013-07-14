@@ -22,7 +22,7 @@ public class ImportService extends IntentService {
 	/**
 	 * Import broadcast identifier
 	 */
-	public final static String broadcast = "de.tum.in.newtumcampus.intent.action.BROADCAST_IMPORT";
+	public final static String BROADCAST_NAME = "de.tum.in.newtumcampus.intent.action.BROADCAST_IMPORT";
 	public static final String CSV_FEEDS = "feeds.csv";
 	public static final String CSV_LOCATIONS = "locations.csv";
 	public static final String IMPORT_SERVICE = "ImportService";
@@ -103,7 +103,7 @@ public class ImportService extends IntentService {
 	 */
 	public void message(String message, String action) {
 		Intent intentSend = new Intent();
-		intentSend.setAction(broadcast);
+		intentSend.setAction(BROADCAST_NAME);
 		intentSend.putExtra(Const.MESSAGE_EXTRA, message);
 		intentSend.putExtra(Const.ACTION_EXTRA, action);
 		sendBroadcast(intentSend);

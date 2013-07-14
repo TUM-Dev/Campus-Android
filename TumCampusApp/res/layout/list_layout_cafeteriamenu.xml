@@ -22,9 +22,11 @@
             style="?android:attr/listSeparatorTextViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="right"
             android:layout_weight="3"
-            android:text="price"
+            android:text="0.00€"
             android:textColor="@color/text_light_gray" />
+
     </LinearLayout>
 
     <TextView
@@ -35,5 +37,12 @@
         android:text="menu"
         android:textSize="@dimen/semilarge_text_size"
         android:textStyle="bold" />
+
+    <RatingBar
+        android:id="@+id/ratingBar1"
+        style="?android:attr/ratingBarStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/padding_default" />
 
 </LinearLayout>
