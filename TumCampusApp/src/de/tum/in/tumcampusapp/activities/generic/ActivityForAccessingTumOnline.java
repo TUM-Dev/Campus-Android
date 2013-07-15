@@ -17,6 +17,15 @@ import de.tum.in.tumcampusapp.preferences.UserPreferencesActivity;
 import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequest;
 import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequestFetchListener;
 
+/**
+ * Generic class which handles all basic tasks to communicate with TUMOnline. It
+ * implements the TUMOnlineRequestFetchListener in order to receive data from
+ * TUMOnline and implements a rhich user feedback with error progress and token
+ * related layouts.
+ * 
+ * @author Sascha Moecker
+ * 
+ */
 public abstract class ActivityForAccessingTumOnline extends FragmentActivity
 		implements TUMOnlineRequestFetchListener {
 
@@ -135,11 +144,11 @@ public abstract class ActivityForAccessingTumOnline extends FragmentActivity
 	public void hideProgressLayout() {
 		this.progressLayout.setVisibility(View.GONE);
 	}
-	
+
 	public void showErrorLayout() {
 		this.errorLayout.setVisibility(View.VISIBLE);
 	}
-	
+
 	public void hideErrorLayout() {
 		this.errorLayout.setVisibility(View.GONE);
 	}

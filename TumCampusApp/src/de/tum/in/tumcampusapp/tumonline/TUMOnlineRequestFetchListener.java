@@ -4,7 +4,7 @@ package de.tum.in.tumcampusapp.tumonline;
  * this interface should frame, how to implement a listener for the
  * fetchInteractive method in TUMOnlineRequest
  * 
- * @author Daniel G. Mayr
+ * @author Daniel G. Mayr, Sascha Moecker
  */
 public interface TUMOnlineRequestFetchListener {
 
@@ -19,6 +19,10 @@ public interface TUMOnlineRequestFetchListener {
 	 */
 	public void onFetch(String rawResponse);
 
+	/**
+	 * Called if the fetch was canceld by the user. This should be implemented
+	 * to cancel the HTMLRequest and clear all previous fetching data.
+	 */
 	public void onFetchCancelled();
 
 	/**

@@ -159,7 +159,7 @@ public class StartActivity extends FragmentActivity {
 		super.onResume();
 		PersonalLayoutManager.setColorForId(this, R.id.pager_title_strip);
 		if (shouldRestartOnResume) {
-			// finsih and restart myself
+			// finish and restart myself
 			finish();
 			Intent intent = new Intent(this, this.getClass());
 			startActivity(intent);

@@ -3,7 +3,11 @@
  */
 package de.tum.in.tumcampusapp.tumonline;
 
-/** @author Vasyl Malinskyi */
+/**
+ * Contains constant values for the TUMOnlineRequest class
+ * 
+ * @author Vasyl Malinskyi, Sascha Moecker
+ */
 public class TUMOnlineConst {
 
 	/** Access token identifier */

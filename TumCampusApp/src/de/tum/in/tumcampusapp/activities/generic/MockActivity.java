@@ -6,6 +6,12 @@ import android.support.v4.app.NavUtils;
 import android.view.MenuItem;
 import de.tum.in.tumcampusapp.R;
 
+/**
+ * Mock Acitivy for test purpose only.
+ * 
+ * @author Sascha Moecker
+ * 
+ */
 public class MockActivity extends Activity {
 
 	@Override

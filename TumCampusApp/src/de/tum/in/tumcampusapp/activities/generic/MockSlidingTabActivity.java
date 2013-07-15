@@ -7,6 +7,12 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.adapters.MockSectionsPagerAdapter;
 import de.tum.in.tumcampusapp.auxiliary.PersonalLayoutManager;
 
+/**
+ * Mock Activity to demonstrate the basic fragment based navigation using tabs.
+ * 
+ * @author Sascha Moecker
+ * 
+ */
 public class MockSlidingTabActivity extends FragmentActivity {
 
 	private MockSectionsPagerAdapter mSectionsPagerAdapter;

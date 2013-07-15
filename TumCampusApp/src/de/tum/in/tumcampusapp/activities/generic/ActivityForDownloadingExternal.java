@@ -19,6 +19,15 @@ import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.services.DownloadService;
 
+/**
+ * Generic class which handles all basic tasks to download JSON or files from an
+ * external source. It uses the DownloadService to download from external and
+ * implements a rich user feedback with error progress and token related
+ * layouts.
+ * 
+ * @author Sascha Moecker
+ * 
+ */
 public class ActivityForDownloadingExternal extends FragmentActivity {
 	private Activity activity = this;
 

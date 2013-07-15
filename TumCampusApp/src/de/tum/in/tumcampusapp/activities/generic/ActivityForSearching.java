@@ -15,6 +15,13 @@ import android.widget.Toast;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 
+/**
+ * Generic class for searching. Provides basic functions for a text search field
+ * and typical processes related to search.
+ * 
+ * @author Sascha Moecker
+ * 
+ */
 public abstract class ActivityForSearching extends FragmentActivity implements
 		OnEditorActionListener {
 

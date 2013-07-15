@@ -27,34 +27,35 @@ import de.tum.in.tumcampusapp.auxiliary.Utils;
 
 /**
  * This class will handle all action needed to communicate with the TUMOnline
- * XML-RPC backend.
+ * XML-RPC backend. ALl communications is based on the base-url which is
+ * attached by the Token and additional parameters.
  * 
  * 
- * @author Thomas Behrens, Vincenz Dölle, Daniel Mayr
+ * @author Thomas Behrens, Vincenz Doelle, Daniel Mayr, Sascha Moecker
  */
 public class TUMOnlineRequest {
 
 	// login service address
 	public static final String LOGIN_SERVICE_URL = "https://campus.tum.de/tumonline/anmeldung.durchfuehren";
-	
+
 	// logout service address
 	public static final String LOGOUT_SERVICE_URL = "https://campus.tum.de/tumonline/anmeldung.beenden";
-	
+
 	// server address
 	public static final String SERVICE_BASE_URL = "https://campus.tum.de/tumonline/wbservicesbasic.";
-	
+
 	// set to null, if not needed
 	private String accessToken = null;
-	
+
 	/** asynchronous task for interactive fetch */
 	AsyncTask<Void, Void, String> backgroundTask = null;
-	
+
 	/** http client instance for fetching */
 	private HttpClient client;
-	
+
 	/** method to call */
 	private String method = null;
-	
+
 	/** a list/map for the needed parameters */
 	private Map<String, String> parameters;
 
@@ -162,7 +163,12 @@ public class TUMOnlineRequest {
 
 			@Override
 			protected void onPostExecute(String result) {
-				Log.d("Result: ", result);
+				if (result != null) {
+					Log.d(getClass().getSimpleName(), "Received result <"
+							+ result + ">");
+				} else {
+					Log.w(getClass().getSimpleName(), "No result available");
+				}
 				// Handles result
 				if (isOnline == false) {
 					listener.onCommonError(context
@@ -189,7 +195,6 @@ public class TUMOnlineRequest {
 			}
 
 		};
-
 		backgroundTask.execute();
 	}
 
@@ -210,9 +215,12 @@ public class TUMOnlineRequest {
 	 */
 	public String getRequestURL() {
 		String url = SERVICE_BASE_URL + method + "?";
-		
+
+		// Builds to be fetched URL based on the base-url and additional
+		// parameters
 		Iterator<Entry<String, String>> itMapIterator = parameters.entrySet()
 				.iterator();
+
 		while (itMapIterator.hasNext()) {
 			Entry<String, String> pairs = itMapIterator.next();
 			url += pairs.getKey() + "=" + pairs.getValue() + "&";
