@@ -16,8 +16,8 @@ import org.xml.sax.SAXException;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -26,17 +26,16 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.activities.generic.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampusapp.adapters.OrgItemListAdapter;
 import de.tum.in.tumcampusapp.auxiliary.Const;
-import de.tum.in.tumcampusapp.auxiliary.Dialogs;
 import de.tum.in.tumcampusapp.auxiliary.FileUtils;
 import de.tum.in.tumcampusapp.auxiliary.PersonalLayoutManager;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.OrgItem;
 import de.tum.in.tumcampusapp.models.OrgItemList;
-import de.tum.in.tumcampusapp.models.managers.OrganisationManager;
-import de.tum.in.tumcampusapp.preferences.UserPreferencesActivity;
 
 /************************************
  * Things could be improved: - add an loading screen after every click - color pushed elements e.g. blue after clicked
@@ -50,7 +49,12 @@ import de.tum.in.tumcampusapp.preferences.UserPreferencesActivity;
  * @review Vincenz Doelle, Daniel G. Mayr
  */
 @SuppressLint("DefaultLocale")
-public class OrganisationActivity extends Activity implements OnClickListener {
+public class OrganisationActivity extends ActivityForAccessingTumOnline
+		implements OnClickListener {
+
+	public OrganisationActivity() {
+		super(Const.ORG_TREE, R.layout.activity_organisation);
+	}
 
 	/**
 	 * language is "de"->German or "en"->English depending on the system
@@ -87,6 +91,7 @@ public class OrganisationActivity extends Activity implements OnClickListener {
 	protected RelativeLayout progressLayout;
 	/** The org.xml File on the SD-card */
 	private File xmlOrgFile;
+	private OrganisationActivity activity = this;
 
 	/**
 	 * SAX-Parsing the org.xml-File to get Information for the Jump in the
@@ -118,7 +123,7 @@ public class OrganisationActivity extends Activity implements OnClickListener {
 	private boolean existSuborganisation(String organisationId) {
 
 		// get list of all organisations
-		NodeList organisationList = getDocument().getElementsByTagName("row");
+		NodeList organisationList = doc.getElementsByTagName("row");
 		Log.d("PARSING", "parsing " + organisationList.getLength()
 				+ " elements...");
 
@@ -140,18 +145,6 @@ public class OrganisationActivity extends Activity implements OnClickListener {
 		return false;
 	}
 
-	/**
-	 * Return the private Document if existing, else build a new one
-	 * 
-	 * @return
-	 */
-	private Document getDocument() {
-		if (this.doc == null) {
-			buildDocument();
-		}
-		return doc;
-	}
-
 	private File getOrgFile() {
 
 		if (xmlOrgFile == null) {
@@ -160,10 +153,13 @@ public class OrganisationActivity extends Activity implements OnClickListener {
 			try {
 				xmlOrgFile = FileUtils.getFileOnSD(Const.ORGANISATIONS,
 						"org.xml");
+				super.hideProgressLayout();
+				super.hideErrorLayout();
 			} catch (Exception e) {
-				Utils.showLongCenteredToast(this,
-						getString(R.string.no_sd_card));
-				Log.d("EXCEPTION", e.getMessage());
+				Toast.makeText(this, R.string.exception_sdcard,
+						Toast.LENGTH_SHORT).show();
+				super.hideProgressLayout();
+				super.showErrorLayout();
 				return null;
 			}
 
@@ -175,38 +171,12 @@ public class OrganisationActivity extends Activity implements OnClickListener {
 			if (!xmlOrgFile.exists() || !xmlOrgFile.isFile()
 					|| !(xmlOrgFile.length() > 100000)) {
 
-				// accessToken for download access
-				String accessToken = PreferenceManager
-						.getDefaultSharedPreferences(this).getString(
-								Const.ACCESS_TOKEN, null);
+				// Request to fetch via TUMRequestManager
+				super.requestFetch();
 
-				// if no token show toast
-				if (accessToken == null) {
-					Dialogs.showIntentSwitchDialog(this, this,
-							getString(R.string.dialog_access_token_missing),
-							new Intent(this, UserPreferencesActivity.class));
-				}
-
-				// if not connected show toast
-				if (!Utils.isConnected(this)) {
-					Utils.showLongCenteredToast(this,
-							getString(R.string.no_internet_connection));
-					return null;
-				}
-
-				try {
-					// download xml file to
-					// "#sd-card#/tumcampus/organisations/org.xml"
-					OrganisationManager orgManager = new OrganisationManager(
-							this);
-					orgManager.downloadFromExternal(false, accessToken);
-				} catch (Exception e) {
-					Log.d("EXCEPTION", e.getMessage());
-					e.printStackTrace();
-				}
 				// call this function recursive, so it should not be null and
 				// return the file
-				return getOrgFile();
+				return null;
 			}
 		}
 		return xmlOrgFile;
@@ -229,7 +199,7 @@ public class OrganisationActivity extends Activity implements OnClickListener {
 		}
 
 		// get all elements to parse and count them
-		NodeList organisationList = getDocument().getElementsByTagName("row");
+		NodeList organisationList = doc.getElementsByTagName("row");
 		Log.d("PARSING", "parsing " + organisationList.getLength()
 				+ " elements...");
 
@@ -331,17 +301,8 @@ public class OrganisationActivity extends Activity implements OnClickListener {
 	}
 
 	@Override
-	public void onClick(View v) {
-		// do nothing
-	}
-
-	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-		setContentView(R.layout.activity_organisation);
-		progressLayout = (RelativeLayout) findViewById(R.id.progress_layout);
-		errorLayout = (RelativeLayout) findViewById(R.id.error_layout);
 
 		// list of organizations
 		lvOrg = (ListView) findViewById(R.id.lstOrganisations);
@@ -356,49 +317,52 @@ public class OrganisationActivity extends Activity implements OnClickListener {
 		} else {
 			language = Const.EN;
 		}
+
+		// get the XML file containing all organisations information
+		if (getOrgFile() != null) {
+			showOrgTree();
+		}
+	}
+
+	private void showOrgTree() {
+
+		AsyncTask<Void, Void, Boolean> backgroundTask;
+		backgroundTask = new AsyncTask<Void, Void, Boolean>() {
+			@Override
+			protected Boolean doInBackground(Void... params) {
+				// be careful! this takes a lot of time on older devices!
+				buildDocument();
+
+				// set orgName depending on language
+				if (language.equals(Const.DE)) {
+					orgName = getParent(parentId).getNameDe();
+				} else {
+					orgName = getParent(parentId).getNameEn();
+				}
+				return true;
+			}
+
+			@Override
+			protected void onPostExecute(Boolean result) {
+				// first: show the first level of the tree (including the
+				// faculties)
+				showItems(parentId);
+				activity.hideProgressLayout();
+			}
+
+			@Override
+			protected void onPreExecute() {
+				activity.showProgressLayout();
+			}
+		};
+		backgroundTask.execute();
+
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
 		PersonalLayoutManager.setColorForId(this, R.id.tvCaption);
-	}
-
-	@Override
-	public void onStart() {
-		super.onStart();
-
-		// get transmitted data of the last activity (e.g. OrganisationDetails)
-		if (this.getIntent().hasExtra(Const.ORG_ID)) {
-			Bundle bundle = this.getIntent().getExtras();
-			orgId = bundle.getString(Const.ORG_ID);
-			parentId = getParent(orgId).getId();
-		}
-
-		// get the XML file containing all organisations information
-		getOrgFile();
-
-		// be careful! this takes a lot of time on older devices!
-		buildDocument();
-
-		// set orgName depending on language
-		if (language.equals(Const.DE)) {
-			orgName = getParent(parentId).getNameDe();
-		} else {
-			orgName = getParent(parentId).getNameEn();
-		}
-
-		// first: show the first level of the tree (including the faculties)
-		showItems(parentId);
-
-		// check if internet is connected, show warning, that details cannot be
-		// shown
-		if (!Utils.isConnected(this)) {
-			Utils.showLongCenteredToast(
-					this,
-					getString(R.string.warning_no_internet_connection_for_organisation_details));
-		}
-
 	}
 
 	/**
@@ -424,7 +388,7 @@ public class OrganisationActivity extends Activity implements OnClickListener {
 		// set caption (organisation "folder" name)
 		tvCaption.setText(orgName.toUpperCase());
 
-		NodeList nodeList = getDocument().getElementsByTagName("row");
+		NodeList nodeList = doc.getElementsByTagName("row");
 		Log.d("PARSING", "parsing " + nodeList.getLength() + " elements...");
 
 		OrgItemList organisationList = new OrgItemList();
@@ -500,5 +464,25 @@ public class OrganisationActivity extends Activity implements OnClickListener {
 				}
 			}
 		});
+	}
+
+	@Override
+	public void onFetch(String rawResponse) {
+
+		try {
+			Utils.getCacheDir("organisations");
+			FileUtils.writeFile(xmlOrgFile, rawResponse);
+			Log.d("Import: org.xml",
+					"Xml file has been new downloaded and saved.");
+			super.hideErrorLayout();
+			super.hideProgressLayout();
+			showOrgTree();
+
+		} catch (IOException e) {
+			Toast.makeText(this, R.string.exception_sdcard, Toast.LENGTH_SHORT)
+					.show();
+			super.hideProgressLayout();
+			super.showErrorLayout();
+		}
 	}
 }

@@ -16,6 +16,18 @@
         layout="@layout/layout_error"
         android:visibility="gone" />
 
+    <include
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        layout="@layout/layout_failed_token"
+        android:visibility="gone" />
+
+    <include
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        layout="@layout/layout_no_token"
+        android:visibility="gone" />
+
     <TextView
         android:id="@+id/tvCaption"
         style="@style/SectionHeadline"

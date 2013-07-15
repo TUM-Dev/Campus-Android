@@ -36,18 +36,25 @@ public class TUMOnlineRequest {
 
 	// login service address
 	public static final String LOGIN_SERVICE_URL = "https://campus.tum.de/tumonline/anmeldung.durchfuehren";
+	
 	// logout service address
 	public static final String LOGOUT_SERVICE_URL = "https://campus.tum.de/tumonline/anmeldung.beenden";
+	
 	// server address
 	public static final String SERVICE_BASE_URL = "https://campus.tum.de/tumonline/wbservicesbasic.";
+	
 	// set to null, if not needed
 	private String accessToken = null;
+	
 	/** asynchronous task for interactive fetch */
 	AsyncTask<Void, Void, String> backgroundTask = null;
+	
 	/** http client instance for fetching */
 	private HttpClient client;
+	
 	/** method to call */
 	private String method = null;
+	
 	/** a list/map for the needed parameters */
 	private Map<String, String> parameters;
 
@@ -203,6 +210,7 @@ public class TUMOnlineRequest {
 	 */
 	public String getRequestURL() {
 		String url = SERVICE_BASE_URL + method + "?";
+		
 		Iterator<Entry<String, String>> itMapIterator = parameters.entrySet()
 				.iterator();
 		while (itMapIterator.hasNext()) {

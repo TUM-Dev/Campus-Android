@@ -95,4 +95,6 @@ public final class Const {
 	public static final String WARNING_MESSAGE = "warning_message";
 	public static final String WEEKDAY_COLUMN = "weekday";
 	public static final String COLOR_SCHEME = "color_scheme";
+	public static final String ORG_TREE = "orgBaum";
+	public static final String ORG_DETAILS = "orgDetails";
 }

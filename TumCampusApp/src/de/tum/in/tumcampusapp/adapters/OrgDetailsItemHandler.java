@@ -4,7 +4,6 @@ import org.xml.sax.Attributes;
 import org.xml.sax.helpers.DefaultHandler;
 
 import android.util.Log;
-import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.OrgDetailsItem;
 
 /**
@@ -18,6 +17,22 @@ import de.tum.in.tumcampusapp.models.OrgDetailsItem;
 
 public class OrgDetailsItemHandler extends DefaultHandler {
 
+	// TODO NOT STABLE!
+
+	public static final String TAG_NR = "nr";
+	public static final String TAG_NAME = "name";
+	public static final String TAG_KENNUNG = "kennung";
+	public static final String TAG_CONTACT_NAME = "ansprechpartner";
+	public static final String TAG_ADDRESSE_TEXT = "adresse_text";
+	public static final String TAG_HOMEPAGE = "www_homepage";
+	public static final String TAG_MAIL = "email_adresse";
+	public static final String TAG_SEKRETARIAT = "sekretariat_info";
+	public static final String TAG_FAX = "fax_nummer";
+	public static final String TAG_TEL = "telefon_nummer";
+	public static final String TAG_BIB = "bibliothek_info";
+	public static final String TAG_EXTRA = "zusatz:info";
+	public static final String TAG_EXTRA_NAME = "zusatz_info_name";
+
 	// Buffer for parsing
 	StringBuffer buff;
 
@@ -28,10 +43,6 @@ public class OrgDetailsItemHandler extends DefaultHandler {
 
 	// OrganisationDetails Object to load parsed data into
 	private final OrgDetailsItem odo = new OrgDetailsItem();
-
-	// stores temporarily the attribute of the tag,
-	// to have access to it at the end tag
-	public String tempAtt;
 
 	@Override
 	public void characters(char ch[], int start, int length) {
@@ -48,83 +59,38 @@ public class OrgDetailsItemHandler extends DefaultHandler {
 	@Override
 	public void endElement(String namespaceURI, String localName, String qName) {
 		// end buffer of interesting tags to handle their content
-		if (localName.equals("orgUnitID") || localName.equals("orgUnitName")
-				|| localName.equals("orgUnitCode")
-				|| localName.equals("orgUnitDescription")
-				|| localName.equals("contactName")
-				|| localName.equals("street") || localName.equals("locality")
-				|| localName.equals("pcode") || localName.equals("country")
-				|| localName.equals("telephone") || localName.equals("fax")
-				|| localName.equals("email") || localName.equals("webLink")
-				|| localName.equals("subBlock")) {
+		if (localName.equals(TAG_NR) || localName.equals(TAG_NAME)
+				|| localName.equals(TAG_KENNUNG)
+				|| localName.equals(TAG_CONTACT_NAME)
+				|| localName.equals(TAG_ADDRESSE_TEXT)
+				|| localName.equals(TAG_SEKRETARIAT)
+				|| localName.equals(TAG_TEL) || localName.equals(TAG_FAX)
+				|| localName.equals(TAG_MAIL) || localName.equals(TAG_HOMEPAGE)) {
 			buffering = false;
 
 			// String-Switch:
 			// Set attributes depending on localname of the tag
-			if (localName.equals("orgUnitID")) {
+			if (localName.equals(TAG_NR)) {
 				odo.setId(buff.toString());
-			} else if (localName.equals("orgUnitName")) {
-				// additionally cut <text> and </text>
-				odo.setName(Utils.cutText(buff.toString(), "<text>", "</text>"));
-			} else if (localName.equals("orgUnitCode")) {
+			} else if (localName.equals(TAG_NAME)) {
+				odo.setName(buff.toString());
+			} else if (localName.equals(TAG_KENNUNG)) {
 				odo.setCode(buff.toString());
-			} else if (localName.equals("orgUnitDescription")) {
-				odo.setDescription(buff.toString());
-			} else if (localName.equals("contactName")) {
-				// additionally cut <text> and </text>
-				odo.setContactName(Utils.cutText(buff.toString(), "<text>",
-						"</text>"));
-			} else if (localName.equals("street")) {
+			} else if (localName.equals(TAG_CONTACT_NAME)) {
+				odo.setContactName(buff.toString());
+			} else if (localName.equals(TAG_ADDRESSE_TEXT)) {
 				odo.setContactStreet(buff.toString());
-			} else if (localName.equals("locality")) {
+			} else if (localName.equals(TAG_SEKRETARIAT)) {
 				odo.setContactLocality(buff.toString());
-			} else if (localName.equals("pcode")) {
-				odo.setContactPLZ(buff.toString());
-			} else if (localName.equals("country")) {
-				odo.setContactCountry(buff.toString());
-			} else if (localName.equals("telephone")) {
+			} else if (localName.equals(TAG_TEL)) {
 				odo.setContactTelephone(buff.toString());
-				odo.setContactTelephoneType(tempAtt);
-			} else if (localName.equals("fax")) {
+				odo.setContactTelephoneType("");
+			} else if (localName.equals(TAG_FAX)) {
 				odo.setContactFax(buff.toString());
-			} else if (localName.equals("email")) {
+			} else if (localName.equals(TAG_MAIL)) {
 				odo.setContactEmail(buff.toString());
-			} else if (localName.equals("webLink")) {
-				// to differ the different links using tempAtt
-				if (tempAtt == null) {
-					tempAtt = "null";
-				}
-				if (tempAtt.compareTo("locationURL") == 0) {
-					// location link
-					odo.setContactLocationURL(buff.toString());
-				} else if (tempAtt.compareTo("CAMPUSonlineURL") == 0) {
-					// TUMCampus link
-					odo.setTumCampusLink(buff.toString());
-				} else if (tempAtt.compareTo("null") == 0) {
-					// TUMOnline link (or other Website)
-					odo.setContactLink(buff.toString());
-				} else {
-					// error: other link
-					Log.d("ERROR:", "other link: " + tempAtt);
-				}
-			} else if (localName.equals("subBlock")) {
-				// to handle the sometimes recursive structure
-				if (isInsideAdditionalInformation == true) {
-					odo.setAdditionalInfoCaption(tempAtt);
-					int offset = odo.getAdditionalInfoCaption().length();
-					odo.setAdditionalInfoText(buff.toString().substring(
-							25 + offset, buff.toString().length() - 11));
-					isInsideAdditionalInformation = false;
-				} else if (tempAtt == null) {
-					return;
-				}
-				// if the block contains additional Information
-				if (tempAtt.compareTo("additionalInformation") == 0) {
-					isInsideAdditionalInformation = true;
-				} else {
-					odo.setAdditionalInfoCaption(tempAtt);
-					odo.setAdditionalInfoText(buff.toString());
-				}
+			} else if (localName.equals(TAG_HOMEPAGE)) {
+				odo.setContactLocationURL(buff.toString());
 			}
 		}
 	}
@@ -148,20 +114,15 @@ public class OrgDetailsItemHandler extends DefaultHandler {
 	public void startElement(String namespaceURI, String localName,
 			String qName, Attributes atts) {
 		// only buffer interesting tags
-		if (localName.equals("orgUnitID") || localName.equals("orgUnitName")
-				|| localName.equals("orgUnitCode")
-				|| localName.equals("orgUnitDescription")
-				|| localName.equals("contactName")
-				|| localName.equals("street") || localName.equals("locality")
-				|| localName.equals("pcode") || localName.equals("country")
-				|| localName.equals("telephone") || localName.equals("fax")
-				|| localName.equals("email") || localName.equals("webLink")
-				|| localName.equals("subBlock")) {
+		if (localName.equals(TAG_NR) || localName.equals(TAG_NAME)
+				|| localName.equals(TAG_KENNUNG)
+				|| localName.equals(TAG_CONTACT_NAME)
+				|| localName.equals(TAG_ADDRESSE_TEXT)
+				|| localName.equals(TAG_SEKRETARIAT)
+				|| localName.equals(TAG_TEL) || localName.equals(TAG_FAX)
+				|| localName.equals(TAG_MAIL) || localName.equals(TAG_HOMEPAGE)) {
 			buff = new StringBuffer("");
 			buffering = true;
-			// to store first attribute till end tag
-			tempAtt = atts.getValue(0);
 		}
 	}
-
 }

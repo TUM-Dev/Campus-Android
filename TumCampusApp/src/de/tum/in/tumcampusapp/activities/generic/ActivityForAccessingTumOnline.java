@@ -31,9 +31,9 @@ public abstract class ActivityForAccessingTumOnline extends FragmentActivity
 	protected RelativeLayout progressLayout;
 	protected TUMOnlineRequest requestHandler;
 
-	public ActivityForAccessingTumOnline(String method, int layoutIt) {
+	public ActivityForAccessingTumOnline(String method, int layoutId) {
 		this.method = method;
-		this.layoutId = layoutIt;
+		this.layoutId = layoutId;
 	}
 
 	public void onClick(View view) {
@@ -126,6 +126,22 @@ public abstract class ActivityForAccessingTumOnline extends FragmentActivity
 		default:
 			return super.onOptionsItemSelected(item);
 		}
+	}
+
+	public void showProgressLayout() {
+		this.progressLayout.setVisibility(View.VISIBLE);
+	}
+
+	public void hideProgressLayout() {
+		this.progressLayout.setVisibility(View.GONE);
+	}
+	
+	public void showErrorLayout() {
+		this.errorLayout.setVisibility(View.VISIBLE);
+	}
+	
+	public void hideErrorLayout() {
+		this.errorLayout.setVisibility(View.GONE);
 	}
 
 	public void requestFetch() {

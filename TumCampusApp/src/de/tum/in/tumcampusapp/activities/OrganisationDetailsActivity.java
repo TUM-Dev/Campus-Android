@@ -9,7 +9,6 @@ import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
@@ -18,14 +17,12 @@ import android.view.KeyEvent;
 import android.widget.TextView;
 import android.widget.Toast;
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.activities.generic.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampusapp.adapters.OrgDetailsItemHandler;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.HTMLStringBuffer;
 import de.tum.in.tumcampusapp.auxiliary.PersonalLayoutManager;
-import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.OrgDetailsItem;
-import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequest;
-import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequestFetchListener;
 
 /**
  * Show all details that are available on TUMCampus to any organisation
@@ -34,8 +31,11 @@ import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequestFetchListener;
  * @review Vincenz Doelle, Daniel G. Mayr
  */
 @SuppressLint("DefaultLocale")
-public class OrganisationDetailsActivity extends Activity implements
-		TUMOnlineRequestFetchListener {
+public class OrganisationDetailsActivity extends ActivityForAccessingTumOnline {
+
+	public OrganisationDetailsActivity() {
+		super(Const.ORG_DETAILS, R.layout.activity_organisationdetails);
+	}
 
 	/**
 	 * Helper Class that brings the Strings+Values in a GUI polished format
@@ -129,21 +129,9 @@ public class OrganisationDetailsActivity extends Activity implements
 	 */
 	private String orgName;
 
-	/**
-	 * To fetch the Details from the TUMCampus interface
-	 */
-	private TUMOnlineRequest requestHandler;
-
-	@Override
-	public void onCommonError(String errorReason) {
-		// TODO Auto-generated method stub
-
-	}
-
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_organisationdetails);
 
 		// get the submitted (bundle) data
 		Bundle bundle = this.getIntent().getExtras();
@@ -165,20 +153,7 @@ public class OrganisationDetailsActivity extends Activity implements
 		// parse XML into one OrgDetailsItem
 		OrgDetailsItem o = parseOrgDetails(rawResponse);
 		updateUI(o);
-	}
-
-	@Override
-	public void onFetchCancelled() {
-		// do nothing
-	}
-
-	/**
-	 * while fetching a TUMOnline Request an error occured this will show the
-	 * error message in a toast
-	 */
-	@Override
-	public void onFetchError(String errorReason) {
-		Utils.showLongCenteredToast(this, "Error: " + errorReason);
+		super.hideProgressLayout();
 	}
 
 	/**
@@ -232,12 +207,8 @@ public class OrganisationDetailsActivity extends Activity implements
 
 			// Initialise the request handler and append the orgUnitID to the
 			// URL
-			requestHandler = new TUMOnlineRequest("");
-			requestHandler.setParameter("orgUnitID", orgId);
-
-			// do the TUMCampus request
-			requestHandler.fetchInteractive(this, this);
-
+			requestHandler.setParameter("pOrgNr", orgId);
+			super.requestFetch();
 		}
 	}
 
@@ -357,6 +328,5 @@ public class OrganisationDetailsActivity extends Activity implements
 
 		// show text in html
 		tvOrgDetails.setText(Html.fromHtml(stringBuffer.toString()));
-
 	}
 }

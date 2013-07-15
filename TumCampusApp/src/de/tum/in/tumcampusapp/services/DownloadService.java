@@ -97,7 +97,7 @@ public class DownloadService extends IntentService {
 	}
 
 	public boolean downloadOrganisations(boolean force) throws Exception {
-		OrganisationManager lm = new OrganisationManager(this);
+		OrganisationManager om = new OrganisationManager(this);
 		String accessToken = PreferenceManager
 				.getDefaultSharedPreferences(this).getString(
 						Const.ACCESS_TOKEN, null);
@@ -106,7 +106,7 @@ public class DownloadService extends IntentService {
 			throw new Exception("No Access Token");
 		}
 		try {
-			lm.downloadFromExternal(force, accessToken);
+			om.downloadFromExternal(force, accessToken);
 		} catch (Exception e) {
 			Log.e(getClass().getSimpleName(), e.getMessage());
 		}

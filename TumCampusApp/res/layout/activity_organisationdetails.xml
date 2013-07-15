@@ -10,13 +10,23 @@
         layout="@layout/layout_progress"
         android:visibility="gone" />
 
-    <!-- TODO Remove visible, if this function is working -->
-
     <include
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         layout="@layout/layout_error"
-        android:visibility="visible" />
+        android:visibility="gone" />
+
+    <include
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        layout="@layout/layout_failed_token"
+        android:visibility="gone" />
+
+    <include
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        layout="@layout/layout_no_token"
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/tvCaption"
@@ -31,7 +41,6 @@
         android:inputType="textMultiLine"
         android:padding="@dimen/padding_default"
         android:scrollHorizontally="false"
-        android:text="tvOrgDetails"
         android:textColor="@color/text_light_blue"
         android:textSize="@dimen/semilarge_text_size" />
 
