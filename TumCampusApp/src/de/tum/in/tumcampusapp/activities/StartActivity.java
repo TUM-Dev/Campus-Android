@@ -44,6 +44,7 @@ public class StartActivity extends FragmentActivity {
 	 * The {@link ViewPager} that will host the section contents.
 	 */
 	ViewPager mViewPager;
+
 	/**
 	 * Receiver for Services
 	 */

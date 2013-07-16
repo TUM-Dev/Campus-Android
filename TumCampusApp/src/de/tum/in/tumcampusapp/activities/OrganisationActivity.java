@@ -14,7 +14,6 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -52,10 +51,6 @@ import de.tum.in.tumcampusapp.models.OrgItemList;
 public class OrganisationActivity extends ActivityForAccessingTumOnline
 		implements OnClickListener {
 
-	public OrganisationActivity() {
-		super(Const.ORG_TREE, R.layout.activity_organisation);
-	}
-
 	/**
 	 * language is "de"->German or "en"->English depending on the system
 	 * language
@@ -67,6 +62,8 @@ public class OrganisationActivity extends ActivityForAccessingTumOnline
 	 * Organisations are child of "Organisation 1" = TUM)
 	 */
 	private static final String TOP_LEVEL_ORG = "1";
+
+	private OrganisationActivity activity = this;
 
 	/** The document is used to access and parse the xml.org file on the SD-card */
 	private Document doc;
@@ -91,7 +88,9 @@ public class OrganisationActivity extends ActivityForAccessingTumOnline
 	protected RelativeLayout progressLayout;
 	/** The org.xml File on the SD-card */
 	private File xmlOrgFile;
-	private OrganisationActivity activity = this;
+	public OrganisationActivity() {
+		super(Const.ORG_TREE, R.layout.activity_organisation);
+	}
 
 	/**
 	 * SAX-Parsing the org.xml-File to get Information for the Jump in the
@@ -324,39 +323,24 @@ public class OrganisationActivity extends ActivityForAccessingTumOnline
 		}
 	}
 
-	private void showOrgTree() {
+	@Override
+	public void onFetch(String rawResponse) {
 
-		AsyncTask<Void, Void, Boolean> backgroundTask;
-		backgroundTask = new AsyncTask<Void, Void, Boolean>() {
-			@Override
-			protected Boolean doInBackground(Void... params) {
-				// be careful! this takes a lot of time on older devices!
-				buildDocument();
+		try {
+			Utils.getCacheDir("organisations");
+			FileUtils.writeFile(xmlOrgFile, rawResponse);
+			Log.d("Import: org.xml",
+					"Xml file has been new downloaded and saved.");
+			super.hideErrorLayout();
+			super.hideProgressLayout();
+			showOrgTree();
 
-				// set orgName depending on language
-				if (language.equals(Const.DE)) {
-					orgName = getParent(parentId).getNameDe();
-				} else {
-					orgName = getParent(parentId).getNameEn();
-				}
-				return true;
-			}
-
-			@Override
-			protected void onPostExecute(Boolean result) {
-				// first: show the first level of the tree (including the
-				// faculties)
-				showItems(parentId);
-				activity.hideProgressLayout();
-			}
-
-			@Override
-			protected void onPreExecute() {
-				activity.showProgressLayout();
-			}
-		};
-		backgroundTask.execute();
-
+		} catch (IOException e) {
+			Toast.makeText(this, R.string.exception_sdcard, Toast.LENGTH_SHORT)
+					.show();
+			super.hideProgressLayout();
+			super.showErrorLayout();
+		}
 	}
 
 	@Override
@@ -466,23 +450,38 @@ public class OrganisationActivity extends ActivityForAccessingTumOnline
 		});
 	}
 
-	@Override
-	public void onFetch(String rawResponse) {
+	private void showOrgTree() {
 
-		try {
-			Utils.getCacheDir("organisations");
-			FileUtils.writeFile(xmlOrgFile, rawResponse);
-			Log.d("Import: org.xml",
-					"Xml file has been new downloaded and saved.");
-			super.hideErrorLayout();
-			super.hideProgressLayout();
-			showOrgTree();
+		AsyncTask<Void, Void, Boolean> backgroundTask;
+		backgroundTask = new AsyncTask<Void, Void, Boolean>() {
+			@Override
+			protected Boolean doInBackground(Void... params) {
+				// be careful! this takes a lot of time on older devices!
+				buildDocument();
 
-		} catch (IOException e) {
-			Toast.makeText(this, R.string.exception_sdcard, Toast.LENGTH_SHORT)
-					.show();
-			super.hideProgressLayout();
-			super.showErrorLayout();
-		}
+				// set orgName depending on language
+				if (language.equals(Const.DE)) {
+					orgName = getParent(parentId).getNameDe();
+				} else {
+					orgName = getParent(parentId).getNameEn();
+				}
+				return true;
+			}
+
+			@Override
+			protected void onPostExecute(Boolean result) {
+				// first: show the first level of the tree (including the
+				// faculties)
+				showItems(parentId);
+				activity.hideProgressLayout();
+			}
+
+			@Override
+			protected void onPreExecute() {
+				activity.showProgressLayout();
+			}
+		};
+		backgroundTask.execute();
+
 	}
 }

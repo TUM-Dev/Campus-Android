@@ -7,11 +7,12 @@
 
     <ImageView
         android:id="@+id/image"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:contentDescription="@string/tum_logo"
-        android:padding="5dip"
-        android:scaleType="center"
+        android:padding="@dimen/padding_to_image_small"
+        android:scaleType="centerCrop"
         android:src="@drawable/ic_launcher" />
 
     <TextView

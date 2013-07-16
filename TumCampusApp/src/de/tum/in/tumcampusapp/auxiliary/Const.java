@@ -8,6 +8,7 @@ public final class Const {
 	public static final String CAFETERIA_ID = "cafeteriasId";
 	public static final String CAFETERIA_NAME = "cafeteriasName";
 	public static final String CAFETERIAS = "cafeterias";
+	public static final String COLOR_SCHEME = "color_scheme";
 	public static final String COMPLETED = "completed";
 	public static final String CURRICULA = "curricula";
 	public final static String DATABASE_NAME = "database.db";
@@ -74,14 +75,18 @@ public final class Const {
 	public static final String NEWS = "news";
 	public static final String NOTE_COLUMN = "note";
 	public static final String NOTEN = "noten";
+	public static final String ORG_DETAILS = "orgDetails";
 	public static final String ORG_ID = "orgId";
 	public static final String ORG_NAME = "orgName";
 	public static final String ORG_PARENT_ID = "orgParentId";
+	public static final String ORG_TREE = "orgBaum";
 	public static final String ORGANISATIONS = "organisations";
 	public static final String PREFS_HAVE_CHANGED = "prefs_have_changed";
 	public static final String REMARK_COLUMN = "remark";
 	public static final String ROOM_COLUMN = "room";
 	public static final String ROOMFINDER = "roomfinder";
+	public static final String SILENCE = "silence";
+	public static final String SILENCE_ON = "silence_on";
 	public static final String START_DE_COLUMN = "start_de";
 	public static final String START_DT_COLUMN = "start_dt";
 	public static final String STUDIENBEITRAGSTATUS = "studienbeitragsstatus";
@@ -94,7 +99,4 @@ public final class Const {
 	public static final String WARNING = "warning";
 	public static final String WARNING_MESSAGE = "warning_message";
 	public static final String WEEKDAY_COLUMN = "weekday";
-	public static final String COLOR_SCHEME = "color_scheme";
-	public static final String ORG_TREE = "orgBaum";
-	public static final String ORG_DETAILS = "orgDetails";
 }

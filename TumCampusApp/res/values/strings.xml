@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string name="bib">Library</string>
+    <string name="extra">Extra</string>
+    <string name="extra_name">Extra Name</string>
+    <string name="identifier">Identifier</string>
     <string name="today">Today</string>
     <string name="open_wizzard">Open Startup-Wizzard</string>
     <string name="open_wizzard_detail">The Startup-Wizzard helps you in order to set the basic preferences for accessing TUMOnline services and the layout of this App.</string>

@@ -58,13 +58,14 @@ public class WizNavColorActivity extends Activity implements
 	public void onClickNext(View view) {
 		SharedPreferences sp = PreferenceManager
 				.getDefaultSharedPreferences(getApplicationContext());
-		
-		String oldColorValue = sp.getString(Const.COLOR_SCHEME, DEFAULT_COLOR_VALUE);
-		
+
+		String oldColorValue = sp.getString(Const.COLOR_SCHEME,
+				DEFAULT_COLOR_VALUE);
+
 		Editor editor = sp.edit();
 		editor.putString(Const.COLOR_SCHEME, colorValue);
 		editor.commit();
-		
+
 		// Inform calling activity via broadcast, that the color has changed
 		if (!oldColorValue.equals(colorValue)) {
 			Intent intentSend = new Intent();

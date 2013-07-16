@@ -19,19 +19,19 @@ public class OrgDetailsItemHandler extends DefaultHandler {
 
 	// TODO NOT STABLE!
 
-	public static final String TAG_NR = "nr";
-	public static final String TAG_NAME = "name";
-	public static final String TAG_KENNUNG = "kennung";
-	public static final String TAG_CONTACT_NAME = "ansprechpartner";
 	public static final String TAG_ADDRESSE_TEXT = "adresse_text";
-	public static final String TAG_HOMEPAGE = "www_homepage";
-	public static final String TAG_MAIL = "email_adresse";
-	public static final String TAG_SEKRETARIAT = "sekretariat_info";
-	public static final String TAG_FAX = "fax_nummer";
-	public static final String TAG_TEL = "telefon_nummer";
 	public static final String TAG_BIB = "bibliothek_info";
+	public static final String TAG_CONTACT_NAME = "ansprechpartner";
 	public static final String TAG_EXTRA = "zusatz:info";
 	public static final String TAG_EXTRA_NAME = "zusatz_info_name";
+	public static final String TAG_FAX = "fax_nummer";
+	public static final String TAG_HOMEPAGE = "www_homepage";
+	public static final String TAG_KENNUNG = "kennung";
+	public static final String TAG_MAIL = "email_adresse";
+	public static final String TAG_NAME = "name";
+	public static final String TAG_NR = "nr";
+	public static final String TAG_SEKRETARIAT = "sekretariat_info";
+	public static final String TAG_TEL = "telefon_nummer";
 
 	// Buffer for parsing
 	StringBuffer buff;
@@ -84,13 +84,18 @@ public class OrgDetailsItemHandler extends DefaultHandler {
 				odo.setContactLocality(buff.toString());
 			} else if (localName.equals(TAG_TEL)) {
 				odo.setContactTelephone(buff.toString());
-				odo.setContactTelephoneType("");
 			} else if (localName.equals(TAG_FAX)) {
 				odo.setContactFax(buff.toString());
 			} else if (localName.equals(TAG_MAIL)) {
 				odo.setContactEmail(buff.toString());
 			} else if (localName.equals(TAG_HOMEPAGE)) {
 				odo.setContactLocationURL(buff.toString());
+			} else if (localName.equals(TAG_EXTRA_NAME)) {
+				odo.setAdditionalInfoCaption(buff.toString());
+			} else if (localName.equals(TAG_EXTRA)) {
+				odo.setAdditionalInfoText(buff.toString());
+			} else if (localName.equals(TAG_BIB)) {
+				odo.setContactAdditionalInfo(buff.toString());
 			}
 		}
 	}

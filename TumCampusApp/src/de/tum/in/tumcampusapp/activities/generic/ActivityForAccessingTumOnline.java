@@ -45,6 +45,14 @@ public abstract class ActivityForAccessingTumOnline extends FragmentActivity
 		this.layoutId = layoutId;
 	}
 
+	public void hideErrorLayout() {
+		this.errorLayout.setVisibility(View.GONE);
+	}
+
+	public void hideProgressLayout() {
+		this.progressLayout.setVisibility(View.GONE);
+	}
+
 	public void onClick(View view) {
 		int viewId = view.getId();
 		switch (viewId) {
@@ -137,22 +145,6 @@ public abstract class ActivityForAccessingTumOnline extends FragmentActivity
 		}
 	}
 
-	public void showProgressLayout() {
-		this.progressLayout.setVisibility(View.VISIBLE);
-	}
-
-	public void hideProgressLayout() {
-		this.progressLayout.setVisibility(View.GONE);
-	}
-
-	public void showErrorLayout() {
-		this.errorLayout.setVisibility(View.VISIBLE);
-	}
-
-	public void hideErrorLayout() {
-		this.errorLayout.setVisibility(View.GONE);
-	}
-
 	public void requestFetch() {
 		accessToken = PreferenceManager.getDefaultSharedPreferences(this)
 				.getString(Const.ACCESS_TOKEN, null);
@@ -167,5 +159,13 @@ public abstract class ActivityForAccessingTumOnline extends FragmentActivity
 			Log.i(getClass().getSimpleName(), "No token was set");
 			noTokenLayout.setVisibility(View.VISIBLE);
 		}
+	}
+
+	public void showErrorLayout() {
+		this.errorLayout.setVisibility(View.VISIBLE);
+	}
+
+	public void showProgressLayout() {
+		this.progressLayout.setVisibility(View.VISIBLE);
 	}
 }

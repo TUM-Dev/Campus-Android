@@ -5,6 +5,7 @@
     <dimen name="padding_default">8dp</dimen>
     <dimen name="padding_to_above_text">4dp</dimen>
     <dimen name="padding_to_image">8dp</dimen>
+    <dimen name="padding_to_image_small">4dp</dimen>
     <dimen name="spacing_grid_view">5dp</dimen>
     <dimen name="small_text_size">12sp</dimen>
     <dimen name="mid_text_size">14sp</dimen>
