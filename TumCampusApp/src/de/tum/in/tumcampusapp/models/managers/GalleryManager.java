@@ -92,10 +92,17 @@ public class GalleryManager {
 			return;
 		}
 
+		// These urls are not working anymore. The "position" statement is not
+		// allowed by facebook anymore.
+		String url_old = "https://graph.facebook.com/280074732057167/photos?"
+				+ "fields=id,name,source,position&limit=25&access_token=";
+		String urlArchive_old = "https://graph.facebook.com/291553714242602/photos?"
+				+ "fields=id,name,source,position&limit=25&access_token=";
+
 		String url = "https://graph.facebook.com/280074732057167/photos?"
-				+ "fields=id,name,source,position&limit=25&access_token=";
+				+ "fields=id,name,source&limit=25&access_token=";
 		String urlArchive = "https://graph.facebook.com/291553714242602/photos?"
-				+ "fields=id,name,source,position&limit=25&access_token=";
+				+ "fields=id,name,source&limit=25&access_token=";
 		String token = "141869875879732|FbjTXY-wtr06A18W9wfhU8GCkwU";
 
 		JSONArray jsonArray = Utils

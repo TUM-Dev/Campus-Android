@@ -88,6 +88,7 @@ public class OrganisationActivity extends ActivityForAccessingTumOnline
 	protected RelativeLayout progressLayout;
 	/** The org.xml File on the SD-card */
 	private File xmlOrgFile;
+
 	public OrganisationActivity() {
 		super(Const.ORG_TREE, R.layout.activity_organisation);
 	}

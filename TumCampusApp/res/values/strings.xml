@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string name="lecture_schedule">Lecture Schedule</string>
+    <string name="lecture_schedule_extra">Your lectures schedule</string>
     <string name="bib">Library</string>
     <string name="extra">Extra</string>
     <string name="extra_name">Extra Name</string>

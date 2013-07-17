@@ -37,6 +37,8 @@ public class LectureItemManager {
 	 */
 	public static int lastInserted = 0;
 
+	public static int TIME_TO_SYNC = 604800; // 1 week
+
 	/**
 	 * Database connection
 	 */
@@ -292,16 +294,21 @@ public class LectureItemManager {
 	 * @author Daniel G. Mayr
 	 * @throws Exception
 	 */
-	public void importFromTUMOnline(Context con) throws Exception {
+	public void importFromTUMOnline(Context context) throws Exception {
 		int count = Utils.dbGetTableCount(db, "lectures_items");
+
+		if (!SyncManager.needSync(db, this, TIME_TO_SYNC)) {
+			return;
+		}
 
 		db.beginTransaction();
 		try {
 
 			// acquire access token
 			String accessToken = null;
-			accessToken = PreferenceManager.getDefaultSharedPreferences(con)
-					.getString(Const.ACCESS_TOKEN, null);
+			accessToken = PreferenceManager
+					.getDefaultSharedPreferences(context).getString(
+							Const.ACCESS_TOKEN, null);
 
 			if (accessToken == null || accessToken == "") {
 				throw new Exception("no access token set");
@@ -309,7 +316,7 @@ public class LectureItemManager {
 
 			// get my lectures
 			TUMOnlineRequest requestHandler = new TUMOnlineRequest(
-					"veranstaltungenEigene", accessToken);
+					"veranstaltungenEigene", context);
 			String strMine = requestHandler.fetch();
 			// deserialize
 			Serializer serializer = new Persister();
@@ -334,7 +341,7 @@ public class LectureItemManager {
 
 				// now, get termine for each lecture
 				TUMOnlineRequest req = new TUMOnlineRequest(
-						"veranstaltungenTermine", accessToken);
+						"veranstaltungenTermine", context);
 				req.setParameter("pLVNr", currentLecture.getStp_sp_nr());
 				String strTermine = req.fetch();
 
@@ -434,7 +441,7 @@ public class LectureItemManager {
 					}
 
 			}
-
+			SyncManager.replaceIntoDb(db, this);
 			db.setTransactionSuccessful();
 		} finally {
 			db.endTransaction();

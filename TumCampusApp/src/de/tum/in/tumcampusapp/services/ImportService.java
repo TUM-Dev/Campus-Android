@@ -13,6 +13,8 @@ import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.Feed;
 import de.tum.in.tumcampusapp.models.Location;
 import de.tum.in.tumcampusapp.models.managers.FeedManager;
+import de.tum.in.tumcampusapp.models.managers.LectureItemManager;
+import de.tum.in.tumcampusapp.models.managers.LectureManager;
 import de.tum.in.tumcampusapp.models.managers.LocationManager;
 
 /**
@@ -51,6 +53,19 @@ public class ImportService extends IntentService {
 				nm.insertUpdateIntoDb(new Feed(row[0], row[1]));
 			}
 		}
+	}
+
+	/**
+	 * imports lecture items from TUMOnline HINT: access token have to be set
+	 * 
+	 * @author Daniel G. Mayr
+	 */
+	public void importLectureItemsFromTUMOnline() throws Exception {
+		LectureItemManager lim = new LectureItemManager(this);
+		lim.importFromTUMOnline(this);
+
+		LectureManager lm = new LectureManager(this);
+		lm.updateLectures();
 	}
 
 	/**
@@ -129,6 +144,7 @@ public class ImportService extends IntentService {
 		// import all defaults or only one action
 		if (action.equals(Const.DEFAULTS)) {
 			try {
+				message("Starting to imported assets", "");
 				// get current app version
 				int version = getPackageManager().getPackageInfo(
 						this.getPackageName(), 0).versionCode;
@@ -143,8 +159,20 @@ public class ImportService extends IntentService {
 				importLocationsDefaults(update);
 				importFeedsDefaults();
 				f.createNewFile();
-				message("Successfully imported Assets.", Const.ACTION_EXTRA);
+				message("Successfully imported Assets", Const.ACTION_EXTRA);
 			} catch (Exception e) {
+				// TODO Give better feedback
+				Utils.log(e, "");
+			}
+		} else if (action.equals(Const.LECTURES_TUM_ONLINE)) {
+			try {
+				message("Starting to imported lecture schedule from TUMOnline",
+						Const.LECTURES_TUM_ONLINE_START);
+				importLectureItemsFromTUMOnline();
+				message("Successfully imported lectures schedule from TUMOnline",
+						Const.LECTURES_TUM_ONLINE_FINISH);
+			} catch (Exception e) {
+				// TODO Give better feedback
 				Utils.log(e, "");
 			}
 		}

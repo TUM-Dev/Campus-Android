@@ -28,11 +28,6 @@
         layout="@layout/layout_no_token"
         android:visibility="gone" />
 
-    <CalendarView
-        android:id="@+id/calendar"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent" >

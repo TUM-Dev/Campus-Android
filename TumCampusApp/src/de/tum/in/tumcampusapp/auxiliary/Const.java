@@ -28,6 +28,7 @@ public final class Const {
 	public static final String FEED_ID = "feedId";
 	public static final String FEED_NAME = "feedName";
 	public static final String FEEDS = "feeds";
+	public static final String FETCH_NOTHING = "";
 	public static final String FORCE_DOWNLOAD = "force_download";
 	public static final String GALLERY = "gallery";
 	public static final String HIDE_WIZZARD_ON_STARTUP = "hide_wizzard_on_startup";
@@ -65,6 +66,8 @@ public final class Const {
 	public static final String LECTURES_PERSONAL = "veranstaltungenEigene";
 	public static final String LECTURES_SEARCH = "veranstaltungenSuche";
 	public static final String LECTURES_TUM_ONLINE = "lecturesTUMOnline";
+	public static final String LECTURES_TUM_ONLINE_FINISH = "lecturesTUMOnlineFinish";
+	public static final String LECTURES_TUM_ONLINE_START = "lecturesTUMOnlineStart";
 	public static final String LINK_COLUMN = "link";
 	public static final String LINKS = "links";
 	public static final String LOCATION_COLUMN = "location";

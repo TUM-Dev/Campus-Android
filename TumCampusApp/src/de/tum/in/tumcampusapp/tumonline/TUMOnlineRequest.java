@@ -16,7 +16,6 @@ import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
@@ -72,19 +71,13 @@ public class TUMOnlineRequest {
 		this.method = method;
 	}
 
-	public TUMOnlineRequest(String method, Activity callingActivity) {
+	public TUMOnlineRequest(String method, Context context) {
 		this();
 		this.method = method;
 
-		if (!loadAccessTokenFromPreferences(callingActivity)) {
+		if (!loadAccessTokenFromPreferences(context)) {
 			// TODO show a dialog for the user
 		}
-	}
-
-	public TUMOnlineRequest(String method, String accessToken) {
-		this();
-		this.method = method;
-		this.accessToken = accessToken;
 	}
 
 	public void cancelRequest(boolean mayInterruptIfRunning) {

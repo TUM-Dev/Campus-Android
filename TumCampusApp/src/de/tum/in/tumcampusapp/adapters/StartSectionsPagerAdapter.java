@@ -17,6 +17,7 @@ import de.tum.in.tumcampusapp.activities.FeedsActivity;
 import de.tum.in.tumcampusapp.activities.GalleryActivity;
 import de.tum.in.tumcampusapp.activities.GradesActivity;
 import de.tum.in.tumcampusapp.activities.InformationActivity;
+import de.tum.in.tumcampusapp.activities.LectureScheduleActivity;
 import de.tum.in.tumcampusapp.activities.LecturesPersonalActivity;
 import de.tum.in.tumcampusapp.activities.LecturesSearchActivity;
 import de.tum.in.tumcampusapp.activities.NewsActivity;
@@ -102,6 +103,9 @@ public class StartSectionsPagerAdapter extends FragmentPagerAdapter {
 			listMenuEntrySet.add(new ListMenuEntry(R.drawable.calendar,
 					R.string.timetable, R.string.timetable_addinfo, new Intent(
 							activity, TimetableActivity.class)));
+			listMenuEntrySet.add(new ListMenuEntry(R.drawable.calendar,
+					R.string.lecture_schedule, R.string.lecture_schedule_extra,
+					new Intent(activity, LectureScheduleActivity.class)));
 			listMenuEntrySet.add(new ListMenuEntry(R.drawable.finance,
 					R.string.tuition_fees, R.string.tuitionfee_addinfo,
 					new Intent(activity, TuitionFeesActivity.class)));

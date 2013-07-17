@@ -1,5 +1,7 @@
 package de.tum.in.tumcampusapp.activities;
 
+import com.bugsense.trace.BugSenseHandler;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -88,6 +90,10 @@ public class StartActivity extends FragmentActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		// Init a Bug Report to https://www.bugsense.com
+		BugSenseHandler.initAndStartSession(this, "19d18764");
+		
 		setContentView(R.layout.activity_start);
 
 		// Workaround for new API version. There was a security update which
