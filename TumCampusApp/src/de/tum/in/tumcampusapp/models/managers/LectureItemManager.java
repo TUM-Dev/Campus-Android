@@ -65,7 +65,7 @@ public class LectureItemManager {
 				+ "id VARCHAR PRIMARY KEY, lectureId VARCHAR, start VARCHAR, "
 				+ "end VARCHAR, name VARCHAR, module VARCHAR, location VARCHAR, "
 				+ "note VARCHAR, url VARCHAR, seriesId VARCHAR)");
-		
+
 		new SyncManager(context);
 	}
 
@@ -117,7 +117,7 @@ public class LectureItemManager {
 	 * 		   end_de, start_dt, end_dt, url, location, _id)
 	 * </pre>
 	 */
-	public Cursor getAllFromDb(String lectureId) {
+	public Cursor getAllFromDbForId(String lectureId) {
 		return db
 				.rawQuery(
 						"SELECT name, note, location, strftime('%w', start) as weekday, "
@@ -138,6 +138,21 @@ public class LectureItemManager {
 						"SELECT name, location, id as _id "
 								+ "FROM lectures_items WHERE datetime('now', 'localtime') BETWEEN start AND end AND "
 								+ "lectureId NOT IN ('holiday', 'vacation') LIMIT 1",
+						null);
+	}
+
+	/**
+	 * Get all lecture items from the database
+	 * 
+	 * @return Database cursor (name, location, _id)
+	 */
+	public Cursor getAllFromDb() {
+		return db
+				.rawQuery(
+						"SELECT name, note, location, strftime('%w', start) as weekday, "
+								+ "strftime('%H:%M', start) as start_de, strftime('%H:%M', end) as end_de, "
+								+ "strftime('%d.%m.%Y', start) as start_dt, strftime('%d.%m.%Y', end) as end_dt, "
+								+ "url, lectureId, id as _id FROM lectures_items ORDER BY start",
 						null);
 	}
 
@@ -296,9 +311,10 @@ public class LectureItemManager {
 	 * @author Daniel G. Mayr
 	 * @throws Exception
 	 */
-	public void importFromTUMOnline(Context context, boolean force) throws Exception {
+	public void importFromTUMOnline(Context context, boolean force)
+			throws Exception {
 		boolean success = true;
-		
+
 		int count = Utils.dbGetTableCount(db, "lectures_items");
 
 		if (!force && !SyncManager.needSync(db, this, TIME_TO_SYNC)) {
@@ -387,59 +403,61 @@ public class LectureItemManager {
 							Calendar cend = Calendar.getInstance();
 							cend.setTime(end);
 
+							// TODO Replaced that, because we fetch all
+							// appointments and decide on while fetching if we
+							// need those appointments
 							if (cnow.before(cend)) {
-
-								// set name/module/ort/lectureId
-								String location = "";
-								if (currentTask.getOrt() != null)
-									location = currentTask.getOrt();
-								String name = "";
-								if (currentLecture.getTitel() != null)
-									name = currentLecture.getTitel();
-
-								String lectureId = "";
-								if (currentLecture.getStp_lv_nr() != null)
-									lectureId = currentLecture.getStp_lv_nr();
-
-								String module = "";
-								if (name.contains("(") && name.contains(")")) {
-									module = name.substring(
-											name.indexOf("(") + 1,
-											name.indexOf(")"));
-									name = name.substring(0, name.indexOf("("))
-											.trim();
-								}
-
-								// set id
-								String id = lectureId + "_"
-										+ String.valueOf(start.getTime());
-
-								// set wochentag
-								String wochentag = Utils
-										.getWeekDayByDate(start).toUpperCase();
-
-								SimpleDateFormat sdfvon = new SimpleDateFormat(
-										"HH:mm");
-								String von = sdfvon.format(start);
-
-								String seriesId = lectureId + "_" + wochentag
-										+ "_" + von;
-
-								// set note and url
-								String note = "";
-								if (currentTask.getTermin_betreff() != null)
-									note = currentTask.getTermin_betreff();
-								String url = "";
-								if (lectureId.length() == 0) {
-									lectureId = Utils.md5(name);
-								}
-
-								// now, make entry to database
-								replaceIntoDb(new LectureItem(id, lectureId,
-										start, end, name, module, location,
-										note, url, seriesId));
-
 							}
+
+							// set name/module/ort/lectureId
+							String location = "";
+							if (currentTask.getOrt() != null)
+								location = currentTask.getOrt();
+							String name = "";
+							if (currentLecture.getTitel() != null)
+								name = currentLecture.getTitel();
+
+							String lectureId = "";
+							if (currentLecture.getStp_lv_nr() != null)
+								lectureId = currentLecture.getStp_lv_nr();
+
+							String module = "";
+							if (name.contains("(") && name.contains(")")) {
+								module = name.substring(name.indexOf("(") + 1,
+										name.indexOf(")"));
+								name = name.substring(0, name.indexOf("("))
+										.trim();
+							}
+
+							// set id
+							String id = lectureId + "_"
+									+ String.valueOf(start.getTime());
+
+							// set wochentag
+							String wochentag = Utils.getWeekDayByDate(start)
+									.toUpperCase();
+
+							SimpleDateFormat sdfvon = new SimpleDateFormat(
+									"HH:mm");
+							String von = sdfvon.format(start);
+
+							String seriesId = lectureId + "_" + wochentag + "_"
+									+ von;
+
+							// set note and url
+							String note = "";
+							if (currentTask.getTermin_betreff() != null)
+								note = currentTask.getTermin_betreff();
+							String url = "";
+							if (lectureId.length() == 0) {
+								lectureId = Utils.md5(name);
+							}
+
+							// now, make entry to database
+							replaceIntoDb(new LectureItem(id, lectureId, start,
+									end, name, module, location, note, url,
+									seriesId));
+
 						} catch (Exception ex) {
 							success = false;
 							Log.d("TUMOnlineParseATask",

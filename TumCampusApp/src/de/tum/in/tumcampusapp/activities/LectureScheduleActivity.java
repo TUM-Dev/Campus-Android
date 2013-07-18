@@ -226,8 +226,10 @@ public class LectureScheduleActivity extends ActivityForAccessingTumOnline
 	private boolean updateListWithLectures() {
 		// get all upcoming lecture units
 		LectureItemManager lim = new LectureItemManager(this);
-		// Cursor c = lim.getRecentFromDb();
-		Cursor cursor = lim.getRecentFromDb();
+		
+		// Cursor cursor = lim.getRecentFromDb();
+		Cursor cursor = lim.getAllFromDb();
+		
 		startManagingCursor(cursor);
 		if (cursor.getCount() == 0) {
 			return false;

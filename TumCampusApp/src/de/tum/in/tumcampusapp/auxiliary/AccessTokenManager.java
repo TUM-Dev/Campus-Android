@@ -8,6 +8,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.tumonline.TUMOnlineConst;
 import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequest;
 
 public class AccessTokenManager implements OnClickListener {
@@ -67,7 +68,6 @@ public class AccessTokenManager implements OnClickListener {
 		}
 	}
 
-	// TODO Test this method
 	public boolean isAccessTokenConfirmed(String token) {
 		TUMOnlineRequest request = new TUMOnlineRequest("isTokenConfirmed");
 		request.setParameter("pToken", token);
@@ -78,10 +78,14 @@ public class AccessTokenManager implements OnClickListener {
 				strTokenXml.indexOf("</confirmed>")));
 	}
 	
-	// TODO Test this method
 	public boolean isAccessTokenConfirmed() {
 		String token = getAccessToken();
 		return isAccessTokenConfirmed(token);
+	}
+	
+	// TODO Implement this
+	public boolean hasRightsForFunction(String function) {
+		return false;
 	}
 
 	@Override

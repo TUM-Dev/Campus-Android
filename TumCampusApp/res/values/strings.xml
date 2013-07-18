@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- START Translated, please do not change identifiers -->
     <string name="lecture_schedule">Lecture Schedule</string>
     <string name="lecture_schedule_extra">Your lectures schedule</string>
     <string name="bib">Library</string>
@@ -110,19 +111,6 @@
     <string name="choose_mensa">Please select a university canteen.</string>
     <string name="choose_date">Choose date</string>
     <string name="choose_study_plan">Choose study plan</string>
-    <string name="debug_syncs">syncs</string>
-    <string name="debug_cafeterias">cafeterias</string>
-    <string name="debug_cafeterias_menus">cafeterias_menus</string>
-    <string name="debug_feeds">feeds</string>
-    <string name="debug_feeds_items">feeds_items</string>
-    <string name="debug_links">links</string>
-    <string name="debug_events">events</string>
-    <string name="debug_news">news</string>
-    <string name="debug_lectures">lectures</string>
-    <string name="debug_lectures_items">lecture_items</string>
-    <string name="debug_locations">locations</string>
-    <string name="debug_time">time</string>
-    <string name="debug_master">master</string>
     <string name="choose_doc">Choose document:</string>
     <string name="past_events">Past events</string>
     <string name="url">URL</string>
@@ -158,12 +146,6 @@
     <string name="next_lectures">Next lectures:</string>
     <string name="slide_lectures">Lectures</string>
     <string name="tumonline_settings">TUMOnline settings</string>
-    <string name="import_lectures_from_sd_card">Import lectures from SD-card</string>
-    <string name="import_lectures_from_tumonline">Import lectures from TUMOnline</string>
-    <string name="import_links">Import links</string>
-    <string name="import_rss_feed">Import RSS-Feeds</string>
-    <string name="import_hint">Warning: existing data won\'t be\ndeleted, but
-		possibly overwritten!</string>
     <string name="data_and_settings">Data and settings</string>
     <string name="tum_logo">TUM Logo</string>
     <string name="initial_download">Start: First time data download!</string>
@@ -172,9 +154,6 @@
     <string name="choose_plan">Choose plan</string>
     <string name="search_caption">Search term:</string>
     <string name="search_help">Name or Keyword</string>
-    <string name="choose_person">Select a person:</string>
-    <string name="choose_station">Please choose a station.</string>
-    <string name="saved_stations">Saved stations:</string>
     <string name="search_station">Search station</string>
     <string name="generate_token">Manually Generate TUMOnline-Access-Token</string>
     <string name="howto">HowTo</string>
@@ -360,29 +339,22 @@
     <string name="access_token">AccessToken</string>
     <string name="dialog_access_token_missing">TUMOnline-Access-Token not set</string>
     <string name="dialog_access_token_invalid">TUMOnline-Access-Token not enabled</string>
-    <string name="dialog_no_rights_function">No rights accessing this function.</string>
+    <string name="dialog_no_rights_function">No rights accessing this function</string>
     <string name="dialog_username_not_set">TUMOnline-Username is not set</string>
     <string name="dialog_password_not_set">TUMOnline-Password is not set</string>
-    <string name="something_wrong">An unkown error occurred</string>
+    <string name="something_wrong">An unknown error occurred</string>
     <string name="elements_found">elements found</string>
     <string name="really_delete">Are you sure to remove it?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="no_internet_connection">No internet connection available</string>
     <string name="no_sd_card">Cannot access the SD-Card</string>
-    <string name="warning_no_internet_connection_for_organisation_details">Warning: No internet connection! No organisation
-		details possible.</string>
     <string name="export_events">Export Events to Calendar</string>
     <string name="export2calendar">Export to Google Calendar</string>
     <string name="empty_result">The operation delivered a faulty result</string>
     <string name="error_occurred_while_opening">Cannot open file</string>
     <string name="lectures_found">Choose a lecture:</string>
     <string name="choose_calendar">Choose a Google Calendar:</string>
-    <string name="calendarexport">Here you can export all your inserted lectures to a
-		Google Calendar. To do so, select the right Google Calendar below and
-		click on the button to export, then all lectures you have imported to
-		TUMCampus App will appear in your Google Calendar as well.</string>
-    <string name="chooseReminder">choose a reminder:</string>
     <string name="deactivated">deactivated</string>
     <string name="error">Error</string>
     <string name="app_short_description">TUM information platform - from students for students</string>
@@ -393,7 +365,7 @@
         \nAndreas Bernhofer (IT-Support/TUMonline)
         \nNils T. Kannengiesser (F13)
         \n\n<b>Important information:</b>\nThis App is not published by the Technical University Muenchen officially. It is a project by and for students. The software is used at your own risk. We are not responsible for any damage that might be caused by using this App or its presented information. For security reasons the access to private information of TUMOnline is regulated by using tokens. You need to enable different features within TUMOnline for a certain token to be able to use those information within the App.
-        \n\n<b>Privacy information:</b>\nThe application stores data on request only. Critical information requires the users permission (clearance by token) and is stored locally or received from TUMOnline directly. Crash reports can be sent manually. Crash reports contain detailed technical information on the phone, the operating system and the error itself. This information is helpfull for the developers in order to improve the App. We do not collect any statistics except the general ones collected by Google automatically. We would appreciate your support!
+        \n\n<b>Privacy information:</b>\nThe application stores data on request only. Critical information requires the users permission (clearance by token) and is stored locally or received from TUMOnline directly. Crash reports can be sent manually. Crash reports contain detailed technical information on the phone, the operating system and the error itself. This information is helpful for the developers in order to improve the App. We do not collect any statistics except the general ones collected by Google automatically. We would appreciate your support!
 		\n\n<b>Support:</b>\nhttps://www.facebook.com/TUMCampus
 		\nPlease take a look at the offered manual as well. Please also contact us at admin.os.in@tum.de for any special requests.
 		\n\n<b>Licenses:</b>\nGNU GPL v3 - http://www.gnu.org/licenses/gpl.html or
@@ -401,7 +373,6 @@
 		\n\nThe source code is available through Github and may be requested from the project manager in the most recent version.
 		\n\n18th August 2013\n</string>
     <string name="credits">ECTS</string>
-    
     <string name="wizzard_on_startup">Do not show at next start</string>
     <string name="token_not_enabled">TUMOnline-Access-Token is not enabled</string>
     <string name="startup_wizzard">Startup Wizzard</string>
@@ -422,5 +393,6 @@
 	<string name="step_2">Step 2</string>
 	<string name="step_3">Step 3</string>
 	<string name="finish">Finish</string>
+	<!-- END Translated, please do not change identifiers -->
 
 </resources>
