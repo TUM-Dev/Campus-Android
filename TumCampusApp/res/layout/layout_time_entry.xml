@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="@dimen/time_one_hour" >
+
+    <ImageView
+        android:id="@+id/entry"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha="0.5"
+        android:background="@color/sections_red" >
+    </ImageView>
+
+    <TextView
+        android:id="@+id/entry_title"
+        android:textStyle="bold"
+        android:textSize="@dimen/semilarge_text_size"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignLeft="@+id/entry"
+        android:layout_alignTop="@+id/entry"
+        android:gravity="center"
+        android:text="Event" />
+
+</RelativeLayout>

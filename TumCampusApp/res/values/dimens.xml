@@ -15,5 +15,12 @@
     <dimen name="section_text_size">15sp</dimen>
     <dimen name="section_padding">4dp</dimen>
     <dimen name="rythm_48dp">48dp</dimen>
+    <dimen name="time_gap">48dp</dimen>
+    <dimen name="time_one_hour">50dp</dimen>
+    <dimen name="time_line_thickness">2dp</dimen>
+    <dimen name="time_timeline_width">50dp</dimen>
+    <dimen name="time_timeline_height">1200dp</dimen>
+    <dimen name="time_entry_width">50dp</dimen>
+    <dimen name="time_entry_height">100dp</dimen>
 
 </resources>

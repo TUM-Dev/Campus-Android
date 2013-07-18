@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- START TODO Translate -->
+    <string name="schedule">Schedule</string>
+    <string name="schedule_extras">Your schedule</string>
+    <!-- END TODO Translate -->
+
     <!-- START Translated, please do not change identifiers -->
     <string name="lecture_schedule">Lecture Schedule</string>
     <string name="lecture_schedule_extra">Your lectures schedule</string>
@@ -56,7 +61,7 @@
     <string name="app_name">TUM Campus App</string>
     <string name="action_settings">Settings</string>
     <string name="generate_tumonline_token">Generate TUMOnline-Access-Token</string>
-    <string name="generate_tumonline_token_detail">Generates a token for using TUMOnline features. You
+    <string name="generate_tumonline_token_detail">Generates a Token for using TUMOnline features. You
 		have to accept the token and set the corresponding permissions in
 		TUMOnline by yourself.</string>
     <string name="action_clear_cache">Clear cache</string>
@@ -95,8 +100,6 @@
     <string name="tumonline_lrz_id">LRZ Identification</string>
     <string name="tumonline_access_token_word">TUMOnline-Access-Token</string>
     <string name="modules">Modules</string>
-    <string name="modules_act_deact">activate, deactivate</string>
-    <string name="tumonline_summary">e.g. access token settings</string>
     <string name="mensa_filter">Mensa filter</string>
     <string name="mensa_settings_info">e.g. "Garching" to list only the dining halls in
 		Garching</string>
@@ -148,7 +151,6 @@
     <string name="tumonline_settings">TUMOnline settings</string>
     <string name="data_and_settings">Data and settings</string>
     <string name="tum_logo">TUM Logo</string>
-    <string name="initial_download">Start: First time data download!</string>
     <string name="organisation_caption">organization</string>
     <string name="zoom_hint">tap two times on the plan to zoom in</string>
     <string name="choose_plan">Choose plan</string>
@@ -377,22 +379,22 @@
     <string name="token_not_enabled">TUMOnline-Access-Token is not enabled</string>
     <string name="startup_wizzard">Startup Wizzard</string>
     <string name="startup_wizzard_uppercase">STARTUP WIZZARD</string>
-	<string name="welcome_msg"><b>Welcome to TUM Campus App!</b>\n\nIn order to setup the TUMOnline access, you need to provide your <b>LRZ Identification</b>.\nThis Id has the following format:\n<i>xx00xxx</i> (2 letters, 2 digits, 3 letters)</string>
-	<string name="button_next">Next</string>
-	<string name="button_done">Done</string>
-	<string name="button_close">Close</string>
-	<string name="exit">Exit</string>
-	<string name="configured"><b>TUM Campus App configuration finished successfully</b>\n\nYou can start exploring the App now.</string>
-	<string name="need_to_enable"><b>The TUMOnline-Access-Token was successfully generated</b>\n\nYou can now enable the Token in TUMOnline.</string>
-	<string name="choose_color"><b>Choose you favorite color</b>\n\nYou can choose a color scheme for the TUM Campus App.</string>
-	<string name="blue">Blue</string>
-	<string name="red">Red</string>
-	<string name="green">Green</string>
-	<string name="gray">Gray</string>
-	<string name="step_1">Step 1</string>
-	<string name="step_2">Step 2</string>
-	<string name="step_3">Step 3</string>
-	<string name="finish">Finish</string>
-	<!-- END Translated, please do not change identifiers -->
+    <string name="welcome_msg"><b>Welcome to TUM Campus App!</b>\n\nIn order to setup the TUMOnline access, you need to provide your <b>LRZ Identification</b>.\nThis Id has the following format:\n<i>xx00xxx</i> (2 letters, 2 digits, 3 letters)</string>
+    <string name="button_next">Next</string>
+    <string name="button_done">Done</string>
+    <string name="button_close">Close</string>
+    <string name="exit">Exit</string>
+    <string name="configured"><b>TUM Campus App configuration finished successfully</b>\n\nYou can start exploring the App now.</string>
+    <string name="need_to_enable"><b>The TUMOnline-Access-Token was successfully generated</b>\n\nYou can now enable the Token in TUMOnline.</string>
+    <string name="choose_color"><b>Choose you favorite color</b>\n\nYou can choose a color scheme for the TUM Campus App.</string>
+    <string name="blue">Blue</string>
+    <string name="red">Red</string>
+    <string name="green">Green</string>
+    <string name="gray">Gray</string>
+    <string name="step_1">Step 1</string>
+    <string name="step_2">Step 2</string>
+    <string name="step_3">Step 3</string>
+    <string name="finish">Finish</string>
+    <!-- END Translated, please do not change identifiers -->
 
 </resources>

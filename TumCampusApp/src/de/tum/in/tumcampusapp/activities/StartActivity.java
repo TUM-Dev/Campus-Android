@@ -29,6 +29,7 @@ import de.tum.in.tumcampusapp.services.ImportService;
  * @author Sascha Moecker
  */
 public class StartActivity extends FragmentActivity {
+	public static final boolean TRACK_ERRORS_WITH_BUG_SENSE = false;
 	public static final int DEFAULT_SECTION = 1;
 	public static final String LAST_CHOOSEN_SECTION = "last_choosen_section";
 	public static final int REQ_CODE_COLOR_CHANGE = 0;
@@ -92,7 +93,9 @@ public class StartActivity extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 		
 		// Init a Bug Report to https://www.bugsense.com
-		BugSenseHandler.initAndStartSession(this, "19d18764");
+		if (TRACK_ERRORS_WITH_BUG_SENSE) {
+			BugSenseHandler.initAndStartSession(this, "19d18764");
+		}
 		
 		setContentView(R.layout.activity_start);
 
