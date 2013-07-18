@@ -68,14 +68,20 @@ public class AccessTokenManager implements OnClickListener {
 	}
 
 	// TODO Test this method
-	public boolean isAccessTokenConfirmed(String lrz_id) {
+	public boolean isAccessTokenConfirmed(String token) {
 		TUMOnlineRequest request = new TUMOnlineRequest("isTokenConfirmed");
-		request.setParameter("pToken", lrz_id);
+		request.setParameter("pToken", token);
 		String strTokenXml = request.fetch();
 		Log.d("RAWOUTPUT", strTokenXml);
 		return Boolean.parseBoolean(strTokenXml.substring(
 				strTokenXml.indexOf("<confirmed>") + "<confirmed>".length(),
 				strTokenXml.indexOf("</confirmed>")));
+	}
+	
+	// TODO Test this method
+	public boolean isAccessTokenConfirmed() {
+		String token = getAccessToken();
+		return isAccessTokenConfirmed(token);
 	}
 
 	@Override
@@ -83,6 +89,13 @@ public class AccessTokenManager implements OnClickListener {
 		if (which == DialogInterface.BUTTON_POSITIVE) {
 			requestAccessToken(getLrzId());
 		}
+	}
+	
+	private String getAccessToken() {
+		String accessToken = PreferenceManager
+				.getDefaultSharedPreferences(context).getString(
+						Const.ACCESS_TOKEN, "");
+		return accessToken;
 	}
 
 	/**

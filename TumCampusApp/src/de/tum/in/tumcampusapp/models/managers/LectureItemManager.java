@@ -65,6 +65,8 @@ public class LectureItemManager {
 				+ "id VARCHAR PRIMARY KEY, lectureId VARCHAR, start VARCHAR, "
 				+ "end VARCHAR, name VARCHAR, module VARCHAR, location VARCHAR, "
 				+ "note VARCHAR, url VARCHAR, seriesId VARCHAR)");
+		
+		new SyncManager(context);
 	}
 
 	/**
@@ -294,10 +296,12 @@ public class LectureItemManager {
 	 * @author Daniel G. Mayr
 	 * @throws Exception
 	 */
-	public void importFromTUMOnline(Context context) throws Exception {
+	public void importFromTUMOnline(Context context, boolean force) throws Exception {
+		boolean success = true;
+		
 		int count = Utils.dbGetTableCount(db, "lectures_items");
 
-		if (!SyncManager.needSync(db, this, TIME_TO_SYNC)) {
+		if (!force && !SyncManager.needSync(db, this, TIME_TO_SYNC)) {
 			return;
 		}
 
@@ -311,7 +315,8 @@ public class LectureItemManager {
 							Const.ACCESS_TOKEN, null);
 
 			if (accessToken == null || accessToken == "") {
-				throw new Exception("no access token set");
+				success = false;
+				throw new Exception("No access token set");
 			}
 
 			// get my lectures
@@ -330,6 +335,7 @@ public class LectureItemManager {
 				MyLecturesList = serializer.read(LecturesSearchRowSet.class,
 						strMine);
 			} catch (Exception e) {
+				success = false;
 				Log.d("SIMPLEXML", "wont work: " + e.getMessage());
 				e.printStackTrace();
 			}
@@ -353,6 +359,7 @@ public class LectureItemManager {
 					MyLectureTerminList = serializer.read(
 							LectureAppointmentsRowSet.class, strTermine);
 				} catch (Exception e) {
+					success = false;
 					Log.d("SIMPLEXML", "wont work: " + e.getMessage());
 					e.printStackTrace();
 				}
@@ -434,6 +441,7 @@ public class LectureItemManager {
 
 							}
 						} catch (Exception ex) {
+							success = false;
 							Log.d("TUMOnlineParseATask",
 									"the task could not be parsed");
 							ex.printStackTrace();
@@ -441,7 +449,9 @@ public class LectureItemManager {
 					}
 
 			}
-			SyncManager.replaceIntoDb(db, this);
+			if (success) {
+				SyncManager.replaceIntoDb(db, this);
+			}
 			db.setTransactionSuccessful();
 		} finally {
 			db.endTransaction();

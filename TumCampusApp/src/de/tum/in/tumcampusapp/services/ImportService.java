@@ -60,9 +60,9 @@ public class ImportService extends IntentService {
 	 * 
 	 * @author Daniel G. Mayr
 	 */
-	public void importLectureItemsFromTUMOnline() throws Exception {
+	public void importLectureItemsFromTUMOnline(boolean force) throws Exception {
 		LectureItemManager lim = new LectureItemManager(this);
-		lim.importFromTUMOnline(this);
+		lim.importFromTUMOnline(this, force);
 
 		LectureManager lm = new LectureManager(this);
 		lm.updateLectures();
@@ -165,10 +165,11 @@ public class ImportService extends IntentService {
 				Utils.log(e, "");
 			}
 		} else if (action.equals(Const.LECTURES_TUM_ONLINE)) {
+			boolean force = intent.getBooleanExtra(Const.FORCE_DOWNLOAD, false);
 			try {
 				message("Starting to imported lecture schedule from TUMOnline",
 						Const.LECTURES_TUM_ONLINE_START);
-				importLectureItemsFromTUMOnline();
+				importLectureItemsFromTUMOnline(force);
 				message("Successfully imported lectures schedule from TUMOnline",
 						Const.LECTURES_TUM_ONLINE_FINISH);
 			} catch (Exception e) {
