@@ -12,6 +12,8 @@ import android.support.v4.widget.SimpleCursorAdapter.ViewBinder;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.CalendarView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -23,15 +25,15 @@ import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.managers.LectureItemManager;
 import de.tum.in.tumcampusapp.preferences.UserPreferencesActivity;
-import de.tum.in.tumcampusapp.services.DownloadService;
 import de.tum.in.tumcampusapp.services.ImportService;
 
 public class LectureScheduleActivity extends ActivityForAccessingTumOnline
-		implements ViewBinder {
+		implements OnItemClickListener, ViewBinder {
+	AccessTokenManager accessTokenManager = new AccessTokenManager(this);
 	CalendarView calendar;
 	Context context = this;
-	AccessTokenManager accessTokenManager = new AccessTokenManager(this);
-	
+	ListView listView;
+
 	/**
 	 * Receiver for Services
 	 */
@@ -61,71 +63,6 @@ public class LectureScheduleActivity extends ActivityForAccessingTumOnline
 		super(Const.FETCH_NOTHING, R.layout.activity_lecturesschedule);
 	}
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-
-		requestImport(false);
-
-		// Registers receiver for download and import
-		IntentFilter intentFilter = new IntentFilter();
-		intentFilter.addAction(ImportService.BROADCAST_NAME);
-		registerReceiver(receiver, intentFilter);
-
-	}
-
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		unregisterReceiver(receiver);
-	}
-
-	@Override
-	public void onFetch(String rawResponse) {
-		// TODO Do something meaningful with the XML file containing all events
-		progressLayout.setVisibility(View.GONE);
-	}
-
-	private void requestImport(boolean force) {
-		errorLayout.setVisibility(View.GONE);
-		noTokenLayout.setVisibility(View.GONE);
-		failedTokenLayout.setVisibility(View.GONE);
-		progressLayout.setVisibility(View.GONE);
-		
-		// Get access token
-		String accessToken = PreferenceManager
-				.getDefaultSharedPreferences(this).getString(
-						Const.ACCESS_TOKEN, null);
-
-		// Check token if null
-		if (accessToken != null) {
-			if (Utils.isConnected(this)) {
-				if (!accessTokenManager.isAccessTokenConfirmed()) {
-					Toast.makeText(this, R.string.token_not_enabled,
-							Toast.LENGTH_SHORT).show();
-
-					failedTokenLayout.setVisibility(View.VISIBLE);
-				} else {
-					Intent service = new Intent(this, ImportService.class);
-					service.putExtra(Const.ACTION_EXTRA,
-							Const.LECTURES_TUM_ONLINE);
-					service.putExtra(Const.FORCE_DOWNLOAD, force);
-					startService(service);
-				}
-			} else {
-				Toast.makeText(this, R.string.no_internet_connection,
-						Toast.LENGTH_SHORT).show();
-				// Show error Sign if is nothing to display
-				if (!updateListWithLectures()) {
-					errorLayout.setVisibility(View.VISIBLE);
-				}
-			}
-		} else {
-			Log.i(getClass().getSimpleName(), "No token was set");
-			noTokenLayout.setVisibility(View.VISIBLE);
-		}
-	}
-	
 	public void onClick(View view) {
 		int viewId = view.getId();
 		switch (viewId) {
@@ -141,6 +78,52 @@ public class LectureScheduleActivity extends ActivityForAccessingTumOnline
 	}
 
 	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+
+		requestImport(false);
+
+		// Registers receiver for download and import
+		IntentFilter intentFilter = new IntentFilter();
+		intentFilter.addAction(ImportService.BROADCAST_NAME);
+		registerReceiver(receiver, intentFilter);
+
+		listView = (ListView) findViewById(R.id.listView);
+
+		listView.setOnItemClickListener(this);
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		unregisterReceiver(receiver);
+	}
+
+	@Override
+	public void onFetch(String rawResponse) {
+		// TODO Do something meaningful with the XML file containing all events
+		progressLayout.setVisibility(View.GONE);
+	}
+
+	@Override
+	public void onItemClick(AdapterView<?> av, View v, int position, long id) {
+
+		// click on lecture unit list
+		Cursor c = (Cursor) listView.getAdapter().getItem(position);
+		String url = c.getString(c.getColumnIndex(Const.URL_COLUMN));
+
+		// set bundle for LectureDetails and show it
+		Bundle bundle = new Bundle();
+		// we need the stp_sp_nr
+		bundle.putString("stp_sp_nr",
+				c.getString(c.getColumnIndex("lectureId")));
+		Intent intent = new Intent(this, LecturesDetailsActivity.class);
+		intent.putExtras(bundle);
+		// start LectureDetails for given stp_sp_nr
+		startActivity(intent);
+	}
+
+	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.action_update:
@@ -148,6 +131,39 @@ public class LectureScheduleActivity extends ActivityForAccessingTumOnline
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
+		}
+	}
+
+	private void requestImport(boolean force) {
+		errorLayout.setVisibility(View.GONE);
+		noTokenLayout.setVisibility(View.GONE);
+		failedTokenLayout.setVisibility(View.GONE);
+		progressLayout.setVisibility(View.GONE);
+
+		// Get access token
+		String accessToken = PreferenceManager
+				.getDefaultSharedPreferences(this).getString(
+						Const.ACCESS_TOKEN, null);
+
+		// Check token if null
+		if (Utils.isAccessTokenValid(accessToken)) {
+			if (Utils.isConnected(this)) {
+				Intent service = new Intent(this, ImportService.class);
+				service.putExtra(Const.ACTION_EXTRA, Const.LECTURES_TUM_ONLINE);
+				service.putExtra(Const.FORCE_DOWNLOAD, force);
+				startService(service);
+
+			} else {
+				Toast.makeText(this, R.string.no_internet_connection,
+						Toast.LENGTH_SHORT).show();
+				// Show error Sign if is nothing to display
+				if (!updateListWithLectures()) {
+					errorLayout.setVisibility(View.VISIBLE);
+				}
+			}
+		} else {
+			Log.i(getClass().getSimpleName(), "No token was set");
+			noTokenLayout.setVisibility(View.VISIBLE);
 		}
 	}
 
@@ -226,10 +242,10 @@ public class LectureScheduleActivity extends ActivityForAccessingTumOnline
 	private boolean updateListWithLectures() {
 		// get all upcoming lecture units
 		LectureItemManager lim = new LectureItemManager(this);
-		
+
 		// Cursor cursor = lim.getRecentFromDb();
 		Cursor cursor = lim.getAllFromDb();
-		
+
 		startManagingCursor(cursor);
 		if (cursor.getCount() == 0) {
 			return false;
@@ -237,13 +253,13 @@ public class LectureScheduleActivity extends ActivityForAccessingTumOnline
 
 		@SuppressWarnings("deprecation")
 		SimpleCursorAdapter adapter = new SimpleCursorAdapter(this,
-				R.layout.list_layout_two_line_item, cursor, cursor.getColumnNames(),
-				new int[] { android.R.id.text1, android.R.id.text2 });
+				R.layout.list_layout_two_line_item, cursor,
+				cursor.getColumnNames(), new int[] { android.R.id.text1,
+						android.R.id.text2 });
 
 		adapter.setViewBinder(this);
 
-		ListView list = (ListView) findViewById(R.id.listView);
-		list.setAdapter(adapter);
+		listView.setAdapter(adapter);
 		return true;
 	}
 }

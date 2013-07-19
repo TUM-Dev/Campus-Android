@@ -2,11 +2,13 @@
 <resources>
 
     <!-- START TODO Translate -->
-    <string name="schedule">Schedule</string>
-    <string name="schedule_extras">Your schedule</string>
     <!-- END TODO Translate -->
 
     <!-- START Translated, please do not change identifiers -->
+    <string name="enable_token_link"><html><a href='http://campus.tum.de'>Enable Token through TUM campus portal using Token-Management</a></html></string>
+    <string name="add_rss">Add RSS-Feed</string>
+    <string name="schedule">Schedule</string>
+    <string name="schedule_extras">Your schedule</string>
     <string name="lecture_schedule">Lecture Schedule</string>
     <string name="lecture_schedule_extra">Your lectures schedule</string>
     <string name="bib">Library</string>
@@ -50,7 +52,7 @@
     <string name="archived_events">Archived Events</string>
     <string name="no_appointments">"No appointments available"</string>
     <string name="information_addinfo">Additional information and links</string>
-    <string name="amount_dots">Amount:</string>
+    <string name="amount_dots">Outstanding balance:</string>
     <string name="deadline_dots">Deadline:</string>
     <string name="color_scheme">Color Scheme</string>
     <string name="color_scheme_summary">Your desired color scheme for this App.</string>
@@ -81,13 +83,13 @@
     <string name="add_rss_feed">Add RSS-Feed</string>
     <string name="personsearch_addinfo">Search for persons at TUM</string>
     <string name="lecturessearch_addinfo">Search for lectures at TUM</string>
-    <string name="plans_addinfo">Plans for TUM campus and MVV</string>
+    <string name="plans_addinfo">Plans for TUM Campus and MVV</string>
     <string name="roomfinder_addinfo">Search for rooms at TUM</string>
     <string name="studyplans_addinfo">Studyplans for study programs</string>
     <string name="openinghours_addinfo">Times for important institutions</string>
     <string name="lectures_addinfo">List of your lectures</string>
     <string name="grades_addinfo">List of your grades</string>
-    <string name="timetable_addinfo">Your current timetable</string>
+    <string name="timetable_addinfo">Your timetable</string>
     <string name="tuitionfee_addinfo">Information about the tuition fees</string>
     <string name="rssfeed_addinfo">Famous RSS-Feeds</string>
     <string name="tumnews_addinfo">News about TUM</string>
@@ -127,7 +129,7 @@
     <string name="examiner">Examiner</string>
     <string name="mode">Mode</string>
     <string name="choose_category">Select category</string>
-    <string name="lec_details_title">Introduction into course title</string>
+    <string name="lec_details_title">Course details</string>
     <string name="archive_gallery">Archive gallery</string>
     <string name="lec_dates">Lecture dates</string>
     <string name="lec_details">Details</string>
@@ -157,7 +159,7 @@
     <string name="search_caption">Search term:</string>
     <string name="search_help">Name or Keyword</string>
     <string name="search_station">Search station</string>
-    <string name="generate_token">Manually Generate TUMOnline-Access-Token</string>
+    <string name="generate_token">Manually generate TUMOnline-Access-Token</string>
     <string name="howto">HowTo</string>
     <string name="crash_notif_ticker_text">Unexpected error, please send a report!</string>
     <string name="crash_notif_title">TUMCampus has crashed!</string>
@@ -214,13 +216,13 @@
     <string name="informatics_master">Informatics Master</string>
     <string name="business_informatics_master">Business Informatics Master</string>
     <string name="bioinformatics_master">Bioinformatics Master</string>
-    <string name="automotive_master">Automotive SE Master</string>
+    <string name="automotive_master">Automotive Software Engineering Master</string>
     <string name="computational_science_master">Computational Science and Engineering</string>
     <string name="certificate_of_matriculation">Confirmation of enrollment</string>
     <string name="study_status">Study status</string>
     <string name="confirmation_about_payment">Confirmation about payment</string>
     <string name="load_doc">Load document?</string>
-    <string name="open_from_sd">Open from SD</string>
+    <string name="open_from_sd">Open from SD-Card</string>
     <string name="download_new">Download new</string>
     <string name="please_choose_doc">Please choose document!</string>
     <string name="load">Load</string>
@@ -310,7 +312,7 @@
     <string name="access_token_wasnt_generated">TUMOnline-Access-Token could not be generated</string>
     <string name="user_data">User data</string>
     <string name="tumonline_password">Password for TUMOnline</string>
-    <string name="tumonline_access_token">Access token for TUMOnline</string>
+    <string name="tumonline_access_token">TUMOnline-Access-Token</string>
     <string name="lrz_id_detail">Your LRZ Identification e.g. go42tum".</string>
     <string name="lrz_id">LRZ Identification"</string>
     <string name="updating">Updating …</string>
@@ -338,7 +340,7 @@
     <string name="settings">Settings</string>
     <string name="week_splitted">Su,Mo,Tu,We,Th,Fr,Sa</string>
     <string name="facility_categories_splitted">library,info,cafeteria_gar,cafeteria_grh,cafeteria,cafeteria_pas,cafeteria_wst</string>
-    <string name="access_token">AccessToken</string>
+    <string name="access_token">TUMOnline-Access-Token</string>
     <string name="dialog_access_token_missing">TUMOnline-Access-Token not set</string>
     <string name="dialog_access_token_invalid">TUMOnline-Access-Token not enabled</string>
     <string name="dialog_no_rights_function">No rights accessing this function</string>
@@ -377,8 +379,8 @@
     <string name="credits">ECTS</string>
     <string name="wizzard_on_startup">Do not show at next start</string>
     <string name="token_not_enabled">TUMOnline-Access-Token is not enabled</string>
-    <string name="startup_wizzard">Startup Wizzard</string>
-    <string name="startup_wizzard_uppercase">STARTUP WIZZARD</string>
+    <string name="startup_wizzard">Startup-Wizzard</string>
+    <string name="startup_wizzard_uppercase">STARTUP-WIZZARD</string>
     <string name="welcome_msg"><b>Welcome to TUM Campus App!</b>\n\nIn order to setup the TUMOnline access, you need to provide your <b>LRZ Identification</b>.\nThis Id has the following format:\n<i>xx00xxx</i> (2 letters, 2 digits, 3 letters)</string>
     <string name="button_next">Next</string>
     <string name="button_done">Done</string>

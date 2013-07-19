@@ -109,6 +109,21 @@ public class LectureItemManager {
 	}
 
 	/**
+	 * Get all lecture items from the database
+	 * 
+	 * @return Database cursor (name, location, _id)
+	 */
+	public Cursor getAllFromDb() {
+		return db
+				.rawQuery(
+						"SELECT name, note, location, strftime('%w', start) as weekday, "
+								+ "strftime('%H:%M', start) as start_de, strftime('%H:%M', end) as end_de, "
+								+ "strftime('%d.%m.%Y', start) as start_dt, strftime('%d.%m.%Y', end) as end_dt, "
+								+ "url, lectureId, id as _id FROM lectures_items ORDER BY start",
+						null);
+	}
+
+	/**
 	 * Get all lecture items for a special lecture from the database
 	 * 
 	 * <pre>
@@ -138,21 +153,6 @@ public class LectureItemManager {
 						"SELECT name, location, id as _id "
 								+ "FROM lectures_items WHERE datetime('now', 'localtime') BETWEEN start AND end AND "
 								+ "lectureId NOT IN ('holiday', 'vacation') LIMIT 1",
-						null);
-	}
-
-	/**
-	 * Get all lecture items from the database
-	 * 
-	 * @return Database cursor (name, location, _id)
-	 */
-	public Cursor getAllFromDb() {
-		return db
-				.rawQuery(
-						"SELECT name, note, location, strftime('%w', start) as weekday, "
-								+ "strftime('%H:%M', start) as start_de, strftime('%H:%M', end) as end_de, "
-								+ "strftime('%d.%m.%Y', start) as start_dt, strftime('%d.%m.%Y', end) as end_dt, "
-								+ "url, lectureId, id as _id FROM lectures_items ORDER BY start",
 						null);
 	}
 

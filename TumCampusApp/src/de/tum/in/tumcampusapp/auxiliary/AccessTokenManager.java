@@ -8,7 +8,6 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.tumonline.TUMOnlineConst;
 import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequest;
 
 public class AccessTokenManager implements OnClickListener {
@@ -51,11 +50,22 @@ public class AccessTokenManager implements OnClickListener {
 				strTokenXml.indexOf("</token>"));
 	}
 
+	private String getAccessToken() {
+		String accessToken = PreferenceManager.getDefaultSharedPreferences(
+				context).getString(Const.ACCESS_TOKEN, "");
+		return accessToken;
+	}
+
 	private String getLrzId() {
 		if (lrzId == null || lrzId == "") {
 			lrzId = Utils.getSetting(context, Const.LRZ_ID);
 		}
 		return lrzId;
+	}
+
+	// TODO Implement this
+	public boolean hasRightsForFunction(String function) {
+		return false;
 	}
 
 	public boolean hasValidAccessToken() {
@@ -68,6 +78,12 @@ public class AccessTokenManager implements OnClickListener {
 		}
 	}
 
+	public boolean isAccessTokenConfirmed() {
+		String token = getAccessToken();
+		return isAccessTokenConfirmed(token);
+	}
+
+	// TODO implement this as a asynch task
 	public boolean isAccessTokenConfirmed(String token) {
 		TUMOnlineRequest request = new TUMOnlineRequest("isTokenConfirmed");
 		request.setParameter("pToken", token);
@@ -77,29 +93,12 @@ public class AccessTokenManager implements OnClickListener {
 				strTokenXml.indexOf("<confirmed>") + "<confirmed>".length(),
 				strTokenXml.indexOf("</confirmed>")));
 	}
-	
-	public boolean isAccessTokenConfirmed() {
-		String token = getAccessToken();
-		return isAccessTokenConfirmed(token);
-	}
-	
-	// TODO Implement this
-	public boolean hasRightsForFunction(String function) {
-		return false;
-	}
 
 	@Override
 	public void onClick(DialogInterface dialog, int which) {
 		if (which == DialogInterface.BUTTON_POSITIVE) {
 			requestAccessToken(getLrzId());
 		}
-	}
-	
-	private String getAccessToken() {
-		String accessToken = PreferenceManager
-				.getDefaultSharedPreferences(context).getString(
-						Const.ACCESS_TOKEN, "");
-		return accessToken;
 	}
 
 	/**

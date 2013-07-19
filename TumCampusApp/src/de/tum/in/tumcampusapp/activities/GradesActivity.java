@@ -49,8 +49,6 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 	 */
 	@Override
 	public void onFetch(String rawResponse) {
-		Log.d(getClass().getSimpleName(), rawResponse);
-
 		Serializer serializer = new Persister();
 		examList = null;
 

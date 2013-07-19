@@ -68,8 +68,6 @@ public class LecturesPersonalActivity extends ActivityForAccessingTumOnline {
 
 	@Override
 	public void onFetch(String rawResponse) {
-		Log.d(getClass().getSimpleName(), rawResponse);
-
 		// deserialize the XML
 		Serializer serializer = new Persister();
 		try {
@@ -176,11 +174,11 @@ public class LecturesPersonalActivity extends ActivityForAccessingTumOnline {
 				Bundle bundle = new Bundle();
 				// we need the stp_sp_nr
 				bundle.putString("stp_sp_nr", item.getStp_sp_nr());
-				Intent i = new Intent(LecturesPersonalActivity.this,
+				Intent intent = new Intent(LecturesPersonalActivity.this,
 						LecturesDetailsActivity.class);
-				i.putExtras(bundle);
+				intent.putExtras(bundle);
 				// start LectureDetails for given stp_sp_nr
-				startActivity(i);
+				startActivity(intent);
 			}
 		});
 	}

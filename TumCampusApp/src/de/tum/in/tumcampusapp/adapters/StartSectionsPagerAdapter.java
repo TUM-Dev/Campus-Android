@@ -108,8 +108,8 @@ public class StartSectionsPagerAdapter extends FragmentPagerAdapter {
 					R.string.lecture_schedule, R.string.lecture_schedule_extra,
 					new Intent(activity, LectureScheduleActivity.class)));
 			listMenuEntrySet.add(new ListMenuEntry(R.drawable.calendar,
-					R.string.schedule, R.string.schedule_extras,
-					new Intent(activity, ScheduleActivity.class)));
+					R.string.schedule, R.string.schedule_extras, new Intent(
+							activity, ScheduleActivity.class)));
 			listMenuEntrySet.add(new ListMenuEntry(R.drawable.finance,
 					R.string.tuition_fees, R.string.tuitionfee_addinfo,
 					new Intent(activity, TuitionFeesActivity.class)));

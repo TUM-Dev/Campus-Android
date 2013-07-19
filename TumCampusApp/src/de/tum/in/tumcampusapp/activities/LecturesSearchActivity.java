@@ -94,8 +94,6 @@ public class LecturesSearchActivity extends ActivityForAccessingTumOnline
 
 	@Override
 	public void onFetch(String rawResponse) {
-		Log.d(getClass().getSimpleName(), rawResponse);
-
 		// deserialize the xml output
 		// we use simpleXML for this by providing a
 		// class which represents the xml-schema

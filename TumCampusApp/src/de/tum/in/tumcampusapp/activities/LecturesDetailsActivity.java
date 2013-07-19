@@ -106,8 +106,6 @@ public class LecturesDetailsActivity extends ActivityForAccessingTumOnline
 	 */
 	@Override
 	public void onFetch(String rawResponse) {
-		Log.d(getClass().getSimpleName(), rawResponse);
-
 		// deserialize
 		Serializer serializer = new Persister();
 		try {

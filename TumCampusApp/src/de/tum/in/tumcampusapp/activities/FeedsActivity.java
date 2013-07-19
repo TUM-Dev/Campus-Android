@@ -109,7 +109,7 @@ public class FeedsActivity extends Activity implements OnItemClickListener,
 		case R.id.action_add:
 			final Dialog dialog = new Dialog(this);
 			dialog.setContentView(R.layout.dialog_feeds_add);
-			dialog.setTitle("Add RSS-Feed");
+			dialog.setTitle(R.string.add_rss);
 			Button saveButton = (Button) dialog.findViewById(R.id.save);
 			saveButton.setOnClickListener(new OnClickListener() {
 				@Override

@@ -1,7 +1,5 @@
 package de.tum.in.tumcampusapp.activities;
 
-import com.bugsense.trace.BugSenseHandler;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -15,6 +13,9 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import com.bugsense.trace.BugSenseHandler;
+
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.wizzard.WizNavColorActivity;
 import de.tum.in.tumcampusapp.activities.wizzard.WizNavStartActivity;
@@ -29,10 +30,10 @@ import de.tum.in.tumcampusapp.services.ImportService;
  * @author Sascha Moecker
  */
 public class StartActivity extends FragmentActivity {
-	public static final boolean TRACK_ERRORS_WITH_BUG_SENSE = false;
 	public static final int DEFAULT_SECTION = 1;
 	public static final String LAST_CHOOSEN_SECTION = "last_choosen_section";
 	public static final int REQ_CODE_COLOR_CHANGE = 0;
+	public static final boolean TRACK_ERRORS_WITH_BUG_SENSE = false;
 
 	/**
 	 * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -91,12 +92,12 @@ public class StartActivity extends FragmentActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		// Init a Bug Report to https://www.bugsense.com
 		if (TRACK_ERRORS_WITH_BUG_SENSE) {
 			BugSenseHandler.initAndStartSession(this, "19d18764");
 		}
-		
+
 		setContentView(R.layout.activity_start);
 
 		// Workaround for new API version. There was a security update which
