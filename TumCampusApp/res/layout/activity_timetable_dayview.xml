@@ -328,6 +328,12 @@
                 android:layout_alignParentLeft="true"
                 android:layout_alignRight="@+id/timeline"
                 android:text="23:00" />
+            <TextView
+                style="@style/TimeSectionTime"
+                android:layout_alignBottom="@+id/hour23"
+                android:layout_alignParentLeft="true"
+                android:layout_alignRight="@+id/timeline"
+                android:text="24:00" />
         </RelativeLayout>
     </ScrollView>
 
