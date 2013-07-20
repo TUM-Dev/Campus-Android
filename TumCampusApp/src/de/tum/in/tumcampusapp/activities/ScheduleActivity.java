@@ -2,7 +2,6 @@ package de.tum.in.tumcampusapp.activities;
 
 import java.io.StringReader;
 import java.util.ArrayList;
-import java.util.Date;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -12,7 +11,6 @@ import org.xml.sax.XMLReader;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
 import android.view.View;
 import android.widget.RelativeLayout;
 import de.tum.in.tumcampusapp.R;
@@ -48,10 +46,7 @@ public class ScheduleActivity extends ActivityForAccessingTumOnline {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
 		mainScheduleLayout = (RelativeLayout) findViewById(R.id.main_schedule_layout);
-
-		updateCalendarWithXML(fetchedMock);
 	}
 	
 	private void updateCalendarWithXML(String fetchedXml) {

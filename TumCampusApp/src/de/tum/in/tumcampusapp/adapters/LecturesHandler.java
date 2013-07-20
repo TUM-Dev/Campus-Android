@@ -30,6 +30,7 @@ public class LecturesHandler extends DefaultHandler {
 	public static final String TAG_TITLE = "title";
 	public static final String TAG_START = "dtstart";
 	public static final String TAG_END = "dtend";
+	public static final String TAG_LOCATION = "location";
 
 	// Buffer for parsing
 	StringBuffer buff;
@@ -70,6 +71,11 @@ public class LecturesHandler extends DefaultHandler {
 		TextView textView = (TextView) entry.findViewById(R.id.entry_title);
 		textView.setText(text);
 	}
+	
+	private void appendText(RelativeLayout entry, String text) {
+		TextView textView = (TextView) entry.findViewById(R.id.entry_title);
+		textView.append(text);
+	}
 
 	public LecturesHandler(Context context) {
 		this.context = context;
@@ -95,8 +101,14 @@ public class LecturesHandler extends DefaultHandler {
 			setStartOfEntry(params, start / 60f);
 			lecture.setLayoutParams(params);
 
+			Log.d("Date", "getDay " + date.getDay());
+			Log.d("Date", "getDate " + date.getDate());
+			Log.d("Date", "getMonth " + date.getMonth());
+			Log.d("Date", "getYear " + date.getYear());
+			Log.d("Date", "new Date() " + new Date().toGMTString());
+			
 			// Add event layout to list
-			if (date.getDay() == 2) {
+			if (date.getDate() == 20 && date.getMonth() == 5 && date.getYear() == 113) {
 				lectureList.add(lecture);
 			}
 		}
@@ -111,6 +123,9 @@ public class LecturesHandler extends DefaultHandler {
 			date = Utils.getISODateTime(buff.toString());
 			end = date.getHours() * 60 + date.getMinutes();
 			hours = (end - start) / 60f;
+		}
+		if (localName.equals(TAG_LOCATION)) {
+			appendText(lecture, "\n" + buff.toString());
 		}
 	}
 

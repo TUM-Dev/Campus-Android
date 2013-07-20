@@ -81,7 +81,6 @@ public class LectureScheduleActivity extends ActivityForAccessingTumOnline
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		requestImport(false);
 
 		// Registers receiver for download and import
 		IntentFilter intentFilter = new IntentFilter();
@@ -89,8 +88,9 @@ public class LectureScheduleActivity extends ActivityForAccessingTumOnline
 		registerReceiver(receiver, intentFilter);
 
 		listView = (ListView) findViewById(R.id.listView);
-
 		listView.setOnItemClickListener(this);
+		
+		requestImport(false);
 	}
 
 	@Override
@@ -101,7 +101,6 @@ public class LectureScheduleActivity extends ActivityForAccessingTumOnline
 
 	@Override
 	public void onFetch(String rawResponse) {
-		// TODO Do something meaningful with the XML file containing all events
 		progressLayout.setVisibility(View.GONE);
 	}
 
