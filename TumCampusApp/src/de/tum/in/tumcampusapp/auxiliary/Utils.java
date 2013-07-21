@@ -229,6 +229,7 @@ public class Utils {
 			}
 		}).start();
 	}
+	
 
 	/**
 	 * Download an icon in the same thread

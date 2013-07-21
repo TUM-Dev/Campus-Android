@@ -1,5 +1,6 @@
 ﻿package de.tum.in.tumcampusapp.models.managers;
 
+import java.io.FileOutputStream;
 import java.net.URLEncoder;
 
 import org.json.JSONArray;
@@ -8,6 +9,8 @@ import org.json.JSONObject;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.Gallery;
 
@@ -15,6 +18,9 @@ import de.tum.in.tumcampusapp.models.Gallery;
  * Gallery Manager, handles database stuff, external imports
  */
 public class GalleryManager {
+	public static final String TUMB_ADDITION = "_thumb";
+	public static final String FILE_TYPE = ".jpg";
+	
 	/**
 	 * Last insert counter
 	 */
@@ -50,10 +56,21 @@ public class GalleryManager {
 		String id = json.getString("id");
 
 		String target = Utils.getCacheDir("gallery/cache") + id + ".jpg";
+		String targetImageThumbnail = Utils.getCacheDir("gallery/cache") + id + TUMB_ADDITION + ".jpg";
 
 		Utils.downloadFileThread(json.getString("source"), target);
+		
+		Bitmap sourceImage = BitmapFactory.decodeFile(target);
+		Bitmap thumbail = Bitmap.createScaledBitmap(sourceImage, 200, 200, false);
+		
+		try {
+		       FileOutputStream out = new FileOutputStream(targetImageThumbnail);
+		       thumbail.compress(Bitmap.CompressFormat.JPEG, 60, out);
+		} catch (Exception e) {
+		       e.printStackTrace();
+		}
 
-		return new Gallery(id, json.getString("name"), target,
+		return new Gallery(id, json.getString("name"), targetImageThumbnail,
 				String.valueOf(position++), json.has("archive"));
 	}
 

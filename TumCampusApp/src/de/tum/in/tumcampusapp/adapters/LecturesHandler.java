@@ -31,14 +31,18 @@ public class LecturesHandler extends DefaultHandler {
 	public static final String TAG_START = "dtstart";
 	public static final String TAG_END = "dtend";
 	public static final String TAG_LOCATION = "location";
-
+	public static final String TAG_DESCRIPTION = "description";
+	public static final String TAG_STATUS = "status";
+	
 	// Buffer for parsing
 	StringBuffer buff;
 	private Context context;
+	private Date requestedDate;
 
 	private float hours;
 	private float start;
 	private float end;
+	private boolean isEventDeletedOrPostponed;
 	private Date date;
 
 	private RelativeLayout lecture;
@@ -51,6 +55,10 @@ public class LecturesHandler extends DefaultHandler {
 
 		return (RelativeLayout) layoutInflater.inflate(
 				R.layout.layout_time_entry, null);
+	}
+	
+	public void setRequestedDate(Date requestedDate) {
+		this.requestedDate = requestedDate;
 	}
 
 	private LayoutParams initLayoutParams(float hours) {
@@ -71,7 +79,7 @@ public class LecturesHandler extends DefaultHandler {
 		TextView textView = (TextView) entry.findViewById(R.id.entry_title);
 		textView.setText(text);
 	}
-	
+
 	private void appendText(RelativeLayout entry, String text) {
 		TextView textView = (TextView) entry.findViewById(R.id.entry_title);
 		textView.append(text);
@@ -96,19 +104,17 @@ public class LecturesHandler extends DefaultHandler {
 	public void endElement(String namespaceURI, String localName, String qName) {
 
 		if (localName.equals(TAG_EVENT)) {
+			if (isEventDeletedOrPostponed) {
+				return;
+			}
 			// Set params to eventLayout
 			LayoutParams params = initLayoutParams(hours);
 			setStartOfEntry(params, start / 60f);
 			lecture.setLayoutParams(params);
-
-			Log.d("Date", "getDay " + date.getDay());
-			Log.d("Date", "getDate " + date.getDate());
-			Log.d("Date", "getMonth " + date.getMonth());
-			Log.d("Date", "getYear " + date.getYear());
-			Log.d("Date", "new Date() " + new Date().toGMTString());
-			
+		
 			// Add event layout to list
-			if (date.getDate() == 20 && date.getMonth() == 5 && date.getYear() == 113) {
+			if (date.getDate() == requestedDate.getDate() && date.getMonth() == requestedDate.getMonth()
+					&& date.getYear() == requestedDate.getYear()) {
 				lectureList.add(lecture);
 			}
 		}
@@ -125,10 +131,17 @@ public class LecturesHandler extends DefaultHandler {
 			hours = (end - start) / 60f;
 		}
 		if (localName.equals(TAG_LOCATION)) {
-			appendText(lecture, "\n" + buff.toString());
+		}
+		if (localName.equals(TAG_DESCRIPTION)) {
+		}
+		if (localName.equals(TAG_STATUS)) {
+			if (buff.toString().contains("CANCEL")) {
+				isEventDeletedOrPostponed = true;
+			} else {
+				isEventDeletedOrPostponed = false;
+			}
 		}
 	}
-
 	public ArrayList<RelativeLayout> getLectureList() {
 		return lectureList;
 	}

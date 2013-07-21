@@ -35,7 +35,7 @@
             android:id="@+id/list_menu_detail"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="4px"
+            android:layout_marginTop="0px"
             android:layout_weight="1"
             android:gravity="center_vertical"
             android:text="list_menu_detail"

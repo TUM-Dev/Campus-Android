@@ -14,7 +14,7 @@
     <string name="identifier">Kennung</string>
     <string name="today">Heute</string>
     <string name="open_wizzard">Öffne Startup-Wizzard</string>
-    <string name="open_wizzard_detail">Der Startup-Wizzard hilft dir grundlegende Einstellungen für den Zugriff auf TUMOnline Dienste einzurichten und das Layout der App festzulegen.</string>
+    <string name="open_wizzard_detail">Der Startup-Wizzard hilft dir, grundlegende Einstellungen für den Zugriff auf TUMOnline Dienste einzurichten und das Farbschema der App festzulegen.</string>
     <string name="extras">Extras</string>
     <string name="no_departures_found">Keine Abfahrtszeiten verfügbar</string>
     <string name="no_station_found">Keine Stationen gefunden</string>
@@ -87,11 +87,11 @@
     <string name="timetable_addinfo">Dein Zeitplan</string>
     <string name="tuitionfee_addinfo">Informationen über Rückmeldegebühren</string>
     <string name="rssfeed_addinfo">Bekannte RSS-Feeds</string>
-    <string name="tumnews_addinfo">News über die TUM</string>
+    <string name="tumnews_addinfo">Neuigkeiten über die TUM</string>
     <string name="events_addinfo">Events an der TUM</string>
-    <string name="gallery_addinfo">Event Ankündigungen</string>
-    <string name="mvv_addinfo">Abfahrtszeiten der MVV</string>
-    <string name="cafeteria_addinfo">Speispläne aller Mensen</string>
+    <string name="gallery_addinfo">Ankündigungen von Events</string>
+    <string name="mvv_addinfo">Abfahrtszeiten des MVV</string>
+    <string name="cafeteria_addinfo">Speisepläne aller Mensen</string>
     <string name="search_persons">Suche nach Personen</string>
     <string name="tumonline_password_word">TUMOnline Passwort</string>
     <string name="tumonline_lrz_id">LRZ Kennung</string>
