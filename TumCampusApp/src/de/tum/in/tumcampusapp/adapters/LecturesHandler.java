@@ -26,67 +26,36 @@ import de.tum.in.tumcampusapp.auxiliary.Utils;
 
 public class LecturesHandler extends DefaultHandler {
 
-	public static final String TAG_EVENT = "event";
-	public static final String TAG_TITLE = "title";
-	public static final String TAG_START = "dtstart";
-	public static final String TAG_END = "dtend";
-	public static final String TAG_LOCATION = "location";
 	public static final String TAG_DESCRIPTION = "description";
+	public static final String TAG_END = "dtend";
+	public static final String TAG_EVENT = "event";
+	public static final String TAG_LOCATION = "location";
+	public static final String TAG_START = "dtstart";
 	public static final String TAG_STATUS = "status";
-	
+	public static final String TAG_TITLE = "title";
+
 	// Buffer for parsing
 	StringBuffer buff;
 	private Context context;
-	private Date requestedDate;
-
-	private float hours;
-	private float start;
-	private float end;
-	private boolean isEventDeletedOrPostponed;
 	private Date date;
 
+	private float end;
+	private float hours;
+	private boolean isEventDeletedOrPostponed;
 	private RelativeLayout lecture;
 	// OrganisationDetails Object to load parsed data into
 	private ArrayList<RelativeLayout> lectureList = new ArrayList<RelativeLayout>();
 
-	private RelativeLayout inflateEntry() {
-		LayoutInflater layoutInflater = (LayoutInflater) context
-				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+	private Date requestedDate;
+	private float start;
 
-		return (RelativeLayout) layoutInflater.inflate(
-				R.layout.layout_time_entry, null);
-	}
-	
-	public void setRequestedDate(Date requestedDate) {
-		this.requestedDate = requestedDate;
-	}
-
-	private LayoutParams initLayoutParams(float hours) {
-		int oneHourHeight = (int) context.getResources().getDimension(
-				R.dimen.time_one_hour);
-		int height = (int) (oneHourHeight * hours);
-		return new LayoutParams(LayoutParams.MATCH_PARENT, height);
-	}
-
-	private void setStartOfEntry(LayoutParams params, float start) {
-		int oneHourHeight = (int) context.getResources().getDimension(
-				R.dimen.time_one_hour);
-		int marginTop = (int) (oneHourHeight * start);
-		params.setMargins(0, marginTop, 0, 0);
-	}
-
-	private void setText(RelativeLayout entry, String text) {
-		TextView textView = (TextView) entry.findViewById(R.id.entry_title);
-		textView.setText(text);
+	public LecturesHandler(Context context) {
+		this.context = context;
 	}
 
 	private void appendText(RelativeLayout entry, String text) {
 		TextView textView = (TextView) entry.findViewById(R.id.entry_title);
 		textView.append(text);
-	}
-
-	public LecturesHandler(Context context) {
-		this.context = context;
 	}
 
 	@Override
@@ -111,9 +80,13 @@ public class LecturesHandler extends DefaultHandler {
 			LayoutParams params = initLayoutParams(hours);
 			setStartOfEntry(params, start / 60f);
 			lecture.setLayoutParams(params);
-		
+
+			Log.d("event-date", date.toGMTString());
+			Log.d("requested-date", requestedDate.toGMTString());
+
 			// Add event layout to list
-			if (date.getDate() == requestedDate.getDate() && date.getMonth() == requestedDate.getMonth()
+			if (date.getDate() == requestedDate.getDate()
+					&& date.getMonth() == requestedDate.getMonth()
 					&& date.getYear() == requestedDate.getYear()) {
 				lectureList.add(lecture);
 			}
@@ -142,8 +115,40 @@ public class LecturesHandler extends DefaultHandler {
 			}
 		}
 	}
+
 	public ArrayList<RelativeLayout> getLectureList() {
 		return lectureList;
+	}
+
+	private RelativeLayout inflateEntry() {
+		LayoutInflater layoutInflater = (LayoutInflater) context
+				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+		return (RelativeLayout) layoutInflater.inflate(
+				R.layout.layout_time_entry, null);
+	}
+
+	private LayoutParams initLayoutParams(float hours) {
+		int oneHourHeight = (int) context.getResources().getDimension(
+				R.dimen.time_one_hour);
+		int height = (int) (oneHourHeight * hours);
+		return new LayoutParams(LayoutParams.MATCH_PARENT, height);
+	}
+
+	public void setRequestedDate(Date requestedDate) {
+		this.requestedDate = requestedDate;
+	}
+
+	private void setStartOfEntry(LayoutParams params, float start) {
+		int oneHourHeight = (int) context.getResources().getDimension(
+				R.dimen.time_one_hour);
+		int marginTop = (int) (oneHourHeight * start);
+		params.setMargins(0, marginTop, 0, 0);
+	}
+
+	private void setText(RelativeLayout entry, String text) {
+		TextView textView = (TextView) entry.findViewById(R.id.entry_title);
+		textView.setText(text);
 	}
 
 	@Override

@@ -81,7 +81,6 @@ public class LectureScheduleActivity extends ActivityForAccessingTumOnline
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-
 		// Registers receiver for download and import
 		IntentFilter intentFilter = new IntentFilter();
 		intentFilter.addAction(ImportService.BROADCAST_NAME);
@@ -89,7 +88,7 @@ public class LectureScheduleActivity extends ActivityForAccessingTumOnline
 
 		listView = (ListView) findViewById(R.id.listView);
 		listView.setOnItemClickListener(this);
-		
+
 		requestImport(false);
 	}
 

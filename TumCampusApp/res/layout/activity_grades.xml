@@ -31,6 +31,7 @@
     <ListView
         android:id="@+id/lstGrades"
         android:layout_width="fill_parent"
+        android:choiceMode="none"
         android:layout_height="wrap_content" />
 
 </LinearLayout>

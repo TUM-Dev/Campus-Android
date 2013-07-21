@@ -18,9 +18,7 @@ import de.tum.in.tumcampusapp.models.Gallery;
  * Gallery Manager, handles database stuff, external imports
  */
 public class GalleryManager {
-	public static final String TUMB_ADDITION = "_thumb";
 	public static final String FILE_TYPE = ".jpg";
-	
 	/**
 	 * Last insert counter
 	 */
@@ -33,6 +31,8 @@ public class GalleryManager {
 	public static int position = 0;
 
 	public static int TIME_TO_SYNC = 86400; // 1 day
+
+	public static final String TUMB_ADDITION = "_thumb";
 
 	/**
 	 * Convert JSON object to Gallery, download gallery picture
@@ -56,18 +56,20 @@ public class GalleryManager {
 		String id = json.getString("id");
 
 		String target = Utils.getCacheDir("gallery/cache") + id + ".jpg";
-		String targetImageThumbnail = Utils.getCacheDir("gallery/cache") + id + TUMB_ADDITION + ".jpg";
+		String targetImageThumbnail = Utils.getCacheDir("gallery/cache") + id
+				+ TUMB_ADDITION + ".jpg";
 
 		Utils.downloadFileThread(json.getString("source"), target);
-		
+
 		Bitmap sourceImage = BitmapFactory.decodeFile(target);
-		Bitmap thumbail = Bitmap.createScaledBitmap(sourceImage, 200, 200, false);
-		
+		Bitmap thumbail = Bitmap.createScaledBitmap(sourceImage, 200, 200,
+				false);
+
 		try {
-		       FileOutputStream out = new FileOutputStream(targetImageThumbnail);
-		       thumbail.compress(Bitmap.CompressFormat.JPEG, 60, out);
+			FileOutputStream out = new FileOutputStream(targetImageThumbnail);
+			thumbail.compress(Bitmap.CompressFormat.JPEG, 60, out);
 		} catch (Exception e) {
-		       e.printStackTrace();
+			e.printStackTrace();
 		}
 
 		return new Gallery(id, json.getString("name"), targetImageThumbnail,

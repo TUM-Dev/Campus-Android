@@ -21,6 +21,13 @@ public class TimetableActivity extends ActivityForAccessingTumOnline {
 		super.onCreate(savedInstanceState);
 		timetable = (TextView) findViewById(R.id.timetable);
 
+		// Set the timespace between now and after this date and before this
+		// date
+		// Dates before the current date
+		requestHandler.setParameter("pMonateVor", "1");
+		// Dates after the current date
+		requestHandler.setParameter("pMonateNach", "3");
+
 		super.requestFetch();
 	}
 

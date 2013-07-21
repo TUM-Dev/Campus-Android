@@ -20,16 +20,36 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampusapp.adapters.LecturesHandler;
 import de.tum.in.tumcampusapp.auxiliary.Const;
+import de.tum.in.tumcampusapp.auxiliary.Utils;
 
 public class ScheduleActivity extends ActivityForAccessingTumOnline {
-	RelativeLayout mainScheduleLayout;
-	ArrayList<RelativeLayout> scheduleList;
-	String rawResponse;
 	Date currentDate = new Date();
 	DatePicker datePicker;
+	RelativeLayout mainScheduleLayout;
+	String rawResponse;
+	ArrayList<RelativeLayout> scheduleList;
 
 	public ScheduleActivity() {
-		super(Const.KALENDER, R.layout.activity_timetable_dayview);
+		super(Const.KALENDER, R.layout.activity_schedule);
+	}
+
+	@Override
+	public void onClick(View view) {
+		super.onClick(view);
+		switch (view.getId()) {
+		case R.id.btn_change:
+			String dateAsString;
+
+			dateAsString = String.valueOf(datePicker.getYear()) + "-"
+					+ String.valueOf(datePicker.getMonth() + 1) + "-"
+					+ String.valueOf(datePicker.getDayOfMonth()) + " 12:00:00";
+			// "yyyy-MM-dd HH:mm:ss"
+			currentDate = Utils.getISODateTime(dateAsString);
+
+			Log.i("currentDate", currentDate.toGMTString());
+			updateCalendarWithXML(currentDate);
+			break;
+		}
 	}
 
 	@Override
@@ -37,32 +57,15 @@ public class ScheduleActivity extends ActivityForAccessingTumOnline {
 		super.onCreate(savedInstanceState);
 		mainScheduleLayout = (RelativeLayout) findViewById(R.id.main_schedule_layout);
 		datePicker = (DatePicker) findViewById(R.id.datePicker);
-	}
 
-	private void updateCalendarWithXML(Date date) {
-		if (this.rawResponse != null) {
-			mainScheduleLayout.removeAllViews();
-			scheduleList = parseEvents(date);
-			Log.i("found", String.valueOf(scheduleList.size()));
-			for (RelativeLayout entry : scheduleList) {
-				mainScheduleLayout.addView(entry);
-			}
-		} else {
-			Toast.makeText(this, "Please fetch first", Toast.LENGTH_SHORT).show();
-		}
-	}
-	
-	@Override
-	public void onClick(View view) {
-		super.onClick(view);
-		switch (view.getId()) {
-		case R.id.btn_change:
-			// currentDate.setDate(currentDate.getDate() - 1);
-			currentDate = new Date(datePicker.getYear(),datePicker.getMonth() + 1,datePicker.getDayOfMonth());
-			Log.i("currentDate", currentDate.toGMTString());
-			updateCalendarWithXML(currentDate);
-			break;
-		}
+		// Set the timespace between now and after this date and before this
+		// date
+		// Dates before the current date
+		requestHandler.setParameter("pMonateVor", "1");
+		// Dates after the current date
+		requestHandler.setParameter("pMonateNach", "3");
+
+		super.requestFetch();
 	}
 
 	@Override
@@ -71,7 +74,7 @@ public class ScheduleActivity extends ActivityForAccessingTumOnline {
 		updateCalendarWithXML(currentDate);
 		progressLayout.setVisibility(View.GONE);
 	}
-	
+
 	private ArrayList<RelativeLayout> parseEvents(Date date) {
 
 		/* Get a SAXParser from the SAXPArserFactory. */
@@ -85,11 +88,8 @@ public class ScheduleActivity extends ActivityForAccessingTumOnline {
 			/* Create a new ContentHandler and apply it to the XML-Reader */
 			LecturesHandler lecturesHandler = new LecturesHandler(this);
 
-			Date dateFixed = new Date(date.getYear()-1900, date.getMonth()-1, date.getDate());
-			Log.i("dateFixed", dateFixed.toGMTString());
-
-			lecturesHandler
-					.setRequestedDate(dateFixed);
+			// Set the requested date
+			lecturesHandler.setRequestedDate(date);
 
 			xmlReader.setContentHandler(lecturesHandler);
 
@@ -104,5 +104,19 @@ public class ScheduleActivity extends ActivityForAccessingTumOnline {
 		}
 		/* Parsing has finished. */
 		return null;
+	}
+
+	private void updateCalendarWithXML(Date date) {
+		if (this.rawResponse != null) {
+			mainScheduleLayout.removeAllViews();
+			scheduleList = parseEvents(date);
+			Log.i("found", String.valueOf(scheduleList.size()));
+			for (RelativeLayout entry : scheduleList) {
+				mainScheduleLayout.addView(entry);
+			}
+		} else {
+			Toast.makeText(this, "Please fetch first", Toast.LENGTH_SHORT)
+					.show();
+		}
 	}
 }

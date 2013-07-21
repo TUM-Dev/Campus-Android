@@ -229,7 +229,6 @@ public class Utils {
 			}
 		}).start();
 	}
-	
 
 	/**
 	 * Download an icon in the same thread
@@ -506,26 +505,6 @@ public class Utils {
 	 * @return Date
 	 * </pre>
 	 */
-	public static Date getISODateTime(String str) {
-		// TODO Who handles exception?
-		try {
-			SimpleDateFormat dateFormat = new SimpleDateFormat(
-					"yyyy-MM-dd HH:mm:ss");
-			return dateFormat.parse(str);
-		} catch (Exception e) {
-			log(e, str);
-		}
-		return new Date();
-	}
-	
-	/**
-	 * Converts a datetime-string to Date
-	 * 
-	 * <pre>
-	 * @param str String with ISO-DateTime (yyyy-mm-ddThh:mm:ss)
-	 * @return Date
-	 * </pre>
-	 */
 	public static Date getDateTime(String str) {
 		// TODO Who handles exception?
 		try {
@@ -608,6 +587,26 @@ public class Utils {
 		webView.setHorizontalScrollBarEnabled(true);
 		webView.getSettings().setUseWideViewPort(true);
 		return webView;
+	}
+
+	/**
+	 * Converts a datetime-string to Date
+	 * 
+	 * <pre>
+	 * @param str String with ISO-DateTime (yyyy-mm-ddThh:mm:ss)
+	 * @return Date
+	 * </pre>
+	 */
+	public static Date getISODateTime(String str) {
+		// TODO Who handles exception?
+		try {
+			SimpleDateFormat dateFormat = new SimpleDateFormat(
+					"yyyy-MM-dd HH:mm:ss");
+			return dateFormat.parse(str);
+		} catch (Exception e) {
+			log(e, str);
+		}
+		return new Date();
 	}
 
 	/**

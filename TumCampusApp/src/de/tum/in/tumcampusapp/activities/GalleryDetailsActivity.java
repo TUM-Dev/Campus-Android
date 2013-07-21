@@ -8,7 +8,6 @@ import android.webkit.WebView;
 import android.widget.TextView;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.auxiliary.PersonalLayoutManager;
-import de.tum.in.tumcampusapp.models.Gallery;
 import de.tum.in.tumcampusapp.models.managers.GalleryManager;
 
 /**
@@ -30,7 +29,7 @@ public class GalleryDetailsActivity extends Activity {
 
 		String name = c.getString(c.getColumnIndex("name"));
 		String image = c.getString(c.getColumnIndex("image"));
-		
+
 		image = image.replace(GalleryManager.TUMB_ADDITION, "");
 
 		TextView tv = (TextView) findViewById(R.id.activity_gallery_details_infos);
