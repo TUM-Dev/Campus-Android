@@ -183,7 +183,6 @@ public class DownloadService extends IntentService {
 		} catch (Exception e) {
 			Log.e(getClass().getSimpleName(),
 					"Unkown error while handling action <" + action + ">");
-			Log.e(getClass().getSimpleName(), e.getMessage());
 			if (!isDestroyed) {
 				broadcastError(getResources().getString(
 						R.string.exception_unknown));

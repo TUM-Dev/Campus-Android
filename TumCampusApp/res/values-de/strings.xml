@@ -2,6 +2,10 @@
 <resources>
 
     <!-- START Translated -->
+    <string name="goto_tumcampus">Starte TUM Campus App</string>
+    <string name="success_clear_cache">Daten erfolgreich gelöscht</string>
+    <string name="clear_cache_detail">Löscht alle durch die TUM Campus App heruntergeladenen, auf der SD-Karte gespeicherten Daten.</string>
+    <string name="clear_cache">Lösche Daten</string>
     <string name="enable_token_link"><a href="http://campus.tum.de">Aktiviere das Token über das Token-Management auf TUMOnline</a></string>
     <string name="add_rss">Füge RSS-Feed hinzu</string>
     <string name="schedule">Kalender</string>
@@ -369,7 +373,7 @@
 		\n\nThe source code is available through Github and may be requested from the project manager in the most recent version.
 		\n\n18th August 2013\n</string>
     <string name="credits">ECTS</string>
-    <string name="wizzard_on_startup">Beim nächsten mal nicht anzeigen</string>
+    <string name="wizzard_on_startup">Beim nächsten Start nicht mehr anzeigen</string>
     <string name="token_not_enabled">TUMOnline-Access-Token ist nicht aktiviert</string>
     <string name="startup_wizzard">Startup-Wizzard</string>
     <string name="startup_wizzard_uppercase">STARTUP-WIZZARD</string>

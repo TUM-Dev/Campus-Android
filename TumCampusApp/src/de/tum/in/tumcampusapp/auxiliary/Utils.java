@@ -37,6 +37,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -168,6 +170,32 @@ public class Utils {
 			log(e, "");
 		}
 		return false;
+	}
+
+	/**
+	 * 
+	 * @param dir
+	 */
+	public static void deleteAllCacheData(File dir) {
+		Log.d("DeleteRecursive", "DELETEPREVIOUS TOP" + dir.getPath());
+		if (dir.isDirectory()) {
+			String[] children = dir.list();
+			for (int i = 0; i < children.length; i++) {
+				File temp = new File(dir, children[i]);
+				if (temp.isDirectory()) {
+					Log.d("DeleteRecursive", "Recursive Call" + temp.getPath());
+					deleteAllCacheData(temp);
+				} else {
+					Log.d("DeleteRecursive", "Delete File" + temp.getPath());
+					boolean b = temp.delete();
+					if (b == false) {
+						Log.d("DeleteRecursive", "DELETE FAIL");
+					}
+				}
+			}
+
+		}
+		dir.delete();
 	}
 
 	/**
@@ -308,6 +336,43 @@ public class Utils {
 				try {
 					Utils.log(url);
 					downloadIconFile(url, target);
+				} catch (Exception e) {
+					log(e, url);
+				}
+			}
+		}).start();
+	}
+
+	/**
+	 * 
+	 * @param url
+	 * @param target
+	 */
+	public static void downloadImageAndCompressThread(final String url,
+			final String target, final String targetImageThumbnail) {
+		openDownloads++;
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				// TODO Who handles exception?
+				try {
+					Utils.log(url);
+					downloadFile(url, target);
+					openDownloads--;
+
+					try {
+						Bitmap sourceImage = BitmapFactory.decodeFile(target);
+						Bitmap thumbail = Bitmap.createScaledBitmap(
+								sourceImage, 200, 200, false);
+
+						FileOutputStream out = new FileOutputStream(
+								targetImageThumbnail);
+						thumbail.compress(Bitmap.CompressFormat.JPEG, 60, out);
+						out.flush();
+						out.close();
+					} catch (Exception e) {
+						Log.w("Gallery", "Error scaling image");
+					}
 				} catch (Exception e) {
 					log(e, url);
 				}

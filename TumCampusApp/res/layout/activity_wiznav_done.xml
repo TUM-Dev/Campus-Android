@@ -36,7 +36,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:onClick="onClickDone"
-                android:text="Go to TUM Campus App" />
+                android:text="@string/goto_tumcampus" />
         </LinearLayout>
     </ScrollView>
 

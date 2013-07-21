@@ -1,6 +1,5 @@
 ﻿package de.tum.in.tumcampusapp.models.managers;
 
-import java.io.FileOutputStream;
 import java.net.URLEncoder;
 
 import org.json.JSONArray;
@@ -9,8 +8,6 @@ import org.json.JSONObject;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.Gallery;
 
@@ -59,21 +56,13 @@ public class GalleryManager {
 		String targetImageThumbnail = Utils.getCacheDir("gallery/cache") + id
 				+ TUMB_ADDITION + ".jpg";
 
-		Utils.downloadFileThread(json.getString("source"), target);
-
-		Bitmap sourceImage = BitmapFactory.decodeFile(target);
-		Bitmap thumbail = Bitmap.createScaledBitmap(sourceImage, 200, 200,
-				false);
-
-		try {
-			FileOutputStream out = new FileOutputStream(targetImageThumbnail);
-			thumbail.compress(Bitmap.CompressFormat.JPEG, 60, out);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		// Utils.downloadFileThread(json.getString("source"), target);
+		Utils.downloadImageAndCompressThread(json.getString("source"), target,
+				targetImageThumbnail);
 
 		return new Gallery(id, json.getString("name"), targetImageThumbnail,
 				String.valueOf(position++), json.has("archive"));
+
 	}
 
 	/**
@@ -113,10 +102,11 @@ public class GalleryManager {
 
 		// These urls are not working anymore. The "position" statement is not
 		// allowed by facebook anymore.
-		String url_old = "https://graph.facebook.com/280074732057167/photos?"
-				+ "fields=id,name,source,position&limit=25&access_token=";
-		String urlArchive_old = "https://graph.facebook.com/291553714242602/photos?"
-				+ "fields=id,name,source,position&limit=25&access_token=";
+		// String url_old = "https://graph.facebook.com/280074732057167/photos?"
+		// + "fields=id,name,source,position&limit=25&access_token=";
+		// String urlArchive_old =
+		// "https://graph.facebook.com/291553714242602/photos?"
+		// + "fields=id,name,source,position&limit=25&access_token=";
 
 		String url = "https://graph.facebook.com/280074732057167/photos?"
 				+ "fields=id,name,source&limit=25&access_token=";
