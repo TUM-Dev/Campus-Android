@@ -5,6 +5,7 @@ public final class Const {
 	public static final String ACCESS_TOKEN = "access_token";
 	public static final String ACTION_EXTRA = "action";
 	public static final String ADDRESS_COLUMN = "address";
+	public static final String BACKGROUND_MODE = "background_mode";
 	public static final String CAFETERIA_ID = "cafeteriasId";
 	public static final String CAFETERIA_NAME = "cafeteriasName";
 	public static final String CAFETERIAS = "cafeterias";
@@ -88,8 +89,8 @@ public final class Const {
 	public static final String REMARK_COLUMN = "remark";
 	public static final String ROOM_COLUMN = "room";
 	public static final String ROOMFINDER = "roomfinder";
-	public static final String SILENCE = "silence";
 	public static final String SILENCE_ON = "silence_on";
+	public static final String SILENCE_SERVICE = "silent_mode";
 	public static final String START_DE_COLUMN = "start_de";
 	public static final String START_DT_COLUMN = "start_dt";
 	public static final String STUDIENBEITRAGSTATUS = "studienbeitragsstatus";

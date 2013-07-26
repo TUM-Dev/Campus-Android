@@ -4,7 +4,13 @@
     <!-- START TODO Translate -->
     <!-- END TODO Translate -->
 
+
     <!-- START Translated, please do not change identifiers -->
+    <string name="button_skip">Skip</string>
+    <string name="background_info">Content will be fetchted once per day to keep your TUM Campus App up to date.</string>
+    <string name="background_mode">Background Mode</string>
+    <string name="set_background_mode"><b>Background Mode</b>\n\nActivate or deactivate <i>Background Mode</i>. If activated, content will be fetchted once per day to keep your TUM Campus App up to date.</string>
+    <string name="set_silent_mode"><b>Silent Service</b>\n\nActivate or deactivate <i>Silent Service</i>. If activated, the device will go into silent mode if a lecture appointment has been recognized.</string>
     <string name="goto_tumcampus">Go to TUM Campus App</string>
     <string name="success_clear_cache">Successfully cleared cache</string>
     <string name="clear_cache_detail">Deletes all data which was downloaded by the TUM Campus App and stored on the SD-Card</string>
@@ -109,8 +115,8 @@
     <string name="mensa_filter">Mensa filter</string>
     <string name="mensa_settings_info">e.g. "Garching" to list only the dining halls in
 		Garching</string>
-    <string name="silence_phone">Phone atomatic. silently</string>
-    <string name="silence_phone_info">during the lecture</string>
+    <string name="silence_phone">Silent Service</string>
+    <string name="silence_phone_info">Sets you device in sielnt mode if a lectures has been recognized.</string>
     <string name="debug_for_developer">for developers</string>
     <string name="debug_mode">debug mode</string>
     <string name="market">Google Play</string>
@@ -310,7 +316,7 @@
     <string name="manual">Manual</string>
     <string name="manualpdf">manual_eng.pdf</string>
     <string name="empty_cache">Empty cache</string>
-    <string name="dialog_new_token">Your TUMOnline-Access-Token is already set.\nClick <i>Yes</i> to generate a new one. As a result, the old Token becomes useless.</string>
+    <string name="dialog_new_token">Your TUMOnline-Access-Token is already set.\n\nClick <i>Yes</i> to generate a new one. \nAs a result, the old Token becomes useless.</string>
     <string name="error_lrz_wrong">Your LRZ Identification is invalid</string>
     <string name="access_token_generated">TUMOnline-Access-Token successfully generated</string>
     <string name="access_token_wasnt_generated">TUMOnline-Access-Token could not be generated</string>
@@ -325,6 +331,7 @@
     <string name="completed">Completed</string>
     <string name="importing">Importing…</string>
     <string name="tum_campus_import">TUMCampus import …</string>
+    <string name="services">Services</string>
     <string name="service">Service</string>
     <string name="import_from_tumonline">import from TUMOnline</string>
     <string name="set_ringer_mode">set ringer mode: </string>
@@ -385,13 +392,13 @@
     <string name="token_not_enabled">TUMOnline-Access-Token is not enabled</string>
     <string name="startup_wizzard">Startup-Wizzard</string>
     <string name="startup_wizzard_uppercase">STARTUP-WIZZARD</string>
-    <string name="welcome_msg"><b>Welcome to TUM Campus App!</b>\n\nIn order to setup the TUMOnline access, you need to provide your <b>LRZ Identification</b>.\nThis Id has the following format:\n<i>xx00xxx</i>\n(2 letters, 2 digits, 3 letters)</string>
+    <string name="welcome_msg"><b>Welcome to TUM Campus App!</b>\n\nIn order to setup the TUMOnline access, you need to provide your <b>LRZ Identification</b>.\n\nThis Id has the following format:\n<i>xx00xxx</i>\n(2 letters, 2 digits, 3 letters)</string>
     <string name="button_next">Next</string>
     <string name="button_done">Done</string>
     <string name="button_close">Close</string>
     <string name="exit">Exit</string>
     <string name="configured"><b>TUM Campus App configuration finished successfully</b>\n\nYou can start exploring the App now.</string>
-    <string name="need_to_enable"><b>The TUMOnline-Access-Token was successfully generated</b>\n\nYou can now enable the Token in TUMOnline.</string>
+    <string name="need_to_enable"><b>The TUMOnline-Access-Token was successfully generated</b>\n\nYou can now enable the Token in TUMOnline via <i>Services/Token-Management</i>. Make sure the rights you want to gain the App are set as well under <i>Active Rights</i>.</string>
     <string name="choose_color"><b>Choose you favorite color</b>\n\nYou can choose a color scheme for the TUM Campus App.</string>
     <string name="blue">Blue</string>
     <string name="red">Red</string>

@@ -17,13 +17,14 @@ import android.view.MenuItem;
 import com.bugsense.trace.BugSenseHandler;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.activities.wizzard.WizNavColorActivity;
+import de.tum.in.tumcampusapp.activities.wizzard.WizNavExtrasActivity;
 import de.tum.in.tumcampusapp.activities.wizzard.WizNavStartActivity;
 import de.tum.in.tumcampusapp.adapters.StartSectionsPagerAdapter;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.PersonalLayoutManager;
 import de.tum.in.tumcampusapp.preferences.UserPreferencesActivity;
 import de.tum.in.tumcampusapp.services.ImportService;
+import de.tum.in.tumcampusapp.services.SilenceService;
 
 /**
  * 
@@ -63,7 +64,7 @@ public class StartActivity extends FragmentActivity {
 					Log.i(getClass().getSimpleName(), message);
 				}
 			}
-			if (intent.getAction().equals(WizNavColorActivity.BROADCAST_NAME)) {
+			if (intent.getAction().equals(WizNavExtrasActivity.BROADCAST_NAME)) {
 				Log.i(getClass().getSimpleName(), "Color has changed");
 				shouldRestartOnResume = true;
 			}
@@ -123,12 +124,17 @@ public class StartActivity extends FragmentActivity {
 		// Registers receiver for download and import
 		IntentFilter intentFilter = new IntentFilter();
 		intentFilter.addAction(ImportService.BROADCAST_NAME);
-		intentFilter.addAction(WizNavColorActivity.BROADCAST_NAME);
+		intentFilter.addAction(WizNavExtrasActivity.BROADCAST_NAME);
 		registerReceiver(receiver, intentFilter);
 
 		// Imports default values into database
-		Intent service = new Intent(this, ImportService.class);
+		Intent service;
+		service = new Intent(this, ImportService.class);
 		service.putExtra(Const.ACTION_EXTRA, Const.DEFAULTS);
+		startService(service);
+
+		// Imports default values into database
+		service = new Intent(this, SilenceService.class);
 		startService(service);
 
 		Boolean hideWizzardOnStartup = PreferenceManager

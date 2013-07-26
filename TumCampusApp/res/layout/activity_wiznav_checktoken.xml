@@ -64,19 +64,47 @@
                 android:text="link" />
 
             <ImageView
-                android:id="@+id/imageView1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:paddingBottom="@dimen/padding_default"
                 android:paddingTop="@dimen/padding_default"
                 android:src="@drawable/tokenmanagement" />
-
-            <Button
+            <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:onClick="onClickNext"
-                android:text="@string/button_next" />
+                android:layout_gravity="center"
+                android:paddingBottom="@dimen/padding_default"
+                android:paddingTop="@dimen/padding_default"
+                android:src="@drawable/wizz_activate_token" />
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:paddingBottom="@dimen/padding_default"
+                android:paddingTop="@dimen/padding_default"
+                android:src="@drawable/wizz_activate_rights" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/padding_default"
+                android:orientation="horizontal" >
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:onClick="onClickSkip"
+                    android:text="@string/button_skip" />
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:onClick="onClickNext"
+                    android:text="@string/button_next" />
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 

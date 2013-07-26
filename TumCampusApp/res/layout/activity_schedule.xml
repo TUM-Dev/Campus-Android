@@ -215,7 +215,7 @@
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentTop="true"
                     android:alpha="0.2"
-                    android:background="@color/sections_gray" />
+                    android:background="@color/sections_blue" />
 
                 <RelativeLayout
                     android:id="@+id/main_schedule_layout"

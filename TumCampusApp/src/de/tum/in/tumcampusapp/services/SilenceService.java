@@ -15,8 +15,7 @@ public class SilenceService extends IntentService {
 	/**
 	 * Interval in milliseconds to check for current lectures
 	 */
-	public static int interval = 60000;
-
+	public static int CHECK_INTERVAL = 60000 * 15; // 15 Minutes
 	public static final String SILENCE_SERVICE = "SilenceService";
 
 	/**
@@ -42,9 +41,10 @@ public class SilenceService extends IntentService {
 	protected void onHandleIntent(Intent intent) {
 
 		// loop until silence mode gets disabled in settings
-		while (Utils.getSettingBool(this, Const.SILENCE)) {
+		while (Utils.getSettingBool(this, Const.SILENCE_SERVICE)) {
 
 			AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+			am.setRingerMode(AudioManager.RINGER_MODE_SILENT);
 
 			LectureItemManager lim = new LectureItemManager(this);
 			if (!lim.hasLectures()) {
@@ -66,10 +66,10 @@ public class SilenceService extends IntentService {
 				Utils.setSettingBool(this, Const.SILENCE_ON, false);
 			}
 
-			// wait unteil next check
+			// wait until next check
 			synchronized (this) {
 				try {
-					wait(interval);
+					wait(CHECK_INTERVAL);
 				} catch (Exception e) {
 					Utils.log(e, "");
 				}

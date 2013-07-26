@@ -2,6 +2,11 @@
 <resources>
 
     <!-- START Translated -->
+        <string name="button_skip">Überspringe</string>
+    <string name="background_info">Es werden einmal am Tag im Hintergrund alle Inhalte heruntergeladen, um deine TUM Campus App auf den neusten Stand zu halten.</string>
+    <string name="background_mode">Hintergrund Modus</string>
+    <string name="set_background_mode"><b>Hintergrund Modus</b>\n\nAktiviere oder deaktiviere den <i>Hintergrund Modus</i>. Bei Aktivierung werden einmal am Tag im Hintergrund alle Inhalte heruntergeladen, um deine TUM Campus App auf den neusten Stand zu halten.</string>
+    <string name="set_silent_mode"><b>Lautlos Service</b>\n\nAktiviere oder deaktiviere den <i>Lautlos Service</i>. Bei Aktivierung wird sich das Gerät bei einer aktuell stattfindenden Vorlesung lautlos schalten.</string>
     <string name="goto_tumcampus">Starte TUM Campus App</string>
     <string name="success_clear_cache">Daten erfolgreich gelöscht</string>
     <string name="clear_cache_detail">Löscht alle durch die TUM Campus App heruntergeladenen, auf der SD-Karte gespeicherten Daten.</string>
@@ -74,7 +79,7 @@
     <string name="tum_news">TUM News</string>
     <string name="timetable">Zeitplan</string>
     <string name="result_extra">Ergebnis:&#160;</string>
-    <string name="error_fetching_tumonline">Fehler beim Zugriff auf TUMOnline.\nBitte stelle sicher, dass das TUMOnline-Access-Token akzeptiert\nund die entsprechenden Rechte aktiviert wurden.\n\n<b>Klicke hier zum Wiederholen.</b></string>
+    <string name="error_fetching_tumonline">Fehler beim Zugriff auf TUMOnline.\nBitte stelle sicher, dass das TUMOnline-Access-Token \nakzeptiertund die entsprechenden Rechte aktiviert wurden.\n\n<b>Klicke hier zum Wiederholen.</b></string>
     <string name="error_no_token_setup">Kein TUMOnline-Access-Token gefunden.\nBitte erzeuge ein TUMOnline-Access-Token in den\n <i>Einstellungen</i>, um TUMOnline Dienste nutzen zu können.\n\n<b>Klicke hier, um zu den <i>Einstellungen</i> zu gelangen.</b></string>
     <string name="error_sorry">Entschuldigung, ein Fehler ist aufgetreten.</string>
     <string name="error_something_wrong">Entschuldigung, irgendetwas ist schief gegangen.</string>
@@ -103,8 +108,8 @@
     <string name="modules">Module</string>
     <string name="mensa_filter">Mensa Filter</string>
     <string name="mensa_settings_info">z.B. "Garching", um nur die Mensen in Garching anzuzeigen</string>
-    <string name="silence_phone">Stellt das Handy automatisch auf lautlos</string>
-    <string name="silence_phone_info">während der Vorlesung</string>
+    <string name="silence_phone">Lautlos Service</string>
+    <string name="silence_phone_info">Das Gerät wird während einer Vorlesung automatisch in den lautlosen Modus gestellt.</string>
     <string name="debug_for_developer">für Entwickler</string>
     <string name="debug_mode">Debug-Modus</string>
     <string name="market">Google Play</string>
@@ -302,7 +307,7 @@
     <string name="manual">Handbuch</string>
     <string name="manualpdf">manual_eng.pdf</string>
     <string name="empty_cache">Leere Cache</string>
-    <string name="dialog_new_token">Dein TUMOnline-Access-Token ist bereits gesetzt.\nKlicke auf <i>Ja</i> um ein neues zu generieren. Dabei wird dein altes Token unbrauchbar.</string>
+    <string name="dialog_new_token">Dein TUMOnline-Access-Token ist bereits gesetzt.\n\nKlicke auf <i>Ja</i> um ein neues zu generieren.\nDabei wird dein altes Token unbrauchbar.</string>
     <string name="error_lrz_wrong">Deine LRZ Kennung ist ungültig</string>
     <string name="access_token_generated">TUMOnline-Access-Token wurde erfolgreich erzeugt</string>
     <string name="access_token_wasnt_generated">TUMOnline-Access-Token konnte nicht erzeugt werden</string>
@@ -317,7 +322,8 @@
     <string name="completed">Fertiggestellt</string>
     <string name="importing">Importiere…</string>
     <string name="tum_campus_import">TUMCampus importiere …</string>
-    <string name="service">Service</string>
+    <string name="services">Dienste</string>
+    <string name="service">Dienst</string>
     <string name="import_from_tumonline">Importiere von TUMOnline</string>
     <string name="set_ringer_mode">Setze Ringer-Modus: </string>
     <string name="current_events">Aktuelle Events</string>
@@ -377,13 +383,13 @@
     <string name="token_not_enabled">TUMOnline-Access-Token ist nicht aktiviert</string>
     <string name="startup_wizzard">Startup-Wizzard</string>
     <string name="startup_wizzard_uppercase">STARTUP-WIZZARD</string>
-    <string name="welcome_msg"><b>Wilkommen zur TUM Campus App!</b>\n\nUm den Zugriff auf TUMOnline Dienste zu ermöglichen wird deine <b>LRZ Kennung</b> benötigt.\nDiese Kennung hat das folgende Format:\n<i>xx00xxx</i>\n(2 Buchstaben, 2 Ziffern, 3 Buchstaben)</string>
+    <string name="welcome_msg"><b>Wilkommen zur TUM Campus App!</b>\n\nUm den Zugriff auf TUMOnline Dienste zu ermöglichen, wird deine <b>LRZ Kennung</b> benötigt.\n\nDiese Kennung hat das folgende Format:\n<i>xx00xxx</i>\n(2 Buchstaben, 2 Ziffern, 3 Buchstaben)</string>
     <string name="button_next">Nächster Schritt</string>
     <string name="button_done">Fertig</string>
     <string name="button_close">Schließen</string>
     <string name="exit">Beenden</string>
     <string name="configured"><b>TUM Campus App Einstellungen erfolgreich abgeschlossen</b>\n\nDu kannst nun mit der Erkundung der App starten.</string>
-    <string name="need_to_enable"><b>Das TUMOnline-Access-Token wurde erfolgreich erzeugt</b>\n\nDu kannst das Token nun in TUMOnline aktivieren.</string>
+    <string name="need_to_enable"><b>Das TUMOnline-Access-Token wurde erfolgreich erzeugt</b>\n\nDu kannst das Token nun in TUMOnline unter <i>Dienste/Token-Verwaltung</i> aktivieren. Beachte, dass du ebenfalls die Rechte zum Zugriff auf einzelne Dienste unter <i>Aktive Rechte</i> aktivieren musst.</string>
     <string name="choose_color"><b>Wähle deine Lieblingsfarbe</b>\n\nDu kannst das Farbschema für die TUM Campus App selber bestimmen.</string>
     <string name="blue">Blau</string>
     <string name="red">Rot</string>

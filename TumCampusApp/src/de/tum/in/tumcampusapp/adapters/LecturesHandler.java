@@ -16,14 +16,10 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 
 /**
- * Class that handles an OrgDetailsObject and SAX-Parses the XML containing such
- * Objects The parsed Object has no child Objects (but can be implemented also
- * with child Objects)
  * 
- * @author Thomas Behrens
- * @review Vincenz Doelle, Daniel G. Mayr
+ * @author Sascha
+ * 
  */
-
 public class LecturesHandler extends DefaultHandler {
 
 	public static final String TAG_DESCRIPTION = "description";
@@ -130,7 +126,9 @@ public class LecturesHandler extends DefaultHandler {
 
 	private LayoutParams initLayoutParams(float hours) {
 		int oneHourHeight = (int) context.getResources().getDimension(
-				R.dimen.time_one_hour);
+				R.dimen.time_gap)
+				+ (int) context.getResources().getDimension(
+						R.dimen.time_line_thickness);
 		int height = (int) (oneHourHeight * hours);
 		return new LayoutParams(LayoutParams.MATCH_PARENT, height);
 	}

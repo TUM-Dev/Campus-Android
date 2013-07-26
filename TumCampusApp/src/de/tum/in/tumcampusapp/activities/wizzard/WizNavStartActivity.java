@@ -1,6 +1,5 @@
 package de.tum.in.tumcampusapp.activities.wizzard;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -9,8 +8,6 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -19,12 +16,12 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.activities.generic.WizzardActivity;
 import de.tum.in.tumcampusapp.auxiliary.AccessTokenManager;
 import de.tum.in.tumcampusapp.auxiliary.Const;
-import de.tum.in.tumcampusapp.auxiliary.PersonalLayoutManager;
 
-public class WizNavStartActivity extends Activity implements OnClickListener,
-		OnCheckedChangeListener {
+public class WizNavStartActivity extends WizzardActivity implements
+		OnClickListener, OnCheckedChangeListener {
 	private AccessTokenManager accessTokenManager = new AccessTokenManager(this);
 	private CheckBox checkBox;
 	private EditText editText;
@@ -42,23 +39,22 @@ public class WizNavStartActivity extends Activity implements OnClickListener,
 	public void onClick(DialogInterface dialog, int which) {
 		if (which == DialogInterface.BUTTON_POSITIVE) {
 			if (accessTokenManager.requestAccessToken(lrzId)) {
-				startWizNavNextActivity();
+				startNextActivity();
 			}
 		}
 		if (which == DialogInterface.BUTTON_NEGATIVE) {
-			startWizNavNextActivity();
+			startNextActivity();
 		}
 	}
 
 	public void onClickNext(View view) {
-
 		String lrz_id = editText.getText().toString();
 		Editor editor = sharedPrefs.edit();
 		editor.putString(Const.LRZ_ID, lrz_id);
 		editor.commit();
 
 		if (setupAccessToken()) {
-			startWizNavNextActivity();
+			startNextActivity();
 		}
 	}
 
@@ -68,6 +64,10 @@ public class WizNavStartActivity extends Activity implements OnClickListener,
 		setContentView(R.layout.activity_wiznav_start);
 
 		sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+		setIntentForNextActivity(new Intent(this,
+				WizNavCheckTokenActivity.class));
+		setIntentForPreviousActivity(null);
 
 		LinearLayout layout = (LinearLayout) findViewById(R.id.wizstart_layout);
 		layout.requestFocus();
@@ -89,31 +89,6 @@ public class WizNavStartActivity extends Activity implements OnClickListener,
 		if (lrzId != null) {
 			editText.setText(lrzId);
 		}
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		super.onCreateOptionsMenu(menu);
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.menu_activity_wizzard, menu);
-		return true;
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case R.id.action_exit:
-			finish();
-			return true;
-		default:
-			return super.onOptionsItemSelected(item);
-		}
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-		PersonalLayoutManager.setColorForId(this, R.id.pager_title_strip);
 	}
 
 	public boolean setupAccessToken() {
@@ -140,11 +115,5 @@ public class WizNavStartActivity extends Activity implements OnClickListener,
 					Toast.LENGTH_LONG).show();
 		}
 		return false;
-	}
-
-	public void startWizNavNextActivity() {
-		finish();
-		Intent intent = new Intent(this, WizNavCheckTokenActivity.class);
-		startActivity(intent);
 	}
 }

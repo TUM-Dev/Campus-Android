@@ -21,13 +21,15 @@ public class WizNavCheckTokenActivity extends ActivityForAccessingTumOnline {
 
 	@Override
 	public void onBackPressed() {
-		finish();
-		Intent intent = new Intent(this, WizNavStartActivity.class);
-		startActivity(intent);
+		startPreviousActivity();
 	}
 
 	public void onClickNext(View view) {
 		super.requestFetch();
+	}
+
+	public void onClickSkip(View view) {
+		startNextActivity();
 	}
 
 	public void onCreate(Bundle savedInstanceState) {
@@ -45,10 +47,7 @@ public class WizNavCheckTokenActivity extends ActivityForAccessingTumOnline {
 	@Override
 	public void onFetch(String rawResponse) {
 		if (rawResponse.contains("true")) {
-			finish();
-			Intent intent = new Intent(this, WizNavColorActivity.class);
-			startActivity(intent);
-
+			startNextActivity();
 		} else if (rawResponse.contains("false")) {
 			Toast.makeText(this, R.string.token_not_enabled, Toast.LENGTH_SHORT)
 					.show();
@@ -78,8 +77,19 @@ public class WizNavCheckTokenActivity extends ActivityForAccessingTumOnline {
 		TextView textView = (TextView) findViewById(R.id.tvBrowse);
 		textView.setClickable(true);
 		textView.setMovementMethod(LinkMovementMethod.getInstance());
-		String text = getResources().getString(R.string.enable_token_link);
 		String url = "<a href='http://campus.tum.de'>TUMOnline</a>";
 		textView.setText(Html.fromHtml(url));
+	}
+
+	private void startNextActivity() {
+		finish();
+		Intent intent = new Intent(this, WizNavExtrasActivity.class);
+		startActivity(intent);
+	}
+
+	private void startPreviousActivity() {
+		finish();
+		Intent intent = new Intent(this, WizNavStartActivity.class);
+		startActivity(intent);
 	}
 }

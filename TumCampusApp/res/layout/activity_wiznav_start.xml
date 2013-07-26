@@ -45,13 +45,29 @@
                 android:id="@+id/chk_start_wizzard_on_startup"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding_default"
                 android:text="@string/wizzard_on_startup" />
 
-            <Button
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:onClick="onClickNext"
-                android:text="@string/button_next" />
+                android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/padding_default"
+                android:orientation="horizontal" >
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:onClick="onClickSkip"
+                    android:text="@string/button_skip" />
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:onClick="onClickNext"
+                    android:text="@string/button_next" />
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 
