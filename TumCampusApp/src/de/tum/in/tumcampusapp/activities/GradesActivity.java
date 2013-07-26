@@ -1,5 +1,12 @@
 package de.tum.in.tumcampusapp.activities;
 
+import java.text.NumberFormat;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
 
@@ -9,7 +16,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Spinner;
+import android.widget.TextView;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampusapp.adapters.ExamListAdapter;
@@ -28,6 +39,11 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 
 	private ExamList examList;
 	private ListView lvGrades;
+	private Spinner spFilter;
+	private TextView average_tx;
+
+	private HashMap<String, Double> weightedGrades_hash;
+	private HashMap<String, Double> creditSum_hash;
 
 	public GradesActivity() {
 		super(Const.NOTEN, R.layout.activity_grades);
@@ -38,6 +54,8 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 		super.onCreate(savedInstanceState);
 
 		lvGrades = (ListView) findViewById(R.id.lstGrades);
+		spFilter = (Spinner) findViewById(R.id.spFilter);
+		average_tx = (TextView) findViewById(R.id.avgGrade);
 
 		super.requestFetch();
 	}
@@ -49,12 +67,17 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 	 */
 	@Override
 	public void onFetch(String rawResponse) {
+		Log.d(getClass().getSimpleName(), rawResponse);
+
 		Serializer serializer = new Persister();
 		examList = null;
 
 		try {
 			// Deserializes XML response
 			examList = serializer.read(ExamList.class, rawResponse);
+
+			// initialize the program choice spinner
+			initSpinner();
 
 			// Displays results in view
 			lvGrades.setAdapter(new ExamListAdapter(GradesActivity.this,
@@ -90,5 +113,108 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 			failedTokenLayout.setVisibility(View.VISIBLE);
 			e.printStackTrace();
 		}
+	}
+
+	/**
+	 * Initialize the spinner for choosing between the study programs.
+	 */
+	private void initSpinner() {
+
+		// set Spinner data
+		List<String> filters = new ArrayList<String>();
+		filters.add(getString(R.string.all_programs));
+
+		// initialize hashmaps with programm_ids as keys
+
+		weightedGrades_hash = new HashMap<String, Double>();
+		creditSum_hash = new HashMap<String, Double>();
+
+		// get all program ids from the results
+		for (int i = 0; i < examList.getExams().size(); i++) {
+			String item = examList.getExams().get(i).getProgramID();
+			if (filters.indexOf(item) == -1) {
+				filters.add(item);
+			}
+			// init HashMap with 0.0 for each key
+			weightedGrades_hash.put(item, 0.0);
+			creditSum_hash.put(item, 0.0);
+		}
+
+		// init the spinner
+		ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(
+				this, android.R.layout.simple_list_item_checked, filters);
+		spFilter.setAdapter(spinnerArrayAdapter);
+
+		// handle if program choice is changed
+		spFilter.setOnItemSelectedListener(new OnItemSelectedListener() {
+
+			@Override
+			public void onItemSelected(AdapterView<?> arg0, View arg1,
+					int arg2, long arg3) {
+
+				String filter = spFilter.getItemAtPosition(arg2).toString();
+
+				if (filter == getString(R.string.all_programs)) {
+					// display all grades
+					lvGrades.setAdapter(new ExamListAdapter(
+							GradesActivity.this, examList.getExams()));
+					average_tx.setVisibility(View.GONE);
+				} else {
+					// do filtering according to selected program
+					List<Exam> filteredExamList = new ArrayList<Exam>();
+					for (int i = 0; i < examList.getExams().size(); i++) {
+						Exam item = examList.getExams().get(i);
+						if (item.getProgramID().equals(filter)) {
+							filteredExamList.add(item);
+						}
+
+						// calculate average grade for every programm
+						NumberFormat format = NumberFormat
+								.getInstance(Locale.FRANCE); // to parse the
+																// number from
+																// x,y to x.y
+
+						String curKey = item.getProgramID();
+						double curGrade = weightedGrades_hash.get(curKey);
+						double curSum = creditSum_hash.get(curKey);
+						try {
+							weightedGrades_hash.put(
+									item.getProgramID(),
+									curGrade
+											+ (format.parse(item.getGrade()))
+													.doubleValue()
+											* Double.valueOf(item.getCredits()));
+						} catch (NumberFormatException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (ParseException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+
+						creditSum_hash.put(curKey,
+								curSum + Double.valueOf(item.getCredits()));
+					}
+					// list view gets filtered list
+					lvGrades.setAdapter(new ExamListAdapter(
+							GradesActivity.this, filteredExamList));
+
+					// diplay average grade
+					average_tx.setText("Average Grade: "
+							+ weightedGrades_hash.get(filter)
+							/ creditSum_hash.get(filter));
+
+				}
+
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> arg0) {
+				// select [Alle]
+				spFilter.setSelection(0);
+				lvGrades.setAdapter(new ExamListAdapter(GradesActivity.this,
+						examList.getExams()));
+			}
+		});
 	}
 }

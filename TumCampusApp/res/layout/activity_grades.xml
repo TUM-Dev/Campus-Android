@@ -1,37 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <include
+    <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        layout="@layout/layout_progress"
-        android:visibility="gone" />
+        android:orientation="vertical" >
 
-    <include
+        <include
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            layout="@layout/layout_progress"
+            android:visibility="gone" />
+
+        <include
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            layout="@layout/layout_error"
+            android:visibility="gone" />
+
+        <include
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            layout="@layout/layout_failed_token"
+            android:visibility="gone" />
+
+        <include
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            layout="@layout/layout_no_token"
+            android:visibility="gone" />
+
+        <Spinner
+            android:id="@+id/spFilter"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/sections_blue"
+            android:drawSelectorOnTop="true" />
+
+        <ListView
+            android:id="@+id/lstGrades"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        layout="@layout/layout_error"
-        android:visibility="gone" />
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true" >
 
-    <include
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        layout="@layout/layout_failed_token"
-        android:visibility="gone" />
+        <TextView
+            android:id="@+id/avgGrade"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Average Grade" />
+    </LinearLayout>
 
-    <include
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        layout="@layout/layout_no_token"
-        android:visibility="gone" />
-
-    <ListView
-        android:id="@+id/lstGrades"
-        android:layout_width="fill_parent"
-        android:choiceMode="none"
-        android:layout_height="wrap_content" />
-
-</LinearLayout>
+</RelativeLayout>
