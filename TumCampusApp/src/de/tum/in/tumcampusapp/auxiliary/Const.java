@@ -103,4 +103,5 @@ public final class Const {
 	public static final String WARNING = "warning";
 	public static final String WARNING_MESSAGE = "warning_message";
 	public static final String WEEKDAY_COLUMN = "weekday";
+	public static final String Kalendar_Uri="KalendarUri";
 }
