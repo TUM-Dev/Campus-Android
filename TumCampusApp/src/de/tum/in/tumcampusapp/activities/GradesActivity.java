@@ -41,6 +41,7 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 	private ListView lvGrades;
 	private Spinner spFilter;
 	private TextView average_tx;
+	private double averageGrade;
 
 	private HashMap<String, Double> weightedGrades_hash;
 	private HashMap<String, Double> creditSum_hash;
@@ -159,6 +160,7 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 					lvGrades.setAdapter(new ExamListAdapter(
 							GradesActivity.this, examList.getExams()));
 					average_tx.setVisibility(View.GONE);
+
 				} else {
 					// do filtering according to selected program
 					List<Exam> filteredExamList = new ArrayList<Exam>();
@@ -199,10 +201,13 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 					lvGrades.setAdapter(new ExamListAdapter(
 							GradesActivity.this, filteredExamList));
 
-					// diplay average grade
-					average_tx.setText("Average Grade: "
-							+ weightedGrades_hash.get(filter)
-							/ creditSum_hash.get(filter));
+					// round and display average grade
+					averageGrade = Math.round(weightedGrades_hash.get(filter)
+							/ creditSum_hash.get(filter) * 1000.0) / 1000.0;
+
+					average_tx.setText("Average Grade: " + averageGrade);
+
+					average_tx.setVisibility(View.VISIBLE);
 
 				}
 

@@ -55,7 +55,11 @@
             android:id="@+id/avgGrade"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Average Grade" />
+            android:background="@color/sections_blue"
+            android:gravity="right"
+            android:text="Average Grade"
+            android:textSize="@dimen/large_text_size"
+            android:visibility="invisible" />
     </LinearLayout>
 
 </RelativeLayout>
