@@ -108,7 +108,7 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
 							.getColumnIndex("typeLong"));
 					if (CafetariaPrices.student_prices.containsKey(curKey))
 						price.setText(CafetariaPrices.student_prices
-								.get(curKey));
+								.get(curKey) + "€");
 					else
 						price.setText("n/a");
 
