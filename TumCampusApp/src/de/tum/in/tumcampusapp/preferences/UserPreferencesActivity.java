@@ -56,7 +56,7 @@ public class UserPreferencesActivity extends PreferenceActivity implements
 
 		NewsManager nm = new NewsManager(context);
 		nm.removeCache();
-		
+
 		CalendarManager calendarManager = new CalendarManager(context);
 		calendarManager.removeCache();
 

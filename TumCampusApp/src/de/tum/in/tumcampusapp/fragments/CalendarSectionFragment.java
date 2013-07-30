@@ -66,12 +66,12 @@ public class CalendarSectionFragment extends Fragment {
 
 		mainScheduleLayout = (RelativeLayout) rootView
 				.findViewById(R.id.main_schedule_layout);
-		
+
 		updateCalendarView();
 
 		return rootView;
 	}
-	
+
 	@SuppressWarnings("deprecation")
 	private void parseEvents() {
 		Date dateStart;

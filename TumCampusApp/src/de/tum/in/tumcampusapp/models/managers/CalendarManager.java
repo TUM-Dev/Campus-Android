@@ -80,6 +80,13 @@ public class CalendarManager {
 		return SyncManager.needSync(db, this, TIME_TO_SYNC);
 	}
 
+	/**
+	 * Removes all cache items
+	 */
+	public void removeCache() {
+		db.execSQL("DELETE FROM kalendar_events");
+	}
+
 	public void replaceIntoDb(CalendarRow row) throws Exception {
 		Utils.log(row.toString());
 
@@ -105,12 +112,5 @@ public class CalendarManager {
 					new String[] { row.getNr(), row.getStatus(), row.getUrl(),
 							row.getTitle(), row.getDescription(),
 							row.getDtstart(), row.getDtend(), row.getLocation() });
-	}
-	
-	/**
-	 * Removes all cache items
-	 */
-	public void removeCache() {
-		db.execSQL("DELETE FROM kalendar_events");
 	}
 }

@@ -139,10 +139,10 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 					averageGrade = Math.round(weightedGrades_hash.get(filter)
 							/ creditSum_hash.get(filter) * 1000.0) / 1000.0;
 
-					average_tx.setText("Average Grade: " + averageGrade);
-
+					average_tx.setText(getResources().getString(
+							R.string.average_grade)
+							+ ":" + averageGrade);
 					average_tx.setVisibility(View.VISIBLE);
-
 				}
 
 			}
@@ -164,6 +164,7 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 		lvGrades = (ListView) findViewById(R.id.lstGrades);
 		spFilter = (Spinner) findViewById(R.id.spFilter);
 		average_tx = (TextView) findViewById(R.id.avgGrade);
+		average_tx.setVisibility(View.GONE);
 
 		super.requestFetch();
 	}

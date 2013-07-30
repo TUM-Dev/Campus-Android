@@ -2,6 +2,7 @@
 <resources>
 
     <!-- START Translated -->
+    <string name="average_grade">Durchschnittsnote</string>
     <string name="delete_chache_sure">Alle Daten wirklich löschen?</string>
     <string name="export_to_google">Exportiere nach Google</string>
     <string name="loading_longtime">(Diese Operation dauert etwas länger)</string>

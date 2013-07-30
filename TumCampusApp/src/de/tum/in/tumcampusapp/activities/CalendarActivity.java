@@ -39,7 +39,7 @@ import de.tum.in.tumcampusapp.models.managers.CalendarManager;
  */
 public class CalendarActivity extends ActivityForAccessingTumOnline {
 	public static final int MONTH_AFTER = 1;
-	public static final int MONTH_BEFORE = 1;
+	public static final int MONTH_BEFORE = 0;
 
 	private CalendarManager kalMgr;
 	private CalendarSectionsPagerAdapter mSectionsPagerAdapter;
@@ -198,7 +198,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline {
 			super.requestFetch();
 		}
 	}
-	
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);

@@ -23,10 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
-            android:layout_weight="3"
-            android:text="0.00€"
-            android:textColor="@color/text_light_gray" />
-
+            android:layout_weight="3" />
     </LinearLayout>
 
     <TextView

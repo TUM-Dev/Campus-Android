@@ -9,8 +9,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
+import android.widget.SimpleCursorAdapter.ViewBinder;
 import android.widget.TextView;
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.auxiliary.CafetariaPrices;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.models.managers.CafeteriaMenuManager;
 import de.tum.in.tumcampusapp.models.managers.LocationManager;
@@ -58,11 +60,6 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
 	private void showMenueForDay() {
 		TextView textView;
 
-		// TODO: This does not work, but the price should also be stored in the
-		// database and then added through the SimpleCursorAdapter (see
-		// underneath)
-		// price.setText("0,00€");
-
 		// opening hours
 		LocationManager lm = new LocationManager(activity);
 		textView = (TextView) footer.findViewById(android.R.id.text2);
@@ -85,7 +82,7 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
 		SimpleCursorAdapter adapterMenue = new SimpleCursorAdapter(activity,
 				R.layout.list_layout_cafeteriamenu, cursorCafeteriaMenu, // android.R.layout.two_line_list_item
 				cursorCafeteriaMenu.getColumnNames(), new int[] {
-						R.id.tx_category, R.id.tx_menu }) {
+						R.id.tx_category, R.id.tx_menu, R.id.tx_price }) {
 
 			@Override
 			public boolean areAllItemsEnabled() {
@@ -97,6 +94,35 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
 				return false;
 			}
 		};
+		adapterMenue.setViewBinder(new ViewBinder() {
+
+			// Adding prices not to the database, but adding them manually
+			@Override
+			public boolean setViewValue(View view, Cursor cursor,
+					int columnIndex) {
+
+				// TODO Auto-generated method stub
+				if (view.getId() == R.id.tx_price) {
+					TextView price = (TextView) view;
+					String curKey = cursor.getString(cursor
+							.getColumnIndex("typeLong"));
+					if (CafetariaPrices.student_prices.containsKey(curKey))
+						price.setText(CafetariaPrices.student_prices
+								.get(curKey) + "€");
+					else
+						price.setText("n/a");
+
+					// set price field invisible for "Beilagen"
+					if (curKey.equals("Beilagen"))
+						price.setVisibility(View.GONE);
+
+					return true;
+
+				}
+
+				return false;
+			}
+		});
 		listViewMenu.setAdapter(adapterMenue);
 	}
 }
