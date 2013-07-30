@@ -1,0 +1,354 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center" >
+
+                <ImageView
+                    android:id="@+id/hour0"
+                    style="@style/TimeSectionLine"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginTop="@dimen/time_gap" />
+
+                <ImageView
+                    android:id="@+id/hour1"
+                    style="@style/TimeSectionLine"
+                    android:layout_below="@id/hour0"
+                    android:layout_marginTop="@dimen/time_gap" />
+
+                <ImageView
+                    android:id="@+id/hour2"
+                    style="@style/TimeSectionLine"
+                    android:layout_below="@id/hour1"
+                    android:layout_marginTop="@dimen/time_gap" />
+
+                <ImageView
+                    android:id="@+id/hour3"
+                    style="@style/TimeSectionLine"
+                    android:layout_below="@id/hour2"
+                    android:layout_marginTop="@dimen/time_gap" />
+
+                <ImageView
+                    android:id="@+id/hour4"
+                    style="@style/TimeSectionLine"
+                    android:layout_below="@id/hour3"
+                    android:layout_marginTop="@dimen/time_gap" />
+
+                <ImageView
+                    android:id="@+id/hour5"
+                    style="@style/TimeSectionLine"
+                    android:layout_below="@id/hour4"
+                    android:layout_marginTop="@dimen/time_gap" />
+
+                <ImageView
+                    android:id="@+id/hour6"
+                    style="@style/TimeSectionLine"
+                    android:layout_below="@id/hour5"
+                    android:layout_marginTop="@dimen/time_gap" />
+
+                <ImageView
+                    android:id="@+id/hour7"
+                    style="@style/TimeSectionLine"
+                    android:layout_below="@id/hour6"
+                    android:layout_marginTop="@dimen/time_gap" />
+
+                <ImageView
+                    android:id="@+id/hour8"
+                    style="@style/TimeSectionLine"
+                    android:layout_below="@id/hour7"
+                    android:layout_marginTop="@dimen/time_gap" />
+
+                <ImageView
+                    android:id="@+id/hour9"
+                    style="@style/TimeSectionLine"
+                    android:layout_below="@id/hour8"
+                    android:layout_marginTop="@dimen/time_gap" />
+
+                <ImageView
+                    android:id="@+id/hour10"
+                    style="@style/TimeSectionLine"
+                    android:layout_below="@id/hour9"
+                    android:layout_marginTop="@dimen/time_gap" />
+
+                <ImageView
+                    android:id="@+id/hour11"
+                    style="@style/TimeSectionLine"
+                    android:layout_below="@id/hour10"
+                    android:layout_marginTop="@dimen/time_gap" />
+
+                <ImageView
+                    android:id="@+id/hour12"
+                    style="@style/TimeSectionLine"
+                    android:layout_below="@id/hour11"
+                    android:layout_marginTop="@dimen/time_gap" />
+
+                <ImageView
+                    android:id="@+id/hour13"
+                    style="@style/TimeSectionLine"
+                    android:layout_below="@id/hour12"
+                    android:layout_marginTop="@dimen/time_gap" />
+
+                <ImageView
+                    android:id="@+id/hour14"
+                    style="@style/TimeSectionLine"
+                    android:layout_below="@id/hour13"
+                    android:layout_marginTop="@dimen/time_gap" />
+
+                <ImageView
+                    android:id="@+id/hour15"
+                    style="@style/TimeSectionLine"
+                    android:layout_below="@id/hour14"
+                    android:layout_marginTop="@dimen/time_gap" />
+
+                <ImageView
+                    android:id="@+id/hour16"
+                    style="@style/TimeSectionLine"
+                    android:layout_below="@id/hour15"
+                    android:layout_marginTop="@dimen/time_gap" />
+
+                <ImageView
+                    android:id="@+id/hour17"
+                    style="@style/TimeSectionLine"
+                    android:layout_below="@id/hour16"
+                    android:layout_marginTop="@dimen/time_gap" />
+
+                <ImageView
+                    android:id="@+id/hour18"
+                    style="@style/TimeSectionLine"
+                    android:layout_below="@id/hour17"
+                    android:layout_marginTop="@dimen/time_gap" />
+
+                <ImageView
+                    android:id="@+id/hour19"
+                    style="@style/TimeSectionLine"
+                    android:layout_below="@id/hour18"
+                    android:layout_marginTop="@dimen/time_gap" />
+
+                <ImageView
+                    android:id="@+id/hour20"
+                    style="@style/TimeSectionLine"
+                    android:layout_below="@id/hour19"
+                    android:layout_marginTop="@dimen/time_gap" />
+
+                <ImageView
+                    android:id="@+id/hour21"
+                    style="@style/TimeSectionLine"
+                    android:layout_below="@id/hour20"
+                    android:layout_marginTop="@dimen/time_gap" />
+
+                <ImageView
+                    android:id="@+id/hour22"
+                    style="@style/TimeSectionLine"
+                    android:layout_below="@id/hour21"
+                    android:layout_marginTop="@dimen/time_gap" />
+
+                <ImageView
+                    android:id="@+id/hour23"
+                    style="@style/TimeSectionLine"
+                    android:layout_below="@id/hour22"
+                    android:layout_marginTop="@dimen/time_gap" />
+
+                <ImageView
+                    android:id="@+id/timeline"
+                    android:layout_width="@dimen/time_timeline_width"
+                    android:layout_height="@dimen/time_timeline_height"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentTop="true"
+                    android:alpha="0.2"
+                    android:background="@color/sections_gray" />
+
+                <RelativeLayout
+                    android:id="@+id/main_schedule_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/timeline"
+                    android:paddingLeft="@dimen/padding_large"
+                    android:paddingRight="@dimen/padding_large" >
+                </RelativeLayout>
+
+                <TextView
+                    style="@style/TimeSectionTime"
+                    android:layout_alignBottom="@+id/hour0"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignRight="@+id/timeline"
+                    android:text="01:00" />
+
+                <TextView
+                    style="@style/TimeSectionTime"
+                    android:layout_alignBottom="@+id/hour1"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignRight="@+id/timeline"
+                    android:text="02:00" />
+
+                <TextView
+                    style="@style/TimeSectionTime"
+                    android:layout_alignBottom="@+id/hour2"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignRight="@+id/timeline"
+                    android:text="03:00" />
+
+                <TextView
+                    style="@style/TimeSectionTime"
+                    android:layout_alignBottom="@+id/hour3"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignRight="@+id/timeline"
+                    android:text="04:00" />
+
+                <TextView
+                    style="@style/TimeSectionTime"
+                    android:layout_alignBottom="@+id/hour4"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignRight="@+id/timeline"
+                    android:text="05:00" />
+
+                <TextView
+                    style="@style/TimeSectionTime"
+                    android:layout_alignBottom="@+id/hour5"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignRight="@+id/timeline"
+                    android:text="06:00" />
+
+                <TextView
+                    style="@style/TimeSectionTime"
+                    android:layout_alignBottom="@+id/hour6"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignRight="@+id/timeline"
+                    android:text="07:00" />
+
+                <TextView
+                    style="@style/TimeSectionTime"
+                    android:layout_alignBottom="@+id/hour7"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignRight="@+id/timeline"
+                    android:text="08:00" />
+
+                <TextView
+                    style="@style/TimeSectionTime"
+                    android:layout_alignBottom="@+id/hour8"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignRight="@+id/timeline"
+                    android:text="09:00" />
+
+                <TextView
+                    style="@style/TimeSectionTime"
+                    android:layout_alignBottom="@+id/hour9"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignRight="@+id/timeline"
+                    android:text="10:00" />
+
+                <TextView
+                    style="@style/TimeSectionTime"
+                    android:layout_alignBottom="@+id/hour10"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignRight="@+id/timeline"
+                    android:text="11:00" />
+
+                <TextView
+                    style="@style/TimeSectionTime"
+                    android:layout_alignBottom="@+id/hour11"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignRight="@+id/timeline"
+                    android:text="12:00" />
+
+                <TextView
+                    style="@style/TimeSectionTime"
+                    android:layout_alignBottom="@+id/hour12"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignRight="@+id/timeline"
+                    android:text="13:00" />
+
+                <TextView
+                    style="@style/TimeSectionTime"
+                    android:layout_alignBottom="@+id/hour13"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignRight="@+id/timeline"
+                    android:text="14:00" />
+
+                <TextView
+                    style="@style/TimeSectionTime"
+                    android:layout_alignBottom="@+id/hour14"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignRight="@+id/timeline"
+                    android:text="15:00" />
+
+                <TextView
+                    style="@style/TimeSectionTime"
+                    android:layout_alignBottom="@+id/hour15"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignRight="@+id/timeline"
+                    android:text="16:00" />
+
+                <TextView
+                    style="@style/TimeSectionTime"
+                    android:layout_alignBottom="@+id/hour16"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignRight="@+id/timeline"
+                    android:text="17:00" />
+
+                <TextView
+                    style="@style/TimeSectionTime"
+                    android:layout_alignBottom="@+id/hour17"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignRight="@+id/timeline"
+                    android:text="18:00" />
+
+                <TextView
+                    style="@style/TimeSectionTime"
+                    android:layout_alignBottom="@+id/hour18"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignRight="@+id/timeline"
+                    android:text="19:00" />
+
+                <TextView
+                    style="@style/TimeSectionTime"
+                    android:layout_alignBottom="@+id/hour19"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignRight="@+id/timeline"
+                    android:text="20:00" />
+
+                <TextView
+                    style="@style/TimeSectionTime"
+                    android:layout_alignBottom="@+id/hour20"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignRight="@+id/timeline"
+                    android:text="21:00" />
+
+                <TextView
+                    style="@style/TimeSectionTime"
+                    android:layout_alignBottom="@+id/hour21"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignRight="@+id/timeline"
+                    android:text="22:00" />
+
+                <TextView
+                    style="@style/TimeSectionTime"
+                    android:layout_alignBottom="@+id/hour22"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignRight="@+id/timeline"
+                    android:text="23:00" />
+
+                <TextView
+                    style="@style/TimeSectionTime"
+                    android:layout_alignBottom="@+id/hour23"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignRight="@+id/timeline"
+                    android:text="24:00" />
+            </RelativeLayout>
+        </ScrollView>
+    </LinearLayout>
+
+</LinearLayout>

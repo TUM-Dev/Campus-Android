@@ -41,7 +41,7 @@
         android:layout_gravity="center"
         android:orientation="horizontal"
         android:paddingBottom="@dimen/padding_default"
-        android:paddingTop="@dimen/rythm_48dp" >
+        android:paddingTop="@dimen/padding_default" >
 
         <ImageView
             android:layout_width="match_parent"

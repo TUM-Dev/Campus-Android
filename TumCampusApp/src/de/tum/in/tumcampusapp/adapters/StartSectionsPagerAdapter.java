@@ -11,6 +11,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.CafeteriaActivity;
+import de.tum.in.tumcampusapp.activities.CalendarActivity;
 import de.tum.in.tumcampusapp.activities.CurriculaActivity;
 import de.tum.in.tumcampusapp.activities.EventsActivity;
 import de.tum.in.tumcampusapp.activities.FeedsActivity;
@@ -26,8 +27,6 @@ import de.tum.in.tumcampusapp.activities.OrganisationActivity;
 import de.tum.in.tumcampusapp.activities.PersonsSearchActivity;
 import de.tum.in.tumcampusapp.activities.PlansActivity;
 import de.tum.in.tumcampusapp.activities.RoomfinderActivity;
-import de.tum.in.tumcampusapp.activities.ScheduleActivity;
-import de.tum.in.tumcampusapp.activities.TimetableActivity;
 import de.tum.in.tumcampusapp.activities.TransportationActivity;
 import de.tum.in.tumcampusapp.activities.TuitionFeesActivity;
 import de.tum.in.tumcampusapp.auxiliary.ListMenuEntry;
@@ -102,14 +101,11 @@ public class StartSectionsPagerAdapter extends FragmentPagerAdapter {
 					R.string.my_grades, R.string.grades_addinfo, new Intent(
 							activity, GradesActivity.class)));
 			listMenuEntrySet.add(new ListMenuEntry(R.drawable.calendar,
-					R.string.timetable, R.string.timetable_addinfo, new Intent(
-							activity, TimetableActivity.class)));
-			listMenuEntrySet.add(new ListMenuEntry(R.drawable.calendar,
 					R.string.lecture_schedule, R.string.lecture_schedule_extra,
 					new Intent(activity, LectureScheduleActivity.class)));
 			listMenuEntrySet.add(new ListMenuEntry(R.drawable.calendar,
 					R.string.schedule, R.string.schedule_extras, new Intent(
-							activity, ScheduleActivity.class)));
+							activity, CalendarActivity.class)));
 			listMenuEntrySet.add(new ListMenuEntry(R.drawable.finance,
 					R.string.tuition_fees, R.string.tuitionfee_addinfo,
 					new Intent(activity, TuitionFeesActivity.class)));

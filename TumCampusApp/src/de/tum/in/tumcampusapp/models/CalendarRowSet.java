@@ -15,16 +15,16 @@ import org.simpleframework.xml.Root;
  * @review Thomas Behrens
  */
 @Root(name = "events")
-public class KalendarRowSet {
+public class CalendarRowSet {
 
 	@ElementList(inline = true)
-	private List<KalendarRow> kalendarList;
+	private List<CalendarRow> kalendarList;
 
-	public List<KalendarRow> getKalendarList() {
+	public List<CalendarRow> getKalendarList() {
 		return kalendarList;
 	}
 
-	public void setKalendarList(List<KalendarRow> kalendarList) {
+	public void setKalendarList(List<CalendarRow> kalendarList) {
 		this.kalendarList = kalendarList;
 	}
 

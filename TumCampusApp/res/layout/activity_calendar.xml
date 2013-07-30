@@ -215,15 +215,15 @@
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentTop="true"
                     android:alpha="0.2"
-                    android:background="@color/sections_blue" />
+                    android:background="@color/sections_gray" />
 
                 <RelativeLayout
                     android:id="@+id/main_schedule_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_toRightOf="@id/timeline"
-                    android:paddingLeft="@dimen/padding_default"
-                    android:paddingRight="@dimen/padding_default" >
+                    android:paddingLeft="@dimen/padding_large"
+                    android:paddingRight="@dimen/padding_large" >
                 </RelativeLayout>
 
                 <TextView

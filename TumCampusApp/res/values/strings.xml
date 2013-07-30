@@ -6,6 +6,9 @@
 
 
     <!-- START Translated, please do not change identifiers -->
+    <string name="delete_chache_sure">Sure to delete all data?</string>
+    <string name="export_to_google">Export to Google</string>
+    <string name="loading_longtime">(This operation will take a bit longer)</string>
     <string name="button_skip">Skip</string>
     <string name="background_info">Content will be fetchted once per day to keep your TUM Campus App up to date.</string>
     <string name="background_mode">Background Mode</string>
@@ -17,7 +20,7 @@
     <string name="clear_cache">Clear Cache</string>
     <string name="enable_token_link"><html><a href="http://campus.tum.de">Enable Token through TUM campus portal using Token-Management</a></html></string>
     <string name="add_rss">Add RSS-Feed</string>
-    <string name="schedule">Schedule</string>
+    <string name="schedule">Calendar</string>
     <string name="schedule_extras">Your schedule</string>
     <string name="lecture_schedule">Lecture Schedule</string>
     <string name="lecture_schedule_extra">Your lectures schedule</string>

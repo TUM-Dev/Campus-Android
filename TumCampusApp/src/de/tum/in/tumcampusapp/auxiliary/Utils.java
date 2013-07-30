@@ -603,6 +603,26 @@ public class Utils {
 	}
 
 	/**
+	 * Converts a datetime-string to Date
+	 * 
+	 * <pre>
+	 * @param str String with ISO-DateTime (yyyy-mm-ddThh:mm:ss)
+	 * @return Date
+	 * </pre>
+	 */
+	public static Date getDateTimeISO(String str) {
+		// TODO Who handles exception?
+		try {
+			SimpleDateFormat dateFormat = new SimpleDateFormat(
+					"yyyy-MM-dd HH:mm:ss");
+			return dateFormat.parse(str);
+		} catch (Exception e) {
+			log(e, str);
+		}
+		return new Date();
+	}
+
+	/**
 	 * Converts a rfc822 datetime-string to Date
 	 * 
 	 * <pre>

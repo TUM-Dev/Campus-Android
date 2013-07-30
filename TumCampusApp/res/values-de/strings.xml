@@ -2,7 +2,10 @@
 <resources>
 
     <!-- START Translated -->
-        <string name="button_skip">Überspringe</string>
+    <string name="delete_chache_sure">Alle Daten wirklich löschen?</string>
+    <string name="export_to_google">Exportiere nach Google</string>
+    <string name="loading_longtime">(Diese Operation dauert etwas länger)</string>
+    <string name="button_skip">Überspringe</string>
     <string name="background_info">Es werden einmal am Tag im Hintergrund alle Inhalte heruntergeladen, um deine TUM Campus App auf den neusten Stand zu halten.</string>
     <string name="background_mode">Hintergrund Modus</string>
     <string name="set_background_mode"><b>Hintergrund Modus</b>\n\nAktiviere oder deaktiviere den <i>Hintergrund Modus</i>. Bei Aktivierung werden einmal am Tag im Hintergrund alle Inhalte heruntergeladen, um deine TUM Campus App auf den neusten Stand zu halten.</string>

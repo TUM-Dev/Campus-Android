@@ -9,6 +9,8 @@ public final class Const {
 	public static final String CAFETERIA_ID = "cafeteriasId";
 	public static final String CAFETERIA_NAME = "cafeteriasName";
 	public static final String CAFETERIAS = "cafeterias";
+	public static final String CALENDAR_URI = "calendar_uri";
+	public static final String CALENDER = "kalender";
 	public static final String COLOR_SCHEME = "color_scheme";
 	public static final String COMPLETED = "completed";
 	public static final String CURRICULA = "curricula";
@@ -59,7 +61,6 @@ public final class Const {
 	public static final String JSON_RESULTS = "results";
 	public static final String JSON_START_TIME = "start_time";
 	public static final String JSON_TITLE = "title";
-	public static final String KALENDER = "kalender";
 	public static final String LECTURE_ID_COLUMN = "lectureId";
 	public static final String LECTURES = "lectures";
 	public static final String LECTURES_APPOINTMENTS = "veranstaltungenTermine";
@@ -103,5 +104,4 @@ public final class Const {
 	public static final String WARNING = "warning";
 	public static final String WARNING_MESSAGE = "warning_message";
 	public static final String WEEKDAY_COLUMN = "weekday";
-	public static final String Kalendar_Uri="KalendarUri";
 }

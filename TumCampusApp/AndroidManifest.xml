@@ -183,11 +183,6 @@
             android:label="@string/event_details" >
         </activity>
         <activity
-            android:name=".activities.TimetableActivity"
-            android:configChanges="orientation|screenSize"
-            android:label="@string/timetable" >
-        </activity>
-        <activity
             android:name=".activities.OrganisationActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/organisations" >
@@ -223,7 +218,7 @@
             android:label="@string/lecture_schedule" >
         </activity>
         <activity
-            android:name=".activities.ScheduleActivity"
+            android:name=".activities.CalendarActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/schedule" >
         </activity>

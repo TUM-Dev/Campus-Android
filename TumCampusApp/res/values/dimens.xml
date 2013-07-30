@@ -3,6 +3,7 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="padding_default">8dp</dimen>
+    <dimen name="padding_large">16dp</dimen>
     <dimen name="padding_to_above_text">4dp</dimen>
     <dimen name="padding_to_image">8dp</dimen>
     <dimen name="padding_to_image_small">4dp</dimen>
