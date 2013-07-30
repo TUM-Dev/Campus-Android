@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="de.tum.in.tumcampusapp"
+    android:versionCode="19"
+    android:versionName="0.5.1" >
+
+    <uses-sdk
+        android:minSdkVersion="8"
+        android:targetSdkVersion="17" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.READ_CALENDAR" />
+    <uses-permission android:name="android.permission.WRITE_CALENDAR" />
+
+    <application
+        android:allowBackup="true"
+        android:description="@string/app_short_description"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:logo="@drawable/ic_launcher"
+        android:theme="@style/AppTheme" android:largeHeap="true">
+        <activity
+            android:name=".activities.StartActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activities.generic.MockActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/app_name" >
+        </activity>
+        <activity
+            android:name=".activities.generic.MockSlidingTabActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/app_name" >
+        </activity>
+        <activity
+            android:name=".activities.NewsActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/tum_news" >
+        </activity>
+        <activity
+            android:name=".activities.PlansActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/plans" >
+        </activity>
+        <activity
+            android:name=".activities.PlansDetailsActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/plans" >
+        </activity>
+        <activity
+            android:name=".activities.GradesActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/my_grades" >
+        </activity>
+        <activity
+            android:name=".preferences.UserPreferencesActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/settings" >
+        </activity>
+        <activity
+            android:name=".activities.GalleryActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/gallery" >
+        </activity>
+        <activity
+            android:name=".activities.GalleryDetailsActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/gallery" >
+        </activity>
+        <activity
+            android:name=".activities.CurriculaActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/study_plans" >
+        </activity>
+        <activity
+            android:name=".activities.CurriculaDetailsActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/study_plans" >
+        </activity>
+        <activity
+            android:name=".activities.OpeningHoursDetailActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/opening_hours" >
+        </activity>
+        <activity
+            android:name=".activities.OpeningHoursListActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/opening_hours" >
+        </activity>
+        <activity
+            android:name=".activities.TransportationActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/mvv" >
+        </activity>
+        <activity
+            android:name=".activities.LecturesActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/my_lectures" >
+        </activity>
+        <activity
+            android:name=".activities.LecturesAppointmentsActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/lectures_appointments" >
+        </activity>
+        <activity
+            android:name=".activities.LecturesDetailsActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/lectures_information" >
+        </activity>
+        <activity
+            android:name=".activities.LecturesPersonalActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/my_lectures" >
+        </activity>
+        <activity
+            android:name=".activities.LecturesSearchActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/lecture_search" >
+        </activity>
+        <activity
+            android:name=".activities.FeedsDetailsActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/rss_feeds" >
+        </activity>
+        <activity
+            android:name=".activities.FeedsActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/rss_feeds" >
+        </activity>
+        <activity
+            android:name=".activities.CafeteriaActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/cafeterias" >
+        </activity>
+        <activity
+            android:name=".activities.CafeteriaDetailsActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/cafeterias" >
+        </activity>
+        <activity
+            android:name=".activities.PersonsSearchActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/person_search" >
+        </activity>
+        <activity
+            android:name=".activities.PersonsDetailsActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/person_information" >
+        </activity>
+        <activity
+            android:name=".activities.RoomfinderActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/roomfinder" >
+        </activity>
+        <activity
+            android:name=".activities.TuitionFeesActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/tuition_fees" >
+        </activity>
+        <activity
+            android:name=".activities.InformationActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/information" >
+        </activity>
+        <activity
+            android:name=".activities.EventsActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/events" >
+        </activity>
+        <activity
+            android:name=".activities.EventsDetailsActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/event_details" >
+        </activity>
+        <activity
+            android:name=".activities.OrganisationActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/organisations" >
+        </activity>
+        <activity
+            android:name=".activities.OrganisationDetailsActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/organisation_details" >
+        </activity>
+        <activity
+            android:name=".activities.wizzard.WizNavStartActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/app_name" >
+        </activity>
+        <activity
+            android:name=".activities.wizzard.WizNavCheckTokenActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/app_name" >
+        </activity>
+        <activity
+            android:name=".activities.wizzard.WizNavDoneActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/app_name" >
+        </activity>
+        <activity
+            android:name=".activities.wizzard.WizNavExtrasActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/app_name" >
+        </activity>
+        <activity
+            android:name=".activities.LectureScheduleActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/lecture_schedule" >
+        </activity>
+        <activity
+            android:name=".activities.CalendarActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/schedule" >
+        </activity>
+
+        <service
+            android:name=".services.DownloadService"
+            android:exported="false" />
+        <service
+            android:name=".services.ImportService"
+            android:exported="false" />
+        <service
+            android:name=".services.SilenceService"
+            android:exported="false" />
+    </application>
+
+</manifest>
