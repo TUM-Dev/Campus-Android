@@ -41,7 +41,7 @@ import de.tum.in.tumcampusapp.models.managers.CalendarManager;
 public class CalendarActivityOld extends ActivityForAccessingTumOnline {
 	Date currentDate = new Date();
 	DatePicker datePicker;
-	private ArrayList<RelativeLayout> eventList = new ArrayList<RelativeLayout>();
+	private final ArrayList<RelativeLayout> eventList = new ArrayList<RelativeLayout>();
 	private RelativeLayout eventView;
 	CalendarManager kalMgr;
 	RelativeLayout mainScheduleLayout;

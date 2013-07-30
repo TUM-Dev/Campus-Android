@@ -26,9 +26,9 @@ public class CalendarSectionFragment extends Fragment {
 	private Activity activity;
 
 	private Date currentDate = new Date();
-	private ArrayList<RelativeLayout> eventList = new ArrayList<RelativeLayout>();
+	private final ArrayList<RelativeLayout> eventList = new ArrayList<RelativeLayout>();
 	private RelativeLayout eventView;
-	private CalendarManager kalMgr;
+	private final CalendarManager kalMgr;
 	private RelativeLayout mainScheduleLayout;
 
 	public CalendarSectionFragment() {
