@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
@@ -25,14 +26,14 @@ import de.tum.in.tumcampusapp.models.managers.CalendarManager;
 public class CalendarSectionFragment extends Fragment {
 	private Activity activity;
 
+	private final CalendarManager calendarManager;
 	private Date currentDate = new Date();
 	private final ArrayList<RelativeLayout> eventList = new ArrayList<RelativeLayout>();
 	private RelativeLayout eventView;
-	private final CalendarManager kalMgr;
 	private RelativeLayout mainScheduleLayout;
 
 	public CalendarSectionFragment() {
-		kalMgr = new CalendarManager(getActivity());
+		calendarManager = new CalendarManager(getActivity());
 	}
 
 	private RelativeLayout inflateEventView() {
@@ -44,10 +45,8 @@ public class CalendarSectionFragment extends Fragment {
 	}
 
 	private LayoutParams initLayoutParams(float hours) {
-		int oneHourHeight = (int) activity.getResources().getDimension(
-				R.dimen.time_gap)
-				+ (int) activity.getResources().getDimension(
-						R.dimen.time_line_thickness);
+		int oneHourHeight = (int) (activity.getResources()
+				.getDimension(R.dimen.time_one_hour));
 		int height = (int) (oneHourHeight * hours);
 		return new LayoutParams(LayoutParams.MATCH_PARENT, height);
 	}
@@ -56,19 +55,38 @@ public class CalendarSectionFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+
+		String date = getArguments().getString("date");
+		boolean updateMode = getArguments().getBoolean("update_mode");
+
 		View rootView = inflater.inflate(R.layout.fragment_calendar_section,
 				container, false);
 
-		activity = getActivity();
+		if (!updateMode) {
 
-		String date = getArguments().getString("date");
-		currentDate = Utils.getDateTimeISO(date);
+			final ScrollView scrollview = ((ScrollView) rootView
+					.findViewById(R.id.scrollview));
 
-		mainScheduleLayout = (RelativeLayout) rootView
-				.findViewById(R.id.main_schedule_layout);
+			// Scroll to a default position
+			scrollview.post(new Runnable() {
+				@Override
+				public void run() {
+					scrollview.scrollTo(
+							0,
+							(int) getResources().getDimension(
+									R.dimen.default_scroll_position));
+				}
+			});
 
-		updateCalendarView();
+			activity = getActivity();
 
+			currentDate = Utils.getDateTimeISO(date);
+
+			mainScheduleLayout = (RelativeLayout) rootView
+					.findViewById(R.id.main_schedule_layout);
+
+			updateCalendarView();
+		}
 		return rootView;
 	}
 
@@ -81,7 +99,7 @@ public class CalendarSectionFragment extends Fragment {
 		float hours;
 
 		// Cursor cursor = kalMgr.getFromDbForDate(currentDate);
-		Cursor cursor = kalMgr.getAllFromDb();
+		Cursor cursor = calendarManager.getAllFromDb();
 		while (cursor.moveToNext()) {
 			final String status = cursor.getString(1);
 			final String strStart = cursor.getString(5);
@@ -133,9 +151,10 @@ public class CalendarSectionFragment extends Fragment {
 		eventList.clear();
 		parseEvents();
 		mainScheduleLayout.removeAllViews();
-		Log.i("Lectures found", String.valueOf(eventList.size()));
+		Log.i("Total lectures found", String.valueOf(eventList.size()));
 		for (RelativeLayout event : eventList) {
 			mainScheduleLayout.addView(event);
+			// TODO PersonalLayoutManager.setColorForView(activity, event);
 		}
 	}
 }

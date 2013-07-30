@@ -5,9 +5,9 @@
     <string name="average_grade">Durchschnittsnote</string>
     <string name="delete_chache_sure">Alle Daten wirklich löschen?</string>
     <string name="export_to_google">Exportiere nach Google</string>
-    <string name="loading_longtime">(Diese Operation dauert etwas länger)</string>
-    <string name="button_skip">Überspringe</string>
-    <string name="background_info">Es werden einmal am Tag im Hintergrund alle Inhalte heruntergeladen, um deine TUM Campus App auf den neusten Stand zu halten.</string>
+    <string name="loading_longtime"><i>(Diese Operation dauert etwas länger)</i></string>
+    <string name="button_skip">Überspringen</string>
+    <string name="background_info">Es werden einmal am Tag im Hintergrund alle Inhalte heruntergeladen, um die App auf den neusten Stand zu halten.</string>
     <string name="background_mode">Hintergrund Modus</string>
     <string name="set_background_mode"><b>Hintergrund Modus</b>\n\nAktiviere oder deaktiviere den <i>Hintergrund Modus</i>. Bei Aktivierung werden einmal am Tag im Hintergrund alle Inhalte heruntergeladen, um deine TUM Campus App auf den neusten Stand zu halten.</string>
     <string name="set_silent_mode"><b>Lautlos Service</b>\n\nAktiviere oder deaktiviere den <i>Lautlos Service</i>. Bei Aktivierung wird sich das Gerät bei einer aktuell stattfindenden Vorlesung lautlos schalten.</string>
@@ -83,7 +83,7 @@
     <string name="tum_news">TUM News</string>
     <string name="timetable">Zeitplan</string>
     <string name="result_extra">Ergebnis:&#160;</string>
-    <string name="error_fetching_tumonline">Fehler beim Zugriff auf TUMOnline.\nBitte stelle sicher, dass das TUMOnline-Access-Token \nakzeptiertund die entsprechenden Rechte aktiviert wurden.\n\n<b>Klicke hier zum Wiederholen.</b></string>
+    <string name="error_fetching_tumonline">Fehler beim Zugriff auf TUMOnline.\nBitte stelle sicher, dass das TUMOnline-Access-Token \nakzeptiert und die entsprechenden Rechte aktiviert wurden.\n\n<b>Klicke hier zum Wiederholen.</b></string>
     <string name="error_no_token_setup">Kein TUMOnline-Access-Token gefunden.\nBitte erzeuge ein TUMOnline-Access-Token in den\n <i>Einstellungen</i>, um TUMOnline Dienste nutzen zu können.\n\n<b>Klicke hier, um zu den <i>Einstellungen</i> zu gelangen.</b></string>
     <string name="error_sorry">Entschuldigung, ein Fehler ist aufgetreten.</string>
     <string name="error_something_wrong">Entschuldigung, irgendetwas ist schief gegangen.</string>
@@ -388,7 +388,7 @@
     <string name="startup_wizzard">Startup-Wizzard</string>
     <string name="startup_wizzard_uppercase">STARTUP-WIZZARD</string>
     <string name="welcome_msg"><b>Wilkommen zur TUM Campus App!</b>\n\nUm den Zugriff auf TUMOnline Dienste zu ermöglichen, wird deine <b>LRZ Kennung</b> benötigt.\n\nDiese Kennung hat das folgende Format:\n<i>xx00xxx</i>\n(2 Buchstaben, 2 Ziffern, 3 Buchstaben)</string>
-    <string name="button_next">Nächster Schritt</string>
+    <string name="button_next">Weiter</string>
     <string name="button_done">Fertig</string>
     <string name="button_close">Schließen</string>
     <string name="exit">Beenden</string>

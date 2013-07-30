@@ -1,11 +1,13 @@
 package de.tum.in.tumcampusapp.preferences;
 
 import android.app.AlertDialog;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
@@ -63,6 +65,16 @@ public class UserPreferencesActivity extends PreferenceActivity implements
 		// table of all download events
 		SyncManager sm = new SyncManager(context);
 		sm.deleteFromDb();
+
+		String strKalUri = PreferenceManager.getDefaultSharedPreferences(this)
+				.getString(Const.CALENDAR_URI, "");
+		// checking if calendar already exist in user's device
+		if (strKalUri != "") {
+			// Delete local calenadar
+			Uri kalUri = Uri.parse(strKalUri);
+			ContentResolver crv = getContentResolver();
+			crv.delete(kalUri, null, null);
+		}
 
 		Toast.makeText(context, R.string.success_clear_cache,
 				Toast.LENGTH_SHORT).show();

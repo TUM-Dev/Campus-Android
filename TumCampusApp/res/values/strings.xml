@@ -9,7 +9,7 @@
      <string name="average_grade">Average grade</string>
     <string name="delete_chache_sure">Sure to delete all data?</string>
     <string name="export_to_google">Export to Google</string>
-    <string name="loading_longtime">(This operation will take a bit longer)</string>
+    <string name="loading_longtime"><i>(This operation will take a bit longer)</i></string>
     <string name="button_skip">Skip</string>
     <string name="background_info">Content will be fetchted once per day to keep your TUM Campus App up to date.</string>
     <string name="background_mode">Background Mode</string>

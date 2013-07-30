@@ -1,13 +1,18 @@
 package de.tum.in.tumcampusapp.fragments;
 
+import java.util.HashMap;
+
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.SimpleCursorAdapter;
 import android.widget.SimpleCursorAdapter.ViewBinder;
 import android.widget.TextView;
@@ -25,8 +30,10 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
 	private String cafeteriaId;
 	private String cafeteriaName;
 	private String date;
+	private RelativeLayout errorLayout;
 	private View footer;
 	private ListView listViewMenu;
+	private SharedPreferences sharedPrefs;
 
 	public CafeteriaDetailsSectionFragment() {
 	}
@@ -39,7 +46,9 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
 				R.layout.fragment_cafeteriadetails_section, container, false);
 
 		activity = getActivity();
+
 		listViewMenu = (ListView) rootView.findViewById(R.id.listView);
+		errorLayout = (RelativeLayout) rootView.findViewById(R.id.error_layout);
 
 		date = getArguments().getString(Const.DATE);
 		cafeteriaId = getArguments().getString(Const.CAFETERIA_ID);
@@ -73,8 +82,10 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
 		textView = (TextView) footer.findViewById(android.R.id.text1);
 		if (cursorCafeteriaMenu.getCount() == 0) {
 			textView.setText(getString(R.string.opening_hours));
+			errorLayout.setVisibility(View.VISIBLE);
 		} else {
 			textView.setText(getString(R.string.kitchen_opening));
+			errorLayout.setVisibility(View.GONE);
 		}
 
 		// no onclick for items, no separator line
@@ -106,11 +117,26 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
 					TextView price = (TextView) view;
 					String curKey = cursor.getString(cursor
 							.getColumnIndex("typeLong"));
-					if (CafetariaPrices.student_prices.containsKey(curKey))
-						price.setText(CafetariaPrices.student_prices
-								.get(curKey) + "€");
+
+					sharedPrefs = PreferenceManager
+							.getDefaultSharedPreferences(activity);
+
+					HashMap<String, String> rolePrices = null;
+					String type = sharedPrefs.getString(Const.ROLE, "0");
+					if (type.equals("0")) {
+						rolePrices = CafetariaPrices.student_prices;
+					} else if (type.equals("1")) {
+						rolePrices = CafetariaPrices.employee_prices;
+					} else if (type.equals("2")) {
+						rolePrices = CafetariaPrices.guest_prices;
+					} else {
+						rolePrices = CafetariaPrices.student_prices;
+					}
+
+					if (rolePrices.containsKey(curKey))
+						price.setText(rolePrices.get(curKey) + "€");
 					else
-						price.setText("n/a");
+						price.setText("");
 
 					// set price field invisible for "Beilagen"
 					if (curKey.equals("Beilagen"))

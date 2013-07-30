@@ -17,13 +17,14 @@
     <dimen name="section_text_size">15sp</dimen>
     <dimen name="section_padding">4dp</dimen>
     <dimen name="rythm_48dp">48dp</dimen>
-    <dimen name="time_gap">49dp</dimen>
-    <dimen name="time_one_hour">50dp</dimen>
-    <dimen name="time_line_thickness">1dp</dimen>
+    <dimen name="time_gap">74px</dimen>
+    <dimen name="time_one_hour">75px</dimen>
+    <dimen name="time_line_thickness">1px</dimen>
     <dimen name="time_timeline_width">50dp</dimen>
-    <dimen name="time_timeline_height">1200dp</dimen>
+    <dimen name="time_timeline_height">1800px</dimen>
     <dimen name="time_entry_width">50dp</dimen>
-    <dimen name="time_entry_height">100dp</dimen>
+    <dimen name="time_entry_height">150px</dimen>
     <dimen name="margin_image">5dp</dimen>
+    <dimen name="default_scroll_position">525px</dimen>
 
 </resources>

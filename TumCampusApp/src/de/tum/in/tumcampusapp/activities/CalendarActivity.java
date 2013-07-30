@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Locale;
 
 import android.annotation.SuppressLint;
@@ -21,6 +22,7 @@ import android.preference.PreferenceManager;
 import android.provider.CalendarContract;
 import android.provider.CalendarContract.Events;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import de.tum.in.tumcampusapp.R;
@@ -39,9 +41,10 @@ import de.tum.in.tumcampusapp.models.managers.CalendarManager;
  */
 public class CalendarActivity extends ActivityForAccessingTumOnline {
 	public static final int MONTH_AFTER = 1;
-	public static final int MONTH_BEFORE = 0;
+	public static final int MONTH_BEFORE = 1;
 
-	private CalendarManager kalMgr;
+	Calendar calendar = new GregorianCalendar();
+	private CalendarManager calendarManager;
 	private CalendarSectionsPagerAdapter mSectionsPagerAdapter;
 
 	private ViewPager mViewPager;
@@ -49,7 +52,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline {
 	private Uri uri;
 
 	public CalendarActivity() {
-		super(Const.CALENDER, R.layout.activity_mockcalendar);
+		super(Const.CALENDER, R.layout.activity_calendar);
 	}
 
 	@SuppressLint("InlinedApi")
@@ -153,6 +156,13 @@ public class CalendarActivity extends ActivityForAccessingTumOnline {
 			protected void onPostExecute(Boolean result) {
 				displayCal();
 				hideProgressLayout();
+				// Workaroud, to set the page adapter in upadte mode (sets its
+				// count
+				// value to zero, thus we do not update each of the more than
+				// 100
+				// fragments when updating
+				mSectionsPagerAdapter.setUpdateMode(false);
+				mSectionsPagerAdapter.notifyDataSetChanged();
 			}
 
 			@Override
@@ -179,11 +189,23 @@ public class CalendarActivity extends ActivityForAccessingTumOnline {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		mSectionsPagerAdapter = new CalendarSectionsPagerAdapter(this,
-				getSupportFragmentManager());
+		mSectionsPagerAdapter = new CalendarSectionsPagerAdapter(
+				CalendarActivity.this, getSupportFragmentManager());
 
 		mViewPager = (ViewPager) findViewById(R.id.pager);
 		mViewPager.setAdapter(mSectionsPagerAdapter);
+
+		Date now = new Date();
+		calendar.setTime(now);
+
+		calendar.add(Calendar.MONTH, -CalendarActivity.MONTH_BEFORE);
+		Date firstDate = calendar.getTime();
+
+		long days = (long) (now.getTime() - firstDate.getTime())
+				/ (1000 * 60 * 60 * 24);
+		Log.d("Days", String.valueOf(days));
+
+		mViewPager.setCurrentItem((int) days);
 
 		// Set the timespace between now and after this date and before this
 		// Dates before the current date
@@ -192,9 +214,11 @@ public class CalendarActivity extends ActivityForAccessingTumOnline {
 		requestHandler.setParameter("pMonateNach", String.valueOf(MONTH_AFTER));
 
 		preferences = PreferenceManager.getDefaultSharedPreferences(this);
-		kalMgr = new CalendarManager(this);
+		calendarManager = new CalendarManager(this);
 
-		if (kalMgr.needsSync()) {
+		if (calendarManager.needsSync()) {
+			mSectionsPagerAdapter.setUpdateMode(true);
+			mSectionsPagerAdapter.notifyDataSetChanged();
 			super.requestFetch();
 		}
 	}
@@ -214,13 +238,20 @@ public class CalendarActivity extends ActivityForAccessingTumOnline {
 		backgroundTask = new AsyncTask<Void, Void, Boolean>() {
 			@Override
 			protected Boolean doInBackground(Void... params) {
-				kalMgr.importKalendar(rawResponse);
+				calendarManager.importKalendar(rawResponse);
 				return true;
 			}
 
 			@Override
 			protected void onPostExecute(Boolean result) {
 				hideProgressLayout();
+				// Workaroud, to set the page adapter in upadte mode (sets its
+				// count
+				// value to zero, thus we do not update each of the more than
+				// 100
+				// fragments when updating
+				mSectionsPagerAdapter.setUpdateMode(false);
+				mSectionsPagerAdapter.notifyDataSetChanged();
 			}
 
 			@Override
@@ -233,6 +264,12 @@ public class CalendarActivity extends ActivityForAccessingTumOnline {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+		// Workaroud, to set the page adapter in upadte mode (sets its count
+		// value to zero, thus we do not update each of the more than 100
+		// fragments when updating
+		mSectionsPagerAdapter.setUpdateMode(true);
+		mSectionsPagerAdapter.notifyDataSetChanged();
+
 		switch (item.getItemId()) {
 		case R.id.action_export_calendar:
 			exportCalendarToGoogle();

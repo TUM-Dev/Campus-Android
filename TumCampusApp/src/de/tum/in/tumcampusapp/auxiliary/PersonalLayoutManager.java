@@ -9,6 +9,7 @@ import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.drawable.Drawable;
 import android.preference.PreferenceManager;
+import android.view.View;
 import de.tum.in.tumcampusapp.R;
 
 @SuppressLint("ResourceAsColor")
@@ -76,6 +77,16 @@ public class PersonalLayoutManager {
 		int colorKey = getColorKey(activity);
 		activity.findViewById(id).setBackgroundColor(colorKey);
 
+	}
+
+	public static void setColorForId(Activity activity, View rootView, int id) {
+		int colorKey = getColorKey(activity);
+		rootView.findViewById(id).setBackgroundColor(colorKey);
+	}
+
+	public static void setColorForView(Activity activity, View view) {
+		int colorKey = getColorKey(activity);
+		view.setBackgroundColor(colorKey);
 	}
 
 	public static void setDrawableColorForId(Activity activity, int id) {

@@ -25,6 +25,7 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampusapp.adapters.ExamListAdapter;
 import de.tum.in.tumcampusapp.auxiliary.Const;
+import de.tum.in.tumcampusapp.auxiliary.PersonalLayoutManager;
 import de.tum.in.tumcampusapp.models.Exam;
 import de.tum.in.tumcampusapp.models.ExamList;
 
@@ -222,5 +223,12 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 			failedTokenLayout.setVisibility(View.VISIBLE);
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		PersonalLayoutManager.setColorForId(this, R.id.spFilter);
+		PersonalLayoutManager.setColorForId(this, R.id.avgGrade);
 	}
 }

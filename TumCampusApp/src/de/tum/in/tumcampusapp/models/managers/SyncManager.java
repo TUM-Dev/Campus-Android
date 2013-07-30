@@ -3,6 +3,9 @@
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
+import android.text.GetChars;
+import android.util.Log;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 
 /**
@@ -36,13 +39,23 @@ public class SyncManager {
 	 */
 	public static boolean needSync(SQLiteDatabase db, String id, int seconds) {
 		boolean result = true;
-		Cursor c = db.rawQuery(
-				"SELECT lastSync FROM syncs WHERE lastSync > datetime('now', '-"
-						+ seconds + " second') AND id=?", new String[] { id });
-		if (c.getCount() == 1) {
-			result = false;
+
+		try {
+			Cursor c = db.rawQuery(
+					"SELECT lastSync FROM syncs WHERE lastSync > datetime('now', '-"
+							+ seconds + " second') AND id=?",
+					new String[] { id });
+			if (c.getCount() == 1) {
+				result = false;
+			}
+			c.close();
+		} catch (SQLiteException e) {
+			if (e.getMessage().toString().contains("no such table")) {
+				Log.w("SQULite", "Error selecting table " + "syncs"
+						+ " because it doesn't exist!");
+				return true;
+			}
 		}
-		c.close();
 		return result;
 	}
 

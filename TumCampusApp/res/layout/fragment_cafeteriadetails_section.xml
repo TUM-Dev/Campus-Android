@@ -4,6 +4,12 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
+    <include
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        layout="@layout/layout_error"
+        android:visibility="gone" />
+
     <ListView
         android:id="@+id/listView"
         android:layout_width="fill_parent"

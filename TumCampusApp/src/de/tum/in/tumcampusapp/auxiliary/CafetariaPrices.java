@@ -3,9 +3,9 @@ package de.tum.in.tumcampusapp.auxiliary;
 import java.util.HashMap;
 
 public class CafetariaPrices {
-	public static HashMap<String, String> student_prices;
 	public static HashMap<String, String> employee_prices;
 	public static HashMap<String, String> guest_prices;
+	public static HashMap<String, String> student_prices;
 
 	static {
 		student_prices = new HashMap<String, String>();
