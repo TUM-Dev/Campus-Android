@@ -27,6 +27,9 @@ public class CalendarManager {
 				+ "nr VARCHAR PRIMARY KEY, status VARCHAR, url VARCHAR, "
 				+ "title VARCHAR, description VARCHAR, dtstart VARCHAR, dtend VARCHAR, "
 				+ "location VARCHAR, longitude VARCHAR, latitude VARCHAR)");
+		
+		// Create a new Synch table
+		new SyncManager(context);
 	}
 
 	public Cursor getAllFromDb() {

@@ -17,7 +17,7 @@ import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.fragments.CalendarSectionFragment;
 
 public class CalendarSectionsPagerAdapter extends FragmentPagerAdapter {
-	public final static int PAGE_COUNT = 5;
+	public final static int PAGE_COUNT = 0;
 
 	Calendar calendar = new GregorianCalendar();
 	Date today = new Date();
@@ -42,7 +42,7 @@ public class CalendarSectionsPagerAdapter extends FragmentPagerAdapter {
 				/ (1000 * 60 * 60 * 24);
 
 		if (updateMode) {
-			return 0;
+			return PAGE_COUNT;
 		} else {
 			return (int) days;
 		}

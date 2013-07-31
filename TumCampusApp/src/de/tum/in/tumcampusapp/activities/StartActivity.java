@@ -27,6 +27,7 @@ import de.tum.in.tumcampusapp.services.ImportService;
 import de.tum.in.tumcampusapp.services.SilenceService;
 
 /**
+ * Starting point for the App.
  * 
  * @author Sascha Moecker
  */
@@ -34,7 +35,7 @@ public class StartActivity extends FragmentActivity {
 	public static final int DEFAULT_SECTION = 1;
 	public static final String LAST_CHOOSEN_SECTION = "last_choosen_section";
 	public static final int REQ_CODE_COLOR_CHANGE = 0;
-	public static final boolean TRACK_ERRORS_WITH_BUG_SENSE = false;
+	public static final boolean TRACK_ERRORS_WITH_BUG_SENSE = true;
 
 	/**
 	 * The {@link android.support.v4.view.PagerAdapter} that will provide
