@@ -56,37 +56,31 @@ public class CalendarSectionFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
+		activity = getActivity();
+		
 		String date = getArguments().getString("date");
-		boolean updateMode = getArguments().getBoolean("update_mode");
-
 		View rootView = inflater.inflate(R.layout.fragment_calendar_section,
 				container, false);
 
-		if (!updateMode) {
+		final ScrollView scrollview = ((ScrollView) rootView
+				.findViewById(R.id.scrollview));
 
-			final ScrollView scrollview = ((ScrollView) rootView
-					.findViewById(R.id.scrollview));
+		// Scroll to a default position
+		scrollview.post(new Runnable() {
+			@Override
+			public void run() {
+				scrollview.scrollTo(
+						0,
+						(int) getResources().getDimension(
+								R.dimen.default_scroll_position));
+			}
+		});
 
-			// Scroll to a default position
-			scrollview.post(new Runnable() {
-				@Override
-				public void run() {
-					scrollview.scrollTo(
-							0,
-							(int) getResources().getDimension(
-									R.dimen.default_scroll_position));
-				}
-			});
+		currentDate = Utils.getDateTimeISO(date);
+		mainScheduleLayout = (RelativeLayout) rootView
+				.findViewById(R.id.main_schedule_layout);
+		updateCalendarView();
 
-			activity = getActivity();
-
-			currentDate = Utils.getDateTimeISO(date);
-
-			mainScheduleLayout = (RelativeLayout) rootView
-					.findViewById(R.id.main_schedule_layout);
-
-			updateCalendarView();
-		}
 		return rootView;
 	}
 

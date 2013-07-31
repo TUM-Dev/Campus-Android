@@ -17,11 +17,11 @@ import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.fragments.CalendarSectionFragment;
 
 public class CalendarSectionsPagerAdapter extends FragmentPagerAdapter {
-	public final static int PAGE_COUNT = 0;
+	public final static int PAGE_COUNT_ZERO = 0;
+	public final static int PAGE_DAYS_COUNT = 62;
 
 	Calendar calendar = new GregorianCalendar();
 	Date today = new Date();
-	boolean updateMode;
 
 	public CalendarSectionsPagerAdapter(Activity mainActivity,
 			FragmentManager fm) {
@@ -41,11 +41,7 @@ public class CalendarSectionsPagerAdapter extends FragmentPagerAdapter {
 		long days = (long) (lastDate.getTime() - firstDate.getTime())
 				/ (1000 * 60 * 60 * 24);
 
-		if (updateMode) {
-			return PAGE_COUNT;
-		} else {
-			return (int) days;
-		}
+		return (int) days;
 	}
 
 	private Date getCurrentDate(int position) {
@@ -62,7 +58,6 @@ public class CalendarSectionsPagerAdapter extends FragmentPagerAdapter {
 
 		args.putString("date",
 				Utils.getDateTimeString(getCurrentDate(position)));
-		args.putBoolean("update_mode", updateMode);
 
 		fragment.setArguments(args);
 		return fragment;
@@ -84,9 +79,5 @@ public class CalendarSectionsPagerAdapter extends FragmentPagerAdapter {
 		String pageTitleToShow = finalDay + ", " + dateDefaultStyle;
 
 		return (pageTitleToShow).toUpperCase(l);
-	}
-
-	public void setUpdateMode(boolean updateMode) {
-		this.updateMode = updateMode;
 	}
 }

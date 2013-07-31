@@ -2,6 +2,7 @@
 <resources>
 
     <!-- START Translated -->
+    <string name="dialog_show_calendar">Exportieren erfolgreich.\nLokalen Kalender in der <i>Google Calendar App</i> anzeigen?</string>
     <string name="average_grade">Durchschnittsnote</string>
     <string name="delete_chache_sure">Alle Daten wirklich löschen?</string>
     <string name="export_to_google">Exportiere nach Google</string>
