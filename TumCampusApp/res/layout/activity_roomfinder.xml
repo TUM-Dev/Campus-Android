@@ -53,10 +53,12 @@
         layout="@layout/layout_error"
         android:visibility="gone" />
 
-    <WebView
-        android:id="@+id/webview_results"
+    <ListView
+        android:id="@+id/list"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:background="@android:color/transparent" />
+        android:layout_height="wrap_content"
+        android:divider="#b5b5b5"
+        android:dividerHeight="1dp"
+         />
 
 </LinearLayout>
