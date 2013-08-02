@@ -41,7 +41,7 @@ public class RoomFinderListAdapter extends BaseAdapter {
 	    }
 	 
 	    public Object getItem(int position) {
-	        return position;
+	        return  data.get(position);
 	    }
 	 
 	    public long getItemId(int position) {

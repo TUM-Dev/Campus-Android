@@ -13,6 +13,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -48,7 +49,7 @@ public class XMLParser {
               
             if (httpEntity != null) {
 				// do something with the response
-            	 xml = EntityUtils.toString(httpEntity);
+            	 xml = EntityUtils.toString(httpEntity, HTTP.UTF_8);
 			}
  
         } catch (UnsupportedEncodingException e) {

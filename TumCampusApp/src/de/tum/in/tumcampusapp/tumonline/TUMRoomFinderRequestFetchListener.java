@@ -37,6 +37,6 @@ public interface TUMRoomFinderRequestFetchListener {
 	 */
 	public void onFetchError(String errorReason);
 
-	public void onFetchMap(Drawable result);
+	public void onFetchDefaultMapId(String result);
 	
 }
