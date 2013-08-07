@@ -42,15 +42,16 @@ public class SilenceService extends IntentService {
 
 		// loop until silence mode gets disabled in settings
 		while (Utils.getSettingBool(this, Const.SILENCE_SERVICE)) {
-
-			AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-			am.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+			AudioManager am;
+			
+			am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
 			LectureItemManager lim = new LectureItemManager(this);
 			if (!lim.hasLectures()) {
 				// no lectures available
 				return;
 			}
+			
 			Cursor c = lim.getCurrentFromDb();
 			if (c.getCount() != 0) {
 				// if current lecture(s) found, silence the mobile
@@ -58,7 +59,6 @@ public class SilenceService extends IntentService {
 
 				Utils.log("set ringer mode: silent");
 				am.setRingerMode(AudioManager.RINGER_MODE_SILENT);
-
 			} else if (Utils.getSettingBool(this, Const.SILENCE_ON)) {
 				// default: no silence
 				Utils.log("set ringer mode: normal");

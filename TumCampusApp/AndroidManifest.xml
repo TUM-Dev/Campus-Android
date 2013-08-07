@@ -23,6 +23,9 @@
         android:largeHeap="true"
         android:logo="@drawable/ic_launcher"
         android:theme="@style/AppTheme" >
+        <provider android:name=".auxiliary.RoomFinderSuggestionProvider"
+              android:authorities="com.example.RoomFinderSuggestionProvider" />
+        
         <activity
             android:name=".activities.StartActivity"
             android:configChanges="orientation|screenSize"
@@ -165,6 +168,16 @@
         </activity>
         <activity
             android:name=".activities.RoomfinderActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/roomfinder" >
+            <intent-filter>
+            	<action android:name="android.intent.action.SEARCH" />
+        	</intent-filter>
+        	<meta-data android:name="android.app.searchable"
+                   android:resource="@xml/roomfinder_searchable"/>
+        </activity>
+        <activity
+            android:name=".activities.RoomFinderDetailsActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/roomfinder" >
         </activity>

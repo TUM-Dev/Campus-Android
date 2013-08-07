@@ -4,8 +4,8 @@
     <!-- START TODO Translate -->
     <!-- END TODO Translate -->
 
-
     <!-- START Translated, please do not change identifiers -->
+    <string name="dialog_show_calendar">Export successful.\nShow local calendar on <i>Google Calendar App</i>?</string>
     <string name="average_grade">Average grade</string>
     <string name="delete_chache_sure">Sure to delete all data?</string>
     <string name="export_to_google">Export to Google</string>
@@ -35,6 +35,7 @@
     <string name="extras">Extras</string>
     <string name="no_departures_found">No departures available</string>
     <string name="no_station_found">No station found</string>
+    <string name="no_rooms_found">No rooms available</string>
     <string name="exception_unknown">Unknown error</string>
     <string name="exception_sdcard">Error accessing the SD-Card</string>
     <string name="exception_timeout">Problems with internet connection, please try later</string>

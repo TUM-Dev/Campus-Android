@@ -8,9 +8,12 @@ import java.util.GregorianCalendar;
 import java.util.Locale;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -32,6 +35,7 @@ import de.tum.in.tumcampusapp.auxiliary.CalendarMapper;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.PersonalLayoutManager;
 import de.tum.in.tumcampusapp.models.managers.CalendarManager;
+import de.tum.in.tumcampusapp.preferences.UserPreferencesActivity;
 
 /**
  * Mock Activity to demonstrate the basic fragment based navigation using tabs.
@@ -39,7 +43,8 @@ import de.tum.in.tumcampusapp.models.managers.CalendarManager;
  * @author Sascha Moecker
  * 
  */
-public class CalendarActivity extends ActivityForAccessingTumOnline {
+public class CalendarActivity extends ActivityForAccessingTumOnline implements
+		OnClickListener {
 	public static final int MONTH_AFTER = 1;
 	public static final int MONTH_BEFORE = 1;
 
@@ -103,7 +108,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline {
 		}
 	}
 
-	public void addToCalendar() {
+	public void addLocalCalendar() {
 		ContentResolver crv = getContentResolver();
 		Calendar calendar = Calendar.getInstance();
 		uri = CalendarMapper.addCalendar(calendar, crv);
@@ -114,14 +119,14 @@ public class CalendarActivity extends ActivityForAccessingTumOnline {
 		editor.commit();
 	}
 
-	public void delCal(String strKalUri) {
+	public void deleteLocalCalendar(String strKalUri) {
 		Uri kalUri = Uri.parse(strKalUri);
 		ContentResolver crv = getContentResolver();
 		crv.delete(kalUri, null, null);
 	}
 
 	// displaying calendar
-	public void displayCal() {
+	public void displayCalendarOnGoogleCalendar() {
 		// displaying Calendar
 		Calendar beginTime = Calendar.getInstance();
 		long startMillis = beginTime.getTimeInMillis();
@@ -132,21 +137,25 @@ public class CalendarActivity extends ActivityForAccessingTumOnline {
 		startActivity(intent);
 	}
 
+	/**
+	 * Asynch taask for exporting the calendar to a local Google calendar
+	 */
 	public void exportCalendarToGoogle() {
 		AsyncTask<Void, Void, Boolean> backgroundTask;
+
 		backgroundTask = new AsyncTask<Void, Void, Boolean>() {
 			@Override
 			protected Boolean doInBackground(Void... params) {
 
-				String strKalUri = preferences
+				String calendarUri = preferences
 						.getString(Const.CALENDAR_URI, "");
 
 				// checking if calendar already exist in user's device
-				if (strKalUri == "")
-					addToCalendar();
+				if (calendarUri == "")
+					addLocalCalendar();
 				else {
-					delCal(strKalUri);
-					addToCalendar();
+					deleteLocalCalendar(calendarUri);
+					addLocalCalendar();
 				}
 				addEvents(uri);
 				return true;
@@ -154,15 +163,15 @@ public class CalendarActivity extends ActivityForAccessingTumOnline {
 
 			@Override
 			protected void onPostExecute(Boolean result) {
-				displayCal();
+				AlertDialog.Builder builder = new AlertDialog.Builder(
+						CalendarActivity.this);
+				builder.setMessage(getString(R.string.dialog_show_calendar))
+						.setPositiveButton(getString(R.string.yes),
+								CalendarActivity.this)
+						.setNegativeButton(getString(R.string.no),
+								CalendarActivity.this).show();
+				attachSectionPagerAdapter();
 				hideProgressLayout();
-				// Workaroud, to set the page adapter in upadte mode (sets its
-				// count
-				// value to zero, thus we do not update each of the more than
-				// 100
-				// fragments when updating
-				mSectionsPagerAdapter.setUpdateMode(false);
-				mSectionsPagerAdapter.notifyDataSetChanged();
 			}
 
 			@Override
@@ -171,6 +180,13 @@ public class CalendarActivity extends ActivityForAccessingTumOnline {
 			}
 		};
 		backgroundTask.execute();
+	}
+
+	@Override
+	public void onClick(DialogInterface dialog, int which) {
+		if (which == DialogInterface.BUTTON_POSITIVE) {
+			displayCalendarOnGoogleCalendar();
+		}
 	}
 
 	// get added calendar id
@@ -189,10 +205,32 @@ public class CalendarActivity extends ActivityForAccessingTumOnline {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+		mViewPager = (ViewPager) findViewById(R.id.pager);
+
+		// Set the timespace between now and after this date and before this
+		// Dates before the current date
+		requestHandler.setParameter("pMonateVor", String.valueOf(MONTH_BEFORE));
+		// Dates after the current date
+		requestHandler.setParameter("pMonateNach", String.valueOf(MONTH_AFTER));
+
+		preferences = PreferenceManager.getDefaultSharedPreferences(this);
+		calendarManager = new CalendarManager(this);
+
+		if (calendarManager.needsSync()) {
+			super.requestFetch();
+		} else {
+			attachSectionPagerAdapter();
+		}
+	}
+
+	/**
+	 * Link the Sections with the content with a section adapter. Additionally
+	 * put the current date at the start position.
+	 */
+	private void attachSectionPagerAdapter() {
 		mSectionsPagerAdapter = new CalendarSectionsPagerAdapter(
 				CalendarActivity.this, getSupportFragmentManager());
 
-		mViewPager = (ViewPager) findViewById(R.id.pager);
 		mViewPager.setAdapter(mSectionsPagerAdapter);
 
 		Date now = new Date();
@@ -206,21 +244,14 @@ public class CalendarActivity extends ActivityForAccessingTumOnline {
 		Log.d("Days", String.valueOf(days));
 
 		mViewPager.setCurrentItem((int) days);
+	}
 
-		// Set the timespace between now and after this date and before this
-		// Dates before the current date
-		requestHandler.setParameter("pMonateVor", String.valueOf(MONTH_BEFORE));
-		// Dates after the current date
-		requestHandler.setParameter("pMonateNach", String.valueOf(MONTH_AFTER));
-
-		preferences = PreferenceManager.getDefaultSharedPreferences(this);
-		calendarManager = new CalendarManager(this);
-
-		if (calendarManager.needsSync()) {
-			mSectionsPagerAdapter.setUpdateMode(true);
-			mSectionsPagerAdapter.notifyDataSetChanged();
-			super.requestFetch();
-		}
+	/**
+	 * Detach the adapter form the Pager to make the asynch task not conflicting
+	 * with the UI thread.
+	 */
+	private void detachSectionPagerAdapter() {
+		mViewPager.setAdapter(null);
 	}
 
 	@Override
@@ -245,13 +276,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline {
 			@Override
 			protected void onPostExecute(Boolean result) {
 				hideProgressLayout();
-				// Workaroud, to set the page adapter in upadte mode (sets its
-				// count
-				// value to zero, thus we do not update each of the more than
-				// 100
-				// fragments when updating
-				mSectionsPagerAdapter.setUpdateMode(false);
-				mSectionsPagerAdapter.notifyDataSetChanged();
+				attachSectionPagerAdapter();
 			}
 
 			@Override
@@ -264,11 +289,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// Workaroud, to set the page adapter in upadte mode (sets its count
-		// value to zero, thus we do not update each of the more than 100
-		// fragments when updating
-		mSectionsPagerAdapter.setUpdateMode(true);
-		mSectionsPagerAdapter.notifyDataSetChanged();
+		detachSectionPagerAdapter();
 
 		switch (item.getItemId()) {
 		case R.id.action_export_calendar:
