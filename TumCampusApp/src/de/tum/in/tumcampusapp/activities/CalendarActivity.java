@@ -23,6 +23,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.CalendarContract;
+import android.provider.CalendarContract.Calendars;
 import android.provider.CalendarContract.Events;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
@@ -54,7 +55,6 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements
 
 	private ViewPager mViewPager;
 	private SharedPreferences preferences;
-	private Uri uri;
 
 	public CalendarActivity() {
 		super(Const.CALENDER, R.layout.activity_calendar);
@@ -108,21 +108,17 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements
 		}
 	}
 
-	public void addLocalCalendar() {
+	public Uri addLocalCalendar() {
 		ContentResolver crv = getContentResolver();
 		Calendar calendar = Calendar.getInstance();
-		uri = CalendarMapper.addCalendar(calendar, crv);
-		SharedPreferences settings = PreferenceManager
-				.getDefaultSharedPreferences(this);
-		Editor editor = settings.edit();
-		editor.putString(Const.CALENDAR_URI, uri.toString());
-		editor.commit();
+		Uri uri = CalendarMapper.addCalendar(calendar, crv);
+		return uri;
 	}
 
-	public void deleteLocalCalendar(String strKalUri) {
-		Uri kalUri = Uri.parse(strKalUri);
+	public void deleteLocalCalendar() {
 		ContentResolver crv = getContentResolver();
-		crv.delete(kalUri, null, null);
+		Uri uri = Calendars.CONTENT_URI; 
+		crv.delete(uri, " account_name = 'TUM_Campus_APP'", null);
 	}
 
 	// displaying calendar
@@ -150,15 +146,11 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements
 				String calendarUri = preferences
 						.getString(Const.CALENDAR_URI, "");
 
-				// checking if calendar already exist in user's device
-				if (calendarUri == "")
-					addLocalCalendar();
-				else {
-					deleteLocalCalendar(calendarUri);
-					addLocalCalendar();
-				}
-				addEvents(uri);
-				return true;
+					//Deleting earlier calendar created by TUM Campus App
+					deleteLocalCalendar();
+					Uri uri=addLocalCalendar();
+					addEvents(uri);
+					return true;
 			}
 
 			@Override
