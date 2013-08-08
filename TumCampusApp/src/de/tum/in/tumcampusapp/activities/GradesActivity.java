@@ -31,6 +31,7 @@ import android.widget.TextView;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampusapp.adapters.ExamListAdapter;
+import de.tum.in.tumcampusapp.auxiliary.ChartColors;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.PersonalLayoutManager;
 import de.tum.in.tumcampusapp.models.Exam;
@@ -385,6 +386,7 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 
 	public String buildPieChartContentString(List<Exam> filteredExamList) {
 		HashMap<String, Integer> gradeDistrubution_hash = new HashMap<String, Integer>();
+		List<String> usedGrades = new ArrayList<String>();
 		for (int j = 0; j < filteredExamList.size(); j++) {
 			Exam item = filteredExamList.get(j);
 
@@ -395,16 +397,32 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 			gradeDistrubution_hash.put(item.getGrade(), curCount + 1);
 
 		}
-		Log.d("GradeDistribution: ", gradeDistrubution_hash.toString());
+
 		String datas = "";
+		String colors = "";
+
 		for (int i = 0; i < Const.GRADES.length; i++) {
-			if (i == Const.GRADES.length - 1)
+			if (gradeDistrubution_hash.containsKey(Const.GRADES[i]))
+				usedGrades.add(Const.GRADES[i]);
+			if (i == Const.GRADES.length - 1) {
 				datas += "['" + Const.GRADES[i] + "', "
 						+ gradeDistrubution_hash.get(Const.GRADES[i]) + "]";
-			else
+			} else {
 				datas += "['" + Const.GRADES[i] + "', "
 						+ gradeDistrubution_hash.get(Const.GRADES[i]) + "],";
+
+			}
 		}
+		for (int j = 0; j < usedGrades.size(); j++) {
+			String item = usedGrades.get(j);
+			if (j == usedGrades.size() - 1)
+				colors += "'" + ChartColors.chartColors.get(item) + "'";
+			else
+				colors += "'" + ChartColors.chartColors.get(item) + "',";
+
+		}
+		Log.d("USEDGRADES", usedGrades.toString());
+		Log.d("COLORS", colors);
 
 		String content = "<html>"
 				+ "  <head>"
@@ -420,7 +438,11 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 				+ "        var options = {"
 				+ "          title: 'Grades of "
 				+ filteredExamList.get(0).getProgramID()
-				+ "',"
+				+ "'"
+				// + "',"
+				// + "colors: ["
+				// + colors
+				// + "] "
 				+ "        };"
 				+ "        var chart = new google.visualization.PieChart(document.getElementById('chart_div'));"
 				+ "        chart.draw(data, options);"

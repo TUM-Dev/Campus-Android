@@ -5,7 +5,8 @@
     <!-- END TODO Translate -->
 
     <!-- START Translated, please do not change identifiers -->
-    <string name="dialog_show_calendar">Export successful.\nShow local calendar on <i>Google Calendar App</i>?</string>
+    <!-- <string name="dialog_show_calendar">Export successful.\nShow local calendar on <i>Google Calendar App</i>?</string> -->
+
     <string name="average_grade">Average grade</string>
     <string name="delete_chache_sure">Sure to delete all data?</string>
     <string name="export_to_google">Export to Google</string>
