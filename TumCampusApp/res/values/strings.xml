@@ -35,7 +35,7 @@
     <string name="extras">Extras</string>
     <string name="no_departures_found">No departures available</string>
     <string name="no_station_found">No station found</string>
-    <string name="no_rooms_found">No rooms available</string>
+    <string name="no_rooms_found">No rooms found</string>
     <string name="exception_unknown">Unknown error</string>
     <string name="exception_sdcard">Error accessing the SD-Card</string>
     <string name="exception_timeout">Problems with internet connection, please try later</string>

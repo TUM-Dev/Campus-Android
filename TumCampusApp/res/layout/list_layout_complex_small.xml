@@ -7,7 +7,7 @@
     <ImageView
         android:id="@+id/list_menu_icon"
         android:layout_width="match_parent"
-        android:layout_height="52dp"
+        android:layout_height="@dimen/icon_small"
         android:layout_marginBottom="10px"
         android:layout_marginLeft="10px"
         android:layout_marginRight="10px"

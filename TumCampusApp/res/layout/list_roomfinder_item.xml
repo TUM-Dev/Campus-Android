@@ -3,45 +3,32 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:padding="5dip" >
-
-    <!-- ListRow Left sied Thumbnail image -->
+    android:padding="@dimen/padding_default" >
 
     <LinearLayout
         android:id="@+id/thumbnail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_marginRight="5dip"
+        android:layout_marginRight="@dimen/padding_default"
         android:padding="3dip" >
 
         <ImageView
             android:id="@+id/list_image"
-            android:layout_width="50dip"
-            android:layout_height="50dip"
+            android:layout_width="@dimen/icon_small"
+            android:layout_height="@dimen/icon_small"
             android:src="@drawable/about" />
     </LinearLayout>
 
-    <!-- Title Of Song -->
-
     <TextView
         android:id="@+id/title"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/thumbnail"
         android:layout_toRightOf="@+id/thumbnail"
-        android:text="Mensa"
-        android:textColor="#040404"
-        android:textSize="15dip"
-        android:textStyle="bold"
-        android:typeface="sans" />
-
-    <!-- Artist Name -->
-
-    <!-- Rightend Duration -->
-
-
-    <!-- Rightend Arrow -->
+        android:text="title"
+        android:textSize="@dimen/large_text_size"
+        android:textStyle="bold" />
 
     <ImageView
         android:id="@+id/imageView1"
@@ -53,26 +40,23 @@
 
     <TextView
         android:id="@+id/campus"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/thumbnail"
-        android:layout_alignRight="@+id/imageView1"
-        android:gravity="right"
-        android:text="MainCampus"
-        android:textColor="#10bcc9"
-        android:textSize="10dip"
-        android:textStyle="bold" />
+        android:layout_alignLeft="@+id/building"
+        android:gravity="left"
+        android:text="campus"
+        android:textColor="@color/text_light_blue"
+        android:textSize="@dimen/small_text_size" />
 
     <TextView
         android:id="@+id/building"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/campus"
-        android:layout_alignBottom="@+id/campus"
-        android:layout_toLeftOf="@+id/imageView1"
+        android:layout_above="@+id/campus"
         android:layout_toRightOf="@+id/thumbnail"
-        android:text="ArciStrasse 21"
-        android:textColor="#343434"
-        android:textSize="10dip" />
+        android:text="building"
+        android:textColor="@color/text_dark_gray"
+        android:textSize="@dimen/mid_text_size" />
 
 </RelativeLayout>

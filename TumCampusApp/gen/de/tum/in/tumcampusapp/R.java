@@ -21,10 +21,11 @@ public final class R {
     public static final class attr {
     }
     public static final class color {
-        public static final int sections_blue=0x7f070002;
-        public static final int sections_gray=0x7f070005;
-        public static final int sections_green=0x7f070004;
-        public static final int sections_red=0x7f070003;
+        public static final int sections_blue=0x7f070003;
+        public static final int sections_gray=0x7f070006;
+        public static final int sections_green=0x7f070005;
+        public static final int sections_red=0x7f070004;
+        public static final int text_dark_gray=0x7f070002;
         public static final int text_light_blue=0x7f070000;
         public static final int text_light_gray=0x7f070001;
     }
@@ -38,6 +39,7 @@ public final class R {
         public static final int activity_vertical_margin=0x7f080001;
         public static final int default_scroll_position=0x7f080019;
         public static final int headline_text_size=0x7f08000a;
+        public static final int icon_small=0x7f08001a;
         public static final int large_text_size=0x7f08000c;
         public static final int margin_image=0x7f080018;
         public static final int mid_text_size=0x7f080009;

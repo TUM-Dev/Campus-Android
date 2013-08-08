@@ -32,6 +32,7 @@
     <string name="extras">Extras</string>
     <string name="no_departures_found">Keine Abfahrtszeiten verfügbar</string>
     <string name="no_station_found">Keine Stationen gefunden</string>
+    <string name="no_rooms_found">Keine Räume gefunden</string>
     <string name="exception_unknown">Unbekannter Fehler</string>
     <string name="exception_sdcard">Fehler beim Zugriff auf die SD-Karte</string>
     <string name="exception_timeout">Probleme bei der Internetverbindung, bitte später erneut versuchen.</string>

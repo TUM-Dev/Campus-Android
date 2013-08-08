@@ -21,6 +21,7 @@ import android.widget.Toast;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.ActivityForSearching;
 import de.tum.in.tumcampusapp.adapters.RoomFinderListAdapter;
+import de.tum.in.tumcampusapp.auxiliary.PersonalLayoutManager;
 import de.tum.in.tumcampusapp.auxiliary.RoomFinderSuggestionProvider;
 import de.tum.in.tumcampusapp.tumonline.TUMRoomFinderRequest;
 import de.tum.in.tumcampusapp.tumonline.TUMRoomFinderRequestFetchListener;
@@ -202,5 +203,11 @@ public class RoomfinderActivity extends ActivityForSearching implements
 		SearchView searchView = (SearchView) this
 				.findViewById(R.id.searchview_field);
 		searchView.setQuery(s, false);
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		PersonalLayoutManager.setDrawableColorForId(this, R.drawable.about);
 	}
 }

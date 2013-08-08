@@ -26,5 +26,6 @@
     <dimen name="time_entry_height">150px</dimen>
     <dimen name="margin_image">5dp</dimen>
     <dimen name="default_scroll_position">525px</dimen>
+    <dimen name="icon_small">52dp</dimen>
 
 </resources>
