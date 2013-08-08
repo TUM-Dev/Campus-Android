@@ -405,6 +405,8 @@
     <string name="step_2">Schritt 2</string>
     <string name="step_3">Schritt 3</string>
     <string name="finish">Fertig</string>
+    <string name="show_column_chart">Zeige als Balkendiagramm</string>
+    <string name="show_pie_chart">Zeige als Tortendiagramm</string>
     <!-- END Translated -->
 
 </resources>

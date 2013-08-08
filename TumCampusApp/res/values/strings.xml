@@ -413,11 +413,8 @@
     <string name="step_2">Step 2</string>
     <string name="step_3">Step 3</string>
     <string name="finish">Finish</string>
-    <!-- END Translated, please do not change identifiers -->
-    
     <string name="show_column_chart">Show Column Chart</string>
     <string name="show_pie_chart">Show Pie Chart</string>
-    <string name="chartalert_header">No Internet Connection…</string>
-    <string name="chartalert_message">Please make sure you have a connection to the Internet. \n This is necessary to display the chart</string>
+    <!-- END Translated, please do not change identifiers -->
 
 </resources>
