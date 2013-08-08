@@ -43,7 +43,7 @@ public class SilenceService extends IntentService {
 		// loop until silence mode gets disabled in settings
 		while (Utils.getSettingBool(this, Const.SILENCE_SERVICE)) {
 			AudioManager am;
-			
+
 			am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
 			LectureItemManager lim = new LectureItemManager(this);
@@ -51,7 +51,7 @@ public class SilenceService extends IntentService {
 				// no lectures available
 				return;
 			}
-			
+
 			Cursor c = lim.getCurrentFromDb();
 			if (c.getCount() != 0) {
 				// if current lecture(s) found, silence the mobile

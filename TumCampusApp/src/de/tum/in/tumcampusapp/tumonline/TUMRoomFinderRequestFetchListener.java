@@ -3,9 +3,6 @@ package de.tum.in.tumcampusapp.tumonline;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
-
 /**
  * this interface sets how to implement a variety of event listeners for the
  * TUMRoomFinderRequest
@@ -14,7 +11,7 @@ import android.graphics.drawable.Drawable;
  */
 
 public interface TUMRoomFinderRequestFetchListener {
-	
+
 	public void onCommonError(String errorReason);
 
 	/**
@@ -38,5 +35,5 @@ public interface TUMRoomFinderRequestFetchListener {
 	public void onFetchError(String errorReason);
 
 	public void onFetchDefaultMapId(String result);
-	
+
 }

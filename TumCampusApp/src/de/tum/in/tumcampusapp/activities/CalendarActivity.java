@@ -16,7 +16,6 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -36,7 +35,6 @@ import de.tum.in.tumcampusapp.auxiliary.CalendarMapper;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.PersonalLayoutManager;
 import de.tum.in.tumcampusapp.models.managers.CalendarManager;
-import de.tum.in.tumcampusapp.preferences.UserPreferencesActivity;
 
 /**
  * Mock Activity to demonstrate the basic fragment based navigation using tabs.
@@ -117,7 +115,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements
 
 	public void deleteLocalCalendar() {
 		ContentResolver crv = getContentResolver();
-		Uri uri = Calendars.CONTENT_URI; 
+		Uri uri = Calendars.CONTENT_URI;
 		crv.delete(uri, " account_name = 'TUM_Campus_APP'", null);
 	}
 
@@ -143,14 +141,14 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements
 			@Override
 			protected Boolean doInBackground(Void... params) {
 
-				String calendarUri = preferences
-						.getString(Const.CALENDAR_URI, "");
+				String calendarUri = preferences.getString(Const.CALENDAR_URI,
+						"");
 
-					//Deleting earlier calendar created by TUM Campus App
-					deleteLocalCalendar();
-					Uri uri=addLocalCalendar();
-					addEvents(uri);
-					return true;
+				// Deleting earlier calendar created by TUM Campus App
+				deleteLocalCalendar();
+				Uri uri = addLocalCalendar();
+				addEvents(uri);
+				return true;
 			}
 
 			@Override
