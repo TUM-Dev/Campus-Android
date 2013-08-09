@@ -108,7 +108,6 @@
                     android:onClick="onClickNext"
                     android:text="@string/button_next" />
             </LinearLayout>
-
         </LinearLayout>
     </ScrollView>
 

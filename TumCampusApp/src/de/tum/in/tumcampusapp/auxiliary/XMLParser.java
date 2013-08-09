@@ -32,39 +32,6 @@ public class XMLParser {
 	}
 
 	/**
-	 * Getting XML from URL making HTTP request
-	 * 
-	 * @param url
-	 *            string
-	 * */
-	public String getXmlFromUrl(String url) {
-		String xml = null;
-
-		try {
-			// defaultHttpClient
-			DefaultHttpClient httpClient = new DefaultHttpClient();
-			HttpGet httpGet = new HttpGet(url);
-
-			HttpResponse httpResponse = httpClient.execute(httpGet);
-			HttpEntity httpEntity = httpResponse.getEntity();
-
-			if (httpEntity != null) {
-				// do something with the response
-				xml = EntityUtils.toString(httpEntity, HTTP.UTF_8);
-			}
-
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		} catch (ClientProtocolException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		// return XML
-		return xml;
-	}
-
-	/**
 	 * Getting XML DOM element
 	 * 
 	 * @param XML
@@ -127,6 +94,39 @@ public class XMLParser {
 	public String getValue(Element item, String str) {
 		NodeList n = item.getElementsByTagName(str);
 		return this.getElementValue(n.item(0));
+	}
+
+	/**
+	 * Getting XML from URL making HTTP request
+	 * 
+	 * @param url
+	 *            string
+	 * */
+	public String getXmlFromUrl(String url) {
+		String xml = null;
+
+		try {
+			// defaultHttpClient
+			DefaultHttpClient httpClient = new DefaultHttpClient();
+			HttpGet httpGet = new HttpGet(url);
+
+			HttpResponse httpResponse = httpClient.execute(httpGet);
+			HttpEntity httpEntity = httpResponse.getEntity();
+
+			if (httpEntity != null) {
+				// do something with the response
+				xml = EntityUtils.toString(httpEntity, HTTP.UTF_8);
+			}
+
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		// return XML
+		return xml;
 	}
 
 }

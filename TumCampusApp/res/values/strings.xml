@@ -5,6 +5,9 @@
     <!-- END TODO Translate -->
 
     <!-- START Translated, please do not change identifiers -->
+    <string name="no_map_available">No map available</string>
+    <string name="android_version_too_low">Android version too low</string>
+    <string name="android_version_too_low_message">This feature is not avaiable on your current Android version</string>
     <string name="dialog_show_calendar">Export successful.\nShow local calendar on <i>Google Calendar App</i>?</string>
     <string name="average_grade">Average grade</string>
     <string name="delete_chache_sure">Sure to delete all data?</string>

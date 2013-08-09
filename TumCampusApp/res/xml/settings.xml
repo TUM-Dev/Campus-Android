@@ -35,24 +35,20 @@
             android:key="button_wizzard"
             android:summary="@string/open_wizzard_detail"
             android:title="@string/open_wizzard" />
-
         <Preference
             android:key="button_clear_cache"
             android:summary="@string/clear_cache_detail"
             android:title="@string/clear_cache" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/services" >
-
         <CheckBoxPreference
             android:key="silent_mode"
             android:summary="@string/silence_phone_info"
             android:title="@string/silence_phone" />
-        
         <CheckBoxPreference
             android:key="background_mode"
             android:summary="@string/background_info"
             android:title="@string/background_mode" />
-
     </PreferenceCategory>
 
 </PreferenceScreen>

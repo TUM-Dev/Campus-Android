@@ -12,10 +12,10 @@
         android:layout_below="@+id/imageView1"
         android:layout_centerHorizontal="true"
         android:gravity="center"
-        android:visibility="gone"
         android:text="@string/error_something_wrong"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textSize="12sp" />
+        android:textSize="12sp"
+        android:visibility="gone" />
 
     <ImageView
         android:id="@+id/imageView1"

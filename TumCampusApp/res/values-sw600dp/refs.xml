@@ -5,7 +5,7 @@
     two-pane version on Large screens.
 
     For more on layout aliases, see:
-    http://developer.android.com/training/multiscreen/screensizes.html#TaskUseAliasFilters
+    http://developer.android.com/training/multiscreen/screensizes.html#TaskUseAliasFilters
     -->
     <item name="activity_openinghourslist" type="layout">@layout/activity_openinghours_twopane</item>
 

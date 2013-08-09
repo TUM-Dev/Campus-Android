@@ -30,32 +30,32 @@ public class TUMRoomFinderRequest {
 	// public static final String SERVICE_BASE_URL =
 	// "http://vmbaumgarten3.informatik.tu-muenchen.de/";
 
-	private final String SERVICE_BASE_URL = "http://vmbaumgarten3.informatik.tu-muenchen.de/";
-	private final String ROOM_SERVICE_URL = SERVICE_BASE_URL + "roommaps/room/";
-	private final String ROOM_SERVICE_DEFAULTMAPURL = SERVICE_BASE_URL
-			+ "roommaps/building/";
+	public static final String KEY_ARCHITECT_NUMBER = "architect_number";
+	public static final String KEY_Building = "building";
+	public static final String KEY_Campus = "Campus";
 
 	// XML node keys
 	static final String KEY_Campuses = "campuses"; // parent node
-	public static final String KEY_Campus = "Campus";
-	public static final String KEY_TITLE = "title";
 	public static final String KEY_ID = "Id";
-	public static final String KEY_Building = "building";
-	public static final String KEY_Room = "room";
 	public static final String KEY_MapId = "mapId";
+	public static final String KEY_Room = "room";
+	public static final String KEY_TITLE = "title";
 	public static final String KEY_WEB_CODE = "web_code";
-	public static final String KEY_ARCHITECT_NUMBER = "architect_number";
-
 	/** asynchronous task for interactive fetch */
 	AsyncTask<String, Void, ArrayList<HashMap<String, String>>> backgroundTask = null;
 	private AsyncTask<String, Void, String> backgroundTaskMap = null;
+	private Context baseContext;
+
 	/** http client instance for fetching */
 	private HttpClient client;
 	/** method to call */
 	private String method = null;
 	/** a list/map for the needed parameters */
 	private Map<String, String> parameters;
-	private Context baseContext;
+	private final String SERVICE_BASE_URL = "http://vmbaumgarten3.informatik.tu-muenchen.de/";
+	private final String ROOM_SERVICE_DEFAULTMAPURL = SERVICE_BASE_URL
+			+ "roommaps/building/";
+	private final String ROOM_SERVICE_URL = SERVICE_BASE_URL + "roommaps/room/";
 
 	public TUMRoomFinderRequest() {
 		client = getThreadSafeClient();
@@ -135,6 +135,89 @@ public class TUMRoomFinderRequest {
 		return roomsList;
 	}
 
+	public String fetchDefaultMapId(String buildingID) {
+		setParameter("id", buildingID);
+
+		String url = getRequestURL(ROOM_SERVICE_DEFAULTMAPURL);
+		Log.d("TUMRoomFinderXMLRequest", "fetching Map URL " + url);
+
+		String result = null;
+
+		try {
+
+			XMLParser parser = new XMLParser();
+			String xml = parser.getXmlFromUrl(url); // getting XML from URL
+			Document doc = parser.getDomElement(xml); // getting DOM element
+
+			NodeList defaultMapIdList = doc.getElementsByTagName(KEY_MapId);
+			Element defaultMapId = (Element) defaultMapIdList.item(0);
+			result = parser.getElementValue(defaultMapId);
+			if (result.equals(""))
+				result = "10";// default room for unknown buildings
+
+		} catch (Exception e) {
+			Log.d("FETCHerror", e.toString());
+			e.printStackTrace();
+			// return e.getMessage();
+		}
+		return result;
+	}
+
+	public void fetchDefaultMapIdJob(final Context context,
+			final TUMRoomFinderRequestFetchListener listener, String mapID) {
+
+		baseContext = context;
+		method = "defaultMapId";
+		// fetch information in a background task and show progress dialog in
+		// meantime
+		backgroundTaskMap = new AsyncTask<String, Void, String>() {
+
+			/** property to determine if there is an internet connection */
+			boolean isOnline;
+
+			@Override
+			protected String doInBackground(String... buildingID) {
+				// set parameter on the TUMRoomFinder request an fetch the
+				// results
+				isOnline = Utils.isConnected(context);
+				if (!isOnline) {
+					// not online, fetch does not make sense
+					return null;
+				}
+				// we are online, return fetch result
+				return fetchDefaultMapId(buildingID[0]);
+			}
+
+			@Override
+			protected void onPostExecute(String resultId) {
+				Log.d(getClass().getSimpleName(), resultId);
+				// handle result
+				if (isOnline == false) {
+					listener.onCommonError(context
+							.getString(R.string.no_internet_connection));
+					return;
+				}
+				if (resultId == null) {
+					listener.onFetchError(context
+							.getString(R.string.empty_result));
+					return;
+					// TODO Check whether to move to string.xml
+				}
+				if (resultId.equals("10")) {
+					listener.onCommonError(context
+							.getString(R.string.no_map_available));
+					return;
+				}
+				// If there could not be found any problems return usual on
+				// Fetch method
+				listener.onFetchDefaultMapId(resultId);
+			}
+
+		};
+
+		backgroundTaskMap.execute(mapID);
+	}
+
 	/**
 	 * this fetch method will fetch the data from the TUMRoomFinder Request and
 	 * will address the listeners onFetch if the fetch succeeded, else the
@@ -196,83 +279,6 @@ public class TUMRoomFinderRequest {
 		backgroundTask.execute(searchString);
 	}
 
-	public void fetchDefaultMapIdJob(final Context context,
-			final TUMRoomFinderRequestFetchListener listener, String mapID) {
-
-		baseContext = context;
-		method = "defaultMapId";
-		// fetch information in a background task and show progress dialog in
-		// meantime
-		backgroundTaskMap = new AsyncTask<String, Void, String>() {
-
-			/** property to determine if there is an internet connection */
-			boolean isOnline;
-
-			@Override
-			protected String doInBackground(String... buildingID) {
-				// set parameter on the TUMRoomFinder request an fetch the
-				// results
-				isOnline = Utils.isConnected(context);
-				if (!isOnline) {
-					// not online, fetch does not make sense
-					return null;
-				}
-				// we are online, return fetch result
-				return fetchDefaultMapId(buildingID[0]);
-			}
-
-			@Override
-			protected void onPostExecute(String resultId) {
-				// handle result
-				if (isOnline == false) {
-					listener.onCommonError(context
-							.getString(R.string.no_internet_connection));
-					return;
-				}
-				if (resultId == null) {
-					listener.onFetchError(context
-							.getString(R.string.empty_result));
-					return;
-					// TODO Check whether to move to string.xml
-				}
-				// If there could not be found any problems return usual on
-				// Fetch method
-				listener.onFetchDefaultMapId(resultId);
-			}
-
-		};
-
-		backgroundTaskMap.execute(mapID);
-	}
-
-	public String fetchDefaultMapId(String buildingID) {
-		setParameter("id", buildingID);
-
-		String url = getRequestURL(ROOM_SERVICE_DEFAULTMAPURL);
-		Log.d("TUMRoomFinderXMLRequest", "fetching Map URL " + url);
-
-		String result = null;
-
-		try {
-
-			XMLParser parser = new XMLParser();
-			String xml = parser.getXmlFromUrl(url); // getting XML from URL
-			Document doc = parser.getDomElement(xml); // getting DOM element
-
-			NodeList defaultMapIdList = doc.getElementsByTagName(KEY_MapId);
-			Element defaultMapId = (Element) defaultMapIdList.item(0);
-			result = parser.getElementValue(defaultMapId);
-			if (result.equals(""))
-				result = "10";// default room for unknown buildings
-
-		} catch (Exception e) {
-			Log.d("FETCHerror", e.toString());
-			e.printStackTrace();
-			// return e.getMessage();
-		}
-		return result;
-	}
-
 	/**
 	 * Returns a map with all set parameter pairs
 	 * 
@@ -310,6 +316,11 @@ public class TUMRoomFinderRequest {
 		return client;
 	}
 
+	public void setMethod(String method) {
+		this.method = method;
+
+	}
+
 	/**
 	 * Sets one parameter name to its given value
 	 * 
@@ -331,11 +342,6 @@ public class TUMRoomFinderRequest {
 	 */
 	public void setParameters(Map<String, String> existingMap) {
 		parameters.putAll(existingMap);
-	}
-
-	public void setMethod(String method) {
-		this.method = method;
-
 	}
 
 }

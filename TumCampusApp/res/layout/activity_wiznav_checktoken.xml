@@ -70,6 +70,7 @@
                 android:paddingBottom="@dimen/padding_default"
                 android:paddingTop="@dimen/padding_default"
                 android:src="@drawable/tokenmanagement" />
+
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -77,6 +78,7 @@
                 android:paddingBottom="@dimen/padding_default"
                 android:paddingTop="@dimen/padding_default"
                 android:src="@drawable/wizz_activate_token" />
+
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

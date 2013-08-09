@@ -10,12 +10,7 @@ import java.util.Locale;
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
 
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -34,6 +29,7 @@ import de.tum.in.tumcampusapp.activities.generic.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampusapp.adapters.ExamListAdapter;
 import de.tum.in.tumcampusapp.auxiliary.ChartColors;
 import de.tum.in.tumcampusapp.auxiliary.Const;
+import de.tum.in.tumcampusapp.auxiliary.Dialogs;
 import de.tum.in.tumcampusapp.auxiliary.PersonalLayoutManager;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.Exam;
@@ -48,26 +44,176 @@ import de.tum.in.tumcampusapp.models.ExamList;
  */
 public class GradesActivity extends ActivityForAccessingTumOnline {
 
+	boolean allSelected = false;
 	private TextView average_tx;
-	private double averageGrade;
 
-	private ExamList examList;
-	private ListView lvGrades;
+	private double averageGrade;
+	String columnChartContent;
 
 	MenuItem columnMenuItem;
-	MenuItem pieMenuItem;
+	private ExamList examList;
 
-	boolean allSelected = false;
-
-	private Spinner spFilter;
 	// private HashMap<String, Integer> gradeDistrubution_hash;
 	NumberFormat format = NumberFormat.getInstance(Locale.FRANCE);
 
-	String columnChartContent;
+	private ListView lvGrades;
 	String pieChartContent;
+
+	MenuItem pieMenuItem;
+	private Spinner spFilter;
 
 	public GradesActivity() {
 		super(Const.NOTEN, R.layout.activity_grades);
+	}
+
+	public String buildColumnChartContentString(List<Exam> filteredExamList) {
+		HashMap<String, Integer> gradeDistrubution_hash = new HashMap<String, Integer>();
+		for (int j = 0; j < filteredExamList.size(); j++) {
+			Exam item = filteredExamList.get(j);
+
+			// increment hash value
+			int curCount = gradeDistrubution_hash.containsKey(item.getGrade()) ? gradeDistrubution_hash
+					.get(item.getGrade()) : 0;
+
+			gradeDistrubution_hash.put(item.getGrade(), curCount + 1);
+
+		}
+		Log.d("GradeDistribution: ", gradeDistrubution_hash.toString());
+		String datas = "";
+		for (int i = 0; i < Const.GRADES.length; i++) {
+			if (i == Const.GRADES.length - 1)
+				datas += "['" + Const.GRADES[i] + "', "
+						+ gradeDistrubution_hash.get(Const.GRADES[i]) + "]";
+			else
+				datas += "['" + Const.GRADES[i] + "', "
+						+ gradeDistrubution_hash.get(Const.GRADES[i]) + "],";
+		}
+
+		String content = "<html>"
+				+ "  <head>"
+				+ "    <script type=\"text/javascript\" src=\"jsapi.js\"></script>"
+				+ "    <script type=\"text/javascript\">"
+				+ "      google.load(\"visualization\", \"1\", {packages:[\"corechart\"]});"
+				+ "      google.setOnLoadCallback(drawChart);"
+				+ "      function drawChart() {"
+				+ "        var data = google.visualization.arrayToDataTable(["
+				+ "          ['Grade', 'Number'],"
+				+ datas
+				+ "        ]);"
+				+ "        var options = {"
+				+ "          title: 'Grades of "
+				+ filteredExamList.get(0).getProgramID()
+				+ "',"
+				+ " 	     legend: {position: 'none'}"
+				+ "        };"
+				+ "        var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));"
+				+ "        chart.draw(data, options);"
+				+ "      }"
+				+ "    </script>"
+				+ "  </head>"
+				+ "  <body>"
+				+ "    <div id=\"chart_div\" style=\"width: 1000px; height: 500px;\"></div>"
+				// +
+				// "       <img style=\"padding: 0; margin: 0 0 0 330px; display: block;\" src=\"truiton.png\"/>"
+				+ "  </body>" + "</html>";
+
+		return content;
+	}
+
+	public String buildPieChartContentString(List<Exam> filteredExamList) {
+		HashMap<String, Integer> gradeDistrubution_hash = new HashMap<String, Integer>();
+		List<String> usedGrades = new ArrayList<String>();
+		for (int j = 0; j < filteredExamList.size(); j++) {
+			Exam item = filteredExamList.get(j);
+
+			// increment hash value
+			int curCount = gradeDistrubution_hash.containsKey(item.getGrade()) ? gradeDistrubution_hash
+					.get(item.getGrade()) : 0;
+
+			gradeDistrubution_hash.put(item.getGrade(), curCount + 1);
+
+		}
+
+		String datas = "";
+		String colors = "";
+
+		for (int i = 0; i < Const.GRADES.length; i++) {
+			if (gradeDistrubution_hash.containsKey(Const.GRADES[i]))
+				usedGrades.add(Const.GRADES[i]);
+			if (i == Const.GRADES.length - 1) {
+				datas += "['" + Const.GRADES[i] + "', "
+						+ gradeDistrubution_hash.get(Const.GRADES[i]) + "]";
+			} else {
+				datas += "['" + Const.GRADES[i] + "', "
+						+ gradeDistrubution_hash.get(Const.GRADES[i]) + "],";
+
+			}
+		}
+		for (int j = 0; j < usedGrades.size(); j++) {
+			String item = usedGrades.get(j);
+			if (j == usedGrades.size() - 1)
+				colors += "'" + ChartColors.chartColors.get(item) + "'";
+			else
+				colors += "'" + ChartColors.chartColors.get(item) + "',";
+
+		}
+		Log.d("USEDGRADES", usedGrades.toString());
+		Log.d("COLORS", colors);
+
+		String content = "<html>"
+				+ "  <head>"
+				+ "    <script type=\"text/javascript\" src=\"jsapi.js\"></script>"
+				+ "    <script type=\"text/javascript\">"
+				+ "      google.load(\"visualization\", \"1\", {packages:[\"corechart\"]});"
+				+ "      google.setOnLoadCallback(drawChart);"
+				+ "      function drawChart() {"
+				+ "        var data = google.visualization.arrayToDataTable(["
+				+ "          ['Grade', 'Number'],"
+				+ datas
+				+ "        ]);"
+				+ "        var options = {"
+				+ "          title: 'Grades of "
+				+ filteredExamList.get(0).getProgramID()
+				+ "'"
+				// + "',"
+				// + "colors: ["
+				// + colors
+				// + "] "
+				+ "        };"
+				+ "        var chart = new google.visualization.PieChart(document.getElementById('chart_div'));"
+				+ "        chart.draw(data, options);"
+				+ "      }"
+				+ "    </script>"
+				+ "  </head>"
+				+ "  <body>"
+				+ "    <div id=\"chart_div\" style=\"width: 1000px; height: 500px;\"></div>"
+				+ "  </body>" + "</html>";
+
+		return content;
+	}
+
+	public Double calculateAverageGrade(List<Exam> filteredExamList) {
+		List<Exam> removedDoubles = removeDuplicates(filteredExamList);
+		double weightedGrade = 0.0;
+		double creditSum = 0.0;
+
+		for (int i = 0; i < removedDoubles.size(); i++) {
+			Exam item = removedDoubles.get(i);
+			creditSum += Double.valueOf(item.getCredits());
+			try {
+				weightedGrade += format.parse(item.getGrade()).doubleValue()
+						* Double.valueOf(item.getCredits());
+			} catch (NumberFormatException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		}
+		return weightedGrade / creditSum;
+
 	}
 
 	/**
@@ -141,11 +287,9 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 
 					average_tx.setText(getResources().getString(
 							R.string.average_grade)
-							+ ":" + averageGrade);
+							+ ": " + averageGrade);
 					average_tx.setVisibility(View.VISIBLE);
-
 				}
-
 			}
 
 			@Override
@@ -168,6 +312,15 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 		average_tx.setVisibility(View.GONE);
 
 		super.requestFetch();
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.menu_show_gradechart, menu);
+		columnMenuItem = menu.findItem(R.id.columnChart);
+		pieMenuItem = menu.findItem(R.id.pieChart);
+
+		return true;
 	}
 
 	/**
@@ -214,7 +367,6 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 					startActivity(i);
 				}
 			});
-
 			progressLayout.setVisibility(View.GONE);
 
 		} catch (Exception e) {
@@ -226,24 +378,14 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 	}
 
 	@Override
-	protected void onResume() {
-		super.onResume();
-		PersonalLayoutManager.setColorForId(this, R.id.spFilter);
-		PersonalLayoutManager.setColorForId(this, R.id.avgGrade);
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.menu_show_gradechart, menu);
-		columnMenuItem = menu.findItem(R.id.columnChart);
-		pieMenuItem = menu.findItem(R.id.pieChart);
-
-		return true;
-	}
-
-	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		Intent intent;
+
+		// Both features (Chart diagrams) are not available on older devices
+		if (android.os.Build.VERSION.SDK_INT <= 10) {
+			Dialogs.showAndroidVersionTooLowAlert(this);
+			return true;
+		}
 
 		if (Utils.isConnected(this)) {
 			switch (item.getItemId()) {
@@ -264,10 +406,18 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 				return super.onOptionsItemSelected(item);
 			}
 		} else {
-			Toast.makeText(this, R.string.no_internet_connection, Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, R.string.no_internet_connection,
+					Toast.LENGTH_SHORT).show();
 			errorLayout.setVisibility(View.VISIBLE);
 			return true;
 		}
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		PersonalLayoutManager.setColorForId(this, R.id.spFilter);
+		PersonalLayoutManager.setColorForId(this, R.id.avgGrade);
 	}
 
 	public List<Exam> removeDuplicates(List<Exam> filteredExamList) {
@@ -297,157 +447,5 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 				removedDoubles.add(item_one);
 		}
 		return removedDoubles;
-	}
-
-	public Double calculateAverageGrade(List<Exam> filteredExamList) {
-		List<Exam> removedDoubles = removeDuplicates(filteredExamList);
-		double weightedGrade = 0.0;
-		double creditSum = 0.0;
-
-		for (int i = 0; i < removedDoubles.size(); i++) {
-			Exam item = removedDoubles.get(i);
-			creditSum += Double.valueOf(item.getCredits());
-			try {
-				weightedGrade += format.parse(item.getGrade()).doubleValue()
-						* Double.valueOf(item.getCredits());
-			} catch (NumberFormatException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-		}
-		return weightedGrade / creditSum;
-
-	}
-
-	public String buildColumnChartContentString(List<Exam> filteredExamList) {
-		HashMap<String, Integer> gradeDistrubution_hash = new HashMap<String, Integer>();
-		for (int j = 0; j < filteredExamList.size(); j++) {
-			Exam item = filteredExamList.get(j);
-
-			// increment hash value
-			int curCount = gradeDistrubution_hash.containsKey(item.getGrade()) ? gradeDistrubution_hash
-					.get(item.getGrade()) : 0;
-
-			gradeDistrubution_hash.put(item.getGrade(), curCount + 1);
-
-		}
-		Log.d("GradeDistribution: ", gradeDistrubution_hash.toString());
-		String datas = "";
-		for (int i = 0; i < Const.GRADES.length; i++) {
-			if (i == Const.GRADES.length - 1)
-				datas += "['" + Const.GRADES[i] + "', "
-						+ gradeDistrubution_hash.get(Const.GRADES[i]) + "]";
-			else
-				datas += "['" + Const.GRADES[i] + "', "
-						+ gradeDistrubution_hash.get(Const.GRADES[i]) + "],";
-		}
-
-		String content = "<html>"
-				+ "  <head>"
-				+ "    <script type=\"text/javascript\" src=\"jsapi.js\"></script>"
-				+ "    <script type=\"text/javascript\">"
-				+ "      google.load(\"visualization\", \"1\", {packages:[\"corechart\"]});"
-				+ "      google.setOnLoadCallback(drawChart);"
-				+ "      function drawChart() {"
-				+ "        var data = google.visualization.arrayToDataTable(["
-				+ "          ['Grade', 'Number'],"
-				+ datas
-				+ "        ]);"
-				+ "        var options = {"
-				+ "          title: 'Grades of "
-				+ filteredExamList.get(0).getProgramID()
-				+ "',"
-				+ " 	     legend: {position: 'none'}"
-				+ "        };"
-				+ "        var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));"
-				+ "        chart.draw(data, options);"
-				+ "      }"
-				+ "    </script>"
-				+ "  </head>"
-				+ "  <body>"
-				+ "    <div id=\"chart_div\" style=\"width: 1000px; height: 500px;\"></div>"
-				// +
-				// "       <img style=\"padding: 0; margin: 0 0 0 330px; display: block;\" src=\"truiton.png\"/>"
-				+ "  </body>" + "</html>";
-
-		return content;
-
-	}
-
-	public String buildPieChartContentString(List<Exam> filteredExamList) {
-		HashMap<String, Integer> gradeDistrubution_hash = new HashMap<String, Integer>();
-		List<String> usedGrades = new ArrayList<String>();
-		for (int j = 0; j < filteredExamList.size(); j++) {
-			Exam item = filteredExamList.get(j);
-
-			// increment hash value
-			int curCount = gradeDistrubution_hash.containsKey(item.getGrade()) ? gradeDistrubution_hash
-					.get(item.getGrade()) : 0;
-
-			gradeDistrubution_hash.put(item.getGrade(), curCount + 1);
-
-		}
-
-		String datas = "";
-		String colors = "";
-
-		for (int i = 0; i < Const.GRADES.length; i++) {
-			if (gradeDistrubution_hash.containsKey(Const.GRADES[i]))
-				usedGrades.add(Const.GRADES[i]);
-			if (i == Const.GRADES.length - 1) {
-				datas += "['" + Const.GRADES[i] + "', "
-						+ gradeDistrubution_hash.get(Const.GRADES[i]) + "]";
-			} else {
-				datas += "['" + Const.GRADES[i] + "', "
-						+ gradeDistrubution_hash.get(Const.GRADES[i]) + "],";
-
-			}
-		}
-		for (int j = 0; j < usedGrades.size(); j++) {
-			String item = usedGrades.get(j);
-			if (j == usedGrades.size() - 1)
-				colors += "'" + ChartColors.chartColors.get(item) + "'";
-			else
-				colors += "'" + ChartColors.chartColors.get(item) + "',";
-
-		}
-		Log.d("USEDGRADES", usedGrades.toString());
-		Log.d("COLORS", colors);
-
-		String content = "<html>"
-				+ "  <head>"
-				+ "    <script type=\"text/javascript\" src=\"jsapi.js\"></script>"
-				+ "    <script type=\"text/javascript\">"
-				+ "      google.load(\"visualization\", \"1\", {packages:[\"corechart\"]});"
-				+ "      google.setOnLoadCallback(drawChart);"
-				+ "      function drawChart() {"
-				+ "        var data = google.visualization.arrayToDataTable(["
-				+ "          ['Grade', 'Number'],"
-				+ datas
-				+ "        ]);"
-				+ "        var options = {"
-				+ "          title: 'Grades of "
-				+ filteredExamList.get(0).getProgramID()
-				+ "'"
-				// + "',"
-				// + "colors: ["
-				// + colors
-				// + "] "
-				+ "        };"
-				+ "        var chart = new google.visualization.PieChart(document.getElementById('chart_div'));"
-				+ "        chart.draw(data, options);"
-				+ "      }"
-				+ "    </script>"
-				+ "  </head>"
-				+ "  <body>"
-				+ "    <div id=\"chart_div\" style=\"width: 1000px; height: 500px;\"></div>"
-				+ "  </body>" + "</html>";
-
-		return content;
-
 	}
 }

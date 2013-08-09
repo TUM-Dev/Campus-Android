@@ -33,6 +33,7 @@ import de.tum.in.tumcampusapp.activities.generic.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampusapp.adapters.CalendarSectionsPagerAdapter;
 import de.tum.in.tumcampusapp.auxiliary.CalendarMapper;
 import de.tum.in.tumcampusapp.auxiliary.Const;
+import de.tum.in.tumcampusapp.auxiliary.Dialogs;
 import de.tum.in.tumcampusapp.auxiliary.PersonalLayoutManager;
 import de.tum.in.tumcampusapp.models.managers.CalendarManager;
 
@@ -113,10 +114,41 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements
 		return uri;
 	}
 
+	/**
+	 * Link the Sections with the content with a section adapter. Additionally
+	 * put the current date at the start position.
+	 */
+	private void attachSectionPagerAdapter() {
+		mSectionsPagerAdapter = new CalendarSectionsPagerAdapter(
+				CalendarActivity.this, getSupportFragmentManager());
+
+		mViewPager.setAdapter(mSectionsPagerAdapter);
+
+		Date now = new Date();
+		calendar.setTime(now);
+
+		calendar.add(Calendar.MONTH, -CalendarActivity.MONTH_BEFORE);
+		Date firstDate = calendar.getTime();
+
+		long days = (long) (now.getTime() - firstDate.getTime())
+				/ (1000 * 60 * 60 * 24);
+		Log.d("Days", String.valueOf(days));
+
+		mViewPager.setCurrentItem((int) days);
+	}
+
 	public void deleteLocalCalendar() {
 		ContentResolver crv = getContentResolver();
 		Uri uri = Calendars.CONTENT_URI;
 		crv.delete(uri, " account_name = 'TUM_Campus_APP'", null);
+	}
+
+	/**
+	 * Detach the adapter form the Pager to make the asynch task not conflicting
+	 * with the UI thread.
+	 */
+	private void detachSectionPagerAdapter() {
+		mViewPager.setAdapter(null);
 	}
 
 	// displaying calendar
@@ -172,13 +204,6 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements
 		backgroundTask.execute();
 	}
 
-	@Override
-	public void onClick(DialogInterface dialog, int which) {
-		if (which == DialogInterface.BUTTON_POSITIVE) {
-			displayCalendarOnGoogleCalendar();
-		}
-	}
-
 	// get added calendar id
 	public String getID(Uri uri) {
 		String[] projection = new String[] { "_id", "name" };
@@ -189,6 +214,13 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements
 			idstring = cursor.getString(0);
 		}
 		return idstring;
+	}
+
+	@Override
+	public void onClick(DialogInterface dialog, int which) {
+		if (which == DialogInterface.BUTTON_POSITIVE) {
+			displayCalendarOnGoogleCalendar();
+		}
 	}
 
 	@Override
@@ -211,37 +243,6 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements
 		} else {
 			attachSectionPagerAdapter();
 		}
-	}
-
-	/**
-	 * Link the Sections with the content with a section adapter. Additionally
-	 * put the current date at the start position.
-	 */
-	private void attachSectionPagerAdapter() {
-		mSectionsPagerAdapter = new CalendarSectionsPagerAdapter(
-				CalendarActivity.this, getSupportFragmentManager());
-
-		mViewPager.setAdapter(mSectionsPagerAdapter);
-
-		Date now = new Date();
-		calendar.setTime(now);
-
-		calendar.add(Calendar.MONTH, -CalendarActivity.MONTH_BEFORE);
-		Date firstDate = calendar.getTime();
-
-		long days = (long) (now.getTime() - firstDate.getTime())
-				/ (1000 * 60 * 60 * 24);
-		Log.d("Days", String.valueOf(days));
-
-		mViewPager.setCurrentItem((int) days);
-	}
-
-	/**
-	 * Detach the adapter form the Pager to make the asynch task not conflicting
-	 * with the UI thread.
-	 */
-	private void detachSectionPagerAdapter() {
-		mViewPager.setAdapter(null);
 	}
 
 	@Override
@@ -279,11 +280,18 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		detachSectionPagerAdapter();
 
 		switch (item.getItemId()) {
 		case R.id.action_export_calendar:
+			// Disable this feature on older device, thus it will not work
+			if (android.os.Build.VERSION.SDK_INT <= 10) {
+				Dialogs.showAndroidVersionTooLowAlert(this);
+				return true;
+			}
+
+			detachSectionPagerAdapter();
 			exportCalendarToGoogle();
+
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);

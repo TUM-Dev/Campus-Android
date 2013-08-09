@@ -105,7 +105,7 @@ public class StartActivity extends FragmentActivity {
 		// Workaround for new API version. There was a security update which
 		// disallows applications to execute HTTP request in the GUI main
 		// thread.
-		if (android.os.Build.VERSION.SDK_INT > 9) {
+		if (android.os.Build.VERSION.SDK_INT > 10) {
 			StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
 					.permitAll().build();
 			StrictMode.setThreadPolicy(policy);

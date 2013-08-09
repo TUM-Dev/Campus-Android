@@ -2,6 +2,9 @@
 <resources>
 
     <!-- START Translated -->
+    <string name="no_map_available">Keine Karte verfügbar</string>
+    <string name="android_version_too_low">Android Version zu alt</string>
+    <string name="android_version_too_low_message">Deine Android Version unterstützt diese Funktion leider nich</string>
     <string name="dialog_show_calendar">Exportieren erfolgreich.\nLokalen Kalender in der <i>Google Calendar App</i> anzeigen?</string>
     <string name="average_grade">Durchschnittsnote</string>
     <string name="delete_chache_sure">Alle Daten wirklich löschen?</string>

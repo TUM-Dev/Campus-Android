@@ -17,7 +17,6 @@
         android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/img_category" >
-
     </ListView>
 
 </RelativeLayout>

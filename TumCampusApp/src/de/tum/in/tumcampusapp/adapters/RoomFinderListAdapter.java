@@ -25,9 +25,9 @@ public class RoomFinderListAdapter extends BaseAdapter {
 		TextView tvName;
 	}
 
+	private static LayoutInflater inflater = null;
 	private Activity activity;
 	private ArrayList<HashMap<String, String>> data;
-	private static LayoutInflater inflater = null;
 
 	// public ImageLoader imageLoader;
 

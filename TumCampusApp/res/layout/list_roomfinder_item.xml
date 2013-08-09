@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:padding="@dimen/padding_default" >
@@ -8,55 +8,58 @@
     <LinearLayout
         android:id="@+id/thumbnail"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
-        android:layout_marginRight="@dimen/padding_default"
-        android:padding="3dip" >
+        android:layout_gravity="center"
+        android:layout_marginRight="@dimen/padding_default">
 
         <ImageView
             android:id="@+id/list_image"
             android:layout_width="@dimen/icon_small"
             android:layout_height="@dimen/icon_small"
+            android:layout_gravity="center"
             android:src="@drawable/about" />
+
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/title"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/thumbnail"
-        android:layout_toRightOf="@+id/thumbnail"
-        android:text="title"
-        android:textSize="@dimen/large_text_size"
-        android:textStyle="bold" />
+        android:layout_weight="1"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="title"
+            android:textSize="@dimen/large_text_size"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/building"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="building"
+            android:textColor="@color/text_dark_gray"
+            android:textSize="@dimen/mid_text_size" />
+        <TextView
+            android:id="@+id/campus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:text="campus"
+            android:textColor="@color/text_light_blue"
+            android:textSize="@dimen/mid_text_size" />
+
+    </LinearLayout>
+   
 
     <ImageView
         android:id="@+id/imageView1"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
+        android:layout_height="match_parent"
         android:src="@drawable/arrow" />
 
-    <TextView
-        android:id="@+id/campus"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/thumbnail"
-        android:layout_alignLeft="@+id/building"
-        android:gravity="left"
-        android:text="campus"
-        android:textColor="@color/text_light_blue"
-        android:textSize="@dimen/small_text_size" />
-
-    <TextView
-        android:id="@+id/building"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/campus"
-        android:layout_toRightOf="@+id/thumbnail"
-        android:text="building"
-        android:textColor="@color/text_dark_gray"
-        android:textSize="@dimen/mid_text_size" />
-
-</RelativeLayout>
+</LinearLayout>
