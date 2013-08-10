@@ -2,8 +2,11 @@ package de.tum.in.tumcampusapp.fragments;
 
 import java.util.ArrayList;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +15,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.adapters.StartListAdapter;
 import de.tum.in.tumcampusapp.adapters.StartSectionsPagerAdapter;
@@ -24,6 +28,9 @@ public class StartSectionFragment extends Fragment implements
 		OnItemClickListener {
 
 	private int imageId;
+	private Activity activity;
+	private SharedPreferences sharedPrefs;
+	private RelativeLayout overlay;
 	/**
 	 * Contains all list items
 	 */
@@ -37,14 +44,24 @@ public class StartSectionFragment extends Fragment implements
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-
+		activity = getActivity();
 		listMenuEntrySet = (ArrayList<ListMenuEntry>) getArguments()
 				.getSerializable(StartSectionsPagerAdapter.LIST_ENTRY_SET);
 		imageId = getArguments().getInt(
 				StartSectionsPagerAdapter.IMAGE_FOR_CATEGORY);
 
-		View rootView = inflater.inflate(R.layout.fragment_start_section,
+		View rootView = inflater.inflate(R.layout.overlay_start_section,
 				container, false);
+		overlay = (RelativeLayout) rootView.findViewById(R.id.myTUM_overlay);
+		// overlay.setOnTouchListener(new View.OnTouchListener() {
+		//
+		// @Override
+		// public boolean onTouch(View v, MotionEvent event) {
+		// overlay.setVisibility(View.GONE);
+		//
+		// return false;
+		// }
+		// });
 
 		// Builds the list according to the list items in listMenuEntrySet
 		ListView list = (ListView) rootView.findViewById(R.id.list_view);
@@ -57,6 +74,18 @@ public class StartSectionFragment extends Fragment implements
 		list.setOnItemClickListener(this);
 
 		return rootView;
+	}
+
+	@Override
+	public void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		sharedPrefs = PreferenceManager.getDefaultSharedPreferences(activity);
+		if (sharedPrefs.getBoolean("demo_mode", false)) {
+			overlay.setVisibility(View.VISIBLE);
+		} else
+			overlay.setVisibility(View.GONE);
+
 	}
 
 	@Override

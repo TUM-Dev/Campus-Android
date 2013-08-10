@@ -19,6 +19,7 @@ import android.widget.TextView;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.auxiliary.CafetariaPrices;
 import de.tum.in.tumcampusapp.auxiliary.Const;
+import de.tum.in.tumcampusapp.auxiliary.PersonalLayoutManager;
 import de.tum.in.tumcampusapp.models.managers.CafeteriaMenuManager;
 import de.tum.in.tumcampusapp.models.managers.LocationManager;
 
@@ -31,6 +32,7 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
 	private String cafeteriaName;
 	private String date;
 	private RelativeLayout errorLayout;
+	private View rootView;
 	private View footer;
 	private ListView listViewMenu;
 	private SharedPreferences sharedPrefs;
@@ -62,7 +64,17 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
 		// listViewMenu.addFooterView(footer, null, false);
 
 		showMenueForDay();
+		this.rootView = rootView;
 		return rootView;
+	}
+
+	@Override
+	public void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		// PersonalLayoutManager.setColorForView(this.getActivity(),
+		// rootView.findViewById(R.id.tx_category));
+
 	}
 
 	@SuppressWarnings("deprecation")
@@ -91,30 +103,36 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
 		// no onclick for items, no separator line
 		@SuppressWarnings("deprecation")
 		SimpleCursorAdapter adapterMenue = new SimpleCursorAdapter(activity,
-				R.layout.list_layout_cafeteriamenu, cursorCafeteriaMenu, // android.R.layout.two_line_list_item
+				R.layout.list_layout_cafeteriamenu, cursorCafeteriaMenu,
 				cursorCafeteriaMenu.getColumnNames(), new int[] {
 						R.id.tx_category, R.id.tx_menu, R.id.tx_price }) {
 
-			@Override
-			public boolean areAllItemsEnabled() {
-				return false;
-			}
-
-			@Override
-			public boolean isEnabled(int position) {
-				return false;
-			}
+			// @Override
+			// public boolean areAllItemsEnabled() {
+			// return false;
+			// }
+			//
+			// @Override
+			// public boolean isEnabled(int position) {
+			// return false;
+			// }
 		};
 		adapterMenue.setViewBinder(new ViewBinder() {
 
-			// Adding prices not to the database, but adding them manually
+			// Adding prices not to the database, but manually to the list
 			@Override
 			public boolean setViewValue(View view, Cursor cursor,
 					int columnIndex) {
+				if (view.getId() == R.id.tx_category) {
+					TextView category = (TextView) view;
+					PersonalLayoutManager.setColorForView(getActivity(),
+							category);
 
-				// TODO Auto-generated method stub
+				}
+
 				if (view.getId() == R.id.tx_price) {
 					TextView price = (TextView) view;
+					PersonalLayoutManager.setColorForView(getActivity(), price);
 					String curKey = cursor.getString(cursor
 							.getColumnIndex("typeLong"));
 
@@ -134,7 +152,7 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
 					}
 
 					if (rolePrices.containsKey(curKey))
-						price.setText(rolePrices.get(curKey) + "€");
+						price.setText(rolePrices.get(curKey) + " â‚¬");
 					else
 						price.setText("");
 

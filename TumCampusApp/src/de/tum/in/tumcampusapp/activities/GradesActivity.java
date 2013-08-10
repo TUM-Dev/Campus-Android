@@ -55,8 +55,6 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 	MenuItem columnMenuItem;
 	MenuItem pieMenuItem;
 
-	boolean allSelected = false;
-
 	private Spinner spFilter;
 	// private HashMap<String, Integer> gradeDistrubution_hash;
 	NumberFormat format = NumberFormat.getInstance(Locale.FRANCE);
@@ -113,7 +111,7 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 						convertedList.add(item);
 					}
 
-					// build chart Content
+					// build chart Content for corresponding list
 					columnChartContent = buildColumnChartContentString(convertedList);
 					pieChartContent = buildPieChartContentString(convertedList);
 

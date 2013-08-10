@@ -4,6 +4,7 @@
     <!-- START TODO Translate -->
     <!-- END TODO Translate -->
 
+
     <!-- START Translated, please do not change identifiers -->
     <!-- <string name="dialog_show_calendar">Export successful.\nShow local calendar on <i>Google Calendar App</i>?</string> -->
 
@@ -419,5 +420,7 @@
     <string name="show_pie_chart">Show Pie Chart</string>
     <string name="chartalert_header">No Internet Connection…</string>
     <string name="chartalert_message">Please make sure you have a connection to the Internet. \n This is necessary to display the chart</string>
+    <string name="demo_mode">Demo Mode</string>
+    <string name="demo_info">Enabling Helping Screens</string>
 
 </resources>

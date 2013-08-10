@@ -133,10 +133,6 @@ public class CafeteriaMenuManager {
 			for (int j = 0; j < beilagen.length(); j++) {
 				replaceIntoDb(getFromJsonAddendum(beilagen.getJSONObject(j)));
 			}
-			JSONArray preise = json.getJSONArray("mensa_preise"); // Test
-			for (int j = 0; j < preise.length(); j++) {
-				replaceIntoDb(getFromJsonAddendum(beilagen.getJSONObject(j)));
-			}
 			db.setTransactionSuccessful();
 		} finally {
 			db.endTransaction();
