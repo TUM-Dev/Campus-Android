@@ -4,10 +4,11 @@
     <!-- START TODO Translate -->
     <!-- END TODO Translate -->
 
-
     <!-- START Translated, please do not change identifiers -->
-    <!-- <string name="dialog_show_calendar">Export successful.\nShow local calendar on <i>Google Calendar App</i>?</string> -->
-
+    <string name="no_map_available">No map available</string>
+    <string name="android_version_too_low">Android version too low</string>
+    <string name="android_version_too_low_message">This feature is not avaiable on your current Android version</string>
+    <string name="dialog_show_calendar">Export successful.\nShow local calendar on <i>Google Calendar App</i>?</string>
     <string name="average_grade">Average grade</string>
     <string name="delete_chache_sure">Sure to delete all data?</string>
     <string name="export_to_google">Export to Google</string>
@@ -37,7 +38,7 @@
     <string name="extras">Extras</string>
     <string name="no_departures_found">No departures available</string>
     <string name="no_station_found">No station found</string>
-    <string name="no_rooms_found">No rooms available</string>
+    <string name="no_rooms_found">No rooms found</string>
     <string name="exception_unknown">Unknown error</string>
     <string name="exception_sdcard">Error accessing the SD-Card</string>
     <string name="exception_timeout">Problems with internet connection, please try later</string>
@@ -415,11 +416,9 @@
     <string name="step_2">Step 2</string>
     <string name="step_3">Step 3</string>
     <string name="finish">Finish</string>
-    <!-- END Translated, please do not change identifiers -->
     <string name="show_column_chart">Show Column Chart</string>
     <string name="show_pie_chart">Show Pie Chart</string>
-    <string name="chartalert_header">No Internet Connection…</string>
-    <string name="chartalert_message">Please make sure you have a connection to the Internet. \n This is necessary to display the chart</string>
+    <!-- END Translated, please do not change identifiers -->
     <string name="demo_mode">Demo Mode</string>
     <string name="demo_info">Enabling Helping Screens</string>
 

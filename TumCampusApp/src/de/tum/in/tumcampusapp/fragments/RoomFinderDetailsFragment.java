@@ -134,7 +134,7 @@ public class RoomFinderDetailsFragment extends Fragment {
 					}
 
 					if (rolePrices.containsKey(curKey))
-						price.setText(rolePrices.get(curKey) + "€");
+						price.setText(rolePrices.get(curKey) + "?");
 					else
 						price.setText("");
 

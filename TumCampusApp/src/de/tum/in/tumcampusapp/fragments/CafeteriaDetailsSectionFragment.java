@@ -153,6 +153,7 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
 
 					if (rolePrices.containsKey(curKey))
 						price.setText(rolePrices.get(curKey) + " €");
+
 					else
 						price.setText("");
 

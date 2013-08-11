@@ -14,6 +14,20 @@ import de.tum.in.tumcampusapp.R;
  */
 public class Dialogs {
 
+	@SuppressWarnings("deprecation")
+	public static void showAndroidVersionTooLowAlert(Context context) {
+		AlertDialog alertDialog = new AlertDialog.Builder(context).create();
+		alertDialog.setTitle(R.string.android_version_too_low);
+		alertDialog.setMessage(context
+				.getString(R.string.android_version_too_low_message));
+		alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(final DialogInterface dialog, final int which) {
+			}
+		});
+		alertDialog.show();
+	}
+
 	/**
 	 * Shows a dialog asking to switch to another activity in order perform some
 	 * actions there.

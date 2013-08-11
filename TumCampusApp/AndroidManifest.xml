@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="de.tum.in.tumcampusapp"
-    android:versionCode="22"
-    android:versionName="0.5.4" >
+    android:versionCode="24"
+    android:versionName="0.6.1" >
 
     <uses-sdk
         android:minSdkVersion="8"
@@ -64,7 +64,7 @@
         <activity
             android:name=".activities.GradeChartActivity"
             android:configChanges="orientation|screenSize"
-            android:screenOrientation="landscape" >
+            android:label="@string/my_grades"  >
         </activity>
         <activity
             android:name=".activities.GradesActivity"
