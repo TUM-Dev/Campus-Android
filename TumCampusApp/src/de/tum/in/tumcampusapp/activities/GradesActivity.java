@@ -43,7 +43,7 @@ import de.tum.in.tumcampusapp.models.ExamList;
  * @review Thomas Behrens
  */
 public class GradesActivity extends ActivityForAccessingTumOnline {
-
+	static int LAST_CHOICE = 0;
 	boolean allSelected = false;
 	private TextView average_tx;
 
@@ -238,6 +238,7 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 		ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(
 				this, android.R.layout.simple_list_item_checked, filters);
 		spFilter.setAdapter(spinnerArrayAdapter);
+		spFilter.setSelection(LAST_CHOICE);
 
 		// handle if program choice is changed
 		spFilter.setOnItemSelectedListener(new OnItemSelectedListener() {
@@ -247,6 +248,7 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 					int arg2, long arg3) {
 
 				String filter = spFilter.getItemAtPosition(arg2).toString();
+				LAST_CHOICE = arg2;
 
 				if (filter == getString(R.string.all_programs)) {
 
@@ -294,7 +296,7 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 
 			@Override
 			public void onNothingSelected(AdapterView<?> arg0) {
-				// select [Alle]
+				// select ALL
 				spFilter.setSelection(0);
 				lvGrades.setAdapter(new ExamListAdapter(GradesActivity.this,
 						examList.getExams()));

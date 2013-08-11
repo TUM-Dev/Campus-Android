@@ -1,13 +1,17 @@
 ﻿package de.tum.in.tumcampusapp.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.SimpleCursorAdapter;
 import android.widget.SimpleCursorAdapter.ViewBinder;
 import android.widget.TextView;
@@ -22,15 +26,18 @@ import de.tum.in.tumcampusapp.models.managers.NewsManager;
  */
 public class NewsActivity extends ActivityForDownloadingExternal implements
 		OnItemClickListener, ViewBinder {
+	RelativeLayout overlay;
+	SharedPreferences sharedPrefs;
 
 	public NewsActivity() {
-		super(Const.NEWS, R.layout.activity_news);
+		super(Const.NEWS, R.layout.activity_news_overlay);
 	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		super.requestDownload(false);
+		overlay = (RelativeLayout) findViewById(R.id.tumNews_overlay);
 	}
 
 	@SuppressWarnings("deprecation")
@@ -108,4 +115,16 @@ public class NewsActivity extends ActivityForDownloadingExternal implements
 		view.setVisibility(View.VISIBLE);
 		return false;
 	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+		Log.d("PREFS", " = " + sharedPrefs.getBoolean("demo_mode", false));
+		if (sharedPrefs.getBoolean("demo_mode", false))
+			overlay.setVisibility(View.VISIBLE);
+		else
+			overlay.setVisibility(View.GONE);
+	}
+
 }

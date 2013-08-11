@@ -69,6 +69,7 @@ public class StartSectionsPagerAdapter extends FragmentPagerAdapter {
 		// the intent which coresponses to the activity which should be started
 		switch (position) {
 		case SECTION_GENERAL_TUM:
+			args.putInt("POSITION", SECTION_GENERAL_TUM);
 			args.putInt(IMAGE_FOR_CATEGORY, R.drawable.img_tum_building);
 			listMenuEntrySet.add(new ListMenuEntry(R.drawable.zoom,
 					R.string.lecture_search, R.string.lecturessearch_addinfo,
@@ -93,6 +94,7 @@ public class StartSectionsPagerAdapter extends FragmentPagerAdapter {
 					new Intent(activity, OrganisationActivity.class)));
 			break;
 		case SECTION_MY_TUM:
+			args.putInt("POSITION", SECTION_MY_TUM);
 			args.putInt(IMAGE_FOR_CATEGORY, R.drawable.img_tum_flags);
 			listMenuEntrySet.add(new ListMenuEntry(R.drawable.calculator,
 					R.string.my_lectures, R.string.lectures_addinfo,
@@ -111,6 +113,7 @@ public class StartSectionsPagerAdapter extends FragmentPagerAdapter {
 					new Intent(activity, TuitionFeesActivity.class)));
 			break;
 		case SECTION_NEWS:
+			args.putInt("POSITION", SECTION_NEWS);
 			args.putInt(IMAGE_FOR_CATEGORY, R.drawable.img_tum_building_main);
 			listMenuEntrySet.add(new ListMenuEntry(R.drawable.fax,
 					R.string.rss_feeds, R.string.rssfeed_addinfo, new Intent(
@@ -126,6 +129,7 @@ public class StartSectionsPagerAdapter extends FragmentPagerAdapter {
 							activity, GalleryActivity.class)));
 			break;
 		case SECTION_CONVENIENCE:
+			args.putInt("POSITION", SECTION_CONVENIENCE);
 			args.putInt(IMAGE_FOR_CATEGORY, R.drawable.img_tum_parabel);
 			listMenuEntrySet.add(new ListMenuEntry(R.drawable.show_info,
 					R.string.mvv, R.string.mvv_addinfo, new Intent(activity,

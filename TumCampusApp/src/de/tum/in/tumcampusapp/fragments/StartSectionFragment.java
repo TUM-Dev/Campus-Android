@@ -30,7 +30,8 @@ public class StartSectionFragment extends Fragment implements
 	private int imageId;
 	private Activity activity;
 	private SharedPreferences sharedPrefs;
-	private RelativeLayout overlay;
+	private RelativeLayout myTUM_overlay;
+	private RelativeLayout news_overlay;
 	/**
 	 * Contains all list items
 	 */
@@ -50,18 +51,12 @@ public class StartSectionFragment extends Fragment implements
 		imageId = getArguments().getInt(
 				StartSectionsPagerAdapter.IMAGE_FOR_CATEGORY);
 
-		View rootView = inflater.inflate(R.layout.overlay_start_section,
+		View rootView = inflater.inflate(R.layout.fragment_start_section_overlay,
 				container, false);
-		overlay = (RelativeLayout) rootView.findViewById(R.id.myTUM_overlay);
-		// overlay.setOnTouchListener(new View.OnTouchListener() {
-		//
-		// @Override
-		// public boolean onTouch(View v, MotionEvent event) {
-		// overlay.setVisibility(View.GONE);
-		//
-		// return false;
-		// }
-		// });
+		myTUM_overlay = (RelativeLayout) rootView
+				.findViewById(R.id.myTUM_overlay);
+		news_overlay = (RelativeLayout) rootView
+				.findViewById(R.id.news_overlay);
 
 		// Builds the list according to the list items in listMenuEntrySet
 		ListView list = (ListView) rootView.findViewById(R.id.list_view);
@@ -82,10 +77,19 @@ public class StartSectionFragment extends Fragment implements
 		super.onResume();
 		sharedPrefs = PreferenceManager.getDefaultSharedPreferences(activity);
 		if (sharedPrefs.getBoolean("demo_mode", false)) {
-			overlay.setVisibility(View.VISIBLE);
-		} else
-			overlay.setVisibility(View.GONE);
+			switch (getArguments().getInt("POSITION")) {
+			case StartSectionsPagerAdapter.SECTION_MY_TUM:
+				myTUM_overlay.setVisibility(View.VISIBLE);
+				break;
+			case StartSectionsPagerAdapter.SECTION_NEWS:
+				news_overlay.setVisibility(View.VISIBLE);
 
+			}
+
+		} else {
+			myTUM_overlay.setVisibility(View.GONE);
+			news_overlay.setVisibility(View.GONE);
+		}
 	}
 
 	@Override
