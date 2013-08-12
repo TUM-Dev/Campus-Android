@@ -9,18 +9,28 @@
         android:layout_height="@dimen/rythm_48dp"
         android:orientation="horizontal" >
 
-        <EditText
+        <AutoCompleteTextView
             android:id="@+id/search_field"
-            android:layout_width="fill_parent"
+                        android:layout_weight="1"
+            android:layout_width="match_parent"
             android:layout_height="fill_parent"
-            android:layout_weight="1"
             android:hint="@string/search_rooms"
             android:imeActionLabel="Search"
             android:imeOptions="actionSearch"
             android:singleLine="true" >
+        </AutoCompleteTextView>
 
-            <requestFocus />
-        </EditText>
+<!--         <SearchView -->
+<!--             android:id="@+id/searchview_field" -->
+<!--             android:layout_width="fill_parent" -->
+<!--             android:layout_height="fill_parent" -->
+<!--             android:layout_weight="1" -->
+<!--             android:hint="@string/search_rooms" -->
+<!--             android:imeActionLabel="Search" -->
+<!--             android:imeOptions="actionSearch" -->
+<!--             android:singleLine="true" -->
+<!--             android:visibility="gone" > -->
+<!--         </SearchView> -->
 
         <ImageButton
             android:id="@+id/clear"
@@ -53,10 +63,11 @@
         layout="@layout/layout_error"
         android:visibility="gone" />
 
-    <WebView
-        android:id="@+id/webview_results"
+    <ListView
+        android:id="@+id/list"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:background="@android:color/transparent" />
+        android:layout_height="wrap_content"
+        android:divider="#b5b5b5"
+        android:dividerHeight="1dp" />
 
 </LinearLayout>

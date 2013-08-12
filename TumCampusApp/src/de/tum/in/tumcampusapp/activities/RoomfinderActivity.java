@@ -1,39 +1,49 @@
 package de.tum.in.tumcampusapp.activities;
 
-import java.io.File;
-import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.HashMap;
 
-import org.apache.http.impl.client.DefaultHttpClient;
-
+import android.app.SearchManager;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
+import android.provider.SearchRecentSuggestions;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
-import android.webkit.WebView;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.ActivityForSearching;
-import de.tum.in.tumcampusapp.auxiliary.Const;
-import de.tum.in.tumcampusapp.auxiliary.FileUtils;
-import de.tum.in.tumcampusapp.auxiliary.SearchResultListener;
-import de.tum.in.tumcampusapp.auxiliary.Utils;
+import de.tum.in.tumcampusapp.adapters.RoomFinderListAdapter;
+import de.tum.in.tumcampusapp.auxiliary.PersonalLayoutManager;
+import de.tum.in.tumcampusapp.auxiliary.RoomFinderSuggestionProvider;
+import de.tum.in.tumcampusapp.tumonline.TUMRoomFinderRequest;
+import de.tum.in.tumcampusapp.tumonline.TUMRoomFinderRequestFetchListener;
 
 /**
  * Activity to show a convenience interface for using the MyTUM room finder.
  * 
- * @author Vincenz Doelle
+ * @author Vincenz Doelle, Anas Chackfeh
  */
 public class RoomfinderActivity extends ActivityForSearching implements
-		OnEditorActionListener, SearchResultListener {
+		OnEditorActionListener, TUMRoomFinderRequestFetchListener,
+		OnItemClickListener, TextWatcher {
 
 	// HTTP client for sending requests to MyTUM roomfinder
-	private DefaultHttpClient httpClient;
+	TUMRoomFinderRequest roomFinderRequest;
 
-	// the URLs of the MyTUM roomfinder web service
-	private final String SERVICE_BASE_URL = "http://portal.mytum.de/campus/roomfinder/";
-	private final String SERVICE_URL = SERVICE_BASE_URL + "search_room_results";
+	ListView list;
+	RoomFinderListAdapter adapter;
 
-	private WebView webView;
+	String currentlySelectedBuildingId;
+
+	private String currentlySelectedRoomId;
 
 	public RoomfinderActivity() {
 		super(R.layout.activity_roomfinder);
@@ -42,89 +52,176 @@ public class RoomfinderActivity extends ActivityForSearching implements
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		roomFinderRequest = new TUMRoomFinderRequest();
+	}
 
-		httpClient = new DefaultHttpClient();
-		webView = Utils.getDefaultWebView(this, R.id.webview_results);
+	/**
+	 * Exported, because unused.
+	 */
+	@SuppressWarnings("unused")
+	private void initSearchView() {
+		final int SEARCHVIEW_FIELD_ID = 0;
+		// Get the SearchView and set the searchable configuration
+		SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+		searchField.addTextChangedListener(this);
+
+		SearchView searchView = (SearchView) this
+				.findViewById(SEARCHVIEW_FIELD_ID);
+		// Assumes current activity is the searchable activity
+		searchView.setSearchableInfo(searchManager
+				.getSearchableInfo(getComponentName()));
+		searchView.setIconifiedByDefault(false);
+		// Do not iconify the widget;
+		// expand it by default
+		searchView.getRootView().requestFocus();
+
+		Intent intent = getIntent();
+		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+			String query = intent.getStringExtra(SearchManager.QUERY);
+			doSearch(query);
+		}
 	}
 
 	@Override
-	public void onSearchError(String message) {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public void onSearchResults(String[] results) {
-		String text = "";
-
-		try {
-			// Get my results and give them semantics
-			String resultCss = results[0];
-			String resultExtraction = results[1];
-
-			// Cut the results from the webpage
-			resultExtraction = Utils.cutText(resultExtraction,
-					"<div id=\"maincontentwrapper\">",
-					"<div class=\"documentActions\">");
-			// fit all links
-			resultExtraction = resultExtraction.replace(
-					"<a href=\"search_room_form\">", "<a href=\""
-							+ SERVICE_BASE_URL + "search_room_form\">");
-			resultExtraction = resultExtraction.replace(
-					"<a href=\"search_room_results", "<a href=\""
-							+ SERVICE_BASE_URL + "search_room_results");
-
-			// This buidl the actual html document using the css file and the
-			// extracetd results.
-			text = Utils.buildHTMLDocument(resultCss, resultExtraction);
-
-		} catch (Exception e) {
-			Toast.makeText(this, R.string.exception_unknown, Toast.LENGTH_SHORT)
-					.show();
-			Log.e(getClass().getSimpleName(), e.getMessage());
-
-			errorLayout.setVisibility(View.VISIBLE);
-			progressLayout.setVisibility(View.GONE);
-		}
-
-		// write resulting document to temporary file on SD-card
-		File file = null;
-		try {
-			file = FileUtils.getFileOnSD(Const.ROOMFINDER, "tmp.html");
-			FileUtils.writeFile(file, text);
-
-			// get image and save it in the same folder as the document
-			FileUtils.getFileFromURL(httpClient, SERVICE_BASE_URL
-					+ "/default.gif",
-					FileUtils.getFileOnSD(Const.ROOMFINDER, "default.gif"));
-
-			webView.loadUrl("file://" + file.getPath());
-
-			errorLayout.setVisibility(View.VISIBLE);
-			progressLayout.setVisibility(View.GONE);
-		} catch (Exception e) {
-			Toast.makeText(this, R.string.no_sd_card, Toast.LENGTH_SHORT)
-					.show();
-			Log.e(getClass().getSimpleName(), e.getMessage());
-
-			errorLayout.setVisibility(View.VISIBLE);
-			progressLayout.setVisibility(View.GONE);
-		}
+	public void onClick(View view) {
+		super.onClick(view);
 	}
 
 	@Override
 	public boolean performSearchAlgorithm() {
-		@SuppressWarnings("deprecation")
-		String param1 = "searchstring="
-				+ URLEncoder.encode(searchField.getText().toString());
-		String param2 = "building=Alle";
-		String param3 = "search=Suche+starten";
+		EditText searchString = (EditText) this.findViewById(R.id.search_field);
 
-		String queryCss = "http://portal.mytum.de/layout.css";
-		String queryExtraction = SERVICE_URL + "?" + param1 + "&" + param2
-				+ "&" + param3;
+		SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this,
+				RoomFinderSuggestionProvider.AUTHORITY,
+				RoomFinderSuggestionProvider.MODE);
+		suggestions.saveRecentQuery(searchString.getText().toString(), null);
 
-		FileUtils.sendAsynchGetRequest(httpClient, this, queryCss,
-				queryExtraction);
+		roomFinderRequest.fetchSearchInteractive(this, this, searchString
+				.getText().toString());
 		return true;
+	}
+
+	@Override
+	public void onCommonError(String errorReason) {
+		Toast.makeText(this, errorReason, Toast.LENGTH_SHORT).show();
+	}
+
+	@Override
+	public void onFetch(ArrayList<HashMap<String, String>> result) {
+		list = (ListView) findViewById(R.id.list);
+
+		// Getting adapter by passing xml data ArrayList
+		adapter = new RoomFinderListAdapter(this, result);
+		list.setAdapter(adapter);
+
+		// Click event for single list row
+		list.setOnItemClickListener(this);
+
+		progressLayout.setVisibility(View.GONE);
+		if (result.size() == 0) {
+			Toast.makeText(this, R.string.no_rooms_found, Toast.LENGTH_SHORT)
+					.show();
+			errorLayout.setVisibility(View.VISIBLE);
+			return;
+		}
+		errorLayout.setVisibility(View.GONE);
+	}
+
+	@Override
+	public void onFetchCancelled() {
+		onFetchError("");
+	}
+
+	@Override
+	public void onFetchError(String errorReason) {
+		roomFinderRequest.cancelRequest(true);
+		errorLayout.setVisibility(View.VISIBLE);
+		progressLayout.setVisibility(View.GONE);
+	}
+
+	@Override
+	public void onFetchDefaultMapId(String mapId) {
+		Intent intent = new Intent(this, RoomFinderDetailsActivity.class);
+		intent.putExtra("buildingId", currentlySelectedBuildingId);
+		intent.putExtra("roomId", currentlySelectedRoomId);
+		intent.putExtra("mapId", mapId);
+
+		startActivity(intent);
+	}
+
+	@Override
+	public void onItemClick(AdapterView<?> parent, View view, int position,
+			long id) {
+
+		@SuppressWarnings("unchecked")
+		HashMap<String, String> room = (HashMap<String, String>) list
+				.getAdapter().getItem(position);
+
+		currentlySelectedBuildingId = room
+				.get(TUMRoomFinderRequest.KEY_Building
+						+ TUMRoomFinderRequest.KEY_ID);
+
+		currentlySelectedRoomId = room
+				.get(TUMRoomFinderRequest.KEY_ARCHITECT_NUMBER);
+
+		roomFinderRequest.fetchDefaultMapIdJob(this, this,
+				currentlySelectedBuildingId);
+
+	}
+
+	public void onNewIntent(Intent intent) {
+		setIntent(intent);
+		handleIntent(intent);
+	}
+
+	private void handleIntent(Intent intent) {
+		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+			String query = intent.getStringExtra(SearchManager.QUERY);
+			doSearch(query);
+		}
+	}
+
+	private void doSearch(String query) {
+
+		SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this,
+				RoomFinderSuggestionProvider.AUTHORITY,
+				RoomFinderSuggestionProvider.MODE);
+		suggestions.saveRecentQuery(query, null);
+
+		roomFinderRequest.fetchSearchInteractive(this, this, query);
+
+	}
+
+	@Override
+	public void afterTextChanged(Editable s) {
+	}
+
+	@Override
+	public void beforeTextChanged(CharSequence s, int start, int count,
+			int after) {
+
+	}
+
+	@Override
+	public void onTextChanged(CharSequence s, int start, int before, int count) {
+	}
+
+	/**
+	 * Exported, because unused.
+	 * 
+	 * @param s
+	 */
+	@SuppressWarnings("unused")
+	private void initQuerySearchView(CharSequence s) {
+		final int SEARCHVIEW_FIELD_ID = 0;
+		SearchView searchView = (SearchView) this
+				.findViewById(SEARCHVIEW_FIELD_ID);
+		searchView.setQuery(s, false);
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		PersonalLayoutManager.setDrawableColorForId(this, R.drawable.about);
 	}
 }

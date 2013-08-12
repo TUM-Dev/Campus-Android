@@ -51,8 +51,8 @@ public class StartSectionFragment extends Fragment implements
 		imageId = getArguments().getInt(
 				StartSectionsPagerAdapter.IMAGE_FOR_CATEGORY);
 
-		View rootView = inflater.inflate(R.layout.fragment_start_section_overlay,
-				container, false);
+		View rootView = inflater.inflate(
+				R.layout.fragment_start_section_overlay, container, false);
 		myTUM_overlay = (RelativeLayout) rootView
 				.findViewById(R.id.myTUM_overlay);
 		news_overlay = (RelativeLayout) rootView

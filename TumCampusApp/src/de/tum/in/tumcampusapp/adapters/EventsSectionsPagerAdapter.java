@@ -12,8 +12,8 @@ import de.tum.in.tumcampusapp.fragments.EventsSectionFragment;
 public class EventsSectionsPagerAdapter extends FragmentPagerAdapter {
 	public final static String ARG_EVENT_MODE = "event_mode";
 	public final static int PAGE_COUNT = 2;
-	public final static int PAGE_LATESTS_EVENTS = 1;
-	public final static int PAGE_PAST_EVENTS = 0;
+	public final static int PAGE_LATESTS_EVENTS = 0;
+	public final static int PAGE_PAST_EVENTS = 1;
 
 	private final Activity activity;
 

@@ -34,6 +34,7 @@ import de.tum.in.tumcampusapp.activities.generic.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampusapp.adapters.CalendarSectionsPagerAdapter;
 import de.tum.in.tumcampusapp.auxiliary.CalendarMapper;
 import de.tum.in.tumcampusapp.auxiliary.Const;
+import de.tum.in.tumcampusapp.auxiliary.Dialogs;
 import de.tum.in.tumcampusapp.auxiliary.PersonalLayoutManager;
 import de.tum.in.tumcampusapp.models.managers.CalendarManager;
 
@@ -315,17 +316,27 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		detachSectionPagerAdapter();
 
 		switch (item.getItemId()) {
 		case R.id.action_export_calendar:
+			// Both features (Chart diagrams) are not available on older devices
+			if (android.os.Build.VERSION.SDK_INT <= 10) {
+				Dialogs.showAndroidVersionTooLowAlert(this);
+				return true;
+			}
+			detachSectionPagerAdapter();
 			exportCalendarToGoogle();
 			return true;
 		case R.id.action_delete_calendar:
+			// Both features (Chart diagrams) are not available on older devices
+			if (android.os.Build.VERSION.SDK_INT <= 10) {
+				Dialogs.showAndroidVersionTooLowAlert(this);
+				return true;
+			}
 			deleteCalendarFromGoogle();
-			attachSectionPagerAdapter();
 			return true;
 		default:
+			detachSectionPagerAdapter();
 			return super.onOptionsItemSelected(item);
 		}
 	}
@@ -334,6 +345,5 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements
 	protected void onResume() {
 		super.onResume();
 		PersonalLayoutManager.setColorForId(this, R.id.pager_title_strip);
-
 	}
 }

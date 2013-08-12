@@ -21,10 +21,11 @@ public final class R {
     public static final class attr {
     }
     public static final class color {
-        public static final int sections_blue=0x7f070002;
-        public static final int sections_gray=0x7f070005;
-        public static final int sections_green=0x7f070004;
-        public static final int sections_red=0x7f070003;
+        public static final int sections_blue=0x7f070003;
+        public static final int sections_gray=0x7f070006;
+        public static final int sections_green=0x7f070005;
+        public static final int sections_red=0x7f070004;
+        public static final int text_dark_gray=0x7f070002;
         public static final int text_light_blue=0x7f070000;
         public static final int text_light_gray=0x7f070001;
     }
@@ -38,6 +39,7 @@ public final class R {
         public static final int activity_vertical_margin=0x7f080001;
         public static final int default_scroll_position=0x7f080019;
         public static final int headline_text_size=0x7f08000a;
+        public static final int icon_small=0x7f08001a;
         public static final int large_text_size=0x7f08000c;
         public static final int margin_image=0x7f080018;
         public static final int mid_text_size=0x7f080009;
@@ -123,13 +125,13 @@ public final class R {
         public static final int TextView03=0x7f0c0021;
         public static final int TextView04=0x7f0c0019;
         public static final int TextView05=0x7f0c0025;
-        public static final int action_add=0x7f0c00c1;
-        public static final int action_delete_calendar=0x7f0c00c3;
-        public static final int action_exit=0x7f0c00c0;
-        public static final int action_export_calendar=0x7f0c00c2;
-        public static final int action_ingredients=0x7f0c00c4;
-        public static final int action_settings=0x7f0c00c7;
-        public static final int action_update=0x7f0c00bf;
+        public static final int action_add=0x7f0c00c0;
+        public static final int action_delete_calendar=0x7f0c00c2;
+        public static final int action_exit=0x7f0c00bf;
+        public static final int action_export_calendar=0x7f0c00c1;
+        public static final int action_ingredients=0x7f0c00c3;
+        public static final int action_settings=0x7f0c00c6;
+        public static final int action_update=0x7f0c00be;
         public static final int activity_curricula_list_view=0x7f0c0003;
         public static final int activity_curricula_web_view=0x7f0c0004;
         public static final int activity_gallery_details_infos=0x7f0c000c;
@@ -158,14 +160,14 @@ public final class R {
         public static final int avgGrade=0x7f0c0012;
         public static final int bib=0x7f0c0051;
         public static final int btnLDetailsTermine=0x7f0c0029;
-        public static final int building=0x7f0c00be;
-        public static final int campus=0x7f0c00bd;
+        public static final int building=0x7f0c00bd;
+        public static final int campus=0x7f0c00bc;
         public static final int chk_background_mode=0x7f0c0075;
         public static final int chk_silent_mode=0x7f0c0074;
         public static final int chk_start_wizzard_on_startup=0x7f0c0079;
         public static final int clear=0x7f0c0053;
         public static final int click=0x7f0c00a9;
-        public static final int columnChart=0x7f0c00c6;
+        public static final int columnChart=0x7f0c00c5;
         public static final int contact=0x7f0c0048;
         public static final int current_menu=0x7f0c00a4;
         public static final int date=0x7f0c003b;
@@ -223,12 +225,13 @@ public final class R {
         public static final int item_list=0x7f0c0043;
         public static final int ivImage=0x7f0c0057;
         public static final int left_arrow=0x7f0c009f;
+        public static final int list=0x7f0c005f;
         public static final int listView=0x7f0c0002;
-        public static final int list_image=0x7f0c00bc;
-        public static final int list_menu_detail=0x7f0c00ba;
-        public static final int list_menu_entry=0x7f0c00b7;
-        public static final int list_menu_icon=0x7f0c00b8;
-        public static final int list_menu_title=0x7f0c00b9;
+        public static final int list_image=0x7f0c00bb;
+        public static final int list_menu_detail=0x7f0c00b9;
+        public static final int list_menu_entry=0x7f0c00b6;
+        public static final int list_menu_icon=0x7f0c00b7;
+        public static final int list_menu_title=0x7f0c00b8;
         public static final int list_view=0x7f0c009c;
         public static final int lrd_id=0x7f0c0078;
         public static final int lstGrades=0x7f0c0011;
@@ -246,7 +249,7 @@ public final class R {
         public static final int pager=0x7f0c0000;
         public static final int pager_title_strip=0x7f0c0001;
         public static final int phone=0x7f0c004c;
-        public static final int pieChart=0x7f0c00c5;
+        public static final int pieChart=0x7f0c00c4;
         public static final int progressBar1=0x7f0c00af;
         public static final int progress_layout=0x7f0c00ae;
         public static final int radioBlue=0x7f0c0070;
@@ -254,7 +257,6 @@ public final class R {
         public static final int radioGreen=0x7f0c0072;
         public static final int radioRed=0x7f0c0071;
         public static final int radiogroupColorScheme=0x7f0c006f;
-        public static final int ratingBar1=0x7f0c00b6;
         public static final int right_arrow=0x7f0c009e;
         public static final int save=0x7f0c007c;
         public static final int scroll=0x7f0c0018;
@@ -274,7 +276,7 @@ public final class R {
         public static final int textView1=0x7f0c0016;
         public static final int textView2=0x7f0c00b0;
         public static final int textViewWel=0x7f0c0077;
-        public static final int thumbnail=0x7f0c00bb;
+        public static final int thumbnail=0x7f0c00ba;
         public static final int timeline=0x7f0c0096;
         public static final int title=0x7f0c000a;
         public static final int top_arrow=0x7f0c00a3;
@@ -315,7 +317,6 @@ public final class R {
         public static final int url=0x7f0c007b;
         public static final int webView1=0x7f0c000e;
         public static final int webView2=0x7f0c000f;
-        public static final int webview_results=0x7f0c005f;
         public static final int wizstart_layout=0x7f0c0076;
     }
     public static final class layout {
@@ -525,8 +526,6 @@ public final class R {
         public static final int delete_chache_sure=0x7f090005;
         public static final int delete_from_google=0x7f09017c;
         public static final int demo_info=0x7f09017b;
-        /**  END Translated, please do not change identifiers 
-         */
         public static final int demo_mode=0x7f09017a;
         public static final int departure=0x7f090121;
         public static final int description=0x7f0900fb;

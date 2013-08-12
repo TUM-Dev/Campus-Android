@@ -12,8 +12,8 @@ import de.tum.in.tumcampusapp.fragments.GallerySectionFragment;
 public class GallerySectionsPagerAdapter extends FragmentPagerAdapter {
 	public final static String ARG_GALLERY_MODE = "event_mode";
 	public final static int PAGE_COUNT = 2;
-	public final static int PAGE_LATESTS_GALLERY = 1;
-	public final static int PAGE_PAST_GALLERY = 0;
+	public final static int PAGE_LATESTS_GALLERY = 0;
+	public final static int PAGE_PAST_GALLERY = 1;
 
 	private final Activity activity;
 

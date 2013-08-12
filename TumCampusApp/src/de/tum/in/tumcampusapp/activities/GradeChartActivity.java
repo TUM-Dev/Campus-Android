@@ -9,7 +9,6 @@ import de.tum.in.tumcampusapp.R;
 
 public class GradeChartActivity extends Activity {
 
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -27,7 +26,8 @@ public class GradeChartActivity extends Activity {
 		Webview.loadDataWithBaseURL("file:///android_asset/", chartContent,
 				"text/html", "utf-8", null);
 	}
-		@Override
+
+	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
 	}

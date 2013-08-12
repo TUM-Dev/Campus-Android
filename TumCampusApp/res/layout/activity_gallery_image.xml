@@ -3,7 +3,7 @@
     android:id="@+id/activity_gallery_image"
     android:layout_width="100dip"
     android:layout_height="100dip"
-    android:scaleType="center"
+    android:scaleType="fitCenter"
     android:src="@drawable/ic_launcher" >
 
 </ImageView>
