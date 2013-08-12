@@ -124,10 +124,11 @@ public final class R {
         public static final int TextView04=0x7f0c0019;
         public static final int TextView05=0x7f0c0025;
         public static final int action_add=0x7f0c00c1;
+        public static final int action_delete_calendar=0x7f0c00c3;
         public static final int action_exit=0x7f0c00c0;
         public static final int action_export_calendar=0x7f0c00c2;
-        public static final int action_ingredients=0x7f0c00c3;
-        public static final int action_settings=0x7f0c00c6;
+        public static final int action_ingredients=0x7f0c00c4;
+        public static final int action_settings=0x7f0c00c7;
         public static final int action_update=0x7f0c00bf;
         public static final int activity_curricula_list_view=0x7f0c0003;
         public static final int activity_curricula_web_view=0x7f0c0004;
@@ -164,7 +165,7 @@ public final class R {
         public static final int chk_start_wizzard_on_startup=0x7f0c0079;
         public static final int clear=0x7f0c0053;
         public static final int click=0x7f0c00a9;
-        public static final int columnChart=0x7f0c00c5;
+        public static final int columnChart=0x7f0c00c6;
         public static final int contact=0x7f0c0048;
         public static final int current_menu=0x7f0c00a4;
         public static final int date=0x7f0c003b;
@@ -245,7 +246,7 @@ public final class R {
         public static final int pager=0x7f0c0000;
         public static final int pager_title_strip=0x7f0c0001;
         public static final int phone=0x7f0c004c;
-        public static final int pieChart=0x7f0c00c4;
+        public static final int pieChart=0x7f0c00c5;
         public static final int progressBar1=0x7f0c00af;
         public static final int progress_layout=0x7f0c00ae;
         public static final int radioBlue=0x7f0c0070;
@@ -520,6 +521,7 @@ public final class R {
         public static final int debug_sqllite=0x7f090148;
         public static final int default_detail_info=0x7f090040;
         public static final int delete_chache_sure=0x7f090005;
+        public static final int delete_from_google=0x7f09017c;
         public static final int demo_info=0x7f09017b;
         /**  END Translated, please do not change identifiers 
          */
@@ -528,6 +530,7 @@ public final class R {
         public static final int description=0x7f0900fb;
         public static final int dialog_access_token_invalid=0x7f09014e;
         public static final int dialog_access_token_missing=0x7f09014d;
+        public static final int dialog_delete_calendar=0x7f09017d;
         public static final int dialog_new_token=0x7f090129;
         public static final int dialog_no_rights_function=0x7f09014f;
         public static final int dialog_password_not_set=0x7f090151;

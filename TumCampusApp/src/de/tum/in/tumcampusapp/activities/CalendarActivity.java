@@ -16,7 +16,6 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -29,6 +28,7 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampusapp.adapters.CalendarSectionsPagerAdapter;
@@ -36,7 +36,6 @@ import de.tum.in.tumcampusapp.auxiliary.CalendarMapper;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.PersonalLayoutManager;
 import de.tum.in.tumcampusapp.models.managers.CalendarManager;
-import de.tum.in.tumcampusapp.preferences.UserPreferencesActivity;
 
 /**
  * Mock Activity to demonstrate the basic fragment based navigation using tabs.
@@ -117,7 +116,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements
 
 	public void deleteLocalCalendar() {
 		ContentResolver crv = getContentResolver();
-		Uri uri = Calendars.CONTENT_URI; 
+		Uri uri = Calendars.CONTENT_URI;
 		crv.delete(uri, " account_name = 'TUM_Campus_APP'", null);
 	}
 
@@ -143,14 +142,14 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements
 			@Override
 			protected Boolean doInBackground(Void... params) {
 
-				String calendarUri = preferences
-						.getString(Const.CALENDAR_URI, "");
+				String calendarUri = preferences.getString(Const.CALENDAR_URI,
+						"");
 
-					//Deleting earlier calendar created by TUM Campus App
-					deleteLocalCalendar();
-					Uri uri=addLocalCalendar();
-					addEvents(uri);
-					return true;
+				// Deleting earlier calendar created by TUM Campus App
+				deleteLocalCalendar();
+				Uri uri = addLocalCalendar();
+				addEvents(uri);
+				return true;
 			}
 
 			@Override
@@ -172,6 +171,33 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements
 			}
 		};
 		backgroundTask.execute();
+	}
+
+	public void deleteCalendarFromGoogle() {
+		AlertDialog.Builder builder = new AlertDialog.Builder(
+				CalendarActivity.this);
+		builder.setMessage(getString(R.string.dialog_delete_calendar))
+				.setPositiveButton(getString(R.string.yes),
+						new OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface arg0, int arg1) {
+								deleteLocalCalendar();
+								Toast.makeText(getApplicationContext(),
+										"Calendar deleted", Toast.LENGTH_LONG)
+										.show();
+
+							}
+						})
+				.setNegativeButton(getString(R.string.no),
+						new OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface arg0, int arg1) {
+
+							}
+						}).show();
+
 	}
 
 	@Override
@@ -231,7 +257,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements
 		calendar.add(Calendar.MONTH, -CalendarActivity.MONTH_BEFORE);
 		Date firstDate = calendar.getTime();
 
-		long days = (long) (now.getTime() - firstDate.getTime())
+		long days = (now.getTime() - firstDate.getTime())
 				/ (1000 * 60 * 60 * 24);
 		Log.d("Days", String.valueOf(days));
 
@@ -287,6 +313,10 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements
 		case R.id.action_export_calendar:
 			exportCalendarToGoogle();
 			return true;
+		case R.id.action_delete_calendar:
+			deleteCalendarFromGoogle();
+			attachSectionPagerAdapter();
+			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
@@ -296,5 +326,6 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements
 	protected void onResume() {
 		super.onResume();
 		PersonalLayoutManager.setColorForId(this, R.id.pager_title_strip);
+
 	}
 }

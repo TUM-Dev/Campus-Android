@@ -4,6 +4,7 @@
     <!-- START TODO Translate -->
     <!-- END TODO Translate -->
 
+
     <!-- START Translated, please do not change identifiers -->
     <string name="no_map_available">No map available</string>
     <string name="android_version_too_low">Android version too low</string>
@@ -421,5 +422,7 @@
     <!-- END Translated, please do not change identifiers -->
     <string name="demo_mode">Demo Mode</string>
     <string name="demo_info">Enabling Helping Screens</string>
+    <string name="delete_from_google">Delete from Google</string>
+    <string name="dialog_delete_calendar">Do you want to delete \n the TUM_CAMPUS_APP from your device???</string>
 
 </resources>
