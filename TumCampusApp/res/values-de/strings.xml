@@ -404,6 +404,14 @@
     <string name="step_2">Schritt 2</string>
     <string name="step_3">Schritt 3</string>
     <string name="finish">Fertig</string>
+    <string name="show_column_chart">Spaltendiagramm anzeigen</string>
+    <string name="show_pie_chart">Tortendiagramm anzeigen</string>
+    <string name="demo_mode">Demo Mode</string>
+    <string name="demo_info">Hilfemodus aktivieren</string>
+    <string name="delete_from_google">Löschen aus Google</string>
+    <string name="dialog_delete_calendar"><b>Wollen sie wirklich den </b>\n<b>TUM_CAMPUS_APP Kalendar</b>\nvon ihrem Gerät löschen???</string>
+    <string name="calendar_deleted_toast">Kalendar erfolgreich gelöscht</string>
+    <string name="calendar_not_existing_toast">Es existiert kein lokale Kalendar</string>
     <!-- END Translated -->
 
 </resources>

@@ -468,6 +468,8 @@ public final class R {
         public static final int cafeteria_addinfo=0x7f09005a;
         public static final int cafeteria_ingredients=0x7f090027;
         public static final int cafeterias=0x7f090134;
+        public static final int calendar_deleted_toast=0x7f09017e;
+        public static final int calendar_not_existing_toast=0x7f09017f;
         public static final int campus_garching=0x7f0900ff;
         public static final int campus_garching_adress=0x7f09010c;
         public static final int campus_klinikum=0x7f090100;

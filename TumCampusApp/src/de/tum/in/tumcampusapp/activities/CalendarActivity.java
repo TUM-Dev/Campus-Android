@@ -114,10 +114,12 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements
 		return uri;
 	}
 
-	public void deleteLocalCalendar() {
+	public int deleteLocalCalendar() {
 		ContentResolver crv = getContentResolver();
 		Uri uri = Calendars.CONTENT_URI;
-		crv.delete(uri, " account_name = 'TUM_Campus_APP'", null);
+		int deleted = crv.delete(uri, " account_name = 'TUM_Campus_APP'", null);
+		return deleted;
+
 	}
 
 	// displaying calendar
@@ -182,10 +184,16 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements
 
 							@Override
 							public void onClick(DialogInterface arg0, int arg1) {
-								deleteLocalCalendar();
-								Toast.makeText(getApplicationContext(),
-										"Calendar deleted", Toast.LENGTH_LONG)
-										.show();
+								int deleted = deleteLocalCalendar();
+								if (deleted > 0)
+									Toast.makeText(getApplicationContext(),
+											R.string.calendar_deleted_toast,
+											Toast.LENGTH_LONG).show();
+								else
+									Toast.makeText(
+											getApplicationContext(),
+											R.string.calendar_not_existing_toast,
+											Toast.LENGTH_LONG).show();
 
 							}
 						})
