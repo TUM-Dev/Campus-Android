@@ -81,45 +81,42 @@ public final class R {
         public static final int first_step=0x7f02000e;
         public static final int go=0x7f02000f;
         public static final int home=0x7f020010;
-        public static final int ic_column_chart=0x7f020011;
-        public static final int ic_launcher=0x7f020012;
-        public static final int ic_launcher_mono=0x7f020013;
-        public static final int ic_pie_chart=0x7f020014;
-        public static final int ic_trash=0x7f020015;
-        public static final int img_tum_building=0x7f020016;
-        public static final int img_tum_building_main=0x7f020017;
-        public static final int img_tum_flags=0x7f020018;
-        public static final int img_tum_parabel=0x7f020019;
-        public static final int left_arrow=0x7f02001a;
-        public static final int list_item=0x7f02001b;
-        public static final int mail=0x7f02001c;
-        public static final int mvv_entire_net_icon=0x7f02001d;
-        public static final int photo_not_available=0x7f02001e;
-        public static final int pictures=0x7f02001f;
-        public static final int plan_campus_garching_icon=0x7f020020;
-        public static final int plan_campus_klinikum_icon=0x7f020021;
-        public static final int plan_campus_olympiapark_hallenplan_icon=0x7f020022;
-        public static final int plan_campus_olympiapark_icon=0x7f020023;
-        public static final int plan_campus_stammgelaende__icon=0x7f020024;
-        public static final int plan_campus_weihenstephan_icon=0x7f020025;
-        public static final int plan_mvv_icon=0x7f020026;
-        public static final int plan_mvv_night_icon=0x7f020027;
-        public static final int plan_tram_icon=0x7f020028;
-        public static final int refresh=0x7f020029;
-        public static final int right_arrow=0x7f02002a;
-        public static final int setting_arrow=0x7f02002b;
-        public static final int shopping_cart=0x7f02002c;
-        public static final int show_info=0x7f02002d;
-        public static final int swipe_right=0x7f02002e;
-        public static final int tokenmanagement=0x7f02002f;
-        public static final int top_arrow=0x7f020030;
-        public static final int trash=0x7f020031;
-        public static final int unlock=0x7f020032;
-        public static final int users=0x7f020033;
-        public static final int web=0x7f020034;
-        public static final int wizz_activate_rights=0x7f020035;
-        public static final int wizz_activate_token=0x7f020036;
-        public static final int zoom=0x7f020037;
+        public static final int ic_launcher=0x7f020011;
+        public static final int ic_launcher_mono=0x7f020012;
+        public static final int img_tum_building=0x7f020013;
+        public static final int img_tum_building_main=0x7f020014;
+        public static final int img_tum_flags=0x7f020015;
+        public static final int img_tum_parabel=0x7f020016;
+        public static final int left_arrow=0x7f020017;
+        public static final int list_item=0x7f020018;
+        public static final int mail=0x7f020019;
+        public static final int mvv_entire_net_icon=0x7f02001a;
+        public static final int photo_not_available=0x7f02001b;
+        public static final int pictures=0x7f02001c;
+        public static final int plan_campus_garching_icon=0x7f02001d;
+        public static final int plan_campus_klinikum_icon=0x7f02001e;
+        public static final int plan_campus_olympiapark_hallenplan_icon=0x7f02001f;
+        public static final int plan_campus_olympiapark_icon=0x7f020020;
+        public static final int plan_campus_stammgelaende__icon=0x7f020021;
+        public static final int plan_campus_weihenstephan_icon=0x7f020022;
+        public static final int plan_mvv_icon=0x7f020023;
+        public static final int plan_mvv_night_icon=0x7f020024;
+        public static final int plan_tram_icon=0x7f020025;
+        public static final int refresh=0x7f020026;
+        public static final int right_arrow=0x7f020027;
+        public static final int setting_arrow=0x7f020028;
+        public static final int shopping_cart=0x7f020029;
+        public static final int show_info=0x7f02002a;
+        public static final int swipe_right=0x7f02002b;
+        public static final int tokenmanagement=0x7f02002c;
+        public static final int top_arrow=0x7f02002d;
+        public static final int trash=0x7f02002e;
+        public static final int unlock=0x7f02002f;
+        public static final int users=0x7f020030;
+        public static final int web=0x7f020031;
+        public static final int wizz_activate_rights=0x7f020032;
+        public static final int wizz_activate_token=0x7f020033;
+        public static final int zoom=0x7f020034;
     }
     public static final class id {
         public static final int TextView01=0x7f0c001c;
@@ -538,8 +535,6 @@ public final class R {
         public static final int dialog_new_token=0x7f090129;
         public static final int dialog_no_rights_function=0x7f09014f;
         public static final int dialog_password_not_set=0x7f090151;
-        /**  START Translated 
-         */
         public static final int dialog_show_calendar=0x7f090003;
         public static final int dialog_username_not_set=0x7f090150;
         public static final int documents=0x7f0900a9;
@@ -687,6 +682,7 @@ public final class R {
         /**  START TODO Translate 
  END TODO Translate 
  START Translated, please do not change identifiers 
+ START Translated 
          */
         public static final int no_map_available=0x7f090000;
         public static final int no_person_set=0x7f0900c4;

@@ -422,8 +422,8 @@
     <string name="demo_mode">Demo Mode</string>
     <string name="demo_info">Activates help mode for instruction on how to use this App.</string>
     <string name="delete_from_google">Delete from Google</string>
-    <string name="dialog_delete_calendar">Do you want to delete  the <i>TUM_CAMPUS_APP Calendar</i> from your device?</string>
-    <string name="calendar_deleted_toast">Calender deleted succesfully</string>
+    <string name="dialog_delete_calendar">Do you want to delete  the <i>TUM_CAMPUS_APP</i>  calendar from your device?</string>
+    <string name="calendar_deleted_toast">Calender deleted successfully</string>
     <string name="calendar_not_existing_toast">No local calendar existing</string>
     <!-- END Translated, please do not change identifiers -->
 

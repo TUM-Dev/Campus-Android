@@ -11,7 +11,6 @@ import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
 
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -56,9 +55,8 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 
 	// private HashMap<String, Integer> gradeDistrubution_hash;
 	NumberFormat format = NumberFormat.getInstance(Locale.FRANCE);
-	private boolean isFetched = false;
+
 	private ListView lvGrades;
-	Menu menu;
 	String pieChartContent;
 
 	MenuItem pieMenuItem;
@@ -118,8 +116,6 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 				// +
 				// "       <img style=\"padding: 0; margin: 0 0 0 330px; display: block;\" src=\"truiton.png\"/>"
 				+ "  </body>" + "</html>";
-
-		// enable corresponding Menu Item and data were fetched
 
 		return content;
 	}
@@ -192,8 +188,6 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 				+ "  <body>"
 				+ "    <div id=\"chart_div\" style=\"width: 1000px; height: 500px;\"></div>"
 				+ "  </body>" + "</html>";
-
-		// enable corresponding Menu Item
 
 		return content;
 	}
@@ -327,7 +321,6 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 		getMenuInflater().inflate(R.menu.menu_show_gradechart, menu);
 		columnMenuItem = menu.findItem(R.id.columnChart);
 		pieMenuItem = menu.findItem(R.id.pieChart);
-		this.menu = menu;
 
 		return true;
 	}
@@ -377,11 +370,6 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 				}
 			});
 			progressLayout.setVisibility(View.GONE);
-			isFetched = true;
-
-			// update the action bar to display the enabled menu options
-			if (Build.VERSION.SDK_INT >= 11)
-				invalidateOptionsMenu();
 
 		} catch (Exception e) {
 			Log.d("SIMPLEXML", "wont work: " + e.getMessage());
@@ -461,17 +449,5 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 				removedDoubles.add(item_one);
 		}
 		return removedDoubles;
-	}
-
-	@Override
-	public boolean onPrepareOptionsMenu(Menu menu) {
-
-		columnMenuItem = menu.findItem(R.id.columnChart);
-		pieMenuItem = menu.findItem(R.id.pieChart);
-
-		columnMenuItem.setEnabled(isFetched).setVisible(isFetched);
-		pieMenuItem.setEnabled(isFetched).setVisible(isFetched);
-
-		return super.onPrepareOptionsMenu(menu);
 	}
 }

@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- START Translated -->
+     <!-- START Translated -->
+      <string name="no_map_available">Keine Karte verfügbar</string>
+    <string name="android_version_too_low">Android Version zu alt</string>
+    <string name="android_version_too_low_message">Deine Android Version unterstützt diese Funktion leider nich</string>
     <string name="dialog_show_calendar">Exportieren erfolgreich.\nLokalen Kalender in der <i>Google Calendar App</i> anzeigen?</string>
     <string name="average_grade">Durchschnittsnote</string>
     <string name="delete_chache_sure">Alle Daten wirklich löschen?</string>
@@ -32,6 +35,7 @@
     <string name="extras">Extras</string>
     <string name="no_departures_found">Keine Abfahrtszeiten verfügbar</string>
     <string name="no_station_found">Keine Stationen gefunden</string>
+    <string name="no_rooms_found">Keine Räume gefunden</string>
     <string name="exception_unknown">Unbekannter Fehler</string>
     <string name="exception_sdcard">Fehler beim Zugriff auf die SD-Karte</string>
     <string name="exception_timeout">Probleme bei der Internetverbindung, bitte später erneut versuchen.</string>
@@ -404,14 +408,14 @@
     <string name="step_2">Schritt 2</string>
     <string name="step_3">Schritt 3</string>
     <string name="finish">Fertig</string>
-    <string name="show_column_chart">Spaltendiagramm anzeigen</string>
-    <string name="show_pie_chart">Tortendiagramm anzeigen</string>
+    <string name="show_column_chart">Zeige als Balkendiagramm</string>
+    <string name="show_pie_chart">Zeige als Tortendiagramm</string>
     <string name="demo_mode">Demo Modus</string>
     <string name="demo_info">Hilfemodus aktivieren, um Informationen zur Bedienung der App zu erhalten.</string>
     <string name="delete_from_google">Löschen aus Google</string>
-    <string name="dialog_delete_calendar">Den lokalen <i>TUM_CAMPUS_APP Kalendar</i> von deinem Gerät löschen?</string>
-    <string name="calendar_deleted_toast">Kalendar erfolgreich gelöscht</string>
-    <string name="calendar_not_existing_toast">Es existiert kein lokaler Kalendar</string>
+    <string name="dialog_delete_calendar">Den lokalen <i>TUM_CAMPUS_APP</i> Kalender von deinem Gerät löschen?</string>
+    <string name="calendar_deleted_toast">Kalender erfolgreich gelöscht</string>
+    <string name="calendar_not_existing_toast">Es existiert kein lokaler Kalender</string>
     <!-- END Translated -->
 
 </resources>

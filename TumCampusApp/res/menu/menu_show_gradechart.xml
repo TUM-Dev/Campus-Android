@@ -3,19 +3,15 @@
 
     <item
         android:id="@+id/pieChart"
-        android:enabled="false"
-        android:icon="@drawable/ic_pie_chart"
+        android:icon="@android:drawable/ic_menu_report_image"
         android:showAsAction="ifRoom"
-        android:title="@string/show_pie_chart"
-        android:visible="false">
+        android:title="@string/show_pie_chart">
     </item>
     <item
         android:id="@+id/columnChart"
-        android:enabled="false"
-        android:icon="@drawable/ic_column_chart"
+        android:icon="@android:drawable/ic_menu_more"
         android:showAsAction="ifRoom"
-        android:title="@string/show_column_chart"
-        android:visible="false">
+        android:title="@string/show_column_chart">
     </item>
 
 </menu>
