@@ -125,13 +125,13 @@ public final class R {
         public static final int TextView03=0x7f0c0021;
         public static final int TextView04=0x7f0c0019;
         public static final int TextView05=0x7f0c0025;
-        public static final int action_add=0x7f0c00c0;
-        public static final int action_delete_calendar=0x7f0c00c2;
-        public static final int action_exit=0x7f0c00bf;
-        public static final int action_export_calendar=0x7f0c00c1;
-        public static final int action_ingredients=0x7f0c00c3;
+        public static final int action_add=0x7f0c00c4;
+        public static final int action_delete_calendar=0x7f0c00bf;
+        public static final int action_exit=0x7f0c00c3;
+        public static final int action_export_calendar=0x7f0c00be;
+        public static final int action_ingredients=0x7f0c00c5;
         public static final int action_settings=0x7f0c00c6;
-        public static final int action_update=0x7f0c00be;
+        public static final int action_update=0x7f0c00c0;
         public static final int activity_curricula_list_view=0x7f0c0003;
         public static final int activity_curricula_web_view=0x7f0c0004;
         public static final int activity_gallery_details_infos=0x7f0c000c;
@@ -167,7 +167,7 @@ public final class R {
         public static final int chk_start_wizzard_on_startup=0x7f0c0079;
         public static final int clear=0x7f0c0053;
         public static final int click=0x7f0c00a9;
-        public static final int columnChart=0x7f0c00c5;
+        public static final int columnChart=0x7f0c00c2;
         public static final int contact=0x7f0c0048;
         public static final int current_menu=0x7f0c00a4;
         public static final int date=0x7f0c003b;
@@ -249,7 +249,7 @@ public final class R {
         public static final int pager=0x7f0c0000;
         public static final int pager_title_strip=0x7f0c0001;
         public static final int phone=0x7f0c004c;
-        public static final int pieChart=0x7f0c00c4;
+        public static final int pieChart=0x7f0c00c1;
         public static final int progressBar1=0x7f0c00af;
         public static final int progress_layout=0x7f0c00ae;
         public static final int radioBlue=0x7f0c0070;
@@ -410,14 +410,14 @@ public final class R {
         public static final int list_roomfinder_item=0x7f030048;
     }
     public static final class menu {
-        public static final int menu_activity_for_accessing_tum_online=0x7f0b0000;
-        public static final int menu_activity_for_downloading_external=0x7f0b0001;
-        public static final int menu_activity_for_searching=0x7f0b0002;
-        public static final int menu_activity_wizzard=0x7f0b0003;
-        public static final int menu_feeds=0x7f0b0004;
-        public static final int menu_schedule_activity=0x7f0b0005;
-        public static final int menu_section_fragment_cafeteria_details=0x7f0b0006;
-        public static final int menu_show_gradechart=0x7f0b0007;
+        public static final int menu_activity_calendar=0x7f0b0000;
+        public static final int menu_activity_for_accessing_tum_online=0x7f0b0001;
+        public static final int menu_activity_for_downloading_external=0x7f0b0002;
+        public static final int menu_activity_for_searching=0x7f0b0003;
+        public static final int menu_activity_grades=0x7f0b0004;
+        public static final int menu_activity_wizzard=0x7f0b0005;
+        public static final int menu_feeds=0x7f0b0006;
+        public static final int menu_section_fragment_cafeteria_details=0x7f0b0007;
         public static final int menu_start_activity=0x7f0b0008;
     }
     public static final class string {

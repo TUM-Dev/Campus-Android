@@ -56,6 +56,11 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements
 	private ViewPager mViewPager;
 	private SharedPreferences preferences;
 
+	private MenuItem menuItemExportGoogle;
+	private MenuItem menuItemDeleteCalendar;
+
+	private boolean isFetched;
+
 	public CalendarActivity() {
 		super(Const.CALENDER, R.layout.activity_calendar);
 	}
@@ -247,6 +252,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements
 			super.requestFetch();
 		} else {
 			attachSectionPagerAdapter();
+			isFetched = true;
 		}
 	}
 
@@ -285,7 +291,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.menu_schedule_activity, menu);
+		getMenuInflater().inflate(R.menu.menu_activity_calendar, menu);
 		return true;
 	}
 
@@ -309,6 +315,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements
 			@Override
 			protected void onPreExecute() {
 				showProgressLayout();
+				isFetched = true;
 			}
 		};
 		backgroundTask.execute();
@@ -337,6 +344,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements
 			return true;
 		default:
 			detachSectionPagerAdapter();
+			isFetched = false;
 			return super.onOptionsItemSelected(item);
 		}
 	}
@@ -345,5 +353,18 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements
 	protected void onResume() {
 		super.onResume();
 		PersonalLayoutManager.setColorForId(this, R.id.pager_title_strip);
+	}
+
+	public void setMenuEnabled(boolean enabled) {
+		menuItemExportGoogle.setEnabled(enabled);
+		menuItemDeleteCalendar.setEnabled(enabled);
+	}
+
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		menuItemExportGoogle = menu.findItem(R.id.action_export_calendar);
+		menuItemDeleteCalendar = menu.findItem(R.id.action_delete_calendar);
+		setMenuEnabled(isFetched);
+		return super.onPrepareOptionsMenu(menu);
 	}
 }

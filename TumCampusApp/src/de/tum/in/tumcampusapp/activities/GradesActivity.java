@@ -48,19 +48,21 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 	private TextView average_tx;
 
 	private double averageGrade;
-	String columnChartContent;
+	private String columnChartContent;
 
-	MenuItem columnMenuItem;
+	private MenuItem columnMenuItem;
+	private MenuItem pieMenuItem;
+
 	private ExamList examList;
 
 	// private HashMap<String, Integer> gradeDistrubution_hash;
-	NumberFormat format = NumberFormat.getInstance(Locale.FRANCE);
-
+	private NumberFormat format = NumberFormat.getInstance(Locale.FRANCE);
 	private ListView lvGrades;
-	String pieChartContent;
+	private String pieChartContent;
 
-	MenuItem pieMenuItem;
 	private Spinner spFilter;
+
+	private boolean isFetched;
 
 	public GradesActivity() {
 		super(Const.NOTEN, R.layout.activity_grades);
@@ -318,10 +320,10 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.menu_show_gradechart, menu);
+		super.onCreateOptionsMenu(menu);
+		getMenuInflater().inflate(R.menu.menu_activity_grades, menu);
 		columnMenuItem = menu.findItem(R.id.columnChart);
 		pieMenuItem = menu.findItem(R.id.pieChart);
-
 		return true;
 	}
 
@@ -370,6 +372,7 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 				}
 			});
 			progressLayout.setVisibility(View.GONE);
+			isFetched = true;
 
 		} catch (Exception e) {
 			Log.d("SIMPLEXML", "wont work: " + e.getMessage());
@@ -405,6 +408,7 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 				return true;
 
 			default:
+				isFetched = false;
 				return super.onOptionsItemSelected(item);
 			}
 		} else {
@@ -449,5 +453,19 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 				removedDoubles.add(item_one);
 		}
 		return removedDoubles;
+	}
+
+	public void setMenuEnabled(boolean enabled) {
+		columnMenuItem.setEnabled(enabled);
+		pieMenuItem.setEnabled(enabled);
+	}
+
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		columnMenuItem = menu.findItem(R.id.columnChart);
+		pieMenuItem = menu.findItem(R.id.pieChart);
+		setMenuEnabled(isFetched);
+
+		return super.onPrepareOptionsMenu(menu);
 	}
 }
