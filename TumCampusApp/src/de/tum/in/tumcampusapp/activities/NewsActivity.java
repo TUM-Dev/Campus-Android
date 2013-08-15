@@ -4,12 +4,13 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.SimpleCursorAdapter;
@@ -27,10 +28,23 @@ import de.tum.in.tumcampusapp.models.managers.NewsManager;
 public class NewsActivity extends ActivityForDownloadingExternal implements
 		OnItemClickListener, ViewBinder {
 	RelativeLayout overlay;
+	ImageView overlay_cross;
 	SharedPreferences sharedPrefs;
+	static int layoutID;
+	static {
+		if (Build.VERSION.SDK_INT >= 11)
+
+			layoutID = R.layout.activity_news_overlay_actionbar;
+		else
+
+			layoutID = R.layout.activity_news_overlay_menubutton;
+
+	}
 
 	public NewsActivity() {
-		super(Const.NEWS, R.layout.activity_news_overlay);
+
+		super(Const.NEWS, layoutID);
+
 	}
 
 	@Override
@@ -38,6 +52,7 @@ public class NewsActivity extends ActivityForDownloadingExternal implements
 		super.onCreate(savedInstanceState);
 		super.requestDownload(false);
 		overlay = (RelativeLayout) findViewById(R.id.tumNews_overlay);
+		overlay_cross = (ImageView) findViewById(R.id.tumNews_cross);
 	}
 
 	@SuppressWarnings("deprecation")
@@ -120,11 +135,16 @@ public class NewsActivity extends ActivityForDownloadingExternal implements
 	protected void onResume() {
 		super.onResume();
 		sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-		Log.d("PREFS", " = " + sharedPrefs.getBoolean("demo_mode", false));
-		if (sharedPrefs.getBoolean("demo_mode", false))
-			overlay.setVisibility(View.VISIBLE);
-		else
-			overlay.setVisibility(View.GONE);
-	}
+		overlay_cross.setOnClickListener(new View.OnClickListener() {
 
+			@Override
+			public void onClick(View v) {
+				sharedPrefs.edit().putBoolean("first_run", false).commit();
+				overlay.setVisibility(View.GONE);
+			}
+		});
+		if (sharedPrefs.getBoolean("first_run", true))
+			overlay.setVisibility(View.VISIBLE);
+
+	}
 }

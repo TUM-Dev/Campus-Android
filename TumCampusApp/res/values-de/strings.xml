@@ -412,6 +412,18 @@
     <string name="dialog_delete_calendar">Den lokalen <i>TUM_CAMPUS_APP Kalendar</i> von deinem Gerät löschen?</string>
     <string name="calendar_deleted_toast">Kalendar erfolgreich gelöscht</string>
     <string name="calendar_not_existing_toast">Es existiert kein lokaler Kalendar</string>
+    <string name="go_on">Weiter</string>
+    <string name="instruction">Willkommen zum Tutorial\nIn den nächsten Minuten\n wirst du lernen, wie\nman die App bedient</string>
+    <string name="skip">Beende das Tutorial\nwannimmer du willst</string>
+    <string name="swipe_instruction">Swipe durch die \n Menü Kategorien</string>
+    <string name="swipe_right">Swipe jetzt nach rechts zu NEWS</string>
+    <string name="current_menu">Aktuelles Menü</string>
+    <string name="click_to_open">Klicke auf TUM News um diesen\nMenü-Punkt zu öffnen</string>
+    <string name="settings_via_menubutton">Gelange zu den Einstellungen\nüber den Menu Knopf</string>
+    <string name="news_description">News werden aus dem Internet geladen\nund in einer Datenbank gespeichert\nJetzt ist es Zeit die App selbst zu entdecken.\nKlicke dazu einfach das X</string>
+    <string name="click_to_update">Klicken um Inhalt\nmanuell zu updaten</string>
+    <string name="click_to_update_via_menubutton">Via Menu Knopf\nden Inhalt\nmanuell updaten</string>
+    <string name="scroll_down">Nach unten Scrollen, um ältere News zu sehen</string>
     <!-- END Translated -->
 
 </resources>

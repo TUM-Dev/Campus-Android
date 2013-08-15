@@ -5,14 +5,17 @@ import java.util.ArrayList;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -30,6 +33,16 @@ public class StartSectionFragment extends Fragment implements
 	private int imageId;
 	private Activity activity;
 	private SharedPreferences sharedPrefs;
+	ImageView instruction_overlay_cross;
+	Button overlay_button;
+	ImageView myTUM_overlay_cross;
+	ImageView news_overlay_cross;
+
+	OnClickListener abortTutorial;
+
+	private View rootView;
+
+	private RelativeLayout instruction_overlay;
 	private RelativeLayout myTUM_overlay;
 	private RelativeLayout news_overlay;
 	/**
@@ -50,13 +63,51 @@ public class StartSectionFragment extends Fragment implements
 				.getSerializable(StartSectionsPagerAdapter.LIST_ENTRY_SET);
 		imageId = getArguments().getInt(
 				StartSectionsPagerAdapter.IMAGE_FOR_CATEGORY);
+		if (Build.VERSION.SDK_INT >= 11)
+			rootView = inflater.inflate(
+					R.layout.fragment_start_section_overlay_actionbar,
+					container, false);
+		else
+			rootView = inflater.inflate(
+					R.layout.fragment_start_section_overlay_menubutton,
+					container, false);
 
-		View rootView = inflater.inflate(
-				R.layout.fragment_start_section_overlay, container, false);
+		// views for the overlays
+		instruction_overlay = (RelativeLayout) rootView
+				.findViewById(R.id.instruction_overlay);
+		overlay_button = (Button) rootView.findViewById(R.id.continue_btn);
+
+		instruction_overlay_cross = (ImageView) rootView
+				.findViewById(R.id.instruction_cross);
+
+		myTUM_overlay_cross = (ImageView) rootView
+				.findViewById(R.id.myTum_cross);
+
+		news_overlay_cross = (ImageView) rootView.findViewById(R.id.news_cross);
+
 		myTUM_overlay = (RelativeLayout) rootView
 				.findViewById(R.id.myTUM_overlay);
 		news_overlay = (RelativeLayout) rootView
 				.findViewById(R.id.news_overlay);
+
+		abortTutorial = new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				sharedPrefs.edit().putBoolean("first_run", false).commit();
+				myTUM_overlay.setVisibility(View.GONE);
+				news_overlay.setVisibility(View.GONE);
+				instruction_overlay.setVisibility(View.GONE);
+
+			}
+		};
+
+		// abort tutorial by clicking the cross
+		instruction_overlay_cross.setOnClickListener(abortTutorial);
+
+		myTUM_overlay_cross.setOnClickListener(abortTutorial);
+
+		news_overlay_cross.setOnClickListener(abortTutorial);
 
 		// Builds the list according to the list items in listMenuEntrySet
 		ListView list = (ListView) rootView.findViewById(R.id.list_view);
@@ -68,28 +119,49 @@ public class StartSectionFragment extends Fragment implements
 		list.setAdapter(adapter);
 		list.setOnItemClickListener(this);
 
+		sharedPrefs = PreferenceManager.getDefaultSharedPreferences(activity);
 		return rootView;
 	}
 
 	@Override
 	public void onResume() {
-		// TODO Auto-generated method stub
 		super.onResume();
 		sharedPrefs = PreferenceManager.getDefaultSharedPreferences(activity);
-		if (sharedPrefs.getBoolean("demo_mode", false)) {
-			switch (getArguments().getInt("POSITION")) {
-			case StartSectionsPagerAdapter.SECTION_MY_TUM:
-				myTUM_overlay.setVisibility(View.VISIBLE);
-				break;
-			case StartSectionsPagerAdapter.SECTION_NEWS:
-				news_overlay.setVisibility(View.VISIBLE);
+		// myTUM_overlay.invalidate();
+		// news_overlay.invalidate();
+		// instruction_overlay.invalidate();
+		switch (getArguments().getInt("POSITION")) {
+		case StartSectionsPagerAdapter.SECTION_MY_TUM:
+			if (sharedPrefs.getBoolean("first_run", true)) {
+
+				instruction_overlay.setVisibility(View.VISIBLE);
+
+				overlay_button.setOnClickListener(new View.OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						instruction_overlay.setVisibility(View.GONE);
+						myTUM_overlay.setVisibility(View.VISIBLE);
+
+					}
+				});
+			} else {
+				instruction_overlay.setVisibility(View.GONE);
+				myTUM_overlay.setVisibility(View.GONE);
+				news_overlay.setVisibility(View.GONE);
 
 			}
 
-		} else {
-			myTUM_overlay.setVisibility(View.GONE);
-			news_overlay.setVisibility(View.GONE);
+			break;
+		case StartSectionsPagerAdapter.SECTION_NEWS:
+			if (sharedPrefs.getBoolean("first_run", true))
+				news_overlay.setVisibility(View.VISIBLE);
+			else
+				news_overlay.setVisibility(View.GONE);
+
 		}
+		rootView.invalidate();
+
 	}
 
 	@Override

@@ -426,5 +426,17 @@
     <string name="calendar_deleted_toast">Calender deleted succesfully</string>
     <string name="calendar_not_existing_toast">No local calendar existing</string>
     <!-- END Translated, please do not change identifiers -->
+    <string name="go_on">Continue</string>
+    <string name="instruction">Welcome to the Tutorial!!\nThe next few minutes you will\n learn how to use this app</string>
+    <string name="skip">skip the tutorial\n whenever you want</string>
+    <string name="swipe_instruction">Swipe through \n menu categories</string>
+    <string name="swipe_right">Now Swipe Right to NEWS</string>
+    <string name="current_menu">Current Menu</string>
+    <string name="click_to_open">Click on TUM News to open \n this menu option</string>
+    <string name="settings_via_menubutton">Get to Setting\nvia Menu Button</string>
+    <string name="news_description">News are fetched from Internet\nand store in database at start\nNow it\'s time to discover\nthe app on your own.\nJust press the X</string>
+    <string name="click_to_update">Click to update\ncontent  manually</string>
+    <string name="click_to_update_via_menubutton">Click via Menu button\nto update\ncontent manually</string>
+    <string name="scroll_down">Scroll down to see older news</string>
 
 </resources>
