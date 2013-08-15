@@ -285,7 +285,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.menu_schedule_activity, menu);
+		getMenuInflater().inflate(R.menu.menu_activity_calendar, menu);
 		return true;
 	}
 

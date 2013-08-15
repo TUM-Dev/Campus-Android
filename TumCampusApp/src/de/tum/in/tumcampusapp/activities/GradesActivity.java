@@ -10,9 +10,17 @@ import java.util.Locale;
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -49,20 +57,21 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 	private TextView average_tx;
 
 	private double averageGrade;
-	String columnChartContent;
+	private String columnChartContent;
 
-	MenuItem columnMenuItem;
+	private MenuItem columnMenuItem;
+	private MenuItem pieMenuItem;
+
 	private ExamList examList;
 
 	// private HashMap<String, Integer> gradeDistrubution_hash;
-	NumberFormat format = NumberFormat.getInstance(Locale.FRANCE);
-	private boolean isFetched = false;
+	private final NumberFormat format = NumberFormat.getInstance(Locale.FRANCE);
 	private ListView lvGrades;
-	Menu menu;
-	String pieChartContent;
+	private String pieChartContent;
 
-	MenuItem pieMenuItem;
 	private Spinner spFilter;
+
+	private boolean isFetched;
 
 	public GradesActivity() {
 		super(Const.NOTEN, R.layout.activity_grades);
@@ -118,8 +127,6 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 				// +
 				// "       <img style=\"padding: 0; margin: 0 0 0 330px; display: block;\" src=\"truiton.png\"/>"
 				+ "  </body>" + "</html>";
-
-		// enable corresponding Menu Item and data were fetched
 
 		return content;
 	}
@@ -192,8 +199,6 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 				+ "  <body>"
 				+ "    <div id=\"chart_div\" style=\"width: 1000px; height: 500px;\"></div>"
 				+ "  </body>" + "</html>";
-
-		// enable corresponding Menu Item
 
 		return content;
 	}
@@ -324,11 +329,10 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.menu_show_gradechart, menu);
+		super.onCreateOptionsMenu(menu);
+		getMenuInflater().inflate(R.menu.menu_activity_grades, menu);
 		columnMenuItem = menu.findItem(R.id.columnChart);
 		pieMenuItem = menu.findItem(R.id.pieChart);
-		this.menu = menu;
-
 		return true;
 	}
 
@@ -417,6 +421,7 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 				return true;
 
 			default:
+				isFetched = false;
 				return super.onOptionsItemSelected(item);
 			}
 		} else {
@@ -473,5 +478,53 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 		pieMenuItem.setEnabled(isFetched).setVisible(isFetched);
 
 		return super.onPrepareOptionsMenu(menu);
+	}
+
+	private void generateNotification(ExamList examList) {
+
+		SharedPreferences settings = PreferenceManager
+				.getDefaultSharedPreferences(this);
+		int gradeCount = settings.getInt("GradeCount", 0);
+		Log.d("Grade Count", "" + gradeCount);
+		int newSize = examList.getExams().size();
+		if (gradeCount != 0) {
+			if (newSize > gradeCount) {
+				Editor editor = settings.edit();
+				editor.putInt("GradeCount", newSize);
+				editor.commit();
+				// Generating Notification
+				NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
+						this).setSmallIcon(android.R.drawable.stat_notify_more)
+						.setContentTitle("TUM Campus App")
+						.setContentText("New Grade Uploaded");
+				// Creates an explicit intent for an Activity in your app
+				Intent resultIntent = new Intent(this, GradesActivity.class);
+
+				// The stack builder object will contain an artificial back
+				// stack for the
+				// started Activity.
+				// This ensures that navigating backward from the Activity leads
+				// out of
+				// your application to the Home screen.
+				TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+				// Adds the back stack for the Intent (but not the Intent
+				// itself)
+				stackBuilder.addParentStack(GradesActivity.class);
+				// Adds the Intent that starts the Activity to the top of the
+				// stack
+				stackBuilder.addNextIntent(resultIntent);
+				PendingIntent resultPendingIntent = stackBuilder
+						.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+				mBuilder.setContentIntent(resultPendingIntent);
+				NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+				int mId = 0;
+				// mId allows you to update the notification later on.
+				mNotificationManager.notify(mId, mBuilder.build());
+			}
+		} else {
+			Editor editor = settings.edit();
+			editor.putInt("GradeCount", newSize);
+			editor.commit();
+		}
 	}
 }
