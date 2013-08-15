@@ -375,6 +375,9 @@
     <string name="no_sd_card">Cannot access the SD-Card</string>
     <string name="export_events">Export Events to Calendar</string>
     <string name="export2calendar">Export to Google Calendar</string>
+    <string name="calendarTimeZone">Germany/Munich</string>
+    <string name="calendar_account_name">TUM_Campus_APP</string>
+    <string name="calendar_display_name">TUM Campus</string>
     <string name="empty_result">The operation delivered a faulty result</string>
     <string name="error_occurred_while_opening">Cannot open file</string>
     <string name="lectures_found">Choose a lecture:</string>

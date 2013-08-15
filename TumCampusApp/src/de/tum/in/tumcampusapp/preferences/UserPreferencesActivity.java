@@ -12,6 +12,8 @@ import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
+import android.provider.CalendarContract.Calendars;
+import android.util.Log;
 import android.widget.Toast;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.wizzard.WizNavStartActivity;
@@ -66,16 +68,14 @@ public class UserPreferencesActivity extends PreferenceActivity implements
 		SyncManager sm = new SyncManager(context);
 		sm.deleteFromDb();
 
-		String strKalUri = PreferenceManager.getDefaultSharedPreferences(this)
-				.getString(Const.CALENDAR_URI, "");
-		// checking if calendar already exist in user's device
-		if (strKalUri != "") {
-			// Delete local calenadar
-			Uri kalUri = Uri.parse(strKalUri);
-			ContentResolver crv = getContentResolver();
-			crv.delete(kalUri, null, null);
-		}
-
+	
+		
+		// Delete local calenadar
+		ContentResolver crv = getContentResolver();
+		Uri uri = Calendars.CONTENT_URI;
+		String accountName=" account_name = '"+getString(R.string.calendar_account_name)+"'";
+		crv.delete(uri, accountName, null);
+		
 		Toast.makeText(context, R.string.success_clear_cache,
 				Toast.LENGTH_SHORT).show();
 		return true;
