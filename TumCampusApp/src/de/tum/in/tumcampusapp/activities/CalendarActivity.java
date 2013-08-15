@@ -55,7 +55,6 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements
 
 	private ViewPager mViewPager;
 
-
 	public CalendarActivity() {
 		super(Const.CALENDER, R.layout.activity_calendar);
 	}
@@ -108,9 +107,12 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements
 	public Uri addLocalCalendar() {
 		ContentResolver crv = getContentResolver();
 		Calendar calendar = Calendar.getInstance();
-		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-		CalendarMapper calendarMapper=new CalendarMapper(getString(R.string.calendar_account_name),getString(R.string.calendar_display_name),preferences);
-	
+		SharedPreferences preferences = PreferenceManager
+				.getDefaultSharedPreferences(getApplicationContext());
+		CalendarMapper calendarMapper = new CalendarMapper(
+				getString(R.string.calendar_account_name),
+				getString(R.string.calendar_display_name), preferences);
+
 		Uri uri = calendarMapper.addCalendar(calendar, crv);
 		return uri;
 	}
@@ -118,7 +120,8 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements
 	public int deleteLocalCalendar() {
 		ContentResolver crv = getContentResolver();
 		Uri uri = Calendars.CONTENT_URI;
-		int deleted = crv.delete(uri, " account_name = '"+getString(R.string.calendar_account_name)+"'", null);
+		int deleted = crv.delete(uri, " account_name = '"
+				+ getString(R.string.calendar_account_name) + "'", null);
 		return deleted;
 
 	}
@@ -315,7 +318,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements
 
 		switch (item.getItemId()) {
 		case R.id.action_export_calendar:
-			// Both features (Chart diagrams) are not available on older devices
+			// the Calendar export is not supported for API < 11
 			if (android.os.Build.VERSION.SDK_INT <= 10) {
 				Dialogs.showAndroidVersionTooLowAlert(this);
 				return true;
@@ -324,7 +327,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements
 			exportCalendarToGoogle();
 			return true;
 		case R.id.action_delete_calendar:
-			// Both features (Chart diagrams) are not available on older devices
+			// deleting calendars is not supported for API < 11
 			if (android.os.Build.VERSION.SDK_INT <= 10) {
 				Dialogs.showAndroidVersionTooLowAlert(this);
 				return true;
