@@ -54,7 +54,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements
 	private CalendarSectionsPagerAdapter mSectionsPagerAdapter;
 
 	private ViewPager mViewPager;
-	private SharedPreferences preferences;
+
 
 	public CalendarActivity() {
 		super(Const.CALENDER, R.layout.activity_calendar);
@@ -68,16 +68,12 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements
 
 		Cursor cursor = kalMgr.getAllFromDb();
 		while (cursor.moveToNext()) {
-			final String nr = cursor.getString(0);
 			final String status = cursor.getString(1);
-			final String url = cursor.getString(2);
 			final String title = cursor.getString(3);
 			final String description = cursor.getString(4);
 			final String strstart = cursor.getString(5);
 			final String strend = cursor.getString(6);
 			final String location = cursor.getString(7);
-			final String longitude = cursor.getString(8);
-			final String latitude = cursor.getString(9);
 			if (!status.equals("CANCEL")) {
 				try {
 					dtstart = new SimpleDateFormat("yyyy-MM-dd HH:mm",
@@ -98,8 +94,9 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements
 					values.put(Events.TITLE, title);
 					values.put(Events.DESCRIPTION, description);
 					values.put(Events.CALENDAR_ID, getID(uri));
-					values.put(Events.EVENT_TIMEZONE, "America/Los_Angeles");
-					Uri uriInsert = cr.insert(Events.CONTENT_URI, values);
+					values.put(Events.EVENT_LOCATION, location);
+					values.put(Events.EVENT_TIMEZONE, R.string.calendarTimeZone);
+					cr.insert(Events.CONTENT_URI, values);
 
 				} catch (ParseException e) {
 					e.printStackTrace();
@@ -111,14 +108,17 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements
 	public Uri addLocalCalendar() {
 		ContentResolver crv = getContentResolver();
 		Calendar calendar = Calendar.getInstance();
-		Uri uri = CalendarMapper.addCalendar(calendar, crv);
+		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+		CalendarMapper calendarMapper=new CalendarMapper(getString(R.string.calendar_account_name),getString(R.string.calendar_display_name),preferences);
+	
+		Uri uri = calendarMapper.addCalendar(calendar, crv);
 		return uri;
 	}
 
 	public int deleteLocalCalendar() {
 		ContentResolver crv = getContentResolver();
 		Uri uri = Calendars.CONTENT_URI;
-		int deleted = crv.delete(uri, " account_name = 'TUM_Campus_APP'", null);
+		int deleted = crv.delete(uri, " account_name = '"+getString(R.string.calendar_account_name)+"'", null);
 		return deleted;
 
 	}
@@ -144,9 +144,6 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements
 		backgroundTask = new AsyncTask<Void, Void, Boolean>() {
 			@Override
 			protected Boolean doInBackground(Void... params) {
-
-				String calendarUri = preferences.getString(Const.CALENDAR_URI,
-						"");
 
 				// Deleting earlier calendar created by TUM Campus App
 				deleteLocalCalendar();
@@ -240,7 +237,6 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements
 		// Dates after the current date
 		requestHandler.setParameter("pMonateNach", String.valueOf(MONTH_AFTER));
 
-		preferences = PreferenceManager.getDefaultSharedPreferences(this);
 		calendarManager = new CalendarManager(this);
 
 		if (calendarManager.needsSync()) {

@@ -68,15 +68,10 @@ public class UserPreferencesActivity extends PreferenceActivity implements
 		SyncManager sm = new SyncManager(context);
 		sm.deleteFromDb();
 
-		String strKalUri = PreferenceManager.getDefaultSharedPreferences(this)
-				.getString(Const.CALENDAR_URI, "");
-		// checking if calendar already exist in user's device
-		if (strKalUri != "") {
-			// Delete local calenadar
-			Uri kalUri = Uri.parse(strKalUri);
-			ContentResolver crv = getContentResolver();
-			crv.delete(kalUri, null, null);
-		}
+		//delete local calendar
+		ContentResolver crv = getContentResolver();
+		Uri uri = Calendars.CONTENT_URI;
+		crv.delete(uri, " account_name = '"+getString(R.string.calendar_account_name)+"'", null);
 
 		Toast.makeText(context, R.string.success_clear_cache,
 				Toast.LENGTH_SHORT).show();
