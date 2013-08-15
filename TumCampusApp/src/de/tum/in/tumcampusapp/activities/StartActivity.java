@@ -140,10 +140,9 @@ public class StartActivity extends FragmentActivity {
 		startService(service);
 		
 		//Start daily Service
-		Log.d("Starting","Daily Service");
 		service = new Intent(this, BackgrdService.class);
 		startService(service);
-		Log.d("Started","Daily Service");
+		
 		
 		Boolean hideWizzardOnStartup = PreferenceManager
 				.getDefaultSharedPreferences(this).getBoolean(
