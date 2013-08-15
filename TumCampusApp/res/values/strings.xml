@@ -441,5 +441,7 @@
     <string name="click_to_update">Click to update\ncontent  manually</string>
     <string name="click_to_update_via_menubutton">Click via Menu button\nto update\ncontent manually</string>
     <string name="scroll_down">Scroll down to see older news</string>
-
+	<!-- Grade Notification -->
+	<string name="notification_title">TUM Campus App</string>
+	<string name="notification_content">New Grade Uploaded</string>
 </resources>
