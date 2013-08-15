@@ -25,6 +25,7 @@ import de.tum.in.tumcampusapp.auxiliary.PersonalLayoutManager;
 import de.tum.in.tumcampusapp.preferences.UserPreferencesActivity;
 import de.tum.in.tumcampusapp.services.ImportService;
 import de.tum.in.tumcampusapp.services.SilenceService;
+import de.tum.in.tumcampusapp.services.BackgrdService;
 
 /**
  * Starting point for the App.
@@ -137,7 +138,13 @@ public class StartActivity extends FragmentActivity {
 		// Imports default values into database
 		service = new Intent(this, SilenceService.class);
 		startService(service);
-
+		
+		//Start daily Service
+		Log.d("Starting","Daily Service");
+		service = new Intent(this, BackgrdService.class);
+		startService(service);
+		Log.d("Started","Daily Service");
+		
 		Boolean hideWizzardOnStartup = PreferenceManager
 				.getDefaultSharedPreferences(this).getBoolean(
 						Const.HIDE_WIZZARD_ON_STARTUP, false);
