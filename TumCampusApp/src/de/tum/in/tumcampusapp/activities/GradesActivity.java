@@ -18,7 +18,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -327,27 +326,28 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 			lvGrades.setAdapter(new ExamListAdapter(GradesActivity.this,
 					examList.getExams()));
 
-			// handle on click events by showing its LectureDetails
-			lvGrades.setOnItemClickListener(new OnItemClickListener() {
-				@Override
-				public void onItemClick(AdapterView<?> a, View v, int position,
-						long id) {
-					Object o = lvGrades.getItemAtPosition(position);
-					Exam item = (Exam) o;
-					String progId = item.getProgramID();
-					Log.d(getClass().getSimpleName(), progId);
-
-					// set bundle for LectureDetails and show it
-					Bundle bundle = new Bundle();
-					// we need the stp_sp_nr
-					bundle.putString("stp_sp_nr", progId);
-					Intent i = new Intent(GradesActivity.this,
-							LecturesDetailsActivity.class);
-					i.putExtras(bundle);
-					// start LectureDetails for given stp_sp_nr
-					startActivity(i);
-				}
-			});
+			// // handle on click events by showing its LectureDetails
+			// lvGrades.setOnItemClickListener(new OnItemClickListener() {
+			// @Override
+			// public void onItemClick(AdapterView<?> a, View v, int position,
+			// long id) {
+			// Object o = lvGrades.getItemAtPosition(position);
+			// Exam item = (Exam) o;
+			// String progId = item.getProgramID();
+			//
+			// Log.d(getClass().getSimpleName(), progId);
+			//
+			// // set bundle for LectureDetails and show it
+			// Bundle bundle = new Bundle();
+			// // we need the stp_sp_nr
+			// bundle.putString("stp_sp_nr", progId);
+			// Intent i = new Intent(GradesActivity.this,
+			// LecturesDetailsActivity.class);
+			// i.putExtras(bundle);
+			// // start LectureDetails for given stp_sp_nr
+			// startActivity(i);
+			// }
+			// });
 			progressLayout.setVisibility(View.GONE);
 
 			// enabling the Menu options after first fetch

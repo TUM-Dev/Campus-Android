@@ -604,8 +604,6 @@ public final class R {
         public static final int generate_token=0x7f090098;
         public static final int generate_tumonline_token=0x7f09003b;
         public static final int generate_tumonline_token_detail=0x7f09003c;
-        /**  END Translated, please do not change identifiers 
-         */
         public static final int go_on=0x7f090183;
         public static final int googlemaps_link=0x7f0900fe;
         public static final int goto_tumcampus=0x7f09000d;
@@ -717,6 +715,11 @@ public final class R {
         public static final int no_sd_card=0x7f090158;
         public static final int no_search_result=0x7f090036;
         public static final int no_station_found=0x7f090020;
+        public static final int notification_content=0x7f090190;
+        /**  END Translated, please do not change identifiers 
+ Grade Notification 
+         */
+        public static final int notification_title=0x7f09018f;
         public static final int office_hours=0x7f09011d;
         public static final int open_from_sd=0x7f0900d6;
         public static final int open_study_plan_for=0x7f0900c7;
