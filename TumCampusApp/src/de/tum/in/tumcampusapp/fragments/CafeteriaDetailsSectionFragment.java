@@ -60,21 +60,9 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
 		footer = getLayoutInflater(savedInstanceState).inflate(
 				android.R.layout.two_line_list_item, null, false);
 
-		// TODO make this look nicer :)
-		// listViewMenu.addFooterView(footer, null, false);
-
 		showMenueForDay();
 		this.rootView = rootView;
 		return rootView;
-	}
-
-	@Override
-	public void onResume() {
-		// TODO Auto-generated method stub
-		super.onResume();
-		// PersonalLayoutManager.setColorForView(this.getActivity(),
-		// rootView.findViewById(R.id.tx_category));
-
 	}
 
 	@SuppressWarnings("deprecation")
@@ -107,15 +95,6 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
 				cursorCafeteriaMenu.getColumnNames(), new int[] {
 						R.id.tx_category, R.id.tx_menu, R.id.tx_price }) {
 
-			// @Override
-			// public boolean areAllItemsEnabled() {
-			// return false;
-			// }
-			//
-			// @Override
-			// public boolean isEnabled(int position) {
-			// return false;
-			// }
 		};
 		adapterMenue.setViewBinder(new ViewBinder() {
 
@@ -123,16 +102,10 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
 			@Override
 			public boolean setViewValue(View view, Cursor cursor,
 					int columnIndex) {
-				if (view.getId() == R.id.tx_category) {
-					TextView category = (TextView) view;
-					PersonalLayoutManager.setColorForView(getActivity(),
-							category);
-
-				}
 
 				if (view.getId() == R.id.tx_price) {
 					TextView price = (TextView) view;
-					PersonalLayoutManager.setColorForView(getActivity(), price);
+
 					String curKey = cursor.getString(cursor
 							.getColumnIndex("typeLong"));
 
@@ -162,9 +135,7 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
 						price.setVisibility(View.GONE);
 
 					return true;
-
 				}
-
 				return false;
 			}
 		});

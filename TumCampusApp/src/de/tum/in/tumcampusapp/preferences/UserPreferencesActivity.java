@@ -71,7 +71,8 @@ public class UserPreferencesActivity extends PreferenceActivity implements
 		//delete local calendar
 		ContentResolver crv = getContentResolver();
 		Uri uri = Calendars.CONTENT_URI;
-		crv.delete(uri, " account_name = '"+getString(R.string.calendar_account_name)+"'", null);
+		crv.delete(uri, " account_name = '"
+				+ getString(R.string.calendar_account_name) + "'", null);
 
 		Toast.makeText(context, R.string.success_clear_cache,
 				Toast.LENGTH_SHORT).show();

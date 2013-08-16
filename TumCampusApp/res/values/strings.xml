@@ -8,10 +8,10 @@
     <!-- START Translated, please do not change identifiers -->
     <string name="no_map_available">No map available</string>
     <string name="android_version_too_low">Android version too low</string>
-    <string name="android_version_too_low_message">This feature is not avaiable on your current Android version</string>
+    <string name="android_version_too_low_message">This feature is not available on your current Android version</string>
     <string name="dialog_show_calendar">Export successful.\nShow local calendar <i>TUM_CAMPUS_APP</i> on <i>Google Calendar App</i>?</string>
     <string name="average_grade">Average grade</string>
-    <string name="delete_chache_sure">Sure to delete all data?</string>
+    <string name="delete_chache_sure">Are you sure to delete all data?</string>
     <string name="export_to_google">Export to Google</string>
     <string name="loading_longtime"><i>(This operation will take a bit longer)</i></string>
     <string name="button_skip">Skip</string>
@@ -358,6 +358,7 @@
     <string name="full_app_info">TUM Campus App for Android</string>
     <string name="debug_sqllite">Debug SQLite</string>
     <string name="settings">Settings</string>
+    <string name="settings_open">Open settings</string>
     <string name="week_splitted">Su,Mo,Tu,We,Th,Fr,Sa</string>
     <string name="facility_categories_splitted">library,info,cafeteria_gar,cafeteria_grh,cafeteria,cafeteria_pas,cafeteria_wst</string>
     <string name="access_token">TUMOnline-Access-Token</string>
@@ -429,16 +430,16 @@
     <string name="calendar_deleted_toast">Calender deleted successfully</string>
     <string name="calendar_not_existing_toast">No local calendar existing</string>
     <string name="go_on">Click here to continue</string>
-    <string name="instruction">Welcome to the Tutorial!!\nThe next few minutes you will\n learn how to use this app</string>
-    <string name="skip">skip the tutorial\n whenever you want</string>
+    <string name="instruction">Welcome to the Tutorial!\nThe next few minutes you will learn how to use this App</string>
+    <string name="skip">Skip the tutorial whenever you want</string>
     <string name="swipe_instruction">Swipe through \n menu categories</string>
-    <string name="swipe_right">Now Swipe Right to NEWS</string>
-    <string name="current_menu">Current Menu</string>
-    <string name="click_to_open">Click on TUM News to open \n this menu option</string>
-    <string name="settings_via_menubutton">Get to Setting\nvia Menu Button</string>
-    <string name="news_description">News are fetched from Internet\nand store in database at start\nNow it\'s time to discover\nthe app on your own.\nJust press the X</string>
+    <string name="swipe_right">Swipe left to go to category <i>News</i></string>
+    <string name="current_menu">Current category</string>
+    <string name="click_to_open">Click on <i>TUM News</i> to start this feature</string>
+    <string name="settings_via_menubutton">Open <i>Settings</i> via Menu Button</string>
+    <string name="news_description">News are fetched from Internet and stored on your device. Press the <i>X</i> to explore the App by yourself.</string>
     <string name="click_to_update">Click to update\ncontent  manually</string>
-    <string name="click_to_update_via_menubutton">Click via Menu button\nto update\ncontent manually</string>
+    <string name="click_to_update_via_menubutton">Click via Menu button to update content manually</string>
     <string name="scroll_down">Scroll down to see older news</string>
     <!-- END Translated, please do not change identifiers -->
     <!-- Grade Notification -->

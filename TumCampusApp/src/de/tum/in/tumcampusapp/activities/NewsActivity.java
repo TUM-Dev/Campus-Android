@@ -33,18 +33,13 @@ public class NewsActivity extends ActivityForDownloadingExternal implements
 	static int layoutID;
 	static {
 		if (Build.VERSION.SDK_INT >= 11)
-
 			layoutID = R.layout.activity_news_overlay_actionbar;
 		else
-
 			layoutID = R.layout.activity_news_overlay_menubutton;
-
 	}
 
 	public NewsActivity() {
-
 		super(Const.NEWS, layoutID);
-
 	}
 
 	@Override
@@ -130,7 +125,7 @@ public class NewsActivity extends ActivityForDownloadingExternal implements
 		view.setVisibility(View.VISIBLE);
 		return false;
 	}
-
+	
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -139,12 +134,11 @@ public class NewsActivity extends ActivityForDownloadingExternal implements
 
 			@Override
 			public void onClick(View v) {
-				sharedPrefs.edit().putBoolean("first_run", false).commit();
+				sharedPrefs.edit().putBoolean(Const.FIRST_RUN, false).commit();
 				overlay.setVisibility(View.GONE);
 			}
 		});
-		if (sharedPrefs.getBoolean("first_run", true))
+		if (sharedPrefs.getBoolean(Const.FIRST_RUN, true))
 			overlay.setVisibility(View.VISIBLE);
-
 	}
 }

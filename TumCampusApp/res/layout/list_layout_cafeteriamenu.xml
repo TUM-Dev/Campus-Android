@@ -31,9 +31,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@color/sections_blue"
+            android:background="@color/text_light_gray"
+            android:padding="@dimen/padding_default"
             android:text="category"
-            android:textColor="#ffffff"
+            android:textColor="#000000"
             android:textStyle="bold" />
 
         <TextView
@@ -42,8 +43,9 @@
             android:layout_height="wrap_content"
             android:layout_gravity="right"
             android:layout_weight="3"
-            android:background="@color/sections_blue"
-            android:textColor="#ffffff"
+            android:background="@color/text_light_gray"
+            android:padding="@dimen/padding_default"
+            android:textColor="#000000"
             android:textStyle="bold" />
     </LinearLayout>
 
