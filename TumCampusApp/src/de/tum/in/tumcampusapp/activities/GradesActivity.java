@@ -28,7 +28,6 @@ import android.widget.Toast;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampusapp.adapters.ExamListAdapter;
-import de.tum.in.tumcampusapp.auxiliary.ChartColors;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Dialogs;
 import de.tum.in.tumcampusapp.auxiliary.PersonalLayoutManager;
@@ -69,7 +68,8 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 		super(Const.NOTEN, R.layout.activity_grades);
 	}
 
-	public String buildColumnChartContentString(List<Exam> filteredExamList) {
+	public HashMap<String, Integer> calcGradeDistribution(
+			List<Exam> filteredExamList) {
 		HashMap<String, Integer> gradeDistrubution_hash = new HashMap<String, Integer>();
 		for (int j = 0; j < filteredExamList.size(); j++) {
 			Exam item = filteredExamList.get(j);
@@ -81,8 +81,15 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 			gradeDistrubution_hash.put(item.getGrade(), curCount + 1);
 
 		}
-		Log.d("GradeDistribution: ", gradeDistrubution_hash.toString());
+		return gradeDistrubution_hash;
+
+	}
+
+	public String buildColumnChartContentString(List<Exam> filteredExamList) {
+		HashMap<String, Integer> gradeDistrubution_hash = calcGradeDistribution(filteredExamList);
+
 		String datas = "";
+		// Build data string
 		for (int i = 0; i < Const.GRADES.length; i++) {
 			if (i == Const.GRADES.length - 1)
 				datas += "['" + Const.GRADES[i] + "', "
@@ -92,6 +99,7 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 						+ gradeDistrubution_hash.get(Const.GRADES[i]) + "],";
 		}
 
+		// Build content String
 		String content = "<html>"
 				+ "  <head>"
 				+ "    <script type=\"text/javascript\" src=\"jsapi.js\"></script>"
@@ -100,14 +108,14 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 				+ "      google.setOnLoadCallback(drawChart);"
 				+ "      function drawChart() {"
 				+ "        var data = google.visualization.arrayToDataTable(["
-				+ "          ['Grade', 'Number'],"
+				+ "          ['Grade', 'Quantity'],"
 				+ datas
 				+ "        ]);"
 				+ "        var options = {"
 				+ "          title: 'Grades of "
 				+ filteredExamList.get(0).getProgramID()
 				+ "',"
-				+ " 	     legend: {position: 'none'}"
+				// + " 	     legend: {position: 'none'}"
 				+ "        };"
 				+ "        var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));"
 				+ "        chart.draw(data, options);"
@@ -116,33 +124,17 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 				+ "  </head>"
 				+ "  <body>"
 				+ "    <div id=\"chart_div\" style=\"width: 1000px; height: 500px;\"></div>"
-				// +
-				// "       <img style=\"padding: 0; margin: 0 0 0 330px; display: block;\" src=\"truiton.png\"/>"
 				+ "  </body>" + "</html>";
 
 		return content;
 	}
 
 	public String buildPieChartContentString(List<Exam> filteredExamList) {
-		HashMap<String, Integer> gradeDistrubution_hash = new HashMap<String, Integer>();
-		List<String> usedGrades = new ArrayList<String>();
-		for (int j = 0; j < filteredExamList.size(); j++) {
-			Exam item = filteredExamList.get(j);
-
-			// increment hash value
-			int curCount = gradeDistrubution_hash.containsKey(item.getGrade()) ? gradeDistrubution_hash
-					.get(item.getGrade()) : 0;
-
-			gradeDistrubution_hash.put(item.getGrade(), curCount + 1);
-
-		}
-
+		HashMap<String, Integer> gradeDistrubution_hash = calcGradeDistribution(filteredExamList);
 		String datas = "";
-		String colors = "";
 
+		// build data String
 		for (int i = 0; i < Const.GRADES.length; i++) {
-			if (gradeDistrubution_hash.containsKey(Const.GRADES[i]))
-				usedGrades.add(Const.GRADES[i]);
 			if (i == Const.GRADES.length - 1) {
 				datas += "['" + Const.GRADES[i] + "', "
 						+ gradeDistrubution_hash.get(Const.GRADES[i]) + "]";
@@ -152,17 +144,7 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 
 			}
 		}
-		for (int j = 0; j < usedGrades.size(); j++) {
-			String item = usedGrades.get(j);
-			if (j == usedGrades.size() - 1)
-				colors += "'" + ChartColors.chartColors.get(item) + "'";
-			else
-				colors += "'" + ChartColors.chartColors.get(item) + "',";
-
-		}
-		Log.d("USEDGRADES", usedGrades.toString());
-		Log.d("COLORS", colors);
-
+		// build content String
 		String content = "<html>"
 				+ "  <head>"
 				+ "    <script type=\"text/javascript\" src=\"jsapi.js\"></script>"
@@ -171,17 +153,13 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 				+ "      google.setOnLoadCallback(drawChart);"
 				+ "      function drawChart() {"
 				+ "        var data = google.visualization.arrayToDataTable(["
-				+ "          ['Grade', 'Number'],"
+				+ "          ['Grade', 'Quantity'],"
 				+ datas
 				+ "        ]);"
 				+ "        var options = {"
 				+ "          title: 'Grades of "
 				+ filteredExamList.get(0).getProgramID()
 				+ "'"
-				// + "',"
-				// + "colors: ["
-				// + colors
-				// + "] "
 				+ "        };"
 				+ "        var chart = new google.visualization.PieChart(document.getElementById('chart_div'));"
 				+ "        chart.draw(data, options);"
@@ -207,10 +185,8 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 				weightedGrade += format.parse(item.getGrade()).doubleValue()
 						* Double.valueOf(item.getCredits());
 			} catch (NumberFormatException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (ParseException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
@@ -336,11 +312,7 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 	@Override
 	public void onFetch(String rawResponse) {
 		Log.d(getClass().getSimpleName(), rawResponse);
-		// updateMenu(false);
-		isFetched = false;
-		// // update the action bar to disable the menu options while fetching
-		// if (Build.VERSION.SDK_INT >= 11)
-		// invalidateOptionsMenu();
+
 		Serializer serializer = new Persister();
 		examList = null;
 
@@ -377,6 +349,8 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 				}
 			});
 			progressLayout.setVisibility(View.GONE);
+
+			// enabling the Menu options after first fetch
 			isFetched = true;
 
 			// update the action bar to display the enabled menu options
@@ -467,6 +441,7 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
 
+		// enable Menu Items after fetching grades
 		columnMenuItem = menu.findItem(R.id.columnChart);
 		pieMenuItem = menu.findItem(R.id.pieChart);
 
