@@ -10,17 +10,9 @@ import java.util.Locale;
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
 
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.app.TaskStackBuilder;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -344,7 +336,11 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 	@Override
 	public void onFetch(String rawResponse) {
 		Log.d(getClass().getSimpleName(), rawResponse);
-
+		// updateMenu(false);
+		isFetched = false;
+		// // update the action bar to disable the menu options while fetching
+		// if (Build.VERSION.SDK_INT >= 11)
+		// invalidateOptionsMenu();
 		Serializer serializer = new Persister();
 		examList = null;
 

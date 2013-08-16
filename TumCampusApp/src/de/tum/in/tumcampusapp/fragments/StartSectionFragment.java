@@ -9,6 +9,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -118,18 +119,17 @@ public class StartSectionFragment extends Fragment implements
 				R.layout.list_layout_complex_large, listMenuEntrySet, true);
 		list.setAdapter(adapter);
 		list.setOnItemClickListener(this);
-
 		sharedPrefs = PreferenceManager.getDefaultSharedPreferences(activity);
+
 		return rootView;
 	}
 
 	@Override
 	public void onResume() {
 		super.onResume();
+		Log.d("StartSectionFragment", "onResume()");
 		sharedPrefs = PreferenceManager.getDefaultSharedPreferences(activity);
-		// myTUM_overlay.invalidate();
-		// news_overlay.invalidate();
-		// instruction_overlay.invalidate();
+
 		switch (getArguments().getInt("POSITION")) {
 		case StartSectionsPagerAdapter.SECTION_MY_TUM:
 			if (sharedPrefs.getBoolean("first_run", true)) {

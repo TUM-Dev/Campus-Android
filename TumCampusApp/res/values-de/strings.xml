@@ -416,8 +416,8 @@
     <string name="dialog_delete_calendar">Den lokalen <i>TUM_CAMPUS_APP</i> Kalender von deinem Gerät löschen?</string>
     <string name="calendar_deleted_toast">Kalender erfolgreich gelöscht</string>
     <string name="calendar_not_existing_toast">Es existiert kein lokaler Kalender</string>
-    <string name="go_on">Weiter</string>
-    <string name="instruction">Willkommen zum Tutorial\nIn den nächsten Minuten\n wirst du lernen, wie\nman die App bedient</string>
+    <string name="go_on">Zum Fortfahren hier klicken</string>
+    <string name="instruction">Willkommen zum Tutorial!\nIn den nächsten Minuten\n wirst du lernen, wie\nman die App bedient</string>
     <string name="skip">Beende das Tutorial\nwannimmer du willst</string>
     <string name="swipe_instruction">Swipe durch die \n Menü Kategorien</string>
     <string name="swipe_right">Swipe jetzt nach rechts zu NEWS</string>

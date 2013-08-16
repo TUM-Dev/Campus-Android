@@ -34,8 +34,8 @@ public final class Const {
 	public static final String FETCH_NOTHING = "";
 	public static final String FORCE_DOWNLOAD = "force_download";
 	public static final String GALLERY = "gallery";
-	public static final String[] GRADES = { "1,0", "1,3", "1,4", "1,7", "2.0",
-			"2,3", "2,4", "2,7", "3.0", "3,3", "3,4", "3,7", "4,0", "4,3",
+	public static final String[] GRADES = { "1,0", "1,3", "1,4", "1,7", "2,0",
+			"2,3", "2,4", "2,7", "3,0", "3,3", "3,4", "3,7", "4,0", "4,3",
 			"4,4", "4,7", "5,0" };
 	public static final String HIDE_WIZZARD_ON_STARTUP = "hide_wizzard_on_startup";
 	public static final String HOLIDAY = "holiday";
@@ -108,5 +108,5 @@ public final class Const {
 	public static final String WARNING = "warning";
 	public static final String WARNING_MESSAGE = "warning_message";
 	public static final String WEEKDAY_COLUMN = "weekday";
-	public static final String Grade_Count="GradeCount";
+	public static final String Grade_Count = "GradeCount";
 }

@@ -428,8 +428,7 @@
     <string name="dialog_delete_calendar">Do you want to delete  the <i>TUM_CAMPUS_APP</i>  calendar from your device?</string>
     <string name="calendar_deleted_toast">Calender deleted successfully</string>
     <string name="calendar_not_existing_toast">No local calendar existing</string>
-    <!-- END Translated, please do not change identifiers -->
-    <string name="go_on">Continue</string>
+    <string name="go_on">Click here to continue</string>
     <string name="instruction">Welcome to the Tutorial!!\nThe next few minutes you will\n learn how to use this app</string>
     <string name="skip">skip the tutorial\n whenever you want</string>
     <string name="swipe_instruction">Swipe through \n menu categories</string>
@@ -441,7 +440,9 @@
     <string name="click_to_update">Click to update\ncontent  manually</string>
     <string name="click_to_update_via_menubutton">Click via Menu button\nto update\ncontent manually</string>
     <string name="scroll_down">Scroll down to see older news</string>
-	<!-- Grade Notification -->
-	<string name="notification_title">TUM Campus App</string>
-	<string name="notification_content">New Grade Uploaded</string>
+    <!-- END Translated, please do not change identifiers -->
+    <!-- Grade Notification -->
+    <string name="notification_title">TUM Campus App</string>
+    <string name="notification_content">New Grade Uploaded</string>
+
 </resources>

@@ -251,6 +251,9 @@
         <service
             android:name=".services.SilenceService"
             android:exported="false" />
+        <service
+            android:name=".services.BackgrdService"
+            android:exported="false" />
     </application>
 
 </manifest>

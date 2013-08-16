@@ -22,7 +22,7 @@ public class Exam {
 	@Element(name = "lv_credits")
 	private String credits;
 
-	@Element(name = "datum")
+	@Element(name = "datum", required = false)
 	private String date;
 
 	@Element(name = "pruefer_nachname")
