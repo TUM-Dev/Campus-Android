@@ -23,6 +23,7 @@ import android.widget.RelativeLayout;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.adapters.StartListAdapter;
 import de.tum.in.tumcampusapp.adapters.StartSectionsPagerAdapter;
+import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.ListMenuEntry;
 
 /**
@@ -95,7 +96,7 @@ public class StartSectionFragment extends Fragment implements
 
 			@Override
 			public void onClick(View v) {
-				sharedPrefs.edit().putBoolean("first_run", false).commit();
+				sharedPrefs.edit().putBoolean(Const.FIRST_RUN, false).commit();
 				myTUM_overlay.setVisibility(View.GONE);
 				news_overlay.setVisibility(View.GONE);
 				instruction_overlay.setVisibility(View.GONE);
@@ -132,7 +133,7 @@ public class StartSectionFragment extends Fragment implements
 
 		switch (getArguments().getInt("POSITION")) {
 		case StartSectionsPagerAdapter.SECTION_MY_TUM:
-			if (sharedPrefs.getBoolean("first_run", true)) {
+			if (sharedPrefs.getBoolean(Const.FIRST_RUN, true)) {
 
 				instruction_overlay.setVisibility(View.VISIBLE);
 
@@ -154,7 +155,7 @@ public class StartSectionFragment extends Fragment implements
 
 			break;
 		case StartSectionsPagerAdapter.SECTION_NEWS:
-			if (sharedPrefs.getBoolean("first_run", true))
+			if (sharedPrefs.getBoolean(Const.FIRST_RUN, true))
 				news_overlay.setVisibility(View.VISIBLE);
 			else
 				news_overlay.setVisibility(View.GONE);

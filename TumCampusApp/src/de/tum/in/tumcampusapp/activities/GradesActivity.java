@@ -437,17 +437,18 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 		}
 		return removedDoubles;
 	}
+	
+	public void setMenuEnabled(boolean enabled) {
+		columnMenuItem.setEnabled(enabled);
+		pieMenuItem.setEnabled(enabled);
+	}
 
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
-
 		// enable Menu Items after fetching grades
 		columnMenuItem = menu.findItem(R.id.columnChart);
 		pieMenuItem = menu.findItem(R.id.pieChart);
-
-		columnMenuItem.setEnabled(isFetched).setVisible(isFetched);
-		pieMenuItem.setEnabled(isFetched).setVisible(isFetched);
-
+		setMenuEnabled(isFetched);
 		return super.onPrepareOptionsMenu(menu);
 	}
 }

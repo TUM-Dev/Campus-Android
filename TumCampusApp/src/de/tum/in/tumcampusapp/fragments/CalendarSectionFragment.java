@@ -154,7 +154,6 @@ public class CalendarSectionFragment extends Fragment {
 		Log.i("Total lectures found", String.valueOf(eventList.size()));
 		for (RelativeLayout event : eventList) {
 			mainScheduleLayout.addView(event);
-			// TODO PersonalLayoutManager.setColorForView(activity, event);
 		}
 	}
 }

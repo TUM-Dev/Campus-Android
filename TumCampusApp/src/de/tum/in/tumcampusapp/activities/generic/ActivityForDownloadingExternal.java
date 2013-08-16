@@ -140,6 +140,7 @@ public class ActivityForDownloadingExternal extends FragmentActivity {
 
 	public void requestDownload(boolean forceDownload) {
 		if (Utils.isConnected(this)) {
+			errorLayout.setVisibility(View.GONE);
 			progressLayout.setVisibility(View.VISIBLE);
 			Intent service = new Intent(this, DownloadService.class);
 			service.putExtra(Const.ACTION_EXTRA, method);

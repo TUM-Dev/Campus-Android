@@ -349,6 +349,7 @@
     <string name="full_app_info">TUM Campus App für Android</string>
     <string name="debug_sqllite">Debug SQLite</string>
     <string name="settings">Einstellungen</string>
+    <string name="settings_open">Öffne die Einstellungen</string>
     <string name="week_splitted">So,Mo,Di,Mi,Do,Fr,Sa</string>
     <string name="facility_categories_splitted">library,info,cafeteria_gar,cafeteria_grh,cafeteria,cafeteria_pas,cafeteria_wst</string>
     <string name="access_token">TUMOnline-Access-Token</string>
@@ -417,16 +418,16 @@
     <string name="calendar_deleted_toast">Kalender erfolgreich gelöscht</string>
     <string name="calendar_not_existing_toast">Es existiert kein lokaler Kalender</string>
     <string name="go_on">Zum Fortfahren hier klicken</string>
-    <string name="instruction">Willkommen zum Tutorial!\nIn den nächsten Minuten\n wirst du lernen, wie\nman die App bedient</string>
-    <string name="skip">Beende das Tutorial\nwannimmer du willst</string>
-    <string name="swipe_instruction">Swipe durch die \n Menü Kategorien</string>
-    <string name="swipe_right">Swipe jetzt nach rechts zu NEWS</string>
-    <string name="current_menu">Aktuelles Menü</string>
-    <string name="click_to_open">Klicke auf TUM News um diesen\nMenü-Punkt zu öffnen</string>
+    <string name="instruction">Willkommen zum Tutorial!\nIn den nächsten Minuten wirst du lernen, wie du die App bedienst</string>
+    <string name="skip">Beende das Tutorial wann immer du möchtest</string>
+    <string name="swipe_instruction">Wische durch die Kategorien</string>
+    <string name="swipe_right">Wische nach links um zu der Kategorie <i>News</i> zu gelangen</string>
+    <string name="current_menu">Aktuelle Kategorie</string>
+    <string name="click_to_open">Klicke auf <i>TUM News</i> um dieses Feature zu starten</string>
     <string name="settings_via_menubutton">Gelange zu den Einstellungen\nüber den Menu Knopf</string>
-    <string name="news_description">News werden aus dem Internet geladen\nund in einer Datenbank gespeichert\nJetzt ist es Zeit die App selbst zu entdecken.\nKlicke dazu einfach das X</string>
-    <string name="click_to_update">Klicken um Inhalt\nmanuell zu updaten</string>
-    <string name="click_to_update_via_menubutton">Via Menu Knopf\nden Inhalt\nmanuell updaten</string>
+    <string name="news_description">News werden aus dem Internet geladen und auf deinem Gerät gespeichert. Klicke auf das <i>X</i> zum eigenen Erkunden der App!</string>
+    <string name="click_to_update">Klicken, um Inhalt manuell zu updaten</string>
+    <string name="click_to_update_via_menubutton">Via Menu Knopf den Inhalt manuell updaten</string>
     <string name="scroll_down">Nach unten Scrollen, um ältere News zu sehen</string>
     <!-- END Translated -->
 

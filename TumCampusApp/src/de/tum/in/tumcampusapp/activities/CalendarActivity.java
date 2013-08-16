@@ -55,6 +55,11 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements
 
 	private ViewPager mViewPager;
 
+	private MenuItem menuItemExportGoogle;
+	private MenuItem menuItemDeleteCalendar;
+
+	private boolean isFetched;
+
 	public CalendarActivity() {
 		super(Const.CALENDER, R.layout.activity_calendar);
 	}
@@ -123,7 +128,6 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements
 		int deleted = crv.delete(uri, " account_name = '"
 				+ getString(R.string.calendar_account_name) + "'", null);
 		return deleted;
-
 	}
 
 	// displaying calendar
@@ -206,7 +210,6 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements
 
 							}
 						}).show();
-
 	}
 
 	@Override
@@ -246,6 +249,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements
 			super.requestFetch();
 		} else {
 			attachSectionPagerAdapter();
+			isFetched = true;
 		}
 	}
 
@@ -308,6 +312,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements
 			@Override
 			protected void onPreExecute() {
 				showProgressLayout();
+				isFetched = true;
 			}
 		};
 		backgroundTask.execute();
@@ -336,6 +341,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements
 			return true;
 		default:
 			detachSectionPagerAdapter();
+			isFetched = false;
 			return super.onOptionsItemSelected(item);
 		}
 	}
@@ -344,5 +350,18 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements
 	protected void onResume() {
 		super.onResume();
 		PersonalLayoutManager.setColorForId(this, R.id.pager_title_strip);
+	}
+
+	public void setMenuEnabled(boolean enabled) {
+		menuItemExportGoogle.setEnabled(enabled);
+		menuItemDeleteCalendar.setEnabled(enabled);
+	}
+
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		menuItemExportGoogle = menu.findItem(R.id.action_export_calendar);
+		menuItemDeleteCalendar = menu.findItem(R.id.action_delete_calendar);
+		setMenuEnabled(isFetched);
+		return super.onPrepareOptionsMenu(menu);
 	}
 }

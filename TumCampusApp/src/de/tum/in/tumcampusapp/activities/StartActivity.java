@@ -150,11 +150,6 @@ public class StartActivity extends FragmentActivity {
 			Intent intent = new Intent(this, WizNavStartActivity.class);
 			startActivity(intent);
 		}
-
-		// testing Tutorial Overlay: DELETE FOR PRODUCTIVE APP
-		// SharedPreferences sharedPrefs = PreferenceManager
-		// .getDefaultSharedPreferences(this);
-		// sharedPrefs.edit().putBoolean("first_run", true).commit();
 	}
 
 	@Override

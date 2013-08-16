@@ -8,5 +8,6 @@
     <color name="sections_red">#EF5E5B</color>
     <color name="sections_green">#7cbc49</color>
     <color name="sections_gray">#a5a5a5</color>
+    <color name="overlay_background">#8000</color>
 
 </resources>
