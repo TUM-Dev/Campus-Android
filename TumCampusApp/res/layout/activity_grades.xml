@@ -43,7 +43,8 @@
         <ListView
             android:id="@+id/lstGrades"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:listSelector="@android:color/transparent" />
     </LinearLayout>
 
     <LinearLayout
@@ -56,10 +57,11 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:background="@color/sections_blue"
-            android:padding="@dimen/padding_to_above_text"
             android:gravity="right"
+            android:padding="@dimen/padding_to_above_text"
             android:text="avgGrade"
-            android:textSize="@dimen/semilarge_text_size" />
+            android:textSize="@dimen/semilarge_text_size"
+            android:visibility="gone" />
     </LinearLayout>
 
 </RelativeLayout>

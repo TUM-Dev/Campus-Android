@@ -15,6 +15,7 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_weight="1"
+        android:listSelector="@android:color/transparent"
         android:padding="@dimen/padding_default"
         android:scrollbars="vertical" />
 

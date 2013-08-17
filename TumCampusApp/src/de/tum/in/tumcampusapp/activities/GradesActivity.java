@@ -289,7 +289,6 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 		lvGrades = (ListView) findViewById(R.id.lstGrades);
 		spFilter = (Spinner) findViewById(R.id.spFilter);
 		average_tx = (TextView) findViewById(R.id.avgGrade);
-		average_tx.setVisibility(View.GONE);
 
 		super.requestFetch();
 	}
@@ -311,7 +310,6 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 	@Override
 	public void onFetch(String rawResponse) {
 		Log.d(getClass().getSimpleName(), rawResponse);
-
 		Serializer serializer = new Persister();
 		examList = null;
 
@@ -326,28 +324,6 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 			lvGrades.setAdapter(new ExamListAdapter(GradesActivity.this,
 					examList.getExams()));
 
-			// // handle on click events by showing its LectureDetails
-			// lvGrades.setOnItemClickListener(new OnItemClickListener() {
-			// @Override
-			// public void onItemClick(AdapterView<?> a, View v, int position,
-			// long id) {
-			// Object o = lvGrades.getItemAtPosition(position);
-			// Exam item = (Exam) o;
-			// String progId = item.getProgramID();
-			//
-			// Log.d(getClass().getSimpleName(), progId);
-			//
-			// // set bundle for LectureDetails and show it
-			// Bundle bundle = new Bundle();
-			// // we need the stp_sp_nr
-			// bundle.putString("stp_sp_nr", progId);
-			// Intent i = new Intent(GradesActivity.this,
-			// LecturesDetailsActivity.class);
-			// i.putExtras(bundle);
-			// // start LectureDetails for given stp_sp_nr
-			// startActivity(i);
-			// }
-			// });
 			progressLayout.setVisibility(View.GONE);
 
 			// enabling the Menu options after first fetch
@@ -398,6 +374,7 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 			Toast.makeText(this, R.string.no_internet_connection,
 					Toast.LENGTH_SHORT).show();
 			errorLayout.setVisibility(View.VISIBLE);
+			average_tx.setVisibility(View.GONE);
 			return true;
 		}
 	}
@@ -407,6 +384,7 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 		super.onResume();
 		PersonalLayoutManager.setColorForId(this, R.id.spFilter);
 		PersonalLayoutManager.setColorForId(this, R.id.avgGrade);
+
 	}
 
 	public List<Exam> removeDuplicates(List<Exam> filteredExamList) {
@@ -437,10 +415,11 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 		}
 		return removedDoubles;
 	}
-	
+
 	public void setMenuEnabled(boolean enabled) {
 		columnMenuItem.setEnabled(enabled);
 		pieMenuItem.setEnabled(enabled);
+
 	}
 
 	@Override
@@ -449,6 +428,7 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 		columnMenuItem = menu.findItem(R.id.columnChart);
 		pieMenuItem = menu.findItem(R.id.pieChart);
 		setMenuEnabled(isFetched);
+
 		return super.onPrepareOptionsMenu(menu);
 	}
 }

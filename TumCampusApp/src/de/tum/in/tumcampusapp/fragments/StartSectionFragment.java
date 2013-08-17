@@ -9,7 +9,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -128,7 +127,7 @@ public class StartSectionFragment extends Fragment implements
 	@Override
 	public void onResume() {
 		super.onResume();
-		Log.d("StartSectionFragment", "onResume()");
+
 		sharedPrefs = PreferenceManager.getDefaultSharedPreferences(activity);
 
 		switch (getArguments().getInt("POSITION")) {
