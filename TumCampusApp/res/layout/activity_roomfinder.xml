@@ -9,28 +9,28 @@
         android:layout_height="@dimen/rythm_48dp"
         android:orientation="horizontal" >
 
-        <AutoCompleteTextView
+        <EditText
             android:id="@+id/search_field"
-                        android:layout_weight="1"
             android:layout_width="match_parent"
             android:layout_height="fill_parent"
+            android:layout_weight="1"
             android:hint="@string/search_rooms"
             android:imeActionLabel="Search"
             android:imeOptions="actionSearch"
             android:singleLine="true" >
-        </AutoCompleteTextView>
+        </EditText>
 
-<!--         <SearchView -->
-<!--             android:id="@+id/searchview_field" -->
-<!--             android:layout_width="fill_parent" -->
-<!--             android:layout_height="fill_parent" -->
-<!--             android:layout_weight="1" -->
-<!--             android:hint="@string/search_rooms" -->
-<!--             android:imeActionLabel="Search" -->
-<!--             android:imeOptions="actionSearch" -->
-<!--             android:singleLine="true" -->
-<!--             android:visibility="gone" > -->
-<!--         </SearchView> -->
+        <!-- <SearchView -->
+        <!-- android:id="@+id/searchview_field" -->
+        <!-- android:layout_width="fill_parent" -->
+        <!-- android:layout_height="fill_parent" -->
+        <!-- android:layout_weight="1" -->
+        <!-- android:hint="@string/search_rooms" -->
+        <!-- android:imeActionLabel="Search" -->
+        <!-- android:imeOptions="actionSearch" -->
+        <!-- android:singleLine="true" -->
+        <!-- android:visibility="gone" > -->
+        <!-- </SearchView> -->
 
         <ImageButton
             android:id="@+id/clear"

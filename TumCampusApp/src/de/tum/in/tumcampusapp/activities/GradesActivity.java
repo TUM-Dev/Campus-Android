@@ -330,8 +330,9 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 			isFetched = true;
 
 			// update the action bar to display the enabled menu options
-			if (Build.VERSION.SDK_INT >= 11)
+			if (Build.VERSION.SDK_INT >= 11) {
 				invalidateOptionsMenu();
+			}
 
 		} catch (Exception e) {
 			Log.d("SIMPLEXML", "wont work: " + e.getMessage());

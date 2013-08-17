@@ -68,7 +68,7 @@ public class UserPreferencesActivity extends PreferenceActivity implements
 		SyncManager sm = new SyncManager(context);
 		sm.deleteFromDb();
 
-		//delete local calendar
+		// delete local calendar
 		ContentResolver crv = getContentResolver();
 		Uri uri = Calendars.CONTENT_URI;
 		crv.delete(uri, " account_name = '"

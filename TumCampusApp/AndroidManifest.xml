@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="de.tum.in.tumcampusapp"
-    android:versionCode="26"
-    android:versionName="0.6.3" >
+    android:versionCode="27"
+    android:versionName="0.6.4" >
 
     <uses-sdk
         android:minSdkVersion="8"
@@ -252,7 +252,7 @@
             android:name=".services.SilenceService"
             android:exported="false" />
         <service
-            android:name=".services.BackgrdService"
+            android:name=".services.BackgroundService"
             android:exported="false" />
     </application>
 

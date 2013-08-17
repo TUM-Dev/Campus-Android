@@ -22,63 +22,10 @@
         layout="@layout/layout_error"
         android:visibility="gone" />
 
-    <!-- TUM-NEWS Overlay -->
-
-    <RelativeLayout
-        android:id="@+id/tumNews_overlay"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/overlay_background"
-        android:visibility="gone" >
-
-        <ImageView
-            android:id="@+id/tumNews_cross"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:clickable="true"
-            android:src="@drawable/cross" />
-
-        <TextView
-            android:id="@+id/description_tx"
-            style="@style/DemoText"
-            android:layout_centerInParent="true"
-            android:text="@string/news_description" />
-
-        <ImageView
-            android:id="@+id/scroll_arrow"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:src="@drawable/down_arrow" />
-
-        <TextView
-            android:id="@+id/scroll_tx"
-            style="@style/DemoText"
-            android:layout_width="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:layout_marginRight="60dp"
-            android:text="@string/scroll_down" />
-
-        <TextView
-            android:id="@+id/update_tx"
-            style="@style/DemoText"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@+id/tumNews_cross"
-            android:layout_marginRight="60dp"
-            android:layout_marginTop="14dp"
-            android:text="@string/click_to_update_via_menubutton" />
-
-        <ImageView
-            android:id="@+id/update_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_below="@+id/tumNews_cross"
-            android:src="@drawable/refresh" />
-    </RelativeLayout>
+    <include
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        layout="@layout/overlay_tutorial_news_menubutton"
+        android:visibility="gone" />
 
 </RelativeLayout>

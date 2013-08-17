@@ -34,8 +34,8 @@
 
             <Button
                 android:layout_width="match_parent"
-                android:layout_marginTop="@dimen/padding_default"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding_default"
                 android:onClick="onClickDone"
                 android:text="@string/goto_tumcampus" />
         </LinearLayout>

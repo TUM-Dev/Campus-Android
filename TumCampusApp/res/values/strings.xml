@@ -399,6 +399,7 @@
 		\n\n<b>Licenses:</b>\nGNU GPL v3 - http://www.gnu.org/licenses/gpl.html or
 		\nNew BSD License - http://www.opensource.org/licenses/bsd-license.php
 		\n\nThe source code is available through Github and may be requested from the project manager in the most recent version.
+		\nTUM Campus App on Facebook: https://www.facebook.com/TUMCampus
 		\n\n18th August 2013\n</string>
     <string name="credits">ECTS</string>
     <string name="wizzard_on_startup">Do not show at next start</string>
@@ -423,8 +424,8 @@
     <string name="finish">Finish</string>
     <string name="show_column_chart">Show Column Chart</string>
     <string name="show_pie_chart">Show Pie Chart</string>
-     <string name="show_feedback">Open Feedback</string>
-    <string name="demo_mode">InApp-Tutorial</string>
+    <string name="demo_mode">In-App-Tutorial</string>
+    <string name="show_feedback">Open Feedback</string>
     <string name="demo_info">Activates help mode for instruction on how to use this App.</string>
     <string name="delete_from_google">Delete from Google</string>
     <string name="dialog_delete_calendar">Do you want to delete  the <i>TUM_CAMPUS_APP</i>  calendar from your device?</string>
@@ -433,20 +434,19 @@
     <string name="go_on">Click here to continue</string>
     <string name="instruction">Welcome to the Tutorial!\nThe next few minutes you will learn how to use this App</string>
     <string name="skip">Skip the tutorial whenever you want</string>
-    <string name="swipe_instruction">Swipe through \n menu categories</string>
+    <string name="swipe_instruction">Swipe through menu categories</string>
     <string name="swipe_right">Swipe left to go to category <i>News</i></string>
     <string name="current_menu">Current category</string>
     <string name="click_to_open">Click on <i>TUM News</i> to start this feature</string>
     <string name="settings_via_menubutton">Open <i>Settings</i> via Menu Button</string>
-    <string name="news_description">News are fetched from Internet and stored on your device. Press the <i>X</i> to explore the App by yourself.</string>
-    <string name="click_to_update">Click to update\ncontent  manually</string>
-    <string name="click_to_update_via_menubutton">Click via Menu button to update content manually</string>
+    <string name="news_description">News are fetched from the internet and stored on your device. Press the <i>X</i> to explore the App by yourself.</string>
+    <string name="click_to_update">Click to update content  manually</string>
+    <string name="click_to_update_via_menubutton">Click via <i>Menu</i> button to update content manually</string>
     <string name="scroll_down">Scroll down to see older news</string>
-    <!-- END Translated, please do not change identifiers -->
-    <!-- Grade Notification -->
     <string name="notification_title">TUM Campus App</string>
-    <string name="notification_content">New Grade Uploaded</string>
+    <string name="notification_content">New grade uploaded</string>
     <string name="feedbackAddr">nils.kannengiesser@tum.de</string>
-    <string name="feedbackSubj">Feedback TUM Campus App</string>
+    <string name="feedbackSubj">Feedback for TUM Campus App</string>
+    <!-- END Translated, please do not change identifiers -->
 
 </resources>
