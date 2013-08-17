@@ -128,7 +128,6 @@ public class StartSectionFragment extends Fragment implements
 	@Override
 	public void onResume() {
 		super.onResume();
-		Log.d("StartSectionFragment", "onResume()");
 		sharedPrefs = PreferenceManager.getDefaultSharedPreferences(activity);
 
 		switch (getArguments().getInt("POSITION")) {

@@ -21,6 +21,7 @@ public final class Const {
 	public static final String DEFAULTS = "defaults";
 	public static final String DESCRIPTION_COLUMN = "description";
 	public static final String DOCUMENTS = "documents";
+	public static final String DOWNLOAD_ALL_FROM_EXTERNAL = "download_all_from_external";
 	public static final String EN = "en";
 	public static final String END_DE_COLUMN = "end_de";
 	public static final String END_DT_COLUMN = "end_dt";

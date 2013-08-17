@@ -10,20 +10,20 @@ import android.provider.CalendarContract;
 import android.provider.CalendarContract.Calendars;
 
 public class CalendarMapper {
-	private  String ACCOUNT_NAME;
-	private  String INT_NAME_PREFIX;
+	private String ACCOUNT_NAME;
+	private String INT_NAME_PREFIX;
 	private String Calendar_Name;
 	private SharedPreferences preferences;
-	
-	public CalendarMapper(String accountName,String calendarName,SharedPreferences preferences){
-		this.ACCOUNT_NAME=accountName;
-		this.INT_NAME_PREFIX=accountName;
-		this.Calendar_Name=calendarName;
-		this.preferences=preferences;
+
+	public CalendarMapper(String accountName, String calendarName,
+			SharedPreferences preferences) {
+		this.ACCOUNT_NAME = accountName;
+		this.INT_NAME_PREFIX = accountName;
+		this.Calendar_Name = calendarName;
+		this.preferences = preferences;
 	}
 
-	
-	public  Uri addCalendar(Calendar calendar, ContentResolver cr) {
+	public Uri addCalendar(Calendar calendar, ContentResolver cr) {
 		if (calendar == null)
 			throw new IllegalArgumentException();
 
@@ -34,7 +34,7 @@ public class CalendarMapper {
 	}
 
 	@SuppressLint("NewApi")
-	private  Uri buildCalUri() {
+	private Uri buildCalUri() {
 		return CalendarContract.Calendars.CONTENT_URI
 				.buildUpon()
 				.appendQueryParameter(CalendarContract.CALLER_IS_SYNCADAPTER,
@@ -45,21 +45,21 @@ public class CalendarMapper {
 	}
 
 	@SuppressLint("InlinedApi")
-	private  ContentValues buildContentValues(Calendar calendar) {
-		
+	private ContentValues buildContentValues(Calendar calendar) {
+
 		int colorCalendar = 0x0066CC;
-		
-		String colorValue = preferences.getString(Const.COLOR_SCHEME,"0");
+
+		String colorValue = preferences.getString(Const.COLOR_SCHEME, "0");
 		if (colorValue != null) {
 			if (colorValue.equals("0")) {
-				colorCalendar=0x0066CC;
+				colorCalendar = 0x0066CC;
 			} else if (colorValue.equals("1")) {
-				colorCalendar=0xFF0000;
+				colorCalendar = 0xFF0000;
 			} else if (colorValue.equals("2")) {
-				colorCalendar=0x33CC33;
+				colorCalendar = 0x33CC33;
 			} else if (colorValue.equals("3")) {
-				colorCalendar=0x696969;
-			
+				colorCalendar = 0x696969;
+
 			}
 		}
 		String intName = INT_NAME_PREFIX + this.Calendar_Name;

@@ -127,13 +127,13 @@ public class ImportService extends IntentService {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		Utils.log("");
+		Utils.log("ImportService has started");
 	}
 
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		Utils.log("");
+		Utils.log("ImportService has stopped");
 	}
 
 	@Override

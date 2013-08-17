@@ -116,6 +116,8 @@ public class DownloadService extends IntentService {
 	@Override
 	public void onCreate() {
 		super.onCreate();
+		Utils.log("DownloadService service has started");
+
 		try {
 			// Check if sd card available
 			Utils.getCacheDir("");
@@ -132,6 +134,7 @@ public class DownloadService extends IntentService {
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
+		Utils.log("DownloadService service has stopped");
 		isDestroyed = true;
 	}
 
@@ -149,6 +152,16 @@ public class DownloadService extends IntentService {
 		Log.i(getClass().getSimpleName(), "Handle action <" + action + ">");
 
 		try {
+			if ((action.equals(Const.DOWNLOAD_ALL_FROM_EXTERNAL))
+					&& !isDestroyed) {
+				// TODO Implement downloading each type of external source
+
+				// downloadGallery(force);
+				// downloadNews(force);
+				// downloadCafeterias(force);
+				// downloadEvents(force);
+				// downloadOrganisations(force);
+			}
 			if ((action.equals(Const.NEWS)) && !isDestroyed) {
 				scucessfull = downloadNews(force);
 			}

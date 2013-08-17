@@ -307,6 +307,8 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements
 			protected void onPostExecute(Boolean result) {
 				hideProgressLayout();
 				attachSectionPagerAdapter();
+				// update the action bar to display the enabled menu options
+				invalidateOptionsMenu();
 			}
 
 			@Override

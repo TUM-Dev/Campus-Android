@@ -125,7 +125,7 @@ public class NewsActivity extends ActivityForDownloadingExternal implements
 		view.setVisibility(View.VISIBLE);
 		return false;
 	}
-	
+
 	@Override
 	protected void onResume() {
 		super.onResume();

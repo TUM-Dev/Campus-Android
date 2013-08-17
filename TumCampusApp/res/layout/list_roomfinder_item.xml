@@ -11,7 +11,7 @@
         android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
         android:layout_gravity="center"
-        android:layout_marginRight="@dimen/padding_default">
+        android:layout_marginRight="@dimen/padding_default" >
 
         <ImageView
             android:id="@+id/list_image"
@@ -19,7 +19,6 @@
             android:layout_height="@dimen/icon_small"
             android:layout_gravity="center"
             android:src="@drawable/about" />
-
     </LinearLayout>
 
     <LinearLayout
@@ -54,7 +53,6 @@
             android:textColor="@color/text_dark_gray"
             android:textSize="@dimen/mid_text_size" />
     </LinearLayout>
-   
 
     <ImageView
         android:id="@+id/imageView1"

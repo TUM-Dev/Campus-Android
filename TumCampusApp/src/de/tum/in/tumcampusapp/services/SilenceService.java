@@ -28,51 +28,53 @@ public class SilenceService extends IntentService {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		Utils.log(""); // log create
+		Utils.log("SilenceService has started");
 	}
 
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		Utils.log(""); // log destroy
+		Utils.log("SilenceService has stopped");
 	}
 
 	@Override
 	protected void onHandleIntent(Intent intent) {
-
 		// loop until silence mode gets disabled in settings
-		while (Utils.getSettingBool(this, Const.SILENCE_SERVICE)) {
-			AudioManager am;
+		while (true) {
+			try {
+				if (Utils.getSettingBool(this, Const.SILENCE_SERVICE)) {
+					Utils.log("SilenceService enabled, checking for lectures ...");
 
-			am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+					AudioManager am;
 
-			LectureItemManager lim = new LectureItemManager(this);
-			if (!lim.hasLectures()) {
-				// no lectures available
-				return;
-			}
+					am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
-			Cursor c = lim.getCurrentFromDb();
-			if (c.getCount() != 0) {
-				// if current lecture(s) found, silence the mobile
-				Utils.setSettingBool(this, Const.SILENCE_ON, true);
+					LectureItemManager lim = new LectureItemManager(this);
+					if (!lim.hasLectures()) {
+						// no lectures available
+						return;
+					}
 
-				Utils.log("set ringer mode: silent");
-				am.setRingerMode(AudioManager.RINGER_MODE_SILENT);
-			} else if (Utils.getSettingBool(this, Const.SILENCE_ON)) {
-				// default: no silence
-				Utils.log("set ringer mode: normal");
-				am.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
-				Utils.setSettingBool(this, Const.SILENCE_ON, false);
-			}
+					Cursor c = lim.getCurrentFromDb();
+					if (c.getCount() != 0) {
+						// if current lecture(s) found, silence the mobile
+						Utils.setSettingBool(this, Const.SILENCE_ON, true);
 
-			// wait until next check
-			synchronized (this) {
-				try {
-					wait(CHECK_INTERVAL);
-				} catch (Exception e) {
-					Utils.log(e, "");
+						Utils.log("set ringer mode: silent");
+						am.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+					} else if (Utils.getSettingBool(this, Const.SILENCE_ON)) {
+						// default: no silence
+						Utils.log("set ringer mode: normal");
+						am.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+						Utils.setSettingBool(this, Const.SILENCE_ON, false);
+					}
 				}
+				// wait until next check
+				synchronized (this) {
+					wait(CHECK_INTERVAL);
+				}
+			} catch (Exception e) {
+				Utils.log(e, "");
 			}
 		}
 	}
