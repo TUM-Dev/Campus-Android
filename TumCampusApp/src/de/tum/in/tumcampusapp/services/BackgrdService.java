@@ -27,6 +27,7 @@ public class BackgrdService extends IntentService {
 	 * Interval in milliseconds to check for current lectures
 	 */
 	public static int CHECK_INTERVAL = 60000 * 60*24; // 1 Day
+	
 	public static final String Background_SERVICE = "BackgrdService";
 
 	/**
@@ -92,9 +93,10 @@ public class BackgrdService extends IntentService {
 				Editor editor = settings.edit();
 				editor.putInt(Const.Grade_Count, newSize);
 				editor.commit();
+				int icon = R.drawable.ic_notification;
 				// Generating Notification
 				NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
-						this).setSmallIcon(android.R.drawable.stat_notify_more)
+						this).setSmallIcon(icon)
 						.setContentTitle(getString(R.string.notification_title))
 						.setContentText(getString(R.string.notification_content));
 				// Creates an explicit intent for an Activity in your app
