@@ -374,20 +374,6 @@
     <string name="deactivated">deaktiviert</string>
     <string name="error">Fehler</string>
     <string name="app_short_description">TUM Informationsplattform - von Studenten für Studenten</string>
-    <string name="app_info_text"><b>TUM Campus App</b>\nThe TUM Campus App is developed by students of the Android practical course, other voluntary freelancers and chair members.
-        \n\n<b>Project Management:</b>\nTUM - Computer Science / F13 Prof. Dr. Uwe Baumgarten
-        \nNils T. Kannengiesser
-        \n\n<b>Current Developers:</b>\nSascha Moecker\nHaris Iltifat\nAnas Chakfeh\nThomas Krex\nMarius Muntean
-        \nAndreas Bernhofer (IT-Support/TUMonline)
-        \nNils T. Kannengiesser (F13)
-        \n\n<b>Important information:</b>\nThis App is not published by the Technical University Muenchen officially. It is a project by and for students. The software is used at your own risk. We are not responsible for any damage that might be caused by using this App or its presented information. For security reasons the access to private information of TUMOnline is regulated by using tokens. You need to enable different features within TUMOnline for a certain token to be able to use those information within the App.
-        \n\n<b>Privacy information:</b>\nThe application stores data on request only. Critical information requires the users permission (clearance by token) and is stored locally or received from TUMOnline directly. Crash reports can be sent manually. Crash reports contain detailed technical information on the phone, the operating system and the error itself. This information is helpful for the developers in order to improve the App. We do not collect any statistics except the general ones collected by Google automatically. We would appreciate your support!
-		\n\n<b>Support:</b>\nhttps://www.facebook.com/TUMCampus
-		\nPlease take a look at the offered manual as well. Please also contact us at admin.os.in@tum.de for any special requests.
-		\n\n<b>Licenses:</b>\nGNU GPL v3 - http://www.gnu.org/licenses/gpl.html or
-		\nNew BSD License - http://www.opensource.org/licenses/bsd-license.php
-		\n\nThe source code is available through Github and may be requested from the project manager in the most recent version.
-		\n\n18th August 2013\n</string>
     <string name="credits">ECTS</string>
     <string name="wizzard_on_startup">Beim nächsten Start nicht mehr anzeigen</string>
     <string name="token_not_enabled">TUMOnline-Access-Token ist nicht aktiviert</string>
@@ -429,6 +415,10 @@
     <string name="click_to_update">Klicken, um Inhalt manuell zu updaten</string>
     <string name="click_to_update_via_menubutton">Via Menu Knopf den Inhalt manuell updaten</string>
     <string name="scroll_down">Nach unten Scrollen, um ältere News zu sehen</string>
+    <string name="notification_title">TUM Campus App</string>
+    <string name="notification_content">Neue Note online</string>
+    <string name="feedbackAddr">nils.kannengiesser@tum.de</string>
+    <string name="feedbackSubj">Feedback für TUM Campus App</string>
     <!-- END Translated -->
 
 </resources>

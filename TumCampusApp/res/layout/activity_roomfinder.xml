@@ -9,7 +9,7 @@
         android:layout_height="@dimen/rythm_48dp"
         android:orientation="horizontal" >
 
-        <AutoCompleteTextView
+        <EditText
             android:id="@+id/search_field"
             android:layout_width="match_parent"
             android:layout_height="fill_parent"
@@ -18,7 +18,7 @@
             android:imeActionLabel="Search"
             android:imeOptions="actionSearch"
             android:singleLine="true" >
-        </AutoCompleteTextView>
+        </EditText>
 
         <!-- <SearchView -->
         <!-- android:id="@+id/searchview_field" -->

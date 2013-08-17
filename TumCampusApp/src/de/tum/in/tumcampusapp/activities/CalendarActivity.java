@@ -19,6 +19,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.CalendarContract;
@@ -308,7 +309,10 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements
 				hideProgressLayout();
 				attachSectionPagerAdapter();
 				// update the action bar to display the enabled menu options
-				invalidateOptionsMenu();
+				// update the action bar to display the enabled menu options
+				if (Build.VERSION.SDK_INT >= 11) {
+					invalidateOptionsMenu();
+				}
 			}
 
 			@Override
