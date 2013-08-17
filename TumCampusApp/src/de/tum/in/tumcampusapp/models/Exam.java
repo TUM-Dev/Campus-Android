@@ -25,19 +25,19 @@ public class Exam {
 	@Element(name = "datum", required = false)
 	private String date;
 
-	@Element(name = "pruefer_nachname")
+	@Element(name = "pruefer_nachname", required = false)
 	private String examiner;
 
 	@Element(name = "uninotenamekurz")
 	private String grade;
 
-	@Element(name = "modus")
+	@Element(name = "modus", required = false)
 	private String modus;
 
 	@Element(name = "studienidentifikator")
 	private String programID;
 
-	@Element(name = "lv_semester")
+	@Element(name = "lv_semester", required = false)
 	private String semester;
 
 	public String getCourse() {
