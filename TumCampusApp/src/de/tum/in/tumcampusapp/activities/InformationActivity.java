@@ -33,7 +33,7 @@ public class InformationActivity extends Activity {
 		/* Fill it with Data */
 		emailIntent.setType("plain/text");
 		emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, new String[]{getString(R.string.feedbackAddr)});
-		emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Feedback TUM Campus App");
+		emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, getString(R.string.feedbackSubj));
 
 		/* Send it off to the Activity-Chooser */
 		startActivity(Intent.createChooser(emailIntent, "Send mail..."));

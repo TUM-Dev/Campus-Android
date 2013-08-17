@@ -447,5 +447,6 @@
     <string name="notification_title">TUM Campus App</string>
     <string name="notification_content">New Grade Uploaded</string>
     <string name="feedbackAddr">nils.kannengiesser@tum.de</string>
+    <string name="feedbackSubj">Feedback TUM Campus App</string>
 
 </resources>
