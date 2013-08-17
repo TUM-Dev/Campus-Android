@@ -423,7 +423,7 @@
     <string name="finish">Finish</string>
     <string name="show_column_chart">Show Column Chart</string>
     <string name="show_pie_chart">Show Pie Chart</string>
-    <string name="demo_mode">Demo Mode</string>
+    <string name="demo_mode">InApp-Tutorial</string>
     <string name="demo_info">Activates help mode for instruction on how to use this App.</string>
     <string name="delete_from_google">Delete from Google</string>
     <string name="dialog_delete_calendar">Do you want to delete  the <i>TUM_CAMPUS_APP</i>  calendar from your device?</string>

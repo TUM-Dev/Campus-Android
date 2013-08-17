@@ -411,7 +411,7 @@
     <string name="finish">Fertig</string>
     <string name="show_column_chart">Zeige als Balkendiagramm</string>
     <string name="show_pie_chart">Zeige als Tortendiagramm</string>
-    <string name="demo_mode">Demo Modus</string>
+    <string name="demo_mode">InApp-Tutorial</string>
     <string name="demo_info">Hilfemodus aktivieren, um Informationen zur Bedienung der App zu erhalten.</string>
     <string name="delete_from_google">Löschen aus Google</string>
     <string name="dialog_delete_calendar">Den lokalen <i>TUM_CAMPUS_APP</i> Kalender von deinem Gerät löschen?</string>
