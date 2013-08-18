@@ -26,7 +26,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="10dp"
             android:background="@color/overlay_background"
-            android:padding="30dp"
+            android:padding="20dp"
             android:text="@string/go_on" />
 
         <TextView
@@ -38,9 +38,10 @@
         <TextView
             android:id="@+id/cross_tx"
             style="@style/DemoText"
-            android:layout_alignBottom="@+id/instruction_cross"
+            android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_marginBottom="19dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="18dp"
             android:layout_toRightOf="@+id/instruction_cross"
             android:text="@string/skip" />
 

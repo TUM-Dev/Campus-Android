@@ -21,7 +21,7 @@ import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.managers.CalendarManager;
 
 /**
- * Fragment for each category-page.
+ * Fragment for each calendar-page.
  */
 public class CalendarSectionFragment extends Fragment {
 	private Activity activity;
@@ -48,7 +48,8 @@ public class CalendarSectionFragment extends Fragment {
 		int oneHourHeight = (int) (activity.getResources()
 				.getDimension(R.dimen.time_one_hour));
 		int height = (int) (oneHourHeight * hours);
-		return new LayoutParams(LayoutParams.MATCH_PARENT, height);
+		return new LayoutParams(
+				android.view.ViewGroup.LayoutParams.MATCH_PARENT, height);
 	}
 
 	@SuppressWarnings("unchecked")

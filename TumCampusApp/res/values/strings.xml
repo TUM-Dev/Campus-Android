@@ -428,7 +428,7 @@
     <string name="show_column_chart">Show Column Chart</string>
     <string name="show_pie_chart">Show Pie Chart</string>
     <string name="demo_mode">In-App-Tutorial</string>
-    <string name="show_feedback">Open Feedback</string>
+    <string name="show_feedback">Send feedback</string>
     <string name="demo_info">Activates help mode for instruction on how to use this App.</string>
     <string name="delete_from_google">Delete from Google</string>
     <string name="dialog_delete_calendar">Do you want to delete  the <i>TUM_CAMPUS_APP</i>  calendar from your device?</string>
@@ -451,7 +451,7 @@
     <string name="feedbackAddr">nils.kannengiesser@tum.de</string>
     <string name="feedbackSubj">Feedback for TUM Campus App</string>
     <string name="version">Version</string>
-    <string name="send_email">E-Mail-Feedback senden</string>
+    <string name="send_email">Send e-mail feedback</string>
     <!-- END Translated, please do not change identifiers -->
 
 </resources>

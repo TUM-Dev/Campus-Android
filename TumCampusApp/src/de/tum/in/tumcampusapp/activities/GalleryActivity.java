@@ -8,6 +8,12 @@ import de.tum.in.tumcampusapp.adapters.GallerySectionsPagerAdapter;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.PersonalLayoutManager;
 
+/**
+ * Displays images fetched from Facebook.
+ * 
+ * @review Sascha Moecker
+ * 
+ */
 public class GalleryActivity extends ActivityForDownloadingExternal {
 
 	private GallerySectionsPagerAdapter mSectionsPagerAdapter;

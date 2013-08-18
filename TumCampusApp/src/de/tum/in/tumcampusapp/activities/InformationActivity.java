@@ -10,21 +10,16 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import de.tum.in.tumcampusapp.R;
 
+/**
+ * Provides Information about this app and all contributors
+ * 
+ * @author Sascha Moecker
+ * 
+ */
 public class InformationActivity extends Activity {
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_information);
-		displayVersionName();
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		super.onCreateOptionsMenu(menu);
-		getMenuInflater().inflate(R.menu.menu_activity_information, menu);
-		return true;
-	}
-
+	/**
+	 * Display version name
+	 */
 	private void displayVersionName() {
 		String versionName = "";
 		PackageInfo packageInfo;
@@ -38,6 +33,20 @@ public class InformationActivity extends Activity {
 		}
 		TextView tv = (TextView) findViewById(R.id.txt_version);
 		tv.setText(versionName);
+	}
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_information);
+		displayVersionName();
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		super.onCreateOptionsMenu(menu);
+		getMenuInflater().inflate(R.menu.menu_activity_information, menu);
+		return true;
 	}
 
 	@Override

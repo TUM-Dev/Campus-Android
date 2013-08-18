@@ -26,7 +26,7 @@ import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.ListMenuEntry;
 
 /**
- * Fragment for each category-page.
+ * Fragment for each start-category-page.
  */
 public class StartSectionFragment extends Fragment implements
 		OnItemClickListener {
@@ -125,6 +125,15 @@ public class StartSectionFragment extends Fragment implements
 	}
 
 	@Override
+	public void onItemClick(AdapterView<?> arg0, View arg1, int position,
+			long arg3) {
+		// Starts the corresponding activity via intent
+		Intent intent = listMenuEntrySet.get(position).intent;
+		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		startActivity(intent);
+	}
+
+	@Override
 	public void onResume() {
 		super.onResume();
 
@@ -162,14 +171,5 @@ public class StartSectionFragment extends Fragment implements
 		}
 		rootView.invalidate();
 
-	}
-
-	@Override
-	public void onItemClick(AdapterView<?> arg0, View arg1, int position,
-			long arg3) {
-		// Starts the corresponding activity via intent
-		Intent intent = listMenuEntrySet.get(position).intent;
-		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		startActivity(intent);
 	}
 }

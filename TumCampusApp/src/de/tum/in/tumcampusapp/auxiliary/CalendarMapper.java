@@ -10,6 +10,10 @@ import android.net.Uri;
 import android.provider.CalendarContract;
 import android.provider.CalendarContract.Calendars;
 
+/**
+ * Mapper class for exporting to Google Calendar.
+ * 
+ */
 public class CalendarMapper {
 	private String ACCOUNT_NAME;
 	private String INT_NAME_PREFIX;

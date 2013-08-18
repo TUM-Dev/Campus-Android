@@ -2,6 +2,10 @@ package de.tum.in.tumcampusapp.auxiliary;
 
 import java.util.HashMap;
 
+/**
+ * Constants for charts colors
+ * 
+ */
 public final class ChartColors {
 	public static HashMap<String, String> chartColors;
 

@@ -2,6 +2,12 @@ package de.tum.in.tumcampusapp.auxiliary;
 
 import android.content.SearchRecentSuggestionsProvider;
 
+/**
+ * RoomFinderSuggestionProvider
+ * 
+ * @author
+ * 
+ */
 public class RoomFinderSuggestionProvider extends
 		SearchRecentSuggestionsProvider {
 	public final static String AUTHORITY = "com.example.RoomFinderSuggestionProvider";

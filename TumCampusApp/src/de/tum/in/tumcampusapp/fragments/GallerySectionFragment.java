@@ -19,7 +19,7 @@ import de.tum.in.tumcampusapp.adapters.GallerySectionsPagerAdapter;
 import de.tum.in.tumcampusapp.models.managers.GalleryManager;
 
 /**
- * Fragment for each category-page.
+ * Fragment for each gallery-category-page.
  */
 public class GallerySectionFragment extends Fragment implements
 		OnItemClickListener {

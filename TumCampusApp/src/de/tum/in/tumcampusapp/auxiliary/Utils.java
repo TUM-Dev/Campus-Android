@@ -52,7 +52,9 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.Toast;
 
-/** Class for helper functions */
+/**
+ * Class for common helper functions used by a lot of classes
+ */
 @SuppressLint("SimpleDateFormat")
 public class Utils {
 	/** Counter for unfinished downloads */

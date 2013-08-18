@@ -9,8 +9,14 @@ import com.bugsense.trace.BugSenseHandler;
 
 import de.tum.in.tumcampusapp.auxiliary.DemoModeStartActivity;
 
+/**
+ * Entrance point of the App.
+ * 
+ * @author Sascha Moecker
+ * 
+ */
 public class StartupActivity extends Activity {
-	public static final boolean DEMO_MODE = true;
+	public static final boolean DEMO_MODE = false;
 	public static final boolean TRACK_ERRORS_WITH_BUG_SENSE = true;
 
 	@Override
@@ -32,6 +38,7 @@ public class StartupActivity extends Activity {
 
 		}
 
+		// Start the demo Activity if demo mode is set
 		if (DEMO_MODE) {
 			Intent intent = new Intent(this, DemoModeStartActivity.class);
 			startActivity(intent);

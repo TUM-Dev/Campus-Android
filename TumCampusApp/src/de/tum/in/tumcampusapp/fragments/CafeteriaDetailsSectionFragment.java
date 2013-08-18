@@ -23,7 +23,7 @@ import de.tum.in.tumcampusapp.models.managers.CafeteriaMenuManager;
 import de.tum.in.tumcampusapp.models.managers.LocationManager;
 
 /**
- * Fragment for each category-page.
+ * Fragment for each cafeteria-page.
  */
 public class CafeteriaDetailsSectionFragment extends Fragment {
 	private Activity activity;

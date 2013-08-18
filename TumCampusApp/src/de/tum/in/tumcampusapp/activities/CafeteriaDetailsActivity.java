@@ -12,10 +12,20 @@ import de.tum.in.tumcampusapp.adapters.CafeteriaDetailsSectionsPagerAdapter;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.PersonalLayoutManager;
 
+/**
+ * Lists all dishes at given cafeteria
+ * 
+ * @author Sascha Moecker, Haris Iltifat, Thomas Krex
+ * 
+ */
 public class CafeteriaDetailsActivity extends FragmentActivity {
 
+	/** Received Id */
 	private String cafeteriaId;
+
+	/** Received Name */
 	private String cafeteriaName;
+
 	private CafeteriaDetailsSectionsPagerAdapter mSectionsPagerAdapter;
 	private ViewPager mViewPager;
 
@@ -24,6 +34,7 @@ public class CafeteriaDetailsActivity extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_cafeteriadetails);
 
+		// Get Id and name from intent (calling activity)
 		cafeteriaId = getIntent().getExtras().getString(Const.CAFETERIA_ID);
 		cafeteriaName = getIntent().getExtras().getString(Const.CAFETERIA_NAME);
 
@@ -50,6 +61,8 @@ public class CafeteriaDetailsActivity extends FragmentActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.action_ingredients:
+			// Build a alert dialog containing the mapping of ingredients to the
+			// numbers
 			AlertDialog alertDialog = new AlertDialog.Builder(this).create();
 			alertDialog.setTitle(R.string.action_ingredients);
 			alertDialog.setMessage(getResources().getString(
@@ -57,6 +70,7 @@ public class CafeteriaDetailsActivity extends FragmentActivity {
 			alertDialog.setButton(
 					getResources().getString(android.R.string.ok),
 					new DialogInterface.OnClickListener() {
+						@Override
 						public void onClick(DialogInterface dialog, int which) {
 							// here you can add functions
 						}

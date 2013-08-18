@@ -25,6 +25,8 @@ public interface TUMRoomFinderRequestFetchListener {
 
 	public void onFetchCancelled();
 
+	public void onFetchDefaultMapId(String result);
+
 	/**
 	 * if the fetchInteractive method will result in null or there is no
 	 * internet connection then this method will be called
@@ -33,7 +35,5 @@ public interface TUMRoomFinderRequestFetchListener {
 	 *            the reason why the request failed (localized)
 	 */
 	public void onFetchError(String errorReason);
-
-	public void onFetchDefaultMapId(String result);
 
 }

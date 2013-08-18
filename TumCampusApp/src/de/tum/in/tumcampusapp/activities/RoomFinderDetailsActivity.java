@@ -9,6 +9,10 @@ import android.webkit.WebView;
 import android.widget.RelativeLayout;
 import de.tum.in.tumcampusapp.R;
 
+/**
+ * Displays the map regarding the searched room.
+ * 
+ */
 public class RoomFinderDetailsActivity extends FragmentActivity {
 
 	private WebView browser;

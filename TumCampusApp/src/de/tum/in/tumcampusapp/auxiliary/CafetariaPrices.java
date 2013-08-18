@@ -2,6 +2,12 @@ package de.tum.in.tumcampusapp.auxiliary;
 
 import java.util.HashMap;
 
+/**
+ * Hardcoded cafeteria prices
+ * 
+ * @author Thomas Krex
+ * 
+ */
 public class CafetariaPrices {
 	public static HashMap<String, String> employee_prices;
 	public static HashMap<String, String> guest_prices;

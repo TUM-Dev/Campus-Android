@@ -7,7 +7,16 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import de.tum.in.tumcampusapp.R;
 
+/**
+ * Displays charts generated with GradesActivity
+ * 
+ */
 public class GradeChartActivity extends Activity {
+
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		super.onConfigurationChanged(newConfig);
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -25,10 +34,5 @@ public class GradeChartActivity extends Activity {
 		Webview.requestFocusFromTouch();
 		Webview.loadDataWithBaseURL("file:///android_asset/", chartContent,
 				"text/html", "utf-8", null);
-	}
-
-	@Override
-	public void onConfigurationChanged(Configuration newConfig) {
-		super.onConfigurationChanged(newConfig);
 	}
 }

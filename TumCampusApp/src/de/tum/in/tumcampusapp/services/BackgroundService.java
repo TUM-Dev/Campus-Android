@@ -37,42 +37,6 @@ public class BackgroundService extends IntentService {
 		super(Background_SERVICE);
 	}
 
-	@Override
-	public void onCreate() {
-		super.onCreate();
-		Utils.log("BackgroundService has started");
-	}
-
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
-		Utils.log("BackgroundService has stopped");
-	}
-
-	@Override
-	protected void onHandleIntent(Intent intent) {
-		while (true) {
-			try {
-				// if background mode is enabled in settings
-				if (Utils.getSettingBool(this, Const.BACKGROUND_MODE)) {
-					Utils.log("BackgroundService enabled, updating ...");
-
-					// Download all from external
-					Intent service = new Intent(this, DownloadService.class);
-					service.putExtra(Const.ACTION_EXTRA,
-							Const.DOWNLOAD_ALL_FROM_EXTERNAL);
-					service.putExtra(Const.FORCE_DOWNLOAD, true);
-					startService(service);
-				}
-				synchronized (this) {
-					wait(CHECK_INTERVAL);
-				}
-			} catch (Exception e) {
-				Utils.log(e, "");
-			}
-		}
-	}
-
 	@SuppressWarnings("unused")
 	private void fetchGrades() {
 		// fetching xml from tum online
@@ -140,6 +104,42 @@ public class BackgroundService extends IntentService {
 			Editor editor = settings.edit();
 			editor.putInt(Const.Grade_Count, newSize);
 			editor.commit();
+		}
+	}
+
+	@Override
+	public void onCreate() {
+		super.onCreate();
+		Utils.log("BackgroundService has started");
+	}
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		Utils.log("BackgroundService has stopped");
+	}
+
+	@Override
+	protected void onHandleIntent(Intent intent) {
+		while (true) {
+			try {
+				// if background mode is enabled in settings
+				if (Utils.getSettingBool(this, Const.BACKGROUND_MODE)) {
+					Utils.log("BackgroundService enabled, updating ...");
+
+					// Download all from external
+					Intent service = new Intent(this, DownloadService.class);
+					service.putExtra(Const.ACTION_EXTRA,
+							Const.DOWNLOAD_ALL_FROM_EXTERNAL);
+					service.putExtra(Const.FORCE_DOWNLOAD, true);
+					startService(service);
+				}
+				synchronized (this) {
+					wait(CHECK_INTERVAL);
+				}
+			} catch (Exception e) {
+				Utils.log(e, "");
+			}
 		}
 	}
 }

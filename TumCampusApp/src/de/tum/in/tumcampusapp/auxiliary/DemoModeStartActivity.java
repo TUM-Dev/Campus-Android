@@ -27,68 +27,12 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.StartActivity;
 
 public class DemoModeStartActivity extends Activity {
-	public final static String WEB_SERVICE_URL = "http://www.timeapi.org/utc/now?format=%25s";
-	public final static int AUGUST_31_2013_IN_SECONDS = 1377986395;
-	public final static int EXPIRED_DATE_IN_SECONDS = 1376830203;
-	public final static int SEPTEMBER_8_2013_IN_SECONDS = 1378677595;
-	public final static int SECONDS_PER_DAY = 60 * 60 * 24;
-	public final static int DUE_DATE_IN_SECONDS = AUGUST_31_2013_IN_SECONDS;
-
-	TextView txtTime;
-	ProgressBar progress;
-	Button button;
-
-	public DemoModeStartActivity() {
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		super.onCreateOptionsMenu(menu);
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.menu_demo_mode_start_activity, menu);
-		return true;
-	}
-
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.demo_mode_start_activity);
-
-		txtTime = (TextView) findViewById(R.id.txt_time_elapsed);
-		progress = (ProgressBar) findViewById(R.id.progress);
-		button = (Button) findViewById(R.id.btn_start_tca);
-
-		button.setEnabled(false);
-		new RequestTask().execute(WEB_SERVICE_URL);
-	}
-
-	public void onClick(View view) {
-		switch (view.getId()) {
-		case R.id.btn_start_tca:
-			finish();
-			Intent intent = new Intent(this, StartActivity.class);
-			startActivity(intent);
-		}
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case R.id.action_update:
-			new RequestTask().execute(WEB_SERVICE_URL);
-			break;
-		}
-		return super.onOptionsItemSelected(item);
-	}
-
 	class RequestTask extends AsyncTask<String, String, String> {
 
-		@Override
-		protected void onPreExecute() {
-			super.onPreExecute();
-			progress.setVisibility(View.VISIBLE);
-			txtTime.setText("---");
-			button.setEnabled(false);
+		private String calcRemainingDays(int currentSeconds) {
+			int daysLeft = DUE_DATE_IN_SECONDS - currentSeconds;
+			daysLeft = daysLeft / SECONDS_PER_DAY + 1;
+			return String.valueOf(daysLeft);
 		}
 
 		@Override
@@ -118,6 +62,14 @@ public class DemoModeStartActivity extends Activity {
 			return responseString;
 		}
 
+		private boolean isInTime(int currentSeconds) {
+			if (currentSeconds < DUE_DATE_IN_SECONDS) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+
 		@Override
 		protected void onPostExecute(String result) {
 			super.onPostExecute(result);
@@ -145,18 +97,66 @@ public class DemoModeStartActivity extends Activity {
 			}
 		}
 
-		private String calcRemainingDays(int currentSeconds) {
-			int daysLeft = DUE_DATE_IN_SECONDS - currentSeconds;
-			daysLeft = daysLeft / SECONDS_PER_DAY + 1;
-			return String.valueOf(daysLeft);
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			progress.setVisibility(View.VISIBLE);
+			txtTime.setText("---");
+			button.setEnabled(false);
 		}
+	}
+	public final static String WEB_SERVICE_URL = "http://www.timeapi.org/utc/now?format=%25s";
+	public final static int AUGUST_31_2013_IN_SECONDS = 1377986395;
+	public final static int EXPIRED_DATE_IN_SECONDS = 1376830203;
+	public final static int SEPTEMBER_8_2013_IN_SECONDS = 1378677595;
+	public final static int SECONDS_PER_DAY = 60 * 60 * 24;
 
-		private boolean isInTime(int currentSeconds) {
-			if (currentSeconds < DUE_DATE_IN_SECONDS) {
-				return true;
-			} else {
-				return false;
-			}
+	public final static int DUE_DATE_IN_SECONDS = AUGUST_31_2013_IN_SECONDS;
+	TextView txtTime;
+	ProgressBar progress;
+
+	Button button;
+
+	public DemoModeStartActivity() {
+	}
+
+	public void onClick(View view) {
+		switch (view.getId()) {
+		case R.id.btn_start_tca:
+			finish();
+			Intent intent = new Intent(this, StartActivity.class);
+			startActivity(intent);
 		}
+	}
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.demo_mode_start_activity);
+
+		txtTime = (TextView) findViewById(R.id.txt_time_elapsed);
+		progress = (ProgressBar) findViewById(R.id.progress);
+		button = (Button) findViewById(R.id.btn_start_tca);
+
+		button.setEnabled(false);
+		new RequestTask().execute(WEB_SERVICE_URL);
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		super.onCreateOptionsMenu(menu);
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.menu_demo_mode_start_activity, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.action_update:
+			new RequestTask().execute(WEB_SERVICE_URL);
+			break;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 }

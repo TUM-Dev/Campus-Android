@@ -16,7 +16,7 @@ import de.tum.in.tumcampusapp.models.managers.CafeteriaManager;
 /**
  * Activity to show cafeterias and meals selected by date
  * 
- * @author TCA Team
+ * @author Sascha Moecker, Thomas Krex
  */
 
 public class CafeteriaActivity extends ActivityForDownloadingExternal implements
@@ -40,21 +40,26 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
 
 		listCafeterias = (ListView) findViewById(R.id.listView);
 
+		// Fetch cafeteria items on startup
 		super.requestDownload(false);
 	}
 
 	@SuppressWarnings("deprecation")
 	@Override
 	public void onItemClick(AdapterView<?> av, View v, int position, long id) {
+		// Get item at clicked position
 		Cursor cursorCafeterias = (Cursor) listCafeterias.getAdapter().getItem(
 				position);
 		startManagingCursor(cursorCafeterias);
 
+		// Get Id and name of the database object
 		cafeteriaId = cursorCafeterias.getString(cursorCafeterias
 				.getColumnIndex(Const.ID_COLUMN));
 		cafeteriaName = cursorCafeterias.getString(cursorCafeterias
 				.getColumnIndex(Const.NAME_COLUMN));
 
+		// Put Id and name into an intent and start the detail view of
+		// cafeterias
 		Intent intent = new Intent(this, CafeteriaDetailsActivity.class);
 		intent.putExtra(Const.CAFETERIA_ID, cafeteriaId);
 		intent.putExtra(Const.CAFETERIA_NAME, cafeteriaName);
@@ -67,11 +72,13 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
 	protected void onStart() {
 		super.onStart();
 
-		CafeteriaManager cm = new CafeteriaManager(this);
+		CafeteriaManager cafeteriaManager = new CafeteriaManager(this);
 
-		Cursor cursor = cm.getAllFromDb("% %");
+		// Get all available cafeterias from database
+		Cursor cursor = cafeteriaManager.getAllFromDb("% %");
 		startManagingCursor(cursor);
 
+		// Iterate over all cafeterias and add them to the listview
 		if (cursor.getCount() > 0) {
 			SimpleCursorAdapter adapterCafeterias = new SimpleCursorAdapter(
 					this, R.layout.list_layout_two_line_item, cursor,
@@ -81,6 +88,7 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
 			listCafeterias.setAdapter(adapterCafeterias);
 			listCafeterias.setOnItemClickListener(this);
 		} else {
+			// If something went wrong or no cafeterias found
 			super.showErrorLayout();
 		}
 	}

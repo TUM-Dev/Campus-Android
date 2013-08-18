@@ -40,25 +40,30 @@ import de.tum.in.tumcampusapp.auxiliary.PersonalLayoutManager;
 import de.tum.in.tumcampusapp.models.managers.CalendarManager;
 
 /**
- * Mock Activity to demonstrate the basic fragment based navigation using tabs.
+ * Activity shwoing the user's calendar. Calendar items (events) are fetched
+ * from TUMOnline and displayed as blocks on a timeline.
  * 
  * @author Sascha Moecker
  * 
  */
 public class CalendarActivity extends ActivityForAccessingTumOnline implements
 		OnClickListener {
+	// The space between the first and the last date
 	public static final int MONTH_AFTER = 1;
 	public static final int MONTH_BEFORE = 1;
 
-	Calendar calendar = new GregorianCalendar();
+	private Calendar calendar = new GregorianCalendar();
+
 	private CalendarManager calendarManager;
 	private CalendarSectionsPagerAdapter mSectionsPagerAdapter;
 
 	private ViewPager mViewPager;
 
+	// Objects for disabling or enabling the options menu items
 	private MenuItem menuItemExportGoogle;
 	private MenuItem menuItemDeleteCalendar;
 
+	/** Used as a flag, if there are results fetched from internet */
 	private boolean isFetched;
 
 	public CalendarActivity() {
@@ -68,32 +73,42 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements
 	@SuppressLint("InlinedApi")
 	@SuppressWarnings("deprecation")
 	public void addEvents(Uri uri) {
-		CalendarManager kalMgr = new CalendarManager(this);
+		CalendarManager calendarManager = new CalendarManager(this);
 		Date dtstart = null, dtend = null;
 
-		Cursor cursor = kalMgr.getAllFromDb();
+		// Get all calendar items from database
+		Cursor cursor = calendarManager.getAllFromDb();
 		while (cursor.moveToNext()) {
+			// Get each table row
 			final String status = cursor.getString(1);
 			final String title = cursor.getString(3);
 			final String description = cursor.getString(4);
 			final String strstart = cursor.getString(5);
 			final String strend = cursor.getString(6);
 			final String location = cursor.getString(7);
+
 			if (!status.equals("CANCEL")) {
 				try {
+					// Get the correct date and time from database
 					dtstart = new SimpleDateFormat("yyyy-MM-dd HH:mm",
 							Locale.ENGLISH).parse(strstart);
 					dtend = new SimpleDateFormat("yyyy-MM-dd HH:mm",
 							Locale.ENGLISH).parse(strend);
+
 					Calendar beginTime = Calendar.getInstance();
 					beginTime.setTime(dtstart);
 					Calendar endTime = Calendar.getInstance();
 					endTime.setTime(dtend);
 
+					// Get start and end time
 					long startMillis = beginTime.getTimeInMillis();
 					long endMillis = endTime.getTimeInMillis();
-					ContentResolver cr = getContentResolver();
+
+					ContentResolver contentResolver = getContentResolver();
 					ContentValues values = new ContentValues();
+
+					// Put the received values into a contentResolver to
+					// transmit the to Google Calendar
 					values.put(Events.DTSTART, startMillis);
 					values.put(Events.DTEND, endMillis);
 					values.put(Events.TITLE, title);
@@ -101,7 +116,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements
 					values.put(Events.CALENDAR_ID, getID(uri));
 					values.put(Events.EVENT_LOCATION, location);
 					values.put(Events.EVENT_TIMEZONE, R.string.calendarTimeZone);
-					cr.insert(Events.CONTENT_URI, values);
+					contentResolver.insert(Events.CONTENT_URI, values);
 
 				} catch (ParseException e) {
 					e.printStackTrace();
@@ -110,6 +125,11 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements
 		}
 	}
 
+	/**
+	 * Adds an new local Google calendar
+	 * 
+	 * @return the URI to access the calendar
+	 */
 	public Uri addLocalCalendar() {
 		ContentResolver crv = getContentResolver();
 		Calendar calendar = Calendar.getInstance();
@@ -123,64 +143,32 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements
 		return uri;
 	}
 
-	public int deleteLocalCalendar() {
-		ContentResolver crv = getContentResolver();
-		Uri uri = Calendars.CONTENT_URI;
-		int deleted = crv.delete(uri, " account_name = '"
-				+ getString(R.string.calendar_account_name) + "'", null);
-		return deleted;
-	}
+	/**
+	 * Link the Sections with the content with a section adapter. Additionally
+	 * put the current date at the start position.
+	 */
+	private void attachSectionPagerAdapter() {
+		mSectionsPagerAdapter = new CalendarSectionsPagerAdapter(
+				CalendarActivity.this, getSupportFragmentManager());
 
-	// displaying calendar
-	public void displayCalendarOnGoogleCalendar() {
-		// displaying Calendar
-		Calendar beginTime = Calendar.getInstance();
-		long startMillis = beginTime.getTimeInMillis();
-		Uri.Builder builder = CalendarContract.CONTENT_URI.buildUpon();
-		builder.appendPath("time");
-		ContentUris.appendId(builder, startMillis);
-		Intent intent = new Intent(Intent.ACTION_VIEW).setData(builder.build());
-		startActivity(intent);
+		mViewPager.setAdapter(mSectionsPagerAdapter);
+
+		Date now = new Date();
+		calendar.setTime(now);
+
+		calendar.add(Calendar.MONTH, -CalendarActivity.MONTH_BEFORE);
+		Date firstDate = calendar.getTime();
+
+		long days = (now.getTime() - firstDate.getTime())
+				/ (1000 * 60 * 60 * 24);
+		Log.d("Days", String.valueOf(days));
+
+		mViewPager.setCurrentItem((int) days);
 	}
 
 	/**
-	 * Asynch taask for exporting the calendar to a local Google calendar
+	 * Asynch task for deleting the calendar from local Google calendar
 	 */
-	public void exportCalendarToGoogle() {
-		AsyncTask<Void, Void, Boolean> backgroundTask;
-
-		backgroundTask = new AsyncTask<Void, Void, Boolean>() {
-			@Override
-			protected Boolean doInBackground(Void... params) {
-
-				// Deleting earlier calendar created by TUM Campus App
-				deleteLocalCalendar();
-				Uri uri = addLocalCalendar();
-				addEvents(uri);
-				return true;
-			}
-
-			@Override
-			protected void onPostExecute(Boolean result) {
-				AlertDialog.Builder builder = new AlertDialog.Builder(
-						CalendarActivity.this);
-				builder.setMessage(getString(R.string.dialog_show_calendar))
-						.setPositiveButton(getString(R.string.yes),
-								CalendarActivity.this)
-						.setNegativeButton(getString(R.string.no),
-								CalendarActivity.this).show();
-				attachSectionPagerAdapter();
-				hideProgressLayout();
-			}
-
-			@Override
-			protected void onPreExecute() {
-				showProgressLayout();
-			}
-		};
-		backgroundTask.execute();
-	}
-
 	public void deleteCalendarFromGoogle() {
 		AlertDialog.Builder builder = new AlertDialog.Builder(
 				CalendarActivity.this);
@@ -213,14 +201,86 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements
 						}).show();
 	}
 
-	@Override
-	public void onClick(DialogInterface dialog, int which) {
-		if (which == DialogInterface.BUTTON_POSITIVE) {
-			displayCalendarOnGoogleCalendar();
-		}
+	/**
+	 * Deletes a local Google calendar
+	 * 
+	 * @return The calendars id
+	 */
+	public int deleteLocalCalendar() {
+		ContentResolver crv = getContentResolver();
+		Uri uri = Calendars.CONTENT_URI;
+		int deleted = crv.delete(uri, " account_name = '"
+				+ getString(R.string.calendar_account_name) + "'", null);
+		return deleted;
 	}
 
-	// get added calendar id
+	/**
+	 * Detach the adapter form the Pager to make the asynch task not conflicting
+	 * with the UI thread.
+	 */
+	private void detachSectionPagerAdapter() {
+		mViewPager.setAdapter(null);
+	}
+
+	/**
+	 * Starts the Google calendar Activity to display the exported calendar.
+	 */
+	public void displayCalendarOnGoogleCalendar() {
+		// displaying Calendar
+		Calendar beginTime = Calendar.getInstance();
+		long startMillis = beginTime.getTimeInMillis();
+		Uri.Builder builder = CalendarContract.CONTENT_URI.buildUpon();
+		builder.appendPath("time");
+		ContentUris.appendId(builder, startMillis);
+		Intent intent = new Intent(Intent.ACTION_VIEW).setData(builder.build());
+		startActivity(intent);
+	}
+
+	/**
+	 * Asynch task for exporting the calendar to a local Google calendar
+	 */
+	public void exportCalendarToGoogle() {
+		AsyncTask<Void, Void, Boolean> backgroundTask;
+
+		backgroundTask = new AsyncTask<Void, Void, Boolean>() {
+			@Override
+			protected Boolean doInBackground(Void... params) {
+				// Deleting earlier calendar created by TUM Campus App
+				deleteLocalCalendar();
+				Uri uri = addLocalCalendar();
+				addEvents(uri);
+				return true;
+			}
+
+			@Override
+			protected void onPostExecute(Boolean result) {
+				// Informs the user about the ongoing action
+				AlertDialog.Builder builder = new AlertDialog.Builder(
+						CalendarActivity.this);
+				builder.setMessage(getString(R.string.dialog_show_calendar))
+						.setPositiveButton(getString(R.string.yes),
+								CalendarActivity.this)
+						.setNegativeButton(getString(R.string.no),
+								CalendarActivity.this).show();
+				attachSectionPagerAdapter();
+				hideProgressLayout();
+			}
+
+			@Override
+			protected void onPreExecute() {
+				showProgressLayout();
+			}
+		};
+		backgroundTask.execute();
+	}
+
+	/**
+	 * Get added calendar id.
+	 * 
+	 * @param uri
+	 *            the URI to be received
+	 * @return the calendar's id
+	 */
 	public String getID(Uri uri) {
 		String[] projection = new String[] { "_id", "name" };
 		ContentResolver ctnresolver = this.getContentResolver();
@@ -230,6 +290,13 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements
 			idstring = cursor.getString(0);
 		}
 		return idstring;
+	}
+
+	@Override
+	public void onClick(DialogInterface dialog, int which) {
+		if (which == DialogInterface.BUTTON_POSITIVE) {
+			displayCalendarOnGoogleCalendar();
+		}
 	}
 
 	@Override
@@ -252,37 +319,6 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements
 			attachSectionPagerAdapter();
 			isFetched = true;
 		}
-	}
-
-	/**
-	 * Link the Sections with the content with a section adapter. Additionally
-	 * put the current date at the start position.
-	 */
-	private void attachSectionPagerAdapter() {
-		mSectionsPagerAdapter = new CalendarSectionsPagerAdapter(
-				CalendarActivity.this, getSupportFragmentManager());
-
-		mViewPager.setAdapter(mSectionsPagerAdapter);
-
-		Date now = new Date();
-		calendar.setTime(now);
-
-		calendar.add(Calendar.MONTH, -CalendarActivity.MONTH_BEFORE);
-		Date firstDate = calendar.getTime();
-
-		long days = (now.getTime() - firstDate.getTime())
-				/ (1000 * 60 * 60 * 24);
-		Log.d("Days", String.valueOf(days));
-
-		mViewPager.setCurrentItem((int) days);
-	}
-
-	/**
-	 * Detach the adapter form the Pager to make the asynch task not conflicting
-	 * with the UI thread.
-	 */
-	private void detachSectionPagerAdapter() {
-		mViewPager.setAdapter(null);
 	}
 
 	@Override
@@ -309,7 +345,6 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements
 				hideProgressLayout();
 				attachSectionPagerAdapter();
 				// update the action bar to display the enabled menu options
-				// update the action bar to display the enabled menu options
 				if (Build.VERSION.SDK_INT >= 11) {
 					invalidateOptionsMenu();
 				}
@@ -326,7 +361,6 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-
 		switch (item.getItemId()) {
 		case R.id.action_export_calendar:
 			// the Calendar export is not supported for API < 11
@@ -353,21 +387,26 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements
 	}
 
 	@Override
-	protected void onResume() {
-		super.onResume();
-		PersonalLayoutManager.setColorForId(this, R.id.pager_title_strip);
-	}
-
-	public void setMenuEnabled(boolean enabled) {
-		menuItemExportGoogle.setEnabled(enabled);
-		menuItemDeleteCalendar.setEnabled(enabled);
-	}
-
-	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		menuItemExportGoogle = menu.findItem(R.id.action_export_calendar);
 		menuItemDeleteCalendar = menu.findItem(R.id.action_delete_calendar);
 		setMenuEnabled(isFetched);
 		return super.onPrepareOptionsMenu(menu);
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		PersonalLayoutManager.setColorForId(this, R.id.pager_title_strip);
+	}
+
+	/**
+	 * Enabled the menu items which are not commonly accessible.
+	 * 
+	 * @param enabled
+	 */
+	public void setMenuEnabled(boolean enabled) {
+		menuItemExportGoogle.setEnabled(enabled);
+		menuItemDeleteCalendar.setEnabled(enabled);
 	}
 }

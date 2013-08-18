@@ -7,10 +7,12 @@ import android.os.Parcelable;
 public class ListMenuEntry implements Parcelable {
 
 	public static final Parcelable.Creator<ListMenuEntry> CREATOR = new Parcelable.Creator<ListMenuEntry>() {
+		@Override
 		public ListMenuEntry createFromParcel(Parcel in) {
 			return new ListMenuEntry(in);
 		}
 
+		@Override
 		public ListMenuEntry[] newArray(int size) {
 			return new ListMenuEntry[size];
 		}
@@ -38,6 +40,7 @@ public class ListMenuEntry implements Parcelable {
 		intent = in.readParcelable(null);
 	}
 
+	@Override
 	public int describeContents() {
 		return 0;
 	}

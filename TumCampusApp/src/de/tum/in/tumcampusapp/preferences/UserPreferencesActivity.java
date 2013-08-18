@@ -28,11 +28,22 @@ import de.tum.in.tumcampusapp.models.managers.GalleryManager;
 import de.tum.in.tumcampusapp.models.managers.NewsManager;
 import de.tum.in.tumcampusapp.models.managers.SyncManager;
 
+/**
+ * Provides the preferences, capsulated into an own activity.
+ * 
+ * @author Sascha Moecker
+ * 
+ */
 public class UserPreferencesActivity extends PreferenceActivity implements
 		SharedPreferences.OnSharedPreferenceChangeListener, OnClickListener {
 	private AccessTokenManager accessTokenManager = new AccessTokenManager(this);
 	private Context context = this;
 
+	/**
+	 * Clears all downlaoded data from SD card and database
+	 * 
+	 * @return true, if successful
+	 */
 	private boolean clearCache() {
 		try {
 			Utils.getCacheDir("");
@@ -93,7 +104,7 @@ public class UserPreferencesActivity extends PreferenceActivity implements
 
 		// Click listener for preference list entries. Used to simulate a button
 		// (since it is not possible to add a button to the preferences screen)
-		Preference buttonToken = (Preference) findPreference("button_token");
+		Preference buttonToken = findPreference("button_token");
 		buttonToken
 				.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 					@Override
@@ -103,7 +114,7 @@ public class UserPreferencesActivity extends PreferenceActivity implements
 						return true;
 					}
 				});
-		Preference buttonWizzard = (Preference) findPreference("button_wizzard");
+		Preference buttonWizzard = findPreference("button_wizzard");
 		buttonWizzard
 				.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 					@Override
@@ -116,7 +127,7 @@ public class UserPreferencesActivity extends PreferenceActivity implements
 						return true;
 					}
 				});
-		Preference buttonClearCache = (Preference) findPreference("button_clear_cache");
+		Preference buttonClearCache = findPreference("button_clear_cache");
 		buttonClearCache
 				.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 					@Override

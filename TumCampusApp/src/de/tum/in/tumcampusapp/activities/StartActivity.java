@@ -24,7 +24,8 @@ import de.tum.in.tumcampusapp.services.ImportService;
 import de.tum.in.tumcampusapp.services.SilenceService;
 
 /**
- * Starting point for the App.
+ * Main activity displaying the categories and menu items to start each activity
+ * (feature)
  * 
  * @author Sascha Moecker
  */

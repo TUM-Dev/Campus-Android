@@ -72,6 +72,22 @@ public class NewsActivity extends ActivityForDownloadingExternal implements
 		startActivity(viewIntent);
 	}
 
+	@Override
+	protected void onResume() {
+		super.onResume();
+		sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+		overlay_cross.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				sharedPrefs.edit().putBoolean(Const.FIRST_RUN, false).commit();
+				overlay.setVisibility(View.GONE);
+			}
+		});
+		if (sharedPrefs.getBoolean(Const.FIRST_RUN, true))
+			overlay.setVisibility(View.VISIBLE);
+	}
+
 	@SuppressWarnings("deprecation")
 	@Override
 	protected void onStart() {
@@ -124,21 +140,5 @@ public class NewsActivity extends ActivityForDownloadingExternal implements
 		}
 		view.setVisibility(View.VISIBLE);
 		return false;
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-		sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-		overlay_cross.setOnClickListener(new View.OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				sharedPrefs.edit().putBoolean(Const.FIRST_RUN, false).commit();
-				overlay.setVisibility(View.GONE);
-			}
-		});
-		if (sharedPrefs.getBoolean(Const.FIRST_RUN, true))
-			overlay.setVisibility(View.VISIBLE);
 	}
 }

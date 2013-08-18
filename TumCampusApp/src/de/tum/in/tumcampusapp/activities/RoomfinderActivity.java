@@ -50,9 +50,44 @@ public class RoomfinderActivity extends ActivityForSearching implements
 	}
 
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		roomFinderRequest = new TUMRoomFinderRequest();
+	public void afterTextChanged(Editable s) {
+	}
+
+	@Override
+	public void beforeTextChanged(CharSequence s, int start, int count,
+			int after) {
+
+	}
+
+	private void doSearch(String query) {
+
+		SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this,
+				RoomFinderSuggestionProvider.AUTHORITY,
+				RoomFinderSuggestionProvider.MODE);
+		suggestions.saveRecentQuery(query, null);
+
+		roomFinderRequest.fetchSearchInteractive(this, this, query);
+
+	}
+
+	private void handleIntent(Intent intent) {
+		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+			String query = intent.getStringExtra(SearchManager.QUERY);
+			doSearch(query);
+		}
+	}
+
+	/**
+	 * Exported, because unused.
+	 * 
+	 * @param s
+	 */
+	@SuppressWarnings("unused")
+	private void initQuerySearchView(CharSequence s) {
+		final int SEARCHVIEW_FIELD_ID = 0;
+		SearchView searchView = (SearchView) this
+				.findViewById(SEARCHVIEW_FIELD_ID);
+		searchView.setQuery(s, false);
 	}
 
 	/**
@@ -88,22 +123,14 @@ public class RoomfinderActivity extends ActivityForSearching implements
 	}
 
 	@Override
-	public boolean performSearchAlgorithm() {
-		EditText searchString = (EditText) this.findViewById(R.id.search_field);
-
-		SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this,
-				RoomFinderSuggestionProvider.AUTHORITY,
-				RoomFinderSuggestionProvider.MODE);
-		suggestions.saveRecentQuery(searchString.getText().toString(), null);
-
-		roomFinderRequest.fetchSearchInteractive(this, this, searchString
-				.getText().toString());
-		return true;
+	public void onCommonError(String errorReason) {
+		Toast.makeText(this, errorReason, Toast.LENGTH_SHORT).show();
 	}
 
 	@Override
-	public void onCommonError(String errorReason) {
-		Toast.makeText(this, errorReason, Toast.LENGTH_SHORT).show();
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		roomFinderRequest = new TUMRoomFinderRequest();
 	}
 
 	@Override
@@ -133,13 +160,6 @@ public class RoomfinderActivity extends ActivityForSearching implements
 	}
 
 	@Override
-	public void onFetchError(String errorReason) {
-		roomFinderRequest.cancelRequest(true);
-		errorLayout.setVisibility(View.VISIBLE);
-		progressLayout.setVisibility(View.GONE);
-	}
-
-	@Override
 	public void onFetchDefaultMapId(String mapId) {
 		Intent intent = new Intent(this, RoomFinderDetailsActivity.class);
 		intent.putExtra("buildingId", currentlySelectedBuildingId);
@@ -147,6 +167,13 @@ public class RoomfinderActivity extends ActivityForSearching implements
 		intent.putExtra("mapId", mapId);
 
 		startActivity(intent);
+	}
+
+	@Override
+	public void onFetchError(String errorReason) {
+		roomFinderRequest.cancelRequest(true);
+		errorLayout.setVisibility(View.VISIBLE);
+		progressLayout.setVisibility(View.GONE);
 	}
 
 	@Override
@@ -169,59 +196,33 @@ public class RoomfinderActivity extends ActivityForSearching implements
 
 	}
 
+	@Override
 	public void onNewIntent(Intent intent) {
 		setIntent(intent);
 		handleIntent(intent);
-	}
-
-	private void handleIntent(Intent intent) {
-		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-			String query = intent.getStringExtra(SearchManager.QUERY);
-			doSearch(query);
-		}
-	}
-
-	private void doSearch(String query) {
-
-		SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this,
-				RoomFinderSuggestionProvider.AUTHORITY,
-				RoomFinderSuggestionProvider.MODE);
-		suggestions.saveRecentQuery(query, null);
-
-		roomFinderRequest.fetchSearchInteractive(this, this, query);
-
-	}
-
-	@Override
-	public void afterTextChanged(Editable s) {
-	}
-
-	@Override
-	public void beforeTextChanged(CharSequence s, int start, int count,
-			int after) {
-
-	}
-
-	@Override
-	public void onTextChanged(CharSequence s, int start, int before, int count) {
-	}
-
-	/**
-	 * Exported, because unused.
-	 * 
-	 * @param s
-	 */
-	@SuppressWarnings("unused")
-	private void initQuerySearchView(CharSequence s) {
-		final int SEARCHVIEW_FIELD_ID = 0;
-		SearchView searchView = (SearchView) this
-				.findViewById(SEARCHVIEW_FIELD_ID);
-		searchView.setQuery(s, false);
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
 		PersonalLayoutManager.setDrawableColorForId(this, R.drawable.about);
+	}
+
+	@Override
+	public void onTextChanged(CharSequence s, int start, int before, int count) {
+	}
+
+	@Override
+	public boolean performSearchAlgorithm() {
+		EditText searchString = (EditText) this.findViewById(R.id.search_field);
+
+		SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this,
+				RoomFinderSuggestionProvider.AUTHORITY,
+				RoomFinderSuggestionProvider.MODE);
+		suggestions.saveRecentQuery(searchString.getText().toString(), null);
+
+		roomFinderRequest.fetchSearchInteractive(this, this, searchString
+				.getText().toString());
+		return true;
 	}
 }

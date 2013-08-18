@@ -19,7 +19,7 @@ import de.tum.in.tumcampusapp.auxiliary.FileUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 
 /**
- * Activity to fetch and display the curricula of different programs.
+ * Activity to display the curricula details of different programs.
  * 
  * @author Vincenz Doelle
  * @review Daniel G. Mayr
@@ -27,7 +27,7 @@ import de.tum.in.tumcampusapp.auxiliary.Utils;
  */
 public class CurriculaDetailsActivity extends Activity {
 
-	// fetch information in a background task and show progress dialog in
+	// Fetch information in a background task and show progress dialog in
 	// meantime
 	final AsyncTask<Object, Void, File> backgroundTask = new AsyncTask<Object, Void, File>() {
 
@@ -46,8 +46,10 @@ public class CurriculaDetailsActivity extends Activity {
 
 	private WebView browser;
 	private RelativeLayout errorLayout;
+
 	/** Http client to fetch the curricula data */
 	private DefaultHttpClient httpClient;
+
 	private RelativeLayout progressLayout;
 
 	/**
@@ -111,7 +113,8 @@ public class CurriculaDetailsActivity extends Activity {
 		}
 
 		if (file == null) {
-			return; // cannot work without target file
+			// cannot work without target file
+			return;
 		}
 
 		// if file does not exist download it again
@@ -136,6 +139,7 @@ public class CurriculaDetailsActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_curriculadetails);
 
+		// TODO export this to the generic app structure
 		httpClient = new DefaultHttpClient();
 
 		browser = (WebView) findViewById(R.id.activity_curricula_web_view);

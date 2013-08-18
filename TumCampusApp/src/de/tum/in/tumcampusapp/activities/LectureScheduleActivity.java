@@ -27,6 +27,10 @@ import de.tum.in.tumcampusapp.models.managers.LectureItemManager;
 import de.tum.in.tumcampusapp.preferences.UserPreferencesActivity;
 import de.tum.in.tumcampusapp.services.ImportService;
 
+/**
+ * Provides an overview about all available lecture appointments fetched from
+ * TUMOnline
+ */
 public class LectureScheduleActivity extends ActivityForAccessingTumOnline
 		implements OnItemClickListener, ViewBinder {
 	AccessTokenManager accessTokenManager = new AccessTokenManager(this);
@@ -63,6 +67,7 @@ public class LectureScheduleActivity extends ActivityForAccessingTumOnline
 		super(Const.FETCH_NOTHING, R.layout.activity_lecturesschedule);
 	}
 
+	@Override
 	public void onClick(View view) {
 		int viewId = view.getId();
 		switch (viewId) {

@@ -38,7 +38,7 @@ public class CalendarSectionsPagerAdapter extends FragmentPagerAdapter {
 		calendar.add(Calendar.MONTH, CalendarActivity.MONTH_AFTER);
 		Date lastDate = calendar.getTime();
 
-		long days = (long) (lastDate.getTime() - firstDate.getTime())
+		long days = (lastDate.getTime() - firstDate.getTime())
 				/ (1000 * 60 * 60 * 24);
 
 		if (updateMode) {

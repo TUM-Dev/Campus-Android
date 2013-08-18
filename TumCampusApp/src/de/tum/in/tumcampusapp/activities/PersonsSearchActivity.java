@@ -88,6 +88,7 @@ public class PersonsSearchActivity extends ActivityForAccessingTumOnline
 		});
 	}
 
+	@Override
 	public void onClick(View view) {
 		super.onClick(view);
 

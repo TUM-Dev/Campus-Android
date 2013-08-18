@@ -32,6 +32,7 @@ public class WizNavCheckTokenActivity extends ActivityForAccessingTumOnline {
 		startNextActivity();
 	}
 
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		overridePendingTransition(R.anim.fadein, R.anim.fadeout);
 		super.onCreate(savedInstanceState);
@@ -72,6 +73,7 @@ public class WizNavCheckTokenActivity extends ActivityForAccessingTumOnline {
 		PersonalLayoutManager.setColorForId(this, R.id.pager_title_strip);
 	}
 
+	@Override
 	protected void onStart() {
 		super.onStart();
 		TextView textView = (TextView) findViewById(R.id.tvBrowse);

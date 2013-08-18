@@ -14,7 +14,7 @@ import de.tum.in.tumcampusapp.adapters.StartListAdapter;
 import de.tum.in.tumcampusapp.auxiliary.ListMenuEntry;
 
 /**
- * Activity to show plans
+ * Activity to show plans.
  */
 public class PlansActivity extends Activity implements OnItemClickListener {
 

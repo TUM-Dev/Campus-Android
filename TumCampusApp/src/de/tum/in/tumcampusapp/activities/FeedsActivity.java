@@ -24,10 +24,19 @@ import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.models.Feed;
 import de.tum.in.tumcampusapp.models.managers.FeedManager;
 
+/**
+ * Displays all available RSS feeds and allow to add them
+ * 
+ * @review Sascha Moecker
+ * 
+ */
 public class FeedsActivity extends Activity implements OnItemClickListener,
 		OnItemLongClickListener {
+
+	// Id and name needed for transmitting to the detail activity
 	private static String feedId;
 	private static String feedName;
+
 	private SimpleCursorAdapter adapter;
 
 	@SuppressWarnings("deprecation")

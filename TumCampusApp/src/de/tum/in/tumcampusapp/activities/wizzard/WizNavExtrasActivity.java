@@ -73,6 +73,7 @@ public class WizNavExtrasActivity extends WizzardActivity implements
 		startNextActivity();
 	}
 
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		overridePendingTransition(R.anim.fadein, R.anim.fadeout);

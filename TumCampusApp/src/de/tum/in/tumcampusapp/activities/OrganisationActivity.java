@@ -36,16 +36,11 @@ import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.OrgItem;
 import de.tum.in.tumcampusapp.models.OrgItemList;
 
-/************************************
- * Things could be improved: - add an loading screen after every click - color pushed elements e.g. blue after clicked
- * on it, to see that a element has been clicked -
- ************************************/
-
 /**
  * Activity that shows the first level of organisations at TUM.
  * 
  * @author Thomas Behrens
- * @review Vincenz Doelle, Daniel G. Mayr
+ * @review Vincenz Doelle, Daniel G. Mayr, Sascha Moecker
  */
 @SuppressLint("DefaultLocale")
 public class OrganisationActivity extends ActivityForAccessingTumOnline

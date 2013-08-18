@@ -25,7 +25,7 @@ import de.tum.in.tumcampusapp.models.TelSubstation;
 import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequestFetchListener;
 
 /**
- * Activity to show information about an employee.
+ * Activity to show information about an person at TUM.
  * 
  * @author Vincenz Doelle
  * @review Daniel G. Mayr

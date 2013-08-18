@@ -1,5 +1,12 @@
 ﻿package de.tum.in.tumcampusapp.auxiliary;
 
+/**
+ * Contains different constants used by several classes. Allows a unified
+ * access.
+ * 
+ * @author Sascha Moecker
+ * 
+ */
 public final class Const {
 
 	public static final String ACCESS_TOKEN = "access_token";

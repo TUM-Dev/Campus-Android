@@ -6,7 +6,7 @@ import android.webkit.WebView;
 import de.tum.in.tumcampusapp.R;
 
 /**
- * Activity to show plans
+ * Activity to show plan details.
  */
 public class PlansDetailsActivity extends Activity {
 

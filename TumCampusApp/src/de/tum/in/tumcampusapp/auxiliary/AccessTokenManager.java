@@ -10,6 +10,12 @@ import android.widget.Toast;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequest;
 
+/**
+ * Easy accessible class for token management.
+ * 
+ * @author Sascha Moecker
+ * 
+ */
 public class AccessTokenManager implements OnClickListener {
 	public static final int MIN_LRZ_LENGTH = 7;
 

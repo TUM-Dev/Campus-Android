@@ -16,11 +16,12 @@ import android.widget.TextView;
 import de.tum.in.tumcampusapp.R;
 
 /**
- * Activity to fetch and display the curricula of different programs..
+ * Activity to fetch and display the curricula of different study programs.
  * 
  * @author Vincenz Doelle
  * @review Daniel G. Mayr
  * @review Thomas Behrens
+ * @review Sascha Moecker
  */
 public class CurriculaActivity extends Activity implements OnItemClickListener {
 
@@ -37,6 +38,7 @@ public class CurriculaActivity extends Activity implements OnItemClickListener {
 
 		ListView list = (ListView) findViewById(R.id.activity_curricula_list_view);
 
+		// Puts all hardcoded web addresses into the hash map
 		options = new Hashtable<String, String>();
 		options.put(
 				getString(R.string.informatics_bachelor),
@@ -70,11 +72,12 @@ public class CurriculaActivity extends Activity implements OnItemClickListener {
 				getString(R.string.computational_science_master),
 				"http://www.in.tum.de/fuer-studieninteressierte/master-studiengaenge/computational-science-and-engineering/course/course-plan.html");
 
-		// sort curricula options and attach them to the list
+		// Sort curricula options and attach them to the list
 		Vector<String> sortedOptions = new Vector<String>(options.keySet());
 		Collections.sort(sortedOptions);
 		String[] optionsArray = sortedOptions.toArray(new String[0]);
 
+		// Sets the adapter with list items
 		ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this,
 				android.R.layout.simple_list_item_1, optionsArray);
 		list = (ListView) findViewById(R.id.activity_curricula_list_view);
@@ -86,6 +89,7 @@ public class CurriculaActivity extends Activity implements OnItemClickListener {
 	public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
 		String curriculumName = ((TextView) view).getText().toString();
 
+		// Puts URL and name into an intent and starts the detail view
 		Intent intent = new Intent(this, CurriculaDetailsActivity.class);
 		intent.putExtra(URL, options.get(curriculumName));
 		intent.putExtra(NAME, curriculumName);

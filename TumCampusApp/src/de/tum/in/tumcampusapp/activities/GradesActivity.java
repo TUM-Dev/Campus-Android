@@ -67,25 +67,14 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 		super(Const.NOTEN, R.layout.activity_grades);
 	}
 
-	public HashMap<String, Integer> calcGradeDistribution(
-			List<Exam> filteredExamList) {
-		HashMap<String, Integer> gradeDistrubution_hash = new HashMap<String, Integer>();
-		for (int j = 0; j < filteredExamList.size(); j++) {
-			Exam item = filteredExamList.get(j);
-
-			// increment hash value
-			int curCount = gradeDistrubution_hash.containsKey(item.getGrade()) ? gradeDistrubution_hash
-					.get(item.getGrade()) : 0;
-
-			gradeDistrubution_hash.put(item.getGrade(), curCount + 1);
-
-		}
-		return gradeDistrubution_hash;
-
-	}
-
+	/**
+	 * buildColumnChartContentString
+	 * 
+	 * @param filteredExamList
+	 * @return
+	 */
 	public String buildColumnChartContentString(List<Exam> filteredExamList) {
-		HashMap<String, Integer> gradeDistrubution_hash = calcGradeDistribution(filteredExamList);
+		HashMap<String, Integer> gradeDistrubution_hash = calculateGradeDistribution(filteredExamList);
 
 		String datas = "";
 		// Build data string
@@ -128,8 +117,14 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 		return content;
 	}
 
+	/**
+	 * buildPieChartContentString
+	 * 
+	 * @param filteredExamList
+	 * @return
+	 */
 	public String buildPieChartContentString(List<Exam> filteredExamList) {
-		HashMap<String, Integer> gradeDistrubution_hash = calcGradeDistribution(filteredExamList);
+		HashMap<String, Integer> gradeDistrubution_hash = calculateGradeDistribution(filteredExamList);
 		String datas = "";
 
 		// build data String
@@ -172,6 +167,12 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 		return content;
 	}
 
+	/**
+	 * calculateAverageGrade
+	 * 
+	 * @param filteredExamList
+	 * @return
+	 */
 	public Double calculateAverageGrade(List<Exam> filteredExamList) {
 		List<Exam> removedDoubles = removeDuplicates(filteredExamList);
 		double weightedGrade = 0.0;
@@ -192,6 +193,27 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 		}
 		return weightedGrade / creditSum;
 
+	}
+
+	/**
+	 * gradeDistrubution_hash
+	 * 
+	 * @param filteredExamList
+	 * @return
+	 */
+	public HashMap<String, Integer> calculateGradeDistribution(
+			List<Exam> filteredExamList) {
+		HashMap<String, Integer> gradeDistrubution_hash = new HashMap<String, Integer>();
+		for (int j = 0; j < filteredExamList.size(); j++) {
+			Exam item = filteredExamList.get(j);
+
+			// increment hash value
+			int curCount = gradeDistrubution_hash.containsKey(item.getGrade()) ? gradeDistrubution_hash
+					.get(item.getGrade()) : 0;
+
+			gradeDistrubution_hash.put(item.getGrade(), curCount + 1);
+		}
+		return gradeDistrubution_hash;
 	}
 
 	/**
@@ -381,6 +403,16 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 	}
 
 	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		// enable Menu Items after fetching grades
+		columnMenuItem = menu.findItem(R.id.columnChart);
+		pieMenuItem = menu.findItem(R.id.pieChart);
+		setMenuEnabled(isFetched);
+
+		return super.onPrepareOptionsMenu(menu);
+	}
+
+	@Override
 	protected void onResume() {
 		super.onResume();
 		PersonalLayoutManager.setColorForId(this, R.id.spFilter);
@@ -388,6 +420,12 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 
 	}
 
+	/**
+	 * removeDuplicates
+	 * 
+	 * @param filteredExamList
+	 * @return
+	 */
 	public List<Exam> removeDuplicates(List<Exam> filteredExamList) {
 		List<Exam> removedDoubles = new ArrayList<Exam>();
 
@@ -417,19 +455,14 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 		return removedDoubles;
 	}
 
+	/**
+	 * Enables or disabled menu items which should not enabled everytime
+	 * 
+	 * @param enabled
+	 */
 	public void setMenuEnabled(boolean enabled) {
 		columnMenuItem.setEnabled(enabled);
 		pieMenuItem.setEnabled(enabled);
 
-	}
-
-	@Override
-	public boolean onPrepareOptionsMenu(Menu menu) {
-		// enable Menu Items after fetching grades
-		columnMenuItem = menu.findItem(R.id.columnChart);
-		pieMenuItem = menu.findItem(R.id.pieChart);
-		setMenuEnabled(isFetched);
-
-		return super.onPrepareOptionsMenu(menu);
 	}
 }

@@ -40,18 +40,22 @@ public class RoomFinderListAdapter extends BaseAdapter {
 		// imageLoader=new ImageLoader(activity.getApplicationContext());
 	}
 
+	@Override
 	public int getCount() {
 		return data.size();
 	}
 
+	@Override
 	public Object getItem(int position) {
 		return data.get(position);
 	}
 
+	@Override
 	public long getItemId(int position) {
 		return position;
 	}
 
+	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View vi = convertView;
 		if (convertView == null)
