@@ -5,7 +5,7 @@
     <string name="days_left">Tage verbleibend</string>
     <string name="day_left">Tag verbleibend</string>
     <string name="date_expired">Demo abgelaufen</string>
-    <string name="welcome_demo"><b>Willkommen zur <i>TUM Campus App Demo</i></b>.\n\nZur Benutzung dieser Demo ist eine Internetverbindung notwendig. Die Demo ist gültig bis zum 31.08.2013.</string>
+    <string name="welcome_demo"><b>Willkommen zur <i>TUM Campus App Demo</i></b>.\n\nZur Benutzung dieser Demo ist eine Internetverbindung notwendig. Die Demo ist gültig bis zum 08.09.2013.</string>
     <string name="no_map_available">Keine Karte verfügbar</string>
     <string name="android_version_too_low">Android Version zu alt</string>
     <string name="android_version_too_low_message">Deine Android Version unterstützt diese Funktion leider nich</string>

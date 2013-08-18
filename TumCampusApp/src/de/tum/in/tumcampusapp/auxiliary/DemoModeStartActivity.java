@@ -111,7 +111,7 @@ public class DemoModeStartActivity extends Activity {
 	public final static int SEPTEMBER_8_2013_IN_SECONDS = 1378677595;
 	public final static int SECONDS_PER_DAY = 60 * 60 * 24;
 
-	public final static int DUE_DATE_IN_SECONDS = AUGUST_31_2013_IN_SECONDS;
+	public final static int DUE_DATE_IN_SECONDS = SEPTEMBER_8_2013_IN_SECONDS;
 	TextView txtTime;
 	ProgressBar progress;
 
