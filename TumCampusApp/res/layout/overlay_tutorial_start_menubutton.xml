@@ -19,13 +19,6 @@
             android:clickable="true"
             android:src="@drawable/cross_with_arrow" />
 
-        <TextView
-            android:id="@+id/cross_tx"
-            style="@style/DemoText"
-            android:layout_alignParentTop="true"
-            android:layout_toRightOf="@+id/instruction_cross"
-            android:text="@string/skip" />
-
         <Button
             android:id="@+id/continue_btn"
             style="@style/DemoText"
@@ -41,6 +34,16 @@
             style="@style/DemoText"
             android:layout_centerInParent="true"
             android:text="@string/instruction" />
+
+        <TextView
+            android:id="@+id/cross_tx"
+            style="@style/DemoText"
+            android:layout_alignBottom="@+id/instruction_cross"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="19dp"
+            android:layout_toRightOf="@+id/instruction_cross"
+            android:text="@string/skip" />
+
     </RelativeLayout>
 
     <!-- First overlay at My Tum -->

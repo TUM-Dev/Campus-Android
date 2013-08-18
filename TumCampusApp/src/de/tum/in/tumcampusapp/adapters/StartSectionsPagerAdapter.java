@@ -18,7 +18,6 @@ import de.tum.in.tumcampusapp.activities.FeedsActivity;
 import de.tum.in.tumcampusapp.activities.GalleryActivity;
 import de.tum.in.tumcampusapp.activities.GradesActivity;
 import de.tum.in.tumcampusapp.activities.InformationActivity;
-import de.tum.in.tumcampusapp.activities.LectureScheduleActivity;
 import de.tum.in.tumcampusapp.activities.LecturesPersonalActivity;
 import de.tum.in.tumcampusapp.activities.LecturesSearchActivity;
 import de.tum.in.tumcampusapp.activities.NewsActivity;
@@ -102,9 +101,14 @@ public class StartSectionsPagerAdapter extends FragmentPagerAdapter {
 			listMenuEntrySet.add(new ListMenuEntry(R.drawable.chart,
 					R.string.my_grades, R.string.grades_addinfo, new Intent(
 							activity, GradesActivity.class)));
-			listMenuEntrySet.add(new ListMenuEntry(R.drawable.calendar,
-					R.string.lecture_schedule, R.string.lecture_schedule_extra,
-					new Intent(activity, LectureScheduleActivity.class)));
+
+			// TODO This feature is not extensively helpful, because the
+			// CalendarActivity and the MyLecturesActivity allready implement
+			// this functionality
+			// listMenuEntrySet.add(new ListMenuEntry(R.drawable.calendar,
+			// R.string.lecture_schedule, R.string.lecture_schedule_extra,
+			// new Intent(activity, LectureScheduleActivity.class)));
+
 			listMenuEntrySet.add(new ListMenuEntry(R.drawable.calendar,
 					R.string.schedule, R.string.schedule_extras, new Intent(
 							activity, CalendarActivity.class)));

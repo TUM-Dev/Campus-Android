@@ -51,7 +51,7 @@ public class CafeteriaDetailsActivity extends FragmentActivity {
 		switch (item.getItemId()) {
 		case R.id.action_ingredients:
 			AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-			alertDialog.setTitle("Ingredients");
+			alertDialog.setTitle(R.string.action_ingredients);
 			alertDialog.setMessage(getResources().getString(
 					R.string.cafeteria_ingredients));
 			alertDialog.setButton(

@@ -19,7 +19,6 @@ import android.widget.TextView;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.auxiliary.CafetariaPrices;
 import de.tum.in.tumcampusapp.auxiliary.Const;
-import de.tum.in.tumcampusapp.auxiliary.PersonalLayoutManager;
 import de.tum.in.tumcampusapp.models.managers.CafeteriaMenuManager;
 import de.tum.in.tumcampusapp.models.managers.LocationManager;
 

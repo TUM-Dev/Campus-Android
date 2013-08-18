@@ -30,17 +30,19 @@
             android:text="@string/go_on" />
 
         <TextView
-            android:id="@+id/cross_tx"
-            style="@style/DemoText"
-            android:layout_alignParentTop="true"
-            android:layout_toRightOf="@+id/instruction_cross"
-            android:text="@string/skip" />
-
-        <TextView
             android:id="@+id/welcome_tx"
             style="@style/DemoText"
             android:layout_centerInParent="true"
             android:text="@string/instruction" />
+
+        <TextView
+            android:id="@+id/cross_tx"
+            style="@style/DemoText"
+            android:layout_alignBottom="@+id/instruction_cross"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="19dp"
+            android:layout_toRightOf="@+id/instruction_cross"
+            android:text="@string/skip" />
 
     </RelativeLayout>
 

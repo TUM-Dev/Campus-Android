@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.media.AudioManager;
+import android.util.Log;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.managers.LectureItemManager;
@@ -51,7 +52,8 @@ public class SilenceService extends IntentService {
 
 					LectureItemManager lim = new LectureItemManager(this);
 					if (!lim.hasLectures()) {
-						// no lectures available
+						Log.d(this.getClass().getSimpleName(),
+								"No lectures available");
 						return;
 					}
 

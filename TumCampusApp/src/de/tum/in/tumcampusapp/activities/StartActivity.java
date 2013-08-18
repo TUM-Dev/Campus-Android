@@ -6,16 +6,12 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-
-import com.bugsense.trace.BugSenseHandler;
-
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.wizzard.WizNavExtrasActivity;
 import de.tum.in.tumcampusapp.activities.wizzard.WizNavStartActivity;
@@ -36,7 +32,6 @@ public class StartActivity extends FragmentActivity {
 	public static final int DEFAULT_SECTION = 1;
 	public static final String LAST_CHOOSEN_SECTION = "last_choosen_section";
 	public static final int REQ_CODE_COLOR_CHANGE = 0;
-	public static final boolean TRACK_ERRORS_WITH_BUG_SENSE = true;
 
 	/**
 	 * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -95,23 +90,7 @@ public class StartActivity extends FragmentActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-		// Init a Bug Report to https://www.bugsense.com
-		if (TRACK_ERRORS_WITH_BUG_SENSE) {
-			BugSenseHandler.initAndStartSession(this, "19d18764");
-		}
-
 		setContentView(R.layout.activity_start);
-
-		// Workaround for new API version. There was a security update which
-		// disallows applications to execute HTTP request in the GUI main
-		// thread.
-		if (android.os.Build.VERSION.SDK_INT > 9) {
-			StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
-					.permitAll().build();
-			StrictMode.setThreadPolicy(policy);
-
-		}
 
 		// Create the adapter that will return a fragment for each of the
 		// primary sections of the app.
@@ -146,6 +125,7 @@ public class StartActivity extends FragmentActivity {
 		Boolean hideWizzardOnStartup = PreferenceManager
 				.getDefaultSharedPreferences(this).getBoolean(
 						Const.HIDE_WIZZARD_ON_STARTUP, false);
+
 		if (!hideWizzardOnStartup) {
 			Intent intent = new Intent(this, WizNavStartActivity.class);
 			startActivity(intent);

@@ -4,8 +4,11 @@
     <!-- START TODO Translate -->
     <!-- END TODO Translate -->
 
-
     <!-- START Translated, please do not change identifiers -->
+    <string name="days_left">days left</string>
+    <string name="day_left">day left</string>
+    <string name="date_expired">Demo expired</string>
+    <string name="welcome_demo"><b>Welcome to <i>TUM Campus App Demo</i></b>.\n\nIn order to use this demo, an internet connection has to be established. This demo is valid until the 31.08.2013.</string>
     <string name="no_map_available">No map available</string>
     <string name="android_version_too_low">Android version too low</string>
     <string name="android_version_too_low_message">This feature is not available on your current Android version</string>
@@ -447,6 +450,8 @@
     <string name="notification_content">New grade uploaded</string>
     <string name="feedbackAddr">nils.kannengiesser@tum.de</string>
     <string name="feedbackSubj">Feedback for TUM Campus App</string>
+    <string name="version">Version</string>
+    <string name="send_email">E-Mail-Feedback senden</string>
     <!-- END Translated, please do not change identifiers -->
 
 </resources>

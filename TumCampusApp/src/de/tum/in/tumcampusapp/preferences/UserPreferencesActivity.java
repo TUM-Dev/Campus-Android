@@ -13,7 +13,6 @@ import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 import android.provider.CalendarContract.Calendars;
-import android.util.Log;
 import android.widget.Toast;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.wizzard.WizNavStartActivity;

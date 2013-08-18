@@ -190,7 +190,6 @@ public class TUMRoomFinderRequest {
 
 			@Override
 			protected void onPostExecute(String resultId) {
-				Log.d(getClass().getSimpleName(), resultId);
 				// handle result
 				if (isOnline == false) {
 					listener.onCommonError(context
