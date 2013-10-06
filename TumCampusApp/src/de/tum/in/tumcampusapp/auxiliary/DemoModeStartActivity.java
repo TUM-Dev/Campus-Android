@@ -23,7 +23,7 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampusapp.activities.StartActivity;
 
 public class DemoModeStartActivity extends Activity {

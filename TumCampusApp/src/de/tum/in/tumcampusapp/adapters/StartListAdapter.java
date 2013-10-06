@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampusapp.auxiliary.ListMenuEntry;
 import de.tum.in.tumcampusapp.auxiliary.PersonalLayoutManager;
 

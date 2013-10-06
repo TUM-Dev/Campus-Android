@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.NavUtils;
 import android.view.MenuItem;
-import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampusapp.fragments.OpeningHoursDetailFragment;
 
 /**

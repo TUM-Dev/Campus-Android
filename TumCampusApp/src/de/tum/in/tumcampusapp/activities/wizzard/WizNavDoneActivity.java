@@ -3,7 +3,7 @@ package de.tum.in.tumcampusapp.activities.wizzard;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampusapp.activities.generic.WizzardActivity;
 
 public class WizNavDoneActivity extends WizzardActivity {

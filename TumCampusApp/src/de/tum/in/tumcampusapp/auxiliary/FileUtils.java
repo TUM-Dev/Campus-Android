@@ -22,7 +22,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
-import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampus.R;
 
 /**
  * Utility functions to ease the work with files and file contents.

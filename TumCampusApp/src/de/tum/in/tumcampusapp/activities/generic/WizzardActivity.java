@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampusapp.auxiliary.PersonalLayoutManager;
 
 public class WizzardActivity extends Activity {

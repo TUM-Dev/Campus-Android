@@ -7,7 +7,7 @@ import android.support.v4.app.FragmentActivity;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.RelativeLayout;
-import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampus.R;
 
 /**
  * Displays the map regarding the searched room.

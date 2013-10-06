@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.TextView;
-import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampusapp.auxiliary.PersonalLayoutManager;
 import de.tum.in.tumcampusapp.models.managers.GalleryManager;
 

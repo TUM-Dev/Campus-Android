@@ -2,7 +2,7 @@ package de.tum.in.tumcampusapp.activities;
 
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampusapp.activities.generic.ActivityForDownloadingExternal;
 import de.tum.in.tumcampusapp.adapters.GallerySectionsPagerAdapter;
 import de.tum.in.tumcampusapp.auxiliary.Const;

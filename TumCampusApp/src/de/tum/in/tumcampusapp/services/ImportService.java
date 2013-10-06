@@ -7,7 +7,7 @@ import java.util.List;
 
 import android.app.IntentService;
 import android.content.Intent;
-import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.Feed;

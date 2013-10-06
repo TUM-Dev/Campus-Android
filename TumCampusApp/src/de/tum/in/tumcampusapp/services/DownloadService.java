@@ -7,7 +7,7 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.managers.CafeteriaManager;
@@ -155,6 +155,7 @@ public class DownloadService extends IntentService {
 			if ((action.equals(Const.DOWNLOAD_ALL_FROM_EXTERNAL))
 					&& !isDestroyed) {
 				// TODO Implement downloading each type of external source
+				// TODO Also download my tum stuff
 
 				// downloadGallery(force);
 				// downloadNews(force);

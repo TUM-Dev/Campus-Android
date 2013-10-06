@@ -47,6 +47,7 @@
             android:title="@string/silence_phone" />
         <CheckBoxPreference
             android:key="background_mode"
+            android:enabled="false"
             android:summary="@string/background_info"
             android:title="@string/background_mode" />
     </PreferenceCategory>

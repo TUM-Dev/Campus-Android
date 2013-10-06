@@ -13,7 +13,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
-import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampusapp.activities.GradesActivity;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
@@ -38,6 +38,10 @@ public class BackgroundService extends IntentService {
 	}
 
 	@SuppressWarnings("unused")
+	/**
+	 * This method should fetch the grade in order to get updates grades. It is not implemented,
+	 *  since the grade web service is under change and redevelops the grade interface.
+	 */
 	private void fetchGrades() {
 		// fetching xml from tum online
 		TUMOnlineRequest requestHandler = new TUMOnlineRequest(Const.NOTEN,

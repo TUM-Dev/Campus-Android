@@ -6,13 +6,14 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampusapp.activities.wizzard.WizNavExtrasActivity;
 import de.tum.in.tumcampusapp.activities.wizzard.WizNavStartActivity;
 import de.tum.in.tumcampusapp.adapters.StartSectionsPagerAdapter;
@@ -97,6 +98,15 @@ public class StartActivity extends FragmentActivity {
 		// primary sections of the app.
 		mSectionsPagerAdapter = new StartSectionsPagerAdapter(this,
 				getSupportFragmentManager());
+		
+		// Workaround for new API version. There was a security update which
+		// disallows applications to execute HTTP request in the GUI main
+		// thread.
+		if (android.os.Build.VERSION.SDK_INT > 8) {
+			StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
+					.permitAll().build();
+			StrictMode.setThreadPolicy(policy);
+		}
 
 		// Set up the ViewPager with the sections adapter.
 		mViewPager = (ViewPager) findViewById(R.id.pager);
@@ -115,11 +125,11 @@ public class StartActivity extends FragmentActivity {
 		service.putExtra(Const.ACTION_EXTRA, Const.DEFAULTS);
 		startService(service);
 
-		// Imports default values into database
+		// Start silence Service (if already started it will just invoke a check)
 		service = new Intent(this, SilenceService.class);
 		startService(service);
 
-		// Start daily Service
+		// Start daily Service (same here: if already started it will just invoke a check)
 		service = new Intent(this, BackgroundService.class);
 		startService(service);
 
@@ -127,6 +137,7 @@ public class StartActivity extends FragmentActivity {
 				.getDefaultSharedPreferences(this).getBoolean(
 						Const.HIDE_WIZZARD_ON_STARTUP, false);
 
+		// Check the flag if user wnats the wizzard to open at startup
 		if (!hideWizzardOnStartup) {
 			Intent intent = new Intent(this, WizNavStartActivity.class);
 			startActivity(intent);
@@ -143,6 +154,7 @@ public class StartActivity extends FragmentActivity {
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
+		// important to unregister the broadcast receiver
 		unregisterReceiver(receiver);
 	}
 

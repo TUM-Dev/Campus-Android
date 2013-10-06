@@ -19,7 +19,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
-import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampusapp.adapters.StartListAdapter;
 import de.tum.in.tumcampusapp.adapters.StartSectionsPagerAdapter;
 import de.tum.in.tumcampusapp.auxiliary.Const;

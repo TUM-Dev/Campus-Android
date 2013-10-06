@@ -8,6 +8,7 @@ import android.media.AudioManager;
 import android.util.Log;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
+import de.tum.in.tumcampusapp.models.managers.CalendarManager;
 import de.tum.in.tumcampusapp.models.managers.LectureItemManager;
 
 /** Service used to silence the mobile during lectures */
@@ -49,16 +50,19 @@ public class SilenceService extends IntentService {
 					AudioManager am;
 
 					am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+					
+					CalendarManager calendarManager = new CalendarManager(this);
 
-					LectureItemManager lim = new LectureItemManager(this);
-					if (!lim.hasLectures()) {
+					if (!calendarManager.hasLectures()) {
 						Log.d(this.getClass().getSimpleName(),
 								"No lectures available");
 						return;
 					}
 
-					Cursor c = lim.getCurrentFromDb();
-					if (c.getCount() != 0) {
+					Cursor cursor = calendarManager.getCurrentFromDb();
+					Log.d("Current lectures: ", String.valueOf(cursor.getCount()));
+					
+					if (cursor.getCount() != 0) {
 						// if current lecture(s) found, silence the mobile
 						Utils.setSettingBool(this, Const.SILENCE_ON, true);
 
@@ -70,6 +74,7 @@ public class SilenceService extends IntentService {
 						am.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
 						Utils.setSettingBool(this, Const.SILENCE_ON, false);
 					}
+					cursor.close();
 				}
 				// wait until next check
 				synchronized (this) {

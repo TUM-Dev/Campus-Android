@@ -1,6 +1,0 @@
-*/ 
-* This file contains information about our testplan.
-*/
-
-(Test description / Expected)
-Test all activitys which access TUMOnline without storing data without internet connection. / The error layout is shown and a toast message issuing the internet connection problem appears.

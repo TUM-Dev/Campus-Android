@@ -14,7 +14,7 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 import android.provider.CalendarContract.Calendars;
 import android.widget.Toast;
-import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampusapp.activities.wizzard.WizNavStartActivity;
 import de.tum.in.tumcampusapp.auxiliary.AccessTokenManager;
 import de.tum.in.tumcampusapp.auxiliary.Const;
@@ -27,6 +27,8 @@ import de.tum.in.tumcampusapp.models.managers.FeedItemManager;
 import de.tum.in.tumcampusapp.models.managers.GalleryManager;
 import de.tum.in.tumcampusapp.models.managers.NewsManager;
 import de.tum.in.tumcampusapp.models.managers.SyncManager;
+import de.tum.in.tumcampusapp.services.BackgroundService;
+import de.tum.in.tumcampusapp.services.SilenceService;
 
 /**
  * Provides the preferences, capsulated into an own activity.
@@ -114,6 +116,8 @@ public class UserPreferencesActivity extends PreferenceActivity implements
 						return true;
 					}
 				});
+		// This button invokes the wizzard to open. It pretents to be a "button"
+		// though the preference do not provide buttons
 		Preference buttonWizzard = findPreference("button_wizzard");
 		buttonWizzard
 				.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
@@ -127,6 +131,7 @@ public class UserPreferencesActivity extends PreferenceActivity implements
 						return true;
 					}
 				});
+		// This button invokes the clear cache method
 		Preference buttonClearCache = findPreference("button_clear_cache");
 		buttonClearCache
 				.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
@@ -146,7 +151,7 @@ public class UserPreferencesActivity extends PreferenceActivity implements
 						return true;
 					}
 				});
-
+		// Register the cahnge liustener to react immediately on changes
 		PreferenceManager.getDefaultSharedPreferences(this)
 				.registerOnSharedPreferenceChangeListener(this);
 	}
@@ -156,10 +161,33 @@ public class UserPreferencesActivity extends PreferenceActivity implements
 			String key) {
 		// if the color scheme has changed, fire a on activity result intent
 		// which can be used by the calling activity
-		if (key.equals("color_scheme")) {
+		if (key.equals(Const.COLOR_SCHEME)) {
 			Intent returnIntent = new Intent();
 			returnIntent.putExtra(Const.PREFS_HAVE_CHANGED, true);
 			setResult(RESULT_OK, returnIntent);
+		}
+
+		// If the silent mode was activated, start the service. This will invoke
+		// the service to call onHandleIntent which checks available lectures
+		if (key.equals(Const.SILENCE_SERVICE)) {
+			Intent service = new Intent(this, SilenceService.class);
+			if (sharedPreferences.getBoolean(key, false)) {
+				startService(service);
+			} else {
+				stopService(service);
+			}
+		}
+
+		// If the backgroun mode was activated, start the service. This will
+		// invoke
+		// the service to call onHandleIntent which updates all background data
+		if (key.equals(Const.BACKGROUND_MODE)) {
+			Intent service = new Intent(this, BackgroundService.class);
+			if (sharedPreferences.getBoolean(key, false)) {
+				startService(service);
+			} else {
+				stopService(service);
+			}
 		}
 	}
 }

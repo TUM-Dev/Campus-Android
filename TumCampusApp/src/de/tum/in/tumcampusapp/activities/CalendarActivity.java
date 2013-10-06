@@ -30,7 +30,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
-import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampusapp.activities.generic.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampusapp.adapters.CalendarSectionsPagerAdapter;
 import de.tum.in.tumcampusapp.auxiliary.CalendarMapper;
@@ -50,7 +50,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements
 		OnClickListener {
 	// The space between the first and the last date
 	public static final int MONTH_AFTER = 1;
-	public static final int MONTH_BEFORE = 1;
+	public static final int MONTH_BEFORE = 0;
 
 	private Calendar calendar = new GregorianCalendar();
 

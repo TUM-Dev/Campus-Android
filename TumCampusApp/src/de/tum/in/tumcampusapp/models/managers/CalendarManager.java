@@ -32,11 +32,15 @@ public class CalendarManager {
 		new SyncManager(context);
 	}
 
+	/**
+	 * Returns all stored events from db
+	 * @return
+	 */
 	public Cursor getAllFromDb() {
 		return db.rawQuery("SELECT * FROM kalendar_events", null);
 	}
 
-	// TODO not working
+	// TODO not working, should get a event linked to one specific date.
 	@SuppressWarnings("deprecation")
 	public Cursor getFromDbForDate(Date date) {
 		Log.d("test", "%" + Utils.getDateTimeString(date) + "%");
@@ -45,6 +49,34 @@ public class CalendarManager {
 						"SELECT title, dtstart, dtend FROM kalendar_events WHERE dtstart LIKE ?",
 						new String[] { "%" + Utils.getDateTimeString(date)
 								+ "%" });
+	}
+
+	/**
+	 * Get all lecture items from the database
+	 * 
+	 * @return Database cursor (name, location, _id)
+	 */
+	public Cursor getCurrentFromDb() {
+		return db
+				.rawQuery(
+						"SELECT title, location, nr "
+								+ "FROM kalendar_events WHERE datetime('now', 'localtime') BETWEEN dtstart AND dtend",
+						null);
+	}
+
+	/**
+	 * Checks if there are any event in the database
+	 * 
+	 * @return
+	 */
+	public boolean hasLectures() {
+		boolean result = false;
+		Cursor c = db.rawQuery("SELECT nr FROM kalendar_events", null);
+		if (c.moveToNext()) {
+			result = true;
+		}
+		c.close();
+		return result;
 	}
 
 	public void importKalendar(String rawResponse) {

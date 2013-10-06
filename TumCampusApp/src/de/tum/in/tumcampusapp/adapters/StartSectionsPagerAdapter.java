@@ -9,7 +9,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampusapp.activities.CafeteriaActivity;
 import de.tum.in.tumcampusapp.activities.CalendarActivity;
 import de.tum.in.tumcampusapp.activities.CurriculaActivity;

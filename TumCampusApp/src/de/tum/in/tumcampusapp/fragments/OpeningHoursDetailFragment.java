@@ -13,7 +13,7 @@ import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.SimpleCursorAdapter.ViewBinder;
 import android.widget.TextView;
-import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampusapp.activities.OpeningHoursDetailActivity;
 import de.tum.in.tumcampusapp.activities.OpeningHoursListActivity;
 import de.tum.in.tumcampusapp.auxiliary.Const;

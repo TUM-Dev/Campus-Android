@@ -3,7 +3,7 @@ package de.tum.in.tumcampusapp.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampusapp.fragments.OpeningHoursDetailFragment;
 import de.tum.in.tumcampusapp.fragments.OpeningHoursListFragment;
 

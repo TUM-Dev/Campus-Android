@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.util.Log;
 
 import com.bugsense.trace.BugSenseHandler;
 
@@ -25,6 +26,7 @@ public class StartupActivity extends Activity {
 
 		// Init a Bug Report to https://www.bugsense.com
 		if (TRACK_ERRORS_WITH_BUG_SENSE) {
+			Log.d(this.getClass().getSimpleName(), "BugSense initialized");
 			BugSenseHandler.initAndStartSession(this, "19d18764");
 		}
 
@@ -35,7 +37,6 @@ public class StartupActivity extends Activity {
 			StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
 					.permitAll().build();
 			StrictMode.setThreadPolicy(policy);
-
 		}
 
 		// Start the demo Activity if demo mode is set
