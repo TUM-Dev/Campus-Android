@@ -8,11 +8,23 @@
         <item>Grau</item>
     </string-array>
     
+    <string-array name="color_schemes_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+    
     <string-array name="roles">
         <item>Student</item>
         <item>Mitarbeiter</item>
         <item>Gast</item>
     </string-array>
 
+        <string-array name="roles_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
 
 </resources>

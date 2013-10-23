@@ -19,7 +19,7 @@
     <string name="loading_longtime"><i>(This operation will take a bit longer)</i></string>
     <string name="button_skip">Skip</string>
     <string name="background_info">Content will be fetchted once per day to keep your TUM Campus App up to date.</string>
-    <string name="background_mode">Background Mode</string>
+    <string name="background_mode">Background Mode -NOT AVAILABLE-</string>
     <string name="set_background_mode"><b>Background Mode</b>\n\nActivate or deactivate <i>Background Mode</i>. If activated, content will be fetchted once per day to keep your TUM Campus App up to date.</string>
     <string name="set_silent_mode"><b>Silent Service</b>\n\nActivate or deactivate <i>Silent Service</i>. If activated, the device will go into silent mode if a lecture appointment has been recognized.</string>
     <string name="goto_tumcampus">Go to TUM Campus App</string>
@@ -93,7 +93,7 @@
     <string name="my_tum">My TUM</string>
     <string name="default_detail_info">Additional information goes here</string>
     <string name="empty_string" />
-    <string name="tum_news">TUM-News</string>
+    <string name="tum_news">TCA-News</string>
     <string name="timetable">Timetable</string>
     <string name="result_extra">Result:&#160;</string>
     <string name="error_fetching_tumonline">Error accessing TUMOnline.\nPlease make sure your TUMOnline-Access-Token has
@@ -114,7 +114,7 @@
     <string name="timetable_addinfo">Your timetable</string>
     <string name="tuitionfee_addinfo">Information about the tuition fees</string>
     <string name="rssfeed_addinfo">Famous RSS-Feeds</string>
-    <string name="tumnews_addinfo">News about TUM</string>
+    <string name="tumnews_addinfo">News about the TUM Campus App</string>
     <string name="events_addinfo">Events at TUM</string>
     <string name="gallery_addinfo">Event announcements</string>
     <string name="mvv_addinfo">Departures of MVV</string>
@@ -390,20 +390,22 @@
     <string name="error">Error</string>
     <string name="app_short_description">TUM information platform - from students for students</string>
     <string name="app_info_text"><b>TUM Campus App</b>\nThe TUM Campus App is developed by students of the Android practical course, other voluntary freelancers and chair members.
-        \n\n<b>Project Management:</b>\nTUM - Computer Science / F13 Prof. Dr. Uwe Baumgarten
+        \n\n<b>Project Management:</b>\nTUM - Computer Science / F13
+        \nProf. Dr. Uwe Baumgarten
         \nNils T. Kannengiesser
         \n\n<b>Current Developers:</b>\nSascha Moecker\nHaris Iltifat\nAnas Chakfeh\nThomas Krex\nMarius Muntean
-        \nAndreas Bernhofer (IT-Support/TUMonline)
-        \nNils T. Kannengiesser (F13)
+        \n\n<b>Further Developers:</b>
+        \nChristoph Richter, Thomas Bley, Vincenz Dölle, Daniel Mayr, Thomas Behrens, Florian Schulz, Vasyl Malinskyi,
+        Andreas Bernhofer (IT-Support/TUMonline), Nils T. Kannengiesser (F13)        
         \n\n<b>Important information:</b>\nThis App is not published by the Technical University Muenchen officially. It is a project by and for students. The software is used at your own risk. We are not responsible for any damage that might be caused by using this App or its presented information. For security reasons the access to private information of TUMOnline is regulated by using tokens. You need to enable different features within TUMOnline for a certain token to be able to use those information within the App.
-        \n\n<b>Privacy information:</b>\nThe application stores data on request only. Critical information requires the users permission (clearance by token) and is stored locally or received from TUMOnline directly. Crash reports can be sent manually. Crash reports contain detailed technical information on the phone, the operating system and the error itself. This information is helpful for the developers in order to improve the App. We do not collect any statistics except the general ones collected by Google automatically. We would appreciate your support!
+        \n\n<b>Privacy information:</b>\nThe application stores data on request only. Critical information requires the user\'s permission (clearance by token) and is stored locally or received from TUMOnline directly. We are using BugSense for bug tracking. Crash reports contain detailed technical information on the phone, the operating system and the error itself. This information is helpful for the developers in order to improve the app. Furthermore BugSense collects anonymous usage information (e.g. users of the app per day). Nevertheless we do not collect any further statistics except the general ones collected by Google automatically. We would appreciate your support!
 		\n\n<b>Support:</b>\nhttps://www.facebook.com/TUMCampus
-		\nPlease take a look at the offered manual as well. Please also contact us at admin.os.in@tum.de for any special requests.
+		\nPlease take a look at the offered manual as well. In addition please contact us at admin.os.in@tum.de for any special requests.
 		\n\n<b>Licenses:</b>\nGNU GPL v3 - http://www.gnu.org/licenses/gpl.html or
 		\nNew BSD License - http://www.opensource.org/licenses/bsd-license.php
-		\n\nThe source code is available through Github and may be requested from the project manager in the most recent version.
-		\nTUM Campus App on Facebook: https://www.facebook.com/TUMCampus
-		\n\n18th August 2013\n</string>
+		\n\nThe source code is available on GitHub (https://github.com/TCA-Team/)
+		\n\nTUM Campus App on Facebook:\nhttps://www.facebook.com/TUMCampus
+		\n\n23rd October 2013\n</string>
     <string name="credits">ECTS</string>
     <string name="wizzard_on_startup">Do not show at next start</string>
     <string name="token_not_enabled">TUMOnline-Access-Token is not enabled</string>
@@ -440,7 +442,7 @@
     <string name="swipe_instruction">Swipe through menu categories</string>
     <string name="swipe_right">Swipe left to go to category <i>News</i></string>
     <string name="current_menu">Current category</string>
-    <string name="click_to_open">Click on <i>TUM News</i> to start this feature</string>
+    <string name="click_to_open">Click on <i>TCA News</i> to start this feature</string>
     <string name="settings_via_menubutton">Open <i>Settings</i> via Menu Button</string>
     <string name="news_description">News are fetched from the internet and stored on your device. Press the <i>X</i> to explore the App by yourself.</string>
     <string name="click_to_update">Click to update content  manually</string>

@@ -8,7 +8,7 @@
     <string name="welcome_demo"><b>Willkommen zur <i>TUM Campus App Demo</i></b>.\n\nZur Benutzung dieser Demo ist eine Internetverbindung notwendig. Die Demo ist gültig bis zum 08.09.2013.</string>
     <string name="no_map_available">Keine Karte verfügbar</string>
     <string name="android_version_too_low">Android Version zu alt</string>
-    <string name="android_version_too_low_message">Deine Android Version unterstützt diese Funktion leider nich</string>
+    <string name="android_version_too_low_message">Deine Android Version unterstützt diese Funktion leider nicht</string>
     <string name="dialog_show_calendar">Exportieren erfolgreich.\nLokalen Kalender <i>TUM_CAMPUS_APP</i> in der <i>Google Calendar App</i> anzeigen?</string>
     <string name="average_grade">Durchschnittsnote</string>
     <string name="delete_chache_sure">Alle Daten wirklich löschen?</string>
@@ -16,7 +16,7 @@
     <string name="loading_longtime"><i>(Diese Operation dauert etwas länger)</i></string>
     <string name="button_skip">Überspringen</string>
     <string name="background_info">Es werden einmal am Tag im Hintergrund alle Inhalte heruntergeladen, um die App auf den neusten Stand zu halten.</string>
-    <string name="background_mode">Hintergrund Modus</string>
+    <string name="background_mode">Hintergrund Modus -NICHT VERFUEGBAR-</string>
     <string name="set_background_mode"><b>Hintergrund Modus</b>\n\nAktiviere oder deaktiviere den <i>Hintergrund Modus</i>. Bei Aktivierung werden einmal am Tag im Hintergrund alle Inhalte heruntergeladen, um deine TUM Campus App auf den neusten Stand zu halten.</string>
     <string name="set_silent_mode"><b>Lautlos Service</b>\n\nAktiviere oder deaktiviere den <i>Lautlos Service</i>. Bei Aktivierung wird sich das Gerät bei einer aktuell stattfindenden Vorlesung lautlos schalten.</string>
     <string name="goto_tumcampus">Starte TUM Campus App</string>
@@ -89,7 +89,7 @@
     <string name="my_tum">Mein TUM</string>
     <string name="default_detail_info">Zusatzinformationen</string>
     <string name="empty_string" />
-    <string name="tum_news">TUM News</string>
+    <string name="tum_news">TCA News</string>
     <string name="timetable">Zeitplan</string>
     <string name="result_extra">Ergebnis:&#160;</string>
     <string name="error_fetching_tumonline">Fehler beim Zugriff auf TUMOnline.\nBitte stelle sicher, dass das TUMOnline-Access-Token \nakzeptiert und die entsprechenden Rechte aktiviert wurden.\n\n<b>Klicke hier zum Wiederholen.</b></string>
@@ -109,7 +109,7 @@
     <string name="timetable_addinfo">Dein Zeitplan</string>
     <string name="tuitionfee_addinfo">Informationen über Rückmeldegebühren</string>
     <string name="rssfeed_addinfo">Bekannte RSS-Feeds</string>
-    <string name="tumnews_addinfo">Neuigkeiten über die TUM</string>
+    <string name="tumnews_addinfo">Neuigkeiten über die TUM Campus App</string>
     <string name="events_addinfo">Events an der TUM</string>
     <string name="gallery_addinfo">Ankündigungen von Events</string>
     <string name="mvv_addinfo">Abfahrtszeiten des MVV</string>
@@ -123,7 +123,7 @@
     <string name="mensa_settings_info">z.B. "Garching", um nur die Mensen in Garching anzuzeigen</string>
     <string name="silence_phone">Lautlos Service</string>
     <string name="silence_phone_info">Das Gerät wird während einer Vorlesung automatisch in den lautlosen Modus gestellt.</string>
-    <string name="debug_for_developer">für Entwickler</string>
+    <string name="debug_for_developer">Für Entwickler</string>
     <string name="debug_mode">Debug-Modus</string>
     <string name="market">Google Play</string>
     <string name="market_info">Bewerte oder update die TUM Campus App</string>
@@ -371,6 +371,9 @@
     <string name="no_sd_card">Kein Zugriff auf die SD-Karte möglich</string>
     <string name="export_events">Exportiere Events in den Google Kalender</string>
     <string name="export2calendar">Exportiere in den Google Kalender</string>
+    <string name="calendarTimeZone">Germany/Munich</string>
+    <string name="calendar_account_name">TUM_Campus_APP</string>
+    <string name="calendar_display_name">TUM Campus</string>
     <string name="empty_result">Die Operation lieferte ein fehlerhaftes Ergebnis</string>
     <string name="error_occurred_while_opening">Kann die Datei nicht öffnen</string>
     <string name="lectures_found">Wähle eine Vorlesung</string>
@@ -378,6 +381,23 @@
     <string name="deactivated">deaktiviert</string>
     <string name="error">Fehler</string>
     <string name="app_short_description">TUM Informationsplattform - von Studenten für Studenten</string>
+    <string name="app_info_text"><b>TUM Campus App</b>\nThe TUM Campus App is developed by students of the Android practical course, other voluntary freelancers and chair members.
+        \n\n<b>Project Management:</b>\nTUM - Computer Science / F13
+        \nProf. Dr. Uwe Baumgarten
+        \nNils T. Kannengiesser
+        \n\n<b>Current Developers:</b>\nSascha Moecker\nHaris Iltifat\nAnas Chakfeh\nThomas Krex\nMarius Muntean
+        \n\n<b>Further Developers:</b>
+        \nChristoph Richter, Thomas Bley, Vincenz Dölle, Daniel Mayr, Thomas Behrens, Florian Schulz, Vasyl Malinskyi,
+        Andreas Bernhofer (IT-Support/TUMonline), Nils T. Kannengiesser (F13)        
+        \n\n<b>Important information:</b>\nThis App is not published by the Technical University Muenchen officially. It is a project by and for students. The software is used at your own risk. We are not responsible for any damage that might be caused by using this App or its presented information. For security reasons the access to private information of TUMOnline is regulated by using tokens. You need to enable different features within TUMOnline for a certain token to be able to use those information within the App.
+        \n\n<b>Privacy information:</b>\nThe application stores data on request only. Critical information requires the user\'s permission (clearance by token) and is stored locally or received from TUMOnline directly. We are using BugSense for bug tracking. Crash reports contain detailed technical information on the phone, the operating system and the error itself. This information is helpful for the developers in order to improve the app. Furthermore BugSense collects anonymous usage information (e.g. users of the app per day). Nevertheless we do not collect any further statistics except the general ones collected by Google automatically. We would appreciate your support!
+		\n\n<b>Support:</b>\nhttps://www.facebook.com/TUMCampus
+		\nPlease take a look at the offered manual as well. In addition please contact us at admin.os.in@tum.de for any special requests.
+		\n\n<b>Licenses:</b>\nGNU GPL v3 - http://www.gnu.org/licenses/gpl.html or
+		\nNew BSD License - http://www.opensource.org/licenses/bsd-license.php
+		\n\nThe source code is available on GitHub (https://github.com/TCA-Team/)
+		\n\nTUM Campus App on Facebook:\nhttps://www.facebook.com/TUMCampus
+		\n\n23rd October 2013\n</string>
     <string name="credits">ECTS</string>
     <string name="wizzard_on_startup">Beim nächsten Start nicht mehr anzeigen</string>
     <string name="token_not_enabled">TUMOnline-Access-Token ist nicht aktiviert</string>
@@ -414,7 +434,7 @@
     <string name="swipe_instruction">Wische durch die Kategorien</string>
     <string name="swipe_right">Wische nach links um zu der Kategorie <i>News</i> zu gelangen</string>
     <string name="current_menu">Aktuelle Kategorie</string>
-    <string name="click_to_open">Klicke auf <i>TUM News</i> um dieses Feature zu starten</string>
+    <string name="click_to_open">Klicke auf <i>TCA News</i> um dieses Feature zu starten</string>
     <string name="settings_via_menubutton">Gelange zu den Einstellungen\nüber den Menu Knopf</string>
     <string name="news_description">News werden aus dem Internet geladen und auf deinem Gerät gespeichert. Klicke auf das <i>X</i> zum eigenen Erkunden der App!</string>
     <string name="click_to_update">Klicken, um Inhalt manuell zu updaten</string>

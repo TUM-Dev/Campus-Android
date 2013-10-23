@@ -50,12 +50,22 @@
             android:enabled="false"
             android:summary="@string/background_info"
             android:title="@string/background_mode" />
-    </PreferenceCategory>
-
-    <CheckBoxPreference
-        android:defaultValue="false"
-        android:key="first_run"
-        android:summary="@string/demo_info"
-        android:title="@string/demo_mode" />
-
+        <CheckBoxPreference
+        	android:defaultValue="false"
+        	android:key="first_run"
+        	android:summary="@string/demo_info"
+        	android:title="@string/demo_mode" />
+		</PreferenceCategory>
+		
+    
+    <PreferenceCategory android:title="@string/debug_for_developer" >
+		 <Preference
+		    android:enabled="false"
+            android:summary="@string/debug_mode"
+            android:title="@string/debug_mode" />
+		</PreferenceCategory>
+    
+    
+    
+    
 </PreferenceScreen>
