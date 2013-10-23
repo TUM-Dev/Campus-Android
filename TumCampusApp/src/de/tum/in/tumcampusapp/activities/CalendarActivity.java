@@ -44,6 +44,7 @@ import de.tum.in.tumcampusapp.models.managers.CalendarManager;
  * from TUMOnline and displayed as blocks on a timeline.
  * 
  * @author Sascha Moecker
+ * @test GitHub Test
  * 
  */
 public class CalendarActivity extends ActivityForAccessingTumOnline implements
