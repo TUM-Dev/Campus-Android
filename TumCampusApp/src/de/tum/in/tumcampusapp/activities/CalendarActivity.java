@@ -21,6 +21,8 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.preference.PreferenceManager;
 import android.provider.CalendarContract;
 import android.provider.CalendarContract.Calendars;
@@ -256,15 +258,17 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements
 			@Override
 			protected void onPostExecute(Boolean result) {
 				// Informs the user about the ongoing action
-				AlertDialog.Builder builder = new AlertDialog.Builder(
-						CalendarActivity.this);
-				builder.setMessage(getString(R.string.dialog_show_calendar))
-						.setPositiveButton(getString(R.string.yes),
-								CalendarActivity.this)
-						.setNegativeButton(getString(R.string.no),
-								CalendarActivity.this).show();
-				attachSectionPagerAdapter();
-				hideProgressLayout();
+				if (!isFinishing()) {
+					AlertDialog.Builder builder = new AlertDialog.Builder(
+							CalendarActivity.this);
+					builder.setMessage(getString(R.string.dialog_show_calendar))
+							.setPositiveButton(getString(R.string.yes),
+									CalendarActivity.this)
+							.setNegativeButton(getString(R.string.no),
+									CalendarActivity.this).show();
+					attachSectionPagerAdapter();
+					hideProgressLayout();
+				}
 			}
 
 			@Override
