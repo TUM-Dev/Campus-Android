@@ -1,5 +1,4 @@
 Tum CampusApp
-==========+==
 
 ... needs to be updated / TEMPORARY VERSION ...
 
