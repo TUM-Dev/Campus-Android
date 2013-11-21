@@ -1,5 +1,18 @@
 package de.tum.in.tumcampusapp.activities;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.StatusLine;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -137,6 +150,51 @@ public class StartActivity extends FragmentActivity {
 				.getDefaultSharedPreferences(this).getBoolean(
 						Const.HIDE_WIZZARD_ON_STARTUP, false);
 
+		// Check for important news 
+        try {
+			DefaultHttpClient client = new DefaultHttpClient();
+	
+			HttpGet request = new HttpGet("http://vmbaumgarten1.informatik.tu-muenchen.de/tca/info.txt");
+			HttpResponse response = client.execute(request);
+	
+			StatusLine stat = response.getStatusLine();
+			if (stat.getStatusCode() != 200) {
+				Log.d("Info", "Cannot fetch important news - wrong status code or server down - no important news?");
+			} else {
+				HttpEntity responseEntity = response.getEntity();
+				InputStream is = responseEntity.getContent();
+				ByteArrayOutputStream content = new ByteArrayOutputStream();
+	
+				int i = 0;
+				// We expect a short message only
+				byte[] buffer = new byte[128]; 
+				while ((i = is.read(buffer)) != -1) {
+				   content.write(buffer, 0, i);
+				}
+				String newsstring = new String(content.toByteArray());
+				
+				String ns = Context.NOTIFICATION_SERVICE;
+				NotificationManager nm = (NotificationManager) getSystemService(ns);
+				      
+				int icon = android.R.drawable.ic_dialog_alert;
+				CharSequence tickerText = newsstring; 
+				long when = System.currentTimeMillis(); // show it right now
+	
+				@SuppressWarnings("deprecation")
+				Notification notification = new Notification(icon, tickerText, when);
+				
+				Intent intent = new Intent(this, StartActivity.class);
+				PendingIntent appIntent = PendingIntent.getActivity(this, 0, intent, 0);
+	
+				notification.setLatestEventInfo(this, "TCA Information", newsstring, appIntent);
+				
+				nm.notify(1, notification);  
+				Log.d("News",newsstring);
+			}
+        } catch (IOException e) {
+        	Log.e("Error", "Cannot fetch important news - unknown exception");
+        } 
+		
 		// Check the flag if user wnats the wizzard to open at startup
 		if (!hideWizzardOnStartup) {
 			Intent intent = new Intent(this, WizNavStartActivity.class);
