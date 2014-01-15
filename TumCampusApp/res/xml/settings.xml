@@ -29,6 +29,31 @@
             android:key="role"
             android:summary="@string/role_summary"
             android:title="@string/role" />
+        <PreferenceScreen
+            
+            android:title="@string/personalized_title"
+            android:summary="@string/personalized_summary">
+        <CheckBoxPreference
+                android:defaultValue="true"
+                android:key="mvv_id"
+                android:title="@string/mvv" />
+         <CheckBoxPreference
+                android:defaultValue="false"
+                android:key="lectures_id"
+                android:title="@string/lectures" />
+         <CheckBoxPreference
+                android:defaultValue="true"
+                android:key="menues_id"
+                android:title="@string/menues" />
+         <CheckBoxPreference
+                android:defaultValue="false"
+                android:key="grades_id"
+                android:title="@string/grades" />
+         <CheckBoxPreference
+                android:defaultValue="false"
+                android:key="rss_feeds_id"
+                android:title="@string/rss_feeds" />
+     </PreferenceScreen>
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/extras" >
         <Preference
@@ -39,6 +64,8 @@
             android:key="button_clear_cache"
             android:summary="@string/clear_cache_detail"
             android:title="@string/clear_cache" />
+            
+    
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/services" >
         <CheckBoxPreference

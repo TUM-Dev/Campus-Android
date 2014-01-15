@@ -4,11 +4,18 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.view.View;
+import android.widget.Button;
+import android.widget.Toast;
+import de.tum.in.tumcampusapp.preferences.UserPreferencesActivity;
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampusapp.activities.CafeteriaActivity;
 import de.tum.in.tumcampusapp.activities.CalendarActivity;
@@ -28,8 +35,11 @@ import de.tum.in.tumcampusapp.activities.PlansActivity;
 import de.tum.in.tumcampusapp.activities.RoomfinderActivity;
 import de.tum.in.tumcampusapp.activities.TransportationActivity;
 import de.tum.in.tumcampusapp.activities.TuitionFeesActivity;
+import de.tum.in.tumcampusapp.activities.wizzard.WizNavStartActivity;
+import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.ListMenuEntry;
 import de.tum.in.tumcampusapp.fragments.StartSectionFragment;
+import de.tum.in.tumcampusapp.preferences.UserPreferencesActivity;
 
 /**
  * A {@link FragmentPagerAdapter} that returns a fragment corresponding to one
@@ -38,18 +48,27 @@ import de.tum.in.tumcampusapp.fragments.StartSectionFragment;
 public class StartSectionsPagerAdapter extends FragmentPagerAdapter {
 	public static final String IMAGE_FOR_CATEGORY = "image_for_category";
 	public static final String LIST_ENTRY_SET = "list_entry_set";
+	public static final String LECTURE_ID = "lecture_id";
+	private Context context;
 
-	public static final int NUMBER_OF_PAGES = 4;
-	public static final int SECTION_CONVENIENCE = 3;
+	public static final int NUMBER_OF_PAGES = 5;
+	public static final int SECTION_CONVENIENCE = 4;
 	public static final int SECTION_GENERAL_TUM = 0;
-	public static final int SECTION_MY_TUM = 1;
-	public static final int SECTION_NEWS = 2;
-	private final Activity activity;
+	public static final int SECTION_PERSONALIZED = 1;
+	public static final int SECTION_MY_TUM = 2;
+	public static final int SECTION_NEWS = 3;
+	private Activity activity;
+	private SharedPreferences sharedPrefs;
+	
 
 	public StartSectionsPagerAdapter(Activity mainActivity, FragmentManager fm) {
 		super(fm);
 		activity = mainActivity;
+		
+		
 	}
+	
+	
 
 	@Override
 	public int getCount() {
@@ -58,15 +77,111 @@ public class StartSectionsPagerAdapter extends FragmentPagerAdapter {
 
 	@Override
 	public Fragment getItem(int position) {
+		
 		// getItem is called to instantiate the fragment for the given page.
 		Fragment fragment = new StartSectionFragment();
 		ArrayList<ListMenuEntry> listMenuEntrySet = new ArrayList<ListMenuEntry>();
 		Bundle args = new Bundle();
+		sharedPrefs = PreferenceManager.getDefaultSharedPreferences(activity);
 
 		// Puts for each section a new ListMenuEntry object in the
 		// listMenuEntrySet. Each ListMenuEntry contains a image, some text and
 		// the intent which coresponses to the activity which should be started
 		switch (position) {
+		case SECTION_PERSONALIZED:
+			args.putInt("POSITION", SECTION_PERSONALIZED);
+			args.putInt(IMAGE_FOR_CATEGORY, R.drawable.img_tum_building);
+			boolean programs;
+			
+			if (sharedPrefs.getBoolean("mvv_id", true)==true)
+			{
+			
+			listMenuEntrySet.add(new ListMenuEntry(R.drawable.show_info,
+					R.string.mvv, R.string.mvv_addinfo, new Intent(activity,
+							TransportationActivity.class)));
+				
+			}
+
+			if (sharedPrefs.getBoolean("lectures_id", true)==true)
+			{
+			
+				listMenuEntrySet.add(new ListMenuEntry(R.drawable.calculator,
+						R.string.my_lectures, R.string.lectures_addinfo,
+						new Intent(activity, LecturesPersonalActivity.class)));
+				
+			}
+			if (sharedPrefs.getBoolean("menues_id", true)==true)
+			{
+			
+				listMenuEntrySet.add(new ListMenuEntry(R.drawable.shopping_cart,
+						R.string.menues, R.string.cafeteria_addinfo, new Intent(
+								activity, CafeteriaActivity.class)));
+				
+			}
+			if (sharedPrefs.getBoolean("grades_id", true)==true)
+			{
+			
+				listMenuEntrySet.add(new ListMenuEntry(R.drawable.chart,
+						R.string.my_grades, R.string.grades_addinfo, new Intent(
+								activity, GradesActivity.class)));
+				
+			}
+			if (sharedPrefs.getBoolean("rss_feeds_id", true)==true)
+			{
+			
+				listMenuEntrySet.add(new ListMenuEntry(R.drawable.fax,
+						R.string.rss_feeds, R.string.rssfeed_addinfo, new Intent(
+								activity, FeedsActivity.class)));
+				
+			}
+			/*boolean programs;
+			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
+			programs = prefs.getBoolean("mvv_id", false);
+			if(programs==false){*/
+			/*args.putInt("POSITION", SECTION_GENERAL_TUM1);
+			args.putInt(IMAGE_FOR_CATEGORY, R.drawable.img_tum_building);
+			listMenuEntrySet.add(new ListMenuEntry(R.drawable.zoom,
+					R.string.lecture_search, R.string.lecturessearch_addinfo,
+					new Intent(activity, LecturesSearchActivity.class)));
+			listMenuEntrySet.add(new ListMenuEntry(R.drawable.users,
+					R.string.person_search, R.string.personsearch_addinfo,
+					new Intent(activity, PersonsSearchActivity.class)));
+			//}
+			
+		
+			//prefs = context.getSharedPreferences("lectures_id", 0); 
+			
+			//spusername = prefs.getBoolean("mvv_id", false);
+
+			/*if(spusername!= null && !spusername.equals(""))
+			    {   
+				Toast.makeText(context, spusername,
+						Toast.LENGTH_SHORT).show();
+
+			    }*/
+			   
+			//if (prefs.equals(LECTURE_ID))
+			//{
+				//Toast.makeText(context, "salaaaam",
+					//	Toast.LENGTH_SHORT).show();
+			
+			
+			 
+	
+			
+			/*listMenuEntrySet.add(new ListMenuEntry(R.drawable.home,
+					R.string.roomfinder, R.string.add_content,
+					new Intent(activity, RoomfinderActivity.class)));
+			listMenuEntrySet.add(new ListMenuEntry(R.drawable.calculator,
+					R.string.my_lectures, R.string.lectures_addinfo,
+					new Intent(activity, LecturesPersonalActivity.class)));
+			listMenuEntrySet.add(new ListMenuEntry(R.drawable.show_info,
+					R.string.mvv, R.string.mvv_addinfo, new Intent(activity,
+							TransportationActivity.class)));
+			listMenuEntrySet.add(new ListMenuEntry(R.drawable.shopping_cart,
+					R.string.menues, R.string.cafeteria_addinfo, new Intent(
+							activity, CafeteriaActivity.class)));*/
+			break;
 		case SECTION_GENERAL_TUM:
 			args.putInt("POSITION", SECTION_GENERAL_TUM);
 			args.putInt(IMAGE_FOR_CATEGORY, R.drawable.img_tum_building);
@@ -158,10 +273,15 @@ public class StartSectionsPagerAdapter extends FragmentPagerAdapter {
 		case 0:
 			return activity.getString(R.string.tum_common).toUpperCase(l);
 		case 1:
-			return activity.getString(R.string.my_tum).toUpperCase(l);
+			return activity.getString(R.string.personalized).toUpperCase(l);
+						
 		case 2:
-			return activity.getString(R.string.news).toUpperCase(l);
+			return activity.getString(R.string.my_tum).toUpperCase(l);
+			
 		case 3:
+			
+			return activity.getString(R.string.news).toUpperCase(l);
+		case 4:
 			return activity.getString(R.string.extras).toUpperCase(l);
 		}
 		return null;

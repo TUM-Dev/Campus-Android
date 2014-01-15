@@ -103,6 +103,9 @@ public class UserPreferencesActivity extends PreferenceActivity implements
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		addPreferencesFromResource(R.xml.settings);
+		
+		//PreferenceManager.setDefaultValues(this, R.xml.settings, false);
+
 
 		// Click listener for preference list entries. Used to simulate a button
 		// (since it is not possible to add a button to the preferences screen)
@@ -166,6 +169,12 @@ public class UserPreferencesActivity extends PreferenceActivity implements
 			returnIntent.putExtra(Const.PREFS_HAVE_CHANGED, true);
 			setResult(RESULT_OK, returnIntent);
 		}
+		if (key.equals(Const.MVV_ID)) {
+			Intent returnIntent = new Intent();
+			returnIntent.putExtra(Const.PREFS_HAVE_CHANGED, true);
+			setResult(RESULT_OK, returnIntent);
+		}
+
 
 		// If the silent mode was activated, start the service. This will invoke
 		// the service to call onHandleIntent which checks available lectures

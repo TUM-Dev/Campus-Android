@@ -1,12 +1,14 @@
 ﻿package de.tum.in.tumcampusapp.activities;
 
 import java.util.NoSuchElementException;
+import java.util.StringTokenizer;
 import java.util.concurrent.TimeoutException;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.database.MatrixCursor;
@@ -46,6 +48,7 @@ public class TransportationActivity extends Activity implements
 
 	private EditText searchTextField;
 	private TransportManager transportaionManager;
+	public static int Counter=0;
 
 	/**
 	 * Check if a network connection is available or can be available soon
@@ -63,6 +66,7 @@ public class TransportationActivity extends Activity implements
 	}
 
 	public void onClick(View view) {
+		
 		infoTextView.setVisibility(View.GONE);
 
 		int viewId = view.getId();
@@ -160,6 +164,30 @@ public class TransportationActivity extends Activity implements
 	public void onItemClick(final AdapterView<?> av, View v, int position,
 			long id) {
 		// click on station in list
+		
+		/*Counter=Counter+1;
+		Toast.makeText(this, String.valueOf(Counter),
+				Toast.LENGTH_LONG).show();*/
+		/*SharedPreferences prefs =  
+			    getSharedPreferences("MyPreferences", MODE_PRIVATE); 
+		int[] list = new int[10];
+		StringBuilder str = new StringBuilder();
+		for (int i = 0; i < list.length; i++) {
+		    str.append(list[i]).append(",");
+		}
+		prefs.edit().putString("string", str.toString());*/
+
+		//String savedString = prefs.getString("Counter", "");
+		//StringTokenizer st = new StringTokenizer(savedString, ",");
+		//int[] savedList = new int[10];
+		//for (int i = 0; i < 10; i++) {
+		 //   savedList[i] = Integer.parseInt(st.nextToken());
+		//}
+		//}
+		//int x=savedList[1];
+		//Toast.makeText(this, String.valueOf(x),
+			//	Toast.LENGTH_LONG).show();
+		
 		Utils.hideKeyboard(this, searchTextField);
 
 		Cursor departureCursor = (Cursor) av.getAdapter().getItem(position);

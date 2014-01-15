@@ -20,6 +20,8 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import de.tum.in.tumcampus.R;
+import de.tum.in.tumcampusapp.activities.LecturesSearchActivity;
+import de.tum.in.tumcampusapp.activities.PersonsSearchActivity;
 import de.tum.in.tumcampusapp.adapters.StartListAdapter;
 import de.tum.in.tumcampusapp.adapters.StartSectionsPagerAdapter;
 import de.tum.in.tumcampusapp.auxiliary.Const;
@@ -111,15 +113,29 @@ public class StartSectionFragment extends Fragment implements
 		news_overlay_cross.setOnClickListener(abortTutorial);
 
 		// Builds the list according to the list items in listMenuEntrySet
+		
 		ListView list = (ListView) rootView.findViewById(R.id.list_view);
 		ImageView image = (ImageView) rootView.findViewById(R.id.img_category);
 		image.setImageResource(imageId);
+		
 
+		
+		sharedPrefs = PreferenceManager.getDefaultSharedPreferences(activity);
+		/*switch (getArguments().getInt("POSITION")) {
+		case StartSectionsPagerAdapter.SECTION_GENERAL_TUM1:
+			listMenuEntrySet.add(new ListMenuEntry(R.drawable.users,
+					R.string.person_search, R.string.personsearch_addinfo,
+					new Intent(activity, PersonsSearchActivity.class)));
+			StartListAdapter adapter = new StartListAdapter(getActivity(),
+					R.layout.list_layout_complex_large, listMenuEntrySet, true);
+			list.setAdapter(adapter);
+			list.setOnItemClickListener(this);
+			break;
+			}*/
 		StartListAdapter adapter = new StartListAdapter(getActivity(),
 				R.layout.list_layout_complex_large, listMenuEntrySet, true);
 		list.setAdapter(adapter);
 		list.setOnItemClickListener(this);
-		sharedPrefs = PreferenceManager.getDefaultSharedPreferences(activity);
 
 		return rootView;
 	}
@@ -136,10 +152,19 @@ public class StartSectionFragment extends Fragment implements
 	@Override
 	public void onResume() {
 		super.onResume();
+		
+		ListView list = (ListView) rootView.findViewById(R.id.list_view);
+		ImageView image = (ImageView) rootView.findViewById(R.id.img_category);
+		image.setImageResource(imageId);
+		StartListAdapter adapter = new StartListAdapter(getActivity(),
+				R.layout.list_layout_complex_large, listMenuEntrySet, true);
+		list.setAdapter(adapter);
+		list.setOnItemClickListener(this);
 
 		sharedPrefs = PreferenceManager.getDefaultSharedPreferences(activity);
 
 		switch (getArguments().getInt("POSITION")) {
+		
 		case StartSectionsPagerAdapter.SECTION_MY_TUM:
 			if (sharedPrefs.getBoolean(Const.FIRST_RUN, true)) {
 

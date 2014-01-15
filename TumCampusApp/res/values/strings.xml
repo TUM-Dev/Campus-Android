@@ -454,6 +454,9 @@
     <string name="feedbackSubj">Feedback for TUM Campus App</string>
     <string name="version">Version</string>
     <string name="send_email">Send e-mail feedback</string>
+    <string  name = "personalized_title" > Persolize start page </string>
+    <string  name = "personalized_summary" > Get your grades, schedule and more-all in one place. </string>
+    <string  name = "personalized" >Personalized Page</string>
     <!-- END Translated, please do not change identifiers -->
 
 </resources>

@@ -118,4 +118,5 @@ public final class Const {
 	public static final String WARNING_MESSAGE = "warning_message";
 	public static final String WEEKDAY_COLUMN = "weekday";
 	public static final String Grade_Count = "GradeCount";
+	public static final String MVV_ID="mvv_id";
 }
