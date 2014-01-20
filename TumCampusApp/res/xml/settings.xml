@@ -29,10 +29,22 @@
             android:key="role"
             android:summary="@string/role_summary"
             android:title="@string/role" />
+        
+        
         <PreferenceScreen
             
             android:title="@string/personalized_title"
             android:summary="@string/personalized_summary">
+            <PreferenceCategory>
+             <CheckBoxPreference
+                android:defaultValue="true"
+                android:key="implicitly_id"
+                android:summary="@string/summary_implicitly"
+                android:title="@string/update_implicitly" />
+            
+            
+        </PreferenceCategory>
+          <PreferenceCategory android:title="@string/customize" >
         <CheckBoxPreference
                 android:defaultValue="true"
                 android:key="mvv_id"
@@ -53,6 +65,23 @@
                 android:defaultValue="false"
                 android:key="rss_feeds_id"
                 android:title="@string/rss_feeds" />
+         <CheckBoxPreference
+                android:defaultValue="true"
+                android:key="calender_id"
+                android:title="@string/schedule" />
+         <CheckBoxPreference
+                android:defaultValue="false"
+                android:key="study_plans_id"
+                android:title="@string/study_plans" />
+          <CheckBoxPreference
+                android:defaultValue="false"
+                android:key="events_id"
+                android:title="@string/events" />
+          <CheckBoxPreference
+                android:defaultValue="false"
+                android:key="gallery_id"
+                android:title="@string/gallery" />
+            </PreferenceCategory>
      </PreferenceScreen>
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/extras" >

@@ -16,6 +16,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
+import android.widget.GridLayout;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -113,27 +115,19 @@ public class StartSectionFragment extends Fragment implements
 		news_overlay_cross.setOnClickListener(abortTutorial);
 
 		// Builds the list according to the list items in listMenuEntrySet
-		
-		ListView list = (ListView) rootView.findViewById(R.id.list_view);
+		GridView list = (GridView) rootView.findViewById(R.id.gridview);
+		//ListView list = (ListView) rootView.findViewById(R.id.list_view);
 		ImageView image = (ImageView) rootView.findViewById(R.id.img_category);
 		image.setImageResource(imageId);
 		
 
 		
 		sharedPrefs = PreferenceManager.getDefaultSharedPreferences(activity);
-		/*switch (getArguments().getInt("POSITION")) {
-		case StartSectionsPagerAdapter.SECTION_GENERAL_TUM1:
-			listMenuEntrySet.add(new ListMenuEntry(R.drawable.users,
-					R.string.person_search, R.string.personsearch_addinfo,
-					new Intent(activity, PersonsSearchActivity.class)));
-			StartListAdapter adapter = new StartListAdapter(getActivity(),
-					R.layout.list_layout_complex_large, listMenuEntrySet, true);
-			list.setAdapter(adapter);
-			list.setOnItemClickListener(this);
-			break;
-			}*/
+	
 		StartListAdapter adapter = new StartListAdapter(getActivity(),
 				R.layout.list_layout_complex_large, listMenuEntrySet, true);
+		
+		
 		list.setAdapter(adapter);
 		list.setOnItemClickListener(this);
 
@@ -153,7 +147,7 @@ public class StartSectionFragment extends Fragment implements
 	public void onResume() {
 		super.onResume();
 		
-		ListView list = (ListView) rootView.findViewById(R.id.list_view);
+		GridView list = (GridView) rootView.findViewById(R.id.gridview);
 		ImageView image = (ImageView) rootView.findViewById(R.id.img_category);
 		image.setImageResource(imageId);
 		StartListAdapter adapter = new StartListAdapter(getActivity(),

@@ -119,4 +119,12 @@ public final class Const {
 	public static final String WEEKDAY_COLUMN = "weekday";
 	public static final String Grade_Count = "GradeCount";
 	public static final String MVV_ID="mvv_id";
+	public static final String LECTURE_ID="lectures_id";
+	public static final String MENUES_ID="menues_id";
+	public static final String GRADES_ID="grades_id";
+	public static final String RSS_FEEDS_ID="rss_feeds_id";
+	public static final String CALENDER_ID="calender_id";
+	public static final String STUDY_PLANS_ID="study_plans_id";
+	public static final String EVENTS_ID="events_id";
+	public static final String GALLERY_ID="gallery_id";
 }

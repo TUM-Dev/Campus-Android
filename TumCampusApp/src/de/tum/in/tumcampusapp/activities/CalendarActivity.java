@@ -8,6 +8,7 @@ import java.util.GregorianCalendar;
 import java.util.Locale;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ContentResolver;
 import android.content.ContentUris;
@@ -65,6 +66,8 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements
 	// Objects for disabling or enabling the options menu items
 	private MenuItem menuItemExportGoogle;
 	private MenuItem menuItemDeleteCalendar;
+	
+	private SharedPreferences sharedPrefs;
 
 	/** Used as a flag, if there are results fetched from internet */
 	private boolean isFetched;
@@ -307,6 +310,10 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+		if (sharedPrefs.getBoolean("implicitly_id", true)==true){
+		Counter();
+		}
 
 		mViewPager = (ViewPager) findViewById(R.id.pager);
 
@@ -325,6 +332,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements
 			isFetched = true;
 		}
 	}
+	
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -332,6 +340,32 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.menu_activity_calendar, menu);
 		return true;
+	}
+	public void Counter()
+	{
+		//Counting number of the times that the user used this activity.
+				SharedPreferences sp = getSharedPreferences(getString(R.string.MyPrefrences), Activity.MODE_PRIVATE);
+				int myvalue = sp.getInt("calender_id",0);
+				myvalue=myvalue+1;
+				SharedPreferences.Editor editor = sp.edit();
+				editor.putInt("calender_id",myvalue);
+				editor.commit();
+				////
+
+				 int myIntValue = sp.getInt("calender_id",0);
+				 if(myIntValue==5){
+						sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+						SharedPreferences.Editor editor1 = sharedPrefs.edit();
+						editor1.putBoolean("calender_id", true);
+						editor1.commit();
+						editor.putInt("calender_id",0);
+						editor.commit();
+					 
+				 Toast.makeText(this, String.valueOf(myIntValue),
+							Toast.LENGTH_LONG).show();
+				 }
+				 //////////
+		
 	}
 
 	@Override

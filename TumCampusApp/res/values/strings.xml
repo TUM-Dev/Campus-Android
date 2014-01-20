@@ -457,6 +457,11 @@
     <string  name = "personalized_title" > Persolize start page </string>
     <string  name = "personalized_summary" > Get your grades, schedule and more-all in one place. </string>
     <string  name = "personalized" >Personalized Page</string>
+    <string  name = "MyPrefrences" >MyPrefrences</string>
+     <string  name = "update_implicitly" >Intelligent resordering</string>
+     <string  name = "summary_implicitly" >Intelligent reordering of the menu items in the personalized startpage</string>
+     <string  name = "customize" >Customize your start page</string>
     <!-- END Translated, please do not change identifiers -->
+    
 
 </resources>

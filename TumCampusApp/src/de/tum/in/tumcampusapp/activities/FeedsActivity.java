@@ -5,8 +5,10 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,6 +21,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
+import android.widget.Toast;
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.models.Feed;
@@ -36,6 +39,7 @@ public class FeedsActivity extends Activity implements OnItemClickListener,
 	// Id and name needed for transmitting to the detail activity
 	private static String feedId;
 	private static String feedName;
+	private SharedPreferences sharedPrefs;
 
 	private SimpleCursorAdapter adapter;
 
@@ -43,6 +47,10 @@ public class FeedsActivity extends Activity implements OnItemClickListener,
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+		if (sharedPrefs.getBoolean("implicitly_id", true)==true){
+		Counter();
+		}
 		setContentView(R.layout.activity_feeds);
 
 		FeedManager fm = new FeedManager(this);
@@ -64,6 +72,33 @@ public class FeedsActivity extends Activity implements OnItemClickListener,
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.menu_feeds, menu);
 		return true;
+	}
+	public void Counter()
+	{
+		//Counting number of the times that the user used this activity.
+				SharedPreferences sp = getSharedPreferences(getString(R.string.MyPrefrences), Activity.MODE_PRIVATE);
+				int myvalue = sp.getInt("rss_feeds_id",0);
+				myvalue=myvalue+1;
+				SharedPreferences.Editor editor = sp.edit();
+				editor.putInt("rss_feeds_id",myvalue);
+				editor.commit();
+				
+
+				 int myIntValue = sp.getInt("rss_feeds_id",0);
+				 
+				 Toast.makeText(this, String.valueOf(myIntValue),
+							Toast.LENGTH_LONG).show();
+				 if(myIntValue==5){
+						sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+						SharedPreferences.Editor editor1 = sharedPrefs.edit();
+						editor1.putBoolean("rss_feeds_id", true);
+						editor1.commit();
+						editor.putInt("rss_feeds_id",0);
+						editor.commit();
+			
+				 }
+
+		
 	}
 
 	@Override

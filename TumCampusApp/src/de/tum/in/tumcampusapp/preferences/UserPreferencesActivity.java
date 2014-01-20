@@ -38,6 +38,7 @@ import de.tum.in.tumcampusapp.services.SilenceService;
  */
 public class UserPreferencesActivity extends PreferenceActivity implements
 		SharedPreferences.OnSharedPreferenceChangeListener, OnClickListener {
+	
 	private AccessTokenManager accessTokenManager = new AccessTokenManager(this);
 	private Context context = this;
 
@@ -169,11 +170,13 @@ public class UserPreferencesActivity extends PreferenceActivity implements
 			returnIntent.putExtra(Const.PREFS_HAVE_CHANGED, true);
 			setResult(RESULT_OK, returnIntent);
 		}
-		if (key.equals(Const.MVV_ID)) {
+		// If the user changes the preferences for personalized start page this part will update the menu based on the preferences
+		if (key.equals(Const.MVV_ID) || key.equals(Const.LECTURE_ID) || key.equals(Const.MENUES_ID) || key.equals(Const.GRADES_ID) || key.equals(Const.RSS_FEEDS_ID) || key.equals(Const.CALENDER_ID) || key.equals(Const.STUDY_PLANS_ID) || key.equals(Const.EVENTS_ID) || key.equals(Const.GALLERY_ID) ) {
 			Intent returnIntent = new Intent();
 			returnIntent.putExtra(Const.PREFS_HAVE_CHANGED, true);
 			setResult(RESULT_OK, returnIntent);
 		}
+		
 
 
 		// If the silent mode was activated, start the service. This will invoke

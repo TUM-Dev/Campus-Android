@@ -15,6 +15,7 @@ import android.database.MatrixCursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -48,7 +49,9 @@ public class TransportationActivity extends Activity implements
 
 	private EditText searchTextField;
 	private TransportManager transportaionManager;
-	public static int Counter=0;
+	private SharedPreferences sharedPrefs;
+	private Activity activity;
+	//public static int Counter=0;
 
 	/**
 	 * Check if a network connection is available or can be available soon
@@ -106,6 +109,10 @@ public class TransportationActivity extends Activity implements
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_transportation);
+		sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+		if (sharedPrefs.getBoolean("implicitly_id", true)==true){
+		Counter();
+		}
 
 		// get all stations from db
 		transportaionManager = new TransportManager(this);
@@ -159,35 +166,40 @@ public class TransportationActivity extends Activity implements
 				});
 		listViewSuggestionsAndSaved.requestFocus();
 	}
+	
+	public void Counter()
+	{
+		//Counting number of the times that the user used this activity.
+				SharedPreferences sp = getSharedPreferences(getString(R.string.MyPrefrences), Activity.MODE_PRIVATE);
+				int myvalue = sp.getInt("key",0);
+				myvalue=myvalue+1;
+				SharedPreferences.Editor editor = sp.edit();
+				editor.putInt("key",myvalue);
+				editor.commit();
+				////
+
+				 int myIntValue = sp.getInt("key",0);
+				 if(myIntValue==5){
+						
+						SharedPreferences.Editor editor1 = sharedPrefs.edit();
+						editor1.putBoolean("mvv_id", true);
+						editor1.commit();
+						editor.putInt("key",0);
+						editor.commit();
+					 
+				 Toast.makeText(this, String.valueOf(myIntValue),
+							Toast.LENGTH_LONG).show();
+				 }
+				 //////////
+		
+	}
 
 	@Override
 	public void onItemClick(final AdapterView<?> av, View v, int position,
 			long id) {
-		// click on station in list
+		//Counter=Counter+1;
 		
-		/*Counter=Counter+1;
-		Toast.makeText(this, String.valueOf(Counter),
-				Toast.LENGTH_LONG).show();*/
-		/*SharedPreferences prefs =  
-			    getSharedPreferences("MyPreferences", MODE_PRIVATE); 
-		int[] list = new int[10];
-		StringBuilder str = new StringBuilder();
-		for (int i = 0; i < list.length; i++) {
-		    str.append(list[i]).append(",");
-		}
-		prefs.edit().putString("string", str.toString());*/
-
-		//String savedString = prefs.getString("Counter", "");
-		//StringTokenizer st = new StringTokenizer(savedString, ",");
-		//int[] savedList = new int[10];
-		//for (int i = 0; i < 10; i++) {
-		 //   savedList[i] = Integer.parseInt(st.nextToken());
-		//}
-		//}
-		//int x=savedList[1];
-		//Toast.makeText(this, String.valueOf(x),
-			//	Toast.LENGTH_LONG).show();
-		
+		// click on station in list	
 		Utils.hideKeyboard(this, searchTextField);
 
 		Cursor departureCursor = (Cursor) av.getAdapter().getItem(position);
