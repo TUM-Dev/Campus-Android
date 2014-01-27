@@ -110,8 +110,8 @@ public class TransportationActivity extends Activity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_transportation);
 		sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-		if (sharedPrefs.getBoolean("implicitly_id", true)==true){
-		Counter();
+		if (sharedPrefs.getBoolean("implicitly_id", true)){
+			ImplicitCounter.Counter("mvv_id",getApplicationContext());
 		}
 
 		// get all stations from db
@@ -167,32 +167,7 @@ public class TransportationActivity extends Activity implements
 		listViewSuggestionsAndSaved.requestFocus();
 	}
 	
-	public void Counter()
-	{
-		//Counting number of the times that the user used this activity.
-				SharedPreferences sp = getSharedPreferences(getString(R.string.MyPrefrences), Activity.MODE_PRIVATE);
-				int myvalue = sp.getInt("key",0);
-				myvalue=myvalue+1;
-				SharedPreferences.Editor editor = sp.edit();
-				editor.putInt("key",myvalue);
-				editor.commit();
-				////
 
-				 int myIntValue = sp.getInt("key",0);
-				 if(myIntValue==5){
-						
-						SharedPreferences.Editor editor1 = sharedPrefs.edit();
-						editor1.putBoolean("mvv_id", true);
-						editor1.commit();
-						editor.putInt("key",0);
-						editor.commit();
-					 
-				 Toast.makeText(this, String.valueOf(myIntValue),
-							Toast.LENGTH_LONG).show();
-				 }
-				 //////////
-		
-	}
 
 	@Override
 	public void onItemClick(final AdapterView<?> av, View v, int position,

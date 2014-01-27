@@ -47,9 +47,11 @@ public class FeedsActivity extends Activity implements OnItemClickListener,
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		//Counting the number of times that the user used this activity for intelligent reordering 
 		sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-		if (sharedPrefs.getBoolean("implicitly_id", true)==true){
-		Counter();
+		if (sharedPrefs.getBoolean("implicitly_id", true)){
+				ImplicitCounter.Counter("rss_feeds_id",getApplicationContext());
 		}
 		setContentView(R.layout.activity_feeds);
 
@@ -73,33 +75,7 @@ public class FeedsActivity extends Activity implements OnItemClickListener,
 		getMenuInflater().inflate(R.menu.menu_feeds, menu);
 		return true;
 	}
-	public void Counter()
-	{
-		//Counting number of the times that the user used this activity.
-				SharedPreferences sp = getSharedPreferences(getString(R.string.MyPrefrences), Activity.MODE_PRIVATE);
-				int myvalue = sp.getInt("rss_feeds_id",0);
-				myvalue=myvalue+1;
-				SharedPreferences.Editor editor = sp.edit();
-				editor.putInt("rss_feeds_id",myvalue);
-				editor.commit();
-				
 
-				 int myIntValue = sp.getInt("rss_feeds_id",0);
-				 
-				 Toast.makeText(this, String.valueOf(myIntValue),
-							Toast.LENGTH_LONG).show();
-				 if(myIntValue==5){
-						sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-						SharedPreferences.Editor editor1 = sharedPrefs.edit();
-						editor1.putBoolean("rss_feeds_id", true);
-						editor1.commit();
-						editor.putInt("rss_feeds_id",0);
-						editor.commit();
-			
-				 }
-
-		
-	}
 
 	@Override
 	public void onItemClick(AdapterView<?> av, View v, int position, long id) {

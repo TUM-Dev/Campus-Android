@@ -171,7 +171,7 @@ public class UserPreferencesActivity extends PreferenceActivity implements
 			setResult(RESULT_OK, returnIntent);
 		}
 		// If the user changes the preferences for personalized start page this part will update the menu based on the preferences
-		if (key.equals(Const.MVV_ID) || key.equals(Const.LECTURE_ID) || key.equals(Const.MENUES_ID) || key.equals(Const.GRADES_ID) || key.equals(Const.RSS_FEEDS_ID) || key.equals(Const.CALENDER_ID) || key.equals(Const.STUDY_PLANS_ID) || key.equals(Const.EVENTS_ID) || key.equals(Const.GALLERY_ID) ) {
+		if (key.equals(Const.MVV_ID) || key.equals(Const.LECTURE_ID) || key.equals(Const.MENUES_ID) || key.equals(Const.GRADES_ID) || key.equals(Const.RSS_FEEDS_ID) || key.equals(Const.CALENDER_ID) || key.equals(Const.STUDY_PLANS_ID) || key.equals(Const.EVENTS_ID) || key.equals(Const.GALLERY_ID) || key.equals(Const.PERSON_SEARCH_ID) ||key.equals(Const.PLANS_ID) || key.equals(Const.ROOMFINDER_ID) || key.equals(Const.OPENING_HOURS_ID) || key.equals(Const.ORGANISATIONS_ID) || key.equals(Const.MY_GRADES_ID) || key.equals(Const.MY_LECTURES_ID) || key.equals(Const.TUITION_FEES_ID) || key.equals(Const.TUM_NEWS_ID) || key.equals(Const.INFORMATION_ID)  ) {
 			Intent returnIntent = new Intent();
 			returnIntent.putExtra(Const.PREFS_HAVE_CHANGED, true);
 			setResult(RESULT_OK, returnIntent);

@@ -81,6 +81,50 @@
                 android:defaultValue="false"
                 android:key="gallery_id"
                 android:title="@string/gallery" />
+          <CheckBoxPreference
+                android:defaultValue="false"
+                android:key="person_search_id"
+                android:title="@string/person_search" />
+          <CheckBoxPreference
+                android:defaultValue="false"
+                android:key="roomfinder_id"
+                android:title="@string/roomfinder" />
+           <CheckBoxPreference
+                android:defaultValue="false"
+                android:key="opening_hours_id"
+                android:title="@string/opening_hours" />
+           <CheckBoxPreference
+                android:defaultValue="false"
+                android:key="organisations_id"
+                android:title="@string/organisations" />
+           <CheckBoxPreference
+                android:defaultValue="false"
+                android:key="my_lectures_id"
+                android:title="@string/my_lectures" />
+           <CheckBoxPreference
+                android:defaultValue="false"
+                android:key="my_grades_id"
+                android:title="@string/my_grades" />
+             <CheckBoxPreference
+                android:defaultValue="false"
+                android:key="tuition_fees_id"
+                android:title="@string/tuition_fees" />
+              <CheckBoxPreference
+                android:defaultValue="false"
+                android:key="tum_news_id"
+                android:title="@string/tum_news" />
+               <CheckBoxPreference
+                android:defaultValue="false"
+                android:key="information_id"
+                android:title="@string/information" />
+              
+
+           
+           
+           
+           
+         
+
             </PreferenceCategory>
      </PreferenceScreen>
     </PreferenceCategory>

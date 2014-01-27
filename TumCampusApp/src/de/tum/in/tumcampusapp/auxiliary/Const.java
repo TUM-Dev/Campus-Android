@@ -127,4 +127,16 @@ public final class Const {
 	public static final String STUDY_PLANS_ID="study_plans_id";
 	public static final String EVENTS_ID="events_id";
 	public static final String GALLERY_ID="gallery_id";
+	public static final String PERSON_SEARCH_ID="person_search_id";
+	public static final String PLANS_ID="plans_id";
+	public static final String ROOMFINDER_ID="roomfinder_id";
+	public static final String OPENING_HOURS_ID="opening_hours_id";
+	public static final String ORGANISATIONS_ID="organisations_id";
+	public static final String MY_LECTURES_ID="my_lectures_id";
+	public static final String MY_GRADES_ID="my_grades_id";
+	public static final String TUITION_FEES_ID="tuition_fees_id";
+	public static final String TUM_NEWS_ID="tum_news_id";
+	public static final String INFORMATION_ID="information_id";
+	
+    
 }

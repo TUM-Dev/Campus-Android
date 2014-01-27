@@ -7,7 +7,9 @@ import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -64,6 +66,12 @@ public class LecturesPersonalActivity extends ActivityForAccessingTumOnline {
 		spFilter = (Spinner) findViewById(R.id.spFilter);
 
 		super.requestFetch();
+		//Counting the number of times that the user used this activity for intelligent reordering 
+		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+		if (sharedPrefs.getBoolean("implicitly_id", true))
+			{
+				ImplicitCounter.Counter("my_lectures_id",getApplicationContext());
+			}
 	}
 
 	@Override

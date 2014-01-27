@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
 import android.widget.Toast;
 import de.tum.in.tumcampus.R;
@@ -39,17 +40,12 @@ public class OpeningHoursListActivity extends FragmentActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_openinghourslist);
-		//Counting number of the times that the user used this activity.
-				SharedPreferences sp = getSharedPreferences(getString(R.string.MyPrefrences), Activity.MODE_PRIVATE);
-				int myvalue = sp.getInt("openingHours",0);
-				myvalue=myvalue+1;
-				SharedPreferences.Editor editor = sp.edit();
-				editor.putInt("openingHours",myvalue);
-				editor.commit();
-				 int myIntValue = sp.getInt("openingHours",0);
-				 Toast.makeText(this, String.valueOf(myIntValue),
-							Toast.LENGTH_LONG).show();
-
+		
+		//Counting the number of times that the user used this activity for intelligent reordering 
+		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+		if (sharedPrefs.getBoolean("implicitly_id", true)){
+						ImplicitCounter.Counter("opening_hours_id",getApplicationContext());
+		}
 		if (findViewById(R.id.item_detail_container) != null) {
 			// The detail container view will be present only in the
 			// large-screen layouts (res/values-large and

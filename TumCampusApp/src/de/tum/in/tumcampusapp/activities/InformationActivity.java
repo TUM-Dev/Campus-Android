@@ -2,9 +2,11 @@ package de.tum.in.tumcampusapp.activities;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -40,6 +42,12 @@ public class InformationActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_information);
 		displayVersionName();
+		//Counting the number of times that the user used this activity for intelligent reordering 
+		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+		if (sharedPrefs.getBoolean("implicitly_id", true))
+			{
+				ImplicitCounter.Counter("information_id",getApplicationContext());
+			}
 	}
 
 	@Override

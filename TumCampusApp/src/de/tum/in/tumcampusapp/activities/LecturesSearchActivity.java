@@ -4,7 +4,9 @@ import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -75,6 +77,12 @@ public class LecturesSearchActivity extends ActivityForAccessingTumOnline
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		//Counting the number of times that the user used this activity for intelligent reordering 
+		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+		if (sharedPrefs.getBoolean("implicitly_id", true))
+		{
+				ImplicitCounter.Counter("lectures_id",getApplicationContext());
+		}
 
 		// bind GUI elements
 		etFindQuery = (EditText) findViewById(R.id.etFindQuery);

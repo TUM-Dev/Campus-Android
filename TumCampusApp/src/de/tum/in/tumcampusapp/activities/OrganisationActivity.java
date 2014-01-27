@@ -15,8 +15,10 @@ import org.xml.sax.SAXException;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -298,6 +300,11 @@ public class OrganisationActivity extends ActivityForAccessingTumOnline
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		//Counting the number of times that the user used this activity for intelligent reordering 
+		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+		if (sharedPrefs.getBoolean("implicitly_id", true)){
+				ImplicitCounter.Counter("organisations_id",getApplicationContext());
+		}
 
 		// list of organizations
 		lvOrg = (ListView) findViewById(R.id.lstOrganisations);

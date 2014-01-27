@@ -43,38 +43,15 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Counter();
+		sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+		if (sharedPrefs.getBoolean("implicitly_id", true)){
+			ImplicitCounter.Counter("menues_id",getApplicationContext());
+		}
 	
 		listCafeterias = (ListView) findViewById(R.id.listView);
 
 		// Fetch cafeteria items on startup
 		super.requestDownload(false);
-	}
-	public void Counter()
-	{
-		//Counting number of the times that the user used this activity.
-		SharedPreferences sp = getSharedPreferences(getString(R.string.MyPrefrences), Activity.MODE_PRIVATE);
-		int myvalue = sp.getInt("Cafeteria",0);
-		myvalue=myvalue+1;
-		SharedPreferences.Editor editor = sp.edit();
-		editor.putInt("Cafeteria",myvalue);
-		editor.commit();
-		
-		int myIntValue = sp.getInt("Cafeteria",0);
-		Toast.makeText(this, String.valueOf(myIntValue),
-				Toast.LENGTH_LONG).show();
-				 if(myIntValue==5){
-						sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-						SharedPreferences.Editor editor1 = sharedPrefs.edit();
-						editor1.putBoolean("menues_id", true);
-						editor1.commit();
-						editor.putInt("Cafeteria",0);
-						editor.commit();
-					 
-				 
-				 }
-				 //////////
-		
 	}
 
 	@SuppressWarnings("deprecation")

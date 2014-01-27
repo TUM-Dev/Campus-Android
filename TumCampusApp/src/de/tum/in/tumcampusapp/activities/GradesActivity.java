@@ -11,8 +11,10 @@ import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -313,6 +315,12 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 		average_tx = (TextView) findViewById(R.id.avgGrade);
 
 		super.requestFetch();
+		//Counting the number of times that the user used this activity for intelligent reordering 
+		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+		if (sharedPrefs.getBoolean("implicitly_id", true))
+		{
+				ImplicitCounter.Counter("my_grades_id",getApplicationContext());
+		}
 	}
 
 	@Override

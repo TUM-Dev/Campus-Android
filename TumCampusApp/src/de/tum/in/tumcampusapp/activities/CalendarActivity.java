@@ -311,8 +311,8 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-		if (sharedPrefs.getBoolean("implicitly_id", true)==true){
-		Counter();
+		if (sharedPrefs.getBoolean("implicitly_id", true)){
+			ImplicitCounter.Counter("calender_id",getApplicationContext());
 		}
 
 		mViewPager = (ViewPager) findViewById(R.id.pager);
@@ -341,33 +341,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements
 		getMenuInflater().inflate(R.menu.menu_activity_calendar, menu);
 		return true;
 	}
-	public void Counter()
-	{
-		//Counting number of the times that the user used this activity.
-				SharedPreferences sp = getSharedPreferences(getString(R.string.MyPrefrences), Activity.MODE_PRIVATE);
-				int myvalue = sp.getInt("calender_id",0);
-				myvalue=myvalue+1;
-				SharedPreferences.Editor editor = sp.edit();
-				editor.putInt("calender_id",myvalue);
-				editor.commit();
-				////
-
-				 int myIntValue = sp.getInt("calender_id",0);
-				 if(myIntValue==5){
-						sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-						SharedPreferences.Editor editor1 = sharedPrefs.edit();
-						editor1.putBoolean("calender_id", true);
-						editor1.commit();
-						editor.putInt("calender_id",0);
-						editor.commit();
-					 
-				 Toast.makeText(this, String.valueOf(myIntValue),
-							Toast.LENGTH_LONG).show();
-				 }
-				 //////////
-		
-	}
-
+	
 	@Override
 	public void onFetch(final String rawResponse) {
 		// parsing and saving xml response
