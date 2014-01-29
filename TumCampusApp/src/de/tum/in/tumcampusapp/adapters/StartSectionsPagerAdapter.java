@@ -60,10 +60,10 @@ public class StartSectionsPagerAdapter extends FragmentPagerAdapter {
 	public static final String LIST_ENTRY_SET = "list_entry_set";
 	public static final int NUMBER_OF_PAGES = 5;
 	public static final int SECTION_CONVENIENCE = 4;
-	public static final int SECTION_GENERAL_TUM = 0;
+	public static final int SECTION_GENERAL_TUM = 3;
 	public static final int SECTION_PERSONALIZED = 1;
 	public static final int SECTION_MY_TUM = 2;
-	public static final int SECTION_NEWS = 3;
+	public static final int SECTION_NEWS = 0;
 	private Activity activity;
 	private String MVV="mvv_id";
 	private String MENUES="menues_id";
@@ -111,7 +111,7 @@ public class StartSectionsPagerAdapter extends FragmentPagerAdapter {
 		switch (position) {
 		case SECTION_PERSONALIZED:
 			args.putInt("POSITION", SECTION_PERSONALIZED);
-			args.putInt(IMAGE_FOR_CATEGORY, R.drawable.img_tum_building);
+			args.putInt(IMAGE_FOR_CATEGORY, R.drawable.personaltum);
 			for (String  _node : _Array) {
 				if(_node.equals(MVV) || (_node.equals(MENUES)) || (_node.equals(ROOM)) || (_node.equals(LECTURE)))
 				{
@@ -249,8 +249,8 @@ public class StartSectionsPagerAdapter extends FragmentPagerAdapter {
 		Locale l = Locale.getDefault();
 		switch (position) {
 		case 0:
-			return activity.getString(R.string.tum_common).toUpperCase(l);
-		
+			return activity.getString(R.string.news).toUpperCase(l);
+			
 		case 1:
 			return activity.getString(R.string.personalized).toUpperCase(l);
 						
@@ -258,7 +258,8 @@ public class StartSectionsPagerAdapter extends FragmentPagerAdapter {
 			return activity.getString(R.string.my_tum).toUpperCase(l);
 			
 		case 3:
-			return activity.getString(R.string.news).toUpperCase(l);
+			
+			return activity.getString(R.string.tum_common).toUpperCase(l);
 		
 		case 4:
 			return activity.getString(R.string.extras).toUpperCase(l);

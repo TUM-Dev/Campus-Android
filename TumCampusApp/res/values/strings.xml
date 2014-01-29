@@ -361,7 +361,7 @@
     <string name="full_app_info">TUM Campus App for Android</string>
     <string name="debug_sqllite">Debug SQLite</string>
     <string name="settings">Settings</string>
-    <string name="settings_open">Open settings</string>
+    <string name="settings_open">Open settings and customize your startpage</string>
     <string name="week_splitted">Su,Mo,Tu,We,Th,Fr,Sa</string>
     <string name="facility_categories_splitted">library,info,cafeteria_gar,cafeteria_grh,cafeteria,cafeteria_pas,cafeteria_wst</string>
     <string name="access_token">TUMOnline-Access-Token</string>

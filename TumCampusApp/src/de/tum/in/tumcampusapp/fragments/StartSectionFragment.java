@@ -50,6 +50,7 @@ public class StartSectionFragment extends Fragment implements
 	private RelativeLayout instruction_overlay;
 	private RelativeLayout myTUM_overlay;
 	private RelativeLayout news_overlay;
+
 	/**
 	 * Contains all list items
 	 */
@@ -90,11 +91,12 @@ public class StartSectionFragment extends Fragment implements
 
 		news_overlay_cross = (ImageView) rootView.findViewById(R.id.news_cross);
 
+
 		myTUM_overlay = (RelativeLayout) rootView
 				.findViewById(R.id.myTUM_overlay);
 		news_overlay = (RelativeLayout) rootView
 				.findViewById(R.id.news_overlay);
-
+	
 		abortTutorial = new View.OnClickListener() {
 
 			@Override
@@ -103,6 +105,7 @@ public class StartSectionFragment extends Fragment implements
 				myTUM_overlay.setVisibility(View.GONE);
 				news_overlay.setVisibility(View.GONE);
 				instruction_overlay.setVisibility(View.GONE);
+				
 
 			}
 		};
@@ -113,6 +116,8 @@ public class StartSectionFragment extends Fragment implements
 		myTUM_overlay_cross.setOnClickListener(abortTutorial);
 
 		news_overlay_cross.setOnClickListener(abortTutorial);
+		
+		
 
 		// Builds the list according to the list items in listMenuEntrySet
 		GridView list = (GridView) rootView.findViewById(R.id.gridview);
@@ -159,10 +164,11 @@ public class StartSectionFragment extends Fragment implements
 
 		switch (getArguments().getInt("POSITION")) {
 		
-		case StartSectionsPagerAdapter.SECTION_MY_TUM:
+		case StartSectionsPagerAdapter.SECTION_PERSONALIZED:
 			if (sharedPrefs.getBoolean(Const.FIRST_RUN, true)) {
 
 				instruction_overlay.setVisibility(View.VISIBLE);
+
 
 				overlay_button.setOnClickListener(new View.OnClickListener() {
 
@@ -177,6 +183,7 @@ public class StartSectionFragment extends Fragment implements
 				instruction_overlay.setVisibility(View.GONE);
 				myTUM_overlay.setVisibility(View.GONE);
 				news_overlay.setVisibility(View.GONE);
+
 
 			}
 
