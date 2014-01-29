@@ -139,6 +139,20 @@ public class RoomfinderActivity extends ActivityForSearching implements
 				if (sharedPrefs.getBoolean("implicitly_id", true)){
 						ImplicitCounter.Counter("roomfinder_id",getApplicationContext());
 				}
+				Bundle bunble=getIntent().getExtras();
+				
+				        if(bunble!=null){
+				
+				            //Getting the value stored in the name "NAME" (binding the calender and room finder)
+				            String searchQuery=bunble.getString("NAME");
+				            doSearch(searchQuery);
+				            
+				
+				
+				     
+				
+				        }
+
 	}
 
 	@Override
