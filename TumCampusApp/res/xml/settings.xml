@@ -50,7 +50,7 @@
                 android:key="mvv_id"
                 android:title="@string/mvv" />
          <CheckBoxPreference
-                android:defaultValue="false"
+                android:defaultValue="true"
                 android:key="lectures_id"
                 android:title="@string/lectures" />
          <CheckBoxPreference
@@ -59,14 +59,10 @@
                 android:title="@string/menues" />
          <CheckBoxPreference
                 android:defaultValue="false"
-                android:key="grades_id"
-                android:title="@string/grades" />
-         <CheckBoxPreference
-                android:defaultValue="false"
                 android:key="rss_feeds_id"
                 android:title="@string/rss_feeds" />
          <CheckBoxPreference
-                android:defaultValue="true"
+                android:defaultValue="false"
                 android:key="calender_id"
                 android:title="@string/schedule" />
          <CheckBoxPreference
@@ -86,7 +82,7 @@
                 android:key="person_search_id"
                 android:title="@string/person_search" />
           <CheckBoxPreference
-                android:defaultValue="false"
+                android:defaultValue="true"
                 android:key="roomfinder_id"
                 android:title="@string/roomfinder" />
            <CheckBoxPreference

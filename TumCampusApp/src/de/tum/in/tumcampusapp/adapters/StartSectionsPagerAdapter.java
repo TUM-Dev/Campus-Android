@@ -194,9 +194,6 @@ public class StartSectionsPagerAdapter extends FragmentPagerAdapter {
 		MyPref.put("menues_id", new ListMenuEntry(R.drawable.shopping_cart,
 				R.string.menues, R.string.cafeteria_addinfo, new Intent(
 						activity, CafeteriaActivity.class)));
-		MyPref.put("grades_id", new ListMenuEntry(R.drawable.chart,
-				R.string.my_grades, R.string.grades_addinfo, new Intent(
-						activity, GradesActivity.class)));
 		MyPref.put("rss_feeds_id", new ListMenuEntry(R.drawable.fax,
 				R.string.rss_feeds, R.string.rssfeed_addinfo, new Intent(
 						activity, FeedsActivity.class)));
