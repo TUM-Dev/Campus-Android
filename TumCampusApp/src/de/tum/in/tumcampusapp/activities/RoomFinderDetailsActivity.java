@@ -2,8 +2,9 @@ package de.tum.in.tumcampusapp.activities;
 
 import org.apache.http.impl.client.DefaultHttpClient;
 
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.RelativeLayout;
@@ -13,7 +14,7 @@ import de.tum.in.tumcampus.R;
  * Displays the map regarding the searched room.
  * 
  */
-public class RoomFinderDetailsActivity extends FragmentActivity {
+public class RoomFinderDetailsActivity extends SherlockFragmentActivity {
 
 	private WebView browser;
 	private RelativeLayout errorLayout;
@@ -21,6 +22,7 @@ public class RoomFinderDetailsActivity extends FragmentActivity {
 	private DefaultHttpClient httpClient;
 	private RelativeLayout progressLayout;
 
+	@SuppressWarnings("deprecation")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

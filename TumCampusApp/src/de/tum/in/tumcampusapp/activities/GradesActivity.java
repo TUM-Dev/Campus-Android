@@ -10,14 +10,15 @@ import java.util.Locale;
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
 
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -326,7 +327,7 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
-		getMenuInflater().inflate(R.menu.menu_activity_grades, menu);
+		getSupportMenuInflater().inflate(R.menu.menu_activity_grades, menu);
 		columnMenuItem = menu.findItem(R.id.columnChart);
 		pieMenuItem = menu.findItem(R.id.pieChart);
 		return true;

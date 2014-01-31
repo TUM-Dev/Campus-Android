@@ -1,8 +1,9 @@
 ﻿package de.tum.in.tumcampusapp.activities;
 
 import java.util.NoSuchElementException;
-import java.util.StringTokenizer;
 import java.util.concurrent.TimeoutException;
+
+import com.actionbarsherlock.app.SherlockActivity;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -37,7 +38,7 @@ import de.tum.in.tumcampusapp.models.managers.TransportManager;
 /**
  * Activity to show transport stations and departures
  */
-public class TransportationActivity extends Activity implements
+public class TransportationActivity extends SherlockActivity implements
 		OnItemClickListener, OnItemLongClickListener {
 
 	private RelativeLayout errorLayout;

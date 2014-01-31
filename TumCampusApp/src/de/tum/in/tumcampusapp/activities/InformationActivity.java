@@ -1,14 +1,15 @@
 package de.tum.in.tumcampusapp.activities;
 
-import android.app.Activity;
+import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.TextView;
 import de.tum.in.tumcampus.R;
 
@@ -18,7 +19,7 @@ import de.tum.in.tumcampus.R;
  * @author Sascha Moecker
  * 
  */
-public class InformationActivity extends Activity {
+public class InformationActivity extends SherlockActivity {
 	/**
 	 * Display version name
 	 */
@@ -53,7 +54,7 @@ public class InformationActivity extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
-		getMenuInflater().inflate(R.menu.menu_activity_information, menu);
+		getSupportMenuInflater().inflate(R.menu.menu_activity_information, menu);
 		return true;
 	}
 

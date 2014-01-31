@@ -1,13 +1,14 @@
 package de.tum.in.tumcampusapp.activities.generic;
 
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.app.FragmentActivity;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -26,7 +27,7 @@ import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequestFetchListener;
  * @author Sascha Moecker
  * 
  */
-public abstract class ActivityForAccessingTumOnline extends FragmentActivity
+public abstract class ActivityForAccessingTumOnline extends SherlockFragmentActivity
 		implements TUMOnlineRequestFetchListener {
 
 	private String accessToken;
@@ -102,7 +103,7 @@ public abstract class ActivityForAccessingTumOnline extends FragmentActivity
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(
+		getSupportMenuInflater().inflate(
 				R.menu.menu_activity_for_downloading_external, menu);
 		return true;
 	}

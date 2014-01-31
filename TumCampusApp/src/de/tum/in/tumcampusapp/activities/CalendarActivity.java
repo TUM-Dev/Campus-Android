@@ -7,8 +7,10 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ContentResolver;
 import android.content.ContentUris;
@@ -22,16 +24,12 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.preference.PreferenceManager;
 import android.provider.CalendarContract;
 import android.provider.CalendarContract.Calendars;
 import android.provider.CalendarContract.Events;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.Toast;
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampusapp.activities.generic.ActivityForAccessingTumOnline;
@@ -77,7 +75,6 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements
 	}
 
 	@SuppressLint("InlinedApi")
-	@SuppressWarnings("deprecation")
 	public void addEvents(Uri uri) {
 		CalendarManager calendarManager = new CalendarManager(this);
 		Date dtstart = null, dtend = null;
@@ -338,10 +335,10 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.menu_activity_calendar, menu);
+		getSupportMenuInflater().inflate(R.menu.menu_activity_calendar, menu);
 		return true;
 	}
-	
+
 	@Override
 	public void onFetch(final String rawResponse) {
 		// parsing and saving xml response

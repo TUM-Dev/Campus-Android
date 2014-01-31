@@ -10,8 +10,9 @@ import org.apache.http.StatusLine;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
+import com.actionbarsherlock.app.SherlockActivity;
+
 import de.tum.in.tumcampus.R;
-import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
@@ -20,7 +21,7 @@ import android.widget.TextView;
  * 
  *
  */
-public class ImportantNewsActivity extends Activity {
+public class ImportantNewsActivity extends SherlockActivity {
 	private void displayVersionName() {
 		String TCAsString = "";
 		try {

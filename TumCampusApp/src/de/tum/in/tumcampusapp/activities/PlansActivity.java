@@ -2,7 +2,8 @@ package de.tum.in.tumcampusapp.activities;
 
 import java.util.ArrayList;
 
-import android.app.Activity;
+import com.actionbarsherlock.app.SherlockActivity;
+
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -18,8 +19,8 @@ import de.tum.in.tumcampusapp.auxiliary.ListMenuEntry;
 /**
  * Activity to show plans.
  */
-public class PlansActivity extends Activity implements OnItemClickListener {
-	
+public class PlansActivity extends SherlockActivity implements OnItemClickListener {
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

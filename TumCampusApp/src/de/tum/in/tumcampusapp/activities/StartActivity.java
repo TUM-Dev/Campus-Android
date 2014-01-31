@@ -1,4 +1,8 @@
 package de.tum.in.tumcampusapp.activities;
+
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -7,11 +11,8 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampusapp.activities.wizzard.WizNavExtrasActivity;
 import de.tum.in.tumcampusapp.activities.wizzard.WizNavStartActivity;
@@ -29,7 +30,7 @@ import de.tum.in.tumcampusapp.services.SilenceService;
  * 
  * @author Sascha Moecker
  */
-public class StartActivity extends FragmentActivity {
+public class StartActivity extends SherlockFragmentActivity {
 	public static final int DEFAULT_SECTION = 1;
 	public static final String LAST_CHOOSEN_SECTION = "last_choosen_section";
 	public static final int REQ_CODE_COLOR_CHANGE = 0;
@@ -149,7 +150,7 @@ public class StartActivity extends FragmentActivity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.menu_start_activity, menu);
+		getSupportMenuInflater().inflate(R.menu.menu_start_activity, menu);
 		return true;
 	}
 

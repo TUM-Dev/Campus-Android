@@ -1,6 +1,9 @@
 ﻿package de.tum.in.tumcampusapp.activities;
 
-import android.app.Activity;
+import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -10,8 +13,6 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -21,7 +22,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
-import android.widget.Toast;
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.models.Feed;
@@ -33,7 +33,7 @@ import de.tum.in.tumcampusapp.models.managers.FeedManager;
  * @review Sascha Moecker
  * 
  */
-public class FeedsActivity extends Activity implements OnItemClickListener,
+public class FeedsActivity extends SherlockActivity implements OnItemClickListener,
 		OnItemLongClickListener {
 
 	// Id and name needed for transmitting to the detail activity
@@ -72,7 +72,7 @@ public class FeedsActivity extends Activity implements OnItemClickListener,
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.menu_feeds, menu);
+		getSupportMenuInflater().inflate(R.menu.menu_feeds, menu);
 		return true;
 	}
 

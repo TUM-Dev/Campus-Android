@@ -4,7 +4,8 @@ import java.util.Collections;
 import java.util.Hashtable;
 import java.util.Vector;
 
-import android.app.Activity;
+import com.actionbarsherlock.app.SherlockActivity;
+
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -15,7 +16,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 import de.tum.in.tumcampus.R;
 
 /**
@@ -26,7 +26,7 @@ import de.tum.in.tumcampus.R;
  * @review Thomas Behrens
  * @review Sascha Moecker
  */
-public class CurriculaActivity extends Activity implements OnItemClickListener {
+public class CurriculaActivity extends SherlockActivity implements OnItemClickListener {
 
 	public static final String NAME = "name";
 

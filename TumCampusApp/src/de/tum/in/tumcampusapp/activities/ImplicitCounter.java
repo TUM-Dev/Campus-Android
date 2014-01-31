@@ -1,19 +1,11 @@
 package de.tum.in.tumcampusapp.activities;
 
-import javax.security.auth.PrivateCredentialPermission;
+import com.actionbarsherlock.app.SherlockActivity;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.view.ViewPager;
-import android.widget.Toast;
-import de.tum.in.tumcampus.R;
-import de.tum.in.tumcampusapp.activities.generic.ActivityForDownloadingExternal;
-import de.tum.in.tumcampusapp.adapters.EventsSectionsPagerAdapter;
-import de.tum.in.tumcampusapp.auxiliary.Const;
-import de.tum.in.tumcampusapp.auxiliary.PersonalLayoutManager;
 
 /**
  * Displays Events which are fetched from Facebook
@@ -21,7 +13,7 @@ import de.tum.in.tumcampusapp.auxiliary.PersonalLayoutManager;
  * @author Sascha Moecker
  * 
  */
-public class ImplicitCounter extends Activity{
+public class ImplicitCounter extends SherlockActivity {
 
 
 	@Override

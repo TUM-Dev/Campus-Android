@@ -1,6 +1,8 @@
 package de.tum.in.tumcampusapp.activities;
 
-import android.app.Activity;
+import com.actionbarsherlock.app.SherlockActivity;
+
+import android.annotation.SuppressLint;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.webkit.WebSettings;
@@ -11,13 +13,14 @@ import de.tum.in.tumcampus.R;
  * Displays charts generated with GradesActivity
  * 
  */
-public class GradeChartActivity extends Activity {
+public class GradeChartActivity extends SherlockActivity {
 
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
 	}
 
+	@SuppressLint("SetJavaScriptEnabled")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

@@ -1,6 +1,7 @@
 package de.tum.in.tumcampusapp.activities;
 
-import android.app.Activity;
+import com.actionbarsherlock.app.SherlockActivity;
+
 import android.os.Bundle;
 import android.webkit.WebView;
 import de.tum.in.tumcampus.R;
@@ -8,10 +9,11 @@ import de.tum.in.tumcampus.R;
 /**
  * Activity to show plan details.
  */
-public class PlansDetailsActivity extends Activity {
+public class PlansDetailsActivity extends SherlockActivity {
 
 	private static int position;
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -29,7 +31,6 @@ public class PlansDetailsActivity extends Activity {
 
 		// draw image from assets directory in webview
 		String file = "";
-		@SuppressWarnings("deprecation")
 		int width = getWindowManager().getDefaultDisplay().getWidth();
 
 		if (position == 0) {

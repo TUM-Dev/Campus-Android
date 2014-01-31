@@ -1,6 +1,7 @@
 ﻿package de.tum.in.tumcampusapp.activities;
 
-import android.app.Activity;
+import com.actionbarsherlock.app.SherlockActivity;
+
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -15,7 +16,7 @@ import de.tum.in.tumcampusapp.models.managers.EventManager;
 /**
  * Activity to show event details (name, location, image, description, etc.)
  */
-public class EventsDetailsActivity extends Activity {
+public class EventsDetailsActivity extends SherlockActivity {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {

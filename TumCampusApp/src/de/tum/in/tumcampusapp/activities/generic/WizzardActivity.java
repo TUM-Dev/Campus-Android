@@ -1,14 +1,15 @@
 package de.tum.in.tumcampusapp.activities.generic;
 
-import android.app.Activity;
+import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+
 import android.content.Intent;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampusapp.auxiliary.PersonalLayoutManager;
 
-public class WizzardActivity extends Activity {
+public class WizzardActivity extends SherlockActivity {
 	private Intent intentForNextActivity;
 	private Intent intentForPreviousActivity;
 
@@ -25,7 +26,7 @@ public class WizzardActivity extends Activity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.menu_activity_wizzard, menu);
+		getSupportMenuInflater().inflate(R.menu.menu_activity_wizzard, menu);
 		return true;
 	}
 

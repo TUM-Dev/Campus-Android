@@ -1,12 +1,11 @@
 package de.tum.in.tumcampusapp.activities;
 
-import android.app.Activity;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.app.FragmentActivity;
-import android.widget.Toast;
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampusapp.fragments.OpeningHoursDetailFragment;
 import de.tum.in.tumcampusapp.fragments.OpeningHoursListFragment;
@@ -27,7 +26,7 @@ import de.tum.in.tumcampusapp.fragments.OpeningHoursListFragment;
  * {@link OpeningHoursListFragment.Callbacks} interface to listen for item
  * selections.
  */
-public class OpeningHoursListActivity extends FragmentActivity implements
+public class OpeningHoursListActivity extends SherlockFragmentActivity implements
 		OpeningHoursListFragment.Callbacks {
 
 	/**

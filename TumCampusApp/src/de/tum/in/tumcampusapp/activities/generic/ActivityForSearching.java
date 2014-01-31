@@ -1,11 +1,12 @@
 package de.tum.in.tumcampusapp.activities.generic;
 
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
@@ -22,7 +23,7 @@ import de.tum.in.tumcampusapp.auxiliary.Utils;
  * @author Sascha Moecker
  * 
  */
-public abstract class ActivityForSearching extends FragmentActivity implements
+public abstract class ActivityForSearching extends SherlockFragmentActivity implements
 		OnEditorActionListener {
 
 	protected RelativeLayout errorLayout;
@@ -68,7 +69,7 @@ public abstract class ActivityForSearching extends FragmentActivity implements
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.menu_activity_for_searching, menu);
+		getSupportMenuInflater().inflate(R.menu.menu_activity_for_searching, menu);
 		return true;
 	}
 

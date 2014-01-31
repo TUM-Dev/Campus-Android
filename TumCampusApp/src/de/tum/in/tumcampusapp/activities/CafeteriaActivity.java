@@ -11,7 +11,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
-import android.widget.Toast;
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampusapp.activities.generic.ActivityForDownloadingExternal;
 import de.tum.in.tumcampusapp.auxiliary.Const;

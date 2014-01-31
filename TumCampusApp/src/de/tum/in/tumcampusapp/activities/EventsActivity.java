@@ -1,11 +1,9 @@
 package de.tum.in.tumcampusapp.activities;
 
-import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.view.ViewPager;
-import android.widget.Toast;
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampusapp.activities.generic.ActivityForDownloadingExternal;
 import de.tum.in.tumcampusapp.adapters.EventsSectionsPagerAdapter;

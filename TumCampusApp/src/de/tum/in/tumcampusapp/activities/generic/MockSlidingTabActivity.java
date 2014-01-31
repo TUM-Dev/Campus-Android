@@ -1,7 +1,8 @@
 package de.tum.in.tumcampusapp.activities.generic;
 
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampusapp.adapters.MockSectionsPagerAdapter;
@@ -13,7 +14,7 @@ import de.tum.in.tumcampusapp.auxiliary.PersonalLayoutManager;
  * @author Sascha Moecker
  * 
  */
-public class MockSlidingTabActivity extends FragmentActivity {
+public class MockSlidingTabActivity extends SherlockFragmentActivity {
 
 	private MockSectionsPagerAdapter mSectionsPagerAdapter;
 	private ViewPager mViewPager;
