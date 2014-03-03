@@ -5,12 +5,15 @@ import java.util.List;
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
 
+import com.actionbarsherlock.view.Menu;
+
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -110,6 +113,11 @@ public class PersonsSearchActivity extends ActivityForAccessingTumOnline
 		etSearch = (EditText) findViewById(R.id.etSearch);
 		etSearch.setOnEditorActionListener(this);
 		lvPersons = (ListView) findViewById(R.id.lstPersons);
+		//Counting the number of times that the user used this activity for intelligent reordering 
+				SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+				if (sharedPrefs.getBoolean("implicitly_id", true)){
+						ImplicitCounter.Counter("person_search_id",getApplicationContext());
+				}
 	}
 
 	@Override

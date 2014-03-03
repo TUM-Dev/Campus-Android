@@ -2,11 +2,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="de.tum.in.tumcampus"
     android:versionCode="32"
-    android:versionName="1.1.2" >
+    android:versionName="1.1.2"
+    android:installLocation="auto" >
 
     <uses-sdk
         android:minSdkVersion="8" 
-        android:targetSdkVersion="17" />
+        android:targetSdkVersion="19" />
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -22,7 +23,7 @@
         android:label="@string/app_name"
         android:largeHeap="true"
         android:logo="@drawable/ic_launcher"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/Theme.Sherlock.Light.DarkActionBar" >
         <provider
             android:name="de.tum.in.tumcampusapp.auxiliary.RoomFinderSuggestionProvider"
             android:authorities="com.example.RoomFinderSuggestionProvider" />
@@ -248,6 +249,11 @@
             android:name="de.tum.in.tumcampusapp.activities.CalendarActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/schedule" >
+        </activity>
+        <activity
+            android:name="de.tum.in.tumcampusapp.activities.ImportantNewsActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/info_title_str" >
         </activity>
         <activity
             android:name="de.tum.in.tumcampusapp.auxiliary.DemoModeStartActivity"

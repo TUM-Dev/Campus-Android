@@ -1,15 +1,18 @@
 ﻿package de.tum.in.tumcampusapp.activities;
 
-import android.app.Activity;
+import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -30,12 +33,13 @@ import de.tum.in.tumcampusapp.models.managers.FeedManager;
  * @review Sascha Moecker
  * 
  */
-public class FeedsActivity extends Activity implements OnItemClickListener,
+public class FeedsActivity extends SherlockActivity implements OnItemClickListener,
 		OnItemLongClickListener {
 
 	// Id and name needed for transmitting to the detail activity
 	private static String feedId;
 	private static String feedName;
+	private SharedPreferences sharedPrefs;
 
 	private SimpleCursorAdapter adapter;
 
@@ -43,6 +47,12 @@ public class FeedsActivity extends Activity implements OnItemClickListener,
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		//Counting the number of times that the user used this activity for intelligent reordering 
+		sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+		if (sharedPrefs.getBoolean("implicitly_id", true)){
+				ImplicitCounter.Counter("rss_feeds_id",getApplicationContext());
+		}
 		setContentView(R.layout.activity_feeds);
 
 		FeedManager fm = new FeedManager(this);
@@ -62,9 +72,10 @@ public class FeedsActivity extends Activity implements OnItemClickListener,
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.menu_feeds, menu);
+		getSupportMenuInflater().inflate(R.menu.menu_feeds, menu);
 		return true;
 	}
+
 
 	@Override
 	public void onItemClick(AdapterView<?> av, View v, int position, long id) {

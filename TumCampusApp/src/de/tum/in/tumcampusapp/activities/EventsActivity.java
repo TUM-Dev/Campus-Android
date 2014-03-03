@@ -1,6 +1,8 @@
 package de.tum.in.tumcampusapp.activities;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.view.ViewPager;
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampusapp.activities.generic.ActivityForDownloadingExternal;
@@ -15,7 +17,7 @@ import de.tum.in.tumcampusapp.auxiliary.PersonalLayoutManager;
  * 
  */
 public class EventsActivity extends ActivityForDownloadingExternal {
-
+	private SharedPreferences sharedPrefs;
 	private EventsSectionsPagerAdapter mSectionsPagerAdapter;
 	private ViewPager mViewPager;
 
@@ -26,9 +28,14 @@ public class EventsActivity extends ActivityForDownloadingExternal {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+		if (sharedPrefs.getBoolean("implicitly_id", true)){
+			ImplicitCounter.Counter("events_id",getApplicationContext());
+		}
 		// Request a non-forced update on startup
 		super.requestDownload(false);
 	}
+	
 
 	@Override
 	protected void onResume() {

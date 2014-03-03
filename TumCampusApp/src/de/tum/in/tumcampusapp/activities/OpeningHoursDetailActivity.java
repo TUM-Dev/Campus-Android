@@ -1,10 +1,11 @@
 package de.tum.in.tumcampusapp.activities;
 
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.MenuItem;
+
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.NavUtils;
-import android.view.MenuItem;
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampusapp.fragments.OpeningHoursDetailFragment;
 
@@ -16,7 +17,7 @@ import de.tum.in.tumcampusapp.fragments.OpeningHoursDetailFragment;
  * This activity is mostly just a 'shell' activity containing nothing more than
  * a {@link OpeningHoursDetailFragment}.
  */
-public class OpeningHoursDetailActivity extends FragmentActivity {
+public class OpeningHoursDetailActivity extends SherlockFragmentActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

@@ -38,6 +38,7 @@ import de.tum.in.tumcampusapp.services.SilenceService;
  */
 public class UserPreferencesActivity extends PreferenceActivity implements
 		SharedPreferences.OnSharedPreferenceChangeListener, OnClickListener {
+	
 	private AccessTokenManager accessTokenManager = new AccessTokenManager(this);
 	private Context context = this;
 
@@ -103,6 +104,9 @@ public class UserPreferencesActivity extends PreferenceActivity implements
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		addPreferencesFromResource(R.xml.settings);
+		
+		//PreferenceManager.setDefaultValues(this, R.xml.settings, false);
+
 
 		// Click listener for preference list entries. Used to simulate a button
 		// (since it is not possible to add a button to the preferences screen)
@@ -166,6 +170,14 @@ public class UserPreferencesActivity extends PreferenceActivity implements
 			returnIntent.putExtra(Const.PREFS_HAVE_CHANGED, true);
 			setResult(RESULT_OK, returnIntent);
 		}
+		// If the user changes the preferences for personalized start page this part will update the menu based on the preferences
+		if (key.equals(Const.MVV_ID) || key.equals(Const.LECTURE_ID) || key.equals(Const.MENUES_ID)  || key.equals(Const.RSS_FEEDS_ID) || key.equals(Const.CALENDER_ID) || key.equals(Const.STUDY_PLANS_ID) || key.equals(Const.EVENTS_ID) || key.equals(Const.GALLERY_ID) || key.equals(Const.PERSON_SEARCH_ID) ||key.equals(Const.PLANS_ID) || key.equals(Const.ROOMFINDER_ID) || key.equals(Const.OPENING_HOURS_ID) || key.equals(Const.ORGANISATIONS_ID) || key.equals(Const.MY_GRADES_ID) || key.equals(Const.MY_LECTURES_ID) || key.equals(Const.TUITION_FEES_ID) || key.equals(Const.TUM_NEWS_ID) || key.equals(Const.INFORMATION_ID)  ) {
+			Intent returnIntent = new Intent();
+			returnIntent.putExtra(Const.PREFS_HAVE_CHANGED, true);
+			setResult(RESULT_OK, returnIntent);
+		}
+		
+
 
 		// If the silent mode was activated, start the service. This will invoke
 		// the service to call onHandleIntent which checks available lectures

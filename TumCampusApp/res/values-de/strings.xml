@@ -364,7 +364,7 @@
     <string name="dialog_password_not_set">TUMOnline-Passwort ist nicht gesetzt</string>
     <string name="something_wrong">Ein Fehler ist aufgetreten</string>
     <string name="elements_found">Elemente gefunden</string>
-    <string name="really_delete">Bist du sicher, dies zu löschen?</string>
+    <string name="really_delete">Bist du sicher, dass du diesen Eintrag löschen willst?</string>
     <string name="yes">Ja</string>
     <string name="no">Nein</string>
     <string name="no_internet_connection">Keine Internetverbindung</string>

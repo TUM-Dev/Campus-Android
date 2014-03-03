@@ -361,7 +361,7 @@
     <string name="full_app_info">TUM Campus App for Android</string>
     <string name="debug_sqllite">Debug SQLite</string>
     <string name="settings">Settings</string>
-    <string name="settings_open">Open settings</string>
+    <string name="settings_open">Open settings and customize your startpage</string>
     <string name="week_splitted">Su,Mo,Tu,We,Th,Fr,Sa</string>
     <string name="facility_categories_splitted">library,info,cafeteria_gar,cafeteria_grh,cafeteria,cafeteria_pas,cafeteria_wst</string>
     <string name="access_token">TUMOnline-Access-Token</string>
@@ -454,6 +454,19 @@
     <string name="feedbackSubj">Feedback for TUM Campus App</string>
     <string name="version">Version</string>
     <string name="send_email">Send e-mail feedback</string>
+    <string  name = "personalized_title" > Persolize start page </string>
+    <string  name = "personalized_summary" > Get your grades, schedule and more-all in one place. </string>
+    <string  name = "personalized" >Personalized Page</string>
+    <string  name = "MyPrefrences" >MyPrefrences</string>
+     <string  name = "update_implicitly" >Intelligent resordering</string>
+     <string  name = "summary_implicitly" >Intelligent reordering of the menu items in the personalized startpage</string>
+     <string  name = "customize" >Customize your start page</string>
+      <string  name = "pref_string" >mvv_id,lectures_id,menues_id,rss_feeds_id,calender_id,study_plans_id,events_id,gallery_id,person_search_id,plans_id,roomfinder_id,opening_hours_id,organisations_id,my_lectures_id,my_grades_id,tuition_fees_id,tum_news_id,information_id</string>
+     <string  name = "info_title_str" >TCA Information</string>
+     <string  name = "info_title" >New information:</string>
+     <string  name = "info_str" >No important news!</string>
+   
     <!-- END Translated, please do not change identifiers -->
+    
 
 </resources>

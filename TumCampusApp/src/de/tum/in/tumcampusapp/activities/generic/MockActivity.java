@@ -1,9 +1,10 @@
 package de.tum.in.tumcampusapp.activities.generic;
 
-import android.app.Activity;
+import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.MenuItem;
+
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
-import android.view.MenuItem;
 import de.tum.in.tumcampus.R;
 
 /**
@@ -12,7 +13,7 @@ import de.tum.in.tumcampus.R;
  * @author Sascha Moecker
  * 
  */
-public class MockActivity extends Activity {
+public class MockActivity extends SherlockActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

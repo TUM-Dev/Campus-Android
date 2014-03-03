@@ -2,9 +2,12 @@ package de.tum.in.tumcampusapp.activities;
 
 import java.util.ArrayList;
 
-import android.app.Activity;
+import com.actionbarsherlock.app.SherlockActivity;
+
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -16,12 +19,17 @@ import de.tum.in.tumcampusapp.auxiliary.ListMenuEntry;
 /**
  * Activity to show plans.
  */
-public class PlansActivity extends Activity implements OnItemClickListener {
+public class PlansActivity extends SherlockActivity implements OnItemClickListener {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_plans);
+		//Counting the number of times that the user used this activity for intelligent reordering 
+		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+		if (sharedPrefs.getBoolean("implicitly_id", true)){
+				ImplicitCounter.Counter("plans_id",getApplicationContext());
+		}
 
 		ListView list = (ListView) findViewById(R.id.activity_plans_list_view);
 

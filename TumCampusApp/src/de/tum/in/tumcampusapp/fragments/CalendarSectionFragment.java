@@ -3,8 +3,10 @@ package de.tum.in.tumcampusapp.fragments;
 import java.util.ArrayList;
 import java.util.Date;
 
+import android.R.integer;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -16,7 +18,9 @@ import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 import de.tum.in.tumcampus.R;
+import de.tum.in.tumcampusapp.activities.RoomfinderActivity;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.managers.CalendarManager;
 
@@ -59,6 +63,8 @@ public class CalendarSectionFragment extends Fragment {
 
 		String date = getArguments().getString("date");
 		boolean updateMode = getArguments().getBoolean("update_mode");
+		
+		
 
 		View rootView = inflater.inflate(R.layout.fragment_calendar_section,
 				container, false);
@@ -85,9 +91,16 @@ public class CalendarSectionFragment extends Fragment {
 
 			mainScheduleLayout = (RelativeLayout) rootView
 					.findViewById(R.id.main_schedule_layout);
+			
 
 			updateCalendarView();
+			mainScheduleLayout.setClickable(true);
+			
+			
+		
+	
 		}
+		
 		return rootView;
 	}
 
@@ -101,7 +114,9 @@ public class CalendarSectionFragment extends Fragment {
 
 		// Cursor cursor = kalMgr.getFromDbForDate(currentDate);
 		Cursor cursor = calendarManager.getAllFromDb();
+		int id=1;
 		while (cursor.moveToNext()) {
+			
 			final String status = cursor.getString(1);
 			final String strStart = cursor.getString(5);
 			final String strEnd = cursor.getString(6);
@@ -113,6 +128,7 @@ public class CalendarSectionFragment extends Fragment {
 			String requestedDateString = year + "-"
 					+ String.format("%02d", month) + "-"
 					+ String.format("%02d", day);
+			
 
 			if (strStart.contains(requestedDateString)
 					&& !status.equals("CANCEL")) {
@@ -128,10 +144,13 @@ public class CalendarSectionFragment extends Fragment {
 				// Set params to eventLayout
 				LayoutParams params = initLayoutParams(hours);
 				setStartOfEntry(params, start / 60f);
-				setText(eventView, cursor.getString(3));
+				setText(eventView, cursor.getString(3)+" / "+cursor.getString(7));
+				
 
 				eventView.setLayoutParams(params);
+				eventView.setTag(cursor.getString(7));
 				eventList.add(eventView);
+
 			}
 		}
 	}
@@ -147,6 +166,30 @@ public class CalendarSectionFragment extends Fragment {
 		TextView textView = (TextView) entry.findViewById(R.id.entry_title);
 		textView.setText(text);
 	}
+	/**
+	 * Binds the Calender to the room finder
+	 * @param v
+	 */
+	private void Listener(View v)
+	{
+		v.setClickable(true);
+		v.setOnClickListener(new View.OnClickListener() {
+		     @Override
+		     public void onClick(View v) {
+		    	 
+		    	 Intent i = new Intent(activity, RoomfinderActivity.class); 
+		    	 //gets the location of the lectures and send it to the roomfinder
+			 	 String string=v.getTag().toString();
+			 	 final String strList[] = string.split(",");
+			 	 i.putExtra("NAME", strList[0]);
+			 	 startActivity(i); 
+			 		
+			 		
+		    	 
+		     }       
+		}); 
+		     
+	}
 
 	private void updateCalendarView() {
 		eventList.clear();
@@ -155,6 +198,9 @@ public class CalendarSectionFragment extends Fragment {
 		Log.i("Total lectures found", String.valueOf(eventList.size()));
 		for (RelativeLayout event : eventList) {
 			mainScheduleLayout.addView(event);
+			Listener(event);
+			
+		
 		}
 	}
 }

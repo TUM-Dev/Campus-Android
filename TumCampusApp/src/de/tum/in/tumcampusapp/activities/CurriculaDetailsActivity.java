@@ -4,7 +4,8 @@ import java.io.File;
 
 import org.apache.http.impl.client.DefaultHttpClient;
 
-import android.app.Activity;
+import com.actionbarsherlock.app.SherlockActivity;
+
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -25,7 +26,7 @@ import de.tum.in.tumcampusapp.auxiliary.Utils;
  * @review Daniel G. Mayr
  * @review Thomas Behrens
  */
-public class CurriculaDetailsActivity extends Activity {
+public class CurriculaDetailsActivity extends SherlockActivity {
 
 	// Fetch information in a background task and show progress dialog in
 	// meantime
@@ -134,6 +135,7 @@ public class CurriculaDetailsActivity extends Activity {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

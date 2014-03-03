@@ -1,8 +1,11 @@
 package de.tum.in.tumcampusapp.activities;
 
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
+import android.preference.PreferenceManager;
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampusapp.fragments.OpeningHoursDetailFragment;
 import de.tum.in.tumcampusapp.fragments.OpeningHoursListFragment;
@@ -23,7 +26,7 @@ import de.tum.in.tumcampusapp.fragments.OpeningHoursListFragment;
  * {@link OpeningHoursListFragment.Callbacks} interface to listen for item
  * selections.
  */
-public class OpeningHoursListActivity extends FragmentActivity implements
+public class OpeningHoursListActivity extends SherlockFragmentActivity implements
 		OpeningHoursListFragment.Callbacks {
 
 	/**
@@ -36,7 +39,12 @@ public class OpeningHoursListActivity extends FragmentActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_openinghourslist);
-
+		
+		//Counting the number of times that the user used this activity for intelligent reordering 
+		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+		if (sharedPrefs.getBoolean("implicitly_id", true)){
+						ImplicitCounter.Counter("opening_hours_id",getApplicationContext());
+		}
 		if (findViewById(R.id.item_detail_container) != null) {
 			// The detail container view will be present only in the
 			// large-screen layouts (res/values-large and

@@ -1,10 +1,11 @@
 package de.tum.in.tumcampusapp.activities;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.util.Log;
+
+import com.actionbarsherlock.app.SherlockActivity;
 
 import com.bugsense.trace.BugSenseHandler;
 
@@ -16,7 +17,7 @@ import de.tum.in.tumcampusapp.auxiliary.DemoModeStartActivity;
  * @author Sascha Moecker
  * 
  */
-public class StartupActivity extends Activity {
+public class StartupActivity extends SherlockActivity {
 	public static final boolean DEMO_MODE = false;
 	public static final boolean TRACK_ERRORS_WITH_BUG_SENSE = true;
 

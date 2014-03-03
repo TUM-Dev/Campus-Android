@@ -1,10 +1,11 @@
 package de.tum.in.tumcampusapp.activities;
 
+import com.actionbarsherlock.view.MenuItem;
+
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;

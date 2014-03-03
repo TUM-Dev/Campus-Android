@@ -1,5 +1,7 @@
 package de.tum.in.tumcampusapp.activities;
 
+import com.actionbarsherlock.view.MenuItem;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -10,7 +12,6 @@ import android.preference.PreferenceManager;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v4.widget.SimpleCursorAdapter.ViewBinder;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;

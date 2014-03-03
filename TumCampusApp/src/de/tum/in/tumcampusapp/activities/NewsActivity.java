@@ -46,8 +46,14 @@ public class NewsActivity extends ActivityForDownloadingExternal implements
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		super.requestDownload(false);
+		
 		overlay = (RelativeLayout) findViewById(R.id.tumNews_overlay);
 		overlay_cross = (ImageView) findViewById(R.id.tumNews_cross);
+		//Counting the number of times that the user used this activity for intelligent reordering 
+		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+		if (sharedPrefs.getBoolean("implicitly_id", true)){
+								ImplicitCounter.Counter("tum_news_id",getApplicationContext());
+		}
 	}
 
 	@SuppressWarnings("deprecation")

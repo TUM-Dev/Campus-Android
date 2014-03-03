@@ -1,12 +1,13 @@
 package de.tum.in.tumcampusapp.activities;
 
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
-import android.view.Menu;
-import android.view.MenuItem;
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampusapp.adapters.CafeteriaDetailsSectionsPagerAdapter;
 import de.tum.in.tumcampusapp.auxiliary.Const;
@@ -18,7 +19,7 @@ import de.tum.in.tumcampusapp.auxiliary.PersonalLayoutManager;
  * @author Sascha Moecker, Haris Iltifat, Thomas Krex
  * 
  */
-public class CafeteriaDetailsActivity extends FragmentActivity {
+public class CafeteriaDetailsActivity extends SherlockFragmentActivity {
 
 	/** Received Id */
 	private String cafeteriaId;
@@ -51,7 +52,7 @@ public class CafeteriaDetailsActivity extends FragmentActivity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(
+		getSupportMenuInflater().inflate(
 				R.menu.menu_section_fragment_cafeteria_details, menu);
 		return true;
 	}

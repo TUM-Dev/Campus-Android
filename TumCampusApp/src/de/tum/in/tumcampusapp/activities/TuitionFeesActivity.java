@@ -4,7 +4,9 @@ import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
 
 import android.annotation.SuppressLint;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -26,6 +28,7 @@ public class TuitionFeesActivity extends ActivityForAccessingTumOnline
 	private TextView amountTextView;
 	private TextView deadlineTextView;
 	private TextView semesterTextView;
+	private SharedPreferences sharedPrefs;
 
 	/**
 	 * tuition information
@@ -45,6 +48,12 @@ public class TuitionFeesActivity extends ActivityForAccessingTumOnline
 		semesterTextView = (TextView) findViewById(R.id.semester);
 
 		super.requestFetch();
+
+		//Counting the number of times that the user used this activity for intelligent reordering 
+		sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+		if (sharedPrefs.getBoolean("implicitly_id", true)){
+				ImplicitCounter.Counter("tuition_fees_id",getApplicationContext());
+		}
 	}
 
 	/**

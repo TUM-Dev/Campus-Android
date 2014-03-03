@@ -1,6 +1,7 @@
 package de.tum.in.tumcampusapp.activities;
 
-import android.app.Activity;
+import com.actionbarsherlock.app.SherlockActivity;
+
 import android.database.Cursor;
 import android.os.Bundle;
 import android.webkit.WebSettings;
@@ -13,8 +14,9 @@ import de.tum.in.tumcampusapp.models.managers.GalleryManager;
 /**
  * Activity to show event details (name, location, image, description, etc.)
  */
-public class GalleryDetailsActivity extends Activity {
+public class GalleryDetailsActivity extends SherlockActivity {
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

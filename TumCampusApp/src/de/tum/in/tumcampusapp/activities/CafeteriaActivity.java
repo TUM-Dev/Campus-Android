@@ -1,8 +1,11 @@
 ﻿package de.tum.in.tumcampusapp.activities;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -29,6 +32,8 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
 	private String cafeteriaName;
 
 	private ListView listCafeterias;
+	private SharedPreferences sharedPrefs;
+	private Activity activity;
 
 	public CafeteriaActivity() {
 		super(Const.CAFETERIAS, R.layout.activity_cafeterias);
@@ -37,7 +42,11 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+		if (sharedPrefs.getBoolean("implicitly_id", true)){
+			ImplicitCounter.Counter("menues_id",getApplicationContext());
+		}
+	
 		listCafeterias = (ListView) findViewById(R.id.listView);
 
 		// Fetch cafeteria items on startup

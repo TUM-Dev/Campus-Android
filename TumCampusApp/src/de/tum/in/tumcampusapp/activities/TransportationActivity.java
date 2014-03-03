@@ -3,16 +3,20 @@
 import java.util.NoSuchElementException;
 import java.util.concurrent.TimeoutException;
 
+import com.actionbarsherlock.app.SherlockActivity;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -34,7 +38,7 @@ import de.tum.in.tumcampusapp.models.managers.TransportManager;
 /**
  * Activity to show transport stations and departures
  */
-public class TransportationActivity extends Activity implements
+public class TransportationActivity extends SherlockActivity implements
 		OnItemClickListener, OnItemLongClickListener {
 
 	private RelativeLayout errorLayout;
@@ -46,6 +50,9 @@ public class TransportationActivity extends Activity implements
 
 	private EditText searchTextField;
 	private TransportManager transportaionManager;
+	private SharedPreferences sharedPrefs;
+	private Activity activity;
+	//public static int Counter=0;
 
 	/**
 	 * Check if a network connection is available or can be available soon
@@ -63,6 +70,7 @@ public class TransportationActivity extends Activity implements
 	}
 
 	public void onClick(View view) {
+		
 		infoTextView.setVisibility(View.GONE);
 
 		int viewId = view.getId();
@@ -102,6 +110,10 @@ public class TransportationActivity extends Activity implements
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_transportation);
+		sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+		if (sharedPrefs.getBoolean("implicitly_id", true)){
+			ImplicitCounter.Counter("mvv_id",getApplicationContext());
+		}
 
 		// get all stations from db
 		transportaionManager = new TransportManager(this);
@@ -155,11 +167,15 @@ public class TransportationActivity extends Activity implements
 				});
 		listViewSuggestionsAndSaved.requestFocus();
 	}
+	
+
 
 	@Override
 	public void onItemClick(final AdapterView<?> av, View v, int position,
 			long id) {
-		// click on station in list
+		//Counter=Counter+1;
+		
+		// click on station in list	
 		Utils.hideKeyboard(this, searchTextField);
 
 		Cursor departureCursor = (Cursor) av.getAdapter().getItem(position);

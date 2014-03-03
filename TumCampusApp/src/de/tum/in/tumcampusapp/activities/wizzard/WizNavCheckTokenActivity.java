@@ -1,11 +1,12 @@
 package de.tum.in.tumcampusapp.activities.wizzard;
 
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -41,7 +42,7 @@ public class WizNavCheckTokenActivity extends ActivityForAccessingTumOnline {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.menu_activity_wizzard, menu);
+		getSupportMenuInflater().inflate(R.menu.menu_activity_wizzard, menu);
 		return true;
 	}
 

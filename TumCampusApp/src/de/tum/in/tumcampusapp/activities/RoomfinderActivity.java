@@ -6,7 +6,9 @@ import java.util.HashMap;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.SearchRecentSuggestions;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -44,6 +46,7 @@ public class RoomfinderActivity extends ActivityForSearching implements
 	String currentlySelectedBuildingId;
 
 	private String currentlySelectedRoomId;
+	private SharedPreferences sharedPrefs;
 
 	public RoomfinderActivity() {
 		super(R.layout.activity_roomfinder);
@@ -131,6 +134,25 @@ public class RoomfinderActivity extends ActivityForSearching implements
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		roomFinderRequest = new TUMRoomFinderRequest();
+		//Counting the number of times that the user used this activity for intelligent reordering 
+				sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+				if (sharedPrefs.getBoolean("implicitly_id", true)){
+						ImplicitCounter.Counter("roomfinder_id",getApplicationContext());
+				}
+				Bundle bunble=getIntent().getExtras();
+				
+				        if(bunble!=null){
+				
+				            //Getting the value stored in the name "NAME" (binding the calender and room finder)
+				            String searchQuery=bunble.getString("NAME");
+				            doSearch(searchQuery);
+				            
+				
+				
+				     
+				
+				        }
+
 	}
 
 	@Override

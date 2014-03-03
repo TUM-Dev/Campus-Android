@@ -4,9 +4,12 @@ import java.util.Collections;
 import java.util.Hashtable;
 import java.util.Vector;
 
-import android.app.Activity;
+import com.actionbarsherlock.app.SherlockActivity;
+
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -23,16 +26,23 @@ import de.tum.in.tumcampus.R;
  * @review Thomas Behrens
  * @review Sascha Moecker
  */
-public class CurriculaActivity extends Activity implements OnItemClickListener {
+public class CurriculaActivity extends SherlockActivity implements OnItemClickListener {
 
 	public static final String NAME = "name";
 
 	public static final String URL = "url";
+	private SharedPreferences sharedPrefs;
 	Hashtable<String, String> options;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		//Counting the number of times that the user used this activity for intelligent reordering 
+		sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+		if (sharedPrefs.getBoolean("implicitly_id", true)){
+			ImplicitCounter.Counter("study_plans_id",getApplicationContext());
+		}
 
 		setContentView(R.layout.activity_curricula);
 
@@ -84,6 +94,7 @@ public class CurriculaActivity extends Activity implements OnItemClickListener {
 		list.setAdapter(arrayAdapter);
 		list.setOnItemClickListener(this);
 	}
+	
 
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
