@@ -16,7 +16,7 @@
     <uses-permission android:name="android.permission.READ_CALENDAR" />
     <uses-permission android:name="android.permission.WRITE_CALENDAR" />
 
-    <application
+    <application 
         android:allowBackup="true"
         android:description="@string/app_short_description"
         android:icon="@drawable/ic_launcher"
