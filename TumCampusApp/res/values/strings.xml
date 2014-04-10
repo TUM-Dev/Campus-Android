@@ -230,9 +230,12 @@
     <string name="kitchen_opening">Kitchen opening</string>
     <string name="prices">Prices</string>
     <string name="open_study_plan_for">Open study plan for</string>
-    <string name="informatics_bachelor">Informatics Bachelor</string>
+    <string name="informatics_bachelor_0809">Informatics Bachelor WS0809</string>
+    <string name="informatics_bachelor_1213">Informatics Bachelor WS1213</string>
     <string name="business_informatics_bachelor_1112">Business Informatics Bachelor WS1112</string>
     <string name="business_informatics_bachelor_0809">Business Informatics Bachelor WS0809</string>
+    <string name="business_informatics_bachelor_1213">Business Informatics Bachelor WS1213</string>
+    <string name="business_informatics_bachelor_1314">Business Informatics Bachelor WS1314</string>
     <string name="bioinformatics_bachelor">Bioinformatics Bachelor</string>
     <string name="games_engineering_bachelor">Games Engineering Bachelor</string>
     <string name="informatics_master">Informatics Master</string>
