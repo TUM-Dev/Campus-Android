@@ -8,7 +8,7 @@ import android.os.Bundle;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.RelativeLayout;
-import de.tum.in.tumcampus.R;
+import de.tum.in.tumcampusapp.R;
 
 /**
  * Displays the map regarding the searched room.

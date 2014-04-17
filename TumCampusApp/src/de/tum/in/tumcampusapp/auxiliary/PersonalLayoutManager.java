@@ -10,7 +10,7 @@ import android.graphics.ColorMatrixColorFilter;
 import android.graphics.drawable.Drawable;
 import android.preference.PreferenceManager;
 import android.view.View;
-import de.tum.in.tumcampus.R;
+import de.tum.in.tumcampusapp.R;
 
 @SuppressLint("ResourceAsColor")
 public class PersonalLayoutManager {

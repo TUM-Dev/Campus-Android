@@ -5,7 +5,7 @@ import com.actionbarsherlock.view.MenuItem;
 
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
-import de.tum.in.tumcampus.R;
+import de.tum.in.tumcampusapp.R;
 
 /**
  * Mock Acitivy for test purpose only.

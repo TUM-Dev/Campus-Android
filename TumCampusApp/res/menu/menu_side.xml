@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/menu_side_lectures"
+        android:icon="@drawable/zoom"
+        android:title="@string/lecture_search"/>
+    <item
+        android:id="@+id/menu_side_mvv"
+        android:icon="@drawable/show_info"
+        android:title="@string/mvv"/>
+    <item
+        android:id="@+id/menu_side_menues"
+        android:icon="@drawable/shopping_cart"
+        android:title="@string/menues"/>
+    <item
+        android:id="@+id/menu_side_rss"
+        android:icon="@drawable/fax"
+        android:title="@string/rss_feeds"/>
+    <item
+        android:id="@+id/menu_side_schedule"
+        android:icon="@drawable/calendar"
+        android:title="@string/schedule"/>
+    <item
+        android:id="@+id/menu_side_studyplans"
+        android:icon="@drawable/documents"
+        android:title="@string/study_plans"/>
+    <item
+        android:id="@+id/menu_side_events"
+        android:icon="@drawable/camera"
+        android:title="@string/events"/>
+    <item
+        android:id="@+id/menu_side_news"
+        android:icon="@drawable/mail"
+        android:title="@string/tum_news"/>
+    
+    <item 
+        android:id="@+id/menu_side_information"
+        android:icon="@drawable/about"
+        android:title="@string/information"
+        android:titleCondensed="InformationActivity"/>
+
+</menu>

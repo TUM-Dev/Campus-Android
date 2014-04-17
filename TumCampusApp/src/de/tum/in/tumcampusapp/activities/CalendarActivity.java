@@ -31,7 +31,7 @@ import android.provider.CalendarContract.Events;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.widget.Toast;
-import de.tum.in.tumcampus.R;
+import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampusapp.adapters.CalendarSectionsPagerAdapter;
 import de.tum.in.tumcampusapp.auxiliary.CalendarMapper;

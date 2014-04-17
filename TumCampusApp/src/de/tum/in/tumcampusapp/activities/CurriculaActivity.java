@@ -17,7 +17,7 @@ import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockActivity;
 
-import de.tum.in.tumcampus.R;
+import de.tum.in.tumcampusapp.R;
 
 /**
  * Activity to fetch and display the curricula of different study programs.

@@ -7,7 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import de.tum.in.tumcampus.R;
+import de.tum.in.tumcampusapp.R;
 
 /**
  * Fragment for each category-page.

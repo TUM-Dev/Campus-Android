@@ -7,7 +7,7 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-import de.tum.in.tumcampus.R;
+import de.tum.in.tumcampusapp.R;
 
 /**
  * Displays charts generated with GradesActivity

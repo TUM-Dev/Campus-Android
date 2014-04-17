@@ -4,7 +4,7 @@ import com.actionbarsherlock.app.SherlockActivity;
 
 import android.os.Bundle;
 import android.webkit.WebView;
-import de.tum.in.tumcampus.R;
+import de.tum.in.tumcampusapp.R;
 
 /**
  * Activity to show plan details.

@@ -13,7 +13,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 import android.widget.RelativeLayout;
 import android.widget.SimpleCursorAdapter;
-import de.tum.in.tumcampus.R;
+import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.GalleryDetailsActivity;
 import de.tum.in.tumcampusapp.adapters.GallerySectionsPagerAdapter;
 import de.tum.in.tumcampusapp.models.managers.GalleryManager;

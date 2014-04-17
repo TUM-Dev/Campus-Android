@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import de.tum.in.tumcampus.R;
+import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.fragments.OpeningHoursDetailFragment;
 import de.tum.in.tumcampusapp.fragments.OpeningHoursListFragment;
 
