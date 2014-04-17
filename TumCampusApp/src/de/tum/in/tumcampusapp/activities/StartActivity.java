@@ -211,4 +211,9 @@ public class StartActivity extends SherlockFragmentActivity implements ISideNavi
 			Log.w("tca", "ClassNotFound", e);
 		}
 	}
+
+	@Override
+	public void onBackPressed() {
+		this.sideNavigationView.toggleMenu();
+	}
 }
