@@ -336,23 +336,31 @@ public class SideNavigationView extends LinearLayout {
 			SideNavigationItem item = SideNavigationView.this.menuItems.get(position);
 			holder.text.setText(SideNavigationView.this.menuItems.get(position).getText());
 
-			// If item has an Icon its an entry, otherwise a seperator
+			// If item has an Icon its an entry
 			if (item.getIcon() != SideNavigationItem.DEFAULT_ICON_VALUE) {
 				holder.icon.setVisibility(View.VISIBLE);
 				holder.icon.setImageResource(SideNavigationView.this.menuItems.get(position).getIcon());
 			} else {
-				Log.d("icon", SideNavigationView.this.menuItems.get(position).getText() + " " + item.getIcon() + " " + SideNavigationItem.DEFAULT_ICON_VALUE);
-				// Add some top padding and other background to indicate the sep
-				LinearLayout lay = (LinearLayout) convertView.findViewById(R.id.side_navigation_item_layout);
-				lay.setPadding(lay.getPaddingLeft() - 1, lay.getPaddingTop() + 2, 0, lay.getPaddingBottom());
-				lay.setBackgroundColor(SideNavigationView.this.getResources().getColor(R.color.side_navigation_list_divider_color));
+				// Check if it has an activity - if not, its a seperator
+				if (item.getActivity() == null) {
+					Log.d("icon", SideNavigationView.this.menuItems.get(position).getText() + " " + item.getIcon() + " "
+							+ SideNavigationItem.DEFAULT_ICON_VALUE);
+					// Add some top padding and other background to indicate the sep
+					LinearLayout lay = (LinearLayout) convertView.findViewById(R.id.side_navigation_item_layout);
+					lay.setBackgroundColor(SideNavigationView.this.getResources().getColor(R.color.side_navigation_list_divider_color));
+
+					int paddingTop = (int) SideNavigationView.this.getResources().getDimension(R.dimen.side_navigation_item_padding_topbottom) + 4;
+					int paddingLeft = (int) SideNavigationView.this.getResources().getDimension(R.dimen.side_navigation_item_padding_leftright) - 2;
+					lay.setPadding(paddingLeft, paddingTop, 0, lay.getPaddingBottom());
+
+					// Make not clickable
+					convertView.setEnabled(false);
+					convertView.setOnClickListener(null);
+				}
 
 				// Remove icon
 				holder.icon.setVisibility(View.GONE);
 
-				// Make not clickable
-				convertView.setEnabled(false);
-				convertView.setOnClickListener(null);
 			}
 			return convertView;
 		}

@@ -169,7 +169,6 @@ public class StartActivity extends SherlockFragmentActivity implements ISideNavi
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		Log.d("main", item.getItemId() + "");
 		switch (item.getItemId()) {
 		case R.id.action_settings:
 			// Opens the preferences screen
@@ -183,7 +182,6 @@ public class StartActivity extends SherlockFragmentActivity implements ISideNavi
 			this.startActivity(newsIntent);
 			break;
 		case android.R.id.home:
-			Log.d("main", "trig");
 			this.sideNavigationView.toggleMenu();
 			break;
 		}
@@ -206,7 +204,6 @@ public class StartActivity extends SherlockFragmentActivity implements ISideNavi
 	public void onSideNavigationItemClick(SideNavigationItem sideNavigationItem) {
 		try {
 			String a = this.getPackageName() + ".activities." + sideNavigationItem.getActivity();
-			Log.d("tca", a);
 			Class<?> clazz = Class.forName(a);
 			Intent newActivity = new Intent(this.getApplicationContext(), clazz);
 			this.startActivity(newActivity);

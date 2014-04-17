@@ -72,9 +72,7 @@ public class StartSectionFragment extends Fragment implements OnItemClickListene
 		this.overlay_button = (Button) this.rootView.findViewById(R.id.continue_btn);
 
 		this.instruction_overlay_cross = (ImageView) this.rootView.findViewById(R.id.instruction_cross);
-
 		this.myTUM_overlay_cross = (ImageView) this.rootView.findViewById(R.id.myTum_cross);
-
 		this.news_overlay_cross = (ImageView) this.rootView.findViewById(R.id.news_cross);
 
 		this.myTUM_overlay = (RelativeLayout) this.rootView.findViewById(R.id.myTUM_overlay);

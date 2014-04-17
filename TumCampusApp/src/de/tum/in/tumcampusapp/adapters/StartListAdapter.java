@@ -34,19 +34,17 @@ public class StartListAdapter extends BaseAdapter {
 	private ArrayList<ListMenuEntry> listMenuEntrySet;
 	private boolean usesColorFilter;
 
-	public StartListAdapter(Activity activity, int layoutId,
-			ArrayList<ListMenuEntry> listMenuEntrySet, boolean usesColorFilter) {
+	public StartListAdapter(Activity activity, int layoutId, ArrayList<ListMenuEntry> listMenuEntrySet, boolean usesColorFilter) {
 		this.activity = activity;
 		this.layoutId = layoutId;
 		this.listMenuEntrySet = listMenuEntrySet;
 		this.usesColorFilter = usesColorFilter;
-		inflater = (LayoutInflater) activity
-				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		this.inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
 
 	@Override
 	public int getCount() {
-		return listMenuEntrySet.size();
+		return this.listMenuEntrySet.size();
 	}
 
 	@Override
@@ -65,14 +63,13 @@ public class StartListAdapter extends BaseAdapter {
 
 		ViewHolder holder;
 		if (convertView == null) {
-			vi = inflater.inflate(layoutId, null);
+			vi = this.inflater.inflate(this.layoutId, null);
 
 			holder = new ViewHolder();
 			holder.icon = (ImageView) vi.findViewById(R.id.list_menu_icon);
 			// Apply a color filter on the images when requested
-			if (usesColorFilter) {
-				holder.icon.setColorFilter(PersonalLayoutManager
-						.getColorFilter(activity));
+			if (this.usesColorFilter) {
+				holder.icon.setColorFilter(PersonalLayoutManager.getColorFilter(this.activity));
 			}
 			holder.title = (TextView) vi.findViewById(R.id.list_menu_title);
 			holder.detail = (TextView) vi.findViewById(R.id.list_menu_detail);
@@ -81,11 +78,9 @@ public class StartListAdapter extends BaseAdapter {
 			holder = (ViewHolder) vi.getTag();
 		}
 
-		holder.icon.setImageResource(listMenuEntrySet.get(position).imageId);
-		holder.title.setText(activity.getResources().getText(
-				listMenuEntrySet.get(position).titleId));
-		holder.detail.setText(activity.getResources().getText(
-				listMenuEntrySet.get(position).detailId));
+		holder.icon.setImageResource(this.listMenuEntrySet.get(position).imageId);
+		holder.title.setText(this.activity.getResources().getText(this.listMenuEntrySet.get(position).titleId));
+		holder.detail.setText(this.activity.getResources().getText(this.listMenuEntrySet.get(position).detailId));
 		return vi;
 	}
 }
