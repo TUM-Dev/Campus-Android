@@ -3,8 +3,6 @@
 import java.util.NoSuchElementException;
 import java.util.concurrent.TimeoutException;
 
-import com.actionbarsherlock.app.SherlockActivity;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -30,6 +28,9 @@ import android.widget.RelativeLayout;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.actionbarsherlock.app.SherlockActivity;
+
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
@@ -38,8 +39,7 @@ import de.tum.in.tumcampusapp.models.managers.TransportManager;
 /**
  * Activity to show transport stations and departures
  */
-public class TransportationActivity extends SherlockActivity implements
-		OnItemClickListener, OnItemLongClickListener {
+public class TransportationActivity extends SherlockActivity implements OnItemClickListener, OnItemLongClickListener {
 
 	private RelativeLayout errorLayout;
 	private TextView infoTextView;
@@ -52,7 +52,10 @@ public class TransportationActivity extends SherlockActivity implements
 	private TransportManager transportaionManager;
 	private SharedPreferences sharedPrefs;
 	private Activity activity;
-	//public static int Counter=0;
+
+	private Thread runningSearch = null;
+
+	// public static int Counter=0;
 
 	/**
 	 * Check if a network connection is available or can be available soon
@@ -60,7 +63,7 @@ public class TransportationActivity extends SherlockActivity implements
 	 * @return true if available
 	 */
 	public boolean connected() {
-		ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+		ConnectivityManager cm = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo netInfo = cm.getActiveNetworkInfo();
 
 		if (netInfo != null && netInfo.isConnectedOrConnecting()) {
@@ -70,33 +73,32 @@ public class TransportationActivity extends SherlockActivity implements
 	}
 
 	public void onClick(View view) {
-		
-		infoTextView.setVisibility(View.GONE);
+
+		this.infoTextView.setVisibility(View.GONE);
 
 		int viewId = view.getId();
 		switch (viewId) {
 		case R.id.activity_transport_dosearch:
-			searchForStations(searchTextField.getText().toString());
-			Utils.hideKeyboard(this, searchTextField);
+			this.searchForStations(this.searchTextField.getText().toString());
+			Utils.hideKeyboard(this, this.searchTextField);
 			break;
 		case R.id.activity_transport_clear:
-			searchTextField.setText("");
+			this.searchTextField.setText("");
 			break;
 		case R.id.activity_transport_domore:
-			Cursor stationCursor = transportaionManager.getAllFromDb();
+			Cursor stationCursor = this.transportaionManager.getAllFromDb();
 
-			if (!transportaionManager.empty()) {
-				SimpleCursorAdapter adapter = (SimpleCursorAdapter) listViewSuggestionsAndSaved
-						.getAdapter();
+			if (!this.transportaionManager.empty()) {
+				SimpleCursorAdapter adapter = (SimpleCursorAdapter) this.listViewSuggestionsAndSaved.getAdapter();
 				adapter.changeCursor(stationCursor);
 			} else {
-				infoTextView.setText("No stored search requests");
-				infoTextView.setVisibility(View.VISIBLE);
+				this.infoTextView.setText("No stored search requests");
+				this.infoTextView.setVisibility(View.VISIBLE);
 			}
-			listViewSuggestionsAndSaved.setVisibility(View.VISIBLE);
-			listViewResults.setVisibility(View.GONE);
-			errorLayout.setVisibility(View.GONE);
-			Utils.hideKeyboard(this, searchTextField);
+			this.listViewSuggestionsAndSaved.setVisibility(View.VISIBLE);
+			this.listViewResults.setVisibility(View.GONE);
+			this.errorLayout.setVisibility(View.GONE);
+			Utils.hideKeyboard(this, this.searchTextField);
 			break;
 		}
 	}
@@ -109,81 +111,69 @@ public class TransportationActivity extends SherlockActivity implements
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_transportation);
-		sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-		if (sharedPrefs.getBoolean("implicitly_id", true)){
-			ImplicitCounter.Counter("mvv_id",getApplicationContext());
+		this.setContentView(R.layout.activity_transportation);
+		this.sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+		if (this.sharedPrefs.getBoolean("implicitly_id", true)) {
+			ImplicitCounter.Counter("mvv_id", this.getApplicationContext());
 		}
 
 		// get all stations from db
-		transportaionManager = new TransportManager(this);
-		Cursor stationCursor = transportaionManager.getAllFromDb();
+		this.transportaionManager = new TransportManager(this);
+		Cursor stationCursor = this.transportaionManager.getAllFromDb();
 
-		searchTextField = (EditText) findViewById(R.id.activity_transport_searchfield);
-		listViewResults = (ListView) findViewById(R.id.activity_transport_listview_result);
-		listViewSuggestionsAndSaved = (ListView) findViewById(R.id.activity_transport_listview_suggestionsandsaved);
-		progressLayout = (RelativeLayout) findViewById(R.id.progress_layout);
-		errorLayout = (RelativeLayout) findViewById(R.id.error_layout);
-		infoTextView = (TextView) findViewById(R.id.activity_transport_textview_info);
+		this.searchTextField = (EditText) this.findViewById(R.id.activity_transport_searchfield);
+		this.listViewResults = (ListView) this.findViewById(R.id.activity_transport_listview_result);
+		this.listViewSuggestionsAndSaved = (ListView) this.findViewById(R.id.activity_transport_listview_suggestionsandsaved);
+		this.progressLayout = (RelativeLayout) this.findViewById(R.id.progress_layout);
+		this.errorLayout = (RelativeLayout) this.findViewById(R.id.error_layout);
+		this.infoTextView = (TextView) this.findViewById(R.id.activity_transport_textview_info);
 
 		@SuppressWarnings("deprecation")
-		ListAdapter adapterSuggestionsAndSaved = new SimpleCursorAdapter(this,
-				android.R.layout.simple_list_item_1, stationCursor,
-				stationCursor.getColumnNames(),
-				new int[] { android.R.id.text1 });
+		ListAdapter adapterSuggestionsAndSaved = new SimpleCursorAdapter(this, android.R.layout.simple_list_item_1, stationCursor,
+				stationCursor.getColumnNames(), new int[] { android.R.id.text1 });
 
-		listViewSuggestionsAndSaved.setAdapter(adapterSuggestionsAndSaved);
-		listViewSuggestionsAndSaved.setOnItemClickListener(this);
-		listViewSuggestionsAndSaved.setOnItemLongClickListener(this);
+		this.listViewSuggestionsAndSaved.setAdapter(adapterSuggestionsAndSaved);
+		this.listViewSuggestionsAndSaved.setOnItemClickListener(this);
+		this.listViewSuggestionsAndSaved.setOnItemLongClickListener(this);
 
 		// initialize empty departure list, disable on click in list
-		MatrixCursor departureCursor = new MatrixCursor(new String[] { "name",
-				"desc", "_id" });
+		MatrixCursor departureCursor = new MatrixCursor(new String[] { "name", "desc", "_id" });
 		@SuppressWarnings("deprecation")
-		SimpleCursorAdapter adapterResults = new SimpleCursorAdapter(this,
-				android.R.layout.two_line_list_item, departureCursor,
-				departureCursor.getColumnNames(), new int[] {
-						android.R.id.text1, android.R.id.text2 }) {
+		SimpleCursorAdapter adapterResults = new SimpleCursorAdapter(this, android.R.layout.two_line_list_item, departureCursor,
+				departureCursor.getColumnNames(), new int[] { android.R.id.text1, android.R.id.text2 }) {
 
 			@Override
 			public boolean isEnabled(int position) {
 				return false;
 			}
 		};
-		listViewResults.setAdapter(adapterResults);
+		this.listViewResults.setAdapter(adapterResults);
 
-		searchTextField
-				.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-					@Override
-					public boolean onEditorAction(TextView v, int actionId,
-							KeyEvent event) {
-						if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-							searchForStations(searchTextField.getText()
-									.toString());
-							return true;
-						}
-						return false;
-					}
-				});
-		listViewSuggestionsAndSaved.requestFocus();
+		this.searchTextField.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+			@Override
+			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+				if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+					TransportationActivity.this.searchForStations(TransportationActivity.this.searchTextField.getText().toString());
+					return true;
+				}
+				return false;
+			}
+		});
+		this.listViewSuggestionsAndSaved.requestFocus();
 	}
-	
-
 
 	@Override
-	public void onItemClick(final AdapterView<?> av, View v, int position,
-			long id) {
-		//Counter=Counter+1;
-		
-		// click on station in list	
-		Utils.hideKeyboard(this, searchTextField);
+	public void onItemClick(final AdapterView<?> av, View v, int position, long id) {
+		// Counter=Counter+1;
+
+		// click on station in list
+		Utils.hideKeyboard(this, this.searchTextField);
 
 		Cursor departureCursor = (Cursor) av.getAdapter().getItem(position);
-		final String location = departureCursor.getString(departureCursor
-				.getColumnIndex(Const.NAME_COLUMN));
+		final String location = departureCursor.getString(departureCursor.getColumnIndex(Const.NAME_COLUMN));
 
-		listViewResults.setEnabled(true);
-		searchTextField.setText(location);
+		this.listViewResults.setEnabled(true);
+		this.searchTextField.setText(location);
 
 		// save clicked station into db and refresh station list
 		// (could be clicked on search result list)
@@ -192,14 +182,13 @@ public class TransportationActivity extends SherlockActivity implements
 		tm.replaceIntoDb(location);
 		adapter.changeCursor(tm.getAllFromDb());
 
-		progressLayout.setVisibility(View.VISIBLE);
-		infoTextView.setVisibility(View.GONE);
+		this.progressLayout.setVisibility(View.VISIBLE);
+		this.infoTextView.setVisibility(View.GONE);
 
 		if (!Utils.isConnected(this)) {
-			progressLayout.setVisibility(View.GONE);
-			errorLayout.setVisibility(View.VISIBLE);
-			Toast.makeText(this, R.string.no_internet_connection,
-					Toast.LENGTH_SHORT).show();
+			this.progressLayout.setVisibility(View.GONE);
+			this.errorLayout.setVisibility(View.VISIBLE);
+			Toast.makeText(this, R.string.no_internet_connection, Toast.LENGTH_SHORT).show();
 			return;
 		}
 
@@ -214,31 +203,30 @@ public class TransportationActivity extends SherlockActivity implements
 				try {
 					departureCursor = tm.getDeparturesFromExternal(location);
 				} catch (NoSuchElementException e) {
-					message = R.string.no_departures_found;
+					this.message = R.string.no_departures_found;
 				} catch (TimeoutException e) {
-					message = R.string.exception_timeout;
+					this.message = R.string.exception_timeout;
 				} catch (Exception e) {
-					message = R.string.exception_unknown;
+					this.message = R.string.exception_unknown;
 				}
 
 				// show departures in list
 				final Cursor finalDepartureCursor = departureCursor;
-				final int showMessage = message;
-				runOnUiThread(new Runnable() {
+				final int showMessage = this.message;
+				TransportationActivity.this.runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
-						SimpleCursorAdapter adapter = (SimpleCursorAdapter) listViewResults
-								.getAdapter();
+						SimpleCursorAdapter adapter = (SimpleCursorAdapter) TransportationActivity.this.listViewResults.getAdapter();
 						adapter.changeCursor(finalDepartureCursor);
 
-						listViewResults.setVisibility(View.VISIBLE);
-						progressLayout.setVisibility(View.GONE);
-						errorLayout.setVisibility(View.GONE);
-						listViewSuggestionsAndSaved.setVisibility(View.GONE);
+						TransportationActivity.this.listViewResults.setVisibility(View.VISIBLE);
+						TransportationActivity.this.progressLayout.setVisibility(View.GONE);
+						TransportationActivity.this.errorLayout.setVisibility(View.GONE);
+						TransportationActivity.this.listViewSuggestionsAndSaved.setVisibility(View.GONE);
 
 						if (showMessage != 0) {
-							infoTextView.setText(showMessage);
-							infoTextView.setVisibility(View.VISIBLE);
+							TransportationActivity.this.infoTextView.setText(showMessage);
+							TransportationActivity.this.infoTextView.setVisibility(View.VISIBLE);
 						}
 					}
 				});
@@ -247,8 +235,7 @@ public class TransportationActivity extends SherlockActivity implements
 	}
 
 	@Override
-	public boolean onItemLongClick(final AdapterView<?> av, View v,
-			final int position, long id) {
+	public boolean onItemLongClick(final AdapterView<?> av, View v, final int position, long id) {
 
 		// confirm and delete station
 		DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
@@ -257,23 +244,32 @@ public class TransportationActivity extends SherlockActivity implements
 
 				// delete station from list, refresh station list
 				Cursor c = (Cursor) av.getAdapter().getItem(position);
-				String location = c.getString(c
-						.getColumnIndex(Const.NAME_COLUMN));
+				String location = c.getString(c.getColumnIndex(Const.NAME_COLUMN));
 
 				TransportManager tm = new TransportManager(av.getContext());
 				tm.deleteFromDb(location);
 
-				SimpleCursorAdapter adapter = (SimpleCursorAdapter) av
-						.getAdapter();
+				SimpleCursorAdapter adapter = (SimpleCursorAdapter) av.getAdapter();
 				adapter.changeCursor(tm.getAllFromDb());
 			}
 		};
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setMessage(getString(R.string.really_delete));
-		builder.setPositiveButton(getString(R.string.yes), listener);
-		builder.setNegativeButton(getString(R.string.no), null);
+		builder.setMessage(this.getString(R.string.really_delete));
+		builder.setPositiveButton(this.getString(R.string.yes), listener);
+		builder.setNegativeButton(this.getString(R.string.no), null);
 		builder.show();
 		return false;
+	}
+
+	@Override
+	public void onBackPressed() {
+		if (this.runningSearch != null) {
+			this.runningSearch.interrupt();
+			this.progressLayout.setVisibility(View.GONE);
+			this.runningSearch = null;
+		} else {
+			this.finish();
+		}
 	}
 
 	/**
@@ -284,67 +280,72 @@ public class TransportationActivity extends SherlockActivity implements
 	 */
 	public void searchForStations(String inputTextRaw) {
 		final Activity activity = this;
-		progressLayout.setVisibility(View.VISIBLE);
+		this.progressLayout.setVisibility(View.VISIBLE);
 
-		listViewSuggestionsAndSaved.setEnabled(true);
+		this.listViewSuggestionsAndSaved.setEnabled(true);
 
-		// TODO: Workaround, because MVV does not find a station with the full
-		// name as a text input
+		// TODO: Workaround, because MVV does not find a station with the full name as a text input
 		String inputTextToCheck = inputTextRaw;
 		if (inputTextRaw.length() > 2) {
-			inputTextToCheck = inputTextRaw.substring(0,
-					inputTextRaw.length() - 1);
+			inputTextToCheck = inputTextRaw.substring(0, inputTextRaw.length() - 1);
 		}
 		final String inputText = inputTextToCheck;
 
 		if (!Utils.isConnected(this)) {
-			progressLayout.setVisibility(View.GONE);
-			errorLayout.setVisibility(View.VISIBLE);
-			Toast.makeText(this, R.string.no_internet_connection,
-					Toast.LENGTH_SHORT).show();
+			this.progressLayout.setVisibility(View.GONE);
+			this.errorLayout.setVisibility(View.VISIBLE);
+			Toast.makeText(this, R.string.no_internet_connection, Toast.LENGTH_SHORT).show();
 			return;
 		}
-
-		new Thread(new Runnable() {
+		this.runningSearch = new Thread(new Runnable() {
 			int message;
 
 			@Override
 			public void run() {
+				// Remember my Thread
+				Thread me = TransportationActivity.this.runningSearch;
+
+				// Get Information
 				TransportManager tm = new TransportManager(activity);
 				Cursor stationCursor = null;
 				try {
 					stationCursor = tm.getStationsFromExternal(inputText);
 				} catch (NoSuchElementException e) {
-					message = R.string.no_station_found;
+					this.message = R.string.no_station_found;
 				} catch (TimeoutException e) {
-					message = R.string.exception_timeout;
+					this.message = R.string.exception_timeout;
 				} catch (Exception e) {
-					message = R.string.exception_unknown;
+					this.message = R.string.exception_unknown;
+				}
+
+				// Drop results if canceled
+				if (TransportationActivity.this.runningSearch == null || TransportationActivity.this.runningSearch != me) {
+					return;
 				}
 
 				final Cursor finalStationCursor = stationCursor;
-				final int showMessage = message;
+				final int showMessage = this.message;
 				// show stations from search result in station list
 				// show error message if necessary
-				runOnUiThread(new Runnable() {
+				TransportationActivity.this.runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
-						SimpleCursorAdapter adapter = (SimpleCursorAdapter) listViewSuggestionsAndSaved
-								.getAdapter();
+						SimpleCursorAdapter adapter = (SimpleCursorAdapter) TransportationActivity.this.listViewSuggestionsAndSaved.getAdapter();
 						adapter.changeCursor(finalStationCursor);
 
-						listViewSuggestionsAndSaved.setVisibility(View.VISIBLE);
-						progressLayout.setVisibility(View.GONE);
-						errorLayout.setVisibility(View.GONE);
-						listViewResults.setVisibility(View.GONE);
+						TransportationActivity.this.listViewSuggestionsAndSaved.setVisibility(View.VISIBLE);
+						TransportationActivity.this.progressLayout.setVisibility(View.GONE);
+						TransportationActivity.this.errorLayout.setVisibility(View.GONE);
+						TransportationActivity.this.listViewResults.setVisibility(View.GONE);
 
 						if (showMessage != 0) {
-							infoTextView.setText(showMessage);
-							infoTextView.setVisibility(View.VISIBLE);
+							TransportationActivity.this.infoTextView.setText(showMessage);
+							TransportationActivity.this.infoTextView.setVisibility(View.VISIBLE);
 						}
 					}
 				});
 			}
-		}).start();
+		});
+		this.runningSearch.start();
 	}
 }
