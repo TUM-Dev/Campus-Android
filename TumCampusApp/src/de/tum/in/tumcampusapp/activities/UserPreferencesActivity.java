@@ -1,4 +1,4 @@
-package de.tum.in.tumcampusapp.preferences;
+package de.tum.in.tumcampusapp.activities;
 
 import android.app.AlertDialog;
 import android.content.ContentResolver;
