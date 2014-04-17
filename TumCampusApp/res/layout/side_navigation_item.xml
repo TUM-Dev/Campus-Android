@@ -3,6 +3,7 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
+    android:id="@+id/side_navigation_item_layout"
     android:paddingBottom="@dimen/side_navigation_item_padding_topbottom"
     android:paddingLeft="@dimen/side_navigation_item_padding_leftright"
     android:paddingRight="@dimen/side_navigation_item_padding_leftright"

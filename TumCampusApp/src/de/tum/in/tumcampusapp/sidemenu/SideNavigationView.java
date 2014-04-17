@@ -257,20 +257,23 @@ public class SideNavigationView extends LinearLayout {
 						String iconId = xrp.getAttributeValue("http://schemas.android.com/apk/res/android", "icon");
 						String resId = xrp.getAttributeValue("http://schemas.android.com/apk/res/android", "id");
 						String activity = xrp.getAttributeValue("http://schemas.android.com/apk/res/android", "titleCondensed");
+						String enabled = xrp.getAttributeValue("http://schemas.android.com/apk/res/android", "enabled");
 
-						SideNavigationItem item = new SideNavigationItem();
-						item.setId(Integer.valueOf(resId.replace("@", "")));
-						item.setText(this.resourceIdToString(textId));
-						item.setActivity(activity);
+						if (enabled != "false") {
+							SideNavigationItem item = new SideNavigationItem();
+							item.setId(Integer.valueOf(resId.replace("@", "")));
+							item.setText(this.resourceIdToString(textId));
+							item.setActivity(activity);
 
-						if (iconId != null) {
-							try {
-								item.setIcon(Integer.valueOf(iconId.replace("@", "")));
-							} catch (NumberFormatException e) {
-								Log.d(LOG_TAG, "Item " + item.getId() + " not have icon");
+							if (iconId != null) {
+								try {
+									item.setIcon(Integer.valueOf(iconId.replace("@", "")));
+								} catch (NumberFormatException e) {
+									Log.d(LOG_TAG, "Item " + item.getId() + " not have icon");
+								}
 							}
+							this.menuItems.add(item);
 						}
-						this.menuItems.add(item);
 					}
 				}
 				eventType = xrp.next();
@@ -332,11 +335,24 @@ public class SideNavigationView extends LinearLayout {
 
 			SideNavigationItem item = SideNavigationView.this.menuItems.get(position);
 			holder.text.setText(SideNavigationView.this.menuItems.get(position).getText());
+
+			// If item has an Icon its an entry, otherwise a seperator
 			if (item.getIcon() != SideNavigationItem.DEFAULT_ICON_VALUE) {
 				holder.icon.setVisibility(View.VISIBLE);
 				holder.icon.setImageResource(SideNavigationView.this.menuItems.get(position).getIcon());
 			} else {
+				Log.d("icon", SideNavigationView.this.menuItems.get(position).getText() + " " + item.getIcon() + " " + SideNavigationItem.DEFAULT_ICON_VALUE);
+				// Add some top padding and other background to indicate the sep
+				LinearLayout lay = (LinearLayout) convertView.findViewById(R.id.side_navigation_item_layout);
+				lay.setPadding(lay.getPaddingLeft() - 1, lay.getPaddingTop() + 2, 0, lay.getPaddingBottom());
+				lay.setBackgroundColor(SideNavigationView.this.getResources().getColor(R.color.side_navigation_list_divider_color));
+
+				// Remove icon
 				holder.icon.setVisibility(View.GONE);
+
+				// Make not clickable
+				convertView.setEnabled(false);
+				convertView.setOnClickListener(null);
 			}
 			return convertView;
 		}

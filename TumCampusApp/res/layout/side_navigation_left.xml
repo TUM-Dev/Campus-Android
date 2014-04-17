@@ -33,8 +33,10 @@
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="true"
                 android:ems="10"
-                android:hint="Search..."
-                android:inputType="text" />
+                android:hint="@string/search"
+                android:inputType="text" 
+                android:textColor="@color/side_navigation_item_text_color"
+        android:textSize="@dimen/side_navigation_item_text_size" />
             
             <ListView
                 android:id="@+id/side_navigation_listview"
@@ -43,7 +45,9 @@
                 android:layout_below="@id/side_navigation_search_txt"
                 android:cacheColorHint="#00000000"
                 android:divider="@color/side_navigation_list_divider_color"
-                android:dividerHeight="0dp" />
+                android:dividerHeight="0dp"
+                android:paddingTop="0dp" />
+
         </RelativeLayout>
 
         <View

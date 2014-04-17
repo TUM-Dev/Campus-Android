@@ -137,7 +137,7 @@ public class StartActivity extends SherlockFragmentActivity implements ISideNavi
 		Boolean hideWizzardOnStartup = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(Const.HIDE_WIZZARD_ON_STARTUP, false);
 
 		// Check for important news
-		// TODO: check if there are any news avaible on the to be implemented webservice
+		// TODO: check if there are any news avaible on the to be implemented webservice - for now hide the icon in the menu_start_activity
 
 		// Setup the side navigation
 		this.sideNavigationView = (SideNavigationView) this.findViewById(R.id.side_navigation_view);
