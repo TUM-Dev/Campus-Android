@@ -12,7 +12,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
-import de.tum.in.tumcampus.R;
+import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.adapters.StartListAdapter;
 import de.tum.in.tumcampusapp.auxiliary.ListMenuEntry;
 

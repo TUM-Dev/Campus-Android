@@ -11,19 +11,19 @@
         <item name="android:textColor">@android:color/white</item>
         <item name="android:textSize">@dimen/section_text_size</item>
     </style>
-    
+
     <style name="TimeSectionLine">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/time_line_thickness</item>
         <item name="android:background">@color/sections_gray</item>
     </style>
-    
+
     <style name="TimeSectionTime">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:gravity">center</item>
     </style>
-    
+
     <style name="DemoText">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -33,6 +33,11 @@
         <item name="android:textStyle">bold</item>
         <item name="android:padding">2dp</item>
         <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="CustomSherlockHomeIcon" parent="Theme.Sherlock.Light.DarkActionBar">
+        <item name="homeAsUpIndicator">@drawable/ic_navigation_drawer</item> 
+        <item name="android:homeAsUpIndicator">@drawable/ic_navigation_drawer</item> 
     </style>
 
 </resources>

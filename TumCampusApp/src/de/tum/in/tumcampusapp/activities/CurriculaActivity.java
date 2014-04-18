@@ -4,8 +4,6 @@ import java.util.Collections;
 import java.util.Hashtable;
 import java.util.Vector;
 
-import com.actionbarsherlock.app.SherlockActivity;
-
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -16,7 +14,10 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import de.tum.in.tumcampus.R;
+
+import com.actionbarsherlock.app.SherlockActivity;
+
+import de.tum.in.tumcampusapp.R;
 
 /**
  * Activity to fetch and display the curricula of different study programs.
@@ -37,64 +38,58 @@ public class CurriculaActivity extends SherlockActivity implements OnItemClickLi
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
-		//Counting the number of times that the user used this activity for intelligent reordering 
-		sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-		if (sharedPrefs.getBoolean("implicitly_id", true)){
-			ImplicitCounter.Counter("study_plans_id",getApplicationContext());
+
+		// Counting the number of times that the user used this activity for intelligent reordering
+		this.sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+		if (this.sharedPrefs.getBoolean("implicitly_id", true)) {
+			ImplicitCounter.Counter("study_plans_id", this.getApplicationContext());
 		}
 
-		setContentView(R.layout.activity_curricula);
+		this.setContentView(R.layout.activity_curricula);
 
-		ListView list = (ListView) findViewById(R.id.activity_curricula_list_view);
+		ListView list = (ListView) this.findViewById(R.id.activity_curricula_list_view);
 
 		// Puts all hardcoded web addresses into the hash map
-		options = new Hashtable<String, String>();
-		options.put(
-				getString(R.string.informatics_bachelor),
-				"http://www.in.tum.de/fuer-studierende-der-tum/bachelor-studiengaenge/informatik/studienplan/studienbeginn-ab-ws-20072008.html");
-		options.put(
-				getString(R.string.business_informatics_bachelor_0809),
-				"http://www.in.tum.de/fuer-studierende-der-tum/bachelor-studiengaenge/wirtschaftsinformatik/studienplan/studienbeginn-ab-ws-20112012.html");
-		options.put(
-				getString(R.string.business_informatics_bachelor_1112),
-				"http://www.in.tum.de/fuer-studierende-der-tum/bachelor-studiengaenge/wirtschaftsinformatik/studienplan/studienbeginn-ab-ws-20082009.html");
-		options.put(
-				getString(R.string.bioinformatics_bachelor),
-				"http://www.in.tum.de/fuer-studierende-der-tum/bachelor-studiengaenge/bioinformatik/studienplan/ws-20072008.html");
-		options.put(
-				getString(R.string.games_engineering_bachelor),
-				"http://www.in.tum.de/fuer-studierende-der-tum/bachelor-studiengaenge/informatik-games-engineering/studienplan-games.html");
-		options.put(
-				getString(R.string.informatics_master),
-				"http://www.in.tum.de/fuer-studierende-der-tum/master-studiengaenge/informatik/studienplan/studienplan-fpo-2007.html");
-		options.put(
-				getString(R.string.business_informatics_master),
-				"http://www.in.tum.de/fuer-studierende-der-tum/master-studiengaenge/wirtschaftsinformatik/studienplan");
+		this.options = new Hashtable<String, String>();
+		this.options.put(this.getString(R.string.informatics_bachelor_0809),
+				"https://www.in.tum.de/fuer-studierende/bachelor-studiengaenge/informatik/studienplan/studienbeginn-ab-ws-20082009.html");
+		this.options.put(this.getString(R.string.informatics_bachelor_1213),
+				"https://www.in.tum.de/fuer-studierende/bachelor-studiengaenge/informatik/studienplan/studienbeginn-ab-ws-20122013.html");
+		this.options.put(this.getString(R.string.business_informatics_bachelor_0809),
+				"https://www.in.tum.de/fuer-studierende/bachelor-studiengaenge/wirtschaftsinformatik/studienplan/studienbeginn-ab-ws-20082009.html");
+		this.options.put(this.getString(R.string.business_informatics_bachelor_1112),
+				"https://www.in.tum.de/fuer-studierende/bachelor-studiengaenge/wirtschaftsinformatik/studienplan/studienbeginn-ab-ws-20112012.html");
+		this.options.put(this.getString(R.string.business_informatics_bachelor_1213),
+				"https://www.in.tum.de/fuer-studierende/bachelor-studiengaenge/wirtschaftsinformatik/studienplan/studienbeginn-ab-ws-20122013.html");
+		this.options.put(this.getString(R.string.business_informatics_bachelor_1314),
+				"https://www.in.tum.de/fuer-studierende/bachelor-studiengaenge/wirtschaftsinformatik/studienplan/studienbeginn-ab-ws-20132014.html");
+		this.options.put(this.getString(R.string.bioinformatics_bachelor),
+				"https://www.in.tum.de/fuer-studierende/bachelor-studiengaenge/bioinformatik/studienplan/ws-20072008.html");
+		this.options.put(this.getString(R.string.games_engineering_bachelor),
+				"https://www.in.tum.de/fuer-studierende/bachelor-studiengaenge/informatik-games-engineering/studienplan-games.html");
+		this.options.put(this.getString(R.string.informatics_master),
+				"https://www.in.tum.de/fuer-studierende/master-studiengaenge/informatik/studienplan/fpo-2007-und-fpso-2012.html");
+		this.options.put(this.getString(R.string.business_informatics_master),
+				"https://www.in.tum.de/fuer-studierende/master-studiengaenge/wirtschaftsinformatik/studienplan/ab-ss-2014.html");
 
-		options.put(
-				getString(R.string.bioinformatics_master),
-				"http://www.in.tum.de/fuer-studierende-der-tum/master-studiengaenge/bioinformatik/studienplan/ws-20072008.html");
-		options.put(
-				getString(R.string.automotive_master),
-				"http://www.in.tum.de/fuer-studierende-der-tum/master-studiengaenge/automotive-software-engineering/studienplanung.html");
-		options.put(
-				getString(R.string.computational_science_master),
-				"http://www.in.tum.de/fuer-studieninteressierte/master-studiengaenge/computational-science-and-engineering/course/course-plan.html");
+		this.options.put(this.getString(R.string.bioinformatics_master),
+				"https://www.in.tum.de/fuer-studierende/master-studiengaenge/bioinformatik/studienplan/ws-20072008.html");
+		this.options.put(this.getString(R.string.automotive_master),
+				"https://www.in.tum.de/fuer-studierende/master-studiengaenge/automotive-software-engineering/studienplanung.html");
+		this.options.put(this.getString(R.string.computational_science_master),
+				"https://www.in.tum.de/fuer-studierende/master-studiengaenge/computational-science-and-engineering/curriculum-and-modules.html");
 
 		// Sort curricula options and attach them to the list
-		Vector<String> sortedOptions = new Vector<String>(options.keySet());
+		Vector<String> sortedOptions = new Vector<String>(this.options.keySet());
 		Collections.sort(sortedOptions);
 		String[] optionsArray = sortedOptions.toArray(new String[0]);
 
 		// Sets the adapter with list items
-		ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this,
-				android.R.layout.simple_list_item_1, optionsArray);
-		list = (ListView) findViewById(R.id.activity_curricula_list_view);
+		ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, optionsArray);
+		list = (ListView) this.findViewById(R.id.activity_curricula_list_view);
 		list.setAdapter(arrayAdapter);
 		list.setOnItemClickListener(this);
 	}
-	
 
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
@@ -102,8 +97,8 @@ public class CurriculaActivity extends SherlockActivity implements OnItemClickLi
 
 		// Puts URL and name into an intent and starts the detail view
 		Intent intent = new Intent(this, CurriculaDetailsActivity.class);
-		intent.putExtra(URL, options.get(curriculumName));
+		intent.putExtra(URL, this.options.get(curriculumName));
 		intent.putExtra(NAME, curriculumName);
-		startActivity(intent);
+		this.startActivity(intent);
 	}
 }

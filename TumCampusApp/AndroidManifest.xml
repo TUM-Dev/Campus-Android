@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="de.tum.in.tumcampus"
+    package="de.tum.in.tumcampusapp"
     android:versionCode="32"
     android:versionName="1.1.2"
     android:installLocation="auto" >
@@ -16,14 +16,14 @@
     <uses-permission android:name="android.permission.READ_CALENDAR" />
     <uses-permission android:name="android.permission.WRITE_CALENDAR" />
 
-    <application
+    <application 
         android:allowBackup="true"
         android:description="@string/app_short_description"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:largeHeap="true"
         android:logo="@drawable/ic_launcher"
-        android:theme="@style/Theme.Sherlock.Light.DarkActionBar" >
+        android:theme="@style/CustomSherlockHomeIcon" >
         <provider
             android:name="de.tum.in.tumcampusapp.auxiliary.RoomFinderSuggestionProvider"
             android:authorities="com.example.RoomFinderSuggestionProvider" />
@@ -79,7 +79,7 @@
             android:label="@string/my_grades" >
         </activity>
         <activity
-            android:name="de.tum.in.tumcampusapp.preferences.UserPreferencesActivity"
+            android:name="de.tum.in.tumcampusapp.activities.UserPreferencesActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/settings" >
         </activity>

@@ -13,7 +13,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
-import de.tum.in.tumcampus.R;
+import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.GradesActivity;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;

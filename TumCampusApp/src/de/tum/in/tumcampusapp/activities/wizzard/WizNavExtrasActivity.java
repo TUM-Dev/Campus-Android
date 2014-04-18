@@ -10,7 +10,7 @@ import android.widget.CheckBox;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
-import de.tum.in.tumcampus.R;
+import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.WizzardActivity;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.PersonalLayoutManager;

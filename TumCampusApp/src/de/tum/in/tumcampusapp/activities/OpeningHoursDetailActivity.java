@@ -6,7 +6,7 @@ import com.actionbarsherlock.view.MenuItem;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
-import de.tum.in.tumcampus.R;
+import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.fragments.OpeningHoursDetailFragment;
 
 /**

@@ -4,8 +4,6 @@ import java.io.File;
 
 import org.apache.http.impl.client.DefaultHttpClient;
 
-import com.actionbarsherlock.app.SherlockActivity;
-
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,7 +12,10 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
-import de.tum.in.tumcampus.R;
+
+import com.actionbarsherlock.app.SherlockActivity;
+
+import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.FileUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
@@ -28,20 +29,19 @@ import de.tum.in.tumcampusapp.auxiliary.Utils;
  */
 public class CurriculaDetailsActivity extends SherlockActivity {
 
-	// Fetch information in a background task and show progress dialog in
-	// meantime
+	// Fetch information in a background task and show progress dialog in meantime
 	final AsyncTask<Object, Void, File> backgroundTask = new AsyncTask<Object, Void, File>() {
 
 		@Override
 		protected File doInBackground(Object... params) {
-			fetchCurriculum((String) params[0], (File) params[1]);
+			CurriculaDetailsActivity.this.fetchCurriculum((String) params[0], (File) params[1]);
 			return (File) params[1];
 		}
 
 		@Override
 		protected void onPostExecute(File result) {
-			openFile(result);
-			progressLayout.setVisibility(View.GONE);
+			CurriculaDetailsActivity.this.openFile(result);
+			CurriculaDetailsActivity.this.progressLayout.setVisibility(View.GONE);
 		}
 	};
 
@@ -57,18 +57,16 @@ public class CurriculaDetailsActivity extends SherlockActivity {
 	 * Extract the results from a document fetched from the given URL.
 	 * 
 	 * @param url
-	 *            URL pointing to a document where the results are extracted
-	 *            from.
+	 *            URL pointing to a document where the results are extracted from.
 	 * @return The results.
 	 */
 	private String extractResultsFromURL(String url) {
-		String text = FileUtils.sendGetRequest(httpClient, url);
+		String text = FileUtils.sendGetRequest(this.httpClient, url);
 
 		if (text == null) {
-			return getString(R.string.something_wrong);
+			return this.getString(R.string.something_wrong);
 		}
-		return Utils.cutText(text, "<!--TYPO3SEARCH_begin-->",
-				"<!--TYPO3SEARCH_end-->");
+		return Utils.cutText(text, "<!--TYPO3SEARCH_begin-->", "<!--TYPO3SEARCH_end-->");
 	}
 
 	/**
@@ -80,20 +78,16 @@ public class CurriculaDetailsActivity extends SherlockActivity {
 	 *            Target where the results should be written to
 	 */
 	private void fetchCurriculum(String url, File targetFile) {
-		String text = Utils.buildHTMLDocument(FileUtils.sendGetRequest(
-				httpClient, "http://www.in.tum.de/fileadmin/_src/add.css"),
-				"<div id=\"maincontent\"><div class=\"inner\">"
-						+ extractResultsFromURL(url) + "</div></div>");
+		String text = Utils.buildHTMLDocument(FileUtils.sendGetRequest(this.httpClient, "http://www.in.tum.de/fileadmin/_src/add.css"),
+				"<div id=\"maincontent\"><div class=\"inner\">" + this.extractResultsFromURL(url) + "</div></div>");
 
-		text = text.replace("href=\"fuer-studierende-der-tum",
-				"href=\"http://www.in.tum.de/fuer-studierende-der-tum");
+		text = text.replace("href=\"fuer-studierende-der-tum", "href=\"http://www.in.tum.de/fuer-studierende-der-tum");
 
 		FileUtils.writeFile(targetFile, text);
 	}
 
 	/**
-	 * Downloads the curricula data, parses the relevant content, adds the
-	 * corresponding css information and creates a new html document.
+	 * Downloads the curricula data, parses the relevant content, adds the corresponding css information and creates a new html document.
 	 * 
 	 * @param name
 	 *            The name of the curriculum as displayed in the list.
@@ -108,8 +102,8 @@ public class CurriculaDetailsActivity extends SherlockActivity {
 		try {
 			file = FileUtils.getFileOnSD(Const.CURRICULA, filename);
 		} catch (Exception e) {
-			progressLayout.setVisibility(View.GONE);
-			errorLayout.setVisibility(View.VISIBLE);
+			this.progressLayout.setVisibility(View.GONE);
+			this.errorLayout.setVisibility(View.VISIBLE);
 			Log.e("EXCEPTION", e.getMessage());
 		}
 
@@ -121,17 +115,16 @@ public class CurriculaDetailsActivity extends SherlockActivity {
 		// if file does not exist download it again
 		if (!file.exists()) {
 			if (!Utils.isConnected(this)) {
-				Toast.makeText(this, R.string.no_internet_connection,
-						Toast.LENGTH_SHORT).show();
-				progressLayout.setVisibility(View.GONE);
-				errorLayout.setVisibility(View.VISIBLE);
+				Toast.makeText(this, R.string.no_internet_connection, Toast.LENGTH_SHORT).show();
+				this.progressLayout.setVisibility(View.GONE);
+				this.errorLayout.setVisibility(View.VISIBLE);
 				return;
 			}
-			backgroundTask.execute(url, file);
+			this.backgroundTask.execute(url, file);
 
 		} else {
-			openFile(file);
-			progressLayout.setVisibility(View.GONE);
+			this.openFile(file);
+			this.progressLayout.setVisibility(View.GONE);
 		}
 	}
 
@@ -139,32 +132,32 @@ public class CurriculaDetailsActivity extends SherlockActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_curriculadetails);
+		this.setContentView(R.layout.activity_curriculadetails);
 
 		// TODO export this to the generic app structure
-		httpClient = new DefaultHttpClient();
+		this.httpClient = new DefaultHttpClient();
 
-		browser = (WebView) findViewById(R.id.activity_curricula_web_view);
-		progressLayout = (RelativeLayout) findViewById(R.id.progress_layout);
-		errorLayout = (RelativeLayout) findViewById(R.id.error_layout);
+		this.browser = (WebView) this.findViewById(R.id.activity_curricula_web_view);
+		this.progressLayout = (RelativeLayout) this.findViewById(R.id.progress_layout);
+		this.errorLayout = (RelativeLayout) this.findViewById(R.id.error_layout);
 
-		browser.getSettings().setBuiltInZoomControls(true);
-		browser.getSettings().setDefaultZoom(WebSettings.ZoomDensity.FAR);
-		browser.getSettings().setUseWideViewPort(true);
+		this.browser.getSettings().setBuiltInZoomControls(true);
+		this.browser.getSettings().setDefaultZoom(WebSettings.ZoomDensity.FAR);
+		this.browser.getSettings().setUseWideViewPort(true);
 
-		String url = getIntent().getExtras().getString(CurriculaActivity.URL);
-		String name = getIntent().getExtras().getString(CurriculaActivity.NAME);
+		String url = this.getIntent().getExtras().getString(CurriculaActivity.URL);
+		String name = this.getIntent().getExtras().getString(CurriculaActivity.NAME);
 
-		setTitle(name);
+		this.setTitle(name);
 
-		progressLayout.setVisibility(View.VISIBLE);
-		getCurriculum(name, url);
+		this.progressLayout.setVisibility(View.VISIBLE);
+		this.getCurriculum(name, url);
 	}
 
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		backgroundTask.cancel(true);
+		this.backgroundTask.cancel(true);
 	}
 
 	/**
@@ -177,6 +170,6 @@ public class CurriculaDetailsActivity extends SherlockActivity {
 		if (file == null) {
 			return;
 		}
-		browser.loadUrl("file://" + file.getPath());
+		this.browser.loadUrl("file://" + file.getPath());
 	}
 }

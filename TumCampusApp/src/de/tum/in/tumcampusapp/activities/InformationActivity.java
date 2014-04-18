@@ -11,7 +11,7 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.widget.TextView;
-import de.tum.in.tumcampus.R;
+import de.tum.in.tumcampusapp.R;
 
 /**
  * Provides Information about this app and all contributors

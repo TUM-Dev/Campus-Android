@@ -1,8 +1,5 @@
 package de.tum.in.tumcampusapp.activities;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -13,41 +10,47 @@ import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
-import de.tum.in.tumcampus.R;
+
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+
+import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.wizzard.WizNavExtrasActivity;
 import de.tum.in.tumcampusapp.activities.wizzard.WizNavStartActivity;
 import de.tum.in.tumcampusapp.adapters.StartSectionsPagerAdapter;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.PersonalLayoutManager;
-import de.tum.in.tumcampusapp.preferences.UserPreferencesActivity;
 import de.tum.in.tumcampusapp.services.BackgroundService;
 import de.tum.in.tumcampusapp.services.ImportService;
 import de.tum.in.tumcampusapp.services.SilenceService;
+import de.tum.in.tumcampusapp.sidemenu.ISideNavigationCallback;
+import de.tum.in.tumcampusapp.sidemenu.SideNavigationItem;
+import de.tum.in.tumcampusapp.sidemenu.SideNavigationView;
+import de.tum.in.tumcampusapp.sidemenu.SideNavigationView.Mode;
 
 /**
- * Main activity displaying the categories and menu items to start each activity
- * (feature)
+ * Main activity displaying the categories and menu items to start each activity (feature)
  * 
  * @author Sascha Moecker
  */
-public class StartActivity extends SherlockFragmentActivity {
+public class StartActivity extends SherlockFragmentActivity implements ISideNavigationCallback {
 	public static final int DEFAULT_SECTION = 1;
 	public static final String LAST_CHOOSEN_SECTION = "last_choosen_section";
 	public static final int REQ_CODE_COLOR_CHANGE = 0;
 
 	/**
-	 * The {@link android.support.v4.view.PagerAdapter} that will provide
-	 * fragments for each of the sections. We use a
-	 * {@link android.support.v4.app.FragmentPagerAdapter} derivative, which
-	 * will keep every loaded fragment in memory. If this becomes too memory
-	 * intensive, it may be best to switch to a
-	 * {@link android.support.v4.app.FragmentStatePagerAdapter}.
+	 * The {@link android.support.v4.view.PagerAdapter} that will provide fragments for each of the sections. We use a
+	 * {@link android.support.v4.app.FragmentPagerAdapter} derivative, which will keep every loaded fragment in memory. If this becomes too memory
+	 * intensive, it may be best to switch to a {@link android.support.v4.app.FragmentStatePagerAdapter}.
 	 */
 	StartSectionsPagerAdapter mSectionsPagerAdapter;
 	/**
 	 * The {@link ViewPager} that will host the section contents.
 	 */
 	ViewPager mViewPager;
+
+	private SideNavigationView sideNavigationView;
 
 	/**
 	 * Receiver for Services
@@ -60,12 +63,12 @@ public class StartActivity extends SherlockFragmentActivity {
 				String action = intent.getStringExtra(Const.ACTION_EXTRA);
 
 				if (action.length() != 0) {
-					Log.i(getClass().getSimpleName(), message);
+					Log.i(this.getClass().getSimpleName(), message);
 				}
 			}
 			if (intent.getAction().equals(WizNavExtrasActivity.BROADCAST_NAME)) {
-				Log.i(getClass().getSimpleName(), "Color has changed");
-				shouldRestartOnResume = true;
+				Log.i(this.getClass().getSimpleName(), "Color has changed");
+				StartActivity.this.shouldRestartOnResume = true;
 			}
 		}
 	};
@@ -75,12 +78,11 @@ public class StartActivity extends SherlockFragmentActivity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		// Check if there is a result key in an intent
-		if (data != null && data.hasExtra(Const.PREFS_HAVE_CHANGED)
-				&& data.getBooleanExtra(Const.PREFS_HAVE_CHANGED, false)) {
+		if (data != null && data.hasExtra(Const.PREFS_HAVE_CHANGED) && data.getBooleanExtra(Const.PREFS_HAVE_CHANGED, false)) {
 			// Restart the Activity if prefs have changed
-			Intent intent = getIntent();
-			finish();
-			startActivity(intent);
+			Intent intent = this.getIntent();
+			this.finish();
+			this.startActivity(intent);
 		}
 	}
 
@@ -92,65 +94,69 @@ public class StartActivity extends SherlockFragmentActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_start);
+		this.setContentView(R.layout.activity_start);
 
 		// Create the adapter that will return a fragment for each of the
 		// primary sections of the app.
-		mSectionsPagerAdapter = new StartSectionsPagerAdapter(this,
-				getSupportFragmentManager());
-		
+		this.mSectionsPagerAdapter = new StartSectionsPagerAdapter(this, this.getSupportFragmentManager());
+
 		// Workaround for new API version. There was a security update which
 		// disallows applications to execute HTTP request in the GUI main
 		// thread.
 		if (android.os.Build.VERSION.SDK_INT > 8) {
-			StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
-					.permitAll().build();
+			StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 			StrictMode.setThreadPolicy(policy);
 		}
 
 		// Set up the ViewPager with the sections adapter.
-		mViewPager = (ViewPager) findViewById(R.id.pager);
-		mViewPager.setAdapter(mSectionsPagerAdapter);
-		mViewPager.setCurrentItem(DEFAULT_SECTION);
+		this.mViewPager = (ViewPager) this.findViewById(R.id.pager);
+		this.mViewPager.setAdapter(this.mSectionsPagerAdapter);
+		this.mViewPager.setCurrentItem(DEFAULT_SECTION);
 
 		// Registers receiver for download and import
 		IntentFilter intentFilter = new IntentFilter();
 		intentFilter.addAction(ImportService.BROADCAST_NAME);
 		intentFilter.addAction(WizNavExtrasActivity.BROADCAST_NAME);
-		registerReceiver(receiver, intentFilter);
+		this.registerReceiver(this.receiver, intentFilter);
 
 		// Imports default values into database
 		Intent service;
 		service = new Intent(this, ImportService.class);
 		service.putExtra(Const.ACTION_EXTRA, Const.DEFAULTS);
-		startService(service);
+		this.startService(service);
 
 		// Start silence Service (if already started it will just invoke a check)
 		service = new Intent(this, SilenceService.class);
-		startService(service);
+		this.startService(service);
 
 		// Start daily Service (same here: if already started it will just invoke a check)
 		service = new Intent(this, BackgroundService.class);
-		startService(service);
+		this.startService(service);
 
-		Boolean hideWizzardOnStartup = PreferenceManager
-				.getDefaultSharedPreferences(this).getBoolean(
-						Const.HIDE_WIZZARD_ON_STARTUP, false);
+		Boolean hideWizzardOnStartup = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(Const.HIDE_WIZZARD_ON_STARTUP, false);
 
-		// Check for important news 
-        
-		
-		// Check the flag if user wnats the wizzard to open at startup
+		// Check for important news
+		// TODO: check if there are any news avaible on the to be implemented webservice - for now hide the icon in the menu_start_activity
+
+		// Setup the side navigation
+		this.sideNavigationView = (SideNavigationView) this.findViewById(R.id.side_navigation_view);
+		this.sideNavigationView.setMenuItems(R.menu.menu_side);
+		this.sideNavigationView.setMenuClickCallback(this);
+		this.sideNavigationView.toggleMenu();
+		this.sideNavigationView.setMode(Mode.LEFT);
+		this.getActionBar().setDisplayHomeAsUpEnabled(true);
+
+		// Check the flag if user wants the wizzard to open at startup
 		if (!hideWizzardOnStartup) {
 			Intent intent = new Intent(this, WizNavStartActivity.class);
-			startActivity(intent);
+			this.startActivity(intent);
 		}
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getSupportMenuInflater().inflate(R.menu.menu_start_activity, menu);
+		this.getSupportMenuInflater().inflate(R.menu.menu_start_activity, menu);
 		return true;
 	}
 
@@ -158,7 +164,7 @@ public class StartActivity extends SherlockFragmentActivity {
 	protected void onDestroy() {
 		super.onDestroy();
 		// important to unregister the broadcast receiver
-		unregisterReceiver(receiver);
+		this.unregisterReceiver(this.receiver);
 	}
 
 	@Override
@@ -167,12 +173,16 @@ public class StartActivity extends SherlockFragmentActivity {
 		case R.id.action_settings:
 			// Opens the preferences screen
 			Intent intent = new Intent(this, UserPreferencesActivity.class);
-			startActivityForResult(intent, REQ_CODE_COLOR_CHANGE);
+			this.startActivityForResult(intent, REQ_CODE_COLOR_CHANGE);
 			break;
-			// Opens the Error message
-		case R.id.error_settings:
-			Intent errorIntent = new Intent(this, ImportantNewsActivity.class);
-			startActivity(errorIntent);
+
+		case R.id.menu_start_news:
+			// Opens the news activity
+			Intent newsIntent = new Intent(this, ImportantNewsActivity.class);
+			this.startActivity(newsIntent);
+			break;
+		case android.R.id.home:
+			this.sideNavigationView.toggleMenu();
 			break;
 		}
 		return super.onOptionsItemSelected(item);
@@ -182,11 +192,28 @@ public class StartActivity extends SherlockFragmentActivity {
 	protected void onResume() {
 		super.onResume();
 		PersonalLayoutManager.setColorForId(this, R.id.pager_title_strip);
-		if (shouldRestartOnResume) {
+		if (this.shouldRestartOnResume) {
 			// finish and restart myself
-			finish();
+			this.finish();
 			Intent intent = new Intent(this, this.getClass());
-			startActivity(intent);
+			this.startActivity(intent);
 		}
+	}
+
+	@Override
+	public void onSideNavigationItemClick(SideNavigationItem sideNavigationItem) {
+		try {
+			String a = this.getPackageName() + ".activities." + sideNavigationItem.getActivity();
+			Class<?> clazz = Class.forName(a);
+			Intent newActivity = new Intent(this.getApplicationContext(), clazz);
+			this.startActivity(newActivity);
+		} catch (ClassNotFoundException e) {
+			Log.w("tca", "ClassNotFound", e);
+		}
+	}
+
+	@Override
+	public void onBackPressed() {
+		this.sideNavigationView.toggleMenu();
 	}
 }

@@ -15,7 +15,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
-import de.tum.in.tumcampus.R;
+import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.services.DownloadService;

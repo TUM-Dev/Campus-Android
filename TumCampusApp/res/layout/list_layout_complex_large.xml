@@ -21,8 +21,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="list_menu_title"
-            android:textSize="@dimen/mid_text_size" >
-        </TextView>
+            android:textSize="@dimen/mid_text_size"
+            android:singleLine="true" />
+
 
         <TextView
             android:id="@+id/list_menu_detail"
@@ -32,8 +33,8 @@
             android:gravity="center_vertical"
             android:text=""
             android:textColor="@color/text_light_blue"
-            android:textSize="8sp" >
-        </TextView>
+            android:textSize="8sp" 
+            android:singleLine="true" />
 
 
 </LinearLayout>
