@@ -1,6 +1,8 @@
 package de.tum.in.tumcampusapp.sidemenu;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.xmlpull.v1.XmlPullParser;
 
@@ -301,6 +303,9 @@ public class SideNavigationView extends LinearLayout {
 	private class SideNavigationAdapter extends BaseAdapter {
 		private LayoutInflater inflater;
 
+		// Manage our items in this map ourselfs
+		private Map<Integer, View> items = new HashMap<Integer, View>();
+
 		public SideNavigationAdapter() {
 			this.inflater = LayoutInflater.from(SideNavigationView.this.getContext());
 		}
@@ -323,45 +328,43 @@ public class SideNavigationView extends LinearLayout {
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			final ViewHolder holder;
-			if (convertView == null) {
+			View view = this.items.get(position);
+			if (view == null) {
 				convertView = this.inflater.inflate(R.layout.side_navigation_item, null);
 				holder = new ViewHolder();
 				holder.text = (TextView) convertView.findViewById(R.id.side_navigation_item_text);
 				holder.icon = (ImageView) convertView.findViewById(R.id.side_navigation_item_icon);
 				convertView.setTag(holder);
-			} else {
-				holder = (ViewHolder) convertView.getTag();
-			}
 
-			SideNavigationItem item = SideNavigationView.this.menuItems.get(position);
-			holder.text.setText(SideNavigationView.this.menuItems.get(position).getText());
+				SideNavigationItem item = SideNavigationView.this.menuItems.get(position);
+				holder.text.setText(SideNavigationView.this.menuItems.get(position).getText());
 
-			// If item has an Icon its an entry
-			if (item.getIcon() != SideNavigationItem.DEFAULT_ICON_VALUE) {
-				holder.icon.setVisibility(View.VISIBLE);
-				holder.icon.setImageResource(SideNavigationView.this.menuItems.get(position).getIcon());
-			} else {
-				// Check if it has an activity - if not, its a seperator
-				if (item.getActivity() == null) {
-					Log.d("icon", SideNavigationView.this.menuItems.get(position).getText() + " " + item.getIcon() + " "
-							+ SideNavigationItem.DEFAULT_ICON_VALUE);
-					// Add some top padding and other background to indicate the sep
-					LinearLayout lay = (LinearLayout) convertView.findViewById(R.id.side_navigation_item_layout);
-					lay.setBackgroundColor(SideNavigationView.this.getResources().getColor(R.color.side_navigation_list_divider_color));
+				// If item has an Icon its an entry
+				if (item.getIcon() != SideNavigationItem.DEFAULT_ICON_VALUE) {
+					holder.icon.setVisibility(View.VISIBLE);
+					holder.icon.setImageResource(SideNavigationView.this.menuItems.get(position).getIcon());
+				} else {
+					// Check if it has an activity - if not, its a seperator
+					if (item.getActivity() == null) {
+						// Log.d("icon", SideNavigationView.this.menuItems.get(position).getText() + " " + item.getIcon() + " ");
+						// Add some top padding and other background to indicate the sep
+						LinearLayout lay = (LinearLayout) convertView.findViewById(R.id.side_navigation_item_layout);
+						lay.setBackgroundColor(SideNavigationView.this.getResources().getColor(R.color.side_navigation_list_divider_color));
 
-					int paddingTop = (int) SideNavigationView.this.getResources().getDimension(R.dimen.side_navigation_item_padding_topbottom) + 4;
-					int paddingLeft = (int) SideNavigationView.this.getResources().getDimension(R.dimen.side_navigation_item_padding_leftright) - 2;
-					lay.setPadding(paddingLeft, paddingTop, 0, lay.getPaddingBottom());
+						int paddingTop = (int) SideNavigationView.this.getResources().getDimension(R.dimen.side_navigation_item_padding_topbottom) + 4;
+						int paddingLeft = (int) SideNavigationView.this.getResources().getDimension(R.dimen.side_navigation_item_padding_leftright) - 2;
+						lay.setPadding(paddingLeft, paddingTop, 0, lay.getPaddingBottom());
 
-					// Make not clickable
-					convertView.setEnabled(false);
-					convertView.setOnClickListener(null);
+						// Make not clickable
+						convertView.setEnabled(false);
+						convertView.setOnClickListener(null);
+					}
+
+					// Remove icon
+					holder.icon.setVisibility(View.GONE);
 				}
-
-				// Remove icon
-				holder.icon.setVisibility(View.GONE);
-
 			}
+
 			return convertView;
 		}
 

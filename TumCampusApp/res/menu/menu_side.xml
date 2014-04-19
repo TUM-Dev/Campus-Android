@@ -2,6 +2,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
     
     <item
+        android:id="@+id/menu_side_search"
+        android:icon="@drawable/ic_feedback"
+        android:title="@string/search"
+        android:titleCondensed="SearchActivity"/>
+    <item
         android:id="@+id/menu_side_s1"
         android:title="@string/my_tum"/>
     <item

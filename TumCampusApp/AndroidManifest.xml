@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="de.tum.in.tumcampusapp"
-    android:versionCode="32"
-    android:versionName="1.1.2"
+    android:versionCode="33"
+    android:versionName="1.2.0"
     android:installLocation="auto" >
 
     <uses-sdk
@@ -209,6 +209,11 @@
             android:name="de.tum.in.tumcampusapp.activities.EventsDetailsActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/event_details" >
+        </activity>
+        <activity
+            android:name="de.tum.in.tumcampusapp.activities.SearchActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/search" >
         </activity>
         <activity
             android:name="de.tum.in.tumcampusapp.activities.OrganisationActivity"

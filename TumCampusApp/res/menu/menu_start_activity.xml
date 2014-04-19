@@ -4,6 +4,8 @@
         android:icon="@android:drawable/ic_dialog_alert"
         android:orderInCategory="100"
         android:showAsAction="never"
+        android:enabled="false"
+        android:visible="false"
         android:title="@string/action_settings">
 	</item>
     <item
