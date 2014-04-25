@@ -13,8 +13,7 @@ import de.tum.in.tumcampusapp.activities.LecturesSearchActivity;
 import de.tum.in.tumcampusapp.models.LecturesSearchRow;
 
 /**
- * This class handles the view output of the results for finding lectures via
- * TUMOnline
+ * This class handles the view output of the results for finding lectures via TUMOnline
  * 
  * {@link LecturesSearchActivity} activity or the {@link MyLectures} activity
  * 
@@ -39,10 +38,9 @@ public class LecturesSearchListAdapter extends BaseAdapter {
 	private final LayoutInflater mInflater;
 
 	// constructor
-	public LecturesSearchListAdapter(Context context,
-			List<LecturesSearchRow> results) {
+	public LecturesSearchListAdapter(Context context, List<LecturesSearchRow> results) {
 		lecturesList = results;
-		mInflater = LayoutInflater.from(context);
+		this.mInflater = LayoutInflater.from(context);
 	}
 
 	@Override
@@ -65,17 +63,13 @@ public class LecturesSearchListAdapter extends BaseAdapter {
 		ViewHolder holder;
 
 		if (convertView == null) {
-			convertView = mInflater.inflate(
-					R.layout.activity_lectures_listview, null);
+			convertView = this.mInflater.inflate(R.layout.activity_lectures_listview, null);
 			holder = new ViewHolder();
 
 			// set UI elements
-			holder.tvLectureName = (TextView) convertView
-					.findViewById(R.id.tvLectureName);
-			holder.tvTypeSWSSemester = (TextView) convertView
-					.findViewById(R.id.tvTypeSWSSemester);
-			holder.tvDozent = (TextView) convertView
-					.findViewById(R.id.tvDozent);
+			holder.tvLectureName = (TextView) convertView.findViewById(R.id.tvLectureName);
+			holder.tvTypeSWSSemester = (TextView) convertView.findViewById(R.id.tvTypeSWSSemester);
+			holder.tvDozent = (TextView) convertView.findViewById(R.id.tvDozent);
 
 			convertView.setTag(holder);
 		} else {
@@ -83,13 +77,10 @@ public class LecturesSearchListAdapter extends BaseAdapter {
 		}
 
 		LecturesSearchRow lvItem = lecturesList.get(position);
-
 		// if we have something to display - set for each lecture element
 		if (lvItem != null) {
 			holder.tvLectureName.setText(lvItem.getTitel());
-			holder.tvTypeSWSSemester.setText(lvItem.getStp_lv_art_name()
-					+ " - " + lvItem.getSemester_id() + " - "
-					+ lvItem.getDauer_info() + " SWS");
+			holder.tvTypeSWSSemester.setText(lvItem.getStp_lv_art_name() + " - " + lvItem.getSemester_id() + " - " + lvItem.getDauer_info() + " SWS");
 			holder.tvDozent.setText(lvItem.getVortragende_mitwirkende());
 		}
 

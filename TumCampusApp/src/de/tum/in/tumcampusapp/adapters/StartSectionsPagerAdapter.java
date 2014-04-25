@@ -40,12 +40,12 @@ import de.tum.in.tumcampusapp.fragments.StartSectionFragment;
 public class StartSectionsPagerAdapter extends FragmentPagerAdapter {
 	public static final String IMAGE_FOR_CATEGORY = "image_for_category";
 	public static final String LIST_ENTRY_SET = "list_entry_set";
-	public static final int NUMBER_OF_PAGES = 5;
-	public static final int SECTION_CONVENIENCE = 4;
-	public static final int SECTION_GENERAL_TUM = 3;
-	public static final int SECTION_PERSONALIZED = 1;
-	public static final int SECTION_MY_TUM = 2;
-	public static final int SECTION_NEWS = 0;
+	public static final int NUMBER_OF_PAGES = 3;
+	public static final int SECTION_CONVENIENCE = 3;
+	public static final int SECTION_GENERAL_TUM = 2;
+	public static final int SECTION_PERSONALIZED = 0;
+	public static final int SECTION_MY_TUM = 1;
+	public static final int SECTION_NEWS = -1;
 	private final Activity activity;
 	private final String MVV = "mvv_id";
 	private final String MENUES = "menues_id";
@@ -110,6 +110,8 @@ public class StartSectionsPagerAdapter extends FragmentPagerAdapter {
 			listMenuEntrySet.add(this.MyPref.get("study_plans_id"));
 			listMenuEntrySet.add(this.MyPref.get("opening_hours_id"));
 			listMenuEntrySet.add(this.MyPref.get("organisations_id"));
+			listMenuEntrySet.add(this.MyPref.get("mvv_id"));
+			listMenuEntrySet.add(this.MyPref.get("menues_id"));
 			break;
 		case SECTION_MY_TUM:
 			args.putInt("POSITION", SECTION_MY_TUM);
@@ -132,16 +134,16 @@ public class StartSectionsPagerAdapter extends FragmentPagerAdapter {
 			args.putInt(IMAGE_FOR_CATEGORY, R.drawable.img_tum_building_main);
 			listMenuEntrySet.add(this.MyPref.get("rss_feeds_id"));
 			listMenuEntrySet.add(this.MyPref.get("tum_news_id"));
+
 			// listMenuEntrySet.add(this.MyPref.get("events_id"));
 			// listMenuEntrySet.add(this.MyPref.get("gallery_id"));
+
 			break;
 		case SECTION_CONVENIENCE:
 			args.putInt("POSITION", SECTION_CONVENIENCE);
 			args.putInt(IMAGE_FOR_CATEGORY, R.drawable.img_tum_parabel);
-			listMenuEntrySet.add(this.MyPref.get("mvv_id"));
 
-			listMenuEntrySet.add(this.MyPref.get("menues_id"));
-			listMenuEntrySet.add(this.MyPref.get("information_id"));
+			// listMenuEntrySet.add(this.MyPref.get("information_id"));
 			break;
 		}
 		args.putSerializable(LIST_ENTRY_SET, listMenuEntrySet);
@@ -191,15 +193,15 @@ public class StartSectionsPagerAdapter extends FragmentPagerAdapter {
 	public CharSequence getPageTitle(int position) {
 		Locale l = Locale.getDefault();
 		switch (position) {
-		case 0:
+		case -1:
 			return this.activity.getString(R.string.news).toUpperCase(l);
-		case 1:
+		case 0:
 			return this.activity.getString(R.string.personalized).toUpperCase(l);
-		case 2:
+		case 1:
 			return this.activity.getString(R.string.my_tum).toUpperCase(l);
-		case 3:
+		case 2:
 			return this.activity.getString(R.string.tum_common).toUpperCase(l);
-		case 4:
+		case 3:
 			return this.activity.getString(R.string.extras).toUpperCase(l);
 		}
 		return null;

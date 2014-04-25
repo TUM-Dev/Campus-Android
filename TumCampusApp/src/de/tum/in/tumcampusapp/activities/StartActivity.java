@@ -35,7 +35,7 @@ import de.tum.in.tumcampusapp.sidemenu.SideNavigationView.Mode;
  * @author Sascha Moecker
  */
 public class StartActivity extends SherlockFragmentActivity implements ISideNavigationCallback {
-	public static final int DEFAULT_SECTION = 1;
+	public static final int DEFAULT_SECTION = 0;
 	public static final String LAST_CHOOSEN_SECTION = "last_choosen_section";
 	public static final int REQ_CODE_COLOR_CHANGE = 0;
 
@@ -213,7 +213,16 @@ public class StartActivity extends SherlockFragmentActivity implements ISideNavi
 	}
 
 	@Override
+	public void onSideNavigationSearch(String txtSearch) {
+		Intent newActivity = new Intent(this.getApplicationContext(), SearchActivity.class);
+		newActivity.putExtra(SearchActivity.searchProp, txtSearch);
+		this.startActivity(newActivity);
+
+	}
+
+	@Override
 	public void onBackPressed() {
 		this.sideNavigationView.toggleMenu();
 	}
+
 }

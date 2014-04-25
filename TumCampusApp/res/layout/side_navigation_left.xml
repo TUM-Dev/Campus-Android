@@ -25,7 +25,6 @@
             android:background="@color/side_navigation_background"
             android:orientation="vertical" >
 
-            
             <EditText
                 android:id="@+id/side_navigation_search_txt"
                 android:layout_width="@dimen/side_navigation_width"
@@ -34,9 +33,10 @@
                 android:layout_alignParentTop="true"
                 android:ems="10"
                 android:hint="@string/search"
-                android:inputType="text" 
+                android:imeOptions="actionSearch"
+                android:inputType="text"
                 android:textColor="@color/side_navigation_item_text_color"
-        android:textSize="@dimen/side_navigation_item_text_size" />
+                android:textSize="@dimen/side_navigation_item_text_size" />
             
             <ListView
                 android:id="@+id/side_navigation_listview"

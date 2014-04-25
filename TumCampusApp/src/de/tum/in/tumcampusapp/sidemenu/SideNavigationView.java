@@ -10,13 +10,16 @@ import android.content.Context;
 import android.content.res.XmlResourceParser;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -35,6 +38,7 @@ public class SideNavigationView extends LinearLayout {
 	private LinearLayout navigationMenu;
 	private ListView listView;
 	private View outsideView;
+	private EditText txtSearch;
 
 	private ISideNavigationCallback callback;
 	private ArrayList<SideNavigationItem> menuItems;
@@ -110,6 +114,19 @@ public class SideNavigationView extends LinearLayout {
 					SideNavigationView.this.callback.onSideNavigationItemClick(SideNavigationView.this.menuItems.get(position));
 				}
 				SideNavigationView.this.hideMenu();
+			}
+		});
+
+		this.txtSearch = (EditText) this.findViewById(R.id.side_navigation_search_txt);
+		this.txtSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+			@Override
+			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+				if (actionId == EditorInfo.IME_ACTION_SEARCH || event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+					SideNavigationView.this.callback.onSideNavigationSearch(SideNavigationView.this.txtSearch.getText().toString());
+					SideNavigationView.this.txtSearch.setText("");
+					return true;
+				}
+				return false;
 			}
 		});
 	}

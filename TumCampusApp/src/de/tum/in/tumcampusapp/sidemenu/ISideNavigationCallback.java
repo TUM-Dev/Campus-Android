@@ -16,4 +16,12 @@ public interface ISideNavigationCallback {
 	 */
 	public void onSideNavigationItemClick(SideNavigationItem sideNavigationItem);
 
+	/**
+	 * Validation searching via. text field
+	 * 
+	 * @param txtSearch
+	 *            string to search for
+	 */
+	public void onSideNavigationSearch(String txtSearch);
+
 }

@@ -25,8 +25,7 @@ import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 
 /**
- * This class will handle all action needed to communicate with the TUMOnline
- * XML-RPC backend. ALl communications is based on the base-url which is
+ * This class will handle all action needed to communicate with the TUMOnline XML-RPC backend. ALl communications is based on the base-url which is
  * attached by the Token and additional parameters.
  * 
  * 
@@ -59,9 +58,9 @@ public class TUMOnlineRequest {
 	private Map<String, String> parameters;
 
 	public TUMOnlineRequest() {
-		client = getThreadSafeClient();
-		resetParameters();
-		HttpParams params = client.getParams();
+		this.client = this.getThreadSafeClient();
+		this.resetParameters();
+		HttpParams params = this.client.getParams();
 		HttpConnectionParams.setSoTimeout(params, Const.HTTP_TIMEOUT);
 		HttpConnectionParams.setConnectionTimeout(params, Const.HTTP_TIMEOUT);
 	}
@@ -75,21 +74,20 @@ public class TUMOnlineRequest {
 		this();
 		this.method = method;
 
-		if (!loadAccessTokenFromPreferences(context)) {
+		if (!this.loadAccessTokenFromPreferences(context)) {
 			// TODO show a dialog for the user
 		}
 	}
 
 	public void cancelRequest(boolean mayInterruptIfRunning) {
 		// Cancel background task just if one has been established
-		if (backgroundTask != null) {
-			backgroundTask.cancel(mayInterruptIfRunning);
+		if (this.backgroundTask != null) {
+			this.backgroundTask.cancel(mayInterruptIfRunning);
 		}
 	}
 
 	/**
-	 * Fetches the result of the HTTPRequest (which can be seen by using
-	 * getRequestURL)
+	 * Fetches the result of the HTTPRequest (which can be seen by using getRequestURL)
 	 * 
 	 * @author Daniel G. Mayr
 	 * @return output will be a raw String
@@ -97,12 +95,12 @@ public class TUMOnlineRequest {
 	 */
 	public String fetch() {
 		String result = "";
-		String url = getRequestURL();
+		String url = this.getRequestURL();
 		Log.d("TUMOnlineXMLRequest", "fetching URL " + url);
 
 		try {
 			HttpGet request = new HttpGet(url);
-			HttpResponse response = client.execute(request);
+			HttpResponse response = this.client.execute(request);
 			HttpEntity responseEntity = response.getEntity();
 
 			if (responseEntity != null) {
@@ -119,8 +117,7 @@ public class TUMOnlineRequest {
 	}
 
 	/**
-	 * this fetch method will fetch the data from the TUMOnline Request and will
-	 * address the listeners onFetch if the fetch succeeded, else the
+	 * this fetch method will fetch the data from the TUMOnline Request and will address the listeners onFetch if the fetch succeeded, else the
 	 * onFetchError will be called
 	 * 
 	 * @param context
@@ -128,16 +125,15 @@ public class TUMOnlineRequest {
 	 * @param listener
 	 *            the listener, which takes the result
 	 */
-	public void fetchInteractive(final Context context,
-			final TUMOnlineRequestFetchListener listener) {
+	public void fetchInteractive(final Context context, final TUMOnlineRequestFetchListener listener) {
 
-		if (!loadAccessTokenFromPreferences(context)) {
+		if (!this.loadAccessTokenFromPreferences(context)) {
 			listener.onFetchCancelled();
 		}
 
 		// fetch information in a background task and show progress dialog in
 		// meantime
-		backgroundTask = new AsyncTask<Void, Void, String>() {
+		this.backgroundTask = new AsyncTask<Void, Void, String>() {
 
 			/** property to determine if there is an internet connection */
 			boolean isOnline;
@@ -145,41 +141,35 @@ public class TUMOnlineRequest {
 			@Override
 			protected String doInBackground(Void... params) {
 				// set parameter on the TUMOnline request an fetch the results
-				isOnline = Utils.isConnected(context);
-				if (!isOnline) {
+				this.isOnline = Utils.isConnected(context);
+				if (!this.isOnline) {
 					// not online, fetch does not make sense
 					return null;
 				}
 				// we are online, return fetch result
-				return fetch();
+				return TUMOnlineRequest.this.fetch();
 			}
 
 			@Override
 			protected void onPostExecute(String result) {
 				if (result != null) {
-					Log.d(getClass().getSimpleName(), "Received result <"
-							+ result + ">");
+					Log.d(this.getClass().getSimpleName(), "Received result <" + result.length() + " characters>");
 				} else {
-					Log.w(getClass().getSimpleName(), "No result available");
+					Log.w(this.getClass().getSimpleName(), "No result available");
 				}
 				// Handles result
-				if (isOnline == false) {
-					listener.onCommonError(context
-							.getString(R.string.no_internet_connection));
+				if (this.isOnline == false) {
+					listener.onCommonError(context.getString(R.string.no_internet_connection));
 					return;
 				}
 				if (result == null) {
-					listener.onFetchError(context
-							.getString(R.string.empty_result));
+					listener.onFetchError(context.getString(R.string.empty_result));
 					return;
-				} else if (result
-						.contains(TUMOnlineConst.TOKEN_NICHT_BESTAETIGT)) {
-					listener.onFetchError(context
-							.getString(R.string.dialog_access_token_invalid));
+				} else if (result.contains(TUMOnlineConst.TOKEN_NICHT_BESTAETIGT)) {
+					listener.onFetchError(context.getString(R.string.dialog_access_token_invalid));
 					return;
 				} else if (result.contains(TUMOnlineConst.NO_FUNCTION_RIGHTS)) {
-					listener.onFetchError(context
-							.getString(R.string.dialog_no_rights_function));
+					listener.onFetchError(context.getString(R.string.dialog_no_rights_function));
 					return;
 				}
 				// If there could not be found any problems return usual on
@@ -188,7 +178,7 @@ public class TUMOnlineRequest {
 			}
 
 		};
-		backgroundTask.execute();
+		this.backgroundTask.execute();
 	}
 
 	/**
@@ -197,22 +187,20 @@ public class TUMOnlineRequest {
 	 * @return Map<String, String> parameters
 	 */
 	public Map<String, String> getParameters() {
-		return parameters;
+		return this.parameters;
 	}
 
 	/**
-	 * This will return the URL to the TUMOnlineRequest with regard to the set
-	 * parameters
+	 * This will return the URL to the TUMOnlineRequest with regard to the set parameters
 	 * 
 	 * @return a String URL
 	 */
 	public String getRequestURL() {
-		String url = SERVICE_BASE_URL + method + "?";
+		String url = SERVICE_BASE_URL + this.method + "?";
 
 		// Builds to be fetched URL based on the base-url and additional
 		// parameters
-		Iterator<Entry<String, String>> itMapIterator = parameters.entrySet()
-				.iterator();
+		Iterator<Entry<String, String>> itMapIterator = this.parameters.entrySet().iterator();
 
 		while (itMapIterator.hasNext()) {
 			Entry<String, String> pairs = itMapIterator.next();
@@ -226,8 +214,7 @@ public class TUMOnlineRequest {
 		ClientConnectionManager mgr = client.getConnectionManager();
 		HttpParams params = client.getParams();
 
-		client = new DefaultHttpClient(new ThreadSafeClientConnManager(params,
-				mgr.getSchemeRegistry()), params);
+		client = new DefaultHttpClient(new ThreadSafeClientConnManager(params, mgr.getSchemeRegistry()), params);
 
 		return client;
 	}
@@ -240,27 +227,26 @@ public class TUMOnlineRequest {
 	 * @return true if access token is available; false otherwise
 	 */
 	private boolean loadAccessTokenFromPreferences(Context context) {
-		accessToken = PreferenceManager.getDefaultSharedPreferences(context)
-				.getString(TUMOnlineConst.ACCESS_TOKEN, null);
+		this.accessToken = PreferenceManager.getDefaultSharedPreferences(context).getString(TUMOnlineConst.ACCESS_TOKEN, null);
 
 		// no access token set, or it is obviously wrong
-		if (accessToken == null || accessToken.length() < 1) {
+		if (this.accessToken == null || this.accessToken.length() < 1) {
 			return false;
 		}
 
-		Log.d("AccessToken", accessToken);
+		Log.d("AccessToken", this.accessToken);
 		// ok, access token seems valid (at first)
 
-		setParameter(TUMOnlineConst.P_TOKEN, accessToken);
+		this.setParameter(TUMOnlineConst.P_TOKEN, this.accessToken);
 		return true;
 	}
 
 	/** Reset parameters to an empty Map */
 	public void resetParameters() {
-		parameters = new HashMap<String, String>();
+		this.parameters = new HashMap<String, String>();
 		// set accessToken as parameter if available
-		if (accessToken != null) {
-			parameters.put(TUMOnlineConst.P_TOKEN, accessToken);
+		if (this.accessToken != null) {
+			this.parameters.put(TUMOnlineConst.P_TOKEN, this.accessToken);
 		}
 	}
 
@@ -273,17 +259,16 @@ public class TUMOnlineRequest {
 	 *            value of the parameter
 	 */
 	public void setParameter(String name, String value) {
-		parameters.put(name, value);
+		this.parameters.put(name, value);
 	}
 
 	/**
-	 * If you want to put a complete Parameter Map into the request, use this
-	 * function to merge them with the existing parameter map
+	 * If you want to put a complete Parameter Map into the request, use this function to merge them with the existing parameter map
 	 * 
 	 * @param existingMap
 	 *            a Map<String,String> which should be set
 	 */
 	public void setParameters(Map<String, String> existingMap) {
-		parameters.putAll(existingMap);
+		this.parameters.putAll(existingMap);
 	}
 }
