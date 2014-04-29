@@ -1,15 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="fill_parent"
-    android:orientation="horizontal" >
+    android:layout_height="fill_parent" >
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/pager"
+    <include
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        tools:context=".SearchActivity" >
-    </android.support.v4.view.ViewPager>
+        layout="@layout/layout_progress"
+        android:visibility="visible" />
 
-</LinearLayout>
+    <include
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        layout="@layout/layout_error"
+        android:visibility="gone" />
+
+    <include
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        layout="@layout/layout_failed_token"
+        android:visibility="gone" />
+
+    <include
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        layout="@layout/layout_no_token"
+        android:visibility="gone" />
+
+    <include
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        layout="@layout/layout_empty_result"
+        android:visibility="gone" />
+
+    <ListView
+        android:id="@+id/lvCategories"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+    </ListView>
+
+    <ListView
+        android:id="@+id/lvFound"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@id/lvCategories"
+        android:entries="@array/roles"
+        android:scrollbars="vertical" />
+
+</RelativeLayout>

@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.actionbarsherlock.app.SherlockFragment;
 
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.activities.SearchActivity;
 import de.tum.in.tumcampusapp.adapters.SearchPagerAdapter;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.data.SearchAction;
@@ -164,6 +165,9 @@ public class SearchFragment extends SherlockFragment implements OnItemClickListe
 
 		// Hide all messages
 		this.hideAll();
+
+		// Tell pager to do something
+		((SearchActivity) this.activity).pagerAdapter.notifyDataSetChanged();
 	}
 
 	@Override

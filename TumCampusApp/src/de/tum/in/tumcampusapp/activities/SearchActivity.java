@@ -63,7 +63,7 @@ public class SearchActivity extends SherlockFragmentActivity implements OnQueryT
 
 	private SuggestionsAdapter mSuggestionsAdapter;
 
-	private SearchPagerAdapter pagerAdapter;
+	public SearchPagerAdapter pagerAdapter;
 	private ViewPager pager;
 	private SearchView searchView;
 
@@ -143,7 +143,7 @@ public class SearchActivity extends SherlockFragmentActivity implements OnQueryT
 		Toast.makeText(this, "You searched for: " + query, Toast.LENGTH_LONG).show();
 		// Hide the keyboard
 		// Utils.hideKeyboard(this, this.rootView);
-		for (SearchFragment x : this.pagerAdapter.pages.values()) {
+		for (SearchFragment x : this.pagerAdapter.pages) {
 			x.doSearch(query);
 		}
 		return true;

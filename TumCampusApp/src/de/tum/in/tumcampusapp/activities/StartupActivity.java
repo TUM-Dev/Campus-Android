@@ -6,7 +6,6 @@ import android.os.StrictMode;
 import android.util.Log;
 
 import com.actionbarsherlock.app.SherlockActivity;
-
 import com.bugsense.trace.BugSenseHandler;
 
 import de.tum.in.tumcampusapp.auxiliary.DemoModeStartActivity;
@@ -19,7 +18,7 @@ import de.tum.in.tumcampusapp.auxiliary.DemoModeStartActivity;
  */
 public class StartupActivity extends SherlockActivity {
 	public static final boolean DEMO_MODE = false;
-	public static final boolean TRACK_ERRORS_WITH_BUG_SENSE = true;
+	public static final boolean TRACK_ERRORS_WITH_BUG_SENSE = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -35,20 +34,19 @@ public class StartupActivity extends SherlockActivity {
 		// disallows applications to execute HTTP request in the GUI main
 		// thread.
 		if (android.os.Build.VERSION.SDK_INT > 8) {
-			StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
-					.permitAll().build();
+			StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 			StrictMode.setThreadPolicy(policy);
 		}
 
 		// Start the demo Activity if demo mode is set
 		if (DEMO_MODE) {
 			Intent intent = new Intent(this, DemoModeStartActivity.class);
-			startActivity(intent);
-			finish();
+			this.startActivity(intent);
+			this.finish();
 		} else {
 			Intent intent = new Intent(this, StartActivity.class);
-			startActivity(intent);
-			finish();
+			this.startActivity(intent);
+			this.finish();
 		}
 	}
 }
