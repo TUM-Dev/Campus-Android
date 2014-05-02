@@ -7,10 +7,13 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.CheckBoxPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
+import android.preference.PreferenceCategory;
 import android.preference.PreferenceManager;
 import android.provider.CalendarContract.Calendars;
 import android.widget.Toast;
@@ -155,9 +158,35 @@ public class UserPreferencesActivity extends PreferenceActivity implements
 						return true;
 					}
 				});
-		// Register the cahnge liustener to react immediately on changes
+		
+		// Add cafeterias to preferences
+		addCafeterias();
+		
+		// Register the change listener to react immediately on changes
 		PreferenceManager.getDefaultSharedPreferences(this)
 				.registerOnSharedPreferenceChangeListener(this);
+	}
+
+	// Uses CafeteriaManager to populate MyMensa Category
+	private void addCafeterias() {
+		PreferenceCategory myMensa = (PreferenceCategory) findPreference("my_mensa");
+		myMensa.removeAll();
+
+		SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
+
+		CafeteriaManager manager = new CafeteriaManager(this);
+		Cursor cursor = manager.getAllFromDb("% %");
+		if (cursor.moveToFirst()) {
+			do {
+				CheckBoxPreference preference = new CheckBoxPreference(this);
+				final String key = cursor.getString(2);
+				preference.setTitle(cursor.getString(0));
+				preference.setSummary(cursor.getString(1));
+				preference.setKey("mensa_"+key);
+				preference.setChecked(sharedPreferences.getBoolean("mensa_"+key, true));
+				myMensa.addPreference(preference);
+			} while (cursor.moveToNext());
+		}
 	}
 
 	@Override

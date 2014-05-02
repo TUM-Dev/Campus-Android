@@ -464,10 +464,16 @@
      <string  name = "update_implicitly" >Intelligent reordering</string>
      <string  name = "summary_implicitly" >Intelligent reordering of the menu items in the personalized startpage</string>
      <string  name = "customize" >Customize your start page</string>
-      <string  name = "pref_string" >mvv_id,lectures_id,menues_id,rss_feeds_id,calender_id,study_plans_id,events_id,gallery_id,person_search_id,plans_id,roomfinder_id,opening_hours_id,organisations_id,my_lectures_id,my_grades_id,tuition_fees_id,tum_news_id,information_id</string>
+     <string  name = "pref_string" >mvv_id,lectures_id,menues_id,rss_feeds_id,calender_id,study_plans_id,events_id,gallery_id,person_search_id,plans_id,roomfinder_id,opening_hours_id,organisations_id,my_lectures_id,my_grades_id,tuition_fees_id,tum_news_id,information_id</string>
      <string  name = "info_title_str" >TCA Information</string>
      <string  name = "info_title" >New information:</string>
      <string  name = "info_str" >No important news!</string>
+     <string  name = "mensa_title" >My Mensa</string>
+     <string  name = "mensa_summary" >Change your preferred canteens</string>
+     <string  name = "mensa_use_location_title" >Use current location</string>
+     <string  name = "mensa_use_location_summary" >Makes use of your current location to decide which canteen to show</string>
+     <string  name = "my_mensa" >My canteens</string>
+     
    
     <!-- END Translated, please do not change identifiers -->
     

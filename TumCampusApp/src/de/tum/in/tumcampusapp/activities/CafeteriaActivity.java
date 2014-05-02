@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.database.MatrixCursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.View;
@@ -81,11 +82,39 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
 
 		// Get all available cafeterias from database
 		Cursor cursor = cafeteriaManager.getAllFromDb("% %");
-		this.startManagingCursor(cursor);
+		
+		MatrixCursor newCursor = new MatrixCursor(cursor.getColumnNames());
+		if (cursor.moveToFirst()) {
+		    do {
+		    	final String key = cursor.getString(2);
+		        if (this.sharedPrefs.getBoolean("mensa_"+key, true)) {
+		        	newCursor.addRow(new Object[]{cursor.getString(0), cursor.getString(1), key});
+		        }
+		    } while (cursor.moveToNext());
+		}
+		cursor.close();
+		
+		this.startManagingCursor(newCursor);
 
 		// Iterate over all cafeterias and add them to the listview
-		if (cursor.getCount() > 0) {
-			SimpleCursorAdapter adapterCafeterias = new SimpleCursorAdapter(this, R.layout.list_layout_two_line_item, cursor, cursor.getColumnNames(),
+		if (newCursor.getCount() == 1) {
+			// Get Id and name of the database object
+			newCursor.moveToFirst();
+			this.cafeteriaId = newCursor.getString(newCursor.getColumnIndex(Const.ID_COLUMN));
+			this.cafeteriaName = newCursor.getString(newCursor.getColumnIndex(Const.NAME_COLUMN));
+
+			// Put Id and name into an intent and start the detail view of
+			// cafeterias
+			Intent intent = new Intent(this, CafeteriaDetailsActivity.class);
+			intent.putExtra(Const.CAFETERIA_ID, this.cafeteriaId);
+			intent.putExtra(Const.CAFETERIA_NAME, this.cafeteriaName);
+
+			this.startActivity(intent);
+			
+			// Close this activity
+			finish();
+		} else if (newCursor.getCount() > 0) {
+			SimpleCursorAdapter adapterCafeterias = new SimpleCursorAdapter(this, R.layout.list_layout_two_line_item, newCursor, newCursor.getColumnNames(),
 					new int[] { android.R.id.text1, android.R.id.text2 });
 
 			this.listCafeterias.setAdapter(adapterCafeterias);

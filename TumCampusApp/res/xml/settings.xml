@@ -29,100 +29,104 @@
             android:key="role"
             android:summary="@string/role_summary"
             android:title="@string/role" />
-        
+
+        <PreferenceScreen
+            android:summary="@string/personalized_summary"
+            android:title="@string/personalized_title" >
+            <PreferenceCategory>
+                <CheckBoxPreference
+                    android:defaultValue="true"
+                    android:key="implicitly_id"
+                    android:summary="@string/summary_implicitly"
+                    android:title="@string/update_implicitly" />
+            </PreferenceCategory>
+            <PreferenceCategory android:title="@string/customize" >
+                <CheckBoxPreference
+                    android:defaultValue="true"
+                    android:key="mvv_id"
+                    android:title="@string/mvv" />
+                <CheckBoxPreference
+                    android:defaultValue="true"
+                    android:key="lectures_id"
+                    android:title="@string/lectures" />
+                <CheckBoxPreference
+                    android:defaultValue="true"
+                    android:key="menues_id"
+                    android:title="@string/menues" />
+                <CheckBoxPreference
+                    android:defaultValue="false"
+                    android:key="rss_feeds_id"
+                    android:title="@string/rss_feeds" />
+                <CheckBoxPreference
+                    android:defaultValue="false"
+                    android:key="calender_id"
+                    android:title="@string/schedule" />
+                <CheckBoxPreference
+                    android:defaultValue="false"
+                    android:key="study_plans_id"
+                    android:title="@string/study_plans" />
+                <CheckBoxPreference
+                    android:defaultValue="false"
+                    android:key="events_id"
+                    android:title="@string/events" />
+                <CheckBoxPreference
+                    android:defaultValue="false"
+                    android:key="gallery_id"
+                    android:title="@string/gallery" />
+                <CheckBoxPreference
+                    android:defaultValue="false"
+                    android:key="person_search_id"
+                    android:title="@string/person_search" />
+                <CheckBoxPreference
+                    android:defaultValue="true"
+                    android:key="roomfinder_id"
+                    android:title="@string/roomfinder" />
+                <CheckBoxPreference
+                    android:defaultValue="false"
+                    android:key="opening_hours_id"
+                    android:title="@string/opening_hours" />
+                <CheckBoxPreference
+                    android:defaultValue="false"
+                    android:key="organisations_id"
+                    android:title="@string/organisations" />
+                <CheckBoxPreference
+                    android:defaultValue="false"
+                    android:key="my_lectures_id"
+                    android:title="@string/my_lectures" />
+                <CheckBoxPreference
+                    android:defaultValue="false"
+                    android:key="my_grades_id"
+                    android:title="@string/my_grades" />
+                <CheckBoxPreference
+                    android:defaultValue="false"
+                    android:key="tuition_fees_id"
+                    android:title="@string/tuition_fees" />
+                <CheckBoxPreference
+                    android:defaultValue="false"
+                    android:key="tum_news_id"
+                    android:title="@string/tum_news" />
+                <CheckBoxPreference
+                    android:defaultValue="false"
+                    android:key="information_id"
+                    android:title="@string/information" />
+            </PreferenceCategory>
+        </PreferenceScreen>
         
         <PreferenceScreen
-            
-            android:title="@string/personalized_title"
-            android:summary="@string/personalized_summary">
-            <PreferenceCategory>
-             <CheckBoxPreference
-                android:defaultValue="true"
-                android:key="implicitly_id"
-                android:summary="@string/summary_implicitly"
-                android:title="@string/update_implicitly" />
-            
-            
-        </PreferenceCategory>
-          <PreferenceCategory android:title="@string/customize" >
-        <CheckBoxPreference
-                android:defaultValue="true"
-                android:key="mvv_id"
-                android:title="@string/mvv" />
-         <CheckBoxPreference
-                android:defaultValue="true"
-                android:key="lectures_id"
-                android:title="@string/lectures" />
-         <CheckBoxPreference
-                android:defaultValue="true"
-                android:key="menues_id"
-                android:title="@string/menues" />
-         <CheckBoxPreference
-                android:defaultValue="false"
-                android:key="rss_feeds_id"
-                android:title="@string/rss_feeds" />
-         <CheckBoxPreference
-                android:defaultValue="false"
-                android:key="calender_id"
-                android:title="@string/schedule" />
-         <CheckBoxPreference
-                android:defaultValue="false"
-                android:key="study_plans_id"
-                android:title="@string/study_plans" />
-          <CheckBoxPreference
-                android:defaultValue="false"
-                android:key="events_id"
-                android:title="@string/events" />
-          <CheckBoxPreference
-                android:defaultValue="false"
-                android:key="gallery_id"
-                android:title="@string/gallery" />
-          <CheckBoxPreference
-                android:defaultValue="false"
-                android:key="person_search_id"
-                android:title="@string/person_search" />
-          <CheckBoxPreference
-                android:defaultValue="true"
-                android:key="roomfinder_id"
-                android:title="@string/roomfinder" />
-           <CheckBoxPreference
-                android:defaultValue="false"
-                android:key="opening_hours_id"
-                android:title="@string/opening_hours" />
-           <CheckBoxPreference
-                android:defaultValue="false"
-                android:key="organisations_id"
-                android:title="@string/organisations" />
-           <CheckBoxPreference
-                android:defaultValue="false"
-                android:key="my_lectures_id"
-                android:title="@string/my_lectures" />
-           <CheckBoxPreference
-                android:defaultValue="false"
-                android:key="my_grades_id"
-                android:title="@string/my_grades" />
-             <CheckBoxPreference
-                android:defaultValue="false"
-                android:key="tuition_fees_id"
-                android:title="@string/tuition_fees" />
-              <CheckBoxPreference
-                android:defaultValue="false"
-                android:key="tum_news_id"
-                android:title="@string/tum_news" />
-               <CheckBoxPreference
-                android:defaultValue="false"
-                android:key="information_id"
-                android:title="@string/information" />
-              
-
-           
-           
-           
-           
-         
-
+            android:summary="@string/mensa_summary"
+            android:title="@string/mensa_title" >
+          <!--  <PreferenceCategory>
+                <CheckBoxPreference
+                    android:defaultValue="true"
+                    android:key="mensa_use_current_location"
+                    android:summary="@string/mensa_use_location_summary"
+                    android:title="@string/mensa_use_location_title" />
+            </PreferenceCategory>-->  
+            <PreferenceCategory 
+                android:key="my_mensa" >
+                <!-- android:title="@string/my_mensa" -->
             </PreferenceCategory>
-     </PreferenceScreen>
+        </PreferenceScreen>
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/extras" >
         <Preference
@@ -133,8 +137,6 @@
             android:key="button_clear_cache"
             android:summary="@string/clear_cache_detail"
             android:title="@string/clear_cache" />
-            
-    
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/services" >
         <CheckBoxPreference
@@ -142,26 +144,21 @@
             android:summary="@string/silence_phone_info"
             android:title="@string/silence_phone" />
         <CheckBoxPreference
-            android:key="background_mode"
             android:enabled="false"
+            android:key="background_mode"
             android:summary="@string/background_info"
             android:title="@string/background_mode" />
         <CheckBoxPreference
-        	android:defaultValue="false"
-        	android:key="first_run"
-        	android:summary="@string/demo_info"
-        	android:title="@string/demo_mode" />
-		</PreferenceCategory>
-		
-    
+            android:defaultValue="false"
+            android:key="first_run"
+            android:summary="@string/demo_info"
+            android:title="@string/demo_mode" />
+    </PreferenceCategory>
     <PreferenceCategory android:title="@string/debug_for_developer" >
-		 <Preference
-		    android:enabled="false"
+        <Preference
+            android:enabled="false"
             android:summary="@string/debug_mode"
             android:title="@string/debug_mode" />
-		</PreferenceCategory>
-    
-    
-    
-    
+    </PreferenceCategory>
+
 </PreferenceScreen>
