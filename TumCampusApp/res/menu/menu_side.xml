@@ -14,11 +14,12 @@
         android:icon="@drawable/calculator"
         android:title="@string/my_lectures"
         android:titleCondensed="LecturesPersonalActivity"/>
-    <item
+   <!-- <item
         android:id="@+id/menu_side_my_grades"
         android:icon="@drawable/chart"
         android:title="@string/my_grades"
-        android:titleCondensed="GradesActivity"/>
+        android:titleCondensed="GradesActivity"/> -->
+        
     <item
         android:id="@+id/menu_side_tuition_fees"
         android:icon="@drawable/finance"
@@ -45,12 +46,12 @@
         android:icon="@drawable/documents"
         android:title="@string/study_plans"
         android:titleCondensed="CurriculaActivity"/>
-    <item
+   <!-- <item
         android:id="@+id/menu_side_events"
         android:icon="@drawable/camera"
         android:title="@string/events"
         android:titleCondensed="EventsActivity"
-        android:enabled="false"/>
+        android:enabled="false"/> -->
     
     <item
         android:id="@+id/menu_side_gallery"
@@ -95,15 +96,18 @@
     <item
         android:id="@+id/menu_side_slast"
         android:title="@string/extra"/>
+    
     <item
         android:id="@+id/action_settings"
         android:icon="@android:drawable/ic_menu_preferences"
         android:title="@string/action_settings"  
         android:titleCondensed="UserPreferencesActivity"/>
+    
     <item
         android:id="@+id/menu_side_news"
         android:icon="@drawable/mail"
-        android:title="@string/tum_news"/>
+        android:title="@string/tum_news"
+        android:titleCondensed="NewsActivity"/>
     
     <item 
         android:id="@+id/menu_side_information"

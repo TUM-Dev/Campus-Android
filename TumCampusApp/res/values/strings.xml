@@ -121,7 +121,7 @@
     <string name="cafeteria_addinfo">Dishes at all TUM cafeterias</string>
     <string name="search_persons">Search persons</string>
     <string name="tumonline_password_word">TUMOnline Password</string>
-    <string name="tumonline_lrz_id">LRZ Identification</string>
+    <string name="tumonline_lrz_id">TUM Identification</string>
     <string name="tumonline_access_token_word">TUMOnline-Access-Token</string>
     <string name="modules">Modules</string>
     <string name="mensa_filter">Mensa filter</string>
@@ -396,9 +396,13 @@
         \n\n<b>Project Management:</b>\nTUM - Computer Science / F13
         \nProf. Dr. Uwe Baumgarten
         \nNils T. Kannengiesser
-        \n\n<b>Current Developers:</b>\nSascha Moecker\nHaris Iltifat\nAnas Chakfeh\nThomas Krex\nMarius Muntean
+        \n\n<b>Most recent Developers:</b>
+        \nKorbian Bruck
+        \nFlorian Dreier
+        \nSepideh Mesbah
+        \nShabnam Najafian
         \n\n<b>Further Developers:</b>
-        \nChristoph Richter, Thomas Bley, Vincenz Dölle, Daniel Mayr, Thomas Behrens, Florian Schulz, Vasyl Malinskyi,
+        \nSascha Moecker, Haris Iltifat, Anas Chakfeh, Thomas Krex, Marius Muntean, Christoph Richter, Thomas Bley, Vincenz Dölle, Daniel Mayr, Thomas Behrens, Florian Schulz, Vasyl Malinskyi,
         Andreas Bernhofer (IT-Support/TUMonline), Nils T. Kannengiesser (F13)        
         \n\n<b>Important information:</b>\nThis App is not published by the Technical University Muenchen officially. It is a project by and for students. The software is used at your own risk. We are not responsible for any damage that might be caused by using this App or its presented information. For security reasons the access to private information of TUMOnline is regulated by using tokens. You need to enable different features within TUMOnline for a certain token to be able to use those information within the App.
         \n\n<b>Privacy information:</b>\nThe application stores data on request only. Critical information requires the user\'s permission (clearance by token) and is stored locally or received from TUMOnline directly. We are using BugSense for bug tracking. Crash reports contain detailed technical information on the phone, the operating system and the error itself. This information is helpful for the developers in order to improve the app. Furthermore BugSense collects anonymous usage information (e.g. users of the app per day). Detailed information on BugSense can be found below.
@@ -408,7 +412,7 @@
 		\nNew BSD License - http://www.opensource.org/licenses/bsd-license.php
 		\n\nThe source code is available on GitHub (https://github.com/TCA-Team/)
 		\n\n<b>TUM Campus App on Facebook:</b>\nhttps://www.facebook.com/TUMCampus
-	    \n\n<b>Detailed information on BugSense:</b>\nBugSense will not collect any sensitive user data, but gathers the following information (as provided by the BugSense support team):\n\nOn Session start:\nUnique device identifier (random string), App version, OS version, Device model, Locale, Timestamp, Event type, SDK version\n\nWhen an exception occurs:\nStacktrace, Error message, App version, OS version, Device model, Locale, Timestamp, SDK version, GPS on/off/NA, WiFi on/off, Cellular data on/off, Device orientation, Screen size, Uncaught or handled exception, custom data\n\nFurthermore it collects the user ip, user country, date/time of crash and application date. BugSense may use the collected information for various general purposes like products and services provision, error analysis, identification and authentication, services improvement, contact, and research. They may publish aggregated and anonymized reports, too.\n\n\n21 November 2013\n</string>
+	    \n\n<b>Detailed information on BugSense:</b>\nBugSense will not collect any sensitive user data, but gathers the following information (as provided by the BugSense support team):\n\nOn Session start:\nUnique device identifier (random string), App version, OS version, Device model, Locale, Timestamp, Event type, SDK version\n\nWhen an exception occurs:\nStacktrace, Error message, App version, OS version, Device model, Locale, Timestamp, SDK version, GPS on/off/NA, WiFi on/off, Cellular data on/off, Device orientation, Screen size, Uncaught or handled exception, custom data\n\nFurthermore it collects the user ip, user country, date/time of crash and application date. BugSense may use the collected information for various general purposes like products and services provision, error analysis, identification and authentication, services improvement, contact, and research. They may publish aggregated and anonymized reports, too.\n\n\nMay 9th 2014\n</string>
     <string name="credits">ECTS</string>
     <string name="wizzard_on_startup">Do not show at next start</string>
     <string name="token_not_enabled">TUMOnline-Access-Token is not enabled</string>
@@ -457,7 +461,7 @@
     <string name="feedbackSubj">Feedback for TUM Campus App</string>
     <string name="version">Version</string>
     <string name="send_email">Send e-mail feedback</string>
-    <string  name = "personalized_title" > Persolize start page </string>
+    <string  name = "personalized_title" > Personalized start page </string>
     <string  name = "personalized_summary" > Get your grades, schedule and more-all in one place. </string>
     <string  name = "personalized" >Personalized Page</string>
     <string  name = "MyPrefrences" >MyPrefrences</string>
