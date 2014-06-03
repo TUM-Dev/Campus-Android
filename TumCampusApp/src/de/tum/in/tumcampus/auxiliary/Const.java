@@ -138,5 +138,7 @@ public final class Const {
 	public static final String TUM_NEWS_ID="tum_news_id";
 	public static final String INFORMATION_ID="information_id";
 	
+	public static final String CHAT_ROOMS_ID="chat_rooms_id";
+	
     
 }
