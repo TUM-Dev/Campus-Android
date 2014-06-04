@@ -260,6 +260,17 @@
             android:configChanges="orientation|screenSize"
             android:label="@string/app_name" >
         </activity>
+        
+        <activity
+            android:name="de.tum.in.tumcampus.activities.ChatRoomsSearchActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/my_chat_rooms" >
+        </activity>
+        <activity
+            android:name="de.tum.in.tumcampus.activities.ChatActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/my_chat_rooms" >
+        </activity>
 
         <service
             android:name="de.tum.in.tumcampus.services.DownloadService"

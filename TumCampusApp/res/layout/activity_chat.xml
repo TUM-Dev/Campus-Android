@@ -7,7 +7,7 @@
     <ListView
       android:id="@+id/lvMessageHistory"
       android:layout_width="wrap_content" 
-      android:layout_height="0px" 
+      android:layout_height="0px"
       android:layout_weight="1"/>
 
     <LinearLayout 

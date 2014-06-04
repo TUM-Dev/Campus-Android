@@ -1,5 +1,7 @@
 package de.tum.in.tumcampus.activities;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import android.app.Activity;
@@ -11,8 +13,12 @@ import android.widget.EditText;
 import android.widget.ListView;
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.adapters.ChatHistoryAdapter;
+import de.tum.in.tumcampus.models.ChatMessage;
 
 /**
+ * 
+ * 
+ * linked files: res.layout.activity_chat
  * 
  * @author Jana Pejic
  */
@@ -29,11 +35,14 @@ public class ChatActivity extends Activity implements OnClickListener {
 		setContentView(R.layout.activity_chat);
 		getActionBar().setTitle("Hello world App"); // TODO: Change to subject name
 		
-		lvMessageHistory = (ListView) findViewById(R.id.lvMessageHistory);
-		loadChatHistory(null); // TODO: Pass chat history
-		etMessage = (EditText) findViewById(R.id.etMessage);
-		btnSend = (Button) findViewById(R.id.btnSend);
-		btnSend.setOnClickListener(this);
+		bindUIElements();
+		
+		// TODO: Pass chat history
+		List<ChatMessage> messageHistory = new ArrayList<ChatMessage>();
+		for (int i = 0; i < 5; i++) {
+			messageHistory.add(new ChatMessage("Jana", "Test Message", new Date()));
+		}
+		loadChatHistory(messageHistory);
 	}
 
 	@Override
@@ -43,7 +52,18 @@ public class ChatActivity extends Activity implements OnClickListener {
 		}
 	}
 	
-	private void loadChatHistory(List<String> messageHistory) { // TODO: Use a new class Message instead of String
-		lvMessageHistory.setAdapter(new ChatHistoryAdapter());
+	/**
+	 * Bind ivars that correspond to UI elements
+	 * to appropriate activity_chat.xml componenets
+	 */
+	private void bindUIElements() {
+		lvMessageHistory = (ListView) findViewById(R.id.lvMessageHistory);
+		etMessage = (EditText) findViewById(R.id.etMessage);
+		btnSend = (Button) findViewById(R.id.btnSend);
+		btnSend.setOnClickListener(this);
+	}
+	
+	private void loadChatHistory(List<ChatMessage> messageHistory) {
+		lvMessageHistory.setAdapter(new ChatHistoryAdapter(this, messageHistory));
 	}
 }

@@ -1,32 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
   xmlns:android="http://schemas.android.com/apk/res/android"
   android:orientation="vertical"
   android:layout_width="wrap_content"
-  android:layout_height="wrap_content">
+  android:layout_height="wrap_content"
+  android:layout_gravity="center"
+  android:id="@+id/chatMessageLayout">
 
-    <LinearLayout
-        android:id="@+id/userAndMessage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+   <TextView
+       android:id="@+id/tvUser"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:textStyle="bold"/>
 
-        <TextView
-            android:id="@+id/tvUser"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textStyle="bold"/>
-
-        <TextView
-            android:id="@+id/tvMessage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textStyle="bold"/>
-
-    </LinearLayout>
-
-    <TextView
-        android:id="@+id/tvTime"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-
-</RelativeLayout>
+   <LinearLayout
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content">
+       
+       <TextView
+           android:id="@+id/tvMessage"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:textStyle="bold"/>
+       
+       <TextView
+           android:id="@+id/tvTime"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"/>
+       
+   </LinearLayout>     
+</LinearLayout>
