@@ -139,6 +139,7 @@ public final class Const {
 	public static final String INFORMATION_ID="information_id";
 	
 	public static final String CHAT_ROOMS_ID="chat_rooms_id";
+	public static final String CHAT_ROOM_UID="chat_room_uid";
 	
     
 }

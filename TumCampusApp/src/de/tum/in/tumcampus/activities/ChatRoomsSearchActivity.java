@@ -6,6 +6,9 @@ import java.util.List;
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
 
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -21,8 +24,10 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.generic.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampus.adapters.ChatRoomsListAdapter;
+import de.tum.in.tumcampus.auxiliary.ChatClient;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.PersonalLayoutManager;
+import de.tum.in.tumcampus.models.ChatRoom;
 import de.tum.in.tumcampus.models.LecturesSearchRow;
 import de.tum.in.tumcampus.models.LecturesSearchRowSet;
 
@@ -110,8 +115,7 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
 				 * FindLecturesListAdapter
 				 */
 				@Override
-				public void onItemSelected(AdapterView<?> arg0, View arg1,
-						int arg2, long arg3) {
+				public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 					String filter = spFilter.getItemAtPosition(arg2).toString();
 					if (filter == getString(R.string.all)) {
 						setListView(lecturesList.getLehrveranstaltungen());
@@ -173,7 +177,22 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
 				bundle.putString("stp_sp_nr", item.getStp_sp_nr());
 				Intent intent = new Intent(ChatRoomsSearchActivity.this, ChatActivity.class);
 				intent.putExtras(bundle);
-				// start LectureDetails for given stp_sp_nr
+				
+				String chatRoomUid = item.getSemester_id() + ":" + item.getTitel();
+				intent.putExtra(Const.CHAT_ROOM_UID, chatRoomUid);
+				
+				ChatClient.getInstance().createGroup(new ChatRoom(chatRoomUid), new Callback<ChatRoom>() {	
+					@Override
+					public void success(ChatRoom arg0, Response arg1) {
+						Log.e("Success", arg0.toString());
+					}
+					
+					@Override
+					public void failure(RetrofitError arg0) {
+						Log.e("Failure", arg0.toString());
+					}
+				});
+				
 				startActivity(intent);
 			}
 		});

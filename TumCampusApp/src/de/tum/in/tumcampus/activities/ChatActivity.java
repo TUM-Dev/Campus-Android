@@ -13,6 +13,8 @@ import android.widget.EditText;
 import android.widget.ListView;
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.adapters.ChatHistoryAdapter;
+import de.tum.in.tumcampus.auxiliary.ChatClient;
+import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.models.ChatMessage;
 
 /**
@@ -29,17 +31,20 @@ public class ChatActivity extends Activity implements OnClickListener {
 	private EditText etMessage;
 	private Button btnSend;
 	
+	private String groupId;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_chat);
-		getActionBar().setTitle("Hello world App"); // TODO: Change to subject name
+		groupId = getIntent().getExtras().getString(Const.CHAT_ROOM_UID);
+		getActionBar().setTitle(groupId);
 		
 		bindUIElements();
 		
 		// TODO: Pass chat history
 		List<ChatMessage> messageHistory = new ArrayList<ChatMessage>();
-		for (int i = 0; i < 5; i++) {
+		for (int i = 0; i < 10; i++) {
 			messageHistory.add(new ChatMessage("Jana", "Test Message", new Date()));
 		}
 		loadChatHistory(messageHistory);
@@ -49,13 +54,10 @@ public class ChatActivity extends Activity implements OnClickListener {
 	public void onClick(View view) {
 		if (view.getId() == btnSend.getId()) {
 			// TODO: SEND MESSAGE
+			ChatClient.getInstance().sendMessage(groupId);
 		}
 	}
 	
-	/**
-	 * Bind ivars that correspond to UI elements
-	 * to appropriate activity_chat.xml componenets
-	 */
 	private void bindUIElements() {
 		lvMessageHistory = (ListView) findViewById(R.id.lvMessageHistory);
 		etMessage = (EditText) findViewById(R.id.etMessage);

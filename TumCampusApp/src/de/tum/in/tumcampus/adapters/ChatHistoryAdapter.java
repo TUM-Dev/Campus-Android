@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 import de.tum.in.tumcampus.R;
@@ -70,20 +71,20 @@ public class ChatHistoryAdapter extends BaseAdapter {
 			holder.tvMessage.setText(chatMessage.getMessage());
 			holder.tvTimestamp.setText(chatMessage.getTimestampString());
 			
-			//LinearLayout chatMessageLayout = (LinearLayout) convertView.findViewById(R.id.chatMessageLayout);
+			LinearLayout chatMessageLayout = (LinearLayout) convertView.findViewById(R.id.chatMessageLayout);
 			
 			// TODO: Put user and timestamp in the bubble
-			LayoutParams layoutParams = (LayoutParams) holder.tvMessage.getLayoutParams();
+			//LayoutParams layoutParams = (LayoutParams) convertView.findViewById(R.id.chatMessageLayout).getLayoutParams();
 			
 			if (position % 2 == 0) { // TODO: Check if it's current user's message
-				holder.tvMessage.setBackgroundResource(R.drawable.bubble_right);
-				layoutParams.gravity = Gravity.RIGHT;
+				chatMessageLayout.setBackgroundResource(R.drawable.bubble_right);
+				//layoutParams.gravity = Gravity.RIGHT;
 			} else {
-				holder.tvMessage.setBackgroundResource(R.drawable.bubble_left);
-				layoutParams.gravity = Gravity.LEFT;
+				chatMessageLayout.setBackgroundResource(R.drawable.bubble_left);
+				//layoutParams.gravity = Gravity.LEFT;
 			}
 			
-			holder.tvMessage.setLayoutParams(layoutParams);
+			//holder.tvMessage.setLayoutParams(layoutParams);
 		}
 
 		return convertView;

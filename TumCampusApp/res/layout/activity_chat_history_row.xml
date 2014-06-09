@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
   xmlns:android="http://schemas.android.com/apk/res/android"
+  android:id="@+id/chatMessageLayout"
   android:orientation="vertical"
   android:layout_width="wrap_content"
   android:layout_height="wrap_content"
-  android:layout_gravity="center"
-  android:id="@+id/chatMessageLayout">
+  android:layout_gravity="right">
 
    <TextView
        android:id="@+id/tvUser"
@@ -20,8 +20,7 @@
        <TextView
            android:id="@+id/tvMessage"
            android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:textStyle="bold"/>
+           android:layout_height="wrap_content"/>
        
        <TextView
            android:id="@+id/tvTime"
