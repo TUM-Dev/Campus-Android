@@ -485,6 +485,8 @@
 	 <string name="chat_rooms_addinfo">Search for chat rooms at TUM</string>
      <string name="my_chat_rooms">My Chat Rooms</string>
      <string name="send">Send</string>
+     <string name="chat_terms_title">Chat Terms</string>
+     <string name="chat_terms_body">Chat Terms</string>
      
     <!-- END Translated, please do not change identifiers -->
     

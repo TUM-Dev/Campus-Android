@@ -9,6 +9,8 @@ import org.simpleframework.xml.core.Persister;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -177,7 +179,7 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
 				Bundle bundle = new Bundle();
 				// we need the stp_sp_nr
 				bundle.putString("stp_sp_nr", item.getStp_sp_nr());
-				Intent intent = new Intent(ChatRoomsSearchActivity.this, ChatActivity.class);
+				final Intent intent = new Intent(ChatRoomsSearchActivity.this, ChatActivity.class);
 				intent.putExtras(bundle);
 				
 				String chatRoomUid = item.getSemester_id() + ":" + item.getTitel();
@@ -197,7 +199,32 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
 					}
 				});
 				
-				startActivity(intent);
+				// Show terms under which the chat is provided by the app developers 
+				AlertDialog.Builder builder = new AlertDialog.Builder(ChatRoomsSearchActivity.this);
+				builder.setTitle(R.string.chat_terms_title)
+					.setMessage(getResources().getString(R.string.chat_terms_body))
+					.setPositiveButton(getResources().getString(android.R.string.ok), new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+								String lrzId = PreferenceManager.getDefaultSharedPreferences(ChatRoomsSearchActivity.this).getString(Const.LRZ_ID, "");
+								if (lrzId != null) {
+									ChatClient.getInstance().joinChatRoom(currentChatRoom, new Callback<ChatRoom>() {
+										@Override
+										public void success(ChatRoom arg0, Response arg1) {
+											Log.e("Success", arg0.toString());
+										}
+										@Override
+										public void failure(RetrofitError arg0) {
+											Log.e("Failure", arg0.toString());
+										}
+									});
+									startActivity(intent);
+								}
+						}
+				});
+				
+				AlertDialog alertDialog = builder.create();
+				alertDialog.show();
 			}
 		});
 	}

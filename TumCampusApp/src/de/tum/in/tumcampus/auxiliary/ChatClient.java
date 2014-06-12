@@ -33,10 +33,10 @@ public class ChatClient {
 	private interface ChatService {
 		
 		@POST("/chat_rooms/")
-		void createGroup(@Body ChatRoom chatRoom, Callback<ChatRoom> cb);
+		void createChatRoom(@Body ChatRoom chatRoom, Callback<ChatRoom> cb);
 		
-		@POST("/chat_rooms/{groupId}/members/")
-		void addUser(@Path("groupId") String groupId, @Body String lrzId);
+		@POST("/chat_rooms/{groupId}/add_member/")
+		void joinChatRoom(@Path("groupId") String groupId, @Body String lrzId);
 		
 		@DELETE("/chat_rooms/{groupId}/members/{lrzId}/")
 		void leaveChatRoom(@Path("groupId") String groupdId, @Path("lrzId") String lrzId);
@@ -50,7 +50,11 @@ public class ChatClient {
 	}
 	
 	public void createGroup(ChatRoom chatRoom, Callback<ChatRoom> cb) {
-		service.createGroup(chatRoom, cb);
+		service.createChatRoom(chatRoom, cb);
+	}
+	
+	public void joinChatRoom(ChatRoom chatRoom, Callback<ChatRoom> cb) {
+		//service.joinChatRoom(groupId, lrzId);
 	}
 	
 	public void sendMessage(String groupId) {
