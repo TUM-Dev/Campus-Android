@@ -47,6 +47,8 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
 	
 	private Spinner spFilter;
 	
+	private ChatRoom currentChatRoom = null;
+	
 	/**
 	 * 
 	 * @param method - The method which should be invoked by the TUMOnline Fetcher
@@ -181,10 +183,12 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
 				String chatRoomUid = item.getSemester_id() + ":" + item.getTitel();
 				intent.putExtra(Const.CHAT_ROOM_UID, chatRoomUid);
 				
-				ChatClient.getInstance().createGroup(new ChatRoom(chatRoomUid), new Callback<ChatRoom>() {	
+				currentChatRoom = new ChatRoom(chatRoomUid);
+				
+				ChatClient.getInstance().createGroup(currentChatRoom, new Callback<ChatRoom>() {	
 					@Override
 					public void success(ChatRoom arg0, Response arg1) {
-						Log.e("Success", arg0.toString());
+						currentChatRoom = arg0;
 					}
 					
 					@Override

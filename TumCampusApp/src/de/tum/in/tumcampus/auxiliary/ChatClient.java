@@ -10,7 +10,7 @@ import de.tum.in.tumcampus.models.ChatRoom;
 
 public class ChatClient {
 
-	public static final String API_URL = "http://192.168.1.4:8888";
+	public static final String API_URL = "http://131.159.196.128:8888";
 	
 	private static ChatClient instance = null;
 	private ChatService service = null;
