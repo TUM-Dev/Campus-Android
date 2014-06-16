@@ -1,5 +1,7 @@
 package de.tum.in.tumcampus.auxiliary;
 
+import java.util.List;
+
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.http.Body;
@@ -53,6 +55,9 @@ public class ChatClient {
 		
 		@POST("/chat_rooms/{groupId}/messages/")
 		void sendMessage(@Path("groupId") String groupId, @Body ChatMessage chatMessage, Callback<ChatMessage> cb);
+		
+		@GET("/chat_rooms/{groupId}/messages/")
+		List<ChatMessage> getMessages(@Path("groupId") String groupId);
 	}
 	
 	public void createGroup(ChatRoom chatRoom, Callback<ChatRoom> cb) {
@@ -73,5 +78,9 @@ public class ChatClient {
 	
 	public void sendMessage(String groupId, ChatMessage chatMessage, Callback<ChatMessage> cb) {
 		service.sendMessage(groupId, chatMessage, cb);
+	}
+	
+	public List<ChatMessage> getMessages(String groupId) {
+		return service.getMessages(groupId);
 	}
 }

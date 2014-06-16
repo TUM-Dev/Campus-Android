@@ -49,13 +49,7 @@ public class ChatActivity extends Activity implements OnClickListener {
 		
 		getIntentData();
 		bindUIElements();
-		
-		// TODO: Pass chat history
-		List<ChatMessage> messageHistory = new ArrayList<ChatMessage>();
-		for (int i = 0; i < 5; i++) {
-			messageHistory.add(new ChatMessage("Jana", "Test Message"/*, new Date()*/));
-		}
-		loadChatHistory(messageHistory);
+		loadChatHistory();
 	}
 
 	@Override
@@ -91,7 +85,9 @@ public class ChatActivity extends Activity implements OnClickListener {
 		btnSend.setOnClickListener(this);
 	}
 	
-	private void loadChatHistory(List<ChatMessage> messageHistory) {
+	private void loadChatHistory() {
+		List<ChatMessage> messageHistory = new ArrayList<ChatMessage>();
+		messageHistory = ChatClient.getInstance().getMessages(currentChatRoom.getGroupId());
 		lvMessageHistory.setAdapter(new ChatHistoryAdapter(this, messageHistory));
 	}
 }
