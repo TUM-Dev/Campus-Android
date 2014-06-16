@@ -140,6 +140,8 @@ public final class Const {
 	
 	public static final String CHAT_ROOMS_ID="chat_rooms_id";
 	public static final String CHAT_ROOM_UID="chat_room_uid";
+	public static final String CURRENT_CHAT_ROOM = "current_chat_room";
+	public static final String CURRENT_CHAT_MEMBER = "current_chat_member";
 	
     
 }

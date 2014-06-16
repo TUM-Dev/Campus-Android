@@ -4,9 +4,12 @@ import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.http.Body;
 import retrofit.http.DELETE;
+import retrofit.http.GET;
 import retrofit.http.POST;
 import retrofit.http.Path;
+import retrofit.http.Query;
 import de.tum.in.tumcampus.models.ChatMember;
+import de.tum.in.tumcampus.models.ChatMessage;
 import de.tum.in.tumcampus.models.ChatRoom;
 
 public class ChatClient {
@@ -39,6 +42,9 @@ public class ChatClient {
 		@POST("/members/")
 		void createMember(@Body ChatMember chatMember, Callback<ChatMember> cb);
 		
+		@GET("/members/")
+		ChatMember getMember(@Query("lrz_id") String lrzId);
+		
 		@POST("/chat_rooms/{groupId}/add_member/")
 		void joinChatRoom(@Path("groupId") String groupId, @Body ChatMember chatMember, Callback<ChatRoom> cb);
 		
@@ -46,7 +52,7 @@ public class ChatClient {
 		void leaveChatRoom(@Path("groupId") String groupdId, @Path("lrzId") String lrzId);
 		
 		@POST("/chat_rooms/{groupId}/messages/")
-		void sendMessage(@Path("groupId") String groupId);
+		void sendMessage(@Path("groupId") String groupId, @Body ChatMessage chatMessage, Callback<ChatMessage> cb);
 	}
 	
 	public void createGroup(ChatRoom chatRoom, Callback<ChatRoom> cb) {
@@ -57,13 +63,15 @@ public class ChatClient {
 		service.createMember(chatMember, cb);
 	}
 	
-	public void joinChatRoom(ChatRoom chatRoom, ChatMember chatMember, Callback<ChatRoom> cb) {
-		String[] splitString = chatRoom.getUrl().split("/");
-		String groupId = splitString[splitString.length-1];
-		service.joinChatRoom(groupId, chatMember, cb);
+	public ChatMember getMember(ChatMember chatMember) {
+		return service.getMember(chatMember.getLrzId());
 	}
 	
-	public void sendMessage(String groupId) {
-		service.sendMessage(groupId);
+	public void joinChatRoom(ChatRoom chatRoom, ChatMember chatMember, Callback<ChatRoom> cb) {
+		service.joinChatRoom(chatRoom.getGroupId(), chatMember, cb);
+	}
+	
+	public void sendMessage(String groupId, ChatMessage chatMessage, Callback<ChatMessage> cb) {
+		service.sendMessage(groupId, chatMessage, cb);
 	}
 }

@@ -6,6 +6,8 @@ import java.util.List;
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
 
+import com.google.gson.Gson;
+
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -192,6 +194,7 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
 					@Override
 					public void success(ChatRoom arg0, Response arg1) {
 						currentChatRoom = arg0;
+						currentChatRoom.setGroupId();
 					}
 					@Override
 					public void failure(RetrofitError arg0) {
@@ -208,6 +211,7 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
 					}
 					@Override
 					public void failure(RetrofitError arg0) {
+						//currentChatMember = ChatClient.getInstance().getMember(currentChatMember);
 						Log.e("Failure", arg0.toString());
 					}
 				});
@@ -224,13 +228,15 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
 									@Override
 									public void success(ChatRoom arg0, Response arg1) {
 										Log.e("Success", arg0.toString());
+										intent.putExtra(Const.CURRENT_CHAT_ROOM, new Gson().toJson(currentChatRoom));
+										intent.putExtra(Const.CURRENT_CHAT_MEMBER, new Gson().toJson(currentChatMember));
+										startActivity(intent);
 									}
 									@Override
 									public void failure(RetrofitError arg0) {
 										Log.e("Failure", arg0.toString());
 									}
 								});
-								startActivity(intent);
 							}
 						}
 					});

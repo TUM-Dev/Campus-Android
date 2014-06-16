@@ -1,42 +1,45 @@
 package de.tum.in.tumcampus.models;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
 
 public class ChatMessage {
 
-	private String user;
-	private String message;
-	private Date timestamp;
+	private String url;
+	private String text;
+	private String member;
+	//private Date timestamp;
 	
-	public ChatMessage(String user, String message, Date timestamp) {
+	public ChatMessage(String text, String member/*, Date timestamp*/) {
 		super();
-		this.user = user;
-		this.message = message;
-		this.timestamp = timestamp;
+		this.text = text;
+		this.member = member;
+		/*this.timestamp = timestamp;*/
 	}
 	
-	public String getUser() {
-		return user;
+	public String getUrl() {
+		return url;
 	}
-	public void setUser(String user) {
-		this.user = user;
+	public void setUrl(String url) {
+		this.url = url;
 	}
-	public String getMessage() {
-		return message;
+	public String getText() {
+		return text;
 	}
-	public void setMessage(String message) {
-		this.message = message;
+	public void setText(String text) {
+		this.text = text;
 	}
-	public Date getTimestamp() {
+	public String getMember() {
+		return member;
+	}
+	public void setMember(String member) {
+		this.member = member;
+	}
+	/*public Date getTimestamp() {
 		return timestamp;
 	}
 	public void setTimestamp(Date timestamp) {
 		this.timestamp = timestamp;
 	}
-	
 	public String getTimestampString() {
 		return new SimpleDateFormat("HH:mm", Locale.ENGLISH).format(timestamp);
-	}
+	}*/
 }

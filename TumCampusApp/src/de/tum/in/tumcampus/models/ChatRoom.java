@@ -8,6 +8,7 @@ public class ChatRoom {
 	private String url;
 	private String name;
 	private ArrayList<String> members = new ArrayList<String>();
+	private String groupId;
 	
 	public ChatRoom(String name) {
 		super();
@@ -38,4 +39,13 @@ public class ChatRoom {
 	public void setMembers(ArrayList<String> members) {
 		this.members = members;
 	}
+	public String getGroupId() {
+		return groupId;
+	}
+	public void setGroupId() {
+		String[] splitString = getUrl().split("/");
+		String groupId = splitString[splitString.length-1];
+		this.groupId = groupId;
+	}
+	
 }

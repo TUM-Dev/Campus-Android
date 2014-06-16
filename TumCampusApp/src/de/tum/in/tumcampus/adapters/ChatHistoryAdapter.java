@@ -67,9 +67,9 @@ public class ChatHistoryAdapter extends BaseAdapter {
 		
 		ChatMessage chatMessage = messageHistory.get(position);
 		if (chatMessage != null) {
-			holder.tvUser.setText(chatMessage.getUser());
-			holder.tvMessage.setText(chatMessage.getMessage());
-			holder.tvTimestamp.setText(chatMessage.getTimestampString());
+			holder.tvUser.setText(chatMessage.getMember());
+			holder.tvMessage.setText(chatMessage.getText());
+			//holder.tvTimestamp.setText(chatMessage.getTimestampString());
 			
 			LinearLayout chatMessageLayout = (LinearLayout) convertView.findViewById(R.id.chatMessageLayout);
 			
