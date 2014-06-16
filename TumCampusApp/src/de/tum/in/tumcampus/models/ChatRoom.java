@@ -7,12 +7,11 @@ public class ChatRoom {
 	private String messages;
 	private String url;
 	private String name;
-	private ArrayList<String> members;
+	private ArrayList<String> members = new ArrayList<String>();
 	
 	public ChatRoom(String name) {
 		super();
 		this.name = name;
-		this.members = new ArrayList<String>();
 	}
 	
 	public String getMessages() {

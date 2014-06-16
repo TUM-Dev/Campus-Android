@@ -13,7 +13,6 @@ import android.widget.EditText;
 import android.widget.ListView;
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.adapters.ChatHistoryAdapter;
-import de.tum.in.tumcampus.auxiliary.ChatClient;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.models.ChatMessage;
 
@@ -53,8 +52,9 @@ public class ChatActivity extends Activity implements OnClickListener {
 	@Override
 	public void onClick(View view) {
 		if (view.getId() == btnSend.getId()) {
-			// TODO: SEND MESSAGE
-			ChatClient.getInstance().sendMessage(groupId);
+			// SEND MESSAGE
+			// String messageText = etMessage.getText().toString();
+			//ChatClient.getInstance().sendMessage(groupId, new ChatMessage("Jana", messageText, null)); // TODO: rest of the args
 		}
 	}
 	

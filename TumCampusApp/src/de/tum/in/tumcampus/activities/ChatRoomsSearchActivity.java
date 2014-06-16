@@ -29,6 +29,7 @@ import de.tum.in.tumcampus.adapters.ChatRoomsListAdapter;
 import de.tum.in.tumcampus.auxiliary.ChatClient;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.PersonalLayoutManager;
+import de.tum.in.tumcampus.models.ChatMember;
 import de.tum.in.tumcampus.models.ChatRoom;
 import de.tum.in.tumcampus.models.LecturesSearchRow;
 import de.tum.in.tumcampus.models.LecturesSearchRowSet;
@@ -50,6 +51,7 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
 	private Spinner spFilter;
 	
 	private ChatRoom currentChatRoom = null;
+	private ChatMember currentChatMember = null;
 	
 	/**
 	 * 
@@ -186,13 +188,24 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
 				intent.putExtra(Const.CHAT_ROOM_UID, chatRoomUid);
 				
 				currentChatRoom = new ChatRoom(chatRoomUid);
-				
 				ChatClient.getInstance().createGroup(currentChatRoom, new Callback<ChatRoom>() {	
 					@Override
 					public void success(ChatRoom arg0, Response arg1) {
 						currentChatRoom = arg0;
 					}
-					
+					@Override
+					public void failure(RetrofitError arg0) {
+						Log.e("Failure", arg0.toString());
+					}
+				});
+				
+				String lrzId = PreferenceManager.getDefaultSharedPreferences(ChatRoomsSearchActivity.this).getString(Const.LRZ_ID, "");
+				currentChatMember = new ChatMember(lrzId, "Jana", "Banana");
+				ChatClient.getInstance().createMember(currentChatMember, new Callback<ChatMember>() {
+					@Override
+					public void success(ChatMember arg0, Response arg1) {
+						currentChatMember = arg0;
+					}
 					@Override
 					public void failure(RetrofitError arg0) {
 						Log.e("Failure", arg0.toString());
@@ -206,22 +219,21 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
 					.setPositiveButton(getResources().getString(android.R.string.ok), new DialogInterface.OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
-								String lrzId = PreferenceManager.getDefaultSharedPreferences(ChatRoomsSearchActivity.this).getString(Const.LRZ_ID, "");
-								if (lrzId != null) {
-									ChatClient.getInstance().joinChatRoom(currentChatRoom, new Callback<ChatRoom>() {
-										@Override
-										public void success(ChatRoom arg0, Response arg1) {
-											Log.e("Success", arg0.toString());
-										}
-										@Override
-										public void failure(RetrofitError arg0) {
-											Log.e("Failure", arg0.toString());
-										}
-									});
-									startActivity(intent);
-								}
+							if (currentChatMember.getLrzId() != null) {
+								ChatClient.getInstance().joinChatRoom(currentChatRoom, currentChatMember, new Callback<ChatRoom>() {
+									@Override
+									public void success(ChatRoom arg0, Response arg1) {
+										Log.e("Success", arg0.toString());
+									}
+									@Override
+									public void failure(RetrofitError arg0) {
+										Log.e("Failure", arg0.toString());
+									}
+								});
+								startActivity(intent);
+							}
 						}
-				});
+					});
 				
 				AlertDialog alertDialog = builder.create();
 				alertDialog.show();
