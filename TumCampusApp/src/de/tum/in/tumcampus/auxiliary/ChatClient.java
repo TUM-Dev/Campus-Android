@@ -41,11 +41,14 @@ public class ChatClient {
 		@POST("/chat_rooms/")
 		void createChatRoom(@Body ChatRoom chatRoom, Callback<ChatRoom> cb);
 		
+		@GET("/chat_rooms/")
+		List<ChatRoom> getChatRoom(@Query("name") String name);
+		
 		@POST("/members/")
-		void createMember(@Body ChatMember chatMember, Callback<ChatMember> cb);
+		ChatMember createMember(@Body ChatMember chatMember);
 		
 		@GET("/members/")
-		ChatMember getMember(@Query("lrz_id") String lrzId);
+		List<ChatMember> getMember(@Query("lrz_id") String lrzId);
 		
 		@POST("/chat_rooms/{groupId}/add_member/")
 		void joinChatRoom(@Path("groupId") String groupId, @Body ChatMember chatMember, Callback<ChatRoom> cb);
@@ -58,18 +61,25 @@ public class ChatClient {
 		
 		@GET("/chat_rooms/{groupId}/messages/")
 		List<ChatMessage> getMessages(@Path("groupId") String groupId);
+		
+		@GET("/chat_rooms/{groupId}/messages/")
+		void getMessagesCb(@Path("groupId") String groupId, Callback<List<ChatMessage>> cb);
 	}
 	
 	public void createGroup(ChatRoom chatRoom, Callback<ChatRoom> cb) {
 		service.createChatRoom(chatRoom, cb);
 	}
 	
-	public void createMember(ChatMember chatMember, Callback<ChatMember> cb) {
-		service.createMember(chatMember, cb);
+	public List<ChatRoom> getChatRoom(ChatRoom chatRoom) {
+		return service.getChatRoom(chatRoom.getName());
 	}
 	
-	public ChatMember getMember(ChatMember chatMember) {
-		return service.getMember(chatMember.getLrzId());
+	public ChatMember createMember(ChatMember chatMember) {
+		return service.createMember(chatMember);
+	}
+	
+	public List<ChatMember> getMember(String lrzId) {
+		return service.getMember(lrzId);
 	}
 	
 	public void joinChatRoom(ChatRoom chatRoom, ChatMember chatMember, Callback<ChatRoom> cb) {
@@ -82,5 +92,9 @@ public class ChatClient {
 	
 	public List<ChatMessage> getMessages(String groupId) {
 		return service.getMessages(groupId);
+	}
+	
+	public void getMessagesCb(String groupId, Callback<List<ChatMessage>> cb) {
+		service.getMessagesCb(groupId, cb);
 	}
 }

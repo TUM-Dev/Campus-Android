@@ -56,15 +56,17 @@ public class ChatActivity extends Activity implements OnClickListener {
 	public void onClick(View view) {
 		if (view.getId() == btnSend.getId()) {
 			// SEND MESSAGE
-			ChatMessage newMessage = new ChatMessage(etMessage.getText().toString(), "http://192.168.1.4:8888/members/1/" /*currentChatMember.getUrl()*/);
+			ChatMessage newMessage = new ChatMessage(etMessage.getText().toString(), currentChatMember.getUrl());
 			ChatClient.getInstance().sendMessage(currentChatRoom.getGroupId(), newMessage, new Callback<ChatMessage>() {
 				@Override
 				public void success(ChatMessage arg0, Response arg1) {
 					Log.e("Success", arg0.toString());
+					// TODO: display message in list
 				}
 				@Override
 				public void failure(RetrofitError arg0) {
 					Log.e("Failure", arg0.toString());
+					// TODO: somehow signal that the message was not sent
 				}
 			});
 			etMessage.setText("");
@@ -86,8 +88,22 @@ public class ChatActivity extends Activity implements OnClickListener {
 	}
 	
 	private void loadChatHistory() {
-		List<ChatMessage> messageHistory = new ArrayList<ChatMessage>();
-		messageHistory = ChatClient.getInstance().getMessages(currentChatRoom.getGroupId());
+		final List<ChatMessage> messageHistory = new ArrayList<ChatMessage>();
+		//messageHistory = ChatClient.getInstance().getMessages(currentChatRoom.getGroupId());
+		
+		ChatClient.getInstance().getMessagesCb(currentChatRoom.getGroupId(), new Callback<List<ChatMessage>>() {
+			@Override
+			public void failure(RetrofitError arg0) {
+				Log.e("Failure", arg0.toString());
+			}
+
+			@Override
+			public void success(List<ChatMessage> arg0, Response arg1) {
+				Log.e("Success", arg0.toString());
+			}
+			
+		});
+		
 		lvMessageHistory.setAdapter(new ChatHistoryAdapter(this, messageHistory));
 	}
 }

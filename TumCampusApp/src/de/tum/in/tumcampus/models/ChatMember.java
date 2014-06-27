@@ -7,11 +7,9 @@ public class ChatMember {
 	private String first_name;
 	private String last_name;
 	
-	public ChatMember(String lrz_id, String first_name, String last_name) {
+	public ChatMember(String lrz_id) {
 		super();
 		this.lrz_id = lrz_id;
-		this.first_name = first_name;
-		this.last_name = last_name;
 	}
 	
 	public String getUrl() {

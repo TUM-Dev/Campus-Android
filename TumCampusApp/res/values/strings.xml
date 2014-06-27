@@ -487,6 +487,9 @@
      <string name="send">Send</string>
      <string name="chat_terms_title">Chat Terms</string>
      <string name="chat_terms_body">Chat Terms</string>
+     <string name="chat_display_name_title">Enter your display name</string>
+     <string name="first_name">First name</string>
+     <string name="last_name">Last name</string>
      
     <!-- END Translated, please do not change identifiers -->
     

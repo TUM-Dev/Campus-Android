@@ -15,12 +15,15 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.AdapterView.OnItemClickListener;
@@ -49,7 +52,6 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
 
 	/** UI elements */
 	private ListView lvMyLecturesList;
-	
 	private Spinner spFilter;
 	
 	private ChatRoom currentChatRoom = null;
@@ -77,10 +79,61 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
 		spFilter = (Spinner) findViewById(R.id.spFilter);
 
 		super.requestFetch();
-		//Counting the number of times that the user used this activity for intelligent reordering 
-		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+		// Count the number of times the user used this activity for intelligent reordering 
+		final SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
 		if (sharedPrefs.getBoolean("implicitly_id", true)) {
 			ImplicitCounter.Counter(Const.CHAT_ROOMS_ID, getApplicationContext());
+		}
+		
+		populateCurrentChatMember(sharedPrefs);
+	}
+
+	private void populateCurrentChatMember(final SharedPreferences sharedPrefs) {
+		String lrzId = sharedPrefs.getString(Const.LRZ_ID, ""); // TODO: what if it's empty?
+		if (sharedPrefs.contains(Const.CHAT_ROOM_DISPLAY_NAME)) {
+			// If this is not the first time this user is opening the chat,
+			// we GET their data from the server using their lrzId
+			List<ChatMember> members = ChatClient.getInstance().getMember(lrzId);
+			currentChatMember = members.get(0);
+		} else {
+			// If the user is opening the chat for the first time, we need to display
+			// a dialog where they can enter their desired display name
+			currentChatMember = new ChatMember(lrzId);
+			
+			LinearLayout layout = new LinearLayout(this);
+			layout.setOrientation(LinearLayout.VERTICAL);
+
+			final EditText etFirstName = new EditText(this);
+			etFirstName.setHint(R.string.first_name);
+			layout.addView(etFirstName);
+
+			final EditText etLastName = new EditText(this);
+			etLastName.setHint(R.string.last_name);
+			layout.addView(etLastName);
+			
+			AlertDialog.Builder builder = new AlertDialog.Builder(ChatRoomsSearchActivity.this);
+			builder.setTitle(R.string.chat_display_name_title)
+				.setView(layout)
+				.setPositiveButton(getResources().getString(android.R.string.ok), new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						currentChatMember.setFirstName(etFirstName.getText().toString());
+						currentChatMember.setLastName(etLastName.getText().toString());
+						// TODO: Disallow empty first or last name
+						
+						// Save display name in shared preferences
+						Editor editor = sharedPrefs.edit();
+						editor.putString(Const.CHAT_ROOM_DISPLAY_NAME, currentChatMember.getFirstName() + " " + currentChatMember.getLastName());
+						editor.commit();
+						
+						// After the user has entered their display name, 
+						// send a request to the server to create the new member
+						currentChatMember = ChatClient.getInstance().createMember(currentChatMember);
+					}
+				});
+			
+			AlertDialog alertDialog = builder.create();
+			alertDialog.show();
 		}
 	}
 
@@ -181,42 +234,31 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
 
 				// set bundle for LectureDetails and show it
 				Bundle bundle = new Bundle();
-				// we need the stp_sp_nr
-				bundle.putString("stp_sp_nr", item.getStp_sp_nr());
 				final Intent intent = new Intent(ChatRoomsSearchActivity.this, ChatActivity.class);
 				intent.putExtras(bundle);
 				
 				String chatRoomUid = item.getSemester_id() + ":" + item.getTitel();
-				intent.putExtra(Const.CHAT_ROOM_UID, chatRoomUid);
 				
 				currentChatRoom = new ChatRoom(chatRoomUid);
 				ChatClient.getInstance().createGroup(currentChatRoom, new Callback<ChatRoom>() {	
 					@Override
-					public void success(ChatRoom arg0, Response arg1) {
-						currentChatRoom = arg0;
+					public void success(ChatRoom newlyCreatedChatRoom, Response arg1) {
+						// The POST request is successful because the chat room did not exist
+						// The newly created chat room is returned
+						currentChatRoom = newlyCreatedChatRoom;
 						currentChatRoom.setGroupId();
 					}
 					@Override
 					public void failure(RetrofitError arg0) {
-						Log.e("Failure", arg0.toString());
+						// The POST request in unsuccessful because the chat room already exists,
+						// so we are trying to retrieve it with an additional GET request
+						List<ChatRoom> chatRooms = ChatClient.getInstance().getChatRoom(currentChatRoom);
+						currentChatRoom = chatRooms.get(0);
+						currentChatRoom.setGroupId();
 					}
 				});
 				
-				String lrzId = PreferenceManager.getDefaultSharedPreferences(ChatRoomsSearchActivity.this).getString(Const.LRZ_ID, "");
-				currentChatMember = new ChatMember(lrzId, "Jana", "Banana");
-				ChatClient.getInstance().createMember(currentChatMember, new Callback<ChatMember>() {
-					@Override
-					public void success(ChatMember arg0, Response arg1) {
-						currentChatMember = arg0;
-					}
-					@Override
-					public void failure(RetrofitError arg0) {
-						//currentChatMember = ChatClient.getInstance().getMember(currentChatMember);
-						Log.e("Failure", arg0.toString());
-					}
-				});
-				
-				// Show terms under which the chat is provided by the app developers 
+				// Show terms under which the chat is provided by the application developers 
 				AlertDialog.Builder builder = new AlertDialog.Builder(ChatRoomsSearchActivity.this);
 				builder.setTitle(R.string.chat_terms_title)
 					.setMessage(getResources().getString(R.string.chat_terms_body))
@@ -227,7 +269,8 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
 								ChatClient.getInstance().joinChatRoom(currentChatRoom, currentChatMember, new Callback<ChatRoom>() {
 									@Override
 									public void success(ChatRoom arg0, Response arg1) {
-										Log.e("Success", arg0.toString());
+										// We need to move to the next activity now and provide the necessary data for it
+										// We are sure that both currentChatRoom and currentChatMember exist
 										intent.putExtra(Const.CURRENT_CHAT_ROOM, new Gson().toJson(currentChatRoom));
 										intent.putExtra(Const.CURRENT_CHAT_MEMBER, new Gson().toJson(currentChatMember));
 										startActivity(intent);
