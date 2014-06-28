@@ -36,4 +36,9 @@ public class ChatMember {
 	public void setLastName(String last_name) {
 		this.last_name = last_name;
 	}
+	
+	public String getUserId() {
+		String[] splitString = getUrl().split("/");
+		return splitString[splitString.length-1];
+	}
 }

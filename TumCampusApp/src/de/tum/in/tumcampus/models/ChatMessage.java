@@ -1,12 +1,16 @@
 package de.tum.in.tumcampus.models;
 
+import java.util.Date;
+
 
 public class ChatMessage {
 
 	private String url;
 	private String text;
 	private String member;
-	//private Date timestamp;
+	private Date timestamp;
+	private String signature;
+	private boolean valid;
 	
 	public ChatMessage(String text, String member/*, Date timestamp*/) {
 		super();
@@ -32,6 +36,9 @@ public class ChatMessage {
 	}
 	public void setMember(String member) {
 		this.member = member;
+	}
+	public void setSignature(String signature) {
+		this.signature = signature;
 	}
 	/*public Date getTimestamp() {
 		return timestamp;

@@ -1,5 +1,9 @@
 package de.tum.in.tumcampus.activities;
 
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,7 +11,11 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import android.app.Activity;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -21,8 +29,10 @@ import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.adapters.ChatHistoryAdapter;
 import de.tum.in.tumcampus.auxiliary.ChatClient;
 import de.tum.in.tumcampus.auxiliary.Const;
+import de.tum.in.tumcampus.auxiliary.RSASigner;
 import de.tum.in.tumcampus.models.ChatMember;
 import de.tum.in.tumcampus.models.ChatMessage;
+import de.tum.in.tumcampus.models.ChatPublicKey;
 import de.tum.in.tumcampus.models.ChatRoom;
 
 /**
@@ -41,6 +51,7 @@ public class ChatActivity extends Activity implements OnClickListener {
 	
 	private ChatRoom currentChatRoom;
 	private ChatMember currentChatMember;
+	private PrivateKey privateKey = null;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -54,18 +65,69 @@ public class ChatActivity extends Activity implements OnClickListener {
 
 	@Override
 	public void onClick(View view) {
+		// SEND MESSAGE
 		if (view.getId() == btnSend.getId()) {
-			// SEND MESSAGE
 			ChatMessage newMessage = new ChatMessage(etMessage.getText().toString(), currentChatMember.getUrl());
+			
+			if (privateKey == null) {
+				// Generate/Retrieve private key
+				SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+				
+				//sharedPrefs.edit().remove(Const.PRIVATE_KEY).commit();
+				if (sharedPrefs.contains(Const.PRIVATE_KEY)) {
+					// If the key is already generated, retrieve it from shared preferences
+					privateKey = new Gson().fromJson(sharedPrefs.getString(Const.PRIVATE_KEY, ""), PrivateKey.class);
+				} else {
+					// If the key is not in shared preferences, generate key-pair
+					KeyPairGenerator keyGen = null;
+					try {
+						keyGen = KeyPairGenerator.getInstance("RSA");
+					} catch (NoSuchAlgorithmException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+			        keyGen.initialize(1024);
+			        KeyPair keyPair = keyGen.generateKeyPair();
+			        
+			        byte[] publicKey = keyPair.getPublic().getEncoded();
+			        String publicKeyString = Base64.encodeToString(publicKey, Base64.DEFAULT);
+			        
+			        privateKey = keyPair.getPrivate();
+					
+					// Save private key in shared preferences
+					Editor editor = sharedPrefs.edit();
+					editor.putString(Const.PRIVATE_KEY, new Gson().toJson(privateKey));
+					editor.commit();
+					
+					// Upload public key to the server
+					ChatClient.getInstance().uploadPublicKey(currentChatMember.getUserId(), new ChatPublicKey(publicKeyString), new Callback<ChatPublicKey>() {
+						@Override
+						public void success(ChatPublicKey arg0, Response arg1) {
+							Log.d("Success uploading public key", arg0.toString());
+						}
+			
+						@Override
+						public void failure(RetrofitError arg0) {
+							Log.d("Failure uploading public key", arg0.toString());
+						}
+					});
+				}
+			}
+			
+			// Generate signature
+			RSASigner signer = new RSASigner(privateKey);
+			newMessage.setSignature(signer.sign(newMessage.getText()));
+			
+			// Send the message to the server
 			ChatClient.getInstance().sendMessage(currentChatRoom.getGroupId(), newMessage, new Callback<ChatMessage>() {
 				@Override
 				public void success(ChatMessage arg0, Response arg1) {
-					Log.e("Success", arg0.toString());
+					Log.e("Success sending message", arg0.toString());
 					// TODO: display message in list
 				}
 				@Override
 				public void failure(RetrofitError arg0) {
-					Log.e("Failure", arg0.toString());
+					Log.e("Failure sending message", arg0.toString());
 					// TODO: somehow signal that the message was not sent
 				}
 			});

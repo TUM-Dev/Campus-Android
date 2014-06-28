@@ -2,6 +2,8 @@ package de.tum.in.tumcampus.auxiliary;
 
 import java.util.List;
 
+import com.google.gson.JsonObject;
+
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.http.Body;
@@ -12,6 +14,7 @@ import retrofit.http.Path;
 import retrofit.http.Query;
 import de.tum.in.tumcampus.models.ChatMember;
 import de.tum.in.tumcampus.models.ChatMessage;
+import de.tum.in.tumcampus.models.ChatPublicKey;
 import de.tum.in.tumcampus.models.ChatRoom;
 
 public class ChatClient {
@@ -64,6 +67,9 @@ public class ChatClient {
 		
 		@GET("/chat_rooms/{groupId}/messages/")
 		void getMessagesCb(@Path("groupId") String groupId, Callback<List<ChatMessage>> cb);
+		
+		@POST("/members/{userId}/pubkeys/")
+		void uploadPublicKey(@Path("userId") String userId, @Body ChatPublicKey publicKey, Callback<ChatPublicKey> cb);
 	}
 	
 	public void createGroup(ChatRoom chatRoom, Callback<ChatRoom> cb) {
@@ -96,5 +102,9 @@ public class ChatClient {
 	
 	public void getMessagesCb(String groupId, Callback<List<ChatMessage>> cb) {
 		service.getMessagesCb(groupId, cb);
+	}
+	
+	public void uploadPublicKey(String userId, ChatPublicKey publicKey, Callback<ChatPublicKey> cb) {
+		service.uploadPublicKey(userId, publicKey, cb);
 	}
 }

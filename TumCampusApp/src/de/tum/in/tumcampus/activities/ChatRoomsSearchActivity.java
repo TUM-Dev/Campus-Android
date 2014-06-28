@@ -90,6 +90,7 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
 
 	private void populateCurrentChatMember(final SharedPreferences sharedPrefs) {
 		String lrzId = sharedPrefs.getString(Const.LRZ_ID, ""); // TODO: what if it's empty?
+		// TODO: Ne moze ovako, moram da proverim ima li ga na serveru!!!
 		if (sharedPrefs.contains(Const.CHAT_ROOM_DISPLAY_NAME)) {
 			// If this is not the first time this user is opening the chat,
 			// we GET their data from the server using their lrzId
@@ -246,7 +247,6 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
 						// The POST request is successful because the chat room did not exist
 						// The newly created chat room is returned
 						currentChatRoom = newlyCreatedChatRoom;
-						currentChatRoom.setGroupId();
 					}
 					@Override
 					public void failure(RetrofitError arg0) {
@@ -254,7 +254,6 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
 						// so we are trying to retrieve it with an additional GET request
 						List<ChatRoom> chatRooms = ChatClient.getInstance().getChatRoom(currentChatRoom);
 						currentChatRoom = chatRooms.get(0);
-						currentChatRoom.setGroupId();
 					}
 				});
 				
