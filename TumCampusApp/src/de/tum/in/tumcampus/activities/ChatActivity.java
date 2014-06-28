@@ -122,12 +122,12 @@ public class ChatActivity extends Activity implements OnClickListener {
 			ChatClient.getInstance().sendMessage(currentChatRoom.getGroupId(), newMessage, new Callback<ChatMessage>() {
 				@Override
 				public void success(ChatMessage arg0, Response arg1) {
-					Log.e("Success sending message", arg0.toString());
+					Log.d("Success sending message", arg0.toString());
 					// TODO: display message in list
 				}
 				@Override
 				public void failure(RetrofitError arg0) {
-					Log.e("Failure sending message", arg0.toString());
+					Log.d("Failure sending message", arg0.toString());
 					// TODO: somehow signal that the message was not sent
 				}
 			});
@@ -155,15 +155,14 @@ public class ChatActivity extends Activity implements OnClickListener {
 		
 		ChatClient.getInstance().getMessagesCb(currentChatRoom.getGroupId(), new Callback<List<ChatMessage>>() {
 			@Override
-			public void failure(RetrofitError arg0) {
-				Log.e("Failure", arg0.toString());
-			}
-
-			@Override
 			public void success(List<ChatMessage> arg0, Response arg1) {
-				Log.e("Success", arg0.toString());
+				Log.d("Success loading chat history", arg0.toString());
 			}
 			
+			@Override
+			public void failure(RetrofitError arg0) {
+				Log.d("Failure loading chat history", arg0.toString());
+			}
 		});
 		
 		lvMessageHistory.setAdapter(new ChatHistoryAdapter(this, messageHistory));

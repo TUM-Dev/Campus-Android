@@ -1,6 +1,8 @@
 package de.tum.in.tumcampus.models;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 
 public class ChatMessage {
@@ -37,10 +39,7 @@ public class ChatMessage {
 	public void setMember(String member) {
 		this.member = member;
 	}
-	public void setSignature(String signature) {
-		this.signature = signature;
-	}
-	/*public Date getTimestamp() {
+	public Date getTimestamp() {
 		return timestamp;
 	}
 	public void setTimestamp(Date timestamp) {
@@ -48,5 +47,17 @@ public class ChatMessage {
 	}
 	public String getTimestampString() {
 		return new SimpleDateFormat("HH:mm", Locale.ENGLISH).format(timestamp);
-	}*/
+	}
+	public boolean isValid() {
+		return valid;
+	}
+	public void setValid(boolean valid) {
+		this.valid = valid;
+	}
+	public String getSignature() {
+		return signature;
+	}
+	public void setSignature(String signature) {
+		this.signature = signature;
+	}
 }

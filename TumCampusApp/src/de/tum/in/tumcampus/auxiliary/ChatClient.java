@@ -2,8 +2,6 @@ package de.tum.in.tumcampus.auxiliary;
 
 import java.util.List;
 
-import com.google.gson.JsonObject;
-
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.http.Body;

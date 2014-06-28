@@ -246,12 +246,14 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
 					public void success(ChatRoom newlyCreatedChatRoom, Response arg1) {
 						// The POST request is successful because the chat room did not exist
 						// The newly created chat room is returned
+						Log.d("Success creating chat room", newlyCreatedChatRoom.toString());
 						currentChatRoom = newlyCreatedChatRoom;
 					}
 					@Override
 					public void failure(RetrofitError arg0) {
 						// The POST request in unsuccessful because the chat room already exists,
 						// so we are trying to retrieve it with an additional GET request
+						Log.d("Failure creating chat room - trying to GET it from the server", arg0.toString());
 						List<ChatRoom> chatRooms = ChatClient.getInstance().getChatRoom(currentChatRoom);
 						currentChatRoom = chatRooms.get(0);
 					}
@@ -268,6 +270,7 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
 								ChatClient.getInstance().joinChatRoom(currentChatRoom, currentChatMember, new Callback<ChatRoom>() {
 									@Override
 									public void success(ChatRoom arg0, Response arg1) {
+										Log.d("Success joining chat room", arg0.toString());
 										// We need to move to the next activity now and provide the necessary data for it
 										// We are sure that both currentChatRoom and currentChatMember exist
 										intent.putExtra(Const.CURRENT_CHAT_ROOM, new Gson().toJson(currentChatRoom));
@@ -276,7 +279,7 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
 									}
 									@Override
 									public void failure(RetrofitError arg0) {
-										Log.e("Failure", arg0.toString());
+										Log.e("Failure joining chat room", arg0.toString());
 									}
 								});
 							}
