@@ -83,7 +83,6 @@ public class ChatActivity extends Activity implements OnClickListener {
 					try {
 						keyGen = KeyPairGenerator.getInstance("RSA");
 					} catch (NoSuchAlgorithmException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 			        keyGen.initialize(1024);
