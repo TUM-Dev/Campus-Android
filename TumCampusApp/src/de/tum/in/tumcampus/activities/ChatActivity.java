@@ -1,9 +1,13 @@
 package de.tum.in.tumcampus.activities;
 
+import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
+import java.security.KeyStore;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +34,7 @@ import de.tum.in.tumcampus.adapters.ChatHistoryAdapter;
 import de.tum.in.tumcampus.auxiliary.ChatClient;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.RSASigner;
+import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.ChatMember;
 import de.tum.in.tumcampus.models.ChatMessage;
 import de.tum.in.tumcampus.models.ChatPublicKey;
@@ -73,10 +78,20 @@ public class ChatActivity extends Activity implements OnClickListener {
 				// Generate/Retrieve private key
 				SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
 				
-				//sharedPrefs.edit().remove(Const.PRIVATE_KEY).commit();
 				if (sharedPrefs.contains(Const.PRIVATE_KEY)) {
 					// If the key is already generated, retrieve it from shared preferences
-					privateKey = new Gson().fromJson(sharedPrefs.getString(Const.PRIVATE_KEY, ""), PrivateKey.class);
+					String privateKeyString = sharedPrefs.getString(Const.PRIVATE_KEY, "");
+					byte[] privateKeyBytes = Base64.decode(privateKeyString, Base64.DEFAULT);
+		            KeyFactory keyFactory;
+					try {
+						keyFactory = KeyFactory.getInstance("RSA");
+						PKCS8EncodedKeySpec privateKeySpec = new PKCS8EncodedKeySpec(privateKeyBytes);
+						privateKey = keyFactory.generatePrivate(privateKeySpec);
+					} catch (NoSuchAlgorithmException e) {
+						e.printStackTrace();
+					} catch (InvalidKeySpecException e) {
+						e.printStackTrace();
+					}
 				} else {
 					// If the key is not in shared preferences, generate key-pair
 					KeyPairGenerator keyGen = null;
@@ -92,22 +107,28 @@ public class ChatActivity extends Activity implements OnClickListener {
 			        String publicKeyString = Base64.encodeToString(publicKey, Base64.DEFAULT);
 			        
 			        privateKey = keyPair.getPrivate();
+			        String privateKeyString = Base64.encodeToString(privateKey.getEncoded(), Base64.DEFAULT);
 					
+			        //String privateKeyString = Base64.encodeBytes(privateKey.getEncoded());
+			        
 					// Save private key in shared preferences
 					Editor editor = sharedPrefs.edit();
-					editor.putString(Const.PRIVATE_KEY, new Gson().toJson(privateKey));
+					editor.putString(Const.PRIVATE_KEY, privateKeyString);
 					editor.commit();
+					
+					
 					
 					// Upload public key to the server
 					ChatClient.getInstance().uploadPublicKey(currentChatMember.getUserId(), new ChatPublicKey(publicKeyString), new Callback<ChatPublicKey>() {
 						@Override
 						public void success(ChatPublicKey arg0, Response arg1) {
 							Log.d("Success uploading public key", arg0.toString());
+							Utils.showLongCenteredToast(ChatActivity.this, "Public key activation mail sent to " + currentChatMember.getLrzId() + "@mytum.de");
 						}
 			
 						@Override
 						public void failure(RetrofitError arg0) {
-							Log.d("Failure uploading public key", arg0.toString());
+							Log.e("Failure uploading public key", arg0.toString());
 						}
 					});
 				}
@@ -115,7 +136,8 @@ public class ChatActivity extends Activity implements OnClickListener {
 			
 			// Generate signature
 			RSASigner signer = new RSASigner(privateKey);
-			newMessage.setSignature(signer.sign(newMessage.getText()));
+			String signature = signer.sign(newMessage.getText());
+ 			newMessage.setSignature(signature);
 			
 			// Send the message to the server
 			ChatClient.getInstance().sendMessage(currentChatRoom.getGroupId(), newMessage, new Callback<ChatMessage>() {
@@ -126,7 +148,7 @@ public class ChatActivity extends Activity implements OnClickListener {
 				}
 				@Override
 				public void failure(RetrofitError arg0) {
-					Log.d("Failure sending message", arg0.toString());
+					Log.e("Failure sending message", arg0.getMessage() + " " + arg0.getCause());
 					// TODO: somehow signal that the message was not sent
 				}
 			});
@@ -149,21 +171,20 @@ public class ChatActivity extends Activity implements OnClickListener {
 	}
 	
 	private void loadChatHistory() {
-		final List<ChatMessage> messageHistory = new ArrayList<ChatMessage>();
+		//final List<ChatMessage> messageHistory = new ArrayList<ChatMessage>();
 		//messageHistory = ChatClient.getInstance().getMessages(currentChatRoom.getGroupId());
 		
 		ChatClient.getInstance().getMessagesCb(currentChatRoom.getGroupId(), new Callback<List<ChatMessage>>() {
 			@Override
-			public void success(List<ChatMessage> arg0, Response arg1) {
-				Log.d("Success loading chat history", arg0.toString());
+			public void success(List<ChatMessage> chatHistory, Response arg1) {
+				Log.d("Success loading chat history", chatHistory.toString());
+				lvMessageHistory.setAdapter(new ChatHistoryAdapter(ChatActivity.this, chatHistory));
 			}
 			
 			@Override
 			public void failure(RetrofitError arg0) {
-				Log.d("Failure loading chat history", arg0.toString());
+				Log.e("Failure loading chat history", arg0.toString());
 			}
 		});
-		
-		lvMessageHistory.setAdapter(new ChatHistoryAdapter(this, messageHistory));
 	}
 }

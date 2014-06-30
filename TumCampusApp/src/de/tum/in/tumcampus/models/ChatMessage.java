@@ -1,7 +1,6 @@
 package de.tum.in.tumcampus.models;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Locale;
 
 
@@ -10,15 +9,14 @@ public class ChatMessage {
 	private String url;
 	private String text;
 	private String member;
-	private Date timestamp;
+	private String timestamp;
 	private String signature;
 	private boolean valid;
 	
-	public ChatMessage(String text, String member/*, Date timestamp*/) {
+	public ChatMessage(String text, String member) {
 		super();
 		this.text = text;
 		this.member = member;
-		/*this.timestamp = timestamp;*/
 	}
 	
 	public String getUrl() {
@@ -39,10 +37,10 @@ public class ChatMessage {
 	public void setMember(String member) {
 		this.member = member;
 	}
-	public Date getTimestamp() {
+	public String getTimestamp() {
 		return timestamp;
 	}
-	public void setTimestamp(Date timestamp) {
+	public void setTimestamp(String timestamp) {
 		this.timestamp = timestamp;
 	}
 	public String getTimestampString() {

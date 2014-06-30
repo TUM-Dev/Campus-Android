@@ -91,7 +91,7 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
 	private void populateCurrentChatMember(final SharedPreferences sharedPrefs) {
 		String lrzId = sharedPrefs.getString(Const.LRZ_ID, ""); // TODO: what if it's empty?
 		// TODO: Ne moze ovako, moram da proverim ima li ga na serveru!!!
-		//sharedPrefs.edit().remove(Const.CHAT_ROOM_DISPLAY_NAME).commit();
+		
 		if (sharedPrefs.contains(Const.CHAT_ROOM_DISPLAY_NAME)) {
 			// If this is not the first time this user is opening the chat,
 			// we GET their data from the server using their lrzId

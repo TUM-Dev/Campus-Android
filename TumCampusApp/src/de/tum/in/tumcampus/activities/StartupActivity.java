@@ -11,6 +11,7 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -20,6 +21,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
+import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.DemoModeStartActivity;
 
 /**
@@ -87,6 +89,9 @@ public class StartupActivity extends SherlockActivity {
         } else {
             Log.i(TAG, "No valid Google Play Services APK found.");
         }
+        
+        //PreferenceManager.getDefaultSharedPreferences(this).edit().remove(Const.CHAT_ROOM_DISPLAY_NAME).commit();
+        //PreferenceManager.getDefaultSharedPreferences(this).edit().remove(Const.PRIVATE_KEY).commit();
 	}
 	
 	@Override
