@@ -26,7 +26,7 @@ import android.support.v4.app.NotificationCompat;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
-import de.tum.in.tumcampus.activities.StartActivity;
+import de.tum.in.tumcampus.activities.ChatRoomsSearchActivity;
 import de.tum.in.tumcampus.auxiliary.GcmBroadcastReceiver;
  
 /**
@@ -44,7 +44,7 @@ public class GcmIntentService extends IntentService {
     public GcmIntentService() {
         super("GcmIntentService");
     }
-    public static final String TAG = "GCM Demo";
+    public static final String TAG = "GCM";
  
     @Override
     protected void onHandleIntent(Intent intent) {
@@ -85,7 +85,7 @@ public class GcmIntentService extends IntentService {
                 this.getSystemService(Context.NOTIFICATION_SERVICE);
  
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
-                new Intent(this, StartActivity.class), 0);
+                new Intent(this, ChatRoomsSearchActivity.class), 0);
  
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)

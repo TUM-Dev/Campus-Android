@@ -3,12 +3,10 @@ package de.tum.in.tumcampus.activities;
 import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
-import java.security.KeyStore;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit.Callback;
@@ -109,14 +107,10 @@ public class ChatActivity extends Activity implements OnClickListener {
 			        privateKey = keyPair.getPrivate();
 			        String privateKeyString = Base64.encodeToString(privateKey.getEncoded(), Base64.DEFAULT);
 					
-			        //String privateKeyString = Base64.encodeBytes(privateKey.getEncoded());
-			        
-					// Save private key in shared preferences
+			        // Save private key in shared preferences
 					Editor editor = sharedPrefs.edit();
 					editor.putString(Const.PRIVATE_KEY, privateKeyString);
 					editor.commit();
-					
-					
 					
 					// Upload public key to the server
 					ChatClient.getInstance().uploadPublicKey(currentChatMember.getUserId(), new ChatPublicKey(publicKeyString), new Callback<ChatPublicKey>() {
@@ -171,9 +165,6 @@ public class ChatActivity extends Activity implements OnClickListener {
 	}
 	
 	private void loadChatHistory() {
-		//final List<ChatMessage> messageHistory = new ArrayList<ChatMessage>();
-		//messageHistory = ChatClient.getInstance().getMessages(currentChatRoom.getGroupId());
-		
 		ChatClient.getInstance().getMessagesCb(currentChatRoom.getGroupId(), new Callback<List<ChatMessage>>() {
 			@Override
 			public void success(List<ChatMessage> chatHistory, Response arg1) {
