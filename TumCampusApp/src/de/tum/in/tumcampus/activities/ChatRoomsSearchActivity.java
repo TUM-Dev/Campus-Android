@@ -46,6 +46,7 @@ import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.PersonalLayoutManager;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.ChatMember;
+import de.tum.in.tumcampus.models.ChatRegistrationId;
 import de.tum.in.tumcampus.models.ChatRoom;
 import de.tum.in.tumcampus.models.LecturesSearchRow;
 import de.tum.in.tumcampus.models.LecturesSearchRowSet;
@@ -69,7 +70,6 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
 	private ChatMember currentChatMember = null;
 	
 	public static final String EXTRA_MESSAGE = "message";
-    public static final String PROPERTY_REG_ID = "registration_id";
     private static final String PROPERTY_APP_VERSION = "appVersion";
     private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
 	
@@ -115,6 +115,7 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
         //  GCM registration.
         if (checkPlayServices()) {
             gcm = GoogleCloudMessaging.getInstance(this);
+            getGCMPreferences(getApplicationContext()).edit().remove(Const.GCM_REG_ID).commit();
             regId = getRegistrationId(getApplicationContext());
 
             if (regId.isEmpty()) {
@@ -123,6 +124,8 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
         } else {
             Log.i(TAG, "No valid Google Play Services APK found.");
         }
+        
+        generateKeys();
 	}
 
 	private void populateCurrentChatMember(final SharedPreferences sharedPrefs) {
@@ -176,6 +179,10 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
 		}
 	}
 
+	private void generateKeys() {
+		
+	}
+	
 	@Override
 	public void onFetch(String rawResponse) {
 		// deserialize the XML
@@ -363,7 +370,7 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
 	 */
 	private String getRegistrationId(Context context) {
 	    final SharedPreferences prefs = getGCMPreferences(context);
-	    String registrationId = prefs.getString(PROPERTY_REG_ID, "");
+	    String registrationId = prefs.getString(Const.GCM_REG_ID, "");
 	    if (registrationId.isEmpty()) {
 	        Log.i(TAG, "Registration not found.");
 	        return "";
@@ -421,7 +428,7 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
                         gcm = GoogleCloudMessaging.getInstance(context);
                     }
                     regId = gcm.register(SENDER_ID);
-                    msg = "Registration ID=" + regId;
+                    msg = "GCM registration successful";
 
                     // You should send the registration ID to your server over HTTP, so it
                     // can use GCM/HTTP or CCS to send messages to your app.
@@ -456,7 +463,18 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
 	 * using the 'from' address in the message.
 	 */
 	private void sendRegistrationIdToBackend() {
-	    // Your implementation here.
+
+		ChatClient.getInstance().uploadRegistrationId(currentChatMember.getUserId(), new ChatRegistrationId(regId), new Callback<ChatRegistrationId>() {
+			@Override
+			public void success(ChatRegistrationId arg0, Response arg1) {
+				Log.d("Success uploading GCM registration id", arg0.toString());
+			}
+			
+			@Override
+			public void failure(RetrofitError arg0) {
+				Log.e("Failure uploading GCM registration id", arg0.toString());
+			}
+		});
 	}
 	
 	/**
@@ -471,7 +489,7 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
 	    int appVersion = getAppVersion(context);
 	    Log.i(TAG, "Saving regId on app version " + appVersion);
 	    SharedPreferences.Editor editor = prefs.edit();
-	    editor.putString(PROPERTY_REG_ID, regId);
+	    editor.putString(Const.GCM_REG_ID, regId);
 	    editor.putInt(PROPERTY_APP_VERSION, appVersion);
 	    editor.commit();
 	}

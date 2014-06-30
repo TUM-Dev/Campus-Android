@@ -70,8 +70,6 @@ public class ChatActivity extends Activity implements OnClickListener {
 	public void onClick(View view) {
 		// SEND MESSAGE
 		if (view.getId() == btnSend.getId()) {
-			ChatMessage newMessage = new ChatMessage(etMessage.getText().toString(), currentChatMember.getUrl());
-			
 			if (privateKey == null) {
 				// Generate/Retrieve private key
 				SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
@@ -127,6 +125,8 @@ public class ChatActivity extends Activity implements OnClickListener {
 					});
 				}
 			}
+			
+			ChatMessage newMessage = new ChatMessage(etMessage.getText().toString(), currentChatMember.getUrl());
 			
 			// Generate signature
 			RSASigner signer = new RSASigner(privateKey);

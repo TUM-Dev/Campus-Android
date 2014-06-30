@@ -13,6 +13,7 @@ import retrofit.http.Query;
 import de.tum.in.tumcampus.models.ChatMember;
 import de.tum.in.tumcampus.models.ChatMessage;
 import de.tum.in.tumcampus.models.ChatPublicKey;
+import de.tum.in.tumcampus.models.ChatRegistrationId;
 import de.tum.in.tumcampus.models.ChatRoom;
 
 public class ChatClient {
@@ -66,8 +67,12 @@ public class ChatClient {
 		@GET("/chat_rooms/{groupId}/messages/")
 		void getMessagesCb(@Path("groupId") String groupId, Callback<List<ChatMessage>> cb);
 		
-		@POST("/members/{userId}/pubkeys/")
-		void uploadPublicKey(@Path("userId") String userId, @Body ChatPublicKey publicKey, Callback<ChatPublicKey> cb);
+		@POST("/members/{memberId}/pubkeys/")
+		void uploadPublicKey(@Path("memberId") String memberId, @Body ChatPublicKey publicKey, Callback<ChatPublicKey> cb);
+		
+		@POST("/members/{memberId}/registration_ids/add_id/")
+		void uploadRegistrationId(@Path("memberId") String memberId, @Body ChatRegistrationId regId, Callback<ChatRegistrationId> cb);
+		
 	}
 	
 	public void createGroup(ChatRoom chatRoom, Callback<ChatRoom> cb) {
@@ -102,7 +107,11 @@ public class ChatClient {
 		service.getMessagesCb(groupId, cb);
 	}
 	
-	public void uploadPublicKey(String userId, ChatPublicKey publicKey, Callback<ChatPublicKey> cb) {
-		service.uploadPublicKey(userId, publicKey, cb);
+	public void uploadPublicKey(String memberId, ChatPublicKey publicKey, Callback<ChatPublicKey> cb) {
+		service.uploadPublicKey(memberId, publicKey, cb);
+	}
+	
+	public void uploadRegistrationId(String memberId, ChatRegistrationId regId, Callback<ChatRegistrationId> cb) {
+		service.uploadRegistrationId(memberId, regId, cb);
 	}
 }
