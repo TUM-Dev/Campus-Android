@@ -1,6 +1,8 @@
 package de.tum.in.tumcampus.models;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 
@@ -44,7 +46,19 @@ public class ChatMessage {
 		this.timestamp = timestamp;
 	}
 	public String getTimestampString() {
-		return new SimpleDateFormat("HH:mm", Locale.ENGLISH).format(timestamp);
+		try {
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.ENGLISH); // 2014-06-30T16:31:57.878Z
+			Date date = formatter.parse(timestamp);
+			if (isToday(date)) {
+				return new SimpleDateFormat("HH:mm", Locale.ENGLISH).format(date);
+			} else if (isYesterday(date)) {
+				return "Yesterday " + new SimpleDateFormat("HH:mm", Locale.ENGLISH).format(date);
+			}
+			return new SimpleDateFormat("dd-mm-yyyy HH:mm", Locale.ENGLISH).format(date);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "";
 	}
 	public boolean isValid() {
 		return valid;
@@ -57,5 +71,30 @@ public class ChatMessage {
 	}
 	public void setSignature(String signature) {
 		this.signature = signature;
+	}
+	
+	private boolean isToday(Date date) {
+		Calendar passedDate = Calendar.getInstance();
+		passedDate.setTime(date); // your date
+		
+		Calendar today = Calendar.getInstance(); // today
+
+		if (today.get(Calendar.YEAR) == passedDate.get(Calendar.YEAR) && today.get(Calendar.DAY_OF_YEAR) == passedDate.get(Calendar.DAY_OF_YEAR)) {
+			return true;
+		}
+		return false;
+	}
+	
+	private boolean isYesterday(Date date) {
+		Calendar passedDate = Calendar.getInstance();
+		passedDate.setTime(date);
+		
+		Calendar yesterday = Calendar.getInstance(); // today
+		yesterday.add(Calendar.DAY_OF_YEAR, -1); // yesterday
+
+		if (yesterday.get(Calendar.YEAR) == passedDate.get(Calendar.YEAR) && yesterday.get(Calendar.DAY_OF_YEAR) == passedDate.get(Calendar.DAY_OF_YEAR)) {
+			return true;
+		}
+		return false;
 	}
 }
