@@ -3,11 +3,14 @@ package de.tum.in.tumcampus.adapters;
 import java.util.List;
 
 import android.content.Context;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.FrameLayout.LayoutParams;
 import android.widget.TextView;
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.models.ChatMessage;
@@ -25,9 +28,12 @@ public class ChatHistoryAdapter extends BaseAdapter {
 	
 	private final LayoutInflater inflater;
 	
-	public ChatHistoryAdapter(Context context, List<ChatMessage> messageHistory) {
+	private String currentUserURL;
+	
+	public ChatHistoryAdapter(Context context, List<ChatMessage> messageHistory, String userURL) {
 		this.messageHistory = messageHistory;
 		inflater = LayoutInflater.from(context);
+		this.currentUserURL = userURL;
 	}
 	
 	@Override
@@ -50,7 +56,7 @@ public class ChatHistoryAdapter extends BaseAdapter {
 		ViewHolder holder;
 
 		if (convertView == null) {
-			convertView = inflater.inflate(R.layout.activity_chat_history_row, null);
+			convertView = inflater.inflate(R.layout.activity_chat_history_row, parent, false);
 			holder = new ViewHolder();
 
 			// set UI elements
@@ -65,19 +71,26 @@ public class ChatHistoryAdapter extends BaseAdapter {
 		
 		ChatMessage chatMessage = messageHistory.get(position);
 		if (chatMessage != null) {
-			holder.tvUser.setText(chatMessage.getMember());
+			holder.tvUser.setText(chatMessage.getMember().substring(0, 10));
 			holder.tvMessage.setText(chatMessage.getText());
 			holder.tvTimestamp.setText(chatMessage.getTimestampString());
 			
 			LinearLayout chatMessageLayout = (LinearLayout) convertView.findViewById(R.id.chatMessageLayout);
+			LayoutParams chatMessageLayoutParams = (LayoutParams) chatMessageLayout.getLayoutParams();
 			
-			if (position % 2 == 0) { // TODO: Check if it's current user's message
+			FrameLayout chatFrameLayout = (FrameLayout) convertView.findViewById(R.id.chatFrameLayout);
+			
+			if (currentUserURL.equals(chatMessage.getMember())) {
 				chatMessageLayout.setBackgroundResource(R.drawable.bubble_right);
-				//layoutParams.gravity = Gravity.RIGHT;
+				chatMessageLayoutParams.gravity = Gravity.RIGHT;
+				chatFrameLayout.setPadding(100, 0, 0, 0); // Add left padding
 			} else {
 				chatMessageLayout.setBackgroundResource(R.drawable.bubble_left);
-				//layoutParams.gravity = Gravity.LEFT;
+				chatMessageLayoutParams.gravity = Gravity.LEFT;
+				chatFrameLayout.setPadding(0, 0, 100, 0); // Add right padding
 			}
+			
+			chatMessageLayout.setLayoutParams(chatMessageLayoutParams);
 		}
 
 		return convertView;

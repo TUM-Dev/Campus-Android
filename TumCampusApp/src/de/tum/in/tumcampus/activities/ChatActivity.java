@@ -169,7 +169,7 @@ public class ChatActivity extends Activity implements OnClickListener {
 			@Override
 			public void success(List<ChatMessage> chatHistory, Response arg1) {
 				Log.d("Success loading chat history", chatHistory.toString());
-				lvMessageHistory.setAdapter(new ChatHistoryAdapter(ChatActivity.this, chatHistory));
+				lvMessageHistory.setAdapter(new ChatHistoryAdapter(ChatActivity.this, chatHistory, currentChatMember.getUrl()));
 			}
 			
 			@Override
