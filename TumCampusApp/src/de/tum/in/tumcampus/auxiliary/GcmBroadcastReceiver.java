@@ -16,7 +16,6 @@
 
 package de.tum.in.tumcampus.auxiliary;
 
-import de.tum.in.tumcampus.services.GcmIntentService;
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;

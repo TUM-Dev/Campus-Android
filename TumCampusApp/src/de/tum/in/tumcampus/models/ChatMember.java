@@ -9,10 +9,12 @@ public class ChatMember {
 	private String lrzId;
 	@SerializedName("first_name")
 	private String displayName;
+	private String last_name;
 	
 	public ChatMember(String lrzId) {
 		super();
 		this.lrzId = lrzId;
+		last_name = "prazno";
 	}
 	
 	public String getUrl() {

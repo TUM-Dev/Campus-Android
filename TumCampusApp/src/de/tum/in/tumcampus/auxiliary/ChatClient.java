@@ -70,7 +70,7 @@ public class ChatClient {
 		@POST("/members/{memberId}/pubkeys/")
 		void uploadPublicKey(@Path("memberId") String memberId, @Body ChatPublicKey publicKey, Callback<ChatPublicKey> cb);
 		
-		@POST("/members/{memberId}/registration_ids/add_id/")
+		@POST("/members/{memberId}/registration_ids/add_id")
 		void uploadRegistrationId(@Path("memberId") String memberId, @Body ChatRegistrationId regId, Callback<ChatRegistrationId> cb);
 		
 	}

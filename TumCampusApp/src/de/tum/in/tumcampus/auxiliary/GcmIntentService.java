@@ -14,9 +14,10 @@
  * limitations under the License.
  */
  
-package de.tum.in.tumcampus.services;
+package de.tum.in.tumcampus.auxiliary;
  
 import android.app.IntentService;
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -26,8 +27,8 @@ import android.support.v4.app.NotificationCompat;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
+import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.ChatRoomsSearchActivity;
-import de.tum.in.tumcampus.auxiliary.GcmBroadcastReceiver;
  
 /**
  * This {@code IntentService} does the actual handling of the GCM message.
@@ -89,13 +90,19 @@ public class GcmIntentService extends IntentService {
  
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
-        //.setSmallIcon(R.drawable.ic_stat_gcm) TODO
+        .setSmallIcon(R.drawable.ic_launcher)
         .setContentTitle("TCA Chat")
         .setStyle(new NotificationCompat.BigTextStyle()
         .bigText(msg))
         .setContentText(msg);
+        
+        Notification notification = mBuilder.build();
+        // Hide the notification after it is selected
+        notification.flags |= Notification.FLAG_AUTO_CANCEL;
+        // Add LED lights to notification
+        notification.defaults |= Notification.DEFAULT_LIGHTS;
  
         mBuilder.setContentIntent(contentIntent);
-        mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
+        mNotificationManager.notify(NOTIFICATION_ID, notification);
     }
 }

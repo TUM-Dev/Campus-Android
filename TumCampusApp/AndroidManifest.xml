@@ -28,9 +28,9 @@
      NOTE: the permission *must* be called PACKAGE.permission.C2D_MESSAGE,
            where PACKAGE is the application's package name.
     -->
-    <permission android:name="com.jana.gcmdemo.permission.C2D_MESSAGE"
+    <permission android:name="de.tum.in.tumcampus.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
-    <uses-permission android:name="com.jana.gcmdemo.permission.C2D_MESSAGE" />
+    <uses-permission android:name="de.tum.in.tumcampus.permission.C2D_MESSAGE" />
 
     <!-- This app has permission to register and receive data message. -->
     <uses-permission
@@ -55,14 +55,14 @@
           so only GCM services can send data messages for the app.
         -->
         <receiver
-            android:name=".GcmBroadcastReceiver"
+            android:name="de.tum.in.tumcampus.auxiliary.GcmBroadcastReceiver"
             android:permission="com.google.android.c2dm.permission.SEND" >
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
                 <category android:name="de.tum.in.tumcampus" />
             </intent-filter>
         </receiver>
-        <service android:name=".GcmIntentService" />
+        <service android:name="de.tum.in.tumcampus.auxiliary.GcmIntentService" />
         
         <provider
             android:name="de.tum.in.tumcampus.auxiliary.RoomFinderSuggestionProvider"

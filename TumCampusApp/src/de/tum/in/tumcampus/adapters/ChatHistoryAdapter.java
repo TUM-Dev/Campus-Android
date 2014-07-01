@@ -71,7 +71,7 @@ public class ChatHistoryAdapter extends BaseAdapter {
 		
 		ChatMessage chatMessage = messageHistory.get(position);
 		if (chatMessage != null) {
-			holder.tvUser.setText(chatMessage.getMember().substring(0, 10));
+			holder.tvUser.setText(chatMessage.getMember().substring(chatMessage.getMember().length() - 10));
 			holder.tvMessage.setText(chatMessage.getText());
 			holder.tvTimestamp.setText(chatMessage.getTimestampString());
 			
