@@ -112,20 +112,18 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
 		populateCurrentChatMember(sharedPrefs);
 		
 		// Check device for Play Services APK. If check succeeds, proceed with
-        //  GCM registration.
-        if (checkPlayServices()) {
-            gcm = GoogleCloudMessaging.getInstance(this);
-            getGCMPreferences(getApplicationContext()).edit().remove(Const.GCM_REG_ID).commit();
-            regId = getRegistrationId(getApplicationContext());
+		//  GCM registration.
+		if (checkPlayServices()) {
+		    gcm = GoogleCloudMessaging.getInstance(this);
+		    getGCMPreferences(getApplicationContext()).edit().remove(Const.GCM_REG_ID).commit();
+		    regId = getRegistrationId(getApplicationContext());
 
-            if (regId.isEmpty()) {
-                registerInBackground();
-            }
-        } else {
-            Log.i(TAG, "No valid Google Play Services APK found.");
-        }
-        
-        generateKeys();
+		    if (regId.isEmpty()) {
+		        registerInBackground();
+		    }
+		} else {
+		    Log.i(TAG, "No valid Google Play Services APK found.");
+		}
 	}
 
 	private void populateCurrentChatMember(final SharedPreferences sharedPrefs) {
@@ -145,13 +143,9 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
 			LinearLayout layout = new LinearLayout(this);
 			layout.setOrientation(LinearLayout.VERTICAL);
 
-			final EditText etFirstName = new EditText(this);
-			etFirstName.setHint(R.string.first_name);
-			layout.addView(etFirstName);
-
-			final EditText etLastName = new EditText(this);
-			etLastName.setHint(R.string.last_name);
-			layout.addView(etLastName);
+			final EditText etDisplayName = new EditText(this);
+			etDisplayName.setHint(R.string.display_name);
+			layout.addView(etDisplayName);
 			
 			AlertDialog.Builder builder = new AlertDialog.Builder(ChatRoomsSearchActivity.this);
 			builder.setTitle(R.string.chat_display_name_title)
@@ -159,13 +153,12 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
 				.setPositiveButton(getResources().getString(android.R.string.ok), new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-						currentChatMember.setFirstName(etFirstName.getText().toString());
-						currentChatMember.setLastName(etLastName.getText().toString());
-						// TODO: Disallow empty first or last name
+						currentChatMember.setDisplayName(etDisplayName.getText().toString());
+						// TODO: Disallow empty display name
 						
 						// Save display name in shared preferences
 						Editor editor = sharedPrefs.edit();
-						editor.putString(Const.CHAT_ROOM_DISPLAY_NAME, currentChatMember.getFirstName() + " " + currentChatMember.getLastName());
+						editor.putString(Const.CHAT_ROOM_DISPLAY_NAME, currentChatMember.getDisplayName());
 						editor.commit();
 						
 						// After the user has entered their display name, 
@@ -177,10 +170,6 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
 			AlertDialog alertDialog = builder.create();
 			alertDialog.show();
 		}
-	}
-
-	private void generateKeys() {
-		
 	}
 	
 	@Override

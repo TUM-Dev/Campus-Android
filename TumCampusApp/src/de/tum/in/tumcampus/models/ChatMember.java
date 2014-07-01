@@ -1,15 +1,18 @@
 package de.tum.in.tumcampus.models;
 
+import com.google.gson.annotations.SerializedName;
+
 public class ChatMember {
 
 	private String url = null;
-	private String lrz_id;
-	private String first_name;
-	private String last_name;
+	@SerializedName("lrz_id")
+	private String lrzId;
+	@SerializedName("first_name")
+	private String displayName;
 	
-	public ChatMember(String lrz_id) {
+	public ChatMember(String lrzId) {
 		super();
-		this.lrz_id = lrz_id;
+		this.lrzId = lrzId;
 	}
 	
 	public String getUrl() {
@@ -19,22 +22,16 @@ public class ChatMember {
 		this.url = url;
 	}
 	public String getLrzId() {
-		return lrz_id;
+		return lrzId;
 	}
-	public void setLrzId(String lrz_id) {
-		this.lrz_id = lrz_id;
+	public void setLrzId(String lrzId) {
+		this.lrzId = lrzId;
 	}
-	public String getFirstName() {
-		return first_name;
+	public String getDisplayName() {
+		return displayName;
 	}
-	public void setFirstName(String first_name) {
-		this.first_name = first_name;
-	}
-	public String getLastName() {
-		return last_name;
-	}
-	public void setLastName(String last_name) {
-		this.last_name = last_name;
+	public void setDisplayName(String displayName) {
+		this.displayName = displayName;
 	}
 	
 	public String getUserId() {
