@@ -1,23 +1,13 @@
 package de.tum.in.tumcampus.activities;
 
-import java.security.KeyFactory;
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.ArrayList;
 import java.util.List;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -34,13 +24,10 @@ import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.adapters.ChatHistoryAdapter;
 import de.tum.in.tumcampus.auxiliary.ChatClient;
 import de.tum.in.tumcampus.auxiliary.Const;
-import de.tum.in.tumcampus.auxiliary.Dialogs;
 import de.tum.in.tumcampus.auxiliary.RSASigner;
-import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.ChatMember;
 import de.tum.in.tumcampus.models.ChatMessage;
 import de.tum.in.tumcampus.models.ChatMessage2;
-import de.tum.in.tumcampus.models.ChatPublicKey;
 import de.tum.in.tumcampus.models.ChatRoom;
 
 /**
@@ -65,7 +52,6 @@ public class ChatActivity extends SherlockActivity implements OnClickListener {
 	
 	private ChatRoom currentChatRoom;
 	private ChatMember currentChatMember;
-	private PrivateKey privateKey = null;
 	
 	private boolean messageSentSuccessfully = false;
 	
@@ -83,8 +69,9 @@ public class ChatActivity extends SherlockActivity implements OnClickListener {
 	public void onClick(View view) {
 		// SEND MESSAGE
 		if (view.getId() == btnSend.getId()) {
+			PrivateKey privateKey = currentChatMember.getPrivateKey();
 			if (privateKey == null) {
-				retrieveOrGeneratePrivateKey();
+				Log.e("ChatActivity", "Private key does not exist!");
 			}
 			
 			ChatMessage newMessage = new ChatMessage(etMessage.getText().toString(), currentChatMember.getUrl());
@@ -99,7 +86,7 @@ public class ChatActivity extends SherlockActivity implements OnClickListener {
 					// Send the message to the server
 					ChatMessage newlyCreatedMessage = ChatClient.getInstance().sendMessage(currentChatRoom.getGroupId(), newMessage);
 					
-					// TODO: uncomment when we no longer need to message classes
+					// TODO: uncomment when we no longer need two message classes
 					//chatHistory.add(newlyCreatedMessage);
 					//chatHistoryAdapter.notifyDataSetChanged();
 						
@@ -110,62 +97,6 @@ public class ChatActivity extends SherlockActivity implements OnClickListener {
 				}
  			}
 			etMessage.setText("");	
-		}
-	}
-
-	private void retrieveOrGeneratePrivateKey() {
-		// Generate/Retrieve private key
-		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-		
-		if (sharedPrefs.contains(Const.PRIVATE_KEY)) {
-			// If the key is already generated, retrieve it from shared preferences
-			String privateKeyString = sharedPrefs.getString(Const.PRIVATE_KEY, "");
-			byte[] privateKeyBytes = Base64.decode(privateKeyString, Base64.DEFAULT);
-		    KeyFactory keyFactory;
-			try {
-				keyFactory = KeyFactory.getInstance("RSA");
-				PKCS8EncodedKeySpec privateKeySpec = new PKCS8EncodedKeySpec(privateKeyBytes);
-				privateKey = keyFactory.generatePrivate(privateKeySpec);
-			} catch (NoSuchAlgorithmException e) {
-				e.printStackTrace();
-			} catch (InvalidKeySpecException e) {
-				e.printStackTrace();
-			}
-		} else {
-			// If the key is not in shared preferences, generate key-pair
-			KeyPairGenerator keyGen = null;
-			try {
-				keyGen = KeyPairGenerator.getInstance("RSA");
-			} catch (NoSuchAlgorithmException e) {
-				e.printStackTrace();
-			}
-		    keyGen.initialize(1024);
-		    KeyPair keyPair = keyGen.generateKeyPair();
-		    
-		    byte[] publicKey = keyPair.getPublic().getEncoded();
-		    String publicKeyString = Base64.encodeToString(publicKey, Base64.DEFAULT);
-		    
-		    privateKey = keyPair.getPrivate();
-		    String privateKeyString = Base64.encodeToString(privateKey.getEncoded(), Base64.DEFAULT);
-			
-		    // Save private key in shared preferences
-			Editor editor = sharedPrefs.edit();
-			editor.putString(Const.PRIVATE_KEY, privateKeyString);
-			editor.commit();
-			
-			// Upload public key to the server
-			ChatClient.getInstance().uploadPublicKey(currentChatMember.getUserId(), new ChatPublicKey(publicKeyString), new Callback<ChatPublicKey>() {
-				@Override
-				public void success(ChatPublicKey arg0, Response arg1) {
-					Log.d("Success uploading public key", arg0.toString());
-					Utils.showLongCenteredToast(ChatActivity.this, "Public key activation mail sent to " + currentChatMember.getLrzId() + "@mytum.de");
-				}
-
-				@Override
-				public void failure(RetrofitError arg0) {
-					Log.e("Failure uploading public key", arg0.toString());
-				}
-			});
 		}
 	}
 	

@@ -1,5 +1,7 @@
 package de.tum.in.tumcampus.models;
 
+import java.security.PrivateKey;
+
 import com.google.gson.annotations.SerializedName;
 
 public class ChatMember {
@@ -9,7 +11,9 @@ public class ChatMember {
 	private String lrzId;
 	@SerializedName("display_name")
 	private String displayName;
-	
+	private String signature;
+	private PrivateKey privateKey;
+
 	public ChatMember(String lrzId) {
 		super();
 		this.lrzId = lrzId;
@@ -32,6 +36,18 @@ public class ChatMember {
 	}
 	public void setDisplayName(String displayName) {
 		this.displayName = displayName;
+	}
+	public String getSignature() {
+		return signature;
+	}
+	public void setSignature(String signature) {
+		this.signature = signature;
+	}
+	public PrivateKey getPrivateKey() {
+		return privateKey;
+	}
+	public void setPrivateKey(PrivateKey privateKey) {
+		this.privateKey = privateKey;
 	}
 	
 	public String getUserId() {

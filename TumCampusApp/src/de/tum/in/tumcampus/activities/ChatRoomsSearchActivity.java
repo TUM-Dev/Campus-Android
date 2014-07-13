@@ -1,6 +1,12 @@
 package de.tum.in.tumcampus.activities;
 
 import java.io.IOException;
+import java.security.KeyFactory;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -22,6 +28,7 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -46,6 +53,7 @@ import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.PersonalLayoutManager;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.ChatMember;
+import de.tum.in.tumcampus.models.ChatPublicKey;
 import de.tum.in.tumcampus.models.ChatRegistrationId;
 import de.tum.in.tumcampus.models.ChatRoom;
 import de.tum.in.tumcampus.models.LecturesSearchRow;
@@ -120,6 +128,8 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
 			// we GET their data from the server using their lrzId
 			List<ChatMember> members = ChatClient.getInstance().getMember(lrzId);
 			currentChatMember = members.get(0);
+			
+			retrieveOrGeneratePrivateKey();
 			checkPlayServicesAndRegister();
 		} else {
 			// If the user is opening the chat for the first time, we need to display
@@ -150,6 +160,7 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
 						// send a request to the server to create the new member
 						currentChatMember = ChatClient.getInstance().createMember(currentChatMember);
 						
+						retrieveOrGeneratePrivateKey();
 						checkPlayServicesAndRegister();
 					}
 				});
@@ -342,7 +353,66 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
 			}
 		});
 	}
+	
+	private void retrieveOrGeneratePrivateKey() {
+		// Generate/Retrieve private key
+		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+		
+		if (sharedPrefs.contains(Const.PRIVATE_KEY)) {
+			// If the key is already generated, retrieve it from shared preferences
+			String privateKeyString = sharedPrefs.getString(Const.PRIVATE_KEY, "");
+			byte[] privateKeyBytes = Base64.decode(privateKeyString, Base64.DEFAULT);
+		    KeyFactory keyFactory;
+			try {
+				keyFactory = KeyFactory.getInstance("RSA");
+				PKCS8EncodedKeySpec privateKeySpec = new PKCS8EncodedKeySpec(privateKeyBytes);
+				currentChatMember.setPrivateKey(keyFactory.generatePrivate(privateKeySpec));
+			} catch (NoSuchAlgorithmException e) {
+				e.printStackTrace();
+			} catch (InvalidKeySpecException e) {
+				e.printStackTrace();
+			}
+		} else {
+			// If the key is not in shared preferences, generate key-pair
+			KeyPairGenerator keyGen = null;
+			try {
+				keyGen = KeyPairGenerator.getInstance("RSA");
+			} catch (NoSuchAlgorithmException e) {
+				e.printStackTrace();
+			}
+		    keyGen.initialize(1024);
+		    KeyPair keyPair = keyGen.generateKeyPair();
+		    
+		    byte[] publicKey = keyPair.getPublic().getEncoded();
+		    String publicKeyString = Base64.encodeToString(publicKey, Base64.DEFAULT);
+		    
+		    currentChatMember.setPrivateKey(keyPair.getPrivate());
+		    String privateKeyString = Base64.encodeToString(currentChatMember.getPrivateKey().getEncoded(), Base64.DEFAULT);
+			
+		    // Save private key in shared preferences
+			Editor editor = sharedPrefs.edit();
+			editor.putString(Const.PRIVATE_KEY, privateKeyString);
+			editor.commit();
+			
+			// Upload public key to the server
+			ChatClient.getInstance().uploadPublicKey(currentChatMember.getUserId(), new ChatPublicKey(publicKeyString), new Callback<ChatPublicKey>() {
+				@Override
+				public void success(ChatPublicKey arg0, Response arg1) {
+					Log.d("Success uploading public key", arg0.toString());
+					Utils.showLongCenteredToast(ChatRoomsSearchActivity.this, "Public key activation mail sent to " + currentChatMember.getLrzId() + "@mytum.de");
+				}
 
+				@Override
+				public void failure(RetrofitError arg0) {
+					Log.e("Failure uploading public key", arg0.toString());
+				}
+			});
+		}
+	}
+
+	
+	
+	// GCM methods
 	
 	private void checkPlayServicesAndRegister() {
 		// Check device for Play Services APK. If check succeeds,
