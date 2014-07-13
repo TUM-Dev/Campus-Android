@@ -13,7 +13,6 @@ import java.util.List;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
-import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
@@ -26,12 +25,16 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 import com.google.gson.Gson;
 
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.adapters.ChatHistoryAdapter;
 import de.tum.in.tumcampus.auxiliary.ChatClient;
 import de.tum.in.tumcampus.auxiliary.Const;
+import de.tum.in.tumcampus.auxiliary.Dialogs;
 import de.tum.in.tumcampus.auxiliary.RSASigner;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.ChatMember;
@@ -47,12 +50,15 @@ import de.tum.in.tumcampus.models.ChatRoom;
  * 
  * @author Jana Pejic
  */
-public class ChatActivity extends Activity implements OnClickListener {
+public class ChatActivity extends SherlockActivity implements OnClickListener {
 	
 	/** UI elements */
 	private ListView lvMessageHistory;
 	private ChatHistoryAdapter chatHistoryAdapter;
 	private ArrayList<ChatMessage2> chatHistory;
+	
+	// Objects for disabling or enabling the options menu items
+	private MenuItem menuItemLeaveChatRoom;
 	
 	private EditText etMessage;
 	private Button btnSend;
@@ -72,7 +78,7 @@ public class ChatActivity extends Activity implements OnClickListener {
 		bindUIElements();
 		loadChatHistory();
 	}
-
+	
 	@Override
 	public void onClick(View view) {
 		// SEND MESSAGE
@@ -89,21 +95,21 @@ public class ChatActivity extends Activity implements OnClickListener {
  			newMessage.setSignature(signature);
  			
  			while (!messageSentSuccessfully) {
-				// Send the message to the server
- 				ChatMessage newlyCreatedMessage = ChatClient.getInstance().sendMessage(currentChatRoom.getGroupId(), newMessage);
-				
- 				if (newlyCreatedMessage != null) {
- 					// TODO: uncomment when we no longer need to message classes
+				try {
+					// Send the message to the server
+					ChatMessage newlyCreatedMessage = ChatClient.getInstance().sendMessage(currentChatRoom.getGroupId(), newMessage);
+					
+					// TODO: uncomment when we no longer need to message classes
 					//chatHistory.add(newlyCreatedMessage);
 					//chatHistoryAdapter.notifyDataSetChanged();
-					
+						
 					messageSentSuccessfully = true;
- 				} else {
- 					Log.d("Error sending message", "Try again");
- 				}
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
  			}
-			etMessage.setText("");
- 			
+			etMessage.setText("");	
 		}
 	}
 
@@ -193,5 +199,45 @@ public class ChatActivity extends Activity implements OnClickListener {
 				Log.e("Failure loading chat history", arg0.toString());
 			}
 		});
+	}
+	
+	// Action Bar
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		super.onCreateOptionsMenu(menu);
+		// Inflate the menu; this adds items to the action bar if it is present.
+		this.getSupportMenuInflater().inflate(R.menu.menu_activity_chat, menu);
+		return true;
+	}
+	
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		this.menuItemLeaveChatRoom = menu.findItem(R.id.action_leave_chat_room);
+		
+		//this.setMenuEnabled(true);
+		return super.onPrepareOptionsMenu(menu);
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.action_leave_chat_room:
+			ChatClient.getInstance().leaveChatRoom(currentChatRoom.getGroupId(), currentChatMember.getUserId(), new Callback<String>() {
+				
+				@Override
+				public void success(String arg0, Response arg1) {
+					Log.d("Success leaving chat room", arg0.toString());
+				}
+				
+				@Override
+				public void failure(RetrofitError arg0) {
+					Log.e("Failure leaving chat room", arg0.toString());
+				}
+			});
+			return true;
+
+		default:
+			return super.onOptionsItemSelected(item);
+		}
 	}
 }

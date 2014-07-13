@@ -296,6 +296,7 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
 			 */
 			private void showTermsIfNeeded(final Intent intent) {
 				final SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(ChatRoomsSearchActivity.this);
+				//sharedPrefs.edit().remove(Const.CHAT_TERMS_SHOWN + "_" + currentChatRoom.getName()).commit();
 				
 				// If the terms have not been shown for this chat room, show them
 				if (!sharedPrefs.getBoolean(Const.CHAT_TERMS_SHOWN + "_" + currentChatRoom.getName(), false)) {
@@ -348,7 +349,7 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
 		// proceed with GCM registration.
 		if (checkPlayServices()) {
 		    gcm = GoogleCloudMessaging.getInstance(this);
-		    getGCMPreferences(getApplicationContext()).edit().remove(Const.GCM_REG_ID).commit();
+		    //getGCMPreferences(getApplicationContext()).edit().remove(Const.GCM_REG_ID).commit();
 		    regId = getRegistrationId(getApplicationContext());
 
 		    if (regId.isEmpty()) {

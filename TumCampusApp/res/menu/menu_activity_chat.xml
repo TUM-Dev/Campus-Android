@@ -1,0 +1,10 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/action_leave_chat_room"
+        android:icon="@drawable/ic_leave_chat"
+        android:orderInCategory="100"
+        android:showAsAction="ifRoom"
+        android:title="@string/leave_chat_room"/>
+
+</menu>
