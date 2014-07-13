@@ -71,7 +71,7 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
 	
 	public static final String EXTRA_MESSAGE = "message";
     private static final String PROPERTY_APP_VERSION = "appVersion";
-    private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
+    private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
 	
 	String SENDER_ID = "1028528438269";
 	
@@ -270,7 +270,7 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
 		lvMyLecturesList.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> a, View v, int position, long id) {
-				LecturesSearchRow item = (LecturesSearchRow) lvMyLecturesList.getItemAtPosition(position);;
+				LecturesSearchRow item = (LecturesSearchRow) lvMyLecturesList.getItemAtPosition(position);
 
 				// set bundle for LectureDetails and show it
 				Bundle bundle = new Bundle();
@@ -287,6 +287,8 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
 						// The newly created chat room is returned
 						Log.d("Success creating chat room", newlyCreatedChatRoom.toString());
 						currentChatRoom = newlyCreatedChatRoom;
+						
+						showTermsIfNeeded(intent);
 					}
 					@Override
 					public void failure(RetrofitError arg0) {
@@ -295,38 +297,61 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
 						Log.d("Failure creating chat room - trying to GET it from the server", arg0.toString());
 						List<ChatRoom> chatRooms = ChatClient.getInstance().getChatRoom(currentChatRoom);
 						currentChatRoom = chatRooms.get(0);
+						
+						showTermsIfNeeded(intent);
 					}
 				});
+			}
+
+			
+			/**
+			 * Show terms under which the chat is provided by the application developers
+			 * @param intent
+			 */
+			private void showTermsIfNeeded(final Intent intent) {
+				final SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(ChatRoomsSearchActivity.this);
 				
-				// Show terms under which the chat is provided by the application developers 
-				AlertDialog.Builder builder = new AlertDialog.Builder(ChatRoomsSearchActivity.this);
-				builder.setTitle(R.string.chat_terms_title)
-					.setMessage(getResources().getString(R.string.chat_terms_body))
-					.setPositiveButton(getResources().getString(android.R.string.ok), new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-							if (currentChatMember.getLrzId() != null) {
-								ChatClient.getInstance().joinChatRoom(currentChatRoom, currentChatMember, new Callback<ChatRoom>() {
-									@Override
-									public void success(ChatRoom arg0, Response arg1) {
-										Log.d("Success joining chat room", arg0.toString());
-										// We need to move to the next activity now and provide the necessary data for it
-										// We are sure that both currentChatRoom and currentChatMember exist
-										intent.putExtra(Const.CURRENT_CHAT_ROOM, new Gson().toJson(currentChatRoom));
-										intent.putExtra(Const.CURRENT_CHAT_MEMBER, new Gson().toJson(currentChatMember));
-										startActivity(intent);
-									}
-									@Override
-									public void failure(RetrofitError arg0) {
-										Log.e("Failure joining chat room", arg0.toString());
-									}
-								});
+				// If the terms have not been shown for this chat room, show them
+				if (!sharedPrefs.getBoolean(Const.CHAT_TERMS_SHOWN + "_" + currentChatRoom.getName(), false)) {
+					AlertDialog.Builder builder = new AlertDialog.Builder(ChatRoomsSearchActivity.this);
+					builder.setTitle(R.string.chat_terms_title)
+						.setMessage(getResources().getString(R.string.chat_terms_body))
+						.setPositiveButton(getResources().getString(android.R.string.ok), new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int which) {
+								if (currentChatMember.getLrzId() != null) {
+									ChatClient.getInstance().joinChatRoom(currentChatRoom, currentChatMember, new Callback<ChatRoom>() {
+										@Override
+										public void success(ChatRoom arg0, Response arg1) {
+											Log.d("Success joining chat room", arg0.toString());
+											// Remember in sharedPrefs that the terms dialog was shown
+											Editor editor = sharedPrefs.edit();
+											editor.putBoolean(Const.CHAT_TERMS_SHOWN + "_" + currentChatRoom.getName(), true);
+											editor.commit();
+											// We need to move to the next activity now and provide the necessary data for it
+											// We are sure that both currentChatRoom and currentChatMember exist
+											intent.putExtra(Const.CURRENT_CHAT_ROOM, new Gson().toJson(currentChatRoom));
+											intent.putExtra(Const.CURRENT_CHAT_MEMBER, new Gson().toJson(currentChatMember));
+											startActivity(intent);
+										}
+										@Override
+										public void failure(RetrofitError arg0) {
+											Log.e("Failure joining chat room", arg0.toString());
+										}
+									});
+								}
 							}
-						}
-					});
-				
-				AlertDialog alertDialog = builder.create();
-				alertDialog.show();
+						});
+					
+					AlertDialog alertDialog = builder.create();
+					alertDialog.show();
+				} else { // If the terms were already shown, just enter the chat room
+					// We need to move to the next activity now and provide the necessary data for it
+					// We are sure that both currentChatRoom and currentChatMember exist
+					intent.putExtra(Const.CURRENT_CHAT_ROOM, new Gson().toJson(currentChatRoom));
+					intent.putExtra(Const.CURRENT_CHAT_MEMBER, new Gson().toJson(currentChatMember));
+					startActivity(intent);
+				}
 			}
 		});
 	}

@@ -85,9 +85,9 @@ public class GcmIntentService extends IntentService {
         mNotificationManager = (NotificationManager)
                 this.getSystemService(Context.NOTIFICATION_SERVICE);
  
-        PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
-                new Intent(this, ChatRoomsSearchActivity.class), 0);
- 
+        Intent notificationIntent = new Intent(this, ChatRoomsSearchActivity.class);
+        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+        
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
         .setSmallIcon(R.drawable.ic_launcher)
@@ -98,7 +98,7 @@ public class GcmIntentService extends IntentService {
         
         Notification notification = mBuilder.build();
         // Hide the notification after it is selected
-        notification.flags |= Notification.FLAG_AUTO_CANCEL;
+        notificationIntent.addFlags(Notification.FLAG_AUTO_CANCEL);
         // Add LED lights to notification
         notification.defaults |= Notification.DEFAULT_LIGHTS;
  

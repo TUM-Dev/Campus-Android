@@ -145,5 +145,6 @@ public final class Const {
 	public static final String PRIVATE_KEY = "chat_member_private_key";
 	public static final String PUBLIC_KEY = "chat_member_public_key";
 	public static final String GCM_REG_ID = "gcm_registration_id";
+	public static final String CHAT_TERMS_SHOWN = "chat_terms_shown";
     
 }
