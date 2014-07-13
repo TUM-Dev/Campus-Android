@@ -7,6 +7,8 @@ import java.util.List;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -44,9 +46,6 @@ public class ChatActivity extends SherlockActivity implements OnClickListener {
 	private ListView lvMessageHistory;
 	private ChatHistoryAdapter chatHistoryAdapter;
 	private ArrayList<ChatMessage2> chatHistory;
-	
-	// Objects for disabling or enabling the options menu items
-	private MenuItem menuItemLeaveChatRoom;
 	
 	private EditText etMessage;
 	private Button btnSend;
@@ -143,32 +142,50 @@ public class ChatActivity extends SherlockActivity implements OnClickListener {
 	}
 	
 	@Override
-	public boolean onPrepareOptionsMenu(Menu menu) {
-		this.menuItemLeaveChatRoom = menu.findItem(R.id.action_leave_chat_room);
-		
-		//this.setMenuEnabled(true);
-		return super.onPrepareOptionsMenu(menu);
-	}
-	
-	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.action_leave_chat_room:
-			// Remove CHAT_TERMS_SHOWN for this room to enable rejoining the room
-			PreferenceManager.getDefaultSharedPreferences(this).edit().remove(Const.CHAT_TERMS_SHOWN + "_" + currentChatRoom.getName()).commit();
 			
-			ChatClient.getInstance().leaveChatRoom(currentChatRoom.getGroupId(), currentChatMember.getUserId(), new Callback<String>() {
-				
-				@Override
-				public void success(String arg0, Response arg1) {
-					Log.d("Success leaving chat room", arg0.toString());
-				}
-				
-				@Override
-				public void failure(RetrofitError arg0) {
-					Log.e("Failure leaving chat room", arg0.toString());
-				}
-			});
+			AlertDialog.Builder builder = new AlertDialog.Builder(ChatActivity.this);
+			builder.setTitle(R.string.leave_chat_room)
+				.setMessage(getResources().getString(R.string.leave_chat_room_body))
+				.setPositiveButton(getResources().getString(android.R.string.ok), new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						if (currentChatMember.getLrzId() != null) {
+							// Generate signature
+							RSASigner signer = new RSASigner(currentChatMember.getPrivateKey());
+							String signature = signer.sign(currentChatMember.getLrzId());
+							currentChatMember.setSignature(signature);
+							
+							// Remove CHAT_TERMS_SHOWN for this room to enable rejoining the room
+							PreferenceManager.getDefaultSharedPreferences(ChatActivity.this).edit().remove(Const.CHAT_TERMS_SHOWN + "_" + currentChatRoom.getName()).commit();
+							
+							// Send request to the server to remove the user from this room
+							ChatClient.getInstance().leaveChatRoom(currentChatRoom.getGroupId(), currentChatMember.getUserId(), new Callback<String>() {
+								@Override
+								public void success(String arg0, Response arg1) {
+									Log.d("Success leaving chat room", arg0.toString());
+								}
+								
+								@Override
+								public void failure(RetrofitError arg0) {
+									Log.e("Failure leaving chat room", arg0.toString());
+								}
+							});
+						}
+					}
+				})
+				.setNegativeButton(getResources().getString(android.R.string.cancel), new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss();
+					}
+				});
+			
+			AlertDialog alertDialog = builder.create();
+			alertDialog.show();
+			
 			return true;
 
 		default:
