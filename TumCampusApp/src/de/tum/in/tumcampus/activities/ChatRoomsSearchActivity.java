@@ -51,6 +51,7 @@ import de.tum.in.tumcampus.adapters.ChatRoomsListAdapter;
 import de.tum.in.tumcampus.auxiliary.ChatClient;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.PersonalLayoutManager;
+import de.tum.in.tumcampus.auxiliary.RSASigner;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.ChatMember;
 import de.tum.in.tumcampus.models.ChatPublicKey;
@@ -318,6 +319,11 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
 							@Override
 							public void onClick(DialogInterface dialog, int which) {
 								if (currentChatMember.getLrzId() != null) {
+									// Generate signature
+									RSASigner signer = new RSASigner(currentChatMember.getPrivateKey());
+									String signature = signer.sign(currentChatMember.getLrzId());
+									currentChatMember.setSignature(signature);
+									
 									ChatClient.getInstance().joinChatRoom(currentChatRoom, currentChatMember, new Callback<ChatRoom>() {
 										@Override
 										public void success(ChatRoom arg0, Response arg1) {
