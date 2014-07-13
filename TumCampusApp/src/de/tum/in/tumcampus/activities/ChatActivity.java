@@ -19,6 +19,8 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -31,8 +33,10 @@ import com.google.gson.Gson;
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.adapters.ChatHistoryAdapter;
 import de.tum.in.tumcampus.auxiliary.ChatClient;
+import de.tum.in.tumcampus.auxiliary.ChatMessageValidator;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.RSASigner;
+import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.ChatMember;
 import de.tum.in.tumcampus.models.ChatMessage;
 import de.tum.in.tumcampus.models.ChatMessage2;
@@ -45,7 +49,7 @@ import de.tum.in.tumcampus.models.ChatRoom;
  * 
  * @author Jana Pejic
  */
-public class ChatActivity extends SherlockActivity implements OnClickListener {
+public class ChatActivity extends SherlockActivity implements OnClickListener, OnItemLongClickListener {
 	
 	/** UI elements */
 	private ListView lvMessageHistory;
@@ -100,6 +104,14 @@ public class ChatActivity extends SherlockActivity implements OnClickListener {
 		}
 	}
 
+	@Override
+	public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+		ChatMessageValidator validator = new ChatMessageValidator();
+		boolean result = validator.validate(chatHistory.get(position));
+		Utils.showLongCenteredToast(this, "Selected message is " + (result ? "" : "not ") + "valid");
+		return result;
+	}
+	
 	private PrivateKey getPrivateKeyFromSharedPrefs() {
 		String privateKeyString = PreferenceManager.getDefaultSharedPreferences(this).getString(Const.PRIVATE_KEY, "");
 		byte[] privateKeyBytes = Base64.decode(privateKeyString, Base64.DEFAULT);
@@ -125,6 +137,7 @@ public class ChatActivity extends SherlockActivity implements OnClickListener {
 	
 	private void bindUIElements() {
 		lvMessageHistory = (ListView) findViewById(R.id.lvMessageHistory);
+		lvMessageHistory.setOnItemLongClickListener(this);
 		etMessage = (EditText) findViewById(R.id.etMessage);
 		btnSend = (Button) findViewById(R.id.btnSend);
 		btnSend.setOnClickListener(this);
