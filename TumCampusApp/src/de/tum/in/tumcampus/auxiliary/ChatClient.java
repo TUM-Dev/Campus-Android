@@ -59,7 +59,7 @@ public class ChatClient {
 		void leaveChatRoom(@Path("groupId") String groupdId, @Path("lrzId") String lrzId);
 		
 		@POST("/chat_rooms/{groupId}/messages/")
-		void sendMessage(@Path("groupId") String groupId, @Body ChatMessage chatMessage, Callback<ChatMessage> cb);
+		ChatMessage sendMessage(@Path("groupId") String groupId, @Body ChatMessage chatMessage);
 		
 		@GET("/chat_rooms/{groupId}/messages/")
 		List<ChatMessage> getMessages(@Path("groupId") String groupId);
@@ -95,8 +95,8 @@ public class ChatClient {
 		service.joinChatRoom(chatRoom.getGroupId(), chatMember, cb);
 	}
 	
-	public void sendMessage(String groupId, ChatMessage chatMessage, Callback<ChatMessage> cb) {
-		service.sendMessage(groupId, chatMessage, cb);
+	public ChatMessage sendMessage(String groupId, ChatMessage chatMessage) {
+		return service.sendMessage(groupId, chatMessage);
 	}
 	
 	public List<ChatMessage> getMessages(String groupId) {

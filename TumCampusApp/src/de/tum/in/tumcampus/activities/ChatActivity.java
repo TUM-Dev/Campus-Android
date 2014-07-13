@@ -60,6 +60,8 @@ public class ChatActivity extends Activity implements OnClickListener {
 	private ChatMember currentChatMember;
 	private PrivateKey privateKey = null;
 	
+	private boolean messageSentSuccessfully = false;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -75,59 +77,7 @@ public class ChatActivity extends Activity implements OnClickListener {
 		// SEND MESSAGE
 		if (view.getId() == btnSend.getId()) {
 			if (privateKey == null) {
-				// Generate/Retrieve private key
-				SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-				
-				if (sharedPrefs.contains(Const.PRIVATE_KEY)) {
-					// If the key is already generated, retrieve it from shared preferences
-					String privateKeyString = sharedPrefs.getString(Const.PRIVATE_KEY, "");
-					byte[] privateKeyBytes = Base64.decode(privateKeyString, Base64.DEFAULT);
-		            KeyFactory keyFactory;
-					try {
-						keyFactory = KeyFactory.getInstance("RSA");
-						PKCS8EncodedKeySpec privateKeySpec = new PKCS8EncodedKeySpec(privateKeyBytes);
-						privateKey = keyFactory.generatePrivate(privateKeySpec);
-					} catch (NoSuchAlgorithmException e) {
-						e.printStackTrace();
-					} catch (InvalidKeySpecException e) {
-						e.printStackTrace();
-					}
-				} else {
-					// If the key is not in shared preferences, generate key-pair
-					KeyPairGenerator keyGen = null;
-					try {
-						keyGen = KeyPairGenerator.getInstance("RSA");
-					} catch (NoSuchAlgorithmException e) {
-						e.printStackTrace();
-					}
-			        keyGen.initialize(1024);
-			        KeyPair keyPair = keyGen.generateKeyPair();
-			        
-			        byte[] publicKey = keyPair.getPublic().getEncoded();
-			        String publicKeyString = Base64.encodeToString(publicKey, Base64.DEFAULT);
-			        
-			        privateKey = keyPair.getPrivate();
-			        String privateKeyString = Base64.encodeToString(privateKey.getEncoded(), Base64.DEFAULT);
-					
-			        // Save private key in shared preferences
-					Editor editor = sharedPrefs.edit();
-					editor.putString(Const.PRIVATE_KEY, privateKeyString);
-					editor.commit();
-					
-					// Upload public key to the server
-					ChatClient.getInstance().uploadPublicKey(currentChatMember.getUserId(), new ChatPublicKey(publicKeyString), new Callback<ChatPublicKey>() {
-						@Override
-						public void success(ChatPublicKey arg0, Response arg1) {
-							Log.d("Success uploading public key", arg0.toString());
-							Utils.showLongCenteredToast(ChatActivity.this, "Public key activation mail sent to " + currentChatMember.getLrzId() + "@mytum.de");
-						}
-			
-						@Override
-						public void failure(RetrofitError arg0) {
-							Log.e("Failure uploading public key", arg0.toString());
-						}
-					});
-				}
+				retrieveOrGeneratePrivateKey();
 			}
 			
 			ChatMessage newMessage = new ChatMessage(etMessage.getText().toString(), currentChatMember.getUrl());
@@ -136,23 +86,78 @@ public class ChatActivity extends Activity implements OnClickListener {
 			RSASigner signer = new RSASigner(privateKey);
 			String signature = signer.sign(newMessage.getText());
  			newMessage.setSignature(signature);
-			
-			// Send the message to the server
-			ChatClient.getInstance().sendMessage(currentChatRoom.getGroupId(), newMessage, new Callback<ChatMessage>() {
-				@Override
-				public void success(ChatMessage newlyCreatedMessage, Response arg1) {
-					Log.d("Success sending message", newlyCreatedMessage.toString());
-					
+ 			
+ 			while (!messageSentSuccessfully) {
+				// Send the message to the server
+ 				ChatMessage newlyCreatedMessage = ChatClient.getInstance().sendMessage(currentChatRoom.getGroupId(), newMessage);
+				
+ 				if (newlyCreatedMessage != null) {
 					chatHistory.add(newlyCreatedMessage);
 					chatHistoryAdapter.notifyDataSetChanged();
+					
+					messageSentSuccessfully = true;
+ 				} else {
+ 					Log.d("Error sending message", "Try again");
+ 				}
+ 			}
+			etMessage.setText("");
+ 			
+		}
+	}
+
+	private void retrieveOrGeneratePrivateKey() {
+		// Generate/Retrieve private key
+		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+		
+		if (sharedPrefs.contains(Const.PRIVATE_KEY)) {
+			// If the key is already generated, retrieve it from shared preferences
+			String privateKeyString = sharedPrefs.getString(Const.PRIVATE_KEY, "");
+			byte[] privateKeyBytes = Base64.decode(privateKeyString, Base64.DEFAULT);
+		    KeyFactory keyFactory;
+			try {
+				keyFactory = KeyFactory.getInstance("RSA");
+				PKCS8EncodedKeySpec privateKeySpec = new PKCS8EncodedKeySpec(privateKeyBytes);
+				privateKey = keyFactory.generatePrivate(privateKeySpec);
+			} catch (NoSuchAlgorithmException e) {
+				e.printStackTrace();
+			} catch (InvalidKeySpecException e) {
+				e.printStackTrace();
+			}
+		} else {
+			// If the key is not in shared preferences, generate key-pair
+			KeyPairGenerator keyGen = null;
+			try {
+				keyGen = KeyPairGenerator.getInstance("RSA");
+			} catch (NoSuchAlgorithmException e) {
+				e.printStackTrace();
+			}
+		    keyGen.initialize(1024);
+		    KeyPair keyPair = keyGen.generateKeyPair();
+		    
+		    byte[] publicKey = keyPair.getPublic().getEncoded();
+		    String publicKeyString = Base64.encodeToString(publicKey, Base64.DEFAULT);
+		    
+		    privateKey = keyPair.getPrivate();
+		    String privateKeyString = Base64.encodeToString(privateKey.getEncoded(), Base64.DEFAULT);
+			
+		    // Save private key in shared preferences
+			Editor editor = sharedPrefs.edit();
+			editor.putString(Const.PRIVATE_KEY, privateKeyString);
+			editor.commit();
+			
+			// Upload public key to the server
+			ChatClient.getInstance().uploadPublicKey(currentChatMember.getUserId(), new ChatPublicKey(publicKeyString), new Callback<ChatPublicKey>() {
+				@Override
+				public void success(ChatPublicKey arg0, Response arg1) {
+					Log.d("Success uploading public key", arg0.toString());
+					Utils.showLongCenteredToast(ChatActivity.this, "Public key activation mail sent to " + currentChatMember.getLrzId() + "@mytum.de");
 				}
+
 				@Override
 				public void failure(RetrofitError arg0) {
-					Log.e("Failure sending message", arg0.getMessage() + " " + arg0.getCause());
-					// TODO: somehow signal that the message was not sent
+					Log.e("Failure uploading public key", arg0.toString());
 				}
 			});
-			etMessage.setText("");
 		}
 	}
 	
