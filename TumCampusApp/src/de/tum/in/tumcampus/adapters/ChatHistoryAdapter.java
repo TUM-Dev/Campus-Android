@@ -9,11 +9,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.FrameLayout.LayoutParams;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import de.tum.in.tumcampus.R;
-import de.tum.in.tumcampus.models.ChatMessage;
+import de.tum.in.tumcampus.models.ChatMessage2;
 
 public class ChatHistoryAdapter extends BaseAdapter {
 
@@ -24,13 +24,13 @@ public class ChatHistoryAdapter extends BaseAdapter {
 		TextView tvTimestamp;
 	}
 	
-	private List<ChatMessage> messageHistory;
+	private List<ChatMessage2> messageHistory;
 	
 	private final LayoutInflater inflater;
 	
 	private String currentUserURL;
 	
-	public ChatHistoryAdapter(Context context, List<ChatMessage> messageHistory, String userURL) {
+	public ChatHistoryAdapter(Context context, List<ChatMessage2> messageHistory, String userURL) {
 		this.messageHistory = messageHistory;
 		inflater = LayoutInflater.from(context);
 		this.currentUserURL = userURL;
@@ -69,9 +69,9 @@ public class ChatHistoryAdapter extends BaseAdapter {
 			holder = (ViewHolder) convertView.getTag();
 		}
 		
-		ChatMessage chatMessage = messageHistory.get(position);
+		ChatMessage2 chatMessage = messageHistory.get(position);
 		if (chatMessage != null) {
-			holder.tvUser.setText(chatMessage.getMember().substring(chatMessage.getMember().length() - 10));
+			holder.tvUser.setText(chatMessage.getMember().getDisplayName());
 			holder.tvMessage.setText(chatMessage.getText());
 			holder.tvTimestamp.setText(chatMessage.getTimestampString());
 			
@@ -80,7 +80,7 @@ public class ChatHistoryAdapter extends BaseAdapter {
 			
 			FrameLayout chatFrameLayout = (FrameLayout) convertView.findViewById(R.id.chatFrameLayout);
 			
-			if (currentUserURL.equals(chatMessage.getMember())) {
+			if (currentUserURL.equals(chatMessage.getMember().getUrl())) {
 				chatMessageLayout.setBackgroundResource(R.drawable.bubble_right);
 				chatMessageLayoutParams.gravity = Gravity.RIGHT;
 				chatFrameLayout.setPadding(100, 0, 0, 0); // Add left padding

@@ -36,6 +36,7 @@ import de.tum.in.tumcampus.auxiliary.RSASigner;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.ChatMember;
 import de.tum.in.tumcampus.models.ChatMessage;
+import de.tum.in.tumcampus.models.ChatMessage2;
 import de.tum.in.tumcampus.models.ChatPublicKey;
 import de.tum.in.tumcampus.models.ChatRoom;
 
@@ -51,7 +52,7 @@ public class ChatActivity extends Activity implements OnClickListener {
 	/** UI elements */
 	private ListView lvMessageHistory;
 	private ChatHistoryAdapter chatHistoryAdapter;
-	private ArrayList<ChatMessage> chatHistory;
+	private ArrayList<ChatMessage2> chatHistory;
 	
 	private EditText etMessage;
 	private Button btnSend;
@@ -92,8 +93,9 @@ public class ChatActivity extends Activity implements OnClickListener {
  				ChatMessage newlyCreatedMessage = ChatClient.getInstance().sendMessage(currentChatRoom.getGroupId(), newMessage);
 				
  				if (newlyCreatedMessage != null) {
-					chatHistory.add(newlyCreatedMessage);
-					chatHistoryAdapter.notifyDataSetChanged();
+ 					// TODO: uncomment when we no longer need to message classes
+					//chatHistory.add(newlyCreatedMessage);
+					//chatHistoryAdapter.notifyDataSetChanged();
 					
 					messageSentSuccessfully = true;
  				} else {
@@ -177,11 +179,11 @@ public class ChatActivity extends Activity implements OnClickListener {
 	
 	// TODO: maybe make this sync
 	private void loadChatHistory() {
-		ChatClient.getInstance().getMessagesCb(currentChatRoom.getGroupId(), new Callback<List<ChatMessage>>() {
+		ChatClient.getInstance().getMessagesCb(currentChatRoom.getGroupId(), new Callback<List<ChatMessage2>>() {
 			@Override
-			public void success(List<ChatMessage> downloadedChatHistory, Response arg1) {
+			public void success(List<ChatMessage2> downloadedChatHistory, Response arg1) {
 				Log.d("Success loading chat history", arg1.toString());
-				chatHistory = (ArrayList<ChatMessage>) downloadedChatHistory;
+				chatHistory = (ArrayList<ChatMessage2>) downloadedChatHistory;
 				chatHistoryAdapter = new ChatHistoryAdapter(ChatActivity.this, chatHistory, currentChatMember.getUrl());
 				lvMessageHistory.setAdapter(chatHistoryAdapter);
 			}

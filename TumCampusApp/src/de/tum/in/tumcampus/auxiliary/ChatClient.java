@@ -12,6 +12,7 @@ import retrofit.http.Path;
 import retrofit.http.Query;
 import de.tum.in.tumcampus.models.ChatMember;
 import de.tum.in.tumcampus.models.ChatMessage;
+import de.tum.in.tumcampus.models.ChatMessage2;
 import de.tum.in.tumcampus.models.ChatPublicKey;
 import de.tum.in.tumcampus.models.ChatRegistrationId;
 import de.tum.in.tumcampus.models.ChatRoom;
@@ -62,10 +63,10 @@ public class ChatClient {
 		ChatMessage sendMessage(@Path("groupId") String groupId, @Body ChatMessage chatMessage);
 		
 		@GET("/chat_rooms/{groupId}/messages/")
-		List<ChatMessage> getMessages(@Path("groupId") String groupId);
+		List<ChatMessage2> getMessages(@Path("groupId") String groupId);
 		
 		@GET("/chat_rooms/{groupId}/messages/")
-		void getMessagesCb(@Path("groupId") String groupId, Callback<List<ChatMessage>> cb);
+		void getMessagesCb(@Path("groupId") String groupId, Callback<List<ChatMessage2>> cb);
 		
 		@POST("/members/{memberId}/pubkeys/")
 		void uploadPublicKey(@Path("memberId") String memberId, @Body ChatPublicKey publicKey, Callback<ChatPublicKey> cb);
@@ -99,11 +100,11 @@ public class ChatClient {
 		return service.sendMessage(groupId, chatMessage);
 	}
 	
-	public List<ChatMessage> getMessages(String groupId) {
+	public List<ChatMessage2> getMessages(String groupId) {
 		return service.getMessages(groupId);
 	}
 	
-	public void getMessagesCb(String groupId, Callback<List<ChatMessage>> cb) {
+	public void getMessagesCb(String groupId, Callback<List<ChatMessage2>> cb) {
 		service.getMessagesCb(groupId, cb);
 	}
 	
