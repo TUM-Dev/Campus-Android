@@ -159,21 +159,7 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
 		}
 	}
 
-	private void checkPlayServicesAndRegister() {
-		// Check device for Play Services APK. If check succeeds,
-		// proceed with GCM registration.
-		if (checkPlayServices()) {
-		    gcm = GoogleCloudMessaging.getInstance(this);
-		    getGCMPreferences(getApplicationContext()).edit().remove(Const.GCM_REG_ID).commit();
-		    regId = getRegistrationId(getApplicationContext());
-
-		    if (regId.isEmpty()) {
-		        registerInBackground();
-		    }
-		} else {
-		    Log.i(TAG, "No valid Google Play Services APK found.");
-		}
-	}
+	
 	
 	@Override
 	public void onFetch(String rawResponse) {
@@ -356,6 +342,22 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
 		});
 	}
 
+	
+	private void checkPlayServicesAndRegister() {
+		// Check device for Play Services APK. If check succeeds,
+		// proceed with GCM registration.
+		if (checkPlayServices()) {
+		    gcm = GoogleCloudMessaging.getInstance(this);
+		    getGCMPreferences(getApplicationContext()).edit().remove(Const.GCM_REG_ID).commit();
+		    regId = getRegistrationId(getApplicationContext());
+
+		    if (regId.isEmpty()) {
+		        registerInBackground();
+		    }
+		} else {
+		    Log.i(TAG, "No valid Google Play Services APK found.");
+		}
+	}
 	
 	/**
      * Check the device to make sure it has the Google Play Services APK. If

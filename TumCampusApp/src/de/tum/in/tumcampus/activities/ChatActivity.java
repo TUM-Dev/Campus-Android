@@ -7,6 +7,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit.Callback;
@@ -49,6 +50,9 @@ public class ChatActivity extends Activity implements OnClickListener {
 	
 	/** UI elements */
 	private ListView lvMessageHistory;
+	private ChatHistoryAdapter chatHistoryAdapter;
+	private ArrayList<ChatMessage> chatHistory;
+	
 	private EditText etMessage;
 	private Button btnSend;
 	
@@ -136,9 +140,11 @@ public class ChatActivity extends Activity implements OnClickListener {
 			// Send the message to the server
 			ChatClient.getInstance().sendMessage(currentChatRoom.getGroupId(), newMessage, new Callback<ChatMessage>() {
 				@Override
-				public void success(ChatMessage arg0, Response arg1) {
-					Log.d("Success sending message", arg0.toString());
-					// TODO: display message in list
+				public void success(ChatMessage newlyCreatedMessage, Response arg1) {
+					Log.d("Success sending message", newlyCreatedMessage.toString());
+					
+					chatHistory.add(newlyCreatedMessage);
+					chatHistoryAdapter.notifyDataSetChanged();
 				}
 				@Override
 				public void failure(RetrofitError arg0) {
@@ -164,12 +170,15 @@ public class ChatActivity extends Activity implements OnClickListener {
 		btnSend.setOnClickListener(this);
 	}
 	
+	// TODO: maybe make this sync
 	private void loadChatHistory() {
 		ChatClient.getInstance().getMessagesCb(currentChatRoom.getGroupId(), new Callback<List<ChatMessage>>() {
 			@Override
-			public void success(List<ChatMessage> chatHistory, Response arg1) {
-				Log.d("Success loading chat history", chatHistory.toString());
-				lvMessageHistory.setAdapter(new ChatHistoryAdapter(ChatActivity.this, chatHistory, currentChatMember.getUrl()));
+			public void success(List<ChatMessage> downloadedChatHistory, Response arg1) {
+				Log.d("Success loading chat history", arg1.toString());
+				chatHistory = (ArrayList<ChatMessage>) downloadedChatHistory;
+				chatHistoryAdapter = new ChatHistoryAdapter(ChatActivity.this, chatHistory, currentChatMember.getUrl());
+				lvMessageHistory.setAdapter(chatHistoryAdapter);
 			}
 			
 			@Override
