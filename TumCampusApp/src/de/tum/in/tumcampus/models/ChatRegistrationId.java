@@ -7,9 +7,11 @@ public class ChatRegistrationId {
 	@SerializedName("registration_id")
 	private String regId;
 	private String status;
+	private String signature;
 
-	public ChatRegistrationId(String regId) {
+	public ChatRegistrationId(String regId, String signature) {
 		this.regId = regId;
+		this.signature = signature;
 	}
 
 	public String getRegId() {
@@ -26,5 +28,13 @@ public class ChatRegistrationId {
 
 	public void setStatus(String status) {
 		this.status = status;
+	}
+
+	public String getSignature() {
+		return signature;
+	}
+
+	public void setSignature(String signature) {
+		this.signature = signature;
 	}
 }

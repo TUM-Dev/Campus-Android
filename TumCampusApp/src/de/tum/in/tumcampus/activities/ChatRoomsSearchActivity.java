@@ -563,7 +563,11 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
 	 * using the 'from' address in the message.
 	 */
 	private void sendRegistrationIdToBackend() {
-		ChatClient.getInstance().uploadRegistrationId(currentChatMember.getUserId(), new ChatRegistrationId(regId), new Callback<ChatRegistrationId>() {
+		// Generate signature
+		RSASigner signer = new RSASigner(currentPrivateKey);
+		String signature = signer.sign(currentChatMember.getLrzId());
+		
+		ChatClient.getInstance().uploadRegistrationId(currentChatMember.getUserId(), new ChatRegistrationId(regId, signature), new Callback<ChatRegistrationId>() {
 			@Override
 			public void success(ChatRegistrationId arg0, Response arg1) {
 				Log.d("Success uploading GCM registration id", arg0.toString());
