@@ -13,6 +13,7 @@ import android.widget.FrameLayout.LayoutParams;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import de.tum.in.tumcampus.R;
+import de.tum.in.tumcampus.models.ChatMember;
 import de.tum.in.tumcampus.models.ChatMessage2;
 
 public class ChatHistoryAdapter extends BaseAdapter {
@@ -28,12 +29,12 @@ public class ChatHistoryAdapter extends BaseAdapter {
 	
 	private final LayoutInflater inflater;
 	
-	private String currentUserURL;
+	private ChatMember currentChatMember;
 	
-	public ChatHistoryAdapter(Context context, List<ChatMessage2> messageHistory, String userURL) {
+	public ChatHistoryAdapter(Context context, List<ChatMessage2> messageHistory, ChatMember currentChatMember) {
 		this.messageHistory = messageHistory;
 		inflater = LayoutInflater.from(context);
-		this.currentUserURL = userURL;
+		this.currentChatMember = currentChatMember;
 	}
 	
 	@Override
@@ -80,12 +81,12 @@ public class ChatHistoryAdapter extends BaseAdapter {
 			
 			FrameLayout chatFrameLayout = (FrameLayout) convertView.findViewById(R.id.chatFrameLayout);
 			
-			if (currentUserURL.equals(chatMessage.getMember().getUrl())) { // TODO: change condition for dummy user
+			if ("bot".equals(chatMessage.getMember().getLrzId())) {
 				chatMessageLayoutParams.gravity = Gravity.CENTER;
 				chatFrameLayout.setPadding(100, 0, 100, 0); // Add left and right padding
 				holder.tvUser.setText("");
 				holder.tvTimestamp.setText("");
-			} else if (currentUserURL.equals(chatMessage.getMember().getUrl())) {
+			} else if (currentChatMember.getUrl().equals(chatMessage.getMember().getUrl())) {
 				chatMessageLayout.setBackgroundResource(R.drawable.bubble_right);
 				chatMessageLayoutParams.gravity = Gravity.RIGHT;
 				chatFrameLayout.setPadding(100, 0, 0, 0); // Add left padding

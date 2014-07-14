@@ -86,13 +86,11 @@ public class ChatActivity extends SherlockActivity implements OnClickListener {
 					// Send the message to the server
 					ChatMessage newlyCreatedMessage = ChatClient.getInstance().sendMessage(currentChatRoom.getGroupId(), newMessage);
 					
-					// TODO: uncomment when we no longer need two message classes
-					//chatHistory.add(newlyCreatedMessage);
-					//chatHistoryAdapter.notifyDataSetChanged();
+					chatHistory.add(newlyCreatedMessage);
+					chatHistoryAdapter.notifyDataSetChanged();
 						
 					messageSentSuccessfully = true;
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
  			}
@@ -137,7 +135,7 @@ public class ChatActivity extends SherlockActivity implements OnClickListener {
 			public void success(List<ChatMessage2> downloadedChatHistory, Response arg1) {
 				Log.d("Success loading chat history", arg1.toString());
 				chatHistory = (ArrayList<ChatMessage2>) downloadedChatHistory;
-				chatHistoryAdapter = new ChatHistoryAdapter(ChatActivity.this, chatHistory, currentChatMember.getUrl());
+				chatHistoryAdapter = new ChatHistoryAdapter(ChatActivity.this, chatHistory, currentChatMember);
 				lvMessageHistory.setAdapter(chatHistoryAdapter);
 			}
 			

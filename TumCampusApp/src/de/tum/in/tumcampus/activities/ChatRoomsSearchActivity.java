@@ -340,7 +340,6 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
 										@Override
 										public void failure(RetrofitError arg0) {
 											Log.e("Failure joining chat room", arg0.toString());
-											moveToChatActivity(intent); // TODO: remove
 										}
 									});
 								}
