@@ -5,6 +5,7 @@ import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.ArrayList;
@@ -75,8 +76,9 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
 	private ListView lvMyLecturesList;
 	private Spinner spFilter;
 	
-	private ChatRoom currentChatRoom = null;
-	private ChatMember currentChatMember = null;
+	private ChatRoom currentChatRoom;
+	private ChatMember currentChatMember;
+	private PrivateKey currentPrivateKey;
 	
 	public static final String EXTRA_MESSAGE = "message";
     private static final String PROPERTY_APP_VERSION = "appVersion";
@@ -130,8 +132,8 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
 			List<ChatMember> members = ChatClient.getInstance().getMember(lrzId);
 			currentChatMember = members.get(0);
 			
-			retrieveOrGeneratePrivateKey();
 			checkPlayServicesAndRegister();
+			currentPrivateKey = retrieveOrGeneratePrivateKey();
 		} else {
 			// If the user is opening the chat for the first time, we need to display
 			// a dialog where they can enter their desired display name
@@ -161,8 +163,8 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
 						// send a request to the server to create the new member
 						currentChatMember = ChatClient.getInstance().createMember(currentChatMember);
 						
-						retrieveOrGeneratePrivateKey();
 						checkPlayServicesAndRegister();
+						currentPrivateKey = retrieveOrGeneratePrivateKey();
 					}
 				});
 			
@@ -320,7 +322,7 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
 							public void onClick(DialogInterface dialog, int which) {
 								if (currentChatMember.getLrzId() != null) {
 									// Generate signature
-									RSASigner signer = new RSASigner(currentChatMember.getPrivateKey());
+									RSASigner signer = new RSASigner(currentPrivateKey);
 									String signature = signer.sign(currentChatMember.getLrzId());
 									currentChatMember.setSignature(signature);
 									
@@ -332,15 +334,13 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
 											Editor editor = sharedPrefs.edit();
 											editor.putBoolean(Const.CHAT_TERMS_SHOWN + "_" + currentChatRoom.getName(), true);
 											editor.commit();
-											// We need to move to the next activity now and provide the necessary data for it
-											// We are sure that both currentChatRoom and currentChatMember exist
-											intent.putExtra(Const.CURRENT_CHAT_ROOM, new Gson().toJson(currentChatRoom));
-											intent.putExtra(Const.CURRENT_CHAT_MEMBER, new Gson().toJson(currentChatMember));
-											startActivity(intent);
+											
+											moveToChatActivity(intent);
 										}
 										@Override
 										public void failure(RetrofitError arg0) {
 											Log.e("Failure joining chat room", arg0.toString());
+											moveToChatActivity(intent); // TODO: remove
 										}
 									});
 								}
@@ -350,17 +350,22 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
 					AlertDialog alertDialog = builder.create();
 					alertDialog.show();
 				} else { // If the terms were already shown, just enter the chat room
-					// We need to move to the next activity now and provide the necessary data for it
-					// We are sure that both currentChatRoom and currentChatMember exist
-					intent.putExtra(Const.CURRENT_CHAT_ROOM, new Gson().toJson(currentChatRoom));
-					intent.putExtra(Const.CURRENT_CHAT_MEMBER, new Gson().toJson(currentChatMember));
-					startActivity(intent);
+					moveToChatActivity(intent);
 				}
+			}
+
+
+			private void moveToChatActivity(final Intent intent) {
+				// We need to move to the next activity now and provide the necessary data for it
+				// We are sure that both currentChatRoom and currentChatMember exist
+				intent.putExtra(Const.CURRENT_CHAT_ROOM, new Gson().toJson(currentChatRoom));
+				intent.putExtra(Const.CURRENT_CHAT_MEMBER, new Gson().toJson(currentChatMember));
+				startActivity(intent);
 			}
 		});
 	}
 	
-	private void retrieveOrGeneratePrivateKey() {
+	private PrivateKey retrieveOrGeneratePrivateKey() {
 		// Generate/Retrieve private key
 		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
 		
@@ -372,7 +377,7 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
 			try {
 				keyFactory = KeyFactory.getInstance("RSA");
 				PKCS8EncodedKeySpec privateKeySpec = new PKCS8EncodedKeySpec(privateKeyBytes);
-				currentChatMember.setPrivateKey(keyFactory.generatePrivate(privateKeySpec));
+				return keyFactory.generatePrivate(privateKeySpec);
 			} catch (NoSuchAlgorithmException e) {
 				e.printStackTrace();
 			} catch (InvalidKeySpecException e) {
@@ -389,11 +394,8 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
 		    keyGen.initialize(1024);
 		    KeyPair keyPair = keyGen.generateKeyPair();
 		    
-		    byte[] publicKey = keyPair.getPublic().getEncoded();
-		    String publicKeyString = Base64.encodeToString(publicKey, Base64.DEFAULT);
-		    
-		    currentChatMember.setPrivateKey(keyPair.getPrivate());
-		    String privateKeyString = Base64.encodeToString(currentChatMember.getPrivateKey().getEncoded(), Base64.DEFAULT);
+		    String publicKeyString = Base64.encodeToString(keyPair.getPublic().getEncoded(), Base64.DEFAULT);
+		    String privateKeyString = Base64.encodeToString(keyPair.getPrivate().getEncoded(), Base64.DEFAULT);
 			
 		    // Save private key in shared preferences
 			Editor editor = sharedPrefs.edit();
@@ -413,7 +415,10 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
 					Log.e("Failure uploading public key", arg0.toString());
 				}
 			});
+			
+			return keyPair.getPrivate();
 		}
+		return null;
 	}
 
 	

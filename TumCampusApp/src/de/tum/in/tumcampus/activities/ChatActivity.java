@@ -1,6 +1,10 @@
 package de.tum.in.tumcampus.activities;
 
+import java.security.KeyFactory;
+import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +15,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -69,15 +74,10 @@ public class ChatActivity extends SherlockActivity implements OnClickListener {
 	public void onClick(View view) {
 		// SEND MESSAGE
 		if (view.getId() == btnSend.getId()) {
-			PrivateKey privateKey = currentChatMember.getPrivateKey();
-			if (privateKey == null) {
-				Log.e("ChatActivity", "Private key does not exist!");
-			}
-			
 			ChatMessage newMessage = new ChatMessage(etMessage.getText().toString(), currentChatMember.getUrl());
 			
 			// Generate signature
-			RSASigner signer = new RSASigner(privateKey);
+			RSASigner signer = new RSASigner(getPrivateKeyFromSharedPrefs());
 			String signature = signer.sign(newMessage.getText());
  			newMessage.setSignature(signature);
  			
@@ -98,6 +98,22 @@ public class ChatActivity extends SherlockActivity implements OnClickListener {
  			}
 			etMessage.setText("");	
 		}
+	}
+
+	private PrivateKey getPrivateKeyFromSharedPrefs() {
+		String privateKeyString = PreferenceManager.getDefaultSharedPreferences(this).getString(Const.PRIVATE_KEY, "");
+		byte[] privateKeyBytes = Base64.decode(privateKeyString, Base64.DEFAULT);
+		KeyFactory keyFactory;
+		try {
+			keyFactory = KeyFactory.getInstance("RSA");
+			PKCS8EncodedKeySpec privateKeySpec = new PKCS8EncodedKeySpec(privateKeyBytes);
+			return keyFactory.generatePrivate(privateKeySpec);
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		} catch (InvalidKeySpecException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 	private void getIntentData() {
@@ -154,7 +170,7 @@ public class ChatActivity extends SherlockActivity implements OnClickListener {
 					public void onClick(DialogInterface dialog, int which) {
 						if (currentChatMember.getLrzId() != null) {
 							// Generate signature
-							RSASigner signer = new RSASigner(currentChatMember.getPrivateKey());
+							RSASigner signer = new RSASigner(getPrivateKeyFromSharedPrefs());
 							String signature = signer.sign(currentChatMember.getLrzId());
 							currentChatMember.setSignature(signature);
 							
