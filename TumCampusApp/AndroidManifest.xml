@@ -9,6 +9,10 @@
         android:minSdkVersion="10" 
         android:targetSdkVersion="19" />
 
+    <instrumentation android:name="android.test.InstrumentationTestRunner"
+    	android:targetPackage="de.tum.in.tumcampus"
+    	android:label="Android JUnit tests" />
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -47,6 +51,9 @@
         
         <meta-data android:name="com.google.android.gms.version"
            android:value="@integer/google_play_services_version" />
+
+        <uses-library android:name="android.test.runner" />   
+       
         <!--
           WakefulBroadcastReceiver that will receive intents from GCM
           services and hand them to the custom IntentService.
