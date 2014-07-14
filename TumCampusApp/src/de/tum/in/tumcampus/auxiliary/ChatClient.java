@@ -71,6 +71,9 @@ public class ChatClient {
 		@POST("/members/{memberId}/pubkeys/")
 		void uploadPublicKey(@Path("memberId") String memberId, @Body ChatPublicKey publicKey, Callback<ChatPublicKey> cb);
 		
+		@GET("/members/{memberId}/pubkeys/")
+		List<ChatPublicKey> getPublicKeysForMember(@Path("memberId") String memberId);
+		
 		@POST("/members/{memberId}/registration_ids/add_id")
 		void uploadRegistrationId(@Path("memberId") String memberId, @Body ChatRegistrationId regId, Callback<ChatRegistrationId> cb);
 		
@@ -114,6 +117,10 @@ public class ChatClient {
 	
 	public void uploadPublicKey(String memberId, ChatPublicKey publicKey, Callback<ChatPublicKey> cb) {
 		service.uploadPublicKey(memberId, publicKey, cb);
+	}
+	
+	public List<ChatPublicKey> getPublicKeysForMember(String memberId) {
+		return service.getPublicKeysForMember(memberId);
 	}
 	
 	public void uploadRegistrationId(String memberId, ChatRegistrationId regId, Callback<ChatRegistrationId> cb) {
