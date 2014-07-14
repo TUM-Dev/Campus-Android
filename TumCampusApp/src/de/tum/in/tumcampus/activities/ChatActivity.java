@@ -13,6 +13,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Base64;
@@ -196,10 +197,13 @@ public class ChatActivity extends SherlockActivity implements OnClickListener, O
 							PreferenceManager.getDefaultSharedPreferences(ChatActivity.this).edit().remove(Const.CHAT_TERMS_SHOWN + "_" + currentChatRoom.getName()).commit();
 							
 							// Send request to the server to remove the user from this room
-							ChatClient.getInstance().leaveChatRoom(currentChatRoom.getGroupId(), currentChatMember.getUserId(), new Callback<String>() {
+							ChatClient.getInstance().leaveChatRoom(currentChatRoom, currentChatMember, new Callback<ChatRoom>() {
 								@Override
-								public void success(String arg0, Response arg1) {
+								public void success(ChatRoom arg0, Response arg1) {
 									Log.d("Success leaving chat room", arg0.toString());
+									// Move back to ChatRoomsSearchActivity
+									Intent intent = new Intent(ChatActivity.this, ChatRoomsSearchActivity.class);
+									startActivity(intent);
 								}
 								
 								@Override

@@ -5,17 +5,16 @@ import java.util.List;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.http.Body;
-import retrofit.http.DELETE;
 import retrofit.http.GET;
 import retrofit.http.POST;
 import retrofit.http.Path;
 import retrofit.http.Query;
 import de.tum.in.tumcampus.models.ChatMember;
-import de.tum.in.tumcampus.models.CreateChatMessage;
-import de.tum.in.tumcampus.models.ListChatMessage;
 import de.tum.in.tumcampus.models.ChatPublicKey;
 import de.tum.in.tumcampus.models.ChatRegistrationId;
 import de.tum.in.tumcampus.models.ChatRoom;
+import de.tum.in.tumcampus.models.CreateChatMessage;
+import de.tum.in.tumcampus.models.ListChatMessage;
 
 public class ChatClient {
 
@@ -56,8 +55,8 @@ public class ChatClient {
 		@POST("/chat_rooms/{groupId}/add_member/")
 		void joinChatRoom(@Path("groupId") String groupId, @Body ChatMember chatMember, Callback<ChatRoom> cb);
 		
-		@DELETE("/chat_rooms/{groupId}/members/{memberId}/")
-		void leaveChatRoom(@Path("groupId") String groupdId, @Path("memberId") String memberId, Callback<String> cb);
+		@POST("/chat_rooms/{groupId}/remove_member/")
+		void leaveChatRoom(@Path("groupId") String groupId, @Body ChatMember chatMember, Callback<ChatRoom> cb);
 		
 		@POST("/chat_rooms/{groupId}/messages/")
 		CreateChatMessage sendMessage(@Path("groupId") String groupId, @Body CreateChatMessage chatMessage);
@@ -99,8 +98,8 @@ public class ChatClient {
 		service.joinChatRoom(chatRoom.getGroupId(), chatMember, cb);
 	}
 	
-	public void leaveChatRoom(String groupdId, String memberId, Callback<String> cb) {
-		service.leaveChatRoom(groupdId, memberId, cb);
+	public void leaveChatRoom(ChatRoom chatRoom, ChatMember chatMember, Callback<ChatRoom> cb) {
+		service.leaveChatRoom(chatRoom.getGroupId(), chatMember, cb);
 	}
 	
 	public CreateChatMessage sendMessage(String groupId, CreateChatMessage chatMessage) {
