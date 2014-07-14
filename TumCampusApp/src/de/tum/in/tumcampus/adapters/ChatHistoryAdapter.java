@@ -80,7 +80,12 @@ public class ChatHistoryAdapter extends BaseAdapter {
 			
 			FrameLayout chatFrameLayout = (FrameLayout) convertView.findViewById(R.id.chatFrameLayout);
 			
-			if (currentUserURL.equals(chatMessage.getMember().getUrl())) {
+			if (currentUserURL.equals(chatMessage.getMember().getUrl())) { // TODO: change condition for dummy user
+				chatMessageLayoutParams.gravity = Gravity.CENTER;
+				chatFrameLayout.setPadding(100, 0, 100, 0); // Add left and right padding
+				holder.tvUser.setText("");
+				holder.tvTimestamp.setText("");
+			} else if (currentUserURL.equals(chatMessage.getMember().getUrl())) {
 				chatMessageLayout.setBackgroundResource(R.drawable.bubble_right);
 				chatMessageLayoutParams.gravity = Gravity.RIGHT;
 				chatFrameLayout.setPadding(100, 0, 0, 0); // Add left padding
