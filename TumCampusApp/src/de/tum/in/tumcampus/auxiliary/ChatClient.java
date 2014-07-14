@@ -11,8 +11,8 @@ import retrofit.http.POST;
 import retrofit.http.Path;
 import retrofit.http.Query;
 import de.tum.in.tumcampus.models.ChatMember;
-import de.tum.in.tumcampus.models.ChatMessage;
-import de.tum.in.tumcampus.models.ChatMessage2;
+import de.tum.in.tumcampus.models.CreateChatMessage;
+import de.tum.in.tumcampus.models.ListChatMessage;
 import de.tum.in.tumcampus.models.ChatPublicKey;
 import de.tum.in.tumcampus.models.ChatRegistrationId;
 import de.tum.in.tumcampus.models.ChatRoom;
@@ -60,13 +60,13 @@ public class ChatClient {
 		void leaveChatRoom(@Path("groupId") String groupdId, @Path("memberId") String memberId, Callback<String> cb);
 		
 		@POST("/chat_rooms/{groupId}/messages/")
-		ChatMessage sendMessage(@Path("groupId") String groupId, @Body ChatMessage chatMessage);
+		CreateChatMessage sendMessage(@Path("groupId") String groupId, @Body CreateChatMessage chatMessage);
 		
 		@GET("/chat_rooms/{groupId}/messages/")
-		List<ChatMessage2> getMessages(@Path("groupId") String groupId);
+		List<ListChatMessage> getMessages(@Path("groupId") String groupId);
 		
 		@GET("/chat_rooms/{groupId}/messages/")
-		void getMessagesCb(@Path("groupId") String groupId, Callback<List<ChatMessage2>> cb);
+		void getMessagesCb(@Path("groupId") String groupId, Callback<List<ListChatMessage>> cb);
 		
 		@POST("/members/{memberId}/pubkeys/")
 		void uploadPublicKey(@Path("memberId") String memberId, @Body ChatPublicKey publicKey, Callback<ChatPublicKey> cb);
@@ -100,15 +100,15 @@ public class ChatClient {
 		service.leaveChatRoom(groupdId, memberId, cb);
 	}
 	
-	public ChatMessage sendMessage(String groupId, ChatMessage chatMessage) {
+	public CreateChatMessage sendMessage(String groupId, CreateChatMessage chatMessage) {
 		return service.sendMessage(groupId, chatMessage);
 	}
 	
-	public List<ChatMessage2> getMessages(String groupId) {
+	public List<ListChatMessage> getMessages(String groupId) {
 		return service.getMessages(groupId);
 	}
 	
-	public void getMessagesCb(String groupId, Callback<List<ChatMessage2>> cb) {
+	public void getMessagesCb(String groupId, Callback<List<ListChatMessage>> cb) {
 		service.getMessagesCb(groupId, cb);
 	}
 	

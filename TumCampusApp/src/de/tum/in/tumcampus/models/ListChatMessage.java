@@ -6,19 +6,24 @@ import java.util.Date;
 import java.util.Locale;
 
 
-public class ChatMessage {
+public class ListChatMessage {
 
 	private String url;
 	private String text;
-	private String member;
+	private ChatMember member;
 	private String timestamp;
 	private String signature;
 	private boolean valid;
 	
-	public ChatMessage(String text, String member) {
+	public ListChatMessage(String text) {
 		super();
 		this.text = text;
-		this.member = member;
+	}
+	
+	public ListChatMessage(CreateChatMessage newlyCreatedMessage, ChatMember currentChatMember) {
+		this.text = newlyCreatedMessage.getText();
+		this.timestamp = newlyCreatedMessage.getTimestamp();
+		this.member = currentChatMember;
 	}
 	
 	public String getUrl() {
@@ -33,10 +38,10 @@ public class ChatMessage {
 	public void setText(String text) {
 		this.text = text;
 	}
-	public String getMember() {
+	public ChatMember getMember() {
 		return member;
 	}
-	public void setMember(String member) {
+	public void setMember(ChatMember member) {
 		this.member = member;
 	}
 	public String getTimestamp() {

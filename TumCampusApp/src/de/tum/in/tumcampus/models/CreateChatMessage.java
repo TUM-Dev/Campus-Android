@@ -6,18 +6,19 @@ import java.util.Date;
 import java.util.Locale;
 
 
-public class ChatMessage2 {
+public class CreateChatMessage {
 
 	private String url;
 	private String text;
-	private ChatMember member;
+	private String member;
 	private String timestamp;
 	private String signature;
 	private boolean valid;
 	
-	public ChatMessage2(String text) {
+	public CreateChatMessage(String text, String member) {
 		super();
 		this.text = text;
+		this.member = member;
 	}
 	
 	public String getUrl() {
@@ -32,10 +33,10 @@ public class ChatMessage2 {
 	public void setText(String text) {
 		this.text = text;
 	}
-	public ChatMember getMember() {
+	public String getMember() {
 		return member;
 	}
-	public void setMember(ChatMember member) {
+	public void setMember(String member) {
 		this.member = member;
 	}
 	public String getTimestamp() {

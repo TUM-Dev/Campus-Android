@@ -14,7 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.models.ChatMember;
-import de.tum.in.tumcampus.models.ChatMessage2;
+import de.tum.in.tumcampus.models.ListChatMessage;
 
 public class ChatHistoryAdapter extends BaseAdapter {
 
@@ -25,13 +25,13 @@ public class ChatHistoryAdapter extends BaseAdapter {
 		TextView tvTimestamp;
 	}
 	
-	private List<ChatMessage2> messageHistory;
+	private List<ListChatMessage> messageHistory;
 	
 	private final LayoutInflater inflater;
 	
 	private ChatMember currentChatMember;
 	
-	public ChatHistoryAdapter(Context context, List<ChatMessage2> messageHistory, ChatMember currentChatMember) {
+	public ChatHistoryAdapter(Context context, List<ListChatMessage> messageHistory, ChatMember currentChatMember) {
 		this.messageHistory = messageHistory;
 		inflater = LayoutInflater.from(context);
 		this.currentChatMember = currentChatMember;
@@ -70,7 +70,7 @@ public class ChatHistoryAdapter extends BaseAdapter {
 			holder = (ViewHolder) convertView.getTag();
 		}
 		
-		ChatMessage2 chatMessage = messageHistory.get(position);
+		ListChatMessage chatMessage = messageHistory.get(position);
 		if (chatMessage != null) {
 			holder.tvUser.setText(chatMessage.getMember().getDisplayName());
 			holder.tvMessage.setText(chatMessage.getText());
@@ -82,6 +82,7 @@ public class ChatHistoryAdapter extends BaseAdapter {
 			FrameLayout chatFrameLayout = (FrameLayout) convertView.findViewById(R.id.chatFrameLayout);
 			
 			if ("bot".equals(chatMessage.getMember().getLrzId())) {
+				chatMessageLayout.setBackground(null);
 				chatMessageLayoutParams.gravity = Gravity.CENTER;
 				chatFrameLayout.setPadding(100, 0, 100, 0); // Add left and right padding
 				holder.tvUser.setText("");

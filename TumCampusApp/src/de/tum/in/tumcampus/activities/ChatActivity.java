@@ -34,8 +34,8 @@ import de.tum.in.tumcampus.auxiliary.ChatClient;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.RSASigner;
 import de.tum.in.tumcampus.models.ChatMember;
-import de.tum.in.tumcampus.models.ChatMessage;
-import de.tum.in.tumcampus.models.ChatMessage2;
+import de.tum.in.tumcampus.models.CreateChatMessage;
+import de.tum.in.tumcampus.models.ListChatMessage;
 import de.tum.in.tumcampus.models.ChatRoom;
 
 /**
@@ -50,7 +50,7 @@ public class ChatActivity extends SherlockActivity implements OnClickListener {
 	/** UI elements */
 	private ListView lvMessageHistory;
 	private ChatHistoryAdapter chatHistoryAdapter;
-	private ArrayList<ChatMessage2> chatHistory;
+	private ArrayList<ListChatMessage> chatHistory;
 	
 	private EditText etMessage;
 	private Button btnSend;
@@ -59,6 +59,7 @@ public class ChatActivity extends SherlockActivity implements OnClickListener {
 	private ChatMember currentChatMember;
 	
 	private boolean messageSentSuccessfully = false;
+	private int numberOfAttempts = 0;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -74,27 +75,30 @@ public class ChatActivity extends SherlockActivity implements OnClickListener {
 	public void onClick(View view) {
 		// SEND MESSAGE
 		if (view.getId() == btnSend.getId()) {
-			ChatMessage newMessage = new ChatMessage(etMessage.getText().toString(), currentChatMember.getUrl());
+			CreateChatMessage newMessage = new CreateChatMessage(etMessage.getText().toString(), currentChatMember.getUrl());
 			
 			// Generate signature
 			RSASigner signer = new RSASigner(getPrivateKeyFromSharedPrefs());
 			String signature = signer.sign(newMessage.getText());
  			newMessage.setSignature(signature);
  			
- 			while (!messageSentSuccessfully) {
+ 			while (!messageSentSuccessfully && numberOfAttempts < 5) {
 				try {
 					// Send the message to the server
-					ChatMessage newlyCreatedMessage = ChatClient.getInstance().sendMessage(currentChatRoom.getGroupId(), newMessage);
+					CreateChatMessage newlyCreatedMessage = ChatClient.getInstance().sendMessage(currentChatRoom.getGroupId(), newMessage);
 					
-					chatHistory.add(newlyCreatedMessage);
+					chatHistory.add(new ListChatMessage(newlyCreatedMessage, currentChatMember));
 					chatHistoryAdapter.notifyDataSetChanged();
 						
 					messageSentSuccessfully = true;
-				} catch (Exception e) {
+				} catch (RetrofitError e) {
 					e.printStackTrace();
+					numberOfAttempts++;
 				}
  			}
-			etMessage.setText("");	
+			etMessage.setText("");
+			messageSentSuccessfully = false;
+			numberOfAttempts = 0;
 		}
 	}
 
@@ -130,11 +134,11 @@ public class ChatActivity extends SherlockActivity implements OnClickListener {
 	
 	// TODO: maybe make this sync
 	private void loadChatHistory() {
-		ChatClient.getInstance().getMessagesCb(currentChatRoom.getGroupId(), new Callback<List<ChatMessage2>>() {
+		ChatClient.getInstance().getMessagesCb(currentChatRoom.getGroupId(), new Callback<List<ListChatMessage>>() {
 			@Override
-			public void success(List<ChatMessage2> downloadedChatHistory, Response arg1) {
+			public void success(List<ListChatMessage> downloadedChatHistory, Response arg1) {
 				Log.d("Success loading chat history", arg1.toString());
-				chatHistory = (ArrayList<ChatMessage2>) downloadedChatHistory;
+				chatHistory = (ArrayList<ListChatMessage>) downloadedChatHistory;
 				chatHistoryAdapter = new ChatHistoryAdapter(ChatActivity.this, chatHistory, currentChatMember);
 				lvMessageHistory.setAdapter(chatHistoryAdapter);
 			}
