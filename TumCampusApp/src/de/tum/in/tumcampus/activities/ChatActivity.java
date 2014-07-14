@@ -38,6 +38,7 @@ import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.RSASigner;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.ChatMember;
+import de.tum.in.tumcampus.models.ChatPublicKey;
 import de.tum.in.tumcampus.models.CreateChatMessage;
 import de.tum.in.tumcampus.models.ListChatMessage;
 import de.tum.in.tumcampus.models.ChatRoom;
@@ -108,7 +109,7 @@ public class ChatActivity extends SherlockActivity implements OnClickListener, O
 
 	@Override
 	public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-        ChatMessage2 message = chatHistory.get(position);
+		ListChatMessage message = chatHistory.get(position);
         ArrayList<ChatPublicKey> publicKeys = (ArrayList<ChatPublicKey>) ChatClient.getInstance().getPublicKeysForMember(message.getMember().getUserId());
 		ChatMessageValidator validator = new ChatMessageValidator(publicKeys);
 		boolean result = validator.validate(message);

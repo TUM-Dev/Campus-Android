@@ -1,6 +1,6 @@
 package de.tum.in.tumcampus.auxiliary;
 
-import de.tum.in.tumcampus.models.ChatMessage2;
+import de.tum.in.tumcampus.models.ListChatMessage;
 import de.tum.in.tumcampus.models.ChatPublicKey;
 
 import java.io.UnsupportedEncodingException;
@@ -60,7 +60,7 @@ public class ChatMessageValidator {
 	 * @param message The message to be validated
 	 * @return True if the signature is valid, False otherwise
 	 */
-	public boolean validate(ChatMessage2 message) {
+	public boolean validate(ListChatMessage message) {
 		if (publicKeys == null) {
 			generatePublicKeys();
 		}
