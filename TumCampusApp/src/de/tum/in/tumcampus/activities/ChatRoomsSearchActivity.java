@@ -340,6 +340,7 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
 										@Override
 										public void failure(RetrofitError arg0) {
 											Log.e("Failure joining chat room", arg0.toString());
+											Utils.showLongCenteredToast(ChatRoomsSearchActivity.this, "Please activate your public key first");
 										}
 									});
 								}
