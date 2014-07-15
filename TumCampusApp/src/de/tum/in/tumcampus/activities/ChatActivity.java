@@ -63,7 +63,7 @@ public class ChatActivity extends SherlockActivity implements OnClickListener, O
 	/** UI elements */
 	private ListView lvMessageHistory;
 	private ChatHistoryAdapter chatHistoryAdapter;
-	private ArrayList<ListChatMessage> chatHistory;
+	private ArrayList<ListChatMessage> chatHistory = new ArrayList<ListChatMessage>();
 	private EditText etMessage;
 	private Button btnSend;
 	private Button btnLoadMore;
@@ -81,13 +81,13 @@ public class ChatActivity extends SherlockActivity implements OnClickListener, O
 		
 		getIntentData();
 		bindUIElements();
-		loadChatHistory();
+		getHistoryPageFromServer(1);
 	}
 	
 	@Override 
 	protected void onResume() {
 		super.onResume();
-		loadChatHistory();
+		getHistoryPageFromServer(1);
 	}
 	
 	@Override
@@ -125,7 +125,7 @@ public class ChatActivity extends SherlockActivity implements OnClickListener, O
 			// Worst case scenario, we have to download 9 messages again
 			int numberOfAlreadyDownloadedPages = (chatHistorySize - (chatHistorySize % 10)) / 10;
 			
-			loadChatHistoryPage(numberOfAlreadyDownloadedPages + 1);
+			getHistoryPageFromServer(numberOfAlreadyDownloadedPages + 1);
 		}
 	}
 
@@ -177,34 +177,22 @@ public class ChatActivity extends SherlockActivity implements OnClickListener, O
 		btnSend.setOnClickListener(this);
 	}
 	
-	private void loadChatHistory() {
-		ChatClient.getInstance().getMessages(currentChatRoom.getGroupId(), 1, new Callback<List<ListChatMessage>>() {
+	private void getHistoryPageFromServer(int page) {
+		ChatClient.getInstance().getMessages(currentChatRoom.getGroupId(), page, new Callback<ArrayList<ListChatMessage>>() {
 			@Override
-			public void success(List<ListChatMessage> downloadedChatHistory, Response arg1) {
-				Log.d("Success loading chat history", arg1.toString());
-				Collections.reverse(downloadedChatHistory);
-				chatHistory = (ArrayList<ListChatMessage>) downloadedChatHistory;
-				chatHistoryAdapter = new ChatHistoryAdapter(ChatActivity.this, chatHistory, currentChatMember);
-				lvMessageHistory.setAdapter(chatHistoryAdapter);
-			}
-			
-			@Override
-			public void failure(RetrofitError arg0) {
-				Log.e("Failure loading chat history", arg0.toString());
-			}
-		});
-	}
-	
-	private void loadChatHistoryPage(int page) {
-		ChatClient.getInstance().getMessages(currentChatRoom.getGroupId(), page, new Callback<List<ListChatMessage>>() {
-			@Override
-			public void success(List<ListChatMessage> downloadedChatHistory, Response arg1) {
+			public void success(ArrayList<ListChatMessage> downloadedChatHistory, Response arg1) {
 				Log.d("Success loading additional chat history", arg1.toString());
-				
-				for (ListChatMessage downloadedMessage : (ArrayList<ListChatMessage>) downloadedChatHistory) {
-					chatHistory.add(0, downloadedMessage);
+				if (chatHistory.size() == 0) {
+					Collections.reverse(downloadedChatHistory);
+					chatHistory = downloadedChatHistory;
+					chatHistoryAdapter = new ChatHistoryAdapter(ChatActivity.this, chatHistory, currentChatMember);
+					lvMessageHistory.setAdapter(chatHistoryAdapter);
+				} else {
+					for (ListChatMessage downloadedMessage : downloadedChatHistory) {
+						chatHistory.add(0, downloadedMessage);
+					}
+					chatHistoryAdapter.notifyDataSetChanged();
 				}
-				chatHistoryAdapter.notifyDataSetChanged();
 			}
 			
 			@Override

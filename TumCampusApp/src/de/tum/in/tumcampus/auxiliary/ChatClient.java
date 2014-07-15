@@ -1,5 +1,6 @@
 package de.tum.in.tumcampus.auxiliary;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit.Callback;
@@ -65,7 +66,7 @@ public class ChatClient {
 		CreateChatMessage sendMessage(@Path("groupId") String groupId, @Body CreateChatMessage chatMessage);
 		
 		@GET("/chat_rooms/{groupId}/messages/")
-		void getMessages(@Path("groupId") String groupId, @Query("page") int page, @Query("page_size") int pageSize, Callback<List<ListChatMessage>> cb);
+		void getMessages(@Path("groupId") String groupId, @Query("page") int page, @Query("page_size") int pageSize, Callback<ArrayList<ListChatMessage>> cb);
 		
 		@POST("/members/{memberId}/pubkeys/")
 		void uploadPublicKey(@Path("memberId") String memberId, @Body ChatPublicKey publicKey, Callback<ChatPublicKey> cb);
@@ -110,7 +111,7 @@ public class ChatClient {
 		return service.sendMessage(groupId, chatMessage);
 	}
 	
-	public void getMessages(String groupId, int page, Callback<List<ListChatMessage>> cb) {
+	public void getMessages(String groupId, int page, Callback<ArrayList<ListChatMessage>> cb) {
 		service.getMessages(groupId, page, 10, cb);
 	}
 	
