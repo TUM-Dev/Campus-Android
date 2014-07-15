@@ -435,6 +435,14 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
 
 		    if (regId.isEmpty()) {
 		        registerInBackground();
+		    } else {
+		    	// If the regId is not empty, we still need to check whether
+		    	// it was successfully sent to the TCA server, because this
+		    	// can fail due to user not confirming their private key
+			    boolean sentToTCAServer = isRegistrationIdSentToTCAServer(getApplicationContext());
+			    if (!sentToTCAServer) {
+			    	sendRegistrationIdToBackend();
+			    }
 		    }
 		} else {
 		    Log.i(TAG, "No valid Google Play Services APK found.");
@@ -488,6 +496,12 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
 	    return registrationId;
 	}
 	
+	private boolean isRegistrationIdSentToTCAServer(Context context) {
+		final SharedPreferences prefs = getGCMPreferences(context);
+		boolean sentToServer = prefs.getBoolean(Const.GCM_REG_ID_SENT_TO_SERVER, false);
+		return sentToServer;
+	}
+	
 	/**
 	 * @return Application's {@code SharedPreferences}.
 	 */
@@ -531,8 +545,8 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
                     regId = gcm.register(SENDER_ID);
                     msg = "GCM registration successful";
 
-                    // You should send the registration ID to your server over HTTP, so it
-                    // can use GCM/HTTP or CCS to send messages to your app.
+                    // You should send the registration ID to your server over HTTP,
+                    // so it can use GCM/HTTP or CCS to send messages to your app.
                     sendRegistrationIdToBackend();
 
                     // For this demo: we don't need to send it because the device will send
@@ -572,6 +586,12 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
 			@Override
 			public void success(ChatRegistrationId arg0, Response arg1) {
 				Log.d("Success uploading GCM registration id", arg0.toString());
+				// Store in shared preferences the information that the 
+				// GCM registration id was sent to the TCA server successfully
+				SharedPreferences sharedPrefs = getGCMPreferences(ChatRoomsSearchActivity.this);
+				SharedPreferences.Editor editor = sharedPrefs.edit();
+			    editor.putBoolean(Const.GCM_REG_ID_SENT_TO_SERVER, true);
+			    editor.commit();
 			}
 			
 			@Override
