@@ -131,7 +131,7 @@ public class ChatActivity extends SherlockActivity implements OnClickListener, O
 
 	@Override
 	public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-		ListChatMessage message = chatHistory.get(position);
+		ListChatMessage message = chatHistory.get(position - 1);
         ArrayList<ChatPublicKey> publicKeys = (ArrayList<ChatPublicKey>) ChatClient.getInstance().getPublicKeysForMember(message.getMember().getUserId());
 		ChatMessageValidator validator = new ChatMessageValidator(publicKeys);
 		boolean result = validator.validate(message);
