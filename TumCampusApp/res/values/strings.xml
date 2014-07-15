@@ -491,6 +491,7 @@
      <string name="display_name">Display name</string>
      <string name="leave_chat_room">Leave chat room</string>
      <string name="leave_chat_room_body">Are you sure you want to leave this chat room?</string>
+     <string name="load_earlier_messages">Load earlier messages</string>
      
     <!-- END Translated, please do not change identifiers -->
     

@@ -57,9 +57,9 @@ public class ChatActivity extends SherlockActivity implements OnClickListener, O
 	private ListView lvMessageHistory;
 	private ChatHistoryAdapter chatHistoryAdapter;
 	private ArrayList<ListChatMessage> chatHistory;
-	
 	private EditText etMessage;
 	private Button btnSend;
+	private Button btnLoadMore;
 	
 	private ChatRoom currentChatRoom;
 	private ChatMember currentChatMember;
@@ -79,8 +79,7 @@ public class ChatActivity extends SherlockActivity implements OnClickListener, O
 	
 	@Override
 	public void onClick(View view) {
-		// SEND MESSAGE
-		if (view.getId() == btnSend.getId()) {
+		if (view.getId() == btnSend.getId()) { // SEND MESSAGE
 			CreateChatMessage newMessage = new CreateChatMessage(etMessage.getText().toString(), currentChatMember.getUrl());
 			
 			// Generate signature
@@ -105,6 +104,8 @@ public class ChatActivity extends SherlockActivity implements OnClickListener, O
 			etMessage.setText("");
 			messageSentSuccessfully = false;
 			numberOfAttempts = 0;
+		} else if (view.getId() == btnLoadMore.getId()) { // Load more messages
+			
 		}
 	}
 
@@ -144,12 +145,18 @@ public class ChatActivity extends SherlockActivity implements OnClickListener, O
 	private void bindUIElements() {
 		lvMessageHistory = (ListView) findViewById(R.id.lvMessageHistory);
 		lvMessageHistory.setOnItemLongClickListener(this);
+		
+		// Add the button for loading more messages to list header
+		btnLoadMore = new Button(this);
+		btnLoadMore.setText(R.string.load_earlier_messages);
+		btnLoadMore.setOnClickListener(this);
+		lvMessageHistory.addHeaderView(btnLoadMore);
+		
 		etMessage = (EditText) findViewById(R.id.etMessage);
 		btnSend = (Button) findViewById(R.id.btnSend);
 		btnSend.setOnClickListener(this);
 	}
 	
-	// TODO: maybe make this sync
 	private void loadChatHistory() {
 		ChatClient.getInstance().getMessagesCb(currentChatRoom.getGroupId(), new Callback<List<ListChatMessage>>() {
 			@Override
