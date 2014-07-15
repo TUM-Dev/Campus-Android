@@ -44,7 +44,10 @@ public class ChatClient {
 		void createChatRoom(@Body ChatRoom chatRoom, Callback<ChatRoom> cb);
 		
 		@GET("/chat_rooms/")
-		List<ChatRoom> getChatRoom(@Query("name") String name);
+		List<ChatRoom> getChatRoomWithName(@Query("name") String name);
+		
+		@GET("/chat_rooms/{groupId}")
+		ChatRoom getChatRoom(@Path("groupId") String id);
 		
 		@POST("/members/")
 		ChatMember createMember(@Body ChatMember chatMember);
@@ -79,8 +82,12 @@ public class ChatClient {
 		service.createChatRoom(chatRoom, cb);
 	}
 	
-	public List<ChatRoom> getChatRoom(ChatRoom chatRoom) {
-		return service.getChatRoom(chatRoom.getName());
+	public List<ChatRoom> getChatRoomWithName(ChatRoom chatRoom) {
+		return service.getChatRoomWithName(chatRoom.getName());
+	}
+	
+	public ChatRoom getChatRoom(String id) {
+		return service.getChatRoom(id);
 	}
 	
 	public ChatMember createMember(ChatMember chatMember) {

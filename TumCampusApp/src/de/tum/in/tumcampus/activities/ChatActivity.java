@@ -41,9 +41,9 @@ import de.tum.in.tumcampus.auxiliary.RSASigner;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.ChatMember;
 import de.tum.in.tumcampus.models.ChatPublicKey;
+import de.tum.in.tumcampus.models.ChatRoom;
 import de.tum.in.tumcampus.models.CreateChatMessage;
 import de.tum.in.tumcampus.models.ListChatMessage;
-import de.tum.in.tumcampus.models.ChatRoom;
 
 /**
  * 
@@ -75,6 +75,12 @@ public class ChatActivity extends SherlockActivity implements OnClickListener, O
 		
 		getIntentData();
 		bindUIElements();
+		loadChatHistory();
+	}
+	
+	@Override 
+	protected void onResume() {
+		super.onResume();
 		loadChatHistory();
 	}
 	

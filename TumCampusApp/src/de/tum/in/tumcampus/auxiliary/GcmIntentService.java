@@ -16,6 +16,8 @@
  
 package de.tum.in.tumcampus.auxiliary;
  
+import java.util.List;
+
 import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -23,6 +25,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
@@ -30,6 +33,8 @@ import com.google.gson.Gson;
 
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.ChatActivity;
+import de.tum.in.tumcampus.models.ChatMember;
+import de.tum.in.tumcampus.models.ChatRoom;
  
 /**
  * This {@code IntentService} does the actual handling of the GCM message.
@@ -87,10 +92,17 @@ public class GcmIntentService extends IntentService {
                 this.getSystemService(Context.NOTIFICATION_SERVICE);
  
         Intent notificationIntent = new Intent(this, ChatActivity.class);
-        //notificationIntent.putExtra(Const.CURRENT_CHAT_ROOM, new Gson().toJson(currentChatRoom));
-        //notificationIntent.putExtra(Const.CURRENT_CHAT_MEMBER, new Gson().toJson(currentChatMember));
-        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
         
+        // Get the data necessary for the ChatActivity
+        String lrzId = PreferenceManager.getDefaultSharedPreferences(this).getString(Const.LRZ_ID, "");
+        List<ChatMember> members = ChatClient.getInstance().getMember(lrzId);
+        ChatRoom chatRoom = ChatClient.getInstance().getChatRoom("4");
+  
+        notificationIntent.putExtra(Const.CURRENT_CHAT_ROOM, new Gson().toJson(chatRoom));
+        notificationIntent.putExtra(Const.CURRENT_CHAT_MEMBER, new Gson().toJson(members.get(0)));
+        
+        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+         
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
         .setSmallIcon(R.drawable.ic_launcher)

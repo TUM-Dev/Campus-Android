@@ -7,6 +7,8 @@ public class ChatRoom {
 	private String messages;
 	private String url;
 	private String name;
+	private String id;
+	
 	private ArrayList<String> members = new ArrayList<String>();
 	
 	public ChatRoom(String name) {
@@ -31,6 +33,12 @@ public class ChatRoom {
 	}
 	public void setName(String name) {
 		this.name = name;
+	}
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
 	}
 	public ArrayList<String> getMembers() {
 		return members;

@@ -295,7 +295,7 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
 						// The POST request in unsuccessful because the chat room already exists,
 						// so we are trying to retrieve it with an additional GET request
 						Log.d("Failure creating chat room - trying to GET it from the server", arg0.toString());
-						List<ChatRoom> chatRooms = ChatClient.getInstance().getChatRoom(currentChatRoom);
+						List<ChatRoom> chatRooms = ChatClient.getInstance().getChatRoomWithName(currentChatRoom);
 						currentChatRoom = chatRooms.get(0);
 						
 						showTermsIfNeeded(intent);
@@ -430,7 +430,7 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
 		// proceed with GCM registration.
 		if (checkPlayServices()) {
 		    gcm = GoogleCloudMessaging.getInstance(this);
-		    getGCMPreferences(getApplicationContext()).edit().remove(Const.GCM_REG_ID).commit();
+		    //getGCMPreferences(getApplicationContext()).edit().remove(Const.GCM_REG_ID).commit();
 		    regId = getRegistrationId(getApplicationContext());
 
 		    if (regId.isEmpty()) {
