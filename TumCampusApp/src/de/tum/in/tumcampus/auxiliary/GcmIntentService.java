@@ -29,6 +29,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.LocalBroadcastManager;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.gson.Gson;
@@ -69,22 +70,9 @@ public class GcmIntentService extends IntentService {
              * extended in the future with new message types, just ignore any message types you're
              * not interested in, or that you don't recognize.
              */
-            if (GoogleCloudMessaging.MESSAGE_TYPE_SEND_ERROR.equals(messageType)) {
-                // Ovo nama vjerovatno nece trebati jer necemo koristiti GCM za upstream messaging (phone -> gcm -> backend), vec
-                // samo za downstream (backend -> gcm -> phone).
-                sendNotification("Send error: " + extras.toString(), "");
-            } else if (GoogleCloudMessaging.MESSAGE_TYPE_DELETED.equals(messageType)) {
-                sendNotification("Deleted messages on server: " + extras.toString(), "");
-            // If it's a regular GCM message, do some work.
-            } else if (GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE.equals(messageType)) {
+            if (GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE.equals(messageType)) {
                 // Post notification of received message.
-                // Prikazuje samo tekst u notifikaciji (ne posiljaoca ili chat room).
-            	String chatRoom = extras.getString("chat_room"); // chat_room={"id":3}
-            	Pattern pattern = Pattern.compile("\\{\"id\":(.*)\\}");
-            	Matcher matcher = pattern.matcher(chatRoom);
-            	if (matcher.find()) {
-            		sendNotification(extras.getString("text"), matcher.group(1));
-            	}
+        		sendNotification(extras);
             }
         }
         // Release the wake lock provided by the WakefulBroadcastReceiver.
@@ -94,10 +82,23 @@ public class GcmIntentService extends IntentService {
     // Put the message into a notification and post it.
     // This is just one simple example of what you
     // might choose to do with a GCM message.
-    private void sendNotification(String msg, String chatRoomId) {
+    private void sendNotification(Bundle extras) {
+    	String chatRoomString = extras.getString("chat_room"); // chat_room={"id":3}
+    	Pattern pattern = Pattern.compile("\\{\"id\":(.*)\\}");
+    	Matcher matcher = pattern.matcher(chatRoomString);
+    	if (!matcher.find()) {
+    		return;
+    	}
+    	String msg = extras.getString("text");
+		String chatRoomId = matcher.group(1);
         mNotificationManager = (NotificationManager)
                 this.getSystemService(Context.NOTIFICATION_SERVICE);
- 
+        
+        // Notify chat activity that a message has been received
+        Intent intent = new Intent("chat-message-received");
+		intent.putExtras(extras);
+		LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+        
         Intent notificationIntent = new Intent(this, ChatActivity.class);
         
         // Get the data necessary for the ChatActivity

@@ -8,15 +8,21 @@ import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
@@ -214,6 +220,28 @@ public class ChatActivity extends SherlockActivity implements OnClickListener, O
 		super.onCreateOptionsMenu(menu);
 		// Inflate the menu; this adds items to the action bar if it is present.
 		this.getSupportMenuInflater().inflate(R.menu.menu_activity_chat, menu);
+		
+		LocalBroadcastManager.getInstance(this).registerReceiver(new BroadcastReceiver() {
+			@Override
+			public void onReceive(Context context, Intent intent) {
+				Bundle extras = intent.getExtras();
+				
+				String chatRoomString = extras.getString("chat_room"); // chat_room={"id":3}
+		    	Pattern pattern = Pattern.compile("\\{\"id\":(.*)\\}");
+		    	Matcher matcher = pattern.matcher(chatRoomString);
+		    	if (!matcher.find() || !matcher.group(1).equals(currentChatRoom.getGroupId())) {
+		    		return;
+		    	}
+				ListChatMessage newMessage = new ListChatMessage(extras.getString("text"));
+				newMessage.setTimestamp(extras.getString("timestamp"));
+			
+				ChatMember member = new Gson().fromJson(extras.getString("member"), ChatMember.class);
+				newMessage.setMember(member);
+				chatHistory.add(newMessage);
+				chatHistoryAdapter.notifyDataSetChanged();
+			}
+		}, new IntentFilter("chat-message-received"));
+		
 		return true;
 	}
 	
