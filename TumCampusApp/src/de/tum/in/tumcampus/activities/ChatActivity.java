@@ -106,7 +106,14 @@ public class ChatActivity extends SherlockActivity implements OnClickListener, O
 			messageSentSuccessfully = false;
 			numberOfAttempts = 0;
 		} else if (view.getId() == btnLoadMore.getId()) { // Load more messages
+			int chatHistorySize = chatHistory.size();
+			// Round the number of already downloaded messages to multiple of 10
+			// Then divide this by 10 to get the number of downloaded pages 
+			// according to current state on the server
+			// Worst case scenario, we have to download 9 messages again
+			int numberOfAlreadyDownloadedPages = (chatHistorySize - (chatHistorySize % 10)) / 10;
 			
+			loadChatHistoryPage(numberOfAlreadyDownloadedPages + 1);
 		}
 	}
 
@@ -159,7 +166,7 @@ public class ChatActivity extends SherlockActivity implements OnClickListener, O
 	}
 	
 	private void loadChatHistory() {
-		ChatClient.getInstance().getMessages(currentChatRoom.getGroupId(), new Callback<List<ListChatMessage>>() {
+		ChatClient.getInstance().getMessages(currentChatRoom.getGroupId(), 1, new Callback<List<ListChatMessage>>() {
 			@Override
 			public void success(List<ListChatMessage> downloadedChatHistory, Response arg1) {
 				Log.d("Success loading chat history", arg1.toString());
@@ -172,6 +179,25 @@ public class ChatActivity extends SherlockActivity implements OnClickListener, O
 			@Override
 			public void failure(RetrofitError arg0) {
 				Log.e("Failure loading chat history", arg0.toString());
+			}
+		});
+	}
+	
+	private void loadChatHistoryPage(int page) {
+		ChatClient.getInstance().getMessages(currentChatRoom.getGroupId(), page, new Callback<List<ListChatMessage>>() {
+			@Override
+			public void success(List<ListChatMessage> downloadedChatHistory, Response arg1) {
+				Log.d("Success loading additional chat history", arg1.toString());
+				
+				for (ListChatMessage downloadedMessage : (ArrayList<ListChatMessage>) downloadedChatHistory) {
+					chatHistory.add(0, downloadedMessage);
+				}
+				chatHistoryAdapter.notifyDataSetChanged();
+			}
+			
+			@Override
+			public void failure(RetrofitError arg0) {
+				Log.e("Failure loading additional chat history", arg0.toString());
 			}
 		});
 	}
