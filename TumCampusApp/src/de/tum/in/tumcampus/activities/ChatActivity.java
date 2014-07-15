@@ -6,6 +6,7 @@ import java.security.PrivateKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import retrofit.Callback;
@@ -162,6 +163,7 @@ public class ChatActivity extends SherlockActivity implements OnClickListener, O
 			@Override
 			public void success(List<ListChatMessage> downloadedChatHistory, Response arg1) {
 				Log.d("Success loading chat history", arg1.toString());
+				Collections.reverse(downloadedChatHistory);
 				chatHistory = (ArrayList<ListChatMessage>) downloadedChatHistory;
 				chatHistoryAdapter = new ChatHistoryAdapter(ChatActivity.this, chatHistory, currentChatMember);
 				lvMessageHistory.setAdapter(chatHistoryAdapter);
