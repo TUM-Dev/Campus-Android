@@ -17,6 +17,8 @@
 package de.tum.in.tumcampus.auxiliary;
  
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import android.app.IntentService;
 import android.app.Notification;
@@ -70,14 +72,19 @@ public class GcmIntentService extends IntentService {
             if (GoogleCloudMessaging.MESSAGE_TYPE_SEND_ERROR.equals(messageType)) {
                 // Ovo nama vjerovatno nece trebati jer necemo koristiti GCM za upstream messaging (phone -> gcm -> backend), vec
                 // samo za downstream (backend -> gcm -> phone).
-                sendNotification("Send error: " + extras.toString());
+                sendNotification("Send error: " + extras.toString(), "");
             } else if (GoogleCloudMessaging.MESSAGE_TYPE_DELETED.equals(messageType)) {
-                sendNotification("Deleted messages on server: " + extras.toString());
+                sendNotification("Deleted messages on server: " + extras.toString(), "");
             // If it's a regular GCM message, do some work.
             } else if (GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE.equals(messageType)) {
                 // Post notification of received message.
                 // Prikazuje samo tekst u notifikaciji (ne posiljaoca ili chat room).
-                sendNotification(extras.getString("text"));
+            	String chatRoom = extras.getString("chat_room"); // chat_room={"id":3}
+            	Pattern pattern = Pattern.compile("\\{\"id\":(.*)\\}");
+            	Matcher matcher = pattern.matcher(chatRoom);
+            	if (matcher.find()) {
+            		sendNotification(extras.getString("text"), matcher.group(1));
+            	}
             }
         }
         // Release the wake lock provided by the WakefulBroadcastReceiver.
@@ -87,7 +94,7 @@ public class GcmIntentService extends IntentService {
     // Put the message into a notification and post it.
     // This is just one simple example of what you
     // might choose to do with a GCM message.
-    private void sendNotification(String msg) {
+    private void sendNotification(String msg, String chatRoomId) {
         mNotificationManager = (NotificationManager)
                 this.getSystemService(Context.NOTIFICATION_SERVICE);
  
@@ -96,12 +103,12 @@ public class GcmIntentService extends IntentService {
         // Get the data necessary for the ChatActivity
         String lrzId = PreferenceManager.getDefaultSharedPreferences(this).getString(Const.LRZ_ID, "");
         List<ChatMember> members = ChatClient.getInstance().getMember(lrzId);
-        ChatRoom chatRoom = ChatClient.getInstance().getChatRoom("4");
-  
+        ChatRoom chatRoom = ChatClient.getInstance().getChatRoom(chatRoomId);
+        // Put the data into the intent
         notificationIntent.putExtra(Const.CURRENT_CHAT_ROOM, new Gson().toJson(chatRoom));
         notificationIntent.putExtra(Const.CURRENT_CHAT_MEMBER, new Gson().toJson(members.get(0)));
         
-        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT|PendingIntent.FLAG_ONE_SHOT);
          
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
