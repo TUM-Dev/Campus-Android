@@ -133,7 +133,6 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
 			currentChatMember = members.get(0);
 			
 			checkPlayServicesAndRegister();
-			currentPrivateKey = retrieveOrGeneratePrivateKey();
 		} else {
 			// If the user is opening the chat for the first time, we need to display
 			// a dialog where they can enter their desired display name
@@ -164,7 +163,6 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
 						currentChatMember = ChatClient.getInstance().createMember(currentChatMember);
 						
 						checkPlayServicesAndRegister();
-						currentPrivateKey = retrieveOrGeneratePrivateKey();
 					}
 				});
 			
@@ -426,6 +424,8 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
 	// GCM methods
 	
 	private void checkPlayServicesAndRegister() {
+		currentPrivateKey = retrieveOrGeneratePrivateKey();
+		
 		// Check device for Play Services APK. If check succeeds,
 		// proceed with GCM registration.
 		if (checkPlayServices()) {
