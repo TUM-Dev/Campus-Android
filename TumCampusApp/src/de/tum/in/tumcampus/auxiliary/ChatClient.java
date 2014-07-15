@@ -62,10 +62,7 @@ public class ChatClient {
 		CreateChatMessage sendMessage(@Path("groupId") String groupId, @Body CreateChatMessage chatMessage);
 		
 		@GET("/chat_rooms/{groupId}/messages/")
-		List<ListChatMessage> getMessages(@Path("groupId") String groupId);
-		
-		@GET("/chat_rooms/{groupId}/messages/")
-		void getMessagesCb(@Path("groupId") String groupId, @Query("page_size") int pageSize, Callback<List<ListChatMessage>> cb);
+		void getMessages(@Path("groupId") String groupId, @Query("page_size") int pageSize, Callback<List<ListChatMessage>> cb);
 		
 		@POST("/members/{memberId}/pubkeys/")
 		void uploadPublicKey(@Path("memberId") String memberId, @Body ChatPublicKey publicKey, Callback<ChatPublicKey> cb);
@@ -106,12 +103,8 @@ public class ChatClient {
 		return service.sendMessage(groupId, chatMessage);
 	}
 	
-	public List<ListChatMessage> getMessages(String groupId) {
-		return service.getMessages(groupId);
-	}
-	
-	public void getMessagesCb(String groupId, Callback<List<ListChatMessage>> cb) {
-		service.getMessagesCb(groupId, 10, cb);
+	public void getMessages(String groupId, Callback<List<ListChatMessage>> cb) {
+		service.getMessages(groupId, 10, cb);
 	}
 	
 	public void uploadPublicKey(String memberId, ChatPublicKey publicKey, Callback<ChatPublicKey> cb) {

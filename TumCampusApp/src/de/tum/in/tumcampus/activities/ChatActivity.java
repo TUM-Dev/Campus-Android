@@ -159,7 +159,7 @@ public class ChatActivity extends SherlockActivity implements OnClickListener, O
 	}
 	
 	private void loadChatHistory() {
-		ChatClient.getInstance().getMessagesCb(currentChatRoom.getGroupId(), new Callback<List<ListChatMessage>>() {
+		ChatClient.getInstance().getMessages(currentChatRoom.getGroupId(), new Callback<List<ListChatMessage>>() {
 			@Override
 			public void success(List<ListChatMessage> downloadedChatHistory, Response arg1) {
 				Log.d("Success loading chat history", arg1.toString());
