@@ -430,7 +430,7 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
 		// proceed with GCM registration.
 		if (checkPlayServices()) {
 		    gcm = GoogleCloudMessaging.getInstance(this);
-		    //getGCMPreferences(getApplicationContext()).edit().remove(Const.GCM_REG_ID).commit();
+		    getGCMPreferences(getApplicationContext()).edit().remove(Const.GCM_REG_ID).commit();
 		    regId = getRegistrationId(getApplicationContext());
 
 		    if (regId.isEmpty()) {

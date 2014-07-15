@@ -26,9 +26,10 @@ import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.google.gson.Gson;
 
 import de.tum.in.tumcampus.R;
-import de.tum.in.tumcampus.activities.ChatRoomsSearchActivity;
+import de.tum.in.tumcampus.activities.ChatActivity;
  
 /**
  * This {@code IntentService} does the actual handling of the GCM message.
@@ -85,7 +86,9 @@ public class GcmIntentService extends IntentService {
         mNotificationManager = (NotificationManager)
                 this.getSystemService(Context.NOTIFICATION_SERVICE);
  
-        Intent notificationIntent = new Intent(this, ChatRoomsSearchActivity.class);
+        Intent notificationIntent = new Intent(this, ChatActivity.class);
+        //notificationIntent.putExtra(Const.CURRENT_CHAT_ROOM, new Gson().toJson(currentChatRoom));
+        //notificationIntent.putExtra(Const.CURRENT_CHAT_MEMBER, new Gson().toJson(currentChatMember));
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
         
         NotificationCompat.Builder mBuilder =
@@ -94,15 +97,12 @@ public class GcmIntentService extends IntentService {
         .setContentTitle("TCA Chat")
         .setStyle(new NotificationCompat.BigTextStyle()
         .bigText(msg))
-        .setContentText(msg);
+        .setContentText(msg)
+        .setContentIntent(contentIntent)
+        .setDefaults(Notification.DEFAULT_ALL)
+        .setAutoCancel(true);
         
         Notification notification = mBuilder.build();
-        // Hide the notification after it is selected
-        notificationIntent.addFlags(Notification.FLAG_AUTO_CANCEL);
-        // Add LED lights to notification
-        notification.defaults |= Notification.DEFAULT_LIGHTS;
- 
-        mBuilder.setContentIntent(contentIntent);
         mNotificationManager.notify(NOTIFICATION_ID, notification);
     }
 }
