@@ -7,7 +7,6 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -177,12 +176,12 @@ public class ChatActivity extends SherlockActivity implements OnClickListener, O
 		btnSend.setOnClickListener(this);
 	}
 	
-	private void getHistoryPageFromServer(int page) {
+	private void getHistoryPageFromServer(final int page) {
 		ChatClient.getInstance().getMessages(currentChatRoom.getGroupId(), page, new Callback<ArrayList<ListChatMessage>>() {
 			@Override
 			public void success(ArrayList<ListChatMessage> downloadedChatHistory, Response arg1) {
 				Log.d("Success loading additional chat history", arg1.toString());
-				if (chatHistory.size() == 0) {
+				if (page == 1) {
 					Collections.reverse(downloadedChatHistory);
 					chatHistory = downloadedChatHistory;
 					chatHistoryAdapter = new ChatHistoryAdapter(ChatActivity.this, chatHistory, currentChatMember);
