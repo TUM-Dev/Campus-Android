@@ -26,6 +26,14 @@ public class ListChatMessage {
 		this.member = currentChatMember;
 	}
 	
+	public ListChatMessage(String url, String text, ChatMember member, String timestamp) {
+		super();
+		this.url = url;
+		this.text = text;
+		this.member = member;
+		this.timestamp = timestamp;
+	}
+
 	public String getUrl() {
 		return url;
 	}

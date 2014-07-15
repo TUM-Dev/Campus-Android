@@ -16,6 +16,13 @@ public class ChatMember {
 		this.lrzId = lrzId;
 	}
 	
+	public ChatMember(String url, String lrzId, String displayName) {
+		super();
+		this.url = url;
+		this.lrzId = lrzId;
+		this.displayName = displayName;
+	}
+
 	public String getUrl() {
 		return url;
 	}
