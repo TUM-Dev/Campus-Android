@@ -568,7 +568,7 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
 
             @Override
             protected void onPostExecute(String msg) {
-            	Utils.showLongCenteredToast(ChatRoomsSearchActivity.this, msg);
+            	Log.e(TAG, msg);
             }
         }.execute(null, null, null);
 	}
