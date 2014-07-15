@@ -269,7 +269,9 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
 			@Override
 			public void onItemClick(AdapterView<?> a, View v, int position, long id) {
 				LecturesSearchRow item = (LecturesSearchRow) lvMyLecturesList.getItemAtPosition(position);
-
+				
+				checkPlayServicesAndRegister();
+				
 				// set bundle for LectureDetails and show it
 				Bundle bundle = new Bundle();
 				final Intent intent = new Intent(ChatRoomsSearchActivity.this, ChatActivity.class);
