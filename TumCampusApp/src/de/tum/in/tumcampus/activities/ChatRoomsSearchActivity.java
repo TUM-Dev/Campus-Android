@@ -124,52 +124,57 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
 	}
 
 	private void populateCurrentChatMember(final SharedPreferences sharedPrefs) {
-		if (currentChatMember == null) {
-			String lrzId = sharedPrefs.getString(Const.LRZ_ID, ""); // TODO: what if it's empty?
-			// TODO: Ne moze ovako, moram da proverim ima li ga na serveru!!!		
-			if (sharedPrefs.contains(Const.CHAT_ROOM_DISPLAY_NAME)) {
-				// If this is not the first time this user is opening the chat,
-				// we GET their data from the server using their lrzId
-				List<ChatMember> members = ChatClient.getInstance().getMember(lrzId);
-				currentChatMember = members.get(0);
-				
-				checkPlayServicesAndRegister();
-			} else {
-				// If the user is opening the chat for the first time, we need to display
-				// a dialog where they can enter their desired display name
-				currentChatMember = new ChatMember(lrzId);
-				
-				LinearLayout layout = new LinearLayout(this);
-				layout.setOrientation(LinearLayout.VERTICAL);
-	
-				final EditText etDisplayName = new EditText(this);
-				etDisplayName.setHint(R.string.display_name);
-				layout.addView(etDisplayName);
-				
-				AlertDialog.Builder builder = new AlertDialog.Builder(ChatRoomsSearchActivity.this);
-				builder.setTitle(R.string.chat_display_name_title)
-					.setView(layout)
-					.setPositiveButton(getResources().getString(android.R.string.ok), new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-							currentChatMember.setDisplayName(etDisplayName.getText().toString()); // TODO: Disallow empty display name
-							
-							// Save display name in shared preferences
-							Editor editor = sharedPrefs.edit();
-							editor.putString(Const.CHAT_ROOM_DISPLAY_NAME, currentChatMember.getDisplayName());
-							editor.commit();
-							
-							// After the user has entered their display name, 
-							// send a request to the server to create the new member
-							currentChatMember = ChatClient.getInstance().createMember(currentChatMember);
-							
-							checkPlayServicesAndRegister();
-						}
-					});
-				
-				AlertDialog alertDialog = builder.create();
-				alertDialog.show();
+		try {
+			if (currentChatMember == null) {
+				String lrzId = sharedPrefs.getString(Const.LRZ_ID, "");		
+				if (sharedPrefs.contains(Const.CHAT_ROOM_DISPLAY_NAME)) {
+					// If this is not the first time this user is opening the chat,
+					// we GET their data from the server using their lrzId
+					List<ChatMember> members = ChatClient.getInstance().getMember(lrzId);
+					currentChatMember = members.get(0);
+					
+					checkPlayServicesAndRegister();
+				} else {
+					// If the user is opening the chat for the first time, we need to display
+					// a dialog where they can enter their desired display name
+					currentChatMember = new ChatMember(lrzId);
+					
+					LinearLayout layout = new LinearLayout(this);
+					layout.setOrientation(LinearLayout.VERTICAL);
+		
+					final EditText etDisplayName = new EditText(this);
+					etDisplayName.setHint(R.string.display_name);
+					layout.addView(etDisplayName);
+					
+					AlertDialog.Builder builder = new AlertDialog.Builder(ChatRoomsSearchActivity.this);
+					builder.setTitle(R.string.chat_display_name_title)
+						.setView(layout)
+						.setPositiveButton(getResources().getString(android.R.string.ok), new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int which) {
+								currentChatMember.setDisplayName(etDisplayName.getText().toString()); // TODO: Disallow empty display name
+								
+								// Save display name in shared preferences
+								Editor editor = sharedPrefs.edit();
+								editor.putString(Const.CHAT_ROOM_DISPLAY_NAME, currentChatMember.getDisplayName());
+								editor.commit();
+								
+								// After the user has entered their display name, 
+								// send a request to the server to create the new member
+								currentChatMember = ChatClient.getInstance().createMember(currentChatMember);
+								
+								checkPlayServicesAndRegister();
+							}
+						});
+					
+					AlertDialog alertDialog = builder.create();
+					alertDialog.show();
+				}
 			}
+		} catch (RetrofitError retrofitError) {
+			retrofitError.printStackTrace();
+			Utils.showLongCenteredToast(this, "Server is currently unavailable");
+			this.finish();
 		}
 	}
 

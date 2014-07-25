@@ -138,6 +138,7 @@ public final class Const {
 	public static final String TUM_NEWS_ID="tum_news_id";
 	public static final String INFORMATION_ID="information_id";
 	
+	public static final String CHAT_URL = "http://ec2-54-75-107-15.eu-west-1.compute.amazonaws.com";
 	public static final String CHAT_ROOMS_ID="chat_rooms_id";
 	public static final String CURRENT_CHAT_ROOM = "current_chat_room";
 	public static final String CURRENT_CHAT_MEMBER = "current_chat_member";

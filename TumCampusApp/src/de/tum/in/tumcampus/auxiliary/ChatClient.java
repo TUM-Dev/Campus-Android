@@ -19,7 +19,7 @@ import de.tum.in.tumcampus.models.ListChatMessage;
 
 public class ChatClient {
 
-	public static final String API_URL = "http://ec2-54-75-107-15.eu-west-1.compute.amazonaws.com";
+	public static final String API_URL = Const.CHAT_URL;
 	
 	private static ChatClient instance = null;
 	private ChatService service = null;
