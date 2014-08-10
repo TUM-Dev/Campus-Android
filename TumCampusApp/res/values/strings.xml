@@ -397,6 +397,8 @@
         \nProf. Dr. Uwe Baumgarten
         \nNils T. Kannengiesser
         \n\n<b>Most recent Developers:</b>
+        \nJana Pejic
+        \nMarko Lalic
         \nKorbian Bruck
         \nFlorian Dreier
         \nSepideh Mesbah
@@ -468,7 +470,7 @@
      <string  name = "update_implicitly" >Intelligent reordering</string>
      <string  name = "summary_implicitly" >Intelligent reordering of the menu items in the personalized startpage</string>
      <string  name = "customize" >Customize your start page</string>
-     <string  name = "pref_string" >mvv_id,lectures_id,menues_id,rss_feeds_id,calender_id,study_plans_id,events_id,gallery_id,person_search_id,plans_id,roomfinder_id,opening_hours_id,organisations_id,my_lectures_id,my_grades_id,tuition_fees_id,tum_news_id,information_id</string>
+     <string  name = "pref_string" >mvv_id,lectures_id,chat_rooms_id,menues_id,rss_feeds_id,calender_id,study_plans_id,events_id,gallery_id,person_search_id,plans_id,roomfinder_id,opening_hours_id,organisations_id,my_lectures_id,my_grades_id,tuition_fees_id,tum_news_id,information_id</string>
      <string  name = "info_title_str" >TCA Information</string>
      <string  name = "info_title" >New information:</string>
      <string  name = "info_str" >No important news!</string>
@@ -478,7 +480,19 @@
      <string  name = "mensa_use_location_summary" >Makes use of your current location to decide which canteen to show</string>
      <string  name = "my_mensa" >My canteens</string>
      
-   
+     <!-- Chat rooms -->
+     <string name="chat_rooms">Chat rooms</string>
+	 <string name="chat_rooms_addinfo">Search for chat rooms at TUM</string>
+     <string name="my_chat_rooms">My Chat Rooms</string>
+     <string name="send">Send</string>
+     <string name="chat_terms_title">Chat Terms</string>
+     <string name="chat_terms_body">Chat Terms</string>
+     <string name="chat_display_name_title">Enter your display name</string>
+     <string name="display_name">Display name</string>
+     <string name="leave_chat_room">Leave chat room</string>
+     <string name="leave_chat_room_body">Are you sure you want to leave this chat room?</string>
+     <string name="load_earlier_messages">Load earlier messages</string>
+     
     <!-- END Translated, please do not change identifiers -->
     
 

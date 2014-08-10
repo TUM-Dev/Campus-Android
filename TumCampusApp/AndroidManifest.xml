@@ -6,8 +6,12 @@
     android:installLocation="auto" >
 
     <uses-sdk
-        android:minSdkVersion="8" 
+        android:minSdkVersion="10" 
         android:targetSdkVersion="19" />
+
+    <instrumentation android:name="android.test.InstrumentationTestRunner"
+    	android:targetPackage="de.tum.in.tumcampus"
+    	android:label="Android JUnit tests" />
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -16,6 +20,26 @@
     <uses-permission android:name="android.permission.READ_CALENDAR" />
     <uses-permission android:name="android.permission.WRITE_CALENDAR" />
 
+    <!-- GCM requires a Google account. -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+
+    <!-- Keeps the processor from sleeping when a message is received. -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <!--
+     Creates a custom permission so only this app can receive its messages.
+
+     NOTE: the permission *must* be called PACKAGE.permission.C2D_MESSAGE,
+           where PACKAGE is the application's package name.
+    -->
+    <permission android:name="de.tum.in.tumcampus.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
+    <uses-permission android:name="de.tum.in.tumcampus.permission.C2D_MESSAGE" />
+
+    <!-- This app has permission to register and receive data message. -->
+    <uses-permission
+        android:name="com.google.android.c2dm.permission.RECEIVE" />
+    
     <application 
         android:allowBackup="true"
         android:description="@string/app_short_description"
@@ -24,6 +48,30 @@
         android:largeHeap="true"
         android:logo="@drawable/ic_launcher"
         android:theme="@style/CustomSherlockHomeIcon" >
+        
+        <meta-data android:name="com.google.android.gms.version"
+           android:value="@integer/google_play_services_version" />
+
+        <uses-library android:name="android.test.runner" />   
+       
+        <!--
+          WakefulBroadcastReceiver that will receive intents from GCM
+          services and hand them to the custom IntentService.
+
+          The com.google.android.c2dm.permission.SEND permission is necessary
+          so only GCM services can send data messages for the app.
+        -->
+        <receiver
+            android:name="de.tum.in.tumcampus.auxiliary.GcmBroadcastReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
+                <category android:name="de.tum.in.tumcampus" />
+            </intent-filter>
+        </receiver>
+        <service android:name="de.tum.in.tumcampus.auxiliary.GcmIntentService" />
+        
         <provider
             android:name="de.tum.in.tumcampus.auxiliary.RoomFinderSuggestionProvider"
             android:authorities="com.example.RoomFinderSuggestionProvider" />
@@ -259,6 +307,17 @@
             android:name="de.tum.in.tumcampus.auxiliary.DemoModeStartActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/app_name" >
+        </activity>
+        
+        <activity
+            android:name="de.tum.in.tumcampus.activities.ChatRoomsSearchActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/my_chat_rooms" >
+        </activity>
+        <activity
+            android:name="de.tum.in.tumcampus.activities.ChatActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/my_chat_rooms" >
         </activity>
 
         <service

@@ -6,6 +6,8 @@
 	<classpathentry kind="lib" path="libs/android-support-v4.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/simple-xml-2.6.2.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/bugsense3.4.jar"/>
+	<classpathentry kind="lib" path="libs/retrofit-1.6.0.jar"/>
+	<classpathentry kind="lib" path="libs/gson-2.2.4.jar"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="gen"/>
 	<classpathentry kind="output" path="bin/classes"/>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/chatFrameLayout"
+    android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:paddingLeft="100dip" 
+	android:paddingRight="100dip">
+
+	<LinearLayout
+	  android:id="@+id/chatMessageLayout"
+	  android:orientation="vertical"
+	  android:layout_width="wrap_content"
+	  android:layout_height="wrap_content">
+	
+	   <TextView
+	       android:id="@+id/tvUser"
+	       android:layout_width="wrap_content"
+	       android:layout_height="wrap_content"
+	       android:textStyle="bold"/>
+	
+	   <LinearLayout
+	       android:orientation="vertical"
+	       android:layout_width="wrap_content"
+	       android:layout_height="wrap_content">
+	       
+	       <TextView
+	           android:id="@+id/tvMessage"
+	           android:layout_width="wrap_content"
+	           android:layout_height="wrap_content"/>
+	       
+	       <TextView
+	           android:id="@+id/tvTime"
+	           android:layout_width="wrap_content"
+	           android:layout_height="wrap_content"
+	           android:layout_gravity="right"
+	           android:gravity="right"/>
+	       
+	   </LinearLayout>     
+	</LinearLayout>
+
+</FrameLayout>

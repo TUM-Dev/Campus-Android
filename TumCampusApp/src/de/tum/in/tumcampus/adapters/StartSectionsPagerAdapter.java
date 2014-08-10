@@ -15,6 +15,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.CafeteriaActivity;
 import de.tum.in.tumcampus.activities.CalendarActivity;
+import de.tum.in.tumcampus.activities.ChatRoomsSearchActivity;
 import de.tum.in.tumcampus.activities.CurriculaActivity;
 import de.tum.in.tumcampus.activities.EventsActivity;
 import de.tum.in.tumcampus.activities.FeedsActivity;
@@ -104,6 +105,7 @@ public class StartSectionsPagerAdapter extends FragmentPagerAdapter {
 			args.putInt("POSITION", SECTION_GENERAL_TUM);
 			args.putInt(IMAGE_FOR_CATEGORY, R.drawable.img_tum_building);
 			listMenuEntrySet.add(this.MyPref.get("lectures_id"));
+			listMenuEntrySet.add(this.MyPref.get("chat_rooms_id"));
 			listMenuEntrySet.add(this.MyPref.get("person_search_id"));
 			listMenuEntrySet.add(this.MyPref.get("plans_id"));
 			listMenuEntrySet.add(this.MyPref.get("roomfinder_id"));
@@ -151,6 +153,9 @@ public class StartSectionsPagerAdapter extends FragmentPagerAdapter {
 	public void initializeHashMap() {
 		this.MyPref.put("lectures_id", new ListMenuEntry(R.drawable.zoom, R.string.lecture_search, R.string.lecturessearch_addinfo, new Intent(this.activity,
 				LecturesSearchActivity.class)));
+		// Chat Rooms icon in main menu 
+		this.MyPref.put("chat_rooms_id", new ListMenuEntry(R.drawable.chat, R.string.chat_rooms, R.string.chat_rooms_addinfo, new Intent(this.activity,
+				ChatRoomsSearchActivity.class)));
 		this.MyPref.put("mvv_id", new ListMenuEntry(R.drawable.show_info, R.string.mvv, R.string.mvv_addinfo, new Intent(this.activity,
 				TransportationActivity.class)));
 		this.MyPref.put("menues_id", new ListMenuEntry(R.drawable.shopping_cart, R.string.menues, R.string.cafeteria_addinfo, new Intent(this.activity,

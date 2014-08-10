@@ -3,12 +3,13 @@ package de.tum.in.tumcampus.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.actionbarsherlock.app.SherlockActivity;
-
 import com.bugsense.trace.BugSenseHandler;
 
+import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.DemoModeStartActivity;
 
 /**
@@ -20,7 +21,7 @@ import de.tum.in.tumcampus.auxiliary.DemoModeStartActivity;
 public class StartupActivity extends SherlockActivity {
 	public static final boolean DEMO_MODE = false;
 	public static final boolean TRACK_ERRORS_WITH_BUG_SENSE = true;
-
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -50,5 +51,8 @@ public class StartupActivity extends SherlockActivity {
 			startActivity(intent);
 			finish();
 		}
+        
+        //PreferenceManager.getDefaultSharedPreferences(this).edit().remove(Const.CHAT_ROOM_DISPLAY_NAME).commit();
+        //PreferenceManager.getDefaultSharedPreferences(this).edit().remove(Const.PRIVATE_KEY).commit();
 	}
 }

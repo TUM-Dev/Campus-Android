@@ -386,6 +386,8 @@
         \nProf. Dr. Uwe Baumgarten
         \nNils T. Kannengiesser
         \n\n<b>Most recent Developers:</b>
+        \nJana Pejic
+        \nMarko Lalic
         \nKorbian Bruck
         \nFlorian Dreier
         \nSepideh Mesbah
@@ -456,7 +458,7 @@
      <string  name = "update_implicitly" >Automatische Anordnung</string>
      <string  name = "summary_implicitly" >Automatische Anordnung der Einträge auf der personalisierten Seite</string>
      <string  name = "customize" >Passe deine Startseite an</string>
-     <string  name = "pref_string" >mvv_id,lectures_id,menues_id,rss_feeds_id,calender_id,study_plans_id,events_id,gallery_id,person_search_id,plans_id,roomfinder_id,opening_hours_id,organisations_id,my_lectures_id,my_grades_id,tuition_fees_id,tum_news_id,information_id</string>
+     <string  name = "pref_string" >mvv_id,lectures_id,chat_rooms_id,menues_id,rss_feeds_id,calender_id,study_plans_id,events_id,gallery_id,person_search_id,plans_id,roomfinder_id,opening_hours_id,organisations_id,my_lectures_id,my_grades_id,tuition_fees_id,tum_news_id,information_id</string>
      <string  name = "info_title" >Neuigkeiten:</string>
      <string  name = "info_str" >Keine wichtigen Neuigkeiten!</string>
      <string  name = "mensa_title" >Meine Mensa</string>
