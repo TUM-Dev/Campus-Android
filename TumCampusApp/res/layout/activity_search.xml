@@ -4,48 +4,63 @@
     android:layout_width="match_parent"
     android:layout_height="fill_parent" >
 
-    <include
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        layout="@layout/layout_progress"
-        android:visibility="visible" />
-
-    <include
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        layout="@layout/layout_error"
-        android:visibility="gone" />
-
-    <include
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        layout="@layout/layout_failed_token"
-        android:visibility="gone" />
-
-    <include
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        layout="@layout/layout_no_token"
-        android:visibility="gone" />
-
-    <include
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        layout="@layout/layout_empty_result"
-        android:visibility="gone" />
-
-    <ListView
-        android:id="@+id/lvCategories"
-        android:layout_width="match_parent"
+    <RelativeLayout
+        android:id="@+id/lay_status"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content" >
-    </ListView>
 
-    <ListView
-        android:id="@+id/lvFound"
-        android:layout_width="match_parent"
-        android:layout_height="fill_parent"
-        android:layout_below="@id/lvCategories"
-        android:entries="@array/roles"
-        android:scrollbars="vertical" />
+        <include
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            layout="@layout/layout_progress"
+            android:visibility="gone" />
+
+        <include
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            layout="@layout/layout_error"
+            android:visibility="gone" />
+
+        <include
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            layout="@layout/layout_failed_token"
+            android:visibility="gone" />
+
+        <include
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            layout="@layout/layout_no_token"
+            android:visibility="gone" />
+
+        <include
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            layout="@layout/layout_empty_result"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/lay_results"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/lay_status"
+        android:orientation="vertical" >
+
+        <ListView
+            android:id="@+id/lvCategories"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+        </ListView>
+
+        <ListView
+            android:id="@+id/lvFound"
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent"
+            android:entries="@array/roles"
+            android:scrollbars="vertical" >
+        </ListView>
+
+    </LinearLayout>
 
 </RelativeLayout>
