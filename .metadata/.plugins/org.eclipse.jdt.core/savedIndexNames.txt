@@ -1,7 +1,0 @@
-INDEX VERSION 1.126+C:\Users\Florian\Documents\Repositories\TumCampusApp\.metadata\.plugins\org.eclipse.jdt.core
-1188739379.index
-329959910.index
-230721008.index
-3187149546.index
-1418914041.index
-926723206.index

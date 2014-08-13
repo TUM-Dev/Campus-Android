@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<lint>
-    <issue id="NewApi" severity="ignore" />
-    <issue id="TrulyRandom">
-        <ignore path="src/de/tum/in/tumcampus/activities/ChatActivity.java" />
-    </issue>
-</lint>
