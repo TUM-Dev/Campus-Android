@@ -1,4 +1,6 @@
-<resources xmlns:android="http://schemas.android.com/apk/res/android">
+<resources
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" >
 
     <style name="SectionHeadline">
         <item name="android:layout_width">fill_parent</item>
@@ -35,9 +37,16 @@
         <item name="android:textSize">18sp</item>
     </style>
 
-    <style name="CustomSherlockHomeIcon" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="homeAsUpIndicator">@drawable/ic_navigation_drawer</item> 
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="homeAsUpIndicator">@drawable/ic_navigation_drawer</item>
+        <item name="android:actionBarStyle" tools:ignore="NewApi">@style/BlueActionBar</item>
+        <item name="actionBarStyle">@style/BlueActionBar</item>
         <!--<item name="android:homeAsUpIndicator">@drawable/ic_navigation_drawer</item> TODO-->
+    </style>
+
+    <style name="BlueActionBar" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
+        <item name="android:background"  tools:ignore="NewApi">@drawable/ab_solid_blue</item>
+        <item name="background">@drawable/ab_solid_blue</item>
     </style>
 
 </resources>

@@ -466,6 +466,7 @@
      <string  name = "mensa_use_location_title" >Verwende meinen Standort</string>
      <string  name = "mensa_use_location_summary" >Wählte die Mensa anhand deines akutellen Standorts</string>
      <string  name = "my_mensa" >Meine Mensen</string>
+    <string name="campus_app">Campus App</string>
     <!-- END Translated -->
 
 </resources>

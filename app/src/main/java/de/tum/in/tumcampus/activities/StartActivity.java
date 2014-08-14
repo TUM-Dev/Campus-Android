@@ -8,11 +8,16 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
+import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
 
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.wizzard.WizNavExtrasActivity;
@@ -23,17 +28,14 @@ import de.tum.in.tumcampus.auxiliary.PersonalLayoutManager;
 import de.tum.in.tumcampus.services.BackgroundService;
 import de.tum.in.tumcampus.services.ImportService;
 import de.tum.in.tumcampus.services.SilenceService;
-import de.tum.in.tumcampus.sidemenu.ISideNavigationCallback;
-import de.tum.in.tumcampus.sidemenu.SideNavigationItem;
-import de.tum.in.tumcampus.sidemenu.SideNavigationView;
-import de.tum.in.tumcampus.sidemenu.SideNavigationView.Mode;
+import de.tum.in.tumcampus.adapters.SideNavigationAdapter;
 
 /**
  * Main activity displaying the categories and menu items to start each activity (feature)
  * 
  * @author Sascha Moecker
  */
-public class StartActivity extends ActionBarActivity implements ISideNavigationCallback {
+public class StartActivity extends ActionBarActivity implements AdapterView.OnItemClickListener {
 	public static final int DEFAULT_SECTION = 1;
 	public static final String LAST_CHOOSEN_SECTION = "last_choosen_section";
 	public static final int REQ_CODE_COLOR_CHANGE = 0;
@@ -48,8 +50,9 @@ public class StartActivity extends ActionBarActivity implements ISideNavigationC
 	 * The {@link ViewPager} that will host the section contents.
 	 */
 	ViewPager mViewPager;
-
-	private SideNavigationView sideNavigationView;
+    boolean shouldRestartOnResume;
+    private DrawerLayout mDrawerLayout;
+    private ListView mDrawerList;
 
 	/**
 	 * Receiver for Services
@@ -71,10 +74,10 @@ public class StartActivity extends ActionBarActivity implements ISideNavigationC
 			}
 		}
 	};
+    private ActionBarDrawerToggle mDrawerToggle;
 
-	boolean shouldRestartOnResume;
 
-	@Override
+    @Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		// Check if there is a result key in an intent
 		if (data != null && data.hasExtra(Const.PREFS_HAVE_CHANGED) && data.getBooleanExtra(Const.PREFS_HAVE_CHANGED, false)) {
@@ -86,14 +89,11 @@ public class StartActivity extends ActionBarActivity implements ISideNavigationC
 	}
 
 	@Override
-	public void onConfigurationChanged(Configuration newConfig) {
-		super.onConfigurationChanged(newConfig);
-	}
-
-	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		this.setContentView(R.layout.activity_start);
+
+        setTitle(getString(R.string.campus_app));
 
 		// Create the adapter that will return a fragment for each of the
 		// primary sections of the app.
@@ -137,13 +137,39 @@ public class StartActivity extends ActionBarActivity implements ISideNavigationC
 		// Check for important news
 		// TODO: check if there are any news avaible on the to be implemented webservice - for now hide the icon in the menu_start_activity
 
-		// Setup the side navigation
-		this.sideNavigationView = (SideNavigationView) this.findViewById(R.id.side_navigation_view);
-		this.sideNavigationView.setMenuItems(R.menu.menu_side);
-		this.sideNavigationView.setMenuClickCallback(this);
-		this.sideNavigationView.toggleMenu();
-		this.sideNavigationView.setMode(Mode.LEFT);
-		this.getActionBar().setDisplayHomeAsUpEnabled(true);
+		// Setup the navigation drawer
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerList = (ListView) findViewById(R.id.left_drawer);
+
+        // Set the adapter for the list view
+        mDrawerList.setAdapter(new SideNavigationAdapter(this));
+        // Set the list's click listener
+        mDrawerList.setOnItemClickListener(this);
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
+                R.drawable.ic_drawer, R.string.drawer_open, R.string.drawer_close) {
+
+            /**
+             * Called when a drawer has settled in a completely closed state.
+             */
+            public void onDrawerClosed(View view) {
+                super.onDrawerClosed(view);
+                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+            }
+
+            /**
+             * Called when a drawer has settled in a completely open state.
+             */
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+            }
+        };
+
+        // Set the drawer toggle as the DrawerListener
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
 
 		// Check the flag if user wants the wizzard to open at startup
 		if (!hideWizzardOnStartup) {
@@ -166,23 +192,37 @@ public class StartActivity extends ActionBarActivity implements ISideNavigationC
 		this.unregisterReceiver(this.receiver);
 	}
 
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        // If the nav drawer is open, hide action items related to the content view
+        boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
+       //TODO menu.findItem(R.id.action_websearch).setVisible(!drawerOpen);
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        mDrawerToggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        mDrawerToggle.onConfigurationChanged(newConfig);
+    }
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+        if (mDrawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
 		switch (item.getItemId()) {
 		case R.id.action_settings:
 			// Opens the preferences screen
 			Intent intent = new Intent(this, UserPreferencesActivity.class);
 			this.startActivityForResult(intent, REQ_CODE_COLOR_CHANGE);
-			break;
-
-		/*case R.id.menu_start_news:
-			// Opens the news activity
-			Intent newsIntent = new Intent(this, ImportantNewsActivity.class);
-			this.startActivity(newsIntent);
-			break;
-		*/	
-		case android.R.id.home:
-			this.sideNavigationView.toggleMenu();
 			break;
 		}
 		return super.onOptionsItemSelected(item);
@@ -200,20 +240,18 @@ public class StartActivity extends ActionBarActivity implements ISideNavigationC
 		}
 	}
 
-	@Override
-	public void onSideNavigationItemClick(SideNavigationItem sideNavigationItem) {
-		try {
-			String a = this.getPackageName() + ".activities." + sideNavigationItem.getActivity();
-			Class<?> clazz = Class.forName(a);
-			Intent newActivity = new Intent(this.getApplicationContext(), clazz);
-			this.startActivity(newActivity);
-		} catch (ClassNotFoundException e) {
-			Log.w("tca", "ClassNotFound", e);
-		}
-	}
-
-	@Override
-	public void onBackPressed() {
-		this.sideNavigationView.toggleMenu();
-	}
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+        SideNavigationAdapter.SideNavigationItem sideNavigationItem = (SideNavigationAdapter.SideNavigationItem)adapterView.getAdapter().getItem(position);
+        try {
+            String a = this.getPackageName() + ".activities." + sideNavigationItem.getActivity();
+            Class<?> clazz = Class.forName(a);
+            Intent newActivity = new Intent(this.getApplicationContext(), clazz);
+            this.startActivity(newActivity);
+        } catch (ClassNotFoundException e) {
+            Log.w("tca", "ClassNotFound", e);
+        }
+        mDrawerList.setItemChecked(position, true);
+        mDrawerLayout.closeDrawer(mDrawerList);
+    }
 }

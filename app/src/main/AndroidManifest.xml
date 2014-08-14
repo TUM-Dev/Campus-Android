@@ -46,8 +46,8 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:largeHeap="true"
-        android:logo="@drawable/ic_launcher"
-        android:theme="@style/CustomSherlockHomeIcon" >
+        android:logo="@drawable/tum_logo"
+        android:theme="@style/AppTheme" >
         
         <meta-data android:name="com.google.android.gms.version"
            android:value="@integer/google_play_services_version" />
@@ -89,17 +89,17 @@
         <activity
             android:name="de.tum.in.tumcampus.activities.StartActivity"
             android:configChanges="orientation|screenSize"
-            android:label="@string/app_name" >
+            android:label="@string/campus_app" >
         </activity>
         <activity
             android:name="de.tum.in.tumcampus.activities.generic.MockActivity"
             android:configChanges="orientation|screenSize"
-            android:label="@string/app_name" >
+            android:label="@string/campus_app" >
         </activity>
         <activity
             android:name="de.tum.in.tumcampus.activities.generic.MockSlidingTabActivity"
             android:configChanges="orientation|screenSize"
-            android:label="@string/app_name" >
+            android:label="@string/campus_app" >
         </activity>
         <activity
             android:name="de.tum.in.tumcampus.activities.NewsActivity"
@@ -166,11 +166,11 @@
             android:configChanges="orientation|screenSize"
             android:label="@string/mvv" >
         </activity>
-        <activity
+       <!-- <activity
             android:name="de.tum.in.tumcampus.activities.LecturesActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/my_lectures" >
-        </activity>
+        </activity>-->
         <activity
             android:name="de.tum.in.tumcampus.activities.LecturesAppointmentsActivity"
             android:configChanges="orientation|screenSize"
@@ -271,22 +271,22 @@
         <activity
             android:name="de.tum.in.tumcampus.activities.wizzard.WizNavStartActivity"
             android:configChanges="orientation|screenSize"
-            android:label="@string/app_name" >
+            android:label="@string/campus_app" >
         </activity>
         <activity
             android:name="de.tum.in.tumcampus.activities.wizzard.WizNavCheckTokenActivity"
             android:configChanges="orientation|screenSize"
-            android:label="@string/app_name" >
+            android:label="@string/campus_app" >
         </activity>
         <activity
             android:name="de.tum.in.tumcampus.activities.wizzard.WizNavDoneActivity"
             android:configChanges="orientation|screenSize"
-            android:label="@string/app_name" >
+            android:label="@string/campus_app" >
         </activity>
         <activity
             android:name="de.tum.in.tumcampus.activities.wizzard.WizNavExtrasActivity"
             android:configChanges="orientation|screenSize"
-            android:label="@string/app_name" >
+            android:label="@string/campus_app" >
         </activity>
         <activity
             android:name="de.tum.in.tumcampus.activities.LectureScheduleActivity"
@@ -306,7 +306,7 @@
         <activity
             android:name="de.tum.in.tumcampus.auxiliary.DemoModeStartActivity"
             android:configChanges="orientation|screenSize"
-            android:label="@string/app_name" >
+            android:label="@string/campus_app" >
         </activity>
         
         <activity

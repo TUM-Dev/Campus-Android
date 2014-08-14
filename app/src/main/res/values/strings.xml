@@ -492,7 +492,10 @@
      <string name="leave_chat_room">Leave chat room</string>
      <string name="leave_chat_room_body">Are you sure you want to leave this chat room?</string>
      <string name="load_earlier_messages">Load earlier messages</string>
-     
+    <string name="campus_app">Campus App</string>
+    <string name="drawer_open">Open</string>
+    <string name="drawer_close">Close</string>
+
     <!-- END Translated, please do not change identifiers -->
     
 
