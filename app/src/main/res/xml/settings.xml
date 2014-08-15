@@ -161,4 +161,12 @@
             android:title="@string/debug_mode" />
     </PreferenceCategory>
 
+    <PreferenceCategory android:title="@string/about_tca" >
+        <Preference
+            android:key="about"
+            android:title="@string/information">
+            <intent android:action="de.tum.in.tumcampus.activities.InformationActivity"/>
+        </Preference>
+    </PreferenceCategory>
+
 </PreferenceScreen>

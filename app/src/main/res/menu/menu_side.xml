@@ -108,11 +108,4 @@
         android:icon="@drawable/mail"
         android:title="@string/tum_news"
         android:titleCondensed="NewsActivity"/>
-    
-    <item 
-        android:id="@+id/menu_side_information"
-        android:icon="@drawable/about"
-        android:title="@string/information"
-        android:titleCondensed="InformationActivity"/>
-
 </menu>
