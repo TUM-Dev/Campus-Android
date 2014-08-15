@@ -49,4 +49,8 @@
         <item name="background">@drawable/ab_solid_blue</item>
     </style>
 
+    <style name="NoActionBar" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
 </resources>
