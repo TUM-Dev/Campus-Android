@@ -167,6 +167,14 @@
             android:title="@string/information">
             <intent android:action="de.tum.in.tumcampus.activities.InformationActivity"/>
         </Preference>
+        <Preference
+            android:key="facebook"
+            android:title="@string/facebook">
+        </Preference>
+        <Preference
+            android:key="github"
+            android:title="@string/github">
+        </Preference>
     </PreferenceCategory>
 
 </PreferenceScreen>

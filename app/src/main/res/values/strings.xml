@@ -399,7 +399,7 @@
         \n\n<b>Most recent Developers:</b>
         \nJana Pejic
         \nMarko Lalic
-        \nKorbian Bruck
+        \nKordian Bruck
         \nFlorian Dreier
         \nSepideh Mesbah
         \nShabnam Najafian
@@ -496,6 +496,9 @@
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
     <string name="about_tca">About TCA</string>
+    <string name="facebook_link_app">fb://page/162327853831856</string>
+    <string name="github">Contribute on Github</string>
+    <string name="github_link">https://github.com/TCA-Team/TumCampusApp</string>
 
     <!-- END Translated, please do not change identifiers -->
     

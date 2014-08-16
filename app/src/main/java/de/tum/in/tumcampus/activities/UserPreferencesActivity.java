@@ -16,6 +16,7 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceManager;
 import android.provider.CalendarContract.Calendars;
+import android.util.Log;
 import android.widget.Toast;
 
 import de.tum.in.tumcampus.R;
@@ -158,6 +159,33 @@ public class UserPreferencesActivity extends PreferenceActivity implements
                         return true;
                     }
                 });
+
+        // Open the facebook app or view in a browser when not installed
+        Preference facebookPref = (Preference) findPreference("facebook");
+        facebookPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            public boolean onPreferenceClick(Preference preference) {
+                Intent facebook;
+                try {
+                    //Try to get facebook package to check if fb app is installed
+                    context.getPackageManager().getPackageInfo("com.facebook.katana", 0);
+                    facebook = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.facebook_link_app)));
+                } catch (Exception e) {
+                    //otherwise just open the normal url
+                    facebook = new Intent(Intent.ACTION_VIEW, Uri.parse(context.getString(R.string.facebook_link)));
+                }
+                startActivity(facebook);
+                return true;
+            }
+        });
+
+        // Open the facebook app or view in a browser when not installed
+        Preference githubPref = (Preference) findPreference("github");
+        githubPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            public boolean onPreferenceClick(Preference preference) {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.github_link))));
+                return true;
+            }
+        });
 
         // Add cafeterias to preferences
         addCafeterias();
