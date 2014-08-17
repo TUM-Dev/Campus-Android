@@ -15,7 +15,7 @@ import de.tum.in.tumcampus.tumonline.TUMOnlineRequest;
  */
 public class TuitionFeeManager implements ProvidesCard {
     @Override
-    public void OnUpdateCard(Context context) {
+    public void onRequestCard(Context context) {
         try {
             TUMOnlineRequest requestHandler = new TUMOnlineRequest(Const.STUDIENBEITRAGSTATUS, context);
             String rawResp = requestHandler.fetch();
@@ -24,6 +24,7 @@ public class TuitionFeeManager implements ProvidesCard {
             tuitionList = serializer.read(TuitionList.class, rawResp);
             TuitionFeesCard card = new TuitionFeesCard();
             card.setTuition(tuitionList.getTuitions().get(0));
+            //TODO: Only add if status has changed
             CardManager.addCard(card);
         } catch (Exception e) {
             e.printStackTrace();

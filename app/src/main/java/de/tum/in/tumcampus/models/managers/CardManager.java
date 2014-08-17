@@ -10,9 +10,10 @@ import de.tum.in.tumcampus.cards.Card;
 public class CardManager {
     public static final int CARD_CAFETERIA = 1;
     public static final int CARD_TUITION_FEE = 2;
+    public static final int CARD_NEXT_LECTURE = 3;
 
-    private static List<Card> cards = new ArrayList<Card>();
-    private static List<ProvidesCard> managers = new ArrayList<ProvidesCard>();
+    private static List<Card> cards;
+    private static List<ProvidesCard> managers;
 
     public static void addCard(Card card) {
         cards.add(card);
@@ -31,15 +32,22 @@ public class CardManager {
      * 1. let the manager class implement ProvidesCard
      * 2. Create a new class extending Card
      * 3. implement the getView method in this class
-     * 4. create a new instance of this card in the OnUpdateCard of the manager
+     * 4. create a new instance of this card in the onRequestCard of the manager
      * 5. add this card to the CardManager by calling addCard(card)
      * 6. add an instance of the manager class to the managers list below
      * */
     public static void update(Context context) {
+        cards = new ArrayList<Card>();
+        managers = new ArrayList<ProvidesCard>();
+        managers.add(new CalendarManager(context));
         managers.add(new CafeteriaManager(context));
         managers.add(new TuitionFeeManager());
 
         for(ProvidesCard manager : managers)
-            manager.OnUpdateCard(context);
+            manager.onRequestCard(context);
+    }
+
+    public static void onCardClicked(Context context, int position) {
+        cards.get(position).onCardClick(context);
     }
 }

@@ -12,10 +12,12 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import de.tum.in.tumcampus.auxiliary.Utils;
+import de.tum.in.tumcampus.cards.Card;
+import de.tum.in.tumcampus.cards.NextLectureCard;
 import de.tum.in.tumcampus.models.CalendarRow;
 import de.tum.in.tumcampus.models.CalendarRowSet;
 
-public class CalendarManager {
+public class CalendarManager implements ProvidesCard {
 	public static int TIME_TO_SYNC = 86400; // 1 day
 	private SQLiteDatabase db;
 
@@ -148,4 +150,16 @@ public class CalendarManager {
 							row.getTitle(), row.getDescription(),
 							row.getDtstart(), row.getDtend(), row.getLocation() });
 	}
+
+    @Override
+    public void onRequestCard(Context context) {
+        Cursor cur = db.rawQuery("SELECT title, dtstart, location "
+                + "FROM kalendar_events WHERE datetime('now', 'localtime') < dtstart ORDER BY dtstart", null);
+        if(cur.moveToFirst()) {
+            NextLectureCard card = new NextLectureCard();
+            card.setLecture(cur.getString(0), cur.getString(1), cur.getString(2));
+            CardManager.addCard(card);
+        }
+        cur.close();
+    }
 }

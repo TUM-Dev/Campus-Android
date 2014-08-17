@@ -41,4 +41,6 @@ public abstract class Card {
        // textview.setPadding(10, 10, 10, 10);
         mLinearLayout.addView(textview);
     }
+
+    public void onCardClick(Context context) {}
 }

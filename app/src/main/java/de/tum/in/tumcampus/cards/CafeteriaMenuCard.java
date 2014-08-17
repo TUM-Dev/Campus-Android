@@ -1,6 +1,7 @@
 package de.tum.in.tumcampus.cards;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.view.View;
@@ -11,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import de.tum.in.tumcampus.R;
+import de.tum.in.tumcampus.activities.CafeteriaDetailsActivity;
 import de.tum.in.tumcampus.auxiliary.CafetariaPrices;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.models.CafeteriaMenu;
@@ -21,8 +23,9 @@ import static de.tum.in.tumcampus.models.managers.CardManager.CARD_CAFETERIA;
 * Created by Florian on 17.08.2014.
 */
 public class CafeteriaMenuCard extends Card {
-    String mCafeteriaName;
-    List<CafeteriaMenu> mMenus;
+    private String mCafeteriaId;
+    private String mCafeteriaName;
+    private List<CafeteriaMenu> mMenus;
 
     @Override
     public int getTyp() {
@@ -34,7 +37,7 @@ public class CafeteriaMenuCard extends Card {
         super.getView(context, parent);
         mTitleView.setText(mCafeteriaName);
 
-        HashMap<String, String> rolePrices = null;
+        HashMap<String, String> rolePrices;
         SharedPreferences sharedPrefs = PreferenceManager
                 .getDefaultSharedPreferences(context);
         String type = sharedPrefs.getString(Const.ROLE, "0");
@@ -75,8 +78,17 @@ public class CafeteriaMenuCard extends Card {
         mLinearLayout.addView(view);
     }
 
-    public void setCardMenus(String name,List<CafeteriaMenu> menus) {
+    public void setCardMenus(String id,String name,List<CafeteriaMenu> menus) {
+        mCafeteriaId = id;
         mCafeteriaName = name;
         mMenus = menus;
+    }
+
+    @Override
+    public void onCardClick(Context context) {
+        Intent i = new Intent(context, CafeteriaDetailsActivity.class);
+        i.putExtra(Const.CAFETERIA_ID, mCafeteriaId);
+        i.putExtra(Const.CAFETERIA_NAME, mCafeteriaName);
+        context.startActivity(i);
     }
 }

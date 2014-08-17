@@ -149,7 +149,7 @@ public class CafeteriaManager implements ProvidesCard {
 
     // TODO: Make this more secure (really handle Exceptions) and faster
     @Override
-    public void OnUpdateCard(Context context) {
+    public void onRequestCard(Context context) {
         try {
             downloadFromExternal(true);
         } catch (Exception e) {
@@ -201,7 +201,7 @@ public class CafeteriaManager implements ProvidesCard {
 
             menus.add(menu);
         } while(cursorCafeteriaMenu.moveToNext());
-        card.setCardMenus(cafeteriaName, menus);
+        card.setCardMenus(cafeteriaId, cafeteriaName, menus);
 
         addCard(card);
     }

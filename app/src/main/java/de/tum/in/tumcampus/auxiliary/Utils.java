@@ -399,7 +399,7 @@ public class Utils {
 		HttpConnectionParams.setSoTimeout(params, Const.HTTP_TIMEOUT);
 		HttpConnectionParams.setConnectionTimeout(params, Const.HTTP_TIMEOUT);
 
-		HttpEntity entity = null;
+		HttpEntity entity;
 		try {
 			entity = httpclient.execute(new HttpGet(url)).getEntity();
 		} catch (Exception e) {

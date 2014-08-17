@@ -8,11 +8,13 @@ import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -28,6 +30,7 @@ import de.tum.in.tumcampus.activities.wizzard.WizNavStartActivity;
 import de.tum.in.tumcampus.adapters.CardsAdapter;
 import de.tum.in.tumcampus.adapters.SideNavigationAdapter;
 import de.tum.in.tumcampus.auxiliary.Const;
+import de.tum.in.tumcampus.models.managers.CardManager;
 import de.tum.in.tumcampus.services.BackgroundService;
 import de.tum.in.tumcampus.services.ImportService;
 import de.tum.in.tumcampus.services.SilenceService;
@@ -37,7 +40,7 @@ import de.tum.in.tumcampus.services.SilenceService;
  * 
  * @author Sascha Moecker
  */
-public class StartActivity extends ActionBarActivity implements AdapterView.OnItemClickListener {
+public class StartActivity extends ActionBarActivity implements AdapterView.OnItemClickListener, SwipeRefreshLayout.OnRefreshListener {
 	public static final int REQ_CODE_COLOR_CHANGE = 0;
 
 	/**
@@ -75,6 +78,8 @@ public class StartActivity extends ActionBarActivity implements AdapterView.OnIt
 		}
 	};
     private ActionBarDrawerToggle mDrawerToggle;
+    private SwipeRefreshLayout mSwipeLayout;
+    private ListView mCardsView;
 
 
     @Override
@@ -103,14 +108,22 @@ public class StartActivity extends ActionBarActivity implements AdapterView.OnIt
 			StrictMode.setThreadPolicy(policy);
 		}
 
+        // Set up the SwipeRefreshLayout
+        mSwipeLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
+        mSwipeLayout.setOnRefreshListener(this);
+        mSwipeLayout.setColorScheme(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
+
 		// Set up the ViewPager with the sections adapter.
-        ListView cardsView = (ListView) findViewById(R.id.cards_view);
-        cardsView.setAdapter(new CardsAdapter(this));
-        cardsView.setDividerHeight(0);
-        cardsView.setOnItemClickListener(this);
-        cardsView.setBackgroundColor(0xFFEEEEEE);
-        cardsView.setSelector(new ColorDrawable(Color.TRANSPARENT));
-        cardsView.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
+        mCardsView = (ListView) findViewById(R.id.cards_view);
+        mCardsView.setAdapter(new CardsAdapter(this));
+        mCardsView.setDividerHeight(0);
+        mCardsView.setOnItemClickListener(this);
+        mCardsView.setBackgroundColor(0xFFEEEEEE);
+        mCardsView.setSelector(new ColorDrawable(Color.TRANSPARENT));
+        mCardsView.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
 
 		// Registers receiver for download and import
 		IntentFilter intentFilter = new IntentFilter();
@@ -254,8 +267,27 @@ public class StartActivity extends ActionBarActivity implements AdapterView.OnIt
                 mDrawerLayout.closeDrawer(mDrawerList);
                 break;
             case R.id.cards_view:
-
+                CardManager.onCardClicked(this,position);
                 break;
         }
+    }
+
+    @Override
+    public void onRefresh() {
+        final Handler handler = new Handler();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                CardManager.update(StartActivity.this);
+
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mCardsView.setAdapter(new CardsAdapter(StartActivity.this));
+                        mSwipeLayout.setRefreshing(false);
+                    }
+                });
+            }
+        }).start();
     }
 }
