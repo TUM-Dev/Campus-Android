@@ -29,7 +29,10 @@ public class NextLectureCard extends Card {
         super.getView(context, parent);
         mTitleView.setText("Nächste Vorlesung");
 
-        addTextView(context, mTitle+" am "+mDate+" ("+mLocation+")");
+        int end = mTitle.length();
+        if(mTitle.contains("("))
+            end = mTitle.indexOf('(');
+        addTextView(context, mTitle.substring(0,end).trim()+" am "+mDate+" ("+mLocation+")");
 
         return mCard;
     }
