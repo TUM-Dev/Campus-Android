@@ -16,4 +16,7 @@
     
     <color name="side_navigation_item_text_color">#f3f3f3</color>
 
+    <color name="card_pressed">#fff8f8f8</color>
+    <color name="card_activated">#500099CC</color>
+
 </resources>

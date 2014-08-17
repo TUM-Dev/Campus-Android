@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
@@ -16,19 +18,19 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.wizzard.WizNavExtrasActivity;
 import de.tum.in.tumcampus.activities.wizzard.WizNavStartActivity;
-import de.tum.in.tumcampus.adapters.StartSectionsPagerAdapter;
+import de.tum.in.tumcampus.adapters.CardsAdapter;
+import de.tum.in.tumcampus.adapters.SideNavigationAdapter;
 import de.tum.in.tumcampus.auxiliary.Const;
-import de.tum.in.tumcampus.auxiliary.PersonalLayoutManager;
 import de.tum.in.tumcampus.services.BackgroundService;
 import de.tum.in.tumcampus.services.ImportService;
 import de.tum.in.tumcampus.services.SilenceService;
-import de.tum.in.tumcampus.adapters.SideNavigationAdapter;
 
 /**
  * Main activity displaying the categories and menu items to start each activity (feature)
@@ -36,8 +38,6 @@ import de.tum.in.tumcampus.adapters.SideNavigationAdapter;
  * @author Sascha Moecker
  */
 public class StartActivity extends ActionBarActivity implements AdapterView.OnItemClickListener {
-	public static final int DEFAULT_SECTION = 1;
-	public static final String LAST_CHOOSEN_SECTION = "last_choosen_section";
 	public static final int REQ_CODE_COLOR_CHANGE = 0;
 
 	/**
@@ -45,11 +45,11 @@ public class StartActivity extends ActionBarActivity implements AdapterView.OnIt
 	 * {@link android.support.v4.app.FragmentPagerAdapter} derivative, which will keep every loaded fragment in memory. If this becomes too memory
 	 * intensive, it may be best to switch to a {@link android.support.v4.app.FragmentStatePagerAdapter}.
 	 */
-	StartSectionsPagerAdapter mSectionsPagerAdapter;
+	//StartSectionsPagerAdapter mSectionsPagerAdapter;
 	/**
 	 * The {@link ViewPager} that will host the section contents.
 	 */
-	ViewPager mViewPager;
+	//ViewPager mViewPager;
     boolean shouldRestartOnResume;
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
@@ -95,10 +95,6 @@ public class StartActivity extends ActionBarActivity implements AdapterView.OnIt
 
         setTitle(getString(R.string.campus_app));
 
-		// Create the adapter that will return a fragment for each of the
-		// primary sections of the app.
-		this.mSectionsPagerAdapter = new StartSectionsPagerAdapter(this, this.getSupportFragmentManager());
-
 		// Workaround for new API version. There was a security update which
 		// disallows applications to execute HTTP request in the GUI main
 		// thread.
@@ -108,9 +104,13 @@ public class StartActivity extends ActionBarActivity implements AdapterView.OnIt
 		}
 
 		// Set up the ViewPager with the sections adapter.
-		this.mViewPager = (ViewPager) this.findViewById(R.id.pager);
-		this.mViewPager.setAdapter(this.mSectionsPagerAdapter);
-		this.mViewPager.setCurrentItem(DEFAULT_SECTION);
+        ListView cardsView = (ListView) findViewById(R.id.cards_view);
+        cardsView.setAdapter(new CardsAdapter(this));
+        cardsView.setDividerHeight(0);
+        cardsView.setOnItemClickListener(this);
+        cardsView.setBackgroundColor(0xFFEEEEEE);
+        cardsView.setSelector(new ColorDrawable(Color.TRANSPARENT));
+        cardsView.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
 
 		// Registers receiver for download and import
 		IntentFilter intentFilter = new IntentFilter();
@@ -133,9 +133,6 @@ public class StartActivity extends ActionBarActivity implements AdapterView.OnIt
 		this.startService(service);
 
 		Boolean hideWizzardOnStartup = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(Const.HIDE_WIZZARD_ON_STARTUP, false);
-
-		// Check for important news
-		// TODO: check if there are any news avaible on the to be implemented webservice - for now hide the icon in the menu_start_activity
 
 		// Setup the navigation drawer
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -196,7 +193,7 @@ public class StartActivity extends ActionBarActivity implements AdapterView.OnIt
     public boolean onPrepareOptionsMenu(Menu menu) {
         // If the nav drawer is open, hide action items related to the content view
         boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
-       //TODO menu.findItem(R.id.action_websearch).setVisible(!drawerOpen);
+        menu.findItem(R.id.action_settings).setVisible(!drawerOpen);
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -231,7 +228,7 @@ public class StartActivity extends ActionBarActivity implements AdapterView.OnIt
 	@Override
 	protected void onResume() {
 		super.onResume();
-		PersonalLayoutManager.setColorForId(this, R.id.pager_title_strip);
+		//PersonalLayoutManager.setColorForId(this, R.id.pager_title_strip);
 		if (this.shouldRestartOnResume) {
 			// finish and restart myself
 			this.finish();
@@ -242,16 +239,23 @@ public class StartActivity extends ActionBarActivity implements AdapterView.OnIt
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-        SideNavigationAdapter.SideNavigationItem sideNavigationItem = (SideNavigationAdapter.SideNavigationItem)adapterView.getAdapter().getItem(position);
-        try {
-            String a = this.getPackageName() + ".activities." + sideNavigationItem.getActivity();
-            Class<?> clazz = Class.forName(a);
-            Intent newActivity = new Intent(this.getApplicationContext(), clazz);
-            this.startActivity(newActivity);
-        } catch (ClassNotFoundException e) {
-            Log.w("tca", "ClassNotFound", e);
+        switch (adapterView.getId()) {
+            case R.id.left_drawer:
+                SideNavigationAdapter.SideNavigationItem sideNavigationItem = (SideNavigationAdapter.SideNavigationItem) adapterView.getAdapter().getItem(position);
+                try {
+                    String a = this.getPackageName() + ".activities." + sideNavigationItem.getActivity();
+                    Class<?> clazz = Class.forName(a);
+                    Intent newActivity = new Intent(this.getApplicationContext(), clazz);
+                    this.startActivity(newActivity);
+                } catch (ClassNotFoundException e) {
+                    Log.w("tca", "ClassNotFound", e);
+                }
+                mDrawerList.setItemChecked(position, true);
+                mDrawerLayout.closeDrawer(mDrawerList);
+                break;
+            case R.id.cards_view:
+
+                break;
         }
-        mDrawerList.setItemChecked(position, true);
-        mDrawerLayout.closeDrawer(mDrawerList);
     }
 }

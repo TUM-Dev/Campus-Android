@@ -38,10 +38,17 @@
     </style>
 
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="homeAsUpIndicator">@drawable/ic_navigation_drawer</item>
         <item name="android:actionBarStyle" tools:ignore="NewApi">@style/BlueActionBar</item>
         <item name="actionBarStyle">@style/BlueActionBar</item>
-        <!--<item name="android:homeAsUpIndicator">@drawable/ic_navigation_drawer</item> TODO-->
+    </style>
+
+    <style name="SmallListSeparatorTextViewStyle">
+        <item name="android:drawableBottom">@drawable/section_header</item>
+        <item name="android:drawablePadding">4dp</item>
+        <item name="android:layout_marginTop">8dp</item>
+        <item name="android:paddingLeft">4dp</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
     <style name="BlueActionBar" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">

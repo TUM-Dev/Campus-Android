@@ -167,13 +167,23 @@ public class CafeteriaMenuManager {
 	 * </pre>
 	 */
 	public Cursor getTypeNameFromDb(String mensaId, String date) {
-		return db
-				.rawQuery(
-						"SELECT typeLong, group_concat(name, '\n') as names, id as _id "
-								+ "FROM cafeterias_menus WHERE mensaId = ? AND "
-								+ "date = ? GROUP BY typeLong ORDER BY typeNr, typeLong, name",
-						new String[] { mensaId, date });
-	}
+        return db
+                .rawQuery(
+                        "SELECT typeLong, group_concat(name, '\n') as names, id as _id  "
+                                + "FROM cafeterias_menus WHERE mensaId = ? AND "
+                                + "date = ? GROUP BY typeLong ORDER BY typeNr, typeLong, name",
+                        new String[] { mensaId, date });
+    }
+
+    public Cursor getTypeNameFromDbCard(String mensaId, String date) {
+        /* mensaId  date  typeShort  typeNr */
+        return db
+                .rawQuery(
+                        "SELECT typeLong, group_concat(name, '\n') as names, id as _id, typeShort "
+                                + "FROM cafeterias_menus WHERE mensaId = ? AND "
+                                + "date = ? GROUP BY typeLong ORDER BY typeNr, typeLong, name",
+                        new String[] { mensaId, date });
+    }
 
 	/**
 	 * Removes all cache items

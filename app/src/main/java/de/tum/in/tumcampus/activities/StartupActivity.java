@@ -11,6 +11,7 @@ import com.bugsense.trace.BugSenseHandler;
 
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.auxiliary.DemoModeStartActivity;
+import de.tum.in.tumcampus.models.managers.CardManager;
 
 /**
  * Entrance point of the App.
@@ -41,6 +42,7 @@ public class StartupActivity extends ActionBarActivity {
                 e.printStackTrace();
             }
 
+            CardManager.update(StartupActivity.this);
 
             // Init a Bug Report to https://www.bugsense.com
             if (TRACK_ERRORS_WITH_BUG_SENSE) {

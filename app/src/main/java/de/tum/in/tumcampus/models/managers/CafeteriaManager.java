@@ -1,21 +1,33 @@
 package de.tum.in.tumcampus.models.managers;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.preference.PreferenceManager;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.content.Context;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.Utils;
+import de.tum.in.tumcampus.cards.CafeteriaMenuCard;
 import de.tum.in.tumcampus.models.Cafeteria;
+import de.tum.in.tumcampus.models.CafeteriaMenu;
+
+import static de.tum.in.tumcampus.models.managers.CardManager.addCard;
 
 /**
  * Cafeteria Manager, handles database stuff, external imports
  */
-public class CafeteriaManager {
-	public static int TIME_TO_SYNC = 604800; // 1 week
+public class CafeteriaManager implements ProvidesCard {
+    public static int TIME_TO_SYNC = 604800; // 1 week
 
 	/**
 	 * Get Cafeteria object by JSON object
@@ -134,4 +146,63 @@ public class CafeteriaManager {
 				"REPLACE INTO cafeterias (id, name, address) VALUES (?, ?, ?)",
 				new String[] { String.valueOf(c.id), c.name, c.address });
 	}
+
+    // TODO: Make this more secure (really handle Exceptions) and faster
+    @Override
+    public void OnUpdateCard(Context context) {
+        try {
+            downloadFromExternal(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        CafeteriaMenuCard card = new CafeteriaMenuCard();
+        CafeteriaManager cafeteriaManager = new CafeteriaManager(context);
+        CafeteriaMenuManager cmm = new CafeteriaMenuManager(context);
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+
+        // Get all available cafeterias from database
+        Cursor cursor = cafeteriaManager.getAllFromDb("% %");
+        String cafeteriaId="", cafeteriaName = "";
+
+        //TODO: Make selection of shown cafeteria more intelligent (use location, timetable)
+        if (cursor.moveToFirst()) {
+            do {
+                final String key = cursor.getString(2);
+                if (sharedPrefs.getBoolean("mensa_"+key, true)) {
+                    cafeteriaName=cursor.getString(0);
+                    cafeteriaId = cursor.getString(2);
+                    break;
+                }
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+
+        Cursor cursorCafeteriaDates = cmm.getDatesFromDb();
+
+        //TODO: Make selection of date more intelligent (use next day if called in the evening)
+        cursorCafeteriaDates.moveToFirst(); // Get today
+        String date = cursorCafeteriaDates.getString(cursorCafeteriaDates.getColumnIndex(Const.ID_COLUMN));
+
+        Cursor cursorCafeteriaMenu = cmm.getTypeNameFromDbCard(cafeteriaId, date);
+        ArrayList<CafeteriaMenu> menus = new ArrayList<CafeteriaMenu>();
+        cursorCafeteriaMenu.moveToFirst();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        Date dateStr = new Date();
+        try {
+            dateStr = formatter.parse(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        do {
+            int typeNr=0;
+            CafeteriaMenu menu = new CafeteriaMenu(Integer.parseInt(cursorCafeteriaMenu.getString(2)),
+                    Integer.parseInt(cafeteriaId), dateStr,
+                    cursorCafeteriaMenu.getString(3), cursorCafeteriaMenu.getString(0), typeNr, cursorCafeteriaMenu.getString(1));
+
+            menus.add(menu);
+        } while(cursorCafeteriaMenu.moveToNext());
+        card.setCardMenus(cafeteriaName, menus);
+
+        addCard(card);
+    }
 }
