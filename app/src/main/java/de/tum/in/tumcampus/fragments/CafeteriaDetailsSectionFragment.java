@@ -106,8 +106,7 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
                 if (view.getId() == R.id.tx_menu) {
                     TextView menu = (TextView) view;
 
-                    String m = cursor.getString(cursor
-                            .getColumnIndex("names"));
+                    String m = cursor.getString(cursor.getColumnIndex("names"));
                     menu.setText(CafeteriaMenuCard.menuToSpan(CafeteriaDetailsSectionFragment.this.getActivity(),m));
                     return true;
                 } else if (view.getId() == R.id.tx_price) {

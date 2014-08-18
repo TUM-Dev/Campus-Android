@@ -154,14 +154,20 @@ public class CafeteriaManager implements ProvidesCard {
             downloadFromExternal(true);
         } catch (Exception e) {
             e.printStackTrace();
+            return;
         }
         CafeteriaMenuCard card = new CafeteriaMenuCard();
-        CafeteriaManager cafeteriaManager = new CafeteriaManager(context);
         CafeteriaMenuManager cmm = new CafeteriaMenuManager(context);
+        try {
+            cmm.downloadFromExternal(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return;
+        }
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
 
         // Get all available cafeterias from database
-        Cursor cursor = cafeteriaManager.getAllFromDb("% %");
+        Cursor cursor = getAllFromDb("% %");
         String cafeteriaId="", cafeteriaName = "";
 
         //TODO: Make selection of shown cafeteria more intelligent (use location, timetable)
