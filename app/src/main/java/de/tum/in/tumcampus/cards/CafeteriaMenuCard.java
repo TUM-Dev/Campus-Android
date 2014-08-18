@@ -10,6 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -28,6 +31,7 @@ public class CafeteriaMenuCard extends Card {
     private String mCafeteriaId;
     private String mCafeteriaName;
     private List<CafeteriaMenu> mMenus;
+    private Date mDate;
 
     @Override
     public int getTyp() {
@@ -63,6 +67,8 @@ public class CafeteriaMenuCard extends Card {
     public View getView(Context context, ViewGroup parent) {
         super.getView(context, parent);
         mTitleView.setText(mCafeteriaName);
+        mDateView.setVisibility(View.VISIBLE);
+        mDateView.setText(SimpleDateFormat.getDateInstance().format(mDate));
 
         HashMap<String, String> rolePrices;
         SharedPreferences sharedPrefs = PreferenceManager
@@ -111,9 +117,10 @@ public class CafeteriaMenuCard extends Card {
         mLinearLayout.addView(view);
     }
 
-    public void setCardMenus(String id,String name,List<CafeteriaMenu> menus) {
+    public void setCardMenus(String id, String name, Date date, List<CafeteriaMenu> menus) {
         mCafeteriaId = id;
         mCafeteriaName = name;
+        mDate = date;
         mMenus = menus;
     }
 
