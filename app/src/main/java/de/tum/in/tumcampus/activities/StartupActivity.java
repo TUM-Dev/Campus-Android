@@ -29,6 +29,7 @@ public class StartupActivity extends ActionBarActivity {
         //Show a loading screen during boot
         this.setContentView(R.layout.activity_startup);
 
+        //Run everything else in the background
         new BootTask().execute();
 
     }
