@@ -34,11 +34,11 @@ public class CafeteriaMenuCard extends Card {
         return CARD_CAFETERIA;
     }
 
-    private SpannableString menuToSpan(String menu, Context context) {
+    public static SpannableString menuToSpan(Context context, String menu) {
         int len;
         do {
             len = menu.length();
-            menu = menu.replaceFirst("\\(([a-z0-9]+),", "($1)(");
+            menu = menu.replaceFirst("\\(([A-Za-z0-9]+),", "($1)(");
         } while(menu.length()>len);
         SpannableString text = new SpannableString(menu);
         replaceWithImg(context, menu, text, "(v)",R.drawable.meal_vegan);
@@ -50,7 +50,7 @@ public class CafeteriaMenuCard extends Card {
         return text;
     }
 
-    private void replaceWithImg(Context context, String menu, SpannableString text, String sym, int drawable) {
+    private static void replaceWithImg(Context context, String menu, SpannableString text, String sym, int drawable) {
         int ind = menu.indexOf(sym);
         while(ind>=0) {
             ImageSpan is = new ImageSpan(context, drawable);
@@ -81,14 +81,16 @@ public class CafeteriaMenuCard extends Card {
         addHeader(context,"Tagesgerichte");
         String curShort = "tg";
         for(CafeteriaMenu menu : mMenus) {
+            if(menu.typeShort.equals("bei"))
+                continue;
             if(!menu.typeShort.equals(curShort)) {
                 curShort = menu.typeShort;
                 addHeader(context, menu.typeLong);
             }
             if (rolePrices.containsKey(menu.typeLong))
-                addPriceline(menuToSpan(menu.name,context), rolePrices.get(menu.typeLong) + " €");
+                addPriceline(menuToSpan(context, menu.name), rolePrices.get(menu.typeLong) + " €");
             else
-                addTextView(context, menuToSpan(menu.name, context));
+                addTextView(context, menuToSpan(context, menu.name));
         }
         return mCard;
     }

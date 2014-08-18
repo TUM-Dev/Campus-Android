@@ -467,6 +467,10 @@
      <string  name = "mensa_use_location_summary" >Wählte die Mensa anhand deines akutellen Standorts</string>
      <string  name = "my_mensa" >Meine Mensen</string>
     <string name="campus_app">Campus App</string>
+    <string name="next_lecture">Nächste Vorlesung</string>
+    <string name="drawer_open">Öffnen</string>
+    <string name="drawer_close">Schließen</string>
+    <string name="next_lecture_time">um</string>
     <!-- END Translated -->
 
 </resources>
