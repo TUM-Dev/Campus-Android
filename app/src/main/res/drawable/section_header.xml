@@ -4,5 +4,5 @@
     android:shape="rectangle">
     <size android:width="1000dp" android:height="1dp" />
     <solid
-        android:color="@color/card_activated"/>
+        android:color="@color/text_dark_gray"/>
 </shape>

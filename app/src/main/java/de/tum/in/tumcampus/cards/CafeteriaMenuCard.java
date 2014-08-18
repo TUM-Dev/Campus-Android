@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -109,7 +108,7 @@ public class CafeteriaMenuCard extends Card {
     }
 
     private void addPriceline(SpannableString title, String price) {
-        View view = mInflater.inflate(R.layout.price_line, mLinearLayout, false);
+        View view = mInflater.inflate(R.layout.card_price_line, mLinearLayout, false);
         TextView textview = (TextView) view.findViewById(R.id.line_name);
         TextView priceview = (TextView) view.findViewById(R.id.line_price);
         textview.setText(title);

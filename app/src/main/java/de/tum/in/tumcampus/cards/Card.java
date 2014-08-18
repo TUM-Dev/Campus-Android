@@ -4,7 +4,6 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -39,19 +38,11 @@ public abstract class Card {
     }
 
     protected void addHeader(Context context, String title) {
-        View view = mInflater.inflate(R.layout.list_header, mLinearLayout, false);
+        View view = mInflater.inflate(R.layout.card_list_header, mLinearLayout, false);
         TextView textview = (TextView) view.findViewById(R.id.list_header);
         textview.setText(title);
         mLinearLayout.addView(textview);
     }
-/*
-    protected void addButton(String text, View.OnClickListener listener) {
-        View view = mInflater.inflate(R.layout.card_button, mLinearLayout, false);
-        Button but1 = (Button) view.findViewById(R.id.card_button1);
-        but1.setText(text);
-        but1.setOnClickListener(listener);
-        mLinearLayout.addView(view);
-    }*/
 
     public void onCardClick(Context context) {}
 }
