@@ -169,8 +169,8 @@ public class CafeteriaManager implements ProvidesCard {
             do {
                 final String key = cursor.getString(2);
                 if (sharedPrefs.getBoolean("mensa_"+key, true)) {
+                    cafeteriaId = key;
                     cafeteriaName=cursor.getString(0);
-                    cafeteriaId = cursor.getString(2);
                     break;
                 }
             } while (cursor.moveToNext());
@@ -201,7 +201,7 @@ public class CafeteriaManager implements ProvidesCard {
 
             menus.add(menu);
         } while(cursorCafeteriaMenu.moveToNext());
-        card.setCardMenus(cafeteriaId, cafeteriaName, menus);
+        card.setCardMenus(cafeteriaId, cafeteriaName, dateStr, menus);
 
         addCard(card);
     }
