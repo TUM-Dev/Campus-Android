@@ -19,6 +19,9 @@ import android.widget.RelativeLayout.LayoutParams;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.gms.analytics.ExceptionParser;
+
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.RoomfinderActivity;
 import de.tum.in.tumcampus.auxiliary.Utils;
@@ -176,16 +179,20 @@ public class CalendarSectionFragment extends Fragment {
 		v.setOnClickListener(new View.OnClickListener() {
 		     @Override
 		     public void onClick(View v) {
-		    	 
-		    	 Intent i = new Intent(activity, RoomfinderActivity.class); 
-		    	 //gets the location of the lectures and send it to the roomfinder
-			 	 String string=v.getTag().toString();
+		    	 //try to get the location of the lectures
+                 String string;
+			 	 try{
+                     string=v.getTag().toString();
+                 }catch (Exception ex){
+                     Log.e("TCA","No tag found on view",ex);
+                     return;
+                 }
 			 	 final String strList[] = string.split(",");
-			 	 i.putExtra("NAME", strList[0]);
-			 	 startActivity(i); 
-			 		
-			 		
-		    	 
+
+                 //Launch the roomfinder activity
+                 Intent i = new Intent(activity, RoomfinderActivity.class);
+                 i.putExtra("NAME", strList[0]);
+			 	 startActivity(i);
 		     }       
 		}); 
 		     
@@ -199,8 +206,6 @@ public class CalendarSectionFragment extends Fragment {
 		for (RelativeLayout event : eventList) {
 			mainScheduleLayout.addView(event);
 			Listener(event);
-			
-		
 		}
 	}
 }
