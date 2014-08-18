@@ -154,14 +154,20 @@ public class CafeteriaManager implements ProvidesCard {
             downloadFromExternal(true);
         } catch (Exception e) {
             e.printStackTrace();
+            return;
         }
         CafeteriaMenuCard card = new CafeteriaMenuCard();
-        CafeteriaManager cafeteriaManager = new CafeteriaManager(context);
         CafeteriaMenuManager cmm = new CafeteriaMenuManager(context);
+        try {
+            cmm.downloadFromExternal(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return;
+        }
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
 
         // Get all available cafeterias from database
-        Cursor cursor = cafeteriaManager.getAllFromDb("% %");
+        Cursor cursor = getAllFromDb("% %");
         String cafeteriaId="", cafeteriaName = "";
 
         //TODO: Make selection of shown cafeteria more intelligent (use location, timetable)
@@ -169,8 +175,8 @@ public class CafeteriaManager implements ProvidesCard {
             do {
                 final String key = cursor.getString(2);
                 if (sharedPrefs.getBoolean("mensa_"+key, true)) {
+                    cafeteriaId = key;
                     cafeteriaName=cursor.getString(0);
-                    cafeteriaId = cursor.getString(2);
                     break;
                 }
             } while (cursor.moveToNext());
@@ -201,7 +207,7 @@ public class CafeteriaManager implements ProvidesCard {
 
             menus.add(menu);
         } while(cursorCafeteriaMenu.moveToNext());
-        card.setCardMenus(cafeteriaId, cafeteriaName, menus);
+        card.setCardMenus(cafeteriaId, cafeteriaName, dateStr, menus);
 
         addCard(card);
     }

@@ -10,6 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -28,17 +30,18 @@ public class CafeteriaMenuCard extends Card {
     private String mCafeteriaId;
     private String mCafeteriaName;
     private List<CafeteriaMenu> mMenus;
+    private Date mDate;
 
     @Override
     public int getTyp() {
         return CARD_CAFETERIA;
     }
 
-    private SpannableString menuToSpan(String menu, Context context) {
+    public static SpannableString menuToSpan(Context context, String menu) {
         int len;
         do {
             len = menu.length();
-            menu = menu.replaceFirst("\\(([a-z0-9]+),", "($1)(");
+            menu = menu.replaceFirst("\\(([A-Za-z0-9]+),", "($1)(");
         } while(menu.length()>len);
         SpannableString text = new SpannableString(menu);
         replaceWithImg(context, menu, text, "(v)",R.drawable.meal_vegan);
@@ -50,7 +53,7 @@ public class CafeteriaMenuCard extends Card {
         return text;
     }
 
-    private void replaceWithImg(Context context, String menu, SpannableString text, String sym, int drawable) {
+    private static void replaceWithImg(Context context, String menu, SpannableString text, String sym, int drawable) {
         int ind = menu.indexOf(sym);
         while(ind>=0) {
             ImageSpan is = new ImageSpan(context, drawable);
@@ -63,6 +66,8 @@ public class CafeteriaMenuCard extends Card {
     public View getView(Context context, ViewGroup parent) {
         super.getView(context, parent);
         mTitleView.setText(mCafeteriaName);
+        mDateView.setVisibility(View.VISIBLE);
+        mDateView.setText(SimpleDateFormat.getDateInstance().format(mDate));
 
         HashMap<String, String> rolePrices;
         SharedPreferences sharedPrefs = PreferenceManager
@@ -81,14 +86,16 @@ public class CafeteriaMenuCard extends Card {
         addHeader(context,"Tagesgerichte");
         String curShort = "tg";
         for(CafeteriaMenu menu : mMenus) {
+            if(menu.typeShort.equals("bei"))
+                continue;
             if(!menu.typeShort.equals(curShort)) {
                 curShort = menu.typeShort;
                 addHeader(context, menu.typeLong);
             }
             if (rolePrices.containsKey(menu.typeLong))
-                addPriceline(menuToSpan(menu.name,context), rolePrices.get(menu.typeLong) + " €");
+                addPriceline(menuToSpan(context, menu.name), rolePrices.get(menu.typeLong) + " €");
             else
-                addTextView(context, menuToSpan(menu.name, context));
+                addTextView(context, menuToSpan(context, menu.name));
         }
         return mCard;
     }
@@ -101,7 +108,7 @@ public class CafeteriaMenuCard extends Card {
     }
 
     private void addPriceline(SpannableString title, String price) {
-        View view = mInflater.inflate(R.layout.price_line, mLinearLayout, false);
+        View view = mInflater.inflate(R.layout.card_price_line, mLinearLayout, false);
         TextView textview = (TextView) view.findViewById(R.id.line_name);
         TextView priceview = (TextView) view.findViewById(R.id.line_price);
         textview.setText(title);
@@ -109,9 +116,10 @@ public class CafeteriaMenuCard extends Card {
         mLinearLayout.addView(view);
     }
 
-    public void setCardMenus(String id,String name,List<CafeteriaMenu> menus) {
+    public void setCardMenus(String id, String name, Date date, List<CafeteriaMenu> menus) {
         mCafeteriaId = id;
         mCafeteriaName = name;
+        mDate = date;
         mMenus = menus;
     }
 

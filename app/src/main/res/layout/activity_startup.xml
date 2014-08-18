@@ -1,28 +1,30 @@
-<LinearLayout
-    android:orientation="horizontal"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@drawable/ab_solid_blue"
     android:gravity="center_vertical|center|center_horizontal"
-    android:background="@drawable/ab_solid_blue">
+    android:orientation="horizontal">
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
         <ImageView
+            android:id="@+id/imageView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/imageView"
-            android:src="@drawable/tum_logo" />
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp"
+            android:src="@drawable/tum_logo_splash_screen" />
 
         <TextView
+            android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/loading"
-            android:id="@+id/textView"
             android:layout_gravity="center"
+            android:layout_marginTop="30dp"
+            android:text="@string/loading"
             android:textColor="#ffffffff" />
 
     </LinearLayout>

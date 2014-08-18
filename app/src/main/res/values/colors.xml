@@ -10,11 +10,9 @@
     <color name="sections_gray">#a5a5a5</color>
     <color name="overlay_background">#8000</color>
     
-    <color name="side_navigation_background">#303030</color>
-    <color name="side_navigation_outside_background">#7000</color>
-    <color name="side_navigation_list_divider_color">#2b2b2b</color>
-    
-    <color name="side_navigation_item_text_color">#f3f3f3</color>
+    <color name="side_navigation_background">#EEEEEE</color>
+    <color name="side_navigation_list_divider_color">#DDDDDD</color>
+    <color name="side_navigation_item_text_color">#333333</color>
 
     <color name="card_pressed">#fff8f8f8</color>
     <color name="card_activated">#500099CC</color>

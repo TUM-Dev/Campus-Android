@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.CheckBox;
@@ -81,15 +82,16 @@ public class WizNavStartActivity extends WizzardActivity implements
 		checkBox.setChecked(sharedPrefs.getBoolean(
 				Const.HIDE_WIZZARD_ON_STARTUP, true));
 
-		// commit the received value to the prefs
-		Editor editor = sharedPrefs.edit();
-		editor.putBoolean(Const.HIDE_WIZZARD_ON_STARTUP, checkBox.isChecked());
-		editor.commit();
-
 		lrzId = sharedPrefs.getString(Const.LRZ_ID, "");
 		if (lrzId != null) {
 			editText.setText(lrzId);
 		}
+
+        // Workaround for new API version. There was a security update which disallows applications to execute HTTP request in the GUI main thread.
+        if (android.os.Build.VERSION.SDK_INT > 9) {
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+        }
 	}
 
 	public boolean setupAccessToken() {

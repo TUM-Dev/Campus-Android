@@ -19,6 +19,8 @@ import android.widget.TextView;
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.auxiliary.CafetariaPrices;
 import de.tum.in.tumcampus.auxiliary.Const;
+import de.tum.in.tumcampus.cards.CafeteriaMenuCard;
+import de.tum.in.tumcampus.models.Cafeteria;
 import de.tum.in.tumcampus.models.managers.CafeteriaMenuManager;
 import de.tum.in.tumcampus.models.managers.LocationManager;
 
@@ -101,8 +103,13 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
 			@Override
 			public boolean setViewValue(View view, Cursor cursor,
 					int columnIndex) {
+                if (view.getId() == R.id.tx_menu) {
+                    TextView menu = (TextView) view;
 
-				if (view.getId() == R.id.tx_price) {
+                    String m = cursor.getString(cursor.getColumnIndex("names"));
+                    menu.setText(CafeteriaMenuCard.menuToSpan(CafeteriaDetailsSectionFragment.this.getActivity(),m));
+                    return true;
+                } else if (view.getId() == R.id.tx_price) {
 					TextView price = (TextView) view;
 
 					String curKey = cursor.getString(cursor
