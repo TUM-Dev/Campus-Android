@@ -60,17 +60,19 @@ public class SideNavigationAdapter extends BaseAdapter {
         SideNavigationItem item = menuItems.get(position);
         holder.text.setText(menuItems.get(position).getText());
 
+        LinearLayout lay = (LinearLayout) convertView.findViewById(R.id.side_navigation_item_layout);
+
         // If item has an Icon its an entry
         if (item.getIcon() != SideNavigationItem.DEFAULT_ICON_VALUE) {
             holder.icon.setVisibility(View.VISIBLE);
             holder.icon.setImageResource(menuItems.get(position).getIcon());
+            lay.setBackgroundColor(mContext.getResources().getColor(R.color.side_navigation_background));
         } else {
             // Check if it has an activity - if not, its a seperator
             if (item.getActivity() == null) {
                 Log.d("icon", menuItems.get(position).getText() + " " + item.getIcon() + " "
                         + SideNavigationItem.DEFAULT_ICON_VALUE);
                 // Add some top padding and other background to indicate the sep
-                LinearLayout lay = (LinearLayout) convertView.findViewById(R.id.side_navigation_item_layout);
                 lay.setBackgroundColor(mContext.getResources().getColor(R.color.side_navigation_list_divider_color));
 
                 int paddingTop = (int) mContext.getResources().getDimension(R.dimen.side_navigation_item_padding_topbottom) + 4;
