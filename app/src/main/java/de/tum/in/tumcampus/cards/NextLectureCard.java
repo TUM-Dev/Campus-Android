@@ -33,16 +33,8 @@ public class NextLectureCard extends Card {
     public View getView(Context context, ViewGroup parent) {
         super.getView(context, parent);
         mTitleView.setText(context.getString(R.string.next_lecture));
-
-        DateFormat df = SimpleDateFormat.getTimeInstance(DateFormat.SHORT);
-        String time;
-        if(DateUtils.isToday(mDate.getTime())) {
-            time = context.getString(R.string.next_lecture_time)+ " " + df.format(mDate);
-        } else {
-            time = DateUtils.getRelativeDateTimeString(context,mDate.getTime(),
-                    DateUtils.MINUTE_IN_MILLIS,DateUtils.WEEK_IN_MILLIS,0)
-                    .toString();
-        }
+        final String time = DateUtils.getRelativeDateTimeString(context,mDate.getTime(),
+                DateUtils.MINUTE_IN_MILLIS,DateUtils.WEEK_IN_MILLIS,0).toString();
         addTextView(context,mTitle+"\n"+time);
 
         return mCard;

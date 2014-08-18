@@ -154,7 +154,8 @@ public class CalendarManager implements ProvidesCard {
     @Override
     public void onRequestCard(Context context) {
         Cursor cur = db.rawQuery("SELECT title, dtstart, location "
-                + "FROM kalendar_events WHERE datetime('now', 'localtime') < dtstart ORDER BY dtstart", null);
+                + "FROM kalendar_events WHERE datetime('now', 'localtime')-1200 < dtstart AND " +
+                "datetime('now', 'localtime') < dtend ORDER BY dtstart", null);
         if(cur.moveToFirst()) {
             NextLectureCard card = new NextLectureCard();
             card.setLecture(cur.getString(0), cur.getString(1), cur.getString(2));
