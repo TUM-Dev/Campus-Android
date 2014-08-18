@@ -1,6 +1,7 @@
 package de.tum.in.tumcampus.models.managers;
 
 import android.content.Context;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,8 +44,14 @@ public class CardManager {
         managers.add(new CafeteriaManager(context));
         managers.add(new TuitionFeeManager());
 
-        for(ProvidesCard manager : managers)
-            manager.onRequestCard(context);
+        for(ProvidesCard manager : managers){
+            try{
+                manager.onRequestCard(context);
+            }catch(Exception ex){
+                Log.e("TCA", "Error while creating card", ex);
+            }
+        }
+
     }
 
     public static void onCardClicked(Context context, int position) {

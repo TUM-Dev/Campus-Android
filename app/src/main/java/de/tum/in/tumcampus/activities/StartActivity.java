@@ -100,13 +100,11 @@ public class StartActivity extends ActionBarActivity implements AdapterView.OnIt
 
         setTitle(getString(R.string.campus_app));
 
-		// Workaround for new API version. There was a security update which
-		// disallows applications to execute HTTP request in the GUI main
-		// thread.
-		if (android.os.Build.VERSION.SDK_INT > 8) {
-			StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-			StrictMode.setThreadPolicy(policy);
-		}
+        // Workaround for new API version. There was a security update which disallows applications to execute HTTP request in the GUI main thread.
+        if (android.os.Build.VERSION.SDK_INT > 9) {
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+        }
 
         // Set up the SwipeRefreshLayout
         mSwipeLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
@@ -145,7 +143,7 @@ public class StartActivity extends ActionBarActivity implements AdapterView.OnIt
 		service = new Intent(this, BackgroundService.class);
 		this.startService(service);
 
-		Boolean hideWizzardOnStartup = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(Const.HIDE_WIZZARD_ON_STARTUP, false);
+
 
 		// Setup the navigation drawer
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -181,11 +179,7 @@ public class StartActivity extends ActionBarActivity implements AdapterView.OnIt
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
-		// Check the flag if user wants the wizzard to open at startup
-		if (!hideWizzardOnStartup) {
-			Intent intent = new Intent(this, WizNavStartActivity.class);
-			this.startActivity(intent);
-		}
+
 	}
 
 	@Override

@@ -49,7 +49,7 @@ public class AccessTokenManager implements OnClickListener {
 
 		// fetch the xml response of requestToken
 		String strTokenXml = request.fetch();
-		Log.d("RAWOUTPUT", strTokenXml);
+		//Log.d("RAWOUTPUT", strTokenXml);
 		// it is only one tag in that xml, let's do a regex pattern
 		return strTokenXml.substring(
 				strTokenXml.indexOf("<token>") + "<token>".length(),
@@ -134,6 +134,7 @@ public class AccessTokenManager implements OnClickListener {
 			return true;
 
 		} catch (Exception ex) {
+            Log.e("TCA",context.getString(R.string.access_token_wasnt_generated),ex);
 			// set access token to null
 			Utils.setSetting(context, Const.ACCESS_TOKEN, null);
 			Toast.makeText(context,
