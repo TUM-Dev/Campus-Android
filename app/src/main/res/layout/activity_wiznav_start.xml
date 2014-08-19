@@ -1,4 +1,4 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
@@ -11,7 +11,13 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/pager_title_strip"
+        android:layout_above="@+id/divider"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
 
         <LinearLayout
             android:id="@+id/wizstart_layout"
@@ -48,27 +54,48 @@
                 android:layout_marginTop="@dimen/padding_default"
                 android:text="@string/wizzard_on_startup" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="@dimen/padding_default"
-                android:orientation="horizontal" >
-
-                <Button
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:onClick="onClickSkip"
-                    android:text="@string/button_skip" />
-
-                <Button
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:onClick="onClickNext"
-                    android:text="@string/button_next" />
-            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 
-</LinearLayout>
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?android:attr/listDivider"
+        android:layout_above="@+id/buttonBar"/>
+
+    <LinearLayout
+        android:id="@+id/buttonBar"
+        style="@style/ButtonBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true">
+
+        <Button
+            android:id="@+id/prev_button"
+            android:onClick="onClickSkip"
+            style="@style/ButtonBarButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/selectable_item_background"
+            android:text="@string/button_skip" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="?android:attr/listDivider" />
+
+        <Button
+            android:id="@+id/next_button"
+            android:onClick="onClickNext"
+            style="@style/ButtonBarButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/selectable_item_background"
+            android:text="@string/button_next" />
+    </LinearLayout>
+
+</RelativeLayout>

@@ -18,16 +18,16 @@ public class WizNavExtrasActivity extends WizzardActivity {
 	CheckBox checkSilentMode;
 	SharedPreferences preferences;
 
-	public void onClickNext(View view) {
+	public void onClickDone(View view) {
 		// Gets the editor for editing preferences and updates the preference
 		// values with the choosen state
 		Editor editor = preferences.edit();
 		editor.putBoolean(Const.SILENCE_SERVICE, checkSilentMode.isChecked());
-		editor.putBoolean(Const.BACKGROUND_MODE,
-				checkBackgroundMode.isChecked());
+		editor.putBoolean(Const.BACKGROUND_MODE, checkBackgroundMode.isChecked());
+        editor.putBoolean(Const.HIDE_WIZZARD_ON_STARTUP, true);
 		editor.commit();
 
-		startNextActivity();
+		finish();
 	}
 
 	@Override
@@ -39,7 +39,7 @@ public class WizNavExtrasActivity extends WizzardActivity {
 		preferences = PreferenceManager
 				.getDefaultSharedPreferences(getApplicationContext());
 
-		setIntentForNextActivity(new Intent(this, WizNavDoneActivity.class));
+		setIntentForNextActivity(null);
 		setIntentForPreviousActivity(new Intent(this,
 				WizNavCheckTokenActivity.class));
 

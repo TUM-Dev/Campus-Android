@@ -33,9 +33,13 @@ public class StartupActivity extends ActionBarActivity {
         //Show a loading screen during boot
         this.setContentView(R.layout.activity_startup);
 
+    }
+
+    protected void onResume() {
+        super.onResume();
+        
         //Run everything else in the background
         new BootTask().execute();
-
     }
 
     private class BootTask extends AsyncTask<Void,Void,Void> {
