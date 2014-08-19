@@ -151,6 +151,7 @@ public class StartActivity extends ActionBarActivity implements AdapterView.OnIt
 
         // Set the adapter for the list view
         mDrawerList.setAdapter(new SideNavigationAdapter(this));
+        mDrawerList.setBackgroundColor(0xFFEEEEEE);
         // Set the list's click listener
         mDrawerList.setOnItemClickListener(this);
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
@@ -249,14 +250,10 @@ public class StartActivity extends ActionBarActivity implements AdapterView.OnIt
         switch (adapterView.getId()) {
             case R.id.left_drawer:
                 SideNavigationAdapter.SideNavigationItem sideNavigationItem = (SideNavigationAdapter.SideNavigationItem) adapterView.getAdapter().getItem(position);
-                try {
-                    String a = this.getPackageName() + ".activities." + sideNavigationItem.getActivity();
-                    Class<?> clazz = Class.forName(a);
-                    Intent newActivity = new Intent(this.getApplicationContext(), clazz);
-                    this.startActivity(newActivity);
-                } catch (ClassNotFoundException e) {
-                    Log.w("tca", "ClassNotFound", e);
-                }
+                if(sideNavigationItem.getActivity()==null)
+                    break;
+                Intent newActivity = new Intent(this.getApplicationContext(), sideNavigationItem.getActivity());
+                this.startActivity(newActivity);
                 mDrawerList.setItemChecked(position, true);
                 mDrawerLayout.closeDrawer(mDrawerList);
                 break;

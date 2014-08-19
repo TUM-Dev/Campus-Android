@@ -1,7 +1,6 @@
 package de.tum.in.tumcampus.adapters;
 
 import android.content.Context;
-import android.content.res.XmlResourceParser;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,44 +10,52 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import org.xmlpull.v1.XmlPullParser;
-
-import java.util.ArrayList;
-
 import de.tum.in.tumcampus.R;
+import de.tum.in.tumcampus.activities.CafeteriaActivity;
+import de.tum.in.tumcampus.activities.CalendarActivity;
+import de.tum.in.tumcampus.activities.CurriculaActivity;
+import de.tum.in.tumcampus.activities.FeedsActivity;
+import de.tum.in.tumcampus.activities.GalleryActivity;
+import de.tum.in.tumcampus.activities.GradesActivity;
+import de.tum.in.tumcampus.activities.LecturesPersonalActivity;
+import de.tum.in.tumcampus.activities.NewsActivity;
+import de.tum.in.tumcampus.activities.OpeningHoursListActivity;
+import de.tum.in.tumcampus.activities.OrganisationActivity;
+import de.tum.in.tumcampus.activities.PlansActivity;
+import de.tum.in.tumcampus.activities.RoomfinderActivity;
+import de.tum.in.tumcampus.activities.TransportationActivity;
+import de.tum.in.tumcampus.activities.TuitionFeesActivity;
+import de.tum.in.tumcampus.activities.UserPreferencesActivity;
 
 public class SideNavigationAdapter extends BaseAdapter {
-    private static final String LOG_TAG = "sideAdapter";
-    private LayoutInflater inflater;
-    private ArrayList<SideNavigationItem> menuItems;
+    private LayoutInflater mInflater;
     private Context mContext;
 
     public SideNavigationAdapter(Context context) {
-        this.inflater = LayoutInflater.from(context);
+        mInflater = LayoutInflater.from(context);
         mContext = context;
-        parseXml(R.menu.menu_side);
     }
 
     @Override
     public int getCount() {
-        return menuItems.size();
+        return menuItems.length;
     }
 
     @Override
     public Object getItem(int position) {
-        return menuItems.get(position);
+        return menuItems[position];
     }
 
     @Override
     public long getItemId(int position) {
-        return 0;
+        return position;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         final ViewHolder holder;
         if (convertView == null) {
-            convertView = this.inflater.inflate(R.layout.side_navigation_item, null);
+            convertView = this.mInflater.inflate(R.layout.side_navigation_item, null);
             holder = new ViewHolder();
             holder.text = (TextView) convertView.findViewById(R.id.side_navigation_item_text);
             holder.icon = (ImageView) convertView.findViewById(R.id.side_navigation_item_icon);
@@ -57,21 +64,19 @@ public class SideNavigationAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        SideNavigationItem item = menuItems.get(position);
-        holder.text.setText(menuItems.get(position).getText());
+        SideNavigationItem item = menuItems[position];
+        holder.text.setText(menuItems[position].getText(mContext));
 
         LinearLayout lay = (LinearLayout) convertView.findViewById(R.id.side_navigation_item_layout);
 
         // If item has an Icon its an entry
-        if (item.getIcon() != SideNavigationItem.DEFAULT_ICON_VALUE) {
+        if (item.getIcon() != SideNavigationItem.NO_ICON_VALUE) {
             holder.icon.setVisibility(View.VISIBLE);
-            holder.icon.setImageResource(menuItems.get(position).getIcon());
+            holder.icon.setImageResource(menuItems[position].getIcon());
             lay.setBackgroundColor(mContext.getResources().getColor(R.color.side_navigation_background));
         } else {
             // Check if it has an activity - if not, its a seperator
             if (item.getActivity() == null) {
-                Log.d("icon", menuItems.get(position).getText() + " " + item.getIcon() + " "
-                        + SideNavigationItem.DEFAULT_ICON_VALUE);
                 // Add some top padding and other background to indicate the sep
                 lay.setBackgroundColor(mContext.getResources().getColor(R.color.side_navigation_list_divider_color));
 
@@ -96,109 +101,60 @@ public class SideNavigationAdapter extends BaseAdapter {
         ImageView icon;
     }
 
-
-    /**
-     * Parse XML describe menu.
-     *
-     * @param menu
-     *            - resource ID
-     */
-    private void parseXml(int menu) {
-        this.menuItems = new ArrayList<SideNavigationItem>();
-        try {
-            XmlResourceParser xrp = mContext.getResources().getXml(menu);
-            xrp.next();
-            int eventType = xrp.getEventType();
-            while (eventType != XmlPullParser.END_DOCUMENT) {
-                if (eventType == XmlPullParser.START_TAG) {
-                    String elemName = xrp.getName();
-                    if (elemName.equals("item")) {
-                        String textId = xrp.getAttributeValue("http://schemas.android.com/apk/res/android", "title");
-                        String iconId = xrp.getAttributeValue("http://schemas.android.com/apk/res/android", "icon");
-                        String resId = xrp.getAttributeValue("http://schemas.android.com/apk/res/android", "id");
-                        String activity = xrp.getAttributeValue("http://schemas.android.com/apk/res/android", "titleCondensed");
-                        String enabled = xrp.getAttributeValue("http://schemas.android.com/apk/res/android", "enabled");
-
-                        if (enabled != "false") {
-                            SideNavigationItem item = new SideNavigationItem();
-                            item.setId(Integer.valueOf(resId.replace("@", "")));
-                            item.setText(this.resourceIdToString(textId));
-                            item.setActivity(activity);
-
-                            if (iconId != null) {
-                                try {
-                                    item.setIcon(Integer.valueOf(iconId.replace("@", "")));
-                                } catch (NumberFormatException e) {
-                                    Log.d(LOG_TAG, "Item " + item.getId() + " not have icon");
-                                }
-                            }
-                            this.menuItems.add(item);
-                        }
-                    }
-                }
-                eventType = xrp.next();
-            }
-        } catch (Exception e) {
-            Log.w(LOG_TAG, e);
-        }
-    }
-
-    /**
-     * Convert resource ID to String.
-     *
-     * @param resId
-     * @return
-     */
-    private String resourceIdToString(String resId) {
-        if (!resId.contains("@")) {
-            return resId;
-        } else {
-            String id = resId.replace("@", "");
-            return mContext.getResources().getString(Integer.valueOf(id));
-        }
-    }
-
     public static class SideNavigationItem {
+        public static final int NO_ICON_VALUE = -1;
 
-        public static int DEFAULT_ICON_VALUE = -1;
+        private final int textRes;
+        private final int icon;
+        private final Class<?> activity;
 
-        private int id;
-        private String text;
-        private int icon = DEFAULT_ICON_VALUE;
-        private String activity;
-
-        public int getId() {
-            return this.id;
+        public SideNavigationItem(int text) {
+            icon = NO_ICON_VALUE;
+            activity = null;
+            textRes = text;
         }
 
-        public void setId(int id) {
-            this.id = id;
+        public SideNavigationItem(int text, int sym, Class<?> activ) {
+            textRes = text;
+            icon = sym;
+            activity = activ;
         }
 
-        public String getText() {
-            return this.text;
-        }
-
-        public void setText(String text) {
-            this.text = text;
+        public String getText(Context c) {
+            return c.getText(textRes).toString();
         }
 
         public int getIcon() {
             return this.icon;
         }
 
-        public void setIcon(int icon) {
-            this.icon = icon;
-        }
-
-        public void setActivity(String activity) {
-            this.activity = activity;
-        }
-
-        public String getActivity() {
+        public Class<?> getActivity() {
             return this.activity;
         }
 
     }
+
+    private static final SideNavigationItem[] menuItems = {
+            new SideNavigationItem(R.string.my_tum),
+            new SideNavigationItem(R.string.schedule,R.drawable.calendar, CalendarActivity.class),
+            new SideNavigationItem(R.string.my_lectures,R.drawable.calculator, LecturesPersonalActivity.class),
+            //new SideNavigationItem(R.string.my_grades,R.drawable.chart, GradesActivity.class),
+            new SideNavigationItem(R.string.tuition_fees,R.drawable.finance, TuitionFeesActivity.class),
+            new SideNavigationItem(R.string.tum_common),
+            new SideNavigationItem(R.string.menues,R.drawable.shopping_cart, CafeteriaActivity.class),
+            new SideNavigationItem(R.string.rss_feeds,R.drawable.fax, FeedsActivity.class),
+            new SideNavigationItem(R.string.study_plans,R.drawable.documents, CurriculaActivity.class),
+            //new SideNavigationItem(R.string.events,R.drawable.camera, EventsActivity.class),
+            //new SideNavigationItem(R.string.gallery,R.drawable.pictures, GalleryActivity.class),
+            //new SideNavigationItem(R.string.person_search,R.drawable.users, PersonsSearchActivity.class),
+            new SideNavigationItem(R.string.plans,R.drawable.web, PlansActivity.class),
+            //new SideNavigationItem(R.string.roomfinder,R.drawable.home, RoomfinderActivity.class),
+            new SideNavigationItem(R.string.opening_hours,R.drawable.unlock, OpeningHoursListActivity.class),
+            new SideNavigationItem(R.string.organisations,R.drawable.chat, OrganisationActivity.class),
+            new SideNavigationItem(R.string.mvv,R.drawable.show_info, TransportationActivity.class),
+            new SideNavigationItem(R.string.extra),
+            new SideNavigationItem(R.string.action_settings,R.drawable.ic_action_settings, UserPreferencesActivity.class),
+            new SideNavigationItem(R.string.tum_news,R.drawable.mail, NewsActivity.class),
+    };
 
 }
