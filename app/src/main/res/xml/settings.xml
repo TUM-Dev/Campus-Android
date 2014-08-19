@@ -115,16 +115,9 @@
         <PreferenceScreen
             android:summary="@string/mensa_summary"
             android:title="@string/mensa_title" >
-          <!--  <PreferenceCategory>
-                <CheckBoxPreference
-                    android:defaultValue="true"
-                    android:key="mensa_use_current_location"
-                    android:summary="@string/mensa_use_location_summary"
-                    android:title="@string/mensa_use_location_title" />
-            </PreferenceCategory>-->  
             <PreferenceCategory 
-                android:key="my_mensa" >
-                <!-- android:title="@string/my_mensa" -->
+                android:key="my_mensa"
+                android:title="@string/my_mensa" >
             </PreferenceCategory>
         </PreferenceScreen>
     </PreferenceCategory>
