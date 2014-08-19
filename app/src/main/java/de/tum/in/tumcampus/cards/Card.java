@@ -29,12 +29,18 @@ public abstract class Card {
         return mCard;
     }
 
-    public void addTextView(Context context, String text) {
-        float density = context.getResources().getDisplayMetrics().density;
+    public TextView addTextView(Context context, String text) {
+
         TextView textview = new TextView(context);
         textview.setText(text);
+
+        //Give some space to the other stuff on the card
+        float density = context.getResources().getDisplayMetrics().density;
         textview.setPadding((int)(10*density), 0, (int)(10*density), 0);
+
         mLinearLayout.addView(textview);
+
+        return textview;
     }
 
     protected void addHeader(Context context, String title) {

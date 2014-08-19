@@ -1,6 +1,7 @@
 package de.tum.in.tumcampus.fragments;
 
 import android.app.Activity;
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -258,8 +259,9 @@ public class CalendarSectionFragment extends Fragment {
 
                 //Launch the roomfinder activity
                 Intent i = new Intent(activity, RoomfinderActivity.class);
-                i.putExtra("NAME", strList[0]);
-                startActivity(i);
+                i.setAction(Intent.ACTION_SEARCH);
+                i.putExtra(SearchManager.QUERY, strList[0]);
+                activity.startActivity(i);
             }
         });
     }

@@ -12,6 +12,7 @@ import android.preference.PreferenceManager;
 import android.provider.SearchRecentSuggestions;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -33,9 +34,7 @@ import de.tum.in.tumcampus.tumonline.TUMRoomFinderRequestFetchListener;
  *
  * @author Vincenz Doelle, Anas Chackfeh
  */
-public class RoomfinderActivity extends ActivityForSearching implements
-        OnEditorActionListener, TUMRoomFinderRequestFetchListener,
-        OnItemClickListener, TextWatcher {
+public class RoomfinderActivity extends ActivityForSearching implements OnEditorActionListener, TUMRoomFinderRequestFetchListener, OnItemClickListener {
 
     // HTTP client for sending requests to MyTUM roomfinder
     TUMRoomFinderRequest roomFinderRequest;
@@ -44,112 +43,37 @@ public class RoomfinderActivity extends ActivityForSearching implements
     RoomFinderListAdapter adapter;
 
     String currentlySelectedBuildingId;
-
     private String currentlySelectedRoomId;
-    private SharedPreferences sharedPrefs;
 
     public RoomfinderActivity() {
         super(R.layout.activity_roomfinder);
     }
 
     @Override
-    public void afterTextChanged(Editable s) {
-    }
-
-    @Override
-    public void beforeTextChanged(CharSequence s, int start, int count,
-                                  int after) {
-
-    }
-
-    private void doSearch(String query) {
-
-        SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this,
-                RoomFinderSuggestionProvider.AUTHORITY,
-                RoomFinderSuggestionProvider.MODE);
-        suggestions.saveRecentQuery(query, null);
-
-        roomFinderRequest.fetchSearchInteractive(this, this, query);
-
-    }
-
-    private void handleIntent(Intent intent) {
-        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            String query = intent.getStringExtra(SearchManager.QUERY);
-            doSearch(query);
-        }
-    }
-
-    /**
-     * Exported, because unused.
-     *
-     * @param s
-     */
-    @SuppressWarnings("unused")
-    private void initQuerySearchView(CharSequence s) {
-        final int SEARCHVIEW_FIELD_ID = 0;
-        SearchView searchView = (SearchView) this
-                .findViewById(SEARCHVIEW_FIELD_ID);
-        searchView.setQuery(s, false);
-    }
-
-    /**
-     * Exported, because unused.
-     */
-    @SuppressWarnings("unused")
-    private void initSearchView() {
-        final int SEARCHVIEW_FIELD_ID = 0;
-        // Get the SearchView and set the searchable configuration
-        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        searchField.addTextChangedListener(this);
-
-        SearchView searchView = (SearchView) this
-                .findViewById(SEARCHVIEW_FIELD_ID);
-        // Assumes current activity is the searchable actisvity
-        searchView.setSearchableInfo(searchManager
-                .getSearchableInfo(getComponentName()));
-        searchView.setIconifiedByDefault(false);
-        // Do not iconify the widget;
-        // expand it by default
-        searchView.getRootView().requestFocus();
-
-        Intent intent = getIntent();
-        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            String query = intent.getStringExtra(SearchManager.QUERY);
-            doSearch(query);
-        }
-    }
-
-    @Override
-    public void onClick(View view) {
-        super.onClick(view);
-    }
-
-    @Override
-    public void onCommonError(String errorReason) {
-        Toast.makeText(this, errorReason, Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         roomFinderRequest = new TUMRoomFinderRequest();
+
         //Counting the number of times that the user used this activity for intelligent reordering
-        sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         if (sharedPrefs.getBoolean("implicitly_id", true)) {
             ImplicitCounter.Counter("roomfinder_id", getApplicationContext());
         }
-        Bundle bunble = getIntent().getExtras();
 
-        if (bunble != null) {
+        //Handle intents
+        handleIntent(getIntent());
+    }
 
-            //Getting the value stored in the name "NAME" (binding the calender and room finder)
-            String searchQuery = bunble.getString("NAME");
-            doSearch(searchQuery);
+    @Override
+    public boolean performSearchAlgorithm() {
+        EditText searchString = (EditText) this.findViewById(R.id.search_field);
+        String query = searchString.getText().toString();
 
+        SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this, RoomFinderSuggestionProvider.AUTHORITY, RoomFinderSuggestionProvider.MODE);
+        suggestions.saveRecentQuery(query.toString(), null);
 
-        }
-
+        roomFinderRequest.fetchSearchInteractive(this, this, query);
+        return true;
     }
 
     @Override
@@ -165,8 +89,7 @@ public class RoomfinderActivity extends ActivityForSearching implements
 
         progressLayout.setVisibility(View.GONE);
         if (result.size() == 0) {
-            Toast.makeText(this, R.string.no_rooms_found, Toast.LENGTH_SHORT)
-                    .show();
+            Toast.makeText(this, R.string.no_rooms_found, Toast.LENGTH_SHORT).show();
             errorLayout.setVisibility(View.VISIBLE);
             return;
         }
@@ -196,46 +119,45 @@ public class RoomfinderActivity extends ActivityForSearching implements
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position,
-                            long id) {
-
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         @SuppressWarnings("unchecked")
-        HashMap<String, String> room = (HashMap<String, String>) list
-                .getAdapter().getItem(position);
+        HashMap<String, String> room = (HashMap<String, String>) list.getAdapter().getItem(position);
 
-        currentlySelectedBuildingId = room
-                .get(TUMRoomFinderRequest.KEY_Building
-                        + TUMRoomFinderRequest.KEY_ID);
+        currentlySelectedBuildingId = room.get(TUMRoomFinderRequest.KEY_Building + TUMRoomFinderRequest.KEY_ID);
+        currentlySelectedRoomId = room.get(TUMRoomFinderRequest.KEY_ARCHITECT_NUMBER);
+        roomFinderRequest.fetchDefaultMapIdJob(this, this, currentlySelectedBuildingId);
+    }
 
-        currentlySelectedRoomId = room
-                .get(TUMRoomFinderRequest.KEY_ARCHITECT_NUMBER);
+    @Override
+    public void onClick(View view) {
+        super.onClick(view);
+    }
 
-        roomFinderRequest.fetchDefaultMapIdJob(this, this,
-                currentlySelectedBuildingId);
-
+    @Override
+    public void onCommonError(String errorReason) {
+        Toast.makeText(this, errorReason, Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
         setIntent(intent);
-        handleIntent(intent);
+        this.handleIntent(intent);
     }
 
-    @Override
-    public void onTextChanged(CharSequence s, int start, int before, int count) {
+    private void handleIntent(Intent intent) {
+        if (intent != null && intent.getAction().equals(Intent.ACTION_SEARCH)) {
+            //Get the requested room
+            String query = intent.getStringExtra(SearchManager.QUERY);
+
+            //Update search field
+            EditText searchView = (EditText) this.findViewById(R.id.search_field);
+            searchView.setText(query);
+
+            //Execute search
+            performSearchAlgorithm();
+        }
     }
 
-    @Override
-    public boolean performSearchAlgorithm() {
-        EditText searchString = (EditText) this.findViewById(R.id.search_field);
 
-        SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this,
-                RoomFinderSuggestionProvider.AUTHORITY,
-                RoomFinderSuggestionProvider.MODE);
-        suggestions.saveRecentQuery(searchString.getText().toString(), null);
-
-        roomFinderRequest.fetchSearchInteractive(this, this, searchString
-                .getText().toString());
-        return true;
-    }
 }
