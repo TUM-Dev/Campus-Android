@@ -157,13 +157,13 @@ public class CalendarManager implements ProvidesCard {
 
         // Get first lecture which starts in the next 30 minutes
         Cursor cur = db.rawQuery("" +
-                "SELECT title, dtstart, location " +
-                "FROM kalendar_events " +
-                "WHERE " +
-                "datetime('now', 'localtime')-1800 < dtstart AND " +
-                "datetime('now', 'localtime') < dtend " +
-                "ORDER BY dtstart" +
-                "LIMIT 1", null);
+                " SELECT title, dtstart, location " +
+                " FROM kalendar_events " +
+                " WHERE " +
+                " datetime('now', 'localtime')-1800 < dtstart AND " +
+                " datetime('now', 'localtime') < dtend " +
+                " ORDER BY dtstart " +
+                " LIMIT 1", null);
 
         if (cur.moveToFirst()) {
             NextLectureCard card = new NextLectureCard();
