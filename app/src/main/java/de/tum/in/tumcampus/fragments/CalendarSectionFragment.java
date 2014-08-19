@@ -132,47 +132,13 @@ public class CalendarSectionFragment extends Fragment {
                 }
 
                 // Try to fix overlapping events
+                // TODO not yet working
                 Integer eventId=cursor.getInt(1);
-                if(eventId!=null && eventId>0){
+                if(eventId!=null && eventId>=0){
                     if(previousId!=null){
                         params.addRule(RelativeLayout.LEFT_OF, previousId);
                     }
-                    previousId=eventId+previousId;
-                    eventView.setId(eventId);
-                }
-
-                eventView.setLayoutParams(params);
-                eventList.add(eventView);
-
-                eventView = inflateEventView();
-                dateStart = Utils.getISODateTime(strStart);
-                dateEnd = Utils.getISODateTime(strEnd);
-
-                start = dateStart.getHours() * 60 + dateStart.getMinutes()+30;
-                end = dateEnd.getHours() * 60 + dateStart.getMinutes()+30;
-
-                hours = (end - start) / 60f;
-
-                // Set params to eventLayout
-                 params = initLayoutParams(hours);
-                setStartOfEntry(params, start / 60f);
-
-                //Check if room is present and set text accordingly
-                 room=cursor.getString(7);
-                if(room!=null && room.length()!=0) {
-                    setText(eventView, cursor.getString(3) + " / " + cursor.getString(7));
-                    eventView.setTag(cursor.getString(7));
-                }else{
-                    setText(eventView, cursor.getString(3));
-                }
-
-                // Try to fix overlapping events
-                eventId=cursor.getInt(1);
-                if(eventId!=null && eventId>0){
-                    if(previousId!=null){
-                        params.addRule(RelativeLayout.LEFT_OF, previousId);
-                    }
-                    previousId=eventId+previousId;
+                    previousId=eventId;
                     eventView.setId(eventId);
                 }
 
