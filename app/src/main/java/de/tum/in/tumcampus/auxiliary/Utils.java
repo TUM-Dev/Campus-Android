@@ -687,8 +687,7 @@ public class Utils {
 	public static Date getISODateTime(String str) {
 		// TODO Who handles exception?
 		try {
-			SimpleDateFormat dateFormat = new SimpleDateFormat(
-					"yyyy-MM-dd HH:mm:ss");
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			return dateFormat.parse(str);
 		} catch (Exception e) {
 			log(e, str);

@@ -39,7 +39,7 @@ public class CalendarManager implements ProvidesCard {
 	 * @return
 	 */
 	public Cursor getAllFromDb() {
-		return db.rawQuery("SELECT * FROM kalendar_events", null);
+        return db.rawQuery("SELECT * FROM kalendar_events", null);
 	}
 
 	// TODO not working, should get a event linked to one specific date.
