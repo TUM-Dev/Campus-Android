@@ -60,4 +60,13 @@
         <item name="android:windowNoTitle">true</item>
     </style>
 
+    <style name="ButtonBar" parent="@android:style/ButtonBar">
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:padding">0dp</item>
+    </style>
+
+    <style name="ButtonBarButton">
+        <item name="android:minHeight">48dp</item>
+    </style>
+
 </resources>

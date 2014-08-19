@@ -401,10 +401,6 @@
             android:configChanges="orientation|screenSize"
             android:label="@string/campus_app"></activity>
         <activity
-            android:name="de.tum.in.tumcampus.activities.wizzard.WizNavDoneActivity"
-            android:configChanges="orientation|screenSize"
-            android:label="@string/campus_app"></activity>
-        <activity
             android:name="de.tum.in.tumcampus.activities.wizzard.WizNavExtrasActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/campus_app"></activity>
