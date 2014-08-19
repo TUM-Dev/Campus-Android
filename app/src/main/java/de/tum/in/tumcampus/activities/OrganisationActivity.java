@@ -33,7 +33,6 @@ import de.tum.in.tumcampus.activities.generic.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampus.adapters.OrgItemListAdapter;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.FileUtils;
-import de.tum.in.tumcampus.auxiliary.PersonalLayoutManager;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.OrgItem;
 import de.tum.in.tumcampus.models.OrgItemList;
@@ -344,12 +343,6 @@ public class OrganisationActivity extends ActivityForAccessingTumOnline
 			super.hideProgressLayout();
 			super.showErrorLayout();
 		}
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-		PersonalLayoutManager.setColorForId(this, R.id.tvCaption);
 	}
 
 	/**

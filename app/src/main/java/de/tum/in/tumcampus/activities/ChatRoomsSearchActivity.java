@@ -51,7 +51,6 @@ import de.tum.in.tumcampus.activities.generic.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampus.adapters.ChatRoomsListAdapter;
 import de.tum.in.tumcampus.auxiliary.ChatClient;
 import de.tum.in.tumcampus.auxiliary.Const;
-import de.tum.in.tumcampus.auxiliary.PersonalLayoutManager;
 import de.tum.in.tumcampus.auxiliary.RSASigner;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.ChatMember;
@@ -256,7 +255,6 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		PersonalLayoutManager.setColorForId(this, R.id.spFilter);
         // Check device for Play Services APK.
 		populateCurrentChatMember(PreferenceManager.getDefaultSharedPreferences(this));
 	}

@@ -13,7 +13,6 @@ import android.widget.TextView;
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.generic.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampus.auxiliary.Const;
-import de.tum.in.tumcampus.auxiliary.PersonalLayoutManager;
 import de.tum.in.tumcampus.models.TuitionList;
 import de.tum.in.tumcampus.tumonline.TUMOnlineRequestFetchListener;
 
@@ -85,13 +84,5 @@ public class TuitionFeesActivity extends ActivityForAccessingTumOnline
 			e.printStackTrace();
 		}
 		progressLayout.setVisibility(View.GONE);
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-		PersonalLayoutManager.setColorForId(this, R.id.semester);
-		PersonalLayoutManager.setDrawableColorForId(this, R.drawable.finance);
-		PersonalLayoutManager.setDrawableColorForId(this, R.drawable.go);
 	}
 }

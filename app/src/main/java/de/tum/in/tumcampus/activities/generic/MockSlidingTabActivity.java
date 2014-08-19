@@ -6,7 +6,6 @@ import android.support.v7.app.ActionBarActivity;
 
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.adapters.MockSectionsPagerAdapter;
-import de.tum.in.tumcampus.auxiliary.PersonalLayoutManager;
 
 /**
  * Mock Activity to demonstrate the basic fragment based navigation using tabs.
@@ -29,11 +28,5 @@ public class MockSlidingTabActivity extends ActionBarActivity {
 
 		mViewPager = (ViewPager) findViewById(R.id.pager);
 		mViewPager.setAdapter(mSectionsPagerAdapter);
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-		PersonalLayoutManager.setColorForId(this, R.id.pager_title_strip);
 	}
 }

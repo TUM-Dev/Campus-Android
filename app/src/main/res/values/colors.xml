@@ -17,4 +17,9 @@
     <color name="card_pressed">#fff8f8f8</color>
     <color name="card_activated">#500099CC</color>
 
+    <color name="holo_blue_bright">#00ddff</color>
+    <color name="holo_green_light">#99cc00</color>
+    <color name="holo_orange_light">#ffbb33</color>
+    <color name="holo_red_light">#ff4444</color>
+
 </resources>

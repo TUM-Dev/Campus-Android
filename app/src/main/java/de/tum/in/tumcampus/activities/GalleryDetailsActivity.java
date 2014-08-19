@@ -7,7 +7,6 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.TextView;
 import de.tum.in.tumcampus.R;
-import de.tum.in.tumcampus.auxiliary.PersonalLayoutManager;
 import de.tum.in.tumcampus.models.managers.GalleryManager;
 
 /**
@@ -46,12 +45,5 @@ public class GalleryDetailsActivity extends ActionBarActivity {
 				+ "'/></body>";
 		browser.loadDataWithBaseURL("file:///android_asset/", data,
 				"text/html", "UTF-8", null);
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-		PersonalLayoutManager.setColorForId(this,
-				R.id.activity_gallery_details_infos);
 	}
 }

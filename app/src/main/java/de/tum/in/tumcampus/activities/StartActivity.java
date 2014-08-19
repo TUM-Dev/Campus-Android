@@ -10,9 +10,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.StrictMode;
-import android.preference.PreferenceManager;
 import android.support.v4.app.ActionBarDrawerToggle;
-import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
@@ -25,8 +23,6 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import de.tum.in.tumcampus.R;
-import de.tum.in.tumcampus.activities.wizzard.WizNavExtrasActivity;
-import de.tum.in.tumcampus.activities.wizzard.WizNavStartActivity;
 import de.tum.in.tumcampus.adapters.CardsAdapter;
 import de.tum.in.tumcampus.adapters.SideNavigationAdapter;
 import de.tum.in.tumcampus.auxiliary.Const;
@@ -43,17 +39,6 @@ import de.tum.in.tumcampus.services.SilenceService;
 public class StartActivity extends ActionBarActivity implements AdapterView.OnItemClickListener, SwipeRefreshLayout.OnRefreshListener {
 	public static final int REQ_CODE_COLOR_CHANGE = 0;
 
-	/**
-	 * The {@link android.support.v4.view.PagerAdapter} that will provide fragments for each of the sections. We use a
-	 * {@link android.support.v4.app.FragmentPagerAdapter} derivative, which will keep every loaded fragment in memory. If this becomes too memory
-	 * intensive, it may be best to switch to a {@link android.support.v4.app.FragmentStatePagerAdapter}.
-	 */
-	//StartSectionsPagerAdapter mSectionsPagerAdapter;
-	/**
-	 * The {@link ViewPager} that will host the section contents.
-	 */
-	//ViewPager mViewPager;
-    boolean shouldRestartOnResume;
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
 
@@ -70,10 +55,6 @@ public class StartActivity extends ActionBarActivity implements AdapterView.OnIt
 				if (action.length() != 0) {
 					Log.i(this.getClass().getSimpleName(), message);
 				}
-			}
-			if (intent.getAction().equals(WizNavExtrasActivity.BROADCAST_NAME)) {
-				Log.i(this.getClass().getSimpleName(), "Color has changed");
-				StartActivity.this.shouldRestartOnResume = true;
 			}
 		}
 	};
@@ -109,10 +90,10 @@ public class StartActivity extends ActionBarActivity implements AdapterView.OnIt
         // Set up the SwipeRefreshLayout
         mSwipeLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
         mSwipeLayout.setOnRefreshListener(this);
-        mSwipeLayout.setColorScheme(android.R.color.holo_blue_bright,
-                android.R.color.holo_green_light,
-                android.R.color.holo_orange_light,
-                android.R.color.holo_red_light);
+        mSwipeLayout.setColorSchemeResources(R.color.holo_blue_bright,
+                R.color.holo_green_light,
+                R.color.holo_orange_light,
+                R.color.holo_red_light);
 
 		// Set up the ViewPager with the sections adapter.
         mCardsView = (ListView) findViewById(R.id.cards_view);
@@ -126,7 +107,6 @@ public class StartActivity extends ActionBarActivity implements AdapterView.OnIt
 		// Registers receiver for download and import
 		IntentFilter intentFilter = new IntentFilter();
 		intentFilter.addAction(ImportService.BROADCAST_NAME);
-		intentFilter.addAction(WizNavExtrasActivity.BROADCAST_NAME);
 		this.registerReceiver(this.receiver, intentFilter);
 
 		// Imports default values into database
@@ -231,18 +211,6 @@ public class StartActivity extends ActionBarActivity implements AdapterView.OnIt
 			break;
 		}
 		return super.onOptionsItemSelected(item);
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-		//PersonalLayoutManager.setColorForId(this, R.id.pager_title_strip);
-		if (this.shouldRestartOnResume) {
-			// finish and restart myself
-			this.finish();
-			Intent intent = new Intent(this, this.getClass());
-			this.startActivity(intent);
-		}
 	}
 
     @Override

@@ -37,7 +37,6 @@ import de.tum.in.tumcampus.adapters.CalendarSectionsPagerAdapter;
 import de.tum.in.tumcampus.auxiliary.CalendarMapper;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.Dialogs;
-import de.tum.in.tumcampus.auxiliary.PersonalLayoutManager;
 import de.tum.in.tumcampus.models.managers.CalendarManager;
 
 /**
@@ -383,12 +382,6 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements O
 		this.menuItemDeleteCalendar = menu.findItem(R.id.action_delete_calendar);
 		this.setMenuEnabled(this.isFetched);
 		return super.onPrepareOptionsMenu(menu);
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-		PersonalLayoutManager.setColorForId(this, R.id.pager_title_strip);
 	}
 
 	/**

@@ -31,7 +31,6 @@ import de.tum.in.tumcampus.activities.generic.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampus.adapters.ExamListAdapter;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.Dialogs;
-import de.tum.in.tumcampus.auxiliary.PersonalLayoutManager;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.Exam;
 import de.tum.in.tumcampus.models.ExamList;
@@ -418,14 +417,6 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 		setMenuEnabled(isFetched);
 
 		return super.onPrepareOptionsMenu(menu);
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-		PersonalLayoutManager.setColorForId(this, R.id.spFilter);
-		PersonalLayoutManager.setColorForId(this, R.id.avgGrade);
-
 	}
 
 	/**

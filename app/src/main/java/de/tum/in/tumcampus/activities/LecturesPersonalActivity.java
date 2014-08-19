@@ -22,7 +22,6 @@ import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.generic.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampus.adapters.LecturesSearchListAdapter;
 import de.tum.in.tumcampus.auxiliary.Const;
-import de.tum.in.tumcampus.auxiliary.PersonalLayoutManager;
 import de.tum.in.tumcampus.models.LecturesSearchRow;
 import de.tum.in.tumcampus.models.LecturesSearchRowSet;
 
@@ -151,12 +150,6 @@ public class LecturesPersonalActivity extends ActivityForAccessingTumOnline {
 		} catch (Exception e) { // NTK quickfix
 			Log.e("TumCampus", "No lectures available" + e.getMessage());
 		}
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-		PersonalLayoutManager.setColorForId(this, R.id.spFilter);
 	}
 
 	/**

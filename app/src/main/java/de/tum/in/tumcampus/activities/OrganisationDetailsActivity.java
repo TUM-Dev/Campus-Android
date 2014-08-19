@@ -19,7 +19,6 @@ import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.generic.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampus.adapters.OrgDetailsItemHandler;
 import de.tum.in.tumcampus.auxiliary.Const;
-import de.tum.in.tumcampus.auxiliary.PersonalLayoutManager;
 import de.tum.in.tumcampus.models.OrgDetailsItem;
 
 /**
@@ -116,7 +115,7 @@ public class OrganisationDetailsActivity extends ActivityForAccessingTumOnline {
 	 * When the data has arrived call this function, parse the Data and Update
 	 * the UserInterface
 	 * 
-	 * @param rawResp
+	 * @param rawResponse
 	 *            = XML-TUMCampus-Response (String)
 	 */
 	@Override
@@ -125,12 +124,6 @@ public class OrganisationDetailsActivity extends ActivityForAccessingTumOnline {
 		OrgDetailsItem orgDetailsItem = parseOrgDetails(rawResponse);
 		updateUI(orgDetailsItem);
 		super.hideProgressLayout();
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-		PersonalLayoutManager.setColorForId(this, R.id.tvCaption);
 	}
 
 	@Override

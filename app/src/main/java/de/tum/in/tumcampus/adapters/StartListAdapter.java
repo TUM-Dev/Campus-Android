@@ -12,7 +12,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.auxiliary.ListMenuEntry;
-import de.tum.in.tumcampus.auxiliary.PersonalLayoutManager;
 
 /**
  * Adapter to combine own layouts with the list view.
@@ -67,10 +66,6 @@ public class StartListAdapter extends BaseAdapter {
 
 			holder = new ViewHolder();
 			holder.icon = (ImageView) vi.findViewById(R.id.list_menu_icon);
-			// Apply a color filter on the images when requested
-			if (this.usesColorFilter) {
-				holder.icon.setColorFilter(PersonalLayoutManager.getColorFilter(this.activity));
-			}
 			holder.title = (TextView) vi.findViewById(R.id.list_menu_title);
 			holder.detail = (TextView) vi.findViewById(R.id.list_menu_detail);
 			vi.setTag(holder);

@@ -9,7 +9,6 @@ import de.tum.in.tumcampus.activities.ImplicitCounter;
 import de.tum.in.tumcampus.activities.generic.ActivityForDownloadingExternal;
 import de.tum.in.tumcampus.adapters.GallerySectionsPagerAdapter;
 import de.tum.in.tumcampus.auxiliary.Const;
-import de.tum.in.tumcampus.auxiliary.PersonalLayoutManager;
 
 /**
  * Displays images fetched from Facebook.
@@ -40,13 +39,7 @@ public class GalleryActivity extends ActivityForDownloadingExternal {
 		}
 		
 	}
-	
 
-	@Override
-	protected void onResume() {
-		super.onResume();
-		PersonalLayoutManager.setColorForId(this, R.id.pager_title_strip);
-	}
 	@Override
 	protected void onStart() {
 		super.onStart();

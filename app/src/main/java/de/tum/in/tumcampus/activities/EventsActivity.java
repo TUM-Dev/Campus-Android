@@ -8,7 +8,6 @@ import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.generic.ActivityForDownloadingExternal;
 import de.tum.in.tumcampus.adapters.EventsSectionsPagerAdapter;
 import de.tum.in.tumcampus.auxiliary.Const;
-import de.tum.in.tumcampus.auxiliary.PersonalLayoutManager;
 
 /**
  * Displays Events which are fetched from Facebook
@@ -34,13 +33,6 @@ public class EventsActivity extends ActivityForDownloadingExternal {
 		}
 		// Request a non-forced update on startup
 		super.requestDownload(false);
-	}
-	
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-		PersonalLayoutManager.setColorForId(this, R.id.pager_title_strip);
 	}
 
 	@Override

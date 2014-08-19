@@ -9,7 +9,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.auxiliary.Const;
-import de.tum.in.tumcampus.auxiliary.PersonalLayoutManager;
 import de.tum.in.tumcampus.models.managers.EventManager;
 
 /**
@@ -64,11 +63,5 @@ public class EventsDetailsActivity extends ActionBarActivity {
 		Bitmap b = BitmapFactory.decodeFile(image);
 		iv.setImageBitmap(Bitmap.createScaledBitmap(b, 360,
 				(b.getHeight() * 360) / b.getWidth(), true));
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-		PersonalLayoutManager.setColorForId(this, R.id.infos);
 	}
 }

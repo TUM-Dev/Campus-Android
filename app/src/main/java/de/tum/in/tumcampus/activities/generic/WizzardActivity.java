@@ -6,7 +6,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import de.tum.in.tumcampus.R;
-import de.tum.in.tumcampus.auxiliary.PersonalLayoutManager;
 
 public class WizzardActivity extends ActionBarActivity {
 	private Intent intentForNextActivity;
@@ -38,12 +37,6 @@ public class WizzardActivity extends ActionBarActivity {
 		default:
 			return super.onOptionsItemSelected(item);
 		}
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-		PersonalLayoutManager.setColorForId(this, R.id.pager_title_strip);
 	}
 
 	public void setIntentForNextActivity(Intent intent) {

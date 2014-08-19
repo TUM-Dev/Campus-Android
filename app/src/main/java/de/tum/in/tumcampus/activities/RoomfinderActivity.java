@@ -24,7 +24,6 @@ import android.widget.Toast;
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.generic.ActivityForSearching;
 import de.tum.in.tumcampus.adapters.RoomFinderListAdapter;
-import de.tum.in.tumcampus.auxiliary.PersonalLayoutManager;
 import de.tum.in.tumcampus.auxiliary.RoomFinderSuggestionProvider;
 import de.tum.in.tumcampus.tumonline.TUMRoomFinderRequest;
 import de.tum.in.tumcampus.tumonline.TUMRoomFinderRequestFetchListener;
@@ -220,12 +219,6 @@ public class RoomfinderActivity extends ActivityForSearching implements
     public void onNewIntent(Intent intent) {
         setIntent(intent);
         handleIntent(intent);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        PersonalLayoutManager.setDrawableColorForId(this, R.drawable.about);
     }
 
     @Override

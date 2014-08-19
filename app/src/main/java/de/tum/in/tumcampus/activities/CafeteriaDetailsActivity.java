@@ -11,7 +11,6 @@ import android.view.MenuItem;
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.adapters.CafeteriaDetailsSectionsPagerAdapter;
 import de.tum.in.tumcampus.auxiliary.Const;
-import de.tum.in.tumcampus.auxiliary.PersonalLayoutManager;
 
 /**
  * Lists all dishes at given cafeteria
@@ -21,31 +20,22 @@ import de.tum.in.tumcampus.auxiliary.PersonalLayoutManager;
  */
 public class CafeteriaDetailsActivity extends ActionBarActivity {
 
-	/** Received Id */
-	private String cafeteriaId;
-
-	/** Received Name */
-	private String cafeteriaName;
-
-	private CafeteriaDetailsSectionsPagerAdapter mSectionsPagerAdapter;
-	private ViewPager mViewPager;
-
-	@Override
+    @Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_cafeteriadetails);
 
 		// Get Id and name from intent (calling activity)
-		cafeteriaId = getIntent().getExtras().getString(Const.CAFETERIA_ID);
-		cafeteriaName = getIntent().getExtras().getString(Const.CAFETERIA_NAME);
+		String cafeteriaId = getIntent().getExtras().getString(Const.CAFETERIA_ID);
+		String cafeteriaName = getIntent().getExtras().getString(Const.CAFETERIA_NAME);
 
 		// Create the adapter that will return a fragment for each of the
 		// primary sections of the app.
-		mSectionsPagerAdapter = new CafeteriaDetailsSectionsPagerAdapter(this,
-				getSupportFragmentManager(), cafeteriaId, cafeteriaName);
+        CafeteriaDetailsSectionsPagerAdapter mSectionsPagerAdapter = new CafeteriaDetailsSectionsPagerAdapter(this,
+                getSupportFragmentManager(), cafeteriaId, cafeteriaName);
 
 		// Set up the ViewPager with the sections adapter.
-		mViewPager = (ViewPager) findViewById(R.id.pager);
+        ViewPager mViewPager = (ViewPager) findViewById(R.id.pager);
 		mViewPager.setAdapter(mSectionsPagerAdapter);
 	}
 
@@ -81,11 +71,5 @@ public class CafeteriaDetailsActivity extends ActionBarActivity {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-		PersonalLayoutManager.setColorForId(this, R.id.pager_title_strip);
 	}
 }

@@ -471,6 +471,8 @@
     <string name="drawer_open">Öffnen</string>
     <string name="drawer_close">Schließen</string>
     <string name="next_lecture_time">um</string>
+    <string name="about_tca">Über TCA</string>
+    <string name="github">Mitmachen auf Github</string>
     <!-- END Translated -->
 
 </resources>

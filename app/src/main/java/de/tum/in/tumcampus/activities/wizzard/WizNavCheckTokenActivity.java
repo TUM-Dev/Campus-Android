@@ -11,7 +11,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.generic.ActivityForAccessingTumOnline;
-import de.tum.in.tumcampus.auxiliary.PersonalLayoutManager;
 
 public class WizNavCheckTokenActivity extends ActivityForAccessingTumOnline {
 
@@ -65,12 +64,6 @@ public class WizNavCheckTokenActivity extends ActivityForAccessingTumOnline {
 		default:
 			return super.onOptionsItemSelected(item);
 		}
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-		PersonalLayoutManager.setColorForId(this, R.id.pager_title_strip);
 	}
 
 	@Override
