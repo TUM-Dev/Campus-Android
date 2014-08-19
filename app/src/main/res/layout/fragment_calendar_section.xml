@@ -175,7 +175,7 @@
                 <RelativeLayout
                     android:id="@+id/main_schedule_layout"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_toRightOf="@id/timeline"
                     android:paddingLeft="@dimen/padding_large"
                     android:paddingRight="@dimen/padding_large" >

@@ -22,4 +22,5 @@
     <color name="holo_orange_light">#ffbb33</color>
     <color name="holo_red_light">#ff4444</color>
 
+    <color name="time_entry_background">#DDff4444</color>
 </resources>
