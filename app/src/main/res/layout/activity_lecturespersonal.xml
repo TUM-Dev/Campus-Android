@@ -28,14 +28,7 @@
         layout="@layout/layout_no_token"
         android:visibility="gone" />
 
-    <Spinner
-        android:id="@+id/spFilter"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/sections_blue"
-        android:drawSelectorOnTop="true" />
-
-    <ListView
+    <se.emilsjolander.stickylistheaders.StickyListHeadersListView
         android:id="@+id/lvMyLecturesList"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"

@@ -1,5 +1,6 @@
 package de.tum.in.tumcampus.adapters;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
@@ -11,12 +12,13 @@ import android.widget.TextView;
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.LecturesSearchActivity;
 import de.tum.in.tumcampus.models.LecturesSearchRow;
+import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 
 /**
  * This class handles the view output of the results for finding lectures via
  * TUMOnline
  * 
- * {@link LecturesSearchActivity} activity or the {@link MyLectures} activity
+ * {@link LecturesSearchActivity} activity or the {@link de.tum.in.tumcampus.activities.LecturesPersonalActivity} activity
  * 
  * linked files: res.layout.lectures_listview
  * 
@@ -24,9 +26,11 @@ import de.tum.in.tumcampus.models.LecturesSearchRow;
  * @review Thomas Behrens
  */
 
-public class LecturesSearchListAdapter extends BaseAdapter {
+public class LecturesSearchListAdapter extends BaseAdapter implements StickyListHeadersAdapter {
 
-	// the layout of the list
+    private final ArrayList<String> filters;
+
+    // the layout of the list
 	static class ViewHolder {
 		TextView tvDozent;
 		TextView tvLectureName;
@@ -43,6 +47,14 @@ public class LecturesSearchListAdapter extends BaseAdapter {
 			List<LecturesSearchRow> results) {
 		lecturesList = results;
 		mInflater = LayoutInflater.from(context);
+
+        filters = new ArrayList<String>();
+        for (LecturesSearchRow result : results) {
+            String item = result.getSemester_id();
+            if (filters.indexOf(item) == -1) {
+                filters.add(item);
+            }
+        }
 	}
 
 	@Override
@@ -65,8 +77,7 @@ public class LecturesSearchListAdapter extends BaseAdapter {
 		ViewHolder holder;
 
 		if (convertView == null) {
-			convertView = mInflater.inflate(
-					R.layout.activity_lectures_listview, null);
+			convertView = mInflater.inflate(R.layout.activity_lectures_listview, parent, false);
 			holder = new ViewHolder();
 
 			// set UI elements
@@ -95,4 +106,31 @@ public class LecturesSearchListAdapter extends BaseAdapter {
 
 		return convertView;
 	}
+
+    // Generate header view
+    @Override
+    public View getHeaderView(int pos, View convertView, ViewGroup parent) {
+        HeaderViewHolder holder;
+        if (convertView == null) {
+            holder = new HeaderViewHolder();
+            convertView = mInflater.inflate(R.layout.header, parent, false);
+            holder.text = (TextView) convertView.findViewById(R.id.lecture_header);
+            convertView.setTag(holder);
+        } else {
+            holder = (HeaderViewHolder) convertView.getTag();
+        }
+        //set header text as first char in name
+        String headerText = lecturesList.get(pos).getSemester_name();
+        holder.text.setText(headerText);
+        return convertView;
+    }
+
+    @Override
+    public long getHeaderId(int i) {
+        return filters.indexOf(lecturesList.get(i).getSemester_id());
+    }
+
+    static class HeaderViewHolder {
+        TextView text;
+    }
 }

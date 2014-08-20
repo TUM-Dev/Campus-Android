@@ -33,4 +33,5 @@
     <color name="popup_bg_color">#EE666666</color>
     <color name="separator_color">#BBBBBB</color>
     <color name="popup_text_color">#FFFFFF</color>
+    <color name="blue_secondary">#303f9f</color>
 </resources>

@@ -1,6 +1,7 @@
 package de.tum.in.tumcampus.activities;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.simpleframework.xml.Serializer;
@@ -24,6 +25,7 @@ import de.tum.in.tumcampus.adapters.LecturesSearchListAdapter;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.models.LecturesSearchRow;
 import de.tum.in.tumcampus.models.LecturesSearchRowSet;
+import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
 /**
  * This activity presents the users' lectures using the TUMOnline web service
@@ -48,9 +50,7 @@ public class LecturesPersonalActivity extends ActivityForAccessingTumOnline {
 	LecturesSearchRowSet lecturesList = null;
 
 	/** UI elements */
-	private ListView lvMyLecturesList;
-
-	private Spinner spFilter;
+	private StickyListHeadersListView lvMyLecturesList;
 
 	public LecturesPersonalActivity() {
 		super(Const.LECTURES_PERSONAL, R.layout.activity_lecturespersonal);
@@ -61,16 +61,15 @@ public class LecturesPersonalActivity extends ActivityForAccessingTumOnline {
 		super.onCreate(savedInstanceState);
 
 		// bind UI elements
-		lvMyLecturesList = (ListView) findViewById(R.id.lvMyLecturesList);
-		spFilter = (Spinner) findViewById(R.id.spFilter);
+		lvMyLecturesList = (StickyListHeadersListView) findViewById(R.id.lvMyLecturesList);
 
 		super.requestFetch();
-		//Counting the number of times that the user used this activity for intelligent reordering 
-		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-		if (sharedPrefs.getBoolean("implicitly_id", true))
-			{
-				ImplicitCounter.Counter("my_lectures_id",getApplicationContext());
-			}
+        //Counting the number of times that the user used this activity for intelligent reordering
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        if (sharedPrefs.getBoolean("implicitly_id", true))
+        {
+            ImplicitCounter.Counter("my_lectures_id",getApplicationContext());
+        }
 	}
 
 	@Override
@@ -87,69 +86,12 @@ public class LecturesPersonalActivity extends ActivityForAccessingTumOnline {
 			e.printStackTrace();
 		}
 
-		// set Spinner data (semester)
-		List<String> filters = new ArrayList<String>();
+        List<LecturesSearchRow> lectures = lecturesList.getLehrveranstaltungen();
 
-		try { // NTK quickfix
-
-			filters.add(getString(R.string.all));
-			for (int i = 0; i < lecturesList.getLehrveranstaltungen().size(); i++) {
-				String item = lecturesList.getLehrveranstaltungen().get(i)
-						.getSemester_id();
-				if (filters.indexOf(item) == -1) {
-					filters.add(item);
-				}
-			}
-
-			// simple adapter for the spinner
-			ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(
-					this, android.R.layout.simple_list_item_checked, filters);
-			spFilter.setAdapter(spinnerArrayAdapter);
-			spFilter.setOnItemSelectedListener(new OnItemSelectedListener() {
-
-				/**
-				 * if an item in the spinner is selected, we have to filter the
-				 * results which are displayed in the ListView
-				 * 
-				 * -> tList will be the data which will be passed to the
-				 * FindLecturesListAdapter
-				 */
-				@Override
-				public void onItemSelected(AdapterView<?> arg0, View arg1,
-						int arg2, long arg3) {
-					String filter = spFilter.getItemAtPosition(arg2).toString();
-					if (filter == getString(R.string.all)) {
-						setListView(lecturesList.getLehrveranstaltungen());
-					} else {
-						// do filtering for the given semester
-						List<LecturesSearchRow> filteredList = new ArrayList<LecturesSearchRow>();
-						for (int i = 0; i < lecturesList
-								.getLehrveranstaltungen().size(); i++) {
-							LecturesSearchRow item = lecturesList
-									.getLehrveranstaltungen().get(i);
-							if (item.getSemester_id().equals(filter)) {
-								filteredList.add(item);
-							}
-						}
-						// listview gets filtered list
-						setListView(filteredList);
-					}
-				}
-
-				@Override
-				public void onNothingSelected(AdapterView<?> arg0) {
-					// select [Alle], if none selected either
-					spFilter.setSelection(0);
-					setListView(lecturesList.getLehrveranstaltungen());
-				}
-			});
-
-			setListView(lecturesList.getLehrveranstaltungen());
-			progressLayout.setVisibility(View.GONE);
-
-		} catch (Exception e) { // NTK quickfix
-			Log.e("TumCampus", "No lectures available" + e.getMessage());
-		}
+        // Sort lectures by semester id
+        Collections.sort(lectures);
+        setListView(lectures);
+        progressLayout.setVisibility(View.GONE);
 	}
 
 	/**

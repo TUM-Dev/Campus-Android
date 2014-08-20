@@ -13,7 +13,7 @@ import org.simpleframework.xml.Root;
  */
 
 @Root(name = "row")
-public class LecturesSearchRow {
+public class LecturesSearchRow implements Comparable<LecturesSearchRow> {
 
 	public static final String STP_SP_NR = "stp_sp_nr";
 
@@ -141,4 +141,8 @@ public class LecturesSearchRow {
 		return vortragende_mitwirkende;
 	}
 
+    @Override
+    public int compareTo(LecturesSearchRow lecturesSearchRow) {
+        return lecturesSearchRow.getSemester_id().compareTo(semester_id);
+    }
 }
