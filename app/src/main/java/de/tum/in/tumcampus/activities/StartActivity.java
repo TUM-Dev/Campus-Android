@@ -5,8 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.StrictMode;
@@ -18,7 +16,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
@@ -26,6 +24,8 @@ import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.adapters.CardsAdapter;
 import de.tum.in.tumcampus.adapters.SideNavigationAdapter;
 import de.tum.in.tumcampus.auxiliary.Const;
+import de.tum.in.tumcampus.auxiliary.SwipeDismissList;
+import de.tum.in.tumcampus.cards.Card;
 import de.tum.in.tumcampus.models.managers.CardManager;
 import de.tum.in.tumcampus.services.BackgroundService;
 import de.tum.in.tumcampus.services.ImportService;
@@ -36,7 +36,7 @@ import de.tum.in.tumcampus.services.SilenceService;
  * 
  * @author Sascha Moecker
  */
-public class StartActivity extends ActionBarActivity implements AdapterView.OnItemClickListener, SwipeRefreshLayout.OnRefreshListener {
+public class StartActivity extends ActionBarActivity implements AdapterView.OnItemClickListener, SwipeRefreshLayout.OnRefreshListener, SwipeDismissList.OnDismissCallback {
 	public static final int REQ_CODE_COLOR_CHANGE = 0;
 
     private DrawerLayout mDrawerLayout;
@@ -61,7 +61,7 @@ public class StartActivity extends ActionBarActivity implements AdapterView.OnIt
     private ActionBarDrawerToggle mDrawerToggle;
     private SwipeRefreshLayout mSwipeLayout;
     private ListView mCardsView;
-
+    private CardsAdapter mAdapter;
 
     @Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -97,12 +97,11 @@ public class StartActivity extends ActionBarActivity implements AdapterView.OnIt
 
 		// Set up the ViewPager with the sections adapter.
         mCardsView = (ListView) findViewById(R.id.cards_view);
-        mCardsView.setAdapter(new CardsAdapter(this));
-        mCardsView.setDividerHeight(0);
+        mAdapter = new CardsAdapter(this);
+        mCardsView.setAdapter(mAdapter);
         mCardsView.setOnItemClickListener(this);
-        mCardsView.setBackgroundColor(0xFFEEEEEE);
-        mCardsView.setSelector(new ColorDrawable(Color.TRANSPARENT));
-        mCardsView.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
+        mCardsView.setDividerHeight(0);
+        SwipeDismissList swipeList = new SwipeDismissList(mCardsView, this, SwipeDismissList.UndoMode.SINGLE_UNDO);
 
 		// Registers receiver for download and import
 		IntentFilter intentFilter = new IntentFilter();
@@ -123,15 +122,13 @@ public class StartActivity extends ActionBarActivity implements AdapterView.OnIt
 		service = new Intent(this, BackgroundService.class);
 		this.startService(service);
 
-
-
 		// Setup the navigation drawer
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
 
         // Set the adapter for the list view
         mDrawerList.setAdapter(new SideNavigationAdapter(this));
-        mDrawerList.setBackgroundColor(0xFFEEEEEE);
+
         // Set the list's click listener
         mDrawerList.setOnItemClickListener(this);
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
@@ -159,8 +156,6 @@ public class StartActivity extends ActionBarActivity implements AdapterView.OnIt
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
-
-
 	}
 
 	@Override
@@ -231,6 +226,9 @@ public class StartActivity extends ActionBarActivity implements AdapterView.OnIt
         }
     }
 
+    /**
+     * Handle refresh request
+     * */
     @Override
     public void onRefresh() {
         final Handler handler = new Handler();
@@ -238,15 +236,29 @@ public class StartActivity extends ActionBarActivity implements AdapterView.OnIt
             @Override
             public void run() {
                 CardManager.update(StartActivity.this);
-
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        mCardsView.setAdapter(new CardsAdapter(StartActivity.this));
+                        mAdapter.notifyDataSetChanged();
                         mSwipeLayout.setRefreshing(false);
                     }
                 });
             }
         }).start();
+    }
+
+    /**
+    * Handle swipe to dismiss events
+    * */
+    @Override
+    public SwipeDismissList.Undoable onDismiss(AbsListView listView, final int position) {
+        // Delete the item from adapter
+        final Card itemToDelete = mAdapter.remove(position);
+        return new SwipeDismissList.Undoable() {
+            public void undo() {
+                // Return the item at its previous position again
+                mAdapter.insert(position, itemToDelete);
+            }
+        };
     }
 }

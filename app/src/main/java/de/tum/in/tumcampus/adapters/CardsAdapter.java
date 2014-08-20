@@ -24,7 +24,7 @@ public class CardsAdapter extends BaseAdapter {
 
     @Override
     public Object getItem(int i) {
-        return i;
+        return CardManager.getCard(i);
     }
 
     @Override
@@ -36,5 +36,16 @@ public class CardsAdapter extends BaseAdapter {
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         return CardManager.getCard(i).getView(mContext,viewGroup);
+    }
+
+    public Card remove(int position) {
+        final Card c = CardManager.remove(position);
+        notifyDataSetChanged();
+        return c;
+    }
+
+    public void insert(int position, Card item) {
+        CardManager.insert(position, item);
+        notifyDataSetChanged();
     }
 }

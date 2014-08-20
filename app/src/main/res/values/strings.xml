@@ -503,6 +503,10 @@
     <string name="github_link">https://github.com/TCA-Team/TumCampusApp</string>
     <string name="next_lecture">Next lecture</string>
     <string name="next_lecture_time">at</string>
+    <string name="deleted_card">Deleted Card</string>
+    <string name="taptoundo">Undo</string>
+    <string name="undoall">Undo All</string>
+    <string name="undo">Undo</string>
 
 
 </resources>

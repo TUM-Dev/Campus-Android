@@ -473,6 +473,9 @@
     <string name="next_lecture_time">um</string>
     <string name="about_tca">Über TCA</string>
     <string name="github">Mitmachen auf Github</string>
+    <string name="deleted_card">Karte gelöscht</string>
+    <string name="taptoundo">Rückgängig</string>
+    <string name="undoall">Alle Rückgängig</string>
     <!-- END Translated -->
 
 </resources>

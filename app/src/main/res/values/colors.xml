@@ -17,10 +17,20 @@
     <color name="card_pressed">#fff8f8f8</color>
     <color name="card_activated">#500099CC</color>
 
+    <!-- Used for SwipeRefreshLayout -->
     <color name="holo_blue_bright">#00ddff</color>
     <color name="holo_green_light">#99cc00</color>
     <color name="holo_orange_light">#ffbb33</color>
     <color name="holo_red_light">#ff4444</color>
 
+    <!-- Used by calendar -->
     <color name="time_entry_background">#DDff4444</color>
+
+    <!-- Used by SwipeUndo -->
+    <color name="btn_pressed">#ff33b5e5</color>
+    <color name="btn_focused">#ff0099cc</color>
+    <color name="btn_normal">#00000000</color>
+    <color name="popup_bg_color">#EE666666</color>
+    <color name="separator_color">#BBBBBB</color>
+    <color name="popup_text_color">#FFFFFF</color>
 </resources>

@@ -15,9 +15,10 @@ public class CardManager {
 
     private static List<Card> cards;
     private static List<ProvidesCard> managers;
+    private static ArrayList<Card> newCards;
 
     public static void addCard(Card card) {
-        cards.add(card);
+        newCards.add(card);
     }
 
     public static int getCardCount() {
@@ -38,7 +39,9 @@ public class CardManager {
      * 6. add an instance of the manager class to the managers list below
      * */
     public static void update(Context context) {
-        cards = new ArrayList<Card>();
+        // Use temporary array to avoid that the main thread is
+        // trying to access an empty array
+        newCards = new ArrayList<Card>();
         managers = new ArrayList<ProvidesCard>();
         managers.add(new CalendarManager(context));
         managers.add(new CafeteriaManager(context));
@@ -51,10 +54,18 @@ public class CardManager {
                 Log.e("TCA", "Error while creating card", ex);
             }
         }
-
+        cards = newCards;
     }
 
     public static void onCardClicked(Context context, int position) {
         cards.get(position).onCardClick(context);
+    }
+
+    public static Card remove(int position) {
+        return cards.remove(position);
+    }
+
+    public static void insert(int position, Card item) {
+        cards.add(position, item);
     }
 }

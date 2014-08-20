@@ -9,9 +9,6 @@ import android.widget.TextView;
 
 import de.tum.in.tumcampus.R;
 
-/**
-* Created by Florian on 17.08.2014.
-*/
 public abstract class Card {
     protected TextView mTitleView;
     protected TextView mDateView;
@@ -51,4 +48,6 @@ public abstract class Card {
     }
 
     public void onCardClick(Context context) {}
+	
+	public void discard() {}
 }

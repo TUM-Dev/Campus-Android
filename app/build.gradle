@@ -25,6 +25,7 @@ dependencies {
     compile 'com.android.support:support-v4:20.0.0'
     compile 'com.google.android.gms:play-services:5.2.08'
     compile 'com.google.code.gson:gson:2.2.4'
+    compile 'com.nineoldandroids:library:2.4.0'
     compile 'com.squareup.retrofit:retrofit:1.6.1'
     compile('org.simpleframework:simple-xml:2.7.1') {
         exclude group: 'stax', module: 'stax-api'
