@@ -13,6 +13,7 @@ import android.widget.TextView;
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.CafeteriaActivity;
 import de.tum.in.tumcampus.activities.CalendarActivity;
+import de.tum.in.tumcampus.activities.ChatRoomsSearchActivity;
 import de.tum.in.tumcampus.activities.CurriculaActivity;
 import de.tum.in.tumcampus.activities.FeedsActivity;
 import de.tum.in.tumcampus.activities.GalleryActivity;
@@ -152,8 +153,7 @@ public class SideNavigationAdapter extends BaseAdapter {
             new SideNavigationItem(R.string.opening_hours,R.drawable.unlock, OpeningHoursListActivity.class),
             new SideNavigationItem(R.string.organisations,R.drawable.chat, OrganisationActivity.class),
             new SideNavigationItem(R.string.mvv,R.drawable.show_info, TransportationActivity.class),
-            new SideNavigationItem(R.string.extra),
-            new SideNavigationItem(R.string.action_settings,R.drawable.ic_action_settings, UserPreferencesActivity.class),
+            new SideNavigationItem(R.string.chat_rooms, R.drawable.chat, ChatRoomsSearchActivity.class),
             new SideNavigationItem(R.string.tum_news,R.drawable.mail, NewsActivity.class),
     };
 
