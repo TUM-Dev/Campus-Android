@@ -3,6 +3,8 @@ package de.tum.in.tumcampus.cards;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.text.format.DateUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,11 +21,11 @@ import de.tum.in.tumcampus.activities.RoomfinderActivity;
 import de.tum.in.tumcampus.models.Tuition;
 import de.tum.in.tumcampus.models.managers.CardManager;
 
-/**
- * Created by Florian on 17.08.2014.
- */
+
 public class NextLectureCard extends Card {
 
+    private static final String NEXT_LECTURE_DATE = "next_date";
+    private static final String NEXT_LECTURE_TITLE = "next_title";
     private String mTitle;
     private Date mDate;
     private String mLocation;
@@ -57,10 +59,28 @@ public class NextLectureCard extends Card {
                 }
             });
         }
-
-
-
         return mCard;
+    }
+
+    @Override
+    public void discard() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(CardManager.getContext());
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putLong(NEXT_LECTURE_DATE, mDate.getTime());
+        editor.putString(NEXT_LECTURE_TITLE, mTitle);
+        editor.commit();
+    }
+
+    @Override
+    public boolean apply() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+        long prevTime = prefs.getLong(NEXT_LECTURE_DATE, 0);
+        String prevTitle = prefs.getString(NEXT_LECTURE_TITLE, "");
+        if((mDate.getTime()==prevTime && !prevTitle.equals(mTitle)) || mDate.getTime()>prevTime) {
+            CardManager.addCard(this);
+            return true;
+        }
+        return false;
     }
 
     public void setLecture(String title, String date, String loc) {

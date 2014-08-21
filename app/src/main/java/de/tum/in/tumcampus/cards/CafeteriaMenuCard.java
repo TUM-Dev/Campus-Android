@@ -20,13 +20,13 @@ import de.tum.in.tumcampus.activities.CafeteriaDetailsActivity;
 import de.tum.in.tumcampus.auxiliary.CafetariaPrices;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.models.CafeteriaMenu;
+import de.tum.in.tumcampus.models.managers.CardManager;
 
 import static de.tum.in.tumcampus.models.managers.CardManager.CARD_CAFETERIA;
 
-/**
-* Created by Florian on 17.08.2014.
-*/
+
 public class CafeteriaMenuCard extends Card {
+    private static final String CAFETERIA_DATE = "cafeteria_date";
     private String mCafeteriaId;
     private String mCafeteriaName;
     private List<CafeteriaMenu> mMenus;
@@ -129,5 +129,24 @@ public class CafeteriaMenuCard extends Card {
         i.putExtra(Const.CAFETERIA_ID, mCafeteriaId);
         i.putExtra(Const.CAFETERIA_NAME, mCafeteriaName);
         context.startActivity(i);
+    }
+
+    @Override
+    public void discard() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(CardManager.getContext());
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putLong(CAFETERIA_DATE, mDate.getTime());
+        editor.commit();
+    }
+
+    @Override
+    public boolean apply() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(CardManager.getContext());
+        long prevDate = prefs.getLong(CAFETERIA_DATE,0);
+        if(prevDate<mDate.getTime()) {
+            CardManager.addCard(this);
+            return true;
+        }
+        return false;
     }
 }

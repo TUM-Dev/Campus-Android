@@ -24,8 +24,7 @@ public class TuitionFeeManager implements ProvidesCard {
             tuitionList = serializer.read(TuitionList.class, rawResp);
             TuitionFeesCard card = new TuitionFeesCard();
             card.setTuition(tuitionList.getTuitions().get(0));
-            //TODO: Only add if status has changed
-            CardManager.addCard(card);
+            card.apply();
         } catch (Exception e) {
             e.printStackTrace();
         }

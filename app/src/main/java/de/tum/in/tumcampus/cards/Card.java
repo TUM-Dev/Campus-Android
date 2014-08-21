@@ -15,9 +15,11 @@ public abstract class Card {
     protected View mCard;
     protected LinearLayout mLinearLayout;
     protected LayoutInflater mInflater;
+    protected Context mContext;
 
     public abstract int getTyp();
     public View getView(Context context, ViewGroup parent) {
+        mContext = context;
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mCard = mInflater.inflate(R.layout.card_item, parent, false);
         mLinearLayout = (LinearLayout) mCard.findViewById(R.id.card_view);
@@ -49,5 +51,13 @@ public abstract class Card {
 
     public void onCardClick(Context context) {}
 	
-	public void discard() {}
+	public abstract void discard();
+
+    /**
+     * Must be called after information has been set
+     * Adds the card to CardManager if not dismissed before
+     *
+     * @return Returns true if it has added the card, false otherwise
+     * */
+    public abstract boolean apply();
 }

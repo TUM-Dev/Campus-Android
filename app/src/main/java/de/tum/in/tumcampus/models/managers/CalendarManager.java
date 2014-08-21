@@ -168,7 +168,7 @@ public class CalendarManager implements ProvidesCard {
         if (cur.moveToFirst()) {
             NextLectureCard card = new NextLectureCard();
             card.setLecture(cur.getString(0), cur.getString(1), cur.getString(2));
-            CardManager.addCard(card);
+            card.apply(); //TODO: if returnd false present next available
         }
         cur.close();
     }

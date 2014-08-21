@@ -208,7 +208,6 @@ public class CafeteriaManager implements ProvidesCard {
             menus.add(menu);
         } while(cursorCafeteriaMenu.moveToNext());
         card.setCardMenus(cafeteriaId, cafeteriaName, dateStr, menus);
-
-        addCard(card);
+        card.apply();
     }
 }

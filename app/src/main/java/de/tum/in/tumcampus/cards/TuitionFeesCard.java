@@ -1,17 +1,19 @@
 package de.tum.in.tumcampus.cards;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.ViewGroup;
 
 import de.tum.in.tumcampus.models.Tuition;
 import de.tum.in.tumcampus.models.managers.CardManager;
 
-/**
-* Created by Florian on 17.08.2014.
-*/
+
 public class TuitionFeesCard extends Card {
 
+    private static final String LAST_FEE_FRIST = "fee_frist";
+    private static final String LAST_FEE_SOLL = "fee_soll";
     private Tuition mTuition;
 
     @Override
@@ -33,6 +35,27 @@ public class TuitionFeesCard extends Card {
         }
 
         return mCard;
+    }
+
+    @Override
+    public void discard() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(LAST_FEE_FRIST, mTuition.getFrist());
+        editor.putString(LAST_FEE_SOLL, mTuition.getSoll());
+        editor.commit();
+    }
+
+    @Override
+    public boolean apply() { //TODO: Rethink
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(CardManager.getContext());
+        String prevFrist = prefs.getString(LAST_FEE_FRIST, "");
+        String prevSoll = prefs.getString(LAST_FEE_SOLL, mTuition.getSoll());
+        if(prevFrist.compareTo(mTuition.getFrist())<0 || prevSoll.compareTo(mTuition.getSoll())>0) {
+            CardManager.addCard(this);
+            return true;
+        }
+        return false;
     }
 
     public void setTuition(Tuition tuition) {
