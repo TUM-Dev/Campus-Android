@@ -22,6 +22,7 @@ import de.tum.in.tumcampus.activities.LecturesPersonalActivity;
 import de.tum.in.tumcampus.activities.NewsActivity;
 import de.tum.in.tumcampus.activities.OpeningHoursListActivity;
 import de.tum.in.tumcampus.activities.OrganisationActivity;
+import de.tum.in.tumcampus.activities.PersonsSearchActivity;
 import de.tum.in.tumcampus.activities.PlansActivity;
 import de.tum.in.tumcampus.activities.RoomfinderActivity;
 import de.tum.in.tumcampus.activities.TransportationActivity;
@@ -139,7 +140,7 @@ public class SideNavigationAdapter extends BaseAdapter {
             new SideNavigationItem(R.string.my_tum),
             new SideNavigationItem(R.string.schedule,R.drawable.calendar, CalendarActivity.class),
             new SideNavigationItem(R.string.my_lectures,R.drawable.calculator, LecturesPersonalActivity.class),
-            //new SideNavigationItem(R.string.my_grades,R.drawable.chart, GradesActivity.class),
+            new SideNavigationItem(R.string.my_grades,R.drawable.chart, GradesActivity.class),
             new SideNavigationItem(R.string.tuition_fees,R.drawable.finance, TuitionFeesActivity.class),
             new SideNavigationItem(R.string.tum_common),
             new SideNavigationItem(R.string.menues,R.drawable.shopping_cart, CafeteriaActivity.class),
@@ -147,9 +148,9 @@ public class SideNavigationAdapter extends BaseAdapter {
             new SideNavigationItem(R.string.study_plans,R.drawable.documents, CurriculaActivity.class),
             //new SideNavigationItem(R.string.events,R.drawable.camera, EventsActivity.class),
             //new SideNavigationItem(R.string.gallery,R.drawable.pictures, GalleryActivity.class),
-            //new SideNavigationItem(R.string.person_search,R.drawable.users, PersonsSearchActivity.class),
+            new SideNavigationItem(R.string.person_search,R.drawable.users, PersonsSearchActivity.class),
             new SideNavigationItem(R.string.plans,R.drawable.web, PlansActivity.class),
-            //new SideNavigationItem(R.string.roomfinder,R.drawable.home, RoomfinderActivity.class),
+            new SideNavigationItem(R.string.roomfinder,R.drawable.home, RoomfinderActivity.class),
             new SideNavigationItem(R.string.opening_hours,R.drawable.unlock, OpeningHoursListActivity.class),
             new SideNavigationItem(R.string.organisations,R.drawable.chat, OrganisationActivity.class),
             new SideNavigationItem(R.string.mvv,R.drawable.show_info, TransportationActivity.class),
