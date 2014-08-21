@@ -142,7 +142,7 @@ public class RoomfinderActivity extends ActivityForSearching implements OnEditor
     }
 
     private void handleIntent(Intent intent) {
-        if (intent != null && intent.getAction().equals(Intent.ACTION_SEARCH)) {
+        if (intent != null && intent.getAction()!= null && intent.getAction().equals(Intent.ACTION_SEARCH)) {
             //Get the requested room
             String query = intent.getStringExtra(SearchManager.QUERY);
 
