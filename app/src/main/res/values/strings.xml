@@ -507,6 +507,7 @@
     <string name="taptoundo">Undo</string>
     <string name="undoall">Undo All</string>
     <string name="undo">Undo</string>
+    <string name="no_stored_search_requests">No stored search requests</string>
 
 
 </resources>
