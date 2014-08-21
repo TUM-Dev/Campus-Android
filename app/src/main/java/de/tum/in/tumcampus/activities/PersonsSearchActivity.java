@@ -25,6 +25,7 @@ import android.widget.Toast;
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.generic.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampus.adapters.PersonListAdapter;
+import de.tum.in.tumcampus.auxiliary.ImplicitCounter;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.Person;
 import de.tum.in.tumcampus.models.PersonList;
@@ -115,7 +116,7 @@ public class PersonsSearchActivity extends ActivityForAccessingTumOnline
 		//Counting the number of times that the user used this activity for intelligent reordering 
 				SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
 				if (sharedPrefs.getBoolean("implicitly_id", true)){
-						ImplicitCounter.Counter("person_search_id",getApplicationContext());
+						ImplicitCounter.Counter("person_search_id", getApplicationContext());
 				}
 	}
 

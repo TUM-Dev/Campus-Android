@@ -1,6 +1,5 @@
 package de.tum.in.tumcampus.activities;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -15,14 +14,12 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.Spinner;
+
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.generic.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampus.adapters.LecturesSearchListAdapter;
 import de.tum.in.tumcampus.auxiliary.Const;
+import de.tum.in.tumcampus.auxiliary.ImplicitCounter;
 import de.tum.in.tumcampus.models.LecturesSearchRow;
 import de.tum.in.tumcampus.models.LecturesSearchRowSet;
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
@@ -68,7 +65,7 @@ public class LecturesPersonalActivity extends ActivityForAccessingTumOnline {
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         if (sharedPrefs.getBoolean("implicitly_id", true))
         {
-            ImplicitCounter.Counter("my_lectures_id",getApplicationContext());
+            ImplicitCounter.Counter("my_lectures_id", getApplicationContext());
         }
 	}
 

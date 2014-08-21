@@ -13,6 +13,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.adapters.StartListAdapter;
+import de.tum.in.tumcampus.auxiliary.ImplicitCounter;
 import de.tum.in.tumcampus.auxiliary.ListMenuEntry;
 
 /**
@@ -27,7 +28,7 @@ public class PlansActivity extends ActionBarActivity implements OnItemClickListe
 		//Counting the number of times that the user used this activity for intelligent reordering 
 		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
 		if (sharedPrefs.getBoolean("implicitly_id", true)){
-				ImplicitCounter.Counter("plans_id",getApplicationContext());
+				ImplicitCounter.Counter("plans_id", getApplicationContext());
 		}
 
 		ListView list = (ListView) findViewById(R.id.activity_plans_list_view);

@@ -31,6 +31,7 @@ import de.tum.in.tumcampus.activities.generic.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampus.adapters.ExamListAdapter;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.Dialogs;
+import de.tum.in.tumcampus.auxiliary.ImplicitCounter;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.Exam;
 import de.tum.in.tumcampus.models.ExamList;
@@ -318,7 +319,7 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
 		if (sharedPrefs.getBoolean("implicitly_id", true))
 		{
-				ImplicitCounter.Counter("my_grades_id",getApplicationContext());
+				ImplicitCounter.Counter("my_grades_id", getApplicationContext());
 		}
 	}
 

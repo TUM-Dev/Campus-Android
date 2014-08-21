@@ -13,6 +13,7 @@ import android.widget.TextView;
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.generic.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampus.auxiliary.Const;
+import de.tum.in.tumcampus.auxiliary.ImplicitCounter;
 import de.tum.in.tumcampus.models.TuitionList;
 import de.tum.in.tumcampus.tumonline.TUMOnlineRequestFetchListener;
 
@@ -51,7 +52,7 @@ public class TuitionFeesActivity extends ActivityForAccessingTumOnline
 		//Counting the number of times that the user used this activity for intelligent reordering 
 		sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
 		if (sharedPrefs.getBoolean("implicitly_id", true)){
-				ImplicitCounter.Counter("tuition_fees_id",getApplicationContext());
+				ImplicitCounter.Counter("tuition_fees_id", getApplicationContext());
 		}
 	}
 

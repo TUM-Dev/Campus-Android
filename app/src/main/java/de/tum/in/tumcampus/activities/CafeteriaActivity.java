@@ -15,6 +15,7 @@ import android.widget.SimpleCursorAdapter;
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.generic.ActivityForDownloadingExternal;
 import de.tum.in.tumcampus.auxiliary.Const;
+import de.tum.in.tumcampus.auxiliary.ImplicitCounter;
 import de.tum.in.tumcampus.models.managers.CafeteriaManager;
 
 /**

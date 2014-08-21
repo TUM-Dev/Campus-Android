@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 import de.tum.in.tumcampus.R;
+import de.tum.in.tumcampus.auxiliary.ImplicitCounter;
 
 /**
  * Provides Information about this app and all contributors
@@ -46,7 +47,7 @@ public class InformationActivity extends ActionBarActivity {
 		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
 		if (sharedPrefs.getBoolean("implicitly_id", true))
 			{
-				ImplicitCounter.Counter("information_id",getApplicationContext());
+				ImplicitCounter.Counter("information_id", getApplicationContext());
 			}
 	}
 

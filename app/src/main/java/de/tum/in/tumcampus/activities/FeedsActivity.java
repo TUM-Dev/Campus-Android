@@ -23,6 +23,7 @@ import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.auxiliary.Const;
+import de.tum.in.tumcampus.auxiliary.ImplicitCounter;
 import de.tum.in.tumcampus.models.Feed;
 import de.tum.in.tumcampus.models.managers.FeedManager;
 
@@ -50,7 +51,7 @@ public class FeedsActivity extends ActionBarActivity implements OnItemClickListe
 		//Counting the number of times that the user used this activity for intelligent reordering 
 		sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
 		if (sharedPrefs.getBoolean("implicitly_id", true)){
-				ImplicitCounter.Counter("rss_feeds_id",getApplicationContext());
+				ImplicitCounter.Counter("rss_feeds_id", getApplicationContext());
 		}
 		setContentView(R.layout.activity_feeds);
 

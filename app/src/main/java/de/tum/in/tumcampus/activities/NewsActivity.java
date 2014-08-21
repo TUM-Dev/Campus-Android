@@ -20,6 +20,7 @@ import android.widget.Toast;
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.generic.ActivityForDownloadingExternal;
 import de.tum.in.tumcampus.auxiliary.Const;
+import de.tum.in.tumcampus.auxiliary.ImplicitCounter;
 import de.tum.in.tumcampus.models.managers.NewsManager;
 
 /**
@@ -52,7 +53,7 @@ public class NewsActivity extends ActivityForDownloadingExternal implements
 		//Counting the number of times that the user used this activity for intelligent reordering 
 		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
 		if (sharedPrefs.getBoolean("implicitly_id", true)){
-								ImplicitCounter.Counter("tum_news_id",getApplicationContext());
+								ImplicitCounter.Counter("tum_news_id", getApplicationContext());
 		}
 	}
 

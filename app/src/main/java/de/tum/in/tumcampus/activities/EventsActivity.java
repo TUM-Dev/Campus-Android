@@ -8,6 +8,7 @@ import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.generic.ActivityForDownloadingExternal;
 import de.tum.in.tumcampus.adapters.EventsSectionsPagerAdapter;
 import de.tum.in.tumcampus.auxiliary.Const;
+import de.tum.in.tumcampus.auxiliary.ImplicitCounter;
 
 /**
  * Displays Events which are fetched from Facebook
@@ -29,7 +30,7 @@ public class EventsActivity extends ActivityForDownloadingExternal {
 		super.onCreate(savedInstanceState);
 		sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
 		if (sharedPrefs.getBoolean("implicitly_id", true)){
-			ImplicitCounter.Counter("events_id",getApplicationContext());
+			ImplicitCounter.Counter("events_id", getApplicationContext());
 		}
 		// Request a non-forced update on startup
 		super.requestDownload(false);

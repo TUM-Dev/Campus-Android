@@ -17,6 +17,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import de.tum.in.tumcampus.R;
+import de.tum.in.tumcampus.auxiliary.ImplicitCounter;
 
 /**
  * Activity to fetch and display the curricula of different study programs.

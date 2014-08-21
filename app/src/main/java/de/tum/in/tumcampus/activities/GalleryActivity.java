@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.view.ViewPager;
 import de.tum.in.tumcampus.R;
-import de.tum.in.tumcampus.activities.ImplicitCounter;
+import de.tum.in.tumcampus.auxiliary.ImplicitCounter;
 import de.tum.in.tumcampus.activities.generic.ActivityForDownloadingExternal;
 import de.tum.in.tumcampus.adapters.GallerySectionsPagerAdapter;
 import de.tum.in.tumcampus.auxiliary.Const;

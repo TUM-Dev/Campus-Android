@@ -15,6 +15,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
 
+import de.tum.in.tumcampus.auxiliary.ImplicitCounter;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;

@@ -37,6 +37,7 @@ import de.tum.in.tumcampus.adapters.CalendarSectionsPagerAdapter;
 import de.tum.in.tumcampus.auxiliary.CalendarMapper;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.Dialogs;
+import de.tum.in.tumcampus.auxiliary.ImplicitCounter;
 import de.tum.in.tumcampus.models.managers.CalendarManager;
 
 /**

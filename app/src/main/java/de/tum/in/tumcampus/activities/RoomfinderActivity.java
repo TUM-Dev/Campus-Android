@@ -4,27 +4,23 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import android.app.SearchManager;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.SearchRecentSuggestions;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.SearchView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.generic.ActivityForSearching;
 import de.tum.in.tumcampus.adapters.RoomFinderListAdapter;
+import de.tum.in.tumcampus.auxiliary.ImplicitCounter;
 import de.tum.in.tumcampus.auxiliary.RoomFinderSuggestionProvider;
 import de.tum.in.tumcampus.tumonline.TUMRoomFinderRequest;
 import de.tum.in.tumcampus.tumonline.TUMRoomFinderRequestFetchListener;

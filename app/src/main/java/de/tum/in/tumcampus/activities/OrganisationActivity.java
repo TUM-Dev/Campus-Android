@@ -33,6 +33,7 @@ import de.tum.in.tumcampus.activities.generic.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampus.adapters.OrgItemListAdapter;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.FileUtils;
+import de.tum.in.tumcampus.auxiliary.ImplicitCounter;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.OrgItem;
 import de.tum.in.tumcampus.models.OrgItemList;
@@ -302,7 +303,7 @@ public class OrganisationActivity extends ActivityForAccessingTumOnline
 		//Counting the number of times that the user used this activity for intelligent reordering 
 		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
 		if (sharedPrefs.getBoolean("implicitly_id", true)){
-				ImplicitCounter.Counter("organisations_id",getApplicationContext());
+				ImplicitCounter.Counter("organisations_id", getApplicationContext());
 		}
 
 		// list of organizations

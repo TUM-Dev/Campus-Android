@@ -7,6 +7,7 @@ import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 
 import de.tum.in.tumcampus.R;
+import de.tum.in.tumcampus.auxiliary.ImplicitCounter;
 import de.tum.in.tumcampus.fragments.OpeningHoursDetailFragment;
 import de.tum.in.tumcampus.fragments.OpeningHoursListFragment;
 
@@ -43,7 +44,7 @@ public class OpeningHoursListActivity extends ActionBarActivity implements
 		//Counting the number of times that the user used this activity for intelligent reordering 
 		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
 		if (sharedPrefs.getBoolean("implicitly_id", true)){
-						ImplicitCounter.Counter("opening_hours_id",getApplicationContext());
+						ImplicitCounter.Counter("opening_hours_id", getApplicationContext());
 		}
 		if (findViewById(R.id.item_detail_container) != null) {
 			// The detail container view will be present only in the
