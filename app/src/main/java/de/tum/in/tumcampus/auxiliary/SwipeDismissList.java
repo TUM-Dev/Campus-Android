@@ -27,7 +27,9 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
@@ -89,7 +91,7 @@ public final class SwipeDismissList implements View.OnTouchListener {
 	private TextView mUndoText;
 	private Button mUndoButton;
 
-	private int mAutoHideDelay = 5000;
+	private int mAutoHideDelay = 4000;
 	private String mDeleteString = "Item deleted";
 	private String mDeleteMultipleString = "%d items deleted";
 	private boolean mTouchBeforeAutoHide = true;
@@ -106,7 +108,7 @@ public final class SwipeDismissList implements View.OnTouchListener {
 		 * the previous deletion.
 		 */
 		SINGLE_UNDO,
-		
+
 		/**
 		 * Give the user the possibility to undo multiple deletions one by one.
 		 * Every click on Undo will undo the previous deleted item. Undos will be
@@ -127,9 +129,8 @@ public final class SwipeDismissList implements View.OnTouchListener {
 	}
 
 	/**
-	 * The callback interface used by {@link SwipeDismissListViewTouchListener}
-	 * to inform its client about a successful dismissal of one or more list
-	 * item positions.
+	 * The callback interface used to inform the client about a successful
+     * dismissal of one or more list item positions.
 	 */
 	public interface OnDismissCallback {
 
@@ -145,7 +146,7 @@ public final class SwipeDismissList implements View.OnTouchListener {
 
 	/**
 	 * An implementation of this abstract class must be returned by the 
-	 * {@link de.tum.in.tumcampus.auxiliary.SwipeDismissList.OnDismissCallback#onDismiss(android.widget.ListView, int)} method,
+	 * {@link de.tum.in.tumcampus.auxiliary.SwipeDismissList.OnDismissCallback#onDismiss(android.widget.AbsListView, int)} method,
 	 * if the user should be able to undo that dismiss. If the action will be undone
 	 * by the user {@link #undo()} will be called. That method should undo the previous
 	 * deletion of the item and add it back to the adapter. Read the README file for
@@ -178,16 +179,10 @@ public final class SwipeDismissList implements View.OnTouchListener {
 		
 	}
 
-	/**
-	 * Constructs a new swipe-to-dismiss touch listener for the given list view.
-	 *
-	 * @param listView The list view whose items should be dismissable.
-	 * @param callback The callback to trigger when the user has indicated that
-	 * she would like to dismiss one or more list items.
-	 */
-	public SwipeDismissList(AbsListView listView, OnDismissCallback callback) {
-		this(listView, callback, UndoMode.SINGLE_UNDO);
-	}
+
+    public interface SwipeDismissDiscardable {
+        public boolean isDismissable(int pos);
+    }
 
 	/**
 	 * Constructs a new swipe-to-dismiss touch listener for the given list view.
@@ -297,7 +292,7 @@ public final class SwipeDismissList implements View.OnTouchListener {
 	 * {@link de.tum.in.tumcampus.auxiliary.SwipeDismissList.UndoMode#MULTI_UNDO} or {@link de.tum.in.tumcampus.auxiliary.SwipeDismissList.UndoMode#COLLAPSED_UNDO} and
 	 * multiple deletions has been stored for undo. If this string contains
 	 * one {@code %d} inside, this will be filled by the numbers of stored undos.
-	 * 
+	 *
 	 * @param msg The string shown in the undo popup for multiple undos.
 	 */
 	public void setUndoMultipleString(String msg) {
@@ -325,13 +320,20 @@ public final class SwipeDismissList implements View.OnTouchListener {
         mUndoPopup.dismiss();
     }
 
+    /**
+     * Clears the undo actions list without discarding
+     */
+    public void cancelUndo() {
+        mUndoActions.clear();
+        mUndoPopup.dismiss();
+    }
+
 	/**
 	 * Returns an {@link android.widget.AbsListView.OnScrollListener} to be
 	 * added to the {@link android.widget.ListView} using
 	 * {@link android.widget.ListView#setOnScrollListener(android.widget.AbsListView.OnScrollListener)}.
 	 * If a scroll listener is already assigned, the caller should still pass
-	 * scroll changes through to this listener. This will ensure that this
-	 * {@link SwipeDismissListViewTouchListener} is paused during list view
+	 * scroll changes through to this listener. This will ensure that this is paused during list view
 	 * scrolling.</p>
 	 */
 	private AbsListView.OnScrollListener makeScrollListener() {
@@ -371,7 +373,8 @@ public final class SwipeDismissList implements View.OnTouchListener {
 				int x = (int) motionEvent.getRawX() - listViewCoords[0];
 				int y = (int) motionEvent.getRawY() - listViewCoords[1];
 				View child;
-				for (int i = 0; i < childCount; i++) {
+                int i;
+				for (i = 0; i < childCount; i++) {
 					child = mListView.getChildAt(i);
 					child.getHitRect(rect);
 					if (rect.contains(x, y)) {
@@ -379,6 +382,15 @@ public final class SwipeDismissList implements View.OnTouchListener {
 						break;
 					}
 				}
+
+                // Check if item is dismissable
+                if(mDownView != null) {
+                    ListAdapter adapter = mListView.getAdapter();
+                    if(adapter instanceof SwipeDismissDiscardable) {
+                        if(!((SwipeDismissDiscardable) adapter).isDismissable(i))
+                            mDownView = null;
+                    }
+                }
 
 				if (mDownView != null) {
 					mDownX = motionEvent.getRawX();
@@ -407,8 +419,7 @@ public final class SwipeDismissList implements View.OnTouchListener {
 					dismiss = true;
 					dismissRight = deltaX > 0;
 				} else if (mMinFlingVelocity <= velocityX && velocityX <= mMaxFlingVelocity
-					&& velocityY < velocityX && mSwiping && isDirectionValid(mVelocityTracker.getXVelocity())
-					&& deltaX >= mViewWidth * 0.2f) {
+					&& velocityY < velocityX && mSwiping && deltaX >= mViewWidth * 0.2f) {
 					dismiss = true;
 					dismissRight = mVelocityTracker.getXVelocity() > 0;
 				}

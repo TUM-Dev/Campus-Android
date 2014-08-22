@@ -160,6 +160,11 @@ public class UserPreferencesActivity extends PreferenceActivity implements
                     }
                 });
 
+        CheckBoxPreference silent = (CheckBoxPreference) findPreference("silent_mode");
+        if(!new AccessTokenManager(this).hasValidAccessToken()) {
+            silent.setEnabled(false);
+        }
+
         // Open the facebook app or view in a browser when not installed
         Preference facebookPref = (Preference) findPreference("facebook");
         facebookPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {

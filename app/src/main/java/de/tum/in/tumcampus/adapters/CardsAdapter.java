@@ -6,10 +6,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
+import de.tum.in.tumcampus.auxiliary.SwipeDismissList;
 import de.tum.in.tumcampus.cards.Card;
 import de.tum.in.tumcampus.models.managers.CardManager;
 
-public class CardsAdapter extends BaseAdapter {
+public class CardsAdapter extends BaseAdapter implements SwipeDismissList.SwipeDismissDiscardable {
 
     private Context mContext;
 
@@ -47,5 +48,10 @@ public class CardsAdapter extends BaseAdapter {
     public void insert(int position, Card item) {
         CardManager.insert(position, item);
         notifyDataSetChanged();
+    }
+
+    @Override
+    public boolean isDismissable(int pos) {
+        return CardManager.getCard(pos).isDismissable();
     }
 }

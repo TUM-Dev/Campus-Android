@@ -47,13 +47,6 @@
                 android:layout_height="wrap_content"
                 android:padding="@dimen/padding_default" />
 
-            <CheckBox
-                android:id="@+id/chk_start_wizzard_on_startup"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/padding_default"
-                android:text="@string/wizzard_on_startup" />
-
         </LinearLayout>
     </ScrollView>
 

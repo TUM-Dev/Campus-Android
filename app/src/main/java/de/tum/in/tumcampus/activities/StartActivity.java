@@ -6,11 +6,9 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.StrictMode;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -36,7 +34,7 @@ import de.tum.in.tumcampus.services.SilenceService;
  * 
  * @author Sascha Moecker
  */
-public class StartActivity extends ActionBarActivity implements AdapterView.OnItemClickListener, SwipeRefreshLayout.OnRefreshListener, SwipeDismissList.OnDismissCallback {
+public class StartActivity extends ActionBarActivity implements AdapterView.OnItemClickListener, SwipeDismissList.OnDismissCallback {
 	public static final int REQ_CODE_COLOR_CHANGE = 0;
 
     private DrawerLayout mDrawerLayout;
@@ -59,9 +57,10 @@ public class StartActivity extends ActionBarActivity implements AdapterView.OnIt
 		}
 	};
     private ActionBarDrawerToggle mDrawerToggle;
-    private SwipeRefreshLayout mSwipeLayout;
+    //private SwipeRefreshLayout mSwipeLayout;
     private ListView mCardsView;
     private CardsAdapter mAdapter;
+    private SwipeDismissList mSwipeList;
 
     @Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -87,13 +86,15 @@ public class StartActivity extends ActionBarActivity implements AdapterView.OnIt
             StrictMode.setThreadPolicy(policy);
         }
 
+        // Currently causes problems when dismissing cards, and there
+        // is no card that really profits from updating
         // Set up the SwipeRefreshLayout
-        mSwipeLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
+        /*mSwipeLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
         mSwipeLayout.setOnRefreshListener(this);
         mSwipeLayout.setColorSchemeResources(R.color.holo_blue_bright,
                 R.color.holo_green_light,
                 R.color.holo_orange_light,
-                R.color.holo_red_light);
+                R.color.holo_red_light);*/
 
 		// Set up the ViewPager with the sections adapter.
         mCardsView = (ListView) findViewById(R.id.cards_view);
@@ -101,7 +102,8 @@ public class StartActivity extends ActionBarActivity implements AdapterView.OnIt
         mCardsView.setAdapter(mAdapter);
         mCardsView.setOnItemClickListener(this);
         mCardsView.setDividerHeight(0);
-        SwipeDismissList swipeList = new SwipeDismissList(mCardsView, this, SwipeDismissList.UndoMode.SINGLE_UNDO);
+        mSwipeList = new SwipeDismissList(mCardsView, this, SwipeDismissList.UndoMode.MULTI_UNDO);
+        mSwipeList.setUndoString(getString(R.string.card_dismissed));
 
 		// Registers receiver for download and import
 		IntentFilter intentFilter = new IntentFilter();
@@ -172,6 +174,13 @@ public class StartActivity extends ActionBarActivity implements AdapterView.OnIt
 		this.unregisterReceiver(this.receiver);
 	}
 
+    // Discard all pending discards, otherwise already discarded item will show up again
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mSwipeList.discardUndo();
+    }
+
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         // If the nav drawer is open, hide action items related to the content view
@@ -221,7 +230,10 @@ public class StartActivity extends ActionBarActivity implements AdapterView.OnIt
                 mDrawerLayout.closeDrawer(mDrawerList);
                 break;
             case R.id.cards_view:
-                CardManager.onCardClicked(this,position);
+                if(CardManager.onCardClicked(this,position)) {
+                    mSwipeList.cancelUndo();
+                    mAdapter.notifyDataSetChanged();
+                }
                 break;
         }
     }
@@ -229,7 +241,7 @@ public class StartActivity extends ActionBarActivity implements AdapterView.OnIt
     /**
      * Handle refresh request
      * */
-    @Override
+    /*@Override
     public void onRefresh() {
         final Handler handler = new Handler();
         new Thread(new Runnable() {
@@ -245,7 +257,7 @@ public class StartActivity extends ActionBarActivity implements AdapterView.OnIt
                 });
             }
         }).start();
-    }
+    }*/
 
     /**
     * Handle swipe to dismiss events
@@ -258,7 +270,7 @@ public class StartActivity extends ActionBarActivity implements AdapterView.OnIt
             @Override
             public void undo() {
                 // Return the item at its previous position again
-                mAdapter.insert(position, itemToDelete); //TODO extend by onReallyDeleted: there call dismiss on card
+                mAdapter.insert(position, itemToDelete);
             }
 
             @Override

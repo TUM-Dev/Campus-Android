@@ -38,13 +38,6 @@ public class WizNavCheckTokenActivity extends ActivityForAccessingTumOnline {
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.menu_activity_wizzard, menu);
-		return true;
-	}
-
-	@Override
 	public void onFetch(String rawResponse) {
 		if (rawResponse.contains("true")) {
 			startNextActivity();
@@ -53,17 +46,6 @@ public class WizNavCheckTokenActivity extends ActivityForAccessingTumOnline {
 					.show();
 		}
 		progressLayout.setVisibility(View.GONE);
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case R.id.action_exit:
-			finish();
-			return true;
-		default:
-			return super.onOptionsItemSelected(item);
-		}
 	}
 
 	@Override

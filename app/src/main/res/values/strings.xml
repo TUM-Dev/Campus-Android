@@ -63,8 +63,7 @@
 		\n8 mit Phosphat
 		\n9 mit Süßungsmitteln
 		\n10 enthält eine Phenylalaninquelle
-		\n11 mit einer Zuckerart und Süßungsmitteln
-		\n99 mit Alkohol</string>
+		\n11 mit einer Zuckerart und Süßungsmitteln</string>
     <string name="action_ingredients">Ingredients</string>
     <string name="role_summary">Your role at TUM. Either student, employee or guest.</string>
     <string name="role">Role</string>
@@ -504,10 +503,11 @@
     <string name="next_lecture">Next lecture</string>
     <string name="next_lecture_time">at</string>
     <string name="deleted_card">Deleted Card</string>
-    <string name="taptoundo">Undo</string>
     <string name="undoall">Undo All</string>
     <string name="undo">Undo</string>
     <string name="no_stored_search_requests">No stored search requests</string>
+    <string name="restore_all_cards">Restore cards</string>
+    <string name="card_dismissed">Card dismissed</string>
 
 
 </resources>

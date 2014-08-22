@@ -14,7 +14,7 @@ import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.models.managers.CardManager;
 
 public abstract class Card {
-    private static final String DISCARD_SETTINGS = "discard_settings";
+    public static final String DISCARD_SETTINGS = "discard_settings";
     protected TextView mTitleView;
     protected TextView mDateView;
     protected View mCard;
@@ -77,4 +77,8 @@ public abstract class Card {
     }
 
     protected abstract boolean apply(SharedPreferences prefs);
+
+    public boolean isDismissable() {
+        return true;
+    }
 }

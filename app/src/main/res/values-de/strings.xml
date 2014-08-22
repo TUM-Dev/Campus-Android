@@ -60,8 +60,7 @@
 		\n8 mit Phosphat
 		\n9 mit Süßungsmitteln
 		\n10 enthält eine Phenylalaninquelle
-		\n11 mit einer Zuckerart und Süßungsmitteln
-		\n99 mit Alkohol</string>
+		\n11 mit einer Zuckerart und Süßungsmitteln</string>
     <string name="action_ingredients">Inhaltsstoffe</string>
     <string name="role_summary">Deine Rolle an der TUM. Entweder Student, Mitarbeiter oder Gast.</string>
     <string name="role">Rolle</string>
@@ -474,8 +473,10 @@
     <string name="about_tca">Über TCA</string>
     <string name="github">Mitmachen auf Github</string>
     <string name="deleted_card">Karte gelöscht</string>
-    <string name="taptoundo">Rückgängig</string>
+    <string name="undo">Rückgängig</string>
     <string name="undoall">Alle Rückgängig</string>
+    <string name="restore_all_cards">Karten wiederherstellen</string>
+    <string name="card_dismissed">Karte gelöscht</string>
     <!-- END Translated -->
 
 </resources>

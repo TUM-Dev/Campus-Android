@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.adapters.CafeteriaDetailsSectionsPagerAdapter;
 import de.tum.in.tumcampus.auxiliary.Const;
+import de.tum.in.tumcampus.cards.CafeteriaMenuCard;
 
 /**
  * Lists all dishes at given cafeteria
@@ -56,8 +57,8 @@ public class CafeteriaDetailsActivity extends ActionBarActivity {
 			// numbers
 			AlertDialog alertDialog = new AlertDialog.Builder(this).create();
 			alertDialog.setTitle(R.string.action_ingredients);
-			alertDialog.setMessage(getResources().getString(
-					R.string.cafeteria_ingredients));
+			alertDialog.setMessage(CafeteriaMenuCard.menuToSpan(this,getResources().getString(
+					R.string.cafeteria_ingredients)));
 			alertDialog.setButton(
 					getResources().getString(android.R.string.ok),
 					new DialogInterface.OnClickListener() {

@@ -10,9 +10,6 @@ import android.os.Bundle;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.view.View;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -22,42 +19,11 @@ import de.tum.in.tumcampus.auxiliary.AccessTokenManager;
 import de.tum.in.tumcampus.auxiliary.Const;
 
 public class WizNavStartActivity extends WizzardActivity implements
-		OnClickListener, OnCheckedChangeListener {
+        OnClickListener {
 	private AccessTokenManager accessTokenManager = new AccessTokenManager(this);
-	private CheckBox checkBox;
 	private EditText editText;
 	private String lrzId;
 	private SharedPreferences sharedPrefs;
-
-	@Override
-	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-		Editor editor = sharedPrefs.edit();
-		editor.putBoolean(Const.HIDE_WIZZARD_ON_STARTUP, isChecked);
-		editor.commit();
-	}
-
-	@Override
-	public void onClick(DialogInterface dialog, int which) {
-		if (which == DialogInterface.BUTTON_POSITIVE) {
-			if (accessTokenManager.requestAccessToken(lrzId)) {
-				startNextActivity();
-			}
-		}
-		if (which == DialogInterface.BUTTON_NEGATIVE) {
-			startNextActivity();
-		}
-	}
-
-	public void onClickNext(View view) {
-		String lrz_id = editText.getText().toString();
-		Editor editor = sharedPrefs.edit();
-		editor.putString(Const.LRZ_ID, lrz_id);
-		editor.commit();
-
-		if (setupAccessToken()) {
-			startNextActivity();
-		}
-	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -75,12 +41,6 @@ public class WizNavStartActivity extends WizzardActivity implements
 		layout.requestFocus();
 
 		editText = (EditText) findViewById(R.id.lrd_id);
-		checkBox = (CheckBox) findViewById(R.id.chk_start_wizzard_on_startup);
-		checkBox.requestFocus();
-
-		checkBox.setOnCheckedChangeListener(this);
-		checkBox.setChecked(sharedPrefs.getBoolean(
-				Const.HIDE_WIZZARD_ON_STARTUP, true));
 
 		lrzId = sharedPrefs.getString(Const.LRZ_ID, "");
 		if (lrzId != null) {
@@ -94,29 +54,54 @@ public class WizNavStartActivity extends WizzardActivity implements
         }
 	}
 
+    public void onClickNext(View view) {
+        String lrz_id = editText.getText().toString();
+        Editor editor = sharedPrefs.edit();
+        editor.putString(Const.LRZ_ID, lrz_id);
+        editor.commit();
+
+        if (setupAccessToken()) {
+            startNextActivity();
+        }
+    }
+
+    @Override
+    public void onClickSkip(View v) {
+        finish();
+        Intent intent = new Intent(this, WizNavExtrasActivity.class);
+        startActivity(intent);
+    }
+
 	public boolean setupAccessToken() {
-		lrzId = PreferenceManager.getDefaultSharedPreferences(this).getString(
-				Const.LRZ_ID, "");
+		lrzId = PreferenceManager.getDefaultSharedPreferences(this).getString(Const.LRZ_ID, "");
 		// check if lrz could be valid?
 		if (lrzId.length() == AccessTokenManager.MIN_LRZ_LENGTH) {
 			// is access token already set?
-			String oldaccesstoken = PreferenceManager
-					.getDefaultSharedPreferences(this).getString(
-							Const.ACCESS_TOKEN, "");
-			if (oldaccesstoken.length() > 2) {
+			if (accessTokenManager.hasValidAccessToken()) {
 				// show Dialog first
 				AlertDialog.Builder builder = new AlertDialog.Builder(this);
-				builder.setMessage(this.getString(R.string.dialog_new_token))
-						.setPositiveButton(this.getString(R.string.yes), this)
-						.setNegativeButton(this.getString(R.string.no), this)
+				builder.setMessage(getString(R.string.dialog_new_token))
+						.setPositiveButton(getString(R.string.yes), this)
+						.setNegativeButton(getString(R.string.no), this)
 						.show();
 			} else {
 				return accessTokenManager.requestAccessToken(lrzId);
 			}
 		} else {
-			Toast.makeText(this, this.getString(R.string.error_lrz_wrong),
+			Toast.makeText(this, getString(R.string.error_lrz_wrong),
 					Toast.LENGTH_LONG).show();
 		}
 		return false;
 	}
+
+    @Override
+    public void onClick(DialogInterface dialog, int which) {
+        if (which == DialogInterface.BUTTON_POSITIVE) {
+            if (accessTokenManager.requestAccessToken(lrzId)) {
+                startNextActivity();
+            }
+        } else if (which == DialogInterface.BUTTON_NEGATIVE) {
+            startNextActivity();
+        }
+    }
 }

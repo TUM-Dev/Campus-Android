@@ -59,9 +59,7 @@ public class StartupActivity extends ActionBarActivity {
             // Also First run setup of id and token
             // Check the flag if user wants the wizard to open at startup
             Boolean hideWizzardOnStartup = PreferenceManager.getDefaultSharedPreferences(StartupActivity.this).getBoolean(Const.HIDE_WIZZARD_ON_STARTUP, false);
-            //Or no token is set
-            String accessToken = PreferenceManager.getDefaultSharedPreferences(StartupActivity.this).getString(Const.ACCESS_TOKEN, "");
-            if (!hideWizzardOnStartup || accessToken.length() < 2) {
+            if (!hideWizzardOnStartup) {
                 Intent intent = new Intent(StartupActivity.this, WizNavStartActivity.class);
                 startActivity(intent);
                 return null;

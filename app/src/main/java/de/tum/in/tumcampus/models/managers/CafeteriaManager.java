@@ -21,8 +21,6 @@ import de.tum.in.tumcampus.cards.CafeteriaMenuCard;
 import de.tum.in.tumcampus.models.Cafeteria;
 import de.tum.in.tumcampus.models.CafeteriaMenu;
 
-import static de.tum.in.tumcampus.models.managers.CardManager.addCard;
-
 /**
  * Cafeteria Manager, handles database stuff, external imports
  */
@@ -66,6 +64,8 @@ public class CafeteriaManager implements ProvidesCard {
 
 		// create table if needed
 		db.execSQL("CREATE TABLE IF NOT EXISTS cafeterias (id INTEGER PRIMARY KEY, name VARCHAR, address VARCHAR)");
+
+        new SyncManager(context);
 	}
 
 	/**

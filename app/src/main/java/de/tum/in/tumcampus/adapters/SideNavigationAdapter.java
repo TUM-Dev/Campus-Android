@@ -28,14 +28,17 @@ import de.tum.in.tumcampus.activities.RoomfinderActivity;
 import de.tum.in.tumcampus.activities.TransportationActivity;
 import de.tum.in.tumcampus.activities.TuitionFeesActivity;
 import de.tum.in.tumcampus.activities.UserPreferencesActivity;
+import de.tum.in.tumcampus.auxiliary.AccessTokenManager;
 
 public class SideNavigationAdapter extends BaseAdapter {
     private LayoutInflater mInflater;
     private Context mContext;
+    private final boolean mHasTUMOAccess;
 
     public SideNavigationAdapter(Context context) {
         mInflater = LayoutInflater.from(context);
         mContext = context;
+        mHasTUMOAccess = new AccessTokenManager(context).hasValidAccessToken();
     }
 
     @Override
@@ -76,6 +79,10 @@ public class SideNavigationAdapter extends BaseAdapter {
             holder.icon.setVisibility(View.VISIBLE);
             holder.icon.setImageResource(menuItems[position].getIcon());
             lay.setBackgroundColor(mContext.getResources().getColor(R.color.side_navigation_background));
+            if(menuItems[position].needsTUMO && !mHasTUMOAccess) {
+                convertView.setEnabled(false);
+                convertView.setOnClickListener(null);
+            }
         } else {
             // Check if it has an activity - if not, its a seperator
             if (item.getActivity() == null) {
@@ -93,7 +100,6 @@ public class SideNavigationAdapter extends BaseAdapter {
 
             // Remove icon
             holder.icon.setVisibility(View.GONE);
-
         }
         return convertView;
     }
@@ -108,17 +114,20 @@ public class SideNavigationAdapter extends BaseAdapter {
 
         private final int textRes;
         private final int icon;
+        private final boolean needsTUMO;
         private final Class<?> activity;
 
         public SideNavigationItem(int text) {
             icon = NO_ICON_VALUE;
             activity = null;
+            needsTUMO = false;
             textRes = text;
         }
 
-        public SideNavigationItem(int text, int sym, Class<?> activ) {
+        public SideNavigationItem(int text, int sym, boolean tumo, Class<?> activ) {
             textRes = text;
             icon = sym;
+            needsTUMO = tumo;
             activity = activ;
         }
 
@@ -138,24 +147,22 @@ public class SideNavigationAdapter extends BaseAdapter {
 
     private static final SideNavigationItem[] menuItems = {
             new SideNavigationItem(R.string.my_tum),
-            new SideNavigationItem(R.string.schedule,R.drawable.calendar, CalendarActivity.class),
-            new SideNavigationItem(R.string.my_lectures,R.drawable.calculator, LecturesPersonalActivity.class),
-            new SideNavigationItem(R.string.my_grades,R.drawable.chart, GradesActivity.class),
-            new SideNavigationItem(R.string.tuition_fees,R.drawable.finance, TuitionFeesActivity.class),
+            new SideNavigationItem(R.string.schedule,R.drawable.calendar, true, CalendarActivity.class),
+            new SideNavigationItem(R.string.my_lectures,R.drawable.calculator, true, LecturesPersonalActivity.class),
+            new SideNavigationItem(R.string.my_grades,R.drawable.chart, true, GradesActivity.class),
+            new SideNavigationItem(R.string.chat_rooms, R.drawable.chat, true, ChatRoomsSearchActivity.class),
+            new SideNavigationItem(R.string.tuition_fees,R.drawable.finance, true, TuitionFeesActivity.class),
             new SideNavigationItem(R.string.tum_common),
-            new SideNavigationItem(R.string.menues,R.drawable.shopping_cart, CafeteriaActivity.class),
-            new SideNavigationItem(R.string.rss_feeds,R.drawable.fax, FeedsActivity.class),
-            new SideNavigationItem(R.string.study_plans,R.drawable.documents, CurriculaActivity.class),
-            //new SideNavigationItem(R.string.events,R.drawable.camera, EventsActivity.class),
-            //new SideNavigationItem(R.string.gallery,R.drawable.pictures, GalleryActivity.class),
-            new SideNavigationItem(R.string.person_search,R.drawable.users, PersonsSearchActivity.class),
-            new SideNavigationItem(R.string.plans,R.drawable.web, PlansActivity.class),
-            new SideNavigationItem(R.string.roomfinder,R.drawable.home, RoomfinderActivity.class),
-            new SideNavigationItem(R.string.opening_hours,R.drawable.unlock, OpeningHoursListActivity.class),
-            new SideNavigationItem(R.string.organisations,R.drawable.chat, OrganisationActivity.class),
-            new SideNavigationItem(R.string.mvv,R.drawable.show_info, TransportationActivity.class),
-            new SideNavigationItem(R.string.chat_rooms, R.drawable.chat, ChatRoomsSearchActivity.class),
-            new SideNavigationItem(R.string.tum_news,R.drawable.mail, NewsActivity.class),
+            new SideNavigationItem(R.string.menues,R.drawable.shopping_cart, false, CafeteriaActivity.class),
+            new SideNavigationItem(R.string.rss_feeds,R.drawable.fax, false, FeedsActivity.class),
+            new SideNavigationItem(R.string.study_plans,R.drawable.documents, false, CurriculaActivity.class),
+            new SideNavigationItem(R.string.person_search,R.drawable.users, true, PersonsSearchActivity.class),
+            new SideNavigationItem(R.string.plans,R.drawable.web, false, PlansActivity.class),
+            new SideNavigationItem(R.string.roomfinder,R.drawable.home, false, RoomfinderActivity.class),
+            new SideNavigationItem(R.string.opening_hours,R.drawable.unlock, false, OpeningHoursListActivity.class),
+            new SideNavigationItem(R.string.organisations,R.drawable.chat, true, OrganisationActivity.class),
+            new SideNavigationItem(R.string.mvv,R.drawable.show_info, false, TransportationActivity.class),
+            new SideNavigationItem(R.string.tum_news,R.drawable.mail, false, NewsActivity.class),
     };
 
 }

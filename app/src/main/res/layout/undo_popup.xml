@@ -4,6 +4,7 @@
 		android:layout_height="fill_parent" 
 		android:orientation="horizontal"
 		android:background="@drawable/popup_bg"
+        android:paddingLeft="8dp"
 		android:paddingRight="8dp"
 		android:gravity="center">
 	<TextView android:id="@+id/text"
@@ -27,7 +28,8 @@
 			android:background="@drawable/undo_btn_bg"
 			android:drawableLeft="@drawable/ic_undo"
 			android:layout_weight="0"
-			android:paddingRight="8dp"
+			android:paddingLeft="8dp"
+            android:paddingRight="8dp"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"/>
 </LinearLayout>

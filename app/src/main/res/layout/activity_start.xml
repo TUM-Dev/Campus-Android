@@ -10,10 +10,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <android.support.v4.widget.SwipeRefreshLayout
+      <!--  <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/swipe_container"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent">-->
 
             <ListView
                 android:id="@+id/cards_view"
@@ -22,7 +22,7 @@
                 android:descendantFocusability="blocksDescendants"
                 android:dividerHeight="0dip"
                 android:listSelector="@android:color/transparent" />
-        </android.support.v4.widget.SwipeRefreshLayout>
+        <!--</android.support.v4.widget.SwipeRefreshLayout>-->
 
     </FrameLayout>
     <!-- The navigation drawer -->

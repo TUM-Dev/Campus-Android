@@ -1,22 +1,27 @@
 package de.tum.in.tumcampus.models.managers;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import de.tum.in.tumcampus.auxiliary.AccessTokenManager;
 import de.tum.in.tumcampus.cards.Card;
+import de.tum.in.tumcampus.cards.RestoreCard;
 
 public class CardManager {
     public static final int CARD_CAFETERIA = 1;
     public static final int CARD_TUITION_FEE = 2;
     public static final int CARD_NEXT_LECTURE = 3;
+    public static final int CARD_RESTORE_CARDS = 4;
 
     private static List<Card> cards;
     private static List<ProvidesCard> managers;
     private static ArrayList<Card> newCards;
     private static Context mContext;
+    private static boolean mRefresh = false;
 
     public static void addCard(Card card) {
         newCards.add(card);
@@ -31,7 +36,7 @@ public class CardManager {
     }
 
 
-    /** HOWTO ADD A CARD
+    /** HOWTO ADD A NEW CARD TYP
      * 1. let the manager class implement ProvidesCard
      * 2. Create a new class extending Card
      * 3. implement the getView method in this class
@@ -41,13 +46,19 @@ public class CardManager {
      * */
     public static void update(Context context) {
         mContext = context;
+
         // Use temporary array to avoid that the main thread is
         // trying to access an empty array
         newCards = new ArrayList<Card>();
         managers = new ArrayList<ProvidesCard>();
-        managers.add(new CalendarManager(context));
+
+        // Add those managers only if valid access token is available
+        if(new AccessTokenManager(context).hasValidAccessToken()) {
+            managers.add(new CalendarManager(context));
+            managers.add(new TuitionFeeManager());
+        }
+        // Those don't need TUMOnline access
         managers.add(new CafeteriaManager(context));
-        managers.add(new TuitionFeeManager());
 
         for(ProvidesCard manager : managers){
             try{
@@ -56,11 +67,20 @@ public class CardManager {
                 Log.e("TCA", "Error while creating card", ex);
             }
         }
+
+        // Always append the restore card at the end of our list
+        new RestoreCard().apply();
+
         cards = newCards;
     }
 
-    public static void onCardClicked(Context context, int position) {
+    public static boolean onCardClicked(Context context, int position) {
         cards.get(position).onCardClick(context);
+        if(mRefresh) {
+            mRefresh = false;
+            return true;
+        }
+        return false;
     }
 
     public static Card remove(int position) {
@@ -73,5 +93,12 @@ public class CardManager {
 
     public static Context getContext() {
         return mContext;
+    }
+
+    public static void restore() {
+        SharedPreferences prefs = CardManager.getContext().getSharedPreferences(Card.DISCARD_SETTINGS, 0);
+        prefs.edit().clear().commit();
+        update(mContext);
+        mRefresh = true;
     }
 }
