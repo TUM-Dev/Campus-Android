@@ -64,7 +64,6 @@ public class CardManager {
     }
 
     public static Card remove(int position) {
-        cards.get(position).discard();
         return cards.remove(position);
     }
 

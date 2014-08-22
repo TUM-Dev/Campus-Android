@@ -255,9 +255,15 @@ public class StartActivity extends ActionBarActivity implements AdapterView.OnIt
         // Delete the item from adapter
         final Card itemToDelete = mAdapter.remove(position);
         return new SwipeDismissList.Undoable() {
+            @Override
             public void undo() {
                 // Return the item at its previous position again
                 mAdapter.insert(position, itemToDelete); //TODO extend by onReallyDeleted: there call dismiss on card
+            }
+
+            @Override
+            public void discard() {
+                itemToDelete.discard();
             }
         };
     }
