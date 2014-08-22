@@ -1,6 +1,9 @@
 package de.tum.in.tumcampus.cards;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,8 +11,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import de.tum.in.tumcampus.R;
+import de.tum.in.tumcampus.models.managers.CardManager;
 
 public abstract class Card {
+    private static final String DISCARD_SETTINGS = "discard_settings";
     protected TextView mTitleView;
     protected TextView mDateView;
     protected View mCard;
@@ -51,7 +56,14 @@ public abstract class Card {
 
     public void onCardClick(Context context) {}
 	
-	public abstract void discard();
+	public void discard() {
+        SharedPreferences prefs = CardManager.getContext().getSharedPreferences(DISCARD_SETTINGS, 0);
+        Editor editor = prefs.edit();
+        discard(editor);
+        editor.commit();
+    }
+
+    protected abstract void discard(Editor editor);
 
     /**
      * Must be called after information has been set
@@ -59,5 +71,10 @@ public abstract class Card {
      *
      * @return Returns true if it has added the card, false otherwise
      * */
-    public abstract boolean apply();
+    public boolean apply() {
+        SharedPreferences prefs = CardManager.getContext().getSharedPreferences(DISCARD_SETTINGS, 0);
+        return apply(prefs);
+    }
+
+    protected abstract boolean apply(SharedPreferences prefs);
 }

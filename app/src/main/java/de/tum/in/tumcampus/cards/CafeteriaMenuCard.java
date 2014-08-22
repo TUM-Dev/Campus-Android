@@ -3,6 +3,7 @@ package de.tum.in.tumcampus.cards;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
 import android.text.SpannableString;
 import android.text.style.ImageSpan;
@@ -132,16 +133,12 @@ public class CafeteriaMenuCard extends Card {
     }
 
     @Override
-    public void discard() {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(CardManager.getContext());
-        SharedPreferences.Editor editor = prefs.edit();
+    public void discard(Editor editor) {
         editor.putLong(CAFETERIA_DATE, mDate.getTime());
-        editor.commit();
     }
 
     @Override
-    public boolean apply() {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(CardManager.getContext());
+    public boolean apply(SharedPreferences prefs) {
         long prevDate = prefs.getLong(CAFETERIA_DATE,0);
         if(prevDate<mDate.getTime()) {
             CardManager.addCard(this);

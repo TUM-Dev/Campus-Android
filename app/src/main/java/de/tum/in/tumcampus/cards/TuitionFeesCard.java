@@ -2,7 +2,7 @@ package de.tum.in.tumcampus.cards;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
+import android.content.SharedPreferences.Editor;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -38,17 +38,13 @@ public class TuitionFeesCard extends Card {
     }
 
     @Override
-    public void discard() {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-        SharedPreferences.Editor editor = prefs.edit();
+    public void discard(Editor editor) {
         editor.putString(LAST_FEE_FRIST, mTuition.getFrist());
         editor.putString(LAST_FEE_SOLL, mTuition.getSoll());
-        editor.commit();
     }
 
     @Override
-    public boolean apply() { //TODO: Rethink
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(CardManager.getContext());
+    public boolean apply(SharedPreferences prefs) { //TODO: Rethink
         String prevFrist = prefs.getString(LAST_FEE_FRIST, "");
         String prevSoll = prefs.getString(LAST_FEE_SOLL, mTuition.getSoll());
         if(prevFrist.compareTo(mTuition.getFrist())<0 || prevSoll.compareTo(mTuition.getSoll())>0) {
