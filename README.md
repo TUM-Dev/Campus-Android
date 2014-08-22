@@ -63,3 +63,8 @@ Weiterhin erhebt BugSense die IP-Adresse, das Herkunftsland, die Uhrzeit/Datum d
 > F: Wann gibt es ein Update?
 
 > A: Die App wird im Rahmen des Android Praktikums regelmaßig weiterentwickelt. Ein Update gibt es meist alle 6-12 Monate. Die Inhalte werden von uns sporadisch gepflegt. Wir sind weiterhin auf der Suche nach ehrenamtlichen Helfern.
+
+> F: How can I contribute?
+
+> A: Help translating https://crowdin.com/project/TUMCampus / Create a feature you think would be cool: https://github.com/TCA-Team/TumCampusApp/issues
+
