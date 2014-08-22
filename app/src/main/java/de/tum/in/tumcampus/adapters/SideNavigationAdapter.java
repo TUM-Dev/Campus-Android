@@ -10,6 +10,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.CafeteriaActivity;
 import de.tum.in.tumcampus.activities.CalendarActivity;
@@ -34,21 +36,28 @@ public class SideNavigationAdapter extends BaseAdapter {
     private LayoutInflater mInflater;
     private Context mContext;
     private final boolean mHasTUMOAccess;
+    private final ArrayList<SideNavigationItem> mVisibleMenuItems;
 
     public SideNavigationAdapter(Context context) {
         mInflater = LayoutInflater.from(context);
         mContext = context;
         mHasTUMOAccess = new AccessTokenManager(context).hasValidAccessToken();
+        mVisibleMenuItems = new ArrayList<SideNavigationItem>();
+        for(SideNavigationItem item : menuItems) {
+            if(!mHasTUMOAccess && item.needsTUMO)
+                continue;
+            mVisibleMenuItems.add(item);
+        }
     }
 
     @Override
     public int getCount() {
-        return menuItems.length;
+        return mVisibleMenuItems.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return menuItems[position];
+        return mVisibleMenuItems.get(position);
     }
 
     @Override
@@ -69,20 +78,16 @@ public class SideNavigationAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        SideNavigationItem item = menuItems[position];
-        holder.text.setText(menuItems[position].getText(mContext));
+        SideNavigationItem item = mVisibleMenuItems.get(position);
+        holder.text.setText(item.getText(mContext));
 
         LinearLayout lay = (LinearLayout) convertView.findViewById(R.id.side_navigation_item_layout);
 
         // If item has an Icon its an entry
         if (item.getIcon() != SideNavigationItem.NO_ICON_VALUE) {
             holder.icon.setVisibility(View.VISIBLE);
-            holder.icon.setImageResource(menuItems[position].getIcon());
+            holder.icon.setImageResource(item.getIcon());
             lay.setBackgroundColor(mContext.getResources().getColor(R.color.side_navigation_background));
-            if(menuItems[position].needsTUMO && !mHasTUMOAccess) {
-                convertView.setEnabled(false);
-                convertView.setOnClickListener(null);
-            }
         } else {
             // Check if it has an activity - if not, its a seperator
             if (item.getActivity() == null) {
@@ -117,10 +122,10 @@ public class SideNavigationAdapter extends BaseAdapter {
         private final boolean needsTUMO;
         private final Class<?> activity;
 
-        public SideNavigationItem(int text) {
+        public SideNavigationItem(int text, boolean tumo) {
             icon = NO_ICON_VALUE;
             activity = null;
-            needsTUMO = false;
+            needsTUMO = tumo;
             textRes = text;
         }
 
@@ -146,13 +151,13 @@ public class SideNavigationAdapter extends BaseAdapter {
     }
 
     private static final SideNavigationItem[] menuItems = {
-            new SideNavigationItem(R.string.my_tum),
+            new SideNavigationItem(R.string.my_tum, true),
             new SideNavigationItem(R.string.schedule,R.drawable.calendar, true, CalendarActivity.class),
             new SideNavigationItem(R.string.my_lectures,R.drawable.calculator, true, LecturesPersonalActivity.class),
             new SideNavigationItem(R.string.my_grades,R.drawable.chart, true, GradesActivity.class),
             new SideNavigationItem(R.string.chat_rooms, R.drawable.chat, true, ChatRoomsSearchActivity.class),
             new SideNavigationItem(R.string.tuition_fees,R.drawable.finance, true, TuitionFeesActivity.class),
-            new SideNavigationItem(R.string.tum_common),
+            new SideNavigationItem(R.string.tum_common, false),
             new SideNavigationItem(R.string.menues,R.drawable.shopping_cart, false, CafeteriaActivity.class),
             new SideNavigationItem(R.string.rss_feeds,R.drawable.fax, false, FeedsActivity.class),
             new SideNavigationItem(R.string.study_plans,R.drawable.documents, false, CurriculaActivity.class),
