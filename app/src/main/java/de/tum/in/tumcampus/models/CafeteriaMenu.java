@@ -1,7 +1,12 @@
 package de.tum.in.tumcampus.models;
 
+import android.content.Context;
+import android.text.SpannableString;
+import android.text.style.ImageSpan;
+
 import java.util.Date;
 
+import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.auxiliary.Utils;
 
 /**
@@ -72,7 +77,7 @@ public class CafeteriaMenu {
 		// this.prize = prize;
 	}
 
-	@Override
+    @Override
 	public String toString() {
 		return "id=" + this.id + " cafeteriaId=" + this.cafeteriaId + " date="
 				+ Utils.getDateString(this.date) + " typeShort="

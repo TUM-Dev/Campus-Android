@@ -18,8 +18,8 @@
     <string name="export_to_google">Export to Google</string>
     <string name="loading_longtime"><i>(This operation will take a bit longer)</i></string>
     <string name="button_skip">Skip</string>
-    <string name="background_info">Content will be fetchted once per day to keep your TUM Campus App up to date.</string>
-    <string name="background_mode">Background Mode -NOT AVAILABLE-</string>
+    <string name="background_info">Content will be fetched once per day to keep you up-to-date even if you don\'t open the app.</string>
+    <string name="background_mode">Background Mode</string>
     <string name="set_background_mode"><b>Background Mode</b>\n\nActivate or deactivate <i>Background Mode</i>. If activated, content will be fetchted once per day to keep your TUM Campus App up to date.</string>
     <string name="set_silent_mode"><b>Silent Service</b>\n\nActivate or deactivate <i>Silent Service</i>. If activated, the device will go into silent mode if a lecture appointment has been recognized.</string>
     <string name="goto_tumcampus">Go to TUM Campus App</string>
@@ -127,13 +127,13 @@
     <string name="mensa_settings_info">e.g. "Garching" to list only the dining halls in
 		Garching</string>
     <string name="silence_phone">Silent Service</string>
-    <string name="silence_phone_info">Sets you device in sielnt mode if a lectures has been recognized.</string>
+    <string name="silence_phone_info">Sets you device in silent mode if a lectures has been recognized.</string>
     <string name="debug_for_developer">for developers</string>
     <string name="debug_mode">debug mode</string>
     <string name="market">Google Play</string>
     <string name="market_info">Rate or update TUM Campus</string>
     <string name="app_management">App management</string>
-    <string name="app_management_info">Delete data or deinstall App</string>
+    <string name="app_management_info">Delete data or uninstall app</string>
     <string name="choose_mensa">Please select a university canteen.</string>
     <string name="choose_date">Choose date</string>
     <string name="choose_study_plan">Choose study plan</string>
@@ -508,6 +508,13 @@
     <string name="no_stored_search_requests">No stored search requests</string>
     <string name="restore_all_cards">Restore cards</string>
     <string name="card_dismissed">Card dismissed</string>
+    <string name="startpage">Startpage</string>
+    <string name="wear">Wearable</string>
+    <string name="card_settings_summary">Decide where to show which cards</string>
+    <string name="cards_settings">Cards</string>
+    <string name="where_appear">Where should the card appear?</string>
+    <string name="reregister_success">You are reregistered for %s!</string>
+    <string name="reregister_todo">You have to reregister until %s!</string>
 
 
 </resources>

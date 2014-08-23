@@ -230,7 +230,7 @@ public class StartActivity extends ActionBarActivity implements AdapterView.OnIt
                 mDrawerLayout.closeDrawer(mDrawerList);
                 break;
             case R.id.cards_view:
-                if(CardManager.onCardClicked(this,position)) {
+                if(CardManager.onCardClicked(position)) {
                     mSwipeList.cancelUndo();
                     mAdapter.notifyDataSetChanged();
                 }
@@ -275,7 +275,7 @@ public class StartActivity extends ActionBarActivity implements AdapterView.OnIt
 
             @Override
             public void discard() {
-                itemToDelete.discard();
+                itemToDelete.discardCard();
             }
         };
     }

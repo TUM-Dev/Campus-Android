@@ -1,48 +1,47 @@
 package de.tum.in.tumcampus.services;
 
-import org.simpleframework.xml.Serializer;
-import org.simpleframework.xml.core.Persister;
-
 import android.app.IntentService;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.app.TaskStackBuilder;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
-import android.preference.PreferenceManager;
-import android.support.v4.app.NotificationCompat;
-import de.tum.in.tumcampus.R;
-import de.tum.in.tumcampus.activities.GradesActivity;
+
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.Utils;
-import de.tum.in.tumcampus.models.ExamList;
-import de.tum.in.tumcampus.tumonline.TUMOnlineRequest;
 
-/** Service used to silence the mobile during lectures */
+/** Service used to sync data in background */
 public class BackgroundService extends IntentService {
 
-	/**
-	 * Interval in milliseconds to check for current lectures
-	 */
-	public static int CHECK_INTERVAL = 60000 * 60 * 24; // 1 Day
+	public static final String BACKGROUND_SERVICE = "BackgroundService";
 
-	public static final String Background_SERVICE = "BackgroundService";
-
-	/**
-	 * default init (run intent in new thread)
-	 */
 	public BackgroundService() {
-		super(Background_SERVICE);
+		super(BACKGROUND_SERVICE);
 	}
 
-	@SuppressWarnings("unused")
-	/**
-	 * This method should fetch the grade in order to get updates grades. It is not implemented,
-	 *  since the grade web service is under change and redevelops the grade interface.
-	 */
-	private void fetchGrades() {
+	@Override
+	public void onCreate() {
+		super.onCreate();
+		Utils.log("BackgroundService has started");
+	}
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		Utils.log("BackgroundService has stopped");
+	}
+
+	@Override
+	protected void onHandleIntent(Intent intent) {
+        // Download all from external
+        Intent service = new Intent(this, DownloadService.class);
+        service.putExtra(Const.ACTION_EXTRA, Const.DOWNLOAD_ALL_FROM_EXTERNAL);
+        service.putExtra(Const.FORCE_DOWNLOAD, false);
+        startService(service);
+	}
+
+
+    /**
+     * This method should fetch the grade in order to get updates grades. It is not implemented,
+     *  since the grade web service is under change and redevelops the grade interface.
+     */
+	/*private void fetchGrades() {
 		// fetching xml from tum online
 		TUMOnlineRequest requestHandler = new TUMOnlineRequest(Const.NOTEN,
 				getApplicationContext());
@@ -53,7 +52,6 @@ public class BackgroundService extends IntentService {
 		try {
 			examList = serializer.read(ExamList.class, rawResponse);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		// generating notification
@@ -109,41 +107,5 @@ public class BackgroundService extends IntentService {
 			editor.putInt(Const.Grade_Count, newSize);
 			editor.commit();
 		}
-	}
-
-	@Override
-	public void onCreate() {
-		super.onCreate();
-		Utils.log("BackgroundService has started");
-	}
-
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
-		Utils.log("BackgroundService has stopped");
-	}
-
-	@Override
-	protected void onHandleIntent(Intent intent) {
-		while (true) {
-			try {
-				// if background mode is enabled in settings
-				if (Utils.getSettingBool(this, Const.BACKGROUND_MODE)) {
-					Utils.log("BackgroundService enabled, updating ...");
-
-					// Download all from external
-					Intent service = new Intent(this, DownloadService.class);
-					service.putExtra(Const.ACTION_EXTRA,
-							Const.DOWNLOAD_ALL_FROM_EXTERNAL);
-					service.putExtra(Const.FORCE_DOWNLOAD, true);
-					startService(service);
-				}
-				synchronized (this) {
-					wait(CHECK_INTERVAL);
-				}
-			} catch (Exception e) {
-				Utils.log(e, "");
-			}
-		}
-	}
+	}*/
 }

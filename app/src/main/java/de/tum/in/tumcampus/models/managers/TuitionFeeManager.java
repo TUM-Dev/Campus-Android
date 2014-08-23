@@ -10,9 +10,7 @@ import de.tum.in.tumcampus.cards.TuitionFeesCard;
 import de.tum.in.tumcampus.models.TuitionList;
 import de.tum.in.tumcampus.tumonline.TUMOnlineRequest;
 
-/**
- * Created by Florian on 17.08.2014.
- */
+
 public class TuitionFeeManager implements ProvidesCard {
     @Override
     public void onRequestCard(Context context) {
@@ -20,9 +18,9 @@ public class TuitionFeeManager implements ProvidesCard {
             TUMOnlineRequest requestHandler = new TUMOnlineRequest(Const.STUDIENBEITRAGSTATUS, context);
             String rawResp = requestHandler.fetch();
             Serializer serializer = new Persister();
-            TuitionList tuitionList = null;
+            TuitionList tuitionList;
             tuitionList = serializer.read(TuitionList.class, rawResp);
-            TuitionFeesCard card = new TuitionFeesCard();
+            TuitionFeesCard card = new TuitionFeesCard(context);
             card.setTuition(tuitionList.getTuitions().get(0));
             card.apply();
         } catch (Exception e) {

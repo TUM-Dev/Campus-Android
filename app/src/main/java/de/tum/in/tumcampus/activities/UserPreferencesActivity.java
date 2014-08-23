@@ -15,14 +15,16 @@ import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceManager;
+import android.preference.PreferenceScreen;
 import android.provider.CalendarContract.Calendars;
-import android.util.Log;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.wizzard.WizNavStartActivity;
 import de.tum.in.tumcampus.auxiliary.AccessTokenManager;
 import de.tum.in.tumcampus.auxiliary.Const;
+import de.tum.in.tumcampus.auxiliary.MultiSelectListPreference;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.managers.CafeteriaManager;
 import de.tum.in.tumcampus.models.managers.CafeteriaMenuManager;
@@ -195,6 +197,12 @@ public class UserPreferencesActivity extends PreferenceActivity implements
         // Add cafeterias to preferences
         addCafeterias();
 
+        // Set summarys for card settings
+        setSummary((MultiSelectListPreference) findPreference("card_tuition_fee_setting"));
+        setSummary((MultiSelectListPreference) findPreference("card_mvv_setting"));
+        setSummary((MultiSelectListPreference) findPreference("card_next_lecture_setting"));
+        setSummary((MultiSelectListPreference) findPreference("card_cafeteria_setting"));
+
         // Register the change listener to react immediately on changes
         PreferenceManager.getDefaultSharedPreferences(this)
                 .registerOnSharedPreferenceChangeListener(this);
@@ -239,6 +247,10 @@ public class UserPreferencesActivity extends PreferenceActivity implements
             setResult(RESULT_OK, returnIntent);
         }
 
+        Preference pref = findPreference(key);
+        if(pref instanceof MultiSelectListPreference) {
+            setSummary((MultiSelectListPreference) pref);
+        }
 
         // If the silent mode was activated, start the service. This will invoke
         // the service to call onHandleIntent which checks available lectures
@@ -267,5 +279,22 @@ public class UserPreferencesActivity extends PreferenceActivity implements
             Intent main = new Intent(this, StartActivity.class);
             startActivity(main);
         }
+    }
+
+    private void setSummary(MultiSelectListPreference pref) {
+        CharSequence[] checked = pref.getCheckedValues();
+        String sum="";
+        for(CharSequence check : checked) {
+            if(!sum.isEmpty())
+                sum+=", ";
+            if(check.equals("1")) {
+                sum+=getString(R.string.startpage);
+            } else if(check.equals("2")) {
+                sum+=getString(R.string.phone);
+            } else if(check.equals("3")) {
+                sum+=getString(R.string.wear);
+            }
+        }
+        pref.setSummary(sum);
     }
 }

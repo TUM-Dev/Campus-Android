@@ -3,6 +3,7 @@ package de.tum.in.tumcampus.fragments;
 import java.util.HashMap;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -17,10 +18,9 @@ import android.widget.SimpleCursorAdapter;
 import android.widget.SimpleCursorAdapter.ViewBinder;
 import android.widget.TextView;
 import de.tum.in.tumcampus.R;
+import de.tum.in.tumcampus.activities.CafeteriaDetailsActivity;
 import de.tum.in.tumcampus.auxiliary.CafetariaPrices;
 import de.tum.in.tumcampus.auxiliary.Const;
-import de.tum.in.tumcampus.cards.CafeteriaMenuCard;
-import de.tum.in.tumcampus.models.Cafeteria;
 import de.tum.in.tumcampus.models.managers.CafeteriaMenuManager;
 import de.tum.in.tumcampus.models.managers.LocationManager;
 
@@ -107,7 +107,7 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
                     TextView menu = (TextView) view;
 
                     String m = cursor.getString(cursor.getColumnIndex("names"));
-                    menu.setText(CafeteriaMenuCard.menuToSpan(CafeteriaDetailsSectionFragment.this.getActivity(),m));
+                    menu.setText(CafeteriaDetailsActivity.menuToSpan(CafeteriaDetailsSectionFragment.this.getActivity(), m));
                     return true;
                 } else if (view.getId() == R.id.tx_price) {
 					TextView price = (TextView) view;
@@ -118,17 +118,7 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
 					sharedPrefs = PreferenceManager
 							.getDefaultSharedPreferences(activity);
 
-					HashMap<String, String> rolePrices = null;
-					String type = sharedPrefs.getString(Const.ROLE, "0");
-					if (type.equals("0")) {
-						rolePrices = CafetariaPrices.student_prices;
-					} else if (type.equals("1")) {
-						rolePrices = CafetariaPrices.employee_prices;
-					} else if (type.equals("2")) {
-						rolePrices = CafetariaPrices.guest_prices;
-					} else {
-						rolePrices = CafetariaPrices.student_prices;
-					}
+					HashMap<String, String> rolePrices = getRolePrices(getActivity());
 
 					if (rolePrices.containsKey(curKey))
 						price.setText(rolePrices.get(curKey) + " €");
@@ -147,4 +137,22 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
 		});
 		listViewMenu.setAdapter(adapterMenue);
 	}
+
+
+    public static HashMap<String, String> getRolePrices(Context context) {
+        HashMap<String, String> rolePrices;
+        SharedPreferences sharedPrefs = PreferenceManager
+                .getDefaultSharedPreferences(context);
+        String type = sharedPrefs.getString(Const.ROLE, "0");
+        if (type.equals("0")) {
+            rolePrices = CafetariaPrices.student_prices;
+        } else if (type.equals("1")) {
+            rolePrices = CafetariaPrices.employee_prices;
+        } else if (type.equals("2")) {
+            rolePrices = CafetariaPrices.guest_prices;
+        } else {
+            rolePrices = CafetariaPrices.student_prices;
+        }
+        return rolePrices;
+    }
 }

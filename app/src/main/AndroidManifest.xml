@@ -455,6 +455,16 @@
                 android:value="de.tum.in.tumcampus.activities.ChatRoomsSearchActivity" />
         </activity>
 
+        <!-- Used to reset Alarm when device has been restarted -->
+        <receiver android:name="de.tum.in.tumcampus.services.StartSyncReceiver" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name="de.tum.in.tumcampus.models.managers.CardManager$DismissHandler"
+            android:exported="false" />
         <service
             android:name="de.tum.in.tumcampus.services.DownloadService"
             android:exported="false" />

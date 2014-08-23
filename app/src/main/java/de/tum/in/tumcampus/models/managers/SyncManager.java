@@ -12,15 +12,30 @@ import de.tum.in.tumcampus.auxiliary.Utils;
  */
 public class SyncManager {
 
+    /**
+     * Database connection
+     */
+    private SQLiteDatabase db;
+
+    /**
+     * Constructor, open/create database, create table if necessary
+     *
+     * @param context Context
+     */
+    public SyncManager(Context context) {
+        db = DatabaseManager.getDb(context);
+
+        // create table if needed
+        db.execSQL("CREATE TABLE IF NOT EXISTS syncs (id VARCHAR PRIMARY KEY, lastSync VARCHAR)");
+    }
+
 	/**
 	 * Checks if a new sync is needed or if data is up-to-date
-	 * 
-	 * <pre>
+	 *
 	 * @param db Database connection
 	 * @param obj Gives class name as sync ID
 	 * @param seconds Sync period, e.g. 86400 for 1 day
 	 * @return true if sync is needed, else false
-	 * </pre>
 	 */
 	public static boolean needSync(SQLiteDatabase db, Object obj, int seconds) {
 		return needSync(db, obj.getClass().getName(), seconds);
@@ -28,13 +43,11 @@ public class SyncManager {
 
 	/**
 	 * Checks if a new sync is needed or if data is up-to-date
-	 * 
-	 * <pre>
+	 *
 	 * @param db Database connection
 	 * @param id Sync-ID (derived by originator class name)
 	 * @param seconds Sync period, e.g. 86400 for 1 day
 	 * @return true if sync is needed, else false
-	 * </pre>
 	 */
 	public static boolean needSync(SQLiteDatabase db, String id, int seconds) {
 		boolean result = true;
@@ -50,8 +63,7 @@ public class SyncManager {
 			c.close();
 		} catch (SQLiteException e) {
 			if (e.getMessage().toString().contains("no such table")) {
-				Log.w("SQULite", "Error selecting table " + "syncs"
-						+ " because it doesn't exist!");
+				Log.w("SQULite", "Error selecting table syncs because it doesn't exist!");
 				return true;
 			}
 		}
@@ -60,12 +72,10 @@ public class SyncManager {
 
 	/**
 	 * Replace or Insert a successful sync event in the database
-	 * 
-	 * <pre>
+	 *
 	 * @param db Database connection
 	 * @param obj Gives class name as sync ID
 	 * @throws Exception
-	 * </pre>
 	 */
 	public static void replaceIntoDb(SQLiteDatabase db, Object obj) {
 		replaceIntoDb(db, obj.getClass().getName());
@@ -73,11 +83,9 @@ public class SyncManager {
 
 	/**
 	 * Replace or Insert a successful sync event in the database
-	 * 
-	 * <pre>
+	 *
 	 * @param db Database connection
 	 * @param id Sync-ID (derived by originator class name)
-	 * </pre>
 	 */
 	public static void replaceIntoDb(SQLiteDatabase db, String id) {
 		Utils.log(id);
@@ -87,25 +95,6 @@ public class SyncManager {
 		}
 		db.execSQL("REPLACE INTO syncs (id, lastSync) VALUES (?, datetime())",
 				new String[] { id });
-	}
-
-	/**
-	 * Database connection
-	 */
-	private SQLiteDatabase db;
-
-	/**
-	 * Constructor, open/create database, create table if necessary
-	 * 
-	 * <pre>
-	 * @param context Context
-	 * </pre>
-	 */
-	public SyncManager(Context context) {
-		db = DatabaseManager.getDb(context);
-
-		// create table if needed
-		db.execSQL("CREATE TABLE IF NOT EXISTS syncs (id VARCHAR PRIMARY KEY, lastSync VARCHAR)");
 	}
 
 	/**

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory android:title="@string/tumonline_settings" >
+    <PreferenceCategory android:title="@string/tumonline_settings">
         <EditTextPreference
             android:key="lrz_id"
             android:summary="@string/lrz_id_detail"
@@ -12,7 +12,7 @@
             android:summary="@string/generate_tumonline_token_detail"
             android:title="@string/generate_tumonline_token" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="@string/personal_settings" >
+    <PreferenceCategory android:title="@string/personal_settings">
         <ListPreference
             android:defaultValue="0"
             android:entries="@array/roles"
@@ -20,17 +20,53 @@
             android:key="role"
             android:summary="@string/role_summary"
             android:title="@string/role" />
-        
+
         <PreferenceScreen
             android:summary="@string/mensa_summary"
-            android:title="@string/mensa_title" >
-            <PreferenceCategory 
+            android:title="@string/mensa_title">
+            <PreferenceCategory
                 android:key="my_mensa"
-                android:title="@string/my_mensa" >
+                android:title="@string/my_mensa"></PreferenceCategory>
+        </PreferenceScreen>
+
+        <PreferenceScreen
+            android:summary="@string/card_settings_summary"
+            android:title="@string/cards_settings">
+            <PreferenceCategory
+                android:key="card_settings"
+                android:title="@string/cards_settings">
+                <de.tum.in.tumcampus.auxiliary.MultiSelectListPreference
+                    android:defaultValue="@array/card_show_start_wear"
+                    android:dialogTitle="@string/where_appear"
+                    android:entries="@array/card_show"
+                    android:entryValues="@array/card_show_values"
+                    android:key="card_tuition_fee_setting"
+                    android:title="@string/tuition_fees" />
+                <de.tum.in.tumcampus.auxiliary.MultiSelectListPreference
+                    android:defaultValue="@array/card_show_start_wear"
+                    android:dialogTitle="@string/where_appear"
+                    android:entries="@array/card_show"
+                    android:entryValues="@array/card_show_values"
+                    android:key="card_mvv_setting"
+                    android:title="@string/mvv" />
+                <de.tum.in.tumcampus.auxiliary.MultiSelectListPreference
+                    android:defaultValue="@array/card_show_start_wear"
+                    android:dialogTitle="@string/where_appear"
+                    android:entries="@array/card_show"
+                    android:entryValues="@array/card_show_values"
+                    android:key="card_next_lecture_setting"
+                    android:title="@string/next_lecture" />
+                <de.tum.in.tumcampus.auxiliary.MultiSelectListPreference
+                    android:defaultValue="@array/card_show_start_wear"
+                    android:dialogTitle="@string/where_appear"
+                    android:entries="@array/card_show"
+                    android:entryValues="@array/card_show_values"
+                    android:key="card_cafeteria_setting"
+                    android:title="@string/cafeterias" />
             </PreferenceCategory>
         </PreferenceScreen>
     </PreferenceCategory>
-    <PreferenceCategory android:title="@string/extras" >
+    <PreferenceCategory android:title="@string/extras">
         <Preference
             android:key="button_wizzard"
             android:summary="@string/open_wizzard_detail"
@@ -40,13 +76,12 @@
             android:summary="@string/clear_cache_detail"
             android:title="@string/clear_cache" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="@string/services" >
+    <PreferenceCategory android:title="@string/services">
         <CheckBoxPreference
             android:key="silent_mode"
             android:summary="@string/silence_phone_info"
             android:title="@string/silence_phone" />
         <CheckBoxPreference
-            android:enabled="false"
             android:key="background_mode"
             android:summary="@string/background_info"
             android:title="@string/background_mode" />
@@ -56,27 +91,25 @@
             android:summary="@string/demo_info"
             android:title="@string/demo_mode" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="@string/debug_for_developer" >
+    <PreferenceCategory android:title="@string/debug_for_developer">
         <Preference
             android:enabled="false"
             android:summary="@string/debug_mode"
             android:title="@string/debug_mode" />
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/about_tca" >
+    <PreferenceCategory android:title="@string/about_tca">
         <Preference
             android:key="about"
             android:title="@string/information">
-            <intent android:action="de.tum.in.tumcampus.activities.InformationActivity"/>
+            <intent android:action="de.tum.in.tumcampus.activities.InformationActivity" />
         </Preference>
         <Preference
             android:key="facebook"
-            android:title="@string/facebook">
-        </Preference>
+            android:title="@string/facebook"></Preference>
         <Preference
             android:key="github"
-            android:title="@string/github">
-        </Preference>
+            android:title="@string/github"></Preference>
     </PreferenceCategory>
 
 </PreferenceScreen>

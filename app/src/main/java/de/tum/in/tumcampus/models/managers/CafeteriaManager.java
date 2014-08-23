@@ -150,20 +150,20 @@ public class CafeteriaManager implements ProvidesCard {
     // TODO: Make this more secure (really handle Exceptions) and faster
     @Override
     public void onRequestCard(Context context) {
-        try {
+        /*try {
             downloadFromExternal(true);
         } catch (Exception e) {
             e.printStackTrace();
             return;
-        }
-        CafeteriaMenuCard card = new CafeteriaMenuCard();
+        }*/
+        CafeteriaMenuCard card = new CafeteriaMenuCard(context);
         CafeteriaMenuManager cmm = new CafeteriaMenuManager(context);
-        try {
+        /*try {
             cmm.downloadFromExternal(true);
         } catch (Exception e) {
             e.printStackTrace();
             return;
-        }
+        }*/
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
 
         // Get all available cafeterias from database

@@ -1,17 +1,19 @@
 package de.tum.in.tumcampus.activities;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
+import android.text.SpannableString;
+import android.text.style.ImageSpan;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.adapters.CafeteriaDetailsSectionsPagerAdapter;
 import de.tum.in.tumcampus.auxiliary.Const;
-import de.tum.in.tumcampus.cards.CafeteriaMenuCard;
 
 /**
  * Lists all dishes at given cafeteria
@@ -57,8 +59,8 @@ public class CafeteriaDetailsActivity extends ActionBarActivity {
 			// numbers
 			AlertDialog alertDialog = new AlertDialog.Builder(this).create();
 			alertDialog.setTitle(R.string.action_ingredients);
-			alertDialog.setMessage(CafeteriaMenuCard.menuToSpan(this,getResources().getString(
-					R.string.cafeteria_ingredients)));
+			alertDialog.setMessage(menuToSpan(this, getResources().getString(
+                    R.string.cafeteria_ingredients)));
 			alertDialog.setButton(
 					getResources().getString(android.R.string.ok),
 					new DialogInterface.OnClickListener() {
@@ -73,4 +75,29 @@ public class CafeteriaDetailsActivity extends ActionBarActivity {
 		}
 		return super.onOptionsItemSelected(item);
 	}
+
+    public static SpannableString menuToSpan(Context context, String menu) {
+        int len;
+        do {
+            len = menu.length();
+            menu = menu.replaceFirst("\\(([A-Za-z0-9]+),", "($1)(");
+        } while (menu.length() > len);
+        SpannableString text = new SpannableString(menu);
+        replaceWithImg(context, menu, text, "(v)", R.drawable.meal_vegan);
+        replaceWithImg(context, menu, text, "(f)", R.drawable.meal_veggie);
+        replaceWithImg(context, menu, text, "(R)", R.drawable.meal_beef);
+        replaceWithImg(context, menu, text, "(S)", R.drawable.meal_pork);
+        replaceWithImg(context, menu, text, "(GQB)", R.drawable.ic_gqb);
+        replaceWithImg(context, menu, text, "(99)", R.drawable.meal_alcohol);
+        return text;
+    }
+
+    private static void replaceWithImg(Context context, String menu, SpannableString text, String sym, int drawable) {
+        int ind = menu.indexOf(sym);
+        while (ind >= 0) {
+            ImageSpan is = new ImageSpan(context, drawable);
+            text.setSpan(is, ind, ind + sym.length(), 0);
+            ind = menu.indexOf(sym, ind + sym.length());
+        }
+    }
 }

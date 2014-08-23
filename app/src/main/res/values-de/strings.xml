@@ -15,8 +15,8 @@
     <string name="export_to_google">Exportiere nach Google</string>
     <string name="loading_longtime"><i>(Diese Operation dauert etwas länger)</i></string>
     <string name="button_skip">Überspringen</string>
-    <string name="background_info">Es werden einmal am Tag im Hintergrund alle Inhalte heruntergeladen, um die App auf den neusten Stand zu halten.</string>
-    <string name="background_mode">Hintergrund Modus -NICHT VERFUEGBAR-</string>
+    <string name="background_info">Aktualisiert die Inhalte der App einmal täglich um dich auf dem neusten Stand zu halten, sogar wenn die App nicht geöffnet ist.</string>
+    <string name="background_mode">Hintergrund Modus</string>
     <string name="set_background_mode"><b>Hintergrund Modus</b>\n\nAktiviere oder deaktiviere den <i>Hintergrund Modus</i>. Bei Aktivierung werden einmal am Tag im Hintergrund alle Inhalte heruntergeladen, um deine TUM Campus App auf den neusten Stand zu halten.</string>
     <string name="set_silent_mode"><b>Lautlos Service</b>\n\nAktiviere oder deaktiviere den <i>Lautlos Service</i>. Bei Aktivierung wird sich das Gerät bei einer aktuell stattfindenden Vorlesung lautlos schalten.</string>
     <string name="goto_tumcampus">Starte TUM Campus App</string>
@@ -477,6 +477,15 @@
     <string name="undoall">Alle Rückgängig</string>
     <string name="restore_all_cards">Karten wiederherstellen</string>
     <string name="card_dismissed">Karte gelöscht</string>
+    <string name="startpage">Startseite</string>
+    <string name="wear">Wearable</string>
+    <string name="card_settings_summary">Wähle aus wo welche Karten angezeigt werden sollen</string>
+    <string name="cards_settings">Karten</string>
+    <string name="cards_settings_mvv">MVV</string>
+    <string name="cards_settings_tuition_fee">Rückmeldung</string>
+    <string name="where_appear">Wo soll die Karte angezeigt werden?</string>
+    <string name="reregister_success">Sie sind für das %s rückgemeldet!</string>
+    <string name="reregister_todo">Sie können sich bis zum %s rückmelden!</string>
     <!-- END Translated -->
 
 </resources>

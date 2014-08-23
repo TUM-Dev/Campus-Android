@@ -36,7 +36,7 @@ public class CardsAdapter extends BaseAdapter implements SwipeDismissList.SwipeD
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
-        return CardManager.getCard(i).getView(mContext,viewGroup);
+        return CardManager.getCard(i).getCardView(mContext, viewGroup);
     }
 
     public Card remove(int position) {
