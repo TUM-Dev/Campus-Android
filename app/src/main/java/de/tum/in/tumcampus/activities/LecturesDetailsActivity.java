@@ -30,10 +30,8 @@ import de.tum.in.tumcampus.models.LectureDetailsRowSet;
  * NEEDS: stp_sp_nr set in incoming bundle (lecture id)
  * 
  * needed/linked files: res.layout.lecture_details, LectureAppointments
- * 
- * @solves [M6] Details einer Lehrveranstaltung ausgeben
+ *
  * @author Daniel G. Mayr
- * @review Thomas Behrens // i found nothing tbd.
  */
 @SuppressLint("DefaultLocale")
 public class LecturesDetailsActivity extends ActivityForAccessingTumOnline

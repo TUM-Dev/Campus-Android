@@ -1,5 +1,7 @@
 package de.tum.in.tumcampus.tumonline;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -93,7 +95,6 @@ public class TUMOnlineRequest {
 	 * 
 	 * @author Daniel G. Mayr
 	 * @return output will be a raw String
-	 * @see getRequestURL
 	 */
 	public String fetch() {
 		String result = "";
@@ -273,8 +274,12 @@ public class TUMOnlineRequest {
 	 *            value of the parameter
 	 */
 	public void setParameter(String name, String value) {
-		parameters.put(name, value);
-	}
+        try {
+            parameters.put(name, URLEncoder.encode(value, "UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+    }
 
 	/**
 	 * If you want to put a complete Parameter Map into the request, use this

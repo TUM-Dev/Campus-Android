@@ -1,7 +1,6 @@
 package de.tum.in.tumcampus.activities.generic;
 
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
@@ -29,8 +28,7 @@ import de.tum.in.tumcampus.tumonline.TUMOnlineRequestFetchListener;
 public abstract class ActivityForAccessingTumOnline extends ActionBarActivity
 		implements TUMOnlineRequestFetchListener {
 
-	private String accessToken;
-	protected RelativeLayout errorLayout;
+    protected RelativeLayout errorLayout;
 	protected RelativeLayout failedTokenLayout;
 	private int layoutId;
 	/** The method which should be invoked by the TUmOnline Fetcher */
@@ -75,11 +73,6 @@ public abstract class ActivityForAccessingTumOnline extends ActionBarActivity
 	}
 
 	@Override
-	public void onConfigurationChanged(Configuration newConfig) {
-		super.onConfigurationChanged(newConfig);
-	}
-
-	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(layoutId);
@@ -102,8 +95,7 @@ public abstract class ActivityForAccessingTumOnline extends ActionBarActivity
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(
-				R.menu.menu_activity_for_downloading_external, menu);
+		getMenuInflater().inflate(R.menu.menu_activity_for_downloading_external, menu);
 		return true;
 	}
 
@@ -146,8 +138,8 @@ public abstract class ActivityForAccessingTumOnline extends ActionBarActivity
 	}
 
 	public void requestFetch() {
-		accessToken = PreferenceManager.getDefaultSharedPreferences(this)
-				.getString(Const.ACCESS_TOKEN, null);
+        String accessToken = PreferenceManager.getDefaultSharedPreferences(this)
+                .getString(Const.ACCESS_TOKEN, null);
 		if (accessToken != null) {
 			Log.i(getClass().getSimpleName(), "TUMOnline token is <"
 					+ accessToken + ">");

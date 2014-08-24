@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 import de.tum.in.tumcampus.R;
-import de.tum.in.tumcampus.activities.LecturesSearchActivity;
 import de.tum.in.tumcampus.models.LecturesSearchRow;
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 
@@ -18,15 +17,14 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
  * This class handles the view output of the results for finding lectures via
  * TUMOnline
  * 
- * {@link LecturesSearchActivity} activity or the {@link de.tum.in.tumcampus.activities.LecturesPersonalActivity} activity
+ *  {@link de.tum.in.tumcampus.activities.LecturesPersonalActivity} activity
  * 
  * linked files: res.layout.lectures_listview
  * 
  * @author Daniel G. Mayr
- * @review Thomas Behrens
  */
 
-public class LecturesSearchListAdapter extends BaseAdapter implements StickyListHeadersAdapter {
+public class LecturesListAdapter extends BaseAdapter implements StickyListHeadersAdapter {
 
     private final ArrayList<String> filters;
 
@@ -43,8 +41,8 @@ public class LecturesSearchListAdapter extends BaseAdapter implements StickyList
 	private final LayoutInflater mInflater;
 
 	// constructor
-	public LecturesSearchListAdapter(Context context,
-			List<LecturesSearchRow> results) {
+	public LecturesListAdapter(Context context,
+                               List<LecturesSearchRow> results) {
 		lecturesList = results;
 		mInflater = LayoutInflater.from(context);
 

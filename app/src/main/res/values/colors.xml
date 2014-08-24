@@ -4,8 +4,7 @@
     <color name="text_light_blue">#0065BD</color>
     <color name="text_light_gray">#C0C0C0</color>
     <color name="text_dark_gray">#a5a5a5</color>
-    <color name="sections_blue">#33b5e5</color>
-    <color name="sections_red">#EF5E5B</color>
+    <color name="sections_blue">#303f9f</color>
     <color name="sections_green">#7cbc49</color>
     <color name="sections_gray">#a5a5a5</color>
     <color name="overlay_background">#8000</color>
@@ -33,5 +32,5 @@
     <color name="popup_bg_color">#EE666666</color>
     <color name="separator_color">#BBBBBB</color>
     <color name="popup_text_color">#FFFFFF</color>
-    <color name="blue_secondary">#303f9f</color>
+    <color name="searchview_hint_color">#ffffff</color>
 </resources>

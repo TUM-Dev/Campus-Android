@@ -8,7 +8,6 @@ import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +21,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import de.tum.in.tumcampus.R;
-import de.tum.in.tumcampus.activities.RoomfinderActivity;
+import de.tum.in.tumcampus.activities.RoomFinderActivity;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.managers.CalendarManager;
 
@@ -258,7 +257,7 @@ public class CalendarSectionFragment extends Fragment {
                 final String strList[] = room.split(",");
 
                 //Launch the roomfinder activity
-                Intent i = new Intent(activity, RoomfinderActivity.class);
+                Intent i = new Intent(activity, RoomFinderActivity.class);
                 i.setAction(Intent.ACTION_SEARCH);
                 i.putExtra(SearchManager.QUERY, strList[0]);
                 activity.startActivity(i);

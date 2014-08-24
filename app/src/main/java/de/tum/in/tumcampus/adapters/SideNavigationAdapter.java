@@ -1,7 +1,6 @@
 package de.tum.in.tumcampus.adapters;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +17,6 @@ import de.tum.in.tumcampus.activities.CalendarActivity;
 import de.tum.in.tumcampus.activities.ChatRoomsSearchActivity;
 import de.tum.in.tumcampus.activities.CurriculaActivity;
 import de.tum.in.tumcampus.activities.FeedsActivity;
-import de.tum.in.tumcampus.activities.GalleryActivity;
 import de.tum.in.tumcampus.activities.GradesActivity;
 import de.tum.in.tumcampus.activities.LecturesPersonalActivity;
 import de.tum.in.tumcampus.activities.NewsActivity;
@@ -26,10 +24,9 @@ import de.tum.in.tumcampus.activities.OpeningHoursListActivity;
 import de.tum.in.tumcampus.activities.OrganisationActivity;
 import de.tum.in.tumcampus.activities.PersonsSearchActivity;
 import de.tum.in.tumcampus.activities.PlansActivity;
-import de.tum.in.tumcampus.activities.RoomfinderActivity;
+import de.tum.in.tumcampus.activities.RoomFinderActivity;
 import de.tum.in.tumcampus.activities.TransportationActivity;
 import de.tum.in.tumcampus.activities.TuitionFeesActivity;
-import de.tum.in.tumcampus.activities.UserPreferencesActivity;
 import de.tum.in.tumcampus.auxiliary.AccessTokenManager;
 
 public class SideNavigationAdapter extends BaseAdapter {
@@ -163,7 +160,7 @@ public class SideNavigationAdapter extends BaseAdapter {
             new SideNavigationItem(R.string.study_plans,R.drawable.documents, false, CurriculaActivity.class),
             new SideNavigationItem(R.string.person_search,R.drawable.users, true, PersonsSearchActivity.class),
             new SideNavigationItem(R.string.plans,R.drawable.web, false, PlansActivity.class),
-            new SideNavigationItem(R.string.roomfinder,R.drawable.home, false, RoomfinderActivity.class),
+            new SideNavigationItem(R.string.roomfinder,R.drawable.home, false, RoomFinderActivity.class),
             new SideNavigationItem(R.string.opening_hours,R.drawable.unlock, false, OpeningHoursListActivity.class),
             new SideNavigationItem(R.string.organisations,R.drawable.chat, true, OrganisationActivity.class),
             new SideNavigationItem(R.string.mvv,R.drawable.show_info, false, TransportationActivity.class),

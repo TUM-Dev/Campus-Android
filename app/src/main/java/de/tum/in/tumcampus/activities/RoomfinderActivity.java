@@ -30,7 +30,7 @@ import de.tum.in.tumcampus.tumonline.TUMRoomFinderRequestFetchListener;
  *
  * @author Vincenz Doelle, Anas Chackfeh
  */
-public class RoomfinderActivity extends ActivityForSearching implements OnEditorActionListener, TUMRoomFinderRequestFetchListener, OnItemClickListener {
+public class RoomFinderActivity extends ActivityForSearching implements TUMRoomFinderRequestFetchListener, OnItemClickListener {
 
     // HTTP client for sending requests to MyTUM roomfinder
     TUMRoomFinderRequest roomFinderRequest;
@@ -41,7 +41,7 @@ public class RoomfinderActivity extends ActivityForSearching implements OnEditor
     String currentlySelectedBuildingId;
     private String currentlySelectedRoomId;
 
-    public RoomfinderActivity() {
+    public RoomFinderActivity() {
         super(R.layout.activity_roomfinder);
     }
 
@@ -61,15 +61,13 @@ public class RoomfinderActivity extends ActivityForSearching implements OnEditor
     }
 
     @Override
-    public boolean performSearchAlgorithm() {
-        EditText searchString = (EditText) this.findViewById(R.id.search_field);
-        String query = searchString.getText().toString();
-
+    public void performSearchAlgorithm(String query) {
         SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this, RoomFinderSuggestionProvider.AUTHORITY, RoomFinderSuggestionProvider.MODE);
         suggestions.saveRecentQuery(query.toString(), null);
 
-        roomFinderRequest.fetchSearchInteractive(this, this, query);
-        return true;
+        if(query.length() >= MIN_SEARCH_LENGTH) {
+            roomFinderRequest.fetchSearchInteractive(this, this, query);
+        }
     }
 
     @Override
@@ -125,11 +123,6 @@ public class RoomfinderActivity extends ActivityForSearching implements OnEditor
     }
 
     @Override
-    public void onClick(View view) {
-        super.onClick(view);
-    }
-
-    @Override
     public void onCommonError(String errorReason) {
         Toast.makeText(this, errorReason, Toast.LENGTH_SHORT).show();
     }
@@ -147,11 +140,10 @@ public class RoomfinderActivity extends ActivityForSearching implements OnEditor
             String query = intent.getStringExtra(SearchManager.QUERY);
 
             //Update search field
-            EditText searchView = (EditText) this.findViewById(R.id.search_field);
-            searchView.setText(query);
+            mSearchView.setQuery(query, true);
 
             //Execute search
-            performSearchAlgorithm();
+            //performSearchAlgorithm(query);
         }
     }
 

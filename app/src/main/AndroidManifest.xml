@@ -1,13 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="de.tum.in.tumcampus"
-    android:versionCode="35"
-    android:versionName="1.1.5"
     android:installLocation="auto">
-
-    <uses-sdk
-        android:minSdkVersion="10"
-        android:targetSdkVersion="19" />
 
     <instrumentation
         android:name="android.test.InstrumentationTestRunner"
@@ -93,15 +87,15 @@
         <activity
             android:name="de.tum.in.tumcampus.activities.StartActivity"
             android:configChanges="orientation|screenSize"
-            android:label="@string/campus_app"></activity>
+            android:label="@string/campus_app"/>
         <activity
             android:name="de.tum.in.tumcampus.activities.generic.MockActivity"
             android:configChanges="orientation|screenSize"
-            android:label="@string/campus_app"></activity>
+            android:label="@string/campus_app"/>
         <activity
             android:name="de.tum.in.tumcampus.activities.generic.MockSlidingTabActivity"
             android:configChanges="orientation|screenSize"
-            android:label="@string/campus_app"></activity>
+            android:label="@string/campus_app"/>
         <activity
             android:name="de.tum.in.tumcampus.activities.NewsActivity"
             android:configChanges="orientation|screenSize"
@@ -310,7 +304,7 @@
                 android:value="de.tum.in.tumcampus.activities.PersonsSearchActivity" />
         </activity>
         <activity
-            android:name="de.tum.in.tumcampus.activities.RoomfinderActivity"
+            android:name=".activities.RoomFinderActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/roomfinder"
             android:parentActivityName="de.tum.in.tumcampus.activities.StartActivity">
@@ -329,7 +323,7 @@
             android:name="de.tum.in.tumcampus.activities.RoomFinderDetailsActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/roomfinder"
-            android:parentActivityName="de.tum.in.tumcampus.activities.RoomfinderActivity">
+            android:parentActivityName=".activities.RoomFinderActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.tum.in.tumcampus.activities.RoomfinderActivity" />
@@ -395,15 +389,15 @@
         <activity
             android:name="de.tum.in.tumcampus.activities.wizzard.WizNavStartActivity"
             android:configChanges="orientation|screenSize"
-            android:label="@string/campus_app"></activity>
+            android:label="@string/campus_app"/>
         <activity
             android:name="de.tum.in.tumcampus.activities.wizzard.WizNavCheckTokenActivity"
             android:configChanges="orientation|screenSize"
-            android:label="@string/campus_app"></activity>
+            android:label="@string/campus_app"/>
         <activity
             android:name="de.tum.in.tumcampus.activities.wizzard.WizNavExtrasActivity"
             android:configChanges="orientation|screenSize"
-            android:label="@string/campus_app"></activity>
+            android:label="@string/campus_app"/>
         <activity
             android:name="de.tum.in.tumcampus.activities.LectureScheduleActivity"
             android:configChanges="orientation|screenSize"
@@ -434,7 +428,7 @@
         <activity
             android:name="de.tum.in.tumcampus.auxiliary.DemoModeStartActivity"
             android:configChanges="orientation|screenSize"
-            android:label="@string/campus_app"></activity>
+            android:label="@string/campus_app"/>
 
         <activity
             android:name="de.tum.in.tumcampus.activities.ChatRoomsSearchActivity"

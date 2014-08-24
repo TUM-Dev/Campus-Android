@@ -1,16 +1,18 @@
-<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tumcampus="http://schemas.android.com/apk/res-auto">
 
     <item
         android:id="@+id/action_export_calendar"
-        android:icon="@android:drawable/ic_menu_share"
+        android:icon="@drawable/ic_action_share"
         android:orderInCategory="100"
-        android:showAsAction="ifRoom"
-        android:title="@string/export_to_google"/>
+        android:title="@string/export_to_google"
+        tumcampus:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_delete_calendar"
-        android:icon="@drawable/ic_trash"
+        android:icon="@drawable/ic_action_discard"
         android:orderInCategory="100"
-        android:showAsAction="ifRoom"
-        android:title="@string/delete_from_google"/>
+        android:title="@string/delete_from_google"
+        tumcampus:showAsAction="ifRoom" />
 
 </menu>

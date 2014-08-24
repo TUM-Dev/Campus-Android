@@ -4,43 +4,6 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/rythm_48dp"
-        android:orientation="horizontal" >
-
-        <EditText
-            android:id="@+id/etSearch"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_weight="1"
-            android:hint="@string/search_persons"
-            android:imeActionLabel="Search"
-            android:imeOptions="actionSearch"
-            android:singleLine="true" >
-
-            <requestFocus />
-        </EditText>
-
-        <ImageButton
-            android:id="@+id/clear"
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:background="@android:color/transparent"
-            android:onClick="onClick"
-            android:scaleType="fitCenter"
-            android:src="@android:drawable/ic_menu_close_clear_cancel" />
-
-        <ImageButton
-            android:id="@+id/dosearch"
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:background="@android:color/transparent"
-            android:onClick="onClick"
-            android:scaleType="fitCenter"
-            android:src="@android:drawable/ic_menu_search" />
-    </LinearLayout>
-
     <include
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"

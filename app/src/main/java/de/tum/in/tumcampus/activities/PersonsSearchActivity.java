@@ -1,21 +1,16 @@
 package de.tum.in.tumcampus.activities;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.view.KeyEvent;
-import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.TextView.OnEditorActionListener;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import org.simpleframework.xml.Serializer;
@@ -24,35 +19,31 @@ import org.simpleframework.xml.core.Persister;
 import java.util.List;
 
 import de.tum.in.tumcampus.R;
-import de.tum.in.tumcampus.activities.generic.ActivityForAccessingTumOnline;
+import de.tum.in.tumcampus.activities.generic.ActivityForSearching;
 import de.tum.in.tumcampus.adapters.PersonListAdapter;
+import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.ImplicitCounter;
-import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.Person;
 import de.tum.in.tumcampus.models.PersonList;
+import de.tum.in.tumcampus.tumonline.TUMOnlineRequest;
+import de.tum.in.tumcampus.tumonline.TUMOnlineRequestFetchListener;
 
 /**
  * Activity to search for employees.
  */
-public class PersonsSearchActivity extends ActivityForAccessingTumOnline implements OnEditorActionListener {
-    private static final int MIN_SEARCH_LENGTH = 3;
+public class PersonsSearchActivity extends ActivityForSearching implements TUMOnlineRequestFetchListener {
     private static final String PERSONEN_SUCHE = "personenSuche";
-
-    private Context context;
-
-    /**
-     * Text field for the search tokens.
-     */
-    private EditText etSearch;
+    private static final String P_SUCHE = "pSuche";
 
     /**
      * List to display the results
      */
     private ListView lvPersons;
+    private RelativeLayout failedTokenLayout;
+    private RelativeLayout noTokenLayout;
 
     public PersonsSearchActivity() {
-        super(PERSONEN_SUCHE, R.layout.activity_persons);
-        context = this;
+        super(R.layout.activity_persons);
     }
 
     /**
@@ -77,8 +68,7 @@ public class PersonsSearchActivity extends ActivityForAccessingTumOnline impleme
                 bundle.putSerializable("personObject", person);
 
                 // show detailed information in new activity
-                Intent intent = new Intent(context,
-                        PersonsDetailsActivity.class);
+                Intent intent = new Intent(PersonsSearchActivity.this, PersonsDetailsActivity.class);
                 intent.putExtras(bundle);
                 startActivity(intent);
             }
@@ -86,27 +76,13 @@ public class PersonsSearchActivity extends ActivityForAccessingTumOnline impleme
     }
 
     @Override
-    public void onClick(View view) {
-        super.onClick(view);
-
-        int viewId = view.getId();
-        switch (viewId) {
-            case R.id.clear:
-                etSearch.setText("");
-                break;
-            case R.id.dosearch:
-                searchForPersons();
-                break;
-        }
-    }
-
-    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        etSearch = (EditText) findViewById(R.id.etSearch);
-        etSearch.setOnEditorActionListener(this);
         lvPersons = (ListView) findViewById(R.id.lstPersons);
+        failedTokenLayout = (RelativeLayout) findViewById(R.id.failed_layout);
+        noTokenLayout = (RelativeLayout) findViewById(R.id.no_token_layout);
+
         //Counting the number of times that the user used this activity for intelligent reordering
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         if (sharedPrefs.getBoolean("implicitly_id", true)) {
@@ -115,18 +91,29 @@ public class PersonsSearchActivity extends ActivityForAccessingTumOnline impleme
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        return true;
+    public void performSearchAlgorithm(String query) {
+        TUMOnlineRequest requestHandler = new TUMOnlineRequest(PERSONEN_SUCHE, this);
+        requestHandler.setParameter(P_SUCHE, query);
+        String accessToken = PreferenceManager.getDefaultSharedPreferences(this)
+                .getString(Const.ACCESS_TOKEN, null);
+        if (accessToken != null) {
+            Log.i(getClass().getSimpleName(), "TUMOnline token is <"
+                    + accessToken + ">");
+            noTokenLayout.setVisibility(View.GONE);
+            progressLayout.setVisibility(View.VISIBLE);
+            errorLayout.setVisibility(View.GONE);
+            requestHandler.fetchInteractive(this, this);
+        } else {
+            Log.i(getClass().getSimpleName(), "No token was set");
+            noTokenLayout.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
-    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-        if (etSearch.getText().length() < MIN_SEARCH_LENGTH) {
-            Toast.makeText(this, R.string.please_insert_at_least_three_chars, Toast.LENGTH_SHORT).show();
-            return false;
-        }
-        searchForPersons();
-        return true;
+    public void onCommonError(String errorReason) {
+        Toast.makeText(this, errorReason, Toast.LENGTH_SHORT).show();
+        progressLayout.setVisibility(View.GONE);
+        errorLayout.setVisibility(View.VISIBLE);
     }
 
     /**
@@ -147,7 +134,7 @@ public class PersonsSearchActivity extends ActivityForAccessingTumOnline impleme
         Serializer serializer = new Persister();
 
         // Lists of employees
-        PersonList personList = null;
+        PersonList personList;
 
         // deserialize the XML to model entities
         try {
@@ -163,9 +150,24 @@ public class PersonsSearchActivity extends ActivityForAccessingTumOnline impleme
         progressLayout.setVisibility(View.GONE);
     }
 
-    private void searchForPersons() {
-        Utils.hideKeyboard(this, etSearch);
-        requestHandler.setParameter("pSuche", etSearch.getText().toString());
-        super.requestFetch();
+    @Override
+    public void onFetchCancelled() {
+        finish();
+    }
+
+    @Override
+    public void onFetchError(String errorReason) {
+        Log.e(getClass().getSimpleName(), errorReason);
+        progressLayout.setVisibility(View.GONE);
+        Toast.makeText(this, errorReason, Toast.LENGTH_SHORT).show();
+
+        // TODO Change errors to Exceptions
+        // If there is a failed token layout show this
+        if (failedTokenLayout != null) {
+            failedTokenLayout.setVisibility(View.VISIBLE);
+        } else {
+            // Else just use the common error layout
+            errorLayout.setVisibility(View.VISIBLE);
+        }
     }
 }

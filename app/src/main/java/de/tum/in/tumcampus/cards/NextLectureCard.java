@@ -18,7 +18,7 @@ import java.util.Date;
 
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.CalendarActivity;
-import de.tum.in.tumcampus.activities.RoomfinderActivity;
+import de.tum.in.tumcampus.activities.RoomFinderActivity;
 import de.tum.in.tumcampus.models.managers.CardManager;
 
 
@@ -60,7 +60,7 @@ public class NextLectureCard extends Card {
             location.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent i = new Intent(mContext, RoomfinderActivity.class);
+                    Intent i = new Intent(mContext, RoomFinderActivity.class);
                     i.setAction(Intent.ACTION_SEARCH);
                     i.putExtra(SearchManager.QUERY, mLocation);
                     mContext.startActivity(i);
