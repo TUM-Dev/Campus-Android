@@ -486,6 +486,7 @@
     <string name="where_appear">Wo soll die Karte angezeigt werden?</string>
     <string name="reregister_success">Sie sind für das %s rückgemeldet!</string>
     <string name="reregister_todo">Sie können sich bis zum %s rückmelden!</string>
+    <string name="phone_and_wear">Handy und Wearable></string>
     <!-- END Translated -->
 
 </resources>

@@ -17,18 +17,13 @@ public class RestoreCard extends Card {
 
     @Override
     public int getTyp() {
-        return CardManager.CARD_RESTORE_CARDS;
+        return CardManager.CARD_RESTORE;
     }
 
     @Override
     public View getCardView(Context context, ViewGroup parent) {
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         return mInflater.inflate(R.layout.card_restore, parent, false);
-    }
-
-    @Override
-    public void onCardClick() {
-        CardManager.restore();
     }
 
     @Override

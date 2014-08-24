@@ -463,9 +463,6 @@
         </receiver>
 
         <service
-            android:name="de.tum.in.tumcampus.models.managers.CardManager$DismissHandler"
-            android:exported="false" />
-        <service
             android:name="de.tum.in.tumcampus.services.DownloadService"
             android:exported="false" />
         <service

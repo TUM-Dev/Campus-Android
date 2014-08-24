@@ -230,9 +230,16 @@ public class StartActivity extends ActionBarActivity implements AdapterView.OnIt
                 mDrawerLayout.closeDrawer(mDrawerList);
                 break;
             case R.id.cards_view:
-                if(CardManager.onCardClicked(position)) {
+                Card card = CardManager.getCard(position);
+                if(card.getTyp()==CardManager.CARD_RESTORE) {
+                    CardManager.restoreCards();
                     mSwipeList.cancelUndo();
                     mAdapter.notifyDataSetChanged();
+                } else {
+                    Intent i = card.getIntent();
+                    if(i!=null) {
+                        startActivity(i);
+                    }
                 }
                 break;
         }

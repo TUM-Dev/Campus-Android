@@ -515,6 +515,6 @@
     <string name="where_appear">Where should the card appear?</string>
     <string name="reregister_success">You are reregistered for %s!</string>
     <string name="reregister_todo">You have to reregister until %s!</string>
-
+    <string name="phone_and_wear">Phone and Wearable</string>
 
 </resources>

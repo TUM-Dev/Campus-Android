@@ -23,7 +23,7 @@ import de.tum.in.tumcampus.models.managers.CardManager;
 
 public abstract class Card {
     public static final String DISCARD_SETTINGS_START = "discard_settings_start";
-    private static final String DISCARD_SETTINGS_PHONE = "discard_settings_phone";
+    public static final String DISCARD_SETTINGS_PHONE = "discard_settings_phone";
     private static final String defaultVal = "1\u0001\u0007\u001D\u0007\u00013";
     
     // Context related stuff
@@ -38,7 +38,7 @@ public abstract class Card {
     
     // Settings for showing this card on startpage or as notification
     private boolean mShowStart = true;
-    private boolean mShowPhone = false;
+    private boolean mShowPhoneWear = false;
     private boolean mShowWear = false;
 
     public Card(Context context, String settings) {
@@ -46,7 +46,7 @@ public abstract class Card {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
         List<String> show = MultiSelectListPreference.getFromString(prefs.getString(settings, defaultVal));
         mShowStart = show.contains("1");
-        mShowPhone = show.contains("2");
+        mShowPhoneWear = show.contains("2");
         mShowWear = show.contains("3");
     }
 
@@ -87,12 +87,6 @@ public abstract class Card {
         mLinearLayout.addView(textview);
     }
 
-    public void onCardClick() {
-        Intent i = getIntent();
-        if(i!=null)
-            mContext.startActivity(i);
-    }
-
     /**
      * Should be called after the user has dismissed the card
      * */
@@ -106,7 +100,7 @@ public abstract class Card {
     /**
      * Should be called if the notification has been dismissed
      * */
-    public void discardNotification() {
+    private void discardNotification() {
         SharedPreferences prefs = CardManager.getContext().getSharedPreferences(DISCARD_SETTINGS_PHONE, 0);
         Editor editor = prefs.edit();
         discard(editor);
@@ -124,15 +118,14 @@ public abstract class Card {
      * */
     public void apply() {
         // Should be shown on start page?
-        boolean show = false;
         if(mShowStart) {
             SharedPreferences prefs = CardManager.getContext().getSharedPreferences(DISCARD_SETTINGS_START, 0);
-            show = shouldShow(prefs);
+            if(shouldShow(prefs))
+                CardManager.addCard(this);
         }
-        CardManager.addCard(this, show);
 
         // Should be shown on phone or watch?
-        if(mShowPhone||mShowWear) {
+        if(mShowPhoneWear ||mShowWear) {
             SharedPreferences prefs = CardManager.getContext().getSharedPreferences(DISCARD_SETTINGS_PHONE, 0);
             if (shouldShow(prefs))
                 notifyUser();
@@ -151,32 +144,27 @@ public abstract class Card {
      * Shows the card as notification if settings allow it
      * */
     public void notifyUser() {
-        if(!mShowPhone && !mShowWear)
+        if(!mShowPhoneWear && !mShowWear)
             return;
 
-        Intent viewIntent = new Intent(mContext, CardManager.DismissHandler.class);
-        viewIntent.putExtra(CardManager.NOTIFICATION_ID, getTyp());
-        viewIntent.putExtra(CardManager.SHOW_CONTENT, true);
+        // Showing a notification is handled as it would already be dismissed, so that it will not
+        // notify again.
+        discardNotification();
 
-        PendingIntent viewPendingIntent = PendingIntent.getService(mContext, getTyp(), viewIntent, 0);
-
-        Intent dismissIntent = new Intent(mContext, CardManager.DismissHandler.class);
-        dismissIntent.putExtra(CardManager.NOTIFICATION_ID, getTyp());
-
-        PendingIntent dismissPendingIntent = PendingIntent.getService(mContext, getTyp(), dismissIntent, 0);
+        PendingIntent viewPendingIntent = PendingIntent.getActivity(mContext, 0, getIntent(), 0);
 
         NotificationCompat.Builder notificationBuilder =
                 new NotificationCompat.Builder(mContext)
                         .setAutoCancel(true)
-                        .setSmallIcon(R.drawable.tum_logo)
                         .setContentIntent(viewPendingIntent)
-                        .setContentTitle(getTitle())
-                        .setDeleteIntent(dismissPendingIntent);
+                        .setContentTitle(getTitle());
 
         // Trick to hide card on phone
-        if(!mShowPhone) {
+        if(!mShowPhoneWear) {
             notificationBuilder.setGroup("GROUP_" + getTyp());
             notificationBuilder.setGroupSummary(false);
+        } else {
+            notificationBuilder.setSmallIcon(R.drawable.tum_logo_notification);
         }
 
         // Let the card set detailed information

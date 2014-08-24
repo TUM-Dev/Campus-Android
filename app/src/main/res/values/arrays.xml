@@ -14,7 +14,7 @@
 
     <string-array name="card_show">
         <item>@string/startpage</item>
-        <item>@string/phone</item>
+        <item>@string/phone_and_wear</item>
         <item>@string/wear</item>
     </string-array>
     <string-array name="card_show_values">
@@ -26,5 +26,4 @@
         <item>1</item>
         <item>3</item>
     </string-array>
-
 </resources>

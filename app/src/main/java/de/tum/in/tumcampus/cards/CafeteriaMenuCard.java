@@ -64,12 +64,23 @@ public class CafeteriaMenuCard extends Card {
                 curShort = menu.typeShort;
                 addHeader(menu.typeLong);
             }
+
             if (rolePrices.containsKey(menu.typeLong))
-                addPriceline(menuToSpan(mContext, menu.name), rolePrices.get(menu.typeLong) + " €");
+                addPriceline(prepare(menu.name), rolePrices.get(menu.typeLong) + " €");
             else
-                addTextView(menuToSpan(mContext, menu.name));
+                addTextView(prepare(menu.name));
         }
         return mCard;
+    }
+
+    private SpannableString prepare(String menu) {
+        int len;
+        do {
+            len = menu.length();
+            menu = menu.replaceFirst("\\(([A-Za-z0-9]+),", "($1)(");
+        } while (menu.length() > len);
+        menu = menu.replaceAll("\\(([1-9]|10|11)\\)", "");
+        return menuToSpan(mContext, menu);
     }
 
     private void addTextView(SpannableString text) {
@@ -116,8 +127,6 @@ public class CafeteriaMenuCard extends Card {
 
     @Override
     protected Notification fillNotification(NotificationCompat.Builder notificationBuilder) {
-        //mDateView.setText(SimpleDateFormat.getDateInstance().format(mDate));
-
         HashMap<String, String> rolePrices = CafeteriaDetailsSectionFragment.getRolePrices(mContext);
 
         NotificationCompat.WearableExtender morePageNotification =
@@ -134,15 +143,17 @@ public class CafeteriaMenuCard extends Card {
 
             String content = menu.name;
             if (rolePrices.containsKey(menu.typeLong))
-                content +=  "  "+rolePrices.get(menu.typeLong) + " €";
+                content +=  "\n"+rolePrices.get(menu.typeLong) + " €";
 
-            content = content.replaceAll("\\([A-Za-z 0-9,]+\\)", "").trim();
+            content = content.replaceAll("\\([^\\)]+\\)", "").trim();
             pageNotification.setContentText(content);
             if(menu.typeShort.equals("tg")) {
-                allContent += content + "\n";
+                if(!allContent.isEmpty())
+                    allContent += "\n";
+                allContent += content;
             }
             if(firstContent.isEmpty()) {
-                firstContent = content+"...";
+                firstContent =  menu.name.replaceAll("\\([^\\)]+\\)", "").trim()+"...";
             }
 
             morePageNotification.addPage(pageNotification.build());
