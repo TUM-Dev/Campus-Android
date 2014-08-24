@@ -31,10 +31,7 @@ import de.tum.in.tumcampus.auxiliary.Utils;
  */
 public class TUMCampusRequest {
 
-	/** TUMCampus-Token for this app */
-	private static String ACCESSTOKEN = "NEEDS TO BE SET AGAIN";
-
-	/** asynchronous task for interactive fetch */
+    /** asynchronous task for interactive fetch */
 	AsyncTask<Void, Void, String> backgroundTask = null;
 
 	/** http client instance for fetching */
@@ -52,10 +49,7 @@ public class TUMCampusRequest {
 	/** Message to be displayed in progress dialog */
 	private String progressDialogMessage = "";
 
-	/** Server address: TUMCampus interface */
-	private final String serviceBaseURL = "https://campus.tum.de/tumonlinej/ws/webservice_v1.0/cdm/organization/";
-
-	/**
+    /**
 	 * @param method
 	 *            the function name to which we are calling
 	 */
@@ -149,7 +143,7 @@ public class TUMCampusRequest {
 				progressDialog.dismiss();
 
 				// handle result
-				if (isOnline == false) {
+				if (!isOnline) {
 					listener.onFetchError(context
 							.getString(R.string.no_internet_connection));
 					return;
@@ -193,7 +187,9 @@ public class TUMCampusRequest {
 	 * @return a String URL
 	 */
 	public String getRequestURL() {
-		String url = serviceBaseURL + method + "/xml?";
+		/* Server address: TUMCampus interface */
+        String serviceBaseURL = "https://campus.tum.de/tumonlinej/ws/webservice_v1.0/cdm/organization/";
+        String url = serviceBaseURL + method + "/xml?";
 		Iterator<Entry<String, String>> itMapIterator = parameters.entrySet()
 				.iterator();
 		while (itMapIterator.hasNext()) {
@@ -206,7 +202,9 @@ public class TUMCampusRequest {
 	/** Reset parameters to an empty Map */
 	public void resetParameters() {
 		parameters = new HashMap<String, String>();
-		parameters.put("token", ACCESSTOKEN);
+		/* TUMCampus-Token for this app */
+        String ACCESSTOKEN = "NEEDS TO BE SET AGAIN";
+        parameters.put("token", ACCESSTOKEN);
 	}
 
 	/**

@@ -34,7 +34,7 @@
         <TextView
             android:id="@+id/list_menu_detail"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
             android:layout_marginTop="4px"
             android:layout_weight="1"
             android:gravity="center_vertical"

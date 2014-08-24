@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <color name="text_light_blue">#0065BD</color>
     <color name="text_light_gray">#C0C0C0</color>
@@ -7,7 +7,7 @@
     <color name="sections_blue">#303f9f</color>
     <color name="sections_green">#7cbc49</color>
     <color name="sections_gray">#a5a5a5</color>
-    <color name="overlay_background">#8000</color>
+    <color name="overlay_background" tools:ignore="UnusedResources">#8000</color>
     
     <color name="side_navigation_background">#EEEEEE</color>
     <color name="side_navigation_list_divider_color">#DDDDDD</color>
@@ -18,8 +18,8 @@
 
     <!-- Used for SwipeRefreshLayout -->
     <color name="holo_blue_bright">#00ddff</color>
-    <color name="holo_green_light">#99cc00</color>
-    <color name="holo_orange_light">#ffbb33</color>
+    <color name="holo_green_light" tools:ignore="UnusedResources">#99cc00</color>
+    <color name="holo_orange_light" tools:ignore="UnusedResources">#ffbb33</color>
     <color name="holo_red_light">#ff4444</color>
 
     <!-- Used by calendar -->

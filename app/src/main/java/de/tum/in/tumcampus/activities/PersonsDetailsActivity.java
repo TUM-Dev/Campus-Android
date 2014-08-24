@@ -36,12 +36,7 @@ public class PersonsDetailsActivity extends ActivityForAccessingTumOnline
 
 	private static final String PERSONEN_DETAILS = "personenDetails";
 
-	/**
-	 * The employee
-	 */
-	private Person person;
-
-	public PersonsDetailsActivity() {
+    public PersonsDetailsActivity() {
 		super(PERSONEN_DETAILS, R.layout.activity_personsdetails);
 	}
 
@@ -96,17 +91,16 @@ public class PersonsDetailsActivity extends ActivityForAccessingTumOnline
 		// add all groups the employee belongs to
 		List<Group> groups = employee.getGroups();
 		if (groups != null) {
-			for (int i = 0; i < groups.size(); i++) {
-				if (groups.get(i) != null) {
-					contentText.appendField(getString(R.string.function),
-							groups.get(i).getTitle());
-					contentText.appendField(getString(R.string.group), groups
-							.get(i).getOrg()
-							+ " ("
-							+ groups.get(i).getId()
-							+ ")" + "<br />");
-				}
-			}
+            for (Group group : groups) {
+                if (group != null) {
+                    contentText.appendField(getString(R.string.function),
+                            group.getTitle());
+                    contentText.appendField(getString(R.string.group), group.getOrg()
+                            + " ("
+                            + group.getId()
+                            + ")" + "<br />");
+                }
+            }
 		}
 		tvDetails2.setText(Html.fromHtml(contentText.toString()),
 				TextView.BufferType.SPANNABLE);
@@ -166,7 +160,10 @@ public class PersonsDetailsActivity extends ActivityForAccessingTumOnline
 
 		// get person ID and/or object from Staff activity
 		Bundle bundle = this.getIntent().getExtras();
-		person = (Person) bundle.getSerializable("personObject");
+		/*
+	  The employee
+	 */
+        Person person = (Person) bundle.getSerializable("personObject");
 		// make sure not both person is not null (error occurred)
 		if (person == null) {
 			// no query text specified

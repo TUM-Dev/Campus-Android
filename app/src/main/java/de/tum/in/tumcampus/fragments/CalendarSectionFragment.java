@@ -191,31 +191,31 @@ public class CalendarSectionFragment extends Fragment {
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) event.getLayoutParams();
 
             // When collision detected: set width and offset
-            if (collisionPrev == true && collisionNext == false) {
+            if (collisionPrev && !collisionNext) {
                 //When three events overlap we need to double the offset
                 if (trippleCollision) {
                     trippleCollision = false;
 
-                    params.width = Math.round((float) avaibleSpace / 3);
+                    params.width = Math.round(avaibleSpace / 3);
                     params.setMargins(2 * params.width, params.topMargin, params.rightMargin, params.bottomMargin);
                 } else {
-                    params.width = Math.round((float) avaibleSpace / 2);
+                    params.width = Math.round(avaibleSpace / 2);
                     params.setMargins(params.width, params.topMargin, params.rightMargin, params.bottomMargin);
                 }
-            } else if (collisionPrev == false && collisionNext == true) {
+            } else if (!collisionPrev && collisionNext) {
 
-                params.width = Math.round((float) avaibleSpace / 2);
+                params.width = Math.round(avaibleSpace / 2);
                 params.setMargins(0, params.topMargin, params.rightMargin, params.bottomMargin);
 
-            } else if (collisionPrev == true && collisionNext == true) {
+            } else if (collisionPrev && collisionNext) {
                 //Set previous
                 RelativeLayout prevEvent=eventList.get(currentEvent - 1);
                 RelativeLayout.LayoutParams prevLp = (RelativeLayout.LayoutParams) prevEvent.getLayoutParams();
-                prevLp.width = Math.round((float) avaibleSpace / 3);
+                prevLp.width = Math.round(avaibleSpace / 3);
                 prevEvent.setLayoutParams(prevLp);
 
                 //Set current
-                params.width = Math.round((float) avaibleSpace / 3);
+                params.width = Math.round(avaibleSpace / 3);
                 params.setMargins(params.width, params.topMargin, params.rightMargin, params.bottomMargin);
 
                 //Tell next one
@@ -233,10 +233,7 @@ public class CalendarSectionFragment extends Fragment {
     }
 
     private boolean overlap(long startTime1, long endTime1, long startTime2, long endTime2) {
-        if (endTime1 < startTime2 || startTime1 > endTime2) {
-            return false;
-        }
-        return true;
+        return !(endTime1 < startTime2 || startTime1 > endTime2);
     }
 
     /**

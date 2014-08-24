@@ -2,10 +2,7 @@ package de.tum.in.tumcampus.activities.generic;
 
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import de.tum.in.tumcampus.R;
 
 public class WizzardActivity extends ActionBarActivity {
 	private Intent intentForNextActivity;

@@ -80,10 +80,7 @@ public class NextLectureCard extends Card {
     protected boolean shouldShow(SharedPreferences prefs) {
         long prevTime = prefs.getLong(NEXT_LECTURE_DATE, 0);
         String prevTitle = prefs.getString(NEXT_LECTURE_TITLE, "");
-        if ((mDate.getTime() == prevTime && !prevTitle.equals(mTitle)) || mDate.getTime() > prevTime) {
-            return true;
-        }
-        return false;
+        return (mDate.getTime() == prevTime && !prevTitle.equals(mTitle)) || mDate.getTime() > prevTime;
     }
 
     @Override

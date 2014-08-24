@@ -25,9 +25,8 @@ public class GallerySectionFragment extends Fragment implements
 		OnItemClickListener {
 
 	private Activity activity;
-	private RelativeLayout errorLayout;
 
-	public GallerySectionFragment() {
+    public GallerySectionFragment() {
 	}
 
 	@SuppressWarnings({ "deprecation" })
@@ -39,7 +38,7 @@ public class GallerySectionFragment extends Fragment implements
 				container, false);
 
 		activity = getActivity();
-		errorLayout = (RelativeLayout) rootView.findViewById(R.id.error_layout);
+        RelativeLayout errorLayout = (RelativeLayout) rootView.findViewById(R.id.error_layout);
 
 		int galleryMode = getArguments().getInt(
 				GallerySectionsPagerAdapter.ARG_GALLERY_MODE);

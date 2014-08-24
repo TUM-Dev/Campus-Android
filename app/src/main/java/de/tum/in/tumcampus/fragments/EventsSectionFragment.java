@@ -27,10 +27,8 @@ import de.tum.in.tumcampus.models.managers.EventManager;
 public class EventsSectionFragment extends Fragment implements
 		OnItemClickListener, ViewBinder {
 	private Activity activity;
-	private RelativeLayout errorLayout;
-	private ListView listView;
 
-	public EventsSectionFragment() {
+    public EventsSectionFragment() {
 	}
 
 	@SuppressWarnings({ "deprecation" })
@@ -42,8 +40,8 @@ public class EventsSectionFragment extends Fragment implements
 				container, false);
 
 		activity = getActivity();
-		listView = (ListView) rootView.findViewById(R.id.listView);
-		errorLayout = (RelativeLayout) rootView.findViewById(R.id.error_layout);
+        ListView listView = (ListView) rootView.findViewById(R.id.listView);
+        RelativeLayout errorLayout = (RelativeLayout) rootView.findViewById(R.id.error_layout);
 
 		int eventMode = getArguments().getInt(
 				EventsSectionsPagerAdapter.ARG_EVENT_MODE);

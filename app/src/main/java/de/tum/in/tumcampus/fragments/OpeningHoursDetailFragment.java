@@ -112,13 +112,13 @@ public class OpeningHoursDetailFragment extends Fragment implements ViewBinder {
 
 			StringBuilder sb = new StringBuilder(hours + "\n" + address);
 			if (room.length() > 0) {
-				sb.append(", " + room);
+				sb.append(", ").append(room);
 			}
 			if (transport.length() > 0) {
-				sb.append(" (" + transport + ")");
+				sb.append(" (").append(transport).append(")");
 			}
 			if (remark.length() > 0) {
-				sb.append("\n" + remark.replaceAll("\\\\n", "\n"));
+				sb.append("\n").append(remark.replaceAll("\\\\n", "\n"));
 			}
 			TextView tv = (TextView) view;
 			tv.setText(sb.toString());

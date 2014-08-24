@@ -72,9 +72,8 @@ public class RSASigner {
 			return null;
 		}
 
-		String signatureString = Base64.encodeToString(
-				signature,
-				Base64.DEFAULT);
-		return signatureString;
+        return Base64.encodeToString(
+                signature,
+                Base64.DEFAULT);
 	}
 }

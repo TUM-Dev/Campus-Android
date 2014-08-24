@@ -31,13 +31,12 @@ public class StartListAdapter extends BaseAdapter {
 	private LayoutInflater inflater = null;
 	private int layoutId;
 	private ArrayList<ListMenuEntry> listMenuEntrySet;
-	private boolean usesColorFilter;
 
-	public StartListAdapter(Activity activity, int layoutId, ArrayList<ListMenuEntry> listMenuEntrySet, boolean usesColorFilter) {
+    public StartListAdapter(Activity activity, int layoutId, ArrayList<ListMenuEntry> listMenuEntrySet, boolean usesColorFilter) {
 		this.activity = activity;
 		this.layoutId = layoutId;
 		this.listMenuEntrySet = listMenuEntrySet;
-		this.usesColorFilter = usesColorFilter;
+        boolean usesColorFilter1 = usesColorFilter;
 		this.inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
 

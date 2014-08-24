@@ -94,7 +94,7 @@ public abstract class Card {
         SharedPreferences prefs = CardManager.getContext().getSharedPreferences(DISCARD_SETTINGS_START, 0);
         Editor editor = prefs.edit();
         discard(editor);
-        editor.commit();
+        editor.apply();
     }
 
     /**
@@ -104,7 +104,7 @@ public abstract class Card {
         SharedPreferences prefs = CardManager.getContext().getSharedPreferences(DISCARD_SETTINGS_PHONE, 0);
         Editor editor = prefs.edit();
         discard(editor);
-        editor.commit();
+        editor.apply();
     }
 
     /**

@@ -164,7 +164,7 @@ public class TUMOnlineRequest {
 					Log.w(getClass().getSimpleName(), "No result available");
 				}
 				// Handles result
-				if (isOnline == false) {
+				if (!isOnline) {
 					listener.onCommonError(context
 							.getString(R.string.no_internet_connection));
 					return;

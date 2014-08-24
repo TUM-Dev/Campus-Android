@@ -57,8 +57,6 @@ public class StartActivity extends ActionBarActivity implements AdapterView.OnIt
 		}
 	};
     private ActionBarDrawerToggle mDrawerToggle;
-    //private SwipeRefreshLayout mSwipeLayout;
-    private ListView mCardsView;
     private CardsAdapter mAdapter;
     private SwipeDismissList mSwipeList;
 
@@ -97,7 +95,7 @@ public class StartActivity extends ActionBarActivity implements AdapterView.OnIt
                 R.color.holo_red_light);*/
 
 		// Set up the ViewPager with the sections adapter.
-        mCardsView = (ListView) findViewById(R.id.cards_view);
+        ListView mCardsView = (ListView) findViewById(R.id.cards_view);
         mAdapter = new CardsAdapter(this);
         mCardsView.setAdapter(mAdapter);
         mCardsView.setOnItemClickListener(this);

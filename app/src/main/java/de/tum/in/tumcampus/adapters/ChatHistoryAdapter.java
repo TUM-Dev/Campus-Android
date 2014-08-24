@@ -82,7 +82,7 @@ public class ChatHistoryAdapter extends BaseAdapter {
 			FrameLayout chatFrameLayout = (FrameLayout) convertView.findViewById(R.id.chatFrameLayout);
 			
 			if ("bot".equals(chatMessage.getMember().getLrzId())) {
-				chatMessageLayout.setBackground(null);
+				chatMessageLayout.setBackgroundDrawable(null);
 				chatMessageLayoutParams.gravity = Gravity.CENTER;
 				chatFrameLayout.setPadding(100, 0, 100, 0); // Add left and right padding
 				holder.tvUser.setText("");

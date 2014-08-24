@@ -50,7 +50,6 @@ public class TransportationActivity extends ActionBarActivity implements OnItemC
 
     private EditText searchTextField;
     private TransportManager transportaionManager;
-    private SharedPreferences sharedPrefs;
     private Activity activity;
 
     private Thread runningSearch = null;
@@ -66,10 +65,7 @@ public class TransportationActivity extends ActionBarActivity implements OnItemC
         ConnectivityManager cm = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
 
-        if (netInfo != null && netInfo.isConnectedOrConnecting()) {
-            return true;
-        }
-        return false;
+        return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
     public void onClick(View view) {
@@ -112,8 +108,8 @@ public class TransportationActivity extends ActionBarActivity implements OnItemC
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.activity_transportation);
-        this.sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-        if (this.sharedPrefs.getBoolean("implicitly_id", true)) {
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        if (sharedPrefs.getBoolean("implicitly_id", true)) {
             ImplicitCounter.Counter("mvv_id", this.getApplicationContext());
         }
 

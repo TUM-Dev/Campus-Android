@@ -79,11 +79,8 @@ public class CreateChatMessage {
 		
 		Calendar today = Calendar.getInstance(); // today
 
-		if (today.get(Calendar.YEAR) == passedDate.get(Calendar.YEAR) && today.get(Calendar.DAY_OF_YEAR) == passedDate.get(Calendar.DAY_OF_YEAR)) {
-			return true;
-		}
-		return false;
-	}
+        return today.get(Calendar.YEAR) == passedDate.get(Calendar.YEAR) && today.get(Calendar.DAY_OF_YEAR) == passedDate.get(Calendar.DAY_OF_YEAR);
+    }
 	
 	private boolean isYesterday(Date date) {
 		Calendar passedDate = Calendar.getInstance();
@@ -92,9 +89,6 @@ public class CreateChatMessage {
 		Calendar yesterday = Calendar.getInstance(); // today
 		yesterday.add(Calendar.DAY_OF_YEAR, -1); // yesterday
 
-		if (yesterday.get(Calendar.YEAR) == passedDate.get(Calendar.YEAR) && yesterday.get(Calendar.DAY_OF_YEAR) == passedDate.get(Calendar.DAY_OF_YEAR)) {
-			return true;
-		}
-		return false;
-	}
+        return yesterday.get(Calendar.YEAR) == passedDate.get(Calendar.YEAR) && yesterday.get(Calendar.DAY_OF_YEAR) == passedDate.get(Calendar.DAY_OF_YEAR);
+    }
 }

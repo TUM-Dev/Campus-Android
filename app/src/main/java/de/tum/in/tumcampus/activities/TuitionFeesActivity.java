@@ -28,14 +28,8 @@ public class TuitionFeesActivity extends ActivityForAccessingTumOnline
 	private TextView amountTextView;
 	private TextView deadlineTextView;
 	private TextView semesterTextView;
-	private SharedPreferences sharedPrefs;
 
-	/**
-	 * tuition information
-	 */
-	private TuitionList tuitionList;
-
-	public TuitionFeesActivity() {
+    public TuitionFeesActivity() {
 		super(Const.STUDIENBEITRAGSTATUS, R.layout.activity_tuitionfees);
 	}
 
@@ -50,7 +44,7 @@ public class TuitionFeesActivity extends ActivityForAccessingTumOnline
 		super.requestFetch();
 
 		//Counting the number of times that the user used this activity for intelligent reordering 
-		sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
 		if (sharedPrefs.getBoolean("implicitly_id", true)){
 				ImplicitCounter.Counter("tuition_fees_id", getApplicationContext());
 		}
@@ -66,7 +60,10 @@ public class TuitionFeesActivity extends ActivityForAccessingTumOnline
 	public void onFetch(String rawResp) {
 
 		Serializer serializer = new Persister();
-		tuitionList = null;
+		/*
+	  tuition information
+	 */
+        TuitionList tuitionList = null;
 
 		try {
 			tuitionList = serializer.read(TuitionList.class, rawResp);

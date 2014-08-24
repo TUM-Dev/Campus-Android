@@ -57,13 +57,12 @@ public class AccessTokenManager implements OnClickListener {
 	}
 
 	private String getAccessToken() {
-		String accessToken = PreferenceManager.getDefaultSharedPreferences(
-				context).getString(Const.ACCESS_TOKEN, "");
-		return accessToken;
+        return PreferenceManager.getDefaultSharedPreferences(
+                context).getString(Const.ACCESS_TOKEN, "");
 	}
 
 	private String getLrzId() {
-		if (lrzId == null || lrzId == "") {
+		if (lrzId == null || lrzId.equals("")) {
 			lrzId = Utils.getSetting(context, Const.LRZ_ID);
 		}
 		return lrzId;
@@ -75,13 +74,9 @@ public class AccessTokenManager implements OnClickListener {
 	}
 
 	public boolean hasValidAccessToken() {
-		String oldaccesstoken = PreferenceManager.getDefaultSharedPreferences(
+		String oldAccessToken = PreferenceManager.getDefaultSharedPreferences(
 				context).getString(Const.ACCESS_TOKEN, "");
-		if (oldaccesstoken != null && oldaccesstoken.length() > 2) {
-			return true;
-		} else {
-			return false;
-		}
+        return oldAccessToken != null && oldAccessToken.length() > 2;
 	}
 
 	public boolean isAccessTokenConfirmed() {
@@ -150,10 +145,10 @@ public class AccessTokenManager implements OnClickListener {
 		// check if lrz could be valid?
 		if (lrzId.length() == MIN_LRZ_LENGTH) {
 			// is access token already set?
-			String oldaccesstoken = PreferenceManager
+			String oldAccessToken = PreferenceManager
 					.getDefaultSharedPreferences(context).getString(
 							Const.ACCESS_TOKEN, "");
-			if (oldaccesstoken.length() > 2) {
+			if (oldAccessToken.length() > 2) {
 				// show Dialog first
 				AlertDialog.Builder builder = new AlertDialog.Builder(context);
 				builder.setMessage(context.getString(R.string.dialog_new_token))

@@ -63,11 +63,7 @@ public class DemoModeStartActivity extends Activity {
 		}
 
 		private boolean isInTime(int currentSeconds) {
-			if (currentSeconds < DUE_DATE_IN_SECONDS) {
-				return true;
-			} else {
-				return false;
-			}
+            return currentSeconds < DUE_DATE_IN_SECONDS;
 		}
 
 		@Override

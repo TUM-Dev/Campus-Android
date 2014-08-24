@@ -65,7 +65,7 @@ public class FeedItemManager {
 			// decode HTML entites, remove links, images, etc.
 			description = Html.fromHtml(
 					json.getString(Const.JSON_DESCRIPTION).replaceAll(
-							"\\<.*?\\>", "")).toString();
+							"<.*?>", "")).toString();
 		}
 		return new FeedItem(feedId, json.getString(Const.JSON_TITLE)
 				.replaceAll("\n", ""), json.getString(Const.JSON_LINK),

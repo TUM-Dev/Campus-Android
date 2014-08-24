@@ -28,9 +28,4 @@
             android:scrollbars="vertical" />
     </LinearLayout>
 
-    <include
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        layout="@layout/overlay_tutorial_news_actionbar" />
-
 </RelativeLayout>

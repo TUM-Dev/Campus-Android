@@ -32,16 +32,15 @@ public class CurriculaActivity extends ActionBarActivity implements OnItemClickL
 	public static final String NAME = "name";
 
 	public static final String URL = "url";
-	private SharedPreferences sharedPrefs;
-	Hashtable<String, String> options;
+    Hashtable<String, String> options;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		// Counting the number of times that the user used this activity for intelligent reordering
-		this.sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-		if (this.sharedPrefs.getBoolean("implicitly_id", true)) {
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+		if (sharedPrefs.getBoolean("implicitly_id", true)) {
 			ImplicitCounter.Counter("study_plans_id", this.getApplicationContext());
 		}
 
@@ -82,7 +81,7 @@ public class CurriculaActivity extends ActionBarActivity implements OnItemClickL
 		// Sort curricula options and attach them to the list
 		Vector<String> sortedOptions = new Vector<String>(this.options.keySet());
 		Collections.sort(sortedOptions);
-		String[] optionsArray = sortedOptions.toArray(new String[0]);
+		String[] optionsArray = sortedOptions.toArray(new String[sortedOptions.size()]);
 
 		// Sets the adapter with list items
 		ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, optionsArray);

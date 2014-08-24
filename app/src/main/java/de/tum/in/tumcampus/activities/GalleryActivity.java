@@ -18,11 +18,9 @@ import de.tum.in.tumcampus.auxiliary.Const;
  */
 public class GalleryActivity extends ActivityForDownloadingExternal {
 
-	private GallerySectionsPagerAdapter mSectionsPagerAdapter;
-	private SharedPreferences sharedPrefs;
-	private ViewPager mViewPager;
-	
-	//private ImplicitCounter implicitCounter;
+    private SharedPreferences sharedPrefs;
+
+    //private ImplicitCounter implicitCounter;
 
 
 	public GalleryActivity() {
@@ -44,11 +42,11 @@ public class GalleryActivity extends ActivityForDownloadingExternal {
 	protected void onStart() {
 		super.onStart();
 		sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-		
-		mSectionsPagerAdapter = new GallerySectionsPagerAdapter(this,
-				getSupportFragmentManager());
 
-		mViewPager = (ViewPager) findViewById(R.id.pager);
+        GallerySectionsPagerAdapter mSectionsPagerAdapter = new GallerySectionsPagerAdapter(this,
+                getSupportFragmentManager());
+
+        ViewPager mViewPager = (ViewPager) findViewById(R.id.pager);
 		mViewPager
 				.setCurrentItem(GallerySectionsPagerAdapter.PAGE_LATESTS_GALLERY);
 		mViewPager.setAdapter(mSectionsPagerAdapter);

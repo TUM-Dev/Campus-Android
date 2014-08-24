@@ -32,13 +32,12 @@ import de.tum.in.tumcampus.auxiliary.AccessTokenManager;
 public class SideNavigationAdapter extends BaseAdapter {
     private LayoutInflater mInflater;
     private Context mContext;
-    private final boolean mHasTUMOAccess;
     private final ArrayList<SideNavigationItem> mVisibleMenuItems;
 
     public SideNavigationAdapter(Context context) {
         mInflater = LayoutInflater.from(context);
         mContext = context;
-        mHasTUMOAccess = new AccessTokenManager(context).hasValidAccessToken();
+        boolean mHasTUMOAccess = new AccessTokenManager(context).hasValidAccessToken();
         mVisibleMenuItems = new ArrayList<SideNavigationItem>();
         for(SideNavigationItem item : menuItems) {
             if(!mHasTUMOAccess && item.needsTUMO)

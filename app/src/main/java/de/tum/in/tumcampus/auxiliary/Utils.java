@@ -93,7 +93,7 @@ public class Utils {
 		// TODO Who handles exception?
 		try {
 			while ((line = reader.readLine()) != null) {
-				sb.append(line + "\n");
+				sb.append(line).append("\n");
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -182,19 +182,19 @@ public class Utils {
 		Log.d("DeleteRecursive", "DELETEPREVIOUS TOP" + dir.getPath());
 		if (dir.isDirectory()) {
 			String[] children = dir.list();
-			for (int i = 0; i < children.length; i++) {
-				File temp = new File(dir, children[i]);
-				if (temp.isDirectory()) {
-					Log.d("DeleteRecursive", "Recursive Call" + temp.getPath());
-					deleteAllCacheData(temp);
-				} else {
-					Log.d("DeleteRecursive", "Delete File" + temp.getPath());
-					boolean b = temp.delete();
-					if (b == false) {
-						Log.d("DeleteRecursive", "DELETE FAIL");
-					}
-				}
-			}
+            for (String aChildren : children) {
+                File temp = new File(dir, aChildren);
+                if (temp.isDirectory()) {
+                    Log.d("DeleteRecursive", "Recursive Call" + temp.getPath());
+                    deleteAllCacheData(temp);
+                } else {
+                    Log.d("DeleteRecursive", "Delete File" + temp.getPath());
+                    boolean b = temp.delete();
+                    if (!b) {
+                        Log.d("DeleteRecursive", "DELETE FAIL");
+                    }
+                }
+            }
 
 		}
 		dir.delete();
@@ -850,11 +850,8 @@ public class Utils {
 	}
 
 	public static boolean isAccessTokenValid(String token) {
-		if (token == null || token == "") {
-			return false;
-		}
-		return true;
-	}
+        return !(token == null || token == "");
+    }
 
 	/**
 	 * Check if a network connection is available or can be available soon
@@ -866,11 +863,8 @@ public class Utils {
 				.getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo netInfo = cm.getActiveNetworkInfo();
 
-		if (netInfo != null && netInfo.isConnectedOrConnecting()) {
-			return true;
-		}
-		return false;
-	}
+        return netInfo != null && netInfo.isConnectedOrConnecting();
+    }
 
 	/**
 	 * Logs an exception and additional information

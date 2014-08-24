@@ -62,7 +62,7 @@ public class SyncManager {
 			}
 			c.close();
 		} catch (SQLiteException e) {
-			if (e.getMessage().toString().contains("no such table")) {
+			if (e.getMessage().contains("no such table")) {
 				Log.w("SQULite", "Error selecting table syncs because it doesn't exist!");
 				return true;
 			}

@@ -90,33 +90,32 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 		}
 
 		// Build content String
-		String content = "<html>"
-				+ "  <head>"
-				+ "    <script type=\"text/javascript\" src=\"jsapi.js\"></script>"
-				+ "    <script type=\"text/javascript\">"
-				+ "      google.load(\"visualization\", \"1\", {packages:[\"corechart\"]});"
-				+ "      google.setOnLoadCallback(drawChart);"
-				+ "      function drawChart() {"
-				+ "        var data = google.visualization.arrayToDataTable(["
-				+ "          ['Grade', 'Quantity'],"
-				+ datas
-				+ "        ]);"
-				+ "        var options = {"
-				+ "          title: 'Grades of "
-				+ filteredExamList.get(0).getProgramID()
-				+ "',"
-				// + " 	     legend: {position: 'none'}"
-				+ "        };"
-				+ "        var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));"
-				+ "        chart.draw(data, options);"
-				+ "      }"
-				+ "    </script>"
-				+ "  </head>"
-				+ "  <body>"
-				+ "    <div id=\"chart_div\" style=\"width: 1000px; height: 500px;\"></div>"
-				+ "  </body>" + "</html>";
 
-		return content;
+        return "<html>"
+                + "  <head>"
+                + "    <script type=\"text/javascript\" src=\"jsapi.js\"></script>"
+                + "    <script type=\"text/javascript\">"
+                + "      google.load(\"visualization\", \"1\", {packages:[\"corechart\"]});"
+                + "      google.setOnLoadCallback(drawChart);"
+                + "      function drawChart() {"
+                + "        var data = google.visualization.arrayToDataTable(["
+                + "          ['Grade', 'Quantity'],"
+                + datas
+                + "        ]);"
+                + "        var options = {"
+                + "          title: 'Grades of "
+                + filteredExamList.get(0).getProgramID()
+                + "',"
+                // + " 	     legend: {position: 'none'}"
+                + "        };"
+                + "        var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));"
+                + "        chart.draw(data, options);"
+                + "      }"
+                + "    </script>"
+                + "  </head>"
+                + "  <body>"
+                + "    <div id=\"chart_div\" style=\"width: 1000px; height: 500px;\"></div>"
+                + "  </body>" + "</html>";
 	}
 
 	/**
@@ -141,32 +140,31 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 			}
 		}
 		// build content String
-		String content = "<html>"
-				+ "  <head>"
-				+ "    <script type=\"text/javascript\" src=\"jsapi.js\"></script>"
-				+ "    <script type=\"text/javascript\">"
-				+ "      google.load(\"visualization\", \"1\", {packages:[\"corechart\"]});"
-				+ "      google.setOnLoadCallback(drawChart);"
-				+ "      function drawChart() {"
-				+ "        var data = google.visualization.arrayToDataTable(["
-				+ "          ['Grade', 'Quantity'],"
-				+ datas
-				+ "        ]);"
-				+ "        var options = {"
-				+ "          title: 'Grades of "
-				+ filteredExamList.get(0).getProgramID()
-				+ "'"
-				+ "        };"
-				+ "        var chart = new google.visualization.PieChart(document.getElementById('chart_div'));"
-				+ "        chart.draw(data, options);"
-				+ "      }"
-				+ "    </script>"
-				+ "  </head>"
-				+ "  <body>"
-				+ "    <div id=\"chart_div\" style=\"width: 1000px; height: 500px;\"></div>"
-				+ "  </body>" + "</html>";
 
-		return content;
+        return "<html>"
+                + "  <head>"
+                + "    <script type=\"text/javascript\" src=\"jsapi.js\"></script>"
+                + "    <script type=\"text/javascript\">"
+                + "      google.load(\"visualization\", \"1\", {packages:[\"corechart\"]});"
+                + "      google.setOnLoadCallback(drawChart);"
+                + "      function drawChart() {"
+                + "        var data = google.visualization.arrayToDataTable(["
+                + "          ['Grade', 'Quantity'],"
+                + datas
+                + "        ]);"
+                + "        var options = {"
+                + "          title: 'Grades of "
+                + filteredExamList.get(0).getProgramID()
+                + "'"
+                + "        };"
+                + "        var chart = new google.visualization.PieChart(document.getElementById('chart_div'));"
+                + "        chart.draw(data, options);"
+                + "      }"
+                + "    </script>"
+                + "  </head>"
+                + "  <body>"
+                + "    <div id=\"chart_div\" style=\"width: 1000px; height: 500px;\"></div>"
+                + "  </body>" + "</html>";
 	}
 
 	/**
@@ -180,19 +178,18 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 		double weightedGrade = 0.0;
 		double creditSum = 0.0;
 
-		for (int i = 0; i < removedDoubles.size(); i++) {
-			Exam item = removedDoubles.get(i);
-			creditSum += Double.valueOf(item.getCredits());
-			try {
-				weightedGrade += format.parse(item.getGrade()).doubleValue()
-						* Double.valueOf(item.getCredits());
-			} catch (NumberFormatException e) {
-				e.printStackTrace();
-			} catch (ParseException e) {
-				e.printStackTrace();
-			}
+        for (Exam item : removedDoubles) {
+            creditSum += Double.valueOf(item.getCredits());
+            try {
+                weightedGrade += format.parse(item.getGrade()).doubleValue()
+                        * Double.valueOf(item.getCredits());
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
 
-		}
+        }
 		return weightedGrade / creditSum;
 
 	}
@@ -206,15 +203,13 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 	public HashMap<String, Integer> calculateGradeDistribution(
 			List<Exam> filteredExamList) {
 		HashMap<String, Integer> gradeDistrubution_hash = new HashMap<String, Integer>();
-		for (int j = 0; j < filteredExamList.size(); j++) {
-			Exam item = filteredExamList.get(j);
+        for (Exam item : filteredExamList) {
+            // increment hash value
+            int curCount = gradeDistrubution_hash.containsKey(item.getGrade()) ? gradeDistrubution_hash
+                    .get(item.getGrade()) : 0;
 
-			// increment hash value
-			int curCount = gradeDistrubution_hash.containsKey(item.getGrade()) ? gradeDistrubution_hash
-					.get(item.getGrade()) : 0;
-
-			gradeDistrubution_hash.put(item.getGrade(), curCount + 1);
-		}
+            gradeDistrubution_hash.put(item.getGrade(), curCount + 1);
+        }
 		return gradeDistrubution_hash;
 	}
 
@@ -252,7 +247,7 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 				String filter = spFilter.getItemAtPosition(arg2).toString();
 				LAST_CHOICE = arg2;
 
-				if (filter == getString(R.string.all_programs)) {
+				if (filter.equals(getString(R.string.all_programs))) {
 
 					// display all grades
 					lvGrades.setAdapter(new ExamListAdapter(
@@ -434,20 +429,19 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 			Exam item_one = filteredExamList.get(i);
 			boolean insert = true;
 
-			for (int j = 0; j < filteredExamList.size(); j++) {
-				Exam item_two = filteredExamList.get(j);
-				if (item_one.getCourse().equals(item_two.getCourse())) {
-					Log.d("Double = ", item_one.getCourse());
-					try {
-						if (format.parse(item_one.getGrade()).doubleValue() > format
-								.parse(item_two.getGrade()).doubleValue())
-							insert = false;
-					} catch (ParseException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
-			}
+            for (Exam item_two : filteredExamList) {
+                if (item_one.getCourse().equals(item_two.getCourse())) {
+                    Log.d("Double = ", item_one.getCourse());
+                    try {
+                        if (format.parse(item_one.getGrade()).doubleValue() > format
+                                .parse(item_two.getGrade()).doubleValue())
+                            insert = false;
+                    } catch (ParseException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                }
+            }
 
 			if (insert)
 				removedDoubles.add(item_one);

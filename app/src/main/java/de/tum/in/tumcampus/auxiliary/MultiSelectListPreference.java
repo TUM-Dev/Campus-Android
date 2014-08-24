@@ -92,7 +92,7 @@ public class MultiSelectListPreference extends ListPreference {
         CharSequence[] entryValues = getEntryValues();
         if (positiveResult && entryValues != null) {
             for (int i = 0; i < entryValues.length; i++) {
-                if (entryChecked[i] == true) {
+                if (entryChecked[i]) {
                     String val = (String) entryValues[i];
                     values.add(val);
                 }

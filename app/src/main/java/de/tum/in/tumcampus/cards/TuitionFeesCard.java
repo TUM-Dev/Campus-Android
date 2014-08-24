@@ -59,10 +59,7 @@ public class TuitionFeesCard extends Card {
     public boolean shouldShow(SharedPreferences prefs) { //TODO: Rethink
         String prevFrist = prefs.getString(LAST_FEE_FRIST, "");
         String prevSoll = prefs.getString(LAST_FEE_SOLL, mTuition.getSoll());
-        if (prevFrist.compareTo(mTuition.getFrist()) < 0 || prevSoll.compareTo(mTuition.getSoll()) > 0) {
-            return true;
-        }
-        return false;
+        return prevFrist.compareTo(mTuition.getFrist()) < 0 || prevSoll.compareTo(mTuition.getSoll()) > 0;
     }
 
     @Override

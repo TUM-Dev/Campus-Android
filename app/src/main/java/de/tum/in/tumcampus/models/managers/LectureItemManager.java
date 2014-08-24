@@ -330,7 +330,7 @@ public class LectureItemManager {
 					.getDefaultSharedPreferences(context).getString(
 							Const.ACCESS_TOKEN, null);
 
-			if (accessToken == null || accessToken == "") {
+			if (accessToken == null || accessToken.equals("")) {
 				success = false;
 				throw new Exception("No access token set");
 			}

@@ -48,7 +48,6 @@ import de.tum.in.tumcampus.models.ChatRoom;
  */
 public class GcmIntentService extends IntentService {
     public static final int NOTIFICATION_ID = 1;
-    private NotificationManager mNotificationManager;
     NotificationCompat.Builder builder;
  
     public GcmIntentService() {
@@ -91,7 +90,7 @@ public class GcmIntentService extends IntentService {
     	}
     	String msg = extras.getString("text");
 		String chatRoomId = matcher.group(1);
-        mNotificationManager = (NotificationManager)
+        NotificationManager mNotificationManager = (NotificationManager)
                 this.getSystemService(Context.NOTIFICATION_SERVICE);
         
         // Notify chat activity that a message has been received

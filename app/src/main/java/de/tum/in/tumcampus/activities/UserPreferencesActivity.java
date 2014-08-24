@@ -15,9 +15,7 @@ import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceManager;
-import android.preference.PreferenceScreen;
 import android.provider.CalendarContract.Calendars;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import de.tum.in.tumcampus.R;
@@ -169,7 +167,7 @@ public class UserPreferencesActivity extends PreferenceActivity implements
         }
 
         // Open the facebook app or view in a browser when not installed
-        Preference facebookPref = (Preference) findPreference("facebook");
+        Preference facebookPref = findPreference("facebook");
         facebookPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             public boolean onPreferenceClick(Preference preference) {
                 Intent facebook;
@@ -187,7 +185,7 @@ public class UserPreferencesActivity extends PreferenceActivity implements
         });
 
         // Open the facebook app or view in a browser when not installed
-        Preference githubPref = (Preference) findPreference("github");
+        Preference githubPref = findPreference("github");
         githubPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             public boolean onPreferenceClick(Preference preference) {
                 startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.github_link))));
@@ -196,7 +194,7 @@ public class UserPreferencesActivity extends PreferenceActivity implements
         });
 
         // Show first use tutorial
-        Preference firstUsePref = (Preference) findPreference("first_run");
+        Preference firstUsePref = findPreference("first_run");
         firstUsePref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             public boolean onPreferenceClick(Preference preference) {
                 SharedPreferences sharedPreferences = PreferenceManager

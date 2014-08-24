@@ -10,15 +10,13 @@ import de.tum.in.tumcampus.R;
  */
 public class PlansDetailsActivity extends ActionBarActivity {
 
-	private static int position;
-
-	@SuppressWarnings("deprecation")
+    @SuppressWarnings("deprecation")
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_plans_details);
 
-		position = getIntent().getExtras().getInt("Plan");
+        int position = getIntent().getExtras().getInt("Plan");
 
 		WebView browser = (WebView) findViewById(R.id.activity_plans_web_view);
 		// activate zoom controls

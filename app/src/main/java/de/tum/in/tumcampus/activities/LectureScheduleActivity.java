@@ -226,7 +226,7 @@ public class LectureScheduleActivity extends ActivityForAccessingTumOnline
 
 				String location = c.getString(c
 						.getColumnIndex(Const.LOCATION_COLUMN));
-				if (location.indexOf(",") != -1) {
+				if (location.contains(",")) {
 					location = location.substring(0, location.indexOf(","));
 				}
 				if (location.length() != 0) {

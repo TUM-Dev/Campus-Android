@@ -36,9 +36,8 @@ public class LecturesAppointmentsActivity extends ActivityForAccessingTumOnline 
 
 	/** UI elements */
 	private ListView lvTermine;
-	private TextView tvTermineLectureName;
 
-	public LecturesAppointmentsActivity() {
+    public LecturesAppointmentsActivity() {
 		super(Const.LECTURES_APPOINTMENTS,
 				R.layout.activity_lecturesappointments);
 	}
@@ -49,12 +48,12 @@ public class LecturesAppointmentsActivity extends ActivityForAccessingTumOnline 
 
 		// set UI Elements
 		lvTermine = (ListView) findViewById(R.id.lvTerminList);
-		tvTermineLectureName = (TextView) findViewById(R.id.tvTermineLectureName);
+        TextView tvTermineLectureName = (TextView) findViewById(R.id.tvTermineLectureName);
 
 		Bundle bundle = this.getIntent().getExtras();
 		// set Lecture Name (depends on bundle data)
 		tvTermineLectureName.setText(bundle.getString(Const.TITLE_EXTRA)
-				.toUpperCase());
+                .toUpperCase());
 		requestHandler.setParameter("pLVNr", bundle.getString("stp_sp_nr"));
 
 		super.requestFetch();

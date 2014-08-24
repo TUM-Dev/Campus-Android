@@ -241,15 +241,6 @@
                 android:value="de.tum.in.tumcampus.activities.StartActivity" />
         </activity>
         <activity
-            android:name="de.tum.in.tumcampus.activities.LecturesSearchActivity"
-            android:configChanges="orientation|screenSize"
-            android:label="@string/lecture_search"
-            android:parentActivityName="de.tum.in.tumcampus.activities.StartActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.tum.in.tumcampus.activities.StartActivity" />
-        </activity>
-        <activity
             android:name="de.tum.in.tumcampus.activities.FeedsDetailsActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/rss_feeds"

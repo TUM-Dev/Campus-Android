@@ -25,15 +25,14 @@ public class RoomFinderListAdapter extends BaseAdapter {
 		TextView tvName;
 	}
 
-	private Activity activity;
-	private ArrayList<HashMap<String, String>> data;
+    private ArrayList<HashMap<String, String>> data;
 	private static LayoutInflater inflater = null;
 
 	// public ImageLoader imageLoader;
 
 	public RoomFinderListAdapter(Activity a,
 			ArrayList<HashMap<String, String>> d) {
-		activity = a;
+        Activity activity = a;
 		data = d;
 		inflater = (LayoutInflater) activity
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);

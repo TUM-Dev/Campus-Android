@@ -17,18 +17,15 @@ import de.tum.in.tumcampus.auxiliary.ImplicitCounter;
  * 
  */
 public class EventsActivity extends ActivityForDownloadingExternal {
-	private SharedPreferences sharedPrefs;
-	private EventsSectionsPagerAdapter mSectionsPagerAdapter;
-	private ViewPager mViewPager;
 
-	public EventsActivity() {
+    public EventsActivity() {
 		super(Const.EVENTS, R.layout.activity_events);
 	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
 		if (sharedPrefs.getBoolean("implicitly_id", true)){
 			ImplicitCounter.Counter("events_id", getApplicationContext());
 		}
@@ -41,10 +38,10 @@ public class EventsActivity extends ActivityForDownloadingExternal {
 		super.onStart();
 
 		// Inits the pager adapter which handles the different fragments
-		mSectionsPagerAdapter = new EventsSectionsPagerAdapter(this,
-				getSupportFragmentManager());
+        EventsSectionsPagerAdapter mSectionsPagerAdapter = new EventsSectionsPagerAdapter(this,
+                getSupportFragmentManager());
 
-		mViewPager = (ViewPager) findViewById(R.id.pager);
+        ViewPager mViewPager = (ViewPager) findViewById(R.id.pager);
 		mViewPager
 				.setCurrentItem(EventsSectionsPagerAdapter.PAGE_LATESTS_EVENTS);
 		mViewPager.setAdapter(mSectionsPagerAdapter);

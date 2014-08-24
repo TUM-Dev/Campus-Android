@@ -10,13 +10,12 @@ import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.SimpleCursorAdapter;
 import android.widget.SimpleCursorAdapter.ViewBinder;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.generic.ActivityForDownloadingExternal;
 import de.tum.in.tumcampus.auxiliary.Const;
@@ -28,8 +27,7 @@ import de.tum.in.tumcampus.models.managers.NewsManager;
  */
 public class NewsActivity extends ActivityForDownloadingExternal implements
 		OnItemClickListener, ViewBinder {
-	RelativeLayout overlay;
-	ImageView overlay_cross;
+
 	SharedPreferences sharedPrefs;
 	static int layoutID;
 	static {
@@ -47,9 +45,7 @@ public class NewsActivity extends ActivityForDownloadingExternal implements
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		super.requestDownload(false);
-		
-		overlay = (RelativeLayout) findViewById(R.id.tumNews_overlay);
-		overlay_cross = (ImageView) findViewById(R.id.tumNews_cross);
+
 		//Counting the number of times that the user used this activity for intelligent reordering 
 		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
 		if (sharedPrefs.getBoolean("implicitly_id", true)){
@@ -77,22 +73,6 @@ public class NewsActivity extends ActivityForDownloadingExternal implements
 		// Opens Url in Browser
 		Intent viewIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
 		startActivity(viewIntent);
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-		sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-		overlay_cross.setOnClickListener(new View.OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				sharedPrefs.edit().putBoolean(Const.FIRST_RUN, false).commit();
-				overlay.setVisibility(View.GONE);
-			}
-		});
-		if (sharedPrefs.getBoolean(Const.FIRST_RUN, true))
-			overlay.setVisibility(View.VISIBLE);
 	}
 
 	@SuppressWarnings("deprecation")

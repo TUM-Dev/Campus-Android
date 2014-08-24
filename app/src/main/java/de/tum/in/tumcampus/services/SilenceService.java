@@ -9,7 +9,6 @@ import android.util.Log;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.managers.CalendarManager;
-import de.tum.in.tumcampus.models.managers.LectureItemManager;
 
 /** Service used to silence the mobile during lectures */
 public class SilenceService extends IntentService {

@@ -18,10 +18,7 @@ import de.tum.in.tumcampus.auxiliary.FileUtils;
 
 public class OrganisationManager {
 
-	/** Maximal file age in milliseconds (here: (3600*1000*24*5) = 5 Days) */
-	private final int MAXFILEAGE = 432000000;
-
-	/**
+    /**
 	 * Constructor, open/create database, create table if necessary
 	 * 
 	 * <pre>
@@ -95,9 +92,8 @@ public class OrganisationManager {
 		Long lastModified = xmlOrgFile.lastModified();
 
 		// if older than 5 days => return true
-		if ((lastModified + MAXFILEAGE) < System.currentTimeMillis()) {
-			return true;
-		}
-		return false;
-	}
+        /* Maximal file age in milliseconds (here: (3600*1000*24*5) = 5 Days) */
+        int MAXFILEAGE = 432000000;
+        return (lastModified + MAXFILEAGE) < System.currentTimeMillis();
+    }
 }

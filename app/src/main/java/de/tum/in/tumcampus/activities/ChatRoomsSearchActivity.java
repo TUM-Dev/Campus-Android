@@ -221,7 +221,7 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
 				@Override
 				public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 					String filter = spFilter.getItemAtPosition(arg2).toString();
-					if (filter == getString(R.string.all)) {
+					if (filter.equals(getString(R.string.all))) {
 						setListView(lecturesList.getLehrveranstaltungen());
 					} else {
 						// do filtering for the given semester
@@ -506,8 +506,7 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
 	
 	private boolean isRegistrationIdSentToTCAServer(Context context) {
 		final SharedPreferences prefs = getGCMPreferences(context);
-		boolean sentToServer = prefs.getBoolean(Const.GCM_REG_ID_SENT_TO_SERVER, false);
-		return sentToServer;
+        return prefs.getBoolean(Const.GCM_REG_ID_SENT_TO_SERVER, false);
 	}
 	
 	/**

@@ -13,10 +13,8 @@ import de.tum.in.tumcampus.R;
  * Fragment for each category-page.
  */
 public class MockSectionFragment extends Fragment {
-	private Activity activity;
-	private ListView listViewMenu;
 
-	public MockSectionFragment() {
+    public MockSectionFragment() {
 	}
 
 	@SuppressWarnings("unchecked")
@@ -26,8 +24,8 @@ public class MockSectionFragment extends Fragment {
 		View rootView = inflater.inflate(
 				R.layout.fragment_mockslidingtab_section, container, false);
 
-		activity = getActivity();
-		listViewMenu = (ListView) rootView.findViewById(R.id.listView);
+        Activity activity = getActivity();
+        ListView listViewMenu = (ListView) rootView.findViewById(R.id.listView);
 
 		getArguments().getInt("key");
 

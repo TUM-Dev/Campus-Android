@@ -87,7 +87,7 @@ public class OrgItemListAdapter extends BaseAdapter {
 		}
 		// get the name depending on the own language
 		if (organisationList.get(position) != null) {
-			if (System.getProperty("user.language") == "de") {
+			if (System.getProperty("user.language").equals("de")) {
 				holder.tvMainField.setText(organisationList.get(position)
 						.getNameDe());
 				holder.tvSubField1.setText(organisationList.get(position)

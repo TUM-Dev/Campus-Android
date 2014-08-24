@@ -39,7 +39,6 @@ public final class Const {
 	public static final String FEED_NAME = "feedName";
 	public static final String FEEDS = "feeds";
 	public static final String FETCH_NOTHING = "";
-	public static final String FIRST_RUN = "first_run";
 	public static final String FORCE_DOWNLOAD = "force_download";
 	public static final String GALLERY = "gallery";
 	public static final String[] GRADES = { "1,0", "1,3", "1,4", "1,7", "2,0",

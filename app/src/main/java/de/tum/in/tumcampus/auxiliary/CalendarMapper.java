@@ -32,8 +32,7 @@ public class CalendarMapper {
 
 		final ContentValues cv = buildContentValues(calendar);
 		Uri calUri = buildCalUri();
-		Uri cancelUri = cr.insert(calUri, cv);
-		return cancelUri;
+        return cr.insert(calUri, cv);
 	}
 
 	@SuppressLint("NewApi")

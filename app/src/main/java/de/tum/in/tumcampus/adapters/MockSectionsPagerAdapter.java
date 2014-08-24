@@ -9,11 +9,10 @@ import de.tum.in.tumcampus.fragments.MockSectionFragment;
 
 public class MockSectionsPagerAdapter extends FragmentPagerAdapter {
 	public final static int PAGE_COUNT = 2;
-	private final Activity activity;
 
-	public MockSectionsPagerAdapter(Activity mainActivity, FragmentManager fm) {
+    public MockSectionsPagerAdapter(Activity mainActivity, FragmentManager fm) {
 		super(fm);
-		this.activity = mainActivity;
+        Activity activity = mainActivity;
 	}
 
 	@Override

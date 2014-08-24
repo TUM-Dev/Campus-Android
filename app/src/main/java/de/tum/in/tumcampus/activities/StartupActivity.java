@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
@@ -17,9 +16,7 @@ import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.wizzard.WizNavStartActivity;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.DemoModeStartActivity;
-import de.tum.in.tumcampus.models.managers.CardManager;
 import de.tum.in.tumcampus.services.DownloadService;
-import de.tum.in.tumcampus.services.ImportService;
 import de.tum.in.tumcampus.services.StartSyncReceiver;
 
 /**

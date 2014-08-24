@@ -47,14 +47,14 @@ public class Dialogs {
 		builder.setMessage(msg)
 				.setCancelable(false)
 				.setPositiveButton(
-						((Activity) context).getString(R.string.yes),
+						context.getString(R.string.yes),
 						new DialogInterface.OnClickListener() {
 							@Override
 							public void onClick(DialogInterface dialog, int id) {
 								parent.startActivity(intent);
 							}
 						})
-				.setNegativeButton(((Activity) context).getString(R.string.no),
+				.setNegativeButton(context.getString(R.string.no),
 						new DialogInterface.OnClickListener() {
 							@Override
 							public void onClick(DialogInterface dialog, int id) {

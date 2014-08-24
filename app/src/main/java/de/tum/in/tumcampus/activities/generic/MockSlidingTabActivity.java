@@ -15,18 +15,15 @@ import de.tum.in.tumcampus.adapters.MockSectionsPagerAdapter;
  */
 public class MockSlidingTabActivity extends ActionBarActivity {
 
-	private MockSectionsPagerAdapter mSectionsPagerAdapter;
-	private ViewPager mViewPager;
-
-	@Override
+    @Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_mocksslidingtab);
 
-		mSectionsPagerAdapter = new MockSectionsPagerAdapter(this,
-				getSupportFragmentManager());
+        MockSectionsPagerAdapter mSectionsPagerAdapter = new MockSectionsPagerAdapter(this,
+                getSupportFragmentManager());
 
-		mViewPager = (ViewPager) findViewById(R.id.pager);
+        ViewPager mViewPager = (ViewPager) findViewById(R.id.pager);
 		mViewPager.setAdapter(mSectionsPagerAdapter);
 	}
 }

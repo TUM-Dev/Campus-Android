@@ -39,9 +39,8 @@ public class FeedsActivity extends ActionBarActivity implements OnItemClickListe
 	// Id and name needed for transmitting to the detail activity
 	private static String feedId;
 	private static String feedName;
-	private SharedPreferences sharedPrefs;
 
-	private SimpleCursorAdapter adapter;
+    private SimpleCursorAdapter adapter;
 
 	@SuppressWarnings("deprecation")
 	@Override
@@ -49,7 +48,7 @@ public class FeedsActivity extends ActionBarActivity implements OnItemClickListe
 		super.onCreate(savedInstanceState);
 		
 		//Counting the number of times that the user used this activity for intelligent reordering 
-		sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
 		if (sharedPrefs.getBoolean("implicitly_id", true)){
 				ImplicitCounter.Counter("rss_feeds_id", getApplicationContext());
 		}

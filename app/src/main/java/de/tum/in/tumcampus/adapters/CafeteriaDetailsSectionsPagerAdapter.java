@@ -24,7 +24,6 @@ import de.tum.in.tumcampus.models.managers.CafeteriaMenuManager;
  */
 @SuppressLint({"SimpleDateFormat", "DefaultLocale"})
 public class CafeteriaDetailsSectionsPagerAdapter extends FragmentPagerAdapter {
-    private final Activity activity;
     private String cafeteriaId;
     private String cafeteriaName;
     private Cursor cursorCafeteriaDates;
@@ -37,7 +36,7 @@ public class CafeteriaDetailsSectionsPagerAdapter extends FragmentPagerAdapter {
     public CafeteriaDetailsSectionsPagerAdapter(Activity mainActivity,
                                                 FragmentManager fm, String cafeteriaId, String cafeteriaName) {
         super(fm);
-        this.activity = mainActivity;
+        Activity activity = mainActivity;
         this.cafeteriaId = cafeteriaId;
         this.cafeteriaName = cafeteriaName;
 

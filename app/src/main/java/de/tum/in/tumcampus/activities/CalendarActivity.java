@@ -55,17 +55,14 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements O
 	private Calendar calendar = new GregorianCalendar();
 
 	private CalendarManager calendarManager;
-	private CalendarSectionsPagerAdapter mSectionsPagerAdapter;
 
-	private ViewPager mViewPager;
+    private ViewPager mViewPager;
 
 	// Objects for disabling or enabling the options menu items
 	private MenuItem menuItemExportGoogle;
 	private MenuItem menuItemDeleteCalendar;
 
-	private SharedPreferences sharedPrefs;
-
-	/** Used as a flag, if there are results fetched from internet */
+    /** Used as a flag, if there are results fetched from internet */
 	private boolean isFetched;
 
 	public CalendarActivity() {
@@ -136,17 +133,16 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements O
 		CalendarMapper calendarMapper = new CalendarMapper(this.getString(R.string.calendar_account_name), this.getString(R.string.calendar_display_name),
 				preferences);
 
-		Uri uri = calendarMapper.addCalendar(calendar, crv);
-		return uri;
+        return calendarMapper.addCalendar(calendar, crv);
 	}
 
 	/**
 	 * Link the Sections with the content with a section adapter. Additionally put the current date at the start position.
 	 */
 	private void attachSectionPagerAdapter() {
-		this.mSectionsPagerAdapter = new CalendarSectionsPagerAdapter(CalendarActivity.this, this.getSupportFragmentManager());
+        CalendarSectionsPagerAdapter mSectionsPagerAdapter = new CalendarSectionsPagerAdapter(CalendarActivity.this, this.getSupportFragmentManager());
 
-		this.mViewPager.setAdapter(this.mSectionsPagerAdapter);
+		this.mViewPager.setAdapter(mSectionsPagerAdapter);
 
 		Date now = new Date();
 		this.calendar.setTime(now);
@@ -194,8 +190,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements O
 	public int deleteLocalCalendar() {
 		ContentResolver crv = this.getContentResolver();
 		Uri uri = Calendars.CONTENT_URI;
-		int deleted = crv.delete(uri, " account_name = '" + this.getString(R.string.calendar_account_name) + "'", null);
-		return deleted;
+        return crv.delete(uri, " account_name = '" + this.getString(R.string.calendar_account_name) + "'", null);
 	}
 
 	/**
@@ -284,8 +279,8 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements O
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		this.sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-		if (this.sharedPrefs.getBoolean("implicitly_id", true)) {
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+		if (sharedPrefs.getBoolean("implicitly_id", true)) {
 			ImplicitCounter.Counter("calender_id", this.getApplicationContext());
 		}
 

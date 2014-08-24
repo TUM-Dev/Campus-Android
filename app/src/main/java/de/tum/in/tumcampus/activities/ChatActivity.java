@@ -158,7 +158,7 @@ public class ChatActivity extends ActionBarActivity implements OnClickListener, 
 		Bundle extras = getIntent().getExtras();
 		currentChatRoom = new Gson().fromJson(extras.getString(Const.CURRENT_CHAT_ROOM), ChatRoom.class);
 		currentChatMember = new Gson().fromJson(extras.getString(Const.CURRENT_CHAT_MEMBER), ChatMember.class);
-		getActionBar().setTitle(currentChatRoom.getName());
+		getSupportActionBar().setTitle(currentChatRoom.getName());
 	}
 	
 	private void bindUIElements() {

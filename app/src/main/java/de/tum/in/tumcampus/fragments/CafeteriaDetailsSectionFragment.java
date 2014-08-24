@@ -30,11 +30,9 @@ import de.tum.in.tumcampus.models.managers.LocationManager;
 public class CafeteriaDetailsSectionFragment extends Fragment {
 	private Activity activity;
 	private String cafeteriaId;
-	private String cafeteriaName;
-	private String date;
+    private String date;
 	private RelativeLayout errorLayout;
-	private View rootView;
-	private View footer;
+    private View footer;
 	private ListView listViewMenu;
 	private SharedPreferences sharedPrefs;
 
@@ -55,14 +53,14 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
 
 		date = getArguments().getString(Const.DATE);
 		cafeteriaId = getArguments().getString(Const.CAFETERIA_ID);
-		cafeteriaName = getArguments().getString(Const.CAFETERIA_NAME);
+        String cafeteriaName = getArguments().getString(Const.CAFETERIA_NAME);
 
 		// initialize listview footer for opening hours
 		footer = getLayoutInflater(savedInstanceState).inflate(
 				android.R.layout.two_line_list_item, null, false);
 
 		showMenueForDay();
-		this.rootView = rootView;
+        View rootView1 = rootView;
 		return rootView;
 	}
 

@@ -12,9 +12,7 @@ import android.provider.SearchRecentSuggestions;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
 import de.tum.in.tumcampus.R;
@@ -63,7 +61,7 @@ public class RoomFinderActivity extends ActivityForSearching implements TUMRoomF
     @Override
     public void performSearchAlgorithm(String query) {
         SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this, RoomFinderSuggestionProvider.AUTHORITY, RoomFinderSuggestionProvider.MODE);
-        suggestions.saveRecentQuery(query.toString(), null);
+        suggestions.saveRecentQuery(query, null);
 
         if(query.length() >= MIN_SEARCH_LENGTH) {
             roomFinderRequest.fetchSearchInteractive(this, this, query);
