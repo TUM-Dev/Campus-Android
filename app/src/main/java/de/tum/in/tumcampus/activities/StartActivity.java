@@ -167,7 +167,13 @@ public class StartActivity extends ActionBarActivity implements AdapterView.OnIt
 		return true;
 	}
 
-	@Override
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mAdapter.notifyDataSetChanged();
+    }
+
+    @Override
 	protected void onDestroy() {
 		super.onDestroy();
 		// important to unregister the broadcast receiver

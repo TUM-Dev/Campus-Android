@@ -29,6 +29,7 @@ import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.managers.CafeteriaManager;
 import de.tum.in.tumcampus.models.managers.CafeteriaMenuManager;
 import de.tum.in.tumcampus.models.managers.CalendarManager;
+import de.tum.in.tumcampus.models.managers.CardManager;
 import de.tum.in.tumcampus.models.managers.EventManager;
 import de.tum.in.tumcampus.models.managers.FeedItemManager;
 import de.tum.in.tumcampus.models.managers.GalleryManager;
@@ -194,6 +195,22 @@ public class UserPreferencesActivity extends PreferenceActivity implements
             }
         });
 
+        // Show first use tutorial
+        Preference firstUsePref = (Preference) findPreference("first_run");
+        firstUsePref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            public boolean onPreferenceClick(Preference preference) {
+                SharedPreferences sharedPreferences = PreferenceManager
+                        .getDefaultSharedPreferences(UserPreferencesActivity.this);
+                SharedPreferences.Editor e = sharedPreferences.edit();
+                e.putBoolean(CardManager.SHOW_TUTORIAL_1, true);
+                e.putBoolean(CardManager.SHOW_TUTORIAL_2, true);
+                e.commit();
+                CardManager.update(UserPreferencesActivity.this);
+                startActivity(new Intent(UserPreferencesActivity.this, StartActivity.class));
+                return true;
+            }
+        });
+
         // Add cafeterias to preferences
         addCafeterias();
 
@@ -231,22 +248,7 @@ public class UserPreferencesActivity extends PreferenceActivity implements
     }
 
     @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
-                                          String key) {
-        // if the color scheme has changed, fire a on activity result intent
-        // which can be used by the calling activity
-        if (key.equals(Const.COLOR_SCHEME)) {
-            Intent returnIntent = new Intent();
-            returnIntent.putExtra(Const.PREFS_HAVE_CHANGED, true);
-            setResult(RESULT_OK, returnIntent);
-        }
-        // If the user changes the preferences for personalized start page this part will update the menu based on the preferences
-        if (key.equals(Const.MVV_ID) || key.equals(Const.LECTURE_ID) || key.equals(Const.MENUES_ID) || key.equals(Const.RSS_FEEDS_ID) || key.equals(Const.CALENDER_ID) || key.equals(Const.STUDY_PLANS_ID) || key.equals(Const.EVENTS_ID) || key.equals(Const.GALLERY_ID) || key.equals(Const.PERSON_SEARCH_ID) || key.equals(Const.PLANS_ID) || key.equals(Const.ROOMFINDER_ID) || key.equals(Const.OPENING_HOURS_ID) || key.equals(Const.ORGANISATIONS_ID) || key.equals(Const.MY_GRADES_ID) || key.equals(Const.MY_LECTURES_ID) || key.equals(Const.TUITION_FEES_ID) || key.equals(Const.TUM_NEWS_ID) || key.equals(Const.INFORMATION_ID)) {
-            Intent returnIntent = new Intent();
-            returnIntent.putExtra(Const.PREFS_HAVE_CHANGED, true);
-            setResult(RESULT_OK, returnIntent);
-        }
-
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         Preference pref = findPreference(key);
         if(pref instanceof MultiSelectListPreference) {
             setSummary((MultiSelectListPreference) pref);
@@ -272,12 +274,6 @@ public class UserPreferencesActivity extends PreferenceActivity implements
             } else {
                 stopService(service);
             }
-        }
-
-        //Launch main activity to start tutorial immediately
-        if (key.equals(Const.FIRST_RUN)) {
-            Intent main = new Intent(this, StartActivity.class);
-            startActivity(main);
         }
     }
 

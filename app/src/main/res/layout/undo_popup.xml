@@ -27,6 +27,7 @@
 			android:textColor="@color/popup_text_color"
 			android:background="@drawable/undo_btn_bg"
 			android:drawableLeft="@drawable/ic_undo"
+            android:drawablePadding="10dp"
 			android:layout_weight="0"
 			android:paddingLeft="8dp"
             android:paddingRight="8dp"

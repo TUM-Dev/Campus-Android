@@ -436,7 +436,7 @@
     <string name="go_on">Zum Fortfahren hier klicken</string>
     <string name="instruction">Willkommen zum Tutorial!\nIn den nächsten Minuten wirst du lernen, wie du die App bedienst</string>
     <string name="skip">Beende das Tutorial wann immer du möchtest</string>
-    <string name="swipe_instruction">Wische durch die Kategorien</string>
+    <string name="swipe_instruction">Wische nach links oder rechts, um eine Karte auszublenden.</string>
     <string name="swipe_right">Wische nach links um zu der Kategorie <i>News</i> zu gelangen</string>
     <string name="current_menu">Aktuelle Kategorie</string>
     <string name="click_to_open">Klicke auf <i>TCA News</i> um dieses Feature zu starten</string>
@@ -487,6 +487,7 @@
     <string name="reregister_success">Sie sind für das %s rückgemeldet!</string>
     <string name="reregister_todo">Sie können sich bis zum %s rückmelden!</string>
     <string name="phone_and_wear">Handy und Wearable></string>
+    <string name="card_settings_instruction">Wenn du eine Karte dauerhaft ausblenden willst oder bei neuen Karten benachrichtigt werden willst öffne Einstellungen &#x2192; Karten</string>
     <!-- END Translated -->
 
 </resources>

@@ -447,7 +447,7 @@
     <string name="go_on">Click here to continue</string>
     <string name="instruction">Welcome to the Tutorial!\nThe next few minutes you will learn how to use this App</string>
     <string name="skip">Skip the tutorial whenever you want</string>
-    <string name="swipe_instruction">Swipe through menu categories</string>
+    <string name="swipe_instruction">Swipe left or right to hide a card.</string>
     <string name="swipe_right">Swipe left to go to category <i>News</i></string>
     <string name="current_menu">Current category</string>
     <string name="click_to_open">Click on <i>TCA News</i> to start this feature</string>
@@ -516,5 +516,6 @@
     <string name="reregister_success">You are reregistered for %s!</string>
     <string name="reregister_todo">You have to reregister until %s!</string>
     <string name="phone_and_wear">Phone and Wearable</string>
+    <string name="card_settings_instruction">If you want to hide a card permanently or you want to be notified if a new card is available open Settings &#x2192; Cards</string>
 
 </resources>

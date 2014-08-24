@@ -85,11 +85,10 @@
             android:key="background_mode"
             android:summary="@string/background_info"
             android:title="@string/background_mode" />
-        <CheckBoxPreference
-            android:defaultValue="false"
+        <Preference
             android:key="first_run"
             android:summary="@string/demo_info"
-            android:title="@string/demo_mode" />
+            android:title="@string/demo_mode"/>
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/debug_for_developer">
         <Preference
@@ -106,10 +105,10 @@
         </Preference>
         <Preference
             android:key="facebook"
-            android:title="@string/facebook"></Preference>
+            android:title="@string/facebook" />
         <Preference
             android:key="github"
-            android:title="@string/github"></Preference>
+            android:title="@string/github" />
     </PreferenceCategory>
 
 </PreferenceScreen>

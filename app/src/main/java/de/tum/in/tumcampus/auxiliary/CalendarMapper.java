@@ -18,14 +18,12 @@ public class CalendarMapper {
 	private String ACCOUNT_NAME;
 	private String INT_NAME_PREFIX;
 	private String Calendar_Name;
-	private SharedPreferences preferences;
 
-	public CalendarMapper(String accountName, String calendarName,
+    public CalendarMapper(String accountName, String calendarName,
 			SharedPreferences preferences) {
 		this.ACCOUNT_NAME = accountName;
 		this.INT_NAME_PREFIX = accountName;
 		this.Calendar_Name = calendarName;
-		this.preferences = preferences;
 	}
 
 	public Uri addCalendar(Calendar calendar, ContentResolver cr) {
@@ -51,22 +49,7 @@ public class CalendarMapper {
 
 	@SuppressLint("InlinedApi")
 	private ContentValues buildContentValues(Calendar calendar) {
-
 		int colorCalendar = 0x0066CC;
-
-		String colorValue = preferences.getString(Const.COLOR_SCHEME, "0");
-		if (colorValue != null) {
-			if (colorValue.equals("0")) {
-				colorCalendar = 0x0066CC;
-			} else if (colorValue.equals("1")) {
-				colorCalendar = 0xFF0000;
-			} else if (colorValue.equals("2")) {
-				colorCalendar = 0x33CC33;
-			} else if (colorValue.equals("3")) {
-				colorCalendar = 0x696969;
-
-			}
-		}
 		String intName = INT_NAME_PREFIX + this.Calendar_Name;
 		final ContentValues cv = new ContentValues();
 		cv.put(Calendars.ACCOUNT_NAME, ACCOUNT_NAME);

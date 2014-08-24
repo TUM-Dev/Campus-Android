@@ -9,13 +9,20 @@ import java.util.List;
 
 import de.tum.in.tumcampus.auxiliary.AccessTokenManager;
 import de.tum.in.tumcampus.cards.Card;
+import de.tum.in.tumcampus.cards.FirstUseCard1;
+import de.tum.in.tumcampus.cards.FirstUseCard2;
 import de.tum.in.tumcampus.cards.RestoreCard;
 
 public class CardManager {
+    public static final String SHOW_TUTORIAL_1 = "show_tutorial_1";
+    public static final String SHOW_TUTORIAL_2 = "show_tutorial_2";
+
     public static final int CARD_CAFETERIA = 1;
     public static final int CARD_TUITION_FEE = 2;
     public static final int CARD_NEXT_LECTURE = 3;
     public static final int CARD_RESTORE = 4;
+    public static final int CARD_FIRST_USE_1 = 5;
+    public static final int CARD_FIRST_USE_2 = 6;
 
     private static List<Card> cards;
     private static ArrayList<Card> newCards;
@@ -50,6 +57,11 @@ public class CardManager {
         // Use temporary array to avoid that the main thread is
         // trying to access an empty array
         newCards = new ArrayList<Card>();
+
+        // Add first use tutorial
+        new FirstUseCard1(context).apply();
+        new FirstUseCard2(context).apply();
+
         List<ProvidesCard> managers = new ArrayList<ProvidesCard>();
 
         // Add those managers only if valid access token is available
