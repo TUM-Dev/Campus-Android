@@ -38,7 +38,7 @@ public class TUMRoomFinderRequest {
 	static final String KEY_Campuses = "campuses"; // parent node
 	public static final String KEY_ID = "Id";
 	public static final String KEY_MapId = "mapId";
-	public static final String KEY_Room = "room";
+	public static final String KEY_ROOM = "room";
 	public static final String KEY_TITLE = "title";
 	public static final String KEY_WEB_CODE = "web_code";
 	/** asynchronous task for interactive fetch */
@@ -97,7 +97,7 @@ public class TUMRoomFinderRequest {
 			String xml = parser.getXmlFromUrl(url); // getting XML from URL
 			Document doc = parser.getDomElement(xml); // getting DOM element
 
-			NodeList roomList = doc.getElementsByTagName(KEY_Room);// building.getChildNodes();
+			NodeList roomList = doc.getElementsByTagName(KEY_ROOM);// building.getChildNodes();
 
 			for (int k = 0; k < roomList.getLength(); k++) {
 
@@ -112,7 +112,7 @@ public class TUMRoomFinderRequest {
 						parser.getValue(campus, KEY_TITLE));
 				roomMap.put(KEY_Building + KEY_TITLE,
 						parser.getValue(building, KEY_TITLE));
-				roomMap.put(KEY_Room + KEY_TITLE,
+				roomMap.put(KEY_ROOM + KEY_TITLE,
 						parser.getValue(room, KEY_TITLE));
 				roomMap.put(KEY_Building + KEY_ID, buildingId);
 				roomMap.put(KEY_ARCHITECT_NUMBER,

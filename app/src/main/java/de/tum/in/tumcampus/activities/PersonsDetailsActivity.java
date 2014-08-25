@@ -1,15 +1,26 @@
 package de.tum.in.tumcampus.activities;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
 
+import android.content.ContentProviderOperation;
+import android.content.OperationApplicationException;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.RemoteException;
+import android.provider.ContactsContract;
+import android.provider.ContactsContract.*;
+import android.provider.ContactsContract.CommonDataKinds.*;
 import android.text.Html;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -17,6 +28,7 @@ import android.widget.Toast;
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.generic.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampus.auxiliary.HTMLStringBuffer;
+import de.tum.in.tumcampus.models.Contact;
 import de.tum.in.tumcampus.models.Employee;
 import de.tum.in.tumcampus.models.Group;
 import de.tum.in.tumcampus.models.Person;
@@ -28,19 +40,87 @@ import de.tum.in.tumcampus.tumonline.TUMOnlineRequestFetchListener;
  * Activity to show information about an person at TUM.
  * 
  * @author Vincenz Doelle
- * @review Daniel G. Mayr
- * @review Thomas Behrens
  */
 public class PersonsDetailsActivity extends ActivityForAccessingTumOnline
 		implements TUMOnlineRequestFetchListener {
 
 	private static final String PERSONEN_DETAILS = "personenDetails";
+    private Employee mEmployee;
+    private MenuItem mContact;
 
     public PersonsDetailsActivity() {
 		super(PERSONEN_DETAILS, R.layout.activity_personsdetails);
 	}
 
-	/**
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        // get person ID and/or object from Staff activity
+        Bundle bundle = this.getIntent().getExtras();
+		/*
+	  The employee
+	 */
+        Person person = (Person) bundle.getSerializable("personObject");
+        // make sure not both person is not null (error occurred)
+        if (person == null) {
+            // no query text specified
+            Toast.makeText(this, getString(R.string.no_person_set), Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        // Sets the current name as a title
+        setTitle(person.getName() + " " + person.getSurname());
+        requestHandler.setParameter("pIdentNr", person.getId());
+        super.requestFetch();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.menu_add_contact, menu);
+        mContact = menu.findItem(R.id.action_add_contact);
+        if(mEmployee==null) {
+            mContact.setVisible(false);
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_add_contact:
+                if(mEmployee!=null)
+                    addContact(mEmployee);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onFetch(String rawResponse) {
+        Log.d(getClass().getSimpleName(), rawResponse);
+
+        // deserialize XML response to model entities
+        Serializer serializer = new Persister();
+        try {
+            mEmployee = serializer.read(Employee.class, rawResponse);
+
+            if (mEmployee != null) {
+                displayResults(mEmployee);
+                progressLayout.setVisibility(View.GONE);
+                mContact.setVisible(true);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.d("EXCEPTION", e.getMessage());
+            progressLayout.setVisibility(View.GONE);
+            errorLayout.setVisibility(View.VISIBLE);
+        }
+    }
+
+    /**
 	 * Displays all relevant information about the given employee in the user
 	 * interface (UI).
 	 * 
@@ -154,47 +234,164 @@ public class PersonsDetailsActivity extends ActivityForAccessingTumOnline
 
 	}
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+    private void addContact(Employee employee) {
+        ArrayList<ContentProviderOperation> ops =
+                new ArrayList<ContentProviderOperation>();
 
-		// get person ID and/or object from Staff activity
-		Bundle bundle = this.getIntent().getExtras();
-		/*
-	  The employee
-	 */
-        Person person = (Person) bundle.getSerializable("personObject");
-		// make sure not both person is not null (error occurred)
-		if (person == null) {
-			// no query text specified
-			Toast.makeText(this, getString(R.string.no_person_set),
-					Toast.LENGTH_LONG).show();
-			return;
-		}
-		// Sets the current name as a title
-		setTitle(person.getName() + " " + person.getSurname());
-		requestHandler.setParameter("pIdentNr", person.getId());
-		super.requestFetch();
-	}
+        int rawContactID = ops.size();
 
-	@Override
-	public void onFetch(String rawResponse) {
-		Log.d(getClass().getSimpleName(), rawResponse);
+        // Adding insert operation to operations list
+        // to insert a new raw contact in the table ContactsContract.RawContacts
+        ops.add(ContentProviderOperation.newInsert(RawContacts.CONTENT_URI)
+                .withValue(RawContacts.ACCOUNT_TYPE, null)
+                .withValue(RawContacts.ACCOUNT_NAME, null)
+                .build());
 
-		// deserialize XML response to model entities
-		Serializer serializer = new Persister();
-		try {
-			Employee employee = serializer.read(Employee.class, rawResponse);
+        // Add full name
+        ops.add(ContentProviderOperation.newInsert(Data.CONTENT_URI)
+                .withValueBackReference(Data.RAW_CONTACT_ID, rawContactID)
+                .withValue(Data.MIMETYPE, StructuredName.CONTENT_ITEM_TYPE)
+                .withValue(StructuredName.PREFIX, employee.getTitle())
+                .withValue(StructuredName.GIVEN_NAME, employee.getName())
+                .withValue(StructuredName.FAMILY_NAME, employee.getSurname())
+                .build());
 
-			if (employee != null) {
-				displayResults(employee);
-				progressLayout.setVisibility(View.GONE);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			Log.d("EXCEPTION", e.getMessage());
-			progressLayout.setVisibility(View.GONE);
-			errorLayout.setVisibility(View.VISIBLE);
-		}
-	}
+        // Add e-mail address
+        if (employee.getEmail() != null) {
+            ops.add(ContentProviderOperation.newInsert(Data.CONTENT_URI)
+                    .withValueBackReference(Data.RAW_CONTACT_ID, rawContactID)
+                    .withValue(Data.MIMETYPE, CommonDataKinds.Email.CONTENT_ITEM_TYPE)
+                    .withValue(CommonDataKinds.Email.DATA, employee.getEmail())
+                    .withValue(CommonDataKinds.Email.TYPE, Email.TYPE_WORK)
+                    .build());
+        }
+
+        List<TelSubstation> substations = employee.getTelSubstations();
+        if (substations != null) {
+            for (TelSubstation sub : substations) {
+                ops.add(ContentProviderOperation.newInsert(Data.CONTENT_URI)
+                        .withValueBackReference(Data.RAW_CONTACT_ID, rawContactID)
+                        .withValue(Data.MIMETYPE, Phone.CONTENT_ITEM_TYPE)
+                        .withValue(Phone.NUMBER, sub.getNumber())
+                        .withValue(Phone.TYPE, Phone.TYPE_WORK)
+                        .build());
+            }
+        }
+
+        // Add work: telefon, mobile, fax, website
+        addContact(ops, rawContactID, employee.getBusinessContact(), true);
+
+        // Add home: telefon, mobile, fax, website
+        addContact(ops, rawContactID, employee.getPrivateContact(), false);
+
+        // Add organisations
+        if (employee.getGroups() != null) {
+            for (Group group : employee.getGroups()) {
+                ops.add(ContentProviderOperation.newInsert(Data.CONTENT_URI)
+                        .withValueBackReference(Data.RAW_CONTACT_ID, rawContactID)
+                        .withValue(Data.MIMETYPE, CommonDataKinds.Organization.CONTENT_ITEM_TYPE)
+                        .withValue(CommonDataKinds.Organization.COMPANY, group.getOrg())
+                        .withValue(Data.MIMETYPE, CommonDataKinds.Organization.CONTENT_ITEM_TYPE)
+                        .withValue(CommonDataKinds.Organization.TITLE, group.getTitle())
+                        .withValue(Data.MIMETYPE, CommonDataKinds.Organization.CONTENT_ITEM_TYPE)
+                        .withValue(CommonDataKinds.Organization.TYPE, Organization.TYPE_WORK).build());
+            }
+        }
+
+        // Add office hours
+        String notes = "";
+        if (employee.getConsultationHours() != null) {
+            notes = getString(R.string.office_hours)+": "+employee.getConsultationHours();
+        }
+
+        // add all rooms
+        List<Room> rooms = employee.getRooms();
+        if (rooms != null && rooms.size() > 0) {
+            if(!notes.isEmpty())
+                notes+="\n";
+            notes += getString(R.string.room)+": "+rooms.get(0).getLocation() + " (" + rooms.get(0).getNumber() + ")";
+        }
+
+        // Finally add notes
+        if(!notes.isEmpty()) {
+            ops.add(ContentProviderOperation.newInsert(Data.CONTENT_URI)
+                    .withValueBackReference(Data.RAW_CONTACT_ID, rawContactID)
+                    .withValue(Data.MIMETYPE, Note.CONTENT_ITEM_TYPE)
+                    .withValue(Note.NOTE, notes)
+                    .build());
+        }
+
+        // Add image
+        Bitmap bitmap = employee.getImage();
+        if(bitmap!=null){    // If an image is selected successfully
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.PNG, 75, stream);
+
+            // Adding insert operation to operations list
+            // to insert Photo in the table ContactsContract.Data
+            ops.add(ContentProviderOperation.newInsert(Data.CONTENT_URI)
+                    .withValueBackReference(Data.RAW_CONTACT_ID, rawContactID)
+                    .withValue(Data.IS_SUPER_PRIMARY, 1)
+                    .withValue(Data.MIMETYPE, Photo.CONTENT_ITEM_TYPE)
+                    .withValue(CommonDataKinds.Photo.PHOTO, stream.toByteArray())
+                    .build());
+
+            try {
+                stream.flush();
+            }catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        // Executing all the insert operations as a single database transaction
+        try{
+            getContentResolver().applyBatch(ContactsContract.AUTHORITY, ops);
+            Toast.makeText(getBaseContext(), getString(R.string.contact_added), Toast.LENGTH_SHORT).show();
+        }catch (RemoteException e) {
+            e.printStackTrace();
+        }catch (OperationApplicationException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void addContact(ArrayList<ContentProviderOperation> ops, int rawContactID, Contact contact, boolean work) {
+        if(contact!=null) {
+            // Add work telefon number
+            if(contact.getTelefon()!=null) {
+                ops.add(ContentProviderOperation.newInsert(Data.CONTENT_URI)
+                        .withValueBackReference(Data.RAW_CONTACT_ID, rawContactID)
+                        .withValue(Data.MIMETYPE, Phone.CONTENT_ITEM_TYPE)
+                        .withValue(Phone.NUMBER, contact.getTelefon())
+                        .withValue(Phone.TYPE, work?Phone.TYPE_WORK:Phone.TYPE_HOME)
+                        .build());
+            }
+            // Add work mobile number
+            if(contact.getMobilephone()!=null) {
+                ops.add(ContentProviderOperation.newInsert(Data.CONTENT_URI)
+                        .withValueBackReference(Data.RAW_CONTACT_ID, rawContactID)
+                        .withValue(Data.MIMETYPE, Phone.CONTENT_ITEM_TYPE)
+                        .withValue(Phone.NUMBER, contact.getMobilephone())
+                        .withValue(Phone.TYPE, work?Phone.TYPE_WORK_MOBILE:Phone.TYPE_MOBILE)
+                        .build());
+            }
+            // Add work fax number
+            if(contact.getFax()!=null) {
+                ops.add(ContentProviderOperation.newInsert(Data.CONTENT_URI)
+                        .withValueBackReference(Data.RAW_CONTACT_ID, rawContactID)
+                        .withValue(Data.MIMETYPE, Phone.CONTENT_ITEM_TYPE)
+                        .withValue(Phone.NUMBER, contact.getFax())
+                        .withValue(Phone.TYPE, work?Phone.TYPE_FAX_WORK:Phone.TYPE_FAX_HOME)
+                        .build());
+            }
+            // Add website
+            if(contact.getHomepage()!=null) {
+                ops.add(ContentProviderOperation.newInsert(Data.CONTENT_URI)
+                        .withValueBackReference(Data.RAW_CONTACT_ID, rawContactID)
+                        .withValue(Data.MIMETYPE, Website.CONTENT_ITEM_TYPE)
+                        .withValue(Website.URL, contact.getHomepage())
+                        .withValue(Website.TYPE, work?Website.TYPE_WORK:Website.TYPE_HOME)
+                        .build());
+            }
+        }
+    }
 }

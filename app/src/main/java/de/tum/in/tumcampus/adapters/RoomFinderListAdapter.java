@@ -68,7 +68,7 @@ public class RoomFinderListAdapter extends BaseAdapter {
 		room = data.get(position);
 
 		// Setting all values in listview
-		roomTitle.setText(room.get(TUMRoomFinderRequest.KEY_Room
+		roomTitle.setText(room.get(TUMRoomFinderRequest.KEY_ROOM
 				+ TUMRoomFinderRequest.KEY_TITLE));
 		buildingTitle.setText(room.get(TUMRoomFinderRequest.KEY_Building
 				+ TUMRoomFinderRequest.KEY_TITLE));
