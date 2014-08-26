@@ -102,6 +102,7 @@ public class StartActivity extends ActionBarActivity implements AdapterView.OnIt
         mCardsView.setDividerHeight(0);
         mSwipeList = new SwipeDismissList(mCardsView, this, SwipeDismissList.UndoMode.MULTI_UNDO);
         mSwipeList.setUndoString(getString(R.string.card_dismissed));
+        mSwipeList.setUndoMultipleString(getString(R.string.cards_dismissed));
 
 		// Registers receiver for download and import
 		IntentFilter intentFilter = new IntentFilter();

@@ -302,7 +302,8 @@
     <!-- Cards -->
     <string name="next_lecture">"prochain cours magistral"</string>
     <string name="restore_all_cards">"Reconstituer les cartes"</string>
-    <string name="card_dismissed">"Carte supprimé"</string>
+    <string name="card_dismissed">"Carte cachée"</string>
+    <string name="cards_dismissed">"%s cartes cachées"</string>
     <string name="reregister_success">"Sie sind für das %s rückgemeldet!"</string>
     <string name="reregister_todo">"Vous avez jusqu'au %s confirmation!"</string>
     <string name="undoall">"Tous Annuler"</string>

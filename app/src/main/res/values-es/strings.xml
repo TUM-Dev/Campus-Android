@@ -302,7 +302,8 @@
     <!-- Cards -->
     <string name="next_lecture">Siguiente lección</string>
     <string name="restore_all_cards">Restaurar tarjetas</string>
-    <string name="card_dismissed">Mapa eliminado</string>
+    <string name="card_dismissed">Carta oculta</string>
+    <string name="cards_dismissed">%s cartas ocultas</string>
     <string name="reregister_success">Son matriculado para los %s!</string>
     <string name="reregister_todo">Usted puede matricularse hasta el %s</string>
     <string name="undoall">Anular todo</string>

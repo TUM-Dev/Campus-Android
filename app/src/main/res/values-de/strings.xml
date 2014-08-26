@@ -304,7 +304,8 @@
     <!-- Cards -->
     <string name="next_lecture">Nächste Vorlesung</string>
     <string name="restore_all_cards">Karten wiederherstellen</string>
-    <string name="card_dismissed">Karte gelöscht</string>
+    <string name="card_dismissed">Karte ausgeblendet</string>
+    <string name="cards_dismissed">%s Karten ausgeblendet</string>
     <string name="reregister_success">Du bist für das %s rückgemeldet!</string>
     <string name="reregister_todo">Du kannst dich bis zum %s rückmelden!</string>
     <string name="undoall">Alle Rückgängig</string>

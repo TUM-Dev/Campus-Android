@@ -93,7 +93,7 @@ public final class SwipeDismissList implements View.OnTouchListener {
 	private int mAutoHideDelay = 4000;
 	private String mDeleteString = "Item deleted";
 	private String mDeleteMultipleString = "%d items deleted";
-	private boolean mTouchBeforeAutoHide = true;
+	private boolean mTouchBeforeAutoHide = false;
 
 	private int mDelayedMsgId;
 
@@ -363,6 +363,11 @@ public final class SwipeDismissList implements View.OnTouchListener {
 				if (mPaused) {
 					return false;
 				}
+                mVelocityTracker = null;
+                mDownX = 0;
+                mDownView = null;
+                mDownPosition = ListView.INVALID_POSITION;
+                mSwiping = false;
 
 				// Find the child view that was touched (perform a hit test)
 				Rect rect = new Rect();
@@ -445,11 +450,6 @@ public final class SwipeDismissList implements View.OnTouchListener {
 						.setDuration(mAnimationTime)
 						.setListener(null);
 				}
-				mVelocityTracker = null;
-				mDownX = 0;
-				mDownView = null;
-				mDownPosition = ListView.INVALID_POSITION;
-				mSwiping = false;
 				break;
 			}
 

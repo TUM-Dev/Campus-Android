@@ -306,7 +306,8 @@
     <!-- Cards -->
     <string name="next_lecture">Next lecture</string>
     <string name="restore_all_cards">Restore cards</string>
-    <string name="card_dismissed">Card dismissed</string>
+    <string name="card_dismissed">Card hidden</string>
+    <string name="cards_dismissed">%s cards hidden</string>
     <string name="reregister_success">You are reregistered for %s!</string>
     <string name="reregister_todo">You have to reregister until %s!</string>
     <string name="undoall">Undo All</string>
