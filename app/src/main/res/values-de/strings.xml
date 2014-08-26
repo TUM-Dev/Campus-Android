@@ -119,6 +119,8 @@
     <string name="facebook_link_app">fb://page/162327853831856</string>
     <string name="github">Mitmachen auf Github</string>
     <string name="github_link">https://github.com/TCA-Team/TumCampusApp</string>
+    <string name="licences">Open Source-Lizenzen</string>
+    <string name="licences_summary">Rechtliche Hinweise zu Lizenzen</string>
 
     <!-- Startup Wizzard -->
     <string name="token_not_enabled">TUMOnline-Access-Token ist nicht aktiviert</string>
@@ -294,8 +296,8 @@
     <string name="send">Senden</string>
     <string name="chat_terms_title">Chat Bedingungen</string>
     <string name="chat_terms_body">Chat Bedingungen</string>
-    <string name="chat_display_name_title">Geben Sie Ihren Anzeigenamen ein</string>
-    <string name="display_name">Anzeigenamen</string>
+    <string name="chat_display_name_title">Geben Sie Ihren Nickname ein</string>
+    <string name="display_name">Nickname</string>
     <string name="leave_chat_room">Chatroom verlassen</string>
     <string name="leave_chat_room_body">Bist du sicher, dass du den chatroom verlassen willst?</string>
     <string name="load_earlier_messages">Ältere Nachrichten laden</string>

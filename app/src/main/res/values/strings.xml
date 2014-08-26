@@ -121,6 +121,8 @@
     <string name="facebook_link_app">fb://page/162327853831856</string>
     <string name="github">Contribute on Github</string>
     <string name="github_link">https://github.com/TCA-Team/TumCampusApp</string>
+    <string name="licences">Open Source-Licences</string>
+    <string name="licences_summary">Legal notes to licences</string>
 
     <!-- Startup Wizzard -->
     <string name="token_not_enabled">TUMOnline-Access-Token is not enabled</string>

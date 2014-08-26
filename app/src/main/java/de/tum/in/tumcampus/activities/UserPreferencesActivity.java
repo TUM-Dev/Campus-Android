@@ -18,6 +18,7 @@ import android.preference.PreferenceManager;
 import android.provider.CalendarContract.Calendars;
 import android.widget.Toast;
 
+import de.psdev.licensesdialog.LicensesDialog;
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.wizzard.WizNavStartActivity;
 import de.tum.in.tumcampus.auxiliary.AccessTokenManager;
@@ -205,6 +206,32 @@ public class UserPreferencesActivity extends PreferenceActivity implements
                 e.commit();
                 CardManager.update(UserPreferencesActivity.this);
                 startActivity(new Intent(UserPreferencesActivity.this, StartActivity.class));
+                return true;
+            }
+        });
+
+
+        // Show licences
+        Preference licencesPref = findPreference("licenses");
+        licencesPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            public boolean onPreferenceClick(Preference preference) {
+                new LicensesDialog(UserPreferencesActivity.this, R.raw.notices, false, true).show();
+                return true;
+            }
+        });
+
+        // Show licences
+        Preference feedbackPref = findPreference("feedback");
+        feedbackPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            public boolean onPreferenceClick(Preference preference) {
+                /* Create the Intent */
+                Intent emailIntent = new Intent(Intent.ACTION_SENDTO);
+                emailIntent.setType("plain/text");
+                emailIntent.putExtra(Intent.EXTRA_EMAIL,getString(R.string.feedbackAddr));
+                emailIntent.putExtra(Intent.EXTRA_SUBJECT,getString(R.string.feedbackSubj));
+
+		        /* Send it off to the Activity-Chooser */
+                startActivity(Intent.createChooser(emailIntent, getString(R.string.send_email)));
                 return true;
             }
         });

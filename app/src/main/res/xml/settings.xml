@@ -99,16 +99,25 @@
 
     <PreferenceCategory android:title="@string/about_tca">
         <Preference
+            android:key="facebook"
+            android:icon="@drawable/ic_facebook"
+            android:title="@string/facebook" />
+        <Preference
+            android:key="github"
+            android:icon="@drawable/ic_github"
+            android:title="@string/github" />
+        <Preference
+            android:key="feedback"
+            android:title="@string/show_feedback" />
+        <Preference
             android:key="about"
             android:title="@string/information">
             <intent android:action="de.tum.in.tumcampus.activities.InformationActivity" />
         </Preference>
         <Preference
-            android:key="facebook"
-            android:title="@string/facebook" />
-        <Preference
-            android:key="github"
-            android:title="@string/github" />
+            android:key="licenses"
+            android:title="@string/licences"
+            android:summary="@string/licences_summary"/>
     </PreferenceCategory>
 
 </PreferenceScreen>
