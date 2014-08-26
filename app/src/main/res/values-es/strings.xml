@@ -338,7 +338,7 @@
     <string name="show_feedback">Envíar comentarios</string>
     <string name="feedbackAddr">tca-support.os.in@tum.de</string>
     <string name="feedbackSubj">Comentarios para la TUM campus App</string>
-    <string name="app_info_text">&lt;b&gt;TUM Campus App&lt;/b&gt;\nThe TUM Campus App is developed by students of the Android practical course, other voluntary freelancers and chair members.
+    <string name="app_info_text">"&lt;b&gt;TUM Campus App&lt;/b&gt;\nThe TUM Campus App is developed by students of the Android practical course, other voluntary freelancers and chair members.
         \n\n&lt;b&gt;Project Management:&lt;/b&gt;\nTUM - Computer Science / F13
         \nProf. Dr. Uwe Baumgarten
         \nNils T. Kannengiesser
@@ -360,7 +360,7 @@
 		\nNew BSD License - http://www.opensource.org/licenses/bsd-license.php
 		\n\nThe source code is available on GitHub (https://github.com/TCA-Team/)
 		\n\n&lt;b&gt;TUM Campus App on Facebook:&lt;/b&gt;\nhttps://www.facebook.com/TUMCampus
-	    \n\n&lt;b&gt;Detailed information on BugSense:&lt;/b&gt;\nBugSense will not collect any sensitive user data, but gathers the following information (as provided by the BugSense support team):\n\nOn Session start:\nUnique device identifier (random string), App version, OS version, Device model, Locale, Timestamp, Event type, SDK version\n\nWhen an exception occurs:\nStacktrace, Error message, App version, OS version, Device model, Locale, Timestamp, SDK version, GPS on/off/NA, WiFi on/off, Cellular data on/off, Device orientation, Screen size, Uncaught or handled exception, custom data\n\nFurthermore it collects the user ip, user country, date/time of crash and application date. BugSense may use the collected information for various general purposes like products and services provision, error analysis, identification and authentication, services improvement, contact, and research. They may publish aggregated and anonymized reports, too.\n\n\nMay 9th 2014\n</string>
+	    \n\n&lt;b&gt;Detailed information on BugSense:&lt;/b&gt;\nBugSense will not collect any sensitive user data, but gathers the following information (as provided by the BugSense support team):\n\nOn Session start:\nUnique device identifier (random string), App version, OS version, Device model, Locale, Timestamp, Event type, SDK version\n\nWhen an exception occurs:\nStacktrace, Error message, App version, OS version, Device model, Locale, Timestamp, SDK version, GPS on/off/NA, WiFi on/off, Cellular data on/off, Device orientation, Screen size, Uncaught or handled exception, custom data\n\nFurthermore it collects the user ip, user country, date/time of crash and application date. BugSense may use the collected information for various general purposes like products and services provision, error analysis, identification and authentication, services improvement, contact, and research. They may publish aggregated and anonymized reports, too.\n\n\nMay 9th 2014\n"</string>
 
     <!-- END Translated, please do not change identifiers -->
 
