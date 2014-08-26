@@ -1,0 +1,368 @@
+<resources>
+
+    <!-- START Translated, please do not change identifiers -->
+
+    <!-- Generic -->
+    <string name="app_name">"TUM Campus App"</string>
+    <string name="campus_app">"Campus App"</string>
+    <string name="search">"Chercher"</string>
+    <string name="tum_logo">"TUM Logo"</string>
+    <string name="update">"Mise à jour"</string>
+    <string name="loading">"Chargement en cours ..."</string>
+    <string name="settings">"Paramètres"</string>
+    <string name="week_splitted">"Dim,Lun,Mar,Mer,Jeu,Ven,Sam"</string>
+    <string name="really_delete">"Est-que tu veux supprimer ce message?"</string>
+    <string name="yes">"Oui"</string>
+    <string name="no">"Non"</string>
+    <string name="no_internet_connection">"Pas de connexion Internet"</string>
+    <string name="app_short_description">"TUM plate-forme d'information - par les étudiants pour les étudiants"</string>
+
+    <!-- Demo mode -->
+    <string name="days_left">"Jours restants"</string>
+    <string name="day_left">"Jour restant"</string>
+    <string name="date_expired">"Démo a expiré"</string>
+    <string name="welcome_demo">"&lt;b&gt;Bienvenue sur le &lt;i&gt;TUM Campus App Demo&lt;/i&gt;&lt;/b&gt;.\n\nIl est nécessaire d'avoir une connexion Internet pour utiliser cette démo. La démo est valable jusqu'au 09/08/2013."</string>
+
+    <!-- Calendar -->
+    <string name="dialog_show_calendar">"Succès à l'exportation.\nCalendrier locale &lt;i&gt;TUM_CAMPUS_APP&lt;/i&gt; dans le &lt;i&gt;Google Calendrier App&lt;/i&gt;?"</string>
+    <string name="export_to_google">"Exporter vers Google"</string>
+    <string name="calendarTimeZone">"Germany/Munich"</string>
+    <string name="calendar_account_name">"TUM_Campus_APP"</string>
+    <string name="calendar_display_name">"TUM Campus"</string>
+    <string name="delete_from_google">"Supprimer de Google"</string>
+    <string name="dialog_delete_calendar">"Veux-tu supprimer le calendrier locale &lt;i&gt;TUM_CAMPUS_APP&lt;/i&gt; de votre appareil?"</string>
+    <string name="calendar_deleted_toast">"Le calendrier a supprimé avec succès"</string>
+    <string name="calendar_not_existing_toast">"Il n'y a pas un calendrier local"</string>
+
+    <!-- Roomfinder -->
+    <string name="no_map_available">"Aucune carte disponible"</string>
+    <string name="no_rooms_found">"Aucunes salles disponibles"</string>
+    <string name="search_rooms">"Chercher des salles"</string>
+
+    <!-- Auxiliary -->
+    <string name="empty_string">""</string>
+    <string name="android_version_too_low">"Android version trop vieille"</string>
+    <string name="android_version_too_low_message">"Ta version Android ne supporte pas cette fonction"</string>
+    <string name="error_fetching_tumonline">"Erreur d'accès TUMOnline.\nContrôle que le TUMOnline-Access-Token a accepté et les droits correspondants sont activés.\n\n&lt;b&gt; Cliquez ici pour répéter.&lt;/b&gt;"</string>
+    <string name="error_no_token_setup">"TUMOnline-Access-Token n'a pas trouvé.\nGénére un TUMOnline-Access-Token dans les\n&lt;i&gt;Paramètres&lt;/i&gt;, pour utiliser les services de TUMOnline.\n\n&lt;b&gt;Clique ici pour voir les &lt;i&gt;Paramètres&lt;/i&gt;.&lt;/b&gt;"</string>
+    <string name="error_something_wrong">"Pardon, quelque chose s'est mal passé."</string>
+    <string name="dialog_new_token">"Ton TUMOnline-Access-Token est déjà réglé.\n\nClique &lt;i&gt;Oui&lt;/i&gt; pour faire un nouveau Token.\nPuis le vieux Token est inutilisable."</string>
+    <string name="error_lrz_wrong">"Ton LRZ indicatif est invalide"</string>
+    <string name="access_token_generated">"TUMOnline-Access-Token est généré avec succès"</string>
+    <string name="access_token_wasnt_generated">"TUMOnline-Access-Token ne peut être créé"</string>
+    <string name="dialog_access_token_invalid">"TUMOnline-Access-Token n'est pas activée"</string>
+    <string name="dialog_no_rights_function">"Aucuns droits pour cette fonction"</string>
+    <string name="empty_result">"La demande apporte un résultat erroné"</string>
+    <string name="error_occurred_while_opening">"Impossible d'ouvrir le fichier"</string>
+    <string name="error">"Erreur"</string>
+
+    <!-- Exam/Grades -->
+    <string name="average_grade">"Moyenne de la note"</string>
+    <string name="show_column_chart">"Montre comme un diagramme à barres"</string>
+    <string name="show_pie_chart">"Montre comme un diagramme en camembert"</string>
+    <string name="result_extra">"Résultat: "</string>
+    <string name="semester">"Semestre"</string>
+    <string name="examiner">"Examinateur"</string>
+    <string name="mode">"Mode"</string>
+    <string name="all_programs">"Tous les programmes"</string>
+    <string name="date">"Date"</string>
+    <string name="credits">"ECTS"</string>
+
+    <!-- Preferences -->
+    <string name="tumonline_settings">"Paramètres TUMOnline"</string>
+    <string name="lrz_id">"LRZ indicatif \""</string>
+    <string name="lrz_id_detail">"Ton LRZ indicatif par exemple go42tum\"."</string>
+    <string name="generate_tumonline_token">"Génére TUMOnline-Access-Token"</string>
+    <string name="generate_tumonline_token_detail">"Crée un Token pour utiliser les services de TUMOnline. Tu dois accepter ce sur TUMOnline et activer les droits correspondantés."</string>
+
+    <string name="personal_settings">"Paramètres personnels"</string>
+    <string name="role">"Rôle"</string>
+    <string name="role_summary">"Ton rôle à la TUM. Ètudiant, employé ou invité."</string>
+    <string name="student">Ètudiant</string>
+    <string name="employee">Employé</string>
+    <string name="guest">Invité</string>
+    <string name="mensa_title">"Ma cafétéria"</string>
+    <string name="mensa_summary">"Choisis tes cafétérias préférés"</string>
+    <string name="my_mensa">"Mes cafétérias"</string>
+    <string name="cards_settings">"Cartes"</string>
+    <string name="card_settings_summary">"Choisis où quelle carte doit être affichée"</string>
+    <string name="where_appear">"Lorsque la carte doit être affichée?"</string>
+    <string name="startpage">"page d'accueil"</string>
+    <string name="wear">"Wearable"</string>
+    <string name="phone_and_wear">"portable et wearable"</string>
+
+    <string name="extras">"Extras"</string>
+    <string name="open_wizzard">"Ouvre startup-wizzard"</string>
+    <string name="open_wizzard_detail">"Le startup-wizzard t'aide à configurer les paramètres de base pour l'accès à les services de TUMOnline et de définir le schéma de couleur de l'application."</string>
+    <string name="clear_cache">"Supprimer les fichiers"</string>
+    <string name="clear_cache_detail">"Supprime tous les fichier qui sont télécharger avec l'appli TUM CAMPUS et sont entasser sur la carte SD."</string>
+    <string name="delete_chache_sure">"Pour supprimer toutes les données?"</string>
+    <string name="success_clear_cache">"Fichiers supprimées avec succès"</string>
+
+    <string name="services">"Services"</string>
+    <string name="silence_phone">"Silent Service"</string>
+    <string name="silence_phone_info">"Pendant des cours magistral, l'appareil est réglée automatiquemen en mode silencieux."</string>
+    <string name="background_mode">"le mode d'arrière-plan"</string>
+    <string name="background_info">"Les capacités vont actualiser une fois par jour pour t'informer sur les nouvelles. Même l'appli n'est pas ouverte."</string>
+    <string name="demo_mode">"In-App Tutorial"</string>
+    <string name="demo_info">"Activer le mode d'aide pour obtenir des informations sur le fonctionnement de l'application."</string>
+
+    <string name="debug_for_developer">"Pour les développeurs"</string>
+    <string name="debug_mode">"Le mode de débogage"</string>
+
+    <string name="about_tca">"À propos de TCA"</string>
+    <string name="information">"Informations"</string>
+    <string name="facebook">"Facebook"</string>
+    <string name="facebook_link">"https://m.facebook.com/TUMCampus"</string>
+    <string name="facebook_link_app">"fb://page/162327853831856"</string>
+    <string name="github">"Contribuer à Github"</string>
+    <string name="github_link">"https://github.com/TCA-Team/TumCampusApp"</string>
+
+    <!-- Startup Wizzard -->
+    <string name="token_not_enabled">"TUMOnline-Access-Token n'est pas activée"</string>
+    <string name="startup_wizzard_uppercase">"Assistant de démarrage"</string>
+    <string name="welcome_msg">"&lt;b&gt;Bienvenue sur le TUM Campus App&lt;/b&gt;\n\nPour permettre l'accès aux services à TUMOnline, ta &lt;b&gt;LRZ indicatif&lt;/b&gt; est nécessaire.\n\nCe indicatif a le format suivant:\n&lt;i&gt;xx00xxx&lt;/i&gt;\n(2 lettres, 2 chiffres, 3 lettres)"</string>
+    <string name="button_skip">"Sauter"</string>
+    <string name="button_next">"Plus"</string>
+    <string name="need_to_enable">"&lt;b&gt;Le TUMOnline-Access-Token a été créé avec succès&lt;/b&gt;\n\nMaintenant, tu peux activer le Token dans TUMOnline sûr &lt;i&gt;Dienste/Token-administration &lt;/ i&gt;. Fais attention, tu dois activer aussi les droit pour l'accès à des services seuls sûr &lt;i&gt;droits actifs&lt;/i&gt;"</string>
+    <string name="step_1">"Etape 1"</string>
+    <string name="step_2">"Etape 2"</string>
+    <string name="step_3">"Etape 3"</string>
+    <string name="set_background_mode">"&lt;b&gt;arrière-plan mode&lt;/b&gt;\n\Active ou désactiver l' &lt;i&gt;arrière-plan mode&lt;/ i&gt;. Après une activation, toutes les capacités vont télécharger une fois par jour et en l'arrière-plan pour."</string>
+    <string name="set_silent_mode">"&lt;b&gt;Silent Service&lt;/ b&gt;\n\nAprès une activation, l'appareil va se met en &lt;i&gt;mode silencieux&lt;/i&gt; lors d'une conférence actuellement détenu."</string>
+    <string name="goto_tumcampus">"Lancer TUM campus App"</string>
+
+    <!-- RSS-Feed -->
+    <string name="add_rss">"Ajouter RSS-Feed"</string>
+    <string name="url">"URL"</string>
+    <string name="name">"Nom"</string>
+    <string name="add">"Ajouter"</string>
+
+    <!-- News -->
+    <string name="no_link_existing">"Aucun lien trouvé."</string>
+    <string name="info_title">"Nouvelles:"</string>
+    <string name="info_str">"Pas de grandes nouvelles!"</string>
+
+    <!-- SideNavigation -->
+    <string name="drawer_open">"Ouvrir"</string>
+    <string name="drawer_close">"Fermer"</string>
+    <string name="my_tum">"Mon TUM"</string>
+    <string name="schedule">"Calendrier"</string>
+    <string name="my_lectures">"Mes cours magistral"</string>
+    <string name="my_grades">"Mes notes"</string>
+    <string name="chat_rooms">"forum de discussion "</string>
+    <string name="tuition_fees">"feed-back "</string>
+    <string name="tum_common">"TUM général"</string>
+    <string name="menues">"cafétérias"</string>
+    <string name="rss_feeds">"RSS-Feeds"</string>
+    <string name="study_plans">"programmes des études"</string>
+    <string name="person_search">"Chercher de personnes"</string>
+    <string name="plans">"Plans"</string>
+    <string name="roomfinder">"Chercher des salles"</string>
+    <string name="opening_hours">"Horaires d'ouverture"</string>
+    <string name="organisations">"Arbre de l'orgarnisation"</string>
+    <string name="mvv">"MVV"</string>
+    <string name="tum_news">"TCA Nouvelles"</string>
+
+    <!-- Activity titles -->
+    <string name="lecture_schedule">"horaire des cours"</string>
+    <string name="lectures_information">"Informations sur les cours magistral"</string>
+    <string name="lectures_appointments">"horaire des cours"</string>
+    <string name="events">"Événements"</string>
+    <string name="gallery">"Galerie"</string>
+    <string name="event_details">"Détails de l'événement"</string>
+    <string name="person_information">"des informations sur les personnes"</string>
+    <string name="organisation_details">"Détails d'organisation"</string>
+    <string name="info_title_str">"TCA Informations"</string>
+    <string name="cafeterias">"cafétérias"</string>
+
+    <!-- Organisations -->
+    <string name="tum">"Université technique de Munich"</string>
+    <string name="invalid_organisation">"Mauvaise organisation!"</string>
+    <string name="contact_person">"Personne de contact"</string>
+    <string name="secretary">"Secrétariat"</string>
+    <string name="bib">"Bibliothèque"</string>
+    <string name="extra">"Supplémentaire"</string>
+    <string name="extra_name">"Nom supplémentaire"</string>
+    <string name="identifier">"indicatif"</string>
+    <string name="exception_sdcard">"Erreur d'accès à la carte SD"</string>
+    <string name="adress">"Adresse"</string>
+
+    <!-- MVV -->
+    <string name="no_departures_found">"Aucun horaire de départ disponibles"</string>
+    <string name="no_station_found">"Aucun des stations trouvé"</string>
+    <string name="exception_unknown">"Erreur inconnue"</string>
+    <string name="exception_timeout">"Problèmes avec la connexion Internet, s'il te plaît essayer encore une fois plus tard."</string>
+    <string name="search_station">"Chercher des stations"</string>
+    <string name="no_stored_search_requests">"Pas de recherches enregistrées"</string>
+
+    <!-- Events -->
+    <string name="latest_events">"nouveaux événements"</string>
+    <string name="past_events">"Événements passés"</string>
+
+    <!-- Lectures -->
+    <string name="no_appointments">"Aucuns dates disponibles"</string>
+    <string name="lec_details">"Détails"</string>
+    <string name="semester_data">"dates des semestre"</string>
+    <string name="sws_number">"Nombre de périodes de semestre par semaine"</string>
+    <string name="lecture_begin">"Début des cours"</string>
+    <string name="first_date">"Première date de cours magistral"</string>
+    <string name="lec_contributors">"Cours magistral équipe"</string>
+    <string name="lecturer">"professeur d'université"</string>
+    <string name="organisation_of_lecture">"organisation"</string>
+    <string name="lec_content">"contenu de cours magistral"</string>
+    <string name="teaching_content">"contenu de l'enseignement"</string>
+    <string name="lec_method">"Méthode"</string>
+    <string name="lec_method_details">"Détails de la méthode"</string>
+    <string name="lec_target">"Objectifs"</string>
+    <string name="teaching_target">"but de l'enseignement"</string>
+    <string name="examination_aids">"Aides examen"</string>
+    <string name="literature">"littérature "</string>
+
+    <!-- Tuition fees -->
+    <string name="amount_dots">"Montant ouvert:"</string>
+    <string name="deadline_dots">"dernière limite:"</string>
+
+    <!-- Persons -->
+    <string name="no_search_result">"Aucun résultat de recherche"</string>
+    <string name="no_person_set">"Aucune personne sélectionnée!"</string>
+    <string name="email">"e-mail"</string>
+    <string name="phone">"téléphone "</string>
+    <string name="fax">"Fax"</string>
+    <string name="homepage">"page d'accueil"</string>
+    <string name="mr">"M."</string>
+    <string name="mrs">"Mme"</string>
+    <string name="function">"Fonction"</string>
+    <string name="group">"Groupe"</string>
+    <string name="mobile_phone">"Numéro de portable"</string>
+    <string name="add_info">"Informations Complémentaires"</string>
+    <string name="office_hours">"Heures de bureau"</string>
+    <string name="room">"Salle"</string>
+    <string name="add_contact">"Ajouter aux contacts"</string>
+    <string name="contact_added">"Contact a été ajouté!"</string>
+
+    <!-- Gallery -->
+    <string name="latest_gallery">"Dernières Galerie"</string>
+    <string name="past_gallery">"Galerie passé"</string>
+
+    <!-- Curricula -->
+    <string name="something_wrong">"Une erreur est survenue"</string>
+    <string name="informatics_bachelor_0809">"bachelor d'informatique WS0809"</string>
+    <string name="informatics_bachelor_1213">"bachelor d'informatique WS1213"</string>
+    <string name="business_informatics_bachelor_1112">"bachelor d'informatique économique WS1112"</string>
+    <string name="business_informatics_bachelor_0809">"bachelor d'informatique économique WS0809"</string>
+    <string name="business_informatics_bachelor_1213">"bachelor d'informatique économique WS1213"</string>
+    <string name="business_informatics_bachelor_1314">"bachelor d'informatique économique WS1314"</string>
+    <string name="bioinformatics_bachelor">"bachelor de bioinformatique"</string>
+    <string name="games_engineering_bachelor">"Games Engineering Bachelor"</string>
+    <string name="informatics_master">"mastère informatique"</string>
+    <string name="business_informatics_master">"mastère informatique économique"</string>
+    <string name="bioinformatics_master">"mastère bioinformatique"</string>
+    <string name="automotive_master">"Automotive Software Engineering mastère"</string>
+    <string name="computational_science_master">"Computational Science and Engineering"</string>
+
+    <!-- Opening hours -->
+    <string name="libraries">"Bibliothèques"</string>
+    <string name="mensa_garching">"cafétéria Garching"</string>
+    <string name="mensa_grosshadern">"cafétéria Grosshadern"</string>
+    <string name="mensa_city">"cafétéria Campus principal"</string>
+    <string name="mensa_pasing">"cafétéria Pasing"</string>
+    <string name="mensa_weihenstephan">"cafétéria Weihenstephan"</string>
+    <string name="facility_categories_splitted">"library,info,cafeteria_gar,cafeteria_grh,cafeteria,cafeteria_pas,cafeteria_wst"</string>
+
+    <!-- Plans -->
+    <string name="campus_garching">"Campus Garching"</string>
+    <string name="campus_klinikum">"Campus Klinikum"</string>
+    <string name="campus_olympiapark">"Campus Olympiapark"</string>
+    <string name="campus_olympiapark_gyms">"Campus Olympiapark plan de salle de gym"</string>
+    <string name="campus_main">"Campus principal"</string>
+    <string name="campus_weihenstephan">"Campus Weihenstephan"</string>
+    <string name="mvv_fast_train_net">"MVV Schnellbahnnetz"</string>
+    <string name="mvv_tram">"MVV réseau de tramway"</string>
+    <string name="mvv_entire_net">"MVV réseau global"</string>
+    <string name="mvv_nightlines">"MVV réseau de lignes de nuit"</string>
+    <string name="campus_garching_adress">"Walther-Meißner-Straße 3, 85748 Garching"</string>
+    <string name="campus_klinikum_adress">"Ismaninger Straße 22, 81675 Munich"</string>
+    <string name="campus_olympiapark_adress">"Connollystraße 32, 80809 Munich"</string>
+    <string name="campus_main_adress">"Arcisstraße 21, 80333 Munich"</string>
+    <string name="campus_weihenstephan_adress">"Liesel-Beckmann-Straße 6, 85354 Freising"</string>
+
+    <!-- Chat rooms -->
+    <string name="my_chat_rooms">"Mes forums de discussions"</string>
+    <string name="send">"Envoyer"</string>
+    <string name="chat_terms_title">"condition de forum de discussion"</string>
+    <string name="chat_terms_body">"condition de forum de discussion"</string>
+    <string name="chat_display_name_title">"Tape ton nickname"</string>
+    <string name="display_name">"nickname"</string>
+    <string name="leave_chat_room">"Quitté le forum de discussion"</string>
+    <string name="leave_chat_room_body">"Es-tu sûr que tu veux quitter le forum de discussion?"</string>
+    <string name="load_earlier_messages">"Charger les anciens messages"</string>
+    <string name="all">"Tous"</string>
+
+    <!-- Cards -->
+    <string name="next_lecture">"prochain cours magistral"</string>
+    <string name="restore_all_cards">"Reconstituer les cartes"</string>
+    <string name="card_dismissed">"Carte supprimé"</string>
+    <string name="reregister_success">"Sie sind für das %s rückgemeldet!"</string>
+    <string name="reregister_todo">"Vous avez jusqu'au %s confirmation!"</string>
+    <string name="undoall">"Tous Annuler"</string>
+    <string name="undo">"Annuler"</string>
+
+    <!-- first use tutorial -->
+    <string name="swipe_instruction">"lessive vers la gauche ou la droite pour cacher une carte."</string>
+    <string name="card_settings_instruction">"Quand tu veux cacher une carte permanente ou tu veux être avertir de nouvelles cartes  ouvrir Paramètres → cartes"</string>
+
+    <!-- Cafeteria -->
+    <string name="cafeteria_ingredients">"(f) 	plat végétarien
+        \n(v) plat vegan
+		\n(S) plat avec porc
+		\n(R) plat avec bœuf 
+		\n(GQB) qualité testée - Bavière
+		\n(99) plat avec de l'alcool
+		\n\n1 avec colorant 
+		\n2 avec conservateur
+		\n3 avec antioxydant
+		\n4 avec exhausteur
+		\n5 sulfuré
+		\n6 noirci (olive)
+		\n8 avec du phosphate
+		\n9 avec des édulcorants
+		\n10 contient une source de phénylalanine
+		\n11 avec le sucre et les édulcorants"</string>
+    <string name="action_ingredients">"Ingrédients"</string>
+    <string name="kitchen_opening">"horaire d'ouverture de la cuisine"</string>
+
+    <!-- Information -->
+    <string name="version">"Version"</string>
+    <string name="send_email">"Envoyer feed-back par e-mail"</string>
+    <string name="show_feedback">"Envoyer feed-back"</string>
+    <string name="feedbackAddr">"tca-support.os.in@tum.de"</string>
+    <string name="feedbackSubj">"Feed-back pour TUM Campus App"</string>
+    <string name="app_info_text">"&lt;b&gt;TUM Campus App&lt;/b&gt;\nThe TUM Campus App is developed by students of the Android practical course, other voluntary freelancers and chair members.
+        \n\n&lt;b&gt;Project Management:&lt;/b&gt;\nTUM - Computer Science / F13
+        \nProf. Dr. Uwe Baumgarten
+        \nNils T. Kannengiesser
+        \n\n&lt;b&gt;Most recent Developers:&lt;/b&gt;
+        \nJana Pejic
+        \nMarko Lalic
+        \nKordian Bruck
+        \nFlorian Dreier
+        \nSepideh Mesbah
+        \nShabnam Najafian
+        \n\n&lt;b&gt;Further Developers:&lt;/b&gt;
+        \nSascha Moecker, Haris Iltifat, Anas Chakfeh, Thomas Krex, Marius Muntean, Christoph Richter, Thomas Bley, Vincenz Dölle, Daniel Mayr, Thomas Behrens, Florian Schulz, Vasyl Malinskyi,
+        Andreas Bernhofer (IT-Support/TUMonline), Nils T. Kannengiesser (F13)
+        \n\n&lt;b&gt;Important information:&lt;/b&gt;\nThis App is not published by the Technical University Muenchen officially. It is a project by and for students. The software is used at your own risk. We are not responsible for any damage that might be caused by using this App or its presented information. For security reasons the access to private information of TUMOnline is regulated by using tokens. You need to enable different features within TUMOnline for a certain token to be able to use those information within the App.
+        \n\n&lt;b&gt;Privacy information:&lt;/b&gt;\nThe application stores data on request only. Critical information requires the user's permission (clearance by token) and is stored locally or received from TUMOnline directly. We are using BugSense for bug tracking. Crash reports contain detailed technical information on the phone, the operating system and the error itself. This information is helpful for the developers in order to improve the app. Furthermore BugSense collects anonymous usage information (e.g. users of the app per day). Detailed information on BugSense can be found below.
+		\n\n&lt;b&gt;Support:&lt;/b&gt;\nhttps://www.facebook.com/TUMCampus
+		\nPlease take a look at the offered manual as well. In addition please contact us at tca-support.os.in@tum.de for any special requests.
+		\n\n&lt;b&gt;Licenses:&lt;/b&gt;\nGNU GPL v3 - http://www.gnu.org/licenses/gpl.html or
+		\nNew BSD License - http://www.opensource.org/licenses/bsd-license.php
+		\n\nThe source code is available on GitHub (https://github.com/TCA-Team/)
+		\n\n&lt;b&gt;TUM Campus App on Facebook:&lt;/b&gt;\nhttps://www.facebook.com/TUMCampus
+	    \n\n&lt;b&gt;Detailed information on BugSense:&lt;/b&gt;\nBugSense will not collect any sensitive user data, but gathers the following information (as provided by the BugSense support team):\n\nOn Session start:\nUnique device identifier (random string), App version, OS version, Device model, Locale, Timestamp, Event type, SDK version\n\nWhen an exception occurs:\nStacktrace, Error message, App version, OS version, Device model, Locale, Timestamp, SDK version, GPS on/off/NA, WiFi on/off, Cellular data on/off, Device orientation, Screen size, Uncaught or handled exception, custom data\n\nFurthermore it collects the user ip, user country, date/time of crash and application date. BugSense may use the collected information for various general purposes like products and services provision, error analysis, identification and authentication, services improvement, contact, and research. They may publish aggregated and anonymized reports, too.\n\n\nMay 9th 2014\n"</string>
+
+    <!-- END Translated, please do not change identifiers -->
+
+
+</resources>

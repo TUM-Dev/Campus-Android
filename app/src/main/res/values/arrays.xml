@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     
     <string-array name="roles">
-        <item>Student</item>
-        <item>Employee</item>
-        <item>Guest</item>
+        <item>@string/student</item>
+        <item>@string/employee</item>
+        <item>@string/guest</item>
     </string-array>
-    <string-array name="roles_values">
+    <string-array name="roles_values" tools:ignore="MissingTranslation">
         <item>0</item>
         <item>1</item>
         <item>2</item>
@@ -14,16 +14,16 @@
 
     <string-array name="card_show">
         <item>@string/startpage</item>
-        <item>@string/phone_and_wear</item>
         <item>@string/wear</item>
+        <item>@string/phone_and_wear</item>
     </string-array>
-    <string-array name="card_show_values">
+    <string-array name="card_show_values" tools:ignore="MissingTranslation">
         <item>1</item>
         <item>2</item>
         <item>3</item>
     </string-array>
-    <string-array name="card_show_start_wear">
+    <string-array name="card_show_start_wear" tools:ignore="MissingTranslation">
         <item>1</item>
-        <item>3</item>
+        <item>2</item>
     </string-array>
 </resources>

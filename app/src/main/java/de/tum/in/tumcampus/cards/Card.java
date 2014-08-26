@@ -24,7 +24,7 @@ import de.tum.in.tumcampus.models.managers.CardManager;
 public abstract class Card {
     public static final String DISCARD_SETTINGS_START = "discard_settings_start";
     public static final String DISCARD_SETTINGS_PHONE = "discard_settings_phone";
-    private static final String defaultVal = "1\u0001\u0007\u001D\u0007\u00013";
+    private static final String defaultVal = "1\u0001\u0007\u001D\u0007\u00012";
     
     // Context related stuff
     protected Context mContext;
@@ -38,16 +38,16 @@ public abstract class Card {
     
     // Settings for showing this card on startpage or as notification
     private boolean mShowStart = true;
-    private boolean mShowPhoneWear = false;
     private boolean mShowWear = false;
+    private boolean mShowPhoneWear = false;
 
     public Card(Context context, String settings) {
         this(context);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
         List<String> show = MultiSelectListPreference.getFromString(prefs.getString(settings, defaultVal));
         mShowStart = show.contains("1");
-        mShowPhoneWear = show.contains("2");
-        mShowWear = show.contains("3");
+        mShowWear = show.contains("2");
+        mShowPhoneWear = show.contains("3");
     }
 
     public Card(Context context) {
@@ -125,7 +125,7 @@ public abstract class Card {
         }
 
         // Should be shown on phone or watch?
-        if(mShowPhoneWear ||mShowWear) {
+        if(mShowPhoneWear || mShowWear) {
             SharedPreferences prefs = CardManager.getContext().getSharedPreferences(DISCARD_SETTINGS_PHONE, 0);
             if (shouldShow(prefs))
                 notifyUser();
@@ -143,10 +143,7 @@ public abstract class Card {
     /**
      * Shows the card as notification if settings allow it
      * */
-    public void notifyUser() {
-        if(!mShowPhoneWear && !mShowWear)
-            return;
-
+    private void notifyUser() {
         // Showing a notification is handled as it would already be dismissed, so that it will not
         // notify again.
         discardNotification();
@@ -160,7 +157,7 @@ public abstract class Card {
                         .setContentTitle(getTitle());
 
         // Trick to hide card on phone
-        if(!mShowPhoneWear) {
+        if(mShowWear) {
             notificationBuilder.setGroup("GROUP_" + getTyp());
             notificationBuilder.setGroupSummary(false);
         } else {
