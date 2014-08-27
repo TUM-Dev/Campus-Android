@@ -56,7 +56,7 @@ public class LecturesPersonalActivity extends ActivityForSearching implements TU
     private RelativeLayout noTokenLayout;
 
     public LecturesPersonalActivity() {
-		super(R.layout.activity_lecturespersonal);
+		super(R.layout.activity_lectures);
 	}
 
 	@Override

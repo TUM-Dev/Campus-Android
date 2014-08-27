@@ -4,10 +4,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -128,7 +126,6 @@ public class NewsActivity extends ActivityForDownloadingExternal implements
                 } else {
                     tv.setText(Uri.parse(link).getHost());
                 }
-                Log.d("Cursor",Uri.parse(link).getHost());
                 return true;
             }
         }
