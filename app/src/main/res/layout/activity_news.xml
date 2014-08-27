@@ -25,7 +25,10 @@
             android:id="@+id/activity_news_list_view"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:scrollbars="vertical" />
+            android:scrollbars="vertical"
+            android:descendantFocusability="blocksDescendants"
+            android:dividerHeight="0dip"
+            android:listSelector="@android:color/transparent" />
     </LinearLayout>
 
 </RelativeLayout>

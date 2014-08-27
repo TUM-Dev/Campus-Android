@@ -168,15 +168,15 @@ public class SideNavigationAdapter extends BaseAdapter {
             new SideNavigationItem(R.string.tuition_fees,R.drawable.ic_money, true, TuitionFeesActivity.class),
             new SideNavigationItem(R.string.tum_common, false),
             new SideNavigationItem(R.string.menues,R.drawable.ic_cutlery, false, CafeteriaActivity.class),
-            new SideNavigationItem(R.string.rss_feeds,R.drawable.ic_rss, false, FeedsActivity.class),
+            new SideNavigationItem(R.string.tum_news,R.drawable.ic_rss, false, NewsActivity.class),
+           // new SideNavigationItem(R.string.rss_feeds,R.drawable.ic_rss, false, FeedsActivity.class),
             new SideNavigationItem(R.string.study_plans,R.drawable.ic_study_plans, false, CurriculaActivity.class),
             new SideNavigationItem(R.string.person_search,R.drawable.ic_users, true, PersonsSearchActivity.class),
             new SideNavigationItem(R.string.plans,R.drawable.ic_plans, false, PlansActivity.class),
             new SideNavigationItem(R.string.roomfinder,R.drawable.ic_place, false, RoomFinderActivity.class),
             new SideNavigationItem(R.string.opening_hours,R.drawable.ic_time, false, OpeningHoursListActivity.class),
             new SideNavigationItem(R.string.organisations,R.drawable.ic_organisations, true, OrganisationActivity.class),
-            new SideNavigationItem(R.string.mvv,R.drawable.ic_mvv, false, TransportationActivity.class),
-            new SideNavigationItem(R.string.tum_news,R.drawable.ic_rss, false, NewsActivity.class),
+            new SideNavigationItem(R.string.mvv,R.drawable.ic_mvv, false, TransportationActivity.class)
     };
 
 }
