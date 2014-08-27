@@ -84,16 +84,6 @@ public class StartActivity extends ActionBarActivity implements AdapterView.OnIt
             StrictMode.setThreadPolicy(policy);
         }
 
-        // Currently causes problems when dismissing cards, and there
-        // is no card that really profits from updating
-        // Set up the SwipeRefreshLayout
-        /*mSwipeLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
-        mSwipeLayout.setOnRefreshListener(this);
-        mSwipeLayout.setColorSchemeResources(R.color.holo_blue_bright,
-                R.color.holo_green_light,
-                R.color.holo_orange_light,
-                R.color.holo_red_light);*/
-
 		// Set up the ViewPager with the sections adapter.
         ListView mCardsView = (ListView) findViewById(R.id.cards_view);
         mAdapter = new CardsAdapter(this);
@@ -249,27 +239,6 @@ public class StartActivity extends ActionBarActivity implements AdapterView.OnIt
                 break;
         }
     }
-
-    /**
-     * Handle refresh request
-     * */
-    /*@Override
-    public void onRefresh() {
-        final Handler handler = new Handler();
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                CardManager.update(StartActivity.this);
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        mAdapter.notifyDataSetChanged();
-                        mSwipeLayout.setRefreshing(false);
-                    }
-                });
-            }
-        }).start();
-    }*/
 
     /**
     * Handle swipe to dismiss events

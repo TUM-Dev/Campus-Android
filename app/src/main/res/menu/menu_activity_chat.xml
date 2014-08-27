@@ -4,8 +4,7 @@
 
     <item
         android:id="@+id/action_leave_chat_room"
-        android:icon="@drawable/ic_leave_chat"
-        android:orderInCategory="100"
+        android:icon="@drawable/ic_action_leave_chat"
         android:title="@string/leave_chat_room"
         tumcampus:showAsAction="ifRoom" />
 

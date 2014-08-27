@@ -10,25 +10,19 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-      <!--  <android.support.v4.widget.SwipeRefreshLayout
-            android:id="@+id/swipe_container"
+        <ListView
+            android:id="@+id/cards_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">-->
-
-            <ListView
-                android:id="@+id/cards_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:descendantFocusability="blocksDescendants"
-                android:dividerHeight="0dip"
-                android:listSelector="@android:color/transparent" />
-        <!--</android.support.v4.widget.SwipeRefreshLayout>-->
+            android:layout_height="match_parent"
+            android:descendantFocusability="blocksDescendants"
+            android:dividerHeight="0dip"
+            android:listSelector="@android:color/transparent" />
 
     </FrameLayout>
     <!-- The navigation drawer -->
     <ListView
         android:id="@+id/left_drawer"
-        android:layout_width="240dp"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:background="#EEEEEE"

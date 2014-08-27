@@ -63,46 +63,55 @@ public class SideNavigationAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        final ViewHolder holder;
-        if (convertView == null) {
-            convertView = this.mInflater.inflate(R.layout.side_navigation_item, null);
-            holder = new ViewHolder();
-            holder.text = (TextView) convertView.findViewById(R.id.side_navigation_item_text);
-            holder.icon = (ImageView) convertView.findViewById(R.id.side_navigation_item_icon);
-            convertView.setTag(holder);
-        } else {
-            holder = (ViewHolder) convertView.getTag();
-        }
-
         SideNavigationItem item = mVisibleMenuItems.get(position);
-        holder.text.setText(item.getText(mContext));
+        ViewHolder holder = null;
+        View view = convertView;
 
-        LinearLayout lay = (LinearLayout) convertView.findViewById(R.id.side_navigation_item_layout);
+        if (view == null) {
+            int layout = R.layout.side_navigation_item;
+            if (item.isHeader())
+                layout = R.layout.side_navigation_header;
 
-        // If item has an Icon its an entry
-        if (item.getIcon() != SideNavigationItem.NO_ICON_VALUE) {
-            holder.icon.setVisibility(View.VISIBLE);
-            holder.icon.setImageResource(item.getIcon());
-            lay.setBackgroundColor(mContext.getResources().getColor(R.color.side_navigation_background));
-        } else {
-            // Check if it has an activity - if not, its a seperator
-            if (item.getActivity() == null) {
-                // Add some top padding and other background to indicate the sep
-                lay.setBackgroundColor(mContext.getResources().getColor(R.color.side_navigation_list_divider_color));
+            view = mInflater.inflate(layout, null);
 
-                int paddingTop = (int) mContext.getResources().getDimension(R.dimen.side_navigation_item_padding_topbottom) + 4;
-                int paddingLeft = (int) mContext.getResources().getDimension(R.dimen.side_navigation_item_padding_leftright) - 2;
-                lay.setPadding(paddingLeft, paddingTop, 0, lay.getPaddingBottom());
-
-                // Make not clickable
-                convertView.setEnabled(false);
-                convertView.setOnClickListener(null);
-            }
-
-            // Remove icon
-            holder.icon.setVisibility(View.GONE);
+            holder = new ViewHolder();
+            holder.text = (TextView) view.findViewById(R.id.side_navigation_text);
+            holder.icon = (ImageView) view.findViewById(R.id.side_navigation_icon);
+            view.setTag(holder);
         }
-        return convertView;
+
+        if (holder == null && view != null) {
+            Object tag = view.getTag();
+            if (tag instanceof ViewHolder) {
+                holder = (ViewHolder) tag;
+            }
+        }
+
+
+        if(item != null && holder != null) {
+            holder.text.setText(item.getText(mContext));
+
+            if (holder.icon != null && item.getIcon()!=SideNavigationItem.NO_ICON_VALUE) {
+                holder.icon.setImageResource(item.getIcon());
+            }
+        }
+
+        return view;
+    }
+
+    @Override
+    public int getViewTypeCount() {
+        return 2;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return mVisibleMenuItems.get(position).isHeader() ? 0 : 1;
+    }
+
+    @Override
+    public boolean isEnabled(int position) {
+        return !mVisibleMenuItems.get(position).isHeader();
     }
 
     class ViewHolder {
@@ -144,26 +153,30 @@ public class SideNavigationAdapter extends BaseAdapter {
             return this.activity;
         }
 
+        public boolean isHeader() {
+            return icon==NO_ICON_VALUE;
+        }
+
     }
 
     private static final SideNavigationItem[] menuItems = {
             new SideNavigationItem(R.string.my_tum, true),
-            new SideNavigationItem(R.string.schedule,R.drawable.calendar, true, CalendarActivity.class),
-            new SideNavigationItem(R.string.my_lectures,R.drawable.calculator, true, LecturesPersonalActivity.class),
-            new SideNavigationItem(R.string.my_grades,R.drawable.chart, true, GradesActivity.class),
-            new SideNavigationItem(R.string.chat_rooms, R.drawable.chat, true, ChatRoomsSearchActivity.class),
-            new SideNavigationItem(R.string.tuition_fees,R.drawable.finance, true, TuitionFeesActivity.class),
+            new SideNavigationItem(R.string.schedule,R.drawable.ic_calendar, true, CalendarActivity.class),
+            new SideNavigationItem(R.string.my_lectures,R.drawable.ic_my_lectures, true, LecturesPersonalActivity.class),
+            new SideNavigationItem(R.string.my_grades,R.drawable.ic_my_grades, true, GradesActivity.class),
+            new SideNavigationItem(R.string.chat_rooms, R.drawable.ic_comment, true, ChatRoomsSearchActivity.class),
+            new SideNavigationItem(R.string.tuition_fees,R.drawable.ic_money, true, TuitionFeesActivity.class),
             new SideNavigationItem(R.string.tum_common, false),
-            new SideNavigationItem(R.string.menues,R.drawable.shopping_cart, false, CafeteriaActivity.class),
-            new SideNavigationItem(R.string.rss_feeds,R.drawable.fax, false, FeedsActivity.class),
-            new SideNavigationItem(R.string.study_plans,R.drawable.documents, false, CurriculaActivity.class),
-            new SideNavigationItem(R.string.person_search,R.drawable.users, true, PersonsSearchActivity.class),
-            new SideNavigationItem(R.string.plans,R.drawable.web, false, PlansActivity.class),
-            new SideNavigationItem(R.string.roomfinder,R.drawable.home, false, RoomFinderActivity.class),
-            new SideNavigationItem(R.string.opening_hours,R.drawable.unlock, false, OpeningHoursListActivity.class),
-            new SideNavigationItem(R.string.organisations,R.drawable.chat, true, OrganisationActivity.class),
-            new SideNavigationItem(R.string.mvv,R.drawable.show_info, false, TransportationActivity.class),
-            new SideNavigationItem(R.string.tum_news,R.drawable.mail, false, NewsActivity.class),
+            new SideNavigationItem(R.string.menues,R.drawable.ic_cutlery, false, CafeteriaActivity.class),
+            new SideNavigationItem(R.string.rss_feeds,R.drawable.ic_rss, false, FeedsActivity.class),
+            new SideNavigationItem(R.string.study_plans,R.drawable.ic_study_plans, false, CurriculaActivity.class),
+            new SideNavigationItem(R.string.person_search,R.drawable.ic_users, true, PersonsSearchActivity.class),
+            new SideNavigationItem(R.string.plans,R.drawable.ic_plans, false, PlansActivity.class),
+            new SideNavigationItem(R.string.roomfinder,R.drawable.ic_place, false, RoomFinderActivity.class),
+            new SideNavigationItem(R.string.opening_hours,R.drawable.ic_time, false, OpeningHoursListActivity.class),
+            new SideNavigationItem(R.string.organisations,R.drawable.ic_organisations, true, OrganisationActivity.class),
+            new SideNavigationItem(R.string.mvv,R.drawable.ic_mvv, false, TransportationActivity.class),
+            new SideNavigationItem(R.string.tum_news,R.drawable.ic_rss, false, NewsActivity.class),
     };
 
 }

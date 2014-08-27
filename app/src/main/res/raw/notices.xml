@@ -28,4 +28,9 @@
         <url>http://simple.sourceforge.net/</url>
         <license>Apache Software License 2.0</license>
     </notice>
+    <notice>
+        <name>Font Awesome</name>
+        <url>http://fortawesome.github.io/Font-Awesome/</url>
+        <license>Creative Commons BY 3.0 DE</license>
+    </notice>
 </notices>

@@ -18,7 +18,7 @@
             android:layout_width="@dimen/icon_small"
             android:layout_height="@dimen/icon_small"
             android:layout_gravity="center"
-            android:src="@drawable/about" />
+            android:src="@drawable/ic_place" />
     </LinearLayout>
 
     <LinearLayout
