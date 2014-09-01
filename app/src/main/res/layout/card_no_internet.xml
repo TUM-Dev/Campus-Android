@@ -1,0 +1,37 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="4dp"
+    android:paddingLeft="8dp"
+    android:paddingRight="8dp"
+    android:paddingTop="8dp">
+
+    <LinearLayout
+        android:id="@+id/card_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/pressed_background"
+        android:orientation="vertical"
+        android:clickable="false"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:padding="10dp"
+        android:layout_gravity="center">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/no_internet_connection"
+            android:textSize="16dp"
+            android:textStyle="bold|italic"
+            android:layout_gravity="center_horizontal" />
+        <TextView
+            android:id="@+id/card_last_update"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/secondary_text_light"
+            android:textStyle="italic"
+            android:layout_gravity="center_horizontal" />
+    </LinearLayout>
+</FrameLayout>
