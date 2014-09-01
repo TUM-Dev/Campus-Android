@@ -304,6 +304,7 @@
     <string name="all">Alle</string>
 
     <!-- Cards -->
+    <string name="last_updated">Der Inhalt wurde zuletzt %s aktualisiert.</string>
     <string name="next_lecture">Nächste Vorlesung</string>
     <string name="restore_all_cards">Karten wiederherstellen</string>
     <string name="card_dismissed">Karte ausgeblendet</string>

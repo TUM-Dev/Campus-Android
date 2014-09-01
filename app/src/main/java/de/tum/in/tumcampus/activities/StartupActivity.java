@@ -66,7 +66,7 @@ public class StartupActivity extends ActionBarActivity {
 
         // Start background service and ensure cards are set
         Intent i = new Intent(StartupActivity.this, StartSyncReceiver.class);
-        i.putExtra(StartSyncReceiver.FORCE_START_SERVICE,true);
+        i.putExtra(Const.APP_LAUNCHES,true);
         StartupActivity.this.sendBroadcast(i);
 
         //PreferenceManager.getDefaultSharedPreferences(this).edit().remove(Const.CHAT_ROOM_DISPLAY_NAME).commit();

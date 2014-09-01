@@ -311,9 +311,9 @@ public class UserPreferencesActivity extends PreferenceActivity implements
             if(check.equals("1")) {
                 sum+=getString(R.string.startpage);
             } else if(check.equals("2")) {
-                sum+=getString(R.string.phone);
-            } else if(check.equals("3")) {
                 sum+=getString(R.string.wear);
+            } else if(check.equals("3")) {
+                sum+=getString(R.string.phone_and_wear);
             }
         }
         pref.setSummary(sum);

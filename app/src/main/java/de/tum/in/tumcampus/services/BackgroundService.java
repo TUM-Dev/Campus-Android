@@ -33,6 +33,7 @@ public class BackgroundService extends IntentService {
         Intent service = new Intent(this, DownloadService.class);
         service.putExtra(Const.ACTION_EXTRA, Const.DOWNLOAD_ALL_FROM_EXTERNAL);
         service.putExtra(Const.FORCE_DOWNLOAD, false);
+        service.putExtra(Const.APP_LAUNCHES, intent.getBooleanExtra(Const.APP_LAUNCHES,false));
         startService(service);
 	}
 

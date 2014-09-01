@@ -133,7 +133,9 @@ public abstract class Card {
     }
 
     /**
-     * Determines if the card should be shown. Decision is based on the given SharedPreferences
+     * Determines if the card should be shown. Decision is based on the given SharedPreferences.
+     * This method should be overridden in most cases.
+     *
      * @return returns true if the card should be shown
      * */
     protected boolean shouldShow(SharedPreferences prefs) {

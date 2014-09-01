@@ -15,13 +15,12 @@ import de.tum.in.tumcampus.auxiliary.Utils;
  * and start BackgroundService if enabled in settings
  * */
 public class StartSyncReceiver extends BroadcastReceiver {
-    public static final String FORCE_START_SERVICE = "force_start_service";
     private static final long START_INTERVAL = AlarmManager.INTERVAL_HOUR * 3;
 
     @Override
     public void onReceive(Context context, Intent intent) {
         // check intent if called from StartupActivity
-        final boolean force = intent.getBooleanExtra(FORCE_START_SERVICE, false);
+        final boolean launch = intent.getBooleanExtra(Const.APP_LAUNCHES, false);
 
         // Set Alarm for next update, if background service is enabled
         final boolean backgroundServiceEnabled = Utils.getSettingBool(context, Const.BACKGROUND_MODE);
@@ -29,9 +28,11 @@ public class StartSyncReceiver extends BroadcastReceiver {
             setAlarm(context, START_INTERVAL);
 
         // Start BackgroundService
-        if(force || backgroundServiceEnabled) {
+        if (launch || backgroundServiceEnabled) {
             Log.d("SyncReceiver", "Start background service...");
-            context.startService(new Intent(context, BackgroundService.class));
+            Intent i = new Intent(context, BackgroundService.class);
+            i.putExtra(Const.APP_LAUNCHES,launch);
+            context.startService(i);
         }
     }
 

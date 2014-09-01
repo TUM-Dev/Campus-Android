@@ -306,6 +306,7 @@
     <string name="all">All</string>
 
     <!-- Cards -->
+    <string name="last_updated">The Content was last updated %s.</string>
     <string name="next_lecture">Next lecture</string>
     <string name="restore_all_cards">Restore cards</string>
     <string name="card_dismissed">Card hidden</string>

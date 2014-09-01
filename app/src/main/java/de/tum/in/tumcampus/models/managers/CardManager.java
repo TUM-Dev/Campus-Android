@@ -11,6 +11,7 @@ import de.tum.in.tumcampus.auxiliary.AccessTokenManager;
 import de.tum.in.tumcampus.cards.Card;
 import de.tum.in.tumcampus.cards.FirstUseCard1;
 import de.tum.in.tumcampus.cards.FirstUseCard2;
+import de.tum.in.tumcampus.cards.NoInternetCard;
 import de.tum.in.tumcampus.cards.RestoreCard;
 
 public class CardManager {
@@ -23,6 +24,7 @@ public class CardManager {
     public static final int CARD_RESTORE = 4;
     public static final int CARD_FIRST_USE_1 = 5;
     public static final int CARD_FIRST_USE_2 = 6;
+    public static final int CARD_NO_INTERNET = 7;
 
     private static List<Card> cards;
     private static ArrayList<Card> newCards;
@@ -57,6 +59,9 @@ public class CardManager {
         // Use temporary array to avoid that the main thread is
         // trying to access an empty array
         newCards = new ArrayList<Card>();
+
+        // Add no internet card
+        new NoInternetCard(context).apply();
 
         // Add first use tutorial
         new FirstUseCard1(context).apply();

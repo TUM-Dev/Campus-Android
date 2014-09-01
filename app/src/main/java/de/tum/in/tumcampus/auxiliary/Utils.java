@@ -1,5 +1,35 @@
 package de.tum.in.tumcampus.auxiliary;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.net.Uri;
+import android.os.Environment;
+import android.preference.PreferenceManager;
+import android.util.Log;
+import android.view.Gravity;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.widget.Toast;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -21,36 +51,6 @@ import java.util.Locale;
 import java.util.concurrent.TimeoutException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.apache.http.HttpEntity;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
-import org.apache.http.util.EntityUtils;
-import org.json.JSONObject;
-
-import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.net.Uri;
-import android.os.Environment;
-import android.preference.PreferenceManager;
-import android.util.Log;
-import android.view.Gravity;
-import android.view.View;
-import android.view.inputmethod.InputMethodManager;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.widget.Toast;
 
 /**
  * Class for common helper functions used by a lot of classes
@@ -89,7 +89,7 @@ public class Utils {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(is));
 		StringBuilder sb = new StringBuilder();
 
-		String line = null;
+		String line;
 		// TODO Who handles exception?
 		try {
 			while ((line = reader.readLine()) != null) {
@@ -864,6 +864,20 @@ public class Utils {
 		NetworkInfo netInfo = cm.getActiveNetworkInfo();
 
         return netInfo != null && netInfo.isConnectedOrConnecting();
+    }
+
+    /**
+     * Check if a network connection is available or can be available soon
+     * and if the available connection is a mobile internet connection
+     *
+     * @return true if available
+     */
+    public static boolean isConnectedMobileData(Context con) {
+        ConnectivityManager cm = (ConnectivityManager) con
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+
+        return netInfo != null && netInfo.isConnectedOrConnecting() && netInfo.getType()==ConnectivityManager.TYPE_MOBILE;
     }
 
 	/**

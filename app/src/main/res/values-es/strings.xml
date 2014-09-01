@@ -290,6 +290,7 @@
     <string name="campus_weihenstephan_adress">Liesel-Beckmann-Straße 6, 85354 Freising</string>
 
     <!-- Chat rooms -->
+    <string name="last_updated">El contenido se actualizó por última vez hace %s.</string>
     <string name="my_chat_rooms">Mis Salas de Chat</string>
     <string name="send">Enviar</string>
     <string name="chat_terms_title">Condiciones del chat</string>

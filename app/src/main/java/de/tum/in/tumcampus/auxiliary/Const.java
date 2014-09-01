@@ -126,5 +126,5 @@ public final class Const {
 	public static final String GCM_REG_ID = "gcm_registration_id";
 	public static final String GCM_REG_ID_SENT_TO_SERVER = "gcm_registration_id_sent_to_server";
 	public static final String CHAT_TERMS_SHOWN = "chat_terms_shown";
-    
+    public static final String APP_LAUNCHES = "app_launches";
 }

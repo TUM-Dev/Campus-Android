@@ -1,12 +1,15 @@
 package de.tum.in.tumcampus.services;
 
+import android.app.IntentService;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+import android.util.Log;
+
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
-import android.app.IntentService;
-import android.content.Intent;
-import android.preference.PreferenceManager;
-import android.util.Log;
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.Utils;
@@ -30,6 +33,9 @@ public class DownloadService extends IntentService {
 	 */
 	public final static String BROADCAST_NAME = "de.tum.in.newtumcampus.intent.action.BROADCAST_DOWNLOAD";
 	private static final String DOWNLOAD_SERVICE = "DownloadService";
+    public static final String UPDATE_PREFS = "update";
+    public static final String LAST_UPDATE = "last_update";
+
 	/**
 	 * Indicator to avoid starting new downloads
 	 */
@@ -72,68 +78,80 @@ public class DownloadService extends IntentService {
         boolean successful = false;
         String action = intent.getStringExtra(Const.ACTION_EXTRA);
         boolean force = intent.getBooleanExtra(Const.FORCE_DOWNLOAD, false);
+        boolean launch = intent.getBooleanExtra(Const.APP_LAUNCHES, false);
 
         if (action == null) {
             // No action: leave service
             return;
         }
 
-        Log.i(getClass().getSimpleName(), "Handle action <" + action + ">");
+        // Check if device has a internet connection
+        if(Utils.isConnected(this) && (launch || !Utils.isConnectedMobileData(this))) {
 
-        try {
-            if ((action.equals(Const.DOWNLOAD_ALL_FROM_EXTERNAL))
-                    && !isDestroyed) {
+            Log.i(getClass().getSimpleName(), "Handle action <" + action + ">");
 
-                // TODO Implement downloading each type of external source
-                // TODO Also download my tum stuff
+            try {
+                if ((action.equals(Const.DOWNLOAD_ALL_FROM_EXTERNAL)) && !isDestroyed) {
 
-                // downloadGallery(force);
-                // downloadNews(force);
-                downloadCafeterias(force);
-                // downloadEvents(force);
-                // downloadOrganisations(force);
-                CardManager.update(this);
+                    // TODO Implement downloading each type of external source
+                    // TODO Also download my tum stuff
 
-                successful = true;
+                    // downloadGallery(force);
+                    // downloadNews(force);
+                    downloadCafeterias(force);
+                    // downloadEvents(force);
+                    downloadOrganisations(force);
+
+                    successful = true;
+                }
+                if ((action.equals(Const.NEWS)) && !isDestroyed) {
+                    successful = downloadNews(force);
+                }
+                if ((action.equals(Const.GALLERY)) && !isDestroyed) {
+                    successful = downloadGallery(force);
+                }
+                if ((action.equals(Const.FEEDS)) && !isDestroyed) {
+                    int feedId = intent.getExtras().getInt(Const.FEED_ID);
+                    successful = downloadFeed(feedId, force);
+                }
+                if ((action.equals(Const.CAFETERIAS)) && !isDestroyed) {
+                    successful = downloadCafeterias(force);
+                }
+                if ((action.equals(Const.EVENTS)) && !isDestroyed) {
+                    successful = downloadEvents(force);
+                }
+                if ((action.equals(Const.ORGANISATIONS)) && !isDestroyed) {
+                    successful = downloadOrganisations(force);
+                }
+            } catch (TimeoutException e) {
+                if (!isDestroyed) {
+                    Log.e(getClass().getSimpleName(), e.getMessage());
+                    broadcastWarning(getResources().getString(
+                            R.string.exception_timeout));
+                }
+            } catch (IOException e) {
+                if (!isDestroyed) {
+                    Log.e(getClass().getSimpleName(), e.getMessage());
+                    broadcastError(getResources().getString(
+                            R.string.exception_sdcard));
+                }
+            } catch (Exception e) {
+                Log.e(getClass().getSimpleName(),
+                        "Unkown error while handling action <" + action + ">");
+                if (!isDestroyed) {
+                    broadcastError(getResources().getString(
+                            R.string.exception_unknown));
+                }
             }
-            if ((action.equals(Const.NEWS)) && !isDestroyed) {
-                successful = downloadNews(force);
+        }
+
+        if ((action.equals(Const.DOWNLOAD_ALL_FROM_EXTERNAL)) && !isDestroyed) {
+            if (successful) {
+                SharedPreferences prefs = getSharedPreferences(UPDATE_PREFS, 0);
+                prefs.edit().putLong(LAST_UPDATE, System.currentTimeMillis()).apply();
             }
-            if ((action.equals(Const.GALLERY)) && !isDestroyed) {
-                successful = downloadGallery(force);
-            }
-            if ((action.equals(Const.FEEDS)) && !isDestroyed) {
-                int feedId = intent.getExtras().getInt(Const.FEED_ID);
-                successful = downloadFeed(feedId, force);
-            }
-            if ((action.equals(Const.CAFETERIAS)) && !isDestroyed) {
-                successful = downloadCafeterias(force);
-            }
-            if ((action.equals(Const.EVENTS)) && !isDestroyed) {
-                successful = downloadEvents(force);
-            }
-            if ((action.equals(Const.ORGANISATIONS)) && !isDestroyed) {
-                successful = downloadOrganisations(force);
-            }
-        } catch (TimeoutException e) {
-            if (!isDestroyed) {
-                Log.e(getClass().getSimpleName(), e.getMessage());
-                broadcastWarning(getResources().getString(
-                        R.string.exception_timeout));
-            }
-        } catch (IOException e) {
-            if (!isDestroyed) {
-                Log.e(getClass().getSimpleName(), e.getMessage());
-                broadcastError(getResources().getString(
-                        R.string.exception_sdcard));
-            }
-        } catch (Exception e) {
-            Log.e(getClass().getSimpleName(),
-                    "Unkown error while handling action <" + action + ">");
-            if (!isDestroyed) {
-                broadcastError(getResources().getString(
-                        R.string.exception_unknown));
-            }
+            CardManager.update(this);
+            successful = true;
         }
 
         // After done the job, create an broadcast intent and send it. The
@@ -214,4 +232,14 @@ public class DownloadService extends IntentService {
 		}
 		return true;
 	}
+
+    /**
+     * Gets the time when BackgroundService was called last time
+     * @param c Context
+     * @return time when BackgroundService was executed last time
+     * */
+    public static long lastUpdate(Context c) {
+        SharedPreferences prefs = c.getSharedPreferences(UPDATE_PREFS, 0);
+        return prefs.getLong(LAST_UPDATE, 0);
+    }
 }
