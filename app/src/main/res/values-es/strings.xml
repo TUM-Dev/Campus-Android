@@ -164,7 +164,7 @@
     <string name="opening_hours">Horario de apertura</string>
     <string name="organisations">Árbol de Organización</string>
     <string name="mvv">MVV</string>
-    <string name="tum_news">Noticias de TCA</string>
+    <string name="news">Noticias</string>
 
     <!-- Activity titles -->
     <string name="lecture_schedule">Calendario de Conferencias</string>

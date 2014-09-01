@@ -168,7 +168,7 @@
     <string name="opening_hours">Opening Hours</string>
     <string name="organisations">Organizations</string>
     <string name="mvv">MVV</string>
-    <string name="tum_news">TCA-News</string>
+    <string name="news">News</string>
 
     <!-- Activity titles -->
     <string name="lecture_schedule">Lecture Schedule</string>

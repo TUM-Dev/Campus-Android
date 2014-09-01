@@ -87,7 +87,11 @@ public class OrgDetailsItemHandler extends DefaultHandler {
 			} else if (localName.equals(TAG_FAX)) {
 				odo.setContactFax(buff.toString());
 			} else if (localName.equals(TAG_MAIL)) {
-				odo.setContactEmail(buff.toString());
+                String mail = buff.toString();
+                mail = mail.replace("ä","ae");
+                mail = mail.replace("ö","oe");
+                mail = mail.replace("ü","ue");
+				odo.setContactEmail(mail);
 			} else if (localName.equals(TAG_HOMEPAGE)) {
 				odo.setContactLocationURL(buff.toString());
 			} else if (localName.equals(TAG_EXTRA_NAME)) {

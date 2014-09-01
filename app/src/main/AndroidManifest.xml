@@ -81,7 +81,6 @@
             android:theme="@style/NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -90,17 +89,9 @@
             android:configChanges="orientation|screenSize"
             android:label="@string/campus_app"/>
         <activity
-            android:name="de.tum.in.tumcampus.activities.generic.MockActivity"
-            android:configChanges="orientation|screenSize"
-            android:label="@string/campus_app"/>
-        <activity
-            android:name="de.tum.in.tumcampus.activities.generic.MockSlidingTabActivity"
-            android:configChanges="orientation|screenSize"
-            android:label="@string/campus_app"/>
-        <activity
             android:name="de.tum.in.tumcampus.activities.NewsActivity"
             android:configChanges="orientation|screenSize"
-            android:label="@string/tum_news"
+            android:label="@string/news"
             android:parentActivityName="de.tum.in.tumcampus.activities.StartActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
