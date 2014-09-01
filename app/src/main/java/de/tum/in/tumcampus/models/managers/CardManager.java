@@ -12,6 +12,7 @@ import de.tum.in.tumcampus.cards.Card;
 import de.tum.in.tumcampus.cards.FirstUseCard1;
 import de.tum.in.tumcampus.cards.FirstUseCard2;
 import de.tum.in.tumcampus.cards.NoInternetCard;
+import de.tum.in.tumcampus.cards.ProvidesCard;
 import de.tum.in.tumcampus.cards.RestoreCard;
 
 public class CardManager {

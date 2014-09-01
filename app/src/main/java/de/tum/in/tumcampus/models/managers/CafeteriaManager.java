@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.preference.PreferenceManager;
+import android.text.format.DateUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -13,11 +14,13 @@ import org.json.JSONObject;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.cards.CafeteriaMenuCard;
+import de.tum.in.tumcampus.cards.ProvidesCard;
 import de.tum.in.tumcampus.models.Cafeteria;
 import de.tum.in.tumcampus.models.CafeteriaMenu;
 
@@ -147,7 +150,6 @@ public class CafeteriaManager implements ProvidesCard {
 				new String[] { String.valueOf(c.id), c.name, c.address });
 	}
 
-    // TODO: Make this more secure (really handle Exceptions) and faster
     @Override
     public void onRequestCard(Context context) {
         CafeteriaMenuCard card = new CafeteriaMenuCard(context);
@@ -173,29 +175,42 @@ public class CafeteriaManager implements ProvidesCard {
 
         Cursor cursorCafeteriaDates = cmm.getDatesFromDb();
 
-        //TODO: Make selection of date more intelligent (use next day if called in the evening)
-        cursorCafeteriaDates.moveToFirst(); // Get today
-        String date = cursorCafeteriaDates.getString(cursorCafeteriaDates.getColumnIndex(Const.ID_COLUMN));
-
-        Cursor cursorCafeteriaMenu = cmm.getTypeNameFromDbCard(cafeteriaId, date);
-        ArrayList<CafeteriaMenu> menus = new ArrayList<CafeteriaMenu>();
-        cursorCafeteriaMenu.moveToFirst();
+        Date date = null;
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-        Date dateStr = new Date();
+        final int idCol = cursorCafeteriaDates.getColumnIndex(Const.ID_COLUMN);
+
+        // Try with next available date
+        cursorCafeteriaDates.moveToFirst(); // Get today or tomorrow if today is sunday e.g.
+        String dateStr = cursorCafeteriaDates.getString(idCol);
         try {
-            dateStr = formatter.parse(date);
+            date = formatter.parse(dateStr);
         } catch (ParseException e) {
             e.printStackTrace();
         }
+
+        // If it is 3pm or later mensa has already closed so display the menu for the following day
+        Calendar now = Calendar.getInstance();
+        if(DateUtils.isToday(date.getTime()) && now.get(Calendar.HOUR_OF_DAY)>=15) {
+            cursorCafeteriaDates.moveToNext(); // Get following day
+            dateStr = cursorCafeteriaDates.getString(idCol);
+            try {
+                date = formatter.parse(dateStr);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        Cursor cursorCafeteriaMenu = cmm.getTypeNameFromDbCard(cafeteriaId, dateStr);
+        ArrayList<CafeteriaMenu> menus = new ArrayList<CafeteriaMenu>();
+        cursorCafeteriaMenu.moveToFirst();
         do {
             int typeNr=0;
             CafeteriaMenu menu = new CafeteriaMenu(Integer.parseInt(cursorCafeteriaMenu.getString(2)),
-                    Integer.parseInt(cafeteriaId), dateStr,
+                    Integer.parseInt(cafeteriaId), date,
                     cursorCafeteriaMenu.getString(3), cursorCafeteriaMenu.getString(0), typeNr, cursorCafeteriaMenu.getString(1));
 
             menus.add(menu);
         } while(cursorCafeteriaMenu.moveToNext());
-        card.setCardMenus(cafeteriaId, cafeteriaName, dateStr, menus);
+        card.setCardMenus(cafeteriaId, cafeteriaName, date, menus);
         card.apply();
     }
 }

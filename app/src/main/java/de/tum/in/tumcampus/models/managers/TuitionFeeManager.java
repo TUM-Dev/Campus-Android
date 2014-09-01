@@ -6,6 +6,7 @@ import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
 
 import de.tum.in.tumcampus.auxiliary.Const;
+import de.tum.in.tumcampus.cards.ProvidesCard;
 import de.tum.in.tumcampus.cards.TuitionFeesCard;
 import de.tum.in.tumcampus.models.TuitionList;
 import de.tum.in.tumcampus.tumonline.TUMOnlineRequest;

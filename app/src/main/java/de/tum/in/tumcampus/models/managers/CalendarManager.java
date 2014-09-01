@@ -15,6 +15,7 @@ import android.util.Log;
 
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.cards.NextLectureCard;
+import de.tum.in.tumcampus.cards.ProvidesCard;
 import de.tum.in.tumcampus.models.CalendarRow;
 import de.tum.in.tumcampus.models.CalendarRowSet;
 

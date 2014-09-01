@@ -1,4 +1,4 @@
-package de.tum.in.tumcampus.models.managers;
+package de.tum.in.tumcampus.cards;
 
 import android.content.Context;
 
