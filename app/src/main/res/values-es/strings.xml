@@ -21,16 +21,16 @@
     <string name="days_left">Días izquierda</string>
     <string name="day_left">Días remanentes</string>
     <string name="date_expired">Demostración caducada</string>
-    <string name="welcome_demo">&lt;b&gt;Bienvenido a la &lt;i&gt;Campus TUM App demo&lt;/i&gt;&lt;/b&gt;.\n\nPara utilizar esta demo se requiere una conexión al Internet. La demo es válida hasta el 08/09/2013.</string>
+    <string name="welcome_demo"><b>Bienvenido a la <i>Campus TUM App demo</i></b>.\n\nPara utilizar esta demo se requiere una conexión al Internet. La demo es válida hasta el 08/09/2013.</string>
 
     <!-- Calendar -->
-    <string name="dialog_show_calendar">Exportación exitosa.\n Calendario local &lt;i&gt;TUM_CAMPUS_APP&lt;/i&gt;mostrar en el espectáculo de la &lt;i&gt;Google Calendar aplicación&lt;/ i&gt;?</string>
+    <string name="dialog_show_calendar">Exportación exitosa.\n Calendario local <i>TUM_CAMPUS_APP</i>mostrar en el espectáculo de la <i>Google Calendar aplicación</i>?</string>
     <string name="export_to_google">Exportar a Google</string>
     <string name="calendarTimeZone">Germany/Munich</string>
     <string name="calendar_account_name">TUM_Campus_APP</string>
     <string name="calendar_display_name">TUM Campus</string>
     <string name="delete_from_google">Borrar de Google</string>
-    <string name="dialog_delete_calendar">Eliminar el calendario local de la &lt;i&gt;TUM_CAMPUS_APP&lt;/ i&gt; de su dispositivo?</string>
+    <string name="dialog_delete_calendar">Eliminar el calendario local de la <i>TUM_CAMPUS_APP</i> de su dispositivo?</string>
     <string name="calendar_deleted_toast">Calendario eliminado con éxito</string>
     <string name="calendar_not_existing_toast">No hay calendario local</string>
 
@@ -43,10 +43,10 @@
     <string name="empty_string"></string>
     <string name="android_version_too_low">Android versión demasiado vieja</string>
     <string name="android_version_too_low_message">Su versión de Android no soporta esta funcionalidad</string>
-    <string name="error_fetching_tumonline">Error de acceso TUMOnline.\nPor favor asegúrese que el TUMOnline token de acceso \n está aceptado y los derechos corespondientes están habilitados.\n\n&lt;b&gt; Haga clic aquí para repetir.&lt;/b&gt;</string>
-    <string name="error_no_token_setup">No TUMOnline acceso Token encontró.\nPor favor generar un token de acceso TUMOnline en los \n&lt;i&gt;Ajustes&lt;/i&gt;, para usar servicios de TUMOnline .\n\n&lt;b&gt; </string>
+    <string name="error_fetching_tumonline">Error de acceso TUMOnline.\nPor favor asegúrese que el TUMOnline token de acceso \n está aceptado y los derechos corespondientes están habilitados.\n\n<b> Haga clic aquí para repetir.</b></string>
+    <string name="error_no_token_setup">No TUMOnline acceso Token encontró.\nPor favor generar un token de acceso TUMOnline en los <i>Ajustes</i>, para usar servicios de TUMOnline.\n\n<b>Haga clic aquí para ver la pantalla <i>Configuración</i>.</b></string>
     <string name="error_something_wrong">Lo siento, algo ha ido mal.</string>
-    <string name="dialog_new_token">Su token de acceso TUMOnline ya está establecido.\n\n Presione &lt;i&gt;Sí&lt;/i&gt; para generar un reemplazo.\n Así su token viejo será inservible.</string>
+    <string name="dialog_new_token">Su token de acceso TUMOnline ya está establecido.\n\n Presione <i>Sí</i> para generar un reemplazo.\n Así su token viejo será inservible.</string>
     <string name="error_lrz_wrong">Su identificador LRZ no es válido </string>
     <string name="access_token_generated">Token de acceso TUMOnline se genera con éxito</string>
     <string name="access_token_wasnt_generated">TUMOnline token de acceso no se pudo crear</string>
@@ -123,15 +123,15 @@
     <!-- Startup Wizzard -->
     <string name="token_not_enabled">TUMOnline token de acceso no está activado</string>
     <string name="startup_wizzard_uppercase">Asistente de inicio</string>
-    <string name="welcome_msg">! &lt;b&gt;Bienvenido al campus TUM App&lt;/b&gt;\n\nPara habilitar el acceso a los servicios TUMOnline requiere su &lt;b&gt;identificador LRZ&lt;/b&gt; \ n identificador\nEste tiene el siguiente formato :.\n&lt;i&gt;xx00xxx&lt;/i&gt;\n(2 letras, 2 números , 3 letras)</string>
+    <string name="welcome_msg">!<b>Bienvenido al campus TUM App</b>\n\nPara habilitar el acceso a los servicios TUMOnline requiere su <b>identificador LRZ</b>\n identificador\nEste tiene el siguiente formato :.\n<i>xx00xxx</i>\n(2 letras, 2 números , 3 letras)</string>
     <string name="button_skip">Salta</string>
     <string name="button_next">Siguiente</string>
-    <string name="need_to_enable">&lt;b&gt;El token de acceso TUMOnline se ha creado con éxito&lt;/b&gt;\n\n  Usted puede activar el token ahora en TUMOnline en &lt;i&gt;Servicios / Token Management&lt;/i&gt;. Observe que usted también necesita habilitar los derechos de acceso a los servicios individuales en &lt;i&gt;Derechos activas&lt;/i&gt;.</string>
+    <string name="need_to_enable"><b>El token de acceso TUMOnline se ha creado con éxito</b>\n\n  Usted puede activar el token ahora en TUMOnline en <i>Servicios / Token Management</i>. Observe que usted también necesita habilitar los derechos de acceso a los servicios individuales en <i>Derechos activas</i>.</string>
     <string name="step_1">Paso 1</string>
     <string name="step_2">Paso 2</string>
     <string name="step_3">Paso 3</string>
-    <string name="set_background_mode">&lt;b&gt;modo de fondo&lt;/b&gt;\n\nAktivar o desactivar el &lt;i&gt;modo de fondo&lt;/ i&gt;. Cuando se activa, se descarga todo el contenido una vez el día en el fondo para poner su Campus TUM aplicación al día.</string>
-    <string name="set_silent_mode">&lt;b&gt;Servicio silencioso&lt;/b&gt;\n\nActivar o desactivar el &lt;i&gt;Servicio silencioso&lt;/ i&gt;. Cuando se activa, el dispositivo se apagará en silencio en una conferencia actualmente realizada.</string>
+    <string name="set_silent_mode">Activar o desactivar el <i>Servicio silencioso</i>. Cuando se activa, el dispositivo se apagará en silencio en una conferencia actualmente realizada.</string>
+    <string name="set_background_mode">Aktivar o desactivar el <i>modo de fondo</i>. Cuando se activa, se descarga todo el contenido una vez el día en el fondo para poner su Campus TUM aplicación al día.</string>
     <string name="goto_tumcampus">Iniciar TUM campus App</string>
 
     <!-- RSS-Feed -->
@@ -314,7 +314,7 @@
 
     <!-- first use tutorial -->
     <string name="swipe_instruction">Pase a la izquierda o a la derecha para ocultar una tarjeta.</string>
-    <string name="card_settings_instruction">Si desea ocultar una tarjeta de forma permanente o ser notificado cuando hay nuevas tarjetas, abra Configuración → Mapas</string>
+    <string name="card_settings_instruction">Si desea ocultar una tarjeta de forma permanente o ser notificado cuando hay nuevas tarjetas, abra Configuración &#x2192; Mapas</string>
 
     <!-- Cafeteria -->
     <string name="cafeteria_ingredients">(f) Plato sin carne
@@ -342,30 +342,6 @@
     <string name="show_feedback">Envíar comentarios</string>
     <string name="feedbackAddr">tca-support.os.in@tum.de</string>
     <string name="feedbackSubj">Comentarios para la TUM campus App</string>
-    <string name="app_info_text">"&lt;b&gt;TUM Campus App&lt;/b&gt;\nThe TUM Campus App is developed by students of the Android practical course, other voluntary freelancers and chair members.
-        \n\n&lt;b&gt;Project Management:&lt;/b&gt;\nTUM - Computer Science / F13
-        \nProf. Dr. Uwe Baumgarten
-        \nNils T. Kannengiesser
-        \n\n&lt;b&gt;Most recent Developers:&lt;/b&gt;
-        \nJana Pejic
-        \nMarko Lalic
-        \nKordian Bruck
-        \nFlorian Dreier
-        \nSepideh Mesbah
-        \nShabnam Najafian
-        \n\n&lt;b&gt;Further Developers:&lt;/b&gt;
-        \nSascha Moecker, Haris Iltifat, Anas Chakfeh, Thomas Krex, Marius Muntean, Christoph Richter, Thomas Bley, Vincenz Dölle, Daniel Mayr, Thomas Behrens, Florian Schulz, Vasyl Malinskyi,
-        Andreas Bernhofer (IT-Support/TUMonline), Nils T. Kannengiesser (F13)
-        \n\n&lt;b&gt;Important information:&lt;/b&gt;\nThis App is not published by the Technical University Muenchen officially. It is a project by and for students. The software is used at your own risk. We are not responsible for any damage that might be caused by using this App or its presented information. For security reasons the access to private information of TUMOnline is regulated by using tokens. You need to enable different features within TUMOnline for a certain token to be able to use those information within the App.
-        \n\n&lt;b&gt;Privacy information:&lt;/b&gt;\nThe application stores data on request only. Critical information requires the user's permission (clearance by token) and is stored locally or received from TUMOnline directly. We are using BugSense for bug tracking. Crash reports contain detailed technical information on the phone, the operating system and the error itself. This information is helpful for the developers in order to improve the app. Furthermore BugSense collects anonymous usage information (e.g. users of the app per day). Detailed information on BugSense can be found below.
-		\n\n&lt;b&gt;Support:&lt;/b&gt;\nhttps://www.facebook.com/TUMCampus
-		\nPlease take a look at the offered manual as well. In addition please contact us at tca-support.os.in@tum.de for any special requests.
-		\n\n&lt;b&gt;Licenses:&lt;/b&gt;\nGNU GPL v3 - http://www.gnu.org/licenses/gpl.html or
-		\nNew BSD License - http://www.opensource.org/licenses/bsd-license.php
-		\n\nThe source code is available on GitHub (https://github.com/TCA-Team/)
-		\n\n&lt;b&gt;TUM Campus App on Facebook:&lt;/b&gt;\nhttps://www.facebook.com/TUMCampus
-	    \n\n&lt;b&gt;Detailed information on BugSense:&lt;/b&gt;\nBugSense will not collect any sensitive user data, but gathers the following information (as provided by the BugSense support team):\n\nOn Session start:\nUnique device identifier (random string), App version, OS version, Device model, Locale, Timestamp, Event type, SDK version\n\nWhen an exception occurs:\nStacktrace, Error message, App version, OS version, Device model, Locale, Timestamp, SDK version, GPS on/off/NA, WiFi on/off, Cellular data on/off, Device orientation, Screen size, Uncaught or handled exception, custom data\n\nFurthermore it collects the user ip, user country, date/time of crash and application date. BugSense may use the collected information for various general purposes like products and services provision, error analysis, identification and authentication, services improvement, contact, and research. They may publish aggregated and anonymized reports, too.\n\n\nMay 9th 2014\n"</string>
-
     <!-- END Translated, please do not change identifiers -->
 
 

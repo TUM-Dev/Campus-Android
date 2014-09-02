@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- START Translated, please do not change identifiers -->
 
@@ -134,8 +134,8 @@
     <string name="step_1">Step 1</string>
     <string name="step_2">Step 2</string>
     <string name="step_3">Step 3</string>
-    <string name="set_background_mode"><b>Background Mode</b>\n\nActivate or deactivate <i>Background Mode</i>. If activated, content will be fetchted once per day to keep your TUM Campus App up to date.</string>
-    <string name="set_silent_mode"><b>Silent Service</b>\n\nActivate or deactivate <i>Silent Service</i>. If activated, the device will go into silent mode if a lecture appointment has been recognized.</string>
+    <string name="set_silent_mode">Activate or deactivate <i>Silent Service</i>. If activated, the device will go into silent mode if a lecture appointment has been recognized.</string>
+    <string name="set_background_mode">Activate or deactivate <i>Background Mode</i>. If activated, content will be fetched once per day to keep your TUM Campus App up to date.</string>
     <string name="goto_tumcampus">Go to TUM Campus App</string>
 
     <!-- RSS-Feed -->
@@ -346,7 +346,7 @@
     <string name="show_feedback">Send feedback</string>
     <string name="feedbackAddr">tca-support.os.in@tum.de</string>
     <string name="feedbackSubj">Feedback for TUM Campus App</string>
-    <string name="app_info_text"><b>TUM Campus App</b>\nThe TUM Campus App is developed by students of the Android practical course, other voluntary freelancers and chair members.
+    <string name="app_info_text" tools:ignore="MissingTranslation"><b>TUM Campus App</b>\nThe TUM Campus App is developed by students of the Android practical course, other voluntary freelancers and chair members.
         \n\n<b>Project Management:</b>\nTUM - Computer Science / F13
         \nProf. Dr. Uwe Baumgarten
         \nNils T. Kannengiesser

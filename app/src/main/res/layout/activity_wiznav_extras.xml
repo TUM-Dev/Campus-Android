@@ -32,17 +32,29 @@
                 android:text="@string/step_3"
                 android:textColor="@color/text_light_gray" />
 
+
+            <CheckBox
+                android:id="@+id/chk_silent_mode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/silence_phone"
+                android:textStyle="bold" />
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/padding_default"
                 android:text="@string/set_silent_mode" />
 
+
             <CheckBox
-                android:id="@+id/chk_silent_mode"
+                android:id="@+id/chk_background_mode"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/silence_phone" />
+                android:layout_marginTop="16dp"
+                android:text="@string/background_mode"
+                android:textStyle="bold" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -50,11 +62,6 @@
                 android:padding="@dimen/padding_default"
                 android:text="@string/set_background_mode" />
 
-            <CheckBox
-                android:id="@+id/chk_background_mode"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/background_mode" />
 
         </LinearLayout>
     </ScrollView>

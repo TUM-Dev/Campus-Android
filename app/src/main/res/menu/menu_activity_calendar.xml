@@ -4,14 +4,12 @@
 
     <item
         android:id="@+id/action_export_calendar"
-        android:icon="@drawable/ic_action_share"
-        android:orderInCategory="100"
+        android:icon="@drawable/ic_sync_cloud"
         android:title="@string/export_to_google"
         tumcampus:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_delete_calendar"
-        android:icon="@drawable/ic_action_discard"
-        android:orderInCategory="100"
+        android:icon="@drawable/ic_stop_sync_cloud"
         android:title="@string/delete_from_google"
         tumcampus:showAsAction="ifRoom" />
 

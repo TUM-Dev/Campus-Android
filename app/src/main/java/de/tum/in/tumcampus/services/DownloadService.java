@@ -33,7 +33,6 @@ public class DownloadService extends IntentService {
 	 */
 	public final static String BROADCAST_NAME = "de.tum.in.newtumcampus.intent.action.BROADCAST_DOWNLOAD";
 	private static final String DOWNLOAD_SERVICE = "DownloadService";
-    public static final String UPDATE_PREFS = "update";
     public static final String LAST_UPDATE = "last_update";
 
 	/**
@@ -147,7 +146,7 @@ public class DownloadService extends IntentService {
 
         if ((action.equals(Const.DOWNLOAD_ALL_FROM_EXTERNAL)) && !isDestroyed) {
             if (successful) {
-                SharedPreferences prefs = getSharedPreferences(UPDATE_PREFS, 0);
+                SharedPreferences prefs = getSharedPreferences(Const.INTERNAL_PREFS, 0);
                 prefs.edit().putLong(LAST_UPDATE, System.currentTimeMillis()).apply();
             }
             CardManager.update(this);
@@ -239,7 +238,7 @@ public class DownloadService extends IntentService {
      * @return time when BackgroundService was executed last time
      * */
     public static long lastUpdate(Context c) {
-        SharedPreferences prefs = c.getSharedPreferences(UPDATE_PREFS, 0);
+        SharedPreferences prefs = c.getSharedPreferences(Const.INTERNAL_PREFS, 0);
         return prefs.getLong(LAST_UPDATE, 0);
     }
 }

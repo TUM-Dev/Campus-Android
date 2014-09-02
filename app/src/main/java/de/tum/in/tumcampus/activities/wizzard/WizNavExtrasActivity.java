@@ -50,13 +50,11 @@ public class WizNavExtrasActivity extends WizzardActivity {
         // Only make silent service selectable if access token exists
         // Otherwise the app cannot load lectures so silence service makes no sense
         if (new AccessTokenManager(this).hasValidAccessToken()) {
-            checkSilentMode.setChecked(preferences.getBoolean(
-                    Const.SILENCE_SERVICE, false));
+            checkSilentMode.setChecked(preferences.getBoolean(Const.SILENCE_SERVICE, true));
         } else {
             checkSilentMode.setChecked(false);
             checkSilentMode.setEnabled(false);
         }
-		checkBackgroundMode.setChecked(preferences.getBoolean(
-				Const.BACKGROUND_MODE, false));
+		checkBackgroundMode.setChecked(preferences.getBoolean(Const.BACKGROUND_MODE, true));
 	}
 }
