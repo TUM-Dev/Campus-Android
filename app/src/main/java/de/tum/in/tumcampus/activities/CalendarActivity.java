@@ -138,10 +138,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements O
 		backgroundTask = new AsyncTask<Void, Void, Boolean>() {
 			@Override
 			protected Boolean doInBackground(Void... params) {
-				// Deleting earlier calendar created by TUM Campus App
-				CalendarManager.deleteLocalCalendar(CalendarActivity.this);
-				Uri uri = CalendarManager.addLocalCalendar(CalendarActivity.this);
-                CalendarManager.addEvents(CalendarActivity.this, uri);
+                CalendarManager.syncCalendar(CalendarActivity.this);
 				return true;
 			}
 

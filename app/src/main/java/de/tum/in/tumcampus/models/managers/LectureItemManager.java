@@ -372,8 +372,7 @@ public class LectureItemManager {
 				MyLectureTerminList
 						.setLehrveranstaltungenTermine(new ArrayList<LectureAppointmentsRow>());
 				try {
-					MyLectureTerminList = serializer.read(
-							LectureAppointmentsRowSet.class, strTermine);
+					MyLectureTerminList = serializer.read(LectureAppointmentsRowSet.class, strTermine);
 				} catch (Exception e) {
 					success = false;
 					Log.d("SIMPLEXML", "wont work: " + e.getMessage());

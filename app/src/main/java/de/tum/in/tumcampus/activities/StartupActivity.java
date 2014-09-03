@@ -53,12 +53,8 @@ public class StartupActivity extends ActionBarActivity {
         if (!hideWizzardOnStartup) {
             Intent intent = new Intent(StartupActivity.this, WizNavStartActivity.class);
             startActivity(intent);
+            finish();
         }
-
-    }
-
-    protected void onResume() {
-        super.onResume();
 
         // Register receiver for background service
         IntentFilter filter = new IntentFilter(DownloadService.BROADCAST_NAME);
@@ -67,15 +63,15 @@ public class StartupActivity extends ActionBarActivity {
         // Start background service and ensure cards are set
         Intent i = new Intent(StartupActivity.this, StartSyncReceiver.class);
         i.putExtra(Const.APP_LAUNCHES,true);
-        StartupActivity.this.sendBroadcast(i);
+        sendBroadcast(i);
 
         //PreferenceManager.getDefaultSharedPreferences(this).edit().remove(Const.CHAT_ROOM_DISPLAY_NAME).commit();
         //PreferenceManager.getDefaultSharedPreferences(this).edit().remove(Const.PRIVATE_KEY).commit();
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
+    protected void onStop() {
+        super.onStop();
         unregisterReceiver(receiver);
     }
 

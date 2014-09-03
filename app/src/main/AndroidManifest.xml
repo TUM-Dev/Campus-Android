@@ -15,6 +15,7 @@
     <uses-permission android:name="android.permission.WRITE_CALENDAR" />
     <uses-permission android:name="android.permission.WRITE_CONTACTS" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <!-- GCM requires a Google account. -->
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
@@ -233,24 +234,6 @@
                 android:value="de.tum.in.tumcampus.activities.StartActivity" />
         </activity>
         <activity
-            android:name="de.tum.in.tumcampus.activities.FeedsDetailsActivity"
-            android:configChanges="orientation|screenSize"
-            android:label="@string/rss_feeds"
-            android:parentActivityName="de.tum.in.tumcampus.activities.FeedsActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.tum.in.tumcampus.activities.FeedsActivity" />
-        </activity>
-        <activity
-            android:name="de.tum.in.tumcampus.activities.FeedsActivity"
-            android:configChanges="orientation|screenSize"
-            android:label="@string/rss_feeds"
-            android:parentActivityName="de.tum.in.tumcampus.activities.StartActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.tum.in.tumcampus.activities.StartActivity" />
-        </activity>
-        <activity
             android:name="de.tum.in.tumcampus.activities.CafeteriaActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/cafeterias"
@@ -382,15 +365,6 @@
             android:configChanges="orientation|screenSize"
             android:label="@string/campus_app"/>
         <activity
-            android:name="de.tum.in.tumcampus.activities.LectureScheduleActivity"
-            android:configChanges="orientation|screenSize"
-            android:label="@string/lecture_schedule"
-            android:parentActivityName="de.tum.in.tumcampus.activities.StartActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.tum.in.tumcampus.activities.StartActivity" />
-        </activity>
-        <activity
             android:name="de.tum.in.tumcampus.activities.CalendarActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/schedule"
@@ -442,9 +416,6 @@
 
         <service
             android:name="de.tum.in.tumcampus.services.DownloadService"
-            android:exported="false" />
-        <service
-            android:name="de.tum.in.tumcampus.services.ImportService"
             android:exported="false" />
         <service
             android:name="de.tum.in.tumcampus.services.SilenceService"

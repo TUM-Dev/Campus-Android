@@ -129,4 +129,6 @@ public final class Const {
     public static final String APP_LAUNCHES = "app_launches";
     public static final String INTERNAL_PREFS = "internal_prefs";
     public static final String SYNC_CALENDAR = "sync_calendar";
+    public static final String CAFETERIA_DB_VERSION = "cafeteria_db_version";
+    public static final String IMPORT_COMPLETED = "import_completed";
 }

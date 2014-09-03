@@ -42,8 +42,7 @@ public class LectureAppointmentsListAdapter extends BaseAdapter {
 
 	private final LayoutInflater mInflater;
 
-	public LectureAppointmentsListAdapter(Context context,
-			List<LectureAppointmentsRow> results) {
+	public LectureAppointmentsListAdapter(Context context, List<LectureAppointmentsRow> results) {
 		terminList = results;
 		mInflater = LayoutInflater.from(context);
 	}

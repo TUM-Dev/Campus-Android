@@ -8,17 +8,19 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.concurrent.TimeoutException;
 
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.Utils;
+import de.tum.in.tumcampus.models.Location;
 import de.tum.in.tumcampus.models.managers.CafeteriaManager;
 import de.tum.in.tumcampus.models.managers.CafeteriaMenuManager;
 import de.tum.in.tumcampus.models.managers.CardManager;
-import de.tum.in.tumcampus.models.managers.EventManager;
-import de.tum.in.tumcampus.models.managers.FeedItemManager;
-import de.tum.in.tumcampus.models.managers.GalleryManager;
+import de.tum.in.tumcampus.models.managers.LectureItemManager;
+import de.tum.in.tumcampus.models.managers.LectureManager;
+import de.tum.in.tumcampus.models.managers.LocationManager;
 import de.tum.in.tumcampus.models.managers.NewsManager;
 import de.tum.in.tumcampus.models.managers.OrganisationManager;
 import de.tum.in.tumcampus.models.managers.SyncManager;
@@ -34,13 +36,16 @@ public class DownloadService extends IntentService {
 	public final static String BROADCAST_NAME = "de.tum.in.newtumcampus.intent.action.BROADCAST_DOWNLOAD";
 	private static final String DOWNLOAD_SERVICE = "DownloadService";
     public static final String LAST_UPDATE = "last_update";
+    public static final String CSV_LOCATIONS = "locations.csv";
+    public static final String ISO = "ISO-8859-1";
+    private static final String LOCATIONS_VERSION = "locations_version";
 
-	/**
+    /**
 	 * Indicator to avoid starting new downloads
 	 */
 	private volatile boolean isDestroyed = false;
 
-	/**
+    /**
 	 * default init (run intent in new thread)
 	 */
 	public DownloadService() {
@@ -95,29 +100,21 @@ public class DownloadService extends IntentService {
                     // TODO Implement downloading each type of external source
                     // TODO Also download my tum stuff
 
-                    // downloadGallery(force);
-                    // downloadNews(force);
+                    downloadNews(force);
                     downloadCafeterias(force);
-                    // downloadEvents(force);
                     downloadOrganisations(force);
+                    importLocationsDefaults();
 
                     successful = true;
                 }
                 if ((action.equals(Const.NEWS)) && !isDestroyed) {
                     successful = downloadNews(force);
                 }
-                if ((action.equals(Const.GALLERY)) && !isDestroyed) {
-                    successful = downloadGallery(force);
-                }
-                if ((action.equals(Const.FEEDS)) && !isDestroyed) {
-                    int feedId = intent.getExtras().getInt(Const.FEED_ID);
-                    successful = downloadFeed(feedId, force);
+                if ((action.equals(Const.LECTURES_TUM_ONLINE)) && !isDestroyed) {
+                    successful = importLectureItemsFromTUMOnline(force);
                 }
                 if ((action.equals(Const.CAFETERIAS)) && !isDestroyed) {
                     successful = downloadCafeterias(force);
-                }
-                if ((action.equals(Const.EVENTS)) && !isDestroyed) {
-                    successful = downloadEvents(force);
                 }
                 if ((action.equals(Const.ORGANISATIONS)) && !isDestroyed) {
                     successful = downloadOrganisations(force);
@@ -158,6 +155,15 @@ public class DownloadService extends IntentService {
         if (successful && !isDestroyed) {
             broadcastDownloadCompleted();
         }
+
+        // Do all other import stuff that is not relevant for creating the viewing the start page
+        if ((action.equals(Const.DOWNLOAD_ALL_FROM_EXTERNAL)) && !isDestroyed) {
+            try {
+                importLectureItemsFromTUMOnline(force);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 	private void broadcastDownloadCompleted() {
@@ -191,24 +197,6 @@ public class DownloadService extends IntentService {
 		return true;
 	}
 
-	public boolean downloadEvents(boolean force) throws Exception {
-		EventManager em = new EventManager(this);
-		em.downloadFromExternal(force);
-		return true;
-	}
-
-	public boolean downloadFeed(int feedId, boolean force) throws Exception {
-		FeedItemManager fim = new FeedItemManager(this);
-		fim.downloadFromExternal(feedId, false, force);
-		return true;
-	}
-
-	public boolean downloadGallery(boolean force) throws Exception {
-		GalleryManager gm = new GalleryManager(this);
-		gm.downloadFromExternal(force);
-		return true;
-	}
-
 	public boolean downloadNews(boolean force) throws Exception {
 		NewsManager nm = new NewsManager(this);
 		nm.downloadFromExternal(force);
@@ -231,6 +219,42 @@ public class DownloadService extends IntentService {
 		}
 		return true;
 	}
+
+    /**
+     * imports lecture items from TUMOnline HINT: access token has to be set
+     */
+    public boolean importLectureItemsFromTUMOnline(boolean force) throws Exception {
+        LectureItemManager lim = new LectureItemManager(this);
+        lim.importFromTUMOnline(this, force);
+
+        LectureManager lm = new LectureManager(this);
+        lm.updateLectures();
+        return true;
+    }
+
+    /**
+     * Import default location and opening hours from assets
+     */
+    public void importLocationsDefaults() throws Exception {
+        // get current app version
+        int version = getPackageManager().getPackageInfo(
+                this.getPackageName(), 0).versionCode;
+
+        // check if database update is needed
+        SharedPreferences prefs = getSharedPreferences(Const.INTERNAL_PREFS, 0);
+        boolean update = prefs.getInt(LOCATIONS_VERSION, -1)!=version;
+
+        LocationManager lm = new LocationManager(this);
+        if (lm.empty() || update) {
+            List<String[]> rows = Utils.readCsv(getAssets().open(CSV_LOCATIONS), ISO);
+
+            for (String[] row : rows) {
+                lm.replaceIntoDb(new Location(Integer.parseInt(row[0]), row[1],
+                        row[2], row[3], row[4], row[5], row[6], row[7], row[8]));
+            }
+        }
+        prefs.edit().putInt(LOCATIONS_VERSION,version).apply();
+    }
 
     /**
      * Gets the time when BackgroundService was called last time

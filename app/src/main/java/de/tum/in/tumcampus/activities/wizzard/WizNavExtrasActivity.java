@@ -8,6 +8,7 @@ import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.CheckBox;
 import de.tum.in.tumcampus.R;
+import de.tum.in.tumcampus.activities.StartupActivity;
 import de.tum.in.tumcampus.activities.generic.WizzardActivity;
 import de.tum.in.tumcampus.auxiliary.AccessTokenManager;
 import de.tum.in.tumcampus.auxiliary.Const;
@@ -28,7 +29,8 @@ public class WizNavExtrasActivity extends WizzardActivity {
         editor.putBoolean(Const.HIDE_WIZZARD_ON_STARTUP, true);
 		editor.commit();
 
-		finish();
+        finish();
+		startActivity(new Intent(this, StartupActivity.class));
 	}
 
 	@Override

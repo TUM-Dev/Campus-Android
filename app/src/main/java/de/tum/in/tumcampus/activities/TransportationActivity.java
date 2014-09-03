@@ -20,6 +20,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -133,16 +134,25 @@ public class TransportationActivity extends ActionBarActivity implements OnItemC
         this.listViewSuggestionsAndSaved.setOnItemLongClickListener(this);
 
         // initialize empty departure list, disable on click in list
-        MatrixCursor departureCursor = new MatrixCursor(new String[]{"name", "desc", "_id"});
+        MatrixCursor departureCursor = new MatrixCursor(new String[]{"symbol", "name", "time", "_id"});
         @SuppressWarnings("deprecation")
-        SimpleCursorAdapter adapterResults = new SimpleCursorAdapter(this, android.R.layout.two_line_list_item, departureCursor,
-                departureCursor.getColumnNames(), new int[]{android.R.id.text1, android.R.id.text2}) {
-
+        SimpleCursorAdapter adapterResults = new SimpleCursorAdapter(this, R.layout.card_departure_line, departureCursor,
+                departureCursor.getColumnNames(), new int[]{R.id.line_symbol, R.id.line_name, R.id.line_time}) {
             @Override
             public boolean isEnabled(int position) {
                 return false;
             }
         };
+        adapterResults.setViewBinder(new SimpleCursorAdapter.ViewBinder() {
+            @Override
+            public boolean setViewValue(View view, Cursor cursor, int i) {
+                if (view.getId() == R.id.line_symbol) {
+                    TransportManager.setSymbol(TransportationActivity.this, (ImageView) view, cursor.getString(0));
+                    return true;
+                }
+                return false;
+            }
+        });
         this.listViewResults.setAdapter(adapterResults);
 
         this.searchTextField.setOnEditorActionListener(new TextView.OnEditorActionListener() {

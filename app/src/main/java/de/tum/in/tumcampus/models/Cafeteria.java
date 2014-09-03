@@ -19,6 +19,9 @@ public class Cafeteria {
 	 */
 	public String name;
 
+    public double latitude;
+    public double longitude;
+
 	/**
 	 * new Cafeteria
 	 * 

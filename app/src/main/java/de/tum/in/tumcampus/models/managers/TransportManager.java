@@ -4,20 +4,26 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.net.URLEncoder;
+
+import de.tum.in.tumcampus.cards.MVVCard;
+import de.tum.in.tumcampus.data.LocationManager;
 import java.util.NoSuchElementException;
 
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.Utils;
+import de.tum.in.tumcampus.cards.ProvidesCard;
 
 /**
  * Transport Manager, handles database stuff, internet connections
  */
-public class TransportManager {
+public class TransportManager implements ProvidesCard {
 
     /**
      * Database connection
@@ -106,13 +112,13 @@ public class TransportManager {
             throw new NoSuchElementException("No departures found");
         }
 
-        MatrixCursor mc = new MatrixCursor(
-                new String[]{"name", "desc", "_id"});
+        MatrixCursor mc = new MatrixCursor(new String[]{"symbol","name", "time", "_id"});
 
         for (int j = 2; j < jsonArray.length(); j = j + 3) {
-            String name = jsonArray.getString(j) + " " + jsonArray.getString(j + 1).trim();
+            String symbol = jsonArray.getString(j);
+            String name = jsonArray.getString(j + 1).trim();
             String desc = jsonArray.getString(j + 2) + " min";
-            mc.addRow(new String[]{name, desc, String.valueOf(j)});
+            mc.addRow(new String[]{symbol, name, desc, String.valueOf(j)});
         }
         return mc;
     }
@@ -179,5 +185,27 @@ public class TransportManager {
             return;
         }
         db.execSQL("REPLACE INTO transports (name) VALUES (?)", new String[]{name});
+    }
+
+    @Override
+    public void onRequestCard(Context context) throws Exception {
+        // Get current campus
+        int campus = 0;//new LocationManager(context).getCurrentCampus();
+        if(campus==-1)
+            return;
+
+        // Get station for this campus
+        final String location = LocationManager.campusStation[campus];
+        Cursor cur = getDeparturesFromExternal(location);
+        MVVCard card = new MVVCard(context);
+        card.setStation(location);
+        card.setDepartures(cur);
+        card.setTime(System.currentTimeMillis());
+        card.apply();
+    }
+
+    public static void setSymbol(Context context, ImageView view, String symbol) {
+        int resID = context.getResources().getIdentifier("mvv_"+symbol.toLowerCase(), "drawable",  context.getPackageName());
+        view.setImageResource(resID);
     }
 }

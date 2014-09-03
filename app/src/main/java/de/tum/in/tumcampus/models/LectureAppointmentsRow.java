@@ -35,6 +35,12 @@ public class LectureAppointmentsRow {
 	@Element(required = false)
 	private String termin_betreff;
 
+    @Element(required = false)
+    private String lv_grp_nr;
+
+    @Element(required = false)
+    private String lv_grp_name;
+
 	public String getArt() {
 		return art;
 	}

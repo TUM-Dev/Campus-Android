@@ -292,18 +292,18 @@
     <!-- Chat rooms -->
     <string name="my_chat_rooms">Mes forums de discussions</string>
     <string name="send">Envoyer</string>
-    <string name="chat_terms_title">condition de forum de discussion</string>
-    <string name="chat_terms_body">condition de forum de discussion</string>
+    <string name="chat_terms_title">Condition de forum de discussion</string>
+    <string name="chat_terms_body">Condition de forum de discussion</string>
     <string name="chat_display_name_title">Tape ton nickname</string>
-    <string name="display_name">nickname</string>
+    <string name="display_name">Nickname</string>
     <string name="leave_chat_room">Quitté le forum de discussion</string>
     <string name="leave_chat_room_body">Es-tu sûr que tu veux quitter le forum de discussion?</string>
     <string name="load_earlier_messages">Charger les anciens messages</string>
     <string name="all">Tous</string>
 
     <!-- Cards -->
-    <string name="last_updated">Le contenu a été mis à jour il ya %s.</string>
-    <string name="next_lecture">prochain cours magistral</string>
+    <string name="last_updated">Le contenu était actualisé avant %s.</string>
+    <string name="next_lecture">Prochain cours magistral</string>
     <string name="restore_all_cards">Reconstituer les cartes</string>
     <string name="card_dismissed">Carte cachée</string>
     <string name="cards_dismissed">%s cartes cachées</string>

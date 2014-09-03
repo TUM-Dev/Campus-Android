@@ -158,8 +158,7 @@ public class TUMOnlineRequest {
 			@Override
 			protected void onPostExecute(String result) {
 				if (result != null) {
-					Log.d(getClass().getSimpleName(), "Received result <"
-							+ result + ">");
+					Log.d(getClass().getSimpleName(), "Received result <" + result + ">");
 				} else {
 					Log.w(getClass().getSimpleName(), "No result available");
 				}

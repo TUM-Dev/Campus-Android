@@ -67,8 +67,7 @@ public class LecturesAppointmentsActivity extends ActivityForAccessingTumOnline 
 		Serializer serializer = new Persister();
 		LectureAppointmentsRowSet lecturesList = null;
 		try {
-			lecturesList = serializer.read(LectureAppointmentsRowSet.class,
-					rawResponse);
+			lecturesList = serializer.read(LectureAppointmentsRowSet.class, rawResponse);
 		} catch (Exception e) {
 			Log.d("SIMPLEXML", "wont work: " + e.getMessage());
 			errorLayout.setVisibility(View.VISIBLE);
@@ -81,8 +80,7 @@ public class LecturesAppointmentsActivity extends ActivityForAccessingTumOnline 
 				|| lecturesList.getLehrveranstaltungenTermine() == null) {
 			errorLayout.setVisibility(View.VISIBLE);
 			progressLayout.setVisibility(View.GONE);
-			Toast.makeText(this, R.string.no_appointments, Toast.LENGTH_SHORT)
-					.show();
+			Toast.makeText(this, R.string.no_appointments, Toast.LENGTH_SHORT).show();
 			return;
 		}
 

@@ -130,10 +130,7 @@ public class CalendarManager implements ProvidesCard {
             // Do sync of google calendar if neccessary
             SharedPreferences prefs = mContext.getSharedPreferences(Const.INTERNAL_PREFS, 0);
             if(prefs.getBoolean(Const.SYNC_CALENDAR, false) && SyncManager.needSync(db, Const.SYNC_CALENDAR, TIME_TO_SYNC_CALENDAR)) {
-                deleteLocalCalendar(mContext);
-                Uri uri = addLocalCalendar(mContext);
-                addEvents(mContext, uri);
-                SyncManager.replaceIntoDb(db, Const.SYNC_CALENDAR);
+                syncCalendar(mContext);
             }
         } catch (Exception e) {
             boolean success = false;
@@ -180,13 +177,21 @@ public class CalendarManager implements ProvidesCard {
                             row.getDtstart(), row.getDtend(), row.getLocation()});
     }
 
-
     /**
-     * Adds an new local Google calendar
+     * Replaces the current TUM_CAMPUS_APP calendar with a new version
      *
-     * @return the URI to access the calendar
+     * @param c Context
      */
-    public static  Uri addLocalCalendar(Context c) {
+    public static void syncCalendar(Context c) {
+        // Deleting earlier calendar created by TUM Campus App
+        deleteLocalCalendar(c);
+        Uri uri = addLocalCalendar(c);
+        addEvents(c, uri);
+        SyncManager.replaceIntoDb(DatabaseManager.getDb(c), Const.SYNC_CALENDAR);
+    }
+
+
+    private static  Uri addLocalCalendar(Context c) {
         ContentResolver crv = c.getContentResolver();
         Calendar calendar = Calendar.getInstance();
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(c);
@@ -206,7 +211,7 @@ public class CalendarManager implements ProvidesCard {
     }
 
     @SuppressLint("InlinedApi")
-    public static void addEvents( Context c, Uri uri) {
+    private static void addEvents( Context c, Uri uri) {
         // Get ID
         ContentResolver contentResolver = c.getContentResolver();
         Cursor cursor2 = contentResolver.query(uri, projection, null, null, null);
@@ -264,10 +269,11 @@ public class CalendarManager implements ProvidesCard {
         }
     }
 
-    @Override
-    public void onRequestCard(Context context) {
-
-        // Get first lecture which starts in the next 30 minutes
+    /**
+     * Gets the next lecture or the current running lecture,
+     * if it started during the last 30 minutes
+     * */
+    public CalendarRow getNextCalendarItem() {
         Cursor cur = db.rawQuery("" +
                 " SELECT title, dtstart, location " +
                 " FROM kalendar_events " +
@@ -277,11 +283,24 @@ public class CalendarManager implements ProvidesCard {
                 " ORDER BY dtstart " +
                 " LIMIT 1", null);
 
+        CalendarRow row = null;
         if (cur.moveToFirst()) {
-            NextLectureCard card = new NextLectureCard(context);
-            card.setLecture(cur.getString(0), cur.getString(1), cur.getString(2));
-            card.apply();
+            row = new CalendarRow();
+            row.setTitle(cur.getString(0));
+            row.setDtstart(cur.getString(1));
+            row.setLocation(cur.getString(2));
         }
         cur.close();
+        return row;
+    }
+
+    @Override
+    public void onRequestCard(Context context) {
+        CalendarRow row = getNextCalendarItem();
+        if (row!=null) {
+            NextLectureCard card = new NextLectureCard(context);
+            card.setLecture(row.getTitle(), row.getDtstart(), row.getDtend());
+            card.apply();
+        }
     }
 }

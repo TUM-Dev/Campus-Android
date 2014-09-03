@@ -1,16 +1,12 @@
 package de.tum.in.tumcampus.activities;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,8 +21,6 @@ import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.SwipeDismissList;
 import de.tum.in.tumcampus.cards.Card;
 import de.tum.in.tumcampus.models.managers.CardManager;
-import de.tum.in.tumcampus.services.BackgroundService;
-import de.tum.in.tumcampus.services.ImportService;
 import de.tum.in.tumcampus.services.SilenceService;
 
 /**
@@ -40,22 +34,6 @@ public class StartActivity extends ActionBarActivity implements AdapterView.OnIt
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
 
-	/**
-	 * Receiver for Services
-	 */
-	private final BroadcastReceiver receiver = new BroadcastReceiver() {
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			if (intent.getAction().equals(ImportService.BROADCAST_NAME)) {
-				String message = intent.getStringExtra(Const.MESSAGE_EXTRA);
-				String action = intent.getStringExtra(Const.ACTION_EXTRA);
-
-				if (action.length() != 0) {
-					Log.i(this.getClass().getSimpleName(), message);
-				}
-			}
-		}
-	};
     private ActionBarDrawerToggle mDrawerToggle;
     private CardsAdapter mAdapter;
     private SwipeDismissList mSwipeList;
@@ -94,23 +72,8 @@ public class StartActivity extends ActionBarActivity implements AdapterView.OnIt
         mSwipeList.setUndoString(getString(R.string.card_dismissed));
         mSwipeList.setUndoMultipleString(getString(R.string.cards_dismissed));
 
-		// Registers receiver for download and import
-		IntentFilter intentFilter = new IntentFilter();
-		intentFilter.addAction(ImportService.BROADCAST_NAME);
-		this.registerReceiver(this.receiver, intentFilter);
-
-		// Imports default values into database
-		Intent service;
-		service = new Intent(this, ImportService.class);
-		service.putExtra(Const.ACTION_EXTRA, Const.DEFAULTS);
-		this.startService(service);
-
 		// Start silence Service (if already started it will just invoke a check)
-		service = new Intent(this, SilenceService.class);
-		this.startService(service);
-
-		// Start daily Service (same here: if already started it will just invoke a check)
-		service = new Intent(this, BackgroundService.class);
+        Intent service = new Intent(this, SilenceService.class);
 		this.startService(service);
 
 		// Setup the navigation drawer
@@ -161,13 +124,6 @@ public class StartActivity extends ActionBarActivity implements AdapterView.OnIt
         super.onResume();
         mAdapter.notifyDataSetChanged();
     }
-
-    @Override
-	protected void onDestroy() {
-		super.onDestroy();
-		// important to unregister the broadcast receiver
-		this.unregisterReceiver(this.receiver);
-	}
 
     // Discard all pending discards, otherwise already discarded item will show up again
     @Override

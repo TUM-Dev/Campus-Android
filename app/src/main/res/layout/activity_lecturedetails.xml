@@ -2,195 +2,220 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <include
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
         layout="@layout/layout_progress"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
         android:visibility="gone" />
 
     <include
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
         layout="@layout/layout_error"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
         android:visibility="gone" />
 
     <include
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
         layout="@layout/layout_failed_token"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
         android:visibility="gone" />
 
     <include
+        layout="@layout/layout_no_token"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        layout="@layout/layout_no_token"
         android:visibility="gone" />
 
-    <TextView
-        android:id="@+id/tvLDetailsName"
-        style="@style/SectionHeadline"
-        android:text="lec_details_title" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <ScrollView
-        android:id="@+id/scroll"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent" >
+        <TextView
+            android:id="@+id/tvLDetailsName"
+            style="@style/SectionHeadline" />
+
+        <ScrollView
+            android:id="@+id/scroll"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_alignBottom="@+id/divider"
+            android:layout_below="@+id/tvLDetailsName">
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="@dimen/padding_default">
+
+                <TextView
+                    android:id="@+id/TextView04"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:autoLink="none"
+                    android:scrollHorizontally="false"
+                    android:text="@string/lec_details"
+                    android:textColor="@color/text_light_blue"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvLDetailsSemester"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:autoLink="all"
+                    android:scrollHorizontally="false"
+                    android:text="@string/semester_data" />
+
+                <TextView
+                    android:id="@+id/tvLDetailsSWS"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:autoLink="none"
+                    android:scrollHorizontally="false"
+                    android:text="@string/sws_number" />
+
+                <TextView
+                    android:id="@+id/TextView01"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:autoLink="none"
+                    android:scrollHorizontally="false"
+                    android:text="@string/lecture_begin"
+                    android:textColor="@color/text_light_blue"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvLDetailsTermin"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:autoLink="none"
+                    android:scrollHorizontally="false"
+                    android:text="@string/first_date" />
+
+                <TextView
+                    android:id="@+id/tvLDHeadDetais"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:autoLink="none"
+                    android:scrollHorizontally="false"
+                    android:text="@string/lec_contributors"
+                    android:textColor="@color/text_light_blue"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvLDetailsDozent"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:autoLink="none"
+                    android:scrollHorizontally="false"
+                    android:text="@string/lecturer" />
+
+                <TextView
+                    android:id="@+id/tvLDetailsOrg"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:autoLink="none"
+                    android:scrollHorizontally="false"
+                    android:text="@string/organisation_of_lecture" />
+
+                <TextView
+                    android:id="@+id/TextView03"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:autoLink="none"
+                    android:scrollHorizontally="false"
+                    android:text="@string/lec_content"
+                    android:textColor="@color/text_light_blue"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvLDetailInhalt"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:autoLink="none"
+                    android:scrollHorizontally="false"
+                    android:text="@string/teaching_content" />
+
+                <TextView
+                    android:id="@+id/TextView02M"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:autoLink="none"
+                    android:scrollHorizontally="false"
+                    android:text="@string/lec_method"
+                    android:textColor="@color/text_light_blue"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvLDetailsMethode"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:autoLink="none"
+                    android:scrollHorizontally="false"
+                    android:text="@string/lec_method_details" />
+
+                <TextView
+                    android:id="@+id/TextView05"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:autoLink="none"
+                    android:scrollHorizontally="false"
+                    android:text="@string/lec_target"
+                    android:textColor="@color/text_light_blue"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvLDetailsZiele"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:autoLink="none"
+                    android:scrollHorizontally="false"
+                    android:text="@string/teaching_target" />
+
+                <TextView
+                    android:id="@+id/TextView02"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:autoLink="none"
+                    android:scrollHorizontally="false"
+                    android:text="@string/examination_aids"
+                    android:textColor="@color/text_light_blue"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvLDetailsLiteratur"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:scrollHorizontally="false"
+                    android:text="@string/literature" />
+            </LinearLayout>
+        </ScrollView>
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_above="@+id/buttonBar"
+            android:background="?android:attr/listDivider" />
 
         <LinearLayout
-            android:layout_width="fill_parent"
+            android:id="@+id/buttonBar"
+            style="@style/ButtonBar"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="@dimen/padding_default" >
-
-            <TextView
-                android:id="@+id/TextView04"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:autoLink="none"
-                android:scrollHorizontally="false"
-                android:text="@string/lec_details"
-                android:textColor="@color/text_light_blue"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/tvLDetailsSemester"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:autoLink="all"
-                android:scrollHorizontally="false"
-                android:text="@string/semester_data" />
-
-            <TextView
-                android:id="@+id/tvLDetailsSWS"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:autoLink="none"
-                android:scrollHorizontally="false"
-                android:text="@string/sws_number" />
-
-            <TextView
-                android:id="@+id/TextView01"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:autoLink="none"
-                android:scrollHorizontally="false"
-                android:text="@string/lecture_begin"
-                android:textColor="@color/text_light_blue"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/tvLDetailsTermin"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:autoLink="none"
-                android:scrollHorizontally="false"
-                android:text="@string/first_date" />
-
-            <TextView
-                android:id="@+id/tvLDHeadDetais"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:autoLink="none"
-                android:scrollHorizontally="false"
-                android:text="@string/lec_contributors"
-                android:textColor="@color/text_light_blue"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/tvLDetailsDozent"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:autoLink="none"
-                android:scrollHorizontally="false"
-                android:text="@string/lecturer" />
-
-            <TextView
-                android:id="@+id/tvLDetailsOrg"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:autoLink="none"
-                android:scrollHorizontally="false"
-                android:text="@string/organisation_of_lecture" />
-
-            <TextView
-                android:id="@+id/TextView03"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:autoLink="none"
-                android:scrollHorizontally="false"
-                android:text="@string/lec_content"
-                android:textColor="@color/text_light_blue"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/tvLDetailInhalt"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:autoLink="none"
-                android:scrollHorizontally="false"
-                android:text="@string/teaching_content" />
-
-            <TextView
-                android:id="@+id/TextView02M"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:autoLink="none"
-                android:scrollHorizontally="false"
-                android:text="@string/lec_method"
-                android:textColor="@color/text_light_blue"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/tvLDetailsMethode"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:autoLink="none"
-                android:scrollHorizontally="false"
-                android:text="@string/lec_method_details" />
-
-            <TextView
-                android:id="@+id/TextView05"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:autoLink="none"
-                android:scrollHorizontally="false"
-                android:text="@string/lec_target"
-                android:textColor="@color/text_light_blue"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/tvLDetailsZiele"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:autoLink="none"
-                android:scrollHorizontally="false"
-                android:text="@string/teaching_target" />
-
-            <TextView
-                android:id="@+id/TextView02"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:autoLink="none"
-                android:scrollHorizontally="false"
-                android:text="@string/examination_aids"
-                android:textColor="@color/text_light_blue"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/tvLDetailsLiteratur"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:scrollHorizontally="false"
-                android:text="@string/literature" />
+            android:layout_alignParentBottom="true"
+            android:orientation="horizontal">
 
             <Button
                 android:id="@+id/btnLDetailsTermine"
-                android:layout_width="match_parent"
+                style="@style/ButtonBarButton"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/selectable_item_background"
                 android:text="@string/lectures_appointments" />
         </LinearLayout>
-    </ScrollView>
+    </RelativeLayout>
 
 </LinearLayout>

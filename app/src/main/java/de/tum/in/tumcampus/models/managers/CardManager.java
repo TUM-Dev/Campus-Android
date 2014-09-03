@@ -26,6 +26,7 @@ public class CardManager {
     public static final int CARD_FIRST_USE_1 = 5;
     public static final int CARD_FIRST_USE_2 = 6;
     public static final int CARD_NO_INTERNET = 7;
+    public static final int CARD_MVV = 8;
 
     private static List<Card> cards;
     private static ArrayList<Card> newCards;
@@ -77,6 +78,7 @@ public class CardManager {
         }
         // Those don't need TUMOnline access
         managers.add(new CafeteriaManager(context));
+        managers.add(new TransportManager(context));
 
         for(ProvidesCard manager : managers){
             try{

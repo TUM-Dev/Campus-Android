@@ -4,6 +4,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
 import android.preference.PreferenceManager;
 import android.text.format.DateUtils;
 
@@ -16,11 +19,13 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.cards.CafeteriaMenuCard;
 import de.tum.in.tumcampus.cards.ProvidesCard;
+import de.tum.in.tumcampus.data.LocationManager;
 import de.tum.in.tumcampus.models.Cafeteria;
 import de.tum.in.tumcampus.models.CafeteriaMenu;
 
@@ -29,8 +34,9 @@ import de.tum.in.tumcampus.models.CafeteriaMenu;
  */
 public class CafeteriaManager implements ProvidesCard {
     public static int TIME_TO_SYNC = 604800; // 1 week
+    private final Context mContext;
 
-	/**
+    /**
 	 * Get Cafeteria object by JSON object
 	 * 
 	 * Example JSON: e.g.
@@ -63,12 +69,11 @@ public class CafeteriaManager implements ProvidesCard {
 	 * </pre>
 	 */
 	public CafeteriaManager(Context context) {
+        mContext = context;
 		db = DatabaseManager.getDb(context);
 
-		// create table if needed
-		db.execSQL("CREATE TABLE IF NOT EXISTS cafeterias (id INTEGER PRIMARY KEY, name VARCHAR, address VARCHAR)");
-
-        new SyncManager(context);
+        // create table if needed
+		db.execSQL("CREATE TABLE IF NOT EXISTS cafeterias (id INTEGER PRIMARY KEY, name VARCHAR, address VARCHAR, latitude REAL, longitude REAL)");
 	}
 
 	/**
@@ -81,6 +86,15 @@ public class CafeteriaManager implements ProvidesCard {
 	 */
 	public void downloadFromExternal(boolean force) throws Exception {
 
+        // Update table schemata if table exists
+        SharedPreferences prefs = mContext.getSharedPreferences(Const.INTERNAL_PREFS, 0);
+        if(prefs.getInt(Const.CAFETERIA_DB_VERSION,1)==1) {
+            db.execSQL("DROP TABLE IF EXISTS cafeterias");
+            db.execSQL("CREATE TABLE IF NOT EXISTS cafeterias (id INTEGER PRIMARY KEY, name VARCHAR, address VARCHAR, latitude REAL, longitude REAL)");
+            prefs.edit().putInt(Const.CAFETERIA_DB_VERSION,2).apply();
+            force = true;
+        }
+
 		if (!force && !SyncManager.needSync(db, this, TIME_TO_SYNC)) {
 			return;
 		}
@@ -91,11 +105,20 @@ public class CafeteriaManager implements ProvidesCard {
 				Const.JSON_MENSA_MENSEN);
 		removeCache();
 
+
+        Geocoder geo = new Geocoder(mContext);
+
 		// write cafeterias into database, transaction = speedup
 		db.beginTransaction();
 		try {
 			for (int i = 0; i < jsonArray.length(); i++) {
-				replaceIntoDb(getFromJson(jsonArray.getJSONObject(i)));
+                Cafeteria mensa = getFromJson(jsonArray.getJSONObject(i));
+                List<Address> list = geo.getFromLocationName(mensa.address, 1);
+                if(list.size()==1) {
+                    mensa.latitude = list.get(0).getLatitude();
+                    mensa.longitude = list.get(0).getLongitude();
+                }
+				replaceIntoDb(mensa);
 			}
 			SyncManager.replaceIntoDb(db, this);
 			db.setTransactionSuccessful();
@@ -119,6 +142,12 @@ public class CafeteriaManager implements ProvidesCard {
 								+ "ORDER BY address like '%Garching%' DESC, name",
 						new String[] { filter, filter });
 	}
+
+    public Cursor getAllLocationsFromDb() {
+        return db
+                .rawQuery(
+                        "SELECT id, latitude, longitude FROM cafeterias", null);
+    }
 
 	/**
 	 * Removes all cache items
@@ -151,66 +180,68 @@ public class CafeteriaManager implements ProvidesCard {
 	}
 
     @Override
-    public void onRequestCard(Context context) {
+    public void onRequestCard(Context context) throws ParseException {
         CafeteriaMenuCard card = new CafeteriaMenuCard(context);
         CafeteriaMenuManager cmm = new CafeteriaMenuManager(context);
+        de.tum.in.tumcampus.data.LocationManager locationManager = new LocationManager(context);
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
 
         // Get all available cafeterias from database
         Cursor cursor = getAllFromDb("% %");
         String cafeteriaId="", cafeteriaName = "";
 
-        //TODO: Make selection of shown cafeteria more intelligent (use location, timetable)
+        // Choose which mensa should be shown
+        Location loc = locationManager.getCurrentLocation();
+        if(loc!=null) {
+            cafeteriaId = locationManager.getNextCafeteria(loc, this);
+        }
         if (cursor.moveToFirst()) {
             do {
                 final String key = cursor.getString(2);
-                if (sharedPrefs.getBoolean("mensa_"+key, true)) {
+                if (sharedPrefs.getBoolean("mensa_" + key, true) && cafeteriaId==null) {
                     cafeteriaId = key;
-                    cafeteriaName=cursor.getString(0);
+                    cafeteriaName = cursor.getString(0);
+                    break;
+                } else if(cafeteriaId!=null && key.equals(cafeteriaId)) {
+                    cafeteriaName = cursor.getString(0);
                     break;
                 }
             } while (cursor.moveToNext());
         }
         cursor.close();
 
+        // Get available dates for cafeteria menus
         Cursor cursorCafeteriaDates = cmm.getDatesFromDb();
-
-        Date date = null;
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         final int idCol = cursorCafeteriaDates.getColumnIndex(Const.ID_COLUMN);
 
         // Try with next available date
         cursorCafeteriaDates.moveToFirst(); // Get today or tomorrow if today is sunday e.g.
         String dateStr = cursorCafeteriaDates.getString(idCol);
-        try {
-            date = formatter.parse(dateStr);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+        Date date = formatter.parse(dateStr);
 
         // If it is 3pm or later mensa has already closed so display the menu for the following day
         Calendar now = Calendar.getInstance();
         if(DateUtils.isToday(date.getTime()) && now.get(Calendar.HOUR_OF_DAY)>=15) {
             cursorCafeteriaDates.moveToNext(); // Get following day
             dateStr = cursorCafeteriaDates.getString(idCol);
-            try {
-                date = formatter.parse(dateStr);
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
+            date = formatter.parse(dateStr);
         }
+        cursorCafeteriaDates.close();
         Cursor cursorCafeteriaMenu = cmm.getTypeNameFromDbCard(cafeteriaId, dateStr);
         ArrayList<CafeteriaMenu> menus = new ArrayList<CafeteriaMenu>();
-        cursorCafeteriaMenu.moveToFirst();
-        do {
-            int typeNr=0;
-            CafeteriaMenu menu = new CafeteriaMenu(Integer.parseInt(cursorCafeteriaMenu.getString(2)),
-                    Integer.parseInt(cafeteriaId), date,
-                    cursorCafeteriaMenu.getString(3), cursorCafeteriaMenu.getString(0), typeNr, cursorCafeteriaMenu.getString(1));
+        if(cursorCafeteriaMenu.moveToFirst()) {
+            do {
+                int typeNr = 0;
+                CafeteriaMenu menu = new CafeteriaMenu(Integer.parseInt(cursorCafeteriaMenu.getString(2)),
+                        Integer.parseInt(cafeteriaId), date,
+                        cursorCafeteriaMenu.getString(3), cursorCafeteriaMenu.getString(0), typeNr, cursorCafeteriaMenu.getString(1));
 
-            menus.add(menu);
-        } while(cursorCafeteriaMenu.moveToNext());
-        card.setCardMenus(cafeteriaId, cafeteriaName, date, menus);
-        card.apply();
+                menus.add(menu);
+            } while (cursorCafeteriaMenu.moveToNext());
+            card.setCardMenus(cafeteriaId, cafeteriaName, date, menus);
+            card.apply();
+        }
+        cursorCafeteriaMenu.close();
     }
 }
