@@ -8,7 +8,6 @@ import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
@@ -21,6 +20,7 @@ import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.generic.ActivityForSearching;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.ImplicitCounter;
+import de.tum.in.tumcampus.auxiliary.MVVStationSuggestionProvider;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.managers.TransportManager;
 
@@ -31,15 +31,13 @@ public class TransportationActivity extends ActivityForSearching implements OnIt
 
     private TextView infoTextView;
     private ListView listViewResults;
-
-    //private ListView listViewSuggestionsAndSaved = null;
-
     private Thread runningSearch = null;
     private SimpleCursorAdapter adapterStations;
     private SimpleCursorAdapter adapterResults;
+    private TransportManager transportationManager;
 
     public TransportationActivity() {
-        super(R.layout.activity_transportation);
+        super(R.layout.activity_transportation, MVVStationSuggestionProvider.AUTHORITY);
     }
 
     @Override
@@ -52,19 +50,20 @@ public class TransportationActivity extends ActivityForSearching implements OnIt
         }
 
         // get all stations from db
-        TransportManager transportationManager = new TransportManager(this);
-        Cursor stationCursor = transportationManager.getAllFromDb();
+        transportationManager = new TransportManager(this);
 
+        infoTextView = (TextView) this.findViewById(R.id.activity_transport_textview_info);
         listViewResults = (ListView) this.findViewById(R.id.activity_transport_listview_result);
-        this.infoTextView = (TextView) this.findViewById(R.id.activity_transport_textview_info);
+        listViewResults.setOnItemClickListener(this);
 
         // Initialize stations adapter
+        Cursor stationCursor = transportationManager.getAllFromDb();
         adapterStations = new SimpleCursorAdapter(this, android.R.layout.simple_list_item_1, stationCursor,
                 stationCursor.getColumnNames(), new int[]{android.R.id.text1});
 
         // initialize empty departure adapter, disable on click in list
         MatrixCursor departureCursor = new MatrixCursor(new String[]{"symbol", "name", "time", "_id"});
-        adapterResults = new SimpleCursorAdapter(this, R.layout.card_departure_line, departureCursor,
+        adapterResults = new SimpleCursorAdapter(this, R.layout.activity_transportation_departure_listview, departureCursor,
                 departureCursor.getColumnNames(), new int[]{R.id.line_symbol, R.id.line_name, R.id.line_time}) {
             @Override
             public boolean isEnabled(int position) {
@@ -75,62 +74,39 @@ public class TransportationActivity extends ActivityForSearching implements OnIt
             @Override
             public boolean setViewValue(View view, Cursor cursor, int i) {
                 if (view.getId() == R.id.line_symbol) {
-                    TransportManager.setSymbol(TransportationActivity.this, (ImageView) view, cursor.getString(0));
+                    TransportManager.setSymbol(TransportationActivity.this, (TextView) view, cursor.getString(0));
                     return true;
                 }
                 return false;
             }
         });
-        listViewResults.setAdapter(adapterStations);
-        listViewResults.setOnItemClickListener(this);
-        listViewResults.requestFocus();
-    }
-/*
-    public void onClick(View view) {
 
-        this.infoTextView.setVisibility(View.GONE);
+        onNewIntent(getIntent());
 
-        int viewId = view.getId();
-        switch (viewId) {
-            case R.id.activity_transport_domore:
-                Cursor stationCursor = this.transportaionManager.getAllFromDb();
-
-                if (!this.transportaionManager.empty()) {
-                    SimpleCursorAdapter adapter = (SimpleCursorAdapter) this.listViewSuggestionsAndSaved.getAdapter();
-                    adapter.changeCursor(stationCursor);
-                } else {
-                    this.infoTextView.setText(getString(R.string.no_stored_search_requests));
-                    this.infoTextView.setVisibility(View.VISIBLE);
-                }
-                this.listViewSuggestionsAndSaved.setVisibility(View.VISIBLE);
-                this.listViewResults.setVisibility(View.GONE);
-                this.errorLayout.setVisibility(View.GONE);
-                Utils.hideKeyboard(this, this.searchTextField);
-                break;
+        if(mQuery==null) {
+            listViewResults.setAdapter(adapterStations);
+            listViewResults.requestFocus();
         }
-    }*/
+    }
 
     /**
      * Click on station in list
      * */
     @Override
     public void onItemClick(final AdapterView<?> av, View v, int position, long id) {
-
         Cursor departureCursor = (Cursor) av.getAdapter().getItem(position);
         final String location = departureCursor.getString(departureCursor.getColumnIndex(Const.NAME_COLUMN));
 
         this.listViewResults.setEnabled(true);
-        //this.searchTextField.setText(location);
+        mSearchView.setQuery(location, false);
 
         showStation(location);
     }
 
     public void showStation(final String location) {
-
         // save clicked station into db and refresh station list
         // (could be clicked on search result list)
-        TransportManager tm = new TransportManager(this);
-        tm.replaceIntoDb(location);
+        transportationManager.replaceIntoDb(location);
 
         this.progressLayout.setVisibility(View.VISIBLE);
         this.infoTextView.setVisibility(View.GONE);
@@ -139,7 +115,7 @@ public class TransportationActivity extends ActivityForSearching implements OnIt
             this.progressLayout.setVisibility(View.GONE);
             this.errorLayout.setVisibility(View.VISIBLE);
             Toast.makeText(this, R.string.no_internet_connection, Toast.LENGTH_SHORT).show();
-            adapterResults.changeCursor(tm.getAllFromDb());
+            adapterResults.changeCursor(transportationManager.getAllFromDb());
             listViewResults.setAdapter(adapterResults);
             return;
         }
@@ -150,10 +126,9 @@ public class TransportationActivity extends ActivityForSearching implements OnIt
             @Override
             public void run() {
                 // get departures from website
-                TransportManager tm = new TransportManager(TransportationActivity.this);
                 Cursor departureCursor = null;
                 try {
-                    departureCursor = tm.getDeparturesFromExternal(location);
+                    departureCursor = transportationManager.getDeparturesFromExternal(location);
                 } catch (NoSuchElementException e) {
                     this.message = R.string.no_departures_found;
                 } catch (TimeoutException e) {
@@ -174,6 +149,8 @@ public class TransportationActivity extends ActivityForSearching implements OnIt
             runningSearch.interrupt();
             progressLayout.setVisibility(View.GONE);
             runningSearch = null;
+        } else if(listViewResults.getAdapter()==adapterResults) {
+            performSearchAlgorithm("");
         } else {
             finish();
         }
@@ -191,6 +168,11 @@ public class TransportationActivity extends ActivityForSearching implements OnIt
         String inputTextToCheck = query;
         if (query.length() > 2) {
             inputTextToCheck = query.substring(0, query.length() - 1);
+        } else if(query.isEmpty()) {
+            Cursor stationCursor = transportationManager.getAllFromDb();
+            adapterStations.changeCursor(stationCursor);
+            listViewResults.setAdapter(adapterStations);
+            return;
         }
         final String inputText = inputTextToCheck;
         infoTextView.setVisibility(View.GONE);
@@ -203,11 +185,10 @@ public class TransportationActivity extends ActivityForSearching implements OnIt
                 Thread me = TransportationActivity.this.runningSearch;
 
                 // Get Information
-                TransportManager tm = new TransportManager(TransportationActivity.this);
                 Cursor stationCursor = null;
                 int message = 0;
                 try {
-                    stationCursor = tm.getStationsFromExternal(inputText);
+                    stationCursor = transportationManager.getStationsFromExternal(inputText);
                 } catch (NoSuchElementException e) {
                     message = R.string.no_station_found;
                 } catch (TimeoutException e) {
@@ -224,7 +205,13 @@ public class TransportationActivity extends ActivityForSearching implements OnIt
                 // If there is exactly one station open results directly
                 if(stationCursor!=null && stationCursor.getCount()==1) {
                     stationCursor.moveToFirst();
-                    showStation(stationCursor.getString(0));
+                    final String location = stationCursor.getString(0);
+                    TransportationActivity.this.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            showStation(location);
+                        }
+                    });
                     return;
                 }
 

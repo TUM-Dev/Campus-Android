@@ -73,7 +73,16 @@
 
         <provider
             android:name="de.tum.in.tumcampus.auxiliary.RoomFinderSuggestionProvider"
-            android:authorities="com.example.RoomFinderSuggestionProvider" />
+            android:authorities="de.tum.in.tumcampus.auxiliary.RoomFinderSuggestionProvider" />
+        <provider
+            android:name="de.tum.in.tumcampus.auxiliary.PersonSearchSuggestionProvider"
+            android:authorities="de.tum.in.tumcampus.auxiliary.PersonSearchSuggestionProvider" />
+        <provider
+            android:name="de.tum.in.tumcampus.auxiliary.MVVStationSuggestionProvider"
+            android:authorities="de.tum.in.tumcampus.auxiliary.MVVStationSuggestionProvider" />
+        <provider
+            android:name="de.tum.in.tumcampus.auxiliary.LectureSearchSuggestionProvider"
+            android:authorities="de.tum.in.tumcampus.auxiliary.LectureSearchSuggestionProvider" />
 
         <activity
             android:name="de.tum.in.tumcampus.activities.StartupActivity"
@@ -202,6 +211,11 @@
             android:configChanges="orientation|screenSize"
             android:label="@string/mvv"
             android:parentActivityName="de.tum.in.tumcampus.activities.StartActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+            <meta-data android:name="android.app.searchable"
+                android:resource="@xml/searchable_mvv"/>
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.tum.in.tumcampus.activities.StartActivity" />
@@ -229,6 +243,11 @@
             android:configChanges="orientation|screenSize"
             android:label="@string/my_lectures"
             android:parentActivityName="de.tum.in.tumcampus.activities.StartActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+            <meta-data android:name="android.app.searchable"
+                android:resource="@xml/searchable_lectures"/>
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.tum.in.tumcampus.activities.StartActivity" />
@@ -256,6 +275,11 @@
             android:configChanges="orientation|screenSize"
             android:label="@string/person_search"
             android:parentActivityName="de.tum.in.tumcampus.activities.StartActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+            <meta-data android:name="android.app.searchable"
+                android:resource="@xml/searchable_persons"/>
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.tum.in.tumcampus.activities.StartActivity" />
@@ -283,13 +307,18 @@
 
             <meta-data
                 android:name="android.app.searchable"
-                android:resource="@xml/roomfinder_searchable" />
+                android:resource="@xml/searchable_rooms" />
         </activity>
         <activity
             android:name="de.tum.in.tumcampus.activities.RoomFinderDetailsActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/roomfinder"
             android:parentActivityName=".activities.RoomFinderActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+            <meta-data android:name="android.app.searchable"
+                android:resource="@xml/searchable_rooms"/>
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.tum.in.tumcampus.activities.RoomfinderActivity" />

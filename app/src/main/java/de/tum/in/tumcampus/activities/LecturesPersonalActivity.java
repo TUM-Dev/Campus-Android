@@ -1,5 +1,6 @@
 package de.tum.in.tumcampus.activities;
 
+import android.app.SearchManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -22,6 +23,7 @@ import de.tum.in.tumcampus.activities.generic.ActivityForSearching;
 import de.tum.in.tumcampus.adapters.LecturesListAdapter;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.ImplicitCounter;
+import de.tum.in.tumcampus.auxiliary.LectureSearchSuggestionProvider;
 import de.tum.in.tumcampus.models.LecturesSearchRow;
 import de.tum.in.tumcampus.models.LecturesSearchRowSet;
 import de.tum.in.tumcampus.tumonline.TUMOnlineRequest;
@@ -56,7 +58,7 @@ public class LecturesPersonalActivity extends ActivityForSearching implements TU
     private RelativeLayout noTokenLayout;
 
     public LecturesPersonalActivity() {
-		super(R.layout.activity_lectures);
+		super(R.layout.activity_lectures, LectureSearchSuggestionProvider.AUTHORITY);
 	}
 
 	@Override
@@ -91,10 +93,11 @@ public class LecturesPersonalActivity extends ActivityForSearching implements TU
 
         //Counting the number of times that the user used this activity for intelligent reordering
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-        if (sharedPrefs.getBoolean("implicitly_id", true))
-        {
+        if (sharedPrefs.getBoolean("implicitly_id", true)) {
             ImplicitCounter.Counter("my_lectures_id", getApplicationContext());
         }
+
+        onNewIntent(getIntent());
 	}
 
     @Override

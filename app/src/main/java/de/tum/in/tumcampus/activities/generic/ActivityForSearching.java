@@ -1,8 +1,14 @@
 package de.tum.in.tumcampus.activities.generic;
 
+import android.app.SearchManager;
+import android.app.SearchableInfo;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SearchRecentSuggestionsProvider;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.provider.SearchRecentSuggestions;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.SearchView;
@@ -34,9 +40,12 @@ public abstract class ActivityForSearching extends ActionBarActivity {
 	private int layoutId;
 	protected RelativeLayout progressLayout;
     protected SearchView mSearchView;
+    protected String mQuery = null;
+    private String mAuthority;
 
-    public ActivityForSearching(int layoutIt) {
-		this.layoutId = layoutIt;
+    public ActivityForSearching(int layoutIt, String auth) {
+		layoutId = layoutIt;
+        mAuthority = auth;
 	}
 
     @Override
@@ -58,10 +67,19 @@ public abstract class ActivityForSearching extends ActionBarActivity {
         MenuItem searchItem = menu.findItem(R.id.action_search);
         mSearchView = (SearchView) MenuItemCompat.getActionView(searchItem);
 
+        // Set the searchable configuration
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchableInfo info = searchManager.getSearchableInfo(getComponentName());
+        mSearchView.setSearchableInfo(info);
+
         // Optical tweaks to match application theme
-        styleSearchView();
+        styleSearchView(info.getHintId());
 
         if (mSearchView != null) {
+            if(mQuery!=null) {
+                mSearchView.setQuery(mQuery, false);
+                MenuItemCompat.expandActionView(searchItem);
+            }
             mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                 @Override
                 public boolean onQueryTextSubmit(String s) {
@@ -78,11 +96,25 @@ public abstract class ActivityForSearching extends ActionBarActivity {
 		return true;
 	}
 
-    private void styleSearchView() {
+    @Override
+    public void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        if(intent==null)
+            return;
+        setIntent(intent);
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            mQuery = intent.getStringExtra(SearchManager.QUERY);
+            SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this, mAuthority, SearchRecentSuggestionsProvider.DATABASE_MODE_QUERIES);
+            suggestions.saveRecentQuery(mQuery, null);
+            performSearchAlgorithm(mQuery);
+        }
+    }
+
+    private void styleSearchView(int hintId) {
         // Adjust small lense icon and hint text
         SearchView.SearchAutoComplete searchAutoComplete = (SearchView.SearchAutoComplete)mSearchView.findViewById(android.support.v7.appcompat.R.id.search_src_text);
         SpannableStringBuilder ssb = new SpannableStringBuilder("   ");
-        ssb.append(getString(R.string.search));
+        ssb.append(getString(hintId));
         Drawable searchIcon = getResources().getDrawable(R.drawable.ic_action_search);
         int textSize = (int) (searchAutoComplete.getTextSize() * 1.4);
         searchIcon.setBounds(0, 0, textSize, textSize);

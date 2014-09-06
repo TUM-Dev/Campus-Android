@@ -4,6 +4,9 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.ShapeDrawable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -12,6 +15,8 @@ import org.json.JSONObject;
 
 import java.net.URLEncoder;
 
+import de.tum.in.tumcampus.R;
+import de.tum.in.tumcampus.auxiliary.MVVSymbolView;
 import de.tum.in.tumcampus.cards.MVVCard;
 import de.tum.in.tumcampus.data.LocationManager;
 import java.util.NoSuchElementException;
@@ -180,7 +185,6 @@ public class TransportManager implements ProvidesCard {
      */
     public void replaceIntoDb(String name) {
         Utils.log(name);
-
         if (name.length() == 0) {
             return;
         }
@@ -204,8 +208,10 @@ public class TransportManager implements ProvidesCard {
         card.apply();
     }
 
-    public static void setSymbol(Context context, ImageView view, String symbol) {
-        int resID = context.getResources().getIdentifier("mvv_"+symbol.toLowerCase(), "drawable",  context.getPackageName());
-        view.setImageResource(resID);
+    public static void setSymbol(Context context, TextView view, String symbol) {
+        MVVSymbolView d = new MVVSymbolView(context, symbol);
+        view.setTextColor(d.getTextColor());
+        view.setText(symbol);
+        view.setBackgroundDrawable(d);
     }
 }

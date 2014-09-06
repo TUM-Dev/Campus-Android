@@ -1,5 +1,6 @@
 package de.tum.in.tumcampus.activities;
 
+import android.app.SearchManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -23,6 +24,7 @@ import de.tum.in.tumcampus.activities.generic.ActivityForSearching;
 import de.tum.in.tumcampus.adapters.PersonListAdapter;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.ImplicitCounter;
+import de.tum.in.tumcampus.auxiliary.PersonSearchSuggestionProvider;
 import de.tum.in.tumcampus.models.Person;
 import de.tum.in.tumcampus.models.PersonList;
 import de.tum.in.tumcampus.tumonline.TUMOnlineRequest;
@@ -43,7 +45,7 @@ public class PersonsSearchActivity extends ActivityForSearching implements TUMOn
     private RelativeLayout noTokenLayout;
 
     public PersonsSearchActivity() {
-        super(R.layout.activity_persons);
+        super(R.layout.activity_persons, PersonSearchSuggestionProvider.AUTHORITY);
     }
 
     /**
@@ -88,6 +90,8 @@ public class PersonsSearchActivity extends ActivityForSearching implements TUMOn
         if (sharedPrefs.getBoolean("implicitly_id", true)) {
             ImplicitCounter.Counter("person_search_id", getApplicationContext());
         }
+
+        onNewIntent(getIntent());
     }
 
     @Override

@@ -1,19 +1,17 @@
 package de.tum.in.tumcampus.activities;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
-import android.app.SearchManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.provider.SearchRecentSuggestions;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.generic.ActivityForSearching;
@@ -40,7 +38,7 @@ public class RoomFinderActivity extends ActivityForSearching implements TUMRoomF
     private String currentlySelectedRoomId;
 
     public RoomFinderActivity() {
-        super(R.layout.activity_roomfinder);
+        super(R.layout.activity_roomfinder, RoomFinderSuggestionProvider.AUTHORITY);
     }
 
     @Override
@@ -54,16 +52,12 @@ public class RoomFinderActivity extends ActivityForSearching implements TUMRoomF
             ImplicitCounter.Counter("roomfinder_id", getApplicationContext());
         }
 
-        //Handle intents
-        handleIntent(getIntent());
+        onNewIntent(getIntent());
     }
 
     @Override
     public void performSearchAlgorithm(String query) {
-        SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this, RoomFinderSuggestionProvider.AUTHORITY, RoomFinderSuggestionProvider.MODE);
-        suggestions.saveRecentQuery(query, null);
-
-        if(query.length() >= MIN_SEARCH_LENGTH) {
+        if(query.length() >= MIN_SEARCH_LENGTH) { //TODO
             roomFinderRequest.fetchSearchInteractive(this, this, query);
         }
     }
@@ -124,26 +118,4 @@ public class RoomFinderActivity extends ActivityForSearching implements TUMRoomF
     public void onCommonError(String errorReason) {
         Toast.makeText(this, errorReason, Toast.LENGTH_SHORT).show();
     }
-
-    @Override
-    public void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        setIntent(intent);
-        this.handleIntent(intent);
-    }
-
-    private void handleIntent(Intent intent) {
-        if (intent != null && intent.getAction()!= null && intent.getAction().equals(Intent.ACTION_SEARCH)) {
-            //Get the requested room
-            String query = intent.getStringExtra(SearchManager.QUERY);
-
-            //Update search field
-            mSearchView.setQuery(query, true);
-
-            //Execute search
-            //performSearchAlgorithm(query);
-        }
-    }
-
-
 }

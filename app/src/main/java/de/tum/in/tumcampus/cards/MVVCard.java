@@ -1,5 +1,6 @@
 package de.tum.in.tumcampus.cards;
 
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -19,6 +20,7 @@ import java.util.List;
 
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.CafeteriaDetailsActivity;
+import de.tum.in.tumcampus.activities.TransportationActivity;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.fragments.CafeteriaDetailsSectionFragment;
 import de.tum.in.tumcampus.models.CafeteriaMenu;
@@ -60,7 +62,7 @@ public class MVVCard extends Card {
 
     private void addDeparture(String symbol, String title, String time) {
         View view = mInflater.inflate(R.layout.card_departure_line, mLinearLayout, false);
-        ImageView symbolView = (ImageView) view.findViewById(R.id.line_symbol);
+        TextView symbolView = (TextView) view.findViewById(R.id.line_symbol);
         TextView textView = (TextView) view.findViewById(R.id.line_name);
         TextView timeView = (TextView) view.findViewById(R.id.line_time);
         TransportManager.setSymbol(mContext, symbolView, symbol);
@@ -69,14 +71,13 @@ public class MVVCard extends Card {
         mLinearLayout.addView(view);
     }
 
-    /*
     @Override
     public Intent getIntent() {
-        Intent i = new Intent(mContext, CafeteriaDetailsActivity.class);
-        i.putExtra(Const.CAFETERIA_ID, mCafeteriaId);
-        i.putExtra(Const.CAFETERIA_NAME, mCafeteriaName);
+        Intent i = new Intent(mContext, TransportationActivity.class);
+        i.setAction(Intent.ACTION_SEARCH);
+        i.putExtra(SearchManager.QUERY, mStationName);
         return i;
-    }*/
+    }
 
     @Override
     protected void discard(Editor editor) {

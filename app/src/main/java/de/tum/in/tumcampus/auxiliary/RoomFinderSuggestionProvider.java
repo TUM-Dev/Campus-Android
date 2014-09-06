@@ -2,18 +2,10 @@ package de.tum.in.tumcampus.auxiliary;
 
 import android.content.SearchRecentSuggestionsProvider;
 
-/**
- * RoomFinderSuggestionProvider
- * 
- * @author
- * 
- */
-public class RoomFinderSuggestionProvider extends
-		SearchRecentSuggestionsProvider {
-	public final static String AUTHORITY = "com.example.RoomFinderSuggestionProvider";
-	public final static int MODE = DATABASE_MODE_QUERIES;
+public class RoomFinderSuggestionProvider extends SearchRecentSuggestionsProvider {
+	public final static String AUTHORITY = "de.tum.in.tumcampus.auxiliary.RoomFinderSuggestionProvider";
 
 	public RoomFinderSuggestionProvider() {
-		setupSuggestions(AUTHORITY, MODE);
+		setupSuggestions(AUTHORITY, DATABASE_MODE_QUERIES);
 	}
 }
