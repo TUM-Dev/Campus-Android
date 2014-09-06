@@ -150,15 +150,21 @@ public abstract class Card {
         // notify again.
         discardNotification();
 
-        PendingIntent viewPendingIntent = PendingIntent.getActivity(mContext, 0, getIntent(), 0);
-
+        // Start building our notification
         NotificationCompat.Builder notificationBuilder =
                 new NotificationCompat.Builder(mContext)
                         .setAutoCancel(true)
-                        .setContentIntent(viewPendingIntent)
                         .setContentTitle(getTitle());
 
-        // Trick to hide card on phone
+        // If intent is specified add the content intent to the notification
+        final Intent intent = getIntent();
+        if(intent!=null) {
+            PendingIntent viewPendingIntent = PendingIntent.getActivity(mContext, 0, intent, 0);
+            notificationBuilder.setContentIntent(viewPendingIntent);
+        }
+
+        // Apply trick to hide card on phone if it the notification
+        // should only be present on the watch
         if(mShowWear) {
             notificationBuilder.setGroup("GROUP_" + getTyp());
             notificationBuilder.setGroupSummary(false);

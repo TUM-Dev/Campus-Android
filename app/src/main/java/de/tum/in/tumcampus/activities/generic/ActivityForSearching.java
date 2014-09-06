@@ -111,7 +111,7 @@ public abstract class ActivityForSearching extends ActionBarActivity {
 	public abstract void performSearchAlgorithm(String query);
 
 	private boolean requestSearch(String query) {
-        if(query.length()<ActivityForSearching.MIN_SEARCH_LENGTH) {
+        if(query.length()<ActivityForSearching.MIN_SEARCH_LENGTH) { // TODO make this individual to each search activity
             return false;
         }
 		progressLayout.setVisibility(View.VISIBLE);
