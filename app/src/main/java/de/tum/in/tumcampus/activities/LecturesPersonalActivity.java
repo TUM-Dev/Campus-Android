@@ -1,6 +1,5 @@
 package de.tum.in.tumcampus.activities;
 
-import android.app.SearchManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -58,7 +57,7 @@ public class LecturesPersonalActivity extends ActivityForSearching implements TU
     private RelativeLayout noTokenLayout;
 
     public LecturesPersonalActivity() {
-		super(R.layout.activity_lectures, LectureSearchSuggestionProvider.AUTHORITY);
+		super(R.layout.activity_lectures, LectureSearchSuggestionProvider.AUTHORITY,4);
 	}
 
 	@Override
@@ -89,7 +88,7 @@ public class LecturesPersonalActivity extends ActivityForSearching implements TU
             }
         });
 
-        performSearchAlgorithm("");
+        performEmptyQuery();
 
         //Counting the number of times that the user used this activity for intelligent reordering
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
@@ -101,9 +100,27 @@ public class LecturesPersonalActivity extends ActivityForSearching implements TU
 	}
 
     @Override
+    public void onClick(View view) {
+        int viewId = view.getId();
+        switch (viewId) {
+            case R.id.failed_layout:
+                Intent intent = new Intent(this, UserPreferencesActivity.class);
+                startActivity(intent);
+                break;
+            default:
+                super.onClick(view);
+        }
+    }
+
+    @Override
+    public void performEmptyQuery() {
+        performSearchAlgorithm("");
+    }
+
+    @Override
     public void performSearchAlgorithm(String query) {
         TUMOnlineRequest requestHandler;
-        if(query.length()<ActivityForSearching.MIN_SEARCH_LENGTH) {
+        if(query.length()<3) {
             // If query is empty show my lectures
             requestHandler = new TUMOnlineRequest(Const.LECTURES_PERSONAL, LecturesPersonalActivity.this);
         } else {

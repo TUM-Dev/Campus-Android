@@ -5,14 +5,6 @@
     android:layout_height="match_parent"
     android:gravity="center" >
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/progressBar1"
-        android:layout_centerHorizontal="true"
-        android:text="@string/loading"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
-
     <ProgressBar
         android:id="@+id/progressBar1"
         style="?android:attr/progressBarStyle"

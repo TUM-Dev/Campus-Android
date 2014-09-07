@@ -1,11 +1,9 @@
 package de.tum.in.tumcampus.auxiliary;
 
-import android.content.SearchRecentSuggestionsProvider;
-
-public class LectureSearchSuggestionProvider extends SearchRecentSuggestionsProvider {
+public class LectureSearchSuggestionProvider extends EnhancedSearchRecentSuggestionsProvider {
 	public final static String AUTHORITY = "de.tum.in.tumcampus.auxiliary.LectureSearchSuggestionProvider";
 
 	public LectureSearchSuggestionProvider() {
-		setupSuggestions(AUTHORITY, DATABASE_MODE_QUERIES);
+		setupSuggestions("lecture", AUTHORITY, DATABASE_MODE_QUERIES);
 	}
 }

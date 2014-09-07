@@ -195,7 +195,7 @@ public class TransportManager implements ProvidesCard {
     public void onRequestCard(Context context) throws Exception {
         // Get current campus
         int campus = 0;//new LocationManager(context).getCurrentCampus();
-        if(campus==-1)
+        if(campus==-1 || !Utils.isConnected(context))
             return;
 
         // Get station for this campus

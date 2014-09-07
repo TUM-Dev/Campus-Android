@@ -371,6 +371,6 @@
 	    \n\n<b>Detailed information on BugSense:</b>\nBugSense will not collect any sensitive user data, but gathers the following information (as provided by the BugSense support team):\n\nOn Session start:\nUnique device identifier (random string), App version, OS version, Device model, Locale, Timestamp, Event type, SDK version\n\nWhen an exception occurs:\nStacktrace, Error message, App version, OS version, Device model, Locale, Timestamp, SDK version, GPS on/off/NA, WiFi on/off, Cellular data on/off, Device orientation, Screen size, Uncaught or handled exception, custom data\n\nFurthermore it collects the user ip, user country, date/time of crash and application date. BugSense may use the collected information for various general purposes like products and services provision, error analysis, identification and authentication, services improvement, contact, and research. They may publish aggregated and anonymized reports, too.\n\n\nMay 9th 2014\n</string>
 
     <!-- END Translated, please do not change identifiers -->
-
+    <string name="min_search_len">Query must be at least %d chars long</string>
 
 </resources>

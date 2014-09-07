@@ -5,6 +5,7 @@ import android.app.SearchableInfo;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SearchRecentSuggestionsProvider;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -24,28 +25,27 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import de.tum.in.tumcampus.R;
+import de.tum.in.tumcampus.activities.UserPreferencesActivity;
 import de.tum.in.tumcampus.auxiliary.Utils;
 
 /**
  * Generic class for searching. Provides basic functions for a text search field
  * and typical processes related to search.
  * 
- * @author Sascha Moecker
- * 
  */
 public abstract class ActivityForSearching extends ActionBarActivity {
-    protected static final int MIN_SEARCH_LENGTH = 4;
-
 	protected RelativeLayout errorLayout;
 	private int layoutId;
 	protected RelativeLayout progressLayout;
     protected SearchView mSearchView;
     protected String mQuery = null;
     private String mAuthority;
+    private int mMinLength;
 
-    public ActivityForSearching(int layoutIt, String auth) {
+    public ActivityForSearching(int layoutIt, String auth, int minLen) {
 		layoutId = layoutIt;
         mAuthority = auth;
+        mMinLength = minLen;
 	}
 
     @Override
@@ -64,7 +64,7 @@ public abstract class ActivityForSearching extends ActionBarActivity {
 		getMenuInflater().inflate(R.menu.menu_activity_for_searching, menu);
 
         // Get SearchView
-        MenuItem searchItem = menu.findItem(R.id.action_search);
+        final MenuItem searchItem = menu.findItem(R.id.action_search);
         mSearchView = (SearchView) MenuItemCompat.getActionView(searchItem);
 
         // Set the searchable configuration
@@ -80,21 +80,47 @@ public abstract class ActivityForSearching extends ActionBarActivity {
                 mSearchView.setQuery(mQuery, false);
                 MenuItemCompat.expandActionView(searchItem);
             }
-            mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+
+            mSearchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
                 @Override
-                public boolean onQueryTextSubmit(String s) {
-                    requestSearch(s);
-                    return true;
+                public boolean onSuggestionSelect(int i) {
+                    return false;
                 }
 
                 @Override
-                public boolean onQueryTextChange(String s) {
+                public boolean onSuggestionClick(int position) {
+                    String suggestion = getSuggestion(position);
+                    mSearchView.setQuery(suggestion, true);
+                    return true;
+                }
+
+                private String getSuggestion(int position) {
+                    Cursor cursor = (Cursor) mSearchView.getSuggestionsAdapter().getItem(position);
+                    return cursor.getString(cursor.getColumnIndex(SearchManager.SUGGEST_COLUMN_TEXT_1));
+                }
+            });
+
+            mSearchView.setOnCloseListener(new SearchView.OnCloseListener() {
+                @Override
+                public boolean onClose() {
+                    MenuItemCompat.collapseActionView(searchItem);
+                    performEmptyQuery();
                     return false;
                 }
             });
         }
 		return true;
 	}
+
+    public void onClick(View view) {
+        int viewId = view.getId();
+        switch (viewId) {
+            case R.id.no_token_layout:
+                Intent intent = new Intent(this, UserPreferencesActivity.class);
+                startActivity(intent);
+                break;
+        }
+    }
 
     @Override
     public void onNewIntent(Intent intent) {
@@ -104,9 +130,7 @@ public abstract class ActivityForSearching extends ActionBarActivity {
         setIntent(intent);
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             mQuery = intent.getStringExtra(SearchManager.QUERY);
-            SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this, mAuthority, SearchRecentSuggestionsProvider.DATABASE_MODE_QUERIES);
-            suggestions.saveRecentQuery(mQuery, null);
-            performSearchAlgorithm(mQuery);
+            requestSearch(mQuery);
         }
     }
 
@@ -140,10 +164,13 @@ public abstract class ActivityForSearching extends ActionBarActivity {
 
     // Abstract method for the search algorithm, has to be implemented by the
 	// inheriting class
+    public abstract void performEmptyQuery();
 	public abstract void performSearchAlgorithm(String query);
 
 	private boolean requestSearch(String query) {
-        if(query.length()<ActivityForSearching.MIN_SEARCH_LENGTH) { // TODO make this individual to each search activity
+        if(query.length()<mMinLength) {
+            String text = String.format(getString(R.string.min_search_len),mMinLength);
+            Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
             return false;
         }
 		progressLayout.setVisibility(View.VISIBLE);
@@ -156,8 +183,14 @@ public abstract class ActivityForSearching extends ActionBarActivity {
 			return false;
 		}
 
-		Utils.hideKeyboard(this, mSearchView);
+        //if(mSearchView!=null)
+        //    mSearchView.setQuery(query, false);
 
+        // Add query to recents
+        SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this, mAuthority, SearchRecentSuggestionsProvider.DATABASE_MODE_QUERIES);
+        suggestions.saveRecentQuery(mQuery, null);
+
+        // Tell activity to start searching
 		performSearchAlgorithm(query);
 		return true;
 	}

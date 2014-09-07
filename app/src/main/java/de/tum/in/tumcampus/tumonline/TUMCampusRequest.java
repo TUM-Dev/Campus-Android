@@ -1,5 +1,7 @@
 package de.tum.in.tumcampus.tumonline;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -216,8 +218,12 @@ public class TUMCampusRequest {
 	 *            value of the parameter
 	 */
 	public void setParameter(String name, String value) {
-		parameters.put(name, value);
-	}
+        try {
+            parameters.put(name, URLEncoder.encode(value, "UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+    }
 
 	/**
 	 * If you want to put a complete Parameter Map into the request, use this

@@ -1,29 +1,19 @@
 package de.tum.in.tumcampus.cards;
 
-import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.text.format.DateUtils;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
 
 import de.tum.in.tumcampus.R;
-import de.tum.in.tumcampus.activities.CafeteriaDetailsActivity;
-import de.tum.in.tumcampus.activities.TransportationActivity;
-import de.tum.in.tumcampus.auxiliary.Const;
-import de.tum.in.tumcampus.fragments.CafeteriaDetailsSectionFragment;
-import de.tum.in.tumcampus.models.CafeteriaMenu;
+import de.tum.in.tumcampus.activities.TransportationDetailsActivity;
 import de.tum.in.tumcampus.models.managers.TransportManager;
 
 import static de.tum.in.tumcampus.models.managers.CardManager.CARD_MVV;
@@ -73,9 +63,8 @@ public class MVVCard extends Card {
 
     @Override
     public Intent getIntent() {
-        Intent i = new Intent(mContext, TransportationActivity.class);
-        i.setAction(Intent.ACTION_SEARCH);
-        i.putExtra(SearchManager.QUERY, mStationName);
+        Intent i = new Intent(mContext, TransportationDetailsActivity.class);
+        i.putExtra(TransportationDetailsActivity.EXTRA_STATION, mStationName);
         return i;
     }
 

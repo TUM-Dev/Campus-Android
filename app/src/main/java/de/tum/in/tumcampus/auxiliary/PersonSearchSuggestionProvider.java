@@ -1,11 +1,9 @@
 package de.tum.in.tumcampus.auxiliary;
 
-import android.content.SearchRecentSuggestionsProvider;
-
-public class PersonSearchSuggestionProvider extends SearchRecentSuggestionsProvider {
+public class PersonSearchSuggestionProvider extends EnhancedSearchRecentSuggestionsProvider {
 	public final static String AUTHORITY = "de.tum.in.tumcampus.auxiliary.PersonSearchSuggestionProvider";
 
 	public PersonSearchSuggestionProvider() {
-		setupSuggestions(AUTHORITY, DATABASE_MODE_QUERIES);
+		setupSuggestions("persons", AUTHORITY, DATABASE_MODE_QUERIES);
 	}
 }

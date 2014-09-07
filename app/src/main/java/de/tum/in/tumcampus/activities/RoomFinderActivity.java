@@ -38,7 +38,7 @@ public class RoomFinderActivity extends ActivityForSearching implements TUMRoomF
     private String currentlySelectedRoomId;
 
     public RoomFinderActivity() {
-        super(R.layout.activity_roomfinder, RoomFinderSuggestionProvider.AUTHORITY);
+        super(R.layout.activity_roomfinder, RoomFinderSuggestionProvider.AUTHORITY,3);
     }
 
     @Override
@@ -56,10 +56,13 @@ public class RoomFinderActivity extends ActivityForSearching implements TUMRoomF
     }
 
     @Override
+    public void performEmptyQuery() {
+        list.setAdapter(null);
+    }
+
+    @Override
     public void performSearchAlgorithm(String query) {
-        if(query.length() >= MIN_SEARCH_LENGTH) { //TODO
-            roomFinderRequest.fetchSearchInteractive(this, this, query);
-        }
+        roomFinderRequest.fetchSearchInteractive(this, this, query);
     }
 
     @Override

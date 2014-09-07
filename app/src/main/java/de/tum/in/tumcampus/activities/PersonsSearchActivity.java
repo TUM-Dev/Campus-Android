@@ -45,7 +45,7 @@ public class PersonsSearchActivity extends ActivityForSearching implements TUMOn
     private RelativeLayout noTokenLayout;
 
     public PersonsSearchActivity() {
-        super(R.layout.activity_persons, PersonSearchSuggestionProvider.AUTHORITY);
+        super(R.layout.activity_persons, PersonSearchSuggestionProvider.AUTHORITY,3);
     }
 
     /**
@@ -92,6 +92,11 @@ public class PersonsSearchActivity extends ActivityForSearching implements TUMOn
         }
 
         onNewIntent(getIntent());
+    }
+
+    @Override
+    public void performEmptyQuery() {
+        lvPersons.setAdapter(null);
     }
 
     @Override
