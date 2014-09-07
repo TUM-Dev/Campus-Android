@@ -81,11 +81,6 @@ public class ActivityForDownloadingExternal extends ActionBarActivity {
 	}
 
 	@Override
-	public void onConfigurationChanged(Configuration newConfig) {
-		super.onConfigurationChanged(newConfig);
-	}
-
-	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(layoutId);
@@ -106,11 +101,6 @@ public class ActivityForDownloadingExternal extends ActionBarActivity {
 		getMenuInflater().inflate(
 				R.menu.menu_activity_for_accessing_tum_online, menu);
 		return true;
-	}
-
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
 	}
 
 	@Override

@@ -6,7 +6,8 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.util.Log;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -19,13 +20,12 @@ import de.tum.in.tumcampus.fragments.CafeteriaDetailsSectionFragment;
 import de.tum.in.tumcampus.models.managers.CafeteriaMenuManager;
 
 /**
- * A {@link FragmentPagerAdapter} that returns a fragment corresponding to one
+ * A {@link FragmentStatePagerAdapter} that returns a fragment corresponding to one
  * of the sections/tabs/pages.
  */
 @SuppressLint({"SimpleDateFormat", "DefaultLocale"})
-public class CafeteriaDetailsSectionsPagerAdapter extends FragmentPagerAdapter {
-    private String cafeteriaId;
-    private String cafeteriaName;
+public class CafeteriaDetailsSectionsPagerAdapter extends FragmentStatePagerAdapter {
+    private String mCafeteriaId;
     private Cursor cursorCafeteriaDates;
     /**
      * Current Date selected (ISO format)
@@ -33,19 +33,18 @@ public class CafeteriaDetailsSectionsPagerAdapter extends FragmentPagerAdapter {
     private ArrayList<String> dates = new ArrayList<String>();
 
     @SuppressWarnings("deprecation")
-    public CafeteriaDetailsSectionsPagerAdapter(Activity mainActivity,
-                                                FragmentManager fm, String cafeteriaId, String cafeteriaName) {
+    public CafeteriaDetailsSectionsPagerAdapter(FragmentManager fm) {
         super(fm);
+    }
+
+    public void setCafeteriaId(Activity mainActivity, String cafeteriaId) {
         Activity activity = mainActivity;
-        this.cafeteriaId = cafeteriaId;
-        this.cafeteriaName = cafeteriaName;
+        mCafeteriaId = cafeteriaId;
 
         // get all (distinct) dates having menus available
         CafeteriaMenuManager cmm = new CafeteriaMenuManager(activity);
         cursorCafeteriaDates = cmm.getDatesFromDb();
         activity.startManagingCursor(cursorCafeteriaDates);
-
-        mainActivity.setTitle(cafeteriaName);
 
         for (int position = 0; position < getCount(); position++) {
             cursorCafeteriaDates.moveToPosition(position);
@@ -70,16 +69,14 @@ public class CafeteriaDetailsSectionsPagerAdapter extends FragmentPagerAdapter {
         Fragment fragment = new CafeteriaDetailsSectionFragment();
         Bundle args = new Bundle();
         args.putString(Const.DATE, dates.get(position));
-        args.putString(Const.CAFETERIA_ID, cafeteriaId);
-        args.putString(Const.CAFETERIA_NAME, cafeteriaName);
+        args.putString(Const.CAFETERIA_ID, mCafeteriaId);
         fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public CharSequence getPageTitle(int position) {
-        Date date = null;
-
+        Date date;
         Locale l = Locale.getDefault();
 
         String input_date = dates.get(position);
@@ -90,14 +87,13 @@ public class CafeteriaDetailsSectionsPagerAdapter extends FragmentPagerAdapter {
             e.printStackTrace();
             return "";
         }
-        SimpleDateFormat formatEE = new SimpleDateFormat("EEEE");
-        String finalDay = formatEE.format(date);
 
-        SimpleDateFormat formatDefaultStyle = new SimpleDateFormat("dd.MM.yyy");
-        String dateDefaultStyle = formatDefaultStyle.format(date);
+        SimpleDateFormat formatDate = new SimpleDateFormat("EEEE, dd.MM.yyy");
+        return formatDate.format(date).toUpperCase(l);
+    }
 
-        String pageTitleToShow = finalDay + ", " + dateDefaultStyle;
-
-        return (pageTitleToShow).toUpperCase(l);
+    @Override
+    public int getItemPosition(Object object) {
+        return POSITION_NONE;
     }
 }

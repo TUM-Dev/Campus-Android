@@ -264,22 +264,13 @@
                 android:value="de.tum.in.tumcampus.activities.StartActivity" />
         </activity>
         <activity
-            android:name="de.tum.in.tumcampus.activities.CafeteriaActivity"
+            android:name=".activities.CafeteriaActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/cafeterias"
             android:parentActivityName="de.tum.in.tumcampus.activities.StartActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.tum.in.tumcampus.activities.StartActivity" />
-        </activity>
-        <activity
-            android:name="de.tum.in.tumcampus.activities.CafeteriaDetailsActivity"
-            android:configChanges="orientation|screenSize"
-            android:label="@string/cafeterias"
-            android:parentActivityName="de.tum.in.tumcampus.activities.CafeteriaActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.tum.in.tumcampus.activities.CafeteriaActivity" />
         </activity>
         <activity
             android:name="de.tum.in.tumcampus.activities.PersonsSearchActivity"

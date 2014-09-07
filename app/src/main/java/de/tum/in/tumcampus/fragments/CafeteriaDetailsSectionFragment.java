@@ -18,7 +18,7 @@ import android.widget.SimpleCursorAdapter;
 import android.widget.SimpleCursorAdapter.ViewBinder;
 import android.widget.TextView;
 import de.tum.in.tumcampus.R;
-import de.tum.in.tumcampus.activities.CafeteriaDetailsActivity;
+import de.tum.in.tumcampus.activities.CafeteriaActivity;
 import de.tum.in.tumcampus.auxiliary.CafetariaPrices;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.models.managers.CafeteriaMenuManager;
@@ -34,7 +34,6 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
 	private RelativeLayout errorLayout;
     private View footer;
 	private ListView listViewMenu;
-	private SharedPreferences sharedPrefs;
 
 	public CafeteriaDetailsSectionFragment() {
 	}
@@ -53,14 +52,12 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
 
 		date = getArguments().getString(Const.DATE);
 		cafeteriaId = getArguments().getString(Const.CAFETERIA_ID);
-        String cafeteriaName = getArguments().getString(Const.CAFETERIA_NAME);
 
 		// initialize listview footer for opening hours
 		footer = getLayoutInflater(savedInstanceState).inflate(
 				android.R.layout.two_line_list_item, null, false);
 
 		showMenueForDay();
-        View rootView1 = rootView;
 		return rootView;
 	}
 
@@ -105,16 +102,13 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
                     TextView menu = (TextView) view;
 
                     String m = cursor.getString(cursor.getColumnIndex("names"));
-                    menu.setText(CafeteriaDetailsActivity.menuToSpan(CafeteriaDetailsSectionFragment.this.getActivity(), m));
+                    menu.setText(CafeteriaActivity.menuToSpan(CafeteriaDetailsSectionFragment.this.getActivity(), m));
                     return true;
                 } else if (view.getId() == R.id.tx_price) {
 					TextView price = (TextView) view;
 
 					String curKey = cursor.getString(cursor
 							.getColumnIndex("typeLong"));
-
-					sharedPrefs = PreferenceManager
-							.getDefaultSharedPreferences(activity);
 
 					HashMap<String, String> rolePrices = getRolePrices(getActivity());
 

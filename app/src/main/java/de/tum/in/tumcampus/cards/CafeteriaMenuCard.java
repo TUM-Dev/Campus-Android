@@ -17,12 +17,12 @@ import java.util.HashMap;
 import java.util.List;
 
 import de.tum.in.tumcampus.R;
-import de.tum.in.tumcampus.activities.CafeteriaDetailsActivity;
+import de.tum.in.tumcampus.activities.CafeteriaActivity;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.fragments.CafeteriaDetailsSectionFragment;
 import de.tum.in.tumcampus.models.CafeteriaMenu;
 
-import static de.tum.in.tumcampus.activities.CafeteriaDetailsActivity.menuToSpan;
+import static de.tum.in.tumcampus.activities.CafeteriaActivity.menuToSpan;
 import static de.tum.in.tumcampus.models.managers.CardManager.CARD_CAFETERIA;
 
 
@@ -108,7 +108,7 @@ public class CafeteriaMenuCard extends Card {
 
     @Override
     public Intent getIntent() {
-        Intent i = new Intent(mContext, CafeteriaDetailsActivity.class);
+        Intent i = new Intent(mContext, CafeteriaActivity.class);
         i.putExtra(Const.CAFETERIA_ID, mCafeteriaId);
         i.putExtra(Const.CAFETERIA_NAME, mCafeteriaName);
         return i;

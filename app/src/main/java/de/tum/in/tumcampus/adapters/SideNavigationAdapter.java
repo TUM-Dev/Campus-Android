@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -78,7 +77,7 @@ public class SideNavigationAdapter extends BaseAdapter {
             view.setTag(holder);
         }
 
-        if (holder == null && view != null) {
+        if (holder == null) {
             Object tag = view.getTag();
             if (tag instanceof ViewHolder) {
                 holder = (ViewHolder) tag;
