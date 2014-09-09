@@ -1,13 +1,7 @@
 package de.tum.in.tumcampus.activities;
 
-import java.util.Collections;
-import java.util.Hashtable;
-import java.util.Vector;
-
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -16,16 +10,15 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.util.Collections;
+import java.util.Hashtable;
+import java.util.Vector;
+
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.auxiliary.ImplicitCounter;
 
 /**
  * Activity to fetch and display the curricula of different study programs.
- * 
- * @author Vincenz Doelle
- * @review Daniel G. Mayr
- * @review Thomas Behrens
- * @review Sascha Moecker
  */
 public class CurriculaActivity extends ActionBarActivity implements OnItemClickListener {
 
@@ -37,12 +30,7 @@ public class CurriculaActivity extends ActionBarActivity implements OnItemClickL
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-		// Counting the number of times that the user used this activity for intelligent reordering
-        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-		if (sharedPrefs.getBoolean("implicitly_id", true)) {
-			ImplicitCounter.Counter("study_plans_id", this.getApplicationContext());
-		}
+        ImplicitCounter.Counter(this);
 
 		this.setContentView(R.layout.activity_curricula);
 

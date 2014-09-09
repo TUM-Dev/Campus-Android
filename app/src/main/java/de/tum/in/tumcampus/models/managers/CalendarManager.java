@@ -21,18 +21,19 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.auxiliary.CalendarMapper;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.Utils;
+import de.tum.in.tumcampus.cards.Card;
 import de.tum.in.tumcampus.cards.NextLectureCard;
-import de.tum.in.tumcampus.cards.ProvidesCard;
 import de.tum.in.tumcampus.models.CalendarRow;
 import de.tum.in.tumcampus.models.CalendarRowSet;
 
-public class CalendarManager implements ProvidesCard {
+public class CalendarManager implements Card.ProvidesCard {
     private static final String[] projection = new String[] { "_id", "name" };
 
     private static final int TIME_TO_SYNC_CALENDAR = 604800000; // 1 week
@@ -113,16 +114,19 @@ public class CalendarManager implements ProvidesCard {
         try {
             // reading xml
             myKalendarList = serializer.read(CalendarRowSet.class, rawResponse);
-            Iterator itr = myKalendarList.getKalendarList().iterator();
-            while (itr.hasNext()) {
-                CalendarRow row = (CalendarRow) itr.next();
-                // insert into database
-                try {
-                    replaceIntoDb(row);
-                } catch (Exception e) {
-                    boolean success = false;
-                    Log.d("SIMPLEXML", "Error in field: " + e.getMessage());
-                    e.printStackTrace();
+            List<CalendarRow> myKalendar = myKalendarList.getKalendarList();
+            if(myKalendar!=null) {
+                Iterator itr = myKalendar.iterator();
+                while (itr.hasNext()) {
+                    CalendarRow row = (CalendarRow) itr.next();
+                    // insert into database
+                    try {
+                        replaceIntoDb(row);
+                    } catch (Exception e) {
+                        boolean success = false;
+                        Log.d("SIMPLEXML", "Error in field: " + e.getMessage());
+                        e.printStackTrace();
+                    }
                 }
             }
             SyncManager.replaceIntoDb(db, this);

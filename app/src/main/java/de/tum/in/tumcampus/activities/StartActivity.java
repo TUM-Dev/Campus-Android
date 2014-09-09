@@ -16,8 +16,9 @@ import android.widget.ListView;
 
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.adapters.CardsAdapter;
-import de.tum.in.tumcampus.adapters.SideNavigationAdapter;
+import de.tum.in.tumcampus.adapters.NavigationDrawerAdapter;
 import de.tum.in.tumcampus.auxiliary.Const;
+import de.tum.in.tumcampus.auxiliary.ImplicitCounter;
 import de.tum.in.tumcampus.auxiliary.SwipeDismissList;
 import de.tum.in.tumcampus.cards.Card;
 import de.tum.in.tumcampus.models.managers.CardManager;
@@ -51,7 +52,9 @@ public class StartActivity extends ActionBarActivity implements AdapterView.OnIt
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+        overridePendingTransition(R.anim.fadein, R.anim.fadeout);
 		super.onCreate(savedInstanceState);
+        ImplicitCounter.Counter(this);
 		this.setContentView(R.layout.activity_start);
 
         setTitle(getString(R.string.campus_app));
@@ -81,7 +84,7 @@ public class StartActivity extends ActionBarActivity implements AdapterView.OnIt
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
 
         // Set the adapter for the list view
-        mDrawerList.setAdapter(new SideNavigationAdapter(this));
+        mDrawerList.setAdapter(new NavigationDrawerAdapter(this));
 
         // Set the list's click listener
         mDrawerList.setOnItemClickListener(this);
@@ -172,7 +175,7 @@ public class StartActivity extends ActionBarActivity implements AdapterView.OnIt
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
         switch (adapterView.getId()) {
             case R.id.left_drawer:
-                SideNavigationAdapter.SideNavigationItem sideNavigationItem = (SideNavigationAdapter.SideNavigationItem) adapterView.getAdapter().getItem(position);
+                NavigationDrawerAdapter.SideNavigationItem sideNavigationItem = (NavigationDrawerAdapter.SideNavigationItem) adapterView.getAdapter().getItem(position);
                 if(sideNavigationItem.getActivity()==null)
                     break;
                 Intent newActivity = new Intent(this.getApplicationContext(), sideNavigationItem.getActivity());

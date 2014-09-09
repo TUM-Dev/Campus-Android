@@ -1,11 +1,9 @@
 package de.tum.in.tumcampus.tumonline;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Map.Entry;
+import android.content.Context;
+import android.os.AsyncTask;
+import android.preference.PreferenceManager;
+import android.util.Log;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -18,10 +16,13 @@ import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
 
-import android.content.Context;
-import android.os.AsyncTask;
-import android.preference.PreferenceManager;
-import android.util.Log;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
+
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.Utils;
@@ -158,7 +159,7 @@ public class TUMOnlineRequest {
 			@Override
 			protected void onPostExecute(String result) {
 				if (result != null) {
-					Log.d(getClass().getSimpleName(), "Received result <" + result + ">");
+					Log.v(getClass().getSimpleName(), "Received result <" + result + ">");
 				} else {
 					Log.w(getClass().getSimpleName(), "No result available");
 				}
@@ -248,7 +249,7 @@ public class TUMOnlineRequest {
 			return false;
 		}
 
-		Log.d("AccessToken", accessToken);
+		Log.v("AccessToken", accessToken);
 		// ok, access token seems valid (at first)
 
 		setParameter(TUMOnlineConst.P_TOKEN, accessToken);

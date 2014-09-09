@@ -12,7 +12,6 @@ import de.tum.in.tumcampus.cards.Card;
 import de.tum.in.tumcampus.cards.FirstUseCard1;
 import de.tum.in.tumcampus.cards.FirstUseCard2;
 import de.tum.in.tumcampus.cards.NoInternetCard;
-import de.tum.in.tumcampus.cards.ProvidesCard;
 import de.tum.in.tumcampus.cards.RestoreCard;
 
 public class CardManager {
@@ -27,6 +26,7 @@ public class CardManager {
     public static final int CARD_FIRST_USE_2 = 6;
     public static final int CARD_NO_INTERNET = 7;
     public static final int CARD_MVV = 8;
+    public static final int CARD_NEWS = 9;
 
     private static List<Card> cards;
     private static ArrayList<Card> newCards;
@@ -69,7 +69,7 @@ public class CardManager {
         new FirstUseCard1(context).apply();
         new FirstUseCard2(context).apply();
 
-        List<ProvidesCard> managers = new ArrayList<ProvidesCard>();
+        List<Card.ProvidesCard> managers = new ArrayList<Card.ProvidesCard>();
 
         // Add those managers only if valid access token is available
         if(new AccessTokenManager(context).hasValidAccessToken()) {
@@ -79,8 +79,9 @@ public class CardManager {
         // Those don't need TUMOnline access
         managers.add(new CafeteriaManager(context));
         managers.add(new TransportManager(context));
+        managers.add(new NewsManager(context));
 
-        for(ProvidesCard manager : managers){
+        for(Card.ProvidesCard manager : managers){
             try{
                 manager.onRequestCard(context);
             }catch(Exception ex){

@@ -95,7 +95,6 @@ public class CafeteriaMenuManager {
 	 * Download cafeteria menus from external interface (JSON)
 	 * 
 	 * <pre>
-	 * @param ids List of cafeteria IDs to download items for
 	 * @param force True to force download over normal sync period, else false
 	 * @throws Exception
 	 * </pre>
@@ -162,27 +161,27 @@ public class CafeteriaMenuManager {
 	 * 
 	 * <pre>
 	 * @param mensaId Mensa ID, e.g. 411
-	 * @param date ISO-Date, e.g. 2011-12-31 
+	 * @param date ISO-Date, e.g. 2011-12-31
 	 * @return Database cursor (typeLong, names, _id)
 	 * </pre>
 	 */
-	public Cursor getTypeNameFromDb(String mensaId, String date) {
+	public Cursor getTypeNameFromDb(int mensaId, String date) {
         return db
                 .rawQuery(
                         "SELECT typeLong, group_concat(name, '\n') as names, id as _id  "
                                 + "FROM cafeterias_menus WHERE mensaId = ? AND "
                                 + "date = ? GROUP BY typeLong ORDER BY typeNr, typeLong, name",
-                        new String[] { mensaId, date });
+                        new String[] { ""+mensaId, date });
     }
 
-    public Cursor getTypeNameFromDbCard(String mensaId, String date) {
+    public Cursor getTypeNameFromDbCard(int mensaId, String date) {
         /* mensaId  date  typeShort  typeNr */
         return db
                 .rawQuery(
                         "SELECT typeLong, group_concat(name, '\n') as names, id as _id, typeShort "
                                 + "FROM cafeterias_menus WHERE mensaId = ? AND "
                                 + "date = ? GROUP BY typeLong ORDER BY typeNr, typeLong, name",
-                        new String[] { mensaId, date });
+                        new String[] { ""+mensaId, date });
     }
 
 	/**

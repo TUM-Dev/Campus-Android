@@ -1,10 +1,14 @@
 package de.tum.in.tumcampus.cards;
 
+import android.app.Notification;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.support.v4.app.NotificationCompat;
 import android.text.format.DateUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +30,7 @@ public class MVVCard extends Card {
     private Date mTime;
 
     public MVVCard(Context context) {
-        super(context, "card_mvv_setting");
+        super(context, "card_mvv");
     }
 
     @Override
@@ -78,46 +82,31 @@ public class MVVCard extends Card {
         final long prevDate = prefs.getLong(MVV_TIME, 0);
         return prevDate+DateUtils.HOUR_IN_MILLIS < mTime.getTime();
     }
-/*
+
     @Override
     protected Notification fillNotification(NotificationCompat.Builder notificationBuilder) {
-        HashMap<String, String> rolePrices = CafeteriaDetailsSectionFragment.getRolePrices(mContext);
-
         NotificationCompat.WearableExtender morePageNotification =
                 new NotificationCompat.WearableExtender();
 
-        String allContent = "", firstContent = "";
-        for (CafeteriaMenu menu : mMenus) {
-            if (menu.typeShort.equals("bei"))
-                continue;
-
-            NotificationCompat.Builder pageNotification =
-                    new NotificationCompat.Builder(mContext)
-                            .setContentTitle(menu.typeLong);
-
-            String content = menu.name;
-            if (rolePrices.containsKey(menu.typeLong))
-                content +=  "\n"+rolePrices.get(menu.typeLong) + " €";
-
-            content = content.replaceAll("\\([^\\)]+\\)", "").trim();
-            pageNotification.setContentText(content);
-            if(menu.typeShort.equals("tg")) {
-                if(!allContent.isEmpty())
-                    allContent += "\n";
-                allContent += content;
-            }
-            if(firstContent.isEmpty()) {
-                firstContent =  menu.name.replaceAll("\\([^\\)]+\\)", "").trim()+"...";
-            }
-
-            morePageNotification.addPage(pageNotification.build());
+        String firstContent = "", firstTime = "";
+        if(mDepartures.moveToFirst()) {
+            firstTime = mDepartures.getString(2);
+            firstContent = mDepartures.getString(0)+" "+mDepartures.getString(1);
+            do {
+                NotificationCompat.Builder pageNotification =
+                        new NotificationCompat.Builder(mContext)
+                                .setContentTitle(mDepartures.getString(2))
+                                .setContentText(mDepartures.getString(0)+" "+mDepartures.getString(1));
+                morePageNotification.addPage(pageNotification.build());
+            } while(mDepartures.moveToNext());
         }
 
-        notificationBuilder.setWhen(mDate.getTime());
+        notificationBuilder.setContentTitle(firstTime);
         notificationBuilder.setContentText(firstContent);
-        notificationBuilder.setStyle(new NotificationCompat.BigTextStyle().bigText(allContent));
+        Bitmap bm = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.wear_mvv);
+        morePageNotification.setBackground(bm);
         return morePageNotification.extend(notificationBuilder).build();
-    }*/
+    }
 
     public void setStation(String station) {
         this.mStationName = station;

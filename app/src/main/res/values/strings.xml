@@ -89,7 +89,7 @@
     <string name="mensa_summary">Change your preferred canteens</string>
     <string name="my_mensa">My canteens</string>
     <string name="cards_settings">Cards</string>
-    <string name="card_settings_summary">Decide where to show which cards</string>
+    <string name="card_settings_summary">Adjust cards shown on home screen</string>
     <string name="where_appear">Where should the card appear?</string>
     <string name="startpage">Startpage</string>
     <string name="wear">Wearable</string>
@@ -372,5 +372,16 @@
 
     <!-- END Translated, please do not change identifiers -->
     <string name="min_search_len">Query must be at least %d chars long</string>
+    <string name="default_cafeteria">Default Cafeteria</string>
+    <string name="default_station">Default Station</string>
+    <string name="campus_klinikum_großhadern">Klinikum Großhadern</string>
+    <string name="cafeteria">Cafeteria</string>
+    <string name="card_cafeteria_summary">Displays the cafeteria menu</string>
+    <string name="card_mvv_summary">Shows you the departure times of public transport</string>
+    <string name="card_next_lecture_summary">Shows information about your next lecture</string>
+    <string name="card_tuition_fee_summary">Reminds you if you have to pay your fees</string>
+    <string name="card_news_summary">Advertises selected news</string>
+    <string name="card_chat_summary">Notifies you if new messages are available</string>
+    <string name="chat">Chat</string>
 
 </resources>

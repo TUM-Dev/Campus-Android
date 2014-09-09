@@ -22,10 +22,8 @@ import de.tum.in.tumcampus.tumonline.TUMOnlineRequestFetchListener;
  * TUMOnline and implements a rhich user feedback with error progress and token
  * related layouts.
  * 
- * @author Sascha Moecker
- * 
  */
-public abstract class ActivityForAccessingTumOnline extends ProgressActivity implements TUMOnlineRequestFetchListener {
+public abstract class ActivityForSearchingTumOnline extends ActivityForSearching implements TUMOnlineRequestFetchListener {
 
 	/** The method which should be invoked by the TUmOnline Fetcher */
 	private String method;
@@ -35,8 +33,8 @@ public abstract class ActivityForAccessingTumOnline extends ProgressActivity imp
     protected RelativeLayout failedTokenLayout;
 	protected TUMOnlineRequest requestHandler;
 
-	public ActivityForAccessingTumOnline(String method, int layoutId) {
-        super(layoutId);
+	public ActivityForSearchingTumOnline(String method, int layoutId, String auth, int minLen) {
+        super(layoutId, auth, minLen);
         this.method = method;
 	}
 
@@ -57,7 +55,6 @@ public abstract class ActivityForAccessingTumOnline extends ProgressActivity imp
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_update, menu);
         return true;
     }

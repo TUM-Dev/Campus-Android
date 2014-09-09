@@ -7,6 +7,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import de.tum.in.tumcampus.R;
+import de.tum.in.tumcampus.auxiliary.ImplicitCounter;
 
 /**
  * Displays charts generated with GradesActivity
@@ -23,6 +24,7 @@ public class GradeChartActivity extends ActionBarActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+        ImplicitCounter.Counter(this);
 		setContentView(R.layout.activity_gradechart);
 		WebView Webview = (WebView) findViewById(R.id.webView1);
 

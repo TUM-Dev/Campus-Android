@@ -22,14 +22,14 @@ import de.tum.in.tumcampus.activities.CafeteriaActivity;
 import de.tum.in.tumcampus.auxiliary.CafetariaPrices;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.models.managers.CafeteriaMenuManager;
-import de.tum.in.tumcampus.models.managers.LocationManager;
+import de.tum.in.tumcampus.models.managers.OpenHoursManager;
 
 /**
  * Fragment for each cafeteria-page.
  */
 public class CafeteriaDetailsSectionFragment extends Fragment {
 	private Activity activity;
-	private String cafeteriaId;
+	private int cafeteriaId;
     private String date;
 	private RelativeLayout errorLayout;
     private View footer;
@@ -51,7 +51,7 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
 		errorLayout = (RelativeLayout) rootView.findViewById(R.id.error_layout);
 
 		date = getArguments().getString(Const.DATE);
-		cafeteriaId = getArguments().getString(Const.CAFETERIA_ID);
+		cafeteriaId = getArguments().getInt(Const.CAFETERIA_ID);
 
 		// initialize listview footer for opening hours
 		footer = getLayoutInflater(savedInstanceState).inflate(
@@ -66,7 +66,7 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
 		TextView textView;
 
 		// opening hours
-		LocationManager lm = new LocationManager(activity);
+		OpenHoursManager lm = new OpenHoursManager(activity);
 		textView = (TextView) footer.findViewById(android.R.id.text2);
 		textView.setText(lm.getHoursById(cafeteriaId));
 

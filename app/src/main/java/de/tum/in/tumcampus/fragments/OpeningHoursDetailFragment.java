@@ -18,7 +18,7 @@ import de.tum.in.tumcampus.activities.OpeningHoursDetailActivity;
 import de.tum.in.tumcampus.activities.OpeningHoursListActivity;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.data.LocationContent;
-import de.tum.in.tumcampus.models.managers.LocationManager;
+import de.tum.in.tumcampus.models.managers.OpenHoursManager;
 
 /**
  * A fragment representing a single Item detail screen. This fragment is either
@@ -70,7 +70,7 @@ public class OpeningHoursDetailFragment extends Fragment implements ViewBinder {
 				container, false);
 
 		// click on category in list
-		LocationManager lm = new LocationManager(getActivity());
+		OpenHoursManager lm = new OpenHoursManager(getActivity());
 		String[] categories = getString(R.string.facility_categories_splitted)
 				.split(",");
 		Cursor c = lm.getAllHoursFromDb(categories[Integer.valueOf(mItem.id)]);

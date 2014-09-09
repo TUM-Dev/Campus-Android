@@ -18,16 +18,6 @@
         layout="@layout/layout_error"
         android:visibility="gone" />
 
-    <TextView
-        android:id="@+id/activity_transport_textview_info"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:text="activity_transport_textview_info"
-        android:textStyle="bold"
-        android:visibility="gone" >
-    </TextView>
-
     <ListView
         android:id="@+id/activity_transport_listview_result"
         android:layout_width="fill_parent"

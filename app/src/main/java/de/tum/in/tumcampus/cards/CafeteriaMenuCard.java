@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.v4.app.NotificationCompat;
 import android.text.SpannableString;
 import android.view.View;
@@ -28,13 +30,13 @@ import static de.tum.in.tumcampus.models.managers.CardManager.CARD_CAFETERIA;
 
 public class CafeteriaMenuCard extends Card {
     private static final String CAFETERIA_DATE = "cafeteria_date";
-    private String mCafeteriaId;
+    private int mCafeteriaId;
     private String mCafeteriaName;
     private List<CafeteriaMenu> mMenus;
     private Date mDate;
 
     public CafeteriaMenuCard(Context context) {
-        super(context, "card_cafeteria_setting");
+        super(context, "card_cafeteria");
     }
 
     @Override
@@ -99,7 +101,7 @@ public class CafeteriaMenuCard extends Card {
         mLinearLayout.addView(view);
     }
 
-    public void setCardMenus(String id, String name, Date date, List<CafeteriaMenu> menus) {
+    public void setCardMenus(int id, String name, Date date, List<CafeteriaMenu> menus) {
         mCafeteriaId = id;
         mCafeteriaName = name;
         mDate = date;
@@ -110,7 +112,6 @@ public class CafeteriaMenuCard extends Card {
     public Intent getIntent() {
         Intent i = new Intent(mContext, CafeteriaActivity.class);
         i.putExtra(Const.CAFETERIA_ID, mCafeteriaId);
-        i.putExtra(Const.CAFETERIA_NAME, mCafeteriaName);
         return i;
     }
 
@@ -139,7 +140,7 @@ public class CafeteriaMenuCard extends Card {
 
             NotificationCompat.Builder pageNotification =
                     new NotificationCompat.Builder(mContext)
-                            .setContentTitle(menu.typeLong);
+                            .setContentTitle(menu.typeLong.replaceAll("[0-9]","").trim());
 
             String content = menu.name;
             if (rolePrices.containsKey(menu.typeLong))
@@ -154,14 +155,16 @@ public class CafeteriaMenuCard extends Card {
             }
             if(firstContent.isEmpty()) {
                 firstContent =  menu.name.replaceAll("\\([^\\)]+\\)", "").trim()+"...";
+            } else {
+                morePageNotification.addPage(pageNotification.build());
             }
-
-            morePageNotification.addPage(pageNotification.build());
         }
 
         notificationBuilder.setWhen(mDate.getTime());
         notificationBuilder.setContentText(firstContent);
         notificationBuilder.setStyle(new NotificationCompat.BigTextStyle().bigText(allContent));
+        Bitmap bm = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.wear_cafeteria);
+        morePageNotification.setBackground(bm);
         return morePageNotification.extend(notificationBuilder).build();
     }
 }

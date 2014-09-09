@@ -1,24 +1,29 @@
 package de.tum.in.tumcampus.models.managers;
 
-import java.net.URLEncoder;
-import java.util.Arrays;
-import java.util.Date;
+import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import android.content.Context;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
+import java.net.URLEncoder;
+import java.util.Arrays;
+import java.util.Date;
+
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.Utils;
+import de.tum.in.tumcampus.cards.Card;
+import de.tum.in.tumcampus.cards.NewsCard;
 import de.tum.in.tumcampus.models.News;
 
 /**
  * News Manager, handles database stuff, external imports
  */
-public class NewsManager {
+public class NewsManager implements Card.ProvidesCard {
 	/**
 	 * Last insert counter
 	 */
@@ -170,9 +175,7 @@ public class NewsManager {
 				}
 
 				// NTK added ignore events
-				if (obj.has("story")
-						&& (obj.getString("story")
-								.equals("TUM Campus App created an event."))) {
+				if (obj.has("story") && (obj.getString("story").equals("TUM Campus App created an event."))) {
 					continue;
 				}
 
@@ -197,10 +200,8 @@ public class NewsManager {
 	 * @return Database cursor (image, message, date_de, link, _id)
 	 */
 	public Cursor getAllFromDb() {
-		return db
-				.rawQuery(
-						"SELECT image, message, strftime('%d.%m.%Y', date) as date_de, link, id as _id "
-								+ "FROM news ORDER BY date DESC", null);
+		return db.rawQuery("SELECT image, message, strftime('%d.%m.%Y', date) as date_de, link, id as _id "
+                + "FROM news ORDER BY date DESC", null);
 	}
 
 	/**
@@ -234,4 +235,21 @@ public class NewsManager {
 				new String[] { n.id, n.message, n.link, n.image,
 						Utils.getDateString(n.date) });
 	}
+
+    @Override
+    public void onRequestCard(Context context) throws Exception {
+        Cursor cur = getAllFromDb();
+        if(cur.moveToFirst()) {
+            NewsCard card = new NewsCard(context);
+            //image, message, strftime('%d.%m.%Y', date) as date_de, link, id as _id "
+            String title = cur.getString(1);
+            if(title.contains("\n")) {
+                title = title.substring(0,title.indexOf('\n'));
+            }
+            Bitmap bitmap = BitmapFactory.decodeFile(cur.getString(0));
+            card.setNews(bitmap,title,cur.getString(3),cur.getString(2));
+            card.apply();
+        }
+        cur.close();
+    }
 }

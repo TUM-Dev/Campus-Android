@@ -17,8 +17,6 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
 import android.widget.Toast;
 
 import org.apache.http.HttpEntity;
@@ -70,7 +68,9 @@ public class Utils {
 	 * @return The HTML document.
 	 */
 	public static String buildHTMLDocument(String css, String body) {
-		String header = "<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"de\" lang=\"de\"><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" /></head>";
+		String header = "<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"de\" lang=\"de\">"+
+                "<head><meta name=\"viewport\" content=\"width=device-width\" />"+
+                "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" /></head>";
 		css = "<style type=\"text/css\">" + css + "</style>";
 		body = "<body>" + body + "</body>";
 		String footer = "</html>";
@@ -392,7 +392,7 @@ public class Utils {
 	 * </pre>
 	 */
 	public static JSONObject downloadJson(String url) throws Exception {
-		Utils.log(url);
+        Log.v("TumCampus", "downloadJson load from " + url);
 
 		HttpClient httpclient = new DefaultHttpClient();
 		HttpParams params = httpclient.getParams();
@@ -414,7 +414,7 @@ public class Utils {
 			InputStream instream = entity.getContent();
 			data = convertStreamToString(instream);
 
-			Utils.log(data);
+            Log.v("TumCampus", "downloadJson " + data);
 			instream.close();
 		}
 		return new JSONObject(data);
@@ -656,24 +656,6 @@ public class Utils {
 		SimpleDateFormat dateFormat = new SimpleDateFormat(
 				"yyyy-MM-dd HH:mm:ss");
 		return dateFormat.format(d);
-	}
-
-	/**
-	 * Configure a {@link WebView} with default settings.
-	 * 
-	 * @param context
-	 *            Context of web view
-	 * @param id
-	 *            id of web view
-	 * @return configured web view
-	 */
-	public static WebView getDefaultWebView(Activity context, int id) {
-		WebView webView = (WebView) context.findViewById(id);
-		webView.getSettings().setBuiltInZoomControls(true);
-		webView.getSettings().setDefaultZoom(WebSettings.ZoomDensity.FAR);
-		webView.setHorizontalScrollBarEnabled(true);
-		webView.getSettings().setUseWideViewPort(true);
-		return webView;
 	}
 
 	/**
@@ -1061,4 +1043,21 @@ public class Utils {
 		return result;
 	}
 
+    public static String formatDist(float meters) {
+        if (meters < 1000) {
+            return ((int) meters) + "m";
+        } else if (meters < 10000) {
+            return formatDec(meters / 1000f, 1) + "km";
+        } else {
+            return ((int) (meters / 1000f)) + "km";
+        }
+    }
+    static String formatDec(float val, int dec) {
+        int factor = (int) Math.pow(10, dec);
+
+        int front = (int) (val);
+        int back = (int) Math.abs(val * (factor)) % factor;
+
+        return front + "." + back;
+    }
 }

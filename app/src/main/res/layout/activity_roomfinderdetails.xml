@@ -3,18 +3,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <include
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        layout="@layout/layout_progress"
-        android:visibility="gone" />
-
-    <include
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        layout="@layout/layout_error"
-        android:visibility="gone" />
-
     <WebView
         android:id="@+id/activity_roomfinder_web_view"
         android:layout_width="fill_parent"

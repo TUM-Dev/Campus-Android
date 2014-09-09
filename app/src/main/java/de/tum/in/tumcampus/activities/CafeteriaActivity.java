@@ -3,24 +3,28 @@ package de.tum.in.tumcampus.activities;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.database.MatrixCursor;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.view.ViewPager;
-import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.ActionBar;
 import android.text.SpannableString;
 import android.text.style.ImageSpan;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.TextView;
+
+import java.util.List;
 
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.generic.ActivityForDownloadingExternal;
 import de.tum.in.tumcampus.adapters.CafeteriaDetailsSectionsPagerAdapter;
 import de.tum.in.tumcampus.auxiliary.Const;
-import de.tum.in.tumcampus.models.managers.CafeteriaManager;
+import de.tum.in.tumcampus.auxiliary.Utils;
+import de.tum.in.tumcampus.models.managers.LocationManager;
+import de.tum.in.tumcampus.models.Cafeteria;
 
 /**
  * Lists all dishes at given cafeteria
@@ -31,9 +35,9 @@ import de.tum.in.tumcampus.models.managers.CafeteriaManager;
 public class CafeteriaActivity extends ActivityForDownloadingExternal implements ActionBar.OnNavigationListener {
 
     private ViewPager mViewPager;
-    private String mCafeteriaId;
-    private MatrixCursor cafeteriaCursor;
+    private int mCafeteriaId = -1;
     private CafeteriaDetailsSectionsPagerAdapter mSectionsPagerAdapter;
+    private List<Cafeteria> mCafeterias;
 
     public CafeteriaActivity() {
         super(Const.CAFETERIAS, R.layout.activity_cafeteria);
@@ -47,7 +51,7 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
         final Intent intent = getIntent();
         if(intent!=null && intent.getExtras()!=null
                 && intent.getExtras().containsKey(Const.CAFETERIA_ID))
-    		mCafeteriaId = intent.getExtras().getString(Const.CAFETERIA_ID);
+    		mCafeteriaId = intent.getExtras().getInt(Const.CAFETERIA_ID);
         mViewPager = (ViewPager) findViewById(R.id.pager);
 	}
 
@@ -75,60 +79,60 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
     protected void onStart() {
         super.onStart();
 
-        CafeteriaManager cafeteriaManager = new CafeteriaManager(this);
-
         // Get all available cafeterias from database
-        Cursor cursor = cafeteriaManager.getAllFromDb("% %");
+        mCafeterias = new LocationManager(this).getCafeterias();
 
         int selIndex = -1;
-        int i=0;
-        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-        cafeteriaCursor = new MatrixCursor(cursor.getColumnNames());
-        if (cursor.moveToFirst()) {
-            do {
-                final String key = cursor.getString(2);
-                if (sharedPrefs.getBoolean("mensa_"+key, true) || key.equals(mCafeteriaId)) {
-                    if(key.equals(mCafeteriaId)) {
-                        selIndex = i;
-                    } else if(mCafeteriaId==null && i==0) {
-                        mCafeteriaId = key;
-                    }
-                    cafeteriaCursor.addRow(new Object[]{cursor.getString(0), cursor.getString(1), key});
-                    i++;
-                }
-            } while (cursor.moveToNext());
+        for(int i=0;i<mCafeterias.size();i++) {
+            Cafeteria c = mCafeterias.get(i);
+            if(mCafeteriaId==-1 || mCafeteriaId == c.id) {
+                mCafeteriaId = c.id;
+                selIndex = i;
+                break;
+            }
         }
-        cursor.close();
 
-        this.startManagingCursor(cafeteriaCursor);
-
-        // Iterate over all cafeterias and add them to the listview
-        if (cafeteriaCursor.getCount() == 1) {
-            // Get Id and name of the database object
-            cafeteriaCursor.moveToFirst();
-            mCafeteriaId = cafeteriaCursor.getString(cafeteriaCursor.getColumnIndex(Const.ID_COLUMN));
-            final String cafeteriaName = cafeteriaCursor.getString(cafeteriaCursor.getColumnIndex(Const.NAME_COLUMN));
-            setTitle(cafeteriaName);
-        } else if (cafeteriaCursor.getCount() > 0) {
-            // Adapter for drop-down navigation
-            SimpleCursorAdapter adapterCafeterias = new SimpleCursorAdapter(this, R.layout.simple_spinner_item_actionbar, cafeteriaCursor, cafeteriaCursor.getColumnNames(),
-                    new int[] { android.R.id.text1, android.R.id.text2 });
-            adapterCafeterias.setDropDownViewResource(R.layout.simple_spinner_dropdown_item_actionbar);
-            getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-            getSupportActionBar().setListNavigationCallbacks(adapterCafeterias, this);
-
-            // Select item
-            if(selIndex>-1)
-                getSupportActionBar().setSelectedNavigationItem(selIndex);
-        } else {
+        if (mCafeterias.size() == 0) {
             // If something went wrong or no cafeterias found
             showErrorLayout();
+            return;
         }
+
+        // Adapter for drop-down navigation
+        ArrayAdapter adapterCafeterias = new ArrayAdapter<Cafeteria>(this, R.layout.simple_spinner_item_actionbar, mCafeterias) {
+            LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+
+            @Override
+            public View getDropDownView(int position, View convertView, ViewGroup parent) {
+                View v = inflater.inflate(R.layout.simple_spinner_dropdown_item_actionbar, parent, false);
+                Cafeteria c = getItem(position);
+
+                // Set name
+                TextView name = (TextView) v.findViewById(android.R.id.text1);
+                name.setText(c.name);
+
+                // Set address
+                TextView address = (TextView) v.findViewById(android.R.id.text2);
+                address.setText(c.address);
+
+                // Set distance
+                TextView dist = (TextView) v.findViewById(R.id.distance);
+                dist.setText(Utils.formatDist(c.distance));
+
+                return v;
+            }
+        };
+        getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+        getSupportActionBar().setListNavigationCallbacks(adapterCafeterias, this);
+
+        // Select item
+        if(selIndex>-1)
+            getSupportActionBar().setSelectedNavigationItem(selIndex);
     }
 
     @Override
     public boolean onNavigationItemSelected(int pos, long id) {
-        mCafeteriaId = "" + id;
+        mCafeteriaId = mCafeterias.get(pos).id;
 
         // Create the adapter that will return a fragment for each of the primary sections of the app.
         if (mSectionsPagerAdapter == null) {

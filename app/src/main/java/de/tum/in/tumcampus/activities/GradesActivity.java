@@ -1,20 +1,8 @@
 package de.tum.in.tumcampus.activities;
 
-import java.text.NumberFormat;
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-
-import org.simpleframework.xml.Serializer;
-import org.simpleframework.xml.core.Persister;
-
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,26 +14,30 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import org.simpleframework.xml.Serializer;
+import org.simpleframework.xml.core.Persister;
+
+import java.text.NumberFormat;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.generic.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampus.adapters.ExamListAdapter;
 import de.tum.in.tumcampus.auxiliary.Const;
-import de.tum.in.tumcampus.auxiliary.Dialogs;
-import de.tum.in.tumcampus.auxiliary.ImplicitCounter;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.Exam;
 import de.tum.in.tumcampus.models.ExamList;
 
 /**
  * Activity to show the user's grades/exams passed.
- * 
- * @author Vincenz Doelle
- * @review Daniel G. Mayr
- * @review Thomas Behrens
  */
 public class GradesActivity extends ActivityForAccessingTumOnline {
 	static int LAST_CHOICE = 0;
-	boolean allSelected = false;
 	private TextView average_tx;
 
 	private double averageGrade;
@@ -228,7 +220,6 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 			if (filters.indexOf(item) == -1) {
 				filters.add(item);
 			}
-
 		}
 
 		// init the spinner
@@ -281,8 +272,7 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 					columnChartContent = buildColumnChartContentString(filteredExamList);
 					pieChartContent = buildPieChartContentString(filteredExamList);
 
-					averageGrade = Math
-							.round(calculateAverageGrade(filteredExamList) * 1000.0) / 1000.0;
+					averageGrade = Math.round(calculateAverageGrade(filteredExamList) * 1000.0) / 1000.0;
 
 					average_tx.setText(getResources().getString(
 							R.string.average_grade)
@@ -309,13 +299,7 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 		spFilter = (Spinner) findViewById(R.id.spFilter);
 		average_tx = (TextView) findViewById(R.id.avgGrade);
 
-		super.requestFetch();
-		//Counting the number of times that the user used this activity for intelligent reordering 
-		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-		if (sharedPrefs.getBoolean("implicitly_id", true))
-		{
-				ImplicitCounter.Counter("my_grades_id", getApplicationContext());
-		}
+		requestFetch();
 	}
 
 	@Override
@@ -324,6 +308,12 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 		getMenuInflater().inflate(R.menu.menu_activity_grades, menu);
 		columnMenuItem = menu.findItem(R.id.columnChart);
 		pieMenuItem = menu.findItem(R.id.pieChart);
+
+        // Both features (Chart diagrams) are not available on older devices
+        if (android.os.Build.VERSION.SDK_INT < 11) {
+            columnMenuItem.setVisible(false);
+            pieMenuItem.setVisible(false);
+        }
 		return true;
 	}
 
@@ -370,12 +360,6 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		Intent intent;
-
-		// Both features (Chart diagrams) are not available on older devices
-		if (android.os.Build.VERSION.SDK_INT <= 10) {
-			Dialogs.showAndroidVersionTooLowAlert(this);
-			return true;
-		}
 
 		if (Utils.isConnected(this)) {
 			switch (item.getItemId()) {
@@ -437,7 +421,6 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
                                 .parse(item_two.getGrade()).doubleValue())
                             insert = false;
                     } catch (ParseException e) {
-                        // TODO Auto-generated catch block
                         e.printStackTrace();
                     }
                 }

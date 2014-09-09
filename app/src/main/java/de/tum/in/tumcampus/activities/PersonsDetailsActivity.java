@@ -1,13 +1,5 @@
 package de.tum.in.tumcampus.activities;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.simpleframework.xml.Serializer;
-import org.simpleframework.xml.core.Persister;
-
 import android.content.ContentProviderOperation;
 import android.content.OperationApplicationException;
 import android.graphics.Bitmap;
@@ -15,8 +7,16 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.RemoteException;
 import android.provider.ContactsContract;
-import android.provider.ContactsContract.*;
-import android.provider.ContactsContract.CommonDataKinds.*;
+import android.provider.ContactsContract.CommonDataKinds;
+import android.provider.ContactsContract.CommonDataKinds.Email;
+import android.provider.ContactsContract.CommonDataKinds.Note;
+import android.provider.ContactsContract.CommonDataKinds.Organization;
+import android.provider.ContactsContract.CommonDataKinds.Phone;
+import android.provider.ContactsContract.CommonDataKinds.Photo;
+import android.provider.ContactsContract.CommonDataKinds.StructuredName;
+import android.provider.ContactsContract.CommonDataKinds.Website;
+import android.provider.ContactsContract.Data;
+import android.provider.ContactsContract.RawContacts;
 import android.text.Html;
 import android.util.Log;
 import android.view.Menu;
@@ -25,6 +25,15 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import org.simpleframework.xml.Serializer;
+import org.simpleframework.xml.core.Persister;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.generic.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampus.auxiliary.HTMLStringBuffer;
@@ -34,15 +43,13 @@ import de.tum.in.tumcampus.models.Group;
 import de.tum.in.tumcampus.models.Person;
 import de.tum.in.tumcampus.models.Room;
 import de.tum.in.tumcampus.models.TelSubstation;
-import de.tum.in.tumcampus.tumonline.TUMOnlineRequestFetchListener;
 
 /**
  * Activity to show information about an person at TUM.
  * 
  * @author Vincenz Doelle
  */
-public class PersonsDetailsActivity extends ActivityForAccessingTumOnline
-		implements TUMOnlineRequestFetchListener {
+public class PersonsDetailsActivity extends ActivityForAccessingTumOnline {
 
 	private static final String PERSONEN_DETAILS = "personenDetails";
     private Employee mEmployee;
@@ -100,7 +107,7 @@ public class PersonsDetailsActivity extends ActivityForAccessingTumOnline
 
     @Override
     public void onFetch(String rawResponse) {
-        Log.d(getClass().getSimpleName(), rawResponse);
+        Log.v(getClass().getSimpleName(), rawResponse);
 
         // deserialize XML response to model entities
         Serializer serializer = new Persister();

@@ -12,57 +12,178 @@
             android:summary="@string/generate_tumonline_token_detail"
             android:title="@string/generate_tumonline_token" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="@string/personal_settings">
-        <ListPreference
-            android:defaultValue="0"
-            android:entries="@array/roles"
-            android:entryValues="@array/roles_values"
-            android:key="role"
-            android:summary="@string/role_summary"
-            android:title="@string/role" />
+    <PreferenceCategory android:title="@string/cards_settings">
 
+        <!-- Cafeteria card -->
         <PreferenceScreen
-            android:summary="@string/mensa_summary"
-            android:title="@string/mensa_title">
-            <PreferenceCategory
-                android:key="my_mensa"
-                android:title="@string/my_mensa"/>
+            android:summary="@string/card_cafeteria_summary"
+            android:title="@string/cafeteria">
+
+            <PreferenceCategory android:title="Anzeige">
+                <CheckBoxPreference
+                    android:defaultValue="true"
+                    android:key="card_cafeteria_start"
+                    android:title="@string/startpage" />
+                <CheckBoxPreference
+                    android:defaultValue="true"
+                    android:key="card_cafeteria_wear"
+                    android:title="@string/wear" />
+                <CheckBoxPreference
+                    android:defaultValue="false"
+                    android:dependency="card_cafeteria_wear"
+                    android:key="card_cafeteria_phone"
+                    android:title="@string/phone" />
+            </PreferenceCategory>
+            <PreferenceCategory android:title="@string/default_cafeteria">
+                <ListPreference
+                    android:defaultValue="422"
+                    android:entries="@array/cafeterias_G"
+                    android:entryValues="@array/cafeterias_G_val"
+                    android:key="cafeteria_default_G"
+                    android:title="@string/campus_garching" />
+                <ListPreference
+                    android:defaultValue="414"
+                    android:entries="@array/cafeterias_K"
+                    android:entryValues="@array/cafeterias_K_val"
+                    android:key="cafeteria_default_K"
+                    android:title="@string/campus_klinikum" />
+                <ListPreference
+                    android:defaultValue="423"
+                    android:entries="@array/cafeterias_W"
+                    android:entryValues="@array/cafeterias_W_val"
+                    android:key="cafeteria_default_W"
+                    android:title="@string/campus_weihenstephan" />
+            </PreferenceCategory>
+            <PreferenceCategory android:title="@string/extra">
+                <ListPreference
+                    android:defaultValue="0"
+                    android:entries="@array/roles"
+                    android:entryValues="@array/roles_values"
+                    android:key="role"
+                    android:summary="@string/role_summary"
+                    android:title="@string/role" />
+            </PreferenceCategory>
         </PreferenceScreen>
 
+        <!-- MVV card -->
         <PreferenceScreen
-            android:summary="@string/card_settings_summary"
-            android:title="@string/cards_settings">
-            <PreferenceCategory
-                android:key="card_settings"
-                android:title="@string/cards_settings">
-                <de.tum.in.tumcampus.auxiliary.MultiSelectListPreference
-                    android:defaultValue="@array/card_show_start_wear"
-                    android:dialogTitle="@string/where_appear"
-                    android:entries="@array/card_show"
-                    android:entryValues="@array/card_show_values"
-                    android:key="card_tuition_fee_setting"
-                    android:title="@string/tuition_fees" />
-                <de.tum.in.tumcampus.auxiliary.MultiSelectListPreference
-                    android:defaultValue="@array/card_show_start_wear"
-                    android:dialogTitle="@string/where_appear"
-                    android:entries="@array/card_show"
-                    android:entryValues="@array/card_show_values"
-                    android:key="card_mvv_setting"
-                    android:title="@string/mvv" />
-                <de.tum.in.tumcampus.auxiliary.MultiSelectListPreference
-                    android:defaultValue="@array/card_show_start_wear"
-                    android:dialogTitle="@string/where_appear"
-                    android:entries="@array/card_show"
-                    android:entryValues="@array/card_show_values"
-                    android:key="card_next_lecture_setting"
-                    android:title="@string/next_lecture" />
-                <de.tum.in.tumcampus.auxiliary.MultiSelectListPreference
-                    android:defaultValue="@array/card_show_start_wear"
-                    android:dialogTitle="@string/where_appear"
-                    android:entries="@array/card_show"
-                    android:entryValues="@array/card_show_values"
-                    android:key="card_cafeteria_setting"
-                    android:title="@string/cafeterias" />
+            android:summary="@string/card_mvv_summary"
+            android:title="@string/mvv">
+
+            <PreferenceCategory android:title="Anzeige">
+                <CheckBoxPreference
+                    android:defaultValue="true"
+                    android:key="card_mvv_start"
+                    android:title="@string/startpage" />
+                <CheckBoxPreference
+                    android:defaultValue="true"
+                    android:key="card_mvv_wear"
+                    android:title="@string/wear" />
+            </PreferenceCategory>
+            <PreferenceCategory android:title="@string/default_station">
+                <ListPreference
+                    android:defaultValue="Garching-Forschungszentrum"
+                    android:entries="@array/stations_G"
+                    android:entryValues="@array/stations_G"
+                    android:key="stations_default_G"
+                    android:title="@string/campus_garching" />
+                <ListPreference
+                    android:defaultValue="Theresienstraße"
+                    android:entries="@array/stations_C"
+                    android:entryValues="@array/stations_C"
+                    android:key="stations_default_C"
+                    android:title="@string/campus_main" />
+                <ListPreference
+                    android:defaultValue="Klinikum Großhadern"
+                    android:entries="@array/stations_K"
+                    android:entryValues="@array/stations_K"
+                    android:key="stations_default_K"
+                    android:title="@string/campus_klinikum_großhadern" />
+            </PreferenceCategory>
+        </PreferenceScreen>
+
+        <!-- Next lecture card -->
+        <PreferenceScreen
+            android:summary="@string/card_next_lecture_summary"
+            android:title="@string/next_lecture">
+
+            <PreferenceCategory android:title="Anzeige">
+                <CheckBoxPreference
+                    android:defaultValue="true"
+                    android:key="card_next_lecture_start"
+                    android:title="@string/startpage" />
+                <CheckBoxPreference
+                    android:defaultValue="true"
+                    android:key="card_next_lecture_wear"
+                    android:title="@string/wear" />
+                <CheckBoxPreference
+                    android:defaultValue="false"
+                    android:dependency="card_next_lecture_wear"
+                    android:key="card_next_lecture_phone"
+                    android:title="@string/phone" />
+            </PreferenceCategory>
+        </PreferenceScreen>
+
+        <!-- Tuition fee card -->
+        <PreferenceScreen
+            android:summary="@string/card_tuition_fee_summary"
+            android:title="@string/tuition_fees">
+            <PreferenceCategory android:title="Anzeige">
+                <CheckBoxPreference
+                    android:defaultValue="true"
+                    android:key="card_tuition_fee_start"
+                    android:title="@string/startpage" />
+                <CheckBoxPreference
+                    android:defaultValue="true"
+                    android:key="card_tuition_fee_wear"
+                    android:title="@string/wear" />
+                <CheckBoxPreference
+                    android:defaultValue="false"
+                    android:dependency="card_tuition_fee_wear"
+                    android:key="card_tuition_fee_phone"
+                    android:title="@string/phone" />
+            </PreferenceCategory>
+        </PreferenceScreen>
+
+        <!-- News card -->
+        <PreferenceScreen
+            android:summary="@string/card_news_summary"
+            android:title="@string/news">
+            <PreferenceCategory android:title="Anzeige">
+                <CheckBoxPreference
+                    android:defaultValue="true"
+                    android:key="card_news_start"
+                    android:title="@string/startpage" />
+                <CheckBoxPreference
+                    android:defaultValue="false"
+                    android:key="card_news_wear"
+                    android:title="@string/wear" />
+                <CheckBoxPreference
+                    android:defaultValue="false"
+                    android:dependency="card_news_wear"
+                    android:key="card_news_phone"
+                    android:title="@string/phone" />
+            </PreferenceCategory>
+        </PreferenceScreen>
+
+        <!-- Chat card -->
+        <PreferenceScreen
+            android:summary="@string/card_chat_summary"
+            android:title="@string/chat">
+            <PreferenceCategory android:title="Anzeige">
+                <CheckBoxPreference
+                    android:defaultValue="true"
+                    android:key="card_chat_start"
+                    android:title="@string/startpage" />
+                <CheckBoxPreference
+                    android:defaultValue="true"
+                    android:key="card_chat_wear"
+                    android:title="@string/wear" />
+                <CheckBoxPreference
+                    android:defaultValue="true"
+                    android:dependency="card_chat_wear"
+                    android:key="card_chat_phone"
+                    android:title="@string/phone" />
             </PreferenceCategory>
         </PreferenceScreen>
     </PreferenceCategory>
@@ -88,23 +209,17 @@
         <Preference
             android:key="first_run"
             android:summary="@string/demo_info"
-            android:title="@string/demo_mode"/>
-    </PreferenceCategory>
-    <PreferenceCategory android:title="@string/debug_for_developer">
-        <Preference
-            android:enabled="false"
-            android:summary="@string/debug_mode"
-            android:title="@string/debug_mode" />
+            android:title="@string/demo_mode" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/about_tca">
         <Preference
-            android:key="facebook"
             android:icon="@drawable/ic_facebook"
+            android:key="facebook"
             android:title="@string/facebook" />
         <Preference
-            android:key="github"
             android:icon="@drawable/ic_github"
+            android:key="github"
             android:title="@string/github" />
         <Preference
             android:key="feedback"
@@ -116,8 +231,8 @@
         </Preference>
         <Preference
             android:key="licenses"
-            android:title="@string/licences"
-            android:summary="@string/licences_summary"/>
+            android:summary="@string/licences_summary"
+            android:title="@string/licences" />
     </PreferenceCategory>
 
 </PreferenceScreen>

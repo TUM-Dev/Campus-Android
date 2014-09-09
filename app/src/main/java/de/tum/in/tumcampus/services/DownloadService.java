@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import java.io.IOException;
@@ -20,8 +21,8 @@ import de.tum.in.tumcampus.models.managers.CafeteriaMenuManager;
 import de.tum.in.tumcampus.models.managers.CardManager;
 import de.tum.in.tumcampus.models.managers.LectureItemManager;
 import de.tum.in.tumcampus.models.managers.LectureManager;
-import de.tum.in.tumcampus.models.managers.LocationManager;
 import de.tum.in.tumcampus.models.managers.NewsManager;
+import de.tum.in.tumcampus.models.managers.OpenHoursManager;
 import de.tum.in.tumcampus.models.managers.OrganisationManager;
 import de.tum.in.tumcampus.models.managers.SyncManager;
 
@@ -110,9 +111,9 @@ public class DownloadService extends IntentService {
                 if ((action.equals(Const.NEWS)) && !isDestroyed) {
                     successful = downloadNews(force);
                 }
-                if ((action.equals(Const.LECTURES_TUM_ONLINE)) && !isDestroyed) {
+                /*if ((action.equals(Const.LECTURES_TUM_ONLINE)) && !isDestroyed) {
                     successful = importLectureItemsFromTUMOnline(force);
-                }
+                }*/
                 if ((action.equals(Const.CAFETERIAS)) && !isDestroyed) {
                     successful = downloadCafeterias(force);
                 }
@@ -156,21 +157,22 @@ public class DownloadService extends IntentService {
             broadcastDownloadCompleted();
         }
 
+        // Currently not used
         // Do all other import stuff that is not relevant for creating the viewing the start page
-        if ((action.equals(Const.DOWNLOAD_ALL_FROM_EXTERNAL)) && !isDestroyed) {
+        /*if ((action.equals(Const.DOWNLOAD_ALL_FROM_EXTERNAL)) && !isDestroyed) {
             try {
                 importLectureItemsFromTUMOnline(force);
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }
+        }*/
     }
 
 	private void broadcastDownloadCompleted() {
 		Intent intentSend = new Intent();
 		intentSend.setAction(BROADCAST_NAME);
 		intentSend.putExtra(Const.ACTION_EXTRA, Const.COMPLETED);
-		sendBroadcast(intentSend);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intentSend);
 	}
 
 	private void broadcastError(String message) {
@@ -178,7 +180,7 @@ public class DownloadService extends IntentService {
 		intentSend.setAction(BROADCAST_NAME);
 		intentSend.putExtra(Const.ACTION_EXTRA, Const.ERROR);
 		intentSend.putExtra(Const.ERROR_MESSAGE, message);
-		sendBroadcast(intentSend);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intentSend);
 	}
 
 	private void broadcastWarning(String message) {
@@ -186,7 +188,7 @@ public class DownloadService extends IntentService {
 		intentSend.setAction(BROADCAST_NAME);
 		intentSend.putExtra(Const.ACTION_EXTRA, Const.WARNING);
 		intentSend.putExtra(Const.WARNING_MESSAGE, message);
-		sendBroadcast(intentSend);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intentSend);
 	}
 
 	public boolean downloadCafeterias(boolean force) throws Exception {
@@ -244,7 +246,7 @@ public class DownloadService extends IntentService {
         SharedPreferences prefs = getSharedPreferences(Const.INTERNAL_PREFS, 0);
         boolean update = prefs.getInt(LOCATIONS_VERSION, -1)!=version;
 
-        LocationManager lm = new LocationManager(this);
+        OpenHoursManager lm = new OpenHoursManager(this);
         if (lm.empty() || update) {
             List<String[]> rows = Utils.readCsv(getAssets().open(CSV_LOCATIONS), ISO);
 

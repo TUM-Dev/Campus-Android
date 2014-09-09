@@ -1,8 +1,5 @@
 package de.tum.in.tumcampus.activities;
 
-import org.simpleframework.xml.Serializer;
-import org.simpleframework.xml.core.Persister;
-
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,6 +7,10 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import org.simpleframework.xml.Serializer;
+import org.simpleframework.xml.core.Persister;
+
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.generic.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampus.adapters.LectureAppointmentsListAdapter;
@@ -38,8 +39,7 @@ public class LecturesAppointmentsActivity extends ActivityForAccessingTumOnline 
 	private ListView lvTermine;
 
     public LecturesAppointmentsActivity() {
-		super(Const.LECTURES_APPOINTMENTS,
-				R.layout.activity_lecturesappointments);
+		super(Const.LECTURES_APPOINTMENTS, R.layout.activity_lecturesappointments);
 	}
 
 	@Override
@@ -52,8 +52,7 @@ public class LecturesAppointmentsActivity extends ActivityForAccessingTumOnline 
 
 		Bundle bundle = this.getIntent().getExtras();
 		// set Lecture Name (depends on bundle data)
-		tvTermineLectureName.setText(bundle.getString(Const.TITLE_EXTRA)
-                .toUpperCase());
+		tvTermineLectureName.setText(bundle.getString(Const.TITLE_EXTRA).toUpperCase());
 		requestHandler.setParameter("pLVNr", bundle.getString("stp_sp_nr"));
 
 		super.requestFetch();

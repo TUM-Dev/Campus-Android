@@ -24,12 +24,8 @@ public class PlansActivity extends ActionBarActivity implements OnItemClickListe
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+        ImplicitCounter.Counter(this);
 		setContentView(R.layout.activity_plans);
-		//Counting the number of times that the user used this activity for intelligent reordering 
-		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-		if (sharedPrefs.getBoolean("implicitly_id", true)){
-				ImplicitCounter.Counter("plans_id", getApplicationContext());
-		}
 
 		ListView list = (ListView) findViewById(R.id.activity_plans_list_view);
 

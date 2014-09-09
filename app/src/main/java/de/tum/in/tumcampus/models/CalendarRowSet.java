@@ -17,7 +17,7 @@ import org.simpleframework.xml.Root;
 @Root(name = "events")
 public class CalendarRowSet {
 
-	@ElementList(inline = true)
+	@ElementList(inline = true, required = false)
 	private List<CalendarRow> kalendarList;
 
 	public List<CalendarRow> getKalendarList() {

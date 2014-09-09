@@ -50,7 +50,6 @@
                 android:padding="@dimen/padding_default">
 
                 <TextView
-                    android:id="@+id/TextView04"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:autoLink="none"
@@ -63,20 +62,17 @@
                     android:id="@+id/tvLDetailsSemester"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:autoLink="all"
-                    android:scrollHorizontally="false"
-                    android:text="@string/semester_data" />
+                    android:autoLink="web"
+                    android:scrollHorizontally="false" />
 
                 <TextView
                     android:id="@+id/tvLDetailsSWS"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:autoLink="none"
-                    android:scrollHorizontally="false"
-                    android:text="@string/sws_number" />
+                    android:scrollHorizontally="false" />
 
                 <TextView
-                    android:id="@+id/TextView01"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:autoLink="none"
@@ -90,11 +86,9 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:autoLink="none"
-                    android:scrollHorizontally="false"
-                    android:text="@string/first_date" />
+                    android:scrollHorizontally="false" />
 
                 <TextView
-                    android:id="@+id/tvLDHeadDetais"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:autoLink="none"
@@ -108,19 +102,16 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:autoLink="none"
-                    android:scrollHorizontally="false"
-                    android:text="@string/lecturer" />
+                    android:scrollHorizontally="false" />
 
                 <TextView
                     android:id="@+id/tvLDetailsOrg"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:autoLink="none"
-                    android:scrollHorizontally="false"
-                    android:text="@string/organisation_of_lecture" />
+                    android:scrollHorizontally="false" />
 
                 <TextView
-                    android:id="@+id/TextView03"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:autoLink="none"
@@ -134,11 +125,9 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:autoLink="none"
-                    android:scrollHorizontally="false"
-                    android:text="@string/teaching_content" />
+                    android:scrollHorizontally="false" />
 
                 <TextView
-                    android:id="@+id/TextView02M"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:autoLink="none"
@@ -152,11 +141,9 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:autoLink="none"
-                    android:scrollHorizontally="false"
-                    android:text="@string/lec_method_details" />
+                    android:scrollHorizontally="false" />
 
                 <TextView
-                    android:id="@+id/TextView05"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:autoLink="none"
@@ -170,11 +157,9 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:autoLink="none"
-                    android:scrollHorizontally="false"
-                    android:text="@string/teaching_target" />
+                    android:scrollHorizontally="false" />
 
                 <TextView
-                    android:id="@+id/TextView02"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:autoLink="none"
@@ -187,8 +172,7 @@
                     android:id="@+id/tvLDetailsLiteratur"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:scrollHorizontally="false"
-                    android:text="@string/literature" />
+                    android:scrollHorizontally="false" />
             </LinearLayout>
         </ScrollView>
 

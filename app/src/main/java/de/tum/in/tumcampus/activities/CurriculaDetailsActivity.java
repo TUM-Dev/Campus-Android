@@ -1,58 +1,49 @@
 package de.tum.in.tumcampus.activities;
 
-import java.io.File;
+import android.os.Bundle;
+import android.webkit.WebView;
 
 import org.apache.http.impl.client.DefaultHttpClient;
 
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
-import android.view.View;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.widget.RelativeLayout;
-import android.widget.Toast;
+import java.io.File;
 
 import de.tum.in.tumcampus.R;
+import de.tum.in.tumcampus.activities.generic.ActivityForLoadingInBackground;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.FileUtils;
 import de.tum.in.tumcampus.auxiliary.Utils;
 
 /**
  * Activity to display the curricula details of different programs.
- * 
- * @author Vincenz Doelle
- * @review Daniel G. Mayr
- * @review Thomas Behrens
  */
-public class CurriculaDetailsActivity extends ActionBarActivity {
-
-	// Fetch information in a background task and show progress dialog in meantime
-	final AsyncTask<Object, Void, File> backgroundTask = new AsyncTask<Object, Void, File>() {
-
-		@Override
-		protected File doInBackground(Object... params) {
-			CurriculaDetailsActivity.this.fetchCurriculum((String) params[0], (File) params[1]);
-			return (File) params[1];
-		}
-
-		@Override
-		protected void onPostExecute(File result) {
-			CurriculaDetailsActivity.this.openFile(result);
-			CurriculaDetailsActivity.this.progressLayout.setVisibility(View.GONE);
-		}
-	};
+public class CurriculaDetailsActivity extends ActivityForLoadingInBackground<Object,File> {
 
 	private WebView browser;
-	private RelativeLayout errorLayout;
 
 	/** Http client to fetch the curricula data */
 	private DefaultHttpClient httpClient;
 
-	private RelativeLayout progressLayout;
+    public CurriculaDetailsActivity() {
+        super(R.layout.activity_curriculadetails);
+    }
 
-	/**
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        httpClient = new DefaultHttpClient();
+
+        browser = (WebView) this.findViewById(R.id.activity_curricula_web_view);
+        browser.getSettings().setBuiltInZoomControls(true);
+
+        String url = getIntent().getExtras().getString(CurriculaActivity.URL);
+        String name = getIntent().getExtras().getString(CurriculaActivity.NAME);
+
+        setTitle(name);
+        getCurriculum(name, url);
+    }
+
+    /**
 	 * Extract the results from a document fetched from the given URL.
 	 * 
 	 * @param url
@@ -101,9 +92,7 @@ public class CurriculaDetailsActivity extends ActionBarActivity {
 		try {
 			file = FileUtils.getFileOnSD(Const.CURRICULA, filename);
 		} catch (Exception e) {
-			this.progressLayout.setVisibility(View.GONE);
-			this.errorLayout.setVisibility(View.VISIBLE);
-			Log.e("EXCEPTION", e.getMessage());
+            showError(e.getMessage());
 		}
 
 		if (file == null) {
@@ -114,50 +103,27 @@ public class CurriculaDetailsActivity extends ActionBarActivity {
 		// if file does not exist download it again
 		if (!file.exists()) {
 			if (!Utils.isConnected(this)) {
-				Toast.makeText(this, R.string.no_internet_connection, Toast.LENGTH_SHORT).show();
-				this.progressLayout.setVisibility(View.GONE);
-				this.errorLayout.setVisibility(View.VISIBLE);
+                showError(R.string.no_internet_connection);
 				return;
 			}
-			this.backgroundTask.execute(url, file);
+			startLoading(url, file);
 
 		} else {
-			this.openFile(file);
-			this.progressLayout.setVisibility(View.GONE);
+			openFile(file);
 		}
 	}
 
-	@SuppressWarnings("deprecation")
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		this.setContentView(R.layout.activity_curriculadetails);
+    // Fetch information in a background task and show progress dialog in meantime
+    @Override
+    protected File onLoadInBackground(Object... params) {
+        fetchCurriculum((String) params[0], (File) params[1]);
+        return (File) params[1];
+    }
 
-		// TODO export this to the generic app structure
-		this.httpClient = new DefaultHttpClient();
-
-		this.browser = (WebView) this.findViewById(R.id.activity_curricula_web_view);
-		this.progressLayout = (RelativeLayout) this.findViewById(R.id.progress_layout);
-		this.errorLayout = (RelativeLayout) this.findViewById(R.id.error_layout);
-
-		this.browser.getSettings().setBuiltInZoomControls(true);
-		this.browser.getSettings().setDefaultZoom(WebSettings.ZoomDensity.FAR);
-		this.browser.getSettings().setUseWideViewPort(true);
-
-		String url = this.getIntent().getExtras().getString(CurriculaActivity.URL);
-		String name = this.getIntent().getExtras().getString(CurriculaActivity.NAME);
-
-		this.setTitle(name);
-
-		this.progressLayout.setVisibility(View.VISIBLE);
-		this.getCurriculum(name, url);
-	}
-
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		this.backgroundTask.cancel(true);
-	}
+    @Override
+    protected void onLoadFinished(File result) {
+        openFile(result);
+    }
 
 	/**
 	 * Opens a local file.

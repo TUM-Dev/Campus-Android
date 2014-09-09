@@ -7,13 +7,12 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
+import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
-import android.preference.PreferenceCategory;
 import android.preference.PreferenceManager;
 import android.provider.CalendarContract.Calendars;
 import android.widget.Toast;
@@ -23,15 +22,11 @@ import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.wizzard.WizNavStartActivity;
 import de.tum.in.tumcampus.auxiliary.AccessTokenManager;
 import de.tum.in.tumcampus.auxiliary.Const;
-import de.tum.in.tumcampus.auxiliary.MultiSelectListPreference;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.managers.CafeteriaManager;
 import de.tum.in.tumcampus.models.managers.CafeteriaMenuManager;
 import de.tum.in.tumcampus.models.managers.CalendarManager;
 import de.tum.in.tumcampus.models.managers.CardManager;
-import de.tum.in.tumcampus.models.managers.EventManager;
-import de.tum.in.tumcampus.models.managers.FeedItemManager;
-import de.tum.in.tumcampus.models.managers.GalleryManager;
 import de.tum.in.tumcampus.models.managers.NewsManager;
 import de.tum.in.tumcampus.models.managers.SyncManager;
 import de.tum.in.tumcampus.services.BackgroundService;
@@ -53,7 +48,7 @@ public class UserPreferencesActivity extends PreferenceActivity implements
      *
      * @return true, if successful
      */
-    private boolean clearCache() {
+    private boolean clearCache() { //TODO remove this option
         try {
             Utils.getCacheDir("");
         } catch (Exception e) {
@@ -67,15 +62,6 @@ public class UserPreferencesActivity extends PreferenceActivity implements
 
         CafeteriaMenuManager cmm = new CafeteriaMenuManager(context);
         cmm.removeCache();
-
-        EventManager em = new EventManager(context);
-        em.removeCache();
-
-        FeedItemManager fim = new FeedItemManager(context);
-        fim.removeCache();
-
-        GalleryManager gm = new GalleryManager(context);
-        gm.removeCache();
 
         NewsManager nm = new NewsManager(context);
         nm.removeCache();
@@ -93,8 +79,7 @@ public class UserPreferencesActivity extends PreferenceActivity implements
         crv.delete(uri, " account_name = '"
                 + getString(R.string.calendar_account_name) + "'", null);
 
-        Toast.makeText(context, R.string.success_clear_cache,
-                Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, R.string.success_clear_cache, Toast.LENGTH_SHORT).show();
         return true;
     }
 
@@ -110,9 +95,6 @@ public class UserPreferencesActivity extends PreferenceActivity implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.settings);
-
-        //PreferenceManager.setDefaultValues(this, R.xml.settings, false);
-
 
         // Click listener for preference list entries. Used to simulate a button
         // (since it is not possible to add a button to the preferences screen)
@@ -236,47 +218,25 @@ public class UserPreferencesActivity extends PreferenceActivity implements
             }
         });
 
-        // Add cafeterias to preferences
-        addCafeterias();
-
-        // Set summarys for card settings
-        setSummary((MultiSelectListPreference) findPreference("card_tuition_fee_setting"));
-        setSummary((MultiSelectListPreference) findPreference("card_mvv_setting"));
-        setSummary((MultiSelectListPreference) findPreference("card_next_lecture_setting"));
-        setSummary((MultiSelectListPreference) findPreference("card_cafeteria_setting"));
+        setSummary("cafeteria_default_G");
+        setSummary("cafeteria_default_K");
+        setSummary("cafeteria_default_W");
+        setSummary("role");
+        setSummary("stations_default_G");
+        setSummary("stations_default_C");
+        setSummary("stations_default_K");
 
         // Register the change listener to react immediately on changes
         PreferenceManager.getDefaultSharedPreferences(this)
                 .registerOnSharedPreferenceChangeListener(this);
     }
 
-    // Uses CafeteriaManager to populate MyMensa Category
-    private void addCafeterias() {
-        PreferenceCategory myMensa = (PreferenceCategory) findPreference("my_mensa");
-        myMensa.removeAll();
-
-        SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
-
-        CafeteriaManager manager = new CafeteriaManager(this);
-        Cursor cursor = manager.getAllFromDb("% %");
-        if (cursor.moveToFirst()) {
-            do {
-                CheckBoxPreference preference = new CheckBoxPreference(this);
-                final String key = cursor.getString(2);
-                preference.setTitle(cursor.getString(0));
-                preference.setSummary(cursor.getString(1));
-                preference.setKey("mensa_" + key);
-                preference.setChecked(sharedPreferences.getBoolean("mensa_" + key, true));
-                myMensa.addPreference(preference);
-            } while (cursor.moveToNext());
-        }
-    }
-
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         Preference pref = findPreference(key);
-        if(pref instanceof MultiSelectListPreference) {
-            setSummary((MultiSelectListPreference) pref);
+        if(pref instanceof ListPreference) {
+            ListPreference lpref = (ListPreference)pref;
+            lpref.setSummary(lpref.getEntry());
         }
 
         // If the silent mode was activated, start the service. This will invoke
@@ -302,20 +262,11 @@ public class UserPreferencesActivity extends PreferenceActivity implements
         }
     }
 
-    private void setSummary(MultiSelectListPreference pref) {
-        CharSequence[] checked = pref.getCheckedValues();
-        String sum="";
-        for(CharSequence check : checked) {
-            if(!sum.isEmpty())
-                sum+=", ";
-            if(check.equals("1")) {
-                sum+=getString(R.string.startpage);
-            } else if(check.equals("2")) {
-                sum+=getString(R.string.wear);
-            } else if(check.equals("3")) {
-                sum+=getString(R.string.phone_and_wear);
-            }
+    public void setSummary(String key) {
+        Preference t = findPreference(key);
+        if(t instanceof ListPreference) {
+            ListPreference pref = (ListPreference)t;
+            pref.setSummary(pref.getEntry());
         }
-        pref.setSummary(sum);
     }
 }

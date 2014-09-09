@@ -1,9 +1,7 @@
 package de.tum.in.tumcampus.activities;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -16,7 +14,6 @@ import java.util.HashMap;
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.generic.ActivityForSearching;
 import de.tum.in.tumcampus.adapters.RoomFinderListAdapter;
-import de.tum.in.tumcampus.auxiliary.ImplicitCounter;
 import de.tum.in.tumcampus.auxiliary.RoomFinderSuggestionProvider;
 import de.tum.in.tumcampus.tumonline.TUMRoomFinderRequest;
 import de.tum.in.tumcampus.tumonline.TUMRoomFinderRequestFetchListener;
@@ -46,22 +43,16 @@ public class RoomFinderActivity extends ActivityForSearching implements TUMRoomF
         super.onCreate(savedInstanceState);
         roomFinderRequest = new TUMRoomFinderRequest();
 
-        //Counting the number of times that the user used this activity for intelligent reordering
-        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-        if (sharedPrefs.getBoolean("implicitly_id", true)) {
-            ImplicitCounter.Counter("roomfinder_id", getApplicationContext());
-        }
-
         onNewIntent(getIntent());
     }
 
     @Override
-    public void performEmptyQuery() {
+    protected void onStartSearch() {
         list.setAdapter(null);
     }
 
     @Override
-    public void performSearchAlgorithm(String query) {
+    public void onStartSearch(String query) {
         roomFinderRequest.fetchSearchInteractive(this, this, query);
     }
 

@@ -8,10 +8,8 @@ import android.content.SearchRecentSuggestionsProvider;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.os.Bundle;
 import android.provider.SearchRecentSuggestions;
 import android.support.v4.view.MenuItemCompat;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.SearchView;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -21,11 +19,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import de.tum.in.tumcampus.R;
-import de.tum.in.tumcampus.activities.UserPreferencesActivity;
 import de.tum.in.tumcampus.auxiliary.Utils;
 
 /**
@@ -33,31 +29,22 @@ import de.tum.in.tumcampus.auxiliary.Utils;
  * and typical processes related to search.
  * 
  */
-public abstract class ActivityForSearching extends ActionBarActivity {
-	protected RelativeLayout errorLayout;
-	private int layoutId;
-	protected RelativeLayout progressLayout;
+public abstract class ActivityForSearching extends ProgressActivity {
     protected SearchView mSearchView;
     protected String mQuery = null;
     private String mAuthority;
     private int mMinLength;
 
+    protected abstract void onStartSearch();
+    protected abstract void onStartSearch(String s);
+
     public ActivityForSearching(int layoutIt, String auth, int minLen) {
-		layoutId = layoutIt;
+		super(layoutIt);
         mAuthority = auth;
         mMinLength = minLen;
 	}
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(layoutId);
-
-        progressLayout = (RelativeLayout) findViewById(R.id.progress_layout);
-        errorLayout = (RelativeLayout) findViewById(R.id.error_layout);
-    }
-
-	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -104,23 +91,14 @@ public abstract class ActivityForSearching extends ActionBarActivity {
                 @Override
                 public boolean onClose() {
                     MenuItemCompat.collapseActionView(searchItem);
-                    performEmptyQuery();
+                    mQuery = null;
+                    onStartSearch();
                     return false;
                 }
             });
         }
 		return true;
 	}
-
-    public void onClick(View view) {
-        int viewId = view.getId();
-        switch (viewId) {
-            case R.id.no_token_layout:
-                Intent intent = new Intent(this, UserPreferencesActivity.class);
-                startActivity(intent);
-                break;
-        }
-    }
 
     @Override
     public void onNewIntent(Intent intent) {
@@ -129,8 +107,7 @@ public abstract class ActivityForSearching extends ActionBarActivity {
             return;
         setIntent(intent);
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            mQuery = intent.getStringExtra(SearchManager.QUERY);
-            requestSearch(mQuery);
+            requestSearch(intent.getStringExtra(SearchManager.QUERY));
         }
     }
 
@@ -162,36 +139,25 @@ public abstract class ActivityForSearching extends ActionBarActivity {
         collapsedSearchIcon.setImageDrawable(bigSearchIcon);
     }
 
-    // Abstract method for the search algorithm, has to be implemented by the
-	// inheriting class
-    public abstract void performEmptyQuery();
-	public abstract void performSearchAlgorithm(String query);
-
 	private boolean requestSearch(String query) {
         if(query.length()<mMinLength) {
             String text = String.format(getString(R.string.min_search_len),mMinLength);
             Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
             return false;
         }
-		progressLayout.setVisibility(View.VISIBLE);
 
 		if (!Utils.isConnected(this)) {
-			Toast.makeText(this, R.string.no_internet_connection,
-					Toast.LENGTH_SHORT).show();
-			errorLayout.setVisibility(View.VISIBLE);
-			progressLayout.setVisibility(View.GONE);
+            showError(R.string.no_internet_connection);
 			return false;
 		}
 
-        //if(mSearchView!=null)
-        //    mSearchView.setQuery(query, false);
-
         // Add query to recents
         SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this, mAuthority, SearchRecentSuggestionsProvider.DATABASE_MODE_QUERIES);
-        suggestions.saveRecentQuery(mQuery, null);
+        suggestions.saveRecentQuery(query, null);
 
         // Tell activity to start searching
-		performSearchAlgorithm(query);
+        mQuery = query;
+        onStartSearch(query);
 		return true;
 	}
 }

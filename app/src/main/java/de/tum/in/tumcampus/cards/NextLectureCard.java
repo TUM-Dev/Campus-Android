@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.v4.app.NotificationCompat;
 import android.text.format.DateUtils;
 import android.view.View;
@@ -31,7 +33,7 @@ public class NextLectureCard extends Card {
     private String mLocation;
 
     public NextLectureCard(Context context) {
-        super(context, "card_next_lecture_setting");
+        super(context, "card_next_lecture");
     }
 
     @Override
@@ -88,6 +90,8 @@ public class NextLectureCard extends Card {
         final String time = DateUtils.getRelativeDateTimeString(mContext, mDate.getTime(),
                 DateUtils.MINUTE_IN_MILLIS, DateUtils.WEEK_IN_MILLIS, 0).toString();
         notificationBuilder.setContentText(mTitle + "\n" + time);
+        Bitmap bm = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.wear_next_lecture);
+        notificationBuilder.extend(new NotificationCompat.WearableExtender().setBackground(bm));
         return notificationBuilder.build();
     }
 

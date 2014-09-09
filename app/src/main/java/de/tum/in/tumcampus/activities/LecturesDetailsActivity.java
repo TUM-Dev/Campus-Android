@@ -1,8 +1,5 @@
 package de.tum.in.tumcampus.activities;
 
-import org.simpleframework.xml.Serializer;
-import org.simpleframework.xml.core.Persister;
-
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,6 +8,10 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
+
+import org.simpleframework.xml.Serializer;
+import org.simpleframework.xml.core.Persister;
+
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.generic.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampus.auxiliary.Const;
@@ -34,8 +35,7 @@ import de.tum.in.tumcampus.models.LectureDetailsRowSet;
  * @author Daniel G. Mayr
  */
 @SuppressLint("DefaultLocale")
-public class LecturesDetailsActivity extends ActivityForAccessingTumOnline
-		implements OnClickListener {
+public class LecturesDetailsActivity extends ActivityForAccessingTumOnline implements OnClickListener {
 
 	/** UI elements */
 	private Button btnLDetailsTermine;

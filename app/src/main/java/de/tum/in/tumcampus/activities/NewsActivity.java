@@ -1,11 +1,9 @@
 package de.tum.in.tumcampus.activities;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -19,16 +17,12 @@ import android.widget.Toast;
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.generic.ActivityForDownloadingExternal;
 import de.tum.in.tumcampus.auxiliary.Const;
-import de.tum.in.tumcampus.auxiliary.ImplicitCounter;
 import de.tum.in.tumcampus.models.managers.NewsManager;
 
 /**
  * Activity to show News (message, image, date)
  */
-public class NewsActivity extends ActivityForDownloadingExternal implements
-		OnItemClickListener, ViewBinder {
-
-	SharedPreferences sharedPrefs;
+public class NewsActivity extends ActivityForDownloadingExternal implements OnItemClickListener, ViewBinder {
 
 	public NewsActivity() {
 		super(Const.NEWS, R.layout.activity_news);
@@ -37,13 +31,7 @@ public class NewsActivity extends ActivityForDownloadingExternal implements
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		super.requestDownload(false);
-
-		//Counting the number of times that the user used this activity for intelligent reordering 
-		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-		if (sharedPrefs.getBoolean("implicitly_id", true)){
-								ImplicitCounter.Counter("tum_news_id", getApplicationContext());
-		}
+		requestDownload(false);
 	}
 
 	@SuppressWarnings("deprecation")
@@ -79,7 +67,7 @@ public class NewsActivity extends ActivityForDownloadingExternal implements
 		startManagingCursor(cursor);
 		if (cursor.getCount() > 0) {
 			SimpleCursorAdapter adapter = new SimpleCursorAdapter(this,
-					R.layout.news_card_item, cursor,
+					R.layout.card_news_item, cursor,
 					cursor.getColumnNames(), new int[] { R.id.news_img,
 							R.id.news_title, R.id.news_src_date, R.id.news_src_title, R.id.news_src_icon });
 
@@ -93,7 +81,7 @@ public class NewsActivity extends ActivityForDownloadingExternal implements
 			// Resets new items counter
 			NewsManager.lastInserted = 0;
 		} else {
-			super.showErrorLayout();
+			showErrorLayout();
 		}
 	}
 

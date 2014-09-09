@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.v4.app.NotificationCompat;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +24,7 @@ public class TuitionFeesCard extends Card {
     private Tuition mTuition;
 
     public TuitionFeesCard(Context context) {
-        super(context, "card_tuition_fee_setting");
+        super(context, "card_tuition_fee");
     }
 
     @Override
@@ -59,6 +61,12 @@ public class TuitionFeesCard extends Card {
     public boolean shouldShow(SharedPreferences prefs) { //TODO: Rethink
         String prevFrist = prefs.getString(LAST_FEE_FRIST, "");
         String prevSoll = prefs.getString(LAST_FEE_SOLL, mTuition.getSoll());
+
+        // If app gets started for the first time and fee is already paid don't annoy user
+        // by showing him that he/she has been re-registered successfully
+        if(prevFrist.isEmpty() && mTuition.getSoll().equals("0"))
+            return false;
+
         return prevFrist.compareTo(mTuition.getFrist()) < 0 || prevSoll.compareTo(mTuition.getSoll()) > 0;
     }
 
@@ -69,6 +77,8 @@ public class TuitionFeesCard extends Card {
         } else {
             notificationBuilder.setContentText(mTuition.getSoll() + "€\n" + String.format(mContext.getString(R.string.reregister_todo), mTuition.getFrist()));
         }
+        Bitmap bm = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.wear_tuition_fee);
+        notificationBuilder.extend(new NotificationCompat.WearableExtender().setBackground(bm));
         return notificationBuilder.build();
     }
 

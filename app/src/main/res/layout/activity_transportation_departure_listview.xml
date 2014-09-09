@@ -2,14 +2,14 @@
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="30dp"
+    android:layout_height="40dp"
     android:orientation="horizontal">
 
     <LinearLayout
         android:id="@+id/line_symbol_ll"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp">
+        android:layout_margin="10dp">
 
         <TextView
             android:id="@+id/line_symbol"
@@ -26,12 +26,13 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentTop="true"
-        android:gravity="center_vertical"
         android:layout_margin="4dp"
         android:layout_toEndOf="@+id/line_symbol_ll"
         android:layout_toLeftOf="@+id/line_time"
         android:layout_toRightOf="@+id/line_symbol_ll"
-        android:layout_toStartOf="@+id/line_time" />
+        android:layout_toStartOf="@+id/line_time"
+        android:gravity="center_vertical"
+        android:textSize="16sp" />
 
     <TextView
         android:id="@+id/line_time"
@@ -42,6 +43,8 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:gravity="right|center_vertical"
+        android:paddingRight="10dp"
         android:minWidth="50dp"
-        android:textColor="@color/sections_green" />
+        android:textColor="@color/sections_green"
+        android:textSize="16sp" />
 </RelativeLayout>

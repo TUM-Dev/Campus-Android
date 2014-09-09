@@ -1,19 +1,20 @@
 package de.tum.in.tumcampus.activities;
 
-import org.simpleframework.xml.Serializer;
-import org.simpleframework.xml.core.Persister;
-
 import android.annotation.SuppressLint;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+
+import org.simpleframework.xml.Serializer;
+import org.simpleframework.xml.core.Persister;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.generic.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampus.auxiliary.Const;
-import de.tum.in.tumcampus.auxiliary.ImplicitCounter;
 import de.tum.in.tumcampus.models.TuitionList;
 import de.tum.in.tumcampus.tumonline.TUMOnlineRequestFetchListener;
 
@@ -41,13 +42,7 @@ public class TuitionFeesActivity extends ActivityForAccessingTumOnline
 		deadlineTextView = (TextView) findViewById(R.id.frist);
 		semesterTextView = (TextView) findViewById(R.id.semester);
 
-		super.requestFetch();
-
-		//Counting the number of times that the user used this activity for intelligent reordering 
-        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-		if (sharedPrefs.getBoolean("implicitly_id", true)){
-				ImplicitCounter.Counter("tuition_fees_id", getApplicationContext());
-		}
+		requestFetch();
 	}
 
 	/**
@@ -68,12 +63,11 @@ public class TuitionFeesActivity extends ActivityForAccessingTumOnline
 		try {
 			tuitionList = serializer.read(TuitionList.class, rawResp);
 
-			amountTextView.setText(tuitionList.getTuitions().get(0).getSoll()
-					+ "€");
-			deadlineTextView.setText(tuitionList.getTuitions().get(0)
-					.getFrist());
-			semesterTextView.setText(tuitionList.getTuitions().get(0)
-					.getSemesterBez().toUpperCase());
+			amountTextView.setText(tuitionList.getTuitions().get(0).getSoll() + "€");
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+            Date date = format.parse(tuitionList.getTuitions().get(0).getFrist());
+			deadlineTextView.setText(SimpleDateFormat.getDateInstance().format(date));
+			semesterTextView.setText(tuitionList.getTuitions().get(0).getSemesterBez().toUpperCase());
 
 		} catch (Exception e) {
 			Log.d("SIMPLEXML", "wont work: " + e.getMessage());

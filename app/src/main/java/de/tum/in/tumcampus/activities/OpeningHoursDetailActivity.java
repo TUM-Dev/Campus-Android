@@ -7,6 +7,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;
 
 import de.tum.in.tumcampus.R;
+import de.tum.in.tumcampus.auxiliary.ImplicitCounter;
 import de.tum.in.tumcampus.fragments.OpeningHoursDetailFragment;
 
 /**
@@ -22,6 +23,7 @@ public class OpeningHoursDetailActivity extends ActionBarActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+        ImplicitCounter.Counter(this);
 		setContentView(R.layout.activity_openinghoursdetails);
 
 		// savedInstanceState is non-null when there is fragment state

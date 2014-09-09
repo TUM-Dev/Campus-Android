@@ -39,13 +39,9 @@ public class OpeningHoursListActivity extends ActionBarActivity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+        ImplicitCounter.Counter(this);
 		setContentView(R.layout.activity_openinghourslist);
-		
-		//Counting the number of times that the user used this activity for intelligent reordering 
-		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-		if (sharedPrefs.getBoolean("implicitly_id", true)){
-						ImplicitCounter.Counter("opening_hours_id", getApplicationContext());
-		}
+
 		if (findViewById(R.id.item_detail_container) != null) {
 			// The detail container view will be present only in the
 			// large-screen layouts (res/values-large and

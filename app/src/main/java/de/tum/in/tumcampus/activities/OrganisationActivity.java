@@ -1,11 +1,17 @@
 package de.tum.in.tumcampus.activities;
 
-import java.io.File;
-import java.io.IOException;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
+import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -13,40 +19,27 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import android.annotation.SuppressLint;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.util.Log;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ListView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-import android.widget.Toast;
+import java.io.File;
+import java.io.IOException;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.generic.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampus.adapters.OrgItemListAdapter;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.FileUtils;
-import de.tum.in.tumcampus.auxiliary.ImplicitCounter;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.OrgItem;
 import de.tum.in.tumcampus.models.OrgItemList;
 
 /**
  * Activity that shows the first level of organisations at TUM.
- * 
- * @author Thomas Behrens
- * @review Vincenz Doelle, Daniel G. Mayr, Sascha Moecker
  */
 @SuppressLint("DefaultLocale")
-public class OrganisationActivity extends ActivityForAccessingTumOnline
-		implements OnClickListener {
+public class OrganisationActivity extends ActivityForAccessingTumOnline implements OnClickListener {
 
 	/**
 	 * language is "de"->German or "en"->English depending on the system
@@ -65,8 +58,6 @@ public class OrganisationActivity extends ActivityForAccessingTumOnline
 	/** The document is used to access and parse the xml.org file on the SD-card */
 	private Document doc;
 
-	protected RelativeLayout errorLayout;
-
 	/** List of Organisations shown on the Display */
 	private ListView lvOrg;
 
@@ -82,7 +73,6 @@ public class OrganisationActivity extends ActivityForAccessingTumOnline
 	 */
 	private String parentId;
 
-	protected RelativeLayout progressLayout;
 	/** The org.xml File on the SD-card */
 	private File xmlOrgFile;
 
@@ -300,18 +290,13 @@ public class OrganisationActivity extends ActivityForAccessingTumOnline
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		//Counting the number of times that the user used this activity for intelligent reordering 
-		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-		if (sharedPrefs.getBoolean("implicitly_id", true)){
-				ImplicitCounter.Counter("organisations_id", getApplicationContext());
-		}
 
 		// list of organizations
 		lvOrg = (ListView) findViewById(R.id.lstOrganisations);
 
 		// start at the top level
-		this.orgId = TOP_LEVEL_ORG;
-		this.parentId = TOP_LEVEL_ORG;
+		orgId = TOP_LEVEL_ORG;
+		parentId = TOP_LEVEL_ORG;
 		// TODO Check for rightful checking. Check in the whole class.
 		// set language = German if system language is German else set English
 		if (System.getProperty("user.language").compareTo(Const.DE) == 0) {

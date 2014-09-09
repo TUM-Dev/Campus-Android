@@ -25,7 +25,7 @@ import de.tum.in.tumcampus.models.managers.CafeteriaMenuManager;
  */
 @SuppressLint({"SimpleDateFormat", "DefaultLocale"})
 public class CafeteriaDetailsSectionsPagerAdapter extends FragmentStatePagerAdapter {
-    private String mCafeteriaId;
+    private int mCafeteriaId;
     private Cursor cursorCafeteriaDates;
     /**
      * Current Date selected (ISO format)
@@ -37,7 +37,7 @@ public class CafeteriaDetailsSectionsPagerAdapter extends FragmentStatePagerAdap
         super(fm);
     }
 
-    public void setCafeteriaId(Activity mainActivity, String cafeteriaId) {
+    public void setCafeteriaId(Activity mainActivity, int cafeteriaId) {
         Activity activity = mainActivity;
         mCafeteriaId = cafeteriaId;
 
@@ -69,7 +69,7 @@ public class CafeteriaDetailsSectionsPagerAdapter extends FragmentStatePagerAdap
         Fragment fragment = new CafeteriaDetailsSectionFragment();
         Bundle args = new Bundle();
         args.putString(Const.DATE, dates.get(position));
-        args.putString(Const.CAFETERIA_ID, mCafeteriaId);
+        args.putInt(Const.CAFETERIA_ID, mCafeteriaId);
         fragment.setArguments(args);
         return fragment;
     }

@@ -16,7 +16,7 @@ import de.tum.in.tumcampus.tumonline.TUMOnlineRequest;
  * @author Sascha Moecker
  * 
  */
-public class AccessTokenManager implements OnClickListener {
+public class AccessTokenManager {
 	public static final int MIN_LRZ_LENGTH = 7;
 
 	private Context context;
@@ -56,11 +56,6 @@ public class AccessTokenManager implements OnClickListener {
 				strTokenXml.indexOf("</token>"));
 	}
 
-	private String getAccessToken() {
-        return PreferenceManager.getDefaultSharedPreferences(
-                context).getString(Const.ACCESS_TOKEN, "");
-	}
-
 	private String getLrzId() {
 		if (lrzId == null || lrzId.equals("")) {
 			lrzId = Utils.getSetting(context, Const.LRZ_ID);
@@ -68,38 +63,10 @@ public class AccessTokenManager implements OnClickListener {
 		return lrzId;
 	}
 
-	// TODO Implement this
-	public boolean hasRightsForFunction(String function) {
-		return false;
-	}
-
 	public boolean hasValidAccessToken() {
 		String oldAccessToken = PreferenceManager.getDefaultSharedPreferences(
 				context).getString(Const.ACCESS_TOKEN, "");
         return oldAccessToken != null && oldAccessToken.length() > 2;
-	}
-
-	public boolean isAccessTokenConfirmed() {
-		String token = getAccessToken();
-		return isAccessTokenConfirmed(token);
-	}
-
-	// TODO implement this as a asynch task
-	public boolean isAccessTokenConfirmed(String token) {
-		TUMOnlineRequest request = new TUMOnlineRequest("isTokenConfirmed");
-		request.setParameter("pToken", token);
-		String strTokenXml = request.fetch();
-		Log.d("RAWOUTPUT", strTokenXml);
-		return Boolean.parseBoolean(strTokenXml.substring(
-				strTokenXml.indexOf("<confirmed>") + "<confirmed>".length(),
-				strTokenXml.indexOf("</confirmed>")));
-	}
-
-	@Override
-	public void onClick(DialogInterface dialog, int which) {
-		if (which == DialogInterface.BUTTON_POSITIVE) {
-			requestAccessToken(getLrzId());
-		}
 	}
 
 	/**
@@ -123,9 +90,6 @@ public class AccessTokenManager implements OnClickListener {
 
 			// save access token to preferences
 			Utils.setSetting(context, Const.ACCESS_TOKEN, strAccessToken);
-			Toast.makeText(context,
-					context.getString(R.string.access_token_generated),
-					Toast.LENGTH_LONG).show();
 			return true;
 
 		} catch (Exception ex) {
@@ -140,21 +104,22 @@ public class AccessTokenManager implements OnClickListener {
 	}
 
 	public void setupAccessToken() {
-		lrzId = PreferenceManager.getDefaultSharedPreferences(context)
-				.getString(Const.LRZ_ID, "");
+		lrzId = PreferenceManager.getDefaultSharedPreferences(context).getString(Const.LRZ_ID, "");
 		// check if lrz could be valid?
 		if (lrzId.length() == MIN_LRZ_LENGTH) {
 			// is access token already set?
-			String oldAccessToken = PreferenceManager
-					.getDefaultSharedPreferences(context).getString(
-							Const.ACCESS_TOKEN, "");
-			if (oldAccessToken.length() > 2) {
+            if (hasValidAccessToken()) {
 				// show Dialog first
-				AlertDialog.Builder builder = new AlertDialog.Builder(context);
-				builder.setMessage(context.getString(R.string.dialog_new_token))
+				new AlertDialog.Builder(context)
+                        .setMessage(context.getString(R.string.dialog_new_token))
 						.setPositiveButton(context.getString(R.string.yes),
-								this)
-						.setNegativeButton(context.getString(R.string.no), this)
+								new OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        requestAccessToken(getLrzId());
+                                    }
+                                })
+						.setNegativeButton(context.getString(R.string.no), null)
 						.show();
 			} else {
 				requestAccessToken(lrzId);

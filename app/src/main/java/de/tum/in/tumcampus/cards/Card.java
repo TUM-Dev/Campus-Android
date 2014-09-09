@@ -15,16 +15,12 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.util.List;
-
 import de.tum.in.tumcampus.R;
-import de.tum.in.tumcampus.auxiliary.MultiSelectListPreference;
 import de.tum.in.tumcampus.models.managers.CardManager;
 
 public abstract class Card {
     public static final String DISCARD_SETTINGS_START = "discard_settings_start";
     public static final String DISCARD_SETTINGS_PHONE = "discard_settings_phone";
-    private static final String defaultVal = "1\u0001\u0007\u001D\u0007\u00012";
     
     // Context related stuff
     protected Context mContext;
@@ -37,17 +33,17 @@ public abstract class Card {
     protected TextView mDateView;
     
     // Settings for showing this card on startpage or as notification
+    // Default values set for restore card, no internet card, etc.
     private boolean mShowStart = true;
     private boolean mShowWear = false;
-    private boolean mShowPhoneWear = false;
+    private boolean mShowPhone = false;
 
     public Card(Context context, String settings) {
         this(context);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-        List<String> show = MultiSelectListPreference.getFromString(prefs.getString(settings, defaultVal));
-        mShowStart = show.contains("1");
-        mShowWear = show.contains("2");
-        mShowPhoneWear = show.contains("3");
+        mShowStart = prefs.getBoolean(settings+"_start", true);
+        mShowWear = prefs.getBoolean(settings+"_wear", true);
+        mShowPhone = prefs.getBoolean(settings+"_phone", false);
     }
 
     public Card(Context context) {
@@ -125,7 +121,7 @@ public abstract class Card {
         }
 
         // Should be shown on phone or watch?
-        if(mShowPhoneWear || mShowWear) {
+        if(mShowWear || mShowPhone) {
             SharedPreferences prefs = CardManager.getContext().getSharedPreferences(DISCARD_SETTINGS_PHONE, 0);
             if (shouldShow(prefs))
                 notifyUser();
@@ -165,7 +161,7 @@ public abstract class Card {
 
         // Apply trick to hide card on phone if it the notification
         // should only be present on the watch
-        if(mShowWear) {
+        if(mShowWear && !mShowPhone) {
             notificationBuilder.setGroup("GROUP_" + getTyp());
             notificationBuilder.setGroupSummary(false);
         } else {
@@ -211,4 +207,7 @@ public abstract class Card {
         return true;
     }
 
+    public static interface ProvidesCard {
+        public void onRequestCard(Context context) throws Exception;
+    }
 }

@@ -1,13 +1,5 @@
 package de.tum.in.tumcampus.activities;
 
-import java.io.StringReader;
-
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-
-import org.xml.sax.InputSource;
-import org.xml.sax.XMLReader;
-
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,6 +7,15 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import org.xml.sax.InputSource;
+import org.xml.sax.XMLReader;
+
+import java.io.StringReader;
+
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.generic.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampus.adapters.OrgDetailsItemHandler;
@@ -23,9 +24,6 @@ import de.tum.in.tumcampus.models.OrgDetailsItem;
 
 /**
  * Show all details that are available on TUMCampus to any organisation
- * 
- * @author Thomas Behrens
- * @review Vincenz Doelle, Daniel G. Mayr
  */
 @SuppressLint("DefaultLocale")
 public class OrganisationDetailsActivity extends ActivityForAccessingTumOnline {

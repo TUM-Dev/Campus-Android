@@ -346,5 +346,17 @@
     <string name="feedbackSubj">Feedback für TUM Campus App</string>
     <!-- END Translated, please do not change identifiers -->
 
+    <string name="min_search_len">Text muss mindestens %d Zeichen lang sein</string>
+    <string name="default_cafeteria">Standard mensa</string>
+    <string name="default_station">Standard Haltestelle</string>
+    <string name="campus_klinikum_großhadern">Klinikum Großhadern</string>
+    <string name="cafeteria">Mensa</string>
+    <string name="card_cafeteria_summary">Zeigt den Mensa-Speiseplan an</string>
+    <string name="card_mvv_summary">Zeigt die Abfahrtszeiten der öffentlich Verkehrmittel an</string>
+    <string name="card_next_lecture_summary">Zeigt Informationen zur nächsten Vorlesung an</string>
+    <string name="card_tuition_fee_summary">Erinnert dich wenn du die Studiengebühren zahlen musst</string>
+    <string name="card_news_summary">Schlägt ausgewählte News vor</string>
+    <string name="card_chat_summary">Benachrichtigt dich wenn neue Nachrichten verfügbar sind</string>
+    <string name="chat">Chat</string>
 
 </resources>

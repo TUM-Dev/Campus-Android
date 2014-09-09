@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.webkit.WebView;
 import de.tum.in.tumcampus.R;
+import de.tum.in.tumcampus.auxiliary.ImplicitCounter;
 
 /**
  * Activity to show plan details.
@@ -14,13 +15,14 @@ public class PlansDetailsActivity extends ActionBarActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+        ImplicitCounter.Counter(this);
 		setContentView(R.layout.activity_plans_details);
 
         int position = getIntent().getExtras().getInt("Plan");
 
 		WebView browser = (WebView) findViewById(R.id.activity_plans_web_view);
-		// activate zoom controls
-		browser.getSettings().setBuiltInZoomControls(true);
+        // activate zooming
+        browser.getSettings().setBuiltInZoomControls(true);
 		// activate double tab to zoom
 		browser.getSettings().setUseWideViewPort(true);
 		// reset zoom

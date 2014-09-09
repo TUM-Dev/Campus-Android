@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-    
     <string-array name="roles">
         <item>@string/student</item>
         <item>@string/employee</item>
@@ -12,18 +11,55 @@
         <item>2</item>
     </string-array>
 
-    <string-array name="card_show">
-        <item>@string/startpage</item>
-        <item>@string/wear</item>
-        <item>@string/phone_and_wear</item>
+    <!-- Default cafeteria and mvv selection -->
+    <!-- Campus Garching -->
+    <string-array name="cafeterias_G" tools:ignore="MissingTranslation">
+        <item>Mensa Garching</item>
+        <item>StuCafé Boltzmannstraße</item>
+        <item>StuCafé Mensa Garching</item>
     </string-array>
-    <string-array name="card_show_values" tools:ignore="MissingTranslation">
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
+    <string-array name="cafeterias_G_val" tools:ignore="MissingTranslation">
+        <item>422</item>
+        <item>527</item>
+        <item>524</item>
     </string-array>
-    <string-array name="card_show_start_wear" tools:ignore="MissingTranslation">
-        <item>1</item>
-        <item>2</item>
+    <string-array name="stations_G" tools:ignore="MissingTranslation">
+        <item>Garching-Forschungszentrum</item>
+        <item>Garching, Techn. Universität</item>
+    </string-array>
+
+    <!-- Campus Stammgelände -->
+    <string-array name="stations_C" tools:ignore="MissingTranslation">
+        <item>Theresienstraße</item>
+        <item>Technische Universität</item>
+        <item>Pinakotheken</item>
+    </string-array>
+
+    <!-- Campus Klinikum Großhadern -->
+    <string-array name="cafeterias_K" tools:ignore="MissingTranslation">
+        <item>Mensa Martinsried</item>
+        <item>Mensaria Großhadern</item>
+    </string-array>
+    <string-array name="cafeterias_K_val" tools:ignore="MissingTranslation">
+        <item>412</item>
+        <item>414</item>
+    </string-array>
+    <string-array name="stations_K" tools:ignore="MissingTranslation">
+        <item>Klinikum Großhadern</item>
+        <item>Waldhüterstraße</item>
+        <item>Martinsried, Großhader. Str.</item>
+    </string-array>
+
+    <!-- Campus Weihenstephan -->
+    <string-array name="cafeterias_W" tools:ignore="MissingTranslation">
+        <item>Mensa Weihenstephan</item>
+        <item>StuCafé Akademie</item>
+        <item>StuCafé Mensa-WST</item>
+    </string-array>
+    <string-array name="cafeterias_W_val" tools:ignore="MissingTranslation">
+        <item>423</item>
+        <item>526</item>
+        <item>525</item>
     </string-array>
 </resources>
+

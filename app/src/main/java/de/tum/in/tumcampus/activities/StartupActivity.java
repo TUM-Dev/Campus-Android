@@ -5,8 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.os.StrictMode;
 import android.preference.PreferenceManager;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 
@@ -16,6 +16,7 @@ import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.wizzard.WizNavStartActivity;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.DemoModeStartActivity;
+import de.tum.in.tumcampus.auxiliary.ImplicitCounter;
 import de.tum.in.tumcampus.services.DownloadService;
 import de.tum.in.tumcampus.services.StartSyncReceiver;
 
@@ -31,6 +32,7 @@ public class StartupActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ImplicitCounter.Counter(this);
 
         //Show a loading screen during boot
         this.setContentView(R.layout.activity_startup);
@@ -39,12 +41,6 @@ public class StartupActivity extends ActionBarActivity {
         if (TRACK_ERRORS_WITH_BUG_SENSE) {
             Log.d(this.getClass().getSimpleName(), "BugSense initialized");
             BugSenseHandler.initAndStartSession(StartupActivity.this, "19d18764");
-        }
-
-        // Workaround for new API version. There was a security update which disallows applications to execute HTTP request in the GUI main thread.
-        if (android.os.Build.VERSION.SDK_INT > 9) {
-            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-            StrictMode.setThreadPolicy(policy);
         }
 
         // Also First run setup of id and token
@@ -58,7 +54,7 @@ public class StartupActivity extends ActionBarActivity {
 
         // Register receiver for background service
         IntentFilter filter = new IntentFilter(DownloadService.BROADCAST_NAME);
-        registerReceiver(receiver,filter);
+        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, filter);
 
         // Start background service and ensure cards are set
         Intent i = new Intent(StartupActivity.this, StartSyncReceiver.class);
@@ -72,7 +68,7 @@ public class StartupActivity extends ActionBarActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        unregisterReceiver(receiver);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
     }
 
     private final BroadcastReceiver receiver = new BroadcastReceiver() {

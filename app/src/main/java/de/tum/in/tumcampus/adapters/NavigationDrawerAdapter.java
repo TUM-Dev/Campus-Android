@@ -26,12 +26,12 @@ import de.tum.in.tumcampus.activities.TransportationActivity;
 import de.tum.in.tumcampus.activities.TuitionFeesActivity;
 import de.tum.in.tumcampus.auxiliary.AccessTokenManager;
 
-public class SideNavigationAdapter extends BaseAdapter {
+public class NavigationDrawerAdapter extends BaseAdapter {
     private LayoutInflater mInflater;
     private Context mContext;
     private final ArrayList<SideNavigationItem> mVisibleMenuItems;
 
-    public SideNavigationAdapter(Context context) {
+    public NavigationDrawerAdapter(Context context) {
         mInflater = LayoutInflater.from(context);
         mContext = context;
         boolean mHasTUMOAccess = new AccessTokenManager(context).hasValidAccessToken();

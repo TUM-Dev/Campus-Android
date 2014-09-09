@@ -5,15 +5,16 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.widget.CheckBox;
+
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.StartupActivity;
-import de.tum.in.tumcampus.activities.generic.WizzardActivity;
 import de.tum.in.tumcampus.auxiliary.AccessTokenManager;
 import de.tum.in.tumcampus.auxiliary.Const;
 
-public class WizNavExtrasActivity extends WizzardActivity {
+public class WizNavExtrasActivity extends ActionBarActivity {
 
 	CheckBox checkBackgroundMode;
 
@@ -39,12 +40,7 @@ public class WizNavExtrasActivity extends WizzardActivity {
 		overridePendingTransition(R.anim.fadein, R.anim.fadeout);
 		setContentView(R.layout.activity_wiznav_extras);
 
-		preferences = PreferenceManager
-				.getDefaultSharedPreferences(getApplicationContext());
-
-		setIntentForNextActivity(null);
-		setIntentForPreviousActivity(new Intent(this,
-				WizNavCheckTokenActivity.class));
+		preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
 		checkSilentMode = (CheckBox) findViewById(R.id.chk_silent_mode);
 		checkBackgroundMode = (CheckBox) findViewById(R.id.chk_background_mode);
@@ -59,4 +55,10 @@ public class WizNavExtrasActivity extends WizzardActivity {
         }
 		checkBackgroundMode.setChecked(preferences.getBoolean(Const.BACKGROUND_MODE, true));
 	}
+
+    @Override
+    public void onBackPressed() {
+        finish();
+        startActivity(new Intent(this, WizNavCheckTokenActivity.class));
+    }
 }

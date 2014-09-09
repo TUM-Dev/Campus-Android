@@ -1,146 +1,156 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:id="@+id/topLayout"
+    <include
+        layout="@layout/layout_progress"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:visibility="gone" />
+
+    <include
+        layout="@layout/layout_error"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:visibility="gone" />
+
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/pager_title_strip"
-            style="@style/SectionHeadline"
-            android:text="@string/startup_wizzard_uppercase" />
-
-        <include
-            layout="@layout/layout_progress"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="gone" />
-
-        <include
-            layout="@layout/layout_error"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:visibility="gone" />
-
-        <include
-            layout="@layout/layout_failed_token"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:visibility="gone" />
-
-        <include
-            layout="@layout/layout_no_token"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:visibility="gone" />
-    </LinearLayout>
-
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/divider"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/topLayout">
+        android:layout_height="match_parent">
 
         <LinearLayout
-            android:id="@+id/tableLayout1"
+            android:id="@+id/topLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="@dimen/padding_default">
+            android:orientation="vertical">
 
             <TextView
-                style="?android:attr/listSeparatorTextViewStyle"
-                android:layout_height="wrap_content"
-                android:text="@string/step_2"
-                android:textColor="@color/text_light_gray" />
+                android:id="@+id/pager_title_strip"
+                style="@style/SectionHeadline"
+                android:text="@string/startup_wizzard_uppercase" />
 
-            <TextView
-                android:id="@+id/tvSucc"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/padding_default"
-                android:text="@string/need_to_enable" />
+            <include
+                layout="@layout/layout_error"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:visibility="gone" />
 
-            <TextView
-                android:id="@+id/tvBrowse"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/padding_default"
-                android:text="link" />
+            <include
+                layout="@layout/layout_failed_token"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:visibility="gone" />
 
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:paddingBottom="@dimen/padding_default"
-                android:paddingTop="@dimen/padding_default"
-                android:src="@drawable/tokenmanagement" />
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:paddingBottom="@dimen/padding_default"
-                android:paddingTop="@dimen/padding_default"
-                android:src="@drawable/wizz_activate_token" />
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:paddingBottom="@dimen/padding_default"
-                android:paddingTop="@dimen/padding_default"
-                android:src="@drawable/wizz_activate_rights" />
-
+            <include
+                layout="@layout/layout_no_token"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:visibility="gone" />
         </LinearLayout>
-    </ScrollView>
 
-    <View
-        android:id="@+id/divider"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_above="@+id/buttonBar"
-        android:background="?android:attr/listDivider" />
-
-    <LinearLayout
-        android:id="@+id/buttonBar"
-        style="@style/ButtonBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/prev_button"
-            style="@style/ButtonBarButton"
-            android:layout_width="0dp"
+        <ScrollView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/selectable_item_background"
-            android:onClick="onClickSkip"
-            android:text="@string/button_skip" />
+            android:layout_above="@+id/divider"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/topLayout">
+
+            <LinearLayout
+                android:id="@+id/tableLayout1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="@dimen/padding_default">
+
+                <TextView
+                    style="?android:attr/listSeparatorTextViewStyle"
+                    android:layout_height="wrap_content"
+                    android:text="@string/step_2"
+                    android:textColor="@color/text_light_gray" />
+
+                <TextView
+                    android:id="@+id/tvSucc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/padding_default"
+                    android:text="@string/need_to_enable" />
+
+                <TextView
+                    android:id="@+id/tvBrowse"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/padding_default" />
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:paddingBottom="@dimen/padding_default"
+                    android:paddingTop="@dimen/padding_default"
+                    android:src="@drawable/tokenmanagement" />
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:paddingBottom="@dimen/padding_default"
+                    android:paddingTop="@dimen/padding_default"
+                    android:src="@drawable/wizz_activate_token" />
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:paddingBottom="@dimen/padding_default"
+                    android:paddingTop="@dimen/padding_default"
+                    android:src="@drawable/wizz_activate_rights" />
+
+            </LinearLayout>
+        </ScrollView>
 
         <View
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_above="@+id/buttonBar"
             android:background="?android:attr/listDivider" />
 
-        <Button
-            android:id="@+id/next_button"
-            style="@style/ButtonBarButton"
-            android:layout_width="0dp"
+        <LinearLayout
+            android:id="@+id/buttonBar"
+            style="@style/ButtonBar"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/selectable_item_background"
-            android:onClick="onClickNext"
-            android:text="@string/button_next" />
-    </LinearLayout>
-</RelativeLayout>
+            android:layout_alignParentBottom="true"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/prev_button"
+                style="@style/ButtonBarButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/selectable_item_background"
+                android:onClick="onClickSkip"
+                android:text="@string/button_skip" />
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="?android:attr/listDivider" />
+
+            <Button
+                android:id="@+id/next_button"
+                style="@style/ButtonBarButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/selectable_item_background"
+                android:onClick="onClickNext"
+                android:text="@string/button_next" />
+        </LinearLayout>
+    </RelativeLayout>
+</LinearLayout>

@@ -18,7 +18,8 @@ public class WizNavCheckTokenActivity extends ActivityForAccessingTumOnline {
 
 	@Override
 	public void onBackPressed() {
-		startPreviousActivity();
+        finish();
+        startActivity(new Intent(this, WizNavStartActivity.class));
 	}
 
 	public void onClickNext(View view) {
@@ -58,13 +59,6 @@ public class WizNavCheckTokenActivity extends ActivityForAccessingTumOnline {
 
 	private void startNextActivity() {
 		finish();
-		Intent intent = new Intent(this, WizNavExtrasActivity.class);
-		startActivity(intent);
-	}
-
-	private void startPreviousActivity() {
-		finish();
-		Intent intent = new Intent(this, WizNavStartActivity.class);
-		startActivity(intent);
+		startActivity(new Intent(this, WizNavExtrasActivity.class));
 	}
 }

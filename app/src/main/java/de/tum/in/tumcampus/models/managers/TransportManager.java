@@ -4,31 +4,24 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.GradientDrawable;
-import android.graphics.drawable.ShapeDrawable;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.net.URLEncoder;
-
-import de.tum.in.tumcampus.R;
-import de.tum.in.tumcampus.auxiliary.MVVSymbolView;
-import de.tum.in.tumcampus.cards.MVVCard;
-import de.tum.in.tumcampus.data.LocationManager;
 import java.util.NoSuchElementException;
 
 import de.tum.in.tumcampus.auxiliary.Const;
+import de.tum.in.tumcampus.auxiliary.MVVSymbolView;
 import de.tum.in.tumcampus.auxiliary.Utils;
-import de.tum.in.tumcampus.cards.ProvidesCard;
+import de.tum.in.tumcampus.cards.Card;
+import de.tum.in.tumcampus.cards.MVVCard;
 
 /**
  * Transport Manager, handles database stuff, internet connections
  */
-public class TransportManager implements ProvidesCard {
+public class TransportManager implements Card.ProvidesCard {
 
     /**
      * Database connection
@@ -193,16 +186,17 @@ public class TransportManager implements ProvidesCard {
 
     @Override
     public void onRequestCard(Context context) throws Exception {
-        // Get current campus
-        int campus = 0;//new LocationManager(context).getCurrentCampus();
-        if(campus==-1 || !Utils.isConnected(context))
+        if(!Utils.isConnected(context))
             return;
 
-        // Get station for this campus
-        final String location = LocationManager.campusStation[campus];
-        Cursor cur = getDeparturesFromExternal(location);
+        // Get station for current campus
+        final String station = new LocationManager(context).getStation();
+        if(station==null)
+            return;
+
+        Cursor cur = getDeparturesFromExternal(station);
         MVVCard card = new MVVCard(context);
-        card.setStation(location);
+        card.setStation(station);
         card.setDepartures(cur);
         card.setTime(System.currentTimeMillis());
         card.apply();

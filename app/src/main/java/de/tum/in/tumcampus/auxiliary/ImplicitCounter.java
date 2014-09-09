@@ -2,36 +2,21 @@ package de.tum.in.tumcampus.auxiliary;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
+import android.support.v7.app.ActionBarActivity;
 
 /**
- * Counts the usage of specific app functions
- *
- * @author Sascha Moecker
+ * Counts the usage of a specific activity
  */
 public class ImplicitCounter {
 
-    public static boolean Counter(String key, Context context) {
-        boolean myboolean = true;
-        //Counting number of the times that the user used this activity.
-        SharedPreferences sp = context.getSharedPreferences("MyPrefrence", Context.MODE_PRIVATE);
-        int myvalue = sp.getInt(key, 0);
-        myvalue = myvalue + 1;
-        SharedPreferences.Editor editor = sp.edit();
-        editor.putInt(key, myvalue);
-        editor.commit();
-        ////
+    /**
+     * Counting number of the times that the user used this activity.
+     * */
+    public static void Counter(ActionBarActivity context) {
+        SharedPreferences sp = context.getSharedPreferences("usage_counter", Context.MODE_PRIVATE);
+        final String identifier = context.getClass().getSimpleName();
 
-        int myIntValue = sp.getInt(key, 0);
-        if (myIntValue == 5) {
-            SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
-            SharedPreferences.Editor editor1 = sharedPrefs.edit();
-            editor1.putBoolean(key, true);
-            editor1.commit();
-            editor.putInt(key, 0);
-            editor.commit();
-
-        }
-        return myboolean;
+        final int currentUsages = sp.getInt(identifier, 0);
+        sp.edit().putInt(identifier, currentUsages+1).apply();
     }
 }

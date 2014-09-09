@@ -17,6 +17,6 @@
         android:layout_weight="1"
         android:listSelector="@android:color/transparent"
         android:padding="@dimen/padding_default"
-        android:scrollbars="vertical" />
+        android:scrollbars="none" />
 
 </LinearLayout>

@@ -153,24 +153,6 @@
                 android:value="de.tum.in.tumcampus.activities.StartActivity" />
         </activity>
         <activity
-            android:name="de.tum.in.tumcampus.activities.GalleryActivity"
-            android:configChanges="orientation|screenSize"
-            android:label="@string/gallery"
-            android:parentActivityName="de.tum.in.tumcampus.activities.StartActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.tum.in.tumcampus.activities.StartActivity" />
-        </activity>
-        <activity
-            android:name="de.tum.in.tumcampus.activities.GalleryDetailsActivity"
-            android:configChanges="orientation|screenSize"
-            android:label="@string/gallery"
-            android:parentActivityName="de.tum.in.tumcampus.activities.GalleryActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.tum.in.tumcampus.activities.GalleryActivity" />
-        </activity>
-        <activity
             android:name="de.tum.in.tumcampus.activities.CurriculaActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/study_plans"
@@ -345,24 +327,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="de.tum.in.tumcampus.activities.EventsActivity"
-            android:configChanges="orientation|screenSize"
-            android:label="@string/events"
-            android:parentActivityName="de.tum.in.tumcampus.activities.StartActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.tum.in.tumcampus.activities.StartActivity" />
-        </activity>
-        <activity
-            android:name="de.tum.in.tumcampus.activities.EventsDetailsActivity"
-            android:configChanges="orientation|screenSize"
-            android:label="@string/event_details"
-            android:parentActivityName="de.tum.in.tumcampus.activities.EventsActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.tum.in.tumcampus.activities.EventsActivity" />
-        </activity>
-        <activity
             android:name="de.tum.in.tumcampus.activities.OrganisationActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/organisations"
@@ -396,15 +360,6 @@
             android:name="de.tum.in.tumcampus.activities.CalendarActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/schedule"
-            android:parentActivityName="de.tum.in.tumcampus.activities.StartActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.tum.in.tumcampus.activities.StartActivity" />
-        </activity>
-        <activity
-            android:name="de.tum.in.tumcampus.activities.ImportantNewsActivity"
-            android:configChanges="orientation|screenSize"
-            android:label="@string/info_title_str"
             android:parentActivityName="de.tum.in.tumcampus.activities.StartActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

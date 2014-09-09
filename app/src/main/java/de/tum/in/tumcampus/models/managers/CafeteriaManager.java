@@ -4,10 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.location.Address;
-import android.location.Geocoder;
-import android.location.Location;
-import android.preference.PreferenceManager;
 import android.text.format.DateUtils;
 
 import org.json.JSONArray;
@@ -19,20 +15,18 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.cards.CafeteriaMenuCard;
-import de.tum.in.tumcampus.cards.ProvidesCard;
-import de.tum.in.tumcampus.data.LocationManager;
+import de.tum.in.tumcampus.cards.Card;
 import de.tum.in.tumcampus.models.Cafeteria;
 import de.tum.in.tumcampus.models.CafeteriaMenu;
 
 /**
  * Cafeteria Manager, handles database stuff, external imports
  */
-public class CafeteriaManager implements ProvidesCard {
+public class CafeteriaManager implements Card.ProvidesCard {
     public static int TIME_TO_SYNC = 604800; // 1 week
     private final Context mContext;
 
@@ -53,7 +47,14 @@ public class CafeteriaManager implements ProvidesCard {
 
 		return new Cafeteria(json.getInt(Const.JSON_ID),
 				json.getString(Const.JSON_NAME),
-				json.getString(Const.JSON_ANSCHRIFT));
+				json.getString(Const.JSON_ANSCHRIFT),
+                48.267510,
+                11.671278);
+		/*return new Cafeteria(json.getInt(Const.JSON_ID),
+				json.getString(Const.JSON_NAME),
+				json.getString(Const.JSON_ANSCHRIFT),
+                json.getDouble(Const.JSON_LATITUDE),
+                json.getDouble(Const.JSON_LONGITUDE));*/
 	}
 
 	/**
@@ -101,24 +102,14 @@ public class CafeteriaManager implements ProvidesCard {
 
 		String url = "http://lu32kap.typo3.lrz.de/mensaapp/exportDB.php";
 
-		JSONArray jsonArray = Utils.downloadJson(url).getJSONArray(
-				Const.JSON_MENSA_MENSEN);
+		JSONArray jsonArray = Utils.downloadJson(url).getJSONArray(Const.JSON_MENSA_MENSEN);
 		removeCache();
-
-
-        Geocoder geo = new Geocoder(mContext);
 
 		// write cafeterias into database, transaction = speedup
 		db.beginTransaction();
 		try {
 			for (int i = 0; i < jsonArray.length(); i++) {
-                Cafeteria mensa = getFromJson(jsonArray.getJSONObject(i));
-                List<Address> list = geo.getFromLocationName(mensa.address, 1);
-                if(list.size()==1) {
-                    mensa.latitude = list.get(0).getLatitude();
-                    mensa.longitude = list.get(0).getLongitude();
-                }
-				replaceIntoDb(mensa);
+				replaceIntoDb(getFromJson(jsonArray.getJSONObject(i)));
 			}
 			SyncManager.replaceIntoDb(db, this);
 			db.setTransactionSuccessful();
@@ -128,26 +119,15 @@ public class CafeteriaManager implements ProvidesCard {
 	}
 
 	/**
-	 * Returns all cafeterias, filterable by substring of name/address
+	 * Returns all cafeterias
 	 * 
 	 * <pre>
-	 * @param filter Filter name/address by substring ("" = no filter)
-	 * @return Database cursor (name, address, _id)
+	 * @return Database cursor (id,name,address,latitude,longitude)
 	 * </pre>
 	 */
-	public Cursor getAllFromDb(String filter) {
-		return db
-				.rawQuery(
-						"SELECT name, address, id as _id FROM cafeterias WHERE name LIKE ? OR address LIKE ? "
-								+ "ORDER BY address like '%Garching%' DESC, name",
-						new String[] { filter, filter });
+	public Cursor getAllFromDb() {
+        return db.query("cafeterias", null, null, null, null, null, null);
 	}
-
-    public Cursor getAllLocationsFromDb() {
-        return db
-                .rawQuery(
-                        "SELECT id, latitude, longitude FROM cafeterias", null);
-    }
 
 	/**
 	 * Removes all cache items
@@ -183,27 +163,22 @@ public class CafeteriaManager implements ProvidesCard {
     public void onRequestCard(Context context) throws ParseException {
         CafeteriaMenuCard card = new CafeteriaMenuCard(context);
         CafeteriaMenuManager cmm = new CafeteriaMenuManager(context);
-        de.tum.in.tumcampus.data.LocationManager locationManager = new LocationManager(context);
-        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+        LocationManager locationManager = new LocationManager(context);
 
         // Get all available cafeterias from database
-        Cursor cursor = getAllFromDb("% %");
-        String cafeteriaId="", cafeteriaName = "";
+        Cursor cursor = getAllFromDb();
+        String cafeteriaName = "";
 
         // Choose which mensa should be shown
-        Location loc = locationManager.getCurrentLocation();
-        if(loc!=null) {
-            cafeteriaId = locationManager.getNextCafeteria(loc, this);
-        }
+        int cafeteriaId = locationManager.getCafeteria();
+        if(cafeteriaId==-1)
+            return;
+
         if (cursor.moveToFirst()) {
             do {
-                final String key = cursor.getString(2);
-                if (sharedPrefs.getBoolean("mensa_" + key, true) && cafeteriaId==null) {
-                    cafeteriaId = key;
-                    cafeteriaName = cursor.getString(0);
-                    break;
-                } else if(cafeteriaId!=null && key.equals(cafeteriaId)) {
-                    cafeteriaName = cursor.getString(0);
+                final int key = cursor.getInt(0);
+                if (key == cafeteriaId) {
+                    cafeteriaName = cursor.getString(1);
                     break;
                 }
             } while (cursor.moveToNext());
@@ -234,7 +209,7 @@ public class CafeteriaManager implements ProvidesCard {
             do {
                 int typeNr = 0;
                 CafeteriaMenu menu = new CafeteriaMenu(Integer.parseInt(cursorCafeteriaMenu.getString(2)),
-                        Integer.parseInt(cafeteriaId), date,
+                        cafeteriaId, date,
                         cursorCafeteriaMenu.getString(3), cursorCafeteriaMenu.getString(0), typeNr, cursorCafeteriaMenu.getString(1));
 
                 menus.add(menu);

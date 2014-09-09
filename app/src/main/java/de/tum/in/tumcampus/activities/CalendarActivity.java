@@ -26,7 +26,6 @@ import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.generic.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampus.adapters.CalendarSectionsPagerAdapter;
 import de.tum.in.tumcampus.auxiliary.Const;
-import de.tum.in.tumcampus.auxiliary.Dialogs;
 import de.tum.in.tumcampus.auxiliary.ImplicitCounter;
 import de.tum.in.tumcampus.models.managers.CalendarManager;
 
@@ -73,7 +72,6 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements O
 		Date firstDate = this.calendar.getTime();
 
 		long days = (now.getTime() - firstDate.getTime()) / (1000 * 60 * 60 * 24);
-		Log.d("Days", String.valueOf(days));
 
 		this.mViewPager.setCurrentItem((int) days);
 	}
@@ -173,10 +171,6 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements O
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-		if (sharedPrefs.getBoolean("implicitly_id", true)) {
-			ImplicitCounter.Counter("calender_id", this.getApplicationContext());
-		}
 
 		this.mViewPager = (ViewPager) this.findViewById(R.id.pager);
 
@@ -201,7 +195,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements O
 		super.onCreateOptionsMenu(menu);
 
 		// Inflate the menu; this adds items to the action bar if it is present.
-		this.getMenuInflater().inflate(R.menu.menu_activity_calendar, menu);
+		getMenuInflater().inflate(R.menu.menu_activity_calendar, menu);
 		return true;
 	}
 
@@ -244,50 +238,45 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements O
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.action_export_calendar:
-			// the Calendar export is not supported for API < 11
-			if (android.os.Build.VERSION.SDK_INT <= 10) {
-				Dialogs.showAndroidVersionTooLowAlert(this);
-				return true;
-			}
-			this.detachSectionPagerAdapter();
-			this.exportCalendarToGoogle();
+			detachSectionPagerAdapter();
+			exportCalendarToGoogle();
 
+            // Enable automatic calendar synchronisation
             SharedPreferences prefs = getSharedPreferences(Const.INTERNAL_PREFS, 0);
             prefs.edit().putBoolean(Const.SYNC_CALENDAR, true).apply();
             supportInvalidateOptionsMenu();
             return true;
 		case R.id.action_delete_calendar:
-			// deleting calendars is not supported for API < 11
-			if (android.os.Build.VERSION.SDK_INT <= 10) {
-				Dialogs.showAndroidVersionTooLowAlert(this);
-				return true;
-			}
-			this.deleteCalendarFromGoogle();
+			deleteCalendarFromGoogle();
             return true;
 		default:
-			this.detachSectionPagerAdapter();
-			this.isFetched = false;
+			detachSectionPagerAdapter();
+			isFetched = false;
 			return super.onOptionsItemSelected(item);
 		}
 	}
 
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
-		this.menuItemExportGoogle = menu.findItem(R.id.action_export_calendar);
-		this.menuItemDeleteCalendar = menu.findItem(R.id.action_delete_calendar);
-		this.setMenuEnabled(this.isFetched);
+        // the Calendar export is not supported for API < 11
+        if (android.os.Build.VERSION.SDK_INT < 11) {
+            menuItemExportGoogle.setVisible(false);
+            menuItemDeleteCalendar.setVisible(false);
+        } else {
+            this.menuItemExportGoogle = menu.findItem(R.id.action_export_calendar);
+            this.menuItemDeleteCalendar = menu.findItem(R.id.action_delete_calendar);
+            this.setMenuEnabled(this.isFetched);
 
-        SharedPreferences prefs = getSharedPreferences(Const.INTERNAL_PREFS, 0);
-        boolean bed = prefs.getBoolean(Const.SYNC_CALENDAR, false);
-        menuItemExportGoogle.setVisible(!bed);
-        menuItemDeleteCalendar.setVisible(bed);
+            SharedPreferences prefs = getSharedPreferences(Const.INTERNAL_PREFS, 0);
+            boolean bed = prefs.getBoolean(Const.SYNC_CALENDAR, false);
+            menuItemExportGoogle.setVisible(!bed);
+            menuItemDeleteCalendar.setVisible(bed);
+        }
 		return super.onPrepareOptionsMenu(menu);
 	}
 
 	/**
 	 * Enabled the menu items which are not commonly accessible.
-	 * 
-	 * @param enabled
 	 */
 	public void setMenuEnabled(boolean enabled) {
 		this.menuItemExportGoogle.setEnabled(enabled);

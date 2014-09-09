@@ -14,7 +14,6 @@ public final class Const {
 	public static final String ADDRESS_COLUMN = "address";
 	public static final String BACKGROUND_MODE = "background_mode";
 	public static final String CAFETERIA_ID = "cafeteriasId";
-	public static final String CAFETERIA_NAME = "cafeteriasName";
 	public static final String CAFETERIAS = "cafeterias";
 	public static final String CALENDAR_URI = "calendar_uri";
 	public static final String CALENDER = "kalender";
@@ -131,4 +130,6 @@ public final class Const {
     public static final String SYNC_CALENDAR = "sync_calendar";
     public static final String CAFETERIA_DB_VERSION = "cafeteria_db_version";
     public static final String IMPORT_COMPLETED = "import_completed";
+    public static final String JSON_LATITUDE = "latitude";
+    public static final String JSON_LONGITUDE = "longitude";
 }
