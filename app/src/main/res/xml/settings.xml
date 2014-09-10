@@ -34,6 +34,7 @@
                     android:defaultValue="false"
                     android:dependency="card_cafeteria_wear"
                     android:key="card_cafeteria_phone"
+                    android:summary="@string/phone_summary"
                     android:title="@string/phone" />
             </PreferenceCategory>
             <PreferenceCategory android:title="@string/default_cafeteria">
@@ -82,6 +83,12 @@
                     android:defaultValue="true"
                     android:key="card_mvv_wear"
                     android:title="@string/wear" />
+                <CheckBoxPreference
+                    android:defaultValue="false"
+                    android:dependency="card_mvv_wear"
+                    android:key="card_mvv_phone"
+                    android:summary="@string/phone_summary"
+                    android:title="@string/phone" />
             </PreferenceCategory>
             <PreferenceCategory android:title="@string/default_station">
                 <ListPreference
@@ -124,6 +131,7 @@
                     android:defaultValue="false"
                     android:dependency="card_next_lecture_wear"
                     android:key="card_next_lecture_phone"
+                    android:summary="@string/phone_summary"
                     android:title="@string/phone" />
             </PreferenceCategory>
         </PreferenceScreen>
@@ -146,6 +154,7 @@
                     android:defaultValue="false"
                     android:dependency="card_tuition_fee_wear"
                     android:key="card_tuition_fee_phone"
+                    android:summary="@string/phone_summary"
                     android:title="@string/phone" />
             </PreferenceCategory>
         </PreferenceScreen>
@@ -168,6 +177,7 @@
                     android:defaultValue="false"
                     android:dependency="card_news_wear"
                     android:key="card_news_phone"
+                    android:summary="@string/phone_summary"
                     android:title="@string/phone" />
             </PreferenceCategory>
         </PreferenceScreen>
@@ -190,6 +200,7 @@
                     android:defaultValue="true"
                     android:dependency="card_chat_wear"
                     android:key="card_chat_phone"
+                    android:summary="@string/phone_summary"
                     android:title="@string/phone" />
             </PreferenceCategory>
         </PreferenceScreen>

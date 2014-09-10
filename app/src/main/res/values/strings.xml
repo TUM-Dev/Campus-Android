@@ -339,5 +339,6 @@
     <string name="open_card_settings">Open card settings</string>
     <string name="always_hide_card">Always hide this card typ</string>
     <string name="options">Options</string>
+    <string name="phone_summary">To receive notifications on your phone you have to enable Wearable</string>
 
 </resources>

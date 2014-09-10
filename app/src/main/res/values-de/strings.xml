@@ -313,5 +313,6 @@
     <string name="open_card_settings">Karte anpassen</string>
     <string name="always_hide_card">Diesen Kartentyp immer ausblenden</string>
     <string name="options">Optionen</string>
+    <string name="phone_summary">Um Benachrichtigungen auf dem Telefon zu erhalten muss Wearable aktiviert sein</string>
 
 </resources>
