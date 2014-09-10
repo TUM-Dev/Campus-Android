@@ -1,7 +1,5 @@
 package de.tum.in.tumcampus.adapters;
 
-import java.util.ArrayList;
-
 import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -10,6 +8,9 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import java.util.ArrayList;
+
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.auxiliary.ListMenuEntry;
 
@@ -32,17 +33,16 @@ public class StartListAdapter extends BaseAdapter {
 	private int layoutId;
 	private ArrayList<ListMenuEntry> listMenuEntrySet;
 
-    public StartListAdapter(Activity activity, int layoutId, ArrayList<ListMenuEntry> listMenuEntrySet, boolean usesColorFilter) {
+    public StartListAdapter(Activity activity, int layoutId, ArrayList<ListMenuEntry> listMenuEntrySet) {
 		this.activity = activity;
 		this.layoutId = layoutId;
 		this.listMenuEntrySet = listMenuEntrySet;
-        boolean usesColorFilter1 = usesColorFilter;
 		this.inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
 
 	@Override
 	public int getCount() {
-		return this.listMenuEntrySet.size();
+		return listMenuEntrySet.size();
 	}
 
 	@Override
@@ -72,9 +72,15 @@ public class StartListAdapter extends BaseAdapter {
 			holder = (ViewHolder) vi.getTag();
 		}
 
-		holder.icon.setImageResource(this.listMenuEntrySet.get(position).imageId);
-		holder.title.setText(this.activity.getResources().getText(this.listMenuEntrySet.get(position).titleId));
-		holder.detail.setText(this.activity.getResources().getText(this.listMenuEntrySet.get(position).detailId));
+        ListMenuEntry item = listMenuEntrySet.get(position);
+		holder.icon.setImageResource(item.imageId);
+		holder.title.setText(activity.getResources().getText(item.titleId));
+        if(item.detailId==R.string.empty_string) {
+            holder.detail.setVisibility(View.GONE);
+        } else {
+            holder.detail.setVisibility(View.VISIBLE);
+            holder.detail.setText(activity.getResources().getText(item.detailId));
+        }
 		return vi;
 	}
 }

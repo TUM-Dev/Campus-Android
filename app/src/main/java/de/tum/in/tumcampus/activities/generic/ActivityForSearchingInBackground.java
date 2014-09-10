@@ -62,5 +62,5 @@ public abstract class ActivityForSearchingInBackground<T> extends ActivityForSea
             onSearchFinished(result);
             asyncTask = null;
         }
-    };
+    }
 }

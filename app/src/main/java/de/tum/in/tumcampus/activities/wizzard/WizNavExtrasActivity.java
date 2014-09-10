@@ -28,7 +28,7 @@ public class WizNavExtrasActivity extends ActionBarActivity {
 		editor.putBoolean(Const.SILENCE_SERVICE, checkSilentMode.isChecked());
 		editor.putBoolean(Const.BACKGROUND_MODE, checkBackgroundMode.isChecked());
         editor.putBoolean(Const.HIDE_WIZZARD_ON_STARTUP, true);
-		editor.commit();
+		editor.apply();
 
         finish();
 		startActivity(new Intent(this, StartupActivity.class));

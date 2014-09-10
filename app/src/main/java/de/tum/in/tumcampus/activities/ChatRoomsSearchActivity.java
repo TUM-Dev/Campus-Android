@@ -179,7 +179,7 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
                                     // Save display name in shared preferences
                                     Editor editor = sharedPrefs.edit();
                                     editor.putString(Const.CHAT_ROOM_DISPLAY_NAME, currentChatMember.getDisplayName());
-                                    editor.commit();
+                                    editor.apply();
 
                                     // After the user has entered their display name,
                                     // send a request to the server to create the new member
@@ -317,35 +317,36 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
             KeyPairGenerator keyGen = null;
             try {
                 keyGen = KeyPairGenerator.getInstance("RSA");
+                keyGen.initialize(1024);
+                KeyPair keyPair = keyGen.generateKeyPair();
+
+                String publicKeyString = Base64.encodeToString(keyPair.getPublic().getEncoded(), Base64.DEFAULT);
+                String privateKeyString = Base64.encodeToString(keyPair.getPrivate().getEncoded(), Base64.DEFAULT);
+
+                // Save private key in shared preferences
+                Editor editor = sharedPrefs.edit();
+                editor.putString(Const.PRIVATE_KEY, privateKeyString);
+                editor.apply();
+
+                // Upload public key to the server
+                ChatClient.getInstance().uploadPublicKey(currentChatMember.getUserId(), new ChatPublicKey(publicKeyString), new Callback<ChatPublicKey>() {
+                    @Override
+                    public void success(ChatPublicKey arg0, Response arg1) {
+                        Log.d("Success uploading public key", arg0.toString());
+                        Utils.showLongCenteredToast(ChatRoomsSearchActivity.this, "Public key activation mail sent to " + currentChatMember.getLrzId() + "@mytum.de");
+                    }
+
+                    @Override
+                    public void failure(RetrofitError arg0) {
+                        Log.e("Failure uploading public key", arg0.toString());
+                    }
+                });
+
+                return keyPair.getPrivate();
             } catch (NoSuchAlgorithmException e) {
                 e.printStackTrace();
             }
-            keyGen.initialize(1024);
-            KeyPair keyPair = keyGen.generateKeyPair();
-
-            String publicKeyString = Base64.encodeToString(keyPair.getPublic().getEncoded(), Base64.DEFAULT);
-            String privateKeyString = Base64.encodeToString(keyPair.getPrivate().getEncoded(), Base64.DEFAULT);
-
-            // Save private key in shared preferences
-            Editor editor = sharedPrefs.edit();
-            editor.putString(Const.PRIVATE_KEY, privateKeyString);
-            editor.apply();
-
-            // Upload public key to the server
-            ChatClient.getInstance().uploadPublicKey(currentChatMember.getUserId(), new ChatPublicKey(publicKeyString), new Callback<ChatPublicKey>() {
-                @Override
-                public void success(ChatPublicKey arg0, Response arg1) {
-                    Log.d("Success uploading public key", arg0.toString());
-                    Utils.showLongCenteredToast(ChatRoomsSearchActivity.this, "Public key activation mail sent to " + currentChatMember.getLrzId() + "@mytum.de");
-                }
-
-                @Override
-                public void failure(RetrofitError arg0) {
-                    Log.e("Failure uploading public key", arg0.toString());
-                }
-            });
-
-            return keyPair.getPrivate();
+            return null;
         }
         return null;
     }
@@ -465,7 +466,7 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
         new AsyncTask<Void, Void, String>() {
             @Override
             protected String doInBackground(Void... params) {
-                String msg = "";
+                String msg;
                 try {
                     Context context = getApplicationContext();
                     if (gcm == null) {
@@ -520,7 +521,7 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
                 SharedPreferences sharedPrefs = getGCMPreferences(ChatRoomsSearchActivity.this);
                 SharedPreferences.Editor editor = sharedPrefs.edit();
                 editor.putBoolean(Const.GCM_REG_ID_SENT_TO_SERVER, true);
-                editor.commit();
+                editor.apply();
             }
 
             @Override
@@ -544,6 +545,6 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString(Const.GCM_REG_ID, regId);
         editor.putInt(PROPERTY_APP_VERSION, appVersion);
-        editor.commit();
+        editor.apply();
     }
 }

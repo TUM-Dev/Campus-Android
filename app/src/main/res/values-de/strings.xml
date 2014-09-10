@@ -11,8 +11,6 @@
     <string name="update">Update</string>
     <string name="loading">Lade …</string>
     <string name="settings">Einstellungen</string>
-    <string name="week_splitted">So,Mo,Di,Mi,Do,Fr,Sa</string>
-    <string name="really_delete">Bist du sicher, dass du diesen Eintrag löschen willst?</string>
     <string name="yes">Ja</string>
     <string name="no">Nein</string>
     <string name="no_internet_connection">Keine Internetverbindung</string>
@@ -42,20 +40,16 @@
 
     <!-- Auxiliary -->
     <string name="empty_string" />
-    <string name="android_version_too_low">Android Version zu alt</string>
-    <string name="android_version_too_low_message">Deine Android Version unterstützt diese Funktion leider nicht</string>
     <string name="error_fetching_tumonline">Fehler beim Zugriff auf TUMOnline.\nBitte stelle sicher, dass das TUMOnline-Access-Token \nakzeptiert und die entsprechenden Rechte aktiviert wurden.\n\n<b>Klicke hier zum Wiederholen.</b></string>
     <string name="error_no_token_setup">Kein TUMOnline-Access-Token gefunden.\nBitte erzeuge ein TUMOnline-Access-Token in den\n <i>Einstellungen</i>, um TUMOnline Dienste nutzen zu können.\n\n<b>Klicke hier, um zu den <i>Einstellungen</i> zu gelangen.</b></string>
     <string name="error_something_wrong">Entschuldigung, irgendetwas ist schief gegangen.</string>
     <string name="dialog_new_token">Dein TUMOnline-Access-Token ist bereits gesetzt.\n\nKlicke auf <i>Ja</i> um ein neues zu generieren.\nDabei wird dein altes Token unbrauchbar.</string>
     <string name="error_lrz_wrong">Deine LRZ Kennung ist ungültig</string>
-    <string name="access_token_generated">TUMOnline-Access-Token wurde erfolgreich erzeugt</string>
     <string name="access_token_wasnt_generated">TUMOnline-Access-Token konnte nicht erzeugt werden</string>
     <string name="dialog_access_token_invalid">TUMOnline-Access-Token nicht aktiviert</string>
     <string name="dialog_no_rights_function">Keine Rechte für diese Funktion</string>
     <string name="empty_result">Die Anfrage lieferte ein fehlerhaftes Ergebnis</string>
     <string name="error_occurred_while_opening">Kann die Datei nicht öffnen</string>
-    <string name="error">Fehler</string>
 
     <!-- Exam/Grades -->
     <string name="average_grade">Durchschnittsnote</string>
@@ -77,21 +71,14 @@
     <string name="generate_tumonline_token_detail">Erzeugt ein Token, um die TUMOnline Dienste nutzen zu können.
         Du musst dieses noch auf TUMOnline akzeptieren und die entsprechenden Rechte aktivieren.</string>
 
-    <string name="personal_settings">Persönliche Einstellungen</string>
     <string name="role">Rolle</string>
     <string name="role_summary">Deine Rolle an der TUM. Entweder Student, Mitarbeiter oder Gast.</string>
     <string name="student">Student</string>
     <string name="employee">Mitarbeiter</string>
     <string name="guest">Gast</string>
-    <string name="mensa_title">Meine Mensa</string>
-    <string name="mensa_summary">Wähle deine bevorzugten Mensen aus</string>
-    <string name="my_mensa">Meine Mensen</string>
     <string name="cards_settings">Karten</string>
-    <string name="card_settings_summary">Wähle aus wo welche Karten angezeigt werden sollen</string>
-    <string name="where_appear">Wo soll die Karte angezeigt werden?</string>
     <string name="startpage">Startseite</string>
     <string name="wear">Wearable</string>
-    <string name="phone_and_wear">Handy und Wearable</string>
 
     <string name="extras">Extras</string>
     <string name="open_wizzard">Öffne Startup-Wizzard</string>
@@ -108,9 +95,6 @@
     <string name="background_info">Aktualisiert die Inhalte der App einmal täglich um dich auf dem neusten Stand zu halten, sogar wenn die App nicht geöffnet ist.</string>
     <string name="demo_mode">In-App-Tutorial</string>
     <string name="demo_info">Hilfemodus aktivieren, um Informationen zur Bedienung der App zu erhalten.</string>
-
-    <string name="debug_for_developer">Für Entwickler</string>
-    <string name="debug_mode">Debug-Modus</string>
 
     <string name="about_tca">Über TCA</string>
     <string name="information">Informationen</string>
@@ -136,18 +120,11 @@
     <string name="set_background_mode">Aktiviere oder deaktiviere den <i>Hintergrund Modus</i>. Bei Aktivierung werden einmal am Tag im Hintergrund alle Inhalte heruntergeladen, um deine TUM Campus App auf den neusten Stand zu halten.</string>
     <string name="goto_tumcampus">Starte TUM Campus App</string>
 
-    <!-- RSS-Feed -->
-    <string name="add_rss">Füge RSS-Feed hinzu</string>
-    <string name="url">URL</string>
-    <string name="name">Name</string>
-    <string name="add">Hinzufügen</string>
-
     <!-- News -->
     <string name="no_link_existing">Kein Link gefunden.</string>
     <string name="info_title">Neuigkeiten:</string>
-    <string name="info_str">Keine wichtigen Neuigkeiten!</string>
 
-    <!-- SideNavigation -->
+    <!-- Navigation drawer -->
     <string name="drawer_open">Öffnen</string>
     <string name="drawer_close">Schließen</string>
     <string name="my_tum">Mein TUM</string>
@@ -158,7 +135,6 @@
     <string name="tuition_fees">Rückmeldung</string>
     <string name="tum_common">TUM Allgemein</string>
     <string name="menues">Mensen</string>
-    <string name="rss_feeds">RSS-Feeds</string>
     <string name="study_plans">Studienpläne</string>
     <string name="person_search">Personensuche</string>
     <string name="plans">Pläne</string>
@@ -169,15 +145,10 @@
     <string name="news">News</string>
 
     <!-- Activity titles -->
-    <string name="lecture_schedule">Vorlesungstermine</string>
     <string name="lectures_information">Vorlesungsinformationen</string>
     <string name="lectures_appointments">Vorlesungstermine</string>
-    <string name="events">Events</string>
-    <string name="gallery">Galerie</string>
-    <string name="event_details">Eventdetails</string>
     <string name="person_information">Personeninformationen</string>
     <string name="organisation_details">Organisationsdetails</string>
-    <string name="info_title_str">TCA Informationen</string>
     <string name="cafeterias">Mensen</string>
 
     <!-- Organisations -->
@@ -191,6 +162,7 @@
     <string name="identifier">Kennung</string>
     <string name="exception_sdcard">Fehler beim Zugriff auf die SD-Karte</string>
     <string name="adress">Adresse</string>
+    <string name="name">Name</string>
 
     <!-- MVV -->
     <string name="no_departures_found">Keine Abfahrtszeiten verfügbar</string>
@@ -198,30 +170,16 @@
     <string name="exception_unknown">Unbekannter Fehler</string>
     <string name="exception_timeout">Probleme bei der Internetverbindung, bitte später erneut versuchen.</string>
     <string name="search_station">Suche nach Stationen</string>
-    <string name="no_stored_search_requests">Keine gespeicherten Suchanfragen</string>
-
-    <!-- Events -->
-    <string name="latest_events">Neueste Events</string>
-    <string name="past_events">Vergangene Events</string>
 
     <!-- Lectures -->
     <string name="no_appointments">Keine Termine verfügbar</string>
     <string name="lec_details">Details</string>
-    <string name="semester_data">Semesterdaten</string>
-    <string name="sws_number">Anzahl der Semesterperioden pro Woche</string>
     <string name="lecture_begin">Vorlesungbeginn</string>
-    <string name="first_date">Erstes Vorlesungsdatum</string>
     <string name="lec_contributors">Vorlesungsteam</string>
-    <string name="lecturer">Dozent</string>
-    <string name="organisation_of_lecture">Organisation</string>
     <string name="lec_content">Vorlesungsinhalt</string>
-    <string name="teaching_content">Lehrinhalt</string>
     <string name="lec_method">Methode</string>
-    <string name="lec_method_details">Methodendetails</string>
     <string name="lec_target">Ziele</string>
-    <string name="teaching_target">Lehrziel</string>
     <string name="examination_aids">Prüfungshilfsmittel</string>
-    <string name="literature">Literatur</string>
 
     <!-- Tuition fees -->
     <string name="amount_dots">Offener Betrag:</string>
@@ -244,10 +202,6 @@
     <string name="room">Raum</string>
     <string name="add_contact">Zu Kontakten hinzufügen</string>
     <string name="contact_added">Kontakt wurde hinzugefügt!</string>
-
-    <!-- Gallery -->
-    <string name="latest_gallery">Neueste Galerie</string>
-    <string name="past_gallery">Vergangene Galerie</string>
 
     <!-- Curricula -->
     <string name="something_wrong">Ein Fehler ist aufgetreten</string>
@@ -272,7 +226,6 @@
     <string name="mensa_city">Mensa Stammgelände</string>
     <string name="mensa_pasing">Mensa Pasing</string>
     <string name="mensa_weihenstephan">Mensa Weihenstephan</string>
-    <string name="facility_categories_splitted">library,info,cafeteria_gar,cafeteria_grh,cafeteria,cafeteria_pas,cafeteria_wst</string>
 
     <!-- Plans -->
     <string name="campus_garching">Campus Garching</string>
@@ -301,7 +254,6 @@
     <string name="leave_chat_room">Chatroom verlassen</string>
     <string name="leave_chat_room_body">Bist du sicher, dass du den chatroom verlassen willst?</string>
     <string name="load_earlier_messages">Ältere Nachrichten laden</string>
-    <string name="all">Alle</string>
 
     <!-- Cards -->
     <string name="last_updated">Der Inhalt wurde zuletzt %s aktualisiert.</string>
@@ -358,5 +310,8 @@
     <string name="card_news_summary">Schlägt ausgewählte News vor</string>
     <string name="card_chat_summary">Benachrichtigt dich wenn neue Nachrichten verfügbar sind</string>
     <string name="chat">Chat</string>
+    <string name="open_card_settings">Karte anpassen</string>
+    <string name="always_hide_card">Diesen Kartentyp immer ausblenden</string>
+    <string name="options">Optionen</string>
 
 </resources>

@@ -21,10 +21,11 @@ import de.tum.in.tumcampus.models.managers.CardManager;
 public abstract class Card {
     public static final String DISCARD_SETTINGS_START = "discard_settings_start";
     public static final String DISCARD_SETTINGS_PHONE = "discard_settings_phone";
-    
+
     // Context related stuff
     protected Context mContext;
     protected LayoutInflater mInflater;
+    private String mSettings;
     
     // UI Elements
     protected View mCard;
@@ -40,6 +41,7 @@ public abstract class Card {
 
     public Card(Context context, String settings) {
         this(context);
+        mSettings = settings;
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
         mShowStart = prefs.getBoolean(settings+"_start", true);
         mShowWear = prefs.getBoolean(settings+"_wear", true);
@@ -47,6 +49,7 @@ public abstract class Card {
     }
 
     public Card(Context context) {
+        mSettings = null;
         mContext = context;
         mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
@@ -205,6 +208,19 @@ public abstract class Card {
      * */
     public boolean isDismissable() {
         return true;
+    }
+
+    public String getSettings() {
+        return mSettings;
+    }
+
+    public void hideAlways() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+        Editor e = prefs.edit();
+        e.putBoolean(mSettings+"_start", false);
+        e.putBoolean(mSettings+"_wear", false);
+        e.putBoolean(mSettings+"_phone", false);
+        e.apply();
     }
 
     public static interface ProvidesCard {

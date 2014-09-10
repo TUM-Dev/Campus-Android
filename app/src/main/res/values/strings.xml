@@ -11,8 +11,6 @@
     <string name="update">Update</string>
     <string name="loading">Loading …</string>
     <string name="settings">Settings</string>
-    <string name="week_splitted">Su,Mo,Tu,We,Th,Fr,Sa</string>
-    <string name="really_delete">Are you sure to remove it?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="no_internet_connection">No internet connection available</string>
@@ -42,21 +40,17 @@
 
     <!-- Auxiliary -->
     <string name="empty_string" />
-    <string name="android_version_too_low">Android version too low</string>
-    <string name="android_version_too_low_message">This feature is not available on your current Android version</string>
     <string name="error_fetching_tumonline">Error accessing TUMOnline.\nPlease make sure your TUMOnline-Access-Token has
 		been\nactivated and the corresponding rights are set.\n\n<b>Click here for retry.</b></string>
     <string name="error_no_token_setup">No TUMOnline-Access-Token was set.\nPlease set your TUMOnline-Access-Token in the\n <i>Settings</i> screen to access TUMOnline features.\n\n<b>Click here for the <i>Settings</i> screen.</b></string>
     <string name="error_something_wrong">Sorry, something went wrong.</string>
     <string name="dialog_new_token">Your TUMOnline-Access-Token is already set.\n\nClick <i>Yes</i> to generate a new one. \nAs a result, the old Token becomes useless.</string>
     <string name="error_lrz_wrong">Your LRZ Identification is invalid</string>
-    <string name="access_token_generated">TUMOnline-Access-Token successfully generated</string>
     <string name="access_token_wasnt_generated">TUMOnline-Access-Token could not be generated</string>
     <string name="dialog_access_token_invalid">TUMOnline-Access-Token not enabled</string>
     <string name="dialog_no_rights_function">No rights accessing this function</string>
     <string name="empty_result">The operation delivered a faulty result</string>
     <string name="error_occurred_while_opening">Cannot open file</string>
-    <string name="error">Error</string>
 
     <!-- Exam/Grades -->
     <string name="average_grade">Average grade</string>
@@ -79,21 +73,14 @@
 		have to accept the token and set the corresponding permissions in
 		TUMOnline by yourself.</string>
 
-    <string name="personal_settings">Personal Settings</string>
     <string name="role">Role</string>
     <string name="role_summary">Your role at TUM. Either student, employee or guest.</string>
     <string name="student">Student</string>
     <string name="employee">Employee</string>
     <string name="guest">Guest</string>
-    <string name="mensa_title">My Mensa</string>
-    <string name="mensa_summary">Change your preferred canteens</string>
-    <string name="my_mensa">My canteens</string>
     <string name="cards_settings">Cards</string>
-    <string name="card_settings_summary">Adjust cards shown on home screen</string>
-    <string name="where_appear">Where should the card appear?</string>
     <string name="startpage">Startpage</string>
     <string name="wear">Wearable</string>
-    <string name="phone_and_wear">Phone and Wearable</string>
 
     <string name="extras">Extras</string>
     <string name="open_wizzard">Open Startup-Wizzard</string>
@@ -110,9 +97,6 @@
     <string name="background_info">Content will be fetched once per day to keep you up-to-date even if you don\'t open the app.</string>
     <string name="demo_mode">In-App-Tutorial</string>
     <string name="demo_info">Activates help mode for instruction on how to use this App.</string>
-
-    <string name="debug_for_developer">for developers</string>
-    <string name="debug_mode">debug mode</string>
 
     <string name="about_tca">About TCA</string>
     <string name="information">Information</string>
@@ -138,18 +122,11 @@
     <string name="set_background_mode">Activate or deactivate <i>Background Mode</i>. If activated, content will be fetched once per day to keep your TUM Campus App up to date.</string>
     <string name="goto_tumcampus">Go to TUM Campus App</string>
 
-    <!-- RSS-Feed -->
-    <string name="add_rss">Add RSS-Feed</string>
-    <string name="url">URL</string>
-    <string name="name">Name</string>
-    <string name="add">Add</string>
-
     <!-- News -->
     <string name="no_link_existing">No link existing.</string>
     <string name="info_title">New information:</string>
-    <string name="info_str">No important news!</string>
 
-    <!-- SideNavigation -->
+    <!-- Navigation drawer -->
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
     <string name="my_tum">My TUM</string>
@@ -160,7 +137,6 @@
     <string name="tuition_fees">Tuition Fees</string>
     <string name="tum_common">General TUM</string>
     <string name="menues">Cafeterias</string>
-    <string name="rss_feeds">RSS-Feeds</string>
     <string name="study_plans">Study Plans</string>
     <string name="person_search">Person Search</string>
     <string name="plans">Plans</string>
@@ -171,15 +147,10 @@
     <string name="news">News</string>
 
     <!-- Activity titles -->
-    <string name="lecture_schedule">Lecture Schedule</string>
     <string name="lectures_information">Lecture Information</string>
     <string name="lectures_appointments">Lecture Appointments</string>
-    <string name="events">Events</string>
-    <string name="gallery">Gallery</string>
-    <string name="event_details">Event Details</string>
     <string name="person_information">Person Information</string>
     <string name="organisation_details">Organization Details</string>
-    <string name="info_title_str">TCA Information</string>
     <string name="cafeterias">Cafeterias</string>
 
     <!-- Organisations -->
@@ -193,6 +164,7 @@
     <string name="identifier">Identifier</string>
     <string name="exception_sdcard">Error accessing the SD-Card</string>
     <string name="adress">Address</string>
+    <string name="name">Name</string>
 
     <!-- MVV -->
     <string name="no_departures_found">No departures available</string>
@@ -200,30 +172,16 @@
     <string name="exception_unknown">Unknown error</string>
     <string name="exception_timeout">Problems with internet connection, please try later</string>
     <string name="search_station">Search station</string>
-    <string name="no_stored_search_requests">No stored search requests</string>
-
-    <!-- Events -->
-    <string name="latest_events">Latest Events</string>
-    <string name="past_events">Past events</string>
 
     <!-- Lectures -->
     <string name="no_appointments">No appointments available</string>
     <string name="lec_details">Details</string>
-    <string name="semester_data">Semester data</string>
-    <string name="sws_number">Number of semester periods per week</string>
     <string name="lecture_begin">Lecture begin</string>
-    <string name="first_date">First lecture date</string>
     <string name="lec_contributors">Lecture contributors</string>
-    <string name="lecturer">Lecturer</string>
-    <string name="organisation_of_lecture">Organization</string>
     <string name="lec_content">Lecture content</string>
-    <string name="teaching_content">Teaching content</string>
     <string name="lec_method">Method</string>
-    <string name="lec_method_details">Method details</string>
     <string name="lec_target">Targets</string>
-    <string name="teaching_target">Teaching target</string>
     <string name="examination_aids">Examination aids</string>
-    <string name="literature">Literature</string>
 
     <!-- Tuition fees -->
     <string name="amount_dots">Outstanding balance:</string>
@@ -246,10 +204,6 @@
     <string name="room">Room</string>
     <string name="add_contact">Add to contacts</string>
     <string name="contact_added">Contact is successfully added!</string>
-
-    <!-- Gallery -->
-    <string name="latest_gallery">Latest Gallery</string>
-    <string name="past_gallery">Past Gallery</string>
 
     <!-- Curricula -->
     <string name="something_wrong">An unknown error occurred</string>
@@ -274,7 +228,7 @@
     <string name="mensa_city">Cafeteria Main Campus</string>
     <string name="mensa_pasing">Cafeteria Pasing</string>
     <string name="mensa_weihenstephan">Cafeteria Weihenstephan</string>
-    <string name="facility_categories_splitted">library,info,cafeteria_gar,cafeteria_grh,cafeteria,cafeteria_pas,cafeteria_wst</string>
+    <string name="facility_categories_splitted" tools:ignore="MissingTranslation">library,info,cafeteria_gar,cafeteria_grh,cafeteria,cafeteria_pas,cafeteria_wst</string>
 
     <!-- Plans -->
     <string name="campus_garching">Campus Garching</string>
@@ -303,7 +257,6 @@
     <string name="leave_chat_room">Leave chat room</string>
     <string name="leave_chat_room_body">Are you sure you want to leave this chat room?</string>
     <string name="load_earlier_messages">Load earlier messages</string>
-    <string name="all">All</string>
 
     <!-- Cards -->
     <string name="last_updated">The Content was last updated %s.</string>
@@ -383,5 +336,8 @@
     <string name="card_news_summary">Advertises selected news</string>
     <string name="card_chat_summary">Notifies you if new messages are available</string>
     <string name="chat">Chat</string>
+    <string name="open_card_settings">Open card settings</string>
+    <string name="always_hide_card">Always hide this card typ</string>
+    <string name="options">Options</string>
 
 </resources>

@@ -1,20 +1,21 @@
 package de.tum.in.tumcampus.activities;
 
 import android.app.AlertDialog;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
-import android.provider.CalendarContract.Calendars;
+import android.preference.PreferenceScreen;
+import android.widget.ListAdapter;
 import android.widget.Toast;
 
 import de.psdev.licensesdialog.LicensesDialog;
@@ -48,7 +49,7 @@ public class UserPreferencesActivity extends PreferenceActivity implements
      *
      * @return true, if successful
      */
-    private boolean clearCache() { //TODO remove this option
+    private boolean clearCache() { //TODO remove this option/clean up too old cache content on startup
         try {
             Utils.getCacheDir("");
         } catch (Exception e) {
@@ -74,10 +75,9 @@ public class UserPreferencesActivity extends PreferenceActivity implements
         sm.deleteFromDb();
 
         // delete local calendar
-        ContentResolver crv = getContentResolver();
-        Uri uri = Calendars.CONTENT_URI;
-        crv.delete(uri, " account_name = '"
-                + getString(R.string.calendar_account_name) + "'", null);
+        if (Build.VERSION.SDK_INT >= 14) {
+            CalendarManager.deleteLocalCalendar(this);
+        }
 
         Toast.makeText(context, R.string.success_clear_cache, Toast.LENGTH_SHORT).show();
         return true;
@@ -185,7 +185,7 @@ public class UserPreferencesActivity extends PreferenceActivity implements
                 SharedPreferences.Editor e = sharedPreferences.edit();
                 e.putBoolean(CardManager.SHOW_TUTORIAL_1, true);
                 e.putBoolean(CardManager.SHOW_TUTORIAL_2, true);
-                e.commit();
+                e.apply();
                 CardManager.update(UserPreferencesActivity.this);
                 startActivity(new Intent(UserPreferencesActivity.this, StartActivity.class));
                 return true;
@@ -229,14 +229,30 @@ public class UserPreferencesActivity extends PreferenceActivity implements
         // Register the change listener to react immediately on changes
         PreferenceManager.getDefaultSharedPreferences(this)
                 .registerOnSharedPreferenceChangeListener(this);
+
+        Intent intent = getIntent();
+        // Open a card's preference screen if selected from it's context menu
+        if(intent!=null && intent.getExtras()!=null && intent.getExtras().containsKey(Const.PREFERENCE_SCREEN)) {
+            final String key = intent.getExtras().getString(Const.PREFERENCE_SCREEN);
+            PreferenceScreen screen = (PreferenceScreen) findPreference("cards_pref_container");
+            Preference cardPreferenceScreen = findPreference(key);
+            final ListAdapter listAdapter = screen.getRootAdapter();
+            final int itemsCount = listAdapter.getCount();
+            for (int i = 0; i < itemsCount; ++i) {
+                if (listAdapter.getItem(i).equals(cardPreferenceScreen)) {
+                    screen.onItemClick(null, null, i, 0);
+                    break;
+                }
+            }
+        }
     }
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         Preference pref = findPreference(key);
         if(pref instanceof ListPreference) {
-            ListPreference lpref = (ListPreference)pref;
-            lpref.setSummary(lpref.getEntry());
+            ListPreference listPreference = (ListPreference)pref;
+            listPreference.setSummary(listPreference.getEntry());
         }
 
         // If the silent mode was activated, start the service. This will invoke

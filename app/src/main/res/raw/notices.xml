@@ -31,6 +31,11 @@
     <notice>
         <name>Font Awesome</name>
         <url>http://fortawesome.github.io/Font-Awesome/</url>
-        <license>Creative Commons BY 3.0 DE</license>
+       <!-- <license>Creative Commons BY 3.0 DE</license> not supported by LicencesDialog-->
+    </notice>
+    <notice>
+        <name>ActionBar-PullToRefresh</name>
+        <url>https://github.com/chrisbanes/ActionBar-PullToRefresh/</url>
+        <license>Apache Software License 2.0</license>
     </notice>
 </notices>

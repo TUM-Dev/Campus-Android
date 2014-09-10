@@ -1,16 +1,15 @@
 package de.tum.in.tumcampus.activities;
 
-import java.util.ArrayList;
-
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
+
+import java.util.ArrayList;
+
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.adapters.StartListAdapter;
 import de.tum.in.tumcampus.auxiliary.ImplicitCounter;
@@ -60,8 +59,7 @@ public class PlansActivity extends ActionBarActivity implements OnItemClickListe
 		listMenuEntrySet.add(new ListMenuEntry(R.drawable.mvv_entire_net_icon,
 				R.string.mvv_entire_net, R.string.empty_string, null));
 
-		StartListAdapter adapter = new StartListAdapter(this,
-				R.layout.list_layout_complex_small, listMenuEntrySet, false);
+		StartListAdapter adapter = new StartListAdapter(this, R.layout.activity_plans_listview, listMenuEntrySet);
 		list.setAdapter(adapter);
 		list.setOnItemClickListener(this);
 	}

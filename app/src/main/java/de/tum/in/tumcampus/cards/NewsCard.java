@@ -21,8 +21,6 @@ public class NewsCard extends Card {
 
     private String mTitle;
     private String mDate;
-    private TextView mSrcTitleView;
-    private ImageView mSrcIconView;
     private String mLink;
     private Bitmap mImage;
 
@@ -49,18 +47,18 @@ public class NewsCard extends Card {
         mTitleView = (TextView) mCard.findViewById(R.id.news_title);
         mTitleView.setText(getTitle());
         mDateView = (TextView) mCard.findViewById(R.id.news_src_date);
-        mSrcTitleView = (TextView) mCard.findViewById(R.id.news_src_title);
-        mSrcIconView = (ImageView) mCard.findViewById(R.id.news_src_icon);
+        TextView srcTitleView = (TextView) mCard.findViewById(R.id.news_src_title);
+        ImageView srcIconView = (ImageView) mCard.findViewById(R.id.news_src_icon);
 
         imageView.setImageBitmap(mImage);
 
         if (mLink.length() > 0) {
             if(Uri.parse(mLink).getHost().equals("graph.facebook.com")) {
-                mSrcTitleView.setText("Facebook");
-                mSrcIconView.setImageResource(R.drawable.ic_facebook);
+                srcTitleView.setText("Facebook");
+                srcIconView.setImageResource(R.drawable.ic_facebook);
             } else {
-                mSrcTitleView.setText(Uri.parse(mLink).getHost());
-                mSrcIconView.setImageResource(R.drawable.ic_comment);
+                srcTitleView.setText(Uri.parse(mLink).getHost());
+                srcIconView.setImageResource(R.drawable.ic_comment);
             }
         }
 

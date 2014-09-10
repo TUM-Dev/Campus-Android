@@ -1,12 +1,6 @@
 package de.tum.in.tumcampus.auxiliary;
 
-import java.io.IOException;
-import java.io.StringReader;
-import java.io.UnsupportedEncodingException;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
+import android.util.Log;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -22,7 +16,13 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import android.util.Log;
+import java.io.IOException;
+import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 /**
  * Parses through XML input
@@ -38,11 +38,10 @@ public class XMLParser {
 	/**
 	 * Getting XML DOM element
 	 * 
-	 * @param XML
-	 *            string
+	 * @param xml string
 	 * */
 	public Document getDomElement(String xml) {
-		Document doc = null;
+		Document doc;
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		try {
 
@@ -90,10 +89,8 @@ public class XMLParser {
 	/**
 	 * Getting node value
 	 * 
-	 * @param Element
-	 *            node
-	 * @param key
-	 *            string
+	 * @param item node
+	 * @param str string
 	 * */
 	public String getValue(Element item, String str) {
 		NodeList n = item.getElementsByTagName(str);

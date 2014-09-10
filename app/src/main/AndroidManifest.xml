@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="de.tum.in.tumcampus"
-    android:installLocation="auto">
+    android:installLocation="auto"
+    tools:ignore="UnusedAttribute">
 
     <instrumentation
         android:name="android.test.InstrumentationTestRunner"
-        android:targetPackage="de.tum.in.tumcampus"
-        android:label="Android JUnit tests" />
+        android:label="Android JUnit tests"
+        android:targetPackage="de.tum.in.tumcampus" />
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -42,8 +44,8 @@
         android:description="@string/app_short_description"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:largeHeap="true"
         android:logo="@drawable/tum_logo"
+        android:supportsRtl="false"
         android:theme="@style/AppTheme">
 
         <meta-data
@@ -73,16 +75,20 @@
 
         <provider
             android:name="de.tum.in.tumcampus.auxiliary.RoomFinderSuggestionProvider"
-            android:authorities="de.tum.in.tumcampus.auxiliary.RoomFinderSuggestionProvider" />
+            android:authorities="de.tum.in.tumcampus.auxiliary.RoomFinderSuggestionProvider"
+            android:exported="false" />
         <provider
             android:name="de.tum.in.tumcampus.auxiliary.PersonSearchSuggestionProvider"
-            android:authorities="de.tum.in.tumcampus.auxiliary.PersonSearchSuggestionProvider" />
+            android:authorities="de.tum.in.tumcampus.auxiliary.PersonSearchSuggestionProvider"
+            android:exported="false" />
         <provider
             android:name="de.tum.in.tumcampus.auxiliary.MVVStationSuggestionProvider"
-            android:authorities="de.tum.in.tumcampus.auxiliary.MVVStationSuggestionProvider" />
+            android:authorities="de.tum.in.tumcampus.auxiliary.MVVStationSuggestionProvider"
+            android:exported="false" />
         <provider
             android:name="de.tum.in.tumcampus.auxiliary.LectureSearchSuggestionProvider"
-            android:authorities="de.tum.in.tumcampus.auxiliary.LectureSearchSuggestionProvider" />
+            android:authorities="de.tum.in.tumcampus.auxiliary.LectureSearchSuggestionProvider"
+            android:exported="false" />
 
         <activity
             android:name="de.tum.in.tumcampus.activities.StartupActivity"
@@ -97,7 +103,7 @@
         <activity
             android:name="de.tum.in.tumcampus.activities.StartActivity"
             android:configChanges="orientation|screenSize"
-            android:label="@string/campus_app"/>
+            android:label="@string/campus_app" />
         <activity
             android:name="de.tum.in.tumcampus.activities.NewsActivity"
             android:configChanges="orientation|screenSize"
@@ -192,13 +198,15 @@
             android:name="de.tum.in.tumcampus.activities.TransportationActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/mvv"
-            android:parentActivityName="de.tum.in.tumcampus.activities.StartActivity"
-            android:launchMode="singleTop">
+            android:launchMode="singleTop"
+            android:parentActivityName="de.tum.in.tumcampus.activities.StartActivity">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
-            <meta-data android:name="android.app.searchable"
-                android:resource="@xml/searchable_mvv"/>
+
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable_mvv" />
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.tum.in.tumcampus.activities.StartActivity" />
@@ -234,13 +242,15 @@
             android:name="de.tum.in.tumcampus.activities.LecturesPersonalActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/my_lectures"
-            android:parentActivityName="de.tum.in.tumcampus.activities.StartActivity"
-            android:launchMode="singleTop">
+            android:launchMode="singleTop"
+            android:parentActivityName="de.tum.in.tumcampus.activities.StartActivity">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
-            <meta-data android:name="android.app.searchable"
-                android:resource="@xml/searchable_lectures"/>
+
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable_lectures" />
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.tum.in.tumcampus.activities.StartActivity" />
@@ -258,13 +268,15 @@
             android:name="de.tum.in.tumcampus.activities.PersonsSearchActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/person_search"
-            android:parentActivityName="de.tum.in.tumcampus.activities.StartActivity"
-            android:launchMode="singleTop">
+            android:launchMode="singleTop"
+            android:parentActivityName="de.tum.in.tumcampus.activities.StartActivity">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
-            <meta-data android:name="android.app.searchable"
-                android:resource="@xml/searchable_persons"/>
+
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable_persons" />
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.tum.in.tumcampus.activities.StartActivity" />
@@ -282,8 +294,8 @@
             android:name=".activities.RoomFinderActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/roomfinder"
-            android:parentActivityName="de.tum.in.tumcampus.activities.StartActivity"
-            android:launchMode="singleTop">
+            android:launchMode="singleTop"
+            android:parentActivityName="de.tum.in.tumcampus.activities.StartActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.tum.in.tumcampus.activities.StartActivity" />
@@ -347,15 +359,15 @@
         <activity
             android:name="de.tum.in.tumcampus.activities.wizzard.WizNavStartActivity"
             android:configChanges="orientation|screenSize"
-            android:label="@string/campus_app"/>
+            android:label="@string/campus_app" />
         <activity
             android:name="de.tum.in.tumcampus.activities.wizzard.WizNavCheckTokenActivity"
             android:configChanges="orientation|screenSize"
-            android:label="@string/campus_app"/>
+            android:label="@string/campus_app" />
         <activity
             android:name="de.tum.in.tumcampus.activities.wizzard.WizNavExtrasActivity"
             android:configChanges="orientation|screenSize"
-            android:label="@string/campus_app"/>
+            android:label="@string/campus_app" />
         <activity
             android:name="de.tum.in.tumcampus.activities.CalendarActivity"
             android:configChanges="orientation|screenSize"
@@ -368,7 +380,7 @@
         <activity
             android:name="de.tum.in.tumcampus.auxiliary.DemoModeStartActivity"
             android:configChanges="orientation|screenSize"
-            android:label="@string/campus_app"/>
+            android:label="@string/campus_app" />
 
         <activity
             android:name="de.tum.in.tumcampus.activities.ChatRoomsSearchActivity"
@@ -390,7 +402,7 @@
         </activity>
 
         <!-- Used to reset Alarm when device has been restarted -->
-        <receiver android:name="de.tum.in.tumcampus.services.StartSyncReceiver" >
+        <receiver android:name="de.tum.in.tumcampus.services.StartSyncReceiver">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
                 <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />

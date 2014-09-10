@@ -1,7 +1,6 @@
 package de.tum.in.tumcampus.auxiliary;
 
-import de.tum.in.tumcampus.models.ListChatMessage;
-import de.tum.in.tumcampus.models.ChatPublicKey;
+import android.util.Base64;
 
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
@@ -15,7 +14,8 @@ import java.security.spec.X509EncodedKeySpec;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.util.Base64;
+import de.tum.in.tumcampus.models.ChatPublicKey;
+import de.tum.in.tumcampus.models.ListChatMessage;
 
 
 /**
@@ -105,7 +105,7 @@ public class ChatMessageValidator {
 			return false;
 		}
 
-		byte[] textBytes = null;
+		byte[] textBytes;
 		try {
 			textBytes = text.getBytes("UTF8");
 		} catch (UnsupportedEncodingException e) {

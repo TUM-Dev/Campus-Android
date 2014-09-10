@@ -109,7 +109,6 @@ public class CardManager {
 
     public static void restoreCards() {
         SharedPreferences prefs = CardManager.getContext().getSharedPreferences(Card.DISCARD_SETTINGS_START, 0);
-        prefs.edit().clear().commit();
-        update(mContext);
+        prefs.edit().clear().apply();
     }
 }

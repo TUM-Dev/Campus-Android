@@ -1,19 +1,5 @@
 package de.tum.in.tumcampus.activities;
 
-import java.security.KeyFactory;
-import java.security.NoSuchAlgorithmException;
-import java.security.PrivateKey;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.PKCS8EncodedKeySpec;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import de.tum.in.tumcampus.auxiliary.ImplicitCounter;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -34,15 +20,27 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 
 import com.google.gson.Gson;
+
+import java.security.KeyFactory;
+import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.adapters.ChatHistoryAdapter;
 import de.tum.in.tumcampus.auxiliary.ChatClient;
 import de.tum.in.tumcampus.auxiliary.ChatMessageValidator;
 import de.tum.in.tumcampus.auxiliary.Const;
+import de.tum.in.tumcampus.auxiliary.ImplicitCounter;
 import de.tum.in.tumcampus.auxiliary.RSASigner;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.ChatMember;
@@ -50,6 +48,9 @@ import de.tum.in.tumcampus.models.ChatPublicKey;
 import de.tum.in.tumcampus.models.ChatRoom;
 import de.tum.in.tumcampus.models.CreateChatMessage;
 import de.tum.in.tumcampus.models.ListChatMessage;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  * 
@@ -65,7 +66,7 @@ public class ChatActivity extends ActionBarActivity implements OnClickListener, 
 	private ChatHistoryAdapter chatHistoryAdapter;
 	private ArrayList<ListChatMessage> chatHistory = new ArrayList<ListChatMessage>();
 	private EditText etMessage;
-	private Button btnSend;
+	private ImageButton btnSend;
 	private Button btnLoadMore;
 	
 	private ChatRoom currentChatRoom;
@@ -174,7 +175,7 @@ public class ChatActivity extends ActionBarActivity implements OnClickListener, 
 		lvMessageHistory.addHeaderView(btnLoadMore);
 		
 		etMessage = (EditText) findViewById(R.id.etMessage);
-		btnSend = (Button) findViewById(R.id.btnSend);
+		btnSend = (ImageButton) findViewById(R.id.btnSend);
 		btnSend.setOnClickListener(this);
 	}
 	

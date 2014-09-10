@@ -155,6 +155,8 @@ public class DownloadService extends IntentService {
         // receivers will be informed that the download service has finished.
         if (successful && !isDestroyed) {
             broadcastDownloadCompleted();
+        } else {
+            Log.e(getClass().getSimpleName(),"Broadcast not sent");
         }
 
         // Currently not used

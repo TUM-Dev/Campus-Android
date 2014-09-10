@@ -2,11 +2,12 @@ package de.tum.in.tumcampus.activities;
 
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.StrictMode;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
+import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,14 +24,18 @@ import de.tum.in.tumcampus.auxiliary.SwipeDismissList;
 import de.tum.in.tumcampus.cards.Card;
 import de.tum.in.tumcampus.models.managers.CardManager;
 import de.tum.in.tumcampus.services.SilenceService;
+import uk.co.senab.actionbarpulltorefresh.extras.actionbarcompat.PullToRefreshLayout;
+import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
+import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 
 /**
  * Main activity displaying the categories and menu items to start each activity (feature)
  * 
  * @author Sascha Moecker
  */
-public class StartActivity extends ActionBarActivity implements AdapterView.OnItemClickListener, SwipeDismissList.OnDismissCallback {
-	public static final int REQ_CODE_COLOR_CHANGE = 0;
+public class StartActivity extends ActionBarActivity implements AdapterView.OnItemClickListener, SwipeDismissList.OnDismissCallback, OnRefreshListener {
+    private static final int MENU_OPEN_SETTINGS = 0;
+    private static final int MENU_HIDE_ALWAYS = 1;
 
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
@@ -38,42 +43,37 @@ public class StartActivity extends ActionBarActivity implements AdapterView.OnIt
     private ActionBarDrawerToggle mDrawerToggle;
     private CardsAdapter mAdapter;
     private SwipeDismissList mSwipeList;
+    private PullToRefreshLayout mPullToRefreshLayout;
+    private ListView mCardsView;
 
     @Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		// Check if there is a result key in an intent
-		if (data != null && data.hasExtra(Const.PREFS_HAVE_CHANGED) && data.getBooleanExtra(Const.PREFS_HAVE_CHANGED, false)) {
-			// Restart the Activity if prefs have changed
-			Intent intent = this.getIntent();
-			this.finish();
-			this.startActivity(intent);
-		}
-	}
-
-	@Override
 	protected void onCreate(Bundle savedInstanceState) {
         overridePendingTransition(R.anim.fadein, R.anim.fadeout);
 		super.onCreate(savedInstanceState);
         ImplicitCounter.Counter(this);
-		this.setContentView(R.layout.activity_start);
+        setContentView(R.layout.activity_start);
 
         setTitle(getString(R.string.campus_app));
 
-        // Workaround for new API version. There was a security update which disallows applications to execute HTTP request in the GUI main thread.
-        if (android.os.Build.VERSION.SDK_INT > 9) {
-            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-            StrictMode.setThreadPolicy(policy);
-        }
-
-		// Set up the ViewPager with the sections adapter.
-        ListView mCardsView = (ListView) findViewById(R.id.cards_view);
-        mAdapter = new CardsAdapter(this);
-        mCardsView.setAdapter(mAdapter);
+        // Setup card list view
+        mCardsView = (ListView) findViewById(R.id.cards_view);
         mCardsView.setOnItemClickListener(this);
         mCardsView.setDividerHeight(0);
+        mAdapter = new CardsAdapter(this);
+        mCardsView.setAdapter(mAdapter);
+        registerForContextMenu(mCardsView);
+
+        // Setup swipe to dismiss feature
         mSwipeList = new SwipeDismissList(mCardsView, this, SwipeDismissList.UndoMode.MULTI_UNDO);
         mSwipeList.setUndoString(getString(R.string.card_dismissed));
         mSwipeList.setUndoMultipleString(getString(R.string.cards_dismissed));
+
+        // Setup pull to refresh
+        mPullToRefreshLayout = (PullToRefreshLayout) findViewById(R.id.ptr_layout);
+
+        // Now setup the PullToRefreshLayout
+        ActionBarPullToRefresh.from(this).allChildrenArePullable()
+                .listener(this).setup(mPullToRefreshLayout);
 
 		// Start silence Service (if already started it will just invoke a check)
         Intent service = new Intent(this, SilenceService.class);
@@ -165,7 +165,7 @@ public class StartActivity extends ActionBarActivity implements AdapterView.OnIt
 		case R.id.action_settings:
 			// Opens the preferences screen
 			Intent intent = new Intent(this, UserPreferencesActivity.class);
-			this.startActivityForResult(intent, REQ_CODE_COLOR_CHANGE);
+			startActivity(intent);
 			break;
 		}
 		return super.onOptionsItemSelected(item);
@@ -187,8 +187,7 @@ public class StartActivity extends ActionBarActivity implements AdapterView.OnIt
                 Card card = CardManager.getCard(position);
                 if(card.getTyp()==CardManager.CARD_RESTORE) {
                     CardManager.restoreCards();
-                    mSwipeList.cancelUndo();
-                    mAdapter.notifyDataSetChanged();
+                    refreshCards();
                 } else {
                     Intent i = card.getIntent();
                     if(i!=null) {
@@ -218,5 +217,66 @@ public class StartActivity extends ActionBarActivity implements AdapterView.OnIt
                 itemToDelete.discardCard();
             }
         };
+    }
+
+    /**
+     * Handle long click events on a card
+     * */
+     @Override
+     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        menu.setHeaderTitle(R.string.options);
+        menu.add(Menu.NONE, MENU_OPEN_SETTINGS, Menu.NONE, R.string.open_card_settings);
+        menu.add(Menu.NONE, MENU_HIDE_ALWAYS, Menu.NONE, R.string.always_hide_card);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        Card card = (Card) mAdapter.getItem(info.position);
+        switch (item.getItemId()) {
+            case MENU_OPEN_SETTINGS:
+                // Open card's preference screen
+                String key = card.getSettings();
+                if(key==null)
+                    return true;
+                Intent intent = new Intent(this, UserPreferencesActivity.class);
+                intent.putExtra(Const.PREFERENCE_SCREEN, key);
+                startActivity(intent);
+                return true;
+            case MENU_HIDE_ALWAYS:
+                card.hideAlways();
+                refreshCards();
+            default:
+                return super.onContextItemSelected(item);
+        }
+    }
+
+
+    private void refreshCards() {
+        mPullToRefreshLayout.setRefreshing(true);
+        onRefreshStarted(mCardsView);
+    }
+    @Override
+    public void onRefreshStarted(View view) {
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                mSwipeList.cancelUndo();
+            }
+
+            @Override
+            protected Void doInBackground(Void... params) {
+                CardManager.update(StartActivity.this);
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void result) {
+                super.onPostExecute(result);
+                mAdapter.notifyDataSetChanged();
+                mPullToRefreshLayout.setRefreshComplete();
+            }
+        }.execute();
     }
 }

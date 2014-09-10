@@ -2,8 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:baselineAligned="false"
     android:orientation="horizontal"
-    android:padding="@dimen/padding_default" >
+    android:padding="@dimen/padding_default">
 
     <LinearLayout
         android:id="@+id/thumbnail"
@@ -11,7 +12,7 @@
         android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
         android:layout_gravity="center"
-        android:layout_marginRight="@dimen/padding_default" >
+        android:layout_marginRight="@dimen/padding_default">
 
         <ImageView
             android:id="@+id/list_image"
@@ -25,7 +26,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:orientation="vertical" >
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/title"
@@ -53,12 +54,5 @@
             android:textColor="@color/text_dark_gray"
             android:textSize="@dimen/mid_text_size" />
     </LinearLayout>
-
-    <ImageView
-        android:id="@+id/imageView1"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:rotation="270"
-        android:src="@android:drawable/arrow_down_float" />
 
 </LinearLayout>

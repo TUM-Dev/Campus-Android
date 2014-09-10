@@ -123,7 +123,6 @@ public class CalendarManager implements Card.ProvidesCard {
                     try {
                         replaceIntoDb(row);
                     } catch (Exception e) {
-                        boolean success = false;
                         Log.d("SIMPLEXML", "Error in field: " + e.getMessage());
                         e.printStackTrace();
                     }
@@ -137,7 +136,6 @@ public class CalendarManager implements Card.ProvidesCard {
                 syncCalendar(mContext);
             }
         } catch (Exception e) {
-            boolean success = false;
             Log.d("SIMPLEXML", "wont work: " + e.getMessage());
             e.printStackTrace();
         }
@@ -210,7 +208,7 @@ public class CalendarManager implements Card.ProvidesCard {
      */
     public static int deleteLocalCalendar(Context c) {
         ContentResolver crv = c.getContentResolver();
-        Uri uri = CalendarContract.Calendars.CONTENT_URI;
+        Uri uri = CalendarContract.Calendars.CONTENT_URI; //TODO check this (API 14), what to do on older systems
         return crv.delete(uri, " account_name = '" + c.getString(R.string.calendar_account_name) + "'", null);
     }
 

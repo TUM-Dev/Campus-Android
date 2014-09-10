@@ -226,7 +226,7 @@ public class Utils {
 
 		FileOutputStream out = new FileOutputStream(file);
 		byte[] buffer = new byte[8192];
-		int count = -1;
+		int count;
 		while ((count = in.read(buffer)) != -1) {
 			out.write(buffer, 0, count);
 		}
@@ -832,7 +832,7 @@ public class Utils {
 	}
 
 	public static boolean isAccessTokenValid(String token) {
-        return !(token == null || token == "");
+        return !(token == null || token.equals(""));
     }
 
 	/**
@@ -925,7 +925,7 @@ public class Utils {
 		try {
 			BufferedReader in = new BufferedReader(new InputStreamReader(fin,
 					charset));
-			String reader = "";
+			String reader;
 			while ((reader = in.readLine()) != null) {
 				list.add(splitCsvLine(reader));
 			}
@@ -946,7 +946,7 @@ public class Utils {
 	 */
 	public static void setSetting(Context c, String key, String value) {
 		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(c);
-		sp.edit().putString(key, value).commit();
+		sp.edit().putString(key, value).apply();
 	}
 
 	/**
@@ -964,7 +964,7 @@ public class Utils {
 		SharedPreferences.Editor editor = PreferenceManager
 				.getDefaultSharedPreferences(c).edit();
 		editor.putBoolean(name, value);
-		editor.commit();
+		editor.apply();
 	}
 
 	/**

@@ -1,18 +1,12 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
 
     <dimen name="padding_default">8dp</dimen>
     <dimen name="padding_large">16dp</dimen>
-    <dimen name="padding_to_above_text">4dp</dimen>
-    <dimen name="padding_to_image">8dp</dimen>
-    <dimen name="padding_to_image_small">4dp</dimen>
-    <dimen name="spacing_grid_view">5dp</dimen>
     <dimen name="small_text_size">12sp</dimen>
     <dimen name="mid_text_size">14sp</dimen>
     <dimen name="semilarge_text_size">16sp</dimen>
     <dimen name="large_text_size">18sp</dimen>
     <dimen name="section_text_size">15sp</dimen>
-    <dimen name="section_padding">4dp</dimen>
-    <dimen name="rythm_48dp">48dp</dimen>
     <dimen name="time_gap">74px</dimen>
     <dimen name="time_one_hour">75px</dimen>
     <dimen name="time_line_thickness">1px</dimen>
@@ -20,13 +14,6 @@
     <dimen name="time_timeline_height">1800px</dimen>
     <dimen name="default_scroll_position">525px</dimen>
     <dimen name="icon_small">56dp</dimen>
-    <dimen name="side_navigation_item_padding_topbottom">5dp</dimen>
-    <dimen name="side_navigation_item_padding_leftright">8dp</dimen>
-    <dimen name="side_navigation_item_image_height">24dp</dimen>
-    <dimen name="side_navigation_item_image_width">24dp</dimen>
-    <dimen name="side_navigation_item_image_padding">2dp</dimen>
-    <dimen name="side_navigation_item_text_size">18sp</dimen>
-    <dimen name="side_navigation_item_text_padding_left">10dp</dimen>
     <dimen name="card_text_padding">10dp</dimen>
 
 </resources>

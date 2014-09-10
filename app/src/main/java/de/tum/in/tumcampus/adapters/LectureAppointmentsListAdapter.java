@@ -117,7 +117,7 @@ public class LectureAppointmentsListAdapter extends BaseAdapter {
 				SimpleDateFormat endHoursOutput = new SimpleDateFormat("HH:mm");
 				SimpleDateFormat DateOutput = new SimpleDateFormat(
 						"dd.MM.yyyy HH:mm");
-				String output = "";
+				String output;
 
 				// output if same day: we only show the date once
 				if (start.getMonth() == ende.getMonth()

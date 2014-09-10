@@ -1,12 +1,11 @@
 package de.tum.in.tumcampus.auxiliary;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStream;
+import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.AsyncTask;
+import android.util.Log;
+import android.widget.Toast;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -16,12 +15,14 @@ import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.net.Uri;
-import android.os.AsyncTask;
-import android.util.Log;
-import android.widget.Toast;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+
 import de.tum.in.tumcampus.R;
 
 /**
@@ -67,7 +68,7 @@ public class FileUtils {
 			fos = new FileOutputStream(targetFile);
 
 			byte[] buffer = new byte[1024];
-			int len1 = 0;
+			int len1;
 			while ((len1 = in.read(buffer)) > 0) {
 				fos.write(buffer, 0, len1);
 			}
@@ -155,7 +156,7 @@ public class FileUtils {
 			// FileReader always assumes default encoding is OK!
 			BufferedReader input = new BufferedReader(new FileReader(file));
 			try {
-				String line = null;
+				String line;
 				while ((line = input.readLine()) != null) {
 					contents.append(line);
 					// contents.append(System.getProperty("line.separator"));
@@ -278,7 +279,7 @@ public class FileUtils {
 			fos = new FileOutputStream(file);
 
 			byte[] buffer = new byte[1024];
-			int len1 = 0;
+			int len1;
 			while ((len1 = in.read(buffer)) > 0) {
 				fos.write(buffer, 0, len1);
 			}

@@ -33,7 +33,7 @@ public class FirstUseCard1 extends Card {
     @Override
     public void discard(Editor editor) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-        prefs.edit().putBoolean(CardManager.SHOW_TUTORIAL_1, false).commit();
+        prefs.edit().putBoolean(CardManager.SHOW_TUTORIAL_1, false).apply();
     }
 
     @Override

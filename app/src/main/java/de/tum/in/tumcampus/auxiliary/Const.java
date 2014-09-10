@@ -132,4 +132,5 @@ public final class Const {
     public static final String IMPORT_COMPLETED = "import_completed";
     public static final String JSON_LATITUDE = "latitude";
     public static final String JSON_LONGITUDE = "longitude";
+    public static final String PREFERENCE_SCREEN = "preference_screen";
 }

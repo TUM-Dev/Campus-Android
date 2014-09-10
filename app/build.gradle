@@ -28,6 +28,9 @@ dependencies {
     compile 'com.nineoldandroids:library:2.4.0'
     compile 'se.emilsjolander:stickylistheaders:2.5.0'
     compile 'com.squareup.retrofit:retrofit:1.6.1'
+    compile ('com.github.chrisbanes.actionbarpulltorefresh:extra-abc:0.9.9') {
+        exclude group: 'com.android.support', module: 'appcompat-v7'
+    }
     compile('org.simpleframework:simple-xml:2.7.1') {
         exclude group: 'stax', module: 'stax-api'
         exclude group: 'xpp3', module: 'xpp3'

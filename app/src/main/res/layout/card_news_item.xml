@@ -52,14 +52,12 @@
                     android:id="@+id/news_src_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:text="Facebook" />
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:text="vor 10 Tagen"
                     android:id="@+id/news_src_date" />
             </LinearLayout>
         </LinearLayout>

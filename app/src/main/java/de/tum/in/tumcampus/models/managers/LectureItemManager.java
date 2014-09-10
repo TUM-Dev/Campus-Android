@@ -216,7 +216,6 @@ public class LectureItemManager {
 
 			// acquire access token
 			if (new AccessTokenManager(context).hasValidAccessToken()) {
-				success = false;
 				throw new Exception("No access token set");
 			}
 

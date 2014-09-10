@@ -1,10 +1,8 @@
 package de.tum.in.tumcampus.tumonline;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Map.Entry;
+import android.content.Context;
+import android.os.AsyncTask;
+import android.util.Log;
 
 import org.apache.http.client.HttpClient;
 import org.apache.http.conn.ClientConnectionManager;
@@ -16,9 +14,12 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import android.content.Context;
-import android.os.AsyncTask;
-import android.util.Log;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
+
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.Utils;
@@ -79,7 +80,7 @@ public class TUMRoomFinderRequest {
 	 * @author Daniel G. Mayr
 	 * @param searchString
 	 * @return output will be a raw String
-	 * @see getRequestURL
+	 * @see TUMRoomFinderRequest#getRequestURL(java.lang.String)
 	 */
 	public ArrayList<HashMap<String, String>> fetch(String searchString) {
 		setParameter("s", searchString);
@@ -163,7 +164,6 @@ public class TUMRoomFinderRequest {
 	public void fetchDefaultMapIdJob(final Context context,
 			final TUMRoomFinderRequestFetchListener listener, String mapID) {
 
-        Context baseContext = context;
 		method = "defaultMapId";
 		// fetch information in a background task and show progress dialog in
 		// meantime

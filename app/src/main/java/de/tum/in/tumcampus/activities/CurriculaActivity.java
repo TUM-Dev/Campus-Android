@@ -31,10 +31,7 @@ public class CurriculaActivity extends ActionBarActivity implements OnItemClickL
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
         ImplicitCounter.Counter(this);
-
-		this.setContentView(R.layout.activity_curricula);
-
-		ListView list = (ListView) this.findViewById(R.id.activity_curricula_list_view);
+		setContentView(R.layout.activity_curricula);
 
 		// Puts all hardcoded web addresses into the hash map
 		this.options = new Hashtable<String, String>();
@@ -73,7 +70,7 @@ public class CurriculaActivity extends ActionBarActivity implements OnItemClickL
 
 		// Sets the adapter with list items
 		ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, optionsArray);
-		list = (ListView) this.findViewById(R.id.activity_curricula_list_view);
+		ListView list = (ListView) this.findViewById(R.id.activity_curricula_list_view);
 		list.setAdapter(arrayAdapter);
 		list.setOnItemClickListener(this);
 	}

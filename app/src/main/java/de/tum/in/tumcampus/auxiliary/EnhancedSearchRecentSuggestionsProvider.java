@@ -3,7 +3,6 @@ package de.tum.in.tumcampus.auxiliary;
 import android.app.SearchManager;
 import android.content.ContentProvider;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -15,7 +14,7 @@ import de.tum.in.tumcampus.models.managers.DatabaseManager;
 /**
  * Slightly modified version of SearchRecentSuggestionsProvider taken from source code of AOSP
  * */
-public class EnhancedSearchRecentSuggestionsProvider extends ContentProvider {
+public abstract class EnhancedSearchRecentSuggestionsProvider extends ContentProvider {
     // client-provided configuration values
     private String mId;
     private String mAuthority;
@@ -27,14 +26,6 @@ public class EnhancedSearchRecentSuggestionsProvider extends ContentProvider {
     private static final String sSuggestions = "suggestions";
     private static final String ORDER_BY = "date DESC";
     private static final String NULL_COLUMN = "query";
-
-    // Table of database versions.  Don't forget to update!
-    // NOTE:  These version values are shifted left 8 bits (x 256) in order to create space for
-    // a small set of mode bitflags in the version int.
-    //
-    // 1      original implementation with queries, and 1 or 2 display columns
-    // 1->2   added UNIQUE constraint to display1 column
-    private static final int DATABASE_VERSION = 2 * 256;
 
     /**
      * This mode bit configures the database to record recent queries.  <i>required</i>
@@ -84,7 +75,7 @@ public class EnhancedSearchRecentSuggestionsProvider extends ContentProvider {
 
         // saved values
         mId = "_"+id;
-        mAuthority = new String(authority);
+        mAuthority = authority;
         mMode = mode;
 
         // derived values
@@ -132,7 +123,7 @@ public class EnhancedSearchRecentSuggestionsProvider extends ContentProvider {
         }
 
         final String base = uri.getPathSegments().get(0);
-        int count = 0;
+        int count;
         if (base.equals(sSuggestions)) {
             selection = selection.replace(sSuggestions,sSuggestions+mId);
             count = db.delete(sSuggestions+mId, selection, selectionArgs);
@@ -284,11 +275,6 @@ public class EnhancedSearchRecentSuggestionsProvider extends ContentProvider {
                 null);
         c.setNotificationUri(getContext().getContentResolver(), uri);
         return c;
-    }
-
-    public Cursor getRecents(Context context) {
-        return context.getContentResolver().query(mSuggestionsUri,
-                new String [] { "query AS name" }, null, null, ORDER_BY);
     }
 
     /**

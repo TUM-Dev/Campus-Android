@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:key="cards_pref_container">
 
     <PreferenceCategory android:title="@string/tumonline_settings">
         <EditTextPreference
@@ -16,6 +17,7 @@
 
         <!-- Cafeteria card -->
         <PreferenceScreen
+            android:key="card_cafeteria"
             android:summary="@string/card_cafeteria_summary"
             android:title="@string/cafeteria">
 
@@ -67,6 +69,7 @@
 
         <!-- MVV card -->
         <PreferenceScreen
+            android:key="card_mvv"
             android:summary="@string/card_mvv_summary"
             android:title="@string/mvv">
 
@@ -104,6 +107,7 @@
 
         <!-- Next lecture card -->
         <PreferenceScreen
+            android:key="card_next_lecture"
             android:summary="@string/card_next_lecture_summary"
             android:title="@string/next_lecture">
 
@@ -126,6 +130,7 @@
 
         <!-- Tuition fee card -->
         <PreferenceScreen
+            android:key="card_tuition_fee"
             android:summary="@string/card_tuition_fee_summary"
             android:title="@string/tuition_fees">
             <PreferenceCategory android:title="Anzeige">
@@ -147,6 +152,7 @@
 
         <!-- News card -->
         <PreferenceScreen
+            android:key="card_news"
             android:summary="@string/card_news_summary"
             android:title="@string/news">
             <PreferenceCategory android:title="Anzeige">
@@ -168,6 +174,7 @@
 
         <!-- Chat card -->
         <PreferenceScreen
+            android:key="card_chat"
             android:summary="@string/card_chat_summary"
             android:title="@string/chat">
             <PreferenceCategory android:title="Anzeige">

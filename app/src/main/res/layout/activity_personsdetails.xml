@@ -53,7 +53,6 @@
                 android:id="@+id/tvDetails1"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="tvDetails1"
                 android:textColor="@color/text_light_blue"
                 android:textSize="@dimen/large_text_size"
                 android:textStyle="bold" />
@@ -63,9 +62,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:autoLink="all"
-                android:inputType="textMultiLine|textNoSuggestions"
                 android:scrollHorizontally="false"
-                android:text="tvDetails2"
                 android:textColor="@android:color/black"
                 android:textSize="@dimen/semilarge_text_size" />
 
@@ -74,9 +71,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:autoLink="all"
-                android:inputType="textMultiLine|textNoSuggestions"
                 android:scrollHorizontally="false"
-                android:text="tvDetails3"
                 android:textColor="@android:color/black"
                 android:textSize="@dimen/semilarge_text_size" />
 
@@ -85,9 +80,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:autoLink="none"
-                android:inputType="textMultiLine|textNoSuggestions"
                 android:scrollHorizontally="false"
-                android:text="tvDetails4"
                 android:textColor="@android:color/black"
                 android:textSize="@dimen/semilarge_text_size" />
         </LinearLayout>

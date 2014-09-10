@@ -1,13 +1,13 @@
 package de.tum.in.tumcampus.auxiliary;
 
+import android.util.Base64;
+
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.Signature;
 import java.security.SignatureException;
-
-import android.util.Base64;
 
 /**
  * Class providing an API to generate signatures of strings.
@@ -34,7 +34,7 @@ public class RSASigner {
 	 * @return A base64 encoded signature
 	 */
 	public String sign(String message) {
-		Signature signer = null;
+		Signature signer;
 		try {
 			signer = Signature.getInstance("SHA1WithRSA");
 		} catch (NoSuchAlgorithmException e) {
@@ -49,7 +49,7 @@ public class RSASigner {
 			return null;
 		}
 
-		byte[] messageBytes = null;
+		byte[] messageBytes;
 		try {
 			messageBytes = message.getBytes("UTF8");
 		} catch (UnsupportedEncodingException e) {
@@ -64,7 +64,7 @@ public class RSASigner {
 			return null;
 		}
 
-		byte[] signature = null;
+		byte[] signature;
 		try {
 			signature = signer.sign();
 		} catch (SignatureException e) {

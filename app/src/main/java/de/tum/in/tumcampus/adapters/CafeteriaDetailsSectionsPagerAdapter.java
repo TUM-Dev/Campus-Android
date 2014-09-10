@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.util.Log;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -38,13 +37,12 @@ public class CafeteriaDetailsSectionsPagerAdapter extends FragmentStatePagerAdap
     }
 
     public void setCafeteriaId(Activity mainActivity, int cafeteriaId) {
-        Activity activity = mainActivity;
         mCafeteriaId = cafeteriaId;
 
         // get all (distinct) dates having menus available
-        CafeteriaMenuManager cmm = new CafeteriaMenuManager(activity);
+        CafeteriaMenuManager cmm = new CafeteriaMenuManager(mainActivity);
         cursorCafeteriaDates = cmm.getDatesFromDb();
-        activity.startManagingCursor(cursorCafeteriaDates);
+        mainActivity.startManagingCursor(cursorCafeteriaDates);
 
         for (int position = 0; position < getCount(); position++) {
             cursorCafeteriaDates.moveToPosition(position);
