@@ -4,7 +4,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -13,7 +12,6 @@ import java.net.URLEncoder;
 import java.util.NoSuchElementException;
 
 import de.tum.in.tumcampus.auxiliary.Const;
-import de.tum.in.tumcampus.auxiliary.MVVSymbolView;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.cards.Card;
 import de.tum.in.tumcampus.cards.MVVCard;
@@ -115,7 +113,7 @@ public class TransportManager implements Card.ProvidesCard {
         for (int j = 2; j < jsonArray.length(); j = j + 3) {
             String symbol = jsonArray.getString(j);
             String name = jsonArray.getString(j + 1).trim();
-            String desc = jsonArray.getString(j + 2) + " min";
+            String desc = jsonArray.getString(j + 2);
             mc.addRow(new String[]{symbol, name, desc, String.valueOf(j)});
         }
         return mc;
@@ -200,12 +198,5 @@ public class TransportManager implements Card.ProvidesCard {
         card.setDepartures(cur);
         card.setTime(System.currentTimeMillis());
         card.apply();
-    }
-
-    public static void setSymbol(Context context, TextView view, String symbol) {
-        MVVSymbolView d = new MVVSymbolView(context, symbol);
-        view.setTextColor(d.getTextColor());
-        view.setText(symbol);
-        view.setBackgroundDrawable(d);
     }
 }

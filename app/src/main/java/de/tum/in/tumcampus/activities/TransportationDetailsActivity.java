@@ -2,18 +2,15 @@ package de.tum.in.tumcampus.activities;
 
 import android.content.Intent;
 import android.database.Cursor;
-import android.database.MatrixCursor;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
-import android.widget.TextView;
+import android.widget.LinearLayout;
 
 import java.util.NoSuchElementException;
 import java.util.concurrent.TimeoutException;
 
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.generic.ActivityForLoadingInBackground;
+import de.tum.in.tumcampus.auxiliary.DepartureView;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.managers.TransportManager;
 
@@ -23,12 +20,11 @@ import de.tum.in.tumcampus.models.managers.TransportManager;
 public class TransportationDetailsActivity extends ActivityForLoadingInBackground<String,Cursor> {
     public static final String EXTRA_STATION = "station";
 
-    private ListView listViewResults;
-    private SimpleCursorAdapter adapterResults;
-    private TransportManager transportationManager;
+    private LinearLayout mViewResults;
+    private TransportManager mTransportationManager;
 
     public TransportationDetailsActivity() {
-        super(R.layout.activity_transportation);
+        super(R.layout.activity_transportation_detail);
     }
 
     @Override
@@ -36,30 +32,9 @@ public class TransportationDetailsActivity extends ActivityForLoadingInBackgroun
         super.onCreate(savedInstanceState);
 
         // get all stations from db
-        transportationManager = new TransportManager(this);
+        mTransportationManager = new TransportManager(this);
 
-        listViewResults = (ListView) this.findViewById(R.id.activity_transport_listview_result);
-
-        // initialize empty departure adapter, disable on click in list
-        MatrixCursor departureCursor = new MatrixCursor(new String[]{"symbol", "name", "time", "_id"});
-        adapterResults = new SimpleCursorAdapter(this, R.layout.activity_transportation_departure_listview, departureCursor,
-                departureCursor.getColumnNames(), new int[]{R.id.line_symbol, R.id.line_name, R.id.line_time}) {
-            @Override
-            public boolean isEnabled(int position) {
-                return false;
-            }
-        };
-        adapterResults.setViewBinder(new SimpleCursorAdapter.ViewBinder() {
-            @Override
-            public boolean setViewValue(View view, Cursor cursor, int i) {
-                if (view.getId() == R.id.line_symbol) {
-                    TransportManager.setSymbol(TransportationDetailsActivity.this, (TextView) view, cursor.getString(0));
-                    return true;
-                }
-                return false;
-            }
-        });
-        listViewResults.setAdapter(adapterResults);
+        mViewResults = (LinearLayout) this.findViewById(R.id.activity_transport_result);
 
         Intent intent = getIntent();
         if(intent==null) {
@@ -68,7 +43,6 @@ public class TransportationDetailsActivity extends ActivityForLoadingInBackgroun
         }
         String location = intent.getStringExtra(EXTRA_STATION);
         setTitle(location);
-
 
         if (!Utils.isConnected(this)) {
             showError(R.string.no_internet_connection);
@@ -82,12 +56,12 @@ public class TransportationDetailsActivity extends ActivityForLoadingInBackgroun
         final String location = arg[0];
         // save clicked station into db and refresh station list
         // (could be clicked on search result list)
-        transportationManager.replaceIntoDb(location);
+        mTransportationManager.replaceIntoDb(location);
 
         // get departures from website
         Cursor departureCursor = null;
         try {
-            departureCursor = transportationManager.getDeparturesFromExternal(location);
+            departureCursor = mTransportationManager.getDeparturesFromExternal(location);
         } catch (NoSuchElementException e) {
             showError(R.string.no_departures_found);
         } catch (TimeoutException e) {
@@ -101,7 +75,14 @@ public class TransportationDetailsActivity extends ActivityForLoadingInBackgroun
 
     @Override
     protected void onLoadFinished(Cursor result) {
-        adapterResults.changeCursor(result);
-        listViewResults.requestFocus();
+        if(result.moveToFirst()) {
+            do {
+                DepartureView view = new DepartureView(this, true);
+                view.setSymbol(result.getString(0));
+                view.setLine(result.getString(1));
+                view.setTime(System.currentTimeMillis()+result.getLong(2)*60000);
+                mViewResults.addView(view);
+            } while(result.moveToNext());
+        }
     }
 }

@@ -12,13 +12,12 @@ import android.support.v4.app.NotificationCompat;
 import android.text.format.DateUtils;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import java.util.Date;
 
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.TransportationDetailsActivity;
-import de.tum.in.tumcampus.models.managers.TransportManager;
+import de.tum.in.tumcampus.auxiliary.DepartureView;
 
 import static de.tum.in.tumcampus.models.managers.CardManager.CARD_MVV;
 
@@ -48,20 +47,17 @@ public class MVVCard extends Card {
         super.getCardView(context, parent);
         if(mDepartures.moveToFirst()) {
             do {
-                addDeparture(mDepartures.getString(0), mDepartures.getString(1),  mDepartures.getString(2));
+                addDeparture(mDepartures.getString(0), mDepartures.getString(1),  mDepartures.getLong(2));
             } while(mDepartures.moveToNext());
         }
         return mCard;
     }
 
-    private void addDeparture(String symbol, String title, String time) {
-        View view = mInflater.inflate(R.layout.card_departure_line, mLinearLayout, false);
-        TextView symbolView = (TextView) view.findViewById(R.id.line_symbol);
-        TextView textView = (TextView) view.findViewById(R.id.line_name);
-        TextView timeView = (TextView) view.findViewById(R.id.line_time);
-        TransportManager.setSymbol(mContext, symbolView, symbol);
-        textView.setText(title);
-        timeView.setText(time);
+    private void addDeparture(String symbol, String title, long time) {
+        DepartureView view = new DepartureView(mContext);
+        view.setSymbol(symbol);
+        view.setLine(title);
+        view.setTime(mTime.getTime()+time*60000);
         mLinearLayout.addView(view);
     }
 

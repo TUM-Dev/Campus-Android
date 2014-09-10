@@ -46,7 +46,8 @@ public class LocationManager {
         Location loc = getCurrentLocation();
         if (loc == null)
             return -1;
-        return getCampusFromLocation(loc);
+        return 0; //TODO delete
+        //return getCampusFromLocation(loc);
     }
 
     /**
