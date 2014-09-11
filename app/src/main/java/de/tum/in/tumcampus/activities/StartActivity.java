@@ -48,7 +48,8 @@ public class StartActivity extends ActionBarActivity implements AdapterView.OnIt
 
     @Override
 	protected void onCreate(Bundle savedInstanceState) {
-        overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+        overridePendingTransition(0,0);
+        //overridePendingTransition(R.anim.fadein, R.anim.fadeout);
 		super.onCreate(savedInstanceState);
         ImplicitCounter.Counter(this);
         setContentView(R.layout.activity_start);

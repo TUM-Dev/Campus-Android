@@ -340,5 +340,11 @@
     <string name="always_hide_card">Always hide this card typ</string>
     <string name="options">Options</string>
     <string name="phone_summary">To receive notifications on your phone you have to enable Wearable</string>
+    <string name="setup_eduroam">Setup eduroam</string>
+    <string name="password">Password</string>
+    <string name="setup">Setup</string>
+    <string name="not_ask_again">Don\'t ask again</string>
+    <string name="eduroam_setup_question">Wollen Sie sich jetzt mit eduroam verbinden?</string>
+    <string name="eduroam_setup_question_desc">Click to start setting up eduroam</string>
 
 </resources>

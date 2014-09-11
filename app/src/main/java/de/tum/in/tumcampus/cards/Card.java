@@ -32,6 +32,7 @@ public abstract class Card {
     protected LinearLayout mLinearLayout;
     protected TextView mTitleView;
     protected TextView mDateView;
+    protected View mPlaceHolder;
     
     // Settings for showing this card on startpage or as notification
     // Default values set for restore card, no internet card, etc.
@@ -64,6 +65,7 @@ public abstract class Card {
         mTitleView = (TextView) mCard.findViewById(R.id.card_title);
         mTitleView.setText(getTitle());
         mDateView = (TextView) mCard.findViewById(R.id.card_date);
+        mPlaceHolder = mCard.findViewById(R.id.place_holder);
         return mCard;
     }
 

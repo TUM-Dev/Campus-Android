@@ -15,13 +15,14 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-        <ListView
-            android:id="@+id/cards_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:descendantFocusability="blocksDescendants"
-            android:dividerHeight="0dip"
-            android:listSelector="@android:color/transparent" />
+            <ListView
+                android:id="@+id/cards_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#EEEEEE"
+                android:descendantFocusability="blocksDescendants"
+                android:dividerHeight="0dip"
+                android:listSelector="@android:color/transparent" />
 
         </uk.co.senab.actionbarpulltorefresh.extras.actionbarcompat.PullToRefreshLayout>
 

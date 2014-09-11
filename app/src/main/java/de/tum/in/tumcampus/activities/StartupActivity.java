@@ -4,13 +4,23 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.util.TypedValue;
+import android.view.View;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bugsense.trace.BugSenseHandler;
+import com.nineoldandroids.animation.Animator;
+import com.nineoldandroids.animation.AnimatorSet;
+import com.nineoldandroids.animation.ObjectAnimator;
+import com.nineoldandroids.view.ViewHelper;
 
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.wizzard.WizNavStartActivity;
@@ -81,15 +91,78 @@ public class StartupActivity extends ActionBarActivity {
     };
 
     private void startApp() {
-        // Start the demo Activity if demo mode is set
-        if (DEMO_MODE) {
-            Intent intent = new Intent(this, DemoModeStartActivity.class);
-            startActivity(intent);
-            finish();
+        // Get views to be moved
+        final View background = findViewById(R.id.startup_background);
+        final ImageView tumLogo = (ImageView) findViewById(R.id.startup_tum_logo);
+        final TextView loadingText = (TextView) findViewById(R.id.startup_loading);
+        final ImageView drawerIndicator = (ImageView) findViewById(R.id.startup_drawer_indicator);
+        final TextView actionBarTitle = (TextView) findViewById(R.id.startup_actionbar_title);
+        final ImageView settings = (ImageView) findViewById(R.id.startup_settings);
+
+        // Make some position calculations
+        float density = getResources().getDisplayMetrics().density;
+        final int actionBarHeight = getActionBarHeight();
+        final float tumScale = (actionBarHeight-density*16)/(float)tumLogo.getHeight();
+        final float screenHeight = background.getHeight();
+        float moveToLeft = (tumLogo.getWidth()*(1-tumScale))/2.0f;
+        float moveToTop = (tumLogo.getHeight()*(1-tumScale))/2.0f;
+
+        // Setup animation
+        AnimatorSet set = new AnimatorSet();
+        set.playTogether(
+                ObjectAnimator.ofFloat(background, "translationY", ViewHelper.getTranslationX(background), actionBarHeight-screenHeight),
+                ObjectAnimator.ofFloat(tumLogo, "translationX", 0, -ViewHelper.getX(tumLogo)-moveToLeft+8*density),
+                ObjectAnimator.ofFloat(tumLogo, "translationY", 0, -ViewHelper.getY(tumLogo)-moveToTop+8*density),
+                ObjectAnimator.ofFloat(tumLogo, "scaleX", 1, tumScale),
+                ObjectAnimator.ofFloat(tumLogo, "scaleY", 1, tumScale),
+                ObjectAnimator.ofFloat(loadingText, "alpha", 1, 0, 0, 0),
+                ObjectAnimator.ofFloat(loadingText, "translationY", 0, -screenHeight),
+                ObjectAnimator.ofFloat(drawerIndicator, "translationX", -50*density, 0),
+                ObjectAnimator.ofFloat(actionBarTitle, "alpha", 0, 0, 0, 1),
+                ObjectAnimator.ofFloat(settings, "alpha", 0, 0, 0, 1)
+        );
+        set.setInterpolator(new AccelerateDecelerateInterpolator());
+        set.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+                drawerIndicator.setVisibility(View.VISIBLE);
+                actionBarTitle.setVisibility(View.VISIBLE);
+                settings.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                // Start the demo Activity if demo mode is set
+                if (DEMO_MODE) {
+                    Intent intent = new Intent(StartupActivity.this, DemoModeStartActivity.class);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    Intent intent = new Intent(StartupActivity.this, StartActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+            }
+            @Override
+            public void onAnimationCancel(Animator animation) {}
+            @Override
+            public void onAnimationRepeat(Animator animation) {}
+        });
+        set.setDuration(600).start();
+    }
+
+    public int getActionBarHeight() {
+        int actionBarHeight = 0;
+        TypedValue tv = new TypedValue();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            if (getTheme().resolveAttribute(android.R.attr.actionBarSize, tv,
+                    true))
+                actionBarHeight = TypedValue.complexToDimensionPixelSize(
+                        tv.data, getResources().getDisplayMetrics());
         } else {
-            Intent intent = new Intent(this, StartActivity.class);
-            startActivity(intent);
-            finish();
+            actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data,
+                    getResources().getDisplayMetrics());
         }
+        return actionBarHeight;
     }
 }

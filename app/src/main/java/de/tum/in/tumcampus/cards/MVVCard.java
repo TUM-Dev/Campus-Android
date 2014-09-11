@@ -45,6 +45,7 @@ public class MVVCard extends Card {
     @Override
     public View getCardView(Context context, ViewGroup parent) {
         super.getCardView(context, parent);
+        mPlaceHolder.setVisibility(View.VISIBLE);
         if(mDepartures.moveToFirst()) {
             do {
                 addDeparture(mDepartures.getString(0), mDepartures.getString(1),  mDepartures.getLong(2));

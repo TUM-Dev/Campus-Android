@@ -4,8 +4,11 @@ package de.tum.in.tumcampus.adapters;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.BaseAdapter;
 
+import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.auxiliary.SwipeDismissList;
 import de.tum.in.tumcampus.cards.Card;
 import de.tum.in.tumcampus.models.managers.CardManager;
@@ -13,6 +16,7 @@ import de.tum.in.tumcampus.models.managers.CardManager;
 public class CardsAdapter extends BaseAdapter implements SwipeDismissList.SwipeDismissDiscardable {
 
     private Context mContext;
+    private int lastPosition = -1;
 
     public CardsAdapter(Context context) {
         mContext = context;
@@ -35,8 +39,16 @@ public class CardsAdapter extends BaseAdapter implements SwipeDismissList.SwipeD
     }
 
     @Override
-    public View getView(int i, View view, ViewGroup viewGroup) {
-        return CardManager.getCard(i).getCardView(mContext, viewGroup);
+    public View getView(int position, View convertView, ViewGroup viewGroup) {
+        View view = CardManager.getCard(position).getCardView(mContext, viewGroup);
+
+        if(position > lastPosition) {
+            Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.up_from_bottom);
+            view.startAnimation(animation);
+        }
+        lastPosition = position;
+
+        return view;
     }
 
     public Card remove(int position) {

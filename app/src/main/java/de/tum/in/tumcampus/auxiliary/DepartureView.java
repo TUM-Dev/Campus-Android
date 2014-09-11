@@ -103,10 +103,12 @@ public class DepartureView extends LinearLayout {
         va.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             public void onAnimationUpdate(ValueAnimator animation) {
                 int value = (Integer) animation.getAnimatedValue();
-                getLayoutParams().height = value;
-                requestLayout();
-                if(value==0) {
-                    setVisibility(View.GONE);
+                if(getLayoutParams()!=null) {
+                    getLayoutParams().height = value;
+                    requestLayout();
+                    if (value == 0) {
+                        setVisibility(View.GONE);
+                    }
                 }
             }
         });

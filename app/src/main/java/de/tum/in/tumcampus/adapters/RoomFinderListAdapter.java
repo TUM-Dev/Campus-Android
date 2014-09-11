@@ -61,7 +61,7 @@ public class RoomFinderListAdapter extends BaseAdapter {
 		if (convertView == null)
 			vi = inflater.inflate(R.layout.list_roomfinder_item, null);
 
-		TextView roomTitle = (TextView) vi.findViewById(R.id.title); // roomtitle
+		TextView roomTitle = (TextView) vi.findViewById(R.id.startup_actionbar_title); // roomtitle
 		TextView buildingTitle = (TextView) vi.findViewById(R.id.building); // building
 		TextView campusTitle = (TextView) vi.findViewById(R.id.campus); // campus
 

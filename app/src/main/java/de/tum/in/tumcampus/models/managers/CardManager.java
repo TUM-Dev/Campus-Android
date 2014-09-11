@@ -9,6 +9,7 @@ import java.util.List;
 
 import de.tum.in.tumcampus.auxiliary.AccessTokenManager;
 import de.tum.in.tumcampus.cards.Card;
+import de.tum.in.tumcampus.cards.EduroamCard;
 import de.tum.in.tumcampus.cards.FirstUseCard1;
 import de.tum.in.tumcampus.cards.FirstUseCard2;
 import de.tum.in.tumcampus.cards.NoInternetCard;
@@ -27,6 +28,7 @@ public class CardManager {
     public static final int CARD_NO_INTERNET = 7;
     public static final int CARD_MVV = 8;
     public static final int CARD_NEWS = 9;
+    public static final int CARD_EDUROAM = 10;
 
     private static List<Card> cards;
     private static ArrayList<Card> newCards;
@@ -38,7 +40,9 @@ public class CardManager {
 
     // For card adapter
     public static int getCardCount() {
-        return cards.size();
+        if(cards==null)
+            return 0;
+        return cards.size(); //TODO investigate why cards is sometimes null
     }
 
     // For card adapter
@@ -68,6 +72,8 @@ public class CardManager {
         // Add first use tutorial
         new FirstUseCard1(context).apply();
         new FirstUseCard2(context).apply();
+
+        new EduroamCard(context).apply();
 
         List<Card.ProvidesCard> managers = new ArrayList<Card.ProvidesCard>();
 

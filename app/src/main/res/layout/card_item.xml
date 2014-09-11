@@ -31,7 +31,11 @@
                 android:gravity="right"
                 android:textColor="@android:color/secondary_text_light" />
         </LinearLayout>
-
+        <View
+            android:id="@+id/place_holder"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="10dp" />
 
     </LinearLayout>
 </FrameLayout>
