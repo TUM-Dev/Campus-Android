@@ -2,92 +2,33 @@ package de.tum.in.tumcampus.activities;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.webkit.WebView;
+
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.auxiliary.ImplicitCounter;
+import it.sephiroth.android.library.imagezoom.ImageViewTouch;
+import it.sephiroth.android.library.imagezoom.ImageViewTouchBase;
 
 /**
  * Activity to show plan details.
  */
 public class PlansDetailsActivity extends ActionBarActivity {
 
-    @SuppressWarnings("deprecation")
+    public static final String PLAN_TITLE_ID = "plan_title_id";
+    public static final String PLAN_IMG_ID = "plan_img_id";
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
         ImplicitCounter.Counter(this);
 		setContentView(R.layout.activity_plans_details);
 
-        int position = getIntent().getExtras().getInt("Plan");
+        int title = getIntent().getExtras().getInt(PLAN_TITLE_ID);
+        int img = getIntent().getExtras().getInt(PLAN_IMG_ID);
 
-		WebView browser = (WebView) findViewById(R.id.activity_plans_web_view);
-        // activate zooming
-        browser.getSettings().setBuiltInZoomControls(true);
-		// activate double tab to zoom
-		browser.getSettings().setUseWideViewPort(true);
-		// reset zoom
-		browser.clearView();
+		ImageViewTouch imageViewTouch = (ImageViewTouch) findViewById(R.id.activity_plans_plan);
+        imageViewTouch.setImageResource(img);
+        imageViewTouch.setDisplayType(ImageViewTouchBase.DisplayType.FIT_TO_SCREEN);
 
-		// draw image from assets directory in webview
-		String file = "";
-		int width = getWindowManager().getDefaultDisplay().getWidth();
-
-		if (position == 0) {
-			file = "plans/CampusGarching.jpg";
-			setTitle(getString(R.string.campus_garching));
-			browser.setInitialScale(100 * width / 1024);
-
-		} else if (position == 1) {
-			file = "plans/CampusKlinikum.jpg";
-			setTitle(getString(R.string.campus_klinikum));
-			browser.setInitialScale(100 * width / 1024);
-
-		} else if (position == 2) {
-			file = "plans/CampusOlympiapark.jpg";
-			setTitle(getString(R.string.campus_olympiapark));
-			browser.setInitialScale(100 * width / 900);
-
-		} else if (position == 3) {
-			file = "plans/CampusOlympiaparkHallenplan.jpg";
-			setTitle(getString(R.string.campus_olympiapark_gyms));
-			browser.setInitialScale(100 * width / 800);
-
-		} else if (position == 4) {
-			file = "plans/CampusStammgelaende.jpg";
-			setTitle(getString(R.string.campus_main));
-			browser.setInitialScale(100 * width / 1024);
-
-		} else if (position == 5) {
-			file = "plans/CampusWeihenstephan.jpg";
-			setTitle(getString(R.string.campus_weihenstephan));
-			browser.setInitialScale(100 * width / 1110);
-
-		} else if (position == 6) {
-			file = "plans/mvv.png";
-			setTitle(getString(R.string.mvv_fast_train_net));
-			browser.setInitialScale(100 * width / 1454);
-
-		} else if (position == 7) {
-			file = "plans/mvv_night.png";
-			setTitle(getString(R.string.mvv_nightlines));
-			browser.setInitialScale(100 * width / 1480);
-
-		} else if (position == 8) {
-			file = "plans/tram.png";
-			setTitle(getString(R.string.mvv_tram));
-			browser.setInitialScale(100 * width / 1480);
-
-		} else if (position == 9) {
-			file = "plans/mvv_entire_net.png";
-			setTitle(getString(R.string.mvv_entire_net));
-			browser.setInitialScale(100 * width / 1480);
-		}
-
-		String data = "<body style='margin:0px;'><img src='" + file
-				+ "'/></body>";
-		browser.loadDataWithBaseURL("file:///android_asset/", data,
-				"text/html", "UTF-8", null);
-		browser.forceLayout();
-
+	    setTitle(getString(title));
 	}
 }

@@ -200,6 +200,25 @@ public class Utils {
 		dir.delete();
 	}
 
+    /**
+     * Start loading a file in the same thread
+     *
+     * <pre>
+     * @param url Download location
+     * @return Gets an InputStream to the file
+     * @throws Exception
+     * </pre>
+     */
+    private static InputStream downloadFileStream(String url) throws Exception {
+        HttpClient httpclient = new DefaultHttpClient();
+        HttpEntity entity = httpclient.execute(new HttpGet(url)).getEntity();
+
+        if (entity == null) {
+            return null;
+        }
+        return entity.getContent();
+    }
+
 	/**
 	 * Download a file in the same thread
 	 * 
@@ -381,6 +400,27 @@ public class Utils {
 			}
 		}).start();
 	}
+
+    public static Bitmap downloadImageAndCompressThread(final String url) {
+        openDownloads++;
+        Bitmap sourceImage = null;
+        try {
+            Utils.log(url);
+
+            InputStream is = downloadFileStream(url);
+            try {
+                sourceImage = BitmapFactory.decodeStream(is);
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                is.close();
+                openDownloads--;
+            }
+        } catch (Exception e) {
+            log(e, url);
+        }
+        return sourceImage;
+    }
 
 	/**
 	 * Download a JSON stream from a URL

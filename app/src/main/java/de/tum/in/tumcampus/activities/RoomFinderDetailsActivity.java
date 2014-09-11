@@ -1,35 +1,46 @@
 package de.tum.in.tumcampus.activities;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
 
 import de.tum.in.tumcampus.R;
-import de.tum.in.tumcampus.auxiliary.ImplicitCounter;
+import de.tum.in.tumcampus.activities.generic.ActivityForLoadingInBackground;
+import de.tum.in.tumcampus.auxiliary.Utils;
+import it.sephiroth.android.library.imagezoom.ImageViewTouch;
+import it.sephiroth.android.library.imagezoom.ImageViewTouchBase;
 
 /**
  * Displays the map regarding the searched room.
  * 
  */
-public class RoomFinderDetailsActivity extends ActionBarActivity {
+public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<String,Bitmap> {
 
-    @SuppressWarnings("deprecation")
-	@Override
+    private ImageViewTouch mImage;
+
+    public RoomFinderDetailsActivity() {
+        super(R.layout.activity_roomfinderdetails);
+    }
+
+    @Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-        ImplicitCounter.Counter(this);
-		setContentView(R.layout.activity_roomfinderdetails);
 
-        WebView browser = (WebView) findViewById(R.id.activity_roomfinder_web_view);
-        browser.getSettings().setBuiltInZoomControls(true);
-		browser.getSettings().setDefaultZoom(WebSettings.ZoomDensity.FAR);
-		browser.getSettings().setUseWideViewPort(true);
+        mImage = (ImageViewTouch) findViewById(R.id.activity_roomfinder_details);
+        mImage.setDisplayType(ImageViewTouchBase.DisplayType.FIT_TO_SCREEN);
 
 		String roomId = getIntent().getExtras().getString("roomId");
 		String mapId = getIntent().getExtras().getString("mapId");
 
-		browser.loadUrl("http://vmbaumgarten3.informatik.tu-muenchen.de/roommaps/room/map?id="
-                + roomId + "&mapid=" + mapId);
+        startLoading("http://vmbaumgarten3.informatik.tu-muenchen.de/roommaps/room/map?id=" + roomId + "&mapid=" + mapId);
 	}
+
+    @Override
+    protected Bitmap onLoadInBackground(String... arg) {
+        return Utils.downloadImageAndCompressThread(arg[0]);
+    }
+
+    @Override
+    protected void onLoadFinished(Bitmap result) {
+        mImage.setImageBitmap(result);
+    }
 }

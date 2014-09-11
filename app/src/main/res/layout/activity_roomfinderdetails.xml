@@ -3,9 +3,21 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <WebView
-        android:id="@+id/activity_roomfinder_web_view"
+    <include
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent" />
+        android:layout_height="fill_parent"
+        layout="@layout/layout_progress"
+        android:visibility="gone" />
+
+    <include
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        layout="@layout/layout_error"
+        android:visibility="gone" />
+
+    <it.sephiroth.android.library.imagezoom.ImageViewTouch
+        android:id="@+id/activity_roomfinder_details"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </LinearLayout>

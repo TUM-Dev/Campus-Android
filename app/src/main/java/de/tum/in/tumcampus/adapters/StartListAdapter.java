@@ -12,7 +12,6 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import de.tum.in.tumcampus.R;
-import de.tum.in.tumcampus.auxiliary.ListMenuEntry;
 
 /**
  * Adapter to combine own layouts with the list view.
@@ -31,23 +30,23 @@ public class StartListAdapter extends BaseAdapter {
 	private Activity activity;
 	private LayoutInflater inflater = null;
 	private int layoutId;
-	private ArrayList<ListMenuEntry> listMenuEntrySet;
+	private ArrayList<PlanListEntry> planList;
 
-    public StartListAdapter(Activity activity, int layoutId, ArrayList<ListMenuEntry> listMenuEntrySet) {
+    public StartListAdapter(Activity activity, int layoutId, ArrayList<PlanListEntry> planList) {
 		this.activity = activity;
 		this.layoutId = layoutId;
-		this.listMenuEntrySet = listMenuEntrySet;
+		this.planList = planList;
 		this.inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
 
 	@Override
 	public int getCount() {
-		return listMenuEntrySet.size();
+		return planList.size();
 	}
 
 	@Override
 	public Object getItem(int position) {
-		return position;
+		return planList.get(position);
 	}
 
 	@Override
@@ -72,7 +71,7 @@ public class StartListAdapter extends BaseAdapter {
 			holder = (ViewHolder) vi.getTag();
 		}
 
-        ListMenuEntry item = listMenuEntrySet.get(position);
+        PlanListEntry item = planList.get(position);
 		holder.icon.setImageResource(item.imageId);
 		holder.title.setText(activity.getResources().getText(item.titleId));
         if(item.detailId==R.string.empty_string) {
@@ -83,4 +82,18 @@ public class StartListAdapter extends BaseAdapter {
         }
 		return vi;
 	}
+
+    public static class PlanListEntry {
+        public int imageId;
+        public int titleId;
+        public int detailId;
+        public int imgId;
+
+        public PlanListEntry(int thumbId, int titleId, int detailId, int imgId) {
+            this.imageId = thumbId;
+            this.titleId = titleId;
+            this.detailId = detailId;
+            this.imgId = imgId;
+        }
+    }
 }

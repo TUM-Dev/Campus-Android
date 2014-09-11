@@ -38,4 +38,10 @@
         <url>https://github.com/chrisbanes/ActionBar-PullToRefresh/</url>
         <license>Apache Software License 2.0</license>
     </notice>
+    <notice>
+        <name>ImageViewTouch for Android</name>
+        <url>https://github.com/sephiroth74/ImageViewZoom</url>
+        <copyright>Alessandro Crugnola</copyright>
+        <license>MIT License</license>
+    </notice>
 </notices>
