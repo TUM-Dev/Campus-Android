@@ -1,14 +1,12 @@
 package de.tum.in.tumcampus.adapters;
 
-
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.BaseAdapter;
 
-import de.tum.in.tumcampus.R;
+import com.nineoldandroids.animation.ObjectAnimator;
+
 import de.tum.in.tumcampus.auxiliary.SwipeDismissList;
 import de.tum.in.tumcampus.cards.Card;
 import de.tum.in.tumcampus.models.managers.CardManager;
@@ -43,8 +41,7 @@ public class CardsAdapter extends BaseAdapter implements SwipeDismissList.SwipeD
         View view = CardManager.getCard(position).getCardView(mContext, viewGroup);
 
         if(position > lastPosition) {
-            Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.up_from_bottom);
-            view.startAnimation(animation);
+            ObjectAnimator.ofFloat(view, "translationY", viewGroup.getMeasuredHeight(), 0).setDuration(500).start();
         }
         lastPosition = position;
 

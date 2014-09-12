@@ -11,7 +11,6 @@ import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
 
 import java.util.List;
 
@@ -22,13 +21,15 @@ import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.managers.EduroamManager;
 
 public class ScanResultsAvailableReceiver extends BroadcastReceiver {
+    private static final String SHOULD_SHOW = "setup_notification_dismissed";
+    private static final String HIDE_SETUP_EDUROAM_ALWAYS = "hide_setup_eduroam";
+
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.d(getClass().getSimpleName(), "ScanResultsAvailableReceiver called!");
         // Test if user has eduroam configured already
         EduroamManager man = new EduroamManager(context);
         SharedPreferences prefs = context.getSharedPreferences(Const.INTERNAL_PREFS, 0);
-        boolean hide = prefs.getBoolean(NeverShowAgain.HIDE_SETUP_EDUROAM_ALWAYS, false);
+        boolean hide = prefs.getBoolean(HIDE_SETUP_EDUROAM_ALWAYS, false);
         if(man.isConfigured() || Utils.isConnected(context) || Build.VERSION.SDK_INT<18 || hide)
             return;
 
@@ -43,29 +44,26 @@ public class ScanResultsAvailableReceiver extends BroadcastReceiver {
             }
         }
 
-        if(!prefs.getBoolean(DismissNotification.SHOULD_SHOW, true)) {
-            prefs.edit().putBoolean(DismissNotification.SHOULD_SHOW, true).apply();
+        if(!prefs.getBoolean(SHOULD_SHOW, true)) {
+            prefs.edit().putBoolean(SHOULD_SHOW, true).apply();
         }
     }
 
     public void showNotification(Context context) {
         // If previous notification is still visible
         SharedPreferences prefs = context.getSharedPreferences(Const.INTERNAL_PREFS, 0);
-        if(!prefs.getBoolean(DismissNotification.SHOULD_SHOW, true))
+        if(!prefs.getBoolean(SHOULD_SHOW, true))
             return;
 
         // Prepate intents for notification actions
         Intent intent = new Intent(context, SetupEduroam.class);
         Intent hide = new Intent(context, NeverShowAgain.class);
-        Intent delete = new Intent(context, DismissNotification.class);
 
         PendingIntent setupIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         PendingIntent hideIntent = PendingIntent.getService(context, 0, hide, PendingIntent.FLAG_UPDATE_CURRENT);
-        PendingIntent deleteIntent = PendingIntent.getService(context, 0, delete, PendingIntent.FLAG_UPDATE_CURRENT);
 
         // Create Notification using NotificationCompat.Builder
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
-                // Set Icon
                 .setSmallIcon(R.drawable.ic_notification_wifi)
                 .setTicker(context.getString(R.string.setup_eduroam))
                 .setContentTitle(context.getString(R.string.setup_eduroam))
@@ -73,20 +71,22 @@ public class ScanResultsAvailableReceiver extends BroadcastReceiver {
                 .addAction(R.drawable.ic_action_cancel, context.getString(R.string.not_ask_again), hideIntent)
                 .addAction(R.drawable.ic_notification_wifi, context.getString(R.string.setup), setupIntent)
                 .setContentIntent(setupIntent)
-                .setDeleteIntent(deleteIntent);
+                .setAutoCancel(true);
 
         // Create Notification Manager
         NotificationManager notificationmanager = (NotificationManager) context
                 .getSystemService(Context.NOTIFICATION_SERVICE);
+
         // Build Notification with Notification Manager
         notificationmanager.notify(123, builder.build());
+
+        prefs.edit().putBoolean(SHOULD_SHOW, false).apply();
 
     }
 
     public static class NeverShowAgain extends IntentService {
 
         private static final String NEVER_SHOW = "never_show";
-        private static final String HIDE_SETUP_EDUROAM_ALWAYS = "hide_setup_eduroam";
 
         public NeverShowAgain() {
             super(NEVER_SHOW);
@@ -96,22 +96,6 @@ public class ScanResultsAvailableReceiver extends BroadcastReceiver {
         protected void onHandleIntent(Intent intent) {
             SharedPreferences prefs = getSharedPreferences(Const.INTERNAL_PREFS, 0);
             prefs.edit().putBoolean(HIDE_SETUP_EDUROAM_ALWAYS,true).apply();
-        }
-    }
-
-    public static class DismissNotification extends IntentService {
-
-        private static final String DISMISSED = "dismissed";
-        private static final String SHOULD_SHOW = "setup_notification_dismissed";
-
-        public DismissNotification() {
-            super(DISMISSED);
-        }
-
-        @Override
-        protected void onHandleIntent(Intent intent) {
-            SharedPreferences prefs = getSharedPreferences(Const.INTERNAL_PREFS, 0);
-            prefs.edit().putBoolean(SHOULD_SHOW, false).apply();
         }
     }
 }
