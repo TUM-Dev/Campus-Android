@@ -87,12 +87,12 @@ public class MVVCard extends Card {
 
         String firstContent = "", firstTime = "";
         if(mDepartures.moveToFirst()) {
-            firstTime = mDepartures.getString(2);
+            firstTime = mDepartures.getString(2)+"min";
             firstContent = mDepartures.getString(0)+" "+mDepartures.getString(1);
             do {
                 NotificationCompat.Builder pageNotification =
                         new NotificationCompat.Builder(mContext)
-                                .setContentTitle(mDepartures.getString(2))
+                                .setContentTitle(mDepartures.getString(2)+"min")
                                 .setContentText(mDepartures.getString(0)+" "+mDepartures.getString(1));
                 morePageNotification.addPage(pageNotification.build());
             } while(mDepartures.moveToNext());

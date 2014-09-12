@@ -43,6 +43,8 @@ public class RoomFinderActivity extends ActivityForSearching implements TUMRoomF
         super.onCreate(savedInstanceState);
         roomFinderRequest = new TUMRoomFinderRequest();
 
+        openSearch();
+
         onNewIntent(getIntent());
     }
 

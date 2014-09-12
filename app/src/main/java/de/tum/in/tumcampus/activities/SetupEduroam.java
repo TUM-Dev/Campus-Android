@@ -35,16 +35,20 @@ public class SetupEduroam extends ActionBarActivity {
                         manager.configureEduroam(lrz.getText().toString(), password.getText().toString());
                         // TODO show progress and then success/error message
                         dialog.cancel();
-                        SetupEduroam.this.finish();
                     }
                 }).setNegativeButton(android.R.string.cancel,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
-                        SetupEduroam.this.finish();
                     }
                 });
         AlertDialog alert = builder.create();
+        alert.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialogInterface) {
+                finish();
+            }
+        });
         alert.show();
     }
 }

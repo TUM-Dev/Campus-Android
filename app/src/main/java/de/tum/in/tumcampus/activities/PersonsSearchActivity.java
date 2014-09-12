@@ -71,6 +71,9 @@ public class PersonsSearchActivity extends ActivityForSearchingTumOnline {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         lvPersons = (ListView) findViewById(R.id.lstPersons);
+
+        openSearch();
+
         onNewIntent(getIntent()); //TODO try if this can be put into SearchActivity
     }
 

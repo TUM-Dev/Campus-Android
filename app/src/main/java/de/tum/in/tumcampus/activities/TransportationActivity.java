@@ -49,8 +49,12 @@ public class TransportationActivity extends ActivityForSearchingInBackground<Cur
         onNewIntent(getIntent());
 
         if(mQuery==null) {
-            listViewResults.setAdapter(adapterStations);
-            listViewResults.requestFocus();
+            if(adapterStations.getCount()==0) {
+                openSearch();
+            } else {
+                listViewResults.setAdapter(adapterStations);
+                listViewResults.requestFocus();
+            }
         }
     }
 

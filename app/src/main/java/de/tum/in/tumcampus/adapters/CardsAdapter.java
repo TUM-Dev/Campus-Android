@@ -14,7 +14,6 @@ import de.tum.in.tumcampus.models.managers.CardManager;
 public class CardsAdapter extends BaseAdapter implements SwipeDismissList.SwipeDismissDiscardable {
 
     private Context mContext;
-    private int lastPosition = -1;
 
     public CardsAdapter(Context context) {
         mContext = context;
@@ -38,14 +37,7 @@ public class CardsAdapter extends BaseAdapter implements SwipeDismissList.SwipeD
 
     @Override
     public View getView(int position, View convertView, ViewGroup viewGroup) {
-        View view = CardManager.getCard(position).getCardView(mContext, viewGroup);
-
-        if(position > lastPosition) {
-            ObjectAnimator.ofFloat(view, "translationY", viewGroup.getMeasuredHeight(), 0).setDuration(500).start();
-        }
-        lastPosition = position;
-
-        return view;
+        return CardManager.getCard(position).getCardView(mContext, viewGroup);
     }
 
     public Card remove(int position) {

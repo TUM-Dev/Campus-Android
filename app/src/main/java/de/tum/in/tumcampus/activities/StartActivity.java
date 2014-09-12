@@ -15,6 +15,8 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.nhaarman.listviewanimations.appearance.simple.SwingBottomInAnimationAdapter;
+
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.adapters.CardsAdapter;
 import de.tum.in.tumcampus.adapters.NavigationDrawerAdapter;
@@ -61,7 +63,9 @@ public class StartActivity extends ActionBarActivity implements AdapterView.OnIt
         mCardsView.setOnItemClickListener(this);
         mCardsView.setDividerHeight(0);
         mAdapter = new CardsAdapter(this);
-        mCardsView.setAdapter(mAdapter);
+        SwingBottomInAnimationAdapter animationAdapter = new SwingBottomInAnimationAdapter(mAdapter);
+        animationAdapter.setAbsListView(mCardsView);
+        mCardsView.setAdapter(animationAdapter);
         registerForContextMenu(mCardsView);
 
         // Setup swipe to dismiss feature
@@ -163,11 +167,11 @@ public class StartActivity extends ActionBarActivity implements AdapterView.OnIt
             return true;
         }
 		switch (item.getItemId()) {
-		case R.id.action_settings:
-			// Opens the preferences screen
-			Intent intent = new Intent(this, UserPreferencesActivity.class);
-			startActivity(intent);
-			break;
+            case R.id.action_settings:
+                // Opens the preferences screen
+                Intent intent = new Intent(this, UserPreferencesActivity.class);
+                startActivity(intent);
+                break;
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -263,7 +267,7 @@ public class StartActivity extends ActionBarActivity implements AdapterView.OnIt
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
-                mSwipeList.cancelUndo();
+                mSwipeList.discardUndo();
             }
 
             @Override

@@ -379,10 +379,6 @@
             android:name="de.tum.in.tumcampus.activities.SetupEduroam"
             android:configChanges="orientation|screenSize"
             android:theme="@style/Theme.AppCompat.Translucent">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name="de.tum.in.tumcampus.activities.wizzard.WizNavStartActivity"

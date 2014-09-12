@@ -104,22 +104,22 @@ public class StartupActivity extends ActionBarActivity {
         final int actionBarHeight = getActionBarHeight();
         final float tumScale = (actionBarHeight-density*16)/(float)tumLogo.getHeight();
         final float screenHeight = background.getHeight();
-        float moveToLeft = (tumLogo.getWidth()*(1-tumScale))/2.0f;
-        float moveToTop = (tumLogo.getHeight()*(1-tumScale))/2.0f;
+        float moveToLeft = -ViewHelper.getX(tumLogo)-(tumLogo.getWidth()*(1-tumScale))/2.0f+8*density;
+        float moveToTop = -ViewHelper.getY(tumLogo)-(tumLogo.getHeight()*(1-tumScale))/2.0f+8*density;
 
         // Setup animation
         AnimatorSet set = new AnimatorSet();
         set.playTogether(
                 ObjectAnimator.ofFloat(background, "translationY", ViewHelper.getTranslationX(background), actionBarHeight-screenHeight),
-                ObjectAnimator.ofFloat(tumLogo, "translationX", 0, -ViewHelper.getX(tumLogo)-moveToLeft+8*density),
-                ObjectAnimator.ofFloat(tumLogo, "translationY", 0, -ViewHelper.getY(tumLogo)-moveToTop+8*density),
-                ObjectAnimator.ofFloat(tumLogo, "scaleX", 1, tumScale),
-                ObjectAnimator.ofFloat(tumLogo, "scaleY", 1, tumScale),
+                ObjectAnimator.ofFloat(tumLogo, "translationX", 0, moveToLeft, moveToLeft),
+                ObjectAnimator.ofFloat(tumLogo, "translationY", 0, moveToTop, moveToTop),
+                ObjectAnimator.ofFloat(tumLogo, "scaleX", 1, tumScale, tumScale),
+                ObjectAnimator.ofFloat(tumLogo, "scaleY", 1, tumScale, tumScale),
                 ObjectAnimator.ofFloat(loadingText, "alpha", 1, 0, 0, 0),
                 ObjectAnimator.ofFloat(loadingText, "translationY", 0, -screenHeight),
                 ObjectAnimator.ofFloat(drawerIndicator, "translationX", -50*density, 0),
-                ObjectAnimator.ofFloat(actionBarTitle, "alpha", 0, 0, 0, 1),
-                ObjectAnimator.ofFloat(settings, "alpha", 0, 0, 0, 1)
+                ObjectAnimator.ofFloat(actionBarTitle, "alpha", 0, 0, 1),
+                ObjectAnimator.ofFloat(settings, "alpha", 0, 0, 1)
         );
         set.setInterpolator(new AccelerateDecelerateInterpolator());
         set.addListener(new Animator.AnimatorListener() {

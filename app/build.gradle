@@ -29,6 +29,7 @@ dependencies {
     compile 'se.emilsjolander:stickylistheaders:2.5.0'
     compile 'com.squareup.retrofit:retrofit:1.6.1'
     compile 'it.sephiroth.android.library.imagezoom:imagezoom:1.0.5'
+    compile 'com.nhaarman.listviewanimations:lib-core:3.1.0@aar'
     compile ('com.github.chrisbanes.actionbarpulltorefresh:extra-abc:0.9.9') {
         exclude group: 'com.android.support', module: 'appcompat-v7'
     }

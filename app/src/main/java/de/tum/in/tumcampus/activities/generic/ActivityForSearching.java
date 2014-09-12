@@ -8,6 +8,7 @@ import android.content.SearchRecentSuggestionsProvider;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.provider.SearchRecentSuggestions;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
@@ -34,6 +35,8 @@ public abstract class ActivityForSearching extends ProgressActivity {
     protected String mQuery = null;
     private String mAuthority;
     private int mMinLength;
+    private MenuItem mSearchItem;
+    private boolean mOpenSearch;
 
     protected abstract void onStartSearch();
     protected abstract void onStartSearch(String s);
@@ -45,14 +48,20 @@ public abstract class ActivityForSearching extends ProgressActivity {
 	}
 
     @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        getSupportActionBar().setIcon(R.drawable.tum_logo);
+    }
+
+    @Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.menu_activity_for_searching, menu);
+		getMenuInflater().inflate(R.menu.menu_search, menu);
 
         // Get SearchView
-        final MenuItem searchItem = menu.findItem(R.id.action_search);
-        mSearchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        mSearchItem = menu.findItem(R.id.action_search);
+        mSearchView = (SearchView) MenuItemCompat.getActionView(mSearchItem);
 
         // Set the searchable configuration
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
@@ -65,7 +74,7 @@ public abstract class ActivityForSearching extends ProgressActivity {
         if (mSearchView != null) {
             if(mQuery!=null) {
                 mSearchView.setQuery(mQuery, false);
-                MenuItemCompat.expandActionView(searchItem);
+                mOpenSearch = true;
             }
 
             mSearchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
@@ -90,7 +99,7 @@ public abstract class ActivityForSearching extends ProgressActivity {
             mSearchView.setOnCloseListener(new SearchView.OnCloseListener() {
                 @Override
                 public boolean onClose() {
-                    MenuItemCompat.collapseActionView(searchItem);
+                    MenuItemCompat.collapseActionView(mSearchItem);
                     mQuery = null;
                     onStartSearch();
                     return false;
@@ -99,6 +108,16 @@ public abstract class ActivityForSearching extends ProgressActivity {
         }
 		return true;
 	}
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        if(mOpenSearch) {
+            MenuItemCompat.expandActionView(mSearchItem);
+            return true;
+        }
+        return false;
+    }
 
     @Override
     public void onNewIntent(Intent intent) {
@@ -160,4 +179,8 @@ public abstract class ActivityForSearching extends ProgressActivity {
         onStartSearch(query);
 		return true;
 	}
+
+    public void openSearch() {
+        mOpenSearch = true;
+    }
 }

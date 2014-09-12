@@ -15,6 +15,7 @@ import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
+import android.view.MenuItem;
 import android.widget.ListAdapter;
 import android.widget.Toast;
 
@@ -284,5 +285,14 @@ public class UserPreferencesActivity extends PreferenceActivity implements
             ListPreference pref = (ListPreference)t;
             pref.setSummary(pref.getEntry());
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId()==android.R.id.home) {
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
