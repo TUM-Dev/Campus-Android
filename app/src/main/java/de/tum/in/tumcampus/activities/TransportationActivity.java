@@ -64,8 +64,7 @@ public class TransportationActivity extends ActivityForSearchingInBackground<Cur
     @Override
     public void onItemClick(final AdapterView<?> av, View v, int position, long id) {
         Cursor departureCursor = (Cursor) av.getAdapter().getItem(position);
-        final String location = departureCursor.getString(departureCursor.getColumnIndex(Const.NAME_COLUMN));
-        showStation(location);
+        showStation(departureCursor.getString(departureCursor.getColumnIndex(Const.NAME_COLUMN)));
     }
 
     public void showStation(String station) {
@@ -118,8 +117,7 @@ public class TransportationActivity extends ActivityForSearchingInBackground<Cur
         // If there is exactly one station open results directly
         if(stationCursor!=null && stationCursor.getCount()==1 && mQuery!=null) {
             stationCursor.moveToFirst();
-            final String location = stationCursor.getString(0);
-            showStation(location);
+            showStation(stationCursor.getString(0));
             return;
         }
 

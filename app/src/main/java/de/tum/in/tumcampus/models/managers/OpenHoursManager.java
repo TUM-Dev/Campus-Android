@@ -3,6 +3,13 @@ package de.tum.in.tumcampus.models.managers;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.text.format.DateUtils;
+
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+
+import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.Location;
 
@@ -82,6 +89,57 @@ public class OpenHoursManager {
 		c.close();
 		return result;
 	}
+
+    public String getHoursById(Context context, int id, Date date) {
+        String result = getHoursById(id);
+        Calendar cal = new GregorianCalendar();
+        cal.setTime(date);
+        int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
+        String interval;
+        if(result.startsWith("Mo-Do") && dayOfWeek<=Calendar.THURSDAY) {
+            interval = result.substring(result.indexOf("Do")+3,result.indexOf(","));
+        } else {
+            interval = result.substring(result.indexOf("Fr")+3);
+        }
+        String[] time = interval.split("-");
+
+        Calendar now = Calendar.getInstance();
+        Calendar opens = strToCal(date, time[0]);
+        Calendar closes = strToCal(date, time[1]);
+        Calendar relativeTo;
+        int relation;
+        if(opens.after(now)) {
+            relation = R.string.opens;
+            relativeTo = opens;
+        } else if(closes.after(now)) {
+            relation = R.string.closes;
+            relativeTo = closes;
+        } else {
+            relation = R.string.closed;
+            relativeTo = closes;
+        }
+        String relStr = DateUtils.getRelativeTimeSpanString(
+                relativeTo.getTimeInMillis(),
+                now.getTimeInMillis(),
+                DateUtils.MINUTE_IN_MILLIS).toString();
+        return context.getString(relation)+" "+relStr.substring(0,1).toLowerCase()+relStr.substring(1);
+
+    }
+
+    private Calendar strToCal(Date date, String time) {
+        Calendar opens = Calendar.getInstance();
+        opens.setTime(date);
+        if(time.contains(".")) {
+            int hour = Integer.parseInt(time.substring(0, time.indexOf(".")));
+            int min = Integer.parseInt(time.substring(time.indexOf(".") + 1));
+            opens.set(Calendar.HOUR_OF_DAY, hour);
+            opens.set(Calendar.MINUTE, min);
+        } else {
+            opens.set(Calendar.HOUR_OF_DAY, Integer.parseInt(time));
+            opens.set(Calendar.MINUTE, 0);
+        }
+        return opens;
+    }
 
 	/**
 	 * Replaces a location in the database

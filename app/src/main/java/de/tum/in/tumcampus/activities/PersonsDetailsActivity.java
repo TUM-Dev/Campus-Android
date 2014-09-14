@@ -118,12 +118,13 @@ public class PersonsDetailsActivity extends ActivityForAccessingTumOnline {
                 displayResults(mEmployee);
                 progressLayout.setVisibility(View.GONE);
                 mContact.setVisible(true);
+            } else {
+                showErrorLayout();
             }
         } catch (Exception e) {
             e.printStackTrace();
             Log.d("EXCEPTION", e.getMessage());
-            progressLayout.setVisibility(View.GONE);
-            errorLayout.setVisibility(View.VISIBLE);
+            showErrorLayout();
         }
     }
 

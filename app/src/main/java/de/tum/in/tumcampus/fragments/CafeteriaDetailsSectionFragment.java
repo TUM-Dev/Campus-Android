@@ -1,24 +1,25 @@
 package de.tum.in.tumcampus.fragments;
 
-import java.util.HashMap;
-
-import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.text.SpannableString;
+import android.text.style.ImageSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
-import android.widget.RelativeLayout;
-import android.widget.SimpleCursorAdapter;
-import android.widget.SimpleCursorAdapter.ViewBinder;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+
 import de.tum.in.tumcampus.R;
-import de.tum.in.tumcampus.activities.CafeteriaActivity;
 import de.tum.in.tumcampus.auxiliary.CafetariaPrices;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.models.managers.CafeteriaMenuManager;
@@ -28,106 +29,86 @@ import de.tum.in.tumcampus.models.managers.OpenHoursManager;
  * Fragment for each cafeteria-page.
  */
 public class CafeteriaDetailsSectionFragment extends Fragment {
-	private Activity activity;
-	private int cafeteriaId;
-    private String date;
-	private RelativeLayout errorLayout;
-    private View footer;
-	private ListView listViewMenu;
 
-	public CafeteriaDetailsSectionFragment() {
-	}
-
-	@SuppressWarnings("unchecked")
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		View rootView = inflater.inflate(
-				R.layout.fragment_cafeteriadetails_section, container, false);
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		View rootView = inflater.inflate(R.layout.fragment_cafeteriadetails_section, container, false);
+        LinearLayout root = (LinearLayout) rootView.findViewById(R.id.layout);
 
-		activity = getActivity();
+        int cafeteriaId = getArguments().getInt(Const.CAFETERIA_ID);
+        String date = getArguments().getString(Const.DATE);
 
-		listViewMenu = (ListView) rootView.findViewById(R.id.listView);
-		errorLayout = (RelativeLayout) rootView.findViewById(R.id.error_layout);
-
-		date = getArguments().getString(Const.DATE);
-		cafeteriaId = getArguments().getInt(Const.CAFETERIA_ID);
-
-		// initialize listview footer for opening hours
-		footer = getLayoutInflater(savedInstanceState).inflate(
-				android.R.layout.two_line_list_item, null, false);
-
-		showMenueForDay();
+		showMenu(root, cafeteriaId, date, true);
 		return rootView;
 	}
 
-	@SuppressWarnings("deprecation")
-	private void showMenueForDay() {
-		TextView textView;
+    public static void showMenu(LinearLayout rootView, int cafeteriaId, String dateStr, boolean big) {
+        // initialize a few often used things
+        final Context context = rootView.getContext();
+        final HashMap<String, String> rolePrices = CafeteriaDetailsSectionFragment.getRolePrices(context);
+        final int padding = (int)context.getResources().getDimension(R.dimen.card_text_padding);
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-		// opening hours
-		OpenHoursManager lm = new OpenHoursManager(activity);
-		textView = (TextView) footer.findViewById(android.R.id.text2);
-		textView.setText(lm.getHoursById(cafeteriaId));
+        // Get menu items
+        Cursor cursorCafeteriaMenu = new CafeteriaMenuManager(context).getTypeNameFromDbCard(cafeteriaId, dateStr);
 
-		// menus
-		CafeteriaMenuManager cmm = new CafeteriaMenuManager(getActivity());
-		Cursor cursorCafeteriaMenu = cmm.getTypeNameFromDb(cafeteriaId, date);
-		activity.startManagingCursor(cursorCafeteriaMenu);
+        TextView textview;
+        if(!big) {
+            // Show opening hours
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+            OpenHoursManager lm = new OpenHoursManager(context);
+            textview = new TextView(context);
+            try {
+                textview.setText(lm.getHoursById(context, cafeteriaId, formatter.parse(dateStr)));
+            } catch (ParseException e) {
+                e.printStackTrace();
+                textview.setText(lm.getHoursById(context, cafeteriaId, new Date()));
+            }
+            textview.setTextColor(context.getResources().getColor(R.color.sections_green));
+            rootView.addView(textview);
+        }
 
-		textView = (TextView) footer.findViewById(android.R.id.text1);
-		if (cursorCafeteriaMenu.getCount() == 0) {
-			textView.setText(getString(R.string.opening_hours));
-			errorLayout.setVisibility(View.VISIBLE);
-		} else {
-			textView.setText(getString(R.string.kitchen_opening));
-			errorLayout.setVisibility(View.GONE);
-		}
+        // Show cafeteria menu
+        String curShort = "";
+        if(cursorCafeteriaMenu.moveToFirst()) {
+            do {
+                String typeShort = cursorCafeteriaMenu.getString(3);
+                String typeLong = cursorCafeteriaMenu.getString(0);
+                String menu = cursorCafeteriaMenu.getString(1);
 
-		// no onclick for items, no separator line
-		@SuppressWarnings("deprecation")
-		SimpleCursorAdapter adapterMenue = new SimpleCursorAdapter(activity,
-				R.layout.list_layout_cafeteriamenu, cursorCafeteriaMenu,
-				cursorCafeteriaMenu.getColumnNames(), new int[] {
-						R.id.tx_category, R.id.tx_menu, R.id.tx_price }) {
+                // Skip "Beilagen" if showing card
+                if (typeShort.equals("bei") && !big)
+                    continue;
 
-		};
-		adapterMenue.setViewBinder(new ViewBinder() {
+                // Add header if we start with a new category
+                if (!typeShort.equals(curShort)) {
+                    curShort = typeShort;
+                    View view = inflater.inflate(big?R.layout.list_header_big:R.layout.card_list_header, rootView, false);
+                    textview = (TextView) view.findViewById(R.id.list_header);
+                    textview.setText(typeLong.replaceAll("[0-9]", "").trim());
+                    rootView.addView(view);
+                }
 
-			// Adding prices not to the database, but manually to the list
-			@Override
-			public boolean setViewValue(View view, Cursor cursor,
-					int columnIndex) {
-                if (view.getId() == R.id.tx_menu) {
-                    TextView menu = (TextView) view;
-
-                    String m = cursor.getString(cursor.getColumnIndex("names"));
-                    menu.setText(CafeteriaActivity.menuToSpan(CafeteriaDetailsSectionFragment.this.getActivity(), m));
-                    return true;
-                } else if (view.getId() == R.id.tx_price) {
-					TextView price = (TextView) view;
-
-					String curKey = cursor.getString(cursor
-							.getColumnIndex("typeLong"));
-
-					HashMap<String, String> rolePrices = getRolePrices(getActivity());
-
-					if (rolePrices.containsKey(curKey))
-						price.setText(rolePrices.get(curKey) + " €");
-
-					else
-						price.setText("");
-
-					// set price field invisible for "Beilagen"
-					if (curKey.equals("Beilagen"))
-						price.setVisibility(View.GONE);
-
-					return true;
-				}
-				return false;
-			}
-		});
-		listViewMenu.setAdapter(adapterMenue);
+                // Show menu item
+                SpannableString text = menuToSpan(context, big ? menu : prepare(menu));
+                if (rolePrices.containsKey(typeLong)) {
+                    // If price is available
+                    View view = inflater.inflate(big?R.layout.price_line_big:R.layout.card_price_line, rootView, false);
+                    textview = (TextView) view.findViewById(R.id.line_name);
+                    TextView priceview = (TextView) view.findViewById(R.id.line_price);
+                    textview.setText(text);
+                    priceview.setText(rolePrices.get(typeLong) + " €");
+                    rootView.addView(view);
+                } else {
+                    // Without price
+                    textview = new TextView(context);
+                    textview.setText(text);
+                    textview.setPadding(padding, padding, padding, padding);
+                    rootView.addView(textview);
+                }
+            } while (cursorCafeteriaMenu.moveToNext());
+        }
+        cursorCafeteriaMenu.close();
 	}
 
 
@@ -146,5 +127,39 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
             rolePrices = CafetariaPrices.student_prices;
         }
         return rolePrices;
+    }
+
+    public static SpannableString menuToSpan(Context context, String menu) {
+        int len;
+        do {
+            len = menu.length();
+            menu = menu.replaceFirst("\\(([A-Za-z0-9]+),", "($1)(");
+        } while (menu.length() > len);
+        SpannableString text = new SpannableString(menu);
+        replaceWithImg(context, menu, text, "(v)", R.drawable.meal_vegan);
+        replaceWithImg(context, menu, text, "(f)", R.drawable.meal_veggie);
+        replaceWithImg(context, menu, text, "(R)", R.drawable.meal_beef);
+        replaceWithImg(context, menu, text, "(S)", R.drawable.meal_pork);
+        replaceWithImg(context, menu, text, "(GQB)", R.drawable.ic_gqb);
+        replaceWithImg(context, menu, text, "(99)", R.drawable.meal_alcohol);
+        return text;
+    }
+
+    private static void replaceWithImg(Context context, String menu, SpannableString text, String sym, int drawable) {
+        int ind = menu.indexOf(sym);
+        while (ind >= 0) {
+            ImageSpan is = new ImageSpan(context, drawable);
+            text.setSpan(is, ind, ind + sym.length(), 0);
+            ind = menu.indexOf(sym, ind + sym.length());
+        }
+    }
+
+    private static String prepare(String menu) {
+        int len;
+        do {
+            len = menu.length();
+            menu = menu.replaceFirst("\\(([A-Za-z0-9]+),", "($1)(");
+        } while (menu.length() > len);
+        return menu.replaceAll("\\(([1-9]|10|11)\\)", "");
     }
 }

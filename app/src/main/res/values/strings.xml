@@ -43,7 +43,7 @@
     <string name="error_fetching_tumonline">Error accessing TUMOnline.\nPlease make sure your TUMOnline-Access-Token has
 		been\nactivated and the corresponding rights are set.\n\n<b>Click here for retry.</b></string>
     <string name="error_no_token_setup">No TUMOnline-Access-Token was set.\nPlease set your TUMOnline-Access-Token in the\n <i>Settings</i> screen to access TUMOnline features.\n\n<b>Click here for the <i>Settings</i> screen.</b></string>
-    <string name="error_something_wrong">Sorry, something went wrong.</string>
+    <string name="error_something_wrong">Sorry, something went wrong.\n\n<b>Click here for retry.</b></string>
     <string name="dialog_new_token">Your TUMOnline-Access-Token is already set.\n\nClick <i>Yes</i> to generate a new one. \nAs a result, the old Token becomes useless.</string>
     <string name="error_lrz_wrong">Your LRZ Identification is invalid</string>
     <string name="access_token_wasnt_generated">TUMOnline-Access-Token could not be generated</string>
@@ -346,5 +346,12 @@
     <string name="not_ask_again">Don\'t ask again</string>
     <string name="eduroam_setup_question">Wollen Sie sich jetzt mit eduroam verbinden?</string>
     <string name="eduroam_setup_question_desc">Click to start setting up eduroam</string>
+    <string name="retry">Retry</string>
+    <string name="card_eduroam_summary">Allows you to easily setup eduroam wifi connection</string>
+    <string name="eduroam">Eduroam</string>
+    <string name="display">Anzeige</string>
+    <string name="opens">Opens</string>
+    <string name="closes">Closes</string>
+    <string name="closed">Closed</string>
 
 </resources>

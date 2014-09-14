@@ -6,17 +6,12 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.auxiliary.Const;
-import de.tum.in.tumcampus.auxiliary.ImplicitCounter;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.services.DownloadService;
 
@@ -27,52 +22,12 @@ import de.tum.in.tumcampus.services.DownloadService;
  * layouts.
  * 
  */
-public abstract class ActivityForDownloadingExternal extends ActionBarActivity {
+public abstract class ActivityForDownloadingExternal extends ProgressActivity {
 	private String method;
 
-    /** Default layouts for user interaction */
-    private int mLayoutId;
-    protected RelativeLayout errorLayout;
-    protected RelativeLayout progressLayout;
-
     public ActivityForDownloadingExternal(String method, int layoutId) {
-        this.mLayoutId = layoutId;
+        super(layoutId);
         this.method = method;
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        ImplicitCounter.Counter(this);
-        setContentView(mLayoutId);
-
-        progressLayout = (RelativeLayout) findViewById(R.id.progress_layout);
-        errorLayout = (RelativeLayout) findViewById(R.id.error_layout);
-
-        if (progressLayout == null || errorLayout == null) {
-            Log.e(getClass().getSimpleName(), "Cannot find layouts, did you forget to provide error and progress layouts?");
-        }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
-        getMenuInflater().inflate(R.menu.menu_update, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                return true;
-            case R.id.action_update:
-                requestDownload(true);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
     }
 
 	public BroadcastReceiver receiver = new BroadcastReceiver() {
@@ -87,8 +42,7 @@ public abstract class ActivityForDownloadingExternal extends ActionBarActivity {
 			if (action.length() != 0) {
 				Log.i(ActivityForDownloadingExternal.this.getClass().getSimpleName(), "Broadcast received  <" + action + ">");
 				if (action.equals(Const.COMPLETED)) {
-					progressLayout.setVisibility(View.GONE);
-					errorLayout.setVisibility(View.GONE);
+					showLoadingEnded();
 					// Calls onStart() to simulate a new start of the activity
 					// without downloading new data, since this receiver
 					// receives data from a new download
@@ -97,17 +51,24 @@ public abstract class ActivityForDownloadingExternal extends ActionBarActivity {
 				if (action.equals(Const.WARNING)) {
 					String message = intent.getStringExtra(Const.WARNING_MESSAGE);
 					Toast.makeText(ActivityForDownloadingExternal.this, message, Toast.LENGTH_SHORT).show();
-					progressLayout.setVisibility(View.GONE);
+                    showLoadingEnded();
 				}
 				if (action.equals(Const.ERROR)) {
 					String message = intent.getStringExtra(Const.ERROR_MESSAGE);
-					Toast.makeText(ActivityForDownloadingExternal.this, message, Toast.LENGTH_SHORT).show();
-					progressLayout.setVisibility(View.GONE);
-					errorLayout.setVisibility(View.VISIBLE);
+					showError(message);
 				}
 			}
 		}
 	};
+
+    public void onClick(View view) {
+        int viewId = view.getId();
+        switch (viewId) {
+            case R.id.error_layout:
+                requestDownload(true);
+                break;
+        }
+    }
 
     @Override
     protected void onResume() {
@@ -119,7 +80,6 @@ public abstract class ActivityForDownloadingExternal extends ActionBarActivity {
 	protected void onPause() {
 		super.onPause();
         LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
-		//stopService(new Intent(this, DownloadService.class));
 	}
 
 	public void requestDownload(boolean forceDownload) {
@@ -147,30 +107,4 @@ public abstract class ActivityForDownloadingExternal extends ActionBarActivity {
 					Toast.LENGTH_SHORT).show();
 		}
 	}
-
-    public void showError(int errorReason) {
-        showError(getString(errorReason));
-    }
-
-    public void showError(String errorReason) {
-        Toast.makeText(this, errorReason, Toast.LENGTH_SHORT).show();
-        progressLayout.setVisibility(View.GONE);
-        errorLayout.setVisibility(View.VISIBLE);
-    }
-
-    public void showErrorLayout() {
-        errorLayout.setVisibility(View.VISIBLE);
-    }
-
-    public void showProgressLayout() {
-        progressLayout.setVisibility(View.VISIBLE);
-    }
-
-    public void hideErrorLayout() {
-        errorLayout.setVisibility(View.GONE);
-    }
-
-    public void hideProgressLayout() {
-        progressLayout.setVisibility(View.GONE);
-    }
 }

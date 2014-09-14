@@ -4,8 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -54,31 +52,11 @@ public abstract class ActivityForAccessingTumOnline extends ProgressActivity imp
         requestHandler = new TUMOnlineRequest(method, this);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_update, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_update:
-                requestFetch();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
     public void requestFetch() {
         String accessToken = PreferenceManager.getDefaultSharedPreferences(this).getString(Const.ACCESS_TOKEN, null);
         if (accessToken != null) {
             Log.i(getClass().getSimpleName(), "TUMOnline token is <" + accessToken + ">");
-            noTokenLayout.setVisibility(View.GONE);
-            progressLayout.setVisibility(View.VISIBLE);
+            showLoadingStart();
             requestHandler.fetchInteractive(this, this);
         } else {
             Log.i(getClass().getSimpleName(), "No token was set");
@@ -90,7 +68,7 @@ public abstract class ActivityForAccessingTumOnline extends ProgressActivity imp
 		int viewId = view.getId();
 		switch (viewId) {
 		case R.id.failed_layout:
-			failedTokenLayout.setVisibility(View.GONE);
+        case R.id.error_layout:
 			requestFetch();
 			break;
 		case R.id.no_token_layout:
@@ -117,15 +95,8 @@ public abstract class ActivityForAccessingTumOnline extends ProgressActivity imp
 
 	@Override
 	public void onFetchError(String errorReason) {
-		progressLayout.setVisibility(View.GONE);
+		showLoadingEnded();
 		Toast.makeText(this, errorReason, Toast.LENGTH_SHORT).show();
-
-		// If there is a failed token layout show this
-		if (failedTokenLayout != null) {
-			failedTokenLayout.setVisibility(View.VISIBLE);
-		} else {
-			// Else just use the common error layout
-			errorLayout.setVisibility(View.VISIBLE);
-		}
+        failedTokenLayout.setVisibility(View.VISIBLE);
 	}
 }

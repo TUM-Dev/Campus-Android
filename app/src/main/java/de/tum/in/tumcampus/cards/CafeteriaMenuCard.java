@@ -8,10 +8,8 @@ import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v4.app.NotificationCompat;
-import android.text.SpannableString;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -24,7 +22,7 @@ import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.fragments.CafeteriaDetailsSectionFragment;
 import de.tum.in.tumcampus.models.CafeteriaMenu;
 
-import static de.tum.in.tumcampus.activities.CafeteriaActivity.menuToSpan;
+import static de.tum.in.tumcampus.fragments.CafeteriaDetailsSectionFragment.showMenu;
 import static de.tum.in.tumcampus.models.managers.CardManager.CARD_CAFETERIA;
 
 
@@ -32,8 +30,9 @@ public class CafeteriaMenuCard extends Card {
     private static final String CAFETERIA_DATE = "cafeteria_date";
     private int mCafeteriaId;
     private String mCafeteriaName;
-    private List<CafeteriaMenu> mMenus;
     private Date mDate;
+    private String mDateStr;
+    private List<CafeteriaMenu> mMenus;
 
     public CafeteriaMenuCard(Context context) {
         super(context, "card_cafeteria");
@@ -52,58 +51,20 @@ public class CafeteriaMenuCard extends Card {
     @Override
     public View getCardView(Context context, ViewGroup parent) {
         super.getCardView(context, parent);
+
+        // Show date
         mDateView.setVisibility(View.VISIBLE);
         mDateView.setText(SimpleDateFormat.getDateInstance().format(mDate));
 
-        HashMap<String, String> rolePrices = CafeteriaDetailsSectionFragment.getRolePrices(mContext);
-
-        addHeader("Tagesgerichte");
-        String curShort = "tg";
-        for (CafeteriaMenu menu : mMenus) {
-            if (menu.typeShort.equals("bei"))
-                continue;
-            if (!menu.typeShort.equals(curShort)) {
-                curShort = menu.typeShort;
-                addHeader(menu.typeLong);
-            }
-
-            if (rolePrices.containsKey(menu.typeLong))
-                addPriceline(prepare(menu.name), rolePrices.get(menu.typeLong) + " €");
-            else
-                addTextView(prepare(menu.name));
-        }
+        // Show cafeteria menu
+        showMenu(mLinearLayout, mCafeteriaId, mDateStr, false);
         return mCard;
     }
 
-    private SpannableString prepare(String menu) {
-        int len;
-        do {
-            len = menu.length();
-            menu = menu.replaceFirst("\\(([A-Za-z0-9]+),", "($1)(");
-        } while (menu.length() > len);
-        menu = menu.replaceAll("\\(([1-9]|10|11)\\)", "");
-        return menuToSpan(mContext, menu);
-    }
-
-    private void addTextView(SpannableString text) {
-        TextView textview = new TextView(mContext);
-        textview.setText(text);
-        textview.setPadding(10, 10, 10, 10);
-        mLinearLayout.addView(textview);
-    }
-
-    private void addPriceline(SpannableString title, String price) {
-        View view = mInflater.inflate(R.layout.card_price_line, mLinearLayout, false);
-        TextView textview = (TextView) view.findViewById(R.id.line_name);
-        TextView priceview = (TextView) view.findViewById(R.id.line_price);
-        textview.setText(title);
-        priceview.setText(price);
-        mLinearLayout.addView(view);
-    }
-
-    public void setCardMenus(int id, String name, Date date, List<CafeteriaMenu> menus) {
+    public void setCardMenus(int id, String name, String dateStr, Date date, List<CafeteriaMenu> menus) {
         mCafeteriaId = id;
         mCafeteriaName = name;
+        mDateStr = dateStr;
         mDate = date;
         mMenus = menus;
     }

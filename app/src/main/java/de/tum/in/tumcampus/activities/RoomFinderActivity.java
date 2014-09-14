@@ -6,7 +6,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -65,17 +64,13 @@ public class RoomFinderActivity extends ActivityForSearching implements TUMRoomF
         // Getting adapter by passing xml data ArrayList
         adapter = new RoomFinderListAdapter(this, result);
         list.setAdapter(adapter);
-
-        // Click event for single list row
         list.setOnItemClickListener(this);
 
-        progressLayout.setVisibility(View.GONE);
         if (result.size() == 0) {
-            Toast.makeText(this, R.string.no_rooms_found, Toast.LENGTH_SHORT).show();
-            errorLayout.setVisibility(View.VISIBLE);
-            return;
+            showError(R.string.no_rooms_found);
+        } else {
+            showLoadingEnded();
         }
-        errorLayout.setVisibility(View.GONE);
     }
 
     @Override
@@ -96,8 +91,7 @@ public class RoomFinderActivity extends ActivityForSearching implements TUMRoomF
     @Override
     public void onFetchError(String errorReason) {
         roomFinderRequest.cancelRequest(true);
-        errorLayout.setVisibility(View.VISIBLE);
-        progressLayout.setVisibility(View.GONE);
+        showError(errorReason);
     }
 
     @Override
@@ -112,6 +106,6 @@ public class RoomFinderActivity extends ActivityForSearching implements TUMRoomF
 
     @Override
     public void onCommonError(String errorReason) {
-        Toast.makeText(this, errorReason, Toast.LENGTH_SHORT).show();
+        showError(errorReason);
     }
 }

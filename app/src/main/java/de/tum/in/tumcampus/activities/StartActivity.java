@@ -50,8 +50,6 @@ public class StartActivity extends ActionBarActivity implements AdapterView.OnIt
 
     @Override
 	protected void onCreate(Bundle savedInstanceState) {
-        overridePendingTransition(0,0);
-        //overridePendingTransition(R.anim.fadein, R.anim.fadeout);
 		super.onCreate(savedInstanceState);
         ImplicitCounter.Counter(this);
         setContentView(R.layout.activity_start);
@@ -123,7 +121,7 @@ public class StartActivity extends ActionBarActivity implements AdapterView.OnIt
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		this.getMenuInflater().inflate(R.menu.menu_start_activity, menu);
+		this.getMenuInflater().inflate(R.menu.menu_settings, menu);
 		return true;
 	}
 

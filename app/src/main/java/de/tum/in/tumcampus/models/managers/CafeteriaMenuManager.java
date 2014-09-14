@@ -1,11 +1,16 @@
 package de.tum.in.tumcampus.models.managers;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.CafeteriaMenu;
 
@@ -182,6 +187,21 @@ public class CafeteriaMenuManager {
                                 + "FROM cafeterias_menus WHERE mensaId = ? AND "
                                 + "date = ? GROUP BY typeLong ORDER BY typeNr, typeLong, name",
                         new String[] { ""+mensaId, date });
+    }
+
+    public List<CafeteriaMenu> getTypeNameFromDbCardList(int mensaId, String dateStr, Date date) {
+        Cursor cursorCafeteriaMenu = getTypeNameFromDbCard(mensaId, dateStr);
+        ArrayList<CafeteriaMenu> menus = new ArrayList<CafeteriaMenu>();
+        if(cursorCafeteriaMenu.moveToFirst()) {
+            do {
+                CafeteriaMenu menu = new CafeteriaMenu(Integer.parseInt(cursorCafeteriaMenu.getString(2)),
+                        mensaId, date,
+                        cursorCafeteriaMenu.getString(3), cursorCafeteriaMenu.getString(0), 0, cursorCafeteriaMenu.getString(1));
+                menus.add(menu);
+            } while (cursorCafeteriaMenu.moveToNext());
+        }
+        cursorCafeteriaMenu.close();
+        return menus;
     }
 
 	/**

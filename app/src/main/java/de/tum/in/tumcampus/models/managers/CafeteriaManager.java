@@ -12,9 +12,9 @@ import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.Utils;
@@ -203,20 +203,11 @@ public class CafeteriaManager implements Card.ProvidesCard {
             date = formatter.parse(dateStr);
         }
         cursorCafeteriaDates.close();
-        Cursor cursorCafeteriaMenu = cmm.getTypeNameFromDbCard(cafeteriaId, dateStr);
-        ArrayList<CafeteriaMenu> menus = new ArrayList<CafeteriaMenu>();
-        if(cursorCafeteriaMenu.moveToFirst()) {
-            do {
-                int typeNr = 0;
-                CafeteriaMenu menu = new CafeteriaMenu(Integer.parseInt(cursorCafeteriaMenu.getString(2)),
-                        cafeteriaId, date,
-                        cursorCafeteriaMenu.getString(3), cursorCafeteriaMenu.getString(0), typeNr, cursorCafeteriaMenu.getString(1));
 
-                menus.add(menu);
-            } while (cursorCafeteriaMenu.moveToNext());
-            card.setCardMenus(cafeteriaId, cafeteriaName, date, menus);
+        List<CafeteriaMenu> menus = cmm.getTypeNameFromDbCardList(cafeteriaId, dateStr, date);
+        if(menus.size()>0) {
+            card.setCardMenus(cafeteriaId, cafeteriaName, dateStr, date, menus);
             card.apply();
         }
-        cursorCafeteriaMenu.close();
     }
 }

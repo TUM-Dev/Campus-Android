@@ -65,9 +65,9 @@ public class NavigationDrawerAdapter extends BaseAdapter {
         View view = convertView;
 
         if (view == null) {
-            int layout = R.layout.side_navigation_item;
+            int layout = R.layout.navigation_drawer_item;
             if (item.isHeader())
-                layout = R.layout.side_navigation_header;
+                layout = R.layout.navigation_drawer_header;
 
             view = mInflater.inflate(layout, null);
 

@@ -103,6 +103,9 @@ public class CalendarManager implements Card.ProvidesCard {
     }
 
     public void importKalendar(String rawResponse) {
+        // Cleanup cache before importing
+        removeCache();
+
         // reader for xml
         Serializer serializer = new Persister();
 

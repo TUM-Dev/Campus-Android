@@ -1,13 +1,10 @@
 package de.tum.in.tumcampus.activities;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
-import android.text.SpannableString;
-import android.text.style.ImageSpan;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,8 +20,10 @@ import de.tum.in.tumcampus.activities.generic.ActivityForDownloadingExternal;
 import de.tum.in.tumcampus.adapters.CafeteriaDetailsSectionsPagerAdapter;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.Utils;
-import de.tum.in.tumcampus.models.managers.LocationManager;
 import de.tum.in.tumcampus.models.Cafeteria;
+import de.tum.in.tumcampus.models.managers.LocationManager;
+
+import static de.tum.in.tumcampus.fragments.CafeteriaDetailsSectionFragment.menuToSpan;
 
 /**
  * Lists all dishes at given cafeteria
@@ -143,30 +142,5 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
             mSectionsPagerAdapter.setCafeteriaId(this, mCafeteriaId);
         }
         return true;
-    }
-
-    public static SpannableString menuToSpan(Context context, String menu) {
-        int len;
-        do {
-            len = menu.length();
-            menu = menu.replaceFirst("\\(([A-Za-z0-9]+),", "($1)(");
-        } while (menu.length() > len);
-        SpannableString text = new SpannableString(menu);
-        replaceWithImg(context, menu, text, "(v)", R.drawable.meal_vegan);
-        replaceWithImg(context, menu, text, "(f)", R.drawable.meal_veggie);
-        replaceWithImg(context, menu, text, "(R)", R.drawable.meal_beef);
-        replaceWithImg(context, menu, text, "(S)", R.drawable.meal_pork);
-        replaceWithImg(context, menu, text, "(GQB)", R.drawable.ic_gqb);
-        replaceWithImg(context, menu, text, "(99)", R.drawable.meal_alcohol);
-        return text;
-    }
-
-    private static void replaceWithImg(Context context, String menu, SpannableString text, String sym, int drawable) {
-        int ind = menu.indexOf(sym);
-        while (ind >= 0) {
-            ImageSpan is = new ImageSpan(context, drawable);
-            text.setSpan(is, ind, ind + sym.length(), 0);
-            ind = menu.indexOf(sym, ind + sym.length());
-        }
     }
 }

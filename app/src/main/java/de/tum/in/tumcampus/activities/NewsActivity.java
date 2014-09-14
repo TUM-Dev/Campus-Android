@@ -34,6 +34,11 @@ public class NewsActivity extends ActivityForDownloadingExternal implements OnIt
 		requestDownload(false);
 	}
 
+    @Override
+    public void onRefreshStarted(View view) {
+        requestDownload(true);
+    }
+
 	@SuppressWarnings("deprecation")
 	@Override
 	public void onItemClick(AdapterView<?> aview, View view, int position,

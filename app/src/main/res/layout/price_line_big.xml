@@ -18,8 +18,9 @@
         android:ellipsize="none"
         android:maxLines="5"
         android:paddingLeft="10dp"
-        android:paddingTop="5dp"
-        android:scrollHorizontally="false" />
+        android:paddingTop="10dp"
+        android:scrollHorizontally="false"
+        android:textSize="16dp" />
 
     <TextView
         android:id="@+id/line_price"
@@ -31,6 +32,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerVertical="true"
         android:minWidth="50dp"
-        android:paddingTop="5dp"
-        android:textColor="@color/sections_green" />
+        android:paddingTop="10dp"
+        android:textColor="@color/sections_green"
+        android:textSize="16dp" />
 </RelativeLayout>

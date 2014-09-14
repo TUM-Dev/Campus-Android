@@ -4,17 +4,19 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
+
+import org.simpleframework.xml.Serializer;
+import org.simpleframework.xml.core.Persister;
 
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.UserPreferencesActivity;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.tumonline.TUMOnlineRequest;
 import de.tum.in.tumcampus.tumonline.TUMOnlineRequestFetchListener;
+import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 
 /**
  * Generic class which handles all basic tasks to communicate with TUMOnline. It
@@ -23,7 +25,7 @@ import de.tum.in.tumcampus.tumonline.TUMOnlineRequestFetchListener;
  * related layouts.
  * 
  */
-public abstract class ActivityForSearchingTumOnline extends ActivityForSearching implements TUMOnlineRequestFetchListener {
+public abstract class ActivityForSearchingTumOnline<T> extends ActivityForSearching implements TUMOnlineRequestFetchListener, OnRefreshListener {
 
 	/** The method which should be invoked by the TUmOnline Fetcher */
 	private String method;
@@ -32,10 +34,12 @@ public abstract class ActivityForSearchingTumOnline extends ActivityForSearching
 	protected RelativeLayout noTokenLayout;
     protected RelativeLayout failedTokenLayout;
 	protected TUMOnlineRequest requestHandler;
+    private Class<T> responseType;
 
-	public ActivityForSearchingTumOnline(String method, int layoutId, String auth, int minLen) {
+    public ActivityForSearchingTumOnline(String method, Class<T> responseType, int layoutId, String auth, int minLen) {
         super(layoutId, auth, minLen);
         this.method = method;
+        this.responseType = responseType;
 	}
 
     @Override
@@ -52,30 +56,11 @@ public abstract class ActivityForSearchingTumOnline extends ActivityForSearching
         requestHandler = new TUMOnlineRequest(method, this);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
-        getMenuInflater().inflate(R.menu.menu_update, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_update:
-                requestFetch();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
     public void requestFetch() {
         String accessToken = PreferenceManager.getDefaultSharedPreferences(this).getString(Const.ACCESS_TOKEN, null);
         if (accessToken != null) {
             Log.i(getClass().getSimpleName(), "TUMOnline token is <" + accessToken + ">");
-            noTokenLayout.setVisibility(View.GONE);
-            progressLayout.setVisibility(View.VISIBLE);
+            showLoadingStart();
             requestHandler.fetchInteractive(this, this);
         } else {
             Log.i(getClass().getSimpleName(), "No token was set");
@@ -83,11 +68,30 @@ public abstract class ActivityForSearchingTumOnline extends ActivityForSearching
         }
     }
 
-	public void onClick(View view) {
+    @Override
+    public final void onFetch(String rawResponse) {
+        noTokenLayout.setVisibility(View.GONE);
+        failedTokenLayout.setVisibility(View.GONE);
+        showLoadingEnded();
+
+        Serializer serializer = new Persister();
+        try {
+            T result = serializer.read(responseType, rawResponse);
+            onLoadFinished(result);
+        } catch (Exception e) {
+            Log.d("SIMPLEXML", "wont work: " + e.getMessage());
+            failedTokenLayout.setVisibility(View.VISIBLE);
+            e.printStackTrace();
+        }
+    }
+
+    protected abstract void onLoadFinished(T result);
+
+    public void onClick(View view) {
 		int viewId = view.getId();
 		switch (viewId) {
 		case R.id.failed_layout:
-			failedTokenLayout.setVisibility(View.GONE);
+        case R.id.error_layout:
 			requestFetch();
 			break;
 		case R.id.no_token_layout:
@@ -114,15 +118,13 @@ public abstract class ActivityForSearchingTumOnline extends ActivityForSearching
 
 	@Override
 	public void onFetchError(String errorReason) {
-		progressLayout.setVisibility(View.GONE);
-		Toast.makeText(this, errorReason, Toast.LENGTH_SHORT).show();
-
-		// If there is a failed token layout show this
-		if (failedTokenLayout != null) {
-			failedTokenLayout.setVisibility(View.VISIBLE);
-		} else {
-			// Else just use the common error layout
-			errorLayout.setVisibility(View.VISIBLE);
-		}
+        showLoadingEnded();
+        Toast.makeText(this, errorReason, Toast.LENGTH_SHORT).show();
+        failedTokenLayout.setVisibility(View.VISIBLE);
 	}
+
+    @Override
+    public void onRefreshStarted(View view) {
+        requestFetch();
+    }
 }

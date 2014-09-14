@@ -2,13 +2,9 @@ package de.tum.in.tumcampus.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-
-import org.simpleframework.xml.Serializer;
-import org.simpleframework.xml.core.Persister;
 
 import java.util.Collections;
 import java.util.List;
@@ -16,6 +12,7 @@ import java.util.List;
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.generic.ActivityForSearchingTumOnline;
 import de.tum.in.tumcampus.adapters.LecturesListAdapter;
+import de.tum.in.tumcampus.adapters.NoResultsAdapter;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.LectureSearchSuggestionProvider;
 import de.tum.in.tumcampus.models.LecturesSearchRow;
@@ -39,17 +36,14 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
  *
  * @author Daniel G. Mayr
  */
-public class LecturesPersonalActivity extends ActivityForSearchingTumOnline {
+public class LecturesPersonalActivity extends ActivityForSearchingTumOnline<LecturesSearchRowSet> {
     private final static String P_SUCHE = "pSuche";
-
-	/** filtered list which will be shown */
-	LecturesSearchRowSet lecturesList = null;
 
 	/** UI elements */
 	private StickyListHeadersListView lvMyLecturesList;
 
     public LecturesPersonalActivity() {
-		super(Const.LECTURES_PERSONAL, R.layout.activity_lectures, LectureSearchSuggestionProvider.AUTHORITY,4);
+		super(Const.LECTURES_PERSONAL, LecturesSearchRowSet.class, R.layout.activity_lectures, LectureSearchSuggestionProvider.AUTHORITY, 4);
 	}
 
 	@Override
@@ -84,44 +78,31 @@ public class LecturesPersonalActivity extends ActivityForSearchingTumOnline {
 
     @Override
     protected void onStartSearch() {
+        enableRefresh();
         requestHandler = new TUMOnlineRequest(Const.LECTURES_PERSONAL, this);
         requestFetch();
     }
 
     @Override
     protected void onStartSearch(String query) {
+        disableRefresh();
         requestHandler = new TUMOnlineRequest(Const.LECTURES_SEARCH, LecturesPersonalActivity.this);
         requestHandler.setParameter(P_SUCHE, query);
         requestFetch();
     }
 
     @Override
-    public void onFetch(String rawResponse) {
-        // deserialize the XML
-        Serializer serializer = new Persister();
-        try {
-            lecturesList = serializer.read(LecturesSearchRowSet.class, rawResponse);
-        } catch (Exception e) {
-            Log.d("SIMPLEXML", "wont work: " + e.getMessage());
-            progressLayout.setVisibility(View.GONE);
-            failedTokenLayout.setVisibility(View.VISIBLE);
-            e.printStackTrace();
-            return;
-        }
-
-        if (lecturesList == null) {
+    public void onLoadFinished(LecturesSearchRowSet response) {
+        if (response == null || response.getLehrveranstaltungen() == null) {
             // no results found
-            //TODO view no results
-            lvMyLecturesList.setAdapter(null);
-            return;
+            lvMyLecturesList.setAdapter(new NoResultsAdapter(this));
+        } else {
+            // Sort lectures by semester id
+            List<LecturesSearchRow> lectures = response.getLehrveranstaltungen();
+            Collections.sort(lectures);
+
+            // set ListView to data via the LecturesListAdapter
+            lvMyLecturesList.setAdapter(new LecturesListAdapter(LecturesPersonalActivity.this, lectures));
         }
-
-        // Sort lectures by semester id
-        List<LecturesSearchRow> lectures = lecturesList.getLehrveranstaltungen();
-        Collections.sort(lectures);
-
-        // set ListView to data via the LecturesListAdapter
-        lvMyLecturesList.setAdapter(new LecturesListAdapter(LecturesPersonalActivity.this, lectures));
-        progressLayout.setVisibility(View.GONE);
     }
 }

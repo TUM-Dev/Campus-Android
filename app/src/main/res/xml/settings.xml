@@ -21,7 +21,7 @@
             android:summary="@string/card_cafeteria_summary"
             android:title="@string/cafeteria">
 
-            <PreferenceCategory android:title="Anzeige">
+            <PreferenceCategory android:title="@string/display">
                 <CheckBoxPreference
                     android:defaultValue="true"
                     android:key="card_cafeteria_start"
@@ -74,7 +74,7 @@
             android:summary="@string/card_mvv_summary"
             android:title="@string/mvv">
 
-            <PreferenceCategory android:title="Anzeige">
+            <PreferenceCategory android:title="@string/display">
                 <CheckBoxPreference
                     android:defaultValue="true"
                     android:key="card_mvv_start"
@@ -118,7 +118,7 @@
             android:summary="@string/card_next_lecture_summary"
             android:title="@string/next_lecture">
 
-            <PreferenceCategory android:title="Anzeige">
+            <PreferenceCategory android:title="@string/display">
                 <CheckBoxPreference
                     android:defaultValue="true"
                     android:key="card_next_lecture_start"
@@ -141,7 +141,7 @@
             android:key="card_tuition_fee"
             android:summary="@string/card_tuition_fee_summary"
             android:title="@string/tuition_fees">
-            <PreferenceCategory android:title="Anzeige">
+            <PreferenceCategory android:title="@string/display">
                 <CheckBoxPreference
                     android:defaultValue="true"
                     android:key="card_tuition_fee_start"
@@ -164,7 +164,7 @@
             android:key="card_news"
             android:summary="@string/card_news_summary"
             android:title="@string/news">
-            <PreferenceCategory android:title="Anzeige">
+            <PreferenceCategory android:title="@string/display">
                 <CheckBoxPreference
                     android:defaultValue="true"
                     android:key="card_news_start"
@@ -187,7 +187,7 @@
             android:key="card_chat"
             android:summary="@string/card_chat_summary"
             android:title="@string/chat">
-            <PreferenceCategory android:title="Anzeige">
+            <PreferenceCategory android:title="@string/display">
                 <CheckBoxPreference
                     android:defaultValue="true"
                     android:key="card_chat_start"
@@ -200,6 +200,26 @@
                     android:defaultValue="true"
                     android:dependency="card_chat_wear"
                     android:key="card_chat_phone"
+                    android:summary="@string/phone_summary"
+                    android:title="@string/phone" />
+            </PreferenceCategory>
+        </PreferenceScreen>
+
+        <!-- Eduroam card -->
+        <PreferenceScreen
+            android:key="card_eduroam"
+            android:summary="@string/card_eduroam_summary"
+            android:title="@string/eduroam">
+
+            <PreferenceCategory android:title="@string/display">
+                <CheckBoxPreference
+                    android:defaultValue="true"
+                    android:key="card_eduroam_start"
+                    android:title="@string/startpage" />
+                <CheckBoxPreference
+                    android:defaultValue="true"
+                    android:dependency="card_eduroam_wear"
+                    android:key="card_eduroam_phone"
                     android:summary="@string/phone_summary"
                     android:title="@string/phone" />
             </PreferenceCategory>

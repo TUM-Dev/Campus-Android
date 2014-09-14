@@ -42,7 +42,7 @@
     <string name="empty_string" />
     <string name="error_fetching_tumonline">Fehler beim Zugriff auf TUMOnline.\nBitte stelle sicher, dass das TUMOnline-Access-Token \nakzeptiert und die entsprechenden Rechte aktiviert wurden.\n\n<b>Klicke hier zum Wiederholen.</b></string>
     <string name="error_no_token_setup">Kein TUMOnline-Access-Token gefunden.\nBitte erzeuge ein TUMOnline-Access-Token in den\n <i>Einstellungen</i>, um TUMOnline Dienste nutzen zu können.\n\n<b>Klicke hier, um zu den <i>Einstellungen</i> zu gelangen.</b></string>
-    <string name="error_something_wrong">Entschuldigung, irgendetwas ist schief gegangen.</string>
+    <string name="error_something_wrong">Entschuldigung, irgendetwas ist schief gegangen.\n\n<b>Klicke hier zum Wiederholen.</b></string>
     <string name="dialog_new_token">Dein TUMOnline-Access-Token ist bereits gesetzt.\n\nKlicke auf <i>Ja</i> um ein neues zu generieren.\nDabei wird dein altes Token unbrauchbar.</string>
     <string name="error_lrz_wrong">Deine LRZ Kennung ist ungültig</string>
     <string name="access_token_wasnt_generated">TUMOnline-Access-Token konnte nicht erzeugt werden</string>
@@ -314,5 +314,18 @@
     <string name="always_hide_card">Diesen Kartentyp immer ausblenden</string>
     <string name="options">Optionen</string>
     <string name="phone_summary">Um Benachrichtigungen auf dem Telefon zu erhalten muss Wearable aktiviert sein</string>
+    <string name="setup_eduroam">Eduroam einrichten</string>
+    <string name="password">Passwort</string>
+    <string name="setup">Einrichten</string>
+    <string name="not_ask_again">Nicht mehr fragen</string>
+    <string name="eduroam_setup_question">Wollen Sie sich jetzt mit eduroam verbinden?</string>
+    <string name="eduroam_setup_question_desc">Hier klicken um eduroam einzurichten</string>
+    <string name="retry">Wiederholen</string>
+    <string name="card_eduroam_summary">Hilft dir eduroam einzurichten</string>
+    <string name="eduroam">Eduroam</string>
+    <string name="display">Anzeige</string>
+    <string name="opens">Öffnet</string>
+    <string name="closes">Schließt</string>
+    <string name="closed">Geschlossen</string>
 
 </resources>

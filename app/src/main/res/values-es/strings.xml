@@ -41,7 +41,7 @@
     <string name="empty_string" />
     <string name="error_fetching_tumonline">Error de acceso TUMOnline.\nPor favor asegúrese que el TUMOnline token de acceso \n está aceptado y los derechos corespondientes están habilitados.\n\n<b> Haga clic aquí para repetir.</b></string>
     <string name="error_no_token_setup">No TUMOnline acceso Token encontró.\nPor favor generar un token de acceso TUMOnline en los <i>Ajustes</i>, para usar servicios de TUMOnline.\n\n<b>Haga clic aquí para ver la pantalla <i>Configuración</i>.</b></string>
-    <string name="error_something_wrong">Lo siento, algo ha ido mal.</string>
+    <string name="error_something_wrong">Lo siento, algo ha ido mal.\n\n<b> Haga clic aquí para repetir.</b></string>
     <string name="dialog_new_token">Su token de acceso TUMOnline ya está establecido.\n\n Presione <i>Sí</i> para generar un reemplazo.\n Así su token viejo será inservible.</string>
     <string name="error_lrz_wrong">Su identificador LRZ no es válido </string>
     <string name="access_token_wasnt_generated">TUMOnline token de acceso no se pudo crear</string>

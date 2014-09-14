@@ -45,7 +45,7 @@ public class StartupActivity extends ActionBarActivity {
         ImplicitCounter.Counter(this);
 
         //Show a loading screen during boot
-        this.setContentView(R.layout.activity_startup);
+        setContentView(R.layout.activity_startup);
 
         // Init a Bug Report to https://www.bugsense.com
         if (TRACK_ERRORS_WITH_BUG_SENSE) {
@@ -70,9 +70,6 @@ public class StartupActivity extends ActionBarActivity {
         Intent i = new Intent(StartupActivity.this, StartSyncReceiver.class);
         i.putExtra(Const.APP_LAUNCHES,true);
         sendBroadcast(i);
-
-        //PreferenceManager.getDefaultSharedPreferences(this).edit().remove(Const.CHAT_ROOM_DISPLAY_NAME).commit();
-        //PreferenceManager.getDefaultSharedPreferences(this).edit().remove(Const.PRIVATE_KEY).commit();
     }
 
     @Override
@@ -142,6 +139,8 @@ public class StartupActivity extends ActionBarActivity {
                     startActivity(intent);
                     finish();
                 }
+                //overridePendingTransition(0,0);
+                overridePendingTransition(R.anim.fadein, R.anim.fadeout);
             }
             @Override
             public void onAnimationCancel(Animator animation) {}

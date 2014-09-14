@@ -482,7 +482,7 @@ public final class SwipeDismissList implements View.OnTouchListener {
 				if (mSwiping) {
 					setTranslationX(mDownView, deltaX);
 					setAlpha(mDownView, Math.max(0f, Math.min(1f,
-						1f - 2f * Math.abs(deltaX) / mViewWidth)));
+						1f - Math.abs(deltaX) / mViewWidth)));//2f *
 					return true;
 				}
 				break;

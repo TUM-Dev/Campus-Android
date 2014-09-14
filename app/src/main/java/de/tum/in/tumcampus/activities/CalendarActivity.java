@@ -190,45 +190,36 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements O
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
-
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.menu_activity_calendar, menu);
+		getMenuInflater().inflate(R.menu.menu_sync_calendar, menu);
 		return true;
 	}
 
 	@Override
 	public void onFetch(final String rawResponse) {
 		// parsing and saving xml response
-		AsyncTask<Void, Void, Boolean> backgroundTask;
-		backgroundTask = new AsyncTask<Void, Void, Boolean>() {
+		new AsyncTask<Void, Void, Boolean>() {
+            @Override
+            protected void onPreExecute() {
+                showLoadingStart();
+                isFetched = true;
+            }
+
 			@Override
 			protected Boolean doInBackground(Void... params) {
-
-				// Remove cache before importing the new items
-				CalendarActivity.this.calendarManager.removeCache();
-
-				// Do the import
-				CalendarActivity.this.calendarManager.importKalendar(rawResponse);
+				calendarManager.importKalendar(rawResponse);
 				return true;
 			}
 
 			@Override
 			protected void onPostExecute(Boolean result) {
-				CalendarActivity.this.hideProgressLayout();
-				CalendarActivity.this.attachSectionPagerAdapter();
+				showLoadingEnded();
+				attachSectionPagerAdapter();
 				// update the action bar to display the enabled menu options
 				if (Build.VERSION.SDK_INT >= 11) {
-					CalendarActivity.this.invalidateOptionsMenu();
+					invalidateOptionsMenu();
 				}
 			}
-
-			@Override
-			protected void onPreExecute() {
-				CalendarActivity.this.showProgressLayout();
-				CalendarActivity.this.isFetched = true;
-			}
-		};
-		backgroundTask.execute();
+		}.execute();
 	}
 
 	@Override
@@ -260,9 +251,9 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements O
             menuItemExportGoogle.setVisible(false);
             menuItemDeleteCalendar.setVisible(false);
         } else {
-            this.menuItemExportGoogle = menu.findItem(R.id.action_export_calendar);
-            this.menuItemDeleteCalendar = menu.findItem(R.id.action_delete_calendar);
-            this.setMenuEnabled(this.isFetched);
+            menuItemExportGoogle = menu.findItem(R.id.action_export_calendar);
+            menuItemDeleteCalendar = menu.findItem(R.id.action_delete_calendar);
+            setMenuEnabled(isFetched);
 
             SharedPreferences prefs = getSharedPreferences(Const.INTERNAL_PREFS, 0);
             boolean bed = prefs.getBoolean(Const.SYNC_CALENDAR, false);
@@ -276,7 +267,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements O
 	 * Enabled the menu items which are not commonly accessible.
 	 */
 	public void setMenuEnabled(boolean enabled) {
-		this.menuItemExportGoogle.setEnabled(enabled);
-		this.menuItemDeleteCalendar.setEnabled(enabled);
+		menuItemExportGoogle.setEnabled(enabled);
+		menuItemDeleteCalendar.setEnabled(enabled);
 	}
 }

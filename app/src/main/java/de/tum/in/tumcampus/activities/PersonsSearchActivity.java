@@ -2,21 +2,16 @@ package de.tum.in.tumcampus.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
-
-import org.simpleframework.xml.Serializer;
-import org.simpleframework.xml.core.Persister;
 
 import java.util.List;
 
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.generic.ActivityForSearchingTumOnline;
+import de.tum.in.tumcampus.adapters.NoResultsAdapter;
 import de.tum.in.tumcampus.adapters.PersonListAdapter;
 import de.tum.in.tumcampus.auxiliary.PersonSearchSuggestionProvider;
 import de.tum.in.tumcampus.models.Person;
@@ -25,7 +20,7 @@ import de.tum.in.tumcampus.models.PersonList;
 /**
  * Activity to search for employees.
  */
-public class PersonsSearchActivity extends ActivityForSearchingTumOnline {
+public class PersonsSearchActivity extends ActivityForSearchingTumOnline<PersonList> {
     private static final String PERSONEN_SUCHE = "personenSuche";
     private static final String P_SUCHE = "pSuche";
 
@@ -35,7 +30,7 @@ public class PersonsSearchActivity extends ActivityForSearchingTumOnline {
     private ListView lvPersons;
 
     public PersonsSearchActivity() {
-        super(PERSONEN_SUCHE, R.layout.activity_persons, PersonSearchSuggestionProvider.AUTHORITY, 3);
+        super(PERSONEN_SUCHE, PersonList.class, R.layout.activity_persons, PersonSearchSuggestionProvider.AUTHORITY, 3);
     }
 
     /**
@@ -92,33 +87,14 @@ public class PersonsSearchActivity extends ActivityForSearchingTumOnline {
      * Handles the XML response from TUMOnline by deserializing the information
      * to model entities.
      *
-     * @param rawResponse The XML data from TUMOnline.
+     * @param response The de-serialized data from TUMOnline.
      */
     @Override
-    public void onFetch(String rawResponse) {
-        Log.d(getClass().getSimpleName(), rawResponse);
-
-        // test by sample element "familienname" (required field)
-        if (!rawResponse.contains("familienname")) {
-            lvPersons.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, new String[]{"keine Ergebnisse"}));
+    public void onLoadFinished(PersonList response) {
+        if(response==null) {
+            lvPersons.setAdapter(new NoResultsAdapter(this));
+        } else {
+            displayResults(response.getPersons());
         }
-
-        Serializer serializer = new Persister();
-
-        // Lists of employees
-        PersonList personList;
-
-        // deserialize the XML to model entities
-        try {
-            personList = serializer.read(PersonList.class, rawResponse);
-        } catch (Exception e) {
-            Log.d("SIMPLEXML", "wont work: " + e.getMessage());
-            progressLayout.setVisibility(View.GONE);
-            errorLayout.setVisibility(View.VISIBLE);
-            Toast.makeText(this, R.string.no_search_result, Toast.LENGTH_SHORT).show();
-            return;
-        }
-        displayResults(personList.getPersons());
-        progressLayout.setVisibility(View.GONE);
     }
 }

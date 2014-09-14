@@ -111,12 +111,21 @@ public abstract class ActivityForSearching extends ProgressActivity {
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        super.onPrepareOptionsMenu(menu);
         if(mOpenSearch) {
+            MenuItemCompat.setShowAsAction(mSearchItem, MenuItemCompat.SHOW_AS_ACTION_ALWAYS|MenuItemCompat.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
             MenuItemCompat.expandActionView(mSearchItem);
             return true;
         }
-        return false;
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    public void onClick(View view) {
+        int viewId = view.getId();
+        switch (viewId) {
+            case R.id.error_layout:
+                requestSearch(mQuery);
+                break;
+        }
     }
 
     @Override
@@ -159,6 +168,7 @@ public abstract class ActivityForSearching extends ProgressActivity {
     }
 
 	private boolean requestSearch(String query) {
+        mQuery = query;
         if(query.length()<mMinLength) {
             String text = String.format(getString(R.string.min_search_len),mMinLength);
             Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
@@ -175,7 +185,6 @@ public abstract class ActivityForSearching extends ProgressActivity {
         suggestions.saveRecentQuery(query, null);
 
         // Tell activity to start searching
-        mQuery = query;
         onStartSearch(query);
 		return true;
 	}

@@ -40,19 +40,24 @@ public abstract class Card {
     private boolean mShowWear = false;
     private boolean mShowPhone = false;
 
-    public Card(Context context, String settings) {
-        this(context);
-        mSettings = settings;
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-        mShowStart = prefs.getBoolean(settings+"_start", true);
-        mShowWear = prefs.getBoolean(settings+"_wear", true);
-        mShowPhone = prefs.getBoolean(settings+"_phone", false);
-    }
-
     public Card(Context context) {
         mSettings = null;
         mContext = context;
         mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    }
+
+    public Card(Context context, String settings) {
+        this(context, settings, true, false);
+        mSettings = settings;
+    }
+
+    public Card(Context context, String settings, boolean wearDefault, boolean phoneDefault) {
+        this(context);
+        mSettings = settings;
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+        mShowStart = prefs.getBoolean(settings+"_start", true);
+        mShowWear = prefs.getBoolean(settings+"_wear", wearDefault);
+        mShowPhone = prefs.getBoolean(settings+"_phone", phoneDefault);
     }
 
     public abstract int getTyp();
@@ -81,12 +86,6 @@ public abstract class Card {
         return textview;
     }
 
-    protected void addHeader(String title) {
-        View view = mInflater.inflate(R.layout.card_list_header, mLinearLayout, false);
-        TextView textview = (TextView) view.findViewById(R.id.list_header);
-        textview.setText(title);
-        mLinearLayout.addView(textview);
-    }
 
     /**
      * Should be called after the user has dismissed the card
@@ -176,9 +175,11 @@ public abstract class Card {
         // Let the card set detailed information
         Notification notification = fillNotification(notificationBuilder);
 
-        NotificationManagerCompat notificationManager =
-                NotificationManagerCompat.from(mContext);
-        notificationManager.notify(getTyp(), notification);
+        if(notification!=null) {
+            NotificationManagerCompat notificationManager =
+                    NotificationManagerCompat.from(mContext);
+            notificationManager.notify(getTyp(), notification);
+        }
     }
 
     /**

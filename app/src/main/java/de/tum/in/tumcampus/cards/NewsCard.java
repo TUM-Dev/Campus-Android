@@ -25,7 +25,7 @@ public class NewsCard extends Card {
     private Bitmap mImage;
 
     public NewsCard(Context context) {
-        super(context, "card_news");
+        super(context, "card_news", false, false);
     }
 
     @Override
@@ -62,8 +62,6 @@ public class NewsCard extends Card {
             }
         }
 
-        //final String time = DateUtils.getRelativeDateTimeString(mContext, mDate.getTime(),
-        //        DateUtils.MINUTE_IN_MILLIS, DateUtils.WEEK_IN_MILLIS, 0).toString();
         mDateView.setText(mDate);
         return mCard;
     }

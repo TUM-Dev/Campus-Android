@@ -1,8 +1,11 @@
 package de.tum.in.tumcampus.cards;
 
+import android.app.Notification;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+import android.support.v4.app.NotificationCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +19,7 @@ import de.tum.in.tumcampus.models.managers.EduroamManager;
 public class EduroamCard extends Card {
 
     public EduroamCard(Context context) {
-        super(context);
+        super(context, "card_eduroam", false, true);
     }
 
     @Override
@@ -38,7 +41,13 @@ public class EduroamCard extends Card {
 
     @Override
     protected void discard(SharedPreferences.Editor editor) {
-        // TODO decide what to do when card is dismissed
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+        prefs.edit().putBoolean("card_eduroam_start", false).apply();
+    }
+
+    @Override
+    protected Notification fillNotification(NotificationCompat.Builder notificationBuilder) {
+        return null;
     }
 
     @Override

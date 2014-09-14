@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.Build;
+import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 
 import java.util.List;
@@ -22,15 +23,14 @@ import de.tum.in.tumcampus.models.managers.EduroamManager;
 
 public class ScanResultsAvailableReceiver extends BroadcastReceiver {
     private static final String SHOULD_SHOW = "setup_notification_dismissed";
-    private static final String HIDE_SETUP_EDUROAM_ALWAYS = "hide_setup_eduroam";
 
     @Override
     public void onReceive(Context context, Intent intent) {
         // Test if user has eduroam configured already
         EduroamManager man = new EduroamManager(context);
-        SharedPreferences prefs = context.getSharedPreferences(Const.INTERNAL_PREFS, 0);
-        boolean hide = prefs.getBoolean(HIDE_SETUP_EDUROAM_ALWAYS, false);
-        if(man.isConfigured() || Utils.isConnected(context) || Build.VERSION.SDK_INT<18 || hide)
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        boolean show = prefs.getBoolean("card_eduroam_phone", true);
+        if(man.isConfigured() || Utils.isConnected(context) || Build.VERSION.SDK_INT<18 || !show)
             return;
 
         // Test if eduroam is available
@@ -44,6 +44,7 @@ public class ScanResultsAvailableReceiver extends BroadcastReceiver {
             }
         }
 
+        prefs = context.getSharedPreferences(Const.INTERNAL_PREFS, 0);
         if(!prefs.getBoolean(SHOULD_SHOW, true)) {
             prefs.edit().putBoolean(SHOULD_SHOW, true).apply();
         }
@@ -94,8 +95,8 @@ public class ScanResultsAvailableReceiver extends BroadcastReceiver {
 
         @Override
         protected void onHandleIntent(Intent intent) {
-            SharedPreferences prefs = getSharedPreferences(Const.INTERNAL_PREFS, 0);
-            prefs.edit().putBoolean(HIDE_SETUP_EDUROAM_ALWAYS,true).apply();
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+            prefs.edit().putBoolean("card_eduroam_phone", false).apply();
         }
     }
 }

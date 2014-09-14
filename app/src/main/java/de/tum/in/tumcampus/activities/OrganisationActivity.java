@@ -319,8 +319,8 @@ public class OrganisationActivity extends ActivityForAccessingTumOnline implemen
 			FileUtils.writeFile(xmlOrgFile, rawResponse);
 			Log.d("Import: org.xml",
 					"Xml file has been new downloaded and saved.");
-			super.hideErrorLayout();
-			super.hideProgressLayout();
+			hideErrorLayout();
+			hideProgressLayout();
 			showOrgTree();
 
 		} catch (IOException e) {

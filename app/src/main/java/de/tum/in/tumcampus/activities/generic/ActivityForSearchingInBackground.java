@@ -1,7 +1,6 @@
 package de.tum.in.tumcampus.activities.generic;
 
 import android.os.AsyncTask;
-import android.view.View;
 
 /**
  * Generic class which handles can handle a long running background searches
@@ -50,15 +49,21 @@ public abstract class ActivityForSearchingInBackground<T> extends ActivityForSea
 
     private class BackgroundSearch extends AsyncTask<String,Void,T> {
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            showLoadingStart();
+        }
+
+        @Override
         protected T doInBackground(String... arg) {
             if(arg.length==0)
-                return ActivityForSearchingInBackground.this.onSearchInBackground();
-            return ActivityForSearchingInBackground.this.onSearchInBackground(arg[0]);
+                return onSearchInBackground();
+            return onSearchInBackground(arg[0]);
         }
 
         @Override
         protected void onPostExecute(T result) {
-            progressLayout.setVisibility(View.GONE);
+            showLoadingEnded();
             onSearchFinished(result);
             asyncTask = null;
         }
