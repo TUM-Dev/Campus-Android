@@ -32,20 +32,13 @@ Jana Pejic, Marko Lalic, Sascha Moecker, Haris Iltifat, Anas Chakfeh, Thomas Kre
 Dies ist keine offizielle App der Technischen Universität München. Es erfolgt daher auch **kein offzieller Support oder eine Haftung**. Die App wird von und für Studierende entwickelt. Die Benutzung erfolgt auf eigene Gefahr und die Entwickler sind in keinem Fall haftbar zu machen. Aus Sicherheitsgründen wird der Zugriff auf private Daten in TUMonline über Tokens realisiert, die jeweils in TUMonline durch den Nutzer freigegeben und mit den jeweiligen Rechten versehen werden müssen.
 
 #### Benötigte Berechtigungen
-+ Standort abfragen
-	Um dir immer aktuelle Informationen zu deinem aktuellen Standort anzuzeigen, wie z.B. Mensa Menü, MVV Abfahrtszeiten, ....
-+ Kontakte ändern
-	Damit du in der Personensuche mit einem Klick die Kontaktdaten eines Komilitonen oder TU Mitarbeiters in deine Kontakte einfügen kannst
-+ Kalendertermine lesen/ändern
-	Damit du deine Vorlesungstermine mit deinem Google Kalender synchronisieren lassen kannst
-+ SD-Karteninhalte ändern oder löschen
-	Damit die App Daten zwischenspeichern kann und damit das Laden beschleunigt wird.
-+ Konten auf dem Gerät suchen
-	Wird für die Chatfunktion benötigt, da dafür ein Google Account benötigt wird.
-+ Internetzugriff
-	Natürlich um die sämtliche Daten abzurufen.
-+ Ruhezustand deaktivieren
-	Um auch bei ausgeschaltetem Display Nachrichten empfangen zu können
++ Standort abfragen: Um dir immer aktuelle Informationen zu deinem aktuellen Standort anzuzeigen, wie z.B. Mensa Menü, MVV Abfahrtszeiten, ....
++ Kontakte ändern: Damit du in der Personensuche mit einem Klick die Kontaktdaten eines Komilitonen oder TU Mitarbeiters in deine Kontakte einfügen kannst
++ Kalendertermine lesen/ändern: Damit du deine Vorlesungstermine mit deinem Google Kalender synchronisieren lassen kannst
++ SD-Karteninhalte ändern oder löschen: Damit die App Daten zwischenspeichern kann und damit das Laden beschleunigt wird.
++ Konten auf dem Gerät suchen: Wird für die Chatfunktion benötigt, da dafür ein Google Account benötigt wird.
++ Internetzugriff: Natürlich um die sämtliche Daten abrufen zu können.
++ Ruhezustand deaktivieren: Um auch bei ausgeschaltetem Display Nachrichten empfangen zu können
 
 #### Datenschutz:
 Die Anwendung speichert Daten nur auf Anweisung des Nutzers bzw. durch Benutzung der App. Der Zugriff auf kritische Informationen erfolgt ausschließlich über (durch den Nutzer zuvor freigegebene) Tokens. Im Fehlerfall erhebt die App mittels "BugSense" detaillierte technische Informationen, die zur Behebung des Fehlers notwendig sind. BugSense erfasst zudem auch anonyme Nutzungsdaten zur App (z.B. Anzahl der Nutzer an einem Tag). Weitere Informationen zu BugSense finden Sie unten.
