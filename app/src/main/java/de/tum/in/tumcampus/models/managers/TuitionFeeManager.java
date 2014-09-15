@@ -16,7 +16,7 @@ public class TuitionFeeManager implements Card.ProvidesCard {
     @Override
     public void onRequestCard(Context context) {
         try {
-            TUMOnlineRequest requestHandler = new TUMOnlineRequest(Const.STUDIENBEITRAGSTATUS, context);
+            TUMOnlineRequest requestHandler = new TUMOnlineRequest(Const.STUDIENBEITRAGSTATUS, context, true);
             String rawResp = requestHandler.fetch();
             Serializer serializer = new Persister();
             TuitionList tuitionList;

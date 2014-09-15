@@ -34,7 +34,7 @@ import de.tum.in.tumcampus.models.managers.CalendarManager;
  */
 public class CalendarActivity extends ActivityForAccessingTumOnline implements OnClickListener {
 	// The space between the first and the last date
-	public static final int MONTH_AFTER = 1;
+	public static final int MONTH_AFTER = 3;
 	public static final int MONTH_BEFORE = 0;
 
     private Calendar calendar = new GregorianCalendar();
@@ -161,7 +161,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements O
 	@Override
 	public void onClick(DialogInterface dialog, int which) {
 		if (which == DialogInterface.BUTTON_POSITIVE) {
-			this.displayCalendarOnGoogleCalendar();
+			displayCalendarOnGoogleCalendar();
 		}
 	}
 
@@ -169,22 +169,17 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements O
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		this.mViewPager = (ViewPager) this.findViewById(R.id.pager);
+		mViewPager = (ViewPager) findViewById(R.id.pager);
 
 		// Set the timespace between now and after this date and before this
 		// Dates before the current date
-		this.requestHandler.setParameter("pMonateVor", String.valueOf(MONTH_BEFORE));
+		requestHandler.setParameter("pMonateVor", String.valueOf(MONTH_BEFORE));
 		// Dates after the current date
-		this.requestHandler.setParameter("pMonateNach", String.valueOf(MONTH_AFTER));
+		requestHandler.setParameter("pMonateNach", String.valueOf(MONTH_AFTER));
 
-		this.calendarManager = new CalendarManager(this);
+		calendarManager = new CalendarManager(this);
 
-		if (this.calendarManager.needsSync()) {
-			super.requestFetch();
-		} else {
-			this.attachSectionPagerAdapter();
-			this.isFetched = true;
-		}
+		requestFetch();
 	}
 
 	@Override

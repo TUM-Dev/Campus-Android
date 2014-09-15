@@ -55,8 +55,7 @@ public class SyncManager {
 		try {
 			Cursor c = db.rawQuery(
 					"SELECT lastSync FROM syncs WHERE lastSync > datetime('now', '-"
-							+ seconds + " second') AND id=?",
-					new String[] { id });
+							+ seconds + " second') AND id=?", new String[] { id });
 			if (c.getCount() == 1) {
 				result = false;
 			}

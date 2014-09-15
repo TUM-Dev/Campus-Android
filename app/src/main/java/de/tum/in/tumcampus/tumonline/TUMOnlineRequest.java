@@ -26,6 +26,7 @@ import java.util.Map.Entry;
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.Utils;
+import de.tum.in.tumcampus.models.managers.TUMOnlineCacheManager;
 
 /**
  * This class will handle all action needed to communicate with the TUMOnline
@@ -36,6 +37,7 @@ import de.tum.in.tumcampus.auxiliary.Utils;
  * @author Thomas Behrens, Vincenz Doelle, Daniel Mayr, Sascha Moecker
  */
 public class TUMOnlineRequest {
+    private static final String TAG = "TUMOnlineRequest";
 
 	// login service address
 	public static final String LOGIN_SERVICE_URL = "https://campus.tum.de/tumonline/anmeldung.durchfuehren";
@@ -46,7 +48,10 @@ public class TUMOnlineRequest {
 	// server address
 	public static final String SERVICE_BASE_URL = "https://campus.tum.de/tumonline/wbservicesbasic.";
 
-	// set to null, if not needed
+    // force to fetch data and fill cache
+    private boolean fillCache = false;
+
+    // set to null, if not needed
 	private String accessToken = null;
 
 	/** asynchronous task for interactive fetch */
@@ -60,8 +65,10 @@ public class TUMOnlineRequest {
 
 	/** a list/map for the needed parameters */
 	private Map<String, String> parameters;
+    private TUMOnlineCacheManager cacheManager;
 
-	public TUMOnlineRequest() {
+    public TUMOnlineRequest(Context context) {
+        cacheManager = new TUMOnlineCacheManager(context);
 		client = getThreadSafeClient();
 		resetParameters();
 		HttpParams params = client.getParams();
@@ -69,19 +76,28 @@ public class TUMOnlineRequest {
 		HttpConnectionParams.setConnectionTimeout(params, Const.HTTP_TIMEOUT);
 	}
 
-	public TUMOnlineRequest(String method) {
-		this();
-		this.method = method;
-	}
-
-	public TUMOnlineRequest(String method, Context context) {
-		this();
+	public TUMOnlineRequest(String method, Context context, boolean needsToken) {
+		this(context);
 		this.method = method;
 
-		if (!loadAccessTokenFromPreferences(context)) {
-			// TODO show a dialog for the user
-		}
+        if(needsToken) {
+            if (!loadAccessTokenFromPreferences(context)) {
+                // TODO show a dialog for the user
+            }
+        }
 	}
+
+    public TUMOnlineRequest(String method, Context context, boolean needsToken, boolean fillCache) {
+        this(context);
+        this.method = method;
+        this.fillCache = fillCache;
+
+        if(needsToken) {
+            if (!loadAccessTokenFromPreferences(context)) {
+                // TODO show a dialog for the user
+            }
+        }
+    }
 
 	public void cancelRequest(boolean mayInterruptIfRunning) {
 		// Cancel background task just if one has been established
@@ -98,20 +114,26 @@ public class TUMOnlineRequest {
 	 * @return output will be a raw String
 	 */
 	public String fetch() {
-		String result = "";
+		String result;
 		String url = getRequestURL();
 		Log.d("TUMOnlineXMLRequest", "fetching URL " + url);
 
 		try {
-			HttpGet request = new HttpGet(url);
-			HttpResponse response = client.execute(request);
-			HttpEntity responseEntity = response.getEntity();
+            result = cacheManager.getFromCache(url);
+            if(result==null || fillCache) {
+                HttpGet request = new HttpGet(url);
+                HttpResponse response = client.execute(request);
+                HttpEntity responseEntity = response.getEntity();
 
-			if (responseEntity != null) {
-				// do something with the response
-				result = EntityUtils.toString(responseEntity);
-			}
-
+                if (responseEntity != null) {
+                    // do something with the response
+                    result = EntityUtils.toString(responseEntity);
+                    cacheManager.addToChache(url, result);
+                    Log.d(TAG, "added to cache " + url);
+                }
+            } else {
+                Log.d(TAG, "loaded from cache " + url);
+            }
 		} catch (Exception e) {
 			Log.d("FETCHerror", e.toString());
 			e.printStackTrace();

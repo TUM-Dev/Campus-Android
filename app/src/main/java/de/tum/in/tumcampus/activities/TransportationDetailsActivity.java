@@ -1,10 +1,10 @@
 package de.tum.in.tumcampus.activities;
 
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.widget.LinearLayout;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.concurrent.TimeoutException;
 
@@ -17,7 +17,7 @@ import de.tum.in.tumcampus.models.managers.TransportManager;
 /**
  * Activity to show transport stations and departures
  */
-public class TransportationDetailsActivity extends ActivityForLoadingInBackground<String,Cursor> {
+public class TransportationDetailsActivity extends ActivityForLoadingInBackground<String,List<TransportManager.Departure>> {
     public static final String EXTRA_STATION = "station";
 
     private LinearLayout mViewResults;
@@ -52,14 +52,14 @@ public class TransportationDetailsActivity extends ActivityForLoadingInBackgroun
     }
 
     @Override
-    protected Cursor onLoadInBackground(String[] arg) {
+    protected List<TransportManager.Departure> onLoadInBackground(String... arg) {
         final String location = arg[0];
         // save clicked station into db and refresh station list
         // (could be clicked on search result list)
         mTransportationManager.replaceIntoDb(location);
 
         // get departures from website
-        Cursor departureCursor = null;
+        List<TransportManager.Departure> departureCursor = null;
         try {
             departureCursor = mTransportationManager.getDeparturesFromExternal(location);
         } catch (NoSuchElementException e) {
@@ -74,15 +74,13 @@ public class TransportationDetailsActivity extends ActivityForLoadingInBackgroun
     }
 
     @Override
-    protected void onLoadFinished(Cursor result) {
-        if(result.moveToFirst()) {
-            do {
-                DepartureView view = new DepartureView(this, true);
-                view.setSymbol(result.getString(0));
-                view.setLine(result.getString(1));
-                view.setTime(System.currentTimeMillis()+result.getLong(2)*60000);
-                mViewResults.addView(view);
-            } while(result.moveToNext());
+    protected void onLoadFinished(List<TransportManager.Departure> result) {
+        for(TransportManager.Departure d : result) {
+            DepartureView view = new DepartureView(this, true);
+            view.setSymbol(d.symbol);
+            view.setLine(d.line);
+            view.setTime(System.currentTimeMillis()+d.time*60000);
+            mViewResults.addView(view);
         }
     }
 }

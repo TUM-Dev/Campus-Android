@@ -53,7 +53,7 @@ public abstract class ActivityForSearchingTumOnline<T> extends ActivityForSearch
             Log.e(getClass().getSimpleName(), "Cannot find layouts, did you forget to provide no or failed token layouts?");
         }
 
-        requestHandler = new TUMOnlineRequest(method, this);
+        requestHandler = new TUMOnlineRequest(method, this, true);
     }
 
     public void requestFetch() {

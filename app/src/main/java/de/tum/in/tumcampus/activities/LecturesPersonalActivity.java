@@ -79,14 +79,14 @@ public class LecturesPersonalActivity extends ActivityForSearchingTumOnline<Lect
     @Override
     protected void onStartSearch() {
         enableRefresh();
-        requestHandler = new TUMOnlineRequest(Const.LECTURES_PERSONAL, this);
+        requestHandler = new TUMOnlineRequest(Const.LECTURES_PERSONAL, this, true);
         requestFetch();
     }
 
     @Override
     protected void onStartSearch(String query) {
         disableRefresh();
-        requestHandler = new TUMOnlineRequest(Const.LECTURES_SEARCH, LecturesPersonalActivity.this);
+        requestHandler = new TUMOnlineRequest(Const.LECTURES_SEARCH, LecturesPersonalActivity.this, true);
         requestHandler.setParameter(P_SUCHE, query);
         requestFetch();
     }

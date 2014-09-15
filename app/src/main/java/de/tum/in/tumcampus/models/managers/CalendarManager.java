@@ -81,9 +81,8 @@ public class CalendarManager implements Card.ProvidesCard {
      */
     public Cursor getCurrentFromDb() {
         return db
-                .rawQuery(
-                        "SELECT title, location, nr "
-                                + "FROM kalendar_events WHERE datetime('now', 'localtime') BETWEEN dtstart AND dtend",
+                .rawQuery( "SELECT title, location, nr "
+                    + "FROM kalendar_events WHERE datetime('now', 'localtime') BETWEEN dtstart AND dtend",
                         null);
     }
 
@@ -131,7 +130,6 @@ public class CalendarManager implements Card.ProvidesCard {
                     }
                 }
             }
-            SyncManager.replaceIntoDb(db, this);
 
             // Do sync of google calendar if neccessary
             SharedPreferences prefs = mContext.getSharedPreferences(Const.INTERNAL_PREFS, 0);
@@ -142,10 +140,6 @@ public class CalendarManager implements Card.ProvidesCard {
             Log.d("SIMPLEXML", "wont work: " + e.getMessage());
             e.printStackTrace();
         }
-    }
-
-    public boolean needsSync() {
-        return SyncManager.needSync(db, this, TIME_TO_SYNC);
     }
 
     /**

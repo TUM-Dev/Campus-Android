@@ -9,6 +9,9 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 import de.tum.in.tumcampus.auxiliary.Const;
@@ -87,10 +90,10 @@ public class TransportManager implements Card.ProvidesCard {
      * <pre>
      *
      * @param location Station name
-     * @return Database cursor (name, desc, _id)
+     * @return Database cursor (name, time, _id)
      * @throws Exception </pre>
      */
-    public Cursor getDeparturesFromExternal(String location) throws Exception {
+    public List<Departure> getDeparturesFromExternal(String location) throws Exception {
 
         String baseUrl = "http://query.yahooapis.com/v1/public/yql?format=json&q=";
         // ISO needed for mvv
@@ -108,15 +111,29 @@ public class TransportManager implements Card.ProvidesCard {
             throw new NoSuchElementException("No departures found");
         }
 
-        MatrixCursor mc = new MatrixCursor(new String[]{"symbol","name", "time", "_id"});
-
+        ArrayList<Departure> list = new ArrayList<Departure>(jsonArray.length());
         for (int j = 2; j < jsonArray.length(); j = j + 3) {
-            String symbol = jsonArray.getString(j);
-            String name = jsonArray.getString(j + 1).trim();
-            String desc = jsonArray.getString(j + 2);
-            mc.addRow(new String[]{symbol, name, desc, String.valueOf(j)});
+            Departure dep = new Departure();
+            dep.symbol = jsonArray.getString(j);
+            dep.line = jsonArray.getString(j + 1).trim();
+            dep.time = jsonArray.getLong(j + 2);
+            list.add(dep);
         }
-        return mc;
+
+        Collections.sort(list);
+
+        return list;
+    }
+
+    public class Departure implements Comparable<Departure> {
+        public String symbol;
+        public String line;
+        public long time;
+
+        @Override
+        public int compareTo(Departure departure) {
+            return time<departure.time?-1:1;
+        }
     }
 
     /**
@@ -192,7 +209,7 @@ public class TransportManager implements Card.ProvidesCard {
         if(station==null)
             return;
 
-        Cursor cur = getDeparturesFromExternal(station);
+        List<Departure> cur = getDeparturesFromExternal(station);
         MVVCard card = new MVVCard(context);
         card.setStation(station);
         card.setDepartures(cur);

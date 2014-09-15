@@ -19,8 +19,6 @@ import de.tum.in.tumcampus.models.Location;
 import de.tum.in.tumcampus.models.managers.CafeteriaManager;
 import de.tum.in.tumcampus.models.managers.CafeteriaMenuManager;
 import de.tum.in.tumcampus.models.managers.CardManager;
-import de.tum.in.tumcampus.models.managers.LectureItemManager;
-import de.tum.in.tumcampus.models.managers.LectureManager;
 import de.tum.in.tumcampus.models.managers.NewsManager;
 import de.tum.in.tumcampus.models.managers.OpenHoursManager;
 import de.tum.in.tumcampus.models.managers.OrganisationManager;
@@ -98,12 +96,8 @@ public class DownloadService extends IntentService {
             try {
                 if ((action.equals(Const.DOWNLOAD_ALL_FROM_EXTERNAL)) && !isDestroyed) {
 
-                    // TODO Implement downloading each type of external source
-                    // TODO Also download my tum stuff
-
                     downloadNews(force);
                     downloadCafeterias(force);
-                    downloadOrganisations(force);
                     importLocationsDefaults();
 
                     successful = true;
@@ -111,9 +105,6 @@ public class DownloadService extends IntentService {
                 if ((action.equals(Const.NEWS)) && !isDestroyed) {
                     successful = downloadNews(force);
                 }
-                /*if ((action.equals(Const.LECTURES_TUM_ONLINE)) && !isDestroyed) {
-                    successful = importLectureItemsFromTUMOnline(force);
-                }*/
                 if ((action.equals(Const.CAFETERIAS)) && !isDestroyed) {
                     successful = downloadCafeterias(force);
                 }
@@ -133,8 +124,7 @@ public class DownloadService extends IntentService {
                             R.string.exception_sdcard));
                 }
             } catch (Exception e) {
-                Log.e(getClass().getSimpleName(),
-                        "Unkown error while handling action <" + action + ">");
+                Log.e(getClass().getSimpleName(), "Unkown error while handling action <" + action + ">");
                 if (!isDestroyed) {
                     broadcastError(getResources().getString(
                             R.string.exception_unknown));
@@ -159,15 +149,10 @@ public class DownloadService extends IntentService {
             Log.e(getClass().getSimpleName(),"Broadcast not sent");
         }
 
-        // Currently not used
         // Do all other import stuff that is not relevant for creating the viewing the start page
-        /*if ((action.equals(Const.DOWNLOAD_ALL_FROM_EXTERNAL)) && !isDestroyed) {
-            try {
-                importLectureItemsFromTUMOnline(force);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }*/
+        if ((action.equals(Const.DOWNLOAD_ALL_FROM_EXTERNAL)) && !isDestroyed) {
+            startService(new Intent(this, FillCacheService.class));
+        }
     }
 
 	private void broadcastDownloadCompleted() {
@@ -223,18 +208,6 @@ public class DownloadService extends IntentService {
 		}
 		return true;
 	}
-
-    /**
-     * imports lecture items from TUMOnline HINT: access token has to be set
-     */
-    public boolean importLectureItemsFromTUMOnline(boolean force) throws Exception {
-        LectureItemManager lim = new LectureItemManager(this);
-        lim.importFromTUMOnline(this, force);
-
-        LectureManager lm = new LectureManager(this);
-        lm.updateLectures();
-        return true;
-    }
 
     /**
      * Import default location and opening hours from assets

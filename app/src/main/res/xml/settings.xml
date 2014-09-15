@@ -218,9 +218,7 @@
                     android:title="@string/startpage" />
                 <CheckBoxPreference
                     android:defaultValue="true"
-                    android:dependency="card_eduroam_wear"
                     android:key="card_eduroam_phone"
-                    android:summary="@string/phone_summary"
                     android:title="@string/phone" />
             </PreferenceCategory>
         </PreferenceScreen>
