@@ -25,4 +25,7 @@
     <color name="separator_color">#BBBBBB</color>
     <color name="popup_text_color">#FFFFFF</color>
     <color name="searchview_hint_color">#ffffff</color>
+
+    <color name="borderless_button_normal">#3f5ca9</color>
+    <color name="borderless_button_pressed">#374f91</color>
 </resources>

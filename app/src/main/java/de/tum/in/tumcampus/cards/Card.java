@@ -146,10 +146,6 @@ public abstract class Card {
      * Shows the card as notification if settings allow it
      * */
     private void notifyUser() {
-        // Showing a notification is handled as it would already be dismissed, so that it will not
-        // notify again.
-        discardNotification();
-
         // Start building our notification
         NotificationCompat.Builder notificationBuilder =
                 new NotificationCompat.Builder(mContext)
@@ -179,6 +175,10 @@ public abstract class Card {
             NotificationManagerCompat notificationManager =
                     NotificationManagerCompat.from(mContext);
             notificationManager.notify(getTyp(), notification);
+
+            // Showing a notification is handled as it would already
+            // be dismissed, so that it will not notify again.
+            discardNotification();
         }
     }
 

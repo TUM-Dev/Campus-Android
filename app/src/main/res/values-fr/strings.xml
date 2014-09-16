@@ -64,8 +64,8 @@
 
     <!-- Preferences -->
     <string name="tumonline_settings">Paramètres TUMOnline</string>
-    <string name="lrz_id">LRZ indicatif \"</string>
-    <string name="lrz_id_detail">Ton LRZ indicatif par exemple go42tum\".</string>
+    <string name="lrz_id">LRZ indicatif</string>
+    <string name="lrz_id_detail">Ton LRZ indicatif par exemple go42tum.</string>
     <string name="generate_tumonline_token">Génére TUMOnline-Access-Token</string>
     <string name="generate_tumonline_token_detail">Crée un Token pour utiliser les services de TUMOnline. Tu dois accepter ce sur TUMOnline et activer les droits correspondantés.</string>
 

@@ -10,7 +10,15 @@ import android.net.wifi.WifiEnterpriseConfig;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 
+import java.io.InputStream;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
 import java.util.List;
+
+import de.tum.in.tumcampus.R;
 
 public class EduroamManager {
     public static final String networkSSID = "eduroam";
@@ -35,10 +43,12 @@ public class EduroamManager {
      * Tests if eduroam has already been setup
      *
      * @return true if eduroam is already setup, false otherwise
-     * */
+     */
     public boolean isConfigured() {
         WifiManager wifiManager = (WifiManager) mContext.getSystemService(Context.WIFI_SERVICE);
         List<WifiConfiguration> list = wifiManager.getConfiguredNetworks();
+        if (list == null)
+            return true;
         for (WifiConfiguration i : list) {
             if (i.SSID != null && i.SSID.equals("\"" + networkSSID + "\"")) {
                 return true;
@@ -47,14 +57,12 @@ public class EduroamManager {
         return false;
     }
 
-    public void configureEduroam(String lrzId, String networkPass) {
-
+    public boolean configureEduroam(String lrzId, String networkPass) {
         // Configure Wifi
         WifiConfiguration conf = new WifiConfiguration();
         conf.SSID = "\"" + networkSSID + "\"";
-        conf.allowedKeyManagement.set(KeyMgmt.IEEE8021X);
         conf.allowedKeyManagement.set(KeyMgmt.WPA_EAP);
-        conf.allowedKeyManagement.set(KeyMgmt.WPA_PSK);
+        conf.allowedKeyManagement.set(KeyMgmt.IEEE8021X);
         conf.allowedGroupCiphers.set(GroupCipher.TKIP);
         conf.allowedGroupCiphers.set(GroupCipher.CCMP);
         conf.allowedGroupCiphers.set(GroupCipher.WEP40);
@@ -62,139 +70,72 @@ public class EduroamManager {
         conf.allowedPairwiseCiphers.set(PairwiseCipher.CCMP);
         conf.allowedPairwiseCiphers.set(PairwiseCipher.TKIP);
         conf.allowedProtocols.set(Protocol.RSN);
-        if(Build.VERSION.SDK_INT>=18) {
+        conf.status = WifiConfiguration.Status.ENABLED;
+
+        if (Build.VERSION.SDK_INT >= 18) {
             conf.enterpriseConfig.setIdentity(lrzId + "@eduroam.mwn.de");
             conf.enterpriseConfig.setPassword(networkPass);
             conf.enterpriseConfig.setEapMethod(WifiEnterpriseConfig.Eap.PEAP);
             conf.enterpriseConfig.setPhase2Method(WifiEnterpriseConfig.Phase2.MSCHAPV2);
-            //TODO support for API lower than 18
-        } /*else {
-            try
-            {
-                // Let the magic start
-                Class[] wcClasses = WifiConfiguration.class.getClasses();
-                // null for overzealous java compiler
-                Class wcEnterpriseField = null;
+            conf.enterpriseConfig.setAnonymousIdentity("anonymous@mwn.de");
 
-                for (Class wcClass : wcClasses)
-                    if (wcClass.getName().equals(INT_ENTERPRISEFIELD_NAME))
-                    {
-                        wcEnterpriseField = wcClass;
-                        break;
-                    }
-                boolean noEnterpriseFieldType = false;
-                if(wcEnterpriseField == null)
-                    noEnterpriseFieldType = true; // Cupcake/Donut access enterprise settings directly
-
-                Field wcefAnonymousId = null, wcefCaCert = null, wcefClientCert = null, wcefEap = null, wcefIdentity = null, wcefPassword = null, wcefPhase2 = null, wcefPrivateKey = null;
-                Field[] wcefFields = WifiConfiguration.class.getFields();
-                // Dispatching Field vars
-                for (Field wcefField : wcefFields)
-                {
-                    if (wcefField.getName().trim().equals(INT_ANONYMOUS_IDENTITY))
-                        wcefAnonymousId = wcefField;
-                    else if (wcefField.getName().trim().equals(INT_CA_CERT))
-                        wcefCaCert = wcefField;
-                    else if (wcefField.getName().trim().equals(INT_CLIENT_CERT))
-                        wcefClientCert = wcefField;
-                    else if (wcefField.getName().trim().equals(INT_EAP))
-                        wcefEap = wcefField;
-                    else if (wcefField.getName().trim().equals(INT_IDENTITY))
-                        wcefIdentity = wcefField;
-                    else if (wcefField.getName().trim().equals(INT_PASSWORD))
-                        wcefPassword = wcefField;
-                    else if (wcefField.getName().trim().equals(INT_PHASE2))
-                        wcefPhase2 = wcefField;
-                    else if (wcefField.getName().trim().equals(INT_PRIVATE_KEY))
-                        wcefPrivateKey = wcefField;
-                }
-                Method wcefSetValue = null;
-                if(!noEnterpriseFieldType)
-                {
-                    for(Method m: wcEnterpriseField.getMethods())
-                        //System.out.println(m.getName());
-                        if(m.getName().trim().equals("value")){
-                            wcefSetValue = m;
-                            break;
-                        }
-                }
-
-                //*EAP Method*//*
-                String result = null;
-                Object obj = null;
-                if(!noEnterpriseFieldType)
-                {
-                    obj = wcefSetValue.invoke(wcefEap.get(config), null);
-                    String retval = (String)obj;
-                }
-
-                //*phase 2*//*
-                if(!noEnterpriseFieldType)
-                {
-                    result = (String) wcefSetValue.invoke(wcefPhase2.get(config), null);
-                }
-
-                //*Anonymous Identity*//*
-                if(!noEnterpriseFieldType)
-                {
-                    result = (String) wcefSetValue.invoke(wcefAnonymousId.get(config),null);
-                }
-
-                //*CA certificate*//*
-                if(!noEnterpriseFieldType)
-                {
-                    result = (String) wcefSetValue.invoke(wcefCaCert.get(config), null);
-                }
-
-                //*private key*//*
-                if(!noEnterpriseFieldType)
-                {
-                    result = (String) wcefSetValue.invoke(wcefPrivateKey.get(config),null);
-                }
-
-                //*Identity*//*
-                if(!noEnterpriseFieldType)
-                {
-                    result = (String) wcefSetValue.invoke(wcefIdentity.get(config), null);
-                }
-
-                //*Password*//*
-                if(!noEnterpriseFieldType)
-                {
-                    result = (String) wcefSetValue.invoke(wcefPassword.get(config), null);
-                }
-
-                //*client certificate*//*
-                if(!noEnterpriseFieldType)
-                {
-                    result = (String) wcefSetValue.invoke(wcefClientCert.get(config), null);
-                }
-
-            }
-            catch(IOException e)
-            {
-                Log.e("<<<<<<<<<<WifiPreference>>>>>>>>>>>>", "Could not write to ReadConfigLog.txt" + e.getMessage());
-            }
-            catch(Exception e)
-            {
+            // Install certificate
+            X509Certificate cert = null;
+            try {
+                InputStream is = mContext.getResources().openRawResource(R.raw.rootcert);
+                CertificateFactory certFactory = CertificateFactory.getInstance("X.509");
+                cert = (X509Certificate) certFactory.generateCertificate(is);
+            } catch (CertificateException e) {
                 e.printStackTrace();
             }
-        }*/
+            conf.enterpriseConfig.setCaCertificate(cert);
+        } else {
 
+            try {
+                // Get class instance for enterprise field class and than find setValue Method
+                Method wcefSetValue = null;
+                Class[] wcClasses = WifiConfiguration.class.getClasses();
+                for (Class wcClass : wcClasses) {
+                    if (wcClass.getName().equals(INT_ENTERPRISEFIELD_NAME)) {
+                        for (Method m : wcClass.getMethods()) {
+                            if (m.getName().trim().equals("setValue")) {
+                                wcefSetValue = m;
+                                break;
+                            }
+                        }
+                        break;
+                    }
+                }
+
+                Field[] wcefFields = WifiConfiguration.class.getFields();
+                // Dispatching Field vars
+                for (Field wcefField : wcefFields) {
+                    if (wcefField.getName().trim().equals(INT_ANONYMOUS_IDENTITY)) {
+                        wcefSetValue.invoke(wcefField.get(conf), "anonymous@mwn.de");
+                    } else if (wcefField.getName().trim().equals(INT_CA_CERT)) {
+                        wcefSetValue.invoke(wcefField.get(conf), "keystore://CACERT_eduroam");
+                    } else if (wcefField.getName().trim().equals(INT_EAP)) {
+                        wcefSetValue.invoke(wcefField.get(conf), "PEAP");
+                    } else if (wcefField.getName().trim().equals(INT_IDENTITY)) {
+                        wcefSetValue.invoke(wcefField.get(conf), lrzId + "@eduroam.mwn.de");
+                    } else if (wcefField.getName().trim().equals(INT_PASSWORD)) {
+                        wcefSetValue.invoke(wcefField.get(conf), networkPass);
+                    } else if (wcefField.getName().trim().equals(INT_PHASE2)) {
+                        wcefSetValue.invoke(wcefField.get(conf), "MSCHAPV2");
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
 
         // Add eduroam to wifi networks
         WifiManager wifiManager = (WifiManager) mContext.getSystemService(Context.WIFI_SERVICE);
-        wifiManager.addNetwork(conf);
+        int networkId = wifiManager.addNetwork(conf);
 
-        //And finally,you might need to enable it, so Android conntects to it:
-        List<WifiConfiguration> list = wifiManager.getConfiguredNetworks();
-        for (WifiConfiguration i : list) {
-            if (i.SSID != null && i.SSID.equals("\"" + networkSSID + "\"")) {
-                //wifiManager.disconnect();
-                wifiManager.enableNetwork(i.networkId, true);
-                //wifiManager.reconnect();
-                break;
-            }
+        if (networkId != -1) {
+            wifiManager.saveConfiguration();
         }
+        return networkId != -1;
     }
 }

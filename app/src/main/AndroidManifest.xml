@@ -12,7 +12,6 @@
 
     <!-- Standard access rights -->
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <!-- For google calendar synchronisation -->
@@ -28,6 +27,7 @@
 
     <!-- For automatically setting up eduroam -->
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
 
     <!-- GCM requires a Google account. -->
@@ -378,7 +378,7 @@
         <activity
             android:name="de.tum.in.tumcampus.activities.SetupEduroam"
             android:configChanges="orientation|screenSize"
-            android:theme="@style/Theme.AppCompat.Translucent">
+            android:label="@string/campus_app">
         </activity>
         <activity
             android:name="de.tum.in.tumcampus.activities.wizzard.WizNavStartActivity"

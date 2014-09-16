@@ -924,8 +924,8 @@ public class Utils {
 	 * </pre>
 	 */
 	public static void log(String message) {
-		StackTraceElement s = Thread.currentThread().getStackTrace()[3];
-		Log.d("TumCampus", s.toString() + " " + message);
+		String s = Thread.currentThread().getStackTrace()[3].getClassName().replaceAll("[a-zA-Z0-9.]+\\.","");
+		Log.d(s, message);
 	}
 
 	/**

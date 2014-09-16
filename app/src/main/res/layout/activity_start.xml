@@ -22,7 +22,8 @@
                 android:background="#EEEEEE"
                 android:descendantFocusability="blocksDescendants"
                 android:dividerHeight="0dip"
-                android:listSelector="@android:color/transparent" />
+                android:listSelector="@android:color/transparent"
+                android:scrollbars="none" />
 
         </uk.co.senab.actionbarpulltorefresh.extras.actionbarcompat.PullToRefreshLayout>
 

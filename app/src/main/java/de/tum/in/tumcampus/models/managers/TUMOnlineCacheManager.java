@@ -4,7 +4,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
-import android.util.Log;
 
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
@@ -13,6 +12,7 @@ import java.util.ArrayList;
 
 import de.tum.in.tumcampus.auxiliary.AccessTokenManager;
 import de.tum.in.tumcampus.auxiliary.Const;
+import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.LecturesSearchRow;
 import de.tum.in.tumcampus.models.LecturesSearchRowSet;
 import de.tum.in.tumcampus.tumonline.TUMOnlineRequest;
@@ -21,7 +21,6 @@ import de.tum.in.tumcampus.tumonline.TUMOnlineRequest;
  * TUMOnline cache manager, allows caching of TUMOnline requests
  */
 public class TUMOnlineCacheManager {
-    private static final String TAG = "CacheManager";
     private static final int TIME_TO_SYNC_CALENDAR = 5 * 86400000;
     public static int TIME_TO_SYNC_LECTURES = 86400000; // 1 day
     public static int TIME_TO_INVALID = 2*86400000; // 2 day
@@ -118,7 +117,7 @@ public class TUMOnlineCacheManager {
 	 * </pre>
 	 */
 	public void addToChache(String url, String data) {
-		Log.d(TAG, "replace "+url+" "+data);
+		Utils.log("replace " + url + " " + data);
 		db.execSQL("REPLACE INTO tumonline (url, data, lastSync) VALUES (?, ?, datetime())", new String[] { url, data });
 	}
 

@@ -66,8 +66,8 @@
 
     <!-- Preferences -->
     <string name="tumonline_settings">TUMOnline settings</string>
-    <string name="lrz_id">LRZ Identification"</string>
-    <string name="lrz_id_detail">Your LRZ Identification e.g. go42tum".</string>
+    <string name="lrz_id">LRZ Identification</string>
+    <string name="lrz_id_detail">Your LRZ Identification e.g. go42tum.</string>
     <string name="generate_tumonline_token">Generate TUMOnline-Access-Token</string>
     <string name="generate_tumonline_token_detail">Generates a Token for using TUMOnline features. You
 		have to accept the token and set the corresponding permissions in
@@ -337,21 +337,38 @@
     <string name="card_chat_summary">Notifies you if new messages are available</string>
     <string name="chat">Chat</string>
     <string name="open_card_settings">Open card settings</string>
-    <string name="always_hide_card">Always hide this card typ</string>
+    <string name="always_hide_card">Always hide card</string>
     <string name="options">Options</string>
     <string name="phone_summary">To receive notifications on your phone you have to enable Wearable</string>
-    <string name="setup_eduroam">Setup eduroam</string>
-    <string name="password">Password</string>
-    <string name="setup">Setup</string>
-    <string name="not_ask_again">Don\'t ask again</string>
-    <string name="eduroam_setup_question">Wollen Sie sich jetzt mit eduroam verbinden?</string>
-    <string name="eduroam_setup_question_desc">Click to start setting up eduroam</string>
     <string name="retry">Retry</string>
-    <string name="card_eduroam_summary">Allows you to easily setup eduroam wifi connection</string>
-    <string name="eduroam">Eduroam</string>
     <string name="display">Anzeige</string>
     <string name="opens">Opens</string>
     <string name="closes">Closes</string>
     <string name="closed">Closed</string>
+
+    <!-- Eduroam card -->
+    <string name="eduroam">Eduroam</string>
+    <string name="setup">Setup</string>
+    <string name="setup_eduroam">Setup eduroam</string>
+    <string name="password">Password</string>
+    <string name="not_ask_again">Don\'t ask again</string>
+    <string name="eduroam_setup_question">Do you want to connect to eduroam now?</string>
+    <string name="eduroam_setup_question_desc">Click to start setting up eduroam</string>
+    <string name="card_eduroam_summary">Allows you to easily setup eduroam wifi connection</string>
+    <string name="pin_lock">PIN-Lock</string>
+    <string name="pin_lock_desc">To set up the wireless access a PIN lock is required.
+        If you don\'t already use PIN lock you can set it up here.
+    <a href="http://www.tum.de/index.php?id=1821&amp;tx_ttnews%5Btt_news%5D=31688">More Info</a></string>
+    <string name="enable_pin_lock">Enable PIN-Lock</string>
+    <string name="data_backup">Data-Backup</string>
+    <string name="data_backup_desc">For safety reasons, the data backup must be disabled to avoid that the LRZ credentials are stored unencrypted on the Google servers.
+         Under \'Backup &amp; restore\' > \'Back up my data\' to disable.
+    <a href="https://www.tum.de/nc/en/print/studies/studinews/issue-052013/show/article/31130//neste/1/">More Info</a></string>
+    <string name="disable_data_backup">Disable Data-Backup</string>
+    <string name="eduroam_success">Eduroam successfully configured</string>
+    <string name="pin_lock_rem"><b>Configuration failed!</b>\nDid you setup a PIN-Lock?</string>
+    <string name="install_certificate">Install certificate</string>
+    <string name="certificate">Certificate</string>
+    <string name="certificate_desc">You have to install a CA-Root-certificate to enable secure connection with server. Just click \'Install certificate\' and confirm with \'OK\'.</string>
 
 </resources>
