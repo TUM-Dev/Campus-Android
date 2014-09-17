@@ -219,13 +219,13 @@ public class UserPreferencesActivity extends PreferenceActivity implements
             }
         });
 
-        setSummary("cafeteria_default_G");
-        setSummary("cafeteria_default_K");
-        setSummary("cafeteria_default_W");
-        setSummary("role");
-        setSummary("stations_default_G");
-        setSummary("stations_default_C");
-        setSummary("stations_default_K");
+        setSummary("card_cafeteria_default_G");
+        setSummary("card_cafeteria_default_K");
+        setSummary("card_cafeteria_default_W");
+        setSummary("card_role");
+        setSummary("card_stations_default_G");
+        setSummary("card_stations_default_C");
+        setSummary("card_stations_default_K");
 
         // Register the change listener to react immediately on changes
         PreferenceManager.getDefaultSharedPreferences(this)
@@ -254,6 +254,10 @@ public class UserPreferencesActivity extends PreferenceActivity implements
         if(pref instanceof ListPreference) {
             ListPreference listPreference = (ListPreference)pref;
             listPreference.setSummary(listPreference.getEntry());
+        }
+
+        if(key.startsWith("card_")) {
+            CardManager.shouldRefresh = true;
         }
 
         // If the silent mode was activated, start the service. This will invoke

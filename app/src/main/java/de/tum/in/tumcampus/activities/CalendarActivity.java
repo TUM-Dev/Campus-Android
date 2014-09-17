@@ -145,14 +145,14 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements O
 					builder.setMessage(CalendarActivity.this.getString(R.string.dialog_show_calendar))
 							.setPositiveButton(CalendarActivity.this.getString(R.string.yes), CalendarActivity.this)
 							.setNegativeButton(CalendarActivity.this.getString(R.string.no), CalendarActivity.this).show();
-					CalendarActivity.this.attachSectionPagerAdapter();
-					CalendarActivity.this.hideProgressLayout();
+					attachSectionPagerAdapter();
+					hideProgressLayout();
 				}
 			}
 
 			@Override
 			protected void onPreExecute() {
-				CalendarActivity.this.showProgressLayout();
+				showProgressLayout();
 			}
 		};
 		backgroundTask.execute();

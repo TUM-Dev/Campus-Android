@@ -151,7 +151,7 @@ public class LocationManager {
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
         final String defaultVal = defaultCampusStation[campus];
-        return prefs.getString("stations_default_" + campusShort[campus], defaultVal);
+        return prefs.getString("card_stations_default_" + campusShort[campus], defaultVal);
     }
 
     /**
@@ -186,7 +186,7 @@ public class LocationManager {
         if(campus!=-1) { // If the user is in university or a lecture has been recognized
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
             final String defaultVal = defaultCampusCafeteria[campus];
-            String cafeteria = prefs.getString("cafeteria_default_"+campusShort[campus], defaultVal);
+            String cafeteria = prefs.getString("card_cafeteria_default_"+campusShort[campus], defaultVal);
             if(cafeteria!=null)
                 return Integer.parseInt(cafeteria);
         }

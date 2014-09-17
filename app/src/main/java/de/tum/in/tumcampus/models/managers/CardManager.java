@@ -33,6 +33,7 @@ public class CardManager {
     private static List<Card> cards;
     private static ArrayList<Card> newCards;
     private static Context mContext;
+    public static boolean shouldRefresh = false;
 
     public static void addCard(Card card) {
         newCards.add(card);
@@ -98,6 +99,7 @@ public class CardManager {
         // Always append the restore card at the end of our list
         new RestoreCard(context).apply();
 
+        shouldRefresh = false;
         cards = newCards;
     }
 

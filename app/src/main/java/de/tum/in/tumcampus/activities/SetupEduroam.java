@@ -1,8 +1,10 @@
 package de.tum.in.tumcampus.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.security.KeyChain;
 import android.support.v7.app.ActionBarActivity;
@@ -20,6 +22,7 @@ import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.ImplicitCounter;
 import de.tum.in.tumcampus.auxiliary.Utils;
+import de.tum.in.tumcampus.models.managers.CardManager;
 import de.tum.in.tumcampus.models.managers.EduroamManager;
 
 public class SetupEduroam extends ActionBarActivity {
@@ -53,6 +56,11 @@ public class SetupEduroam extends ActionBarActivity {
         if(success) {
             Toast.makeText(this, R.string.eduroam_success, Toast.LENGTH_LONG).show();
             finish();
+
+            // Hide eduroam card and update cards list
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+            prefs.edit().putBoolean("card_eduroam_start", false).apply();
+            CardManager.shouldRefresh = true;
         } else {
             ((TextView)findViewById(R.id.pin_lock)).setTextColor(0xFFFF0000);
             findViewById(R.id.pin_lock_rem).setVisibility(View.VISIBLE);

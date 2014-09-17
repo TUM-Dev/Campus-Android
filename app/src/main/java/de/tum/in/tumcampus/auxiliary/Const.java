@@ -97,7 +97,7 @@ public final class Const {
 	public static final String ORGANISATIONS = "organisations";
 	public static final String PREFS_HAVE_CHANGED = "prefs_have_changed";
 	public static final String REMARK_COLUMN = "remark";
-	public static final String ROLE = "role";
+	public static final String ROLE = "card_role";
 	public static final String ROOM_COLUMN = "room";
 	public static final String ROOMFINDER = "roomfinder";
 	public static final String SILENCE_ON = "silence_on";

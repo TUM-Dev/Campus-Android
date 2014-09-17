@@ -60,10 +60,6 @@ public class StartActivity extends ActionBarActivity implements AdapterView.OnIt
         mCardsView = (ListView) findViewById(R.id.cards_view);
         mCardsView.setOnItemClickListener(this);
         mCardsView.setDividerHeight(0);
-        mAdapter = new CardsAdapter(this);
-        SwingBottomInAnimationAdapter animationAdapter = new SwingBottomInAnimationAdapter(mAdapter);
-        animationAdapter.setAbsListView(mCardsView);
-        mCardsView.setAdapter(animationAdapter);
         registerForContextMenu(mCardsView);
 
         // Setup swipe to dismiss feature
@@ -128,7 +124,18 @@ public class StartActivity extends ActionBarActivity implements AdapterView.OnIt
     @Override
     protected void onResume() {
         super.onResume();
-        mAdapter.notifyDataSetChanged();
+        if(CardManager.shouldRefresh) {
+            refreshCards();
+        } else {
+            initAdapter();
+        }
+    }
+
+    private void initAdapter() {
+        mAdapter = new CardsAdapter(this);
+        SwingBottomInAnimationAdapter animationAdapter = new SwingBottomInAnimationAdapter(mAdapter);
+        animationAdapter.setAbsListView(mCardsView);
+        mCardsView.setAdapter(animationAdapter);
     }
 
     // Discard all pending discards, otherwise already discarded item will show up again
@@ -277,7 +284,10 @@ public class StartActivity extends ActionBarActivity implements AdapterView.OnIt
             @Override
             protected void onPostExecute(Void result) {
                 super.onPostExecute(result);
-                mAdapter.notifyDataSetChanged();
+                if(mAdapter==null)
+                    initAdapter();
+                else
+                    mAdapter.notifyDataSetChanged();
                 mPullToRefreshLayout.setRefreshComplete();
             }
         }.execute();
