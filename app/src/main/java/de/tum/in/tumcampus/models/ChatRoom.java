@@ -22,7 +22,7 @@ public class ChatRoom {
 	public void setMessages(String messages) {
 		this.messages = messages;
 	}
-	public String getUrl() {
+	String getUrl() {
 		return url;
 	}
 	public void setUrl(String url) {

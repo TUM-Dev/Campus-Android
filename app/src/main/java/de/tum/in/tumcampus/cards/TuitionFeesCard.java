@@ -16,7 +16,9 @@ import de.tum.in.tumcampus.activities.TuitionFeesActivity;
 import de.tum.in.tumcampus.models.Tuition;
 import de.tum.in.tumcampus.models.managers.CardManager;
 
-
+/**
+ * Card that shows information about your fees that have to be paid or have been paid
+ */
 public class TuitionFeesCard extends Card {
 
     private static final String LAST_FEE_FRIST = "fee_frist";
@@ -63,11 +65,9 @@ public class TuitionFeesCard extends Card {
         String prevSoll = prefs.getString(LAST_FEE_SOLL, mTuition.getSoll());
 
         // If app gets started for the first time and fee is already paid don't annoy user
-        // by showing him that he/she has been re-registered successfully
-        if(prevFrist.isEmpty() && mTuition.getSoll().equals("0"))
-            return false;
-
-        return prevFrist.compareTo(mTuition.getFrist()) < 0 || prevSoll.compareTo(mTuition.getSoll()) > 0;
+        // by showing him that he has been re-registered successfully
+        return !(prevFrist.isEmpty() && mTuition.getSoll().equals("0")) &&
+                (prevFrist.compareTo(mTuition.getFrist()) < 0 || prevSoll.compareTo(mTuition.getSoll()) > 0);
     }
 
     @Override

@@ -4,11 +4,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.auxiliary.Const;
@@ -18,19 +16,28 @@ import de.tum.in.tumcampus.services.DownloadService;
 /**
  * Generic class which handles all basic tasks to download JSON or files from an
  * external source. It uses the DownloadService to download from external and
- * implements a rich user feedback with error progress and token related
- * layouts.
- * 
+ * implements a rich user feedback with error progress and token related layouts.
  */
 public abstract class ActivityForDownloadingExternal extends ProgressActivity {
-	private String method;
+	private final String method;
 
+    /**
+     * Standard constructor for ActivityForAccessingTumOnline.
+     * The given layout must include a progress_layout, failed_layout, no_token_layout and an error_layout.
+     * If the Activity should support Pull-To-Refresh it can also contain a
+     * {@link uk.co.senab.actionbarpulltorefresh.extras.actionbarcompat.PullToRefreshLayout} named ptr_layout
+     *
+     * @param method Type of content to be downloaded
+     * @param layoutId Resource id of the xml layout that should be used to inflate the activity
+     */
+    //TODO replace method with enum
     public ActivityForDownloadingExternal(String method, int layoutId) {
         super(layoutId);
         this.method = method;
     }
 
-	public BroadcastReceiver receiver = new BroadcastReceiver() {
+    /** Broadcast receiver getting notifications from the download service, if downloading was successful or not */
+    private final BroadcastReceiver receiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 
@@ -50,7 +57,7 @@ public abstract class ActivityForDownloadingExternal extends ProgressActivity {
 				}
 				if (action.equals(Const.WARNING)) {
 					String message = intent.getStringExtra(Const.WARNING_MESSAGE);
-					Toast.makeText(ActivityForDownloadingExternal.this, message, Toast.LENGTH_SHORT).show();
+					Utils.showToast(ActivityForDownloadingExternal.this, message);
                     showLoadingEnded();
 				}
 				if (action.equals(Const.ERROR)) {
@@ -61,6 +68,7 @@ public abstract class ActivityForDownloadingExternal extends ProgressActivity {
 		}
 	};
 
+    @Override
     public void onClick(View view) {
         int viewId = view.getId();
         switch (viewId) {
@@ -82,29 +90,20 @@ public abstract class ActivityForDownloadingExternal extends ProgressActivity {
         LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
 	}
 
-	public void requestDownload(boolean forceDownload) {
+    /**
+     * Start a download of the specified type
+     * @param forceDownload If set to true if will force the download service
+     *                      to throw away cached data and re-download instead.
+     */
+    protected void requestDownload(boolean forceDownload) {
 		if (Utils.isConnected(this)) {
-			errorLayout.setVisibility(View.GONE);
-			progressLayout.setVisibility(View.VISIBLE);
+            showLoadingStart();
 			Intent service = new Intent(this, DownloadService.class);
 			service.putExtra(Const.ACTION_EXTRA, method);
 			service.putExtra(Const.FORCE_DOWNLOAD, forceDownload);
 			startService(service);
 		} else {
-			Toast.makeText(this, R.string.no_internet_connection, Toast.LENGTH_SHORT).show();
-		}
-	}
-
-	public void requestDownloadWithExtras(Bundle extras, boolean forceDownload) {
-		if (Utils.isConnected(this)) {
-			progressLayout.setVisibility(View.VISIBLE);
-			Intent service = new Intent(this, DownloadService.class);
-			service.putExtra(Const.ACTION_EXTRA, method);
-			service.putExtras(extras);
-			startService(service);
-		} else {
-			Toast.makeText(this, R.string.no_internet_connection,
-					Toast.LENGTH_SHORT).show();
+			showError(R.string.no_internet_connection); // TODO Make generic layout for no internet
 		}
 	}
 }

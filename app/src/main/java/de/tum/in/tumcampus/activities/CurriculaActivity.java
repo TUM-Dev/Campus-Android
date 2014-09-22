@@ -22,11 +22,10 @@ import de.tum.in.tumcampus.auxiliary.ImplicitCounter;
  * Activity to fetch and display the curricula of different study programs.
  */
 public class CurriculaActivity extends ActionBarActivity implements OnItemClickListener {
-
 	public static final String NAME = "name";
-
 	public static final String URL = "url";
-    Hashtable<String, String> options;
+
+    private Hashtable<String, String> options;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -76,6 +75,13 @@ public class CurriculaActivity extends ActionBarActivity implements OnItemClickL
 		list.setOnItemClickListener(this);
 	}
 
+    /**
+     * Handle click on curricula item
+     * @param parent Containing listView
+     * @param view Item view
+     * @param pos Index of item
+     * @param id Id of item
+     */
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
 		String curriculumName = ((TextView) view).getText().toString();

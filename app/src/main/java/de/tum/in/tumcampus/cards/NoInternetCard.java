@@ -15,7 +15,9 @@ import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.managers.CardManager;
 import de.tum.in.tumcampus.services.DownloadService;
 
-
+/**
+ * Card that informs that no internet connection is available
+ */
 public class NoInternetCard extends Card {
 
     public NoInternetCard(Context context) {

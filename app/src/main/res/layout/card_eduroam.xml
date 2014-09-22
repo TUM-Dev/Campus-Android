@@ -15,27 +15,15 @@
         android:orientation="vertical"
         android:padding="10dp">
 
-        <LinearLayout
+        <TextView
             android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:layout_gravity="center_horizontal"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_gravity="center_vertical"
-                android:layout_marginRight="7dp"
-                android:src="@drawable/ic_action_network_wifi" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:gravity="center_vertical"
-                android:text="@string/setup_eduroam"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
-        </LinearLayout>
+            android:layout_height="25dp"
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:drawableLeft="@drawable/ic_action_network_wifi"
+            android:drawablePadding="7dp"
+            android:text="@string/setup_eduroam"
+            android:layout_marginBottom="5dp"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <TextView
             android:layout_width="wrap_content"

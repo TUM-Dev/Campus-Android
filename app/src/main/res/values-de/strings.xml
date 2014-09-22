@@ -26,8 +26,6 @@
     <string name="dialog_show_calendar">Exportieren erfolgreich.\nLokalen Kalender <i>TUM_CAMPUS_APP</i> in der <i>Google Calendar App</i> anzeigen?</string>
     <string name="export_to_google">Exportiere nach Google</string>
     <string name="calendarTimeZone">Germany/Munich</string>
-    <string name="calendar_account_name">TUM_Campus_APP</string>
-    <string name="calendar_display_name">TUM Campus</string>
     <string name="delete_from_google">Löschen aus Google</string>
     <string name="dialog_delete_calendar">Den lokalen <i>TUM_CAMPUS_APP</i> Kalender von deinem Gerät löschen?</string>
     <string name="calendar_deleted_toast">Kalender erfolgreich gelöscht</string>
@@ -39,7 +37,6 @@
     <string name="search_rooms">Suche nach Räumen</string>
 
     <!-- Auxiliary -->
-    <string name="empty_string" />
     <string name="error_fetching_tumonline">Fehler beim Zugriff auf TUMOnline.\nBitte stelle sicher, dass das TUMOnline-Access-Token \nakzeptiert und die entsprechenden Rechte aktiviert wurden.\n\n<b>Klicke hier zum Wiederholen.</b></string>
     <string name="error_no_token_setup">Kein TUMOnline-Access-Token gefunden.\nBitte erzeuge ein TUMOnline-Access-Token in den\n <i>Einstellungen</i>, um TUMOnline Dienste nutzen zu können.\n\n<b>Klicke hier, um zu den <i>Einstellungen</i> zu gelangen.</b></string>
     <string name="error_something_wrong">Entschuldigung, irgendetwas ist schief gegangen.\n\n<b>Klicke hier zum Wiederholen.</b></string>
@@ -49,7 +46,6 @@
     <string name="dialog_access_token_invalid">TUMOnline-Access-Token nicht aktiviert</string>
     <string name="dialog_no_rights_function">Keine Rechte für diese Funktion</string>
     <string name="empty_result">Die Anfrage lieferte ein fehlerhaftes Ergebnis</string>
-    <string name="error_occurred_while_opening">Kann die Datei nicht öffnen</string>
 
     <!-- Exam/Grades -->
     <string name="average_grade">Durchschnittsnote</string>
@@ -81,8 +77,8 @@
     <string name="wear">Wearable</string>
 
     <string name="extras">Extras</string>
-    <string name="open_wizzard">Öffne Startup-Wizzard</string>
-    <string name="open_wizzard_detail">Der Startup-Wizzard hilft dir, grundlegende Einstellungen für den Zugriff auf TUMOnline Dienste einzurichten und das Farbschema der App festzulegen.</string>
+    <string name="open_wizard">Öffne Startup-Wizard</string>
+    <string name="open_wizard_detail">Der Startup-Wizard hilft dir, grundlegende Einstellungen für den Zugriff auf TUMOnline Dienste einzurichten und das Farbschema der App festzulegen.</string>
     <string name="clear_cache">Lösche Daten</string>
     <string name="clear_cache_detail">Löscht alle durch die TUM Campus App heruntergeladenen, auf der SD-Karte gespeicherten Daten.</string>
     <string name="delete_chache_sure">Alle Daten wirklich löschen?</string>
@@ -106,10 +102,10 @@
     <string name="licences">Open Source-Lizenzen</string>
     <string name="licences_summary">Rechtliche Hinweise zu Lizenzen</string>
 
-    <!-- Startup Wizzard -->
+    <!-- Startup Wizard -->
     <string name="token_not_enabled">TUMOnline-Access-Token ist nicht aktiviert</string>
-    <string name="startup_wizzard_uppercase">STARTUP-WIZZARD</string>
-    <string name="welcome_msg"><b>Wilkommen zur TUM Campus App!</b>\n\nUm den Zugriff auf TUMOnline Dienste zu ermöglichen, wird deine <b>LRZ Kennung</b> benötigt.\n\nDiese Kennung hat das folgende Format:\n<i>xx00xxx</i>\n(2 Buchstaben, 2 Ziffern, 3 Buchstaben)</string>
+    <string name="startup_wizard_uppercase">STARTUP-WIZARD</string>
+    <string name="welcome_msg"><b>Willkommen zur TUM Campus App!</b>\n\nUm den Zugriff auf TUMOnline Dienste zu ermöglichen, wird deine <b>LRZ Kennung</b> benötigt.\n\nDiese Kennung hat das folgende Format:\n<i>xx00xxx</i>\n(2 Buchstaben, 2 Ziffern, 3 Buchstaben)</string>
     <string name="button_skip">Überspringen</string>
     <string name="button_next">Weiter</string>
     <string name="need_to_enable"><b>Das TUMOnline-Access-Token wurde erfolgreich erzeugt</b>\n\nDu kannst das Token nun in TUMOnline unter <i>Dienste/Token-Verwaltung</i> aktivieren. Beachte, dass du ebenfalls die Rechte zum Zugriff auf einzelne Dienste unter <i>Aktive Rechte</i> aktivieren musst.</string>
@@ -288,7 +284,6 @@
 		\n10 enthält eine Phenylalaninquelle
 		\n11 mit einer Zuckerart und Süßungsmitteln</string>
     <string name="action_ingredients">Inhaltsstoffe</string>
-    <string name="kitchen_opening">Küchenöffnungszeiten</string>
 
     <!-- Information -->
     <string name="version">Version</string>
@@ -299,7 +294,7 @@
     <!-- END Translated, please do not change identifiers -->
 
     <string name="min_search_len">Text muss mindestens %d Zeichen lang sein</string>
-    <string name="default_cafeteria">Standard mensa</string>
+    <string name="default_cafeteria">Standard Mensa</string>
     <string name="default_station">Standard Haltestelle</string>
     <string name="campus_klinikum_großhadern">Klinikum Großhadern</string>
     <string name="cafeteria">Mensa</string>
@@ -316,6 +311,7 @@
     <string name="phone_summary">Um Benachrichtigungen auf dem Telefon zu erhalten muss Wearable aktiviert sein</string>
     <string name="retry">Wiederholen</string>
     <string name="display">Anzeige</string>
+
     <string name="opens">Öffnet</string>
     <string name="closes">Schließt</string>
     <string name="closed">Geschlossen</string>

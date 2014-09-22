@@ -1,10 +1,8 @@
 package de.tum.in.tumcampus.fragments;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.text.SpannableString;
 import android.text.style.ImageSpan;
@@ -14,14 +12,12 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 
 import de.tum.in.tumcampus.R;
-import de.tum.in.tumcampus.auxiliary.CafetariaPrices;
+import de.tum.in.tumcampus.auxiliary.CafeteriaPrices;
 import de.tum.in.tumcampus.auxiliary.Const;
+import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.managers.CafeteriaMenuManager;
 import de.tum.in.tumcampus.models.managers.OpenHoursManager;
 
@@ -42,10 +38,20 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
 		return rootView;
 	}
 
+    /**
+     * Inflates the cafeteria menu layout.
+     * This is put into an extra static method to be able to
+     * reuse it in {@link de.tum.in.tumcampus.cards.CafeteriaMenuCard}
+     *
+     * @param rootView Parent layout
+     * @param cafeteriaId Cafeteria id
+     * @param dateStr Date in yyyy-mm-dd format
+     * @param big True to show big lines
+     */
     public static void showMenu(LinearLayout rootView, int cafeteriaId, String dateStr, boolean big) {
         // initialize a few often used things
         final Context context = rootView.getContext();
-        final HashMap<String, String> rolePrices = CafeteriaDetailsSectionFragment.getRolePrices(context);
+        final HashMap<String, String> rolePrices = CafeteriaPrices.getRolePrices(context);
         final int padding = (int)context.getResources().getDimension(R.dimen.card_text_padding);
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
@@ -55,15 +61,9 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
         TextView textview;
         if(!big) {
             // Show opening hours
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
             OpenHoursManager lm = new OpenHoursManager(context);
             textview = new TextView(context);
-            try {
-                textview.setText(lm.getHoursById(context, cafeteriaId, formatter.parse(dateStr)));
-            } catch (ParseException e) {
-                e.printStackTrace();
-                textview.setText(lm.getHoursById(context, cafeteriaId, new Date()));
-            }
+            textview.setText(lm.getHoursByIdAsString(context, cafeteriaId, Utils.getDate(dateStr)));
             textview.setTextColor(context.getResources().getColor(R.color.sections_green));
             rootView.addView(textview);
         }
@@ -95,9 +95,9 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
                     // If price is available
                     View view = inflater.inflate(big?R.layout.price_line_big:R.layout.card_price_line, rootView, false);
                     textview = (TextView) view.findViewById(R.id.line_name);
-                    TextView priceview = (TextView) view.findViewById(R.id.line_price);
+                    TextView priceView = (TextView) view.findViewById(R.id.line_price);
                     textview.setText(text);
-                    priceview.setText(rolePrices.get(typeLong) + " €");
+                    priceView.setText(rolePrices.get(typeLong) + " €");
                     rootView.addView(view);
                 } else {
                     // Without price
@@ -111,24 +111,13 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
         cursorCafeteriaMenu.close();
 	}
 
-
-    public static HashMap<String, String> getRolePrices(Context context) {
-        HashMap<String, String> rolePrices;
-        SharedPreferences sharedPrefs = PreferenceManager
-                .getDefaultSharedPreferences(context);
-        String type = sharedPrefs.getString(Const.ROLE, "0");
-        if (type.equals("0")) {
-            rolePrices = CafetariaPrices.student_prices;
-        } else if (type.equals("1")) {
-            rolePrices = CafetariaPrices.employee_prices;
-        } else if (type.equals("2")) {
-            rolePrices = CafetariaPrices.guest_prices;
-        } else {
-            rolePrices = CafetariaPrices.student_prices;
-        }
-        return rolePrices;
-    }
-
+    /**
+     * Converts menu text to {@link SpannableString}.
+     * Replaces all (v), ... annotations with images
+     * @param context Context
+     * @param menu Text with annotations
+     * @return Spannable text with images
+     */
     public static SpannableString menuToSpan(Context context, String menu) {
         int len;
         do {
@@ -154,6 +143,11 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
         }
     }
 
+    /**
+     * Replaces all annotations that cannot be replaces with images such as (1), ...
+     * @param menu Text to delete annotations from
+     * @return Text without un-replaceable annotations
+     */
     private static String prepare(String menu) {
         int len;
         do {

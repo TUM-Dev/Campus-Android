@@ -10,17 +10,41 @@ import de.tum.in.tumcampus.R;
  */
 public abstract class ActivityForLoadingInBackground<T1,T2> extends ProgressActivity {
 
+    /**
+     * Called in separate thread after {@link #startLoading(Object[])} gets called.
+     * Should do all loading and return the result.
+     * @param arg Parameters given to {@link #startLoading(Object[])}
+     * @return Result of the loading task
+     */
+    protected abstract T2 onLoadInBackground(T1... arg);
+
+    /**
+     * Gets called from the UI thread after background task has finished.
+     * @param result Result returned by {@link #onLoadInBackground(Object[])}
+     */
+    protected abstract void onLoadFinished(T2 result);
+
+    /**
+     * Standard constructor for ActivityForLoadingInBackground.
+     * The given layout must include a progress_layout and an error_layout.
+     * If the Activity should support Pull-To-Refresh it can also contain a
+     * {@link uk.co.senab.actionbarpulltorefresh.extras.actionbarcompat.PullToRefreshLayout} named ptr_layout
+     *
+     * @param layoutId Resource id of the xml layout that should be used to inflate the activity
+     */
     public ActivityForLoadingInBackground(int layoutId) {
 		super(layoutId);
 	}
 
-    protected abstract T2 onLoadInBackground(T1... arg);
-    protected abstract void onLoadFinished(T2 result);
+    private AsyncTask<T1, Void, T2> asyncTask;
+    private T1[] lastArg;
 
-    protected AsyncTask<T1, Void, T2> asyncTask;
-    protected T1[] lastArg;
-
-    public void startLoading(final T1... arg) {
+    /**
+     * Starts a new background task.
+     * The work that should be done in background must be specified in the {@link #onLoadInBackground(Object[])} method.
+     * @param arg Arguments passed to {@link #onLoadInBackground(Object[])}
+     */
+    protected void startLoading(final T1... arg) {
         if(asyncTask!=null)
             asyncTask.cancel(true);
 
@@ -29,8 +53,7 @@ public abstract class ActivityForLoadingInBackground<T1,T2> extends ProgressActi
         asyncTask = new AsyncTask<T1,Void,T2>() {
             @Override
             protected void onPreExecute() {
-                progressLayout.setVisibility(View.VISIBLE);
-                errorLayout.setVisibility(View.GONE);
+                showLoadingStart();
             }
 
             @Override
@@ -40,7 +63,7 @@ public abstract class ActivityForLoadingInBackground<T1,T2> extends ProgressActi
 
             @Override
             protected void onPostExecute(T2 result) {
-                progressLayout.setVisibility(View.GONE);
+                showLoadingEnded();
                 onLoadFinished(result);
                 asyncTask = null;
             }
@@ -48,18 +71,15 @@ public abstract class ActivityForLoadingInBackground<T1,T2> extends ProgressActi
         asyncTask.execute(arg);
 	}
 
-    protected void onCancelLoading() {
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
         if (asyncTask!=null) {
             asyncTask.cancel(true);
         }
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        onCancelLoading();
-    }
-
     public void onClick(View view) {
         int viewId = view.getId();
         switch (viewId) {

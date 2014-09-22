@@ -5,6 +5,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+import de.tum.in.tumcampus.auxiliary.Utils;
+
 
 public class CreateChatMessage {
 
@@ -16,7 +18,6 @@ public class CreateChatMessage {
 	private boolean valid;
 	
 	public CreateChatMessage(String text, String member) {
-		super();
 		this.text = text;
 		this.member = member;
 	}
@@ -56,7 +57,7 @@ public class CreateChatMessage {
 			}
 			return new SimpleDateFormat("dd-mm-yyyy HH:mm", Locale.ENGLISH).format(date);
 		} catch (Exception e) {
-			e.printStackTrace();
+			Utils.log(e);
 		}
 		return "";
 	}

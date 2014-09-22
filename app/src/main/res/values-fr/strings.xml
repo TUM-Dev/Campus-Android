@@ -25,8 +25,6 @@
     <string name="dialog_show_calendar">Succès à l\'exportation.\nCalendrier locale <i>TUM_CAMPUS_APP</i> dans le <i>Google Calendrier App</i>?</string>
     <string name="export_to_google">Exporter vers Google</string>
     <string name="calendarTimeZone">Germany/Munich</string>
-    <string name="calendar_account_name">TUM_Campus_APP</string>
-    <string name="calendar_display_name">TUM Campus</string>
     <string name="delete_from_google">Supprimer de Google</string>
     <string name="dialog_delete_calendar">Veux-tu supprimer le calendrier locale <i>TUM_CAMPUS_APP</i> de votre appareil?</string>
     <string name="calendar_deleted_toast">Le calendrier a supprimé avec succès</string>
@@ -38,7 +36,6 @@
     <string name="search_rooms">Chercher des salles</string>
 
     <!-- Auxiliary -->
-    <string name="empty_string"></string>
     <string name="error_fetching_tumonline">Erreur d\'accès TUMOnline.\nContrôle que le TUMOnline-Access-Token a accepté et les droits correspondants sont activés.\n\n<b> Cliquez ici pour répéter.</b></string>
     <string name="error_no_token_setup">TUMOnline-Access-Token n\'a pas trouvé.\nGénére un TUMOnline-Access-Token dans les\n<i>Paramètres</i>, pour utiliser les services de TUMOnline.\n\n<b>Clique ici pour voir les <i>Paramètres</i>.</b></string>
     <string name="error_something_wrong">Pardon, quelque chose s\'est mal passé.\n\n<b> Cliquez ici pour répéter.</b></string>
@@ -48,7 +45,6 @@
     <string name="dialog_access_token_invalid">TUMOnline-Access-Token n\'est pas activée</string>
     <string name="dialog_no_rights_function">Aucuns droits pour cette fonction</string>
     <string name="empty_result">La demande apporte un résultat erroné</string>
-    <string name="error_occurred_while_opening">Impossible d\'ouvrir le fichier</string>
 
     <!-- Exam/Grades -->
     <string name="average_grade">Moyenne de la note</string>
@@ -79,8 +75,8 @@
     <string name="wear">Wearable</string>
 
     <string name="extras">Extras</string>
-    <string name="open_wizzard">Ouvre startup-wizzard</string>
-    <string name="open_wizzard_detail">Le startup-wizzard t\'aide à configurer les paramètres de base pour l\'accès à les services de TUMOnline et de définir le schéma de couleur de l\'application.</string>
+    <string name="open_wizard">Ouvre startup-wizard</string>
+    <string name="open_wizard_detail">Le startup-wizard t\'aide à configurer les paramètres de base pour l\'accès à les services de TUMOnline et de définir le schéma de couleur de l\'application.</string>
     <string name="clear_cache">Supprimer les fichiers</string>
     <string name="clear_cache_detail">Supprime tous les fichier qui sont télécharger avec l\'appli TUM CAMPUS et sont entasser sur la carte SD.</string>
     <string name="delete_chache_sure">Pour supprimer toutes les données?</string>
@@ -104,9 +100,9 @@
     <string name="licences">Licences open source</string>
     <string name="licences_summary">Des notes juridiques licences</string>
 
-    <!-- Startup Wizzard -->
+    <!-- Startup Wizard -->
     <string name="token_not_enabled">TUMOnline-Access-Token n\'est pas activée</string>
-    <string name="startup_wizzard_uppercase">Assistant de démarrage</string>
+    <string name="startup_wizard_uppercase">Assistant de démarrage</string>
     <string name="welcome_msg"><b>Bienvenue sur le TUM Campus App</b>\n\nPour permettre l\'accès aux services à TUMOnline, ta <b>LRZ indicatif</b> est nécessaire.\n\nCe indicatif a le format suivant:\n<i>xx00xxx</i>\n(2 lettres, 2 chiffres, 3 lettres)</string>
     <string name="button_skip">Sauter</string>
     <string name="button_next">Plus</string>
@@ -286,7 +282,6 @@
 		\n10 contient une source de phénylalanine
 		\n11 avec le sucre et les édulcorants</string>
     <string name="action_ingredients">Ingrédients</string>
-    <string name="kitchen_opening">horaire d\'ouverture de la cuisine</string>
 
     <!-- Information -->
     <string name="version">Version</string>
@@ -296,5 +291,52 @@
     <string name="feedbackSubj">Feed-back pour TUM Campus App</string>
     <!-- END Translated, please do not change identifiers -->
 
+    <string name="min_search_len">Le texte doit comporter au moins %d caractères</string>
+    <string name="default_cafeteria">Cafétéria par défaut</string>
+    <string name="default_station">Station de défaut/arrêt d\'arrêt norme</string>
+    <string name="campus_klinikum_großhadern">Hôpital Großhadern</string>
+    <string name="cafeteria">Cafétéria</string>
+    <string name="card_cafeteria_summary">Affiche le menu Mensa</string>
+    <string name="card_mvv_summary">Affiche les heures de départ des transports publics à</string>
+    <string name="card_next_lecture_summary">Affiche des informations sur la prochaine conférence</string>
+    <string name="card_tuition_fee_summary">Vous rappelle quand vous devez payer les frais de scolarité</string>
+    <string name="card_news_summary">Propose une sélection de nouvelles avant</string>
+    <string name="card_chat_summary">Vous avertit lorsque de nouveaux messages sont disponibles</string>
+    <string name="chat">Chat</string>
+    <string name="open_card_settings">Personnalisez carte</string>
+    <string name="always_hide_card">Toujours masquer carte</string>
+    <string name="options">Options de</string>
+    <string name="phone_summary">Doit recevoir des notifications sur votre téléphone portable soit activé</string>
+    <string name="retry">Répétez</string>
+    <string name="display">Affichage</string>
+
+    <string name="opens">Ouvre</string>
+    <string name="closes">Ferme</string>
+    <string name="closed">Fermé</string>
+
+    <!-- Eduroam card -->
+    <string name="eduroam">Eduroam</string>
+    <string name="setup">Installer</string>
+    <string name="setup_eduroam">Mise en place d\'eduroam</string>
+    <string name="password">Mot de passe</string>
+    <string name="not_ask_again">Ne pas demander à nouveau</string>
+    <string name="eduroam_setup_question">Voulez-vous vous connecter à eduroam maintenant?</string>
+    <string name="eduroam_setup_question_desc">Cliquez ici pour mettre en place eduroam</string>
+    <string name="card_eduroam_summary">Vous aide à configurer eduroam</string>
+    <string name="pin_lock">Verrouillage de la carte</string>
+    <string name="pin_lock_desc">Pour configurer l\'accès sans fil un verrouillage PIN est nécessaire.
+         Si vous avez utilisé aucune serrure de code PIN, vous pouvez en créer un ici.
+    <a href="http://www.tum.de/index.php?id=1821&amp;tx_ttnews%5Btt_news%5D=31688">Plus d\'infos</a></string>
+    <string name="enable_pin_lock">Activer code PIN de verrouillage</string>
+    <string name="data_backup">Sauvegarde des données</string>
+    <string name="data_backup_desc">Pour des raisons de sécurité, la sauvegarde des données doit être désactivée pour permettre aux informations d\'identification de LRZ ne sont pas stockés en clair sur les serveurs de Google.
+         Ces \'Reset &amp; Backup sous\' > \'Sauvegarder mes données\' pour désactiver.
+    <a href="https://www.tum.de/nc/en/print/studies/studinews/issue-052013/show/article/31130//neste/1/">Plus d\'infos</a></string>
+    <string name="disable_data_backup">Désactiver la sauvegarde des données</string>
+    <string name="eduroam_success">Eduroam est établie avec succès</string>
+    <string name="pin_lock_rem"><b>Configuration a échoué!</b>\nAvez-vous mis en place un verrouillage PIN?</string>
+    <string name="install_certificate">Installer le certificat</string>
+    <string name="certificate">Certificat</string>
+    <string name="certificate_desc">Vous devez installer une connexion sécurisée au serveur pour être en mesure de construire un certificat de CA racine. Il suffit de taper \'installer le certificat\' et confirmer avec \'OK\'.</string>
 
 </resources>

@@ -3,10 +3,8 @@ package de.tum.in.tumcampus.activities;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
@@ -20,47 +18,15 @@ import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.generic.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampus.adapters.OrgDetailsItemHandler;
 import de.tum.in.tumcampus.auxiliary.Const;
+import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.OrgDetailsItem;
+import de.tum.in.tumcampus.tumonline.TUMOnlineConst;
 
 /**
  * Show all details that are available on TUMCampus to any organisation
  */
 @SuppressLint("DefaultLocale")
 public class OrganisationDetailsActivity extends ActivityForAccessingTumOnline {
-
-	/**
-	 * Parse XML-String into one OrgDetails-Object
-	 * 
-	 * @param rawResp
-	 *            = XML-String to parse
-	 * @return OrgDetailsItem (OrgDetails Object)
-	 */
-	private static OrgDetailsItem parseOrgDetails(String rawResp) {
-
-		/* Get a SAXParser from the SAXPArserFactory. */
-		SAXParserFactory sxParserFactory = SAXParserFactory.newInstance();
-		SAXParser sxParser;
-		try {
-			sxParser = sxParserFactory.newSAXParser();
-
-			/* Get the XMLReader of the SAXParser we created. */
-			XMLReader xmlReader = sxParser.getXMLReader();
-			/* Create a new ContentHandler and apply it to the XML-Reader */
-			OrgDetailsItemHandler orgDetailsItem = new OrgDetailsItemHandler();
-			xmlReader.setContentHandler(orgDetailsItem);
-
-			/* Parse the xml-data from our URL. */
-			xmlReader.parse(new InputSource(new StringReader(rawResp)));
-
-			return orgDetailsItem.getDetails();
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			Log.d("EXCEPTION", e.getMessage());
-		}
-		/* Parsing has finished. */
-		return null;
-	}
 
 	/**
 	 * Id of the organisation of which the details should be shown
@@ -73,8 +39,43 @@ public class OrganisationDetailsActivity extends ActivityForAccessingTumOnline {
 	private String orgName;
 
 	public OrganisationDetailsActivity() {
-		super(Const.ORG_DETAILS, R.layout.activity_organisationdetails);
+		super(TUMOnlineConst.ORG_DETAILS, R.layout.activity_organisationdetails);
 	}
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        // get the submitted (bundle) data
+        Bundle bundle = this.getIntent().getExtras();
+        orgId = bundle.getString(Const.ORG_ID);
+        orgName = bundle.getString(Const.ORG_NAME);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        // if there is a call of OrganisationDetails without an id (should not
+        // be possible)
+        if (orgId == null) {
+            Utils.showToast(this, R.string.invalid_organisation);
+            return;
+        }
+
+        // set the name of the organisation as heading (TextView tvCaption)
+        // only load the details if the details page is new and it isn't a
+        // return from a link
+        TextView tvCaption = (TextView) findViewById(R.id.tvCaption);
+        if (tvCaption.getText().toString().compareTo(orgName) != 0) {
+
+            // set the new organisation name in the heading
+            tvCaption.setText(orgName.toUpperCase());
+
+            // Initialise the request handler and append the orgUnitID to the URL
+            requestHandler.setParameter("pOrgNr", orgId);
+            super.requestFetch();
+        }
+    }
 
 	/**
 	 * Initialize BackButton -> On Click: Go to Organisation.java and show the
@@ -99,63 +100,56 @@ public class OrganisationDetailsActivity extends ActivityForAccessingTumOnline {
 		startActivity(intent);
 	}
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-
-		// get the submitted (bundle) data
-		Bundle bundle = this.getIntent().getExtras();
-		orgId = bundle.getString(Const.ORG_ID);
-		orgName = bundle.getString(Const.ORG_NAME);
-	}
-
 	/**
 	 * When the data has arrived call this function, parse the Data and Update
 	 * the UserInterface
 	 * 
-	 * @param rawResponse
-	 *            = XML-TUMCampus-Response (String)
+	 * @param rawResponse XML-TUMCampus-Response (String)
 	 */
 	@Override
 	public void onFetch(String rawResponse) {
 		// parse XML into one OrgDetailsItem
 		OrgDetailsItem orgDetailsItem = parseOrgDetails(rawResponse);
 		updateUI(orgDetailsItem);
-		super.hideProgressLayout();
+		showLoadingEnded();
 	}
 
-	@Override
-	public void onStart() {
-		super.onStart();
-		// if there is a call of OrganisationDetails without an id (should not
-		// be possible)
-		if (orgId == null) {
-			Toast.makeText(this, getString(R.string.invalid_organisation),
-					Toast.LENGTH_LONG).show();
-			return;
-		}
+    /**
+     * Parse XML-String into one OrgDetails-Object
+     *
+     * @param rawResp XML-String to parse
+     * @return OrgDetailsItem (OrgDetails Object)
+     */
+    private static OrgDetailsItem parseOrgDetails(String rawResp) {
 
-		// set the name of the organisation as heading (TextView tvCaption)
-		// only load the details if the details page is new and it isn't a
-		// return from a link
-		TextView tvCaption = (TextView) findViewById(R.id.tvCaption);
-		if (tvCaption.getText().toString().compareTo(orgName) != 0) {
+		/* Get a SAXParser from the SAXPArserFactory. */
+        SAXParserFactory sxParserFactory = SAXParserFactory.newInstance();
+        SAXParser sxParser;
+        try {
+            sxParser = sxParserFactory.newSAXParser();
 
-			// set the new organisation name in the heading
-			tvCaption.setText(orgName.toUpperCase());
+			/* Get the XMLReader of the SAXParser we created. */
+            XMLReader xmlReader = sxParser.getXMLReader();
+			/* Create a new ContentHandler and apply it to the XML-Reader */
+            OrgDetailsItemHandler orgDetailsItem = new OrgDetailsItemHandler();
+            xmlReader.setContentHandler(orgDetailsItem);
 
-			// Initialise the request handler and append the orgUnitID to the
-			// URL
-			requestHandler.setParameter("pOrgNr", orgId);
-			super.requestFetch();
-		}
-	}
+			/* Parse the xml-data from our URL. */
+            xmlReader.parse(new InputSource(new StringReader(rawResp)));
+
+            return orgDetailsItem.getDetails();
+
+        } catch (Exception e) {
+            Utils.log(e);
+        }
+		/* Parsing has finished. */
+        return null;
+    }
 
 	/**
 	 * Show the Organisation Details to the user
 	 * 
-	 * @param organisation
-	 *            (= organisation detail object)
+	 * @param organisation organisation detail object
 	 */
 	private void updateUI(OrgDetailsItem organisation) {
 		// catch error
@@ -166,12 +160,12 @@ public class OrganisationDetailsActivity extends ActivityForAccessingTumOnline {
 		TextView identifier = (TextView) findViewById(R.id.identifier);
 		TextView name = (TextView) findViewById(R.id.name);
 		TextView contact = (TextView) findViewById(R.id.contact);
-		TextView adress = (TextView) findViewById(R.id.adress);
+		TextView address = (TextView) findViewById(R.id.adress);
 		TextView homepage = (TextView) findViewById(R.id.homepage);
 		TextView email = (TextView) findViewById(R.id.email);
 		TextView phone = (TextView) findViewById(R.id.phone);
 		TextView fax = (TextView) findViewById(R.id.fax);
-		TextView secretacy = (TextView) findViewById(R.id.secretary);
+		TextView secretary = (TextView) findViewById(R.id.secretary);
 		TextView extraCaption = (TextView) findViewById(R.id.extra_name);
 		TextView extra = (TextView) findViewById(R.id.extra);
 		TextView bib = (TextView) findViewById(R.id.bib);
@@ -179,12 +173,12 @@ public class OrganisationDetailsActivity extends ActivityForAccessingTumOnline {
 		identifier.setText(organisation.getCode());
 		name.setText(organisation.getName());
 		contact.setText(organisation.getContactName());
-		adress.setText(organisation.getContactStreet());
+		address.setText(organisation.getContactStreet());
 		homepage.setText(organisation.getContactLocationURL());
 		email.setText(organisation.getContactEmail());
 		phone.setText(organisation.getContactTelephone());
 		fax.setText(organisation.getContactFax());
-		secretacy.setText(organisation.getContactLocality());
+		secretary.setText(organisation.getContactLocality());
 		extraCaption.setText(organisation.getAdditionalInfoCaption());
 		extra.setText(organisation.getAdditionalInfoText());
 		bib.setText(organisation.getContactLocality());
@@ -198,8 +192,8 @@ public class OrganisationDetailsActivity extends ActivityForAccessingTumOnline {
 		if (contact.getText().length() == 0) {
 			((View) contact.getParent()).setVisibility(View.GONE);
 		}
-		if (adress.getText().length() == 0) {
-			((View) adress.getParent()).setVisibility(View.GONE);
+		if (address.getText().length() == 0) {
+			((View) address.getParent()).setVisibility(View.GONE);
 		}
 		if (homepage.getText().length() == 0) {
 			((View) homepage.getParent()).setVisibility(View.GONE);
@@ -213,8 +207,8 @@ public class OrganisationDetailsActivity extends ActivityForAccessingTumOnline {
 		if (fax.getText().length() == 0) {
 			((View) fax.getParent()).setVisibility(View.GONE);
 		}
-		if (secretacy.getText().length() == 0) {
-			((View) secretacy.getParent()).setVisibility(View.GONE);
+		if (secretary.getText().length() == 0) {
+			((View) secretary.getParent()).setVisibility(View.GONE);
 		}
 		if (extraCaption.getText().length() == 0) {
 			((View) extraCaption.getParent()).setVisibility(View.GONE);

@@ -1,24 +1,20 @@
 package de.tum.in.tumcampus.models;
 
-import java.io.Serializable;
-import java.util.List;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
 
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.Root;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.util.Base64;
+import java.io.Serializable;
+import java.util.List;
 
 /**
  * An employee of the TUM.
  * <p>
  * Note: This model is based on the TUMOnline web service response format for a
  * corresponding request.
- * 
- * @author Vincenz Doelle
- * @review Daniel G. Mayr
- * @review Thomas Behrens
  */
 @Root(name = "person", strict = false)
 public class Employee extends Person implements Serializable {

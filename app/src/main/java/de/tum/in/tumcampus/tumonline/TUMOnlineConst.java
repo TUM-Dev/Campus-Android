@@ -1,24 +1,23 @@
-/**
- * 
- */
 package de.tum.in.tumcampus.tumonline;
 
 /**
- * Contains constant values for the TUMOnlineRequest class
- * 
- * @author Vasyl Malinskyi, Sascha Moecker
+ * Enum for all TUMOnline access possibilities
  */
-public class TUMOnlineConst {
-
-	/** Access token identifier */
-	public static final String ACCESS_TOKEN = "access_token";
-
-	/** String possibly contained in response from server */
-	public static final String NO_FUNCTION_RIGHTS = "Keine Rechte für Funktion";
-
-	/** Token */
-	public static final String P_TOKEN = "pToken";
-
-	/** String possibly contained in response from server */
-	public static final String TOKEN_NICHT_BESTAETIGT = "Token ist nicht bestätigt oder ungültig!";
+public enum TUMOnlineConst {
+    CALENDER("kalender"),
+    STUDIENBEITRAGSTATUS("studienbeitragsstatus"),
+    LECTURES_PERSONAL("veranstaltungenEigene"),
+    LECTURES_DETAILS("veranstaltungenDetails"),
+    LECTURES_APPOINTMENTS("veranstaltungenTermine"),
+    LECTURES_SEARCH("veranstaltungenSuche"),
+    ORG_TREE("orgBaum"),
+    ORG_DETAILS("orgDetails"),
+    PERSONEN_DETAILS("personenDetails"),
+    PERSONEN_SUCHE("personenSuche"),
+    NOTEN("noten"),
+    TOKEN_CONFIRMED("isTokenConfirmed"),
+    REQUEST_TOKEN("requestToken");
+    private final String stringValue;
+    private TUMOnlineConst(final String s) { stringValue = s; }
+    public String toString() { return stringValue; }
 }

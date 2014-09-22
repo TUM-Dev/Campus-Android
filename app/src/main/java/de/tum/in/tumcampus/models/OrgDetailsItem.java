@@ -5,8 +5,6 @@ import de.tum.in.tumcampus.adapters.OrgDetailsItemHandler;
 /**
  * Modell for the Organisation Details collected by
  * {@link OrgDetailsItemHandler}
- * 
- * @author Thomas Behrens
  */
 
 public class OrgDetailsItem {

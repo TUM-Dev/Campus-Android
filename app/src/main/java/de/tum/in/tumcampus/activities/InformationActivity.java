@@ -8,12 +8,10 @@ import android.widget.TextView;
 
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.auxiliary.ImplicitCounter;
+import de.tum.in.tumcampus.auxiliary.Utils;
 
 /**
- * Provides Information about this app and all contributors
- * 
- * @author Sascha Moecker
- * 
+ * Provides information about this app and all contributors
  */
 public class InformationActivity extends ActionBarActivity {
 
@@ -32,12 +30,10 @@ public class InformationActivity extends ActionBarActivity {
 		String versionName = "";
 		PackageInfo packageInfo;
 		try {
-			packageInfo = getPackageManager().getPackageInfo(getPackageName(),
-					0);
-			versionName = getResources().getString(R.string.version) + ": "
-					+ packageInfo.versionName;
+			packageInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+			versionName = getResources().getString(R.string.version) + ": " + packageInfo.versionName;
 		} catch (NameNotFoundException e) {
-			e.printStackTrace();
+			Utils.log(e);
 		}
 		TextView tv = (TextView) findViewById(R.id.txt_version);
 		tv.setText(versionName);

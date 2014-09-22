@@ -19,24 +19,25 @@ import java.security.cert.X509Certificate;
 import java.util.List;
 
 import de.tum.in.tumcampus.R;
+import de.tum.in.tumcampus.auxiliary.Utils;
 
+/**
+ * Eduroam manager, manages connecting to eduroam wifi network
+ */
 public class EduroamManager {
     public static final String networkSSID = "eduroam";
-
-    private static final String INT_PRIVATE_KEY = "private_key";
     private static final String INT_PHASE2 = "phase2";
     private static final String INT_PASSWORD = "password";
     private static final String INT_IDENTITY = "identity";
     private static final String INT_EAP = "eap";
-    private static final String INT_CLIENT_CERT = "client_cert";
     private static final String INT_CA_CERT = "ca_cert";
     private static final String INT_ANONYMOUS_IDENTITY = "anonymous_identity";
-    final String INT_ENTERPRISEFIELD_NAME = "android.net.wifi.WifiConfiguration$EnterpriseField";
+    private final String INT_ENTERPRISE_FIELD_NAME = "android.net.wifi.WifiConfiguration$EnterpriseField";
 
-    private Context mContext;
+    private final Context mContext;
 
-    public EduroamManager(Context mContext) {
-        this.mContext = mContext;
+    public EduroamManager(Context context) {
+        mContext = context;
     }
 
     /**
@@ -57,6 +58,12 @@ public class EduroamManager {
         return false;
     }
 
+    /**
+     * Configures eduroam wifi connection
+     * @param lrzId User's LRZ-ID
+     * @param networkPass User's lrz password
+     * @return Returns true if configuration was successful, false otherwise
+     */
     public boolean configureEduroam(String lrzId, String networkPass) {
         // Configure Wifi
         WifiConfiguration conf = new WifiConfiguration();
@@ -80,13 +87,14 @@ public class EduroamManager {
             conf.enterpriseConfig.setAnonymousIdentity("anonymous@mwn.de");
 
             // Install certificate
-            X509Certificate cert = null;
+            X509Certificate cert;
             try {
                 InputStream is = mContext.getResources().openRawResource(R.raw.rootcert);
                 CertificateFactory certFactory = CertificateFactory.getInstance("X.509");
                 cert = (X509Certificate) certFactory.generateCertificate(is);
             } catch (CertificateException e) {
-                e.printStackTrace();
+                Utils.log(e);
+                return false;
             }
             conf.enterpriseConfig.setCaCertificate(cert);
         } else {
@@ -96,7 +104,7 @@ public class EduroamManager {
                 Method wcefSetValue = null;
                 Class[] wcClasses = WifiConfiguration.class.getClasses();
                 for (Class wcClass : wcClasses) {
-                    if (wcClass.getName().equals(INT_ENTERPRISEFIELD_NAME)) {
+                    if (wcClass.getName().equals(INT_ENTERPRISE_FIELD_NAME)) {
                         for (Method m : wcClass.getMethods()) {
                             if (m.getName().trim().equals("setValue")) {
                                 wcefSetValue = m;
@@ -107,25 +115,28 @@ public class EduroamManager {
                     }
                 }
 
+                if(wcefSetValue==null)
+                    return false;
+
                 Field[] wcefFields = WifiConfiguration.class.getFields();
-                // Dispatching Field vars
                 for (Field wcefField : wcefFields) {
-                    if (wcefField.getName().trim().equals(INT_ANONYMOUS_IDENTITY)) {
-                        wcefSetValue.invoke(wcefField.get(conf), "anonymous@mwn.de");
-                    } else if (wcefField.getName().trim().equals(INT_CA_CERT)) {
-                        wcefSetValue.invoke(wcefField.get(conf), "keystore://CACERT_eduroam");
-                    } else if (wcefField.getName().trim().equals(INT_EAP)) {
-                        wcefSetValue.invoke(wcefField.get(conf), "PEAP");
-                    } else if (wcefField.getName().trim().equals(INT_IDENTITY)) {
-                        wcefSetValue.invoke(wcefField.get(conf), lrzId + "@eduroam.mwn.de");
-                    } else if (wcefField.getName().trim().equals(INT_PASSWORD)) {
-                        wcefSetValue.invoke(wcefField.get(conf), networkPass);
-                    } else if (wcefField.getName().trim().equals(INT_PHASE2)) {
-                        wcefSetValue.invoke(wcefField.get(conf), "MSCHAPV2");
-                    }
+                        if (wcefField.getName().trim().equals(INT_ANONYMOUS_IDENTITY)) {
+                            wcefSetValue.invoke(wcefField.get(conf), "anonymous@mwn.de");
+                        } else if (wcefField.getName().trim().equals(INT_CA_CERT)) {
+                            wcefSetValue.invoke(wcefField.get(conf), "keystore://CACERT_eduroam");
+                        } else if (wcefField.getName().trim().equals(INT_EAP)) {
+                            wcefSetValue.invoke(wcefField.get(conf), "PEAP");
+                        } else if (wcefField.getName().trim().equals(INT_IDENTITY)) {
+                            wcefSetValue.invoke(wcefField.get(conf), lrzId + "@eduroam.mwn.de");
+                        } else if (wcefField.getName().trim().equals(INT_PASSWORD)) {
+                            wcefSetValue.invoke(wcefField.get(conf), networkPass);
+                        } else if (wcefField.getName().trim().equals(INT_PHASE2)) {
+                            wcefSetValue.invoke(wcefField.get(conf), "MSCHAPV2");
+                        }
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                Utils.log(e);
+                return false;
             }
         }
 

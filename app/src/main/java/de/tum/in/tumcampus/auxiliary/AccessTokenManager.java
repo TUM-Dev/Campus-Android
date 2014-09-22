@@ -4,24 +4,19 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
-import android.preference.PreferenceManager;
-import android.util.Log;
-import android.widget.Toast;
+
 import de.tum.in.tumcampus.R;
+import de.tum.in.tumcampus.tumonline.TUMOnlineConst;
 import de.tum.in.tumcampus.tumonline.TUMOnlineRequest;
 
 /**
  * Easy accessible class for token management.
  * 
- * @author Sascha Moecker
- * 
  */
 public class AccessTokenManager {
 	public static final int MIN_LRZ_LENGTH = 7;
 
-	private Context context;
-
-	private String lrzId;
+	private final Context context;
 
 	public AccessTokenManager(Context context) {
 		this.context = context;
@@ -29,82 +24,83 @@ public class AccessTokenManager {
 
 	/**
 	 * get a new access token for TUMOnline by passing the lrz ID due to the
-	 * simplicity of the given xml file we only need to parse the <token>
+	 * simplicity of the given xml file we only need to parse the &lt;token&gt;
 	 * element using an xml-parser is simply to much... just extract the pattern
 	 * via regex
 	 * 
-	 * @param lrz_id
-	 *            lrz user id
+	 * @param lrz_id lrz user id
 	 * @return the access token
 	 */
-	public String generateAccessToken(String lrz_id) {
+    String generateAccessToken(String lrz_id) {
 		// we don't have an access token yet, though we take the constructor
 		// with only one parameter to set the method
-		TUMOnlineRequest request = new TUMOnlineRequest("requestToken", context, false);
+		TUMOnlineRequest request = new TUMOnlineRequest(TUMOnlineConst.REQUEST_TOKEN, context, false);
 		// add lrz_id to parameters
 		request.setParameter("pUsername", lrz_id);
 		// add readable name for TUMOnline
-		request.setParameter("pTokenName", "TUMCampusApp-"
-				+ android.os.Build.PRODUCT);
+		request.setParameter("pTokenName", "TUMCampusApp-" + android.os.Build.PRODUCT);
 
 		// fetch the xml response of requestToken
 		String strTokenXml = request.fetch();
-		//Log.d("RAWOUTPUT", strTokenXml);
+
 		// it is only one tag in that xml, let's do a regex pattern
-		return strTokenXml.substring(
-				strTokenXml.indexOf("<token>") + "<token>".length(),
-				strTokenXml.indexOf("</token>"));
+        return Utils.cutText(strTokenXml, "<token>", "</token>");
 	}
 
+    /**
+     * Gets the users lrz id
+     * @return LRZ id, if it is set, an empty string otherwise
+     */
 	private String getLrzId() {
-		if (lrzId == null || lrzId.equals("")) {
-			lrzId = Utils.getSetting(context, Const.LRZ_ID);
-		}
-		return lrzId;
+		return Utils.getSetting(context, Const.LRZ_ID);
 	}
 
+    /**
+     * Test if a valid access token already exists
+     * @return True, if access token is set
+     */
 	public boolean hasValidAccessToken() {
-		String oldAccessToken = PreferenceManager.getDefaultSharedPreferences(
-				context).getString(Const.ACCESS_TOKEN, "");
+        final String oldAccessToken = Utils.getSetting(context, Const.ACCESS_TOKEN);
         return oldAccessToken != null && oldAccessToken.length() > 2;
 	}
 
 	/**
-	 * Internal method for setting a new token. WARNING: Doesn't use shared
-	 * preferences, but rather a parameter. Needed for the onPreferenceChanged
-	 * callback, so as to use the new LRZ_ID value for the token generation
-	 * before it is set (which happens right after the callback).
+	 * Internal method for setting a new token.
+     * It uses the given lrzId to generate a new access token, which is saved to
+     * shared preferences afterwards
 	 * 
-	 * @param stringLRZID
+	 * @param lrzId LRZ id
+     * @return True if new access token has been set successfully
 	 */
-	public boolean requestAccessToken(String stringLRZID) {
+	public boolean requestAccessToken(String lrzId) {
 		try {
 			if (!Utils.isConnected(context)) {
-				Toast.makeText(context, R.string.no_internet_connection,
-						Toast.LENGTH_LONG).show();
+				Utils.showToast(context, R.string.no_internet_connection);
 				return false;
 			}
 			// ok, do the request now
-			String strAccessToken = generateAccessToken(stringLRZID);
-			Log.d("AcquiredAccessToken", strAccessToken);
+			String strAccessToken = generateAccessToken(lrzId);
+			Utils.log("AcquiredAccessToken = " + strAccessToken);
 
 			// save access token to preferences
 			Utils.setSetting(context, Const.ACCESS_TOKEN, strAccessToken);
 			return true;
 
 		} catch (Exception ex) {
-            Log.e("TCA",context.getString(R.string.access_token_wasnt_generated),ex);
+            Utils.log(ex, context.getString(R.string.access_token_wasnt_generated));
 			// set access token to null
 			Utils.setSetting(context, Const.ACCESS_TOKEN, null);
-			Toast.makeText(context,
-					context.getString(R.string.access_token_wasnt_generated),
-					Toast.LENGTH_LONG).show();
+			Utils.showToast(context, R.string.access_token_wasnt_generated);
 		}
 		return false;
 	}
 
+    /**
+     * Generates an access token and if there already is an access token a dialog is shown which
+     * asks the user if he wants to generate a new one
+     */
 	public void setupAccessToken() {
-		lrzId = PreferenceManager.getDefaultSharedPreferences(context).getString(Const.LRZ_ID, "");
+        String lrzId = Utils.getSetting(context, Const.LRZ_ID);
 		// check if lrz could be valid?
 		if (lrzId.length() == MIN_LRZ_LENGTH) {
 			// is access token already set?
@@ -125,9 +121,7 @@ public class AccessTokenManager {
 				requestAccessToken(lrzId);
 			}
 		} else {
-			Toast.makeText(context,
-					context.getString(R.string.error_lrz_wrong),
-					Toast.LENGTH_LONG).show();
+			Utils.showToast(context, R.string.error_lrz_wrong);
 		}
 	}
 }

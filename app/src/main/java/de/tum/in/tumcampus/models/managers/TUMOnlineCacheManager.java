@@ -11,32 +11,30 @@ import org.simpleframework.xml.core.Persister;
 import java.util.ArrayList;
 
 import de.tum.in.tumcampus.auxiliary.AccessTokenManager;
-import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.LecturesSearchRow;
 import de.tum.in.tumcampus.models.LecturesSearchRowSet;
+import de.tum.in.tumcampus.tumonline.TUMOnlineConst;
 import de.tum.in.tumcampus.tumonline.TUMOnlineRequest;
 
 /**
  * TUMOnline cache manager, allows caching of TUMOnline requests
  */
 public class TUMOnlineCacheManager {
-    private static final int TIME_TO_SYNC_CALENDAR = 5 * 86400000;
-    public static int TIME_TO_SYNC_LECTURES = 86400000; // 1 day
-    public static int TIME_TO_INVALID = 2*86400000; // 2 day
+    private static final int TIME_TO_SYNC_CALENDAR = 5 * 86400; // 5 days
+    private static final int TIME_TO_SYNC_LECTURES = 86400; // 1 day
+    private static final int TIME_TO_INVALID = 2*86400; // 2 days
 
 	/**
 	 * Database connection
 	 */
 	private final SQLiteDatabase db;
-    private Context mContext;
+    private final Context mContext;
 
     /**
 	 * Constructor, open/create database, create table if necessary
 	 *
-	 * <pre>
 	 * @param context Context
-	 * </pre>
 	 */
 	public TUMOnlineCacheManager(Context context) {
         mContext = context;
@@ -63,14 +61,14 @@ public class TUMOnlineCacheManager {
             importLecturesFromTUMOnline();
 
             // Sync fee status
-            TUMOnlineRequest requestHandler = new TUMOnlineRequest(Const.STUDIENBEITRAGSTATUS, mContext, true, true);
+            TUMOnlineRequest requestHandler = new TUMOnlineRequest(TUMOnlineConst.STUDIENBEITRAGSTATUS, mContext);
             requestHandler.fetch();
             SyncManager.replaceIntoDb(db, "lectures");
         }
 
         if (SyncManager.needSync(db, "calendar", TIME_TO_SYNC_CALENDAR)) {
             // Sync calendar
-            TUMOnlineRequest requestHandler = new TUMOnlineRequest(Const.CALENDER, mContext, true, true);
+            TUMOnlineRequest requestHandler = new TUMOnlineRequest(TUMOnlineConst.CALENDER, mContext);
             requestHandler.setParameter("pMonateVor", "0");
             requestHandler.setParameter("pMonateNach", "3");
             requestHandler.fetch();
@@ -96,40 +94,28 @@ public class TUMOnlineCacheManager {
             }
             c.close();
         } catch (SQLiteException e) {
-            e.printStackTrace();
+            Utils.log(e);
         }
         return result;
     }
 
-	/**
-	 * Removes all cache items
-	 */
-	public void removeCache() {
-		db.execSQL("DELETE FROM tumonline");
-	}
-
-	/**
+    /**
 	 * Add a result to cache
-	 * 
-	 * <pre>
+	 *
 	 * @param url url from where the data was fetched
      * @param data result
-	 * </pre>
 	 */
 	public void addToChache(String url, String data) {
-		Utils.log("replace " + url + " " + data);
+		Utils.logv("replace " + url + " " + data);
 		db.execSQL("REPLACE INTO tumonline (url, data, lastSync) VALUES (?, ?, datetime())", new String[] { url, data });
 	}
 
-
     /**
-     * this function allows us to import all lecture settings from TUMOnline
-     *
-     * @throws Exception
+     * this function allows us to import all lecture items from TUMOnline
      */
-    public void importLecturesFromTUMOnline() {
+    void importLecturesFromTUMOnline() {
         // get my lectures
-        TUMOnlineRequest requestHandler = new TUMOnlineRequest(Const.LECTURES_PERSONAL, mContext, true, true);
+        TUMOnlineRequest requestHandler = new TUMOnlineRequest(TUMOnlineConst.LECTURES_PERSONAL, mContext);
         String strMine = requestHandler.fetch();
         // deserialize
         Serializer serializer = new Persister();
@@ -141,7 +127,7 @@ public class TUMOnlineCacheManager {
         try {
             myLecturesList = serializer.read(LecturesSearchRowSet.class, strMine);
         } catch (Exception e) {
-            e.printStackTrace();
+            Utils.log(e);
         }
 
         // get schedule for my lectures
@@ -149,11 +135,11 @@ public class TUMOnlineCacheManager {
             LecturesSearchRow currentLecture = myLecturesList.getLehrveranstaltungen().get(i);
 
             // now, get termine for each lecture
-            TUMOnlineRequest req = new TUMOnlineRequest(Const.LECTURES_APPOINTMENTS, mContext, true, true);
+            TUMOnlineRequest req = new TUMOnlineRequest(TUMOnlineConst.LECTURES_APPOINTMENTS, mContext);
             req.setParameter("pLVNr", currentLecture.getStp_sp_nr());
             req.fetch();
 
-            req = new TUMOnlineRequest(Const.LECTURES_DETAILS, mContext, true, true);
+            req = new TUMOnlineRequest(TUMOnlineConst.LECTURES_DETAILS, mContext);
             req.setParameter("pLVNr", currentLecture.getStp_sp_nr());
             req.fetch();
         }

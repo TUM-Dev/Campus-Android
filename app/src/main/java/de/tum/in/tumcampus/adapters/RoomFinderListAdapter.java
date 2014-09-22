@@ -16,28 +16,20 @@ import de.tum.in.tumcampus.tumonline.TUMRoomFinderRequest;
 
 /**
  * Custom UI adapter for a list of employees.
- * 
- * @author Anas Chakfeh
  */
 public class RoomFinderListAdapter extends BaseAdapter {
 	static class ViewHolder {
-		TextView tvDetails1;
-		TextView tvDetails2;
-		TextView tvName;
+		TextView tvRoomTitle;
+        TextView tvBuildingTitle;
+        TextView tvCampusTitle;
 	}
 
-    private ArrayList<HashMap<String, String>> data;
-	private static LayoutInflater inflater = null;
+    private final ArrayList<HashMap<String, String>> data;
+	private static LayoutInflater inflater;
 
-	// public ImageLoader imageLoader;
-
-	public RoomFinderListAdapter(Activity a,
-			ArrayList<HashMap<String, String>> d) {
-        Activity activity = a;
+	public RoomFinderListAdapter(Activity activity, ArrayList<HashMap<String, String>> d) {
 		data = d;
-		inflater = (LayoutInflater) activity
-				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		// imageLoader=new ImageLoader(activity.getApplicationContext());
+		inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
 
 	@Override
@@ -57,23 +49,25 @@ public class RoomFinderListAdapter extends BaseAdapter {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		View vi = convertView;
-		if (convertView == null)
-			vi = inflater.inflate(R.layout.list_roomfinder_item, null);
+        ViewHolder holder;
+        if (convertView == null) {
+            convertView = inflater.inflate(R.layout.list_roomfinder_item, parent, false);
 
-		TextView roomTitle = (TextView) vi.findViewById(R.id.startup_actionbar_title); // roomtitle
-		TextView buildingTitle = (TextView) vi.findViewById(R.id.building); // building
-		TextView campusTitle = (TextView) vi.findViewById(R.id.campus); // campus
+            holder = new ViewHolder();
+            holder.tvRoomTitle = (TextView) convertView.findViewById(R.id.startup_actionbar_title);
+            holder.tvBuildingTitle = (TextView) convertView.findViewById(R.id.building);
+            holder.tvCampusTitle = (TextView) convertView.findViewById(R.id.campus);
+            convertView.setTag(holder);
+        } else {
+            holder = (ViewHolder) convertView.getTag();
+        }
 
 		HashMap<String, String> room = data.get(position);
 
 		// Setting all values in listview
-		roomTitle.setText(room.get(TUMRoomFinderRequest.KEY_ROOM
-				+ TUMRoomFinderRequest.KEY_TITLE));
-		buildingTitle.setText(room.get(TUMRoomFinderRequest.KEY_Building
-				+ TUMRoomFinderRequest.KEY_TITLE));
-		campusTitle.setText(room.get(TUMRoomFinderRequest.KEY_Campus
-				+ TUMRoomFinderRequest.KEY_TITLE));
-		return vi;
+		holder.tvRoomTitle.setText(room.get(TUMRoomFinderRequest.KEY_ROOM + TUMRoomFinderRequest.KEY_TITLE));
+        holder.tvBuildingTitle.setText(room.get(TUMRoomFinderRequest.KEY_Building + TUMRoomFinderRequest.KEY_TITLE));
+        holder.tvCampusTitle.setText(room.get(TUMRoomFinderRequest.KEY_Campus + TUMRoomFinderRequest.KEY_TITLE));
+		return convertView;
 	}
 }

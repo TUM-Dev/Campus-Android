@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
 
     <color name="text_light_blue">#0065BD</color>
     <color name="text_light_gray">#C0C0C0</color>

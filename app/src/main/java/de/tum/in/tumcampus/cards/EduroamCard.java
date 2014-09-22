@@ -11,11 +11,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import de.tum.in.tumcampus.R;
-import de.tum.in.tumcampus.activities.SetupEduroam;
+import de.tum.in.tumcampus.activities.SetupEduroamActivity;
 import de.tum.in.tumcampus.models.managers.CardManager;
 import de.tum.in.tumcampus.models.managers.EduroamManager;
 
-
+/**
+ * Card that can start {@link de.tum.in.tumcampus.activities.SetupEduroamActivity}
+ */
 public class EduroamCard extends Card {
 
     public EduroamCard(Context context) {
@@ -52,6 +54,6 @@ public class EduroamCard extends Card {
 
     @Override
     public Intent getIntent() {
-        return new Intent(mContext, SetupEduroam.class);
+        return new Intent(mContext, SetupEduroamActivity.class);
     }
 }

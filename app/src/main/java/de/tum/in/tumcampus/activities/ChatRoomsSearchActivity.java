@@ -12,7 +12,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Base64;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -41,7 +40,8 @@ import java.util.List;
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.generic.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampus.adapters.LecturesListAdapter;
-import de.tum.in.tumcampus.auxiliary.ChatClient;
+import de.tum.in.tumcampus.adapters.NoResultsAdapter;
+import de.tum.in.tumcampus.models.ChatClient;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.RSASigner;
 import de.tum.in.tumcampus.auxiliary.Utils;
@@ -51,6 +51,7 @@ import de.tum.in.tumcampus.models.ChatRegistrationId;
 import de.tum.in.tumcampus.models.ChatRoom;
 import de.tum.in.tumcampus.models.LecturesSearchRow;
 import de.tum.in.tumcampus.models.LecturesSearchRowSet;
+import de.tum.in.tumcampus.tumonline.TUMOnlineConst;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -59,37 +60,23 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 /**
  * This activity presents the chat rooms of user's
  * lectures using the TUMOnline web service
- *
- * @author Jana Pejic
  */
 public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
+    private static final String PROPERTY_APP_VERSION = "appVersion";
+    private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
+    private static final String SENDER_ID = "1028528438269";
 
-    /**
-     * filtered list which will be shown
-     */
-    LecturesSearchRowSet lecturesList = null;
-
-    /**
-     * UI elements
-     */
     private StickyListHeadersListView lvMyLecturesList;
 
     private ChatRoom currentChatRoom;
     private ChatMember currentChatMember;
     private PrivateKey currentPrivateKey;
 
-    private static final String PROPERTY_APP_VERSION = "appVersion";
-    private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
-
-    String SENDER_ID = "1028528438269";
-
-    static final String TAG = "GCM";
-
-    GoogleCloudMessaging gcm;
-    String regId;
+    private GoogleCloudMessaging gcm;
+    private String regId;
 
     public ChatRoomsSearchActivity() {
-        super(Const.LECTURES_PERSONAL, R.layout.activity_lectures);
+        super(TUMOnlineConst.LECTURES_PERSONAL, R.layout.activity_lectures);
     }
 
     @Override
@@ -118,7 +105,7 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
                     public void success(ChatRoom newlyCreatedChatRoom, Response arg1) {
                         // The POST request is successful because the chat room did not exist
                         // The newly created chat room is returned
-                        Log.d("Success creating chat room", newlyCreatedChatRoom.toString());
+                        Utils.logv("Success creating chat room: " + newlyCreatedChatRoom.toString());
                         currentChatRoom = newlyCreatedChatRoom;
 
                         showTermsIfNeeded(intent);
@@ -128,7 +115,7 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
                     public void failure(RetrofitError arg0) {
                         // The POST request in unsuccessful because the chat room already exists,
                         // so we are trying to retrieve it with an additional GET request
-                        Log.d("Failure creating chat room - trying to GET it from the server", arg0.toString());
+                        Utils.logv("Failure creating chat room - trying to GET it from the server: " + arg0.toString());
                         List<ChatRoom> chatRooms = ChatClient.getInstance().getChatRoomWithName(currentChatRoom);
                         if(chatRooms!=null)
                             currentChatRoom = chatRooms.get(0);
@@ -145,6 +132,13 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
         populateCurrentChatMember(sharedPrefs);
     }
 
+    /**
+     * Checks device for Play Services APK.
+     * Initializes current chat member, if not already initialized
+     * shows dialog to enter display name.
+     *
+     * @param sharedPrefs Default shared preferences object
+     */
     private void populateCurrentChatMember(final SharedPreferences sharedPrefs) {
         try {
             if (currentChatMember == null) {
@@ -193,10 +187,9 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
                     alertDialog.show();
                 }
             }
-        } catch (RetrofitError retrofitError) {
-            retrofitError.printStackTrace();
-            Utils.showLongCenteredToast(this, "Server is currently unavailable");
-            this.finish();
+        } catch (RetrofitError e) {
+            Utils.log(e);
+            Utils.showToast(this, "Server is currently unavailable");
         }
     }
 
@@ -205,20 +198,20 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
     public void onFetch(String rawResponse) {
         // deserialize the XML
         Serializer serializer = new Persister();
+        /* filtered list which will be shown */
+        LecturesSearchRowSet lecturesList;
         try {
             lecturesList = serializer.read(LecturesSearchRowSet.class, rawResponse);
         } catch (Exception e) {
-            Log.d("SIMPLEXML", "wont work: " + e.getMessage());
-            progressLayout.setVisibility(View.GONE);
+            Utils.log(e);
+            showLoadingEnded();
             failedTokenLayout.setVisibility(View.VISIBLE);
-            e.printStackTrace();
             return;
         }
 
         if (lecturesList == null) {
             // no results found
-            //TODO view no results
-            lvMyLecturesList.setAdapter(null);
+            lvMyLecturesList.setAdapter(new NoResultsAdapter(this));
             return;
         }
 
@@ -228,7 +221,7 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
 
         // set ListView to data via the LecturesListAdapter
         lvMyLecturesList.setAdapter(new LecturesListAdapter(ChatRoomsSearchActivity.this, lectures));
-        progressLayout.setVisibility(View.GONE);
+        showLoadingEnded();
     }
 
     @Override
@@ -238,12 +231,13 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
         populateCurrentChatMember(PreferenceManager.getDefaultSharedPreferences(this));
     }
 
+    /**
+     * Displays chat terms if activity is opened for the first time
+     * @param intent Intent to start after chat terms have been accepted
+     */
     private void showTermsIfNeeded(final Intent intent) {
-        final SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(ChatRoomsSearchActivity.this);
-        //sharedPrefs.edit().remove(Const.CHAT_TERMS_SHOWN + "_" + currentChatRoom.getName()).commit();
-
         // If the terms have not been shown for this chat room, show them
-        if (!sharedPrefs.getBoolean(Const.CHAT_TERMS_SHOWN + "_" + currentChatRoom.getName(), false)) {
+        if (!Utils.getInternalSettingBool(this, Const.CHAT_TERMS_SHOWN + "_" + currentChatRoom.getName(), false)) {
             AlertDialog.Builder builder = new AlertDialog.Builder(ChatRoomsSearchActivity.this);
             builder.setTitle(R.string.chat_terms_title)
                     .setMessage(getResources().getString(R.string.chat_terms_body))
@@ -259,19 +253,17 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
                                 ChatClient.getInstance().joinChatRoom(currentChatRoom, currentChatMember, new Callback<ChatRoom>() {
                                     @Override
                                     public void success(ChatRoom arg0, Response arg1) {
-                                        Log.d("Success joining chat room", arg0.toString());
+                                        Utils.logv("Success joining chat room: " + arg0.toString());
                                         // Remember in sharedPrefs that the terms dialog was shown
-                                        Editor editor = sharedPrefs.edit();
-                                        editor.putBoolean(Const.CHAT_TERMS_SHOWN + "_" + currentChatRoom.getName(), true);
-                                        editor.apply();
+                                        Utils.setInternalSetting(ChatRoomsSearchActivity.this, Const.CHAT_TERMS_SHOWN + "_" + currentChatRoom.getName(), true);
 
                                         moveToChatActivity(intent);
                                     }
 
                                     @Override
-                                    public void failure(RetrofitError arg0) {
-                                        Log.e("Failure joining chat room", arg0.toString());
-                                        Utils.showLongCenteredToast(ChatRoomsSearchActivity.this, "Please activate your public key first");
+                                    public void failure(RetrofitError e) {
+                                        Utils.log(e, "Failure joining chat room");
+                                        Utils.showToast(ChatRoomsSearchActivity.this, "Please activate your public key first");
                                     }
                                 });
                             }
@@ -285,7 +277,10 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
         }
     }
 
-
+    /**
+     * Opens {@link ChatActivity}
+     * @param intent Intent for {@link ChatActivity}
+     */
     private void moveToChatActivity(final Intent intent) {
         // We need to move to the next activity now and provide the necessary data for it
         // We are sure that both currentChatRoom and currentChatMember exist
@@ -294,13 +289,16 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
         startActivity(intent);
     }
 
+    /**
+     * Gets private key from preferences or generates one.
+     * @return Private key instance
+     */
     private PrivateKey retrieveOrGeneratePrivateKey() {
         // Generate/Retrieve private key
-        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        String privateKeyString = Utils.getInternalSettingString(this, Const.PRIVATE_KEY, "");
 
-        if (sharedPrefs.contains(Const.PRIVATE_KEY)) {
+        if (!privateKeyString.isEmpty()) {
             // If the key is already generated, retrieve it from shared preferences
-            String privateKeyString = sharedPrefs.getString(Const.PRIVATE_KEY, "");
             byte[] privateKeyBytes = Base64.decode(privateKeyString, Base64.DEFAULT);
             KeyFactory keyFactory;
             try {
@@ -308,52 +306,50 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
                 PKCS8EncodedKeySpec privateKeySpec = new PKCS8EncodedKeySpec(privateKeyBytes);
                 return keyFactory.generatePrivate(privateKeySpec);
             } catch (NoSuchAlgorithmException e) {
-                e.printStackTrace();
+                Utils.log(e);
             } catch (InvalidKeySpecException e) {
-                e.printStackTrace();
+                Utils.log(e);
             }
         } else {
             // If the key is not in shared preferences, generate key-pair
-            KeyPairGenerator keyGen = null;
+            KeyPairGenerator keyGen;
             try {
                 keyGen = KeyPairGenerator.getInstance("RSA");
                 keyGen.initialize(1024);
                 KeyPair keyPair = keyGen.generateKeyPair();
 
                 String publicKeyString = Base64.encodeToString(keyPair.getPublic().getEncoded(), Base64.DEFAULT);
-                String privateKeyString = Base64.encodeToString(keyPair.getPrivate().getEncoded(), Base64.DEFAULT);
+                privateKeyString = Base64.encodeToString(keyPair.getPrivate().getEncoded(), Base64.DEFAULT);
 
                 // Save private key in shared preferences
-                Editor editor = sharedPrefs.edit();
-                editor.putString(Const.PRIVATE_KEY, privateKeyString);
-                editor.apply();
+                Utils.setInternalSetting(this, Const.PRIVATE_KEY, privateKeyString);
 
                 // Upload public key to the server
                 ChatClient.getInstance().uploadPublicKey(currentChatMember.getUserId(), new ChatPublicKey(publicKeyString), new Callback<ChatPublicKey>() {
                     @Override
                     public void success(ChatPublicKey arg0, Response arg1) {
-                        Log.d("Success uploading public key", arg0.toString());
-                        Utils.showLongCenteredToast(ChatRoomsSearchActivity.this, "Public key activation mail sent to " + currentChatMember.getLrzId() + "@mytum.de");
+                        Utils.logv("Success uploading public key: " + arg0.toString());
+                        Utils.showToast(ChatRoomsSearchActivity.this, "Public key activation mail sent to " + currentChatMember.getLrzId() + "@mytum.de");
                     }
 
                     @Override
-                    public void failure(RetrofitError arg0) {
-                        Log.e("Failure uploading public key", arg0.toString());
+                    public void failure(RetrofitError e) {
+                        Utils.log(e, "Failure uploading public key");
                     }
                 });
 
                 return keyPair.getPrivate();
             } catch (NoSuchAlgorithmException e) {
-                e.printStackTrace();
+                Utils.log(e);
             }
             return null;
         }
         return null;
     }
 
-
-    // GCM methods
-
+    /**
+     * Checks if play services are available and registers for GCM
+     */
     private void checkPlayServicesAndRegister() {
         currentPrivateKey = retrieveOrGeneratePrivateKey();
 
@@ -370,13 +366,13 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
                 // If the regId is not empty, we still need to check whether
                 // it was successfully sent to the TCA server, because this
                 // can fail due to user not confirming their private key
-                boolean sentToTCAServer = isRegistrationIdSentToTCAServer(getApplicationContext());
+                boolean sentToTCAServer = Utils.getInternalSettingBool(this, Const.GCM_REG_ID_SENT_TO_SERVER, false);
                 if (!sentToTCAServer) {
                     sendRegistrationIdToBackend();
                 }
             }
         } else {
-            Log.i(TAG, "No valid Google Play Services APK found.");
+            Utils.log("No valid Google Play Services APK found.");
         }
     }
 
@@ -392,7 +388,7 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
                 GooglePlayServicesUtil.getErrorDialog(resultCode, this,
                         PLAY_SERVICES_RESOLUTION_REQUEST).show();
             } else {
-                Log.i(TAG, "This device is not supported.");
+                Utils.log("This device is not supported by Google Play services.");
                 finish();
             }
             return false;
@@ -402,44 +398,28 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
 
     /**
      * Gets the current registration ID for application on GCM service.
-     * <p/>
+     *
      * If result is empty, the app needs to register.
      *
      * @return registration ID, or empty string if there is no existing
      * registration ID.
      */
     private String getRegistrationId(Context context) {
-        final SharedPreferences prefs = getGCMPreferences(context);
-        String registrationId = prefs.getString(Const.GCM_REG_ID, "");
+        String registrationId = Utils.getInternalSettingString(this, Const.GCM_REG_ID, "");
         if (registrationId.isEmpty()) {
-            Log.i(TAG, "Registration not found.");
+            Utils.log("Registration not found.");
             return "";
         }
         // Check if app was updated; if so, it must clear the registration ID
         // since the existing regID is not guaranteed to work with the new
         // app version.
-        int registeredVersion = prefs.getInt(PROPERTY_APP_VERSION, Integer.MIN_VALUE);
+        int registeredVersion = Utils.getInternalSettingInt(this, PROPERTY_APP_VERSION, Integer.MIN_VALUE);
         int currentVersion = getAppVersion(context);
         if (registeredVersion != currentVersion) {
-            Log.i(TAG, "App version changed.");
+            Utils.log("App version changed.");
             return "";
         }
         return registrationId;
-    }
-
-    private boolean isRegistrationIdSentToTCAServer(Context context) {
-        final SharedPreferences prefs = getGCMPreferences(context);
-        return prefs.getBoolean(Const.GCM_REG_ID_SENT_TO_SERVER, false);
-    }
-
-    /**
-     * @return Application's {@code SharedPreferences}.
-     */
-    private SharedPreferences getGCMPreferences(Context context) {
-        // This sample app persists the registration ID in shared preferences, but
-        // how you store the regID in your app is up to you.
-        return getSharedPreferences(ChatRoomsSearchActivity.class.getSimpleName(),
-                Context.MODE_PRIVATE);
     }
 
     /**
@@ -458,7 +438,7 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
 
     /**
      * Registers the application with GCM servers asynchronously.
-     * <p/>
+     *
      * Stores the registration ID and app versionCode in the application's
      * shared preferences.
      */
@@ -496,7 +476,7 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
 
             @Override
             protected void onPostExecute(String msg) {
-                Log.e(TAG, msg);
+                Utils.log(msg);
             }
         }.execute(null, null, null);
     }
@@ -515,18 +495,15 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
         ChatClient.getInstance().uploadRegistrationId(currentChatMember.getUserId(), new ChatRegistrationId(regId, signature), new Callback<ChatRegistrationId>() {
             @Override
             public void success(ChatRegistrationId arg0, Response arg1) {
-                Log.d("Success uploading GCM registration id", arg0.toString());
+                Utils.logv("Success uploading GCM registration id: " + arg0.toString());
                 // Store in shared preferences the information that the
                 // GCM registration id was sent to the TCA server successfully
-                SharedPreferences sharedPrefs = getGCMPreferences(ChatRoomsSearchActivity.this);
-                SharedPreferences.Editor editor = sharedPrefs.edit();
-                editor.putBoolean(Const.GCM_REG_ID_SENT_TO_SERVER, true);
-                editor.apply();
+                Utils.setInternalSetting(ChatRoomsSearchActivity.this, Const.GCM_REG_ID_SENT_TO_SERVER, true);
             }
 
             @Override
-            public void failure(RetrofitError arg0) {
-                Log.e("Failure uploading GCM registration id", arg0.toString());
+            public void failure(RetrofitError e) {
+                Utils.log(e, "Failure uploading GCM registration id");
             }
         });
     }
@@ -539,12 +516,10 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
      * @param regId   registration ID
      */
     private void storeRegistrationId(Context context, String regId) {
-        final SharedPreferences prefs = getGCMPreferences(context);
         int appVersion = getAppVersion(context);
-        Log.i(TAG, "Saving regId on app version " + appVersion);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putString(Const.GCM_REG_ID, regId);
-        editor.putInt(PROPERTY_APP_VERSION, appVersion);
-        editor.apply();
+
+        Utils.logv("Saving regId on app version " + appVersion);
+        Utils.setInternalSetting(this, Const.GCM_REG_ID, regId);
+        Utils.setInternalSetting(this, PROPERTY_APP_VERSION, appVersion);
     }
 }

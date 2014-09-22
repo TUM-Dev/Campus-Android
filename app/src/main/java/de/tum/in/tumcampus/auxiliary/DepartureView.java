@@ -15,6 +15,11 @@ import com.nineoldandroids.animation.ValueAnimator;
 
 import de.tum.in.tumcampus.R;
 
+/**
+ * Custom view that shows a departure.
+ * Holds an icon of the subway public transfer line, the line name and an animated
+ * automatically down counting departure time
+ */
 public class DepartureView extends LinearLayout {
 
     private static final long UPDATE_INTERVAL = 10000;
@@ -22,13 +27,23 @@ public class DepartureView extends LinearLayout {
     private final TextView mLineView;
     private final TextSwitcher mTimeSwitcher;
     private long mDeparture;
-    private Handler mHandler;
+    private final Handler mHandler;
     private long mLastDiffMin;
 
+    /**
+     * Standard constructor for DepartureView
+     * Usees a thin departure line
+     * @param context Context
+     */
     public DepartureView(Context context) {
         this(context, false);
     }
 
+    /**
+     * Constructor for DepartureView
+     * @param context Context
+     * @param big Whether the departure should use a thin or a big line
+     */
     public DepartureView(Context context, boolean big) {
         super(context);
 
@@ -57,18 +72,30 @@ public class DepartureView extends LinearLayout {
         mHandler = new Handler();
     }
 
+    /**
+     * Sets the line symbol name
+     * @param symbol Symbol e.g. U6, S1, T14
+     */
     @SuppressWarnings("deprecation")
     public void setSymbol(String symbol) {
-        MVVSymbolView d = new MVVSymbolView(getContext(), symbol);
+        MVVSymbolView d = new MVVSymbolView(symbol);
         mSymbolView.setTextColor(d.getTextColor());
         mSymbolView.setText(symbol);
         mSymbolView.setBackgroundDrawable(d);
     }
 
+    /**
+     * Sets the line name
+     * @param line Line name e.g. Klinikum Großhadern
+     */
     public void setLine(String line) {
         mLineView.setText(line);
     }
 
+    /**
+     * Sets the departure time
+     * @param departure Time in the future where this line will leave in milliseconds
+     */
     public void setTime(long departure) {
         mDeparture = departure;
         updateDepartureTime();
@@ -113,11 +140,5 @@ public class DepartureView extends LinearLayout {
             }
         });
         va.start();
-    }
-
-    public void stopTimer(){
-        if(mHandler != null){
-            mHandler = null;
-        }
     }
 }

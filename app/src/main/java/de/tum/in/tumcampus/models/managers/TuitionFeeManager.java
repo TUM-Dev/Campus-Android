@@ -5,18 +5,26 @@ import android.content.Context;
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
 
-import de.tum.in.tumcampus.auxiliary.Const;
+import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.cards.Card;
 import de.tum.in.tumcampus.cards.TuitionFeesCard;
 import de.tum.in.tumcampus.models.TuitionList;
+import de.tum.in.tumcampus.tumonline.TUMOnlineConst;
 import de.tum.in.tumcampus.tumonline.TUMOnlineRequest;
 
-
+/**
+ * Tuition manager, handles tuition card
+ */
 public class TuitionFeeManager implements Card.ProvidesCard {
+
+    /**
+     * Shows tuition card with current fee status
+     * @param context Context
+     */
     @Override
     public void onRequestCard(Context context) {
         try {
-            TUMOnlineRequest requestHandler = new TUMOnlineRequest(Const.STUDIENBEITRAGSTATUS, context, true);
+            TUMOnlineRequest requestHandler = new TUMOnlineRequest(TUMOnlineConst.STUDIENBEITRAGSTATUS, context, true);
             String rawResp = requestHandler.fetch();
             Serializer serializer = new Persister();
             TuitionList tuitionList;
@@ -25,7 +33,7 @@ public class TuitionFeeManager implements Card.ProvidesCard {
             card.setTuition(tuitionList.getTuitions().get(0));
             card.apply();
         } catch (Exception e) {
-            e.printStackTrace();
+            Utils.log(e);
         }
     }
 }

@@ -1,7 +1,5 @@
 package de.tum.in.tumcampus.adapters;
 
-import java.util.List;
-
 import android.content.Context;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -12,6 +10,9 @@ import android.widget.FrameLayout;
 import android.widget.FrameLayout.LayoutParams;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import java.util.List;
+
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.models.ChatMember;
 import de.tum.in.tumcampus.models.ListChatMessage;
@@ -25,11 +26,11 @@ public class ChatHistoryAdapter extends BaseAdapter {
 		TextView tvTimestamp;
 	}
 	
-	private List<ListChatMessage> messageHistory;
+	private final List<ListChatMessage> messageHistory;
 	
 	private final LayoutInflater inflater;
 	
-	private ChatMember currentChatMember;
+	private final ChatMember currentChatMember;
 	
 	public ChatHistoryAdapter(Context context, List<ListChatMessage> messageHistory, ChatMember currentChatMember) {
 		this.messageHistory = messageHistory;
@@ -82,7 +83,8 @@ public class ChatHistoryAdapter extends BaseAdapter {
 			FrameLayout chatFrameLayout = (FrameLayout) convertView.findViewById(R.id.chatFrameLayout);
 			
 			if ("bot".equals(chatMessage.getMember().getLrzId())) {
-				chatMessageLayout.setBackgroundDrawable(null);
+                //noinspection deprecation
+                chatMessageLayout.setBackgroundDrawable(null);
 				chatMessageLayoutParams.gravity = Gravity.CENTER;
 				chatFrameLayout.setPadding(100, 0, 100, 0); // Add left and right padding
 				holder.tvUser.setText("");

@@ -1,6 +1,5 @@
 package de.tum.in.tumcampus.auxiliary;
 
-import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.ColorFilter;
 import android.graphics.Paint;
@@ -10,15 +9,21 @@ import android.graphics.Point;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 
-public class MVVSymbolView extends Drawable {
+/**
+ * Subclass of drawable that can draw a subway line icon
+ */
+class MVVSymbolView extends Drawable {
     private final Paint mBgPaint;
     private final RectF mRect;
     private int mTriangle;
     private boolean mRounded;
     private int mTextColor;
 
-    public MVVSymbolView(Context context, String line) {
-        super();
+    /**
+     * Standard constructor
+     * @param line Line symbol name e.g. U6, S1, T14
+     */
+    public MVVSymbolView(String line) {
         mRect = new RectF();
         mRounded = false;
         mTextColor = 0xffffffff;
@@ -73,6 +78,10 @@ public class MVVSymbolView extends Drawable {
         mBgPaint.setColor(backgroundColor);
     }
 
+    /**
+     * Gets the text color that should be used to draw text on top of this drawable
+     * @return Text color
+     */
     public int getTextColor() {
         return mTextColor;
     }

@@ -38,7 +38,6 @@ public class CalendarSectionFragment extends Fragment {
     private final ArrayList<RelativeLayout> eventList = new ArrayList<RelativeLayout>();
     private int[][] eventTimes;
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -51,7 +50,7 @@ public class CalendarSectionFragment extends Fragment {
 
         // Parse the date we want to show events for
         String date = getArguments().getString("date");
-        today = Utils.getDateTimeISO(date);
+        today = Utils.getISODateTime(date);
 
         // Scroll to a default position
         final ScrollView scrollview = ((ScrollView) rootView.findViewById(R.id.scrollview));
@@ -69,6 +68,7 @@ public class CalendarSectionFragment extends Fragment {
         // Add the entries when layout is displayed, thus not blocking
         mainScheduleLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
 
+            @SuppressWarnings("deprecation")
             @Override
             public void onGlobalLayout() {
                 // Ensure we call it only once
@@ -87,6 +87,7 @@ public class CalendarSectionFragment extends Fragment {
         return rootView;
     }
 
+    @SuppressWarnings("deprecation")
     private void parseEvents() {
         Date dateStart;
         Date dateEnd;
@@ -167,11 +168,11 @@ public class CalendarSectionFragment extends Fragment {
         parseEvents();
 
         //Get the width of the RL where events will be added
-        float avaibleSpace = mainScheduleLayout.getWidth() - getResources().getDimension(R.dimen.padding_large) * 2;
+        float availableSpace = mainScheduleLayout.getWidth() - getResources().getDimension(R.dimen.padding_large) * 2;
 
         //Useful vars
         int currentEvent = 0;
-        boolean trippleCollision = false;
+        boolean tripleCollision = false;
 
         //Iterate through all items
         for (RelativeLayout event : eventList) {
@@ -193,33 +194,33 @@ public class CalendarSectionFragment extends Fragment {
             // When collision detected: set width and offset
             if (collisionPrev && !collisionNext) {
                 //When three events overlap we need to double the offset
-                if (trippleCollision) {
-                    trippleCollision = false;
+                if (tripleCollision) {
+                    tripleCollision = false;
 
-                    params.width = Math.round(avaibleSpace / 3);
+                    params.width = Math.round(availableSpace / 3);
                     params.setMargins(2 * params.width, params.topMargin, params.rightMargin, params.bottomMargin);
                 } else {
-                    params.width = Math.round(avaibleSpace / 2);
+                    params.width = Math.round(availableSpace / 2);
                     params.setMargins(params.width, params.topMargin, params.rightMargin, params.bottomMargin);
                 }
             } else if (!collisionPrev && collisionNext) {
 
-                params.width = Math.round(avaibleSpace / 2);
+                params.width = Math.round(availableSpace / 2);
                 params.setMargins(0, params.topMargin, params.rightMargin, params.bottomMargin);
 
-            } else if (collisionPrev && collisionNext) {
+            } else if (collisionPrev) {
                 //Set previous
                 RelativeLayout prevEvent=eventList.get(currentEvent - 1);
                 RelativeLayout.LayoutParams prevLp = (RelativeLayout.LayoutParams) prevEvent.getLayoutParams();
-                prevLp.width = Math.round(avaibleSpace / 3);
+                prevLp.width = Math.round(availableSpace / 3);
                 prevEvent.setLayoutParams(prevLp);
 
                 //Set current
-                params.width = Math.round(avaibleSpace / 3);
+                params.width = Math.round(availableSpace / 3);
                 params.setMargins(params.width, params.topMargin, params.rightMargin, params.bottomMargin);
 
                 //Tell next one
-                trippleCollision = true;
+                tripleCollision = true;
             }
 
             //Update params
@@ -253,7 +254,7 @@ public class CalendarSectionFragment extends Fragment {
                 }
                 final String strList[] = room.split(",");
 
-                //Launch the roomfinder activity
+                //Launch the room finder activity
                 Intent i = new Intent(activity, RoomFinderActivity.class);
                 i.setAction(Intent.ACTION_SEARCH);
                 i.putExtra(SearchManager.QUERY, strList[0]);

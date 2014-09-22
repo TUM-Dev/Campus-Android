@@ -13,10 +13,10 @@ import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.generic.ActivityForSearchingTumOnline;
 import de.tum.in.tumcampus.adapters.LecturesListAdapter;
 import de.tum.in.tumcampus.adapters.NoResultsAdapter;
-import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.LectureSearchSuggestionProvider;
 import de.tum.in.tumcampus.models.LecturesSearchRow;
 import de.tum.in.tumcampus.models.LecturesSearchRowSet;
+import de.tum.in.tumcampus.tumonline.TUMOnlineConst;
 import de.tum.in.tumcampus.tumonline.TUMOnlineRequest;
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
@@ -27,14 +27,6 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
  * This activity uses the same models as FindLectures.
  * 
  * HINT: a TUMOnline access token is needed
- * 
- * 
- * needed/linked files:
- * 
- * res.layout.mylectures (Layout XML), models.FindLecturesRowSet,
- * models.FindLecturesListAdapter
- *
- * @author Daniel G. Mayr
  */
 public class LecturesPersonalActivity extends ActivityForSearchingTumOnline<LecturesSearchRowSet> {
     private final static String P_SUCHE = "pSuche";
@@ -43,7 +35,7 @@ public class LecturesPersonalActivity extends ActivityForSearchingTumOnline<Lect
 	private StickyListHeadersListView lvMyLecturesList;
 
     public LecturesPersonalActivity() {
-		super(Const.LECTURES_PERSONAL, LecturesSearchRowSet.class, R.layout.activity_lectures, LectureSearchSuggestionProvider.AUTHORITY, 4);
+		super(TUMOnlineConst.LECTURES_PERSONAL, LecturesSearchRowSet.class, R.layout.activity_lectures, LectureSearchSuggestionProvider.AUTHORITY, 4);
 	}
 
 	@Override
@@ -72,21 +64,21 @@ public class LecturesPersonalActivity extends ActivityForSearchingTumOnline<Lect
             }
         });
 
-        onStartSearch();
-        onNewIntent(getIntent());
+        if(mQuery==null)
+            onStartSearch();
 	}
 
     @Override
     protected void onStartSearch() {
         enableRefresh();
-        requestHandler = new TUMOnlineRequest(Const.LECTURES_PERSONAL, this, true);
+        requestHandler = new TUMOnlineRequest(TUMOnlineConst.LECTURES_PERSONAL, this, true);
         requestFetch();
     }
 
     @Override
     protected void onStartSearch(String query) {
         disableRefresh();
-        requestHandler = new TUMOnlineRequest(Const.LECTURES_SEARCH, LecturesPersonalActivity.this, true);
+        requestHandler = new TUMOnlineRequest(TUMOnlineConst.LECTURES_SEARCH, LecturesPersonalActivity.this, true);
         requestHandler.setParameter(P_SUCHE, query);
         requestFetch();
     }

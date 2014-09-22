@@ -8,6 +8,9 @@ import android.widget.ArrayAdapter;
 import de.tum.in.tumcampus.R;
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 
+/**
+ * This adapter class produces just one single item saying now search results
+ */
 public class NoResultsAdapter extends ArrayAdapter<String> implements StickyListHeadersAdapter {
 
 	// constructor

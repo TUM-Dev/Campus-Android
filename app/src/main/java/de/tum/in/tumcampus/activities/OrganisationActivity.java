@@ -4,27 +4,23 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
 import java.io.File;
 import java.io.IOException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.generic.ActivityForAccessingTumOnline;
@@ -34,6 +30,7 @@ import de.tum.in.tumcampus.auxiliary.FileUtils;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.OrgItem;
 import de.tum.in.tumcampus.models.OrgItemList;
+import de.tum.in.tumcampus.tumonline.TUMOnlineConst;
 
 /**
  * Activity that shows the first level of organisations at TUM.
@@ -53,7 +50,7 @@ public class OrganisationActivity extends ActivityForAccessingTumOnline implemen
 	 */
 	private static final String TOP_LEVEL_ORG = "1";
 
-	private OrganisationActivity activity = this;
+	private final OrganisationActivity activity = this;
 
 	/** The document is used to access and parse the xml.org file on the SD-card */
 	private Document doc;
@@ -77,7 +74,7 @@ public class OrganisationActivity extends ActivityForAccessingTumOnline implemen
 	private File xmlOrgFile;
 
 	public OrganisationActivity() {
-		super(Const.ORG_TREE, R.layout.activity_organisation);
+		super(TUMOnlineConst.ORG_TREE, R.layout.activity_organisation);
 	}
 
 	/**
@@ -94,8 +91,7 @@ public class OrganisationActivity extends ActivityForAccessingTumOnline implemen
 			docBuilder = docBuilderFactory.newDocumentBuilder();
 			doc = docBuilder.parse(getOrgFile());
 		} catch (Exception e) {
-			Log.d("EXCEPTION", e.getMessage());
-			e.printStackTrace();
+			Utils.log(e);
 		}
 		doc.getDocumentElement().normalize();
 	}
@@ -104,15 +100,14 @@ public class OrganisationActivity extends ActivityForAccessingTumOnline implemen
 	 * Returns true if there are one or more elements in the organisation tree
 	 * inside this organisation
 	 * 
-	 * @param organisationId
-	 * @return
+	 * @param organisationId organisation id
+	 * @return True if it exists, false otherwise
 	 */
 	private boolean existSuborganisation(String organisationId) {
 
 		// get list of all organisations
 		NodeList organisationList = doc.getElementsByTagName("row");
-		Log.d("PARSING", "parsing " + organisationList.getLength()
-				+ " elements...");
+		Utils.logv("parsing " + organisationList.getLength() + " elements...");
 
 		// go through each organisation
 		for (int i = 0; i < organisationList.getLength(); i++) {
@@ -138,28 +133,21 @@ public class OrganisationActivity extends ActivityForAccessingTumOnline implemen
 			// File linking to SD-card to a xml, that contains the whole
 			// organisation-tree
 			try {
-				xmlOrgFile = FileUtils.getFileOnSD(Const.ORGANISATIONS,
-						"org.xml");
-				super.hideProgressLayout();
-				super.hideErrorLayout();
+				xmlOrgFile = FileUtils.getFileOnSD(Const.ORGANISATIONS, "org.xml");
+                showLoadingEnded();
 			} catch (Exception e) {
-				Toast.makeText(this, R.string.exception_sdcard,
-						Toast.LENGTH_SHORT).show();
-				super.hideProgressLayout();
-				super.showErrorLayout();
+                Utils.log(e);
+				showError(R.string.exception_sdcard);
 				return null;
 			}
 
 			// check if XML file exists and if it is bigger than 100kB (it is
-			// approximately 317kb, if the import isn't
-			// "wrong token")
-			// if no valid XML file -> set Token, Download XML data and start
-			// 'Organisations' again
-			if (!xmlOrgFile.exists() || !xmlOrgFile.isFile()
-					|| !(xmlOrgFile.length() > 100000)) {
+			// approximately 317kb, if the import isn't "wrong token")
+			// if no valid XML file -> set Token, Download XML data and start 'Organisations' again
+			if (!xmlOrgFile.exists() || !xmlOrgFile.isFile() || !(xmlOrgFile.length() > 100000)) {
 
 				// Request to fetch via TUMRequestManager
-				super.requestFetch();
+				requestFetch();
 
 				// call this function recursive, so it should not be null and
 				// return the file
@@ -173,10 +161,10 @@ public class OrganisationActivity extends ActivityForAccessingTumOnline implemen
 	 * Searches for the parentId of an element, if it is already in the highest
 	 * layer, it returns 1.
 	 * 
-	 * @param parentId
-	 * @return
+	 * @param parentId parent id
+	 * @return organisation item
 	 */
-	public OrgItem getParent(String parentId) {
+    OrgItem getParent(String parentId) {
 
 		// if already in highest layer => create OrgItem of highest layer
 		if (parentId.equals(TOP_LEVEL_ORG)) {
@@ -187,8 +175,7 @@ public class OrganisationActivity extends ActivityForAccessingTumOnline implemen
 
 		// get all elements to parse and count them
 		NodeList organisationList = doc.getElementsByTagName("row");
-		Log.d("PARSING", "parsing " + organisationList.getLength()
-				+ " elements...");
+		Utils.logv("parsing " + organisationList.getLength() + " elements...");
 
 		// parse xml tree (org.xml) to find parent of an element
 		for (int i = 0; i < organisationList.getLength(); i++) {
@@ -240,12 +227,10 @@ public class OrganisationActivity extends ActivityForAccessingTumOnline implemen
 	/**
 	 * Function that gets the Value out of a Node with a special name
 	 * 
-	 * @param item
-	 *            = Node that gets evaluated
-	 * @param type
-	 *            = Type of node (e.g. parent, id, nameDe)
+	 * @param item Node that gets evaluated
+	 * @param type Type of node (e.g. parent, id, nameDe)
 	 */
-	public String getValue(Node item, String type) {
+    String getValue(Node item, String type) {
 		Element elem = (Element) item;
 		// filter the item with a special tag
 		NodeList list = elem.getElementsByTagName(type);
@@ -264,7 +249,7 @@ public class OrganisationActivity extends ActivityForAccessingTumOnline implemen
 	public void onBackPressed() {
 		// go back to the main menu, if the user is in the highest level
 		if (orgId.equals(TOP_LEVEL_ORG)) {
-			Intent intent = new Intent(this, StartActivity.class);
+			Intent intent = new Intent(this, MainActivity.class);
 			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
 					| Intent.FLAG_ACTIVITY_SINGLE_TOP);
 			startActivity(intent);
@@ -313,35 +298,24 @@ public class OrganisationActivity extends ActivityForAccessingTumOnline implemen
 
 	@Override
 	public void onFetch(String rawResponse) {
-
 		try {
 			Utils.getCacheDir("organisations");
 			FileUtils.writeFile(xmlOrgFile, rawResponse);
-			Log.d("Import: org.xml",
-					"Xml file has been new downloaded and saved.");
-			hideErrorLayout();
-			hideProgressLayout();
+			Utils.logv("org.xml file has been new downloaded and saved.");
+			showLoadingEnded();
 			showOrgTree();
-
 		} catch (IOException e) {
-			Toast.makeText(this, R.string.exception_sdcard, Toast.LENGTH_SHORT)
-					.show();
-			super.hideProgressLayout();
-			super.showErrorLayout();
+			showError(R.string.exception_sdcard);
 		}
 	}
 
 	/**
 	 * Show all items in a certain layer having a parent element with parent_id
-	 * = parent.
+	 * parent.
 	 * 
-	 * @param parent
-	 *            all items with the same parent
-	 * @throws ParserConfigurationException
-	 * @throws IOException
-	 * @throws SAXException
+	 * @param parent all items with the same parent
 	 */
-	public void showItems(String parent) {
+    void showItems(String parent) {
 
 		// caption button gets caption
 		TextView tvCaption = (TextView) findViewById(R.id.tvCaption);
@@ -355,7 +329,7 @@ public class OrganisationActivity extends ActivityForAccessingTumOnline implemen
 		tvCaption.setText(orgName.toUpperCase());
 
 		NodeList nodeList = doc.getElementsByTagName("row");
-		Log.d("PARSING", "parsing " + nodeList.getLength() + " elements...");
+		Utils.logv("parsing " + nodeList.getLength() + " elements...");
 
 		OrgItemList organisationList = new OrgItemList();
 

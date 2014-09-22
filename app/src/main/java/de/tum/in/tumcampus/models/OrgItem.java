@@ -4,9 +4,6 @@ package de.tum.in.tumcampus.models;
  * An Element of the Organisation Tree. In the App a List of those Elements is
  * showed ({@link OrgItemList}). The shown Elements are for Navigation to an
  * Element without child-Element, whose details are then shown.
- * 
- * @author Thomas Behrens
- * @review Daniel G. Mayr, Vincenz Doelle
  */
 
 public class OrgItem {

@@ -1,30 +1,31 @@
 package de.tum.in.tumcampus.adapters;
 
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.text.format.DateUtils;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 
-import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-
 import de.tum.in.tumcampus.activities.CalendarActivity;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.fragments.CalendarSectionFragment;
 
+/**
+ * A {@link FragmentPagerAdapter} that returns a fragment corresponding to one
+ * of the sections/tabs/pages.
+ */
 public class CalendarSectionsPagerAdapter extends FragmentPagerAdapter {
-    public final static int PAGE_COUNT = 0;
 
-    Calendar calendar = new GregorianCalendar();
-    Date today = new Date();
-    boolean updateMode;
+    private final Calendar calendar = new GregorianCalendar();
+    private final Date today = new Date();
 
-    public CalendarSectionsPagerAdapter(Activity mainActivity, FragmentManager fm) {
+    public CalendarSectionsPagerAdapter(FragmentManager fm) {
         super(fm);
     }
 
@@ -38,9 +39,7 @@ public class CalendarSectionsPagerAdapter extends FragmentPagerAdapter {
         calendar.add(Calendar.MONTH, CalendarActivity.MONTH_AFTER);
         Date lastDate = calendar.getTime();
 
-        long days = (lastDate.getTime() - firstDate.getTime()) / (1000 * 60 * 60 * 24);
-
-        return (int) days;
+        return (int) ((lastDate.getTime() - firstDate.getTime()) / DateUtils.DAY_IN_MILLIS);
     }
 
     private Date getCurrentDate(int position) {
@@ -61,7 +60,6 @@ public class CalendarSectionsPagerAdapter extends FragmentPagerAdapter {
         return fragment;
     }
 
-    @SuppressLint("SimpleDateFormat")
     @Override
     public CharSequence getPageTitle(int position) {
         Date date = getCurrentDate(position);

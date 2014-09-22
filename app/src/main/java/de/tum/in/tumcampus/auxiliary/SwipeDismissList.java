@@ -19,6 +19,7 @@ import android.content.Context;
 import android.graphics.Rect;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -53,9 +54,7 @@ import static com.nineoldandroids.view.ViewPropertyAnimator.animate;
  * {@link android.widget.ListView} dismissable. {@link android.widget.ListView} is given special treatment
  * because by default it handles touches for its list items... i.e. it's in
  * charge of drawing the pressed state (the list selector), handling list item
- * clicks, etc. 
- * 
- * Read the README file for a detailed explanation on how to use this class.
+ * clicks, etc.
  */
 public final class SwipeDismissList implements View.OnTouchListener {
 	
@@ -71,7 +70,7 @@ public final class SwipeDismissList implements View.OnTouchListener {
 	private int mViewWidth = 1; // 1 and not 0 to prevent dividing by zero
 	
 	// Transient properties
-	private SortedSet<PendingDismissData> mPendingDismisses = new TreeSet<PendingDismissData>();
+	private final SortedSet<PendingDismissData> mPendingDismisses = new TreeSet<PendingDismissData>();
 	private int mDismissAnimationRefCount = 0;
 	private float mDownX;
 	private boolean mSwiping;
@@ -140,7 +139,8 @@ public final class SwipeDismissList implements View.OnTouchListener {
 		 * @param listView The originating {@link android.widget.ListView}.
 		 * @param position The position of the item to dismiss.
 		 */
-		Undoable onDismiss(AbsListView listView, int position);
+        @SuppressWarnings("UnusedParameters")
+        Undoable onDismiss(AbsListView listView, int position);
 	}
 
 	/**
@@ -185,13 +185,11 @@ public final class SwipeDismissList implements View.OnTouchListener {
 
 	/**
 	 * Constructs a new swipe-to-dismiss touch listener for the given list view.
-	 *
 	 * @param listView The list view whose items should be dismissable.
 	 * @param callback The callback to trigger when the user has indicated that
 	 * she would like to dismiss one or more list items.
-	 * @param mode The mode this list handles multiple undos.
-	 */
-	public SwipeDismissList(AbsListView listView, OnDismissCallback callback, UndoMode mode) {
+     */
+	public SwipeDismissList(AbsListView listView, OnDismissCallback callback) {
 
 		if(listView == null) {
 			throw new IllegalArgumentException("listview must not be null.");
@@ -200,7 +198,7 @@ public final class SwipeDismissList implements View.OnTouchListener {
 		mHandler = new HideUndoPopupHandler();
 		mListView = listView;
 		mCallback = callback;
-		mMode = mode;
+		mMode = UndoMode.MULTI_UNDO;
 		
 		ViewConfiguration vc = ViewConfiguration.get(listView.getContext());
 		mSlop = vc.getScaledTouchSlop();
@@ -244,7 +242,7 @@ public final class SwipeDismissList implements View.OnTouchListener {
 		listView.setOnTouchListener(this);
 		listView.setOnScrollListener(this.makeScrollListener());
 
-		switch(mode) {
+		switch(UndoMode.MULTI_UNDO) {
 			case SINGLE_UNDO:
 				mUndoActions = new ArrayList<Undoable>(1);
 				break;
@@ -493,8 +491,8 @@ public final class SwipeDismissList implements View.OnTouchListener {
 
 	class PendingDismissData implements Comparable<PendingDismissData> {
 
-		public int position;
-		public View view;
+		public final int position;
+		public final View view;
 
 		public PendingDismissData(int position, View view) {
 			this.position = position;
@@ -502,7 +500,7 @@ public final class SwipeDismissList implements View.OnTouchListener {
 		}
 
 		@Override
-		public int compareTo(PendingDismissData other) {
+		public int compareTo(@NonNull PendingDismissData other) {
 			// Sort by descending position
 			return other.position - position;
 		}

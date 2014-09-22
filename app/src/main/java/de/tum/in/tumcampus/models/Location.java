@@ -8,52 +8,51 @@ public class Location {
 	/**
 	 * Address
 	 */
-	public String address;
+	public final String address;
 
 	/**
 	 * Category
 	 */
-	public String category;
+	public final String category;
 
 	/**
 	 * Opening hours
 	 */
-	public String hours;
+	public final String hours;
 
 	/**
 	 * Location ID
 	 */
-	public int id;
+	public final int id;
 
 	/**
 	 * Location name
 	 */
-	public String name;
+	public final String name;
 
 	/**
 	 * Remark
 	 */
-	public String remark;
+	public final String remark;
 
 	/**
 	 * Room
 	 */
-	public String room;
+	public final String room;
 
 	/**
 	 * Next transport station
 	 */
-	public String transport;
+	public final String transport;
 
 	/**
 	 * URL
 	 */
-	public String url;
+	public final String url;
 
 	/**
 	 * New Location
-	 * 
-	 * <pre>
+	 *
 	 * @param id Location ID, e.g. 100
 	 * @param category Location category, e.g. library, cafeteria, info
 	 * @param name Location name, e.g. Studentenwerksbibliothek
@@ -63,7 +62,6 @@ public class Location {
 	 * @param hours Opening hours, e.g. Mo–Fr 8–24
 	 * @param remark Additional information, e.g. Tel: 089-11111
 	 * @param url Location URL, e.g. http://stud.ub.uni-muenchen.de/
-	 * </pre>
 	 */
 	public Location(int id, String category, String name, String address,
 			String room, String transport, String hours, String remark,

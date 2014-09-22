@@ -16,7 +16,9 @@ import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.NewsActivity;
 import de.tum.in.tumcampus.models.managers.CardManager;
 
-
+/**
+ * Card that shows selected news
+ */
 public class NewsCard extends Card {
 
     private String mTitle;
@@ -34,7 +36,7 @@ public class NewsCard extends Card {
     }
 
     @Override
-    public String getTitle() {
+    protected String getTitle() {
         return mTitle;
     }
 
@@ -66,6 +68,13 @@ public class NewsCard extends Card {
         return mCard;
     }
 
+    /**
+     * Sets the information needed to show news
+     * @param img Big image
+     * @param title Title
+     * @param link Url
+     * @param date Date
+     */
     public void setNews(Bitmap img, String title, String link, String date) {
         mImage = img;
         mTitle = title;

@@ -10,16 +10,15 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+
 import de.tum.in.tumcampus.R;
-import de.tum.in.tumcampus.data.LocationContent;
-import de.tum.in.tumcampus.data.LocationContent.Location;
 
 /**
  * A list fragment representing a list of Items. This fragment also supports
  * tablet devices by allowing list items to be given an 'activated' state upon
  * selection. This helps indicate which item is currently being viewed in a
  * {@link OpeningHoursDetailFragment}.
- * <p>
+ *
  * Activities containing this fragment MUST implement the {@link Callbacks}
  * interface.
  */
@@ -33,17 +32,19 @@ public class OpeningHoursListFragment extends ListFragment {
 	public interface Callbacks {
 		/**
 		 * Callback for when an item has been selected.
-		 */
-		public void onItemSelected(String id);
+         * @param pos Index of the item
+         * @param name Name of the item
+         */
+		public void onItemSelected(int pos, String name);
 	}
 
 	/**
 	 * A dummy implementation of the {@link Callbacks} interface that does
 	 * nothing. Used only when this fragment is not attached to an activity.
 	 */
-	private static Callbacks sDummyCallbacks = new Callbacks() {
+	private static final Callbacks sDummyCallbacks = new Callbacks() {
 		@Override
-		public void onItemSelected(String id) {
+		public void onItemSelected(int id, String name) {
 		}
 	};
 
@@ -77,10 +78,8 @@ public class OpeningHoursListFragment extends ListFragment {
 
 		// Activities containing this fragment must implement its callbacks.
 		if (!(activity instanceof Callbacks)) {
-			throw new IllegalStateException(
-					"Activity must implement fragment's callbacks.");
+			throw new IllegalStateException("Activity must implement fragment's callbacks.");
 		}
-
 		mCallbacks = (Callbacks) activity;
 	}
 
@@ -100,17 +99,7 @@ public class OpeningHoursListFragment extends ListFragment {
 				getString(R.string.mensa_pasing),
 				getString(R.string.mensa_weihenstephan) };
 
-		LocationContent.clear();
-		int position = 0;
-		for (String name : names) {
-			LocationContent
-					.addItem(new Location(String.valueOf(position), name));
-			position++;
-		}
-
-		setListAdapter(new ArrayAdapter<LocationContent.Location>(
-				getActivity(), layout, android.R.id.text1,
-				LocationContent.ITEMS));
+		setListAdapter(new ArrayAdapter<String>(getActivity(), layout, android.R.id.text1, names));
 	}
 
 	@Override
@@ -122,13 +111,13 @@ public class OpeningHoursListFragment extends ListFragment {
 	}
 
 	@Override
-	public void onListItemClick(ListView listView, View view, int position,
-			long id) {
+	public void onListItemClick(ListView listView, View view, int position, long id) {
 		super.onListItemClick(listView, view, position, id);
 
 		// Notify the active callbacks interface (the activity, if the
 		// fragment is attached to one) that an item has been selected.
-		mCallbacks.onItemSelected(LocationContent.ITEMS.get(position).id);
+        ArrayAdapter<String> adapter = (ArrayAdapter<String>) getListAdapter();
+		mCallbacks.onItemSelected(position, adapter.getItem(position));
 	}
 
 	@Override
@@ -145,10 +134,8 @@ public class OpeningHoursListFragment extends ListFragment {
 		super.onViewCreated(view, savedInstanceState);
 
 		// Restore the previously serialized activated item position.
-		if (savedInstanceState != null
-				&& savedInstanceState.containsKey(STATE_ACTIVATED_POSITION)) {
-			setActivatedPosition(savedInstanceState
-					.getInt(STATE_ACTIVATED_POSITION));
+		if (savedInstanceState != null && savedInstanceState.containsKey(STATE_ACTIVATED_POSITION)) {
+			setActivatedPosition(savedInstanceState.getInt(STATE_ACTIVATED_POSITION));
 		}
 	}
 

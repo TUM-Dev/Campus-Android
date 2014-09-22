@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.annotation.NonNull;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -27,34 +28,18 @@ public class TransportManager implements Card.ProvidesCard {
     /**
      * Database connection
      */
-    private SQLiteDatabase db;
+    private final SQLiteDatabase db;
 
     /**
      * Constructor, open/create database, create table if necessary
-     * <p/>
-     * <pre>
      *
      * @param context Context
-     *                </pre>
      */
     public TransportManager(Context context) {
         db = DatabaseManager.getDb(context);
 
         // create table if needed
         db.execSQL("CREATE TABLE IF NOT EXISTS transports (name VARCHAR PRIMARY KEY)");
-    }
-
-    /**
-     * delete a station from the database
-     * <p/>
-     * <pre>
-     *
-     * @param name Station name
-     *             </pre>
-     */
-    public void deleteFromDb(String name) {
-        db.execSQL("DELETE FROM transports WHERE name = ?",
-                new String[]{name});
     }
 
     /**
@@ -83,15 +68,12 @@ public class TransportManager implements Card.ProvidesCard {
     }
 
     /**
-     * Get all departures for a station
-     * <p/>
-     * Cursor includes target station name, departure in remaining minutes
-     * <p/>
-     * <pre>
+     * Get all departures for a station.
+     * Cursor includes target station name, departure in remaining minutes.
      *
      * @param location Station name
-     * @return Database cursor (name, time, _id)
-     * @throws Exception </pre>
+     * @return List of departures
+     * @throws Exception
      */
     public List<Departure> getDeparturesFromExternal(String location) throws Exception {
 
@@ -99,8 +81,7 @@ public class TransportManager implements Card.ProvidesCard {
         // ISO needed for mvv
         String lookupUrl = "http://www.mvg-live.de/ims/dfiStaticAnzeige.svc?haltestelle=" + URLEncoder.encode(location, "ISO-8859-1");
 
-        @SuppressWarnings("deprecation")
-        String query = URLEncoder.encode("select content from html where url=\"" + lookupUrl + "\" and xpath=\"//td[contains(@class,'Column')]/p\"");
+        String query = URLEncoder.encode("select content from html where url=\"" + lookupUrl + "\" and xpath=\"//td[contains(@class,'Column')]/p\"", "UTF-8");
         Utils.log(query);
 
         JSONArray jsonArray = Utils.downloadJson(baseUrl + query)
@@ -110,6 +91,8 @@ public class TransportManager implements Card.ProvidesCard {
         if (jsonArray.length() < 3) {
             throw new NoSuchElementException("No departures found");
         }
+
+        //TODO read server time
 
         ArrayList<Departure> list = new ArrayList<Departure>(jsonArray.length());
         for (int j = 2; j < jsonArray.length(); j = j + 3) {
@@ -131,29 +114,25 @@ public class TransportManager implements Card.ProvidesCard {
         public long time;
 
         @Override
-        public int compareTo(Departure departure) {
+        public int compareTo(@NonNull Departure departure) {
             return time<departure.time?-1:1;
         }
     }
 
     /**
      * Find stations by station name prefix
-     * <p/>
-     * <pre>
      *
      * @param location Name prefix
      * @return Database Cursor (name, _id)
-     * @throws Exception </pre>
+     * @throws Exception
      */
     public Cursor getStationsFromExternal(String location) throws Exception {
 
         String baseUrl = "http://query.yahooapis.com/v1/public/yql?format=json&q=";
         String lookupUrl = "http://www.mvg-live.de/ims/dfiStaticAuswahl.svc?haltestelle=" + URLEncoder.encode(location, "ISO-8859-1");
 
-        @SuppressWarnings("deprecation")
-        String query = URLEncoder
-                .encode("select content from html where url=\"" + lookupUrl
-                        + "\" and xpath=\"//a[contains(@href,'haltestelle')]\"");
+        String query = URLEncoder.encode("select content from html where url=\"" + lookupUrl
+                        + "\" and xpath=\"//a[contains(@href,'haltestelle')]\"", "UTF-8");
         Utils.log(query);
 
         JSONObject jsonObj = Utils.downloadJson(baseUrl + query).getJSONObject(
@@ -185,11 +164,8 @@ public class TransportManager implements Card.ProvidesCard {
 
     /**
      * Replace or Insert a station into the database
-     * <p/>
-     * <pre>
      *
      * @param name Station name
-     * @throws Exception </pre>
      */
     public void replaceIntoDb(String name) {
         Utils.log(name);
@@ -199,8 +175,12 @@ public class TransportManager implements Card.ProvidesCard {
         db.execSQL("REPLACE INTO transports (name) VALUES (?)", new String[]{name});
     }
 
+    /**
+     * Inserts a MVV card for the nearest public transport station
+     * @param context Context
+     */
     @Override
-    public void onRequestCard(Context context) throws Exception {
+    public void onRequestCard(Context context) {
         if(!Utils.isConnected(context))
             return;
 
@@ -209,11 +189,16 @@ public class TransportManager implements Card.ProvidesCard {
         if(station==null)
             return;
 
-        List<Departure> cur = getDeparturesFromExternal(station);
-        MVVCard card = new MVVCard(context);
-        card.setStation(station);
-        card.setDepartures(cur);
-        card.setTime(System.currentTimeMillis());
-        card.apply();
+        List<Departure> cur;
+        try {
+            cur = getDeparturesFromExternal(station);
+            MVVCard card = new MVVCard(context);
+            card.setStation(station);
+            card.setDepartures(cur);
+            card.setTime(System.currentTimeMillis());
+            card.apply();
+        } catch (Exception e) {
+            Utils.log(e);
+        }
     }
 }

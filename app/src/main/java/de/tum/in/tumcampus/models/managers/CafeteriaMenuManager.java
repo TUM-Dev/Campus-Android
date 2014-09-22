@@ -23,7 +23,7 @@ public class CafeteriaMenuManager {
 	 */
 	public static int lastInserted = 0;
 
-	public static int TIME_TO_SYNC = 86400; // 1 day
+	private static final int TIME_TO_SYNC = 86400; // 1 day
 
 	/**
 	 * Convert JSON object to CafeteriaMenu
@@ -32,14 +32,12 @@ public class CafeteriaMenuManager {
 	 * {"id":"25544","mensa_id":"411","date":"2011-06-20","type_short"
 	 * :"tg","type_long":"Tagesgericht 3","type_nr":"3","name":
 	 * "Cordon bleu vom Schwein (mit Formfleischhinterschinken) (S) (1,2,3,8)"}
-	 * 
-	 * <pre>
+	 *
 	 * @param json see above
 	 * @return CafeteriaMenu
 	 * @throws Exception
-	 * </pre>
 	 */
-	public static CafeteriaMenu getFromJson(JSONObject json) throws Exception {
+	private static CafeteriaMenu getFromJson(JSONObject json) throws Exception {
 
 		return new CafeteriaMenu(json.getInt("id"), json.getInt("mensa_id"),
 				Utils.getDate(json.getString("date")),
@@ -53,14 +51,12 @@ public class CafeteriaMenuManager {
 	 * Example JSON: e.g.
 	 * {"mensa_id":"411","date":"2011-07-29","name":"Pflaumenkompott"
 	 * ,"type_short":"bei","type_long":"Beilagen"}
-	 * 
-	 * <pre>
+	 *
 	 * @param json see above
 	 * @return CafeteriaMenu
 	 * @throws Exception
-	 * </pre>
 	 */
-	public static CafeteriaMenu getFromJsonAddendum(JSONObject json)
+	private static CafeteriaMenu getFromJsonAddendum(JSONObject json)
 			throws Exception {
 
 		return new CafeteriaMenu(0, json.getInt("mensa_id"), Utils.getDate(json
@@ -75,10 +71,8 @@ public class CafeteriaMenuManager {
 
 	/**
 	 * Constructor, open/create database, create table if necessary
-	 * 
-	 * <pre>
+	 *
 	 * @param context Context
-	 * </pre>
 	 */
 	public CafeteriaMenuManager(Context context) {
 		db = DatabaseManager.getDb(context);
@@ -92,17 +86,15 @@ public class CafeteriaMenuManager {
 	/**
 	 * Removes all old items (older than 7 days)
 	 */
-	public void cleanupDb() {
+    void cleanupDb() {
 		db.execSQL("DELETE FROM cafeterias_menus WHERE date < date('now','-7 day')");
 	}
 
 	/**
 	 * Download cafeteria menus from external interface (JSON)
-	 * 
-	 * <pre>
+	 *
 	 * @param force True to force download over normal sync period, else false
 	 * @throws Exception
-	 * </pre>
 	 */
 	public void downloadFromExternal(boolean force) throws Exception {
 
@@ -161,24 +153,12 @@ public class CafeteriaMenuManager {
 	}
 
 	/**
-	 * Get all types and names from the database for a special date and a
-	 * special cafeteria
-	 * 
-	 * <pre>
+	 * Get all types and names from the database for a special date and a special cafeteria
+	 *
 	 * @param mensaId Mensa ID, e.g. 411
 	 * @param date ISO-Date, e.g. 2011-12-31
-	 * @return Database cursor (typeLong, names, _id)
-	 * </pre>
+	 * @return Database cursor (typeLong, names, _id, typeShort)
 	 */
-	public Cursor getTypeNameFromDb(int mensaId, String date) {
-        return db
-                .rawQuery(
-                        "SELECT typeLong, group_concat(name, '\n') as names, id as _id  "
-                                + "FROM cafeterias_menus WHERE mensaId = ? AND "
-                                + "date = ? GROUP BY typeLong ORDER BY typeNr, typeLong, name",
-                        new String[] { ""+mensaId, date });
-    }
-
     public Cursor getTypeNameFromDbCard(int mensaId, String date) {
         /* mensaId  date  typeShort  typeNr */
         return db
@@ -189,6 +169,14 @@ public class CafeteriaMenuManager {
                         new String[] { ""+mensaId, date });
     }
 
+    /**
+     * Get all types and names from the database for a special date and a special cafeteria
+     *
+     * @param mensaId Mensa ID, e.g. 411
+     * @param dateStr ISO-Date, e.g. 2011-12-31
+     * @param date Date
+     * @return List of cafeteria menus
+     */
     public List<CafeteriaMenu> getTypeNameFromDbCardList(int mensaId, String dateStr, Date date) {
         Cursor cursorCafeteriaMenu = getTypeNameFromDbCard(mensaId, dateStr);
         ArrayList<CafeteriaMenu> menus = new ArrayList<CafeteriaMenu>();
@@ -213,13 +201,11 @@ public class CafeteriaMenuManager {
 
 	/**
 	 * Replace or Insert a cafeteria menu in the database
-	 * 
-	 * <pre>
+	 *
 	 * @param c CafeteriaMenu object
 	 * @throws Exception
-	 * </pre>
 	 */
-	public void replaceIntoDb(CafeteriaMenu c) throws Exception {
+    void replaceIntoDb(CafeteriaMenu c) throws Exception {
 		if (c.cafeteriaId <= 0) {
 			throw new Exception("Invalid cafeteriaId.");
 		}

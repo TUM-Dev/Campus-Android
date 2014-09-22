@@ -11,15 +11,13 @@ import java.security.SignatureException;
 
 /**
  * Class providing an API to generate signatures of strings.
- * 
  * Takes care of handling all unicode juggling and crypto algorithm selection.
- * 
  */
 public class RSASigner {
 	/**
 	 * A {@link PrivateKey} instance which will be used to generate the signature.
 	 */
-	private PrivateKey privateKey;
+	private final PrivateKey privateKey;
 
 	public RSASigner(PrivateKey privateKey) {
 		this.privateKey = privateKey;
@@ -29,8 +27,7 @@ public class RSASigner {
 	 * Sign the message given as the parameter and return it as a base64 encoded
 	 * {@link String}.
 	 * 
-	 * @param message
-	 *            The message to be encoded
+	 * @param message The message to be encoded
 	 * @return A base64 encoded signature
 	 */
 	public String sign(String message) {
@@ -38,14 +35,14 @@ public class RSASigner {
 		try {
 			signer = Signature.getInstance("SHA1WithRSA");
 		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
+			Utils.log(e);
 			return null;
 		}
 
 		try {
 			signer.initSign(privateKey);
 		} catch (InvalidKeyException e) {
-			e.printStackTrace();
+			Utils.log(e);
 			return null;
 		}
 
@@ -53,14 +50,14 @@ public class RSASigner {
 		try {
 			messageBytes = message.getBytes("UTF8");
 		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
+			Utils.log(e);
 			return null;
 		}
 
 		try {
 			signer.update(messageBytes);
 		} catch (SignatureException e) {
-			e.printStackTrace();
+			Utils.log(e);
 			return null;
 		}
 
@@ -68,7 +65,7 @@ public class RSASigner {
 		try {
 			signature = signer.sign();
 		} catch (SignatureException e) {
-			e.printStackTrace();
+			Utils.log(e);
 			return null;
 		}
 

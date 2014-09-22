@@ -22,8 +22,8 @@
             android:id="@+id/startup_tum_logo"
             android:layout_marginRight="10dp"
             android:layout_centerVertical="true"
-            android:layout_toLeftOf="@+id/startup_loading"
-            android:layout_toStartOf="@+id/startup_loading" />
+            android:layout_toLeftOf="@+id/textView"
+            android:layout_toStartOf="@+id/textView" />
 
         <TextView
             android:id="@+id/textView"

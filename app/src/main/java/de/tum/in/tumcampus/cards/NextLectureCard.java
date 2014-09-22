@@ -14,13 +14,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.CalendarActivity;
 import de.tum.in.tumcampus.activities.RoomFinderActivity;
+import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.managers.CardManager;
 
 
@@ -106,17 +105,9 @@ public class NextLectureCard extends Card {
         if (0 < end) {
             end = title.length();
         }
+
         mTitle = title.substring(0, end).trim();
-
-        // Format Date
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-        try {
-            mDate = formatter.parse(date);
-        } catch (ParseException e) {
-            mDate = null;
-        }
-
-        // Check for Location
+        mDate = Utils.getISODateTime(date);
         mLocation = loc;
     }
 }

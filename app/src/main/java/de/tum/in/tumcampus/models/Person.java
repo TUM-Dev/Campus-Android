@@ -1,19 +1,15 @@
 package de.tum.in.tumcampus.models;
 
-import java.io.Serializable;
-
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.Root;
+
+import java.io.Serializable;
 
 /**
  * A person, often an {@link Employee} working at TUM.
  * <p>
  * Note: This model is based on the TUMOnline web service response format for a
  * corresponding request.
- * 
- * @author Vincenz Doelle
- * @review Daniel G. Mayr
- * @review Thomas Behrens
  */
 @Root(name = "row", strict = false)
 public class Person implements Serializable {

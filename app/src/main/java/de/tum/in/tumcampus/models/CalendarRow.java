@@ -73,32 +73,12 @@ public class CalendarRow {
 		return url;
 	}
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public void setDtend(String dtend) {
-        this.dtend = dtend;
-    }
-
     public void setDtstart(String dtstart) {
         this.dtstart = dtstart;
     }
 
-    public void setGeo(Geo geo) {
-        this.geo = geo;
-    }
-
     public void setLocation(String location) {
         this.location = location;
-    }
-
-    public void setNr(String nr) {
-        this.nr = nr;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
     }
 
     public void setTitle(String title) {

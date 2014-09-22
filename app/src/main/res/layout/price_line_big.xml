@@ -20,7 +20,7 @@
         android:paddingLeft="10dp"
         android:paddingTop="10dp"
         android:scrollHorizontally="false"
-        android:textSize="16dp" />
+        android:textSize="16sp" />
 
     <TextView
         android:id="@+id/line_price"
@@ -34,5 +34,5 @@
         android:minWidth="50dp"
         android:paddingTop="10dp"
         android:textColor="@color/sections_green"
-        android:textSize="16dp" />
+        android:textSize="16sp" />
 </RelativeLayout>

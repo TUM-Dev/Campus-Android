@@ -12,11 +12,11 @@ import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.SimpleCursorAdapter.ViewBinder;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.generic.ActivityForDownloadingExternal;
 import de.tum.in.tumcampus.auxiliary.Const;
+import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.managers.NewsManager;
 
 /**
@@ -32,33 +32,6 @@ public class NewsActivity extends ActivityForDownloadingExternal implements OnIt
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestDownload(false);
-	}
-
-    @Override
-    public void onRefreshStarted(View view) {
-        requestDownload(true);
-    }
-
-	@SuppressWarnings("deprecation")
-	@Override
-	public void onItemClick(AdapterView<?> aview, View view, int position,
-			long id) {
-		ListView lv = (ListView) findViewById(R.id.activity_news_list_view);
-
-		Cursor cursor = (Cursor) lv.getAdapter().getItem(position);
-		startManagingCursor(cursor);
-
-		String url = cursor.getString(cursor.getColumnIndex(Const.LINK_COLUMN));
-
-		if (url.length() == 0) {
-			Toast.makeText(this, getString(R.string.no_link_existing),
-					Toast.LENGTH_LONG).show();
-			return;
-		}
-
-		// Opens Url in Browser
-		Intent viewIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-		startActivity(viewIntent);
 	}
 
 	@SuppressWarnings("deprecation")
@@ -90,9 +63,15 @@ public class NewsActivity extends ActivityForDownloadingExternal implements OnIt
 		}
 	}
 
+    /**
+     * Correctly bind cursor data to views
+     * @param view Item view
+     * @param cursor Cursor containing the data
+     * @param index index of the cursor column to be set
+     * @return True if bind was handled
+     */
 	@Override
 	public boolean setViewValue(View view, Cursor cursor, int index) {
-
         if (view.getId() == R.id.news_title) {
             String title = cursor.getString(index);
             if(title.contains("\n")) {
@@ -147,4 +126,37 @@ public class NewsActivity extends ActivityForDownloadingExternal implements OnIt
 		view.setVisibility(View.VISIBLE);
 		return false;
 	}
+
+    /**
+     * If news item has been clicked open the corresponding link
+     * @param aview Containing listView
+     * @param view Item view
+     * @param position Index of the item
+     * @param id Item id
+     */
+    @SuppressWarnings("deprecation")
+    @Override
+    public void onItemClick(AdapterView<?> aview, View view, int position,
+                            long id) {
+        ListView lv = (ListView) findViewById(R.id.activity_news_list_view);
+
+        Cursor cursor = (Cursor) lv.getAdapter().getItem(position);
+        startManagingCursor(cursor);
+
+        String url = cursor.getString(cursor.getColumnIndex(Const.LINK_COLUMN));
+
+        if (url.length() == 0) {
+            Utils.showToast(this, R.string.no_link_existing);
+            return;
+        }
+
+        // Opens Url in Browser
+        Intent viewIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+        startActivity(viewIntent);
+    }
+
+    @Override
+    public void onRefreshStarted(View view) {
+        requestDownload(true);
+    }
 }

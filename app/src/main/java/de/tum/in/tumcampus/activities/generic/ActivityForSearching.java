@@ -20,29 +20,53 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.auxiliary.Utils;
 
 /**
- * Generic class for searching. Provides basic functions for a text search field
+ * Generic class for searching. Provides basic functions for a {@link SearchView}
  * and typical processes related to search.
  * 
  */
 public abstract class ActivityForSearching extends ProgressActivity {
-    protected SearchView mSearchView;
-    protected String mQuery = null;
-    private String mAuthority;
-    private int mMinLength;
+    /** SearchView handle */
+    private SearchView mSearchView;
     private MenuItem mSearchItem;
+
+    /** @see ActivityForSearching#openSearch() */
     private boolean mOpenSearch;
 
-    protected abstract void onStartSearch();
-    protected abstract void onStartSearch(String s);
+    /** Search authority and minimum query length */
+    private final String mAuthority;
+    private final int mMinLength;
 
-    public ActivityForSearching(int layoutIt, String auth, int minLen) {
-		super(layoutIt);
+    /** Last search query */
+    protected String mQuery = null;
+
+    /**
+     * Gets called if search has been canceled
+     */
+    protected abstract void onStartSearch();
+
+    /**
+     * Gets called if a search query has been entered
+     * @param query Query to search for
+     */
+    protected abstract void onStartSearch(String query);
+
+    /**
+     * Initializes an activity for searching.
+     * The xml layout must include an error_layout and a progress_layout.
+     * A {@link uk.co.senab.actionbarpulltorefresh.extras.actionbarcompat.PullToRefreshLayout}
+     * called ptr_layout is required if the activity should support PullToRefresh method
+     *
+     * @param layoutId Resource id of the xml layout that should be used to inflate the activity
+     * @param auth Authority for search suggestions declared in manifest file
+     * @param minLen Minimum text length that has to be entered by the user before a search quest can be submitted
+     */
+    public ActivityForSearching(int layoutId, String auth, int minLen) {
+		super(layoutId);
         mAuthority = auth;
         mMinLength = minLen;
 	}
@@ -51,12 +75,13 @@ public abstract class ActivityForSearching extends ProgressActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getSupportActionBar().setIcon(R.drawable.tum_logo);
+        onNewIntent(getIntent());
     }
 
     @Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
-		// Inflate the menu; this adds items to the action bar if it is present.
+		// Inflate the menu; this adds a SearchView to the ActionBar
 		getMenuInflater().inflate(R.menu.menu_search, menu);
 
         // Get SearchView
@@ -71,41 +96,42 @@ public abstract class ActivityForSearching extends ProgressActivity {
         // Optical tweaks to match application theme
         styleSearchView(info.getHintId());
 
-        if (mSearchView != null) {
-            if(mQuery!=null) {
-                mSearchView.setQuery(mQuery, false);
-                mOpenSearch = true;
+        // If activity gets called via Intent with a search query set SearchView accordingly
+        if(mQuery!=null) {
+            mSearchView.setQuery(mQuery, false);
+            mOpenSearch = true;
+        }
+
+        // Ensures that SearchView is updated if suggestion has been clicked
+        mSearchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
+            @Override
+            public boolean onSuggestionSelect(int i) {
+                return false;
             }
 
-            mSearchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
-                @Override
-                public boolean onSuggestionSelect(int i) {
-                    return false;
-                }
+            @Override
+            public boolean onSuggestionClick(int position) {
+                String suggestion = getSuggestion(position);
+                mSearchView.setQuery(suggestion, true);
+                return true;
+            }
 
-                @Override
-                public boolean onSuggestionClick(int position) {
-                    String suggestion = getSuggestion(position);
-                    mSearchView.setQuery(suggestion, true);
-                    return true;
-                }
+            private String getSuggestion(int position) {
+                Cursor cursor = (Cursor) mSearchView.getSuggestionsAdapter().getItem(position);
+                return cursor.getString(cursor.getColumnIndex(SearchManager.SUGGEST_COLUMN_TEXT_1));
+            }
+        });
 
-                private String getSuggestion(int position) {
-                    Cursor cursor = (Cursor) mSearchView.getSuggestionsAdapter().getItem(position);
-                    return cursor.getString(cursor.getColumnIndex(SearchManager.SUGGEST_COLUMN_TEXT_1));
-                }
-            });
-
-            mSearchView.setOnCloseListener(new SearchView.OnCloseListener() {
-                @Override
-                public boolean onClose() {
-                    MenuItemCompat.collapseActionView(mSearchItem);
-                    mQuery = null;
-                    onStartSearch();
-                    return false;
-                }
-            });
-        }
+        // Handle search cancellation
+        mSearchView.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                MenuItemCompat.collapseActionView(mSearchItem);
+                mQuery = null;
+                onStartSearch();
+                return false;
+            }
+        });
 		return true;
 	}
 
@@ -119,6 +145,7 @@ public abstract class ActivityForSearching extends ProgressActivity {
         return super.onPrepareOptionsMenu(menu);
     }
 
+    @Override
     public void onClick(View view) {
         int viewId = view.getId();
         switch (viewId) {
@@ -139,6 +166,10 @@ public abstract class ActivityForSearching extends ProgressActivity {
         }
     }
 
+    /**
+     * Make some optical adjustments to SearchView to match blue actionbar color
+     * @param hintId Resource id of the hint text to be shown in empty SearchView
+     */
     private void styleSearchView(int hintId) {
         // Adjust small lense icon and hint text
         SearchView.SearchAutoComplete searchAutoComplete = (SearchView.SearchAutoComplete)mSearchView.findViewById(android.support.v7.appcompat.R.id.search_src_text);
@@ -167,17 +198,22 @@ public abstract class ActivityForSearching extends ProgressActivity {
         collapsedSearchIcon.setImageDrawable(bigSearchIcon);
     }
 
-	private boolean requestSearch(String query) {
+    /**
+     * Tests if search query is valid and internet connection is available.
+     * Then starts a new search.
+     * @param query Query to search for
+     */
+	private void requestSearch(String query) {
         mQuery = query;
         if(query.length()<mMinLength) {
-            String text = String.format(getString(R.string.min_search_len),mMinLength);
-            Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
-            return false;
+            final String text = String.format(getString(R.string.min_search_len), mMinLength);
+            Utils.showToast(this, text);
+            return;
         }
 
 		if (!Utils.isConnected(this)) {
             showError(R.string.no_internet_connection);
-			return false;
+			return;
 		}
 
         // Add query to recents
@@ -186,10 +222,15 @@ public abstract class ActivityForSearching extends ProgressActivity {
 
         // Tell activity to start searching
         onStartSearch(query);
-		return true;
 	}
 
-    public void openSearch() {
+    /**
+     * Expands the Search-ActionView on activity startup, so that the user can immediately start typing.
+     * Only has an effect if it is called during
+     * {@link de.tum.in.tumcampus.activities.generic.ActivityForSearching#onCreate(android.os.Bundle)}} or
+     * {@link de.tum.in.tumcampus.activities.generic.ActivityForSearching#onResume()}} method.
+     */
+    protected void openSearch() {
         mOpenSearch = true;
     }
 }

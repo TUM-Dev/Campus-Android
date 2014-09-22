@@ -26,10 +26,9 @@ import de.tum.in.tumcampus.models.managers.LocationManager;
 import static de.tum.in.tumcampus.fragments.CafeteriaDetailsSectionFragment.menuToSpan;
 
 /**
- * Lists all dishes at given cafeteria
- * 
- * @author Sascha Moecker, Haris Iltifat, Thomas Krex
- * 
+ * Lists all dishes at selected cafeteria
+ *
+ * OPTIONAL: Const.CAFETERIA_ID set in incoming bundle (cafeteria to show)
  */
 public class CafeteriaActivity extends ActivityForDownloadingExternal implements ActionBar.OnNavigationListener {
 
@@ -46,17 +45,16 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		// Get Id and name from intent (calling activity)
+		// Get id from intent if specified
         final Intent intent = getIntent();
-        if(intent!=null && intent.getExtras()!=null
-                && intent.getExtras().containsKey(Const.CAFETERIA_ID))
+        if(intent!=null && intent.getExtras()!=null && intent.getExtras().containsKey(Const.CAFETERIA_ID))
     		mCafeteriaId = intent.getExtras().getInt(Const.CAFETERIA_ID);
         mViewPager = (ViewPager) findViewById(R.id.pager);
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
+        // Add info icon to show ingredients
 		getMenuInflater().inflate(R.menu.menu_section_fragment_cafeteria_details, menu);
 		return true;
 	}
@@ -73,7 +71,9 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
 		return super.onOptionsItemSelected(item);
 	}
 
-    @SuppressWarnings("deprecation")
+    /**
+     * Setup action bar navigation (to switch between cafeterias)
+     */
     @Override
     protected void onStart() {
         super.onStart();
@@ -99,7 +99,7 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
 
         // Adapter for drop-down navigation
         ArrayAdapter adapterCafeterias = new ArrayAdapter<Cafeteria>(this, R.layout.simple_spinner_item_actionbar, mCafeterias) {
-            LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+            final LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(LAYOUT_INFLATER_SERVICE);
 
             @Override
             public View getDropDownView(int position, View convertView, ViewGroup parent) {
@@ -129,6 +129,12 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
             getSupportActionBar().setSelectedNavigationItem(selIndex);
     }
 
+    /**
+     * Switch cafeteria if a new cafeteria has been selected
+     * @param pos index of the new selection
+     * @param id id of the selected item
+     * @return True if selection has been handled
+     */
     @Override
     public boolean onNavigationItemSelected(int pos, long id) {
         mCafeteriaId = mCafeterias.get(pos).id;

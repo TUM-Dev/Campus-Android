@@ -8,10 +8,6 @@ import org.simpleframework.xml.Root;
  * <p>
  * Note: This model is based on the TUMOnline web service response format for a
  * corresponding request.
- * 
- * @author Vincenz Doelle
- * @review Daniel G. Mayr
- * @review Thomas Behrens
  */
 @Root(name = "row", strict = false)
 public class Exam {

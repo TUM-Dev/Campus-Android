@@ -1,18 +1,15 @@
 package de.tum.in.tumcampus.models;
 
-import java.io.Serializable;
-import java.util.List;
-
 import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.Root;
 
+import java.io.Serializable;
+import java.util.List;
+
 /**
- * Wrapper class holding a list of {@link TelSubstations}. Note: This model is
+ * Wrapper class holding a list of {@link TelSubstation}s. Note: This model is
  * based on the TUMOnline web service response format for a corresponding
  * request.
- * 
- * @author Vincenz Doelle
- * @review Daniel G. Mayr
  */
 @Root(name = "telefon_nebenstellen")
 public class TelSubstationList implements Serializable {

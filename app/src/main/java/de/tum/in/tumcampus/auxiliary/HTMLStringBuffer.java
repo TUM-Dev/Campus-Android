@@ -2,9 +2,6 @@ package de.tum.in.tumcampus.auxiliary;
 
 /**
  * StringBuffer wrapper class to format text in a customized way.
- * 
- * 
- * @author Vincenz Doelle
  */
 public class HTMLStringBuffer {
 
@@ -20,8 +17,7 @@ public class HTMLStringBuffer {
 	/**
 	 * Append text to the buffer.
 	 * 
-	 * @param s
-	 *            The text.
+	 * @param s The text.
 	 */
 	public void append(String s) {
 		buffer.append(s);
@@ -30,10 +26,8 @@ public class HTMLStringBuffer {
 	/**
 	 * Append a new label-content pair to the text. Format label as being bold.
 	 * 
-	 * @param label
-	 *            The label labeling the content.
-	 * @param content
-	 *            The content labeled by the label.
+	 * @param label The label labeling the content.
+	 * @param content The content labeled by the label.
 	 */
 	public void appendField(String label, String content) {
 		if (content != null && content.length() > 0) {
@@ -44,10 +38,9 @@ public class HTMLStringBuffer {
 	/**
 	 * Append new line broken by "br".
 	 * 
-	 * @param s
-	 *            Last string of the line.
+	 * @param s Last string of the line.
 	 */
-	public void appendLine(String s) {
+    void appendLine(String s) {
 		s = s.replace("null", "");
 
 		append(s);

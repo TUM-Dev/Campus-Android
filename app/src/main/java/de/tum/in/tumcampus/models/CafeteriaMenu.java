@@ -12,44 +12,43 @@ public class CafeteriaMenu {
 	/**
 	 * Cafeteria ID
 	 */
-	public int cafeteriaId;
+	public final int cafeteriaId;
 
 	/**
 	 * Menu date
 	 */
-	public Date date;
+	public final Date date;
 
 	/**
 	 * CafeteriaMenu Id (empty for addendum)
 	 */
-	public int id;
+	public final int id;
 
 	/**
 	 * Menu name
 	 */
-	public String name;
+	public final String name;
 
 	/**
 	 * Long type, e.g. Tagesgericht 1
 	 */
-	public String typeLong;
+	public final String typeLong;
 
 	/**
 	 * Type ID
 	 */
-	public int typeNr;
+	public final int typeNr;
 
 	/**
 	 * Short type, e.g. tg
 	 */
-	public String typeShort;
+	public final String typeShort;
 
 	// public String prize;
 
 	/**
 	 * New CafeteriaMenu
-	 * 
-	 * <pre>
+	 *
 	 * @param id CafeteriaMenu Id (empty for addendum)
 	 * @param cafeteriaId Cafeteria ID
 	 * @param date Menu date
@@ -57,7 +56,6 @@ public class CafeteriaMenu {
 	 * @param typeLong Long type, e.g. Tagesgericht 1
 	 * @param typeNr Type ID
 	 * @param name Menu name
-	 * </pre>
 	 */
 	public CafeteriaMenu(int id, int cafeteriaId, Date date, String typeShort,
 			String typeLong, int typeNr, String name) {

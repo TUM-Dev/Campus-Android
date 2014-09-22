@@ -1,17 +1,13 @@
 package de.tum.in.tumcampus.models;
 
-import java.io.Serializable;
-
 import org.simpleframework.xml.Element;
+
+import java.io.Serializable;
 
 /**
  * Contact information of a TUM {@link Employee} or a generic {@link Person}.
  * Note: This model is based on the TUMOnline web service response format for a
  * corresponding request.
- * 
- * @author Vincenz Doelle
- * @review Daniel G. Mayr
- * @review Thomas Behrens
  */
 public class Contact implements Serializable {
 

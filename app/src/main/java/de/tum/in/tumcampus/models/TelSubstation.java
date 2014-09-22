@@ -1,16 +1,13 @@
 package de.tum.in.tumcampus.models;
 
-import java.io.Serializable;
-
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.Root;
+
+import java.io.Serializable;
 
 /**
  * Telefon substation to reach an employee. Note: This model is based on the
  * TUMOnline web service response format for a corresponding request.
- * 
- * @author Vincenz Doelle
- * @review Daniel G. Mayr
  */
 @Root(name = "nebenstelle", strict = false)
 public class TelSubstation implements Serializable {

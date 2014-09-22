@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.location.Location;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -14,10 +13,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.Cafeteria;
 import de.tum.in.tumcampus.models.CalendarRow;
 
-
+/**
+ * Location manager, manages intelligent location services, provides methods to easily access
+ * the users current location, campus, next public transfer station and best cafeteria
+ */
 public class LocationManager {
     private final Context mContext;
 
@@ -30,7 +33,7 @@ public class LocationManager {
      *
      * @return Returns the more or less current position or null on failure
      */
-    public Location getCurrentLocation() {
+    Location getCurrentLocation() {
         if (servicesConnected()) {
             return getLastLocation();
         }
@@ -42,7 +45,7 @@ public class LocationManager {
      *
      * @return Campus id
      */
-    public int getCurrentCampus() {
+    int getCurrentCampus() {
         Location loc = getCurrentLocation();
         if (loc == null)
             return -1;
@@ -87,7 +90,7 @@ public class LocationManager {
     public List<Cafeteria> getCafeterias() {
         // Get current location
         Location location = getCurrentLocation();
-        if(location==null)
+        if (location == null)
             return null;
 
         final double lat = location.getLatitude();
@@ -99,8 +102,8 @@ public class LocationManager {
 
         if (cur.moveToFirst()) {
             do {
-                Cafeteria cafe = new Cafeteria(cur.getInt(0),cur.getString(1),
-                        cur.getString(2),cur.getDouble(3), cur.getDouble(4));
+                Cafeteria cafe = new Cafeteria(cur.getInt(0), cur.getString(1),
+                        cur.getString(2), cur.getDouble(3), cur.getDouble(4));
                 Location.distanceBetween(cur.getDouble(3), cur.getDouble(4), lat, lng, results);
                 cafe.distance = results[0];
                 list.add(cafe);
@@ -116,7 +119,7 @@ public class LocationManager {
      *
      * @return The last location
      */
-    public Location getLastLocation() {
+    Location getLastLocation() {
         Location bestResult = null;
         float bestAccuracy = Float.MAX_VALUE;
         long bestTime = Long.MIN_VALUE;
@@ -144,9 +147,14 @@ public class LocationManager {
         return bestResult;
     }
 
+    /**
+     * Returns the name of the station that is nearby and/or set by the user
+     *
+     * @return Name of the station or null if the user is not near any campus
+     */
     public String getStation() {
         int campus = getCurrentCampus();
-        if(campus==-1)
+        if (campus == -1)
             return null;
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
@@ -162,7 +170,7 @@ public class LocationManager {
         if (ConnectionResult.SUCCESS == resultCode) {
             return true;
         } else {
-            Log.d("Location Updates", "Google Play services is NOT available.");
+            Utils.log("Google Play services is NOT available.");
             return false;
         }
     }
@@ -170,30 +178,30 @@ public class LocationManager {
     /**
      * Gets the campus you are currently on or if you are at home or wherever
      * query for your next lecture and find out at which campus it takes place
-     * */
-     public int getCurrentOrNextCampus() {
+     */
+    int getCurrentOrNextCampus() {
         int campus = getCurrentCampus();
-        if(campus!=-1)
+        if (campus != -1)
             return campus;
         return getNextCampus();
     }
 
     /**
      * Provides some intelligence to pick one cafeteria to show
-     * */
+     */
     public int getCafeteria() {
         int campus = getCurrentOrNextCampus();
-        if(campus!=-1) { // If the user is in university or a lecture has been recognized
+        if (campus != -1) { // If the user is in university or a lecture has been recognized
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
             final String defaultVal = defaultCampusCafeteria[campus];
-            String cafeteria = prefs.getString("card_cafeteria_default_"+campusShort[campus], defaultVal);
-            if(cafeteria!=null)
+            String cafeteria = prefs.getString("card_cafeteria_default_" + campusShort[campus], defaultVal);
+            if (cafeteria != null)
                 return Integer.parseInt(cafeteria);
         }
 
         // Get nearest cafeteria
         List<Cafeteria> list = getCafeterias();
-        if(list!=null && list.size()>0)
+        if (list != null && list.size() > 0)
             return list.get(0).id;
         else
             return -1;
@@ -201,11 +209,11 @@ public class LocationManager {
 
     /**
      * Queries your calender and gets the campus at which your next lecture takes place
-     * */
-    public int getNextCampus() {
+     */
+    int getNextCampus() {
         CalendarManager manager = new CalendarManager(mContext);
         CalendarRow nextLecture = manager.getNextCalendarItem();
-        if(nextLecture!=null) {
+        if (nextLecture != null) {
             // TODO:
             // - nextLecture.getLocation(); of form 00.09.036@5609
             // - query room location from http://vmbaumgarten3.informatik.tu-muenchen.de/roommaps/room/coordinates?id=00.09.036@5609
@@ -218,7 +226,7 @@ public class LocationManager {
 
     /**
      * Converts UTM based coordinates to latitude and longitude based format
-     * */
+     */
     private Location UTMtoLL(double north, double east, double zone) {
         double d = 0.99960000000000004;
         double d1 = 6378137;
@@ -245,7 +253,7 @@ public class LocationManager {
         return location;
     }
 
-    public static final double[][] campusLocations = {
+    private static final double[][] campusLocations = {
             {48.2648424, 11.6709511}, // Garching Forschungszentrum
             {48.249432, 11.633905}, // Garching Hochbrück
             {48.397990, 11.722727}, // Weihenstephan
@@ -256,7 +264,7 @@ public class LocationManager {
             {48.150244, 11.580665} // Geschwister Schollplatz/Adalbertstraße
     };
 
-    public static final String[] campusShort = {
+    private static final String[] campusShort = {
             "G", // Garching Forschungszentrum
             "H", // Garching Hochbrück
             "W", // Weihenstephan
@@ -267,7 +275,7 @@ public class LocationManager {
             "S" // Geschwister Schollplatz/Adalbertstraße
     };
 
-    public static final String[] defaultCampusStation = {
+    private static final String[] defaultCampusStation = {
             "Garching-Forschungszentrum",
             "Garching-Hochbrück",
             "Weihenstephan",
@@ -278,5 +286,5 @@ public class LocationManager {
             "Universität"
     };
 
-    public static final String[] defaultCampusCafeteria = { "422", null, "423", "421", "414", null, "411", null };
+    private static final String[] defaultCampusCafeteria = {"422", null, "423", "421", "414", null, "411", null};
 }

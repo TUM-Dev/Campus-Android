@@ -4,7 +4,6 @@ import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
@@ -34,9 +33,8 @@ public class DownloadService extends IntentService {
 	 */
 	public final static String BROADCAST_NAME = "de.tum.in.newtumcampus.intent.action.BROADCAST_DOWNLOAD";
 	private static final String DOWNLOAD_SERVICE = "DownloadService";
-    public static final String LAST_UPDATE = "last_update";
-    public static final String CSV_LOCATIONS = "locations.csv";
-    public static final String ISO = "ISO-8859-1";
+    private static final String LAST_UPDATE = "last_update";
+    private static final String CSV_LOCATIONS = "locations.csv";
     private static final String LOCATIONS_VERSION = "locations_version";
 
     /**
@@ -62,7 +60,7 @@ public class DownloadService extends IntentService {
             // Init sync table
             new SyncManager(this);
         } catch (IOException e) {
-            Log.e(getClass().getSimpleName(), e.getMessage());
+            Utils.log(e);
             broadcastError(getResources().getString(R.string.exception_sdcard));
             // Don't start new downloads
             isDestroyed = true;
@@ -94,37 +92,37 @@ public class DownloadService extends IntentService {
             Log.i(getClass().getSimpleName(), "Handle action <" + action + ">");
 
             try {
-                if ((action.equals(Const.DOWNLOAD_ALL_FROM_EXTERNAL)) && !isDestroyed) {
-
-                    downloadNews(force);
-                    downloadCafeterias(force);
-                    importLocationsDefaults();
-
+                if(!isDestroyed) {
+                    if ((action.equals(Const.DOWNLOAD_ALL_FROM_EXTERNAL))) {
+                        downloadNews(force);
+                        downloadCafeterias(force);
+                        importLocationsDefaults();
+                    }
+                    if ((action.equals(Const.NEWS))) {
+                        downloadNews(force);
+                    }
+                    if ((action.equals(Const.CAFETERIAS))) {
+                        downloadCafeterias(force);
+                    }
+                    if ((action.equals(Const.ORGANISATIONS))) {
+                        downloadOrganisations(force);
+                    }
                     successful = true;
-                }
-                if ((action.equals(Const.NEWS)) && !isDestroyed) {
-                    successful = downloadNews(force);
-                }
-                if ((action.equals(Const.CAFETERIAS)) && !isDestroyed) {
-                    successful = downloadCafeterias(force);
-                }
-                if ((action.equals(Const.ORGANISATIONS)) && !isDestroyed) {
-                    successful = downloadOrganisations(force);
                 }
             } catch (TimeoutException e) {
                 if (!isDestroyed) {
-                    Log.e(getClass().getSimpleName(), e.getMessage());
+                    Utils.log(e);
                     broadcastWarning(getResources().getString(
                             R.string.exception_timeout));
                 }
             } catch (IOException e) {
                 if (!isDestroyed) {
-                    Log.e(getClass().getSimpleName(), e.getMessage());
+                    Utils.log(e);
                     broadcastError(getResources().getString(
                             R.string.exception_sdcard));
                 }
             } catch (Exception e) {
-                Log.e(getClass().getSimpleName(), "Unkown error while handling action <" + action + ">");
+                Utils.log(e, "Unknown error while handling action <" + action + ">");
                 if (!isDestroyed) {
                     broadcastError(getResources().getString(
                             R.string.exception_unknown));
@@ -146,7 +144,7 @@ public class DownloadService extends IntentService {
         if (successful && !isDestroyed) {
             broadcastDownloadCompleted();
         } else {
-            Log.e(getClass().getSimpleName(),"Broadcast not sent");
+            Utils.log("Broadcast not sent");
         }
 
         // Do all other import stuff that is not relevant for creating the viewing the start page
@@ -178,59 +176,51 @@ public class DownloadService extends IntentService {
         LocalBroadcastManager.getInstance(this).sendBroadcast(intentSend);
 	}
 
-	public boolean downloadCafeterias(boolean force) throws Exception {
+	private void downloadCafeterias(boolean force) throws Exception {
 		CafeteriaManager cm = new CafeteriaManager(this);
 		CafeteriaMenuManager cmm = new CafeteriaMenuManager(this);
 		cm.downloadFromExternal(force);
 		cmm.downloadFromExternal(force);
-		return true;
 	}
 
-	public boolean downloadNews(boolean force) throws Exception {
+	private void downloadNews(boolean force) throws Exception {
 		NewsManager nm = new NewsManager(this);
 		nm.downloadFromExternal(force);
-		return true;
 	}
 
-	public boolean downloadOrganisations(boolean force) throws Exception {
+	private void downloadOrganisations(boolean force) throws Exception {
 		OrganisationManager om = new OrganisationManager(this);
-		String accessToken = PreferenceManager
-				.getDefaultSharedPreferences(this).getString(
-						Const.ACCESS_TOKEN, null);
-
-		if (accessToken == null) {
+		String accessToken = Utils.getSetting(this, Const.ACCESS_TOKEN);
+		if (accessToken.isEmpty()) {
 			throw new Exception("No Access Token");
 		}
 		try {
 			om.downloadFromExternal(force, accessToken);
 		} catch (Exception e) {
-			Log.e(getClass().getSimpleName(), e.getMessage());
+			Utils.log(e);
 		}
-		return true;
 	}
 
     /**
      * Import default location and opening hours from assets
      */
-    public void importLocationsDefaults() throws Exception {
+    private void importLocationsDefaults() throws Exception {
         // get current app version
-        int version = getPackageManager().getPackageInfo(
-                this.getPackageName(), 0).versionCode;
+        int version = getPackageManager().getPackageInfo(getPackageName(), 0).versionCode;
 
         // check if database update is needed
-        SharedPreferences prefs = getSharedPreferences(Const.INTERNAL_PREFS, 0);
-        boolean update = prefs.getInt(LOCATIONS_VERSION, -1)!=version;
+        boolean update = Utils.getInternalSettingInt(this, LOCATIONS_VERSION, -1)!=version;
 
         OpenHoursManager lm = new OpenHoursManager(this);
         if (lm.empty() || update) {
-            List<String[]> rows = Utils.readCsv(getAssets().open(CSV_LOCATIONS), ISO);
+            List<String[]> rows = Utils.readCsv(getAssets().open(CSV_LOCATIONS));
 
             for (String[] row : rows) {
                 lm.replaceIntoDb(new Location(Integer.parseInt(row[0]), row[1],
                         row[2], row[3], row[4], row[5], row[6], row[7], row[8]));
             }
         }
-        prefs.edit().putInt(LOCATIONS_VERSION,version).apply();
+        Utils.setInternalSetting(this, LOCATIONS_VERSION, version);
     }
 
     /**

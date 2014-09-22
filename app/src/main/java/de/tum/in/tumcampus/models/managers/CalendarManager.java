@@ -1,16 +1,14 @@
 package de.tum.in.tumcampus.models.managers;
 
-import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
-import android.preference.PreferenceManager;
+import android.os.Build;
 import android.provider.CalendarContract;
-import android.util.Log;
 
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
@@ -20,12 +18,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
 import de.tum.in.tumcampus.R;
-import de.tum.in.tumcampus.auxiliary.CalendarMapper;
+import de.tum.in.tumcampus.auxiliary.CalendarHelper;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.cards.Card;
@@ -33,14 +30,16 @@ import de.tum.in.tumcampus.cards.NextLectureCard;
 import de.tum.in.tumcampus.models.CalendarRow;
 import de.tum.in.tumcampus.models.CalendarRowSet;
 
+/**
+ * Calendar Manager, handles database stuff, external imports
+ */
 public class CalendarManager implements Card.ProvidesCard {
     private static final String[] projection = new String[] { "_id", "name" };
 
-    private static final int TIME_TO_SYNC_CALENDAR = 604800000; // 1 week
-    public static int TIME_TO_SYNC = 86400; // 1 day
+    private static final int TIME_TO_SYNC_CALENDAR = 604800; // 1 week
 
     private final Context mContext;
-    private SQLiteDatabase db;
+    private final SQLiteDatabase db;
 
     public CalendarManager(Context context) {
         mContext = context;
@@ -59,16 +58,16 @@ public class CalendarManager implements Card.ProvidesCard {
     /**
      * Returns all stored events from db
      *
-     * @return
+     * @return Cursor with all calendar events. Columns are
+     * (nr, status, url, title, description, dtstart, dtend, location, longitude, latitude)
      */
-    public Cursor getAllFromDb() {
+    Cursor getAllFromDb() {
         return db.rawQuery("SELECT * FROM kalendar_events", null);
     }
 
     public Cursor getFromDbForDate(Date date) {
         // Format the requested date
-        SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
-        String requestedDateString = sf.format(date);
+        String requestedDateString = Utils.getDateString(date);
 
         // Fetch the data
         return db.rawQuery("SELECT * FROM kalendar_events WHERE dtstart LIKE ? ORDER BY dtstart ASC", new String[]{"%" + requestedDateString + "%"});
@@ -80,16 +79,14 @@ public class CalendarManager implements Card.ProvidesCard {
      * @return Database cursor (name, location, _id)
      */
     public Cursor getCurrentFromDb() {
-        return db
-                .rawQuery( "SELECT title, location, nr "
-                    + "FROM kalendar_events WHERE datetime('now', 'localtime') BETWEEN dtstart AND dtend",
-                        null);
+        return db.rawQuery( "SELECT title, location, nr "
+                    + "FROM kalendar_events WHERE datetime('now', 'localtime') BETWEEN dtstart AND dtend", null);
     }
 
     /**
      * Checks if there are any event in the database
      *
-     * @return
+     * @return True if there are lectures in the database, false if there is no lecture
      */
     public boolean hasLectures() {
         boolean result = false;
@@ -118,27 +115,23 @@ public class CalendarManager implements Card.ProvidesCard {
             myKalendarList = serializer.read(CalendarRowSet.class, rawResponse);
             List<CalendarRow> myKalendar = myKalendarList.getKalendarList();
             if(myKalendar!=null) {
-                Iterator itr = myKalendar.iterator();
-                while (itr.hasNext()) {
-                    CalendarRow row = (CalendarRow) itr.next();
+                for (CalendarRow row : myKalendar) {
                     // insert into database
                     try {
                         replaceIntoDb(row);
                     } catch (Exception e) {
-                        Log.d("SIMPLEXML", "Error in field: " + e.getMessage());
-                        e.printStackTrace();
+                        Utils.log(e, "SIMPLEXML: Error in field: " + e.getMessage());
                     }
                 }
             }
 
             // Do sync of google calendar if neccessary
-            SharedPreferences prefs = mContext.getSharedPreferences(Const.INTERNAL_PREFS, 0);
-            if(prefs.getBoolean(Const.SYNC_CALENDAR, false) && SyncManager.needSync(db, Const.SYNC_CALENDAR, TIME_TO_SYNC_CALENDAR)) {
+            boolean syncCalendar = Utils.getInternalSettingBool(mContext, Const.SYNC_CALENDAR, false);
+            if(syncCalendar && SyncManager.needSync(db, Const.SYNC_CALENDAR, TIME_TO_SYNC_CALENDAR)) {
                 syncCalendar(mContext);
             }
         } catch (Exception e) {
-            Log.d("SIMPLEXML", "wont work: " + e.getMessage());
-            e.printStackTrace();
+            Utils.log(e);
         }
     }
 
@@ -149,7 +142,7 @@ public class CalendarManager implements Card.ProvidesCard {
         db.execSQL("DELETE FROM kalendar_events");
     }
 
-    public void replaceIntoDb(CalendarRow row) throws Exception {
+    void replaceIntoDb(CalendarRow row) throws Exception {
         Utils.log(row.toString());
 
         if (row.getNr().length() == 0)
@@ -181,36 +174,26 @@ public class CalendarManager implements Card.ProvidesCard {
      *
      * @param c Context
      */
+    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     public static void syncCalendar(Context c) {
         // Deleting earlier calendar created by TUM Campus App
         deleteLocalCalendar(c);
-        Uri uri = addLocalCalendar(c);
+        Uri uri = CalendarHelper.addCalendar(c);
         addEvents(c, uri);
         SyncManager.replaceIntoDb(DatabaseManager.getDb(c), Const.SYNC_CALENDAR);
     }
 
-
-    private static  Uri addLocalCalendar(Context c) {
-        ContentResolver crv = c.getContentResolver();
-        Calendar calendar = Calendar.getInstance();
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(c);
-        CalendarMapper calendarMapper = new CalendarMapper(c.getString(R.string.calendar_account_name), c.getString(R.string.calendar_display_name), preferences);
-        return calendarMapper.addCalendar(calendar, crv);
-    }
-
     /**
      * Deletes a local Google calendar
-     *
-     * @return The calendars id
+     * @return Number of rows deleted
      */
+    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     public static int deleteLocalCalendar(Context c) {
-        ContentResolver crv = c.getContentResolver();
-        Uri uri = CalendarContract.Calendars.CONTENT_URI; //TODO check this (API 14), what to do on older systems
-        return crv.delete(uri, " account_name = '" + c.getString(R.string.calendar_account_name) + "'", null);
+        return CalendarHelper.deleteCalendar(c);
     }
 
-    @SuppressLint("InlinedApi")
-    private static void addEvents( Context c, Uri uri) {
+    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+    private static void addEvents(Context c, Uri uri) {
         // Get ID
         ContentResolver contentResolver = c.getContentResolver();
         Cursor cursor2 = contentResolver.query(uri, projection, null, null, null);
@@ -262,7 +245,7 @@ public class CalendarManager implements Card.ProvidesCard {
                     contentResolver.insert(CalendarContract.Events.CONTENT_URI, values);
 
                 } catch (ParseException e) {
-                    e.printStackTrace();
+                    Utils.log(e);
                 }
             }
         }
@@ -293,6 +276,10 @@ public class CalendarManager implements Card.ProvidesCard {
         return row;
     }
 
+    /**
+     * Shows next lecture card if lecture is available
+     * @param context Context
+     */
     @Override
     public void onRequestCard(Context context) {
         CalendarRow row = getNextCalendarItem();

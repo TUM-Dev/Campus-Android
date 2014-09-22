@@ -22,7 +22,9 @@ import de.tum.in.tumcampus.models.managers.TransportManager;
 
 import static de.tum.in.tumcampus.models.managers.CardManager.CARD_MVV;
 
-
+/**
+ * Card that shows MVV departure times
+ */
 public class MVVCard extends Card {
     private static final String MVV_TIME = "mvv_time";
     private String mStationName;
@@ -47,17 +49,14 @@ public class MVVCard extends Card {
     public View getCardView(Context context, ViewGroup parent) {
         super.getCardView(context, parent);
         mPlaceHolder.setVisibility(View.VISIBLE);
-        for(TransportManager.Departure d : mDepartures)
-            addDeparture(d.symbol, d.line,  d.time);
+        for(TransportManager.Departure d : mDepartures) {
+            DepartureView view = new DepartureView(mContext);
+            view.setSymbol(d.symbol);
+            view.setLine(d.line);
+            view.setTime(mTime.getTime() + d.time * 60000);
+            mLinearLayout.addView(view);
+        }
         return mCard;
-    }
-
-    private void addDeparture(String symbol, String title, long time) {
-        DepartureView view = new DepartureView(mContext);
-        view.setSymbol(symbol);
-        view.setLine(title);
-        view.setTime(mTime.getTime()+time*60000);
-        mLinearLayout.addView(view);
     }
 
     @Override

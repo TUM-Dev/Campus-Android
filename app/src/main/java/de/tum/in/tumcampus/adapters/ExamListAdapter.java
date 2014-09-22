@@ -1,22 +1,19 @@
 package de.tum.in.tumcampus.adapters;
 
-import java.util.List;
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+
+import java.util.List;
+
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.models.Exam;
 
 /**
  * Custom UI adapter for a list of exams.
- * 
- * @author Vincenz Doelle
- * @review Daniel G. Mayr
- * @review Thomas Behrens
  */
 public class ExamListAdapter extends BaseAdapter {
 	static class ViewHolder {
@@ -59,8 +56,7 @@ public class ExamListAdapter extends BaseAdapter {
 
 		// find and init UI
 		if (convertView == null) {
-			convertView = mInflater.inflate(R.layout.activity_grades_listview,
-					null);
+			convertView = mInflater.inflate(R.layout.activity_grades_listview, parent, false);
 			holder = new ViewHolder();
 			holder.tvName = (TextView) convertView.findViewById(R.id.name);
 			holder.tvGrade = (TextView) convertView.findViewById(R.id.grade);

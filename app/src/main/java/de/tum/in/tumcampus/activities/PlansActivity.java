@@ -12,8 +12,8 @@ import android.widget.ListView;
 import java.util.ArrayList;
 
 import de.tum.in.tumcampus.R;
-import de.tum.in.tumcampus.adapters.StartListAdapter;
-import de.tum.in.tumcampus.adapters.StartListAdapter.PlanListEntry;
+import de.tum.in.tumcampus.adapters.PlanListAdapter;
+import de.tum.in.tumcampus.adapters.PlanListAdapter.PlanListEntry;
 import de.tum.in.tumcampus.auxiliary.ImplicitCounter;
 
 /**
@@ -21,7 +21,7 @@ import de.tum.in.tumcampus.auxiliary.ImplicitCounter;
  */
 public class PlansActivity extends ActionBarActivity implements OnItemClickListener {
 
-    private StartListAdapter mListAdapter;
+    private PlanListAdapter mListAdapter;
 
     @Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -37,7 +37,7 @@ public class PlansActivity extends ActionBarActivity implements OnItemClickListe
 		listMenuEntrySet.add(new PlanListEntry(
 				R.drawable.plan_campus_klinikum_icon, R.string.campus_klinikum,
 				R.string.campus_klinikum_adress, R.drawable.campus_klinikum));
-		listMenuEntrySet.add(new StartListAdapter.PlanListEntry(
+		listMenuEntrySet.add(new PlanListAdapter.PlanListEntry(
 				R.drawable.plan_campus_olympiapark_icon,
 				R.string.campus_olympiapark,
 				R.string.campus_olympiapark_adress, R.drawable.campus_olympiapark));
@@ -61,7 +61,7 @@ public class PlansActivity extends ActionBarActivity implements OnItemClickListe
 		listMenuEntrySet.add(new PlanListEntry(R.drawable.mvv_entire_net_icon,
 				R.string.mvv_entire_net, R.string.empty_string, R.drawable.mvv_entire_net));
 
-		mListAdapter = new StartListAdapter(this, R.layout.activity_plans_listview, listMenuEntrySet);
+		mListAdapter = new PlanListAdapter(this, listMenuEntrySet);
 		list.setAdapter(mListAdapter);
 		list.setOnItemClickListener(this);
 	}

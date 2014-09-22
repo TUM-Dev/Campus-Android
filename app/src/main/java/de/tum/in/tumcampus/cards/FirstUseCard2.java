@@ -11,7 +11,9 @@ import android.view.ViewGroup;
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.models.managers.CardManager;
 
-
+/**
+ * Card that describes how to change card settings
+ */
 public class FirstUseCard2 extends Card {
 
     public FirstUseCard2(Context context) {

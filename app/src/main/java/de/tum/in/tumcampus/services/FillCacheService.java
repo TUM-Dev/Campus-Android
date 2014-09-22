@@ -6,10 +6,12 @@ import android.content.Intent;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.managers.TUMOnlineCacheManager;
 
-/** Service used to sync data in background */
+/**
+ * Service used to fill caches in background, for faster/offline access
+ * */
 public class FillCacheService extends IntentService {
 
-	public static final String CACHE_SERVICE = "FillCacheService";
+	private static final String CACHE_SERVICE = "FillCacheService";
 
 	public FillCacheService() {
 		super(CACHE_SERVICE);
@@ -18,13 +20,13 @@ public class FillCacheService extends IntentService {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		Utils.log("FillCacheService has started");
+		Utils.logv("FillCacheService has started");
 	}
 
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		Utils.log("FillCacheService has stopped");
+		Utils.logv("FillCacheService has stopped");
 	}
 
 	@Override

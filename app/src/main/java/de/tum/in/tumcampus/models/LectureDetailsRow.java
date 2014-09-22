@@ -6,10 +6,8 @@ import org.simpleframework.xml.Root;
 /**
  * This class is dealing with the deserialization of the output of TUMOnline to
  * the method "DetailsLehrveranstaltungen".
- * 
- * @author Daniel Mayr
- * 
- * @see http://simple.sourceforge.net/download/stream/doc/tutorial/tutorial.php
+ *
+ * @see <a href="http://simple.sourceforge.net/download/stream/doc/tutorial/tutorial.php">SimpleXML tutorial</a>
  */
 @Root(name = "row", strict = false)
 public class LectureDetailsRow {

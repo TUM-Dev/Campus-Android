@@ -1,18 +1,14 @@
 package de.tum.in.tumcampus.models;
 
-import java.io.Serializable;
-import java.util.List;
-
 import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.Root;
 
+import java.io.Serializable;
+import java.util.List;
+
 /**
- * Wrapper class holding a list of {@link Rooms}. Note: This model is based on
+ * Wrapper class holding a list of {@link Room}s. Note: This model is based on
  * the TUMOnline web service response format for a corresponding request.
- * 
- * @author Vincenz Doelle
- * @review Daniel G. Mayr
- * @review Thomas Behrens
  */
 @Root(name = "raeume")
 public class RoomList implements Serializable {

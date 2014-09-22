@@ -19,22 +19,20 @@ import de.tum.in.tumcampus.tumonline.TUMRoomFinderRequestFetchListener;
 
 /**
  * Activity to show a convenience interface for using the MyTUM room finder.
- *
- * @author Vincenz Doelle, Anas Chackfeh
  */
 public class RoomFinderActivity extends ActivityForSearching implements TUMRoomFinderRequestFetchListener, OnItemClickListener {
 
     // HTTP client for sending requests to MyTUM roomfinder
-    TUMRoomFinderRequest roomFinderRequest;
+    private TUMRoomFinderRequest roomFinderRequest;
 
-    ListView list;
-    RoomFinderListAdapter adapter;
+    private ListView list;
+    private RoomFinderListAdapter adapter;
 
-    String currentlySelectedBuildingId;
+    private String currentlySelectedBuildingId;
     private String currentlySelectedRoomId;
 
     public RoomFinderActivity() {
-        super(R.layout.activity_roomfinder, RoomFinderSuggestionProvider.AUTHORITY,3);
+        super(R.layout.activity_roomfinder, RoomFinderSuggestionProvider.AUTHORITY, 3);
     }
 
     @Override
@@ -43,8 +41,6 @@ public class RoomFinderActivity extends ActivityForSearching implements TUMRoomF
         roomFinderRequest = new TUMRoomFinderRequest();
 
         openSearch();
-
-        onNewIntent(getIntent());
     }
 
     @Override
@@ -71,11 +67,6 @@ public class RoomFinderActivity extends ActivityForSearching implements TUMRoomF
         } else {
             showLoadingEnded();
         }
-    }
-
-    @Override
-    public void onFetchCancelled() {
-        onFetchError("");
     }
 
     @Override

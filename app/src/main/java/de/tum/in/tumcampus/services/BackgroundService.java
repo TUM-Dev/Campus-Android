@@ -6,10 +6,12 @@ import android.content.Intent;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.Utils;
 
-/** Service used to sync data in background */
+/**
+ * Service used to sync data in background
+ * */
 public class BackgroundService extends IntentService {
 
-	public static final String BACKGROUND_SERVICE = "BackgroundService";
+	private static final String BACKGROUND_SERVICE = "BackgroundService";
 
 	public BackgroundService() {
 		super(BACKGROUND_SERVICE);
@@ -27,6 +29,10 @@ public class BackgroundService extends IntentService {
 		Utils.log("BackgroundService has stopped");
 	}
 
+    /**
+     * Starts {@link DownloadService} with appropriate extras
+     * @param intent Intent
+     */
 	@Override
 	protected void onHandleIntent(Intent intent) {
         // Download all from external
@@ -53,7 +59,7 @@ public class BackgroundService extends IntentService {
 		try {
 			examList = serializer.read(ExamList.class, rawResponse);
 		} catch (Exception e) {
-			e.printStackTrace();
+			Utils.log(e);
 		}
 		// generating notification
 		generateNotification(examList);

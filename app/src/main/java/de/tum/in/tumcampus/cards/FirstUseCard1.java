@@ -11,7 +11,9 @@ import android.view.ViewGroup;
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.models.managers.CardManager;
 
-
+/**
+ * Card that describes how to dismiss a card
+ */
 public class FirstUseCard1 extends Card {
 
     public FirstUseCard1(Context context) {

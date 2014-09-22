@@ -16,21 +16,53 @@ import de.tum.in.tumcampus.adapters.PersonListAdapter;
 import de.tum.in.tumcampus.auxiliary.PersonSearchSuggestionProvider;
 import de.tum.in.tumcampus.models.Person;
 import de.tum.in.tumcampus.models.PersonList;
+import de.tum.in.tumcampus.tumonline.TUMOnlineConst;
 
 /**
  * Activity to search for employees.
  */
 public class PersonsSearchActivity extends ActivityForSearchingTumOnline<PersonList> {
-    private static final String PERSONEN_SUCHE = "personenSuche";
     private static final String P_SUCHE = "pSuche";
 
-    /**
-     * List to display the results
-     */
+    /** List to display the results */
     private ListView lvPersons;
 
     public PersonsSearchActivity() {
-        super(PERSONEN_SUCHE, PersonList.class, R.layout.activity_persons, PersonSearchSuggestionProvider.AUTHORITY, 3);
+        super(TUMOnlineConst.PERSONEN_SUCHE, PersonList.class, R.layout.activity_persons, PersonSearchSuggestionProvider.AUTHORITY, 3);
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        lvPersons = (ListView) findViewById(R.id.lstPersons);
+
+        openSearch();
+    }
+
+    @Override
+    protected void onStartSearch() {
+        lvPersons.setAdapter(null);
+    }
+
+    @Override
+    public void onStartSearch(String query) {
+        requestHandler.setParameter(P_SUCHE, query);
+        requestFetch();
+    }
+
+    /**
+     * Handles the XML response from TUMOnline by de-serializing the information
+     * to model entities.
+     *
+     * @param response The de-serialized data from TUMOnline.
+     */
+    @Override
+    public void onLoadFinished(PersonList response) {
+        if(response==null) {
+            lvPersons.setAdapter(new NoResultsAdapter(this));
+        } else {
+            displayResults(response.getPersons());
+        }
     }
 
     /**
@@ -60,41 +92,5 @@ public class PersonsSearchActivity extends ActivityForSearchingTumOnline<PersonL
                 startActivity(intent);
             }
         });
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        lvPersons = (ListView) findViewById(R.id.lstPersons);
-
-        openSearch();
-
-        onNewIntent(getIntent()); //TODO try if this can be put into SearchActivity
-    }
-
-    @Override
-    protected void onStartSearch() {
-        lvPersons.setAdapter(null);
-    }
-
-    @Override
-    public void onStartSearch(String query) {
-        requestHandler.setParameter(P_SUCHE, query);
-        requestFetch();
-    }
-
-    /**
-     * Handles the XML response from TUMOnline by deserializing the information
-     * to model entities.
-     *
-     * @param response The de-serialized data from TUMOnline.
-     */
-    @Override
-    public void onLoadFinished(PersonList response) {
-        if(response==null) {
-            lvPersons.setAdapter(new NoResultsAdapter(this));
-        } else {
-            displayResults(response.getPersons());
-        }
     }
 }

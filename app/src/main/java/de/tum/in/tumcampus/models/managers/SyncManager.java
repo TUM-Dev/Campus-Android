@@ -15,7 +15,7 @@ public class SyncManager {
     /**
      * Database connection
      */
-    private SQLiteDatabase db;
+    private final SQLiteDatabase db;
 
     /**
      * Constructor, open/create database, create table if necessary
@@ -74,7 +74,6 @@ public class SyncManager {
 	 *
 	 * @param db Database connection
 	 * @param obj Gives class name as sync ID
-	 * @throws Exception
 	 */
 	public static void replaceIntoDb(SQLiteDatabase db, Object obj) {
 		replaceIntoDb(db, obj.getClass().getName());

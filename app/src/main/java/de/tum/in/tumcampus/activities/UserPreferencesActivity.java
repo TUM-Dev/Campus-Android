@@ -1,7 +1,6 @@
 package de.tum.in.tumcampus.activities;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
@@ -17,11 +16,10 @@ import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
 import android.view.MenuItem;
 import android.widget.ListAdapter;
-import android.widget.Toast;
 
 import de.psdev.licensesdialog.LicensesDialog;
 import de.tum.in.tumcampus.R;
-import de.tum.in.tumcampus.activities.wizzard.WizNavStartActivity;
+import de.tum.in.tumcampus.activities.wizard.WizNavStartActivity;
 import de.tum.in.tumcampus.auxiliary.AccessTokenManager;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.Utils;
@@ -35,61 +33,12 @@ import de.tum.in.tumcampus.services.BackgroundService;
 import de.tum.in.tumcampus.services.SilenceService;
 
 /**
- * Provides the preferences, capsulated into an own activity.
- *
- * @author Sascha Moecker
+ * Provides the preferences, encapsulated into an own activity.
  */
 public class UserPreferencesActivity extends PreferenceActivity implements
-        SharedPreferences.OnSharedPreferenceChangeListener, OnClickListener {
+        SharedPreferences.OnSharedPreferenceChangeListener, Preference.OnPreferenceClickListener {
 
-    private AccessTokenManager accessTokenManager = new AccessTokenManager(this);
-    private Context context = this;
-
-    /**
-     * Clears all downlaoded data from SD card and database
-     *
-     * @return true, if successful
-     */
-    private boolean clearCache() { //TODO remove this option/clean up too old cache content on startup
-        try {
-            Utils.getCacheDir("");
-        } catch (Exception e) {
-            Toast.makeText(context, R.string.exception_sdcard,
-                    Toast.LENGTH_SHORT).show();
-            return false;
-        }
-
-        CafeteriaManager cm = new CafeteriaManager(context);
-        cm.removeCache();
-
-        CafeteriaMenuManager cmm = new CafeteriaMenuManager(context);
-        cmm.removeCache();
-
-        NewsManager nm = new NewsManager(context);
-        nm.removeCache();
-
-        CalendarManager calendarManager = new CalendarManager(context);
-        calendarManager.removeCache();
-
-        // table of all download events
-        SyncManager sm = new SyncManager(context);
-        sm.deleteFromDb();
-
-        // delete local calendar
-        if (Build.VERSION.SDK_INT >= 14) {
-            CalendarManager.deleteLocalCalendar(this);
-        }
-
-        Toast.makeText(context, R.string.success_clear_cache, Toast.LENGTH_SHORT).show();
-        return true;
-    }
-
-    @Override
-    public void onClick(DialogInterface dialog, int which) {
-        if (which == DialogInterface.BUTTON_POSITIVE) {
-            clearCache();
-        }
-    }
+    private final AccessTokenManager accessTokenManager = new AccessTokenManager(this);
 
     @SuppressWarnings("deprecation")
     @Override
@@ -97,128 +46,24 @@ public class UserPreferencesActivity extends PreferenceActivity implements
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.settings);
 
-        // Click listener for preference list entries. Used to simulate a button
-        // (since it is not possible to add a button to the preferences screen)
-        Preference buttonToken = findPreference("button_token");
-        buttonToken
-                .setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                    @Override
-                    public boolean onPreferenceClick(Preference arg0) {
-                        // Querys for a access token from TUMOnline
-                        accessTokenManager.setupAccessToken();
-                        return true;
-                    }
-                });
-        // This button invokes the wizzard to open. It pretents to be a "button"
-        // though the preference do not provide buttons
-        Preference buttonWizzard = findPreference("button_wizzard");
-        buttonWizzard
-                .setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                    @Override
-                    public boolean onPreferenceClick(Preference arg0) {
-                        finish();
-                        Intent intent = new Intent(
-                                UserPreferencesActivity.this,
-                                WizNavStartActivity.class);
-                        startActivity(intent);
-                        return true;
-                    }
-                });
-        // This button invokes the clear cache method
-        Preference buttonClearCache = findPreference("button_clear_cache");
-        buttonClearCache
-                .setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                    @Override
-                    public boolean onPreferenceClick(Preference arg0) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(
-                                context);
-                        builder.setMessage(
-                                context.getString(R.string.delete_chache_sure))
-                                .setPositiveButton(
-                                        context.getString(R.string.yes),
-                                        UserPreferencesActivity.this)
-                                .setNegativeButton(
-                                        context.getString(R.string.no),
-                                        UserPreferencesActivity.this).show();
-
-                        return true;
-                    }
-                });
 
         CheckBoxPreference silent = (CheckBoxPreference) findPreference("silent_mode");
         if(!new AccessTokenManager(this).hasValidAccessToken()) {
             silent.setEnabled(false);
         }
 
-        // Open the facebook app or view in a browser when not installed
-        Preference facebookPref = findPreference("facebook");
-        facebookPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            public boolean onPreferenceClick(Preference preference) {
-                Intent facebook;
-                try {
-                    //Try to get facebook package to check if fb app is installed
-                    context.getPackageManager().getPackageInfo("com.facebook.katana", 0);
-                    facebook = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.facebook_link_app)));
-                } catch (Exception e) {
-                    //otherwise just open the normal url
-                    facebook = new Intent(Intent.ACTION_VIEW, Uri.parse(context.getString(R.string.facebook_link)));
-                }
-                startActivity(facebook);
-                return true;
-            }
-        });
+        // Click listener for preference list entries. Used to simulate a button
+        // (since it is not possible to add a button to the preferences screen)
+        findPreference("button_token").setOnPreferenceClickListener(this);
+        findPreference("button_wizard").setOnPreferenceClickListener(this);
+        findPreference("button_clear_cache").setOnPreferenceClickListener(this);
+        findPreference("facebook").setOnPreferenceClickListener(this);
+        findPreference("github").setOnPreferenceClickListener(this);
+        findPreference("first_run").setOnPreferenceClickListener(this);
+        findPreference("licenses").setOnPreferenceClickListener(this);
+        findPreference("feedback").setOnPreferenceClickListener(this);
 
-        // Open the facebook app or view in a browser when not installed
-        Preference githubPref = findPreference("github");
-        githubPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            public boolean onPreferenceClick(Preference preference) {
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.github_link))));
-                return true;
-            }
-        });
-
-        // Show first use tutorial
-        Preference firstUsePref = findPreference("first_run");
-        firstUsePref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            public boolean onPreferenceClick(Preference preference) {
-                SharedPreferences sharedPreferences = PreferenceManager
-                        .getDefaultSharedPreferences(UserPreferencesActivity.this);
-                SharedPreferences.Editor e = sharedPreferences.edit();
-                e.putBoolean(CardManager.SHOW_TUTORIAL_1, true);
-                e.putBoolean(CardManager.SHOW_TUTORIAL_2, true);
-                e.apply();
-                CardManager.update(UserPreferencesActivity.this);
-                startActivity(new Intent(UserPreferencesActivity.this, StartActivity.class));
-                return true;
-            }
-        });
-
-
-        // Show licences
-        Preference licencesPref = findPreference("licenses");
-        licencesPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            public boolean onPreferenceClick(Preference preference) {
-                new LicensesDialog(UserPreferencesActivity.this, R.raw.notices, false, true).show();
-                return true;
-            }
-        });
-
-        // Show licences
-        Preference feedbackPref = findPreference("feedback");
-        feedbackPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            public boolean onPreferenceClick(Preference preference) {
-                /* Create the Intent */
-                Intent emailIntent = new Intent(Intent.ACTION_SENDTO);
-                emailIntent.setType("plain/text");
-                emailIntent.putExtra(Intent.EXTRA_EMAIL,getString(R.string.feedbackAddr));
-                emailIntent.putExtra(Intent.EXTRA_SUBJECT,getString(R.string.feedbackSubj));
-
-		        /* Send it off to the Activity-Chooser */
-                startActivity(Intent.createChooser(emailIntent, getString(R.string.send_email)));
-                return true;
-            }
-        });
-
+        // Set summary for these preferences
         setSummary("card_cafeteria_default_G");
         setSummary("card_cafeteria_default_K");
         setSummary("card_cafeteria_default_W");
@@ -231,8 +76,8 @@ public class UserPreferencesActivity extends PreferenceActivity implements
         PreferenceManager.getDefaultSharedPreferences(this)
                 .registerOnSharedPreferenceChangeListener(this);
 
-        Intent intent = getIntent();
         // Open a card's preference screen if selected from it's context menu
+        Intent intent = getIntent();
         if(intent!=null && intent.getExtras()!=null && intent.getExtras().containsKey(Const.PREFERENCE_SCREEN)) {
             final String key = intent.getExtras().getString(Const.PREFERENCE_SCREEN);
             PreferenceScreen screen = (PreferenceScreen) findPreference("cards_pref_container");
@@ -248,6 +93,7 @@ public class UserPreferencesActivity extends PreferenceActivity implements
         }
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         Preference pref = findPreference(key);
@@ -283,7 +129,8 @@ public class UserPreferencesActivity extends PreferenceActivity implements
         }
     }
 
-    public void setSummary(String key) {
+    @SuppressWarnings("deprecation")
+    void setSummary(String key) {
         Preference t = findPreference(key);
         if(t instanceof ListPreference) {
             ListPreference pref = (ListPreference)t;
@@ -298,5 +145,123 @@ public class UserPreferencesActivity extends PreferenceActivity implements
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * Handle all clicks on 'button'-preferences
+     * @param preference Preference that has been clicked
+     * @return True, if handled
+     */
+    @Override
+    public boolean onPreferenceClick(Preference preference) {
+        final String key = preference.getKey();
+
+        if(key.equals("button_token")) {
+            // Querys for a access token from TUMOnline
+            accessTokenManager.setupAccessToken();
+
+
+        } else if(key.equals("button_wizard")) {
+            finish();
+            startActivity(new Intent(this, WizNavStartActivity.class));
+
+
+        } else if(key.equals("button_clear_cache")) {
+            // This button invokes the clear cache method
+            new AlertDialog.Builder(this)
+                    .setMessage(R.string.delete_chache_sure)
+                    .setPositiveButton(R.string.yes, new OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            clearCache();
+                        }
+                    })
+                    .setNegativeButton(R.string.no, null).show();
+
+
+        } else if(key.equals("facebook")) {
+            // Open the facebook app or view in a browser when not installed
+            Intent facebook;
+            try {
+                //Try to get facebook package to check if fb app is installed
+                getPackageManager().getPackageInfo("com.facebook.katana", 0);
+                facebook = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.facebook_link_app)));
+            } catch (Exception e) {
+                //otherwise just open the normal url
+                facebook = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.facebook_link)));
+            }
+            startActivity(facebook);
+
+
+        } else if(key.equals("github")) {
+            // Open TCA-github web page
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.github_link))));
+
+
+        } else if(key.equals("first_run")) {
+            // Show first use tutorial
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+            SharedPreferences.Editor e = prefs.edit();
+            e.putBoolean(CardManager.SHOW_TUTORIAL_1, true);
+            e.putBoolean(CardManager.SHOW_TUTORIAL_2, true);
+            e.apply();
+            CardManager.update(this);
+            startActivity(new Intent(this, MainActivity.class));
+
+
+        } else if(key.equals("licenses")) {
+            // Show licences
+            new LicensesDialog(this, R.raw.notices, false, true).show();
+
+
+        } else if(key.equals("feedback")) {
+            /* Create the Intent */
+            Intent emailIntent = new Intent(Intent.ACTION_SENDTO);
+            emailIntent.setType("plain/text");
+            emailIntent.putExtra(Intent.EXTRA_EMAIL, getString(R.string.feedbackAddr));
+            emailIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.feedbackSubj));
+
+		    /* Send it off to the Activity-Chooser */
+            startActivity(Intent.createChooser(emailIntent, getString(R.string.send_email)));
+        } else {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Clears all downloaded data from SD card and database
+     */
+    //TODO remove this option/clean up too old cache content on startup
+    private void clearCache() {
+        try {
+            Utils.getCacheDir("");
+        } catch (Exception e) {
+            Utils.showToast(this, R.string.exception_sdcard);
+            return;
+        }
+
+        CafeteriaManager cm = new CafeteriaManager(this);
+        cm.removeCache();
+
+        CafeteriaMenuManager cmm = new CafeteriaMenuManager(this);
+        cmm.removeCache();
+
+        NewsManager nm = new NewsManager(this);
+        nm.removeCache();
+
+        CalendarManager calendarManager = new CalendarManager(this);
+        calendarManager.removeCache();
+
+        // table of all download events
+        SyncManager sm = new SyncManager(this);
+        sm.deleteFromDb();
+
+        // delete local calendar
+        if (Build.VERSION.SDK_INT >= 14) {
+            CalendarManager.deleteLocalCalendar(this);
+        }
+
+        Utils.showToast(this, R.string.success_clear_cache);
     }
 }

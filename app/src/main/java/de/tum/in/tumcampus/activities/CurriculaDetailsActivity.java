@@ -15,6 +15,9 @@ import de.tum.in.tumcampus.auxiliary.Utils;
 
 /**
  * Activity to display the curricula details of different programs.
+ *
+ * NEEDS: CurriculaActivity.URL set in incoming bundle (url to load study plan from)
+ *        CurriculaActivity.NAME set in incoming bundle (name of the study program)
  */
 public class CurriculaDetailsActivity extends ActivityForLoadingInBackground<Object,File> {
 
@@ -46,8 +49,7 @@ public class CurriculaDetailsActivity extends ActivityForLoadingInBackground<Obj
     /**
 	 * Extract the results from a document fetched from the given URL.
 	 * 
-	 * @param url
-	 *            URL pointing to a document where the results are extracted from.
+	 * @param url URL pointing to a document where the results are extracted from.
 	 * @return The results.
 	 */
 	private String extractResultsFromURL(String url) {
@@ -62,14 +64,12 @@ public class CurriculaDetailsActivity extends ActivityForLoadingInBackground<Obj
 	/**
 	 * Fetches the curriculum document and extracts all relevant information.
 	 * 
-	 * @param url
-	 *            URL of the curriculum document
-	 * @param targetFile
-	 *            Target where the results should be written to
+	 * @param url URL of the curriculum document
+	 * @param targetFile Target where the results should be written to
 	 */
 	private void fetchCurriculum(String url, File targetFile) {
-		String text = Utils.buildHTMLDocument(FileUtils.sendGetRequest(this.httpClient, "http://www.in.tum.de/fileadmin/_src/add.css"),
-				"<div id=\"maincontent\"><div class=\"inner\">" + this.extractResultsFromURL(url) + "</div></div>");
+		String text = Utils.buildHTMLDocument(FileUtils.sendGetRequest(httpClient, "http://www.in.tum.de/fileadmin/_src/add.css"),
+				"<div id=\"maincontent\"><div class=\"inner\">" + extractResultsFromURL(url) + "</div></div>");
 
 		text = text.replace("href=\"fuer-studierende-der-tum", "href=\"http://www.in.tum.de/fuer-studierende-der-tum");
 
@@ -79,14 +79,11 @@ public class CurriculaDetailsActivity extends ActivityForLoadingInBackground<Obj
 	/**
 	 * Downloads the curricula data, parses the relevant content, adds the corresponding css information and creates a new html document.
 	 * 
-	 * @param name
-	 *            The name of the curriculum as displayed in the list.
-	 * @param url
-	 *            The url of the curriculum to be downloaded.
+	 * @param name The name of the curriculum as displayed in the list.
+	 * @param url The url of the curriculum to be downloaded.
 	 */
 	private void getCurriculum(String name, final String url) {
-
-		String filename = FileUtils.getFilename(name, ".html");
+		String filename = name.replace(" ", "_") + ".html";
 
 		File file = null;
 		try {
@@ -107,19 +104,24 @@ public class CurriculaDetailsActivity extends ActivityForLoadingInBackground<Obj
 				return;
 			}
 			startLoading(url, file);
-
 		} else {
 			openFile(file);
 		}
 	}
 
-    // Fetch information in a background task and show progress dialog in meantime
+    /**
+     * Fetch information in a background task and show progress dialog in meantime
+     */
     @Override
     protected File onLoadInBackground(Object... params) {
         fetchCurriculum((String) params[0], (File) params[1]);
         return (File) params[1];
     }
 
+    /**
+     * When file is available, open it
+     * @param result File
+     */
     @Override
     protected void onLoadFinished(File result) {
         openFile(result);
@@ -128,8 +130,7 @@ public class CurriculaDetailsActivity extends ActivityForLoadingInBackground<Obj
 	/**
 	 * Opens a local file.
 	 * 
-	 * @param file
-	 *            File to be opened.
+	 * @param file File to be opened.
 	 */
 	private void openFile(File file) {
 		if (file == null) {

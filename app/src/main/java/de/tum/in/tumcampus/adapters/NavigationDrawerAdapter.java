@@ -26,9 +26,12 @@ import de.tum.in.tumcampus.activities.TransportationActivity;
 import de.tum.in.tumcampus.activities.TuitionFeesActivity;
 import de.tum.in.tumcampus.auxiliary.AccessTokenManager;
 
+/**
+ * This class handles the output of the navigation drawer
+ */
 public class NavigationDrawerAdapter extends BaseAdapter {
-    private LayoutInflater mInflater;
-    private Context mContext;
+    private final LayoutInflater mInflater;
+    private final Context mContext;
     private final ArrayList<SideNavigationItem> mVisibleMenuItems;
 
     public NavigationDrawerAdapter(Context context) {
@@ -124,18 +127,18 @@ public class NavigationDrawerAdapter extends BaseAdapter {
         private final boolean needsTUMO;
         private final Class<?> activity;
 
-        public SideNavigationItem(int text, boolean tumo) {
+        public SideNavigationItem(int text, boolean needsTUMO) {
             icon = NO_ICON_VALUE;
             activity = null;
-            needsTUMO = tumo;
+            this.needsTUMO = needsTUMO;
             textRes = text;
         }
 
-        public SideNavigationItem(int text, int sym, boolean tumo, Class<?> activ) {
+        public SideNavigationItem(int text, int sym, boolean needsTUMO, Class<?> activity) {
             textRes = text;
             icon = sym;
-            needsTUMO = tumo;
-            activity = activ;
+            this.needsTUMO = needsTUMO;
+            this.activity = activity;
         }
 
         public String getText(Context c) {

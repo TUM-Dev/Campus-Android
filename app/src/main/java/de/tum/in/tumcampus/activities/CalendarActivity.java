@@ -1,20 +1,20 @@
 package de.tum.in.tumcampus.activities;
 
+import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.ContentUris;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.support.v4.view.ViewPager;
+import android.text.format.DateUtils;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -24,20 +24,20 @@ import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.generic.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampus.adapters.CalendarSectionsPagerAdapter;
 import de.tum.in.tumcampus.auxiliary.Const;
+import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.managers.CalendarManager;
+import de.tum.in.tumcampus.tumonline.TUMOnlineConst;
 
 /**
- * Activity shwoing the user's calendar. Calendar items (events) are fetched from TUMOnline and displayed as blocks on a timeline.
- * 
- * @author Sascha Moecker
- * 
+ * Activity showing the user's calendar. Calendar items (events) are fetched from TUMOnline and displayed as blocks on a timeline.
  */
 public class CalendarActivity extends ActivityForAccessingTumOnline implements OnClickListener {
-	// The space between the first and the last date
+
+	/** The space between the first and the last date */
 	public static final int MONTH_AFTER = 3;
 	public static final int MONTH_BEFORE = 0;
 
-    private Calendar calendar = new GregorianCalendar();
+    private final Calendar calendar = new GregorianCalendar();
 
 	private CalendarManager calendarManager;
 
@@ -51,83 +51,99 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements O
 	private boolean isFetched;
 
 	public CalendarActivity() {
-		super(Const.CALENDER, R.layout.activity_calendar);
+		super(TUMOnlineConst.CALENDER, R.layout.activity_calendar);
 	}
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        mViewPager = (ViewPager) findViewById(R.id.pager);
+        calendarManager = new CalendarManager(this);
+
+        // Set the time space between now and after this date and before this
+        // Dates before the current date
+        requestHandler.setParameter("pMonateVor", String.valueOf(MONTH_BEFORE));
+        // Dates after the current date
+        requestHandler.setParameter("pMonateNach", String.valueOf(MONTH_AFTER));
+        requestFetch();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.menu_sync_calendar, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        // the Calendar export is not supported for API < 14
+        if (android.os.Build.VERSION.SDK_INT < 14) {
+            menuItemExportGoogle.setVisible(false);
+            menuItemDeleteCalendar.setVisible(false);
+        } else {
+            menuItemExportGoogle = menu.findItem(R.id.action_export_calendar);
+            menuItemDeleteCalendar = menu.findItem(R.id.action_delete_calendar);
+            menuItemExportGoogle.setEnabled(isFetched);
+            menuItemDeleteCalendar.setEnabled(isFetched);
+
+            boolean bed = Utils.getInternalSettingBool(this, Const.SYNC_CALENDAR, false);
+            menuItemExportGoogle.setVisible(!bed);
+            menuItemDeleteCalendar.setVisible(bed);
+        }
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_export_calendar:
+                detachSectionPagerAdapter();
+                exportCalendarToGoogle();
+
+                // Enable automatic calendar synchronisation
+                Utils.setInternalSetting(this, Const.SYNC_CALENDAR, true);
+                supportInvalidateOptionsMenu();
+                return true;
+            case R.id.action_delete_calendar:
+                deleteCalendarFromGoogle();
+                return true;
+            default:
+                detachSectionPagerAdapter();
+                isFetched = false;
+                return super.onOptionsItemSelected(item);
+        }
+    }
 
 	/**
 	 * Link the Sections with the content with a section adapter. Additionally put the current date at the start position.
 	 */
 	private void attachSectionPagerAdapter() {
-        CalendarSectionsPagerAdapter mSectionsPagerAdapter = new CalendarSectionsPagerAdapter(CalendarActivity.this, this.getSupportFragmentManager());
-
-		this.mViewPager.setAdapter(mSectionsPagerAdapter);
+        CalendarSectionsPagerAdapter mSectionsPagerAdapter = new CalendarSectionsPagerAdapter(getSupportFragmentManager());
+		mViewPager.setAdapter(mSectionsPagerAdapter);
 
 		Date now = new Date();
-		this.calendar.setTime(now);
+		calendar.setTime(now);
 
-		this.calendar.add(Calendar.MONTH, -CalendarActivity.MONTH_BEFORE);
-		Date firstDate = this.calendar.getTime();
+		calendar.add(Calendar.MONTH, -CalendarActivity.MONTH_BEFORE);
+		Date firstDate = calendar.getTime();
 
-		long days = (now.getTime() - firstDate.getTime()) / (1000 * 60 * 60 * 24);
-
-		this.mViewPager.setCurrentItem((int) days);
+		long days = (now.getTime() - firstDate.getTime()) / DateUtils.DAY_IN_MILLIS;
+		mViewPager.setCurrentItem((int) days);
 	}
 
-	/**
-	 * Asynch task for deleting the calendar from local Google calendar
-	 */
-	public void deleteCalendarFromGoogle() {
-		AlertDialog.Builder builder = new AlertDialog.Builder(CalendarActivity.this);
-		builder.setMessage(this.getString(R.string.dialog_delete_calendar)).setPositiveButton(this.getString(R.string.yes), new OnClickListener() {
-
-			@Override
-			public void onClick(DialogInterface arg0, int arg1) {
-				int deleted = CalendarManager.deleteLocalCalendar(CalendarActivity.this);
-                SharedPreferences prefs = getSharedPreferences(Const.INTERNAL_PREFS, 0);
-                prefs.edit().putBoolean(Const.SYNC_CALENDAR, false).apply();
-                invalidateOptionsMenu();
-				if (deleted > 0) {
-					Toast.makeText(CalendarActivity.this.getApplicationContext(), R.string.calendar_deleted_toast, Toast.LENGTH_LONG).show();
-				} else {
-					Toast.makeText(CalendarActivity.this.getApplicationContext(), R.string.calendar_not_existing_toast, Toast.LENGTH_LONG).show();
-				}
-
-			}
-		}).setNegativeButton(this.getString(R.string.no), new OnClickListener() {
-
-			@Override
-			public void onClick(DialogInterface arg0, int arg1) {
-
-			}
-		}).show();
-	}
-
+    /**
+     * Detach the adapter form the Pager to make the asynch task not conflicting with the UI thread.
+     */
+    private void detachSectionPagerAdapter() {
+        mViewPager.setAdapter(null);
+    }
 
 	/**
-	 * Detach the adapter form the Pager to make the asynch task not conflicting with the UI thread.
+	 * Asynchronous task for exporting the calendar to a local Google calendar
 	 */
-	private void detachSectionPagerAdapter() {
-		this.mViewPager.setAdapter(null);
-	}
-
-	/**
-	 * Starts the Google calendar Activity to display the exported calendar.
-	 */
-	public void displayCalendarOnGoogleCalendar() {
-		// displaying Calendar
-		Calendar beginTime = Calendar.getInstance();
-		long startMillis = beginTime.getTimeInMillis();
-		Uri.Builder builder = CalendarContract.CONTENT_URI.buildUpon();
-		builder.appendPath("time");
-		ContentUris.appendId(builder, startMillis);
-		Intent intent = new Intent(Intent.ACTION_VIEW).setData(builder.build());
-		this.startActivity(intent);
-	}
-
-	/**
-	 * Asynch task for exporting the calendar to a local Google calendar
-	 */
-	public void exportCalendarToGoogle() {
+    void exportCalendarToGoogle() {
 		AsyncTask<Void, Void, Boolean> backgroundTask;
 
 		backgroundTask = new AsyncTask<Void, Void, Boolean>() {
@@ -165,29 +181,20 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements O
 		}
 	}
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-
-		mViewPager = (ViewPager) findViewById(R.id.pager);
-
-		// Set the timespace between now and after this date and before this
-		// Dates before the current date
-		requestHandler.setParameter("pMonateVor", String.valueOf(MONTH_BEFORE));
-		// Dates after the current date
-		requestHandler.setParameter("pMonateNach", String.valueOf(MONTH_AFTER));
-
-		calendarManager = new CalendarManager(this);
-
-		requestFetch();
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		super.onCreateOptionsMenu(menu);
-		getMenuInflater().inflate(R.menu.menu_sync_calendar, menu);
-		return true;
-	}
+    /**
+     * Starts the Google calendar Activity to display the exported calendar.
+     */
+    @TargetApi(14)
+    void displayCalendarOnGoogleCalendar() {
+        // displaying Calendar
+        Calendar beginTime = Calendar.getInstance();
+        long startMillis = beginTime.getTimeInMillis();
+        Uri.Builder builder = CalendarContract.CONTENT_URI.buildUpon();
+        builder.appendPath("time");
+        ContentUris.appendId(builder, startMillis);
+        Intent intent = new Intent(Intent.ACTION_VIEW).setData(builder.build());
+        startActivity(intent);
+    }
 
 	@Override
 	public void onFetch(final String rawResponse) {
@@ -210,59 +217,31 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements O
 				showLoadingEnded();
 				attachSectionPagerAdapter();
 				// update the action bar to display the enabled menu options
-				if (Build.VERSION.SDK_INT >= 11) {
+				if (Build.VERSION.SDK_INT >= 14) {
 					invalidateOptionsMenu();
 				}
 			}
 		}.execute();
 	}
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case R.id.action_export_calendar:
-			detachSectionPagerAdapter();
-			exportCalendarToGoogle();
+    /**
+     * Asynch task for deleting the calendar from local Google calendar
+     */
+    void deleteCalendarFromGoogle() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(CalendarActivity.this);
+        builder.setMessage(getString(R.string.dialog_delete_calendar)).setPositiveButton(getString(R.string.yes), new OnClickListener() {
 
-            // Enable automatic calendar synchronisation
-            SharedPreferences prefs = getSharedPreferences(Const.INTERNAL_PREFS, 0);
-            prefs.edit().putBoolean(Const.SYNC_CALENDAR, true).apply();
-            supportInvalidateOptionsMenu();
-            return true;
-		case R.id.action_delete_calendar:
-			deleteCalendarFromGoogle();
-            return true;
-		default:
-			detachSectionPagerAdapter();
-			isFetched = false;
-			return super.onOptionsItemSelected(item);
-		}
-	}
-
-	@Override
-	public boolean onPrepareOptionsMenu(Menu menu) {
-        // the Calendar export is not supported for API < 11
-        if (android.os.Build.VERSION.SDK_INT < 11) {
-            menuItemExportGoogle.setVisible(false);
-            menuItemDeleteCalendar.setVisible(false);
-        } else {
-            menuItemExportGoogle = menu.findItem(R.id.action_export_calendar);
-            menuItemDeleteCalendar = menu.findItem(R.id.action_delete_calendar);
-            setMenuEnabled(isFetched);
-
-            SharedPreferences prefs = getSharedPreferences(Const.INTERNAL_PREFS, 0);
-            boolean bed = prefs.getBoolean(Const.SYNC_CALENDAR, false);
-            menuItemExportGoogle.setVisible(!bed);
-            menuItemDeleteCalendar.setVisible(bed);
-        }
-		return super.onPrepareOptionsMenu(menu);
-	}
-
-	/**
-	 * Enabled the menu items which are not commonly accessible.
-	 */
-	public void setMenuEnabled(boolean enabled) {
-		menuItemExportGoogle.setEnabled(enabled);
-		menuItemDeleteCalendar.setEnabled(enabled);
-	}
+            @Override
+            public void onClick(DialogInterface arg0, int arg1) {
+                int deleted = CalendarManager.deleteLocalCalendar(CalendarActivity.this);
+                Utils.setInternalSetting(CalendarActivity.this, Const.SYNC_CALENDAR, false);
+                invalidateOptionsMenu();
+                if (deleted > 0) {
+                    Utils.showToast(CalendarActivity.this, R.string.calendar_deleted_toast);
+                } else {
+                    Utils.showToast(CalendarActivity.this, R.string.calendar_not_existing_toast);
+                }
+            }
+        }).setNegativeButton(getString(R.string.no), null).show();
+    }
 }

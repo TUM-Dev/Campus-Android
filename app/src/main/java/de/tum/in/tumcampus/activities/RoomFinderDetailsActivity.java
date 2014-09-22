@@ -11,7 +11,6 @@ import it.sephiroth.android.library.imagezoom.ImageViewTouchBase;
 
 /**
  * Displays the map regarding the searched room.
- * 
  */
 public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<String,Bitmap> {
 
@@ -36,7 +35,7 @@ public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<St
 
     @Override
     protected Bitmap onLoadInBackground(String... arg) {
-        return Utils.downloadImageAndCompressThread(arg[0]);
+        return Utils.downloadImage(arg[0]);
     }
 
     @Override

@@ -17,13 +17,13 @@ import de.tum.in.tumcampus.fragments.OpeningHoursListFragment;
  * {@link OpeningHoursDetailActivity} representing item details. On tablets, the
  * activity presents the list of items and item details side-by-side using two
  * vertical panes.
- * <p>
+ *
  * The activity makes heavy use of fragments. The list of items is a
  * {@link OpeningHoursListFragment} and the item details (if present) is a
  * {@link OpeningHoursDetailFragment}.
- * <p>
+ *
  * This activity also implements the required
- * {@link OpeningHoursListFragment.Callbacks} interface to listen for item
+ * {@link de.tum.in.tumcampus.fragments.OpeningHoursListFragment.Callbacks} interface to listen for item
  * selections.
  */
 public class OpeningHoursListActivity extends ActionBarActivity implements
@@ -54,22 +54,24 @@ public class OpeningHoursListActivity extends ActionBarActivity implements
 					.findFragmentById(R.id.item_list))
 					.setActivateOnItemClick(true);
 		}
-
-		// TODO: If exposing deep links into your app, handle intents here.
 	}
 
 	/**
-	 * Callback method from {@link OpeningHoursListFragment.Callbacks}
+	 * Callback method from {@link de.tum.in.tumcampus.fragments.OpeningHoursListFragment.Callbacks}
 	 * indicating that the item with the given ID was selected.
-	 */
+     *
+     * @param id id of institution
+     * @param name name of institution
+     */
 	@Override
-	public void onItemSelected(String id) {
+	public void onItemSelected(int id, String name) {
 		if (mTwoPane) {
 			// In two-pane mode, show the detail view in this activity by
 			// adding or replacing the detail fragment using a
 			// fragment transaction.
 			Bundle arguments = new Bundle();
-			arguments.putString(OpeningHoursDetailFragment.ARG_ITEM_ID, id);
+			arguments.putInt(OpeningHoursDetailFragment.ARG_ITEM_ID, id);
+            arguments.putString(OpeningHoursDetailFragment.ARG_ITEM_CONTENT, name);
 			OpeningHoursDetailFragment fragment = new OpeningHoursDetailFragment();
 			fragment.setArguments(arguments);
 			getSupportFragmentManager().beginTransaction()

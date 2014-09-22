@@ -3,40 +3,34 @@ package de.tum.in.tumcampus.adapters;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.DefaultHandler;
 
-import android.util.Log;
+import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.OrgDetailsItem;
 
 /**
  * Class that handles an OrgDetailsObject and SAX-Parses the XML containing such
- * Objects The parsed Object has no child Objects (but can be implemented also
+ * Objects. The parsed Object has no child Objects (but can be implemented also
  * with child Objects)
- * 
- * @author Thomas Behrens
- * @review Vincenz Doelle, Daniel G. Mayr
  */
-
 public class OrgDetailsItemHandler extends DefaultHandler {
 
-	// TODO NOT STABLE!
-
-	public static final String TAG_ADDRESSE_TEXT = "adresse_text";
-	public static final String TAG_BIB = "bibliothek_info";
-	public static final String TAG_CONTACT_NAME = "ansprechpartner";
-	public static final String TAG_EXTRA = "zusatz:info";
-	public static final String TAG_EXTRA_NAME = "zusatz_info_name";
-	public static final String TAG_FAX = "fax_nummer";
-	public static final String TAG_HOMEPAGE = "www_homepage";
-	public static final String TAG_KENNUNG = "kennung";
-	public static final String TAG_MAIL = "email_adresse";
-	public static final String TAG_NAME = "name";
-	public static final String TAG_NR = "nr";
-	public static final String TAG_SEKRETARIAT = "sekretariat_info";
-	public static final String TAG_TEL = "telefon_nummer";
+	private static final String TAG_ADDRESSE_TEXT = "adresse_text";
+	private static final String TAG_BIB = "bibliothek_info";
+	private static final String TAG_CONTACT_NAME = "ansprechpartner";
+	private static final String TAG_EXTRA = "zusatz:info";
+	private static final String TAG_EXTRA_NAME = "zusatz_info_name";
+	private static final String TAG_FAX = "fax_nummer";
+	private static final String TAG_HOMEPAGE = "www_homepage";
+	private static final String TAG_KENNUNG = "kennung";
+	private static final String TAG_MAIL = "email_adresse";
+	private static final String TAG_NAME = "name";
+	private static final String TAG_NR = "nr";
+	private static final String TAG_SEKRETARIAT = "sekretariat_info";
+	private static final String TAG_TEL = "telefon_nummer";
 
 	// Buffer for parsing
-	StringBuffer buff;
+    private StringBuffer buff;
 
-	boolean buffering = false;
+	private boolean buffering = false;
 	// save if the parser is inside Additional Information
 	// to handle those another way
 	boolean isInsideAdditionalInformation = false;
@@ -53,7 +47,7 @@ public class OrgDetailsItemHandler extends DefaultHandler {
 
 	@Override
 	public void endDocument() {
-		Log.d("sax-parser", "end sax-parsing XML-document");
+		Utils.logv("end sax-parsing XML-document");
 	}
 
 	@Override
@@ -115,10 +109,9 @@ public class OrgDetailsItemHandler extends DefaultHandler {
 
 	@Override
 	public void startDocument() {
-		Log.d("sax-parser", "start sax-parsing XML-document");
+		Utils.logv("start sax-parsing XML-document");
 	}
 
-	// TODO Check whether refactor list of interesting tags
 	@Override
 	public void startElement(String namespaceURI, String localName,
 			String qName, Attributes atts) {

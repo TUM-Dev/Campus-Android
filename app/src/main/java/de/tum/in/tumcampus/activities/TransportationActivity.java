@@ -31,6 +31,7 @@ public class TransportationActivity extends ActivityForSearchingInBackground<Cur
         super(R.layout.activity_transportation, MVVStationSuggestionProvider.AUTHORITY, 3);
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,8 +46,6 @@ public class TransportationActivity extends ActivityForSearchingInBackground<Cur
         Cursor stationCursor = transportationManager.getAllFromDb();
         adapterStations = new SimpleCursorAdapter(this, android.R.layout.simple_list_item_1, stationCursor,
                 stationCursor.getColumnNames(), new int[]{android.R.id.text1});
-
-        onNewIntent(getIntent());
 
         if(mQuery==null) {
             if(adapterStations.getCount()==0) {
@@ -67,21 +66,30 @@ public class TransportationActivity extends ActivityForSearchingInBackground<Cur
         showStation(departureCursor.getString(departureCursor.getColumnIndex(Const.NAME_COLUMN)));
     }
 
-    public void showStation(String station) {
+    /**
+     * Opens {@link TransportationDetailsActivity} with departure times for the specified station
+     * @param station Station
+     */
+    void showStation(String station) {
         Intent intent = new Intent(this, TransportationDetailsActivity.class);
         intent.putExtra(TransportationDetailsActivity.EXTRA_STATION, station);
         startActivity(intent);
     }
 
+    /**
+     * Shows all recently used stations
+     * @return Cursor holding the recents information (name, _id)
+     */
     @Override
     public Cursor onSearchInBackground() {
         return transportationManager.getAllFromDb();
     }
 
     /**
-     * Searchs the Webservice for stations
+     * Searches the Webservice for stations
      *
      * @param query the text entered by the user
+     * @return Cursor holding the stations (name, _id)
      */
     @Override
     public Cursor onSearchInBackground(String query) {
@@ -112,6 +120,10 @@ public class TransportationActivity extends ActivityForSearchingInBackground<Cur
         return stationCursor;
     }
 
+    /**
+     * Shows the stations
+     * @param stationCursor Cursor with stations (name, _id)
+     */
     @Override
     protected void onSearchFinished(Cursor stationCursor) {
         // If there is exactly one station open results directly

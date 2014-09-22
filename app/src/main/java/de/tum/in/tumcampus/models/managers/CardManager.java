@@ -2,12 +2,12 @@ package de.tum.in.tumcampus.models.managers;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import de.tum.in.tumcampus.auxiliary.AccessTokenManager;
+import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.cards.Card;
 import de.tum.in.tumcampus.cards.EduroamCard;
 import de.tum.in.tumcampus.cards.FirstUseCard1;
@@ -15,10 +15,14 @@ import de.tum.in.tumcampus.cards.FirstUseCard2;
 import de.tum.in.tumcampus.cards.NoInternetCard;
 import de.tum.in.tumcampus.cards.RestoreCard;
 
+/**
+ * Card manager, manages inserting, dismissing, updating and displaying of cards
+ */
 public class CardManager {
     public static final String SHOW_TUTORIAL_1 = "show_tutorial_1";
     public static final String SHOW_TUTORIAL_2 = "show_tutorial_2";
 
+    /** Card typ constants */
     public static final int CARD_CAFETERIA = 1;
     public static final int CARD_TUITION_FEE = 2;
     public static final int CARD_NEXT_LECTURE = 3;
@@ -35,30 +39,50 @@ public class CardManager {
     private static Context mContext;
     public static boolean shouldRefresh = false;
 
+    /**
+     * Adds the specified card to the card manager
+     * Should only be used in {@link Card#apply()}
+     * @param card Card that should be added
+     */
     public static void addCard(Card card) {
         newCards.add(card);
     }
 
-    // For card adapter
+    /**
+     * Gets the number of cards
+     * HINT: For use in {@link de.tum.in.tumcampus.adapters.CardsAdapter}
+     *
+     * @return Card count
+     */
     public static int getCardCount() {
         if(cards==null)
             return 0;
         return cards.size(); //TODO investigate why cards is sometimes null
     }
 
-    // For card adapter
+    /**
+     * Gets the card by index
+     * HINT: For use in {@link de.tum.in.tumcampus.adapters.CardsAdapter}
+     *
+     * @return Card
+     */
     public static Card getCard(int pos) {
         return cards.get(pos);
     }
 
-
-    /** HOWTO ADD A NEW CARD TYP
-     * 1. let the manager class implement ProvidesCard
-     * 2. Create a new class extending Card
-     * 3. implement the getCardView method in this class
-     * 4. create a new instance of this card in the onRequestCard of the manager
-     * 5. add this card to the CardManager by calling addCard(card)
-     * 6. add an instance of the manager class to the managers list below
+    /**
+     * Refreshes or initialises all cards.
+     * WARNING: Must not be called from UI thread.
+     *
+     * HOWTO ADD A NEW CARD:
+     * 1. Let the manager class implement {@link de.tum.in.tumcampus.cards.Card.ProvidesCard}
+     * 2. Create a new class extending {@link Card}
+     * 3. Implement the getCardView method in this class
+     * 4. Create a new instance of this card in the
+     * {@link de.tum.in.tumcampus.cards.Card.ProvidesCard#onRequestCard(android.content.Context)} method of the manager
+     * 5. Add this card to the CardManager by calling {@link Card#apply()} from
+     * {@link de.tum.in.tumcampus.cards.Card.ProvidesCard#onRequestCard(android.content.Context)}
+     * 6. Add an instance of the manager class to the managers list below
      * */
     public static void update(Context context) {
         mContext = context;
@@ -83,6 +107,7 @@ public class CardManager {
             managers.add(new CalendarManager(context));
             managers.add(new TuitionFeeManager());
         }
+
         // Those don't need TUMOnline access
         managers.add(new CafeteriaManager(context));
         managers.add(new TransportManager(context));
@@ -92,7 +117,7 @@ public class CardManager {
             try{
                 manager.onRequestCard(context);
             }catch(Exception ex){
-                Log.e("TCA", "Error while creating card", ex);
+                Utils.log(ex, "Error while creating card");
             }
         }
 
@@ -103,20 +128,31 @@ public class CardManager {
         cards = newCards;
     }
 
-    public static Card remove(int position) {
-        return cards.remove(position);
-    }
-
+    /**
+     * Inserts a card into the list
+     *
+     * @param position Position where the card should be inserted
+     * @param item Card to be inserted
+     */
     public static void insert(int position, Card item) {
         cards.add(position, item);
     }
 
-    public static Context getContext() {
-        return mContext;
+    /**
+     * Removes card from the list
+     *
+     * @param position Index of the card to delete
+     * @return The removed card object
+     */
+    public static Card remove(int position) {
+        return cards.remove(position);
     }
 
+    /**
+     * Resets dismiss settings for all cards
+     */
     public static void restoreCards() {
-        SharedPreferences prefs = CardManager.getContext().getSharedPreferences(Card.DISCARD_SETTINGS_START, 0);
+        SharedPreferences prefs = mContext.getSharedPreferences(Card.DISCARD_SETTINGS_START, 0);
         prefs.edit().clear().apply();
     }
 }

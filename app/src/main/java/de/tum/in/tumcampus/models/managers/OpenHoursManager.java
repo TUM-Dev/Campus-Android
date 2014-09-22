@@ -18,17 +18,13 @@ import de.tum.in.tumcampus.models.Location;
  */
 public class OpenHoursManager {
 
-	/**
-	 * Database connection
-	 */
-	private SQLiteDatabase db;
+	/** Database connection */
+	private final SQLiteDatabase db;
 
 	/**
 	 * Constructor, open/create database, create table if necessary
-	 * 
-	 * <pre>
+	 *
 	 * @param context Context
-	 * </pre>
 	 */
 	public OpenHoursManager(Context context) {
 		db = DatabaseManager.getDb(context);
@@ -56,12 +52,10 @@ public class OpenHoursManager {
 
 	/**
 	 * Get all locations by category from the database
-	 * 
-	 * <pre>
+	 *
 	 * @param category String Location category, e.g. library, cafeteria
 	 * @return Database cursor (name, address, room, transport, hours, remark, 
 	 * 		url, _id)
-	 * </pre>
 	 */
 	public Cursor getAllHoursFromDb(String category) {
 		return db.rawQuery(
@@ -72,13 +66,11 @@ public class OpenHoursManager {
 
 	/**
 	 * Get opening hours for a specific location
-	 * 
-	 * <pre>
-	 * @param id String Location ID, e.g. 100
-	 * @return String hours
-	 * </pre>
+	 *
+	 * @param id Location ID, e.g. 100
+	 * @return hours
 	 */
-	public String getHoursById(int id) {
+    String getHoursById(int id) {
 		String result = "";
 		Cursor c = db.rawQuery("SELECT hours FROM locations WHERE id=?",
 				new String[] { ""+id });
@@ -90,7 +82,18 @@ public class OpenHoursManager {
 		return result;
 	}
 
-    public String getHoursById(Context context, int id, Date date) {
+    /**
+     * Converts the opening hours into more readable format.
+     * e.g. Opening in 2 hours.
+     * HINT: Currently only works for cafeterias, and institutions
+     * that have Mo-Do xx-yy.yy, Fr aa-bb and Mo-Fr xx-yy format
+     *
+     * @param context Context
+     * @param id Location ID, e.g. 100
+     * @param date Relative date
+     * @return Readable opening string
+     */
+    public String getHoursByIdAsString(Context context, int id, Date date) {
         String result = getHoursById(id);
         Calendar cal = new GregorianCalendar();
         cal.setTime(date);
@@ -143,11 +146,9 @@ public class OpenHoursManager {
 
 	/**
 	 * Replaces a location in the database
-	 * 
-	 * <pre>
+	 *
 	 * @param l Location object
 	 * @throws Exception
-	 * </pre>
 	 */
 	public void replaceIntoDb(Location l) throws Exception {
 		Utils.log(l.toString());
@@ -158,8 +159,7 @@ public class OpenHoursManager {
 		if (l.name.length() == 0) {
 			throw new Exception("Invalid name.");
 		}
-		db.execSQL(
-				"REPLACE INTO locations (id, category, name, address, room, "
+		db.execSQL("REPLACE INTO locations (id, category, name, address, room, "
 						+ "transport, hours, remark, url) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
 				new String[] { String.valueOf(l.id), l.category, l.name,
 						l.address, l.room, l.transport, l.hours, l.remark,

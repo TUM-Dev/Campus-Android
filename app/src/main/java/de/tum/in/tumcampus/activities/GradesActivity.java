@@ -3,7 +3,6 @@ package de.tum.in.tumcampus.activities;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,7 +12,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
@@ -32,12 +30,13 @@ import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.Exam;
 import de.tum.in.tumcampus.models.ExamList;
+import de.tum.in.tumcampus.tumonline.TUMOnlineConst;
 
 /**
  * Activity to show the user's grades/exams passed.
  */
 public class GradesActivity extends ActivityForAccessingTumOnline {
-	static int LAST_CHOICE = 0;
+	private static int LAST_CHOICE = 0;
 	private TextView average_tx;
 
 	private double averageGrade;
@@ -48,7 +47,6 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 
 	private ExamList examList;
 
-	// private HashMap<String, Integer> gradeDistrubution_hash;
 	private final NumberFormat format = NumberFormat.getInstance(Locale.FRANCE);
 	private ListView lvGrades;
 	private String pieChartContent;
@@ -58,16 +56,16 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 	private boolean isFetched;
 
 	public GradesActivity() {
-		super(Const.NOTEN, R.layout.activity_grades);
+		super(TUMOnlineConst.NOTEN, R.layout.activity_grades);
 	}
 
 	/**
-	 * buildColumnChartContentString
+     * Builds HTML string showing a column chart
 	 * 
-	 * @param filteredExamList
-	 * @return
+	 * @param filteredExamList List of exams
+	 * @return content string
 	 */
-	public String buildColumnChartContentString(List<Exam> filteredExamList) {
+    String buildColumnChartContentString(List<Exam> filteredExamList) {
 		HashMap<String, Integer> gradeDistrubution_hash = calculateGradeDistribution(filteredExamList);
 
 		String datas = "";
@@ -82,7 +80,6 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 		}
 
 		// Build content String
-
         return "<html>"
                 + "  <head>"
                 + "    <script type=\"text/javascript\" src=\"jsapi.js\"></script>"
@@ -111,12 +108,12 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 	}
 
 	/**
-	 * buildPieChartContentString
+     * Builds HTML string showing a pie chart
 	 * 
-	 * @param filteredExamList
-	 * @return
+	 * @param filteredExamList List of exams
+	 * @return content string
 	 */
-	public String buildPieChartContentString(List<Exam> filteredExamList) {
+    String buildPieChartContentString(List<Exam> filteredExamList) {
 		HashMap<String, Integer> gradeDistrubution_hash = calculateGradeDistribution(filteredExamList);
 		String datas = "";
 
@@ -160,12 +157,12 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 	}
 
 	/**
-	 * calculateAverageGrade
+	 * Calculates the average grade of the given exams
 	 * 
-	 * @param filteredExamList
-	 * @return
+	 * @param filteredExamList List of exams
+	 * @return Average grade
 	 */
-	public Double calculateAverageGrade(List<Exam> filteredExamList) {
+    Double calculateAverageGrade(List<Exam> filteredExamList) {
 		List<Exam> removedDoubles = removeDuplicates(filteredExamList);
 		double weightedGrade = 0.0;
 		double creditSum = 0.0;
@@ -176,9 +173,9 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
                 weightedGrade += format.parse(item.getGrade()).doubleValue()
                         * Double.valueOf(item.getCredits());
             } catch (NumberFormatException e) {
-                e.printStackTrace();
+                Utils.log(e);
             } catch (ParseException e) {
-                e.printStackTrace();
+                Utils.log(e);
             }
 
         }
@@ -187,13 +184,13 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 	}
 
 	/**
-	 * gradeDistrubution_hash
+	 * Calculates grade distribution
 	 * 
-	 * @param filteredExamList
-	 * @return
+	 * @param filteredExamList List of exams
+	 * @return HashMap with grade to grade count mapping
 	 */
-	public HashMap<String, Integer> calculateGradeDistribution(
-			List<Exam> filteredExamList) {
+    HashMap<String, Integer> calculateGradeDistribution(
+            List<Exam> filteredExamList) {
 		HashMap<String, Integer> gradeDistrubution_hash = new HashMap<String, Integer>();
         for (Exam item : filteredExamList) {
             // increment hash value
@@ -318,13 +315,12 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 	}
 
 	/**
-	 * Handle the response by deserializing it into model entities.
+	 * Handle the response by de-serializing it into model entities.
 	 * 
-	 * @param rawResponse
+	 * @param rawResponse Raw text response
 	 */
 	@Override
 	public void onFetch(String rawResponse) {
-		Log.d(getClass().getSimpleName(), rawResponse);
 		Serializer serializer = new Persister();
 		examList = null;
 
@@ -336,10 +332,9 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 			initSpinner();
 
 			// Displays results in view
-			lvGrades.setAdapter(new ExamListAdapter(GradesActivity.this,
-					examList.getExams()));
+			lvGrades.setAdapter(new ExamListAdapter(GradesActivity.this, examList.getExams()));
 
-			progressLayout.setVisibility(View.GONE);
+            showLoadingEnded();
 
 			// enabling the Menu options after first fetch
 			isFetched = true;
@@ -350,10 +345,9 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 			}
 
 		} catch (Exception e) {
-			Log.d("SIMPLEXML", "wont work: " + e.getMessage());
-			progressLayout.setVisibility(View.GONE);
+			Utils.log(e);
+			showLoadingEnded();
 			failedTokenLayout.setVisibility(View.VISIBLE);
-			e.printStackTrace();
 		}
 	}
 
@@ -364,26 +358,21 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 		if (Utils.isConnected(this)) {
 			switch (item.getItemId()) {
 			case R.id.columnChart:
-				intent = new Intent(GradesActivity.this,
-						GradeChartActivity.class);
+				intent = new Intent(this, GradeChartActivity.class);
 				intent.putExtra("chartContent", columnChartContent);
 				startActivity(intent);
 				return true;
 			case R.id.pieChart:
-				intent = new Intent(GradesActivity.this,
-						GradeChartActivity.class);
+				intent = new Intent(this, GradeChartActivity.class);
 				intent.putExtra("chartContent", pieChartContent);
 				startActivity(intent);
 				return true;
-
 			default:
 				isFetched = false;
 				return super.onOptionsItemSelected(item);
 			}
 		} else {
-			Toast.makeText(this, R.string.no_internet_connection,
-					Toast.LENGTH_SHORT).show();
-			errorLayout.setVisibility(View.VISIBLE);
+			showError(R.string.no_internet_connection);
 			average_tx.setVisibility(View.GONE);
 			return true;
 		}
@@ -393,19 +382,20 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		// enable Menu Items after fetching grades
 		columnMenuItem = menu.findItem(R.id.columnChart);
+        columnMenuItem.setEnabled(isFetched);
 		pieMenuItem = menu.findItem(R.id.pieChart);
-		setMenuEnabled(isFetched);
+        pieMenuItem.setEnabled(isFetched);
 
 		return super.onPrepareOptionsMenu(menu);
 	}
 
 	/**
-	 * removeDuplicates
+	 * Removes duplicate exams from the list
 	 * 
-	 * @param filteredExamList
-	 * @return
+	 * @param filteredExamList List of exams
+	 * @return List with duplicate items removed
 	 */
-	public List<Exam> removeDuplicates(List<Exam> filteredExamList) {
+    List<Exam> removeDuplicates(List<Exam> filteredExamList) {
 		List<Exam> removedDoubles = new ArrayList<Exam>();
 
 		// find and remove duplicates
@@ -415,13 +405,13 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 
             for (Exam item_two : filteredExamList) {
                 if (item_one.getCourse().equals(item_two.getCourse())) {
-                    Log.d("Double = ", item_one.getCourse());
+                    Utils.logv("Double = " + item_one.getCourse());
                     try {
                         if (format.parse(item_one.getGrade()).doubleValue() > format
                                 .parse(item_two.getGrade()).doubleValue())
                             insert = false;
                     } catch (ParseException e) {
-                        e.printStackTrace();
+                        Utils.log(e);
                     }
                 }
             }
@@ -430,16 +420,5 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 				removedDoubles.add(item_one);
 		}
 		return removedDoubles;
-	}
-
-	/**
-	 * Enables or disabled menu items which should not enabled everytime
-	 * 
-	 * @param enabled
-	 */
-	public void setMenuEnabled(boolean enabled) {
-		columnMenuItem.setEnabled(enabled);
-		pieMenuItem.setEnabled(enabled);
-
 	}
 }

@@ -3,7 +3,6 @@ package de.tum.in.tumcampus.activities;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -15,8 +14,10 @@ import org.simpleframework.xml.core.Persister;
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.generic.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampus.auxiliary.Const;
+import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.LectureDetailsRow;
 import de.tum.in.tumcampus.models.LectureDetailsRowSet;
+import de.tum.in.tumcampus.tumonline.TUMOnlineConst;
 
 /**
  * This Activity will show all details found on the TUMOnline web service
@@ -29,16 +30,13 @@ import de.tum.in.tumcampus.models.LectureDetailsRowSet;
  * HINT: a valid TUM Online token is needed
  * 
  * NEEDS: stp_sp_nr set in incoming bundle (lecture id)
- * 
- * needed/linked files: res.layout.lecture_details, LectureAppointments
- *
- * @author Daniel G. Mayr
  */
 @SuppressLint("DefaultLocale")
 public class LecturesDetailsActivity extends ActivityForAccessingTumOnline implements OnClickListener {
 
 	/** UI elements */
 	private Button btnLDetailsTermine;
+
 	/** the current processing Lecture item (model: LectureDetailsRow) */
 	private LectureDetailsRow currentitem;
 	private TextView tvLDetailsDozent;
@@ -53,7 +51,7 @@ public class LecturesDetailsActivity extends ActivityForAccessingTumOnline imple
 	private TextView tvLDetailsZiele;
 
 	public LecturesDetailsActivity() {
-		super(Const.LECTURES_DETAILS, R.layout.activity_lecturedetails);
+		super(TUMOnlineConst.LECTURES_DETAILS, R.layout.activity_lecturedetails);
 	}
 
 	@Override
@@ -99,23 +97,21 @@ public class LecturesDetailsActivity extends ActivityForAccessingTumOnline imple
 	/**
 	 * process the given TUMOnline Data and display the details
 	 * 
-	 * @param rawResponse
+	 * @param rawResponse Raw text response
 	 */
 	@Override
 	public void onFetch(String rawResponse) {
 		// deserialize
 		Serializer serializer = new Persister();
 		try {
-			LectureDetailsRowSet xmllv = serializer.read(
-					LectureDetailsRowSet.class, rawResponse);
+			LectureDetailsRowSet xmllv = serializer.read(LectureDetailsRowSet.class, rawResponse);
 			// we got exactly one row, thats fine
 			currentitem = xmllv.getLehrveranstaltungenDetails().get(0);
 			tvLDetailsName.setText(currentitem.getStp_sp_titel().toUpperCase());
 
 			String strLectureLanguage = currentitem.getSemester_name();
 			if (currentitem.getHaupt_unterrichtssprache() != null) {
-				strLectureLanguage += " - "
-						+ currentitem.getHaupt_unterrichtssprache();
+				strLectureLanguage += " - " + currentitem.getHaupt_unterrichtssprache();
 			}
 			tvLDetailsSemester.setText(strLectureLanguage);
 			tvLDetailsSWS.setText(currentitem.getStp_lv_art_name() + " - "
@@ -128,14 +124,13 @@ public class LecturesDetailsActivity extends ActivityForAccessingTumOnline imple
 			tvLDetailsLiteratur.setText(currentitem.getStudienbehelfe());
 			tvLDetailsTermin.setText(currentitem.getErsttermin());
 
-			progressLayout.setVisibility(View.GONE);
+			showLoadingEnded();
 
 		} catch (Exception e) {
 			// well, something went obviously wrong
-			Log.d("conv", "wont work: " + e.toString());
-			errorLayout.setVisibility(View.VISIBLE);
-			progressLayout.setVisibility(View.GONE);
-			e.printStackTrace();
+            Utils.log(e);
+            showLoadingEnded();
+			showErrorLayout();
 		}
 	}
 }

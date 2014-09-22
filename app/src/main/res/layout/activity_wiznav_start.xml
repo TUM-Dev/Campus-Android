@@ -22,7 +22,7 @@
         <TextView
             android:id="@+id/pager_title_strip"
             style="@style/SectionHeadline"
-            android:text="@string/startup_wizzard_uppercase" />
+            android:text="@string/startup_wizard_uppercase" />
 
         <ScrollView
             android:layout_width="match_parent"
@@ -35,7 +35,7 @@
             android:layout_below="@+id/pager_title_strip">
 
             <LinearLayout
-                android:id="@+id/wizstart_layout"
+                android:id="@+id/wizard_start_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:focusable="true"

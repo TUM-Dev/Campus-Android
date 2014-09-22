@@ -3,7 +3,6 @@ package de.tum.in.tumcampus.tumonline;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -19,7 +18,6 @@ import org.apache.http.util.EntityUtils;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -32,21 +30,16 @@ import de.tum.in.tumcampus.models.managers.TUMOnlineCacheManager;
  * This class will handle all action needed to communicate with the TUMOnline
  * XML-RPC backend. ALl communications is based on the base-url which is
  * attached by the Token and additional parameters.
- * 
- * 
- * @author Thomas Behrens, Vincenz Doelle, Daniel Mayr, Sascha Moecker
  */
 public class TUMOnlineRequest {
-    private static final String TAG = "TUMOnlineRequest";
-
-	// login service address
-	public static final String LOGIN_SERVICE_URL = "https://campus.tum.de/tumonline/anmeldung.durchfuehren";
-
-	// logout service address
-	public static final String LOGOUT_SERVICE_URL = "https://campus.tum.de/tumonline/anmeldung.beenden";
-
 	// server address
-	public static final String SERVICE_BASE_URL = "https://campus.tum.de/tumonline/wbservicesbasic.";
+	private static final String SERVICE_BASE_URL = "https://campus.tum.de/tumonline/wbservicesbasic.";
+
+    /** String possibly contained in response from server */
+    private static final String NO_FUNCTION_RIGHTS = "Keine Rechte für Funktion";
+
+    /** String possibly contained in response from server */
+    private static final String TOKEN_NICHT_BESTAETIGT = "Token ist nicht bestätigt oder ungültig!";
 
     // force to fetch data and fill cache
     private boolean fillCache = false;
@@ -55,19 +48,19 @@ public class TUMOnlineRequest {
 	private String accessToken = null;
 
 	/** asynchronous task for interactive fetch */
-	AsyncTask<Void, Void, String> backgroundTask = null;
+    private AsyncTask<Void, Void, String> backgroundTask = null;
 
 	/** http client instance for fetching */
-	private HttpClient client;
+	private final HttpClient client;
 
 	/** method to call */
-	private String method = null;
+	private TUMOnlineConst method = null;
 
 	/** a list/map for the needed parameters */
 	private Map<String, String> parameters;
-    private TUMOnlineCacheManager cacheManager;
+    private final TUMOnlineCacheManager cacheManager;
 
-    public TUMOnlineRequest(Context context) {
+    private TUMOnlineRequest(Context context) {
         cacheManager = new TUMOnlineCacheManager(context);
 		client = getThreadSafeClient();
 		resetParameters();
@@ -76,27 +69,18 @@ public class TUMOnlineRequest {
 		HttpConnectionParams.setConnectionTimeout(params, Const.HTTP_TIMEOUT);
 	}
 
-	public TUMOnlineRequest(String method, Context context, boolean needsToken) {
+	public TUMOnlineRequest(TUMOnlineConst method, Context context, boolean needsToken) {
 		this(context);
 		this.method = method;
 
         if(needsToken) {
-            if (!loadAccessTokenFromPreferences(context)) {
-                // TODO show a dialog for the user
-            }
+            loadAccessTokenFromPreferences(context);
         }
 	}
 
-    public TUMOnlineRequest(String method, Context context, boolean needsToken, boolean fillCache) {
-        this(context);
-        this.method = method;
-        this.fillCache = fillCache;
-
-        if(needsToken) {
-            if (!loadAccessTokenFromPreferences(context)) {
-                // TODO show a dialog for the user
-            }
-        }
+    public TUMOnlineRequest(TUMOnlineConst method, Context context) {
+        this(method, context, true);
+        this.fillCache = true;
     }
 
 	public void cancelRequest(boolean mayInterruptIfRunning) {
@@ -107,16 +91,14 @@ public class TUMOnlineRequest {
 	}
 
 	/**
-	 * Fetches the result of the HTTPRequest (which can be seen by using
-	 * getRequestURL)
-	 * 
-	 * @author Daniel G. Mayr
+	 * Fetches the result of the HTTPRequest (which can be seen by using {@link #getRequestURL()})
+     *
 	 * @return output will be a raw String
 	 */
 	public String fetch() {
 		String result;
 		String url = getRequestURL();
-		Log.d("TUMOnlineXMLRequest", "fetching URL " + url);
+		Utils.log("fetching URL " + url);
 
 		try {
             result = cacheManager.getFromCache(url);
@@ -129,14 +111,13 @@ public class TUMOnlineRequest {
                     // do something with the response
                     result = EntityUtils.toString(responseEntity);
                     cacheManager.addToChache(url, result);
-                    Log.d(TAG, "added to cache " + url);
+                    Utils.logv("added to cache " + url);
                 }
             } else {
-                Log.d(TAG, "loaded from cache " + url);
+                Utils.logv("loaded from cache " + url);
             }
 		} catch (Exception e) {
-			Log.d("FETCHerror", e.toString());
-			e.printStackTrace();
+			Utils.log(e, "FetchError");
 			return e.getMessage();
 		}
 		return result;
@@ -147,10 +128,8 @@ public class TUMOnlineRequest {
 	 * address the listeners onFetch if the fetch succeeded, else the
 	 * onFetchError will be called
 	 * 
-	 * @param context
-	 *            the current context (may provide the current activity)
-	 * @param listener
-	 *            the listener, which takes the result
+	 * @param context the current context (may provide the current activity)
+	 * @param listener the listener, which takes the result
 	 */
 	public void fetchInteractive(final Context context,
 			final TUMOnlineRequestFetchListener listener) {
@@ -181,28 +160,24 @@ public class TUMOnlineRequest {
 			@Override
 			protected void onPostExecute(String result) {
 				if (result != null) {
-					Log.v(getClass().getSimpleName(), "Received result <" + result + ">");
+					Utils.logv("Received result <" + result + ">");
 				} else {
-					Log.w(getClass().getSimpleName(), "No result available");
+					Utils.log("No result available");
 				}
 				// Handles result
 				if (!isOnline) {
-					listener.onCommonError(context
-							.getString(R.string.no_internet_connection));
+					listener.onCommonError(context.getString(R.string.no_internet_connection));
 					return;
 				}
 				if (result == null) {
-					listener.onFetchError(context
-							.getString(R.string.empty_result));
+					listener.onFetchError(context.getString(R.string.empty_result));
 					return;
 				} else if (result
-						.contains(TUMOnlineConst.TOKEN_NICHT_BESTAETIGT)) {
-					listener.onFetchError(context
-							.getString(R.string.dialog_access_token_invalid));
+						.contains(TOKEN_NICHT_BESTAETIGT)) {
+					listener.onFetchError(context.getString(R.string.dialog_access_token_invalid));
 					return;
-				} else if (result.contains(TUMOnlineConst.NO_FUNCTION_RIGHTS)) {
-					listener.onFetchError(context
-							.getString(R.string.dialog_no_rights_function));
+				} else if (result.contains(NO_FUNCTION_RIGHTS)) {
+					listener.onFetchError(context.getString(R.string.dialog_no_rights_function));
 					return;
 				}
 				// If there could not be found any problems return usual on
@@ -215,32 +190,18 @@ public class TUMOnlineRequest {
 	}
 
 	/**
-	 * Returns a map with all set parameter pairs
-	 * 
-	 * @return Map<String, String> parameters
-	 */
-	public Map<String, String> getParameters() {
-		return parameters;
-	}
-
-	/**
 	 * This will return the URL to the TUMOnlineRequest with regard to the set
 	 * parameters
 	 * 
 	 * @return a String URL
 	 */
-	public String getRequestURL() {
+    String getRequestURL() {
 		String url = SERVICE_BASE_URL + method + "?";
 
-		// Builds to be fetched URL based on the base-url and additional
-		// parameters
-		Iterator<Entry<String, String>> itMapIterator = parameters.entrySet()
-				.iterator();
-
-		while (itMapIterator.hasNext()) {
-			Entry<String, String> pairs = itMapIterator.next();
-			url += pairs.getKey() + "=" + pairs.getValue() + "&";
-		}
+		// Builds to be fetched URL based on the base-url and additional parameters
+        for (Entry<String, String> pairs : parameters.entrySet()) {
+            url += pairs.getKey() + "=" + pairs.getValue() + "&";
+        }
 		return url;
 	}
 
@@ -258,59 +219,48 @@ public class TUMOnlineRequest {
 	/**
 	 * Check if TUMOnline access token can be retrieved from shared preferences.
 	 * 
-	 * @param context
-	 *            The context
+	 * @param context The context
 	 * @return true if access token is available; false otherwise
 	 */
 	private boolean loadAccessTokenFromPreferences(Context context) {
-		accessToken = PreferenceManager.getDefaultSharedPreferences(context)
-				.getString(TUMOnlineConst.ACCESS_TOKEN, null);
+		accessToken = PreferenceManager.getDefaultSharedPreferences(context).getString(Const.ACCESS_TOKEN, null);
 
 		// no access token set, or it is obviously wrong
 		if (accessToken == null || accessToken.length() < 1) {
 			return false;
 		}
 
-		Log.v("AccessToken", accessToken);
-		// ok, access token seems valid (at first)
+		Utils.logv("AccessToken = " + accessToken);
 
-		setParameter(TUMOnlineConst.P_TOKEN, accessToken);
+		// ok, access token seems valid (at first)
+		setParameter(Const.P_TOKEN, accessToken);
 		return true;
 	}
 
 	/** Reset parameters to an empty Map */
-	public void resetParameters() {
+    void resetParameters() {
 		parameters = new HashMap<String, String>();
 		// set accessToken as parameter if available
 		if (accessToken != null) {
-			parameters.put(TUMOnlineConst.P_TOKEN, accessToken);
+			parameters.put(Const.P_TOKEN, accessToken);
 		}
 	}
 
 	/**
 	 * Sets one parameter name to its given value
 	 * 
-	 * @param name
-	 *            identifier of the parameter
-	 * @param value
-	 *            value of the parameter
+	 * @param name identifier of the parameter
+	 * @param value value of the parameter
 	 */
 	public void setParameter(String name, String value) {
         try {
             parameters.put(name, URLEncoder.encode(value, "UTF-8"));
         } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            Utils.log(e);
         }
     }
 
-	/**
-	 * If you want to put a complete Parameter Map into the request, use this
-	 * function to merge them with the existing parameter map
-	 * 
-	 * @param existingMap
-	 *            a Map<String,String> which should be set
-	 */
-	public void setParameters(Map<String, String> existingMap) {
-		parameters.putAll(existingMap);
-	}
+    public void setForce(boolean force) {
+        fillCache = force;
+    }
 }

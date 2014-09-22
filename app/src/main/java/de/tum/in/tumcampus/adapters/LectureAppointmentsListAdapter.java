@@ -1,6 +1,5 @@
 package de.tum.in.tumcampus.adapters;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -15,20 +14,11 @@ import java.util.Date;
 import java.util.List;
 
 import de.tum.in.tumcampus.R;
-import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.LectureAppointmentsRow;
 
 /**
- * Generates the output of the ListView on the LectureAppointments activity.
- * 
- * used by: LectureAppointments
- * 
- * linked files: res.layout.termine_listview
- * 
- * @author Daniel G. Mayr
- * @review Thomas Behrens
+ * Generates the output of the ListView on the {@link de.tum.in.tumcampus.activities.LecturesAppointmentsActivity} activity.
  */
-
 public class LectureAppointmentsListAdapter extends BaseAdapter {
 
 	// the layout
@@ -39,23 +29,23 @@ public class LectureAppointmentsListAdapter extends BaseAdapter {
 	}
 
 	// list of Appointments to one lecture
-	private static List<LectureAppointmentsRow> terminList;
+	private static List<LectureAppointmentsRow> appointmentList;
 
 	private final LayoutInflater mInflater;
 
 	public LectureAppointmentsListAdapter(Context context, List<LectureAppointmentsRow> results) {
-		terminList = results;
+		appointmentList = results;
 		mInflater = LayoutInflater.from(context);
 	}
 
 	@Override
 	public int getCount() {
-		return terminList.size();
+		return appointmentList.size();
 	}
 
 	@Override
 	public Object getItem(int position) {
-		return terminList.get(position);
+		return appointmentList.get(position);
 	}
 
 	@Override
@@ -63,30 +53,24 @@ public class LectureAppointmentsListAdapter extends BaseAdapter {
 		return position;
 	}
 
-	@SuppressLint("SimpleDateFormat")
 	@SuppressWarnings("deprecation")
-	@Override
+    @Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		ViewHolder holder;
 		if (convertView == null) {
-			convertView = mInflater.inflate(
-					R.layout.activity_lecturesappointments_listview, null);
-			holder = new ViewHolder();
+			convertView = mInflater.inflate(R.layout.activity_lecturesappointments_listview, parent, false);
 
-			// set UI elements
-			holder.tvTerminZeit = (TextView) convertView
-					.findViewById(R.id.tvTerminZeit);
-			holder.tvTerminOrt = (TextView) convertView
-					.findViewById(R.id.tvTerminOrt);
-			holder.tvTerminBetreff = (TextView) convertView
-					.findViewById(R.id.tvTerminBetreff);
-
+			// save UI elements in view holder
+            holder = new ViewHolder();
+			holder.tvTerminZeit = (TextView) convertView.findViewById(R.id.tvTerminZeit);
+			holder.tvTerminOrt = (TextView) convertView.findViewById(R.id.tvTerminOrt);
+			holder.tvTerminBetreff = (TextView) convertView.findViewById(R.id.tvTerminBetreff);
 			convertView.setTag(holder);
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
 
-		LectureAppointmentsRow lvItem = terminList.get(position);
+		LectureAppointmentsRow lvItem = appointmentList.get(position);
 
 		// only show if lecture has a title and enough info
 		if (lvItem != null) {
@@ -101,11 +85,9 @@ public class LectureAppointmentsListAdapter extends BaseAdapter {
 			// zeitdarstellung setzen
 			// parse dates
 			// this is the template for the date in the xml file
-			SimpleDateFormat formatter = new SimpleDateFormat(
-					"yyyy-MM-dd HH:mm");
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 			try {
-				Date start = formatter
-						.parse(lvItem.getBeginn_datum_zeitpunkt());
+				Date start = formatter.parse(lvItem.getBeginn_datum_zeitpunkt());
 				Date ende = formatter.parse(lvItem.getEnde_datum_zeitpunkt());
 
 				// make two calendar instances
@@ -115,21 +97,16 @@ public class LectureAppointmentsListAdapter extends BaseAdapter {
 
 				// date formats for the day output
 				SimpleDateFormat endHoursOutput = new SimpleDateFormat("HH:mm");
-				SimpleDateFormat DateOutput = new SimpleDateFormat(
-						"dd.MM.yyyy HH:mm");
-				String output;
+				SimpleDateFormat StartDateOutput = new SimpleDateFormat("EEE dd.MM.yyyy HH:mm");
+                SimpleDateFormat EndDateOutput = new SimpleDateFormat("dd.MM.yyyy HH:mm");
 
 				// output if same day: we only show the date once
-				if (start.getMonth() == ende.getMonth()
-						&& start.getDate() == ende.getDate()) {
-					output = Utils.getWeekDayByDate(start) + " "
-							+ DateOutput.format(start) + " - "
-							+ endHoursOutput.format(ende);
+                String output;
+				if (start.getMonth() == ende.getMonth() && start.getDate() == ende.getDate()) {
+					output = StartDateOutput.format(start) + " - " + endHoursOutput.format(ende);
 				} else {
 					// show it normally
-					output = Utils.getWeekDayByDate(start) + " "
-							+ DateOutput.format(start) + " - "
-							+ DateOutput.format(ende);
+					output = StartDateOutput.format(start) + " - " + EndDateOutput.format(ende);
 				}
 
 				// grey it, if in past

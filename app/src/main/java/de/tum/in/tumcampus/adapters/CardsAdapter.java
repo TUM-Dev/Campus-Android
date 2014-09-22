@@ -5,15 +5,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
-import com.nineoldandroids.animation.ObjectAnimator;
-
 import de.tum.in.tumcampus.auxiliary.SwipeDismissList;
 import de.tum.in.tumcampus.cards.Card;
 import de.tum.in.tumcampus.models.managers.CardManager;
 
+/**
+ * Adapter for the cards start page used in {@link de.tum.in.tumcampus.activities.MainActivity}
+ */
 public class CardsAdapter extends BaseAdapter implements SwipeDismissList.SwipeDismissDiscardable {
 
-    private Context mContext;
+    private final Context mContext;
 
     public CardsAdapter(Context context) {
         mContext = context;

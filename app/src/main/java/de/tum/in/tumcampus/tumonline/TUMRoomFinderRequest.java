@@ -2,7 +2,6 @@ package de.tum.in.tumcampus.tumonline;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import org.apache.http.client.HttpClient;
 import org.apache.http.conn.ClientConnectionManager;
@@ -16,7 +15,6 @@ import org.w3c.dom.NodeList;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -25,6 +23,9 @@ import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.auxiliary.XMLParser;
 
+/**
+ * Base class for communication with TUMRoomFinder
+ */
 public class TUMRoomFinderRequest {
 
 	// server address
@@ -36,19 +37,18 @@ public class TUMRoomFinderRequest {
 	public static final String KEY_Campus = "Campus";
 
 	// XML node keys
-	static final String KEY_Campuses = "campuses"; // parent node
 	public static final String KEY_ID = "Id";
-	public static final String KEY_MapId = "mapId";
+	private static final String KEY_MapId = "mapId";
 	public static final String KEY_ROOM = "room";
 	public static final String KEY_TITLE = "title";
-	public static final String KEY_WEB_CODE = "web_code";
+	private static final String KEY_WEB_CODE = "web_code";
 	/** asynchronous task for interactive fetch */
-	AsyncTask<String, Void, ArrayList<HashMap<String, String>>> backgroundTask = null;
+    private AsyncTask<String, Void, ArrayList<HashMap<String, String>>> backgroundTask = null;
 
     /** method to call */
 	private String method = null;
 	/** a list/map for the needed parameters */
-	private Map<String, String> parameters;
+	private final Map<String, String> parameters;
 	private final String SERVICE_BASE_URL = "http://vmbaumgarten3.informatik.tu-muenchen.de/";
 
     public TUMRoomFinderRequest() {
@@ -61,11 +61,6 @@ public class TUMRoomFinderRequest {
 		this.method = "search";
 	}
 
-	public TUMRoomFinderRequest(String method) {
-		this();
-		this.method = method;
-	}
-
 	public void cancelRequest(boolean mayInterruptIfRunning) {
 		// Cancel background task just if one has been established
 		if (backgroundTask != null) {
@@ -76,13 +71,12 @@ public class TUMRoomFinderRequest {
 	/**
 	 * Fetches the result of the HTTPRequest (which can be seen by using
 	 * getRequestURL)
-	 * 
-	 * @author Daniel G. Mayr
-	 * @param searchString
+	 *
+	 * @param searchString Text to search for
 	 * @return output will be a raw String
 	 * @see TUMRoomFinderRequest#getRequestURL(java.lang.String)
 	 */
-	public ArrayList<HashMap<String, String>> fetch(String searchString) {
+    ArrayList<HashMap<String, String>> fetch(String searchString) {
 		setParameter("s", searchString);
 		this.method = "search";
 
@@ -90,7 +84,7 @@ public class TUMRoomFinderRequest {
 
         String ROOM_SERVICE_URL = SERVICE_BASE_URL + "roommaps/room/";
         String url = getRequestURL(ROOM_SERVICE_URL);
-		Log.d("TUMRoomFinderXMLRequest", "fetching URL " + url);
+		Utils.log("fetching URL " + url);
 
 		try {
 
@@ -124,20 +118,17 @@ public class TUMRoomFinderRequest {
 			}
 
 		} catch (Exception e) {
-			Log.d("FETCHerror", e.toString());
-			e.printStackTrace();
-			// return e.getMessage();
+			Utils.log(e, "FetchError");
 		}
 		return roomsList;
 	}
 
-	public String fetchDefaultMapId(String buildingID) {
+	String fetchDefaultMapId(String buildingID) {
 		setParameter("id", buildingID);
 
-        String ROOM_SERVICE_DEFAULTMAPURL = SERVICE_BASE_URL
-                + "roommaps/building/";
+        String ROOM_SERVICE_DEFAULTMAPURL = SERVICE_BASE_URL + "roommaps/building/";
         String url = getRequestURL(ROOM_SERVICE_DEFAULTMAPURL);
-		Log.d("TUMRoomFinderXMLRequest", "fetching Map URL " + url);
+		Utils.log("fetching Map URL " + url);
 
 		String result = null;
 
@@ -154,8 +145,7 @@ public class TUMRoomFinderRequest {
 				result = "10";// default room for unknown buildings
 
 		} catch (Exception e) {
-			Log.d("FETCHerror", e.toString());
-			e.printStackTrace();
+			Utils.log(e, "FetchError");
 			// return e.getMessage();
 		}
 		return result;
@@ -197,7 +187,6 @@ public class TUMRoomFinderRequest {
                     listener.onFetchError(context
                             .getString(R.string.empty_result));
                     return;
-                    // TODO Check whether to move to string.xml
                 }
                 if (resultId.equals("10")) {
                     listener.onCommonError(context
@@ -219,11 +208,9 @@ public class TUMRoomFinderRequest {
 	 * will address the listeners onFetch if the fetch succeeded, else the
 	 * onFetchError will be called
 	 * 
-	 * @param context
-	 *            the current context (may provide the current activity)
-	 * @param listener
-	 *            the listener, which takes the result
-	 * @param searchString
+	 * @param context the current context (may provide the current activity)
+	 * @param listener the listener, which takes the result
+	 * @param searchString Text to search for
 	 */
 	public void fetchSearchInteractive(final Context context,
 			final TUMRoomFinderRequestFetchListener listener,
@@ -275,29 +262,17 @@ public class TUMRoomFinderRequest {
 		backgroundTask.execute(searchString);
 	}
 
-	/**
-	 * Returns a map with all set parameter pairs
-	 * 
-	 * @return Map<String, String> parameters
-	 */
-	public Map<String, String> getParameters() {
-		return parameters;
-	}
-
-	/**
+    /**
 	 * This will return the URL to the TUMRoomFinderRequest with regard to the
 	 * set parameters
 	 * 
 	 * @return a String URL
 	 */
-	public String getRequestURL(String baseURL) {
+    String getRequestURL(String baseURL) {
 		String url = baseURL + method + "?";
-		Iterator<Entry<String, String>> itMapIterator = parameters.entrySet()
-				.iterator();
-		while (itMapIterator.hasNext()) {
-			Entry<String, String> pairs = itMapIterator.next();
-			url += pairs.getKey() + "=" + pairs.getValue() + "&";
-		}
+        for (Entry<String, String> pairs : parameters.entrySet()) {
+            url += pairs.getKey() + "=" + pairs.getValue() + "&";
+        }
 		return url;
 	}
 
@@ -312,32 +287,14 @@ public class TUMRoomFinderRequest {
 		return client;
 	}
 
-	public void setMethod(String method) {
-		this.method = method;
-
-	}
-
-	/**
+    /**
 	 * Sets one parameter name to its given value
 	 * 
-	 * @param name
-	 *            identifier of the parameter
-	 * @param value
-	 *            value of the parameter
+	 * @param name identifier of the parameter
+	 * @param value value of the parameter
 	 */
-	public void setParameter(String name, String value) {
+    void setParameter(String name, String value) {
 		parameters.put(name, value);
-	}
-
-	/**
-	 * If you want to put a complete Parameter Map into the request, use this
-	 * function to merge them with the existing parameter map
-	 * 
-	 * @param existingMap
-	 *            a Map<String,String> which should be set
-	 */
-	public void setParameters(Map<String, String> existingMap) {
-		parameters.putAll(existingMap);
 	}
 
 }

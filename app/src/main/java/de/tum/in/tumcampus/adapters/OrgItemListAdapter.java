@@ -1,30 +1,26 @@
 package de.tum.in.tumcampus.adapters;
 
-import java.util.List;
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+
+import java.util.List;
+
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.models.OrgItem;
 
 /**
- * Adapterclass for {@OrgItemList}. The purpose is to get Items
- * from the list and set them into the Textview
- * 
- * @author Thomas Behrens
- * @review Vincez Doelle, Daniel G. Mayr
+ * Adapter class for {@link OrgItem} list. The purpose is to get Items
+ * from the list and set them into the TextView
  */
-
 public class OrgItemListAdapter extends BaseAdapter {
 
 	static class ViewHolder {
 		TextView tvMainField;
 		TextView tvSubField1;
-		TextView tvSubField2;
 	}
 
 	/**
@@ -74,13 +70,11 @@ public class OrgItemListAdapter extends BaseAdapter {
 		ViewHolder holder;
 		// set up TextView elements if given TextView != null
 		if (convertView == null) {
-			convertView = mInflater.inflate(
-					R.layout.activity_organisation_listview, null);
+			convertView = mInflater.inflate(R.layout.activity_organisation_listview, parent, false);
+
 			holder = new ViewHolder();
 			holder.tvMainField = (TextView) convertView.findViewById(R.id.name);
 			holder.tvSubField1 = (TextView) convertView.findViewById(R.id.tv1);
-			holder.tvSubField2 = (TextView) convertView.findViewById(R.id.tv2);
-
 			convertView.setTag(holder);
 		} else {
 			holder = (ViewHolder) convertView.getTag();
@@ -88,15 +82,11 @@ public class OrgItemListAdapter extends BaseAdapter {
 		// get the name depending on the own language
 		if (organisationList.get(position) != null) {
 			if (System.getProperty("user.language").equals("de")) {
-				holder.tvMainField.setText(organisationList.get(position)
-						.getNameDe());
-				holder.tvSubField1.setText(organisationList.get(position)
-						.getNameEn());
+				holder.tvMainField.setText(organisationList.get(position).getNameDe());
+				holder.tvSubField1.setText(organisationList.get(position).getNameEn());
 			} else {
-				holder.tvMainField.setText(organisationList.get(position)
-						.getNameEn());
-				holder.tvSubField1.setText(organisationList.get(position)
-						.getNameDe());
+				holder.tvMainField.setText(organisationList.get(position).getNameEn());
+				holder.tvSubField1.setText(organisationList.get(position).getNameDe());
 			}
 		}
 

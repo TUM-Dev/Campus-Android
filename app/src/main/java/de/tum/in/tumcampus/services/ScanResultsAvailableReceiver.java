@@ -6,21 +6,22 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.Build;
-import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 
 import java.util.List;
 
 import de.tum.in.tumcampus.R;
-import de.tum.in.tumcampus.activities.SetupEduroam;
-import de.tum.in.tumcampus.auxiliary.Const;
+import de.tum.in.tumcampus.activities.SetupEduroamActivity;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.managers.EduroamManager;
 
+/**
+ * Listens for android's ScanResultsAvailable broadcast and checks if eduroam is nearby.
+ * If yes and eduroam has not been setup by now it shows an according notification.
+ */
 public class ScanResultsAvailableReceiver extends BroadcastReceiver {
     private static final String SHOULD_SHOW = "setup_notification_dismissed";
 
@@ -28,8 +29,7 @@ public class ScanResultsAvailableReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         // Test if user has eduroam configured already
         EduroamManager man = new EduroamManager(context);
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        boolean show = prefs.getBoolean("card_eduroam_phone", true);
+        boolean show = Utils.getSettingBool(context, "card_eduroam_phone", true);
         if(man.isConfigured() || Utils.isConnected(context) || Build.VERSION.SDK_INT<18 || !show)
             return;
 
@@ -44,20 +44,23 @@ public class ScanResultsAvailableReceiver extends BroadcastReceiver {
             }
         }
 
-        prefs = context.getSharedPreferences(Const.INTERNAL_PREFS, 0);
-        if(!prefs.getBoolean(SHOULD_SHOW, true)) {
-            prefs.edit().putBoolean(SHOULD_SHOW, true).apply();
+        if(!Utils.getInternalSettingBool(context, SHOULD_SHOW, true)) {
+            Utils.setInternalSetting(context, SHOULD_SHOW, true);
         }
     }
 
-    public void showNotification(Context context) {
+    /**
+     * Shows notification if it is not already visible
+     * @param context Context
+     */
+    void showNotification(Context context) {
         // If previous notification is still visible
-        SharedPreferences prefs = context.getSharedPreferences(Const.INTERNAL_PREFS, 0);
-        if(!prefs.getBoolean(SHOULD_SHOW, true))
+
+        if(!Utils.getInternalSettingBool(context, SHOULD_SHOW, true))
             return;
 
         // Prepate intents for notification actions
-        Intent intent = new Intent(context, SetupEduroam.class);
+        Intent intent = new Intent(context, SetupEduroamActivity.class);
         Intent hide = new Intent(context, NeverShowAgain.class);
 
         PendingIntent setupIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -81,7 +84,7 @@ public class ScanResultsAvailableReceiver extends BroadcastReceiver {
         // Build Notification with Notification Manager
         notificationmanager.notify(123, builder.build());
 
-        prefs.edit().putBoolean(SHOULD_SHOW, false).apply();
+        Utils.setInternalSetting(context, SHOULD_SHOW, false);
 
     }
 
@@ -95,8 +98,7 @@ public class ScanResultsAvailableReceiver extends BroadcastReceiver {
 
         @Override
         protected void onHandleIntent(Intent intent) {
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-            prefs.edit().putBoolean("card_eduroam_phone", false).apply();
+            Utils.setSetting(this, "card_eduroam_phone", false);
         }
     }
 }

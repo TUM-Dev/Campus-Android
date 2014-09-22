@@ -18,13 +18,10 @@ import android.provider.ContactsContract.CommonDataKinds.Website;
 import android.provider.ContactsContract.Data;
 import android.provider.ContactsContract.RawContacts;
 import android.text.Html;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
@@ -37,42 +34,39 @@ import java.util.List;
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.generic.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampus.auxiliary.HTMLStringBuffer;
+import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.Contact;
 import de.tum.in.tumcampus.models.Employee;
 import de.tum.in.tumcampus.models.Group;
 import de.tum.in.tumcampus.models.Person;
 import de.tum.in.tumcampus.models.Room;
 import de.tum.in.tumcampus.models.TelSubstation;
+import de.tum.in.tumcampus.tumonline.TUMOnlineConst;
 
 /**
  * Activity to show information about an person at TUM.
- * 
- * @author Vincenz Doelle
  */
 public class PersonsDetailsActivity extends ActivityForAccessingTumOnline {
 
-	private static final String PERSONEN_DETAILS = "personenDetails";
     private Employee mEmployee;
     private MenuItem mContact;
 
     public PersonsDetailsActivity() {
-		super(PERSONEN_DETAILS, R.layout.activity_personsdetails);
+		super(TUMOnlineConst.PERSONEN_DETAILS, R.layout.activity_personsdetails);
 	}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // get person ID and/or object from Staff activity
+        // get person from staff activity
         Bundle bundle = this.getIntent().getExtras();
-		/*
-	  The employee
-	 */
         Person person = (Person) bundle.getSerializable("personObject");
+
         // make sure not both person is not null (error occurred)
         if (person == null) {
             // no query text specified
-            Toast.makeText(this, getString(R.string.no_person_set), Toast.LENGTH_LONG).show();
+            Utils.showToast(this, R.string.no_person_set);
             return;
         }
 
@@ -107,7 +101,7 @@ public class PersonsDetailsActivity extends ActivityForAccessingTumOnline {
 
     @Override
     public void onFetch(String rawResponse) {
-        Log.v(getClass().getSimpleName(), rawResponse);
+        Utils.logv(rawResponse);
 
         // deserialize XML response to model entities
         Serializer serializer = new Persister();
@@ -116,14 +110,13 @@ public class PersonsDetailsActivity extends ActivityForAccessingTumOnline {
 
             if (mEmployee != null) {
                 displayResults(mEmployee);
-                progressLayout.setVisibility(View.GONE);
+                showLoadingEnded();
                 mContact.setVisible(true);
             } else {
                 showErrorLayout();
             }
         } catch (Exception e) {
-            e.printStackTrace();
-            Log.d("EXCEPTION", e.getMessage());
+            Utils.log(e);
             showErrorLayout();
         }
     }
@@ -132,8 +125,7 @@ public class PersonsDetailsActivity extends ActivityForAccessingTumOnline {
 	 * Displays all relevant information about the given employee in the user
 	 * interface (UI).
 	 * 
-	 * @param employee
-	 *            The employee whose information should be displayed.
+	 * @param employee The employee whose information should be displayed.
 	 */
 	private void displayResults(Employee employee) {
 		// add the employee's counterfeit
@@ -242,6 +234,10 @@ public class PersonsDetailsActivity extends ActivityForAccessingTumOnline {
 
 	}
 
+    /**
+     * Adds the given employee to the users contact list
+     * @param employee Object to insert into contacts
+     */
     private void addContact(Employee employee) {
         ArrayList<ContentProviderOperation> ops =
                 new ArrayList<ContentProviderOperation>();
@@ -347,18 +343,18 @@ public class PersonsDetailsActivity extends ActivityForAccessingTumOnline {
             try {
                 stream.flush();
             }catch (IOException e) {
-                e.printStackTrace();
+                Utils.log(e);
             }
         }
 
         // Executing all the insert operations as a single database transaction
         try{
             getContentResolver().applyBatch(ContactsContract.AUTHORITY, ops);
-            Toast.makeText(getBaseContext(), getString(R.string.contact_added), Toast.LENGTH_SHORT).show();
+            Utils.showToast(this, R.string.contact_added);
         }catch (RemoteException e) {
-            e.printStackTrace();
+            Utils.log(e);
         }catch (OperationApplicationException e) {
-            e.printStackTrace();
+            Utils.log(e);
         }
     }
 

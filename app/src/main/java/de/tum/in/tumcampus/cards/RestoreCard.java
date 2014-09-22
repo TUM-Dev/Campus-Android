@@ -8,7 +8,9 @@ import android.view.ViewGroup;
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.models.managers.CardManager;
 
-
+/**
+ * Card that allows the user to reset the dismiss state of all cards
+ */
 public class RestoreCard extends Card {
 
     public RestoreCard(Context context) {

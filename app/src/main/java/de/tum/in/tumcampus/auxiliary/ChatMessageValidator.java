@@ -31,7 +31,7 @@ public class ChatMessageValidator {
 	/**
 	 * A list of public keys to be used to validate given chat messages.
 	 */
-	private List<ChatPublicKey> chatPublicKeys;
+	private final List<ChatPublicKey> chatPublicKeys;
 
 	/**
 	 * A list holding the given chat public keys converted to their {@link PublicKey}
@@ -45,7 +45,7 @@ public class ChatMessageValidator {
 	
 	/**
 	 * Constructs a new validator for the given public keys.
-	 * @param publicKeys
+	 * @param publicKeys public key
 	 */
 	public ChatMessageValidator(List<ChatPublicKey> publicKeys) {
 		this.chatPublicKeys = publicKeys;
@@ -85,7 +85,7 @@ public class ChatMessageValidator {
 	 * @param text The text the signature has signed
 	 * @param signature The signature encoded as a base64 string
 	 * @param key a {@link PublicKey} instance to use to verify the signature
-	 * @return
+	 * @return Returns true if signature is valid
 	 */
 	private boolean verifySignature(String text, String signature,
 			PublicKey key) {
@@ -94,14 +94,14 @@ public class ChatMessageValidator {
 		try {
 			sig = Signature.getInstance("SHA1WithRSA");
 		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
+			Utils.log(e);
 			return false;
 		}
 
 		try {
 			sig.initVerify(key);
 		} catch (InvalidKeyException e) {
-			e.printStackTrace();
+			Utils.log(e);
 			return false;
 		}
 
@@ -109,19 +109,19 @@ public class ChatMessageValidator {
 		try {
 			textBytes = text.getBytes("UTF8");
 		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
+			Utils.log(e);
 			return false;
 		}
 		try {
 			sig.update(textBytes);
 		} catch (SignatureException e) {
-			e.printStackTrace();
+			Utils.log(e);
 			return false;
 		}
 		try {
 			return sig.verify(decodeByteRepresentation(signature));
 		} catch (SignatureException e) {
-			e.printStackTrace();
+			Utils.log(e);
 			return false;
 		}
 	}
@@ -157,7 +157,7 @@ public class ChatMessageValidator {
 		try {
 			keyFactory = KeyFactory.getInstance(KEY_ALGORITHM);
 		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
+			Utils.log(e);
 			return null;
 		}
 		
@@ -165,7 +165,7 @@ public class ChatMessageValidator {
 		try {
 			return keyFactory.generatePublic(new X509EncodedKeySpec(keyBytes));
 		} catch (InvalidKeySpecException e) {
-			e.printStackTrace();
+			Utils.log(e);
 			return null;
 		}
 		

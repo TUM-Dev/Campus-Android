@@ -18,21 +18,24 @@ import android.widget.TextView;
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.models.managers.CardManager;
 
+/**
+ * Base class for all cards
+ */
 public abstract class Card {
     public static final String DISCARD_SETTINGS_START = "discard_settings_start";
-    public static final String DISCARD_SETTINGS_PHONE = "discard_settings_phone";
+    private static final String DISCARD_SETTINGS_PHONE = "discard_settings_phone";
 
     // Context related stuff
-    protected Context mContext;
-    protected LayoutInflater mInflater;
+    Context mContext;
+    LayoutInflater mInflater;
     private String mSettings;
     
     // UI Elements
-    protected View mCard;
-    protected LinearLayout mLinearLayout;
-    protected TextView mTitleView;
-    protected TextView mDateView;
-    protected View mPlaceHolder;
+    View mCard;
+    LinearLayout mLinearLayout;
+    TextView mTitleView;
+    TextView mDateView;
+    View mPlaceHolder;
     
     // Settings for showing this card on startpage or as notification
     // Default values set for restore card, no internet card, etc.
@@ -40,18 +43,34 @@ public abstract class Card {
     private boolean mShowWear = false;
     private boolean mShowPhone = false;
 
-    public Card(Context context) {
+    /**
+     * Card constructor for special cards that don't have a preference screen
+     * @param context Context
+     */
+    Card(Context context) {
         mSettings = null;
         mContext = context;
         mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
-    public Card(Context context, String settings) {
+    /**
+     * Standard card constructor.
+     * @param context Context
+     * @param settings Preference key prefix used for all preferences belonging to that card
+     */
+    Card(Context context, String settings) {
         this(context, settings, true, false);
         mSettings = settings;
     }
 
-    public Card(Context context, String settings, boolean wearDefault, boolean phoneDefault) {
+    /**
+     * Card constructor that can set special default values for wear and phone
+     * @param context Context
+     * @param settings Preference key prefix used for all preferences belonging to that card
+     * @param wearDefault True if notifications should by default be displayed on android wear
+     * @param phoneDefault True if notifications should by default be displayed on the phone
+     */
+    Card(Context context, String settings, boolean wearDefault, boolean phoneDefault) {
         this(context);
         mSettings = settings;
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
@@ -60,8 +79,18 @@ public abstract class Card {
         mShowPhone = prefs.getBoolean(settings+"_phone", phoneDefault);
     }
 
+    /**
+     * Gets the card typ
+     * @return Returns an individual integer for each card typ
+     */
     public abstract int getTyp();
 
+    /**
+     * Inflates the card layout
+     * @param context Context
+     * @param parent Parent
+     * @return Card view
+     */
     public View getCardView(Context context, ViewGroup parent) {
         mContext = context;
         mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -74,7 +103,12 @@ public abstract class Card {
         return mCard;
     }
 
-    public TextView addTextView(String text) {
+    /**
+     * Adds a new text view to the main card layout
+     * @param text Text that should be shown
+     * @return Handle to the {@link android.widget.TextView}
+     */
+    TextView addTextView(String text) {
         TextView textview = new TextView(mContext);
         textview.setText(text);
 
@@ -86,12 +120,11 @@ public abstract class Card {
         return textview;
     }
 
-
     /**
      * Should be called after the user has dismissed the card
      * */
 	public void discardCard() {
-        SharedPreferences prefs = CardManager.getContext().getSharedPreferences(DISCARD_SETTINGS_START, 0);
+        SharedPreferences prefs = mContext.getSharedPreferences(DISCARD_SETTINGS_START, 0);
         Editor editor = prefs.edit();
         discard(editor);
         editor.apply();
@@ -101,7 +134,7 @@ public abstract class Card {
      * Should be called if the notification has been dismissed
      * */
     private void discardNotification() {
-        SharedPreferences prefs = CardManager.getContext().getSharedPreferences(DISCARD_SETTINGS_PHONE, 0);
+        SharedPreferences prefs = mContext.getSharedPreferences(DISCARD_SETTINGS_PHONE, 0);
         Editor editor = prefs.edit();
         discard(editor);
         editor.apply();
@@ -109,8 +142,10 @@ public abstract class Card {
 
     /**
      * Save information about the dismissed card/notification to decide later if the card should be shown again
+     *
+     * @param editor Editor to be used for saving values
      * */
-    protected void discard(Editor editor) {}
+    void discard(Editor editor) {}
 
     /**
      * Must be called after information has been set
@@ -119,14 +154,14 @@ public abstract class Card {
     public void apply() {
         // Should be shown on start page?
         if(mShowStart) {
-            SharedPreferences prefs = CardManager.getContext().getSharedPreferences(DISCARD_SETTINGS_START, 0);
+            SharedPreferences prefs = mContext.getSharedPreferences(DISCARD_SETTINGS_START, 0);
             if(shouldShow(prefs))
                 CardManager.addCard(this);
         }
 
         // Should be shown on phone or watch?
         if(mShowWear || mShowPhone) {
-            SharedPreferences prefs = CardManager.getContext().getSharedPreferences(DISCARD_SETTINGS_PHONE, 0);
+            SharedPreferences prefs = mContext.getSharedPreferences(DISCARD_SETTINGS_PHONE, 0);
             if (shouldShow(prefs))
                 notifyUser();
         }
@@ -138,7 +173,7 @@ public abstract class Card {
      *
      * @return returns true if the card should be shown
      * */
-    protected boolean shouldShow(SharedPreferences prefs) {
+    boolean shouldShow(SharedPreferences prefs) {
         return true;
     }
 
@@ -185,7 +220,7 @@ public abstract class Card {
     /**
      * Should fill the given notification builder with content
      * */
-    protected Notification fillNotification(NotificationCompat.Builder notificationBuilder) {
+    Notification fillNotification(NotificationCompat.Builder notificationBuilder) {
         return notificationBuilder.build();
     }
 
@@ -200,7 +235,7 @@ public abstract class Card {
     /**
      * Gets the title of the card
      * */
-    protected String getTitle() {
+    String getTitle() {
         return null;
     }
 
@@ -213,10 +248,18 @@ public abstract class Card {
         return true;
     }
 
+    /**
+     * Gets the prefix that is used for all preference key's belonging to that card
+     * @return Key prefix e.g. "card_cafeteria"
+     */
     public String getSettings() {
         return mSettings;
     }
 
+    /**
+     * Sets preferences so that this card does not show up again until
+     * reactivated manually by the user
+     */
     public void hideAlways() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
         Editor e = prefs.edit();
@@ -226,7 +269,17 @@ public abstract class Card {
         e.apply();
     }
 
+    /**
+     * Interface which has to be implemented by a manager class to add cards to the stream
+     */
     public static interface ProvidesCard {
-        public void onRequestCard(Context context) throws Exception;
+        /**
+         * Gets called whenever cards need to be shown or refreshed.
+         * This method should decide whether a card can be displayed and if so
+         * call {@link Card#apply()} to tell the card manager.
+         *
+         * @param context Context
+         */
+        public void onRequestCard(Context context);
     }
 }

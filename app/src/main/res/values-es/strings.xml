@@ -25,8 +25,6 @@
     <string name="dialog_show_calendar">Exportación exitosa.\n Calendario local <i>TUM_CAMPUS_APP</i>mostrar en el espectáculo de la <i>Google Calendar aplicación</i>?</string>
     <string name="export_to_google">Exportar a Google</string>
     <string name="calendarTimeZone">Germany/Munich</string>
-    <string name="calendar_account_name">TUM_Campus_APP</string>
-    <string name="calendar_display_name">TUM Campus</string>
     <string name="delete_from_google">Borrar de Google</string>
     <string name="dialog_delete_calendar">Eliminar el calendario local de la <i>TUM_CAMPUS_APP</i> de su dispositivo?</string>
     <string name="calendar_deleted_toast">Calendario eliminado con éxito</string>
@@ -38,7 +36,6 @@
     <string name="search_rooms">Buscar Habitaciones</string>
 
     <!-- Auxiliary -->
-    <string name="empty_string" />
     <string name="error_fetching_tumonline">Error de acceso TUMOnline.\nPor favor asegúrese que el TUMOnline token de acceso \n está aceptado y los derechos corespondientes están habilitados.\n\n<b> Haga clic aquí para repetir.</b></string>
     <string name="error_no_token_setup">No TUMOnline acceso Token encontró.\nPor favor generar un token de acceso TUMOnline en los <i>Ajustes</i>, para usar servicios de TUMOnline.\n\n<b>Haga clic aquí para ver la pantalla <i>Configuración</i>.</b></string>
     <string name="error_something_wrong">Lo siento, algo ha ido mal.\n\n<b> Haga clic aquí para repetir.</b></string>
@@ -48,7 +45,6 @@
     <string name="dialog_access_token_invalid">TUMOnline token de acceso no está activado</string>
     <string name="dialog_no_rights_function">No hay derechos para esta función</string>
     <string name="empty_result">La operación entregó un resultado defectuoso</string>
-    <string name="error_occurred_while_opening">No se puede abrir el archivo</string>
 
     <!-- Exam/Grades -->
     <string name="average_grade">Calificación media</string>
@@ -78,8 +74,8 @@
     <string name="wear">Wearable</string>
 
     <string name="extras">Extras</string>
-    <string name="open_wizzard">Abra Asistente de inicio</string>
-    <string name="open_wizzard_detail">El Asistente de Inicio le ayuda a configurar los ajustes básicos para acceder a los servicios TUMOnline y establecer el esquema de color de la aplicación.</string>
+    <string name="open_wizard">Abra Asistente de inicio</string>
+    <string name="open_wizard_detail">El Asistente de Inicio le ayuda a configurar los ajustes básicos para acceder a los servicios TUMOnline y establecer el esquema de color de la aplicación.</string>
     <string name="clear_cache">Borrar datos</string>
     <string name="clear_cache_detail">Borra todos los datos descargados por la aplicación campus TUM y almacenados en la tarjeta SD.</string>
     <string name="delete_chache_sure">Para borrar todos los datos?</string>
@@ -103,9 +99,9 @@
     <string name="licences">Licencias de código abierto</string>
     <string name="licences_summary">Licencias Aviso legal</string>
 
-    <!-- Startup Wizzard -->
+    <!-- Startup Wizard -->
     <string name="token_not_enabled">TUMOnline token de acceso no está activado</string>
-    <string name="startup_wizzard_uppercase">Asistente de inicio</string>
+    <string name="startup_wizard_uppercase">Asistente de inicio</string>
     <string name="welcome_msg">!<b>Bienvenido al campus TUM App</b>\n\nPara habilitar el acceso a los servicios TUMOnline requiere su <b>identificador LRZ</b>\n identificador\nEste tiene el siguiente formato :.\n<i>xx00xxx</i>\n(2 letras, 2 números , 3 letras)</string>
     <string name="button_skip">Salta</string>
     <string name="button_next">Siguiente</string>
@@ -285,7 +281,6 @@
 \n10 contiene una fuente de fenilalanina
 \n11 con azúcar y edulcorantes</string>
     <string name="action_ingredients">Ingredientes</string>
-    <string name="kitchen_opening">Horarios de la cocina</string>
 
     <!-- Information -->
     <string name="version">Versión</string>

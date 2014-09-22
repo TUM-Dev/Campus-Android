@@ -12,7 +12,7 @@ import android.text.TextUtils;
 import de.tum.in.tumcampus.models.managers.DatabaseManager;
 
 /**
- * Slightly modified version of SearchRecentSuggestionsProvider taken from source code of AOSP
+ * Slightly modified version of SearchRecentSuggestionsProvider taken from AOSP source code
  * */
 public abstract class EnhancedSearchRecentSuggestionsProvider extends ContentProvider {
     // client-provided configuration values
@@ -30,16 +30,16 @@ public abstract class EnhancedSearchRecentSuggestionsProvider extends ContentPro
     /**
      * This mode bit configures the database to record recent queries.  <i>required</i>
      *
-     * @see #setupSuggestions(String, String, int)
+     * @see #setupSuggestions(String, String)
      */
-    public static final int DATABASE_MODE_QUERIES = 1;
+    private static final int DATABASE_MODE_QUERIES = 1;
     /**
      * This mode bit configures the database to include a 2nd annotation line with each entry.
      * <i>optional</i>
      *
-     * @see #setupSuggestions(String, String, int)
+     * @see #setupSuggestions(String, String)
      */
-    public static final int DATABASE_MODE_2LINES = 2;
+    private static final int DATABASE_MODE_2LINES = 2;
 
     // Uri and query support
     private static final int URI_MATCH_SUGGEST = 1;
@@ -58,25 +58,20 @@ public abstract class EnhancedSearchRecentSuggestionsProvider extends ContentPro
      * @param id String identifying the SuggestionProvider. Must not contain blanks or any
      *           other special characters
      * @param authority This must match the authority that you've declared in your manifest.
-     * @param mode You can use mode flags here to determine certain functional aspects of your
-     * database.  Note, this value should not change from run to run, because when it does change,
-     * your suggestions database may be wiped.
-     *
      * @see #DATABASE_MODE_QUERIES
      * @see #DATABASE_MODE_2LINES
      */
-    protected void setupSuggestions(String id, String authority, int mode) {
-        if (TextUtils.isEmpty(authority) ||
-                ((mode & DATABASE_MODE_QUERIES) == 0)) {
+    void setupSuggestions(String id, String authority) {
+        if (TextUtils.isEmpty(authority)) {
             throw new IllegalArgumentException();
         }
         // unpack mode flags
-        mTwoLineDisplay = (0 != (mode & DATABASE_MODE_2LINES));
+        mTwoLineDisplay = (0 != (EnhancedSearchRecentSuggestionsProvider.DATABASE_MODE_QUERIES & DATABASE_MODE_2LINES));
 
         // saved values
         mId = "_"+id;
         mAuthority = authority;
-        mMode = mode;
+        mMode = EnhancedSearchRecentSuggestionsProvider.DATABASE_MODE_QUERIES;
 
         // derived values
         mSuggestionsUri = Uri.parse("content://" + mAuthority + "/suggestions");

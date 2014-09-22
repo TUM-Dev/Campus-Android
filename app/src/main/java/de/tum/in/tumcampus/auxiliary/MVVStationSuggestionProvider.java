@@ -4,6 +4,6 @@ public class MVVStationSuggestionProvider extends EnhancedSearchRecentSuggestion
 	public final static String AUTHORITY = "de.tum.in.tumcampus.auxiliary.MVVStationSuggestionProvider";
 
 	public MVVStationSuggestionProvider() {
-		setupSuggestions("mvv", AUTHORITY, DATABASE_MODE_QUERIES);
+		setupSuggestions("mvv", AUTHORITY);
 	}
 }

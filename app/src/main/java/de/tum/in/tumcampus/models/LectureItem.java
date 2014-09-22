@@ -7,7 +7,7 @@ import de.tum.in.tumcampus.auxiliary.Utils;
 /**
  * LectureItem object
  */
-public class LectureItem {
+class LectureItem {
 
 	// TODO Check whether to externalise Strings ex. Feiertag - problems (no
 	// activity)
@@ -61,57 +61,56 @@ public class LectureItem {
 	/**
 	 * End DateTime
 	 */
-	public Date end;
+    private final Date end;
 
 	/**
 	 * Lecture item ID (LectureId_Start-Unix-Timestamp)
 	 */
-	public String id;
+    private final String id;
 
 	/**
 	 * Lecture ID
 	 */
-	public String lectureId;
+    private final String lectureId;
 
 	/**
 	 * Lecture item location
 	 */
-	public String location;
+    private final String location;
 
 	/**
 	 * Lecture module
 	 */
-	public String module;
+    private final String module;
 
 	/**
 	 * Lecture name
 	 */
-	public String name;
+    private final String name;
 
 	/**
 	 * Lecture item note, e.g. Übung
 	 */
-	public String note;
+    private final String note;
 
 	/**
 	 * Lecture item series ID (LectureID_Week-Day_Start-Time)
 	 */
-	public String seriesId;
+    private final String seriesId;
 
 	/**
 	 * Start DateTime
 	 */
-	public Date start;
+    private final Date start;
 
 	/**
 	 * Lecture item URL
 	 */
-	public String url;
+    private final String url;
 
 	/**
 	 * New Lecture item
-	 * 
-	 * <pre>
+	 *
 	 * @param id Lecture item ID (LectureId_Start-Unix-Timestamp)
 	 * @param lectureId Lecture ID
 	 * @param start Start DateTime
@@ -122,11 +121,10 @@ public class LectureItem {
 	 * @param note Lecture item note, e.g. Übung
 	 * @param url Lecture item URL
 	 * @param seriesId Lecture item series ID (LectureID_Week-Day_Start-Time)
-	 * </pre>
 	 */
-	public LectureItem(String id, String lectureId, Date start, Date end,
-			String name, String module, String location, String note,
-			String url, String seriesId) {
+    LectureItem(String id, String lectureId, Date start, Date end,
+                String name, String module, String location, String note,
+                String url, String seriesId) {
 		this.id = id;
 		this.lectureId = lectureId;
 		this.start = start;

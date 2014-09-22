@@ -12,38 +12,36 @@ public class News {
 	/**
 	 * Date
 	 */
-	public Date date;
+	public final Date date;
 
 	/**
 	 * News Facebook-ID
 	 */
-	public String id;
+	public final String id;
 
 	/**
 	 * Local image, e.g. /mnt/sdcard/tumcampus/news/cache/xy.jpg
 	 */
-	public String image;
+	public final String image;
 
 	/**
 	 * Link Url, e.g. http://www.in.tum.de
 	 */
-	public String link;
+	public final String link;
 
 	/**
 	 * Message, e.g. X released
 	 */
-	public String message;
+	public final String message;
 
 	/**
 	 * New News
-	 * 
-	 * <pre>
+	 *
 	 * @param id News Facebook-ID
 	 * @param message Message, e.g. X released
 	 * @param link Url, e.g. http://www.in.tum.de
 	 * @param image Local image, e.g. /mnt/sdcard/tumcampus/news/cache/xy.jpg
 	 * @param date Date
-	 * </pre>
 	 */
 	public News(String id, String message, String link, String image, Date date) {
 
@@ -56,7 +54,7 @@ public class News {
 
 	@Override
 	public String toString() {
-		return "id=" + id + " message=" + message + " link=" + link + " iamge="
+		return "id=" + id + " message=" + message + " link=" + link + " image="
 				+ image + " date=" + Utils.getDateString(date);
 	}
 }

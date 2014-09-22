@@ -15,7 +15,9 @@ import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.managers.TransportManager;
 
 /**
- * Activity to show transport stations and departures
+ * Activity to show transport departures for a specified station
+ *
+ * NEEDS: EXTRA_STATION set in incoming bundle (station name)
  */
 public class TransportationDetailsActivity extends ActivityForLoadingInBackground<String,List<TransportManager.Departure>> {
     public static final String EXTRA_STATION = "station";
@@ -33,7 +35,6 @@ public class TransportationDetailsActivity extends ActivityForLoadingInBackgroun
 
         // get all stations from db
         mTransportationManager = new TransportManager(this);
-
         mViewResults = (LinearLayout) this.findViewById(R.id.activity_transport_result);
 
         Intent intent = getIntent();
@@ -51,11 +52,16 @@ public class TransportationDetailsActivity extends ActivityForLoadingInBackgroun
         }
     }
 
+    /**
+     * Load departure times
+     * @param arg Station name
+     * @return List of departures
+     */
     @Override
     protected List<TransportManager.Departure> onLoadInBackground(String... arg) {
         final String location = arg[0];
-        // save clicked station into db and refresh station list
-        // (could be clicked on search result list)
+
+        // save clicked station into db
         mTransportationManager.replaceIntoDb(location);
 
         // get departures from website
@@ -73,6 +79,10 @@ public class TransportationDetailsActivity extends ActivityForLoadingInBackgroun
         return departureCursor;
     }
 
+    /**
+     * Adds a new {@link DepartureView} for each departure entry
+     * @param result List of departures
+     */
     @Override
     protected void onLoadFinished(List<TransportManager.Departure> result) {
         for(TransportManager.Departure d : result) {

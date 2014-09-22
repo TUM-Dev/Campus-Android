@@ -1,7 +1,5 @@
 package de.tum.in.tumcampus.auxiliary;
 
-import android.util.Log;
-
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -26,14 +24,8 @@ import javax.xml.parsers.ParserConfigurationException;
 
 /**
  * Parses through XML input
- * 
  */
 public class XMLParser {
-
-	// constructor
-	public XMLParser() {
-
-	}
 
 	/**
 	 * Getting XML DOM element
@@ -44,7 +36,6 @@ public class XMLParser {
 		Document doc;
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		try {
-
 			DocumentBuilder db = dbf.newDocumentBuilder();
 
 			InputSource is = new InputSource();
@@ -52,13 +43,13 @@ public class XMLParser {
 			doc = db.parse(is);
 
 		} catch (ParserConfigurationException e) {
-			Log.e("Error: ", e.getMessage());
+			Utils.log(e);
 			return null;
 		} catch (SAXException e) {
-			Log.e("Error: ", e.getMessage());
+            Utils.log(e);
 			return null;
 		} catch (IOException e) {
-			Log.e("Error: ", e.getMessage());
+            Utils.log(e);
 			return null;
 		}
 
@@ -68,8 +59,7 @@ public class XMLParser {
 	/**
 	 * Getting node value
 	 * 
-	 * @param elem
-	 *            element
+	 * @param elem element
 	 */
 	public final String getElementValue(Node elem) {
 		Node child;
@@ -100,8 +90,7 @@ public class XMLParser {
 	/**
 	 * Getting XML from URL making HTTP request
 	 * 
-	 * @param url
-	 *            string
+	 * @param url string
 	 * */
 	public String getXmlFromUrl(String url) {
 		String xml = null;
@@ -120,11 +109,11 @@ public class XMLParser {
 			}
 
 		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
+			Utils.log(e);
 		} catch (ClientProtocolException e) {
-			e.printStackTrace();
+			Utils.log(e);
 		} catch (IOException e) {
-			e.printStackTrace();
+			Utils.log(e);
 		}
 		// return XML
 		return xml;

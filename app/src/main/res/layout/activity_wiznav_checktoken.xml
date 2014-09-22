@@ -28,7 +28,7 @@
             <TextView
                 android:id="@+id/pager_title_strip"
                 style="@style/SectionHeadline"
-                android:text="@string/startup_wizzard_uppercase" />
+                android:text="@string/startup_wizard_uppercase" />
 
             <include
                 layout="@layout/layout_error"

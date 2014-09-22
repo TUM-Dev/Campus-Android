@@ -18,14 +18,16 @@ import java.util.List;
 
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.CafeteriaActivity;
+import de.tum.in.tumcampus.auxiliary.CafeteriaPrices;
 import de.tum.in.tumcampus.auxiliary.Const;
-import de.tum.in.tumcampus.fragments.CafeteriaDetailsSectionFragment;
 import de.tum.in.tumcampus.models.CafeteriaMenu;
 
 import static de.tum.in.tumcampus.fragments.CafeteriaDetailsSectionFragment.showMenu;
 import static de.tum.in.tumcampus.models.managers.CardManager.CARD_CAFETERIA;
 
-
+/**
+ * Card that shows the cafeteria menu
+ */
 public class CafeteriaMenuCard extends Card {
     private static final String CAFETERIA_DATE = "cafeteria_date";
     private int mCafeteriaId;
@@ -61,6 +63,14 @@ public class CafeteriaMenuCard extends Card {
         return mCard;
     }
 
+    /**
+     * Sets the information needed to build the card
+     * @param id Cafeteria id
+     * @param name Cafeteria name
+     * @param dateStr Date of the menu in yyyy-mm-dd format
+     * @param date Date of the menu
+     * @param menus List of cafeteria menus
+     */
     public void setCardMenus(int id, String name, String dateStr, Date date, List<CafeteriaMenu> menus) {
         mCafeteriaId = id;
         mCafeteriaName = name;
@@ -89,7 +99,7 @@ public class CafeteriaMenuCard extends Card {
 
     @Override
     protected Notification fillNotification(NotificationCompat.Builder notificationBuilder) {
-        HashMap<String, String> rolePrices = CafeteriaDetailsSectionFragment.getRolePrices(mContext);
+        HashMap<String, String> rolePrices = CafeteriaPrices.getRolePrices(mContext);
 
         NotificationCompat.WearableExtender morePageNotification =
                 new NotificationCompat.WearableExtender();

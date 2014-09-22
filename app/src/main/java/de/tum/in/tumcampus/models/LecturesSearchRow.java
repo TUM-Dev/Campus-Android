@@ -1,15 +1,14 @@
 package de.tum.in.tumcampus.models;
 
+import android.support.annotation.NonNull;
+
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.Root;
 
 /**
  * This class is dealing with the deserialization of the output of TUMOnline to
  * the method "sucheLehrveranstaltungen".
- * 
- * @author Daniel Mayr
- * @review Thomas Behrens
- * @see http://simple.sourceforge.net/download/stream/doc/tutorial/tutorial.php
+ * @see <a href="http://simple.sourceforge.net/download/stream/doc/tutorial/tutorial.php">SimpleXML tutorial</a>
  */
 
 @Root(name = "row")
@@ -142,7 +141,7 @@ public class LecturesSearchRow implements Comparable<LecturesSearchRow> {
 	}
 
     @Override
-    public int compareTo(LecturesSearchRow lecturesSearchRow) {
+    public int compareTo(@NonNull LecturesSearchRow lecturesSearchRow) {
         return lecturesSearchRow.getSemester_id().compareTo(semester_id);
     }
 }

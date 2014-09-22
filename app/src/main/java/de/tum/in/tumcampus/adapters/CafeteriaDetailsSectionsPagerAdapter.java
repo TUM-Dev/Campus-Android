@@ -1,6 +1,5 @@
 package de.tum.in.tumcampus.adapters;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -8,13 +7,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Locale;
 
 import de.tum.in.tumcampus.auxiliary.Const;
+import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.fragments.CafeteriaDetailsSectionFragment;
 import de.tum.in.tumcampus.models.managers.CafeteriaMenuManager;
 
@@ -22,20 +20,18 @@ import de.tum.in.tumcampus.models.managers.CafeteriaMenuManager;
  * A {@link FragmentStatePagerAdapter} that returns a fragment corresponding to one
  * of the sections/tabs/pages.
  */
-@SuppressLint({"SimpleDateFormat", "DefaultLocale"})
 public class CafeteriaDetailsSectionsPagerAdapter extends FragmentStatePagerAdapter {
     private int mCafeteriaId;
     private Cursor cursorCafeteriaDates;
-    /**
-     * Current Date selected (ISO format)
-     */
-    private ArrayList<String> dates = new ArrayList<String>();
 
-    @SuppressWarnings("deprecation")
+    /** Current Date selected (ISO format) */
+    private final ArrayList<String> dates = new ArrayList<String>();
+
     public CafeteriaDetailsSectionsPagerAdapter(FragmentManager fm) {
         super(fm);
     }
 
+    @SuppressWarnings("deprecation")
     public void setCafeteriaId(Activity mainActivity, int cafeteriaId) {
         mCafeteriaId = cafeteriaId;
 
@@ -74,20 +70,10 @@ public class CafeteriaDetailsSectionsPagerAdapter extends FragmentStatePagerAdap
 
     @Override
     public CharSequence getPageTitle(int position) {
-        Date date;
-        Locale l = Locale.getDefault();
-
-        String input_date = dates.get(position);
-        SimpleDateFormat formatYMD = new SimpleDateFormat("yyyy-MM-dd");
-        try {
-            date = formatYMD.parse(input_date);
-        } catch (ParseException e) {
-            e.printStackTrace();
-            return "";
-        }
+        Date date = Utils.getDate(dates.get(position));
 
         SimpleDateFormat formatDate = new SimpleDateFormat("EEEE, dd.MM.yyy");
-        return formatDate.format(date).toUpperCase(l);
+        return formatDate.format(date).toUpperCase();
     }
 
     @Override

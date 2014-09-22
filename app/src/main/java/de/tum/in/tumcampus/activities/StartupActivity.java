@@ -4,12 +4,12 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -23,21 +23,20 @@ import com.nineoldandroids.animation.ObjectAnimator;
 import com.nineoldandroids.view.ViewHelper;
 
 import de.tum.in.tumcampus.R;
-import de.tum.in.tumcampus.activities.wizzard.WizNavStartActivity;
+import de.tum.in.tumcampus.activities.wizard.WizNavStartActivity;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.DemoModeStartActivity;
 import de.tum.in.tumcampus.auxiliary.ImplicitCounter;
+import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.services.DownloadService;
 import de.tum.in.tumcampus.services.StartSyncReceiver;
 
 /**
  * Entrance point of the App.
- *
- * @author Sascha Moecker
  */
 public class StartupActivity extends ActionBarActivity {
-    public static final boolean DEMO_MODE = false;
-    public static final boolean TRACK_ERRORS_WITH_BUG_SENSE = true;
+    private static final boolean DEMO_MODE = false;
+    private static final boolean TRACK_ERRORS_WITH_BUG_SENSE = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,17 +48,26 @@ public class StartupActivity extends ActionBarActivity {
 
         // Init a Bug Report to https://www.bugsense.com
         if (TRACK_ERRORS_WITH_BUG_SENSE) {
-            Log.d(this.getClass().getSimpleName(), "BugSense initialized");
-            BugSenseHandler.initAndStartSession(StartupActivity.this, "19d18764");
+            Utils.log("BugSense initialized");
+            BugSenseHandler.initAndStartSession(this, "19d18764");
+        }
+
+        // For compatibility reasons
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        if(sp.contains("hide_wizzard_on_startup")) {
+            SharedPreferences.Editor e = sp.edit();
+            e.putBoolean(Const.HIDE_WIZARD_ON_STARTUP, sp.getBoolean("hide_wizzard_on_startup", false));
+            e.remove("hide_wizzard_on_startup");
+            e.apply();
         }
 
         // Also First run setup of id and token
         // Check the flag if user wants the wizard to open at startup
-        Boolean hideWizzardOnStartup = PreferenceManager.getDefaultSharedPreferences(StartupActivity.this).getBoolean(Const.HIDE_WIZZARD_ON_STARTUP, false);
-        if (!hideWizzardOnStartup) {
-            Intent intent = new Intent(StartupActivity.this, WizNavStartActivity.class);
-            startActivity(intent);
+        Boolean hideWizardOnStartup = Utils.getSettingBool(this, Const.HIDE_WIZARD_ON_STARTUP, false);
+        if (!hideWizardOnStartup) {
+            startActivity(new Intent(this, WizNavStartActivity.class));
             finish();
+            return;
         }
 
         // Register receiver for background service
@@ -67,7 +75,7 @@ public class StartupActivity extends ActionBarActivity {
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, filter);
 
         // Start background service and ensure cards are set
-        Intent i = new Intent(StartupActivity.this, StartSyncReceiver.class);
+        Intent i = new Intent(this, StartSyncReceiver.class);
         i.putExtra(Const.APP_LAUNCHES,true);
         sendBroadcast(i);
     }
@@ -78,6 +86,10 @@ public class StartupActivity extends ActionBarActivity {
         LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
     }
 
+    /**
+     * Broadcast receiver gets notified if {@link de.tum.in.tumcampus.services.BackgroundService}
+     * has prepared cards to be displayed
+     */
     private final BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -87,6 +99,10 @@ public class StartupActivity extends ActionBarActivity {
         }
     };
 
+    /**
+     * Animates the TUM logo into place (left upper corner) and animates background up.
+     * Afterwards {@link MainActivity} gets started
+     */
     private void startApp() {
         // Get views to be moved
         final View background = findViewById(R.id.startup_background);
@@ -135,7 +151,7 @@ public class StartupActivity extends ActionBarActivity {
                     startActivity(intent);
                     finish();
                 } else {
-                    Intent intent = new Intent(StartupActivity.this, StartActivity.class);
+                    Intent intent = new Intent(StartupActivity.this, MainActivity.class);
                     startActivity(intent);
                     finish();
                 }
@@ -150,12 +166,15 @@ public class StartupActivity extends ActionBarActivity {
         set.setDuration(600).start();
     }
 
-    public int getActionBarHeight() {
+    /**
+     * Gets the height of the actionbar
+     * @return Actionbar height
+     */
+    private int getActionBarHeight() {
         int actionBarHeight = 0;
         TypedValue tv = new TypedValue();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            if (getTheme().resolveAttribute(android.R.attr.actionBarSize, tv,
-                    true))
+            if (getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true))
                 actionBarHeight = TypedValue.complexToDimensionPixelSize(
                         tv.data, getResources().getDisplayMetrics());
         } else {

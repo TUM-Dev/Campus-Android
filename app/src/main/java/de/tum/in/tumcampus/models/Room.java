@@ -1,18 +1,14 @@
 package de.tum.in.tumcampus.models;
 
-import java.io.Serializable;
-
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.Root;
+
+import java.io.Serializable;
 
 /**
  * A room that belongs to some {@link Person} or {@link Employee}. Note: This
  * model is based on the TUMOnline web service response format for a
  * corresponding request.
- * 
- * @author Vincenz Doelle
- * @review Daniel G. Mayr
- * @review Thomas Behrens
  */
 @Root(name = "raum", strict = false)
 public class Room implements Serializable {
