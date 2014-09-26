@@ -1,8 +1,11 @@
 package de.tum.in.tumcampus.activities;
 
+import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -11,91 +14,104 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.android.gms.internal.js;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.Collections;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.Vector;
 
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.auxiliary.ImplicitCounter;
+import de.tum.in.tumcampus.auxiliary.Utils;
+import de.tum.in.tumcampus.models.managers.TUMOnlineCacheManager;
 
 /**
  * Activity to fetch and display the curricula of different study programs.
  */
 public class CurriculaActivity extends ActionBarActivity implements OnItemClickListener {
-	public static final String NAME = "name";
-	public static final String URL = "url";
+    public static final String NAME = "name";
+    public static final String URL = "url";
 
     private Hashtable<String, String> options;
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         ImplicitCounter.Counter(this);
-		setContentView(R.layout.activity_curricula);
+        setContentView(R.layout.activity_curricula);
 
-		// Puts all hardcoded web addresses into the hash map
-		this.options = new Hashtable<String, String>();
-		this.options.put(this.getString(R.string.informatics_bachelor_0809),
-				"https://www.in.tum.de/fuer-studierende/bachelor-studiengaenge/informatik/studienplan/studienbeginn-ab-ws-20082009.html");
-		this.options.put(this.getString(R.string.informatics_bachelor_1213),
-				"https://www.in.tum.de/fuer-studierende/bachelor-studiengaenge/informatik/studienplan/studienbeginn-ab-ws-20122013.html");
-		this.options.put(this.getString(R.string.business_informatics_bachelor_0809),
-				"https://www.in.tum.de/fuer-studierende/bachelor-studiengaenge/wirtschaftsinformatik/studienplan/studienbeginn-ab-ws-20082009.html");
-		this.options.put(this.getString(R.string.business_informatics_bachelor_1112),
-				"https://www.in.tum.de/fuer-studierende/bachelor-studiengaenge/wirtschaftsinformatik/studienplan/studienbeginn-ab-ws-20112012.html");
-		this.options.put(this.getString(R.string.business_informatics_bachelor_1213),
-				"https://www.in.tum.de/fuer-studierende/bachelor-studiengaenge/wirtschaftsinformatik/studienplan/studienbeginn-ab-ws-20122013.html");
-		this.options.put(this.getString(R.string.business_informatics_bachelor_1314),
-				"https://www.in.tum.de/fuer-studierende/bachelor-studiengaenge/wirtschaftsinformatik/studienplan/studienbeginn-ab-ws-20132014.html");
-		this.options.put(this.getString(R.string.bioinformatics_bachelor),
-				"https://www.in.tum.de/fuer-studierende/bachelor-studiengaenge/bioinformatik/studienplan/ws-20072008.html");
-		this.options.put(this.getString(R.string.games_engineering_bachelor),
-				"https://www.in.tum.de/fuer-studierende/bachelor-studiengaenge/informatik-games-engineering/studienplan-games.html");
-		this.options.put(this.getString(R.string.informatics_master),
-				"https://www.in.tum.de/fuer-studierende/master-studiengaenge/informatik/studienplan/fpo-2007-und-fpso-2012.html");
-		this.options.put(this.getString(R.string.business_informatics_master),
-				"https://www.in.tum.de/fuer-studierende/master-studiengaenge/wirtschaftsinformatik/studienplan/ab-ss-2014.html");
+        // Sets the adapter
+        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
+        ListView list = (ListView) this.findViewById(R.id.activity_curricula_list_view);
+        list.setAdapter(arrayAdapter);
+        list.setOnItemClickListener(this);
 
-		this.options.put(this.getString(R.string.bioinformatics_master),
-				"https://www.in.tum.de/fuer-studierende/master-studiengaenge/bioinformatik/studienplan/ws-20072008.html");
-		this.options.put(this.getString(R.string.automotive_master),
-				"https://www.in.tum.de/fuer-studierende/master-studiengaenge/automotive-software-engineering/studienplanung.html");
-		this.options.put(this.getString(R.string.computational_science_master),
-				"https://www.in.tum.de/fuer-studierende/master-studiengaenge/computational-science-and-engineering/curriculum-and-modules.html");
+        // Fetch all curricula from webservice
+        // TODO create a nicer access class with caching for api access
+        this.options = new Hashtable<String, String>();
+        final TUMOnlineCacheManager t = new TUMOnlineCacheManager(this.getApplicationContext());
+        final Context c = this.getApplicationContext();
+        new AsyncTask<Void, Void, JSONArray>() {
 
-		// Sort curricula options and attach them to the list
-		Vector<String> sortedOptions = new Vector<String>(this.options.keySet());
-		Collections.sort(sortedOptions);
-		String[] optionsArray = sortedOptions.toArray(new String[sortedOptions.size()]);
+            @Override
+            protected JSONArray doInBackground(Void... v) {
 
-		// Sets the adapter with list items
-		ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, optionsArray);
-		ListView list = (ListView) this.findViewById(R.id.activity_curricula_list_view);
-		list.setAdapter(arrayAdapter);
-		list.setOnItemClickListener(this);
-	}
+                try {
+                    return Utils.downloadJsonArray(c, "https://tumcabe.in.tum.de/Api/curricula");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(JSONArray jsonData) {
+
+                try {
+                    for (int i = 0; i < jsonData.length(); i++) {
+                        JSONObject item = jsonData.getJSONObject(i);
+
+                        arrayAdapter.add(item.getString("name"));
+                        options.put(item.getString("name"),item.getString("url"));
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+        }.execute();
+
+    }
 
     /**
      * Handle click on curricula item
+     *
      * @param parent Containing listView
-     * @param view Item view
-     * @param pos Index of item
-     * @param id Id of item
+     * @param view   Item view
+     * @param pos    Index of item
+     * @param id     Id of item
      */
-	@Override
-	public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
-		String curriculumName = ((TextView) view).getText().toString();
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
+        String curriculumName = ((TextView) view).getText().toString();
 
-		// Puts URL and name into an intent and starts the detail view
-		Intent intent = new Intent(this, CurriculaDetailsActivity.class);
-		intent.putExtra(URL, this.options.get(curriculumName));
-		intent.putExtra(NAME, curriculumName);
-		this.startActivity(intent);
-	}
+        // Puts URL and name into an intent and starts the detail view
+        Intent intent = new Intent(this, CurriculaDetailsActivity.class);
+        intent.putExtra(URL, this.options.get(curriculumName));
+        intent.putExtra(NAME, curriculumName);
+        this.startActivity(intent);
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId()==android.R.id.home) {
+        if (item.getItemId() == android.R.id.home) {
             finish();
             return true;
         }
