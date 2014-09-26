@@ -26,7 +26,6 @@ public class RoomFinderActivity extends ActivityForSearching implements TUMRoomF
     private TUMRoomFinderRequest roomFinderRequest;
 
     private ListView list;
-    private RoomFinderListAdapter adapter;
 
     private String currentlySelectedBuildingId;
     private String currentlySelectedRoomId;
@@ -58,7 +57,7 @@ public class RoomFinderActivity extends ActivityForSearching implements TUMRoomF
         list = (ListView) findViewById(R.id.list);
 
         // Getting adapter by passing xml data ArrayList
-        adapter = new RoomFinderListAdapter(this, result);
+        RoomFinderListAdapter adapter = new RoomFinderListAdapter(this, result);
         list.setAdapter(adapter);
         list.setOnItemClickListener(this);
 

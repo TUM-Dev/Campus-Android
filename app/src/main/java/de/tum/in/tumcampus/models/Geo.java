@@ -7,11 +7,18 @@ import org.simpleframework.xml.Root;
 public class Geo {
     @SuppressWarnings("FieldCanBeLocal")
     @Element(required = false)
-    private final String latitude = "0";
+    private String latitude = "0";
 
     @SuppressWarnings("FieldCanBeLocal")
     @Element(required = false)
-    private final String longitude = "0";
+    private String longitude = "0";
+
+    public Geo() {}
+
+    public Geo(double latitude, double longitude) {
+        this.latitude = Double.toString(latitude);
+        this.longitude = Double.toString(longitude);
+    }
 
     public String getLatitude() {
         return latitude;

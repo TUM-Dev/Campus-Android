@@ -16,7 +16,7 @@ public interface TUMOnlineRequestFetchListener {
 	/**
 	 * fetchInteractive will call this method if the fetch of the
 	 * TUMOnlineRequest has succeeded
-	 * 
+	 *
 	 * @param rawResponse this will be the raw return of the fetch
 	 */
 	public void onFetch(String rawResponse);

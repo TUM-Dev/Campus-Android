@@ -103,7 +103,7 @@ public class OrganisationDetailsActivity extends ActivityForAccessingTumOnline {
 	/**
 	 * When the data has arrived call this function, parse the Data and Update
 	 * the UserInterface
-	 * 
+	 *
 	 * @param rawResponse XML-TUMCampus-Response (String)
 	 */
 	@Override

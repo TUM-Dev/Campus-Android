@@ -96,6 +96,7 @@ public class StartupActivity extends ActionBarActivity {
             if (intent.getAction().equals(DownloadService.BROADCAST_NAME)) {
                 startApp();
             }
+            //TODO handle error and warning result
         }
     };
 

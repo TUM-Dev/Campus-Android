@@ -172,8 +172,7 @@ public class TUMOnlineRequest {
 				if (result == null) {
 					listener.onFetchError(context.getString(R.string.empty_result));
 					return;
-				} else if (result
-						.contains(TOKEN_NICHT_BESTAETIGT)) {
+				} else if (result.contains(TOKEN_NICHT_BESTAETIGT)) {
 					listener.onFetchError(context.getString(R.string.dialog_access_token_invalid));
 					return;
 				} else if (result.contains(NO_FUNCTION_RIGHTS)) {

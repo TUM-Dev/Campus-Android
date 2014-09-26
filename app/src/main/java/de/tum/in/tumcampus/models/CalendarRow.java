@@ -88,4 +88,8 @@ public class CalendarRow {
     public void setUrl(String url) {
         this.url = url;
     }
+
+    public void setGeo(Geo geo) {
+        this.geo = geo;
+    }
 }

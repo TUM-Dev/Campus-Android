@@ -112,20 +112,22 @@ public class DownloadService extends IntentService {
             } catch (TimeoutException e) {
                 if (!isDestroyed) {
                     Utils.log(e);
-                    broadcastWarning(getResources().getString(
-                            R.string.exception_timeout));
+                    broadcastWarning(getResources().getString(R.string.exception_timeout));
+                    successful = false;
                 }
             } catch (IOException e) {
                 if (!isDestroyed) {
                     Utils.log(e);
                     broadcastError(getResources().getString(
                             R.string.exception_sdcard));
+                    successful = false;
                 }
             } catch (Exception e) {
                 Utils.log(e, "Unknown error while handling action <" + action + ">");
                 if (!isDestroyed) {
                     broadcastError(getResources().getString(
                             R.string.exception_unknown));
+                    successful = false;
                 }
             }
         }

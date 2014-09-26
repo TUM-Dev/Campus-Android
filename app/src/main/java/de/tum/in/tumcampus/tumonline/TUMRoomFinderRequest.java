@@ -13,6 +13,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -22,6 +24,7 @@ import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.auxiliary.XMLParser;
+import de.tum.in.tumcampus.models.Geo;
 
 /**
  * Base class for communication with TUMRoomFinder
@@ -68,17 +71,50 @@ public class TUMRoomFinderRequest {
 		}
 	}
 
+    /**
+     * Fetches the result of the HTTPRequest (which can be seen by using
+     * getRequestURL)
+     *
+     * @param roomId Room identifier e.g. 00.09.036@5609
+     * @return position of the room
+     * @see TUMRoomFinderRequest#getRequestURL(java.lang.String)
+     */
+    public Geo fetchCoordinates(String roomId) {
+        setParameter("id", roomId);
+        method = "coordinates";
+
+        String ROOM_SERVICE_URL = SERVICE_BASE_URL + "roommaps/room/";
+        String url = getRequestURL(ROOM_SERVICE_URL);
+        Utils.log("fetching URL " + url);
+
+        try {
+
+            XMLParser parser = new XMLParser();
+            String xml = parser.getXmlFromUrl(url); // getting XML from URL
+            Document doc = parser.getDomElement(xml); // getting DOM element
+
+            Element location = doc.getDocumentElement();
+            double zone = Double.parseDouble(parser.getValue(location, "utm_zone"));
+            double easting = Double.parseDouble(parser.getValue(location, "utm_easting"));
+            double northing = Double.parseDouble(parser.getValue(location, "utm_northing"));
+
+            return UTMtoLL(northing,easting,zone);
+        } catch (Exception e) {
+            Utils.log(e, "FetchError");
+        }
+        return null;
+    }
+
 	/**
 	 * Fetches the result of the HTTPRequest (which can be seen by using
 	 * getRequestURL)
 	 *
-	 * @param searchString Text to search for
-	 * @return output will be a raw String
+	 * @return list of HashMaps representing rooms, Map: attributes -> values
 	 * @see TUMRoomFinderRequest#getRequestURL(java.lang.String)
 	 */
-    ArrayList<HashMap<String, String>> fetch(String searchString) {
-		setParameter("s", searchString);
-		this.method = "search";
+    public ArrayList<HashMap<String, String>> fetchRooms(String searchString) {
+        setParameter("s", searchString);
+        method = "search";
 
 		ArrayList<HashMap<String, String>> roomsList = new ArrayList<HashMap<String, String>>();
 
@@ -126,8 +162,8 @@ public class TUMRoomFinderRequest {
 	String fetchDefaultMapId(String buildingID) {
 		setParameter("id", buildingID);
 
-        String ROOM_SERVICE_DEFAULTMAPURL = SERVICE_BASE_URL + "roommaps/building/";
-        String url = getRequestURL(ROOM_SERVICE_DEFAULTMAPURL);
+        String ROOM_SERVICE_DEFAULT_MAP_URL = SERVICE_BASE_URL + "roommaps/building/";
+        String url = getRequestURL(ROOM_SERVICE_DEFAULT_MAP_URL);
 		Utils.log("fetching Map URL " + url);
 
 		String result = null;
@@ -234,7 +270,8 @@ public class TUMRoomFinderRequest {
 					return null;
 				}
 				// we are online, return fetch result
-				return fetch(searchString[0]);
+
+				return fetchRooms(searchString[0]);
 			}
 
 			@Override
@@ -250,7 +287,6 @@ public class TUMRoomFinderRequest {
 					listener.onFetchError(context
 							.getString(R.string.empty_result));
 					return;
-					// TODO Check whether to move to string.xml
 				}
 				// If there could not be found any problems return usual on
 				// Fetch method
@@ -288,13 +324,44 @@ public class TUMRoomFinderRequest {
 	}
 
     /**
-	 * Sets one parameter name to its given value
+	 * Sets one parameter name to its given value and deletes all others
 	 * 
 	 * @param name identifier of the parameter
 	 * @param value value of the parameter
 	 */
     void setParameter(String name, String value) {
-		parameters.put(name, value);
+        parameters.clear();
+        try {
+            parameters.put(name, URLEncoder.encode(value, "UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            Utils.log(e);
+        }
 	}
 
+
+    /**
+     * Converts UTM based coordinates to latitude and longitude based format
+     */
+    private Geo UTMtoLL(double north, double east, double zone) {
+        double d = 0.99960000000000004;
+        double d1 = 6378137;
+        double d2 = 0.0066943799999999998;
+        double d4 = (1 - Math.sqrt(1 - d2)) / (1 + Math.sqrt(1 - d2));
+        double d15 = east - 500000;
+        double d11 = ((zone - 1) * 6 - 180) + 3;
+        double d3 = d2 / (1 - d2);
+        double d10 = north / d;
+        double d12 = d10 / (d1 * (1 - d2 / 4 - (3 * d2 * d2) / 64 - (5 * Math.pow(d2, 3)) / 256));
+        double d14 = d12 + ((3 * d4) / 2 - (27 * Math.pow(d4, 3)) / 32) * Math.sin(2 * d12) + ((21 * d4 * d4) / 16 - (55 * Math.pow(d4, 4)) / 32) * Math.sin(4 * d12) + ((151 * Math.pow(d4, 3)) / 96) * Math.sin(6 * d12);
+        double d5 = d1 / Math.sqrt(1 - d2 * Math.sin(d14) * Math.sin(d14));
+        double d6 = Math.tan(d14) * Math.tan(d14);
+        double d7 = d3 * Math.cos(d14) * Math.cos(d14);
+        double d8 = (d1 * (1 - d2)) / Math.pow(1 - d2 * Math.sin(d14) * Math.sin(d14), 1.5);
+        double d9 = d15 / (d5 * d);
+        double d17 = d14 - ((d5 * Math.tan(d14)) / d8) * (((d9 * d9) / 2 - (((5 + 3 * d6 + 10 * d7) - 4 * d7 * d7 - 9 * d3) * Math.pow(d9, 4)) / 24) + (((61 + 90 * d6 + 298 * d7 + 45 * d6 * d6) - 252 * d3 - 3 * d7 * d7) * Math.pow(d9, 6)) / 720);
+        d17 = d17 * 180 / Math.PI;
+        double d18 = ((d9 - ((1 + 2 * d6 + d7) * Math.pow(d9, 3)) / 6) + (((((5 - 2 * d7) + 28 * d6) - 3 * d7 * d7) + 8 * d3 + 24 * d6 * d6) * Math.pow(d9, 5)) / 120) / Math.cos(d14);
+        d18 = d11 + d18 * 180 / Math.PI;
+        return new Geo(d18, d17);
+    }
 }

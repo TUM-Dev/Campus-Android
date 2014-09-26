@@ -5,17 +5,21 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.location.Location;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.Cafeteria;
 import de.tum.in.tumcampus.models.CalendarRow;
+import de.tum.in.tumcampus.models.Geo;
+import de.tum.in.tumcampus.tumonline.TUMRoomFinderRequest;
 
 /**
  * Location manager, manages intelligent location services, provides methods to easily access
@@ -89,9 +93,7 @@ public class LocationManager {
      */
     public List<Cafeteria> getCafeterias() {
         // Get current location
-        Location location = getCurrentLocation();
-        if (location == null)
-            return null;
+        Location location = getCurrentOrNextLocation();
 
         final double lat = location.getLatitude();
         final double lng = location.getLongitude();
@@ -112,6 +114,19 @@ public class LocationManager {
         cur.close();
         Collections.sort(list);
         return list;
+    }
+
+    /**
+     * Gets the current location and if it is not available guess
+     * by querying for the next lecture.
+     * @return Any of the above described locations.
+     */
+    private @NonNull Location getCurrentOrNextLocation() {
+        Location l = getCurrentLocation();
+        if(l!=null) {
+            return l;
+        }
+        return getNextLocation();
     }
 
     /**
@@ -211,46 +226,47 @@ public class LocationManager {
      * Queries your calender and gets the campus at which your next lecture takes place
      */
     int getNextCampus() {
-        CalendarManager manager = new CalendarManager(mContext);
-        CalendarRow nextLecture = manager.getNextCalendarItem();
-        if (nextLecture != null) {
-            // TODO:
-            // - nextLecture.getLocation(); of form 00.09.036@5609
-            // - query room location from http://vmbaumgarten3.informatik.tu-muenchen.de/roommaps/room/coordinates?id=00.09.036@5609
-            // - convert UML based position to latitude/longitude
-            // - return getCampusFromLocation(convertedLocation);
-        }
-        return 0; // TODO Replace this (it is just for testing purposes)
-        //return -1;
+        return getCampusFromLocation(getNextLocation());
     }
 
     /**
-     * Converts UTM based coordinates to latitude and longitude based format
+     * Gets the location of the next room where the user has a lecture.
+     * If no lectures are available Garching will be returned
+     *
+     * @return Location of the next lecture room
      */
-    private Location UTMtoLL(double north, double east, double zone) {
-        double d = 0.99960000000000004;
-        double d1 = 6378137;
-        double d2 = 0.0066943799999999998;
-        double d4 = (1 - Math.sqrt(1 - d2)) / (1 + Math.sqrt(1 - d2));
-        double d15 = east - 500000;
-        double d11 = ((zone - 1) * 6 - 180) + 3;
-        double d3 = d2 / (1 - d2);
-        double d10 = north / d;
-        double d12 = d10 / (d1 * (1 - d2 / 4 - (3 * d2 * d2) / 64 - (5 * Math.pow(d2, 3)) / 256));
-        double d14 = d12 + ((3 * d4) / 2 - (27 * Math.pow(d4, 3)) / 32) * Math.sin(2 * d12) + ((21 * d4 * d4) / 16 - (55 * Math.pow(d4, 4)) / 32) * Math.sin(4 * d12) + ((151 * Math.pow(d4, 3)) / 96) * Math.sin(6 * d12);
-        double d5 = d1 / Math.sqrt(1 - d2 * Math.sin(d14) * Math.sin(d14));
-        double d6 = Math.tan(d14) * Math.tan(d14);
-        double d7 = d3 * Math.cos(d14) * Math.cos(d14);
-        double d8 = (d1 * (1 - d2)) / Math.pow(1 - d2 * Math.sin(d14) * Math.sin(d14), 1.5);
-        double d9 = d15 / (d5 * d);
-        double d17 = d14 - ((d5 * Math.tan(d14)) / d8) * (((d9 * d9) / 2 - (((5 + 3 * d6 + 10 * d7) - 4 * d7 * d7 - 9 * d3) * Math.pow(d9, 4)) / 24) + (((61 + 90 * d6 + 298 * d7 + 45 * d6 * d6) - 252 * d3 - 3 * d7 * d7) * Math.pow(d9, 6)) / 720);
-        d17 = d17 * 180 / Math.PI;
-        double d18 = ((d9 - ((1 + 2 * d6 + d7) * Math.pow(d9, 3)) / 6) + (((((5 - 2 * d7) + 28 * d6) - 3 * d7 * d7) + 8 * d3 + 24 * d6 * d6) * Math.pow(d9, 5)) / 120) / Math.cos(d14);
-        d18 = d11 + d18 * 180 / Math.PI;
+    private Location getNextLocation() {
+        CalendarManager manager = new CalendarManager(mContext);
+        CalendarRow nextLecture = manager.getNextCalendarItem();
         Location location = new Location("roomfinder");
-        location.setLatitude(d18);
-        location.setLongitude(d17);
+        if (nextLecture != null) {
+            Geo geo = nextLecture.getGeo();
+            location.setLatitude(Double.parseDouble(geo.getLatitude()));
+            location.setLongitude(Double.parseDouble(geo.getLongitude()));
+        } else {
+            location.setLatitude(48.2648424);
+            location.setLongitude(11.6709511);
+        }
         return location;
+    }
+
+    /**
+     * Translates room title to Geo
+     * HINT: Don't call from UI thread
+     *
+     * @param loc Room title
+     * @return Location or null on failure
+     */
+    public Geo roomLocationStringToGeo(String loc) {
+        TUMRoomFinderRequest requestHandler = new TUMRoomFinderRequest();
+        loc = loc.substring(0,loc.indexOf('(')).trim();
+
+        ArrayList<HashMap<String, String>> request = requestHandler.fetchRooms(loc);
+        if(request.size()>0) {
+            String room = request.get(0).get(TUMRoomFinderRequest.KEY_ARCHITECT_NUMBER);
+            return requestHandler.fetchCoordinates(room);
+        }
+        return null;
     }
 
     private static final double[][] campusLocations = {

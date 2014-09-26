@@ -34,7 +34,7 @@ import de.tum.in.tumcampus.tumonline.TUMOnlineConst;
 public class CalendarActivity extends ActivityForAccessingTumOnline implements OnClickListener {
 
 	/** The space between the first and the last date */
-	public static final int MONTH_AFTER = 3;
+	public static final int MONTH_AFTER = 1;
 	public static final int MONTH_BEFORE = 0;
 
     private final Calendar calendar = new GregorianCalendar();
@@ -208,7 +208,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements O
 
 			@Override
 			protected Boolean doInBackground(Void... params) {
-				calendarManager.importKalendar(rawResponse);
+				calendarManager.importCalendar(rawResponse);
 				return true;
 			}
 

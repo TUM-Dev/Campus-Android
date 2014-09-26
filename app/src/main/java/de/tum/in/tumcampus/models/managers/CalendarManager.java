@@ -18,6 +18,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -29,12 +30,13 @@ import de.tum.in.tumcampus.cards.Card;
 import de.tum.in.tumcampus.cards.NextLectureCard;
 import de.tum.in.tumcampus.models.CalendarRow;
 import de.tum.in.tumcampus.models.CalendarRowSet;
+import de.tum.in.tumcampus.models.Geo;
 
 /**
  * Calendar Manager, handles database stuff, external imports
  */
 public class CalendarManager implements Card.ProvidesCard {
-    private static final String[] projection = new String[] { "_id", "name" };
+    private static final String[] projection = new String[]{"_id", "name"};
 
     private static final int TIME_TO_SYNC_CALENDAR = 604800; // 1 week
 
@@ -79,8 +81,8 @@ public class CalendarManager implements Card.ProvidesCard {
      * @return Database cursor (name, location, _id)
      */
     public Cursor getCurrentFromDb() {
-        return db.rawQuery( "SELECT title, location, nr "
-                    + "FROM kalendar_events WHERE datetime('now', 'localtime') BETWEEN dtstart AND dtend", null);
+        return db.rawQuery("SELECT title, location, nr "
+                + "FROM kalendar_events WHERE datetime('now', 'localtime') BETWEEN dtstart AND dtend", null);
     }
 
     /**
@@ -98,26 +100,40 @@ public class CalendarManager implements Card.ProvidesCard {
         return result;
     }
 
-    public void importKalendar(String rawResponse) {
+    public void importCalendar(String rawResponse) {
         // Cleanup cache before importing
         removeCache();
 
         // reader for xml
         Serializer serializer = new Persister();
 
-        // KalendarRowSet will contain list of events in KalendarRow
-        CalendarRowSet myKalendarList = new CalendarRowSet();
+        // CalendarRowSet will contain list of events in CalendarRow
+        CalendarRowSet myCalendarList = new CalendarRowSet();
 
-        myKalendarList.setKalendarList(new ArrayList<CalendarRow>());
+        myCalendarList.setKalendarList(new ArrayList<CalendarRow>());
 
         try {
             // reading xml
-            myKalendarList = serializer.read(CalendarRowSet.class, rawResponse);
-            List<CalendarRow> myKalendar = myKalendarList.getKalendarList();
-            if(myKalendar!=null) {
-                for (CalendarRow row : myKalendar) {
+            LocationManager locationManager = new LocationManager(mContext);
+            HashMap<String, Geo> cache = new HashMap<String, Geo>();
+            myCalendarList = serializer.read(CalendarRowSet.class, rawResponse);
+            List<CalendarRow> myCalendar = myCalendarList.getKalendarList();
+            if (myCalendar != null) {
+                for (CalendarRow row : myCalendar) {
                     // insert into database
                     try {
+                        // Retrieve geo from room name
+                        String loc = row.getLocation();
+                        if (cache.containsKey(loc)) {
+                            row.setGeo(cache.get(loc));
+                        } else {
+                            Geo geo = locationManager.roomLocationStringToGeo(loc);
+                            if (geo != null) {
+                                row.setGeo(geo);
+                                cache.put(loc,geo);
+                            }
+                        }
+
                         replaceIntoDb(row);
                     } catch (Exception e) {
                         Utils.log(e, "SIMPLEXML: Error in field: " + e.getMessage());
@@ -125,9 +141,9 @@ public class CalendarManager implements Card.ProvidesCard {
                 }
             }
 
-            // Do sync of google calendar if neccessary
+            // Do sync of google calendar if necessary
             boolean syncCalendar = Utils.getInternalSettingBool(mContext, Const.SYNC_CALENDAR, false);
-            if(syncCalendar && SyncManager.needSync(db, Const.SYNC_CALENDAR, TIME_TO_SYNC_CALENDAR)) {
+            if (syncCalendar && SyncManager.needSync(db, Const.SYNC_CALENDAR, TIME_TO_SYNC_CALENDAR)) {
                 syncCalendar(mContext);
             }
         } catch (Exception e) {
@@ -185,6 +201,7 @@ public class CalendarManager implements Card.ProvidesCard {
 
     /**
      * Deletes a local Google calendar
+     *
      * @return Number of rows deleted
      */
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
@@ -254,10 +271,9 @@ public class CalendarManager implements Card.ProvidesCard {
     /**
      * Gets the next lecture or the current running lecture,
      * if it started during the last 30 minutes
-     * */
+     */
     public CalendarRow getNextCalendarItem() {
-        Cursor cur = db.rawQuery("" +
-                " SELECT title, dtstart, location " +
+        Cursor cur = db.rawQuery("SELECT title, dtstart, location " +
                 " FROM kalendar_events " +
                 " WHERE " +
                 " datetime('now', 'localtime')-1800 < dtstart AND " +
@@ -278,12 +294,13 @@ public class CalendarManager implements Card.ProvidesCard {
 
     /**
      * Shows next lecture card if lecture is available
+     *
      * @param context Context
      */
     @Override
     public void onRequestCard(Context context) {
         CalendarRow row = getNextCalendarItem();
-        if (row!=null) {
+        if (row != null) {
             NextLectureCard card = new NextLectureCard(context);
             card.setLecture(row.getTitle(), row.getDtstart(), row.getDtend());
             card.apply();

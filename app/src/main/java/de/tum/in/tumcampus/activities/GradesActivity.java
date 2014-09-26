@@ -316,7 +316,7 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 
 	/**
 	 * Handle the response by de-serializing it into model entities.
-	 * 
+	 *
 	 * @param rawResponse Raw text response
 	 */
 	@Override

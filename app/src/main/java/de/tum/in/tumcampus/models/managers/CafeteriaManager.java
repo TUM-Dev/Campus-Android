@@ -31,26 +31,19 @@ public class CafeteriaManager implements Card.ProvidesCard {
 	 * Get Cafeteria object by JSON object
 	 * 
 	 * Example JSON: e.g.
-	 * {"id":"411","name":"Mensa Leopoldstra\u00dfe","anschrift"
-	 * :"Leopoldstra\u00dfe 13a, M\u00fcnchen"}
+	 * {"mensa":"4", "id":"411","name":"Mensa Leopoldstra\u00dfe","anschrift"
+	 * :"Leopoldstra\u00dfe 13a, M\u00fcnchen", "latitude":0.0000, "longitude":0.0000}
 	 *
 	 * @param json See example
 	 * @return Cafeteria object
 	 * @throws JSONException
 	 */
 	private static Cafeteria getFromJson(JSONObject json) throws JSONException {
-
-		return new Cafeteria(json.getInt(Const.JSON_ID),
+        return new Cafeteria(json.getInt(Const.JSON_ID),
 				json.getString(Const.JSON_NAME),
-				json.getString(Const.JSON_ANSCHRIFT),
-                48.267510,
-                11.671278);
-        //TODO use cafeterias.json from webservice instead
-		/*return new Cafeteria(json.getInt(Const.JSON_ID),
-				json.getString(Const.JSON_NAME),
-				json.getString(Const.JSON_ANSCHRIFT),
+				json.getString(Const.JSON_ADDRESS),
                 json.getDouble(Const.JSON_LATITUDE),
-                json.getDouble(Const.JSON_LONGITUDE));*/
+                json.getDouble(Const.JSON_LONGITUDE));
 	}
 
 	/** Database connection */
@@ -89,10 +82,9 @@ public class CafeteriaManager implements Card.ProvidesCard {
 			return;
 		}
 
-        //TODO use cafeterias.json from webservice instead
-		String url = "http://lu32kap.typo3.lrz.de/mensaapp/exportDB.php";
+		String url = "https://tumcabe.in.tum.de/Api/mensen";
 
-		JSONArray jsonArray = Utils.downloadJson(url).getJSONArray(Const.JSON_MENSA_MENSEN);
+		JSONArray jsonArray = Utils.downloadJsonArray(mContext, url);
 		removeCache();
 
 		// write cafeterias into database, transaction = speedup
@@ -131,8 +123,6 @@ public class CafeteriaManager implements Card.ProvidesCard {
 	 * @throws Exception
 	 */
     void replaceIntoDb(Cafeteria c) throws Exception {
-		Utils.log(c.toString());
-
 		if (c.id <= 0) {
 			throw new Exception("Invalid id.");
 		}

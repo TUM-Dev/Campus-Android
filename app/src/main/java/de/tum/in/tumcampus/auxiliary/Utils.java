@@ -19,6 +19,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -35,14 +36,15 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.TimeoutException;
+import java.util.UUID;
 
 /**
  * Class for common helper functions used by a lot of classes
  */
 public class Utils {
-	/** Counter for unfinished downloads */
-	private static int openDownloads = 0;
+    /* Device id */
+    private static String uniqueID = null;
+    private static final String PREF_UNIQUE_ID = "PREF_UNIQUE_ID";
 
 	/**
 	 * Builds a HTML document out of a css file and the body content.
@@ -180,15 +182,12 @@ public class Utils {
 	 * @param target Target filename in local file system
 	 */
 	public static void downloadFileThread(final String url, final String target) {
-		openDownloads++;
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				// TODO Who handles exception?
 				try {
 					log(url);
 					downloadFile(url, target);
-					openDownloads--;
 				} catch (Exception e) {
 					log(e, url);
 				}
@@ -202,7 +201,6 @@ public class Utils {
      * @return Downloaded image as {@link Bitmap}
      */
     public static Bitmap downloadImage(final String url) {
-        openDownloads++;
         Bitmap sourceImage = null;
         try {
             log(url);
@@ -214,7 +212,6 @@ public class Utils {
                 Utils.log(e);
             } finally {
                 is.close();
-                openDownloads--;
             }
         } catch (Exception e) {
             log(e, url);
@@ -222,41 +219,71 @@ public class Utils {
         return sourceImage;
     }
 
-	/**
-	 * Download a JSON stream from a URL
-	 *
-	 * @param url Valid URL
-	 * @return JSONObject
-	 * @throws Exception
-	 */
-	public static JSONObject downloadJson(String url) throws Exception {
+    /**
+     * Download a JSON stream from a URL
+     *
+     * @param url Valid URL
+     * @return JSONObject
+     * @throws Exception
+     */
+    public static JSONObject downloadJson(String url) throws Exception {
         logv("downloadJson load from " + url);
 
-		HttpClient httpclient = new DefaultHttpClient();
-		HttpParams params = httpclient.getParams();
-		HttpConnectionParams.setSoTimeout(params, Const.HTTP_TIMEOUT);
-		HttpConnectionParams.setConnectionTimeout(params, Const.HTTP_TIMEOUT);
+        HttpClient httpClient = new DefaultHttpClient();
 
-		HttpEntity entity;
-		try {
-			entity = httpclient.execute(new HttpGet(url)).getEntity();
-		} catch (Exception e) {
-			// Throw a new TimeoutException which is treated later
-			throw new TimeoutException("HTTP Timeout");
-		}
+        HttpParams params = httpClient.getParams();
+        HttpConnectionParams.setSoTimeout(params, Const.HTTP_TIMEOUT);
+        HttpConnectionParams.setConnectionTimeout(params, Const.HTTP_TIMEOUT);
 
-		String data = "";
-		if (entity != null) {
+        HttpEntity entity = httpClient.execute(new HttpGet(url)).getEntity();
 
-			// JSON Response Read
-			InputStream inStream = entity.getContent();
-			data = convertStreamToString(inStream);
+        String data = "";
+        if (entity != null) {
+            // JSON Response Read
+            InputStream inStream = entity.getContent();
+            data = convertStreamToString(inStream);
 
             logv("downloadJson " + data);
-			inStream.close();
-		}
-		return new JSONObject(data);
-	}
+            inStream.close();
+        }
+        return new JSONObject(data);
+    }
+
+
+    /**
+     * Download a JSON stream from a URL
+     *
+     *
+     * @param context Context
+     * @param url Valid URL
+     * @return JSONObject
+     * @throws Exception
+     */
+    public static JSONArray downloadJsonArray(Context context, String url) throws Exception {
+        logv("downloadJson load from " + url);
+
+        HttpClient httpClient = new DefaultHttpClient();
+
+        HttpParams params = httpClient.getParams();
+        HttpConnectionParams.setSoTimeout(params, Const.HTTP_TIMEOUT);
+        HttpConnectionParams.setConnectionTimeout(params, Const.HTTP_TIMEOUT);
+
+        HttpGet get = new HttpGet(url);
+        get.addHeader("X-DEVICE-ID", getDeviceID(context));
+
+        HttpEntity entity = httpClient.execute(get).getEntity();
+
+        String data = "";
+        if (entity != null) {
+            // JSON Response Read
+            InputStream inStream = entity.getContent();
+            data = convertStreamToString(inStream);
+
+            logv("downloadJson " + data);
+            inStream.close();
+        }
+        return new JSONArray(data);
+    }
 
     /**
 	 * Deletes all contents of a cache directory
@@ -660,5 +687,22 @@ public class Utils {
     public static String getInternalSettingString(Context context, String key, String value) {
         SharedPreferences prefs = context.getSharedPreferences(Const.INTERNAL_PREFS, Context.MODE_PRIVATE);
         return prefs.getString(key, value);
+    }
+
+    /**
+     * Gets an unique id that identifies this device
+     *
+     * @param context Context
+     * @return Unique device id
+     */
+    public synchronized static String getDeviceID(Context context) {
+        if (uniqueID == null) {
+            uniqueID = getInternalSettingString(context, PREF_UNIQUE_ID, null);
+            if (uniqueID == null) {
+                uniqueID = UUID.randomUUID().toString();
+                setInternalSetting(context, PREF_UNIQUE_ID, uniqueID);
+            }
+        }
+        return uniqueID;
     }
 }

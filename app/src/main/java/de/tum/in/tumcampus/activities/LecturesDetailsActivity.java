@@ -96,7 +96,7 @@ public class LecturesDetailsActivity extends ActivityForAccessingTumOnline imple
 
 	/**
 	 * process the given TUMOnline Data and display the details
-	 * 
+	 *
 	 * @param rawResponse Raw text response
 	 */
 	@Override

@@ -29,15 +29,15 @@ public final class Const {
 	public static final String HOURS_COLUMN = "hours";
 	public static final int HTTP_TIMEOUT = 25000;
 	public static final String ID_COLUMN = "_id";
-	public static final String JSON_ANSCHRIFT = "anschrift";
+	public static final String JSON_ADDRESS = "address";
 	public static final String JSON_CAPTION = "caption";
 	public static final String JSON_CREATED_TIME = "created_time";
 	public static final String JSON_DATA = "data";
 	public static final String JSON_DESCRIPTION = "description";
 	public static final String JSON_FROM = "from";
 	public static final String JSON_ID = "id";
+    public static final String JSON_MENSA = "mensa";
 	public static final String JSON_LINK = "link";
-	public static final String JSON_MENSA_MENSEN = "mensa_mensen";
 	public static final String JSON_MESSAGE = "message";
 	public static final String JSON_NAME = "name";
 	public static final String JSON_OBJECT_ID = "object_id";

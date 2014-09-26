@@ -46,7 +46,7 @@ public class TUMOnlineCacheManager {
 	}
 
 	/**
-	 * Download usual tumonline requests
+	 * Download usual tumOnline requests
 	 */
 	public void fillCache() {
         // TODO cache news images
@@ -71,7 +71,9 @@ public class TUMOnlineCacheManager {
             TUMOnlineRequest requestHandler = new TUMOnlineRequest(TUMOnlineConst.CALENDER, mContext);
             requestHandler.setParameter("pMonateVor", "0");
             requestHandler.setParameter("pMonateNach", "3");
-            requestHandler.fetch();
+
+            CalendarManager calendarManager = new CalendarManager(mContext);
+            calendarManager.importCalendar(requestHandler.fetch());
             SyncManager.replaceIntoDb(db, "calendar");
         }
 
