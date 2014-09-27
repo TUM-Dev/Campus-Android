@@ -4,7 +4,7 @@ package de.tum.in.tumcampus.tumonline;
  * this interface should frame, how to implement a listener for the
  * fetchInteractive method in TUMOnlineRequest
  */
-public interface TUMOnlineRequestFetchListener {
+public interface TUMOnlineRequestFetchListener<T> {
 
     /**
      * fetchInteractive will call this method if the fetch canceled because of an error
@@ -17,9 +17,9 @@ public interface TUMOnlineRequestFetchListener {
 	 * fetchInteractive will call this method if the fetch of the
 	 * TUMOnlineRequest has succeeded
 	 *
-	 * @param rawResponse this will be the raw return of the fetch
+	 * @param response de-serialized result object
 	 */
-	public void onFetch(String rawResponse);
+	public void onFetch(T response);
 
 	/**
 	 * Called if the fetch was canceled by the user. This should be implemented

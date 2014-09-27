@@ -1,32 +1,22 @@
 package de.tum.in.tumcampus.activities;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
-import org.xml.sax.InputSource;
-import org.xml.sax.XMLReader;
-
-import java.io.StringReader;
-
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.generic.ActivityForAccessingTumOnline;
-import de.tum.in.tumcampus.adapters.OrgDetailsItemHandler;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.Utils;
+import de.tum.in.tumcampus.models.OrgDetailItemList;
 import de.tum.in.tumcampus.models.OrgDetailsItem;
 import de.tum.in.tumcampus.tumonline.TUMOnlineConst;
 
 /**
  * Show all details that are available on TUMCampus to any organisation
  */
-@SuppressLint("DefaultLocale")
-public class OrganisationDetailsActivity extends ActivityForAccessingTumOnline {
+public class OrganisationDetailsActivity extends ActivityForAccessingTumOnline<OrgDetailItemList> {
 
 	/**
 	 * Id of the organisation of which the details should be shown
@@ -39,7 +29,7 @@ public class OrganisationDetailsActivity extends ActivityForAccessingTumOnline {
 	private String orgName;
 
 	public OrganisationDetailsActivity() {
-		super(TUMOnlineConst.ORG_DETAILS, R.layout.activity_organisationdetails);
+		super(TUMOnlineConst.ORG_DETAILS, OrgDetailItemList.class, R.layout.activity_organisationdetails);
 	}
 
     @Override
@@ -104,47 +94,13 @@ public class OrganisationDetailsActivity extends ActivityForAccessingTumOnline {
 	 * When the data has arrived call this function, parse the Data and Update
 	 * the UserInterface
 	 *
-	 * @param rawResponse XML-TUMCampus-Response (String)
+	 * @param result XML-TUMCampus-Response (String)
 	 */
 	@Override
-	public void onFetch(String rawResponse) {
-		// parse XML into one OrgDetailsItem
-		OrgDetailsItem orgDetailsItem = parseOrgDetails(rawResponse);
-		updateUI(orgDetailsItem);
-		showLoadingEnded();
+	public void onFetch(OrgDetailItemList result) {
+        updateUI(result.getGroups().get(0));
+        showLoadingEnded();
 	}
-
-    /**
-     * Parse XML-String into one OrgDetails-Object
-     *
-     * @param rawResp XML-String to parse
-     * @return OrgDetailsItem (OrgDetails Object)
-     */
-    private static OrgDetailsItem parseOrgDetails(String rawResp) {
-
-		/* Get a SAXParser from the SAXPArserFactory. */
-        SAXParserFactory sxParserFactory = SAXParserFactory.newInstance();
-        SAXParser sxParser;
-        try {
-            sxParser = sxParserFactory.newSAXParser();
-
-			/* Get the XMLReader of the SAXParser we created. */
-            XMLReader xmlReader = sxParser.getXMLReader();
-			/* Create a new ContentHandler and apply it to the XML-Reader */
-            OrgDetailsItemHandler orgDetailsItem = new OrgDetailsItemHandler();
-            xmlReader.setContentHandler(orgDetailsItem);
-
-			/* Parse the xml-data from our URL. */
-            xmlReader.parse(new InputSource(new StringReader(rawResp)));
-
-            return orgDetailsItem.getDetails();
-
-        } catch (Exception e) {
-            Utils.log(e);
-        }
-		/* Parsing has finished. */
-        return null;
-    }
 
 	/**
 	 * Show the Organisation Details to the user
@@ -175,7 +131,11 @@ public class OrganisationDetailsActivity extends ActivityForAccessingTumOnline {
 		contact.setText(organisation.getContactName());
 		address.setText(organisation.getContactStreet());
 		homepage.setText(organisation.getContactLocationURL());
-		email.setText(organisation.getContactEmail());
+        String mail = organisation.getContactEmail();
+        mail = mail.replace("ä","ae");
+        mail = mail.replace("ö","oe");
+        mail = mail.replace("ü","ue");
+        email.setText(mail);
 		phone.setText(organisation.getContactTelephone());
 		fax.setText(organisation.getContactFax());
 		secretary.setText(organisation.getContactLocality());

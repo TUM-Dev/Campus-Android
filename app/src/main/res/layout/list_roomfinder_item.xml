@@ -30,9 +30,8 @@
         <TextView
             android:id="@+id/startup_actionbar_title"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:text="title"
+            android:layout_height="wrap_content"
+            android:text="@android:string/untitled"
             android:textSize="@dimen/large_text_size"
             android:textStyle="bold" />
 
@@ -40,7 +39,7 @@
             android:id="@+id/building"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="building"
+            android:text="@android:string/untitled"
             android:textColor="@color/text_dark_gray"
             android:textSize="@dimen/mid_text_size" />
     </LinearLayout>

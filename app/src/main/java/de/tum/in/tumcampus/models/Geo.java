@@ -3,13 +3,12 @@ package de.tum.in.tumcampus.models;
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.Root;
 
+@SuppressWarnings({"FieldCanBeLocal","UnusedDeclaration"})
 @Root(name = "geo")
 public class Geo {
-    @SuppressWarnings("FieldCanBeLocal")
     @Element(required = false)
     private String latitude = "0";
 
-    @SuppressWarnings("FieldCanBeLocal")
     @Element(required = false)
     private String longitude = "0";
 

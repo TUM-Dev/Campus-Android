@@ -10,6 +10,8 @@ import java.io.Serializable;
  * to. Note: This model is based on the TUMOnline web service response format
  * for a corresponding request.
  */
+
+@SuppressWarnings("UnusedDeclaration")
 @Root(name = "gruppe", strict = false)
 public class Group implements Serializable {
 
@@ -27,10 +29,6 @@ public class Group implements Serializable {
 	@Element(name = "titel", required = false)
 	private String title;
 
-	public String getDescription() {
-		return description;
-	}
-
 	public String getId() {
 		return id;
 	}
@@ -41,10 +39,6 @@ public class Group implements Serializable {
 
 	public String getTitle() {
 		return title;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
 	}
 
 	public void setId(String id) {

@@ -11,15 +11,15 @@ import java.util.List;
  */
 
 @Root(name = "rowset")
-public class OrgItemList {
+public class OrgDetailItemList {
 
 	/**
 	 * List of OrganisationItems
 	 */
     @ElementList(inline = true, required = false)
-	private List<OrgItem> groups;
+	private List<OrgDetailsItem> groups;
 
-	public List<OrgItem> getGroups() {
+	public List<OrgDetailsItem> getGroups() {
 		return groups;
 	}
 

@@ -2,6 +2,7 @@ package de.tum.in.tumcampus.models;
 
 import java.util.ArrayList;
 
+@SuppressWarnings("UnusedDeclaration")
 public class ChatRoom {
 	
 	private String messages;

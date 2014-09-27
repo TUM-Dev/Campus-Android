@@ -69,33 +69,6 @@ public class Utils {
     }
 
     /**
-     * Convert an input stream to a string
-     *
-     * @param is input stream from file, download
-     * @return output string
-     */
-    private static String convertStreamToString(InputStream is) {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-        StringBuilder sb = new StringBuilder();
-
-        String line;
-        try {
-            while ((line = reader.readLine()) != null) {
-                sb.append(line).append("\n");
-            }
-        } catch (IOException e) {
-            log(e, "convertStreamToString failed");
-        } finally {
-            try {
-                is.close();
-            } catch (IOException e) {
-                Utils.log(e);
-            }
-        }
-        return sb.toString();
-    }
-
-    /**
      * Cut substring from a text.
      *
      * @param text        The text.
@@ -264,7 +237,7 @@ public class Utils {
     public static JSONArray downloadJsonArray(Context context, String url, boolean fillCache) {
         logv("downloadJson load from " + url);
 
-        String result = "";
+        String result;
         try {
             CacheManager cacheManager = new CacheManager(context);
             result = cacheManager.getFromCache(url);
@@ -283,7 +256,7 @@ public class Utils {
                 if (entity != null) {
                     // do something with the response
                     result = EntityUtils.toString(entity);
-                    cacheManager.addToCache(url, result);
+                    cacheManager.addToCache(url, result,0);
                     logv("added to cache " + url);
                     logv("downloadJson " + result);
                 }

@@ -14,6 +14,8 @@ import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
+import org.simpleframework.xml.Serializer;
+import org.simpleframework.xml.core.Persister;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -31,7 +33,7 @@ import de.tum.in.tumcampus.models.managers.CacheManager;
  * XML-RPC backend. ALl communications is based on the base-url which is
  * attached by the Token and additional parameters.
  */
-public class TUMOnlineRequest {
+public class TUMOnlineRequest<T> {
 	// server address
 	private static final String SERVICE_BASE_URL = "https://campus.tum.de/tumonline/wbservicesbasic.";
 
@@ -39,7 +41,7 @@ public class TUMOnlineRequest {
     private static final String NO_FUNCTION_RIGHTS = "Keine Rechte für Funktion";
 
     /** String possibly contained in response from server */
-    private static final String TOKEN_NICHT_BESTAETIGT = "Token ist nicht bestätigt oder ungültig!";
+    private static final String TOKEN_NOT_CONFIRMED = "Token ist nicht bestätigt oder ungültig!";
 
     // force to fetch data and fill cache
     private boolean fillCache = false;
@@ -48,7 +50,7 @@ public class TUMOnlineRequest {
 	private String accessToken = null;
 
 	/** asynchronous task for interactive fetch */
-    private AsyncTask<Void, Void, String> backgroundTask = null;
+    private AsyncTask<Void, Void, T> backgroundTask = null;
 
 	/** http client instance for fetching */
 	private final HttpClient client;
@@ -58,19 +60,25 @@ public class TUMOnlineRequest {
 
 	/** a list/map for the needed parameters */
 	private Map<String, String> parameters;
+
     private final CacheManager cacheManager;
 
-    private TUMOnlineRequest(Context context) {
+    private Class<T> returnClass;
+    private String lastError;
+
+    @SuppressWarnings("unchecked")
+    private TUMOnlineRequest(Context context, Class<T> returnClass) {
         cacheManager = new CacheManager(context);
 		client = getThreadSafeClient();
 		resetParameters();
 		HttpParams params = client.getParams();
 		HttpConnectionParams.setSoTimeout(params, Const.HTTP_TIMEOUT);
 		HttpConnectionParams.setConnectionTimeout(params, Const.HTTP_TIMEOUT);
+        this.returnClass = returnClass;
 	}
 
-	public TUMOnlineRequest(TUMOnlineConst method, Context context, boolean needsToken) {
-		this(context);
+	public TUMOnlineRequest(TUMOnlineConst method, Class<T> returnClass, Context context, boolean needsToken) {
+		this(context, returnClass);
 		this.method = method;
 
         if(needsToken) {
@@ -78,8 +86,8 @@ public class TUMOnlineRequest {
         }
 	}
 
-    public TUMOnlineRequest(TUMOnlineConst method, Context context) {
-        this(method, context, true);
+    public TUMOnlineRequest(TUMOnlineConst method, Class<T> returnClass, Context context) {
+        this(method, returnClass, context, true);
         this.fillCache = true;
     }
 
@@ -95,7 +103,7 @@ public class TUMOnlineRequest {
      *
 	 * @return output will be a raw String
 	 */
-	public String fetch() {
+	public T fetch() {
 		String result;
 		String url = getRequestURL();
 		Utils.log("fetching URL " + url);
@@ -110,7 +118,7 @@ public class TUMOnlineRequest {
                 if (responseEntity != null) {
                     // do something with the response
                     result = EntityUtils.toString(responseEntity);
-                    cacheManager.addToCache(url, result);
+                    cacheManager.addToCache(url, result, 0);
                     Utils.logv("added to cache " + url);
                 }
             } else {
@@ -118,9 +126,17 @@ public class TUMOnlineRequest {
             }
 		} catch (Exception e) {
 			Utils.log(e, "FetchError");
-			return e.getMessage();
+            lastError = e.getMessage();
+			return null;
 		}
-		return result;
+
+        Serializer serializer = new Persister();
+        try {
+            return serializer.read(returnClass, result);
+        } catch (Exception e) {
+            Utils.log(e);
+            return null;
+        }
 	}
 
 	/**
@@ -131,7 +147,7 @@ public class TUMOnlineRequest {
 	 * @param context the current context (may provide the current activity)
 	 * @param listener the listener, which takes the result
 	 */
-	public void fetchInteractive(final Context context, final TUMOnlineRequestFetchListener listener) {
+	public void fetchInteractive(final Context context, final TUMOnlineRequestFetchListener<T> listener) {
 
 		if (!loadAccessTokenFromPreferences(context)) {
 			listener.onFetchCancelled();
@@ -139,13 +155,13 @@ public class TUMOnlineRequest {
 
 		// fetch information in a background task and show progress dialog in
 		// meantime
-		backgroundTask = new AsyncTask<Void, Void, String>() {
+		backgroundTask = new AsyncTask<Void, Void, T>() {
 
 			/** property to determine if there is an internet connection */
 			boolean isOnline;
 
 			@Override
-			protected String doInBackground(Void... params) {
+			protected T doInBackground(Void... params) {
 				// set parameter on the TUMOnline request an fetch the results
 				isOnline = Utils.isConnected(context);
 				if (!isOnline) {
@@ -157,27 +173,29 @@ public class TUMOnlineRequest {
 			}
 
 			@Override
-			protected void onPostExecute(String result) {
-				if (result != null) {
-					Utils.logv("Received result <" + result + ">");
-				} else {
-					Utils.log("No result available");
-				}
-				// Handles result
-				if (!isOnline) {
-					listener.onCommonError(context.getString(R.string.no_internet_connection));
-					return;
-				}
-				if (result == null) {
-					listener.onFetchError(context.getString(R.string.empty_result));
-					return;
-				} else if (result.contains(TOKEN_NICHT_BESTAETIGT)) {
-					listener.onFetchError(context.getString(R.string.dialog_access_token_invalid));
-					return;
-				} else if (result.contains(NO_FUNCTION_RIGHTS)) {
-					listener.onFetchError(context.getString(R.string.dialog_no_rights_function));
-					return;
-				}
+			protected void onPostExecute(T result) {
+                if (result != null) {
+                    Utils.logv("Received result <" + result + ">");
+                } else {
+                    Utils.log("No result available");
+                }
+                // Handles result
+                if (!isOnline) {
+                    listener.onCommonError(context.getString(R.string.no_internet_connection));
+                    return;
+                }
+                if (result == null) {
+                    if (lastError.contains(TOKEN_NOT_CONFIRMED)) {
+                        listener.onFetchError(context.getString(R.string.dialog_access_token_invalid));
+                        return;
+                    } else if (lastError.contains(NO_FUNCTION_RIGHTS)) {
+                        listener.onFetchError(context.getString(R.string.dialog_no_rights_function));
+                        return;
+                    } else {
+                        listener.onFetchError(context.getString(R.string.empty_result));
+                        return;
+                    }
+                }
 				// If there could not be found any problems return usual on
 				// Fetch method
 				listener.onFetch(result);

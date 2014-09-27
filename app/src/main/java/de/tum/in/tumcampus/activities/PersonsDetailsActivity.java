@@ -23,9 +23,6 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.simpleframework.xml.Serializer;
-import org.simpleframework.xml.core.Persister;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -46,13 +43,13 @@ import de.tum.in.tumcampus.tumonline.TUMOnlineConst;
 /**
  * Activity to show information about an person at TUM.
  */
-public class PersonsDetailsActivity extends ActivityForAccessingTumOnline {
+public class PersonsDetailsActivity extends ActivityForAccessingTumOnline<Employee> {
 
     private Employee mEmployee;
     private MenuItem mContact;
 
     public PersonsDetailsActivity() {
-		super(TUMOnlineConst.PERSONEN_DETAILS, R.layout.activity_personsdetails);
+		super(TUMOnlineConst.PERSONEN_DETAILS, Employee.class, R.layout.activity_personsdetails);
 	}
 
     @Override
@@ -100,25 +97,11 @@ public class PersonsDetailsActivity extends ActivityForAccessingTumOnline {
     }
 
     @Override
-    public void onFetch(String rawResponse) {
-        Utils.logv(rawResponse);
-
-        // deserialize XML response to model entities
-        Serializer serializer = new Persister();
-        try {
-            mEmployee = serializer.read(Employee.class, rawResponse);
-
-            if (mEmployee != null) {
-                displayResults(mEmployee);
-                showLoadingEnded();
-                mContact.setVisible(true);
-            } else {
-                showErrorLayout();
-            }
-        } catch (Exception e) {
-            Utils.log(e);
-            showErrorLayout();
-        }
+    public void onFetch(Employee rawResponse) {
+        mEmployee = rawResponse;
+        displayResults(mEmployee);
+        mContact.setVisible(true);
+        showLoadingEnded();
     }
 
     /**

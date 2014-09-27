@@ -10,12 +10,8 @@ import android.net.Uri;
 import android.os.Build;
 import android.provider.CalendarContract;
 
-import org.simpleframework.xml.Serializer;
-import org.simpleframework.xml.core.Persister;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -100,54 +96,40 @@ public class CalendarManager implements Card.ProvidesCard {
         return result;
     }
 
-    public void importCalendar(String rawResponse) {
+    public void importCalendar(CalendarRowSet myCalendarList) {
         // Cleanup cache before importing
         removeCache();
 
-        // reader for xml
-        Serializer serializer = new Persister();
-
-        // CalendarRowSet will contain list of events in CalendarRow
-        CalendarRowSet myCalendarList = new CalendarRowSet();
-
-        myCalendarList.setKalendarList(new ArrayList<CalendarRow>());
-
-        try {
-            // reading xml
-            LocationManager locationManager = new LocationManager(mContext);
-            HashMap<String, Geo> cache = new HashMap<String, Geo>();
-            myCalendarList = serializer.read(CalendarRowSet.class, rawResponse);
-            List<CalendarRow> myCalendar = myCalendarList.getKalendarList();
-            if (myCalendar != null) {
-                for (CalendarRow row : myCalendar) {
-                    // insert into database
-                    try {
-                        // Retrieve geo from room name
-                        String loc = row.getLocation();
-                        if (cache.containsKey(loc)) {
-                            row.setGeo(cache.get(loc));
-                        } else {
-                            Geo geo = locationManager.roomLocationStringToGeo(loc);
-                            if (geo != null) {
-                                row.setGeo(geo);
-                                cache.put(loc,geo);
-                            }
+        // reading xml
+        LocationManager locationManager = new LocationManager(mContext);
+        HashMap<String, Geo> cache = new HashMap<String, Geo>();
+        List<CalendarRow> myCalendar = myCalendarList.getKalendarList();
+        if (myCalendar != null) {
+            for (CalendarRow row : myCalendar) {
+                // insert into database
+                try {
+                    // Retrieve geo from room name
+                    String loc = row.getLocation();
+                    if (cache.containsKey(loc)) {
+                        row.setGeo(cache.get(loc));
+                    } else {
+                        Geo geo = locationManager.roomLocationStringToGeo(loc);
+                        if (geo != null) {
+                            row.setGeo(geo);
+                            cache.put(loc,geo);
                         }
-
-                        replaceIntoDb(row);
-                    } catch (Exception e) {
-                        Utils.log(e, "SIMPLEXML: Error in field: " + e.getMessage());
                     }
+                    replaceIntoDb(row);
+                } catch (Exception e) {
+                    Utils.log(e, "SIMPLEXML: Error in field: " + e.getMessage());
                 }
             }
+        }
 
-            // Do sync of google calendar if necessary
-            boolean syncCalendar = Utils.getInternalSettingBool(mContext, Const.SYNC_CALENDAR, false);
-            if (syncCalendar && SyncManager.needSync(db, Const.SYNC_CALENDAR, TIME_TO_SYNC_CALENDAR)) {
-                syncCalendar(mContext);
-            }
-        } catch (Exception e) {
-            Utils.log(e);
+        // Do sync of google calendar if necessary
+        boolean syncCalendar = Utils.getInternalSettingBool(mContext, Const.SYNC_CALENDAR, false);
+        if (syncCalendar && SyncManager.needSync(db, Const.SYNC_CALENDAR, TIME_TO_SYNC_CALENDAR)) {
+            syncCalendar(mContext);
         }
     }
 
@@ -273,6 +255,7 @@ public class CalendarManager implements Card.ProvidesCard {
      * if it started during the last 30 minutes
      */
     public CalendarRow getNextCalendarItem() {
+        // TODO investigate
         Cursor cur = db.rawQuery("SELECT title, dtstart, location " +
                 " FROM kalendar_events " +
                 " WHERE " +

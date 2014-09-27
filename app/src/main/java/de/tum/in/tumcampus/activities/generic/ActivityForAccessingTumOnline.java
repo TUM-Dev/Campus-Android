@@ -21,14 +21,15 @@ import de.tum.in.tumcampus.tumonline.TUMOnlineRequestFetchListener;
  * TUMOnline and implements a rich user feedback with error progress and token
  * related layouts.
  */
-public abstract class ActivityForAccessingTumOnline extends ProgressActivity implements TUMOnlineRequestFetchListener {
+public abstract class ActivityForAccessingTumOnline<T> extends ProgressActivity implements TUMOnlineRequestFetchListener<T> {
 
 	/** The method which should be invoked by the TumOnlineFetcher */
 	private final TUMOnlineConst method;
+    private final Class<T> returnClass;
 
-	/** Default layouts for user interaction */
+    /** Default layouts for user interaction */
     private RelativeLayout noTokenLayout;
-    protected RelativeLayout failedTokenLayout;
+    private RelativeLayout failedTokenLayout;
 	protected TUMOnlineRequest requestHandler;
 
     /**
@@ -40,28 +41,29 @@ public abstract class ActivityForAccessingTumOnline extends ProgressActivity imp
      * @param method A identifier specifying what kind of data should be fetched from TumOnline
      * @param layoutId Resource id of the xml layout that should be used to inflate the activity
      */
-	public ActivityForAccessingTumOnline(TUMOnlineConst method, int layoutId) {
+	public ActivityForAccessingTumOnline(TUMOnlineConst method, Class<T> returnClass, int layoutId) {
         super(layoutId);
         this.method = method;
+        this.returnClass = returnClass;
 	}
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        failedTokenLayout = (RelativeLayout) findViewById(R.id.failed_layout); // TODO make this private and add accessor methods
+        failedTokenLayout = (RelativeLayout) findViewById(R.id.failed_layout);
         noTokenLayout = (RelativeLayout) findViewById(R.id.no_token_layout);
 
         if (noTokenLayout == null || failedTokenLayout == null) {
             Utils.log("Cannot find layouts, did you forget to provide no or failed token layouts?");
         }
 
-        requestHandler = new TUMOnlineRequest(method, this, true);
+        requestHandler = new TUMOnlineRequest<T>(method, returnClass, this, true);
     }
 
     /**
      * Starts fetching data from TumOnline in background
-     * {@link #onFetch(String)} gets called if data was fetched successfully.
+     * {@link #onFetch(T)} gets called if data was fetched successfully.
      * If an error occurred it is handled by {@link ActivityForAccessingTumOnline}.
      * */
     protected void requestFetch() {
@@ -70,11 +72,10 @@ public abstract class ActivityForAccessingTumOnline extends ProgressActivity imp
 
     /**
      * Starts fetching data from TumOnline in background
-     * {@link #onFetch(String)} gets called if data was fetched successfully.
+     * {@link #onFetch(T)} gets called if data was fetched successfully.
      * If an error occurred it is handled by {@link ActivityForAccessingTumOnline}.
      *
-     * @param force Force reload of content
-     * */
+     * @param force Force reload of content */
     protected void requestFetch(boolean force) {
         String accessToken = PreferenceManager.getDefaultSharedPreferences(this).getString(Const.ACCESS_TOKEN, null);
         if (accessToken != null) {
@@ -132,5 +133,13 @@ public abstract class ActivityForAccessingTumOnline extends ProgressActivity imp
     @Override
     public void onRefreshStarted(View view) {
         requestFetch(true);
+    }
+
+    /**
+     * Shows failed layout
+     */
+    protected void showFailedTokenLayout() {
+        showLoadingEnded();
+        failedTokenLayout.setVisibility(View.VISIBLE);
     }
 }

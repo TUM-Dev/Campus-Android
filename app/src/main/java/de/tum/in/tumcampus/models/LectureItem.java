@@ -9,8 +9,7 @@ import de.tum.in.tumcampus.auxiliary.Utils;
  */
 class LectureItem {
 
-	// TODO Check whether to externalise Strings ex. Feiertag - problems (no
-	// activity)
+	// TODO Check whether to externalise Strings ex. Feiertag - problems (no activity)
 	/**
 	 * Holiday object (extends LectureItem)
 	 */
@@ -18,12 +17,10 @@ class LectureItem {
 
 		/**
 		 * New Holiday
-		 * 
-		 * <pre>
+		 *
 		 * @param id Holiday ID
 		 * @param date Date
 		 * @param name Name, e.g. Allerheiligen
-		 * </pre>
 		 */
 
 		public Holiday(String id, Date date, String name) {
@@ -32,8 +29,7 @@ class LectureItem {
 			 * String module, String location, String note, String url, String
 			 * seriesId
 			 */
-			super(id, "holiday", date, date, "Feiertage", "", "", name,
-					"about:blank", id);
+			super(id, "holiday", date, date, "Feiertage", "", "", name, "about:blank", id);
 		}
 	}
 
@@ -44,17 +40,14 @@ class LectureItem {
 
 		/**
 		 * New Vacation
-		 * 
-		 * <pre>
+		 *
 		 * @param id Vacation ID
 		 * @param start Begin Date
 		 * @param end End Date
 		 * @param name Name, e.g. Sommerferien
-		 * </pre>
 		 */
 		public Vacation(String id, Date start, Date end, String name) {
-			super(id, "vacation", start, end, "Ferien", "", "", name,
-					"about:blank", id);
+			super(id, "vacation", start, end, "Ferien", "", "", name, "about:blank", id);
 		}
 	}
 

@@ -41,12 +41,12 @@
     <string name="error_fetching_tumonline">Error accessing TUMOnline.\nPlease make sure your TUMOnline-Access-Token has
 		been\nactivated and the corresponding rights are set.\n\n<b>Click here for retry.</b></string>
     <string name="error_no_token_setup">No TUMOnline-Access-Token was set.\nPlease set your TUMOnline-Access-Token in the\n <i>Settings</i> screen to access TUMOnline features.\n\n<b>Click here for the <i>Settings</i> screen.</b></string>
-    <string name="error_something_wrong">Sorry, something went wrong.\n\n<b>Click here for retry.</b></string>
+    <string name="error_something_wrong"><![CDATA[Sorry, something went wrong.\n\n<b>Click here to retry.</b>]]></string>
     <string name="dialog_new_token">Your TUMOnline-Access-Token is already set.\n\nClick <i>Yes</i> to generate a new one. \nAs a result, the old Token becomes useless.</string>
     <string name="error_lrz_wrong">Your LRZ Identification is invalid</string>
     <string name="access_token_wasnt_generated">TUMOnline-Access-Token could not be generated</string>
     <string name="dialog_access_token_invalid">TUMOnline-Access-Token not enabled</string>
-    <string name="dialog_no_rights_function">No rights accessing this function</string>
+    <string name="dialog_no_rights_function">No rights to access this function</string>
     <string name="empty_result">The operation delivered a faulty result</string>
 
     <!-- Exam/Grades -->
@@ -59,7 +59,7 @@
     <string name="mode">Mode</string>
     <string name="all_programs">All programs</string>
     <string name="date">Date</string>
-    <string name="credits">ECTS</string>
+    <string name="credits" translatable="false">ECTS</string>
 
     <!-- Preferences -->
     <string name="tumonline_settings">TUMOnline settings</string>
@@ -84,12 +84,12 @@
     <string name="open_wizard_detail">The Startup-Wizard helps you in order to set the basic preferences for accessing TUMOnline services and the layout of this App.</string>
     <string name="clear_cache">Clear Cache</string>
     <string name="clear_cache_detail">Deletes all data which was downloaded by the TUM Campus App and stored on the SD-Card</string>
-    <string name="delete_chache_sure">Are you sure to delete all data?</string>
+    <string name="delete_chache_sure">Are you sure you want to delete all data?</string>
     <string name="success_clear_cache">Successfully cleared cache</string>
 
     <string name="services">Services</string>
     <string name="silence_phone">Silent Service</string>
-    <string name="silence_phone_info">Sets you device in silent mode if a lectures has been recognized.</string>
+    <string name="silence_phone_info">The device will be automatically put into silent mode during a lecture.</string>
     <string name="background_mode">Background Mode</string>
     <string name="background_info">Content will be fetched once per day to keep you up-to-date even if you don\'t open the app.</string>
     <string name="demo_mode">In-App-Tutorial</string>
@@ -98,10 +98,10 @@
     <string name="about_tca">About TCA</string>
     <string name="information">Information</string>
     <string name="facebook">Facebook</string>
-    <string name="facebook_link">https://m.facebook.com/TUMCampus</string>
-    <string name="facebook_link_app">fb://page/162327853831856</string>
+    <string name="facebook_link" translatable="false">https://m.facebook.com/TUMCampus</string>
+    <string name="facebook_link_app" translatable="false">fb://page/162327853831856</string>
     <string name="github">Contribute on Github</string>
-    <string name="github_link">https://github.com/TCA-Team/TumCampusApp</string>
+    <string name="github_link" translatable="false">https://github.com/TCA-Team/TumCampusApp</string>
     <string name="licences">Open Source-Licences</string>
     <string name="licences_summary">Legal notes to licences</string>
 
@@ -151,7 +151,7 @@
     <string name="cafeterias">Cafeterias</string>
 
     <!-- Organisations -->
-    <string name="tum">Technische Universität München</string>
+    <string name="tum">Technical university of Munich</string>
     <string name="invalid_organisation">Invalid organization!</string>
     <string name="contact_person">Contact Person</string>
     <string name="secretary">Secretary</string>
@@ -165,9 +165,9 @@
 
     <!-- MVV -->
     <string name="no_departures_found">No departures available</string>
-    <string name="no_station_found">No station found</string>
+    <string name="no_station_found">No stations found</string>
     <string name="exception_unknown">Unknown error</string>
-    <string name="exception_timeout">Problems with internet connection, please try later</string>
+    <string name="exception_timeout">Problems with internet connection, please try again later</string>
     <string name="search_station">Search station</string>
 
     <!-- Lectures -->
@@ -239,7 +239,7 @@
     <string name="display_name">Display name</string>
     <string name="leave_chat_room">Leave chat room</string>
     <string name="leave_chat_room_body">Are you sure you want to leave this chat room?</string>
-    <string name="load_earlier_messages">Load earlier messages</string>
+    <string name="load_earlier_messages">Load older messages</string>
 
     <!-- Cards -->
     <string name="last_updated">The Content was last updated %s.</string>
@@ -279,7 +279,7 @@
     <string name="version">Version</string>
     <string name="send_email">Send e-mail feedback</string>
     <string name="show_feedback">Send feedback</string>
-    <string name="feedbackAddr">tca-support.os.in@tum.de</string>
+    <string name="feedbackAddr" translatable="false">tca-support.os.in@tum.de</string>
     <string name="feedbackSubj">Feedback for TUM Campus App</string>
     <string name="app_info_text" tools:ignore="MissingTranslation"><b>TUM Campus App</b>\nThe TUM Campus App is developed by students of the Android practical course, other voluntary freelancers and chair members.
         \n\n<b>Project Management:</b>\nTUM - Computer Science / F13
@@ -337,7 +337,7 @@
     <string name="not_ask_again">Don\'t ask again</string>
     <string name="eduroam_setup_question">Do you want to connect to eduroam now?</string>
     <string name="eduroam_setup_question_desc">Click to start setting up eduroam</string>
-    <string name="card_eduroam_summary">Allows you to easily setup eduroam wifi connection</string>
+    <string name="card_eduroam_summary">Allows you to easily set up eduroam wifi connection</string>
     <string name="pin_lock">PIN-Lock</string>
     <string name="pin_lock_desc">To set up the wireless access a PIN lock is required.
         If you don\'t already use PIN lock you can set it up here.

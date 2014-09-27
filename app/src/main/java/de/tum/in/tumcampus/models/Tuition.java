@@ -5,10 +5,11 @@ import org.simpleframework.xml.Root;
 
 /**
  * Class holding tuition information.
- * <p>
+ *
  * Note: This model is based on the TUMOnline web service response format for a
- * corresponding request.</p>
+ * corresponding request.
  */
+@SuppressWarnings("UnusedDeclaration")
 @Root(name = "row", strict = false)
 public class Tuition {
 

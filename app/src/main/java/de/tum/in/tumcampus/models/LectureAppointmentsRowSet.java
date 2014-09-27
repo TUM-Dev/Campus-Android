@@ -12,6 +12,7 @@ import java.util.List;
  * @see LectureAppointmentsRow
  * @see <a href="http://simple.sourceforge.net/download/stream/doc/tutorial/tutorial.php">SimpleXML tutorial</a>
  */
+@SuppressWarnings("UnusedDeclaration")
 @Root(name = "rowset")
 public class LectureAppointmentsRowSet {
 

@@ -23,9 +23,6 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.gson.Gson;
 
-import org.simpleframework.xml.Serializer;
-import org.simpleframework.xml.core.Persister;
-
 import java.io.IOException;
 import java.security.KeyFactory;
 import java.security.KeyPair;
@@ -41,10 +38,10 @@ import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.generic.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampus.adapters.LecturesListAdapter;
 import de.tum.in.tumcampus.adapters.NoResultsAdapter;
-import de.tum.in.tumcampus.models.ChatClient;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.RSASigner;
 import de.tum.in.tumcampus.auxiliary.Utils;
+import de.tum.in.tumcampus.models.ChatClient;
 import de.tum.in.tumcampus.models.ChatMember;
 import de.tum.in.tumcampus.models.ChatPublicKey;
 import de.tum.in.tumcampus.models.ChatRegistrationId;
@@ -61,7 +58,7 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
  * This activity presents the chat rooms of user's
  * lectures using the TUMOnline web service
  */
-public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
+public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline<LecturesSearchRowSet> {
     private static final String PROPERTY_APP_VERSION = "appVersion";
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     private static final String SENDER_ID = "1028528438269";
@@ -76,7 +73,7 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
     private String regId;
 
     public ChatRoomsSearchActivity() {
-        super(TUMOnlineConst.LECTURES_PERSONAL, R.layout.activity_lectures);
+        super(TUMOnlineConst.LECTURES_PERSONAL, LecturesSearchRowSet.class, R.layout.activity_lectures);
     }
 
     @Override
@@ -195,28 +192,16 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline {
 
 
     @Override
-    public void onFetch(String rawResponse) {
-        // deserialize the XML
-        Serializer serializer = new Persister();
-        /* filtered list which will be shown */
-        LecturesSearchRowSet lecturesList;
-        try {
-            lecturesList = serializer.read(LecturesSearchRowSet.class, rawResponse);
-        } catch (Exception e) {
-            Utils.log(e);
-            showLoadingEnded();
-            failedTokenLayout.setVisibility(View.VISIBLE);
-            return;
-        }
+    public void onFetch(LecturesSearchRowSet lecturesList) {
+        List<LecturesSearchRow> lectures = lecturesList.getLehrveranstaltungen();
 
-        if (lecturesList == null) {
+        if (lectures == null) { //TODO set required false in model
             // no results found
             lvMyLecturesList.setAdapter(new NoResultsAdapter(this));
             return;
         }
 
         // Sort lectures by semester id
-        List<LecturesSearchRow> lectures = lecturesList.getLehrveranstaltungen();
         Collections.sort(lectures);
 
         // set ListView to data via the LecturesListAdapter

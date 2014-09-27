@@ -5,15 +5,14 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 
-import org.simpleframework.xml.Serializer;
-import org.simpleframework.xml.core.Persister;
-
-import java.util.ArrayList;
-
 import de.tum.in.tumcampus.auxiliary.AccessTokenManager;
 import de.tum.in.tumcampus.auxiliary.Utils;
+import de.tum.in.tumcampus.models.CalendarRowSet;
+import de.tum.in.tumcampus.models.LectureAppointmentsRowSet;
+import de.tum.in.tumcampus.models.LectureDetailsRowSet;
 import de.tum.in.tumcampus.models.LecturesSearchRow;
 import de.tum.in.tumcampus.models.LecturesSearchRowSet;
+import de.tum.in.tumcampus.models.TuitionList;
 import de.tum.in.tumcampus.tumonline.TUMOnlineConst;
 import de.tum.in.tumcampus.tumonline.TUMOnlineRequest;
 
@@ -23,7 +22,7 @@ import de.tum.in.tumcampus.tumonline.TUMOnlineRequest;
 public class CacheManager {
     private static final int TIME_TO_SYNC_CALENDAR = 5 * 86400; // 5 days
     private static final int TIME_TO_SYNC_LECTURES = 86400; // 1 day
-    private static final int TIME_TO_INVALID = 2*86400; // 2 days
+    private static final int TIME_TO_DELETE = 10*86400; // 10 days
 
 	/**
 	 * Database connection
@@ -41,8 +40,9 @@ public class CacheManager {
 		db = DatabaseManager.getDb(context);
 
         // create table if needed
-		db.execSQL("CREATE TABLE IF NOT EXISTS cache (url VARCHAR UNIQUE, data BLOB, lastSync VARCHAR)");
-        db.rawQuery("DELETE FROM cache WHERE lastSync > datetime('now', '-" + TIME_TO_INVALID + " second')", null);
+        db.execSQL("DROP TABLE cache");
+		db.execSQL("CREATE TABLE IF NOT EXISTS cache (url VARCHAR UNIQUE, data BLOB, lastSync VARCHAR, validity INTEGER)");
+        db.rawQuery("DELETE FROM cache WHERE lastSync > datetime('now', '-"+TIME_TO_DELETE+" second')", null);
 	}
 
 	/**
@@ -68,20 +68,23 @@ public class CacheManager {
             importLecturesFromTUMOnline();
 
             // Sync fee status
-            TUMOnlineRequest requestHandler = new TUMOnlineRequest(TUMOnlineConst.STUDIENBEITRAGSTATUS, mContext);
+            TUMOnlineRequest<TuitionList> requestHandler = new TUMOnlineRequest<TuitionList>(TUMOnlineConst.STUDIENBEITRAGSTATUS, TuitionList.class, mContext);
             requestHandler.fetch();
             SyncManager.replaceIntoDb(db, "lectures");
         }
 
         if (SyncManager.needSync(db, "calendar", TIME_TO_SYNC_CALENDAR)) {
             // Sync calendar
-            TUMOnlineRequest requestHandler = new TUMOnlineRequest(TUMOnlineConst.CALENDER, mContext);
+            TUMOnlineRequest<CalendarRowSet> requestHandler = new TUMOnlineRequest<CalendarRowSet>(TUMOnlineConst.CALENDER, CalendarRowSet.class, mContext);
             requestHandler.setParameter("pMonateVor", "0");
-            requestHandler.setParameter("pMonateNach", "3"); //TODO investigate
+            requestHandler.setParameter("pMonateNach", "3");
 
             CalendarManager calendarManager = new CalendarManager(mContext);
-            calendarManager.importCalendar(requestHandler.fetch());
-            SyncManager.replaceIntoDb(db, "calendar");
+            CalendarRowSet set = requestHandler.fetch();
+            if(set!=null) {
+                calendarManager.importCalendar(set);
+                SyncManager.replaceIntoDb(db, "calendar");
+            }
         }
 
 	}
@@ -96,7 +99,7 @@ public class CacheManager {
         String result = null;
 
         try {
-            Cursor c = db.rawQuery("SELECT data FROM cache WHERE url=?", new String[] {url});
+            Cursor c = db.rawQuery("SELECT data FROM cache WHERE url=? AND lastSync > datetime('now', '-`validity` second')", new String[] {url});
             if (c.getCount() == 1) {
                 c.moveToFirst();
                 result = c.getString(0);
@@ -114,9 +117,9 @@ public class CacheManager {
 	 * @param url url from where the data was fetched
      * @param data result
 	 */
-	public void addToCache(String url, String data) {
+	public void addToCache(String url, String data, int validity) {
 		Utils.logv("replace " + url + " " + data);
-		db.execSQL("REPLACE INTO cache (url, data, lastSync) VALUES (?, ?, datetime())", new String[] { url, data });
+		db.execSQL("REPLACE INTO cache (url, data, lastSync, validity) VALUES (?, ?, datetime(), ?)", new String[] { url, data, ""+validity });
 	}
 
     /**
@@ -124,33 +127,23 @@ public class CacheManager {
      */
     void importLecturesFromTUMOnline() {
         // get my lectures
-        TUMOnlineRequest requestHandler = new TUMOnlineRequest(TUMOnlineConst.LECTURES_PERSONAL, mContext);
-        String strMine = requestHandler.fetch();
-        // deserialize
-        Serializer serializer = new Persister();
-
-        // define it this way to get at least an empty list
-        LecturesSearchRowSet myLecturesList = new LecturesSearchRowSet();
-        myLecturesList.setLehrveranstaltungen(new ArrayList<LecturesSearchRow>());
-
-        try {
-            myLecturesList = serializer.read(LecturesSearchRowSet.class, strMine);
-        } catch (Exception e) {
-            Utils.log(e);
-        }
+        TUMOnlineRequest<LecturesSearchRowSet> requestHandler = new TUMOnlineRequest<LecturesSearchRowSet>(TUMOnlineConst.LECTURES_PERSONAL, LecturesSearchRowSet.class, mContext);
+        LecturesSearchRowSet myLecturesList = requestHandler.fetch();
+        if(myLecturesList==null)
+            return;
 
         // get schedule for my lectures
         for (int i = 0; i < myLecturesList.getLehrveranstaltungen().size(); i++) {
             LecturesSearchRow currentLecture = myLecturesList.getLehrveranstaltungen().get(i);
 
-            // now, get termine for each lecture
-            TUMOnlineRequest req = new TUMOnlineRequest(TUMOnlineConst.LECTURES_APPOINTMENTS, mContext);
+            // now, get appointments for each lecture
+            TUMOnlineRequest<LectureAppointmentsRowSet> req = new TUMOnlineRequest<LectureAppointmentsRowSet>(TUMOnlineConst.LECTURES_APPOINTMENTS, LectureAppointmentsRowSet.class, mContext);
             req.setParameter("pLVNr", currentLecture.getStp_sp_nr());
             req.fetch();
 
-            req = new TUMOnlineRequest(TUMOnlineConst.LECTURES_DETAILS, mContext);
-            req.setParameter("pLVNr", currentLecture.getStp_sp_nr());
-            req.fetch();
+            TUMOnlineRequest<LectureDetailsRowSet> req2 = new TUMOnlineRequest<LectureDetailsRowSet>(TUMOnlineConst.LECTURES_DETAILS, LectureDetailsRowSet.class, mContext);
+            req2.setParameter("pLVNr", currentLecture.getStp_sp_nr());
+            req2.fetch();
         }
     }
 }

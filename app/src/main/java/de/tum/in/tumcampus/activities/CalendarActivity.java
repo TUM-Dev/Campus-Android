@@ -25,16 +25,17 @@ import de.tum.in.tumcampus.activities.generic.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampus.adapters.CalendarSectionsPagerAdapter;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.Utils;
+import de.tum.in.tumcampus.models.CalendarRowSet;
 import de.tum.in.tumcampus.models.managers.CalendarManager;
 import de.tum.in.tumcampus.tumonline.TUMOnlineConst;
 
 /**
  * Activity showing the user's calendar. Calendar items (events) are fetched from TUMOnline and displayed as blocks on a timeline.
  */
-public class CalendarActivity extends ActivityForAccessingTumOnline implements OnClickListener {
+public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowSet> implements OnClickListener {
 
 	/** The space between the first and the last date */
-	public static final int MONTH_AFTER = 1;
+	public static final int MONTH_AFTER = 3;
 	public static final int MONTH_BEFORE = 0;
 
     private final Calendar calendar = new GregorianCalendar();
@@ -51,7 +52,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements O
 	private boolean isFetched;
 
 	public CalendarActivity() {
-		super(TUMOnlineConst.CALENDER, R.layout.activity_calendar);
+		super(TUMOnlineConst.CALENDER, CalendarRowSet.class, R.layout.activity_calendar);
 	}
 
     @Override
@@ -197,12 +198,11 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements O
     }
 
 	@Override
-	public void onFetch(final String rawResponse) {
+	public void onFetch(final CalendarRowSet rawResponse) {
 		// parsing and saving xml response
 		new AsyncTask<Void, Void, Boolean>() {
             @Override
             protected void onPreExecute() {
-                showLoadingStart();
                 isFetched = true;
             }
 
@@ -225,7 +225,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline implements O
 	}
 
     /**
-     * Asynch task for deleting the calendar from local Google calendar
+     * Async task for deleting the calendar from local Google calendar
      */
     void deleteCalendarFromGoogle() {
         AlertDialog.Builder builder = new AlertDialog.Builder(CalendarActivity.this);

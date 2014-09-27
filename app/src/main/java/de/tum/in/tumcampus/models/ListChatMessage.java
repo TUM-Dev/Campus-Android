@@ -8,6 +8,7 @@ import java.util.Locale;
 import de.tum.in.tumcampus.auxiliary.Utils;
 
 
+@SuppressWarnings("UnusedDeclaration")
 public class ListChatMessage {
 
 	private String url;

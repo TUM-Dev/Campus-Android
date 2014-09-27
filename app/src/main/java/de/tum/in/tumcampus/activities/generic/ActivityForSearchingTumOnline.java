@@ -7,9 +7,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 
-import org.simpleframework.xml.Serializer;
-import org.simpleframework.xml.core.Persister;
-
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.UserPreferencesActivity;
 import de.tum.in.tumcampus.auxiliary.Const;
@@ -26,18 +23,16 @@ import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
  * TUMOnline and implements a rich user feedback with error progress and token
  * related layouts. Generic class parameter specifies the type of data returned by TumOnline.
  */
-public abstract class ActivityForSearchingTumOnline<T> extends ActivityForSearching implements TUMOnlineRequestFetchListener, OnRefreshListener {
+public abstract class ActivityForSearchingTumOnline<T> extends ActivityForSearching implements TUMOnlineRequestFetchListener<T>, OnRefreshListener {
 
 	/** The method which should be invoked by the TUmOnline Fetcher */
 	private final TUMOnlineConst method;
+    private final Class<T> returnClass;
 
-	/** Default layouts for user interaction */
+    /** Default layouts for user interaction */
     private RelativeLayout noTokenLayout;
     private RelativeLayout failedTokenLayout;
-	protected TUMOnlineRequest requestHandler;
-
-    /** Class instance of response data type */
-    private final Class<T> responseType;
+	protected TUMOnlineRequest<T> requestHandler;
 
     /**
      * Standard constructor for ActivityForSearchingTumOnline.
@@ -46,16 +41,15 @@ public abstract class ActivityForSearchingTumOnline<T> extends ActivityForSearch
      * {@link uk.co.senab.actionbarpulltorefresh.extras.actionbarcompat.PullToRefreshLayout} named ptr_layout
      *
      * @param method A identifier specifying what kind of data should be fetched from TumOnline
-     * @param responseType Class instance that identifies the response type
      * @param layoutId Resource id of the xml layout that should be used to inflate the activity
      * @param auth Authority for search suggestions declared in manifest file
      * @param minLen Minimum text length that has to be entered by the user before a search quest can be submitted
      *
      */
-    public ActivityForSearchingTumOnline(TUMOnlineConst method, Class<T> responseType, int layoutId, String auth, int minLen) {
+    public ActivityForSearchingTumOnline(TUMOnlineConst method, Class<T> returnClass, int layoutId, String auth, int minLen) {
         super(layoutId, auth, minLen);
         this.method = method;
-        this.responseType = responseType;
+        this.returnClass = returnClass;
 	}
 
     @Override
@@ -69,7 +63,7 @@ public abstract class ActivityForSearchingTumOnline<T> extends ActivityForSearch
             Utils.log("Cannot find layouts, did you forget to provide no or failed token layouts?");
         }
 
-        requestHandler = new TUMOnlineRequest(method, this, true);
+        requestHandler = new TUMOnlineRequest<T>(method, returnClass, this, true);
     }
 
     /**
@@ -102,19 +96,12 @@ public abstract class ActivityForSearchingTumOnline<T> extends ActivityForSearch
     }
 
     @Override
-    public final void onFetch(String rawResponse) {
+    public final void onFetch(T result) {
         noTokenLayout.setVisibility(View.GONE);
         failedTokenLayout.setVisibility(View.GONE);
         showLoadingEnded();
 
-        Serializer serializer = new Persister();
-        try {
-            T result = serializer.read(responseType, rawResponse);
-            onLoadFinished(result);
-        } catch (Exception e) {
-            failedTokenLayout.setVisibility(View.VISIBLE);
-            Utils.log(e);
-        }
+        onLoadFinished(result);
     }
 
     /**

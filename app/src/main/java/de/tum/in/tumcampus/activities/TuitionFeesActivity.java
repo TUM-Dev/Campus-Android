@@ -3,9 +3,6 @@ package de.tum.in.tumcampus.activities;
 import android.os.Bundle;
 import android.widget.TextView;
 
-import org.simpleframework.xml.Serializer;
-import org.simpleframework.xml.core.Persister;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -14,20 +11,18 @@ import de.tum.in.tumcampus.activities.generic.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.TuitionList;
 import de.tum.in.tumcampus.tumonline.TUMOnlineConst;
-import de.tum.in.tumcampus.tumonline.TUMOnlineRequestFetchListener;
 
 /**
  * Activity to show the user's tuition ; based on grades.java / quick solution
  */
-public class TuitionFeesActivity extends ActivityForAccessingTumOnline
-        implements TUMOnlineRequestFetchListener {
+public class TuitionFeesActivity extends ActivityForAccessingTumOnline<TuitionList> {
 
     private TextView amountTextView;
     private TextView deadlineTextView;
     private TextView semesterTextView;
 
     public TuitionFeesActivity() {
-        super(TUMOnlineConst.STUDIENBEITRAGSTATUS, R.layout.activity_tuitionfees);
+        super(TUMOnlineConst.STUDIENBEITRAGSTATUS, TuitionList.class, R.layout.activity_tuitionfees);
     }
 
     @Override
@@ -44,25 +39,15 @@ public class TuitionFeesActivity extends ActivityForAccessingTumOnline
     /**
      * Handle the response by de-serializing it into model entities.
      *
-     * @param rawResp TUMOnline response
+     * @param tuitionList TUMOnline response
      */
     @Override
-    public void onFetch(String rawResp) {
+    public void onFetch(TuitionList tuitionList) {
+        amountTextView.setText(tuitionList.getTuitions().get(0).getSoll() + "€");
+        Date date = Utils.getDate(tuitionList.getTuitions().get(0).getFrist());
+        deadlineTextView.setText(SimpleDateFormat.getDateInstance().format(date));
+        semesterTextView.setText(tuitionList.getTuitions().get(0).getSemesterBez().toUpperCase());
 
-        Serializer serializer = new Persister();
-
-        try {
-            TuitionList tuitionList = serializer.read(TuitionList.class, rawResp);
-
-            amountTextView.setText(tuitionList.getTuitions().get(0).getSoll() + "€");
-            Date date = Utils.getDate(tuitionList.getTuitions().get(0).getFrist());
-            deadlineTextView.setText(SimpleDateFormat.getDateInstance().format(date));
-            semesterTextView.setText(tuitionList.getTuitions().get(0).getSemesterBez().toUpperCase());
-
-            showLoadingEnded();
-        } catch (Exception e) {
-            Utils.log(e);
-            showErrorLayout();
-        }
+        showLoadingEnded();
     }
 }

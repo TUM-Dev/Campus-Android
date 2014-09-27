@@ -7,7 +7,7 @@ import java.io.Serializable;
 
 /**
  * A person, often an {@link Employee} working at TUM.
- * <p>
+ *
  * Note: This model is based on the TUMOnline web service response format for a
  * corresponding request.
  */
@@ -53,19 +53,11 @@ public class Person implements Serializable {
 		return surname;
 	}
 
-	public void setGender(String gender) {
-		this.gender = gender;
-	}
-
 	public void setId(String id) {
 		this.id = id;
 	}
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public void setSurname(String surname) {
-		this.surname = surname;
 	}
 }

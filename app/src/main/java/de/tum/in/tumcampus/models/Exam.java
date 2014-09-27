@@ -5,7 +5,7 @@ import org.simpleframework.xml.Root;
 
 /**
  * Exam passed by the user.
- * <p>
+ *
  * Note: This model is based on the TUMOnline web service response format for a
  * corresponding request.
  */
@@ -68,32 +68,8 @@ public class Exam {
 		return semester;
 	}
 
-	public void setCourse(String course) {
-		this.course = course;
-	}
-
-	public void setCredits(String credits) {
-		this.credits = credits;
-	}
-
 	public void setDate(String date) {
 		this.date = date;
-	}
-
-	public void setExaminer(String examiner) {
-		this.examiner = examiner;
-	}
-
-	public void setGrade(String grade) {
-		this.grade = grade;
-	}
-
-	public void setModus(String modus) {
-		this.modus = modus;
-	}
-
-	public void setProgramID(String programID) {
-		this.programID = programID;
 	}
 
 	public void setSemester(String semester) {

@@ -4,14 +4,10 @@ import android.os.Bundle;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import org.simpleframework.xml.Serializer;
-import org.simpleframework.xml.core.Persister;
-
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.generic.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampus.adapters.LectureAppointmentsListAdapter;
 import de.tum.in.tumcampus.auxiliary.Const;
-import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.LectureAppointmentsRowSet;
 import de.tum.in.tumcampus.tumonline.TUMOnlineConst;
 
@@ -23,13 +19,13 @@ import de.tum.in.tumcampus.tumonline.TUMOnlineConst;
  * 
  * NEEDS: stp_sp_nr and title set in incoming bundle (lecture id, title)
  */
-public class LecturesAppointmentsActivity extends ActivityForAccessingTumOnline {
+public class LecturesAppointmentsActivity extends ActivityForAccessingTumOnline<LectureAppointmentsRowSet> {
 
 	/** UI elements */
 	private ListView lvTermine;
 
     public LecturesAppointmentsActivity() {
-		super(TUMOnlineConst.LECTURES_APPOINTMENTS, R.layout.activity_lecturesappointments);
+		super(TUMOnlineConst.LECTURES_APPOINTMENTS, LectureAppointmentsRowSet.class, R.layout.activity_lecturesappointments);
 	}
 
 	@Override
@@ -51,27 +47,15 @@ public class LecturesAppointmentsActivity extends ActivityForAccessingTumOnline 
 
 	/** process data got from TUMOnline request and show the list view */
 	@Override
-	public void onFetch(String rawResponse) {
-		// deserialize xml
-		Serializer serializer = new Persister();
-		LectureAppointmentsRowSet lecturesList = null;
-		try {
-			lecturesList = serializer.read(LectureAppointmentsRowSet.class, rawResponse);
-		} catch (Exception e) {
-			Utils.log(e);
-            showLoadingEnded();
-            showErrorLayout();
-		}
-
+	public void onFetch(LectureAppointmentsRowSet lecturesList) {
 		// may happen if there are no appointments for the lecture
-		if (lecturesList == null || lecturesList.getLehrveranstaltungenTermine() == null) {
+		if (lecturesList.getLehrveranstaltungenTermine() == null) {
             showError(R.string.no_appointments);
 			return;
 		}
 
 		// set data to the ListView object nothing to click (yet)
-		lvTermine.setAdapter(new LectureAppointmentsListAdapter(this,
-				lecturesList.getLehrveranstaltungenTermine()));
+		lvTermine.setAdapter(new LectureAppointmentsListAdapter(this, lecturesList.getLehrveranstaltungenTermine()));
         showLoadingEnded();
 	}
 }

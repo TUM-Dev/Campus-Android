@@ -50,13 +50,13 @@
     <string name="average_grade">Moyenne de la note</string>
     <string name="show_column_chart">Montre comme un diagramme à barres</string>
     <string name="show_pie_chart">Montre comme un diagramme en camembert</string>
-    <string name="result_extra">Résultat: </string>
+    <string name="result_extra">Résultat:&#160;</string>
     <string name="semester">Semestre</string>
     <string name="examiner">Examinateur</string>
     <string name="mode">Mode</string>
     <string name="all_programs">Tous les programmes</string>
     <string name="date">Date</string>
-    <string name="credits">ECTS</string>
+    <string name="credits" translatable="false">ECTS</string>
 
     <!-- Preferences -->
     <string name="tumonline_settings">Paramètres TUMOnline</string>
@@ -85,18 +85,18 @@
     <string name="services">Services</string>
     <string name="silence_phone">Silent Service</string>
     <string name="silence_phone_info">Pendant des cours magistral, l\'appareil est réglée automatiquemen en mode silencieux.</string>
-    <string name="background_mode">le mode d\'arrière-plan</string>
-    <string name="background_info">Les capacités vont actualiser une fois par jour pour t\'informer sur les nouvelles. Même l\'appli n\'est pas ouverte.</string>
+    <string name="background_mode">Le mode d\'arrière-plan</string>
+    <string name="background_info">Les capacités vont actualiser une fois par jour pour t\'informer sur les nouvelles actuelles. Même l\'appli n\'est pas ouverte.</string>
     <string name="demo_mode">In-App Tutorial</string>
     <string name="demo_info">Activer le mode d\'aide pour obtenir des informations sur le fonctionnement de l\'application.</string>
 
     <string name="about_tca">À propos de TCA</string>
     <string name="information">Informations</string>
     <string name="facebook">Facebook</string>
-    <string name="facebook_link">https://m.facebook.com/TUMCampus</string>
-    <string name="facebook_link_app">fb://page/162327853831856</string>
+    <string name="facebook_link" translatable="false">https://m.facebook.com/TUMCampus</string>
+    <string name="facebook_link_app" translatable="false">fb://page/162327853831856</string>
     <string name="github">Contribuer à Github</string>
-    <string name="github_link">https://github.com/TCA-Team/TumCampusApp</string>
+    <string name="github_link" translatable="false">https://github.com/TCA-Team/TumCampusApp</string>
     <string name="licences">Licences open source</string>
     <string name="licences_summary">Des notes juridiques licences</string>
 
@@ -242,8 +242,8 @@
     <string name="restore_all_cards">Reconstituer les cartes</string>
     <string name="card_dismissed">Carte cachée</string>
     <string name="cards_dismissed">%s cartes cachées</string>
-    <string name="reregister_success">Sie sind für das %s rückgemeldet!</string>
-    <string name="reregister_todo">Vous avez jusqu\'au %s confirmation!</string>
+    <string name="reregister_success">Tu as une réinscription pour %s!</string>
+    <string name="reregister_todo">Tu as jusqu\'au %s confirmation!</string>
     <string name="undoall">Tous Annuler</string>
     <string name="undo">Annuler</string>
 
@@ -274,7 +274,7 @@
     <string name="version">Version</string>
     <string name="send_email">Envoyer feed-back par e-mail</string>
     <string name="show_feedback">Envoyer feed-back</string>
-    <string name="feedbackAddr">tca-support.os.in@tum.de</string>
+    <string name="feedbackAddr" translatable="false">tca-support.os.in@tum.de</string>
     <string name="feedbackSubj">Feed-back pour TUM Campus App</string>
     <!-- END Translated, please do not change identifiers -->
 
@@ -290,7 +290,7 @@
     <string name="card_news_summary">Propose une sélection de nouvelles avant</string>
     <string name="card_chat_summary">Vous avertit lorsque de nouveaux messages sont disponibles</string>
     <string name="chat">Chat</string>
-    <string name="open_card_settings">Personnalisez carte</string>
+    <string name="open_card_settings">Personnaliser carte</string>
     <string name="always_hide_card">Toujours masquer carte</string>
     <string name="options">Options de</string>
     <string name="phone_summary">Doit recevoir des notifications sur votre téléphone portable soit activé</string>

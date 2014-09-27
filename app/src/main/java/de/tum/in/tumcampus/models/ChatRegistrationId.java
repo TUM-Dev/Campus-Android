@@ -2,6 +2,7 @@ package de.tum.in.tumcampus.models;
 
 import com.google.gson.annotations.SerializedName;
 
+@SuppressWarnings("UnusedDeclaration")
 public class ChatRegistrationId {
 
 	@SerializedName("registration_id")

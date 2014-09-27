@@ -50,13 +50,13 @@
     <string name="average_grade">Calificación media</string>
     <string name="show_column_chart">Mostrando como un gráfico de barras</string>
     <string name="show_pie_chart">Mostrar como un gráfico circular</string>
-    <string name="result_extra">Resultado: </string>
+    <string name="result_extra">Resultado:&#160;</string>
     <string name="semester">Semestre</string>
     <string name="examiner">Comprobador</string>
     <string name="mode">Modo</string>
     <string name="all_programs">Todos los programas</string>
     <string name="date">Fecha</string>
-    <string name="credits">ECTS</string>
+    <string name="credits" translatable="false">ECTS</string>
 
     <!-- Preferences -->
     <string name="tumonline_settings">Ajustes TUMOnline</string>
@@ -92,10 +92,10 @@
     <string name="about_tca">Sobre TCA</string>
     <string name="information">Información</string>
     <string name="facebook">Facebook</string>
-    <string name="facebook_link">https://m.facebook.com/TUMCampus</string>
-    <string name="facebook_link_app">fb://page/162327853831856</string>
+    <string name="facebook_link" translatable="false">https://m.facebook.com/TUMCampus</string>
+    <string name="facebook_link_app" translatable="false">fb://page/162327853831856</string>
     <string name="github">Contribuir a Github</string>
-    <string name="github_link">https://github.com/TCA-Team/TumCampusApp</string>
+    <string name="github_link" translatable="false">https://github.com/TCA-Team/TumCampusApp</string>
     <string name="licences">Licencias de código abierto</string>
     <string name="licences_summary">Licencias Aviso legal</string>
 
@@ -273,7 +273,7 @@
     <string name="version">Versión</string>
     <string name="send_email">Enviar comentarios por correo electrónico</string>
     <string name="show_feedback">Envíar comentarios</string>
-    <string name="feedbackAddr">tca-support.os.in@tum.de</string>
+    <string name="feedbackAddr" translatable="false">tca-support.os.in@tum.de</string>
     <string name="feedbackSubj">Comentarios para la TUM campus App</string>
     <!-- END Translated, please do not change identifiers -->
 

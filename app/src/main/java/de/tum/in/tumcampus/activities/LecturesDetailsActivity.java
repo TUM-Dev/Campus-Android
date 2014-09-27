@@ -8,13 +8,9 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 
-import org.simpleframework.xml.Serializer;
-import org.simpleframework.xml.core.Persister;
-
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.generic.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampus.auxiliary.Const;
-import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.LectureDetailsRow;
 import de.tum.in.tumcampus.models.LectureDetailsRowSet;
 import de.tum.in.tumcampus.tumonline.TUMOnlineConst;
@@ -32,7 +28,7 @@ import de.tum.in.tumcampus.tumonline.TUMOnlineConst;
  * NEEDS: stp_sp_nr set in incoming bundle (lecture id)
  */
 @SuppressLint("DefaultLocale")
-public class LecturesDetailsActivity extends ActivityForAccessingTumOnline implements OnClickListener {
+public class LecturesDetailsActivity extends ActivityForAccessingTumOnline<LectureDetailsRowSet> implements OnClickListener {
 
 	/** UI elements */
 	private Button btnLDetailsTermine;
@@ -51,7 +47,7 @@ public class LecturesDetailsActivity extends ActivityForAccessingTumOnline imple
 	private TextView tvLDetailsZiele;
 
 	public LecturesDetailsActivity() {
-		super(TUMOnlineConst.LECTURES_DETAILS, R.layout.activity_lecturedetails);
+		super(TUMOnlineConst.LECTURES_DETAILS, LectureDetailsRowSet.class, R.layout.activity_lecturedetails);
 	}
 
 	@Override
@@ -97,40 +93,29 @@ public class LecturesDetailsActivity extends ActivityForAccessingTumOnline imple
 	/**
 	 * process the given TUMOnline Data and display the details
 	 *
-	 * @param rawResponse Raw text response
+	 * @param xmllv Raw text response
 	 */
 	@Override
-	public void onFetch(String rawResponse) {
-		// deserialize
-		Serializer serializer = new Persister();
-		try {
-			LectureDetailsRowSet xmllv = serializer.read(LectureDetailsRowSet.class, rawResponse);
-			// we got exactly one row, thats fine
-			currentitem = xmllv.getLehrveranstaltungenDetails().get(0);
-			tvLDetailsName.setText(currentitem.getStp_sp_titel().toUpperCase());
+	public void onFetch(LectureDetailsRowSet xmllv) {
+        // we got exactly one row, that's fine
+        currentitem = xmllv.getLehrveranstaltungenDetails().get(0);
+        tvLDetailsName.setText(currentitem.getStp_sp_titel().toUpperCase());
 
-			String strLectureLanguage = currentitem.getSemester_name();
-			if (currentitem.getHaupt_unterrichtssprache() != null) {
-				strLectureLanguage += " - " + currentitem.getHaupt_unterrichtssprache();
-			}
-			tvLDetailsSemester.setText(strLectureLanguage);
-			tvLDetailsSWS.setText(currentitem.getStp_lv_art_name() + " - "
-					+ currentitem.getDauer_info() + " SWS");
-			tvLDetailsDozent.setText(currentitem.getVortragende_mitwirkende());
-			tvLDetailsOrg.setText(currentitem.getOrg_name_betreut());
-			tvLDetailsInhalt.setText(currentitem.getLehrinhalt());
-			tvLDetailsMethode.setText(currentitem.getLehrmethode());
-			tvLDetailsZiele.setText(currentitem.getLehrziel());
-			tvLDetailsLiteratur.setText(currentitem.getStudienbehelfe());
-			tvLDetailsTermin.setText(currentitem.getErsttermin());
+        String strLectureLanguage = currentitem.getSemester_name();
+        if (currentitem.getHaupt_unterrichtssprache() != null) {
+            strLectureLanguage += " - " + currentitem.getHaupt_unterrichtssprache();
+        }
+        tvLDetailsSemester.setText(strLectureLanguage);
+        tvLDetailsSWS.setText(currentitem.getStp_lv_art_name() + " - "
+                + currentitem.getDauer_info() + " SWS");
+        tvLDetailsDozent.setText(currentitem.getVortragende_mitwirkende());
+        tvLDetailsOrg.setText(currentitem.getOrg_name_betreut());
+        tvLDetailsInhalt.setText(currentitem.getLehrinhalt());
+        tvLDetailsMethode.setText(currentitem.getLehrmethode());
+        tvLDetailsZiele.setText(currentitem.getLehrziel());
+        tvLDetailsLiteratur.setText(currentitem.getStudienbehelfe());
+        tvLDetailsTermin.setText(currentitem.getErsttermin());
 
-			showLoadingEnded();
-
-		} catch (Exception e) {
-			// well, something went obviously wrong
-            Utils.log(e);
-            showLoadingEnded();
-			showErrorLayout();
-		}
+        showLoadingEnded();
 	}
 }

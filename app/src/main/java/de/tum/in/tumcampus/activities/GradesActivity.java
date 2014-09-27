@@ -13,9 +13,6 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import org.simpleframework.xml.Serializer;
-import org.simpleframework.xml.core.Persister;
-
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -35,7 +32,7 @@ import de.tum.in.tumcampus.tumonline.TUMOnlineConst;
 /**
  * Activity to show the user's grades/exams passed.
  */
-public class GradesActivity extends ActivityForAccessingTumOnline {
+public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
 	private static int LAST_CHOICE = 0;
 	private TextView average_tx;
 
@@ -56,7 +53,7 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 	private boolean isFetched;
 
 	public GradesActivity() {
-		super(TUMOnlineConst.NOTEN, R.layout.activity_grades);
+		super(TUMOnlineConst.NOTEN, ExamList.class, R.layout.activity_grades);
 	}
 
 	/**
@@ -320,35 +317,24 @@ public class GradesActivity extends ActivityForAccessingTumOnline {
 	 * @param rawResponse Raw text response
 	 */
 	@Override
-	public void onFetch(String rawResponse) {
-		Serializer serializer = new Persister();
-		examList = null;
+	public void onFetch(ExamList rawResponse) {
+		examList = rawResponse;
 
-		try {
-			// Deserializes XML response
-			examList = serializer.read(ExamList.class, rawResponse);
+        // initialize the program choice spinner
+        initSpinner();
 
-			// initialize the program choice spinner
-			initSpinner();
+        // Displays results in view
+        lvGrades.setAdapter(new ExamListAdapter(this, examList.getExams()));
 
-			// Displays results in view
-			lvGrades.setAdapter(new ExamListAdapter(GradesActivity.this, examList.getExams()));
+        showLoadingEnded();
 
-            showLoadingEnded();
+        // enabling the Menu options after first fetch
+        isFetched = true;
 
-			// enabling the Menu options after first fetch
-			isFetched = true;
-
-			// update the action bar to display the enabled menu options
-			if (Build.VERSION.SDK_INT >= 11) {
-				invalidateOptionsMenu();
-			}
-
-		} catch (Exception e) {
-			Utils.log(e);
-			showLoadingEnded();
-			failedTokenLayout.setVisibility(View.VISIBLE);
-		}
+        // update the action bar to display the enabled menu options
+        if (Build.VERSION.SDK_INT >= 11) {
+            invalidateOptionsMenu();
+        }
 	}
 
 	@Override

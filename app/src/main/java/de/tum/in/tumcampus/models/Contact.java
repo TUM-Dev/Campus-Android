@@ -47,24 +47,4 @@ public class Contact implements Serializable {
 	public String getTelefon() {
 		return telefon;
 	}
-
-	public void setAdditionalInfo(String addInfo) {
-		this.addInfo = addInfo;
-	}
-
-	public void setFax(String fax) {
-		this.fax = fax;
-	}
-
-	public void setHomepage(String homepage) {
-		this.homepage = homepage;
-	}
-
-	public void setMobilephone(String mobilephone) {
-		this.mobilephone = mobilephone;
-	}
-
-	public void setTelefon(String telefon) {
-		this.telefon = telefon;
-	}
 }

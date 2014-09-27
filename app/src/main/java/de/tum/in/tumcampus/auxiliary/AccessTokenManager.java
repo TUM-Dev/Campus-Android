@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 
 import de.tum.in.tumcampus.R;
+import de.tum.in.tumcampus.models.AccessToken;
 import de.tum.in.tumcampus.tumonline.TUMOnlineConst;
 import de.tum.in.tumcampus.tumonline.TUMOnlineRequest;
 
@@ -34,17 +35,17 @@ public class AccessTokenManager {
     String generateAccessToken(String lrz_id) {
 		// we don't have an access token yet, though we take the constructor
 		// with only one parameter to set the method
-		TUMOnlineRequest request = new TUMOnlineRequest(TUMOnlineConst.REQUEST_TOKEN, context, false);
+		TUMOnlineRequest<AccessToken> request = new TUMOnlineRequest<AccessToken>(TUMOnlineConst.REQUEST_TOKEN, AccessToken.class, context, false);
 		// add lrz_id to parameters
 		request.setParameter("pUsername", lrz_id);
 		// add readable name for TUMOnline
 		request.setParameter("pTokenName", "TUMCampusApp-" + android.os.Build.PRODUCT);
 
 		// fetch the xml response of requestToken
-		String strTokenXml = request.fetch();
+		AccessToken token = request.fetch();
 
 		// it is only one tag in that xml, let's do a regex pattern
-        return Utils.cutText(strTokenXml, "<token>", "</token>");
+        return token.getToken();
 	}
 
     /**

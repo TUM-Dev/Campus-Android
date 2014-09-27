@@ -57,7 +57,7 @@
     <string name="mode">Modus</string>
     <string name="all_programs">Alle Programme</string>
     <string name="date">Datum</string>
-    <string name="credits">ECTS</string>
+    <string name="credits" translatable="false">ECTS</string>
 
     <!-- Preferences -->
     <string name="tumonline_settings">TUMOnline Einstellungen</string>
@@ -88,17 +88,17 @@
     <string name="silence_phone">Lautlos Service</string>
     <string name="silence_phone_info">Das Gerät wird während einer Vorlesung automatisch in den lautlosen Modus gestellt.</string>
     <string name="background_mode">Hintergrund Modus</string>
-    <string name="background_info">Aktualisiert die Inhalte der App einmal täglich um dich auf dem neusten Stand zu halten, sogar wenn die App nicht geöffnet ist.</string>
+    <string name="background_info">Aktualisiert die Inhalte der App einmal täglich, um dich auf dem neusten Stand zu halten, sogar wenn die App nicht geöffnet ist.</string>
     <string name="demo_mode">In-App-Tutorial</string>
     <string name="demo_info">Hilfemodus aktivieren, um Informationen zur Bedienung der App zu erhalten.</string>
 
     <string name="about_tca">Über TCA</string>
     <string name="information">Informationen</string>
     <string name="facebook">Facebook</string>
-    <string name="facebook_link">https://m.facebook.com/TUMCampus</string>
-    <string name="facebook_link_app">fb://page/162327853831856</string>
+    <string name="facebook_link" translatable="false">https://m.facebook.com/TUMCampus</string>
+    <string name="facebook_link_app" translatable="false">fb://page/162327853831856</string>
     <string name="github">Mitmachen auf Github</string>
-    <string name="github_link">https://github.com/TCA-Team/TumCampusApp</string>
+    <string name="github_link" translatable="false">https://github.com/TCA-Team/TumCampusApp</string>
     <string name="licences">Open Source-Lizenzen</string>
     <string name="licences_summary">Rechtliche Hinweise zu Lizenzen</string>
 
@@ -276,7 +276,7 @@
     <string name="version">Version</string>
     <string name="send_email">E-Mail Feedback senden</string>
     <string name="show_feedback">Feedback senden</string>
-    <string name="feedbackAddr">tca-support.os.in@tum.de</string>
+    <string name="feedbackAddr" translatable="false">tca-support.os.in@tum.de</string>
     <string name="feedbackSubj">Feedback für TUM Campus App</string>
     <!-- END Translated, please do not change identifiers -->
 

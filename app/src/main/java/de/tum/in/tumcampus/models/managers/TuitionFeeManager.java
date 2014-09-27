@@ -2,9 +2,6 @@ package de.tum.in.tumcampus.models.managers;
 
 import android.content.Context;
 
-import org.simpleframework.xml.Serializer;
-import org.simpleframework.xml.core.Persister;
-
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.cards.Card;
 import de.tum.in.tumcampus.cards.TuitionFeesCard;
@@ -24,11 +21,8 @@ public class TuitionFeeManager implements Card.ProvidesCard {
     @Override
     public void onRequestCard(Context context) {
         try {
-            TUMOnlineRequest requestHandler = new TUMOnlineRequest(TUMOnlineConst.STUDIENBEITRAGSTATUS, context, true);
-            String rawResp = requestHandler.fetch();
-            Serializer serializer = new Persister();
-            TuitionList tuitionList;
-            tuitionList = serializer.read(TuitionList.class, rawResp);
+            TUMOnlineRequest<TuitionList> requestHandler = new TUMOnlineRequest<TuitionList>(TUMOnlineConst.STUDIENBEITRAGSTATUS, TuitionList.class, context, true);
+            TuitionList tuitionList = requestHandler.fetch();
             TuitionFeesCard card = new TuitionFeesCard(context);
             card.setTuition(tuitionList.getTuitions().get(0));
             card.apply();

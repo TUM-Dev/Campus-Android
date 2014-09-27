@@ -112,36 +112,8 @@ public class Employee extends Person implements Serializable {
 		return title;
 	}
 
-	public void setBusinessContact(Contact businessContact) {
-		this.businessContact = businessContact;
-	}
-
-	public void setConsultationHours(String consultationHours) {
-		this.consultationHours = consultationHours;
-	}
-
 	public void setEmail(String email) {
 		this.email = email;
-	}
-
-	public void setGroups(GroupList groups) {
-		this.groups = groups;
-	}
-
-	public void setImageData(String base64String) {
-		this.imageData = base64String;
-	}
-
-	public void setPrivateContact(Contact privateContact) {
-		this.privateContact = privateContact;
-	}
-
-	public void setRoomList(RoomList rooms) {
-		this.rooms = rooms;
-	}
-
-	public void setTelSubstationList(TelSubstationList telSubstations) {
-		this.telSubstations = telSubstations;
 	}
 
 	public void setTitle(String title) {

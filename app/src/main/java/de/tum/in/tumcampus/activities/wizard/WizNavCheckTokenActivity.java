@@ -10,15 +10,16 @@ import android.widget.TextView;
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.generic.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampus.auxiliary.Utils;
+import de.tum.in.tumcampus.models.TokenConfirmation;
 import de.tum.in.tumcampus.tumonline.TUMOnlineConst;
 
 /**
  *
  */
-public class WizNavCheckTokenActivity extends ActivityForAccessingTumOnline {
+public class WizNavCheckTokenActivity extends ActivityForAccessingTumOnline<TokenConfirmation> {
 
 	public WizNavCheckTokenActivity() {
-		super(TUMOnlineConst.TOKEN_CONFIRMED, R.layout.activity_wiznav_checktoken);
+		super(TUMOnlineConst.TOKEN_CONFIRMED, TokenConfirmation.class, R.layout.activity_wiznav_checktoken);
 	}
 
     @Override
@@ -56,16 +57,16 @@ public class WizNavCheckTokenActivity extends ActivityForAccessingTumOnline {
 
     /**
      * When fetch was successful, start next activity or show error
-     * @param rawResponse this will be the raw return of the fetch
+     * @param confirmation this will be the raw return of the fetch
      */
 	@Override
-	public void onFetch(String rawResponse) {
-		if (rawResponse.contains("true")) {
-			startNextActivity();
-		} else if (rawResponse.contains("false")) {
+	public void onFetch(TokenConfirmation confirmation) {
+        if (confirmation.isConfirmed()) {
+            startNextActivity();
+        } else {
             Utils.showToast(this, R.string.token_not_enabled);
-		}
-		showLoadingEnded();
+        }
+        showLoadingEnded();
 	}
 
     /**
