@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ListView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,6 +15,7 @@ import de.tum.in.tumcampus.adapters.RoomFinderListAdapter;
 import de.tum.in.tumcampus.auxiliary.RoomFinderSuggestionProvider;
 import de.tum.in.tumcampus.tumonline.TUMRoomFinderRequest;
 import de.tum.in.tumcampus.tumonline.TUMRoomFinderRequestFetchListener;
+import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
 /**
  * Activity to show a convenience interface for using the MyTUM room finder.
@@ -25,7 +25,7 @@ public class RoomFinderActivity extends ActivityForSearching implements TUMRoomF
     // HTTP client for sending requests to MyTUM roomfinder
     private TUMRoomFinderRequest roomFinderRequest;
 
-    private ListView list;
+    private StickyListHeadersListView list;
 
     private String currentlySelectedBuildingId;
     private String currentlySelectedRoomId;
@@ -54,7 +54,7 @@ public class RoomFinderActivity extends ActivityForSearching implements TUMRoomF
 
     @Override
     public void onFetch(ArrayList<HashMap<String, String>> result) {
-        list = (ListView) findViewById(R.id.list);
+        list = (StickyListHeadersListView) findViewById(R.id.list);
 
         // Getting adapter by passing xml data ArrayList
         RoomFinderListAdapter adapter = new RoomFinderListAdapter(this, result);

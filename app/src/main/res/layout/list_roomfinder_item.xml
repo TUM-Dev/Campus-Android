@@ -37,15 +37,6 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/campus"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="left"
-            android:text="campus"
-            android:textColor="@color/text_light_blue"
-            android:textSize="@dimen/mid_text_size" />
-
-        <TextView
             android:id="@+id/building"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"

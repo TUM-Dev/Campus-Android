@@ -84,7 +84,7 @@ public class CafeteriaManager implements Card.ProvidesCard {
 
 		String url = "https://tumcabe.in.tum.de/Api/mensen";
 
-		JSONArray jsonArray = Utils.downloadJsonArray(mContext, url);
+		JSONArray jsonArray = Utils.downloadJsonArray(mContext, url, false);
 		removeCache();
 
 		// write cafeterias into database, transaction = speedup

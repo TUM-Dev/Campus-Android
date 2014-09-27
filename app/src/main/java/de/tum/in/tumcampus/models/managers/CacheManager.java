@@ -20,7 +20,7 @@ import de.tum.in.tumcampus.tumonline.TUMOnlineRequest;
 /**
  * TUMOnline cache manager, allows caching of TUMOnline requests
  */
-public class TUMOnlineCacheManager {
+public class CacheManager {
     private static final int TIME_TO_SYNC_CALENDAR = 5 * 86400; // 5 days
     private static final int TIME_TO_SYNC_LECTURES = 86400; // 1 day
     private static final int TIME_TO_INVALID = 2*86400; // 2 days
@@ -36,19 +36,26 @@ public class TUMOnlineCacheManager {
 	 *
 	 * @param context Context
 	 */
-	public TUMOnlineCacheManager(Context context) {
+	public CacheManager(Context context) {
         mContext = context;
 		db = DatabaseManager.getDb(context);
 
         // create table if needed
-		db.execSQL("CREATE TABLE IF NOT EXISTS tumonline (url VARCHAR UNIQUE, data BLOB, lastSync VARCHAR)");
-        db.rawQuery("DELETE FROM tumonline WHERE lastSync > datetime('now', '-" + TIME_TO_INVALID + " second')", null);
+		db.execSQL("CREATE TABLE IF NOT EXISTS cache (url VARCHAR UNIQUE, data BLOB, lastSync VARCHAR)");
+        db.rawQuery("DELETE FROM cache WHERE lastSync > datetime('now', '-" + TIME_TO_INVALID + " second')", null);
 	}
 
 	/**
 	 * Download usual tumOnline requests
 	 */
 	public void fillCache() {
+        // Cache webservice
+        //TODO integrate sync manager into cache
+        if (SyncManager.needSync(db, "curricula", TIME_TO_SYNC_LECTURES)) { //TODO reset if loaded from activity/does it load if too old?
+            Utils.downloadJsonArray(mContext, "https://tumcabe.in.tum.de/Api/curricula", true);
+            SyncManager.replaceIntoDb(db, "curricula");
+        }
+
         // TODO cache news images
 
         // acquire access token
@@ -70,7 +77,7 @@ public class TUMOnlineCacheManager {
             // Sync calendar
             TUMOnlineRequest requestHandler = new TUMOnlineRequest(TUMOnlineConst.CALENDER, mContext);
             requestHandler.setParameter("pMonateVor", "0");
-            requestHandler.setParameter("pMonateNach", "3");
+            requestHandler.setParameter("pMonateNach", "3"); //TODO investigate
 
             CalendarManager calendarManager = new CalendarManager(mContext);
             calendarManager.importCalendar(requestHandler.fetch());
@@ -89,7 +96,7 @@ public class TUMOnlineCacheManager {
         String result = null;
 
         try {
-            Cursor c = db.rawQuery("SELECT data FROM tumonline WHERE url=?", new String[] {url});
+            Cursor c = db.rawQuery("SELECT data FROM cache WHERE url=?", new String[] {url});
             if (c.getCount() == 1) {
                 c.moveToFirst();
                 result = c.getString(0);
@@ -107,9 +114,9 @@ public class TUMOnlineCacheManager {
 	 * @param url url from where the data was fetched
      * @param data result
 	 */
-	public void addToChache(String url, String data) {
+	public void addToCache(String url, String data) {
 		Utils.logv("replace " + url + " " + data);
-		db.execSQL("REPLACE INTO tumonline (url, data, lastSync) VALUES (?, ?, datetime())", new String[] { url, data });
+		db.execSQL("REPLACE INTO cache (url, data, lastSync) VALUES (?, ?, datetime())", new String[] { url, data });
 	}
 
     /**

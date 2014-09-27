@@ -199,19 +199,6 @@
 
     <!-- Curricula -->
     <string name="something_wrong">Une erreur est survenue</string>
-    <string name="informatics_bachelor_0809">bachelor d\'informatique WS0809</string>
-    <string name="informatics_bachelor_1213">bachelor d\'informatique WS1213</string>
-    <string name="business_informatics_bachelor_1112">bachelor d\'informatique économique WS1112</string>
-    <string name="business_informatics_bachelor_0809">bachelor d\'informatique économique WS0809</string>
-    <string name="business_informatics_bachelor_1213">bachelor d\'informatique économique WS1213</string>
-    <string name="business_informatics_bachelor_1314">bachelor d\'informatique économique WS1314</string>
-    <string name="bioinformatics_bachelor">bachelor de bioinformatique</string>
-    <string name="games_engineering_bachelor">Games Engineering Bachelor</string>
-    <string name="informatics_master">mastère informatique</string>
-    <string name="business_informatics_master">mastère informatique économique</string>
-    <string name="bioinformatics_master">mastère bioinformatique</string>
-    <string name="automotive_master">Automotive Software Engineering mastère</string>
-    <string name="computational_science_master">Computational Science and Engineering</string>
 
     <!-- Opening hours -->
     <string name="libraries">Bibliothèques</string>

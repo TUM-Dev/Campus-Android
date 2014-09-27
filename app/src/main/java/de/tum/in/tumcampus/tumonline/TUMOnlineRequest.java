@@ -24,7 +24,7 @@ import java.util.Map.Entry;
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.Utils;
-import de.tum.in.tumcampus.models.managers.TUMOnlineCacheManager;
+import de.tum.in.tumcampus.models.managers.CacheManager;
 
 /**
  * This class will handle all action needed to communicate with the TUMOnline
@@ -58,10 +58,10 @@ public class TUMOnlineRequest {
 
 	/** a list/map for the needed parameters */
 	private Map<String, String> parameters;
-    private final TUMOnlineCacheManager cacheManager;
+    private final CacheManager cacheManager;
 
     private TUMOnlineRequest(Context context) {
-        cacheManager = new TUMOnlineCacheManager(context);
+        cacheManager = new CacheManager(context);
 		client = getThreadSafeClient();
 		resetParameters();
 		HttpParams params = client.getParams();
@@ -110,7 +110,7 @@ public class TUMOnlineRequest {
                 if (responseEntity != null) {
                     // do something with the response
                     result = EntityUtils.toString(responseEntity);
-                    cacheManager.addToChache(url, result);
+                    cacheManager.addToCache(url, result);
                     Utils.logv("added to cache " + url);
                 }
             } else {
@@ -131,8 +131,7 @@ public class TUMOnlineRequest {
 	 * @param context the current context (may provide the current activity)
 	 * @param listener the listener, which takes the result
 	 */
-	public void fetchInteractive(final Context context,
-			final TUMOnlineRequestFetchListener listener) {
+	public void fetchInteractive(final Context context, final TUMOnlineRequestFetchListener listener) {
 
 		if (!loadAccessTokenFromPreferences(context)) {
 			listener.onFetchCancelled();

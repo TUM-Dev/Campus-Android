@@ -13,15 +13,16 @@ import java.util.HashMap;
 
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.tumonline.TUMRoomFinderRequest;
+import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 
 /**
  * Custom UI adapter for a list of employees.
  */
-public class RoomFinderListAdapter extends BaseAdapter {
-	static class ViewHolder {
+public class RoomFinderListAdapter extends BaseAdapter implements StickyListHeadersAdapter {
+
+    static class ViewHolder {
 		TextView tvRoomTitle;
         TextView tvBuildingTitle;
-        TextView tvCampusTitle;
 	}
 
     private final ArrayList<HashMap<String, String>> data;
@@ -56,7 +57,6 @@ public class RoomFinderListAdapter extends BaseAdapter {
             holder = new ViewHolder();
             holder.tvRoomTitle = (TextView) convertView.findViewById(R.id.startup_actionbar_title);
             holder.tvBuildingTitle = (TextView) convertView.findViewById(R.id.building);
-            holder.tvCampusTitle = (TextView) convertView.findViewById(R.id.campus);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -64,10 +64,38 @@ public class RoomFinderListAdapter extends BaseAdapter {
 
 		HashMap<String, String> room = data.get(position);
 
-		// Setting all values in listview
+		// Setting all values in listView
 		holder.tvRoomTitle.setText(room.get(TUMRoomFinderRequest.KEY_ROOM + TUMRoomFinderRequest.KEY_TITLE));
         holder.tvBuildingTitle.setText(room.get(TUMRoomFinderRequest.KEY_Building + TUMRoomFinderRequest.KEY_TITLE));
-        holder.tvCampusTitle.setText(room.get(TUMRoomFinderRequest.KEY_Campus + TUMRoomFinderRequest.KEY_TITLE));
 		return convertView;
 	}
+
+    // Generate header view
+    @Override
+    public View getHeaderView(int position, View convertView, ViewGroup parent) {
+        HeaderViewHolder holder;
+        if (convertView == null) {
+            holder = new HeaderViewHolder();
+            convertView = inflater.inflate(R.layout.header, parent, false);
+            holder.text = (TextView) convertView.findViewById(R.id.lecture_header);
+            convertView.setTag(holder);
+        } else {
+            holder = (HeaderViewHolder) convertView.getTag();
+        }
+
+        //set header text as first char in name
+        HashMap<String, String> room = data.get(position);
+        String headerText = room.get(TUMRoomFinderRequest.KEY_Campus + TUMRoomFinderRequest.KEY_TITLE);
+        holder.text.setText(headerText);
+        return convertView;
+    }
+
+    @Override
+    public long getHeaderId(int i) {
+        return data.get(i).get(TUMRoomFinderRequest.KEY_Campus + TUMRoomFinderRequest.KEY_ID).charAt(0);
+    }
+
+    static class HeaderViewHolder {
+        TextView text;
+    }
 }

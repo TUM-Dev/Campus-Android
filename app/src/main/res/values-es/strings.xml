@@ -198,19 +198,6 @@
 
     <!-- Curricula -->
     <string name="something_wrong">Se ha producido un error</string>
-    <string name="informatics_bachelor_0809">WS0809 Bachelor de técnica informática </string>
-    <string name="informatics_bachelor_1213">WS1213 Bachelor de técnica informática</string>
-    <string name="business_informatics_bachelor_1112">WS1112 Bachelor de técnica informática económica</string>
-    <string name="business_informatics_bachelor_0809">WS0809 Bachelor de técnica informática económica</string>
-    <string name="business_informatics_bachelor_1213">WS1213 Bachelor de técnica informática económica</string>
-    <string name="business_informatics_bachelor_1314">WS1314 Bachelor de técnica informática económica</string>
-    <string name="bioinformatics_bachelor">Bioinformática Licenciatura</string>
-    <string name="games_engineering_bachelor">Juegos Ingeniería Licenciatura</string>
-    <string name="informatics_master">Master Informática</string>
-    <string name="business_informatics_master">Master de informática Económica</string>
-    <string name="bioinformatics_master">Bioinformática Máster</string>
-    <string name="automotive_master">Automotive Software Engineering Máster</string>
-    <string name="computational_science_master">Ciencias de la Computación e Ingeniería</string>
 
     <!-- Opening hours -->
     <string name="libraries">Bibliotecas</string>

@@ -61,7 +61,7 @@ public class TUMRoomFinderRequest {
 		HttpConnectionParams.setSoTimeout(params, Const.HTTP_TIMEOUT);
 		HttpConnectionParams.setConnectionTimeout(params, Const.HTTP_TIMEOUT);
 		parameters = new HashMap<String, String>();
-		this.method = "search";
+		method = "search";
 	}
 
 	public void cancelRequest(boolean mayInterruptIfRunning) {
@@ -96,9 +96,9 @@ public class TUMRoomFinderRequest {
             Element location = doc.getDocumentElement();
             double zone = Double.parseDouble(parser.getValue(location, "utm_zone"));
             double easting = Double.parseDouble(parser.getValue(location, "utm_easting"));
-            double northing = Double.parseDouble(parser.getValue(location, "utm_northing"));
+            double north = Double.parseDouble(parser.getValue(location, "utm_northing"));
 
-            return UTMtoLL(northing,easting,zone);
+            return UTMtoLL(north,easting,zone);
         } catch (Exception e) {
             Utils.log(e, "FetchError");
         }
@@ -139,6 +139,8 @@ public class TUMRoomFinderRequest {
 				String buildingId = building.getAttribute(KEY_WEB_CODE);
 
 				Element campus = (Element) building.getParentNode();
+                roomMap.put(KEY_Campus + KEY_ID,
+                        campus.getAttribute("id"));
 				roomMap.put(KEY_Campus + KEY_TITLE,
 						parser.getValue(campus, KEY_TITLE));
 				roomMap.put(KEY_Building + KEY_TITLE,

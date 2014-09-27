@@ -201,19 +201,6 @@
 
     <!-- Curricula -->
     <string name="something_wrong">Ein Fehler ist aufgetreten</string>
-    <string name="informatics_bachelor_0809">Informatik Bachelor WS0809</string>
-    <string name="informatics_bachelor_1213">Informatik Bachelor WS1213</string>
-    <string name="business_informatics_bachelor_1112">Wirtschaftsinformatik Bachelor WS1112</string>
-    <string name="business_informatics_bachelor_0809">Wirtschaftsinformatik Bachelor WS0809</string>
-    <string name="business_informatics_bachelor_1213">Wirtschaftsinformatik Bachelor WS1213</string>
-    <string name="business_informatics_bachelor_1314">Wirtschaftsinformatik Bachelor WS1314</string>
-    <string name="bioinformatics_bachelor">Bioinformatik Bachelor</string>
-    <string name="games_engineering_bachelor">Games Engineering Bachelor</string>
-    <string name="informatics_master">Informatik Master</string>
-    <string name="business_informatics_master">Wirtschaftsinformatik Master</string>
-    <string name="bioinformatics_master">Bioinformatik Master</string>
-    <string name="automotive_master">Automotive Software Engineering Master</string>
-    <string name="computational_science_master">Computational Science and Engineering</string>
 
     <!-- Opening hours -->
     <string name="libraries">Bibliotheken</string>
