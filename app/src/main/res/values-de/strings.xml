@@ -16,12 +16,6 @@
     <string name="no_internet_connection">Keine Internetverbindung</string>
     <string name="app_short_description">TUM Informationsplattform - von Studenten für Studenten</string>
 
-    <!-- Demo mode -->
-    <string name="days_left">Tage verbleibend</string>
-    <string name="day_left">Tag verbleibend</string>
-    <string name="date_expired">Demo abgelaufen</string>
-    <string name="welcome_demo"><b>Willkommen zur <i>TUM Campus App Demo</i></b>.\n\nZur Benutzung dieser Demo ist eine Internetverbindung notwendig. Die Demo ist gültig bis zum 08.09.2013.</string>
-
     <!-- Calendar -->
     <string name="dialog_show_calendar">Exportieren erfolgreich.\nLokalen Kalender <i>TUM_CAMPUS_APP</i> in der <i>Google Calendar App</i> anzeigen?</string>
     <string name="export_to_google">Exportiere nach Google</string>

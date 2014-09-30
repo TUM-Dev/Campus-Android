@@ -3,8 +3,6 @@ package de.tum.in.tumcampus.models.managers;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -47,22 +45,18 @@ public class NewsManager implements Card.ProvidesCard {
      */
     private static News getFromJson(JSONObject json) throws Exception {
 
-        String target = "";
+        String picture = "";
         if (json.has("picture")) {
-            String picture = json.getString(Const.JSON_PICTURE);
-            target = Utils.getCacheDir("news/cache") + Utils.md5(picture) + ".jpg";
-            Utils.downloadFileThread(picture, target);
+            picture = json.getString(Const.JSON_PICTURE);
+            //target = Utils.getCacheDir("news/cache") + Utils.md5(picture) + ".jpg";
+            //Utils.downloadFileThread(picture, target);
         }
         String link = "";
-        if (json.has(Const.JSON_LINK)
-                && !json.getString(Const.JSON_LINK)
-                .contains(Const.FACEBOOK_URL)) {
+        if (json.has(Const.JSON_LINK) && !json.getString(Const.JSON_LINK).contains(Const.FACEBOOK_URL)) {
             link = json.getString(Const.JSON_LINK);
         }
         if (link.length() == 0 && json.has(Const.JSON_OBJECT_ID)) {
-            link = "http://graph.facebook.com/"
-                    + json.getString(Const.JSON_OBJECT_ID)
-                    + "/Picture?type=normal";
+            link = "http://graph.facebook.com/" + json.getString(Const.JSON_OBJECT_ID) + "/Picture?type=normal";
         }
 
         // message empty => description empty => caption
@@ -83,7 +77,7 @@ public class NewsManager implements Card.ProvidesCard {
 
         Date date = Utils.getDate(json.getString(Const.JSON_CREATED_TIME));
 
-        return new News(json.getString(Const.JSON_ID), message, link, target, date);
+        return new News(json.getString(Const.JSON_ID), message, link, picture, date);
     }
 
     /** Database connection */
@@ -124,10 +118,8 @@ public class NewsManager implements Card.ProvidesCard {
         String url = "https://graph.facebook.com/162327853831856/feed/?limit=100&access_token=";
         String token = "141869875879732|FbjTXY-wtr06A18W9wfhU8GCkwU";
 
-        @SuppressWarnings("deprecation")
-        JSONArray jsonArray = Utils
-                .downloadJson(url + URLEncoder.encode(token)).getJSONArray(
-                        Const.JSON_DATA);
+        JSONArray jsonArray = Utils.downloadJson(url + URLEncoder.encode(token, "UTF-8"))
+                .getJSONArray(Const.JSON_DATA);
 
         cleanupDb();
         int count = Utils.dbGetTableCount(db, "news");
@@ -154,10 +146,8 @@ public class NewsManager implements Card.ProvidesCard {
                     continue;
                 }
                 // NTK added Kurz notiert Archiv ---> ignore in news
-                if (obj.has("name")
-                        && (obj.getString("name").equals("Kurz notiert") || obj
-                        .getString("name")
-                        .equals("Kurz notiert Archiv"))) {
+                if (obj.has("name") && (obj.getString("name").equals("Kurz notiert") || obj
+                        .getString("name").equals("Kurz notiert Archiv"))) {
                     continue;
                 }
 
@@ -196,7 +186,6 @@ public class NewsManager implements Card.ProvidesCard {
      */
     public void removeCache() {
         db.execSQL("DELETE FROM news");
-        Utils.emptyCacheDir("news/cache");
     }
 
     /**
@@ -233,8 +222,7 @@ public class NewsManager implements Card.ProvidesCard {
             if (title.contains("\n")) {
                 title = title.substring(0, title.indexOf('\n'));
             }
-            Bitmap bitmap = BitmapFactory.decodeFile(cur.getString(0));
-            card.setNews(bitmap, title, cur.getString(3), cur.getString(2));
+            card.setNews(cur.getString(0), title, cur.getString(3), cur.getString(2));
             card.apply();
         }
         cur.close();

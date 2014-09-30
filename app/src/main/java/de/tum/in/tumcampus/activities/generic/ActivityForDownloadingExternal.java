@@ -4,11 +4,11 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.View;
 
-import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.services.DownloadService;
@@ -30,10 +30,16 @@ public abstract class ActivityForDownloadingExternal extends ProgressActivity {
      * @param method Type of content to be downloaded
      * @param layoutId Resource id of the xml layout that should be used to inflate the activity
      */
-    //TODO replace method with enum
     public ActivityForDownloadingExternal(String method, int layoutId) {
         super(layoutId);
         this.method = method;
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(DownloadService.BROADCAST_NAME));
+
     }
 
     /** Broadcast receiver getting notifications from the download service, if downloading was successful or not */
@@ -69,24 +75,13 @@ public abstract class ActivityForDownloadingExternal extends ProgressActivity {
 	};
 
     @Override
-    public void onClick(View view) {
-        int viewId = view.getId();
-        switch (viewId) {
-            case R.id.error_layout:
-                requestDownload(true);
-                break;
-        }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(DownloadService.BROADCAST_NAME));
+    public void onRefreshStarted(View view) {
+        requestDownload(true);
     }
 
 	@Override
-	protected void onPause() {
-		super.onPause();
+	protected void onStop() {
+		super.onStop();
         LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
 	}
 
@@ -103,7 +98,7 @@ public abstract class ActivityForDownloadingExternal extends ProgressActivity {
 			service.putExtra(Const.FORCE_DOWNLOAD, forceDownload);
 			startService(service);
 		} else {
-			showError(R.string.no_internet_connection); // TODO Make generic layout for no internet
+			showNoInternetLayout();
 		}
 	}
 }

@@ -2,7 +2,6 @@ package de.tum.in.tumcampus.activities;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -53,7 +52,7 @@ public class OrganisationActivity extends ActivityForAccessingTumOnline<OrgItemL
     private OrgItemList result;
 
     public OrganisationActivity() {
-		super(TUMOnlineConst.ORG_TREE, OrgItemList.class, R.layout.activity_organisation);
+		super(TUMOnlineConst.ORG_TREE, R.layout.activity_organisation);
 	}
 
     @Override
@@ -73,8 +72,13 @@ public class OrganisationActivity extends ActivityForAccessingTumOnline<OrgItemL
     @Override
     public void onFetch(OrgItemList rawResponse) {
         result = rawResponse;
+        if (languageGerman) {
+            orgName = getParent(parentId).getNameDe();
+        } else {
+            orgName = getParent(parentId).getNameEn();
+        }
+        showItems(parentId);
         showLoadingEnded();
-        showOrgTree();
     }
 
 	/**
@@ -216,38 +220,5 @@ public class OrganisationActivity extends ActivityForAccessingTumOnline<OrgItemL
 				}
 			}
 		});
-	}
-
-	private void showOrgTree() {
-
-		AsyncTask<Void, Void, Boolean> backgroundTask;
-		backgroundTask = new AsyncTask<Void, Void, Boolean>() {
-			@Override
-			protected Boolean doInBackground(Void... params) {
-				// be careful! this takes a lot of time on older devices!
-
-				// set orgName depending on language
-				if (languageGerman) {
-					orgName = getParent(parentId).getNameDe();
-				} else {
-					orgName = getParent(parentId).getNameEn();
-				}
-				return true;
-			}
-
-			@Override
-			protected void onPostExecute(Boolean result) {
-				// first: show the first level of the tree (including the faculties)
-				showItems(parentId);
-				hideProgressLayout();
-			}
-
-			@Override
-			protected void onPreExecute() {
-				showProgressLayout();
-			}
-		};
-		backgroundTask.execute();
-
 	}
 }

@@ -50,7 +50,7 @@ public class BackgroundService extends IntentService {
      */
 	/*private void fetchGrades() {
 		// fetching xml from tum online
-		TUMOnlineRequest requestHandler = new TUMOnlineRequest(Const.NOTEN,
+		TUMOnlineRequest requestHandler = new TUMOnlineRequest(Const.EXAMS,
 				getApplicationContext());
 		String rawResponse = requestHandler.fetch();
 		Serializer serializer = new Persister();

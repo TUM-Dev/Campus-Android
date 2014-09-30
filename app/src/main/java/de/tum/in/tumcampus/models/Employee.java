@@ -119,4 +119,16 @@ public class Employee extends Person implements Serializable {
 	public void setTitle(String title) {
 		this.title = title;
 	}
+
+    @Override
+    public String toString() {
+        String infoText = "";
+
+        String title = getTitle();
+        if (title != null) {
+            infoText = title + " ";
+        }
+
+        return infoText + getName() + " " + getSurname();
+    }
 }

@@ -35,7 +35,7 @@ public class AccessTokenManager {
     String generateAccessToken(String lrz_id) {
 		// we don't have an access token yet, though we take the constructor
 		// with only one parameter to set the method
-		TUMOnlineRequest<AccessToken> request = new TUMOnlineRequest<AccessToken>(TUMOnlineConst.REQUEST_TOKEN, AccessToken.class, context, false);
+		TUMOnlineRequest<AccessToken> request = new TUMOnlineRequest<AccessToken>(TUMOnlineConst.REQUEST_TOKEN, context, false);
 		// add lrz_id to parameters
 		request.setParameter("pUsername", lrz_id);
 		// add readable name for TUMOnline

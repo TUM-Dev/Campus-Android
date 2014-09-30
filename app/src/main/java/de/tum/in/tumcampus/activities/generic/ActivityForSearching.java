@@ -146,16 +146,6 @@ public abstract class ActivityForSearching extends ProgressActivity {
     }
 
     @Override
-    public void onClick(View view) {
-        int viewId = view.getId();
-        switch (viewId) {
-            case R.id.error_layout:
-                requestSearch(mQuery);
-                break;
-        }
-    }
-
-    @Override
     public void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         if(intent==null)
@@ -232,5 +222,10 @@ public abstract class ActivityForSearching extends ProgressActivity {
      */
     protected void openSearch() {
         mOpenSearch = true;
+    }
+
+    @Override
+    public void onRefreshStarted(View view) {
+        requestSearch(mQuery);
     }
 }

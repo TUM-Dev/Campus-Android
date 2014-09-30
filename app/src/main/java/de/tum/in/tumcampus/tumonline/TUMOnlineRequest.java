@@ -33,7 +33,7 @@ import de.tum.in.tumcampus.models.managers.CacheManager;
  * XML-RPC backend. ALl communications is based on the base-url which is
  * attached by the Token and additional parameters.
  */
-public class TUMOnlineRequest<T> {
+public  class TUMOnlineRequest<T> {
 	// server address
 	private static final String SERVICE_BASE_URL = "https://campus.tum.de/tumonline/wbservicesbasic.";
 
@@ -56,29 +56,27 @@ public class TUMOnlineRequest<T> {
 	private final HttpClient client;
 
 	/** method to call */
-	private TUMOnlineConst method = null;
+	private TUMOnlineConst<T> method = null;
 
 	/** a list/map for the needed parameters */
 	private Map<String, String> parameters;
 
     private final CacheManager cacheManager;
 
-    private Class<T> returnClass;
     private String lastError;
 
     @SuppressWarnings("unchecked")
-    private TUMOnlineRequest(Context context, Class<T> returnClass) {
+    private TUMOnlineRequest(Context context) {
         cacheManager = new CacheManager(context);
 		client = getThreadSafeClient();
 		resetParameters();
 		HttpParams params = client.getParams();
 		HttpConnectionParams.setSoTimeout(params, Const.HTTP_TIMEOUT);
 		HttpConnectionParams.setConnectionTimeout(params, Const.HTTP_TIMEOUT);
-        this.returnClass = returnClass;
 	}
 
-	public TUMOnlineRequest(TUMOnlineConst method, Class<T> returnClass, Context context, boolean needsToken) {
-		this(context, returnClass);
+	public TUMOnlineRequest(TUMOnlineConst<T> method, Context context, boolean needsToken) {
+		this(context);
 		this.method = method;
 
         if(needsToken) {
@@ -86,8 +84,8 @@ public class TUMOnlineRequest<T> {
         }
 	}
 
-    public TUMOnlineRequest(TUMOnlineConst method, Class<T> returnClass, Context context) {
-        this(method, returnClass, context, true);
+    public TUMOnlineRequest(TUMOnlineConst method, Context context) {
+        this(method, context, true);
         this.fillCache = true;
     }
 
@@ -111,14 +109,24 @@ public class TUMOnlineRequest<T> {
 		try {
             result = cacheManager.getFromCache(url);
             if(result==null || fillCache) {
-                HttpGet request = new HttpGet(url);
-                HttpResponse response = client.execute(request);
-                HttpEntity responseEntity = response.getEntity();
+                HttpEntity responseEntity;
+                //try {
+                    HttpGet request = new HttpGet(url);
+                    HttpResponse response = client.execute(request);
+                    responseEntity = response.getEntity();
+                //TODO implement with more generic method from Utils
+                /*} catch (ConnectTimeoutException e) {
+                    Utils.log(e);
+                    Utils.logv("Second try");
+                    HttpGet request = new HttpGet(url);
+                    HttpResponse response = client.execute(request);
+                    responseEntity = response.getEntity();
+                }*/
 
                 if (responseEntity != null) {
                     // do something with the response
                     result = EntityUtils.toString(responseEntity);
-                    cacheManager.addToCache(url, result, 0);
+                    cacheManager.addToCache(url, result, method.getValidity(), CacheManager.CACHE_TYP_DATA);
                     Utils.logv("added to cache " + url);
                 }
             } else {
@@ -132,7 +140,7 @@ public class TUMOnlineRequest<T> {
 
         Serializer serializer = new Persister();
         try {
-            return serializer.read(returnClass, result);
+            return serializer.read(method.getResponse(), result);
         } catch (Exception e) {
             Utils.log(e);
             return null;
@@ -181,7 +189,7 @@ public class TUMOnlineRequest<T> {
                 }
                 // Handles result
                 if (!isOnline) {
-                    listener.onCommonError(context.getString(R.string.no_internet_connection));
+                    listener.onNoInternetError();
                     return;
                 }
                 if (result == null) {
@@ -206,12 +214,11 @@ public class TUMOnlineRequest<T> {
 	}
 
 	/**
-	 * This will return the URL to the TUMOnlineRequest with regard to the set
-	 * parameters
+	 * This will return the URL to the TUMOnlineRequest with regard to the set parameters
 	 * 
 	 * @return a String URL
 	 */
-    String getRequestURL() {
+    public String getRequestURL() {
 		String url = SERVICE_BASE_URL + method + "?";
 
 		// Builds to be fetched URL based on the base-url and additional parameters
@@ -225,11 +232,7 @@ public class TUMOnlineRequest<T> {
 		DefaultHttpClient client = new DefaultHttpClient();
 		ClientConnectionManager mgr = client.getConnectionManager();
 		HttpParams params = client.getParams();
-
-		client = new DefaultHttpClient(new ThreadSafeClientConnManager(params,
-				mgr.getSchemeRegistry()), params);
-
-		return client;
+		return new DefaultHttpClient(new ThreadSafeClientConnManager(params, mgr.getSchemeRegistry()), params);
 	}
 
 	/**

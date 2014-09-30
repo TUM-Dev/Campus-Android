@@ -29,7 +29,7 @@ public class OrganisationDetailsActivity extends ActivityForAccessingTumOnline<O
 	private String orgName;
 
 	public OrganisationDetailsActivity() {
-		super(TUMOnlineConst.ORG_DETAILS, OrgDetailItemList.class, R.layout.activity_organisationdetails);
+		super(TUMOnlineConst.ORG_DETAILS, R.layout.activity_organisationdetails);
 	}
 
     @Override

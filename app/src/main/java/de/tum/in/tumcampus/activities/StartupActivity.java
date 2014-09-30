@@ -5,8 +5,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBarActivity;
@@ -22,12 +25,15 @@ import com.nineoldandroids.animation.AnimatorSet;
 import com.nineoldandroids.animation.ObjectAnimator;
 import com.nineoldandroids.view.ViewHelper;
 
+import java.io.File;
+
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.wizard.WizNavStartActivity;
 import de.tum.in.tumcampus.auxiliary.Const;
-import de.tum.in.tumcampus.auxiliary.DemoModeStartActivity;
+import de.tum.in.tumcampus.auxiliary.FileUtils;
 import de.tum.in.tumcampus.auxiliary.ImplicitCounter;
 import de.tum.in.tumcampus.auxiliary.Utils;
+import de.tum.in.tumcampus.models.managers.DatabaseManager;
 import de.tum.in.tumcampus.services.DownloadService;
 import de.tum.in.tumcampus.services.StartSyncReceiver;
 
@@ -35,7 +41,6 @@ import de.tum.in.tumcampus.services.StartSyncReceiver;
  * Entrance point of the App.
  */
 public class StartupActivity extends ActionBarActivity {
-    private static final boolean DEMO_MODE = false;
     private static final boolean TRACK_ERRORS_WITH_BUG_SENSE = true;
 
     @Override
@@ -53,12 +58,18 @@ public class StartupActivity extends ActionBarActivity {
         }
 
         // For compatibility reasons
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-        if(sp.contains("hide_wizzard_on_startup")) {
-            SharedPreferences.Editor e = sp.edit();
-            e.putBoolean(Const.HIDE_WIZARD_ON_STARTUP, sp.getBoolean("hide_wizzard_on_startup", false));
-            e.remove("hide_wizzard_on_startup");
-            e.apply();
+        int prevVersion = Utils.getInternalSettingInt(this, Const.APP_VERSION, 35);
+
+        // get current app version
+        int currentVersion = 0;
+        try {
+            currentVersion = getPackageManager().getPackageInfo(getPackageName(), 0).versionCode;
+        } catch (PackageManager.NameNotFoundException e) {
+            Utils.log(e);
+        }
+        if(prevVersion<currentVersion) {
+            setupNewVersion();
+            Utils.setInternalSetting(this, Const.APP_VERSION, currentVersion);
         }
 
         // Also First run setup of id and token
@@ -96,7 +107,6 @@ public class StartupActivity extends ActionBarActivity {
             if (intent.getAction().equals(DownloadService.BROADCAST_NAME)) {
                 startApp();
             }
-            //TODO handle error and warning result
         }
     };
 
@@ -147,15 +157,9 @@ public class StartupActivity extends ActionBarActivity {
             @Override
             public void onAnimationEnd(Animator animation) {
                 // Start the demo Activity if demo mode is set
-                if (DEMO_MODE) {
-                    Intent intent = new Intent(StartupActivity.this, DemoModeStartActivity.class);
-                    startActivity(intent);
-                    finish();
-                } else {
-                    Intent intent = new Intent(StartupActivity.this, MainActivity.class);
-                    startActivity(intent);
-                    finish();
-                }
+                Intent intent = new Intent(StartupActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();
                 //overridePendingTransition(0,0);
                 overridePendingTransition(R.anim.fadein, R.anim.fadeout);
             }
@@ -183,5 +187,34 @@ public class StartupActivity extends ActionBarActivity {
                     getResources().getDisplayMetrics());
         }
         return actionBarHeight;
+    }
+
+    /**
+     * Delete stuff from old version
+     */
+    private void setupNewVersion() {
+        SQLiteDatabase db = DatabaseManager.getDb(this);
+        // reset sync manager
+        db.execSQL("DROP TABLE IF EXISTS syncs");
+
+        // drop cafeterias table
+        db.execSQL("DROP TABLE IF EXISTS cafeterias");
+
+        // drop transportation table
+        db.execSQL("DROP TABLE IF EXISTS transports");
+
+        // drop locations table
+        db.execSQL("DROP TABLE IF EXISTS locations");
+
+        // rename hide_wizzard_on_startup
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor e = sp.edit();
+        e.putBoolean(Const.HIDE_WIZARD_ON_STARTUP, sp.getBoolean("hide_wizzard_on_startup", false));
+        e.remove("hide_wizzard_on_startup");
+        e.apply();
+
+        // delete tumcampus directory
+        File f = new File(Environment.getExternalStorageDirectory().getPath() + "/tumcampus");
+        FileUtils.deleteRecursive(f);
     }
 }

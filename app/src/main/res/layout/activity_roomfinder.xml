@@ -5,21 +5,14 @@
     android:orientation="vertical">
 
     <include
-        layout="@layout/layout_progress"
+        layout="@layout/layout_all_errors"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:visibility="gone" />
-
-    <include
-        layout="@layout/layout_error"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:visibility="gone" />
+        android:layout_height="fill_parent" />
 
     <se.emilsjolander.stickylistheaders.StickyListHeadersListView
         android:id="@+id/list"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:divider="#b5b5b5"
         android:dividerHeight="1dp"
         android:scrollbars="vertical" />

@@ -10,7 +10,7 @@ import java.util.HashMap;
 
 public interface TUMRoomFinderRequestFetchListener {
 
-	public void onCommonError(String errorReason);
+	public void onNoInternetError();
 
 	/**
 	 * fetchInteractive will call this method if the fetch of the

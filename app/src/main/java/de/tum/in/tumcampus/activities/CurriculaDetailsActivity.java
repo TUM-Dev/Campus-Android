@@ -125,6 +125,7 @@ public class CurriculaDetailsActivity extends ActivityForLoadingInBackground<Obj
     @Override
     protected void onLoadFinished(File result) {
         openFile(result);
+        showLoadingEnded();
     }
 
 	/**

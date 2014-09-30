@@ -36,7 +36,7 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
     private int mCafeteriaId = -1;
     private CafeteriaDetailsSectionsPagerAdapter mSectionsPagerAdapter;
     private List<Cafeteria> mCafeterias;
-//TODO nothing is downloaded right now?
+
     public CafeteriaActivity() {
         super(Const.CAFETERIAS, R.layout.activity_cafeteria);
     }

@@ -3,6 +3,9 @@ package de.tum.in.tumcampus.activities;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.generic.ActivityForLoadingInBackground;
 import de.tum.in.tumcampus.auxiliary.Utils;
@@ -12,7 +15,7 @@ import it.sephiroth.android.library.imagezoom.ImageViewTouchBase;
 /**
  * Displays the map regarding the searched room.
  */
-public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<String,Bitmap> {
+public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<String, Bitmap> {
 
     private ImageViewTouch mImage;
 
@@ -21,25 +24,32 @@ public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<St
     }
 
     @Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
         mImage = (ImageViewTouch) findViewById(R.id.activity_roomfinder_details);
         mImage.setDisplayType(ImageViewTouchBase.DisplayType.FIT_TO_SCREEN);
 
-		String roomId = getIntent().getExtras().getString("roomId");
-		String mapId = getIntent().getExtras().getString("mapId");
+        String roomId = getIntent().getExtras().getString("roomId");
+        String mapId = getIntent().getExtras().getString("mapId");
 
-        startLoading("http://vmbaumgarten3.informatik.tu-muenchen.de/roommaps/room/map?id=" + roomId + "&mapid=" + mapId);
-	}
+        try {
+            startLoading("http://vmbaumgarten3.informatik.tu-muenchen.de/roommaps/room/map?id="
+                    + URLEncoder.encode(roomId, "UTF-8") + "&mapid="
+                    + URLEncoder.encode(mapId, "UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            Utils.log(e);
+        }
+    }
 
     @Override
     protected Bitmap onLoadInBackground(String... arg) {
-        return Utils.downloadImage(arg[0]);
+        return Utils.downloadImage(this, arg[0]);
     }
 
     @Override
     protected void onLoadFinished(Bitmap result) {
         mImage.setImageBitmap(result);
+        showLoadingEnded();
     }
 }

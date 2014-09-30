@@ -16,12 +16,6 @@
     <string name="no_internet_connection">No internet connection available</string>
     <string name="app_short_description">TUM information platform - from students for students</string>
 
-    <!-- Demo mode -->
-    <string name="days_left">days left</string>
-    <string name="day_left">day left</string>
-    <string name="date_expired">Demo expired</string>
-    <string name="welcome_demo"><b>Welcome to <i>TUM Campus App Demo</i></b>.\n\nIn order to use this demo, an internet connection has to be established. This demo is valid until the 08.09.2013.</string>
-
     <!-- Calendar -->
     <string name="dialog_show_calendar">Export successful.\nShow local calendar <i>TUM_CAMPUS_APP</i> on <i>Google Calendar App</i>?</string>
     <string name="export_to_google">Export to Google</string>
@@ -353,5 +347,6 @@
     <string name="install_certificate">Install certificate</string>
     <string name="certificate">Certificate</string>
     <string name="certificate_desc">You have to install a CA-Root-certificate to enable secure connection with server. Just click \'Install certificate\' and confirm with \'OK\'.</string>
+    <string name="enable_wifi">Enable Wifi</string>
 
 </resources>

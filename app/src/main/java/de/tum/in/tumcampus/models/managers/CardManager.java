@@ -22,7 +22,9 @@ public class CardManager {
     public static final String SHOW_TUTORIAL_1 = "show_tutorial_1";
     public static final String SHOW_TUTORIAL_2 = "show_tutorial_2";
 
-    /** Card typ constants */
+    /**
+     * Card typ constants
+     */
     public static final int CARD_CAFETERIA = 1;
     public static final int CARD_TUITION_FEE = 2;
     public static final int CARD_NEXT_LECTURE = 3;
@@ -42,6 +44,7 @@ public class CardManager {
     /**
      * Adds the specified card to the card manager
      * Should only be used in {@link Card#apply()}
+     *
      * @param card Card that should be added
      */
     public static void addCard(Card card) {
@@ -55,7 +58,7 @@ public class CardManager {
      * @return Card count
      */
     public static int getCardCount() {
-        if(cards==null)
+        if (cards == null)
             return 0;
         return cards.size(); //TODO investigate why cards is sometimes null
     }
@@ -73,7 +76,7 @@ public class CardManager {
     /**
      * Refreshes or initialises all cards.
      * WARNING: Must not be called from UI thread.
-     *
+     * <p/>
      * HOWTO ADD A NEW CARD:
      * 1. Let the manager class implement {@link de.tum.in.tumcampus.cards.Card.ProvidesCard}
      * 2. Create a new class extending {@link Card}
@@ -83,7 +86,7 @@ public class CardManager {
      * 5. Add this card to the CardManager by calling {@link Card#apply()} from
      * {@link de.tum.in.tumcampus.cards.Card.ProvidesCard#onRequestCard(android.content.Context)}
      * 6. Add an instance of the manager class to the managers list below
-     * */
+     */
     public static void update(Context context) {
         mContext = context;
 
@@ -103,20 +106,20 @@ public class CardManager {
         List<Card.ProvidesCard> managers = new ArrayList<Card.ProvidesCard>();
 
         // Add those managers only if valid access token is available
-        if(new AccessTokenManager(context).hasValidAccessToken()) {
+        if (new AccessTokenManager(context).hasValidAccessToken()) {
             managers.add(new CalendarManager(context));
             managers.add(new TuitionFeeManager());
         }
 
         // Those don't need TUMOnline access
         managers.add(new CafeteriaManager(context));
-        managers.add(new TransportManager(context));
+        managers.add(new TransportManager());
         managers.add(new NewsManager(context));
 
-        for(Card.ProvidesCard manager : managers){
-            try{
+        for (Card.ProvidesCard manager : managers) {
+            try {
                 manager.onRequestCard(context);
-            }catch(Exception ex){
+            } catch (Exception ex) {
                 Utils.log(ex, "Error while creating card");
             }
         }
@@ -132,7 +135,7 @@ public class CardManager {
      * Inserts a card into the list
      *
      * @param position Position where the card should be inserted
-     * @param item Card to be inserted
+     * @param item     Card to be inserted
      */
     public static void insert(int position, Card item) {
         cards.add(position, item);

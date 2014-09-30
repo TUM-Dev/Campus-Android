@@ -102,4 +102,84 @@ public abstract class ActivityForSearchingInBackground<T> extends ActivityForSea
             asyncTask = null;
         }
     }
+
+    /**
+     * Shows error layout and toasts the given message.
+     * Hides any progress indicator.
+     *
+     * @param errorReason Resource id of the error text
+     */
+    @Override
+    protected void showError(int errorReason) {
+        showError(getString(errorReason));
+    }
+
+    /**
+     * Shows error layout and toasts the given message.
+     * Hides any progress indicator.
+     *
+     * @param errorReason Error text
+     */
+    protected void showError(final String errorReason) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                ActivityForSearchingInBackground.super.showError(errorReason);
+            }
+        });
+    }
+
+    /**
+     * Shows error layout.
+     * Hides any progress indicator.
+     */
+    @Override
+    protected void showErrorLayout() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                ActivityForSearchingInBackground.super.showErrorLayout();
+            }
+        });
+    }
+
+    /**
+     * Shows failed layout
+     * @param error Error Text to be toasted
+     */
+    @Override
+    protected void showFailedTokenLayout(final String error) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                ActivityForSearchingInBackground.super.showFailedTokenLayout(error);
+            }
+        });
+    }
+
+    /**
+     * Shows failed layout
+     */
+    @Override
+    protected void showNoTokenLayout() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                ActivityForSearchingInBackground.super.showNoTokenLayout();
+            }
+        });
+    }
+
+    /**
+     * Shows failed layout
+     */
+    @Override
+    protected void showNoInternetLayout() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                ActivityForSearchingInBackground.super.showNoInternetLayout();
+            }
+        });
+    }
 }

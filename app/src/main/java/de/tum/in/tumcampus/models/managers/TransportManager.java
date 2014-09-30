@@ -3,7 +3,6 @@ package de.tum.in.tumcampus.models.managers;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.MatrixCursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 
 import org.json.JSONArray;
@@ -21,52 +20,9 @@ import de.tum.in.tumcampus.cards.Card;
 import de.tum.in.tumcampus.cards.MVVCard;
 
 /**
- * Transport Manager, handles database stuff, internet connections
+ * Transport Manager, handles querying data from mvv and card creation
  */
 public class TransportManager implements Card.ProvidesCard {
-
-    /**
-     * Database connection
-     */
-    private final SQLiteDatabase db;
-
-    /**
-     * Constructor, open/create database, create table if necessary
-     *
-     * @param context Context
-     */
-    public TransportManager(Context context) {
-        db = DatabaseManager.getDb(context);
-
-        // create table if needed
-        db.execSQL("CREATE TABLE IF NOT EXISTS transports (name VARCHAR PRIMARY KEY)");
-    }
-
-    /**
-     * Checks if the transports table is empty
-     *
-     * @return true if no stations are available, else false
-     */
-    public boolean empty() {
-        boolean result = true;
-        Cursor c = db.rawQuery("SELECT name FROM transports LIMIT 1", null);
-        if (c.moveToNext()) {
-            result = false;
-        }
-        c.close();
-        return result;
-    }
-
-    /**
-     * Get all stations from the database
-     *
-     * @return Database cursor (name, _id)
-     */
-    public Cursor getAllFromDb() {
-        return db.rawQuery(
-                "SELECT name, name as _id FROM transports ORDER BY name", null);
-    }
-
     /**
      * Get all departures for a station.
      * Cursor includes target station name, departure in remaining minutes.
@@ -75,7 +31,7 @@ public class TransportManager implements Card.ProvidesCard {
      * @return List of departures
      * @throws Exception
      */
-    public List<Departure> getDeparturesFromExternal(String location) throws Exception {
+    public static List<Departure> getDeparturesFromExternal(String location) throws Exception {
 
         String baseUrl = "http://query.yahooapis.com/v1/public/yql?format=json&q=";
         // ISO needed for mvv
@@ -108,7 +64,7 @@ public class TransportManager implements Card.ProvidesCard {
         return list;
     }
 
-    public class Departure implements Comparable<Departure> {
+    public static class Departure implements Comparable<Departure> {
         public String symbol;
         public String line;
         public long time;
@@ -126,7 +82,7 @@ public class TransportManager implements Card.ProvidesCard {
      * @return Database Cursor (name, _id)
      * @throws Exception
      */
-    public Cursor getStationsFromExternal(String location) throws Exception {
+    public static Cursor getStationsFromExternal(String location) throws Exception {
 
         String baseUrl = "http://query.yahooapis.com/v1/public/yql?format=json&q=";
         String lookupUrl = "http://www.mvg-live.de/ims/dfiStaticAuswahl.svc?haltestelle=" + URLEncoder.encode(location, "ISO-8859-1");
@@ -160,19 +116,6 @@ public class TransportManager implements Card.ProvidesCard {
             mc.addRow(new String[]{station, String.valueOf(j)});
         }
         return mc;
-    }
-
-    /**
-     * Replace or Insert a station into the database
-     *
-     * @param name Station name
-     */
-    public void replaceIntoDb(String name) {
-        Utils.log(name);
-        if (name.length() == 0) {
-            return;
-        }
-        db.execSQL("REPLACE INTO transports (name) VALUES (?)", new String[]{name});
     }
 
     /**

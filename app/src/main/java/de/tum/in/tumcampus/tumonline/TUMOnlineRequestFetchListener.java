@@ -9,9 +9,8 @@ public interface TUMOnlineRequestFetchListener<T> {
     /**
      * fetchInteractive will call this method if the fetch canceled because of an error
      *
-     * @param errorReason error message
      */
-	public void onCommonError(String errorReason);
+	public void onNoInternetError();
 
 	/**
 	 * fetchInteractive will call this method if the fetch of the

@@ -3,11 +3,11 @@ package de.tum.in.tumcampus.activities;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
 
 import java.util.NoSuchElementException;
 import java.util.concurrent.TimeoutException;
@@ -16,6 +16,7 @@ import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.generic.ActivityForSearchingInBackground;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.MVVStationSuggestionProvider;
+import de.tum.in.tumcampus.models.managers.RecentsManager;
 import de.tum.in.tumcampus.models.managers.TransportManager;
 
 /**
@@ -25,7 +26,7 @@ public class TransportationActivity extends ActivityForSearchingInBackground<Cur
 
     private ListView listViewResults;
     private SimpleCursorAdapter adapterStations;
-    private TransportManager transportationManager;
+    private RecentsManager recentsManager;
 
     public TransportationActivity() {
         super(R.layout.activity_transportation, MVVStationSuggestionProvider.AUTHORITY, 3);
@@ -37,13 +38,13 @@ public class TransportationActivity extends ActivityForSearchingInBackground<Cur
         super.onCreate(savedInstanceState);
 
         // get all stations from db
-        transportationManager = new TransportManager(this);
+        recentsManager = new RecentsManager(this, RecentsManager.STATIONS);
 
-        listViewResults = (ListView) this.findViewById(R.id.activity_transport_listview_result);
+        listViewResults = (ListView) findViewById(R.id.activity_transport_listview_result);
         listViewResults.setOnItemClickListener(this);
 
         // Initialize stations adapter
-        Cursor stationCursor = transportationManager.getAllFromDb();
+        Cursor stationCursor = recentsManager.getAllFromDb();
         adapterStations = new SimpleCursorAdapter(this, android.R.layout.simple_list_item_1, stationCursor,
                 stationCursor.getColumnNames(), new int[]{android.R.id.text1});
 
@@ -82,7 +83,7 @@ public class TransportationActivity extends ActivityForSearchingInBackground<Cur
      */
     @Override
     public Cursor onSearchInBackground() {
-        return transportationManager.getAllFromDb();
+        return recentsManager.getAllFromDb();
     }
 
     /**
@@ -103,7 +104,7 @@ public class TransportationActivity extends ActivityForSearchingInBackground<Cur
         // Get Information
         Cursor stationCursor = null;
         try {
-            stationCursor = transportationManager.getStationsFromExternal(inputText);
+            stationCursor = TransportManager.getStationsFromExternal(inputText);
         } catch (NoSuchElementException e) {
             showError(R.string.no_station_found);
         } catch (TimeoutException e) {

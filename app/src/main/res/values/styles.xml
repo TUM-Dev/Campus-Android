@@ -26,17 +26,6 @@
         <item name="android:gravity">center</item>
     </style>
 
-    <style name="DemoText">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:gravity">center</item>
-        <item name="android:typeface">serif</item>
-        <item name="android:textColor">@android:color/white</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:padding">2dp</item>
-        <item name="android:textSize">18sp</item>
-    </style>
-
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="android:actionBarStyle" tools:ignore="NewApi">@style/BlueActionBar</item>
         <item name="actionBarStyle">@style/BlueActionBar</item>

@@ -35,7 +35,6 @@ public class DownloadService extends IntentService {
 	private static final String DOWNLOAD_SERVICE = "DownloadService";
     private static final String LAST_UPDATE = "last_update";
     private static final String CSV_LOCATIONS = "locations.csv";
-    private static final String LOCATIONS_VERSION = "locations_version";
 
     /**
 	 * Indicator to avoid starting new downloads
@@ -94,9 +93,24 @@ public class DownloadService extends IntentService {
             try {
                 if(!isDestroyed) {
                     if ((action.equals(Const.DOWNLOAD_ALL_FROM_EXTERNAL))) {
-                        downloadNews(force);
-                        downloadCafeterias(force);
-                        importLocationsDefaults();
+                        try {
+                            downloadNews(force);
+                        } catch (Exception e) {
+                            Utils.log(e);
+                            successful = false;
+                        }
+                        try {
+                            downloadCafeterias(force);
+                        } catch (Exception e) {
+                            Utils.log(e);
+                            successful = false;
+                        }
+                        try {
+                            importLocationsDefaults();
+                        } catch (Exception e) {
+                            Utils.log(e);
+                            successful = false;
+                        }
                     }
                     if ((action.equals(Const.NEWS))) {
                         downloadNews(force);
@@ -125,8 +139,7 @@ public class DownloadService extends IntentService {
             } catch (Exception e) {
                 Utils.log(e, "Unknown error while handling action <" + action + ">");
                 if (!isDestroyed) {
-                    broadcastError(getResources().getString(
-                            R.string.exception_unknown));
+                    broadcastError(getResources().getString(R.string.exception_unknown));
                     successful = false;
                 }
             }
@@ -207,14 +220,8 @@ public class DownloadService extends IntentService {
      * Import default location and opening hours from assets
      */
     private void importLocationsDefaults() throws Exception {
-        // get current app version
-        int version = getPackageManager().getPackageInfo(getPackageName(), 0).versionCode;
-
-        // check if database update is needed
-        boolean update = Utils.getInternalSettingInt(this, LOCATIONS_VERSION, -1)!=version;
-
         OpenHoursManager lm = new OpenHoursManager(this);
-        if (lm.empty() || update) {
+        if (lm.empty()) {
             List<String[]> rows = Utils.readCsv(getAssets().open(CSV_LOCATIONS));
 
             for (String[] row : rows) {
@@ -222,7 +229,6 @@ public class DownloadService extends IntentService {
                         row[2], row[3], row[4], row[5], row[6], row[7], row[8]));
             }
         }
-        Utils.setInternalSetting(this, LOCATIONS_VERSION, version);
     }
 
     /**

@@ -49,7 +49,7 @@ public class PersonsDetailsActivity extends ActivityForAccessingTumOnline<Employ
     private MenuItem mContact;
 
     public PersonsDetailsActivity() {
-		super(TUMOnlineConst.PERSONEN_DETAILS, Employee.class, R.layout.activity_personsdetails);
+		super(TUMOnlineConst.PERSON_DETAILS, R.layout.activity_personsdetails);
 	}
 
     @Override

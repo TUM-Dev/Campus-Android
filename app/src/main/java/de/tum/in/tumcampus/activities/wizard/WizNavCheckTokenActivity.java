@@ -19,13 +19,13 @@ import de.tum.in.tumcampus.tumonline.TUMOnlineConst;
 public class WizNavCheckTokenActivity extends ActivityForAccessingTumOnline<TokenConfirmation> {
 
 	public WizNavCheckTokenActivity() {
-		super(TUMOnlineConst.TOKEN_CONFIRMED, TokenConfirmation.class, R.layout.activity_wiznav_checktoken);
+		super(TUMOnlineConst.TOKEN_CONFIRMED, R.layout.activity_wiznav_checktoken);
 	}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+        disableRefresh();
     }
 
     /**
@@ -35,6 +35,7 @@ public class WizNavCheckTokenActivity extends ActivityForAccessingTumOnline<Toke
 	public void onBackPressed() {
         finish();
         startActivity(new Intent(this, WizNavStartActivity.class));
+        overridePendingTransition(R.anim.fadein, R.anim.fadeout);
 	}
 
     /**
@@ -65,8 +66,8 @@ public class WizNavCheckTokenActivity extends ActivityForAccessingTumOnline<Toke
             startNextActivity();
         } else {
             Utils.showToast(this, R.string.token_not_enabled);
+            showLoadingEnded();
         }
-        showLoadingEnded();
 	}
 
     /**
@@ -88,5 +89,6 @@ public class WizNavCheckTokenActivity extends ActivityForAccessingTumOnline<Toke
 	private void startNextActivity() {
 		finish();
 		startActivity(new Intent(this, WizNavExtrasActivity.class));
+        overridePendingTransition(R.anim.fadein, R.anim.fadeout);
 	}
 }

@@ -4,16 +4,9 @@
     android:orientation="vertical">
 
     <include
-        layout="@layout/layout_progress"
+        layout="@layout/layout_all_errors"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:visibility="gone" />
-
-    <include
-        layout="@layout/layout_error"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:visibility="gone" />
+        android:layout_height="fill_parent" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -24,47 +17,50 @@
             style="@style/SectionHeadline"
             android:text="@string/startup_wizard_uppercase" />
 
-        <ScrollView
+        <uk.co.senab.actionbarpulltorefresh.extras.actionbarcompat.PullToRefreshLayout
+            android:id="@+id/ptr_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/divider"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/pager_title_strip">
+            android:layout_height="match_parent"
+            android:layout_below="@+id/pager_title_strip"
+            android:layout_above="@+id/divider">
 
-            <LinearLayout
-                android:id="@+id/wizard_start_layout"
+            <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:focusable="true"
-                android:focusableInTouchMode="true"
-                android:orientation="vertical"
-                android:padding="@dimen/padding_default">
+                android:layout_height="wrap_content">
 
-                <TextView
-                    style="?android:attr/listSeparatorTextViewStyle"
-                    android:layout_height="wrap_content"
-                    android:text="@string/step_1"
-                    android:textColor="@color/text_light_gray" />
-
-                <TextView
-                    android:id="@+id/textViewWel"
+                <LinearLayout
+                    android:id="@+id/wizard_start_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="@dimen/padding_default"
-                    android:text="@string/welcome_msg" />
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:orientation="vertical"
+                    android:padding="@dimen/padding_default">
 
-                <EditText
-                    android:id="@+id/lrd_id"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="text"
-                    android:padding="@dimen/padding_default" />
+                    <TextView
+                        style="?android:attr/listSeparatorTextViewStyle"
+                        android:layout_height="wrap_content"
+                        android:text="@string/step_1"
+                        android:textColor="@color/text_light_gray" />
 
-            </LinearLayout>
-        </ScrollView>
+                    <TextView
+                        android:id="@+id/textViewWel"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/padding_default"
+                        android:text="@string/welcome_msg" />
+
+                    <EditText
+                        android:id="@+id/lrd_id"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="text"
+                        android:padding="@dimen/padding_default" />
+
+                </LinearLayout>
+            </ScrollView>
+
+        </uk.co.senab.actionbarpulltorefresh.extras.actionbarcompat.PullToRefreshLayout>
 
         <View
             android:id="@+id/divider"

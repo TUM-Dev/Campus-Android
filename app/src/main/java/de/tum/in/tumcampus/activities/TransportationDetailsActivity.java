@@ -12,6 +12,7 @@ import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.generic.ActivityForLoadingInBackground;
 import de.tum.in.tumcampus.auxiliary.DepartureView;
 import de.tum.in.tumcampus.auxiliary.Utils;
+import de.tum.in.tumcampus.models.managers.RecentsManager;
 import de.tum.in.tumcampus.models.managers.TransportManager;
 
 /**
@@ -23,7 +24,7 @@ public class TransportationDetailsActivity extends ActivityForLoadingInBackgroun
     public static final String EXTRA_STATION = "station";
 
     private LinearLayout mViewResults;
-    private TransportManager mTransportationManager;
+    private RecentsManager recentsManager;
 
     public TransportationDetailsActivity() {
         super(R.layout.activity_transportation_detail);
@@ -34,7 +35,7 @@ public class TransportationDetailsActivity extends ActivityForLoadingInBackgroun
         super.onCreate(savedInstanceState);
 
         // get all stations from db
-        mTransportationManager = new TransportManager(this);
+        recentsManager = new RecentsManager(this, RecentsManager.STATIONS);
         mViewResults = (LinearLayout) this.findViewById(R.id.activity_transport_result);
 
         Intent intent = getIntent();
@@ -62,12 +63,12 @@ public class TransportationDetailsActivity extends ActivityForLoadingInBackgroun
         final String location = arg[0];
 
         // save clicked station into db
-        mTransportationManager.replaceIntoDb(location);
+        recentsManager.replaceIntoDb(location);
 
         // get departures from website
         List<TransportManager.Departure> departureCursor = null;
         try {
-            departureCursor = mTransportationManager.getDeparturesFromExternal(location);
+            departureCursor = TransportManager.getDeparturesFromExternal(location);
         } catch (NoSuchElementException e) {
             showError(R.string.no_departures_found);
         } catch (TimeoutException e) {
@@ -85,6 +86,7 @@ public class TransportationDetailsActivity extends ActivityForLoadingInBackgroun
      */
     @Override
     protected void onLoadFinished(List<TransportManager.Departure> result) {
+        mViewResults.removeAllViews();
         for(TransportManager.Departure d : result) {
             DepartureView view = new DepartureView(this, true);
             view.setSymbol(d.symbol);
@@ -92,5 +94,6 @@ public class TransportationDetailsActivity extends ActivityForLoadingInBackgroun
             view.setTime(System.currentTimeMillis()+d.time*60000);
             mViewResults.addView(view);
         }
+        showLoadingEnded();
     }
 }

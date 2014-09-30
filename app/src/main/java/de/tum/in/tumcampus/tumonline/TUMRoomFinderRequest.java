@@ -31,45 +31,51 @@ import de.tum.in.tumcampus.models.Geo;
  */
 public class TUMRoomFinderRequest {
 
-	// server address
-	// public static final String SERVICE_BASE_URL =
-	// "http://vmbaumgarten3.informatik.tu-muenchen.de/";
+    // server address
+    // public static final String SERVICE_BASE_URL =
+    // "http://vmbaumgarten3.informatik.tu-muenchen.de/";
 
-	public static final String KEY_ARCHITECT_NUMBER = "architect_number";
-	public static final String KEY_Building = "building";
-	public static final String KEY_Campus = "Campus";
+    public static final String KEY_ARCHITECT_NUMBER = "architect_number";
+    public static final String KEY_Building = "building";
+    public static final String KEY_Campus = "Campus";
 
-	// XML node keys
-	public static final String KEY_ID = "Id";
-	private static final String KEY_MapId = "mapId";
-	public static final String KEY_ROOM = "room";
-	public static final String KEY_TITLE = "title";
-	private static final String KEY_WEB_CODE = "web_code";
-	/** asynchronous task for interactive fetch */
+    // XML node keys
+    public static final String KEY_ID = "Id";
+    private static final String KEY_MapId = "mapId";
+    public static final String KEY_ROOM = "room";
+    public static final String KEY_TITLE = "title";
+    private static final String KEY_WEB_CODE = "web_code";
+    /**
+     * asynchronous task for interactive fetch
+     */
     private AsyncTask<String, Void, ArrayList<HashMap<String, String>>> backgroundTask = null;
 
-    /** method to call */
-	private String method = null;
-	/** a list/map for the needed parameters */
-	private final Map<String, String> parameters;
-	private final String SERVICE_BASE_URL = "http://vmbaumgarten3.informatik.tu-muenchen.de/";
+    /**
+     * method to call
+     */
+    private String method = null;
+    /**
+     * a list/map for the needed parameters
+     */
+    private final Map<String, String> parameters;
+    private final String SERVICE_BASE_URL = "http://vmbaumgarten3.informatik.tu-muenchen.de/";
 
     public TUMRoomFinderRequest() {
-		/* http client instance for fetching */
+        /* http client instance for fetching */
         HttpClient client = getThreadSafeClient();
-		HttpParams params = client.getParams();
-		HttpConnectionParams.setSoTimeout(params, Const.HTTP_TIMEOUT);
-		HttpConnectionParams.setConnectionTimeout(params, Const.HTTP_TIMEOUT);
-		parameters = new HashMap<String, String>();
-		method = "search";
-	}
+        HttpParams params = client.getParams();
+        HttpConnectionParams.setSoTimeout(params, Const.HTTP_TIMEOUT);
+        HttpConnectionParams.setConnectionTimeout(params, Const.HTTP_TIMEOUT);
+        parameters = new HashMap<String, String>();
+        method = "search";
+    }
 
-	public void cancelRequest(boolean mayInterruptIfRunning) {
-		// Cancel background task just if one has been established
-		if (backgroundTask != null) {
-			backgroundTask.cancel(mayInterruptIfRunning);
-		}
-	}
+    public void cancelRequest(boolean mayInterruptIfRunning) {
+        // Cancel background task just if one has been established
+        if (backgroundTask != null) {
+            backgroundTask.cancel(mayInterruptIfRunning);
+        }
+    }
 
     /**
      * Fetches the result of the HTTPRequest (which can be seen by using
@@ -98,103 +104,103 @@ public class TUMRoomFinderRequest {
             double easting = Double.parseDouble(parser.getValue(location, "utm_easting"));
             double north = Double.parseDouble(parser.getValue(location, "utm_northing"));
 
-            return UTMtoLL(north,easting,zone);
+            return UTMtoLL(north, easting, zone);
         } catch (Exception e) {
             Utils.log(e, "FetchError");
         }
         return null;
     }
 
-	/**
-	 * Fetches the result of the HTTPRequest (which can be seen by using
-	 * getRequestURL)
-	 *
-	 * @return list of HashMaps representing rooms, Map: attributes -> values
-	 * @see TUMRoomFinderRequest#getRequestURL(java.lang.String)
-	 */
+    /**
+     * Fetches the result of the HTTPRequest (which can be seen by using
+     * getRequestURL)
+     *
+     * @return list of HashMaps representing rooms, Map: attributes -> values
+     * @see TUMRoomFinderRequest#getRequestURL(java.lang.String)
+     */
     public ArrayList<HashMap<String, String>> fetchRooms(String searchString) {
         setParameter("s", searchString);
         method = "search";
 
-		ArrayList<HashMap<String, String>> roomsList = new ArrayList<HashMap<String, String>>();
+        ArrayList<HashMap<String, String>> roomsList = new ArrayList<HashMap<String, String>>();
 
         String ROOM_SERVICE_URL = SERVICE_BASE_URL + "roommaps/room/";
         String url = getRequestURL(ROOM_SERVICE_URL);
-		Utils.log("fetching URL " + url);
+        Utils.log("fetching URL " + url);
 
-		try {
+        try {
 
-			XMLParser parser = new XMLParser();
-			String xml = parser.getXmlFromUrl(url); // getting XML from URL
-			Document doc = parser.getDomElement(xml); // getting DOM element
+            XMLParser parser = new XMLParser();
+            String xml = parser.getXmlFromUrl(url); // getting XML from URL
+            Document doc = parser.getDomElement(xml); // getting DOM element
 
-			NodeList roomList = doc.getElementsByTagName(KEY_ROOM);// building.getChildNodes();
+            NodeList roomList = doc.getElementsByTagName(KEY_ROOM);// building.getChildNodes();
 
-			for (int k = 0; k < roomList.getLength(); k++) {
+            for (int k = 0; k < roomList.getLength(); k++) {
 
-				Element room = (Element) roomList.item(k);
-				HashMap<String, String> roomMap = new HashMap<String, String>();
-				// adding each child node to HashMap key =&gt; value
-				Element building = (Element) room.getParentNode();
-				String buildingId = building.getAttribute(KEY_WEB_CODE);
+                Element room = (Element) roomList.item(k);
+                HashMap<String, String> roomMap = new HashMap<String, String>();
+                // adding each child node to HashMap key =&gt; value
+                Element building = (Element) room.getParentNode();
+                String buildingId = building.getAttribute(KEY_WEB_CODE);
 
-				Element campus = (Element) building.getParentNode();
+                Element campus = (Element) building.getParentNode();
                 roomMap.put(KEY_Campus + KEY_ID,
                         campus.getAttribute("id"));
-				roomMap.put(KEY_Campus + KEY_TITLE,
-						parser.getValue(campus, KEY_TITLE));
-				roomMap.put(KEY_Building + KEY_TITLE,
-						parser.getValue(building, KEY_TITLE));
-				roomMap.put(KEY_ROOM + KEY_TITLE,
-						parser.getValue(room, KEY_TITLE));
-				roomMap.put(KEY_Building + KEY_ID, buildingId);
-				roomMap.put(KEY_ARCHITECT_NUMBER,
-						parser.getValue(room, KEY_ARCHITECT_NUMBER));
+                roomMap.put(KEY_Campus + KEY_TITLE,
+                        parser.getValue(campus, KEY_TITLE));
+                roomMap.put(KEY_Building + KEY_TITLE,
+                        parser.getValue(building, KEY_TITLE));
+                roomMap.put(KEY_ROOM + KEY_TITLE,
+                        parser.getValue(room, KEY_TITLE));
+                roomMap.put(KEY_Building + KEY_ID, buildingId);
+                roomMap.put(KEY_ARCHITECT_NUMBER,
+                        parser.getValue(room, KEY_ARCHITECT_NUMBER));
 
-				// adding HashList to ArrayList
-				roomsList.add(roomMap);
-			}
+                // adding HashList to ArrayList
+                roomsList.add(roomMap);
+            }
 
-		} catch (Exception e) {
-			Utils.log(e, "FetchError");
-		}
-		return roomsList;
-	}
+        } catch (Exception e) {
+            Utils.log(e, "FetchError");
+        }
+        return roomsList;
+    }
 
-	String fetchDefaultMapId(String buildingID) {
-		setParameter("id", buildingID);
+    String fetchDefaultMapId(String buildingID) {
+        setParameter("id", buildingID);
 
         String ROOM_SERVICE_DEFAULT_MAP_URL = SERVICE_BASE_URL + "roommaps/building/";
         String url = getRequestURL(ROOM_SERVICE_DEFAULT_MAP_URL);
-		Utils.log("fetching Map URL " + url);
+        Utils.log("fetching Map URL " + url);
 
-		String result = null;
+        String result = null;
 
-		try {
+        try {
 
-			XMLParser parser = new XMLParser();
-			String xml = parser.getXmlFromUrl(url); // getting XML from URL
-			Document doc = parser.getDomElement(xml); // getting DOM element
+            XMLParser parser = new XMLParser();
+            String xml = parser.getXmlFromUrl(url); // getting XML from URL
+            Document doc = parser.getDomElement(xml); // getting DOM element
 
-			NodeList defaultMapIdList = doc.getElementsByTagName(KEY_MapId);
-			Element defaultMapId = (Element) defaultMapIdList.item(0);
-			result = parser.getElementValue(defaultMapId);
-			if (result.equals(""))
-				result = "10";// default room for unknown buildings
+            NodeList defaultMapIdList = doc.getElementsByTagName(KEY_MapId);
+            Element defaultMapId = (Element) defaultMapIdList.item(0);
+            result = parser.getElementValue(defaultMapId);
+            if (result.equals(""))
+                result = "10";// default room for unknown buildings
 
-		} catch (Exception e) {
-			Utils.log(e, "FetchError");
-			// return e.getMessage();
-		}
-		return result;
-	}
+        } catch (Exception e) {
+            Utils.log(e, "FetchError");
+            // return e.getMessage();
+        }
+        return result;
+    }
 
-	public void fetchDefaultMapIdJob(final Context context,
-			final TUMRoomFinderRequestFetchListener listener, String mapID) {
+    public void fetchDefaultMapIdJob(final Context context,
+                                     final TUMRoomFinderRequestFetchListener listener, String mapID) {
 
-		method = "defaultMapId";
-		// fetch information in a background task and show progress dialog in
-		// meantime
+        method = "defaultMapId";
+        // fetch information in a background task and show progress dialog in
+        // meantime
         AsyncTask<String, Void, String> backgroundTaskMap = new AsyncTask<String, Void, String>() {
 
             /** property to determine if there is an internet connection */
@@ -217,18 +223,15 @@ public class TUMRoomFinderRequest {
             protected void onPostExecute(String resultId) {
                 // handle result
                 if (!isOnline) {
-                    listener.onCommonError(context
-                            .getString(R.string.no_internet_connection));
+                    listener.onNoInternetError();
                     return;
                 }
                 if (resultId == null) {
-                    listener.onFetchError(context
-                            .getString(R.string.empty_result));
+                    listener.onFetchError(context.getString(R.string.empty_result));
                     return;
                 }
                 if (resultId.equals("10")) {
-                    listener.onCommonError(context
-                            .getString(R.string.no_map_available));
+                    listener.onFetchError(context.getString(R.string.no_map_available));
                     return;
                 }
                 // If there could not be found any problems return usual on
@@ -238,99 +241,98 @@ public class TUMRoomFinderRequest {
 
         };
 
-		backgroundTaskMap.execute(mapID);
-	}
-
-	/**
-	 * this fetch method will fetch the data from the TUMRoomFinder Request and
-	 * will address the listeners onFetch if the fetch succeeded, else the
-	 * onFetchError will be called
-	 * 
-	 * @param context the current context (may provide the current activity)
-	 * @param listener the listener, which takes the result
-	 * @param searchString Text to search for
-	 */
-	public void fetchSearchInteractive(final Context context,
-			final TUMRoomFinderRequestFetchListener listener,
-			String searchString) {
-
-		// fetch information in a background task and show progress dialog in
-		// meantime
-		backgroundTask = new AsyncTask<String, Void, ArrayList<HashMap<String, String>>>() {
-
-			/** property to determine if there is an internet connection */
-			boolean isOnline;
-
-			@Override
-			protected ArrayList<HashMap<String, String>> doInBackground(
-					String... searchString) {
-				// set parameter on the TUMRoomFinder request an fetch the
-				// results
-				isOnline = Utils.isConnected(context);
-				if (!isOnline) {
-					// not online, fetch does not make sense
-					return null;
-				}
-				// we are online, return fetch result
-
-				return fetchRooms(searchString[0]);
-			}
-
-			@Override
-			protected void onPostExecute(
-					ArrayList<HashMap<String, String>> result) {
-				// handle result
-				if (!isOnline) {
-					listener.onCommonError(context
-							.getString(R.string.no_internet_connection));
-					return;
-				}
-				if (result == null) {
-					listener.onFetchError(context
-							.getString(R.string.empty_result));
-					return;
-				}
-				// If there could not be found any problems return usual on
-				// Fetch method
-				listener.onFetch(result);
-			}
-
-		};
-
-		backgroundTask.execute(searchString);
-	}
+        backgroundTaskMap.execute(mapID);
+    }
 
     /**
-	 * This will return the URL to the TUMRoomFinderRequest with regard to the
-	 * set parameters
-	 * 
-	 * @return a String URL
-	 */
+     * this fetch method will fetch the data from the TUMRoomFinder Request and
+     * will address the listeners onFetch if the fetch succeeded, else the
+     * onFetchError will be called
+     *
+     * @param context      the current context (may provide the current activity)
+     * @param listener     the listener, which takes the result
+     * @param searchString Text to search for
+     */
+    public void fetchSearchInteractive(final Context context,
+                                       final TUMRoomFinderRequestFetchListener listener,
+                                       String searchString) {
+
+        // fetch information in a background task and show progress dialog in
+        // meantime
+        backgroundTask = new AsyncTask<String, Void, ArrayList<HashMap<String, String>>>() {
+
+            /** property to determine if there is an internet connection */
+            boolean isOnline;
+
+            @Override
+            protected ArrayList<HashMap<String, String>> doInBackground(
+                    String... searchString) {
+                // set parameter on the TUMRoomFinder request an fetch the
+                // results
+                isOnline = Utils.isConnected(context);
+                if (!isOnline) {
+                    // not online, fetch does not make sense
+                    return null;
+                }
+                // we are online, return fetch result
+
+                return fetchRooms(searchString[0]);
+            }
+
+            @Override
+            protected void onPostExecute(
+                    ArrayList<HashMap<String, String>> result) {
+                // handle result
+                if (!isOnline) {
+                    listener.onNoInternetError();
+                    return;
+                }
+                if (result == null) {
+                    listener.onFetchError(context
+                            .getString(R.string.empty_result));
+                    return;
+                }
+                // If there could not be found any problems return usual on
+                // Fetch method
+                listener.onFetch(result);
+            }
+
+        };
+
+        backgroundTask.execute(searchString);
+    }
+
+    /**
+     * This will return the URL to the TUMRoomFinderRequest with regard to the
+     * set parameters
+     *
+     * @return a String URL
+     */
     String getRequestURL(String baseURL) {
-		String url = baseURL + method + "?";
+        String url = baseURL + method + "?";
         for (Entry<String, String> pairs : parameters.entrySet()) {
             url += pairs.getKey() + "=" + pairs.getValue() + "&";
         }
-		return url;
-	}
+        return url;
+    }
 
-	private DefaultHttpClient getThreadSafeClient() {
-		DefaultHttpClient client = new DefaultHttpClient();
-		ClientConnectionManager mgr = client.getConnectionManager();
-		HttpParams params = client.getParams();
+    private DefaultHttpClient getThreadSafeClient() {
+        DefaultHttpClient client = new DefaultHttpClient();
+        ClientConnectionManager mgr = client.getConnectionManager();
+        HttpParams params = client.getParams();
 
-		client = new DefaultHttpClient(new ThreadSafeClientConnManager(params,
-				mgr.getSchemeRegistry()), params);
+        client = new DefaultHttpClient(new ThreadSafeClientConnManager(params,
+                mgr.getSchemeRegistry()), params);
 
-		return client;
-	}
+        return client;
+    }
 
     /**
-	 * Sets one parameter name to its given value and deletes all others
-	 * 
-	 * @param name identifier of the parameter
-	 * @param value value of the parameter
-	 */
+     * Sets one parameter name to its given value and deletes all others
+     *
+     * @param name  identifier of the parameter
+     * @param value value of the parameter
+     */
     void setParameter(String name, String value) {
         parameters.clear();
         try {
@@ -338,7 +340,7 @@ public class TUMRoomFinderRequest {
         } catch (UnsupportedEncodingException e) {
             Utils.log(e);
         }
-	}
+    }
 
 
     /**

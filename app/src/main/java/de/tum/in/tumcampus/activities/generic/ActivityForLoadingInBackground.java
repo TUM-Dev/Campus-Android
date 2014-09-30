@@ -3,8 +3,6 @@ package de.tum.in.tumcampus.activities.generic;
 import android.os.AsyncTask;
 import android.view.View;
 
-import de.tum.in.tumcampus.R;
-
 /**
  * Generic class which handles can handle a long running background task
  */
@@ -63,7 +61,6 @@ public abstract class ActivityForLoadingInBackground<T1,T2> extends ProgressActi
 
             @Override
             protected void onPostExecute(T2 result) {
-                showLoadingEnded();
                 onLoadFinished(result);
                 asyncTask = null;
             }
@@ -80,17 +77,87 @@ public abstract class ActivityForLoadingInBackground<T1,T2> extends ProgressActi
     }
 
     @Override
-    public void onClick(View view) {
-        int viewId = view.getId();
-        switch (viewId) {
-            case R.id.error_layout:
-                if(lastArg.length==0)
-                    startLoading();
-                else if(lastArg.length==1)
-                    startLoading(lastArg[0]);
-                else
-                    startLoading(lastArg[0],lastArg[1]);
-                break;
-        }
+    public void onRefreshStarted(View view) {
+        startLoading(lastArg);
+    }
+
+    /**
+     * Shows error layout and toasts the given message.
+     * Hides any progress indicator.
+     *
+     * @param errorReason Resource id of the error text
+     */
+    @Override
+    protected void showError(int errorReason) {
+        showError(getString(errorReason));
+    }
+
+    /**
+     * Shows error layout and toasts the given message.
+     * Hides any progress indicator.
+     *
+     * @param errorReason Error text
+     */
+    protected void showError(final String errorReason) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                ActivityForLoadingInBackground.super.showError(errorReason);
+            }
+        });
+    }
+
+    /**
+     * Shows error layout.
+     * Hides any progress indicator.
+     */
+    @Override
+    protected void showErrorLayout() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                ActivityForLoadingInBackground.super.showErrorLayout();
+            }
+        });
+    }
+
+    /**
+     * Shows failed layout
+     * @param error Error Text to be toasted
+     */
+    @Override
+    protected void showFailedTokenLayout(final String error) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                ActivityForLoadingInBackground.super.showFailedTokenLayout(error);
+            }
+        });
+    }
+
+    /**
+     * Shows failed layout
+     */
+    @Override
+    protected void showNoTokenLayout() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                ActivityForLoadingInBackground.super.showNoTokenLayout();
+            }
+        });
+    }
+
+    /**
+     * Shows failed layout
+     */
+    @Override
+    protected void showNoInternetLayout() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                ActivityForLoadingInBackground.super.showNoInternetLayout();
+            }
+        });
     }
 }

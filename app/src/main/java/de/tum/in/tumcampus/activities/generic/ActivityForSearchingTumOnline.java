@@ -1,16 +1,11 @@
 package de.tum.in.tumcampus.activities.generic;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
-import android.widget.RelativeLayout;
 
-import de.tum.in.tumcampus.R;
-import de.tum.in.tumcampus.activities.UserPreferencesActivity;
 import de.tum.in.tumcampus.auxiliary.Const;
-import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.tumonline.TUMOnlineConst;
 import de.tum.in.tumcampus.tumonline.TUMOnlineRequest;
 import de.tum.in.tumcampus.tumonline.TUMOnlineRequestFetchListener;
@@ -26,17 +21,14 @@ import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 public abstract class ActivityForSearchingTumOnline<T> extends ActivityForSearching implements TUMOnlineRequestFetchListener<T>, OnRefreshListener {
 
 	/** The method which should be invoked by the TUmOnline Fetcher */
-	private final TUMOnlineConst method;
-    private final Class<T> returnClass;
+	private final TUMOnlineConst<T> method;
 
     /** Default layouts for user interaction */
-    private RelativeLayout noTokenLayout;
-    private RelativeLayout failedTokenLayout;
 	protected TUMOnlineRequest<T> requestHandler;
 
     /**
      * Standard constructor for ActivityForSearchingTumOnline.
-     * The given layout must include a progress_layout, failed_layout, no_token_layout and an error_layout.
+     * The given layout must include a all_error_layout.
      * If the Activity should support Pull-To-Refresh it can also contain a
      * {@link uk.co.senab.actionbarpulltorefresh.extras.actionbarcompat.PullToRefreshLayout} named ptr_layout
      *
@@ -46,24 +38,16 @@ public abstract class ActivityForSearchingTumOnline<T> extends ActivityForSearch
      * @param minLen Minimum text length that has to be entered by the user before a search quest can be submitted
      *
      */
-    public ActivityForSearchingTumOnline(TUMOnlineConst method, Class<T> returnClass, int layoutId, String auth, int minLen) {
+    public ActivityForSearchingTumOnline(TUMOnlineConst<T> method, int layoutId, String auth, int minLen) {
         super(layoutId, auth, minLen);
         this.method = method;
-        this.returnClass = returnClass;
 	}
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        failedTokenLayout = (RelativeLayout) findViewById(R.id.failed_layout);
-        noTokenLayout = (RelativeLayout) findViewById(R.id.no_token_layout);
-
-        if (noTokenLayout == null || failedTokenLayout == null) {
-            Utils.log("Cannot find layouts, did you forget to provide no or failed token layouts?");
-        }
-
-        requestHandler = new TUMOnlineRequest<T>(method, returnClass, this, true);
+        requestHandler = new TUMOnlineRequest<T>(method, this, true);
     }
 
     /**
@@ -90,15 +74,12 @@ public abstract class ActivityForSearchingTumOnline<T> extends ActivityForSearch
             requestHandler.setForce(force);
             requestHandler.fetchInteractive(this, this);
         } else {
-            Log.i(getClass().getSimpleName(), "No token was set");
-            noTokenLayout.setVisibility(View.VISIBLE);
+            showNoTokenLayout();
         }
     }
 
     @Override
     public final void onFetch(T result) {
-        noTokenLayout.setVisibility(View.GONE);
-        failedTokenLayout.setVisibility(View.GONE);
         showLoadingEnded();
 
         onLoadFinished(result);
@@ -110,27 +91,9 @@ public abstract class ActivityForSearchingTumOnline<T> extends ActivityForSearch
      */
     protected abstract void onLoadFinished(T result);
 
-    /**
-     * Handle click on error_layout, failed_layout and no_token_layout
-     * @param view Handle of layout view
-     */
-    @Override
-    public void onClick(View view) {
-		int viewId = view.getId();
-		switch (viewId) {
-		case R.id.failed_layout:
-        case R.id.error_layout:
-			requestFetch();
-			break;
-		case R.id.no_token_layout:
-			startActivity(new Intent(this, UserPreferencesActivity.class));
-			break;
-		}
-	}
-
 	@Override
-	public void onCommonError(String errorReason) {
-		showError(errorReason);
+	public void onNoInternetError() {
+		showNoInternetLayout();
 	}
 
     @Override
@@ -146,9 +109,7 @@ public abstract class ActivityForSearchingTumOnline<T> extends ActivityForSearch
 
 	@Override
 	public void onFetchError(String errorReason) {
-        showLoadingEnded();
-        Utils.showToast(this, errorReason);
-        failedTokenLayout.setVisibility(View.VISIBLE);
+        showFailedTokenLayout(errorReason);
 	}
 
     @Override

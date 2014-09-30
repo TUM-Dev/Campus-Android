@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.NewsActivity;
+import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.managers.CardManager;
 
 /**
@@ -24,7 +25,7 @@ public class NewsCard extends Card {
     private String mTitle;
     private String mDate;
     private String mLink;
-    private Bitmap mImage;
+    private String mImage;
 
     public NewsCard(Context context) {
         super(context, "card_news", false, false);
@@ -52,7 +53,12 @@ public class NewsCard extends Card {
         TextView srcTitleView = (TextView) mCard.findViewById(R.id.news_src_title);
         ImageView srcIconView = (ImageView) mCard.findViewById(R.id.news_src_icon);
 
-        imageView.setImageBitmap(mImage);
+        if(mImage.isEmpty()) {
+            imageView.setVisibility(View.GONE);
+        } else {
+            imageView.setVisibility(View.VISIBLE);
+            Utils.loadAndSetImage(mContext, mImage, imageView);
+        }
 
         if (mLink.length() > 0) {
             if(Uri.parse(mLink).getHost().equals("graph.facebook.com")) {
@@ -75,7 +81,7 @@ public class NewsCard extends Card {
      * @param link Url
      * @param date Date
      */
-    public void setNews(Bitmap img, String title, String link, String date) {
+    public void setNews(String img, String title, String link, String date) {
         mImage = img;
         mTitle = title;
         mDate = date;
@@ -104,7 +110,8 @@ public class NewsCard extends Card {
             notificationBuilder.setContentInfo(Uri.parse(mLink).getHost());
         }
         notificationBuilder.setTicker(mTitle);
-        notificationBuilder.extend(new NotificationCompat.WearableExtender().setBackground(mImage));
+        Bitmap img = Utils.downloadImage(mContext, mImage);
+        notificationBuilder.extend(new NotificationCompat.WearableExtender().setBackground(img));
         return notificationBuilder.build();
     }
 

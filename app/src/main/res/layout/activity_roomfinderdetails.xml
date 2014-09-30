@@ -4,16 +4,9 @@
     android:orientation="vertical">
 
     <include
+        layout="@layout/layout_all_errors"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        layout="@layout/layout_progress"
-        android:visibility="gone" />
-
-    <include
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        layout="@layout/layout_error"
-        android:visibility="gone" />
+        android:layout_height="fill_parent" />
 
     <it.sephiroth.android.library.imagezoom.ImageViewTouch
         android:id="@+id/activity_roomfinder_details"

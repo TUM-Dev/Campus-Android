@@ -70,5 +70,6 @@ public class WizNavExtrasActivity extends ActionBarActivity {
             startActivity(new Intent(this, WizNavCheckTokenActivity.class));
         else
             startActivity(new Intent(this, WizNavStartActivity.class));
+        overridePendingTransition(R.anim.fadein, R.anim.fadeout);
     }
 }

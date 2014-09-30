@@ -22,7 +22,7 @@ public class TuitionFeesActivity extends ActivityForAccessingTumOnline<TuitionLi
     private TextView semesterTextView;
 
     public TuitionFeesActivity() {
-        super(TUMOnlineConst.STUDIENBEITRAGSTATUS, TuitionList.class, R.layout.activity_tuitionfees);
+        super(TUMOnlineConst.TUITION_FEE_STATUS, R.layout.activity_tuitionfees);
     }
 
     @Override

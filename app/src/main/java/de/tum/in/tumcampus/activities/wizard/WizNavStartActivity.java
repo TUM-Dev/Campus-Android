@@ -34,7 +34,7 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<Void,Boo
     @Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+        disableRefresh();
 
 		sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
 
@@ -57,6 +57,7 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<Void,Boo
     public void onClickSkip(View skip) {
         finish();
         startActivity(new Intent(this, WizNavExtrasActivity.class));
+        overridePendingTransition(R.anim.fadein, R.anim.fadeout);
     }
 
     /**
@@ -121,6 +122,9 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<Void,Boo
         if(result) {
             finish();
             startActivity(new Intent(this, WizNavCheckTokenActivity.class));
+            overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+        } else {
+            showLoadingEnded();
         }
     }
 }

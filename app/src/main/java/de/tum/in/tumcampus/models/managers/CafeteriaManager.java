@@ -27,6 +27,8 @@ public class CafeteriaManager implements Card.ProvidesCard {
     private static final int TIME_TO_SYNC = 604800; // 1 week
     private final Context mContext;
 
+    public static final String CAFETERIAS_URL = "https://tumcabe.in.tum.de/Api/mensen";
+
     /**
 	 * Get Cafeteria object by JSON object
 	 * 
@@ -70,21 +72,11 @@ public class CafeteriaManager implements Card.ProvidesCard {
 	 */
 	public void downloadFromExternal(boolean force) throws Exception {
         // Update table schemata if table exists
-        int oldVersion = Utils.getInternalSettingInt(mContext, Const.CAFETERIA_DB_VERSION, 1);
-        if(oldVersion < 2) {
-            db.execSQL("DROP TABLE IF EXISTS cafeterias");
-            db.execSQL("CREATE TABLE IF NOT EXISTS cafeterias (id INTEGER PRIMARY KEY, name VARCHAR, address VARCHAR, latitude REAL, longitude REAL)");
-            Utils.setInternalSetting(mContext, Const.CAFETERIA_DB_VERSION, 2);
-            force = true;
-        }
-
 		if (!force && !SyncManager.needSync(db, this, TIME_TO_SYNC)) {
 			return;
 		}
 
-		String url = "https://tumcabe.in.tum.de/Api/mensen";
-
-		JSONArray jsonArray = Utils.downloadJsonArray(mContext, url, false);
+		JSONArray jsonArray = Utils.downloadJsonArray(mContext, CAFETERIAS_URL, false, CacheManager.VALIDITY_ONE_MONTH);
 		removeCache();
 
 		// write cafeterias into database, transaction = speedup

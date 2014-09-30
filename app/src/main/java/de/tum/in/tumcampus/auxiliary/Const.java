@@ -73,9 +73,9 @@ public final class Const {
     public static final String APP_LAUNCHES = "app_launches";
     public static final String INTERNAL_PREFS = "internal_prefs";
     public static final String SYNC_CALENDAR = "sync_calendar";
-    public static final String CAFETERIA_DB_VERSION = "cafeteria_db_version";
     public static final String JSON_LATITUDE = "latitude";
     public static final String JSON_LONGITUDE = "longitude";
     public static final String PREFERENCE_SCREEN = "preference_screen";
     public static final String P_TOKEN = "pToken";
+    public static final String APP_VERSION = "app_version";
 }

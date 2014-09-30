@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/failed_layout"
+    android:id="@+id/no_internet_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
-    android:onClick="onClick" >
+    android:onClick="onClick">
 
     <TextView
+        android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/imageView1"
         android:layout_centerHorizontal="true"
         android:gravity="center"
-        android:text="@string/error_fetching_tumonline"
+        android:text="@string/no_internet_connection"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textSize="12sp" />
 
@@ -23,6 +24,14 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:alpha="0.5"
-        android:src="@drawable/exclamation" />
+        android:src="@drawable/ic_no_wifi" />
+
+    <Button
+        android:id="@+id/button_enable_wifi"
+        style="@style/FlatButton"
+        android:layout_below="@+id/textView"
+        android:layout_centerHorizontal="true"
+        android:onClick="onEnableWifi"
+        android:text="@string/enable_wifi" />
 
 </RelativeLayout>

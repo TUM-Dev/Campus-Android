@@ -52,7 +52,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
 	private boolean isFetched;
 
 	public CalendarActivity() {
-		super(TUMOnlineConst.CALENDER, CalendarRowSet.class, R.layout.activity_calendar);
+		super(TUMOnlineConst.CALENDER, R.layout.activity_calendar);
 	}
 
     @Override
@@ -163,13 +163,13 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
 							.setPositiveButton(CalendarActivity.this.getString(R.string.yes), CalendarActivity.this)
 							.setNegativeButton(CalendarActivity.this.getString(R.string.no), CalendarActivity.this).show();
 					attachSectionPagerAdapter();
-					hideProgressLayout();
+					showLoadingEnded();
 				}
 			}
 
 			@Override
 			protected void onPreExecute() {
-				showProgressLayout();
+				showLoadingStart();
 			}
 		};
 		backgroundTask.execute();

@@ -5,28 +5,9 @@
     android:orientation="vertical">
 
     <include
-        layout="@layout/layout_progress"
+        layout="@layout/layout_all_errors"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:visibility="gone" />
-
-    <include
-        layout="@layout/layout_error"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:visibility="gone" />
-
-    <include
-        layout="@layout/layout_failed_token"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:visibility="gone" />
-
-    <include
-        layout="@layout/layout_no_token"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:visibility="gone" />
+        android:layout_height="fill_parent" />
 
     <uk.co.senab.actionbarpulltorefresh.extras.actionbarcompat.PullToRefreshLayout
         android:id="@+id/ptr_layout"
@@ -35,8 +16,8 @@
 
         <se.emilsjolander.stickylistheaders.StickyListHeadersListView
             android:id="@+id/lvMyLecturesList"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:scrollbars="vertical" />
 
     </uk.co.senab.actionbarpulltorefresh.extras.actionbarcompat.PullToRefreshLayout>

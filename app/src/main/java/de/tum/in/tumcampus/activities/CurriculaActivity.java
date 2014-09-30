@@ -18,6 +18,7 @@ import java.util.Hashtable;
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.generic.ActivityForLoadingInBackground;
 import de.tum.in.tumcampus.auxiliary.Utils;
+import de.tum.in.tumcampus.models.managers.CacheManager;
 
 /**
  * Activity to fetch and display the curricula of different study programs.
@@ -25,6 +26,8 @@ import de.tum.in.tumcampus.auxiliary.Utils;
 public class CurriculaActivity extends ActivityForLoadingInBackground<Void,JSONArray> implements OnItemClickListener {
     public static final String NAME = "name";
     public static final String URL = "url";
+
+    public static final String CURRICULA_URL = "https://tumcabe.in.tum.de/Api/curricula";
 
     private Hashtable<String, String> options;
     private ArrayAdapter<String> arrayAdapter;
@@ -49,7 +52,7 @@ public class CurriculaActivity extends ActivityForLoadingInBackground<Void,JSONA
 
     @Override
     protected JSONArray onLoadInBackground(Void... arg) {
-        return Utils.downloadJsonArray(this, "https://tumcabe.in.tum.de/Api/curricula", false);
+        return Utils.downloadJsonArray(this, CURRICULA_URL, false, CacheManager.VALIDITY_ONE_MONTH);
     }
 
     @Override
@@ -65,6 +68,7 @@ public class CurriculaActivity extends ActivityForLoadingInBackground<Void,JSONA
         } catch (JSONException e) {
             Utils.log(e);
         }
+        showLoadingEnded();
     }
 
     /**

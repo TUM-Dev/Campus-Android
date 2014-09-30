@@ -53,7 +53,7 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
 	private boolean isFetched;
 
 	public GradesActivity() {
-		super(TUMOnlineConst.NOTEN, ExamList.class, R.layout.activity_grades);
+		super(TUMOnlineConst.EXAMS, R.layout.activity_grades);
 	}
 
 	/**

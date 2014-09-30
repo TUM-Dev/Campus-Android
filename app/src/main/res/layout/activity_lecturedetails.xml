@@ -5,28 +5,9 @@
     android:orientation="vertical">
 
     <include
-        layout="@layout/layout_progress"
+        layout="@layout/layout_all_errors"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:visibility="gone" />
-
-    <include
-        layout="@layout/layout_error"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:visibility="gone" />
-
-    <include
-        layout="@layout/layout_failed_token"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:visibility="gone" />
-
-    <include
-        layout="@layout/layout_no_token"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:visibility="gone" />
+        android:layout_height="fill_parent" />
 
     <RelativeLayout
         android:layout_width="match_parent"

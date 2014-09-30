@@ -44,10 +44,9 @@ public class NewsActivity extends ActivityForDownloadingExternal implements OnIt
 		Cursor cursor = nm.getAllFromDb();
 		startManagingCursor(cursor);
 		if (cursor.getCount() > 0) {
-			SimpleCursorAdapter adapter = new SimpleCursorAdapter(this,
-					R.layout.card_news_item, cursor,
-					cursor.getColumnNames(), new int[] { R.id.news_img,
-							R.id.news_title, R.id.news_src_date, R.id.news_src_title, R.id.news_src_icon });
+			SimpleCursorAdapter adapter = new SimpleCursorAdapter(this, R.layout.card_news_item, cursor,
+					cursor.getColumnNames(), new int[] { R.id.news_img, R.id.news_title,
+                    R.id.news_src_date, R.id.news_src_title, R.id.news_src_icon });
 
 			adapter.setViewBinder(this);
 
@@ -72,10 +71,22 @@ public class NewsActivity extends ActivityForDownloadingExternal implements OnIt
      */
 	@Override
 	public boolean setViewValue(View view, Cursor cursor, int index) {
+        if (view.getId() == R.id.news_img) {
+            ImageView img = (ImageView) view;
+            String imgUrl = cursor.getString(index);
+            if(imgUrl.isEmpty()) {
+                img.setVisibility(View.GONE);
+            } else {
+                img.setVisibility(View.VISIBLE);
+                Utils.loadAndSetImage(this, imgUrl, img);
+            }
+            return true;
+        }
+
         if (view.getId() == R.id.news_title) {
             String title = cursor.getString(index);
             if(title.contains("\n")) {
-                title = title.substring(0,title.indexOf('\n'));
+                title = title.substring(0, title.indexOf('\n'));
             }
             ((TextView) view).setText(title);
             return true;
@@ -129,15 +140,14 @@ public class NewsActivity extends ActivityForDownloadingExternal implements OnIt
 
     /**
      * If news item has been clicked open the corresponding link
-     * @param aview Containing listView
+     * @param adapterView Containing listView
      * @param view Item view
      * @param position Index of the item
      * @param id Item id
      */
     @SuppressWarnings("deprecation")
     @Override
-    public void onItemClick(AdapterView<?> aview, View view, int position,
-                            long id) {
+    public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
         ListView lv = (ListView) findViewById(R.id.activity_news_list_view);
 
         Cursor cursor = (Cursor) lv.getAdapter().getItem(position);
@@ -150,7 +160,7 @@ public class NewsActivity extends ActivityForDownloadingExternal implements OnIt
             return;
         }
 
-        // Opens Url in Browser
+        // Opens url in browser
         Intent viewIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
         startActivity(viewIntent);
     }

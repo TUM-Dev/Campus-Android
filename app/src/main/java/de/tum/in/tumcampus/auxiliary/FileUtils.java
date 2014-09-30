@@ -24,11 +24,9 @@ public class FileUtils {
 	 * @param filename The file's name.
 	 * 
 	 * @return The file.
-	 * @throws Exception
-	 *             If SD-card does not exist
+	 * @throws Exception If SD-card does not exist
 	 */
-	public static File getFileOnSD(String folder, String filename)
-			throws Exception {
+	public static File getFileOnSD(String folder, String filename) throws Exception {
 		// Save the file to/open from SD
 		File path = new File(Utils.getCacheDir(folder));
 
@@ -98,4 +96,12 @@ public class FileUtils {
 			Utils.log(e, "FileUtils.writeFile");
 		}
 	}
+
+    public static void deleteRecursive(File fileOrDirectory) {
+        if (fileOrDirectory.isDirectory())
+            for (File child : fileOrDirectory.listFiles())
+                deleteRecursive(child);
+
+        fileOrDirectory.delete();
+    }
 }

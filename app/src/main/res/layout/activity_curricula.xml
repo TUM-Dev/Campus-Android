@@ -3,16 +3,9 @@
     android:layout_height="match_parent">
 
     <include
-        layout="@layout/layout_progress"
+        layout="@layout/layout_all_errors"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:visibility="gone" />
-
-    <include
-        layout="@layout/layout_error"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:visibility="gone" />
+        android:layout_height="fill_parent" />
 
     <ListView
         android:id="@+id/activity_curricula_list_view"

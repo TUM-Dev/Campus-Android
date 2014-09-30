@@ -73,7 +73,7 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline<Lectu
     private String regId;
 
     public ChatRoomsSearchActivity() {
-        super(TUMOnlineConst.LECTURES_PERSONAL, LecturesSearchRowSet.class, R.layout.activity_lectures);
+        super(TUMOnlineConst.LECTURES_PERSONAL, R.layout.activity_lectures);
     }
 
     @Override

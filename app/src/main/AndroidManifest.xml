@@ -54,7 +54,7 @@
     <application
         android:allowBackup="true"
         android:description="@string/app_short_description"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@drawable/ic_launcher_beta"
         android:label="@string/app_name"
         android:logo="@drawable/tum_logo"
         android:supportsRtl="false"
@@ -406,10 +406,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.tum.in.tumcampus.activities.StartActivity" />
         </activity>
-        <activity
-            android:name="de.tum.in.tumcampus.auxiliary.DemoModeStartActivity"
-            android:configChanges="orientation|screenSize"
-            android:label="@string/campus_app" />
 
         <activity
             android:name="de.tum.in.tumcampus.activities.ChatRoomsSearchActivity"

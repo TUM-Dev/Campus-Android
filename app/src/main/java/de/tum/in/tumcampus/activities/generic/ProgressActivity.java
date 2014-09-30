@@ -1,12 +1,19 @@
 package de.tum.in.tumcampus.activities.generic;
 
+import android.content.Context;
+import android.content.Intent;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import de.tum.in.tumcampus.R;
+import de.tum.in.tumcampus.activities.UserPreferencesActivity;
 import de.tum.in.tumcampus.auxiliary.ImplicitCounter;
 import de.tum.in.tumcampus.auxiliary.StickyListViewDelegate;
 import de.tum.in.tumcampus.auxiliary.Utils;
@@ -24,20 +31,17 @@ public abstract class ProgressActivity extends ActionBarActivity implements OnRe
      * Default layouts for user interaction
      */
     private final int mLayoutId;
+    private LinearLayout allErrorsLayout;
     private RelativeLayout errorLayout;
     private RelativeLayout progressLayout;
+    private RelativeLayout noTokenLayout;
+    private RelativeLayout noInternetLayout;
+    private RelativeLayout failedTokenLayout;
     private PullToRefreshLayout refreshLayout;
 
     /**
-     * Saves if this is the first time data is fetched
-     * If a {@link PullToRefreshLayout} is given it doesn't
-     * show the progress as fullscreen progressbar but as refresh indicator
-     */
-    private boolean mFirstFetch = true;
-
-    /**
      * Standard constructor for ProgressActivity.
-     * The given layout must include a progress_layout and an error_layout.
+     * The given layout must include a errors_layout.
      * If the Activity should support Pull-To-Refresh it can also contain a
      * {@link PullToRefreshLayout} named ptr_layout
      *
@@ -53,9 +57,13 @@ public abstract class ProgressActivity extends ActionBarActivity implements OnRe
         ImplicitCounter.Counter(this);
         setContentView(mLayoutId);
 
+        allErrorsLayout = (LinearLayout) findViewById(R.id.errors_layout);
         progressLayout = (RelativeLayout) findViewById(R.id.progress_layout);
         errorLayout = (RelativeLayout) findViewById(R.id.error_layout);
         refreshLayout = (PullToRefreshLayout) findViewById(R.id.ptr_layout);
+        noInternetLayout = (RelativeLayout) findViewById(R.id.no_internet_layout);
+        failedTokenLayout = (RelativeLayout) findViewById(R.id.failed_layout);
+        noTokenLayout = (RelativeLayout) findViewById(R.id.no_token_layout);
 
         // If content is refreshable setup the PullToRefreshLayout
         if (refreshLayout != null) {
@@ -64,8 +72,8 @@ public abstract class ProgressActivity extends ActionBarActivity implements OnRe
                     .listener(this).setup(refreshLayout);
         }
 
-        if (progressLayout == null || errorLayout == null) {
-            Utils.log("Cannot find layouts, did you forget to provide error and progress layouts?");
+        if (progressLayout == null) {
+            Utils.log("Cannot find layouts, did you forget to provide all_error_layout?");
         }
     }
 
@@ -75,7 +83,7 @@ public abstract class ProgressActivity extends ActionBarActivity implements OnRe
             finish();
             return true;
         }
-        return super.onOptionsItemSelected(item);
+        return false;
     }
 
     /**
@@ -106,27 +114,40 @@ public abstract class ProgressActivity extends ActionBarActivity implements OnRe
     protected void showErrorLayout() {
         showLoadingEnded();
         errorLayout.setVisibility(View.VISIBLE);
+        allErrorsLayout.setVisibility(View.VISIBLE);
     }
 
     /**
-     * Shows progress layout
+     * Shows failed layout
+     * @param error Error Text to be toasted
      */
-    protected void showProgressLayout() {
-        progressLayout.setVisibility(View.VISIBLE);
+    protected void showFailedTokenLayout(String error) {
+        showLoadingEnded();
+        failedTokenLayout.setVisibility(View.VISIBLE);
+        allErrorsLayout.setVisibility(View.VISIBLE);
+        Toast.makeText(this, error, Toast.LENGTH_LONG).show();
     }
 
     /**
-     * Hides error layout
+     * Shows failed layout
      */
-    public void hideErrorLayout() {
-        errorLayout.setVisibility(View.GONE);
+    protected void showNoTokenLayout() {
+        showLoadingEnded();
+        noTokenLayout.setVisibility(View.VISIBLE);
+        allErrorsLayout.setVisibility(View.VISIBLE);
+        Utils.log("No token was set");
     }
 
     /**
-     * Hides progress layout
+     * Shows failed layout
      */
-    protected void hideProgressLayout() {
-        progressLayout.setVisibility(View.GONE);
+    protected void showNoInternetLayout() {
+        showLoadingEnded();
+        noInternetLayout.setVisibility(View.VISIBLE);
+        allErrorsLayout.setVisibility(View.VISIBLE);
+        WifiManager wifi = (WifiManager)getSystemService(Context.WIFI_SERVICE);
+        Button but = (Button) findViewById(R.id.button_enable_wifi);
+        but.setVisibility(wifi.isWifiEnabled() ? View.GONE : View.VISIBLE);
     }
 
     /**
@@ -134,10 +155,12 @@ public abstract class ProgressActivity extends ActionBarActivity implements OnRe
      * if present in the xml layout
      */
     protected void showLoadingStart() {
-        if (mFirstFetch || refreshLayout == null) {
+        if (refreshLayout == null) {
+            noInternetLayout.setVisibility(View.GONE);
+            noTokenLayout.setVisibility(View.GONE);
             errorLayout.setVisibility(View.GONE);
             progressLayout.setVisibility(View.VISIBLE);
-            mFirstFetch = false;
+            allErrorsLayout.setVisibility(View.VISIBLE);
         } else {
             refreshLayout.setRefreshing(true);
         }
@@ -148,8 +171,12 @@ public abstract class ProgressActivity extends ActionBarActivity implements OnRe
      * and setting {@link PullToRefreshLayout}'s state to completed
      */
     protected void showLoadingEnded() {
+        failedTokenLayout.setVisibility(View.GONE);
+        noInternetLayout.setVisibility(View.GONE);
+        noTokenLayout.setVisibility(View.GONE);
         errorLayout.setVisibility(View.GONE);
         progressLayout.setVisibility(View.GONE);
+        allErrorsLayout.setVisibility(View.GONE);
         if (refreshLayout != null) {
             refreshLayout.setRefreshComplete();
         }
@@ -179,12 +206,30 @@ public abstract class ProgressActivity extends ActionBarActivity implements OnRe
      * @param view View that should be refreshed
      */
     @Override
-    public void onRefreshStarted(View view) {
+    public abstract void onRefreshStarted(View view);
+
+    /**
+     * Handle click on error_layout, failed_layout and no_token_layout
+     * @param view Handle of layout view
+     */
+    public void onClick(View view) {
+        int viewId = view.getId();
+        switch (viewId) {
+            case R.id.failed_layout:
+            case R.id.error_layout:
+                onRefreshStarted(view);
+                break;
+            case R.id.no_token_layout:
+                startActivity(new Intent(this, UserPreferencesActivity.class));
+                break;
+        }
     }
 
     /**
-     * Handle click on error_layout
-     * @param view Handle of error_layout
+     * Show wifi settings
      */
-    public abstract void onClick(View view);
+    public void onEnableWifi(View view) {
+        WifiManager wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+        wifi.setWifiEnabled(true);
+    }
 }

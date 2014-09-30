@@ -8,13 +8,14 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import org.apache.http.HttpEntity;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -22,7 +23,6 @@ import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -129,8 +129,7 @@ public class Utils {
      * @param target Target filename in local file system
      * @throws Exception
      */
-    private static void downloadFile(String url, String target)
-            throws Exception {
+    private static void downloadFile(String url, String target) throws Exception {
         File f = new File(target);
         if (f.exists()) {
             return;
@@ -154,48 +153,56 @@ public class Utils {
     }
 
     /**
-     * Download a file in a new thread
-     *
-     * @param url    Download location
-     * @param target Target filename in local file system
-     */
-    public static void downloadFileThread(final String url, final String target) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    log(url);
-                    downloadFile(url, target);
-                } catch (Exception e) {
-                    log(e, url);
-                }
-            }
-        }).start();
-    }
-
-    /**
      * Downloads an image synchronously from the given url
      *
      * @param url Image url
      * @return Downloaded image as {@link Bitmap}
      */
-    public static Bitmap downloadImage(final String url) {
-        Bitmap sourceImage = null;
+    public static Bitmap downloadImage(Context context, final String url) {
         try {
-            log(url);
+            logv("Download image: "+url);
 
-            InputStream is = downloadFileStream(url);
-            try {
-                sourceImage = BitmapFactory.decodeStream(is);
-            } catch (Exception e) {
-                Utils.log(e);
-            } finally {
-                is.close();
+            CacheManager cacheManager = new CacheManager(context);
+            String file = cacheManager.getFromCache(url);
+            if(file==null) {
+                File cache = context.getCacheDir();
+                file = cache.getAbsolutePath() + "/" + md5(url) + ".jpg";
             }
+            File f = new File(file);
+
+            // If file already exists/was loaded it will return immediately
+            downloadFile(url, file);
+            cacheManager.addToCache(url, file, CacheManager.VALIDITY_TEN_DAYS, CacheManager.CACHE_TYP_IMAGE);
+
+            return BitmapFactory.decodeFile(f.getAbsolutePath());
         } catch (Exception e) {
             log(e, url);
+            return null;
         }
-        return sourceImage;
+    }
+
+    /**
+     * Download an image in background and sets the image to the image view
+     *
+     * @param context Context
+     * @param url URL
+     * @param img Image
+     */
+    public static void loadAndSetImage(final Context context, final String url, final ImageView img) {
+        //TODO implement something to avoid loading the same image multiple times in parallel
+        new AsyncTask<Void, Void, Bitmap>() {
+            @Override
+            protected Bitmap doInBackground(Void... voids) {
+                return downloadImage(context, url);
+            }
+
+            @Override
+            protected void onPostExecute(Bitmap bitmap) {
+                if(img==null)
+                    return;
+                img.setImageBitmap(bitmap);
+            }
+        }.execute();
     }
 
     /**
@@ -206,7 +213,7 @@ public class Utils {
      * @throws Exception
      */
     public static JSONObject downloadJson(String url) throws Exception {
-        logv("downloadJson load from " + url);
+        logv("DownloadJson load from " + url);
 
         HttpClient httpClient = new DefaultHttpClient();
 
@@ -225,7 +232,6 @@ public class Utils {
         return new JSONObject(data);
     }
 
-
     /**
      * Download a JSON stream from a URL or load it from cache
      *
@@ -234,7 +240,7 @@ public class Utils {
      * @param fillCache Load data anyway and fill cache, even if valid cached version exists
      * @return JSONObject
      */
-    public static JSONArray downloadJsonArray(Context context, String url, boolean fillCache) {
+    public static JSONArray downloadJsonArray(Context context, String url, boolean fillCache, int validity) {
         logv("downloadJson load from " + url);
 
         String result;
@@ -256,7 +262,7 @@ public class Utils {
                 if (entity != null) {
                     // do something with the response
                     result = EntityUtils.toString(entity);
-                    cacheManager.addToCache(url, result,0);
+                    cacheManager.addToCache(url, result, validity, CacheManager.CACHE_TYP_DATA);
                     logv("added to cache " + url);
                     logv("downloadJson " + result);
                 }
@@ -265,31 +271,9 @@ public class Utils {
             }
 
             return new JSONArray(result);
-        } catch (ClientProtocolException e) {
-            log(e);
-        } catch (IOException e) {
-            log(e);
-        } catch (JSONException e) {
-            log(e);
-        }
-        return null;
-    }
-
-    /**
-     * Deletes all contents of a cache directory
-     *
-     * @param directory directory postfix (e.g. feeds/cache)
-     */
-    public static void emptyCacheDir(String directory) {
-        try {
-            File dir = new File(getCacheDir(directory));
-            if (dir.isDirectory() && dir.canWrite()) {
-                for (String child : dir.list()) {
-                    new File(dir, child).delete();
-                }
-            }
         } catch (Exception e) {
-            log(e, directory);
+            log(e);
+            return null;
         }
     }
 
@@ -348,8 +332,7 @@ public class Utils {
      * @return String (yyyy-mm-dd hh:mm:ss)
      */
     public static String getDateTimeString(Date d) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat(
-                "yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         return dateFormat.format(d);
     }
 
@@ -558,7 +541,7 @@ public class Utils {
 
     /**
      * Splits a line from a CSV file into column values
-     * <p/>
+     *
      * e.g. "aaa;aaa";"bbb";1 gets aaa,aaa;bbb;1;
      *
      * @param str CSV line
