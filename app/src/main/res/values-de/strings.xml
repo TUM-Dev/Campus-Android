@@ -321,5 +321,8 @@
     <string name="install_certificate">Zertifikat installieren</string>
     <string name="certificate">Zertifikat</string>
     <string name="certificate_desc">Du musst ein CA-Root-Zertifikat installieren um eine sichere Verbindung mit dem Server aufbauen zu können. Tippe einfach auf \'Zertifikat installieren\' und bestätige mit \'OK\'.</string>
+    <string name="enable_wifi">WLAN aktivieren</string>
+    <string name="loading_first_time">Der erste Start könnte ein paar Minuten dauern</string>
+    <string name="password_gets_not_saved">TUM Campus App does not save the password, but Android WifiManager does.</string>
 
 </resources>

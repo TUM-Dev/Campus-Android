@@ -69,6 +69,7 @@ public class StartupActivity extends ActionBarActivity {
         }
         if(prevVersion<currentVersion) {
             setupNewVersion();
+            findViewById(R.id.startup_loading_first).setVisibility(View.VISIBLE);
             Utils.setInternalSetting(this, Const.APP_VERSION, currentVersion);
         }
 

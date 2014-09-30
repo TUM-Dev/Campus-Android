@@ -112,7 +112,7 @@ public class CalendarManager implements Card.ProvidesCard {
                     String loc = row.getLocation();
                     if (cache.containsKey(loc)) {
                         row.setGeo(cache.get(loc));
-                    } else {
+                    } else if(loc!=null) {
                         Geo geo = locationManager.roomLocationStringToGeo(loc);
                         if (geo != null) {
                             row.setGeo(geo);
@@ -255,14 +255,11 @@ public class CalendarManager implements Card.ProvidesCard {
      * if it started during the last 30 minutes
      */
     public CalendarRow getNextCalendarItem() {
-        // TODO investigate
         Cursor cur = db.rawQuery("SELECT title, dtstart, location " +
                 " FROM kalendar_events " +
-                " WHERE " +
-                " datetime('now', 'localtime')-1800 < dtstart AND " +
-                " datetime('now', 'localtime') < dtend " +
-                " ORDER BY dtstart " +
-                " LIMIT 1", null);
+                " WHERE datetime('now', '-1800 seconds') < dtstart AND " +
+                " datetime() < dtend " +
+                " ORDER BY dtstart LIMIT 1", null);
 
         CalendarRow row = null;
         if (cur.moveToFirst()) {

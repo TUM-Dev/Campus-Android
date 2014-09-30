@@ -158,27 +158,41 @@ public class Utils {
      * @param url Image url
      * @return Downloaded image as {@link Bitmap}
      */
-    public static Bitmap downloadImage(Context context, final String url) {
+    public static File downloadImage(Context context, final String url) {
         try {
-            logv("Download image: "+url);
+            logv("Download image: " + url);
 
             CacheManager cacheManager = new CacheManager(context);
             String file = cacheManager.getFromCache(url);
-            if(file==null) {
+            if (file == null) {
                 File cache = context.getCacheDir();
                 file = cache.getAbsolutePath() + "/" + md5(url) + ".jpg";
+                cacheManager.addToCache(url, file, CacheManager.VALIDITY_TEN_DAYS, CacheManager.CACHE_TYP_IMAGE);
             }
-            File f = new File(file);
 
             // If file already exists/was loaded it will return immediately
+            // Use this to be sure cache has not been cleaned manually
+            File f = new File(file);
             downloadFile(url, file);
-            cacheManager.addToCache(url, file, CacheManager.VALIDITY_TEN_DAYS, CacheManager.CACHE_TYP_IMAGE);
 
-            return BitmapFactory.decodeFile(f.getAbsolutePath());
+            return f;
         } catch (Exception e) {
             log(e, url);
             return null;
         }
+    }
+
+    /**
+     * Downloads an image synchronously from the given url
+     *
+     * @param url Image url
+     * @return Downloaded image as {@link Bitmap}
+     */
+    public static Bitmap downloadImageToBitmap(Context context, final String url) {
+        File f = downloadImage(context, url);
+        if(f==null)
+            return null;
+        return BitmapFactory.decodeFile(f.getAbsolutePath());
     }
 
     /**
@@ -193,7 +207,7 @@ public class Utils {
         new AsyncTask<Void, Void, Bitmap>() {
             @Override
             protected Bitmap doInBackground(Void... voids) {
-                return downloadImage(context, url);
+                return downloadImageToBitmap(context, url);
             }
 
             @Override

@@ -44,7 +44,7 @@ public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<St
 
     @Override
     protected Bitmap onLoadInBackground(String... arg) {
-        return Utils.downloadImage(this, arg[0]);
+        return Utils.downloadImageToBitmap(this, arg[0]);
     }
 
     @Override

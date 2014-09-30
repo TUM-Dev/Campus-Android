@@ -68,4 +68,16 @@
         android:text="@string/loading"
         android:textColor="#ffffffff" />
 
+    <TextView
+        android:id="@+id/startup_loading_first"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/startup_loading"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:text="@string/loading_first_time"
+        android:textColor="#ffffffff"
+        android:visibility="gone" />
+
 </RelativeLayout>

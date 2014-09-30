@@ -110,7 +110,7 @@ public class NewsCard extends Card {
             notificationBuilder.setContentInfo(Uri.parse(mLink).getHost());
         }
         notificationBuilder.setTicker(mTitle);
-        Bitmap img = Utils.downloadImage(mContext, mImage);
+        Bitmap img = Utils.downloadImageToBitmap(mContext, mImage);
         notificationBuilder.extend(new NotificationCompat.WearableExtender().setBackground(img));
         return notificationBuilder.build();
     }
