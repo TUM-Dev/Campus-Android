@@ -37,11 +37,6 @@ public class DownloadService extends IntentService {
     private static final String CSV_LOCATIONS = "locations.csv";
 
     /**
-	 * Indicator to avoid starting new downloads
-	 */
-	private volatile boolean isDestroyed = false;
-
-    /**
 	 * default init (run intent in new thread)
 	 */
 	public DownloadService() {
@@ -53,99 +48,75 @@ public class DownloadService extends IntentService {
         super.onCreate();
         Utils.log("DownloadService service has started");
 
-        try {
-            // Check if sd card available
-            Utils.getCacheDir("");
-            // Init sync table
-            new SyncManager(this);
-        } catch (IOException e) {
-            Utils.log(e);
-            broadcastError(getResources().getString(R.string.exception_sdcard));
-            // Don't start new downloads
-            isDestroyed = true;
-        }
+        // Init sync table
+        new SyncManager(this);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         Utils.log("DownloadService service has stopped");
-        isDestroyed = true;
     }
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        boolean successful = false;
+        boolean successful = true;
         String action = intent.getStringExtra(Const.ACTION_EXTRA);
         boolean force = intent.getBooleanExtra(Const.FORCE_DOWNLOAD, false);
         boolean launch = intent.getBooleanExtra(Const.APP_LAUNCHES, false);
 
+        // No action: leave service
         if (action == null) {
-            // No action: leave service
             return;
         }
 
         // Check if device has a internet connection
         if(Utils.isConnected(this) && (launch || !Utils.isConnectedMobileData(this))) {
-
             Log.i(getClass().getSimpleName(), "Handle action <" + action + ">");
-
             try {
-                if(!isDestroyed) {
-                    if ((action.equals(Const.DOWNLOAD_ALL_FROM_EXTERNAL))) {
-                        try {
-                            downloadNews(force);
-                        } catch (Exception e) {
-                            Utils.log(e);
-                            successful = false;
-                        }
-                        try {
-                            downloadCafeterias(force);
-                        } catch (Exception e) {
-                            Utils.log(e);
-                            successful = false;
-                        }
-                        try {
-                            importLocationsDefaults();
-                        } catch (Exception e) {
-                            Utils.log(e);
-                            successful = false;
-                        }
-                    }
-                    if ((action.equals(Const.NEWS))) {
+                if ((action.equals(Const.DOWNLOAD_ALL_FROM_EXTERNAL))) {
+                    try {
                         downloadNews(force);
+                    } catch (Exception e) {
+                        Utils.log(e);
+                        successful = false;
                     }
-                    if ((action.equals(Const.CAFETERIAS))) {
+                    try {
                         downloadCafeterias(force);
+                    } catch (Exception e) {
+                        Utils.log(e);
+                        successful = false;
                     }
-                    if ((action.equals(Const.ORGANISATIONS))) {
-                        downloadOrganisations(force);
+                    try {
+                        importLocationsDefaults();
+                    } catch (Exception e) {
+                        Utils.log(e);
+                        successful = false;
                     }
-                    successful = true;
+                } else if ((action.equals(Const.NEWS))) {
+                    downloadNews(force);
+                } else if ((action.equals(Const.CAFETERIAS))) {
+                    downloadCafeterias(force);
+                } else if ((action.equals(Const.ORGANISATIONS))) {
+                    downloadOrganisations(force);
                 }
             } catch (TimeoutException e) {
-                if (!isDestroyed) {
-                    Utils.log(e);
-                    broadcastWarning(getResources().getString(R.string.exception_timeout));
-                    successful = false;
-                }
+                Utils.log(e);
+                broadcastWarning(getResources().getString(R.string.exception_timeout));
+                successful = false;
             } catch (IOException e) {
-                if (!isDestroyed) {
-                    Utils.log(e);
-                    broadcastError(getResources().getString(
-                            R.string.exception_sdcard));
-                    successful = false;
-                }
+                Utils.log(e);
+                broadcastError(getResources().getString(
+                        R.string.exception_sdcard));
+                successful = false;
             } catch (Exception e) {
                 Utils.log(e, "Unknown error while handling action <" + action + ">");
-                if (!isDestroyed) {
-                    broadcastError(getResources().getString(R.string.exception_unknown));
-                    successful = false;
-                }
+                broadcastError(getResources().getString(R.string.exception_unknown));
+                successful = false;
             }
         }
 
-        if ((action.equals(Const.DOWNLOAD_ALL_FROM_EXTERNAL)) && !isDestroyed) {
+        if ((action.equals(Const.DOWNLOAD_ALL_FROM_EXTERNAL))) {
             if (successful) {
                 SharedPreferences prefs = getSharedPreferences(Const.INTERNAL_PREFS, 0);
                 prefs.edit().putLong(LAST_UPDATE, System.currentTimeMillis()).apply();
@@ -156,14 +127,12 @@ public class DownloadService extends IntentService {
 
         // After done the job, create an broadcast intent and send it. The
         // receivers will be informed that the download service has finished.
-        if (successful && !isDestroyed) {
+        if (successful) {
             broadcastDownloadCompleted();
-        } else {
-            Utils.log("Broadcast not sent");
         }
 
         // Do all other import stuff that is not relevant for creating the viewing the start page
-        if ((action.equals(Const.DOWNLOAD_ALL_FROM_EXTERNAL)) && !isDestroyed) {
+        if ((action.equals(Const.DOWNLOAD_ALL_FROM_EXTERNAL))) {
             startService(new Intent(this, FillCacheService.class));
         }
     }

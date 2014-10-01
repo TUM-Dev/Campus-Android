@@ -42,7 +42,7 @@ public class NextLectureCard extends Card {
 
     @Override
     public String getTitle() {
-        return mContext.getString(R.string.next_lecture);
+        return mTitle;
     }
 
     @Override
@@ -52,7 +52,7 @@ public class NextLectureCard extends Card {
         //Add content
         final String time = DateUtils.getRelativeDateTimeString(mContext, mDate.getTime(),
                 DateUtils.MINUTE_IN_MILLIS, DateUtils.WEEK_IN_MILLIS, 0).toString();
-        addTextView(mTitle + "\n" + time);
+        addTextView(time);
 
         //Add location with link to room finder
         if (mLocation != null) {

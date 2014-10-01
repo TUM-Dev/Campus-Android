@@ -15,8 +15,7 @@ public class NoResultsAdapter extends ArrayAdapter<String> implements StickyList
 
 	// constructor
 	public NoResultsAdapter(Context context) {
-        super(context, android.R.layout.simple_list_item_1,
-                new String[]{context.getString(R.string.no_search_result)});
+        super(context, R.layout.listview_simple_item_center, new String[]{context.getString(R.string.no_search_result)});
 	}
 
     // Generate header view
@@ -28,5 +27,10 @@ public class NoResultsAdapter extends ArrayAdapter<String> implements StickyList
     @Override
     public long getHeaderId(int i) {
         return 0;
+    }
+
+    @Override
+    public boolean isEnabled(int position) {
+        return false;
     }
 }

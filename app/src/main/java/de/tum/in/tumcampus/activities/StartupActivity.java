@@ -207,6 +207,9 @@ public class StartupActivity extends ActionBarActivity {
         // drop locations table
         db.execSQL("DROP TABLE IF EXISTS locations");
 
+        // drop news table
+        db.execSQL("DROP TABLE IF EXISTS news");
+
         // rename hide_wizzard_on_startup
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor e = sp.edit();

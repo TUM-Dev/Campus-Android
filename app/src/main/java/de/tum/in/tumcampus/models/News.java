@@ -10,11 +10,6 @@ import de.tum.in.tumcampus.auxiliary.Utils;
 public class News {
 
 	/**
-	 * Date
-	 */
-	public final Date date;
-
-	/**
 	 * News Facebook-ID
 	 */
 	public final String id;
@@ -29,32 +24,45 @@ public class News {
 	 */
 	public final String link;
 
-	/**
-	 * Message, e.g. X released
-	 */
-	public final String message;
+    /**
+     * Content
+     */
+    public final String title;
+    public final String description;
 
-	/**
+    /**
+     * Date
+     */
+    public final Date date;
+    public final Date created;
+
+    public final String src;
+
+    /**
 	 * New News
 	 *
 	 * @param id News Facebook-ID
-	 * @param message Message, e.g. X released
+     * @param title Title
+     * @param description Description
 	 * @param link Url, e.g. http://www.in.tum.de
-	 * @param image Local image, e.g. /mnt/sdcard/tumcampus/news/cache/xy.jpg
+	 * @param image Image url e.g. http://www.tu-film.de/img/film/poster/Fack%20ju%20Ghte.jpg
 	 * @param date Date
+     * @param created Creation date
 	 */
-	public News(String id, String message, String link, String image, Date date) {
-
+	public News(String id, String title, String description, String link, String src, String image, Date date, Date created) {
 		this.id = id;
-		this.message = message;
+        this.title = title;
+        this.description = description;
 		this.link = link;
+        this.src = src;
 		this.image = image;
 		this.date = date;
+        this.created = created;
 	}
 
 	@Override
 	public String toString() {
-		return "id=" + id + " message=" + message + " link=" + link + " image="
-				+ image + " date=" + Utils.getDateString(date);
+		return "id=" + id + " title=" + title + " link=" + link + " image="
+				+ image + " date=" + Utils.getDateString(date)+" created="+Utils.getDateString(created);
 	}
 }

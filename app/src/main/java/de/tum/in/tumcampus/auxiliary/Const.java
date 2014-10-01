@@ -17,10 +17,8 @@ public final class Const {
 	public static final String DATE = "date";
 	public static final String DE = "de";
 	public static final String DOWNLOAD_ALL_FROM_EXTERNAL = "download_all_from_external";
-	public static final String EN = "en";
 	public static final String ERROR = "error";
 	public static final String ERROR_MESSAGE = "error_message";
-	public static final String FACEBOOK_URL = "www.facebook.com";
 	public static final String FORCE_DOWNLOAD = "force_download";
 	public static final String[] GRADES = { "1,0", "1,3", "1,4", "1,7", "2,0",
 			"2,3", "2,4", "2,7", "3,0", "3,3", "3,4", "3,7", "4,0", "4,3",
@@ -30,18 +28,10 @@ public final class Const {
 	public static final int HTTP_TIMEOUT = 25000;
 	public static final String ID_COLUMN = "_id";
 	public static final String JSON_ADDRESS = "address";
-	public static final String JSON_CAPTION = "caption";
-	public static final String JSON_CREATED_TIME = "created_time";
-	public static final String JSON_DATA = "data";
 	public static final String JSON_DESCRIPTION = "description";
-	public static final String JSON_FROM = "from";
 	public static final String JSON_ID = "id";
-    public static final String JSON_MENSA = "mensa";
 	public static final String JSON_LINK = "link";
-	public static final String JSON_MESSAGE = "message";
 	public static final String JSON_NAME = "name";
-	public static final String JSON_OBJECT_ID = "object_id";
-	public static final String JSON_PICTURE = "picture";
 	public static final String JSON_RESULTS = "results";
 	public static final String LINK_COLUMN = "link";
 	public static final String LRZ_ID = "lrz_id";
@@ -78,4 +68,12 @@ public final class Const {
     public static final String PREFERENCE_SCREEN = "preference_screen";
     public static final String P_TOKEN = "pToken";
     public static final String APP_VERSION = "app_version";
+    public static final String JSON_NEWS = "news";
+    public static final String JSON_DATE = "date";
+    public static final String JSON_TITLE = "title";
+    public static final String JSON_IMAGE = "image";
+    public static final String JSON_CREATED = "created";
+    public static final String JSON_SRC = "src";
+    public static final String JSON_ICON = "icon";
+    public static final String JSON_SOURCE = "source";
 }

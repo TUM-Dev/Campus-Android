@@ -7,8 +7,6 @@ import android.database.sqlite.SQLiteDatabase;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.net.URLEncoder;
-import java.util.Arrays;
 import java.util.Date;
 
 import de.tum.in.tumcampus.auxiliary.Const;
@@ -21,64 +19,12 @@ import de.tum.in.tumcampus.models.News;
  * News Manager, handles database stuff, external imports
  */
 public class NewsManager implements Card.ProvidesCard {
-    /** Last insert counter */
-    public static int lastInserted = 0;
 
     private static final int TIME_TO_SYNC = 86400; // 1 day
+    private final Context mContext;
 
-    /**
-     * Convert JSON object to News and download news image
-     * <p/>
-     * Example JSON: e.g. { "id": "162327853831856_174943842570257", "from": {
-     * ... }, "message": "Testing ...", "picture":
-     * "http://photos-d.ak.fbcdn.net/hphotos-ak-ash4/268937_174943835903591_162327853831856_476156_7175901_s.jpg"
-     * , "link":
-     * "https://www.facebook.com/photo.php?fbid=174943835903591&set=a.174943832570258.47966.162327853831856&type=1"
-     * , "name": "Wall Photos", "icon":
-     * "http://static.ak.fbcdn.net/rsrc.php/v1/yz/r/StEh3RhPvjk.gif", "type":
-     * "photo", "object_id": "174943835903591", "created_time":
-     * "2011-07-04T01:58:25+0000", "updated_time": "2011-07-04T01:58:25+0000" },
-     *
-     * @param json see above
-     * @return News
-     * @throws Exception
-     */
-    private static News getFromJson(JSONObject json) throws Exception {
-
-        String picture = "";
-        if (json.has("picture")) {
-            picture = json.getString(Const.JSON_PICTURE);
-            //target = Utils.getCacheDir("news/cache") + Utils.md5(picture) + ".jpg";
-            //Utils.downloadFileThread(picture, target);
-        }
-        String link = "";
-        if (json.has(Const.JSON_LINK) && !json.getString(Const.JSON_LINK).contains(Const.FACEBOOK_URL)) {
-            link = json.getString(Const.JSON_LINK);
-        }
-        if (link.length() == 0 && json.has(Const.JSON_OBJECT_ID)) {
-            link = "http://graph.facebook.com/" + json.getString(Const.JSON_OBJECT_ID) + "/Picture?type=normal";
-        }
-
-        // message empty => description empty => caption
-        String message = "";
-        if (json.has(Const.JSON_MESSAGE)) {
-            message = json.getString(Const.JSON_MESSAGE);
-        } else if (json.has(Const.JSON_DESCRIPTION)) {
-            message = json.getString(Const.JSON_DESCRIPTION);
-        } else if (json.has(Const.JSON_CAPTION)) {
-            message = json.getString(Const.JSON_CAPTION);
-        } else if (json.has("name")) {
-            message = json.getString("name");
-        } else if (json.has("story")) {
-            message = json.getString("story");
-        } else {
-            Utils.log("No message / json object error - FB changed something?");
-        }
-
-        Date date = Utils.getDate(json.getString(Const.JSON_CREATED_TIME));
-
-        return new News(json.getString(Const.JSON_ID), message, link, picture, date);
-    }
+    private static final String NEWS_URL = "https://tumcabe.in.tum.de/Api/news/";
+    private static final String NEWS_SOURCES_URL = NEWS_URL + "sources";
 
     /** Database connection */
     private final SQLiteDatabase db;
@@ -90,10 +36,14 @@ public class NewsManager implements Card.ProvidesCard {
      */
     public NewsManager(Context context) {
         db = DatabaseManager.getDb(context);
+        mContext = context;
+
+        // create news sources table
+        db.execSQL("CREATE TABLE IF NOT EXISTS news_sources (id VARCHAR PRIMARY KEY, icon INTEGER, title VARCHAR)");
 
         // create table if needed
-        db.execSQL("CREATE TABLE IF NOT EXISTS news (id VARCHAR PRIMARY KEY, message VARCHAR, link VARCHAR, "
-                + "image VARCHAR, date VARCHAR)");
+        db.execSQL("CREATE TABLE IF NOT EXISTS news (id VARCHAR PRIMARY KEY, src INTEGER, title TEXT, description TEXT, link VARCHAR, "
+                + "image VARCHAR, date VARCHAR, created VARCHAR)");
     }
 
     /**
@@ -115,70 +65,94 @@ public class NewsManager implements Card.ProvidesCard {
             return;
         }
 
-        String url = "https://graph.facebook.com/162327853831856/feed/?limit=100&access_token=";
-        String token = "141869875879732|FbjTXY-wtr06A18W9wfhU8GCkwU";
-
-        JSONArray jsonArray = Utils.downloadJson(url + URLEncoder.encode(token, "UTF-8"))
-                .getJSONArray(Const.JSON_DATA);
-
-        cleanupDb();
-        int count = Utils.dbGetTableCount(db, "news");
+        // Load all news sources
+        JSONArray jsonArray = Utils.downloadJsonArray(mContext, NEWS_SOURCES_URL, force, CacheManager.VALIDITY_ONE_MONTH);
 
         db.beginTransaction();
         try {
-            int countItems = 0;
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject obj = jsonArray.getJSONObject(i);
+                replaceIntoSourcesDb(obj);
+            }
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
 
-                String[] types = new String[]{"photo", "link", "video"};
+        // Load all news since the last sync
+        jsonArray = Utils.downloadJsonArray(mContext, NEWS_URL + getLastId(), force, CacheManager.VALIDITY_ONE_DAY);
 
-                String[] ids = new String[]{
-                        "162327853831856_228060957258545",
-                        "162327853831856_228060957258545",
-                        "162327853831856_224344127630228"};
+        // Delete all too old items
+        cleanupDb();
 
-                // filter out events, empty items
-                if ((!Arrays.asList(types).contains(obj.getString("type")) && !Arrays
-                        .asList(ids).contains(obj.getString("id")))
-                        || !obj.getJSONObject(Const.JSON_FROM)
-                        .getString(Const.JSON_ID)
-                        .equals("162327853831856")) {
-                    continue;
-                }
-                // NTK added Kurz notiert Archiv ---> ignore in news
-                if (obj.has("name") && (obj.getString("name").equals("Kurz notiert") || obj
-                        .getString("name").equals("Kurz notiert Archiv"))) {
-                    continue;
-                }
-
-                // NTK added ignore events
-                if (obj.has("story") && (obj.getString("story").equals("TUM Campus App created an event."))) {
-                    continue;
-                }
-
-                if (countItems > 24) {
-                    break;
-                }
+        db.beginTransaction();
+        try {
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject obj = jsonArray.getJSONObject(i);
                 replaceIntoDb(getFromJson(obj));
-                countItems++;
             }
             SyncManager.replaceIntoDb(db, this);
             db.setTransactionSuccessful();
         } finally {
             db.endTransaction();
         }
-        // update last insert counter
-        lastInserted += Utils.dbGetTableCount(db, "news") - count;
+    }
+
+    /**
+     * Convert JSON object to News and download news image
+     *
+     * @param json see above
+     * @return News
+     * @throws Exception
+     */
+    private static News getFromJson(JSONObject json) throws Exception {
+        String id = json.getString(Const.JSON_NEWS);
+        String src = json.getString(Const.JSON_SRC);
+        String title = json.getString(Const.JSON_TITLE);
+        String description = json.getString(Const.JSON_DESCRIPTION);
+        String link = json.getString(Const.JSON_LINK);
+        String image = json.getString(Const.JSON_IMAGE);
+        Date date = Utils.getISODateTime(json.getString(Const.JSON_DATE));
+        Date created = Utils.getISODateTime(json.getString(Const.JSON_CREATED));
+
+        return new News(id, title, description, link, src, image, date, created);
     }
 
     /**
      * Get all news from the database
      *
-     * @return Database cursor (image, message, date_de, link, _id)
+     * @return Database cursor (_id, src, title, description, link, image, date, created, icon, source)
      */
     public Cursor getAllFromDb() {
-        return db.rawQuery("SELECT image, message, strftime('%d.%m.%Y', date) as date_de, link, id as _id "
-                + "FROM news ORDER BY date DESC", null);
+        return db.rawQuery("SELECT n.id AS _id, n.src, n.title, n.description, " +
+                "n.link, n.image, n.date, n.created, s.icon, s.title AS source " +
+                "FROM news n, news_sources s WHERE n.src=s.id ORDER BY date DESC", null);
+    }
+
+    /**
+     * Get the index of the newest item that is older than 'now'
+     *
+     * @return Database cursor (_id, src, title, description, link, image, date, created, icon, source)
+     */
+    public int getTodayIndex() {
+        Cursor c = db.rawQuery("SELECT COUNT(*) FROM news WHERE date>datetime()", null);
+        if(c.moveToFirst()) {
+            int res = c.getInt(0);
+            c.close();
+            return res;
+        }
+        c.close();
+        return 0;
+    }
+
+    private String getLastId() {
+        String lastId = "";
+        Cursor c = db.rawQuery("SELECT id FROM news ORDER BY id DESC LIMIT 1", null);
+        if(c.moveToFirst()) {
+            lastId = c.getString(0);
+        }
+        c.close();
+        return lastId;
     }
 
     /**
@@ -197,15 +171,21 @@ public class NewsManager implements Card.ProvidesCard {
     void replaceIntoDb(News n) throws Exception {
         Utils.logv(n.toString());
 
-        if (n.id.length() == 0) {
-            throw new Exception("Invalid id.");
-        }
-        if (n.message.length() == 0) {
-            Utils.log(n.toString());
-            throw new Exception("Invalid message.");
-        }
-        db.execSQL("REPLACE INTO news (id, message, link, image, date) VALUES (?, ?, ?, ?, ?)",
-                new String[]{n.id, n.message, n.link, n.image, Utils.getDateString(n.date)});
+        db.execSQL("REPLACE INTO news (id, src, title, description, link, image, date, created) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                new String[]{n.id, n.src, n.title, n.description, n.link, n.image, Utils.getDateTimeString(n.date), Utils.getDateTimeString(n.created)});
+    }
+
+    /**
+     * Replace or Insert a news source in the database
+     *
+     * @param n News source object
+     * @throws Exception
+     */
+    void replaceIntoSourcesDb(JSONObject n) throws Exception {
+        Utils.logv(n.toString());
+
+        db.execSQL("REPLACE INTO news_sources (id, icon, title) VALUES (?, ?, ?)",
+                new String[]{n.getString(Const.JSON_SOURCE), n.getString(Const.JSON_ICON), n.getString(Const.JSON_TITLE)});
     }
 
     /**
@@ -218,13 +198,8 @@ public class NewsManager implements Card.ProvidesCard {
         Cursor cur = getAllFromDb();
         if (cur.moveToFirst()) {
             NewsCard card = new NewsCard(context);
-            String title = cur.getString(1);
-            if (title.contains("\n")) {
-                title = title.substring(0, title.indexOf('\n'));
-            }
-            card.setNews(cur.getString(0), title, cur.getString(3), cur.getString(2));
+            card.setNews(cur, 0);
             card.apply();
         }
-        cur.close();
     }
 }

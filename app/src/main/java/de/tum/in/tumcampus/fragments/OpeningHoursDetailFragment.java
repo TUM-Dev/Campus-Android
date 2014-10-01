@@ -114,8 +114,8 @@ public class OpeningHoursDetailFragment extends Fragment implements ViewBinder {
 			TextView tv = (TextView) view;
 			tv.setText(sb.toString());
 
-			// linkify email addresses and phone numbers (e.g. 089-123456)
-			// don't linkify room numbers 00.01.123
+			// link email addresses and phone numbers (e.g. 089-123456)
+			// don't link room numbers 00.01.123
 			Linkify.addLinks(tv, Linkify.EMAIL_ADDRESSES);
             Linkify.addLinks(tv, Linkify.WEB_URLS);
 			Linkify.addLinks(tv, Pattern.compile("[0-9-]{6,}"), "tel:");

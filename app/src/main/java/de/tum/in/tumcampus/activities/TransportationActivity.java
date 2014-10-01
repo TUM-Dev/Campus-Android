@@ -14,6 +14,7 @@ import java.util.concurrent.TimeoutException;
 
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.generic.ActivityForSearchingInBackground;
+import de.tum.in.tumcampus.adapters.NoResultsAdapter;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.MVVStationSuggestionProvider;
 import de.tum.in.tumcampus.models.managers.RecentsManager;
@@ -106,9 +107,8 @@ public class TransportationActivity extends ActivityForSearchingInBackground<Cur
         try {
             stationCursor = TransportManager.getStationsFromExternal(inputText);
         } catch (NoSuchElementException e) {
-            showError(R.string.no_station_found);
         } catch (TimeoutException e) {
-            showError(R.string.exception_timeout);
+            showNoInternetLayout();
         } catch (Exception e) {
             showError(R.string.exception_unknown);
         }
@@ -132,9 +132,14 @@ public class TransportationActivity extends ActivityForSearchingInBackground<Cur
             stationCursor.moveToFirst();
             showStation(stationCursor.getString(0));
             return;
+        } else if(stationCursor==null) {
+            listViewResults.setAdapter(new NoResultsAdapter(this));
+            listViewResults.requestFocus();
+            return;
         }
 
         adapterStations.changeCursor(stationCursor);
+        listViewResults.setAdapter(adapterStations);
         listViewResults.requestFocus();
     }
 }

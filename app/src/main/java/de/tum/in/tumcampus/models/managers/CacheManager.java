@@ -15,6 +15,7 @@ import de.tum.in.tumcampus.models.LectureAppointmentsRowSet;
 import de.tum.in.tumcampus.models.LectureDetailsRowSet;
 import de.tum.in.tumcampus.models.LecturesSearchRow;
 import de.tum.in.tumcampus.models.LecturesSearchRowSet;
+import de.tum.in.tumcampus.models.OrgItemList;
 import de.tum.in.tumcampus.models.TuitionList;
 import de.tum.in.tumcampus.tumonline.TUMOnlineConst;
 import de.tum.in.tumcampus.tumonline.TUMOnlineRequest;
@@ -86,7 +87,7 @@ public class CacheManager {
         Cursor cur = news.getAllFromDb();
         if(cur.moveToFirst()) {
             do {
-                String imgUrl = cur.getString(0);
+                String imgUrl = cur.getString(5);
                 if(!imgUrl.isEmpty())
                     Utils.downloadImage(mContext, imgUrl);
             } while(cur.moveToNext());
@@ -100,21 +101,27 @@ public class CacheManager {
 
         // ALL STUFF BELOW HERE NEEDS A VALID ACCESS TOKEN
 
-        // Sync fee status
-        TUMOnlineRequest<TuitionList> requestHandler = new TUMOnlineRequest<TuitionList>(TUMOnlineConst.TUITION_FEE_STATUS, mContext);
+        // Sync organisation tree
+        TUMOnlineRequest<OrgItemList> requestHandler = new TUMOnlineRequest<OrgItemList>(TUMOnlineConst.ORG_TREE, mContext);
         if (shouldRefresh(requestHandler.getRequestURL())) {
             requestHandler.fetch();
+        }
+
+        // Sync fee status
+        TUMOnlineRequest<TuitionList> requestHandler2 = new TUMOnlineRequest<TuitionList>(TUMOnlineConst.TUITION_FEE_STATUS, mContext);
+        if (shouldRefresh(requestHandler2.getRequestURL())) {
+            requestHandler2.fetch();
         }
 
         // Sync lectures, details and appointments
         importLecturesFromTUMOnline();
 
         // Sync calendar
-        TUMOnlineRequest<CalendarRowSet> requestHandler2 = new TUMOnlineRequest<CalendarRowSet>(TUMOnlineConst.CALENDER, mContext);
+        TUMOnlineRequest<CalendarRowSet> requestHandler3 = new TUMOnlineRequest<CalendarRowSet>(TUMOnlineConst.CALENDER, mContext);
         requestHandler.setParameter("pMonateVor", "0");
         requestHandler.setParameter("pMonateNach", "3");
-        if (shouldRefresh(requestHandler2.getRequestURL())) {
-            CalendarRowSet set = requestHandler2.fetch();
+        if (shouldRefresh(requestHandler3.getRequestURL())) {
+            CalendarRowSet set = requestHandler3.fetch();
             if (set != null) {
                 CalendarManager calendarManager = new CalendarManager(mContext);
                 calendarManager.importCalendar(set);

@@ -3,17 +3,16 @@ package de.tum.in.tumcampus.cards;
 import android.app.Notification;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import de.tum.in.tumcampus.R;
-import de.tum.in.tumcampus.activities.NewsActivity;
+import de.tum.in.tumcampus.adapters.NewsAdapter;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.managers.CardManager;
 
@@ -22,10 +21,8 @@ import de.tum.in.tumcampus.models.managers.CardManager;
  */
 public class NewsCard extends Card {
 
-    private String mTitle;
-    private String mDate;
-    private String mLink;
-    private String mImage;
+    private Cursor mCursor;
+    private int mPosition;
 
     public NewsCard(Context context) {
         super(context, "card_news", false, false);
@@ -38,54 +35,27 @@ public class NewsCard extends Card {
 
     @Override
     protected String getTitle() {
-        return mTitle;
+        mCursor.moveToPosition(mPosition);
+        return mCursor.getString(2);
     }
 
     @Override
     public View getCardView(Context context, ViewGroup parent) {
-        mContext = context;
-        mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        mCard = mInflater.inflate(R.layout.card_news_item, parent, false);
-        ImageView imageView = (ImageView) mCard.findViewById(R.id.news_img);
-        mTitleView = (TextView) mCard.findViewById(R.id.news_title);
-        mTitleView.setText(getTitle());
-        mDateView = (TextView) mCard.findViewById(R.id.news_src_date);
-        TextView srcTitleView = (TextView) mCard.findViewById(R.id.news_src_title);
-        ImageView srcIconView = (ImageView) mCard.findViewById(R.id.news_src_icon);
-
-        if(mImage.isEmpty()) {
-            imageView.setVisibility(View.GONE);
-        } else {
-            imageView.setVisibility(View.VISIBLE);
-            Utils.loadAndSetImage(mContext, mImage, imageView);
-        }
-
-        if (mLink.length() > 0) {
-            if(Uri.parse(mLink).getHost().equals("graph.facebook.com")) {
-                srcTitleView.setText("Facebook");
-                srcIconView.setImageResource(R.drawable.ic_facebook);
-            } else {
-                srcTitleView.setText(Uri.parse(mLink).getHost());
-                srcIconView.setImageResource(R.drawable.ic_comment);
-            }
-        }
-
-        mDateView.setText(mDate);
-        return mCard;
+        mCursor.moveToPosition(mPosition);
+        mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View card = NewsAdapter.newNewsView(mInflater, mCursor, parent);
+        NewsAdapter.bindNewsView(card, mContext, mCursor);
+        return card;
     }
 
     /**
      * Sets the information needed to show news
-     * @param img Big image
-     * @param title Title
-     * @param link Url
-     * @param date Date
+     * @param c Cursor
+     * @param pos Position inside the cursor
      */
-    public void setNews(String img, String title, String link, String date) {
-        mImage = img;
-        mTitle = title;
-        mDate = date;
-        mLink = link;
+    public void setNews(Cursor c, int pos) {
+        mCursor = c;
+        mPosition = pos;
     }
 
     //@Override
@@ -102,21 +72,30 @@ public class NewsCard extends Card {
 
     @Override
     protected Notification fillNotification(NotificationCompat.Builder notificationBuilder) {
+        mCursor.moveToPosition(mPosition);
         notificationBuilder.setContentTitle(mContext.getString(R.string.news));
-        notificationBuilder.setContentText(mTitle);
-        if(Uri.parse(mLink).getHost().equals("graph.facebook.com")) {
+        notificationBuilder.setContentText(mCursor.getString(2));
+        /*if(Uri.parse(mLink).getHost().equals("graph.facebook.com")) {
             notificationBuilder.setContentInfo("Facebook");
         } else {
             notificationBuilder.setContentInfo(Uri.parse(mLink).getHost());
-        }
-        notificationBuilder.setTicker(mTitle);
-        Bitmap img = Utils.downloadImageToBitmap(mContext, mImage);
+        }*/
+        notificationBuilder.setTicker(mCursor.getString(2));
+        Bitmap img = Utils.downloadImageToBitmap(mContext, mCursor.getString(5));
         notificationBuilder.extend(new NotificationCompat.WearableExtender().setBackground(img));
         return notificationBuilder.build();
     }
 
     @Override
     public Intent getIntent() {
-        return new Intent(mContext, NewsActivity.class);
+        mCursor.moveToPosition(mPosition);
+        String url = mCursor.getString(4);
+        if (url.length() == 0) {
+            Utils.showToast(mContext, R.string.no_link_existing);
+            return null;
+        }
+
+        // Opens url in browser
+        return new Intent(Intent.ACTION_VIEW, Uri.parse(url));
     }
 }

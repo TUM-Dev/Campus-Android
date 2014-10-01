@@ -63,7 +63,7 @@ public  class TUMOnlineRequest<T> {
 
     private final CacheManager cacheManager;
 
-    private String lastError;
+    private String lastError = "";
 
     @SuppressWarnings("unchecked")
     private TUMOnlineRequest(Context context) {

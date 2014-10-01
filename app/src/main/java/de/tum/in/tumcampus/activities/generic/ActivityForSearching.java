@@ -132,6 +132,20 @@ public abstract class ActivityForSearching extends ProgressActivity {
                 return false;
             }
         });
+
+        MenuItemCompat.setOnActionExpandListener(mSearchItem, new MenuItemCompat.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                mQuery = null;
+                onStartSearch();
+                return true;
+            }
+        });
 		return true;
 	}
 

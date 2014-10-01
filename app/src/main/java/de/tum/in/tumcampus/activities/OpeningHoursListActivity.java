@@ -80,11 +80,10 @@ public class OpeningHoursListActivity extends ActionBarActivity implements
 		} else {
 			// In single-pane mode, simply start the detail activity
 			// for the selected item ID.
-			Intent detailIntent = new Intent(this,
-					OpeningHoursDetailActivity.class);
+			Intent detailIntent = new Intent(this, OpeningHoursDetailActivity.class);
 			detailIntent.putExtra(OpeningHoursDetailFragment.ARG_ITEM_ID, id);
-			detailIntent
-					.putExtra(OpeningHoursDetailFragment.TWO_PANE, mTwoPane);
+            detailIntent.putExtra(OpeningHoursDetailFragment.ARG_ITEM_CONTENT, name);
+			detailIntent.putExtra(OpeningHoursDetailFragment.TWO_PANE, mTwoPane);
 			startActivity(detailIntent);
 		}
 	}

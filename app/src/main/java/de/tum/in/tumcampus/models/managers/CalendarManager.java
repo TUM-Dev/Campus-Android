@@ -49,7 +49,7 @@ public class CalendarManager implements Card.ProvidesCard {
                 + "title VARCHAR, description VARCHAR, dtstart VARCHAR, dtend VARCHAR, "
                 + "location VARCHAR, longitude VARCHAR, latitude VARCHAR)");
 
-        // Create a new Synch table
+        // Create a new sync table
         new SyncManager(context);
     }
 
@@ -97,6 +97,10 @@ public class CalendarManager implements Card.ProvidesCard {
     }
 
     public void importCalendar(CalendarRowSet myCalendarList) {
+
+        if (!SyncManager.needSync(db, this, TIME_TO_SYNC_CALENDAR))
+            return;
+
         // Cleanup cache before importing
         removeCache();
 
@@ -124,12 +128,14 @@ public class CalendarManager implements Card.ProvidesCard {
                     Utils.log(e, "SIMPLEXML: Error in field: " + e.getMessage());
                 }
             }
+            SyncManager.replaceIntoDb(DatabaseManager.getDb(mContext), this);
         }
 
         // Do sync of google calendar if necessary
         boolean syncCalendar = Utils.getInternalSettingBool(mContext, Const.SYNC_CALENDAR, false);
         if (syncCalendar && SyncManager.needSync(db, Const.SYNC_CALENDAR, TIME_TO_SYNC_CALENDAR)) {
             syncCalendar(mContext);
+            SyncManager.replaceIntoDb(DatabaseManager.getDb(mContext), Const.SYNC_CALENDAR);
         }
     }
 
@@ -178,7 +184,6 @@ public class CalendarManager implements Card.ProvidesCard {
         deleteLocalCalendar(c);
         Uri uri = CalendarHelper.addCalendar(c);
         addEvents(c, uri);
-        SyncManager.replaceIntoDb(DatabaseManager.getDb(c), Const.SYNC_CALENDAR);
     }
 
     /**

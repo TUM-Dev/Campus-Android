@@ -113,6 +113,7 @@ public class Utils {
      * @throws Exception
      */
     private static InputStream downloadFileStream(String url) throws Exception {
+        logv("Download file: " + url);
         HttpClient httpclient = new DefaultHttpClient();
         HttpEntity entity = httpclient.execute(new HttpGet(url)).getEntity();
 
@@ -122,14 +123,43 @@ public class Utils {
         return entity.getContent();
     }
 
+
+    public static String downloadFileAndCache(Context context, String url, int validity) {
+        try {
+            CacheManager cacheManager = new CacheManager(context);
+            String content = cacheManager.getFromCache(url);
+            if (content != null) {
+                return content;
+            }
+
+            HttpClient httpClient = new DefaultHttpClient();
+
+            HttpParams params = httpClient.getParams();
+            HttpConnectionParams.setSoTimeout(params, Const.HTTP_TIMEOUT);
+            HttpConnectionParams.setConnectionTimeout(params, Const.HTTP_TIMEOUT);
+
+            HttpEntity entity = httpClient.execute(new HttpGet(url)).getEntity();
+
+            content = EntityUtils.toString(entity);
+
+            cacheManager.addToCache(url, content, validity, CacheManager.CACHE_TYP_DATA);
+            return content;
+        } catch (Exception e) {
+            log(e);
+            return null;
+        }
+    }
+
     /**
-     * Download a file in the same thread
+     * Download a file in the same thread.
+     * If file already exists the method returns immediately
+     * without downloading anything
      *
      * @param url    Download location
      * @param target Target filename in local file system
      * @throws Exception
      */
-    private static void downloadFile(String url, String target) throws Exception {
+    private static void downloadToFile(String url, String target) throws Exception {
         File f = new File(target);
         if (f.exists()) {
             return;
@@ -158,9 +188,9 @@ public class Utils {
      * @param url Image url
      * @return Downloaded image as {@link Bitmap}
      */
-    public static File downloadImage(Context context, final String url) {
+    public static File downloadImage(Context context, String url) {
         try {
-            logv("Download image: " + url);
+            url=url.replaceAll(" ", "%20");
 
             CacheManager cacheManager = new CacheManager(context);
             String file = cacheManager.getFromCache(url);
@@ -173,7 +203,7 @@ public class Utils {
             // If file already exists/was loaded it will return immediately
             // Use this to be sure cache has not been cleaned manually
             File f = new File(file);
-            downloadFile(url, file);
+            downloadToFile(url, file);
 
             return f;
         } catch (Exception e) {
@@ -205,6 +235,12 @@ public class Utils {
     public static void loadAndSetImage(final Context context, final String url, final ImageView img) {
         //TODO implement something to avoid loading the same image multiple times in parallel
         new AsyncTask<Void, Void, Bitmap>() {
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                img.setImageBitmap(null);
+            }
+
             @Override
             protected Bitmap doInBackground(Void... voids) {
                 return downloadImageToBitmap(context, url);
