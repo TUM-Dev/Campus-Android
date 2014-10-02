@@ -4,8 +4,14 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+import android.graphics.Bitmap;
+import android.support.v4.util.LruCache;
+import android.widget.ImageView;
 
 import java.io.File;
+import java.util.Collections;
+import java.util.Map;
+import java.util.WeakHashMap;
 
 import de.tum.in.tumcampus.activities.CurriculaActivity;
 import de.tum.in.tumcampus.auxiliary.AccessTokenManager;
@@ -31,6 +37,19 @@ public class CacheManager {
     public static final int VALIDITY_FIFE_DAYS = 5*86400;
     public static final int VALIDITY_TEN_DAYS = 10*86400;
     public static final int VALIDITY_ONE_MONTH = 30*86400;
+
+    public static Map<ImageView, String> imageViews = Collections.synchronizedMap(new WeakHashMap<ImageView, String>());
+    public static final LruCache<String,Bitmap> bitmapCache;
+    static {
+        int cacheSize = 4 * 1024 * 1024; // 4MiB
+        bitmapCache = new LruCache<String,Bitmap>(cacheSize) {
+            @Override
+            protected int sizeOf(String key, Bitmap bitmap) {
+                return bitmap.getRowBytes() * bitmap.getHeight();
+
+            }
+        };
+    }
 
     /**
      * Database connection
@@ -75,9 +94,20 @@ public class CacheManager {
             Utils.downloadJsonArray(mContext, CurriculaActivity.CURRICULA_URL, true, CacheManager.VALIDITY_ONE_MONTH);
         }
 
-        // Cache news images
+        // Cache news source images
         NewsManager news = new NewsManager(mContext);
-        Cursor cur = news.getAllFromDb(mContext);
+        Cursor cur = news.getNewsSources();
+        if(cur.moveToFirst()) {
+            do {
+                String imgUrl = cur.getString(1);
+                if(!imgUrl.isEmpty() && !imgUrl.equals("null"))
+                    Utils.downloadImage(mContext, imgUrl);
+            } while(cur.moveToNext());
+        }
+        cur.close();
+
+        // Cache news images
+        cur = news.getAllFromDb(mContext);
         if(cur.moveToFirst()) {
             do {
                 String imgUrl = cur.getString(5);

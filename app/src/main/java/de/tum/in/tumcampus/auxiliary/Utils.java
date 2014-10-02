@@ -230,15 +230,22 @@ public class Utils {
      *
      * @param context Context
      * @param url URL
-     * @param img Image
+     * @param imageView Image
      */
-    public static void loadAndSetImage(final Context context, final String url, final ImageView img) {
-        //TODO implement something to avoid loading the same image multiple times in parallel
+    public static void loadAndSetImage(final Context context, final String url, final ImageView imageView) {
+        synchronized (CacheManager.bitmapCache) {
+            Bitmap bmp = CacheManager.bitmapCache.get(url);
+            if (bmp != null) {
+                imageView.setImageBitmap(bmp);
+                return;
+            }
+        }
         new AsyncTask<Void, Void, Bitmap>() {
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
-                img.setImageBitmap(null);
+                CacheManager.imageViews.put(imageView, url);
+                imageView.setImageBitmap(null);
             }
 
             @Override
@@ -248,9 +255,13 @@ public class Utils {
 
             @Override
             protected void onPostExecute(Bitmap bitmap) {
-                if(img==null)
-                    return;
-                img.setImageBitmap(bitmap);
+                synchronized (CacheManager.bitmapCache) {
+                    CacheManager.bitmapCache.put(url, bitmap);
+                }
+                String tag = CacheManager.imageViews.get(imageView);
+                if (tag != null && tag.equals(url)) {
+                    imageView.setImageBitmap(bitmap);
+                }
             }
         }.execute();
     }
