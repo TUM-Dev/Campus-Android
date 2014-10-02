@@ -164,6 +164,7 @@ public class TUMRoomFinderRequest {
     }
 
     String fetchDefaultMapId(String buildingID) {
+        method = "defaultMapId";
         setParameter("id", buildingID);
 
         String ROOM_SERVICE_DEFAULT_MAP_URL = SERVICE_BASE_URL + "roommaps/building/";
@@ -191,10 +192,46 @@ public class TUMRoomFinderRequest {
         return result;
     }
 
+    public ArrayList<HashMap<String, String>> fetchAvailableMaps(String room) {
+        method = "availableMaps";
+        setParameter("id", room);
+
+        String url = getRequestURL(SERVICE_BASE_URL + "roommaps/room/");
+        Utils.log("fetching Map URL " + url);
+
+        ArrayList<HashMap<String, String>> mapsList = new ArrayList<HashMap<String, String>>();
+
+        try {
+
+            XMLParser parser = new XMLParser();
+            String xml = parser.getXmlFromUrl(url); // getting XML from URL
+            Document doc = parser.getDomElement(xml); // getting DOM element
+
+            NodeList roomList = doc.getElementsByTagName("map");// building.getChildNodes();
+
+            for (int k = 0; k < roomList.getLength(); k++) {
+                Element map = (Element) roomList.item(k);
+                int scale = Integer.parseInt(parser.getValue(map, "scaling"));
+                if(scale>400000)
+                    continue;
+
+                HashMap<String, String> mapMap = new HashMap<String, String>();
+                mapMap.put(KEY_ID, parser.getValue(map, "id"));
+                mapMap.put(KEY_TITLE, parser.getValue(map, "description"));
+
+                // adding HashList to ArrayList
+                mapsList.add(mapMap);
+            }
+        } catch (Exception e) {
+            Utils.log(e, "FetchError");
+            // return e.getMessage();
+        }
+        return mapsList;
+    }
+
     public void fetchDefaultMapIdJob(final Context context,
                                      final TUMRoomFinderRequestFetchListener listener, String mapID) {
 
-        method = "defaultMapId";
         // fetch information in a background task and show progress dialog in
         // meantime
         AsyncTask<String, Void, String> backgroundTaskMap = new AsyncTask<String, Void, String>() {
@@ -226,10 +263,10 @@ public class TUMRoomFinderRequest {
                     listener.onFetchError(context.getString(R.string.empty_result));
                     return;
                 }
-                if (resultId.equals("10")) {
+                /*if (resultId.equals("10")) {
                     listener.onFetchError(context.getString(R.string.no_map_available));
                     return;
-                }
+                }*/
                 // If there could not be found any problems return usual on
                 // Fetch method
                 listener.onFetchDefaultMapId(resultId);

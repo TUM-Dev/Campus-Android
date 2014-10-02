@@ -157,10 +157,9 @@ public class CafeteriaMenuManager {
 	 * @return Database cursor (typeLong, names, _id, typeShort)
 	 */
     public Cursor getTypeNameFromDbCard(int mensaId, String date) {
-        /* mensaId  date  typeShort  typeNr */
         return db.rawQuery("SELECT typeLong, group_concat(name, '\n') as names, id as _id, typeShort "
                                 + "FROM cafeterias_menus WHERE mensaId = ? AND "
-                                + "date = ? GROUP BY typeLong ORDER BY typeNr, typeLong, name",
+                                + "date = ? GROUP BY typeLong ORDER BY typeShort=\"tg\" DESC, typeShort ASC, typeNr",
                         new String[] { ""+mensaId, date });
     }
 
