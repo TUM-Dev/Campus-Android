@@ -30,4 +30,19 @@ public abstract class DatabaseManager {
 		}
 		return db;
 	}
+
+    public static void resetDb(Context c) {
+        getDb(c);
+        db.execSQL("DROP TABLE IF EXISTS cache");
+        db.execSQL("DROP TABLE IF EXISTS cafeterias");
+        db.execSQL("DROP TABLE IF EXISTS cafeteria_menus");
+        db.execSQL("DROP TABLE IF EXISTS calendar");
+        db.execSQL("DROP TABLE IF EXISTS kalendar_events");
+        db.execSQL("DROP TABLE IF EXISTS locations");
+        db.execSQL("DROP TABLE IF EXISTS news");
+        db.execSQL("DROP TABLE IF EXISTS news_sources");
+        db.execSQL("DROP TABLE IF EXISTS recents");
+        db.execSQL("DROP TABLE IF EXISTS room_locations");
+        db.execSQL("DROP TABLE IF EXISTS syncs");
+    }
 }

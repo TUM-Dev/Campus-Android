@@ -106,7 +106,8 @@ public  class TUMOnlineRequest<T> {
 		String url = getRequestURL();
 		Utils.log("fetching URL " + url);
 
-		try {
+        boolean addToCache = false;
+        try {
             result = cacheManager.getFromCache(url);
             if(result==null || fillCache) {
                 HttpEntity responseEntity;
@@ -124,9 +125,9 @@ public  class TUMOnlineRequest<T> {
                 }*/
 
                 if (responseEntity != null) {
+                    addToCache = true;
                     // do something with the response
                     result = EntityUtils.toString(responseEntity);
-                    cacheManager.addToCache(url, result, method.getValidity(), CacheManager.CACHE_TYP_DATA);
                     Utils.logv("added to cache " + url);
                 }
             } else {
@@ -140,7 +141,11 @@ public  class TUMOnlineRequest<T> {
 
         Serializer serializer = new Persister();
         try {
-            return serializer.read(method.getResponse(), result);
+            T res =  serializer.read(method.getResponse(), result);
+            // Only add to cache if data is valid
+            if(addToCache)
+                cacheManager.addToCache(url, result, method.getValidity(), CacheManager.CACHE_TYP_DATA);
+            return res;
         } catch (Exception e) {
             Utils.log(e);
             return null;

@@ -92,11 +92,6 @@
             </intent-filter>
         </receiver>
 
-        <service
-            android:name="de.tum.in.tumcampus.services.ScanResultsAvailableReceiver$NeverShowAgain"
-            android:exported="false" />
-        <service android:name=".services.GcmIntentService" />
-
         <provider
             android:name="de.tum.in.tumcampus.auxiliary.RoomFinderSuggestionProvider"
             android:authorities="de.tum.in.tumcampus.auxiliary.RoomFinderSuggestionProvider"
@@ -444,8 +439,11 @@
             android:name="de.tum.in.tumcampus.services.BackgroundService"
             android:exported="false" />
         <service
-            android:name="de.tum.in.tumcampus.services.FillCacheService"
+            android:name="de.tum.in.tumcampus.services.ScanResultsAvailableReceiver$NeverShowAgain"
             android:exported="false" />
+        <service
+            android:name="de.tum.in.tumcampus.models.managers.CalendarManager$QueryLocationsService"
+            android:exported="false" />
+        <service android:name=".services.GcmIntentService" />
     </application>
-
 </manifest>

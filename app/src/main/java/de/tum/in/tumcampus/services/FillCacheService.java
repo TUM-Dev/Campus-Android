@@ -31,7 +31,12 @@ public class FillCacheService extends IntentService {
 
 	@Override
 	protected void onHandleIntent(Intent intent) {
-        CacheManager cache = new CacheManager(this);
-        cache.fillCache();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                CacheManager cache = new CacheManager(FillCacheService.this);
+                cache.fillCache();
+            }
+        }).start();
 	}
 }

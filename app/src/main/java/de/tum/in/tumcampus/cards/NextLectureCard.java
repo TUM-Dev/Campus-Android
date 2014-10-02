@@ -101,12 +101,10 @@ public class NextLectureCard extends Card {
 
     public void setLecture(String title, String date, String loc) {
         // Extract course title
-        int end = title.indexOf('(');
-        if (0 < end) {
-            end = title.length();
-        }
+        title = title.replaceAll("[A-Z 0-9(LV\\.Nr\\.)=]+$","");
+        title = title.replaceAll("\\([A-Z]+[0-9]+\\)","");
 
-        mTitle = title.substring(0, end).trim();
+        mTitle = title.trim();
         mDate = Utils.getISODateTime(date);
         mLocation = loc;
     }

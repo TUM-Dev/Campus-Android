@@ -1,5 +1,6 @@
 package de.tum.in.tumcampus.auxiliary;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -73,10 +74,15 @@ public class AccessTokenManager {
 	 * @param lrzId LRZ id
      * @return True if new access token has been set successfully
 	 */
-	public boolean requestAccessToken(String lrzId) {
+	public boolean requestAccessToken(Activity activity, String lrzId) {
 		try {
 			if (!Utils.isConnected(context)) {
-				Utils.showToast(context, R.string.no_internet_connection);
+                activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Utils.showToast(context, R.string.no_internet_connection);
+                    }
+                });
 				return false;
 			}
 			// ok, do the request now
@@ -91,7 +97,13 @@ public class AccessTokenManager {
             Utils.log(ex, context.getString(R.string.access_token_wasnt_generated));
 			// set access token to null
 			Utils.setSetting(context, Const.ACCESS_TOKEN, null);
-			Utils.showToast(context, R.string.access_token_wasnt_generated);
+
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Utils.showToast(context, R.string.access_token_wasnt_generated);
+                }
+            });
 		}
 		return false;
 	}
@@ -100,10 +112,10 @@ public class AccessTokenManager {
      * Generates an access token and if there already is an access token a dialog is shown which
      * asks the user if he wants to generate a new one
      */
-	public void setupAccessToken() {
+	public void setupAccessToken(final Activity activity) {
         String lrzId = Utils.getSetting(context, Const.LRZ_ID);
 		// check if lrz could be valid?
-		if (lrzId.length() == MIN_LRZ_LENGTH) {
+		if (lrzId.length() >= MIN_LRZ_LENGTH) {
 			// is access token already set?
             if (hasValidAccessToken()) {
 				// show Dialog first
@@ -113,16 +125,25 @@ public class AccessTokenManager {
 								new OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialogInterface, int i) {
-                                        requestAccessToken(getLrzId());
+                                        requestAccessTokenInThread(activity, getLrzId());
                                     }
                                 })
 						.setNegativeButton(context.getString(R.string.no), null)
 						.show();
 			} else {
-				requestAccessToken(lrzId);
+                requestAccessTokenInThread(activity, lrzId);
 			}
 		} else {
 			Utils.showToast(context, R.string.error_lrz_wrong);
 		}
 	}
+
+    private void requestAccessTokenInThread(final Activity activity, final String lrz) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                requestAccessToken(activity, lrz);
+            }
+        }).start();
+    }
 }

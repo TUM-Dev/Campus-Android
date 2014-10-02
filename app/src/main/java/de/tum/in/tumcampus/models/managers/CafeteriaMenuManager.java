@@ -145,11 +145,8 @@ public class CafeteriaMenuManager {
 	 * @return Database cursor (date_de, _id)
 	 */
 	public Cursor getDatesFromDb() {
-		return db
-				.rawQuery(
-						"SELECT DISTINCT strftime('%d.%m.%Y', date) as date_de, date as _id "
-								+ "FROM cafeterias_menus WHERE date >= date() ORDER BY date",
-						null);
+		return db.rawQuery("SELECT DISTINCT strftime('%d.%m.%Y', date) as date_de, date as _id "
+				+ "FROM cafeterias_menus WHERE date >= date() ORDER BY date", null);
 	}
 
 	/**
@@ -161,9 +158,7 @@ public class CafeteriaMenuManager {
 	 */
     public Cursor getTypeNameFromDbCard(int mensaId, String date) {
         /* mensaId  date  typeShort  typeNr */
-        return db
-                .rawQuery(
-                        "SELECT typeLong, group_concat(name, '\n') as names, id as _id, typeShort "
+        return db.rawQuery("SELECT typeLong, group_concat(name, '\n') as names, id as _id, typeShort "
                                 + "FROM cafeterias_menus WHERE mensaId = ? AND "
                                 + "date = ? GROUP BY typeLong ORDER BY typeNr, typeLong, name",
                         new String[] { ""+mensaId, date });
@@ -183,8 +178,8 @@ public class CafeteriaMenuManager {
         if(cursorCafeteriaMenu.moveToFirst()) {
             do {
                 CafeteriaMenu menu = new CafeteriaMenu(Integer.parseInt(cursorCafeteriaMenu.getString(2)),
-                        mensaId, date,
-                        cursorCafeteriaMenu.getString(3), cursorCafeteriaMenu.getString(0), 0, cursorCafeteriaMenu.getString(1));
+                        mensaId, date, cursorCafeteriaMenu.getString(3), cursorCafeteriaMenu.getString(0),
+                        0, cursorCafeteriaMenu.getString(1));
                 menus.add(menu);
             } while (cursorCafeteriaMenu.moveToNext());
         }
@@ -221,8 +216,7 @@ public class CafeteriaMenuManager {
 		if (c.date.before(Utils.getDate("2012-01-01"))) {
 			throw new Exception("Invalid date.");
 		}
-		db.execSQL(
-				"REPLACE INTO cafeterias_menus (id, mensaId, date, typeShort, "
+		db.execSQL("REPLACE INTO cafeterias_menus (id, mensaId, date, typeShort, "
 						+ "typeLong, typeNr, name) VALUES (?, ?, ?, ?, ?, ?, ?)",
 				new String[] { String.valueOf(c.id),
 						String.valueOf(c.cafeteriaId),

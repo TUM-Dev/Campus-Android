@@ -15,6 +15,7 @@ import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.Location;
+import de.tum.in.tumcampus.models.managers.CacheManager;
 import de.tum.in.tumcampus.models.managers.CafeteriaManager;
 import de.tum.in.tumcampus.models.managers.CafeteriaMenuManager;
 import de.tum.in.tumcampus.models.managers.CardManager;
@@ -59,7 +60,16 @@ public class DownloadService extends IntentService {
     }
 
     @Override
-    protected void onHandleIntent(Intent intent) {
+    protected void onHandleIntent(final Intent intent) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                download(intent);
+            }
+        }).start();
+    }
+
+    private void download(Intent intent) {
         boolean successful = true;
         String action = intent.getStringExtra(Const.ACTION_EXTRA);
         boolean force = intent.getBooleanExtra(Const.FORCE_DOWNLOAD, false);
@@ -92,6 +102,14 @@ public class DownloadService extends IntentService {
                     } catch (Exception e) {
                         Utils.log(e);
                         successful = false;
+                    }
+
+                    boolean isSetup = Utils.getInternalSettingBool(this, Const.EVERYTHING_SETUP, false);
+                    if(!isSetup) {
+                        CacheManager cm = new CacheManager(this);
+                        cm.fillCache();
+                        if(successful)
+                            Utils.setInternalSetting(this, Const.EVERYTHING_SETUP, true);
                     }
                 } else if ((action.equals(Const.NEWS))) {
                     downloadNews(force);

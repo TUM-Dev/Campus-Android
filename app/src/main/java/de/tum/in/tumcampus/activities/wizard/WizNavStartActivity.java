@@ -72,7 +72,7 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<Void,Boo
         editor.apply();
 
 		// check if lrz could be valid?
-		if (lrzId.length() == AccessTokenManager.MIN_LRZ_LENGTH) {
+		if (lrzId.length() >= AccessTokenManager.MIN_LRZ_LENGTH) {
 			// is access token already set?
 			if (accessTokenManager.hasValidAccessToken()) {
 				// show Dialog first
@@ -110,7 +110,7 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<Void,Boo
      */
     @Override
     protected Boolean onLoadInBackground(Void... arg) {
-        return accessTokenManager.requestAccessToken(lrzId);
+        return accessTokenManager.requestAccessToken(WizNavStartActivity.this, lrzId);
     }
 
     /**

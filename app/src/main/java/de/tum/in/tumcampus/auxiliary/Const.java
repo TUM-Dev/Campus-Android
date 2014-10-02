@@ -76,4 +76,6 @@ public final class Const {
     public static final String JSON_SRC = "src";
     public static final String JSON_ICON = "icon";
     public static final String JSON_SOURCE = "source";
+    public static final String EVERYTHING_SETUP = "everything_setup";
+    public static final String SYNC_CALENDAR_IMPORT = "calendar_import";
 }

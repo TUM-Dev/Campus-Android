@@ -6,6 +6,7 @@ import android.content.ContentUris;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -27,6 +28,8 @@ import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.CalendarRowSet;
 import de.tum.in.tumcampus.models.managers.CalendarManager;
+import de.tum.in.tumcampus.models.managers.DatabaseManager;
+import de.tum.in.tumcampus.models.managers.SyncManager;
 import de.tum.in.tumcampus.tumonline.TUMOnlineConst;
 
 /**
@@ -37,6 +40,8 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
 	/** The space between the first and the last date */
 	public static final int MONTH_AFTER = 3;
 	public static final int MONTH_BEFORE = 0;
+
+    private static final int TIME_TO_SYNC_CALENDAR = 604800; // 1 week
 
     private final Calendar calendar = new GregorianCalendar();
 
@@ -67,7 +72,42 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
         requestHandler.setParameter("pMonateVor", String.valueOf(MONTH_BEFORE));
         // Dates after the current date
         requestHandler.setParameter("pMonateNach", String.valueOf(MONTH_AFTER));
-        requestFetch();
+
+        SQLiteDatabase db = DatabaseManager.getDb(this);
+        if (SyncManager.needSync(db, Const.SYNC_CALENDAR_IMPORT, TIME_TO_SYNC_CALENDAR)) {
+            requestFetch();
+        } else {
+            isFetched = true;
+            attachSectionPagerAdapter();
+        }
+    }
+
+    @Override
+    public void onFetch(final CalendarRowSet rawResponse) {
+        // parsing and saving xml response
+        new AsyncTask<Void, Void, Boolean>() {
+            @Override
+            protected void onPreExecute() {
+                isFetched = true;
+            }
+
+            @Override
+            protected Boolean doInBackground(Void... params) {
+                calendarManager.importCalendar(rawResponse);
+                return true;
+            }
+
+            @Override
+            protected void onPostExecute(Boolean result) {
+                showLoadingEnded();
+                attachSectionPagerAdapter();
+                // update the action bar to display the enabled menu options
+                if (Build.VERSION.SDK_INT >= 14) {
+                    invalidateOptionsMenu();
+                }
+                startService(new Intent(CalendarActivity.this, CalendarManager.QueryLocationsService.class));
+            }
+        }.execute();
     }
 
     @Override
@@ -196,33 +236,6 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
         Intent intent = new Intent(Intent.ACTION_VIEW).setData(builder.build());
         startActivity(intent);
     }
-
-	@Override
-	public void onFetch(final CalendarRowSet rawResponse) {
-		// parsing and saving xml response
-		new AsyncTask<Void, Void, Boolean>() {
-            @Override
-            protected void onPreExecute() {
-                isFetched = true;
-            }
-
-			@Override
-			protected Boolean doInBackground(Void... params) {
-				calendarManager.importCalendar(rawResponse);
-				return true;
-			}
-
-			@Override
-			protected void onPostExecute(Boolean result) {
-				showLoadingEnded();
-				attachSectionPagerAdapter();
-				// update the action bar to display the enabled menu options
-				if (Build.VERSION.SDK_INT >= 14) {
-					invalidateOptionsMenu();
-				}
-			}
-		}.execute();
-	}
 
     /**
      * Async task for deleting the calendar from local Google calendar

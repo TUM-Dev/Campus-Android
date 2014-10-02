@@ -17,7 +17,6 @@ import java.util.List;
 
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.Cafeteria;
-import de.tum.in.tumcampus.models.CalendarRow;
 import de.tum.in.tumcampus.models.Geo;
 import de.tum.in.tumcampus.tumonline.TUMRoomFinderRequest;
 
@@ -78,6 +77,7 @@ public class LocationManager {
             }
         }
         if (bestDistance < 1000) {
+            Utils.logv("Location belongs to campus "+campusShort[bestCampus]);
             return bestCampus;
         } else {
             return -1;
@@ -236,10 +236,10 @@ public class LocationManager {
      */
     private Location getNextLocation() {
         CalendarManager manager = new CalendarManager(mContext);
-        CalendarRow nextLecture = manager.getNextCalendarItem();
+        Geo geo = manager.getNextCalendarItemGeo();
         Location location = new Location("roomfinder");
-        if (nextLecture != null) {
-            Geo geo = nextLecture.getGeo();
+        if (geo != null) {
+            Utils.logv("Use next location: "+geo);
             location.setLatitude(Double.parseDouble(geo.getLatitude()));
             location.setLongitude(Double.parseDouble(geo.getLongitude()));
         } else {

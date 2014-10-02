@@ -137,7 +137,11 @@ public class CalendarSectionFragment extends Fragment {
                 //Check if room is present and set text accordingly
                 String room = cursor.getString(7);
                 if (room != null && room.length() != 0) {
-                    setText(eventView, cursor.getString(3) + " / " + cursor.getString(7));
+                    String title = cursor.getString(3);
+                    title = title.replaceAll("[A-Z 0-9(LV\\.Nr\\.)=]+$","");
+                    title = title.replaceAll("\\([A-Z]+[0-9]+\\)","");
+
+                    setText(eventView, title + " / " + cursor.getString(7));
                     eventView.setTag(cursor.getString(7));
                 } else {
                     setText(eventView, cursor.getString(3));
@@ -254,7 +258,8 @@ public class CalendarSectionFragment extends Fragment {
                 }
                 final String strList[] = room.split(",");
 
-                //Launch the room finder activity
+                // TODO Open map directly
+                // Launch the room finder activity
                 Intent i = new Intent(activity, RoomFinderActivity.class);
                 i.setAction(Intent.ACTION_SEARCH);
                 i.putExtra(SearchManager.QUERY, strList[0]);

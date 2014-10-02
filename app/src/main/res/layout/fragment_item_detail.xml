@@ -7,7 +7,6 @@
         android:id="@+id/fragment_item_detail_listview"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:padding="5dp"
-        android:scrollbars="vertical" />
+        android:scrollbars="none" />
 
 </LinearLayout>

@@ -11,9 +11,6 @@ import de.tum.in.tumcampus.activities.CurriculaActivity;
 import de.tum.in.tumcampus.auxiliary.AccessTokenManager;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.CalendarRowSet;
-import de.tum.in.tumcampus.models.LectureAppointmentsRowSet;
-import de.tum.in.tumcampus.models.LectureDetailsRowSet;
-import de.tum.in.tumcampus.models.LecturesSearchRow;
 import de.tum.in.tumcampus.models.LecturesSearchRowSet;
 import de.tum.in.tumcampus.models.OrgItemList;
 import de.tum.in.tumcampus.models.TuitionList;
@@ -73,16 +70,12 @@ public class CacheManager {
      * Download usual tumOnline requests
      */
     public void fillCache() {
-        // Cache webservice
-        if (shouldRefresh(CafeteriaManager.CAFETERIAS_URL)) {
-            Utils.downloadJsonArray(mContext, CafeteriaManager.CAFETERIAS_URL, true, VALIDITY_ONE_MONTH);
-        }
-
         // Cache curricula urls
         if (shouldRefresh(CurriculaActivity.CURRICULA_URL)) {
             Utils.downloadJsonArray(mContext, CurriculaActivity.CURRICULA_URL, true, CacheManager.VALIDITY_ONE_MONTH);
         }
 
+        // Cache news images
         NewsManager news = new NewsManager(mContext);
         Cursor cur = news.getAllFromDb();
         if(cur.moveToFirst()) {
@@ -95,7 +88,7 @@ public class CacheManager {
         cur.close();
 
         // acquire access token
-        if (new AccessTokenManager(mContext).hasValidAccessToken()) {
+        if (!new AccessTokenManager(mContext).hasValidAccessToken()) {
             return;
         }
 
@@ -125,6 +118,7 @@ public class CacheManager {
             if (set != null) {
                 CalendarManager calendarManager = new CalendarManager(mContext);
                 calendarManager.importCalendar(set);
+                CalendarManager.QueryLocationsService.loadGeo(mContext);
             }
         }
 
@@ -181,12 +175,12 @@ public class CacheManager {
      * @param data result
      */
     public void addToCache(String url, String data, int validity, int typ) {
-        if(validity== VALIDITY_DO_NOT_CACHE)
+        if(validity==VALIDITY_DO_NOT_CACHE)
             return;
         Utils.logv("replace " + url + " " + data);
         db.execSQL("REPLACE INTO cache (url, data, validity, max_age, typ) " +
-                        "VALUES (?, ?, datetime('now','+ "+(validity/2)+" seconds'), " +
-                        "datetime('now','+ "+validity+" seconds'), ?)",
+                        "VALUES (?, ?, datetime('now','+"+(validity/2)+" seconds'), " +
+                        "datetime('now','+"+validity+" seconds'), ?)",
                 new String[]{url, data, "" + typ});
     }
 
@@ -199,8 +193,9 @@ public class CacheManager {
         if(!shouldRefresh(requestHandler.getRequestURL()))
             return;
 
-        LecturesSearchRowSet myLecturesList = requestHandler.fetch();
-        if (myLecturesList == null)
+        //LecturesSearchRowSet myLecturesList =
+                requestHandler.fetch();
+    /*    if (myLecturesList == null)
             return;
 
         // get schedule for my lectures
@@ -215,6 +210,6 @@ public class CacheManager {
             TUMOnlineRequest<LectureDetailsRowSet> req2 = new TUMOnlineRequest<LectureDetailsRowSet>(TUMOnlineConst.LECTURES_DETAILS, mContext);
             req2.setParameter("pLVNr", currentLecture.getStp_sp_nr());
             req2.fetch();
-        }
+        }*/
     }
 }

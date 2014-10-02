@@ -1,9 +1,11 @@
 package de.tum.in.tumcampus.models.managers;
 
 import android.annotation.TargetApi;
+import android.app.IntentService;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
@@ -14,7 +16,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -44,10 +45,13 @@ public class CalendarManager implements Card.ProvidesCard {
         db = DatabaseManager.getDb(context);
 
         // create table if needed
-        db.execSQL("CREATE TABLE IF NOT EXISTS kalendar_events ("
+        db.execSQL("CREATE TABLE IF NOT EXISTS room_locations ("
+                + "title VARCHAR PRIMARY KEY, latitude VARCHAR, longitude VARCHAR)");
+
+        db.execSQL("CREATE TABLE IF NOT EXISTS calendar ("
                 + "nr VARCHAR PRIMARY KEY, status VARCHAR, url VARCHAR, "
                 + "title VARCHAR, description VARCHAR, dtstart VARCHAR, dtend VARCHAR, "
-                + "location VARCHAR, longitude VARCHAR, latitude VARCHAR)");
+                + "location VARCHAR REFERENCES room_locations)");
 
         // Create a new sync table
         new SyncManager(context);
@@ -57,10 +61,10 @@ public class CalendarManager implements Card.ProvidesCard {
      * Returns all stored events from db
      *
      * @return Cursor with all calendar events. Columns are
-     * (nr, status, url, title, description, dtstart, dtend, location, longitude, latitude)
+     * (nr, status, url, title, description, dtstart, dtend, location)
      */
     Cursor getAllFromDb() {
-        return db.rawQuery("SELECT * FROM kalendar_events", null);
+        return db.rawQuery("SELECT * FROM calendar", null);
     }
 
     public Cursor getFromDbForDate(Date date) {
@@ -68,17 +72,17 @@ public class CalendarManager implements Card.ProvidesCard {
         String requestedDateString = Utils.getDateString(date);
 
         // Fetch the data
-        return db.rawQuery("SELECT * FROM kalendar_events WHERE dtstart LIKE ? ORDER BY dtstart ASC", new String[]{"%" + requestedDateString + "%"});
+        return db.rawQuery("SELECT * FROM calendar WHERE dtstart LIKE ? ORDER BY dtstart ASC", new String[]{"%" + requestedDateString + "%"});
     }
 
     /**
-     * Get all lecture items from the database
+     * Get current lecture from the database
      *
      * @return Database cursor (name, location, _id)
      */
     public Cursor getCurrentFromDb() {
         return db.rawQuery("SELECT title, location, nr "
-                + "FROM kalendar_events WHERE datetime('now', 'localtime') BETWEEN dtstart AND dtend", null);
+                + "FROM calendar WHERE datetime('now', 'localtime') BETWEEN dtstart AND dtend", null);
     }
 
     /**
@@ -88,7 +92,7 @@ public class CalendarManager implements Card.ProvidesCard {
      */
     public boolean hasLectures() {
         boolean result = false;
-        Cursor c = db.rawQuery("SELECT nr FROM kalendar_events", null);
+        Cursor c = db.rawQuery("SELECT nr FROM calendar", null);
         if (c.moveToNext()) {
             result = true;
         }
@@ -98,79 +102,43 @@ public class CalendarManager implements Card.ProvidesCard {
 
     public void importCalendar(CalendarRowSet myCalendarList) {
 
-        if (!SyncManager.needSync(db, this, TIME_TO_SYNC_CALENDAR))
-            return;
-
         // Cleanup cache before importing
         removeCache();
 
         // reading xml
-        LocationManager locationManager = new LocationManager(mContext);
-        HashMap<String, Geo> cache = new HashMap<String, Geo>();
         List<CalendarRow> myCalendar = myCalendarList.getKalendarList();
         if (myCalendar != null) {
             for (CalendarRow row : myCalendar) {
                 // insert into database
                 try {
-                    // Retrieve geo from room name
-                    String loc = row.getLocation();
-                    if (cache.containsKey(loc)) {
-                        row.setGeo(cache.get(loc));
-                    } else if(loc!=null) {
-                        Geo geo = locationManager.roomLocationStringToGeo(loc);
-                        if (geo != null) {
-                            row.setGeo(geo);
-                            cache.put(loc,geo);
-                        }
-                    }
                     replaceIntoDb(row);
                 } catch (Exception e) {
-                    Utils.log(e, "SIMPLEXML: Error in field: " + e.getMessage());
+                    Utils.log(e);
                 }
             }
-            SyncManager.replaceIntoDb(DatabaseManager.getDb(mContext), this);
         }
-
-        // Do sync of google calendar if necessary
-        boolean syncCalendar = Utils.getInternalSettingBool(mContext, Const.SYNC_CALENDAR, false);
-        if (syncCalendar && SyncManager.needSync(db, Const.SYNC_CALENDAR, TIME_TO_SYNC_CALENDAR)) {
-            syncCalendar(mContext);
-            SyncManager.replaceIntoDb(DatabaseManager.getDb(mContext), Const.SYNC_CALENDAR);
-        }
+        SyncManager.replaceIntoDb(DatabaseManager.getDb(mContext), Const.SYNC_CALENDAR_IMPORT);
     }
 
     /**
      * Removes all cache items
      */
     public void removeCache() {
-        db.execSQL("DELETE FROM kalendar_events");
+        db.execSQL("DELETE FROM calendar");
     }
 
     void replaceIntoDb(CalendarRow row) throws Exception {
-        Utils.log(row.toString());
-
         if (row.getNr().length() == 0)
             throw new Exception("Invalid id.");
 
         if (row.getTitle().length() == 0)
             throw new Exception("Invalid lecture Title.");
 
-        if (row.getGeo() != null)
-            db.execSQL(
-                    "REPLACE INTO kalendar_events (nr, status, url, title, "
-                            + "description, dtstart, dtend, location, longitude, latitude) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                    new String[]{row.getNr(), row.getStatus(), row.getUrl(),
-                            row.getTitle(), row.getDescription(),
-                            row.getDtstart(), row.getDtend(),
-                            row.getLocation(), row.getGeo().getLongitude(),
-                            row.getGeo().getLatitude()});
-        else
-            db.execSQL(
-                    "REPLACE INTO kalendar_events (nr, status, url, title, "
-                            + "description, dtstart, dtend, location) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-                    new String[]{row.getNr(), row.getStatus(), row.getUrl(),
-                            row.getTitle(), row.getDescription(),
-                            row.getDtstart(), row.getDtend(), row.getLocation()});
+        db.execSQL("REPLACE INTO calendar (nr, status, url, title, "
+                        + "description, dtstart, dtend, location) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                new String[]{row.getNr(), row.getStatus(), row.getUrl(),
+                        row.getTitle(), row.getDescription(),
+                        row.getDtstart(), row.getDtend(), row.getLocation()});
     }
 
     /**
@@ -260,8 +228,8 @@ public class CalendarManager implements Card.ProvidesCard {
      * if it started during the last 30 minutes
      */
     public CalendarRow getNextCalendarItem() {
-        Cursor cur = db.rawQuery("SELECT title, dtstart, location " +
-                " FROM kalendar_events " +
+        Cursor cur = db.rawQuery("SELECT title, dtstart " +
+                " FROM calendar " +
                 " WHERE datetime('now', '-1800 seconds') < dtstart AND " +
                 " datetime() < dtend " +
                 " ORDER BY dtstart LIMIT 1", null);
@@ -271,10 +239,28 @@ public class CalendarManager implements Card.ProvidesCard {
             row = new CalendarRow();
             row.setTitle(cur.getString(0));
             row.setDtstart(cur.getString(1));
-            row.setLocation(cur.getString(2));
         }
         cur.close();
         return row;
+    }
+
+    /**
+     * Gets the next lecture or the current running lecture,
+     * if it started during the last 30 minutes
+     */
+    public Geo getNextCalendarItemGeo() {
+        Cursor cur = db.rawQuery("SELECT r.latitude, r.longitude " +
+                "FROM calendar c, room_locations r " +
+                "WHERE datetime('now', '-1800 seconds') < c.dtstart AND " +
+                "datetime() < c.dtend AND r.title != c.location " +
+                "ORDER BY dtstart LIMIT 1", null);
+
+        Geo geo = null;
+        if (cur.moveToFirst()) {
+            geo = new Geo(cur.getDouble(0), cur.getDouble(1));
+        }
+        cur.close();
+        return geo;
     }
 
     /**
@@ -289,6 +275,59 @@ public class CalendarManager implements Card.ProvidesCard {
             NextLectureCard card = new NextLectureCard(context);
             card.setLecture(row.getTitle(), row.getDtstart(), row.getDtend());
             card.apply();
+        }
+    }
+
+    public static class QueryLocationsService extends IntentService {
+
+        private static final String QUERY_LOCATIONS = "query_locations";
+
+        public QueryLocationsService() {
+            super(QUERY_LOCATIONS);
+        }
+
+        @Override
+        protected void onHandleIntent(Intent intent) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    loadGeo(QueryLocationsService.this);
+                }
+            }).start();
+        }
+
+        public static void loadGeo(Context c) {
+            SQLiteDatabase db = DatabaseManager.getDb(c);
+            LocationManager locationManager = new LocationManager(c);
+
+            Cursor cur = db.rawQuery("SELECT c.location " +
+                    "FROM calendar c LEFT JOIN room_locations r ON " +
+                    "c.location=r.title " +
+                    "WHERE r.latitude IS NULL " +
+                    "GROUP BY c.location", null);
+
+            // Retrieve geo from room name
+            if(cur.moveToFirst()) {
+                do {
+                    String location = cur.getString(0);
+                    if(location != null && !location.isEmpty()) {
+                        Geo geo = locationManager.roomLocationStringToGeo(location);
+                        if (geo != null) {
+                            Utils.logv("inserted "+location+" "+geo);
+                            db.execSQL("REPLACE INTO room_locations (title, latitude, longitude) VALUES (?, ?, ?)",
+                                    new String[]{location, geo.getLatitude(), geo.getLongitude()});
+                        }
+                    }
+                } while(cur.moveToNext());
+            }
+            cur.close();
+
+            // Do sync of google calendar if necessary
+            boolean syncCalendar = Utils.getInternalSettingBool(c, Const.SYNC_CALENDAR, false);
+            if (syncCalendar && SyncManager.needSync(db, Const.SYNC_CALENDAR, TIME_TO_SYNC_CALENDAR)) {
+                syncCalendar(c);
+                SyncManager.replaceIntoDb(db, Const.SYNC_CALENDAR);
+            }
         }
     }
 }

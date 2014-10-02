@@ -158,4 +158,8 @@ public class CardManager {
         SharedPreferences prefs = mContext.getSharedPreferences(Card.DISCARD_SETTINGS_START, 0);
         prefs.edit().clear().apply();
     }
+
+    public static List<Card> getCards() {
+        return cards;
+    }
 }

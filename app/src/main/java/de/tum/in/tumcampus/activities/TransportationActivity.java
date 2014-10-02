@@ -107,6 +107,7 @@ public class TransportationActivity extends ActivityForSearchingInBackground<Cur
         try {
             stationCursor = TransportManager.getStationsFromExternal(inputText);
         } catch (NoSuchElementException e) {
+            return null;
         } catch (TimeoutException e) {
             showNoInternetLayout();
         } catch (Exception e) {

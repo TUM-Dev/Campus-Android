@@ -158,7 +158,7 @@ public class UserPreferencesActivity extends PreferenceActivity implements
 
         if(key.equals("button_token")) {
             // Querys for a access token from TUMOnline
-            accessTokenManager.setupAccessToken();
+            accessTokenManager.setupAccessToken(this);
 
 
         } else if(key.equals("button_wizard")) {

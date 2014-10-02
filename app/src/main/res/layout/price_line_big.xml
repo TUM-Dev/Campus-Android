@@ -17,7 +17,10 @@
         android:layout_toStartOf="@+id/line_price"
         android:ellipsize="none"
         android:maxLines="5"
+        android:paddingEnd="3dp"
         android:paddingLeft="10dp"
+        android:paddingRight="3dp"
+        android:paddingStart="10dp"
         android:paddingTop="10dp"
         android:scrollHorizontally="false"
         android:textSize="16sp" />

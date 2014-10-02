@@ -89,8 +89,7 @@ public class TUMRoomFinderRequest {
         setParameter("id", roomId);
         method = "coordinates";
 
-        String ROOM_SERVICE_URL = SERVICE_BASE_URL + "roommaps/room/";
-        String url = getRequestURL(ROOM_SERVICE_URL);
+        String url = getRequestURL(SERVICE_BASE_URL + "roommaps/room/");
         Utils.log("fetching URL " + url);
 
         try {
@@ -105,6 +104,8 @@ public class TUMRoomFinderRequest {
             double north = Double.parseDouble(parser.getValue(location, "utm_northing"));
 
             return UTMtoLL(north, easting, zone);
+        } catch (NumberFormatException e) {
+            Utils.log("No location found for room " + roomId);
         } catch (Exception e) {
             Utils.log(e, "FetchError");
         }
@@ -145,17 +146,12 @@ public class TUMRoomFinderRequest {
                 String buildingId = building.getAttribute(KEY_WEB_CODE);
 
                 Element campus = (Element) building.getParentNode();
-                roomMap.put(KEY_Campus + KEY_ID,
-                        campus.getAttribute("id"));
-                roomMap.put(KEY_Campus + KEY_TITLE,
-                        parser.getValue(campus, KEY_TITLE));
-                roomMap.put(KEY_Building + KEY_TITLE,
-                        parser.getValue(building, KEY_TITLE));
-                roomMap.put(KEY_ROOM + KEY_TITLE,
-                        parser.getValue(room, KEY_TITLE));
+                roomMap.put(KEY_Campus + KEY_ID, campus.getAttribute("id"));
+                roomMap.put(KEY_Campus + KEY_TITLE, parser.getValue(campus, KEY_TITLE));
+                roomMap.put(KEY_Building + KEY_TITLE, parser.getValue(building, KEY_TITLE));
+                roomMap.put(KEY_ROOM + KEY_TITLE, parser.getValue(room, KEY_TITLE));
                 roomMap.put(KEY_Building + KEY_ID, buildingId);
-                roomMap.put(KEY_ARCHITECT_NUMBER,
-                        parser.getValue(room, KEY_ARCHITECT_NUMBER));
+                roomMap.put(KEY_ARCHITECT_NUMBER, parser.getValue(room, KEY_ARCHITECT_NUMBER));
 
                 // adding HashList to ArrayList
                 roomsList.add(roomMap);
@@ -366,6 +362,6 @@ public class TUMRoomFinderRequest {
         d17 = d17 * 180 / Math.PI;
         double d18 = ((d9 - ((1 + 2 * d6 + d7) * Math.pow(d9, 3)) / 6) + (((((5 - 2 * d7) + 28 * d6) - 3 * d7 * d7) + 8 * d3 + 24 * d6 * d6) * Math.pow(d9, 5)) / 120) / Math.cos(d14);
         d18 = d11 + d18 * 180 / Math.PI;
-        return new Geo(d18, d17);
+        return new Geo(d17, d18);
     }
 }

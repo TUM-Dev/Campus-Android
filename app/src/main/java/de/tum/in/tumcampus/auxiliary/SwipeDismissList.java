@@ -33,6 +33,8 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+
+import com.nhaarman.listviewanimations.appearance.simple.SwingBottomInAnimationAdapter;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorListenerAdapter;
 import com.nineoldandroids.animation.ValueAnimator;
@@ -370,10 +372,10 @@ public final class SwipeDismissList implements View.OnTouchListener {
 				// Find the child view that was touched (perform a hit test)
 				Rect rect = new Rect();
 				int childCount = mListView.getChildCount();
-				int[] listViewCoords = new int[2];
-				mListView.getLocationOnScreen(listViewCoords);
-				int x = (int) motionEvent.getRawX() - listViewCoords[0];
-				int y = (int) motionEvent.getRawY() - listViewCoords[1];
+				int[] listViewCoordinates = new int[2];
+				mListView.getLocationOnScreen(listViewCoordinates);
+				int x = (int) motionEvent.getRawX() - listViewCoordinates[0];
+				int y = (int) motionEvent.getRawY() - listViewCoordinates[1];
 				View child;
                 int i;
 				for (i = 0; i < childCount; i++) {
@@ -384,13 +386,17 @@ public final class SwipeDismissList implements View.OnTouchListener {
 						break;
 					}
 				}
+                i+=mListView.getFirstVisiblePosition();
 
                 // Check if item is dismissable
                 if(mDownView != null) {
                     ListAdapter adapter = mListView.getAdapter();
-                    if(adapter instanceof SwipeDismissDiscardable) {
-                        if(!((SwipeDismissDiscardable) adapter).isDismissable(i))
-                            mDownView = null;
+                    if(adapter instanceof SwingBottomInAnimationAdapter) {
+                        adapter = ((SwingBottomInAnimationAdapter) adapter).getDecoratedBaseAdapter();
+                        if (adapter instanceof SwipeDismissDiscardable) {
+                            if (!((SwipeDismissDiscardable) adapter).isDismissable(i))
+                                mDownView = null;
+                        }
                     }
                 }
 

@@ -324,5 +324,6 @@
     <string name="enable_wifi">WLAN aktivieren</string>
     <string name="loading_first_time">Der erste Start könnte ein paar Minuten dauern</string>
     <string name="password_gets_not_saved">TUM Campus App does not save the password, but Android WifiManager does.</string>
+    <string name="website">Website</string>
 
 </resources>

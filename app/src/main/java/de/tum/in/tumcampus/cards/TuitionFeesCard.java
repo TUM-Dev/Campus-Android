@@ -11,8 +11,12 @@ import android.support.v4.app.NotificationCompat;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.TuitionFeesActivity;
+import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.Tuition;
 import de.tum.in.tumcampus.models.managers.CardManager;
 
@@ -46,8 +50,10 @@ public class TuitionFeesCard extends Card {
         if (mTuition.getSoll().equals("0")) {
             addTextView(String.format(mContext.getString(R.string.reregister_success), mTuition.getSemesterBez()));
         } else {
-            addTextView(mTuition.getSoll() + "€");
-            addTextView(String.format(mContext.getString(R.string.reregister_todo), mTuition.getFrist()));
+            Date d = Utils.getDate(mTuition.getFrist());
+            String date = SimpleDateFormat.getDateInstance().format(d);
+            addTextView(String.format(mContext.getString(R.string.reregister_todo), date));
+            addTextView(context.getString(R.string.amount_dots)+" "+mTuition.getSoll() + "€");
         }
 
         return mCard;

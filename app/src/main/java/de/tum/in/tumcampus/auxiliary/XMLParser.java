@@ -38,8 +38,7 @@ public class XMLParser {
 		try {
 			DocumentBuilder db = dbf.newDocumentBuilder();
 
-			InputSource is = new InputSource();
-			is.setCharacterStream(new StringReader(xml));
+			InputSource is = new InputSource(new StringReader(xml));
 			doc = db.parse(is);
 
 		} catch (ParserConfigurationException e) {
@@ -84,7 +83,17 @@ public class XMLParser {
 	 * */
 	public String getValue(Element item, String str) {
 		NodeList n = item.getElementsByTagName(str);
-		return this.getElementValue(n.item(0));
+        String value = getElementValue(n.item(0));
+        // TODO Fix in API itself
+        // Workarounds for bug in RoomFinder API
+        value = value.replace("H?rsaal","Hörsaal");
+        value = value.replace("B?hne","Bühne");
+        value = value.replace("Hochbr?ck","Hochbrück");
+        value = value.replace("StammgelÃ¤nde","Stammgelände");
+        value = value.replace("M??bauer","Mößbauer");
+        value = value.replace("F?ppl","Föppl");
+        value = value.replace("Sch?nleutner","Schönleutner");
+        return value;
 	}
 
 	/**

@@ -86,11 +86,11 @@ public class RoomFinderActivity extends ActivityForSearching implements TUMRoomF
 
     @Override
     public void onFetchDefaultMapId(String mapId) {
-        Intent intent = new Intent(this, RoomFinderDetailsActivity.class);
+        /*Intent intent = new Intent(this, RoomFinderDetailsActivity.class);
         intent.putExtra("buildingId", currentlySelectedBuildingId);
         intent.putExtra("roomId", currentlySelectedRoomId);
         intent.putExtra("mapId", mapId);
-        startActivity(intent);
+        startActivity(intent);*/
     }
 
     @Override
@@ -104,9 +104,7 @@ public class RoomFinderActivity extends ActivityForSearching implements TUMRoomF
         @SuppressWarnings("unchecked")
         HashMap<String, String> room = (HashMap<String, String>) list.getAdapter().getItem(position);
 
-        currentlySelectedBuildingId = room.get(TUMRoomFinderRequest.KEY_Building + TUMRoomFinderRequest.KEY_ID);
         currentlySelectedRoomId = room.get(TUMRoomFinderRequest.KEY_ARCHITECT_NUMBER);
-        roomFinderRequest.fetchDefaultMapIdJob(this, this, currentlySelectedBuildingId);
 
         // Add to recents
         String val = "";
@@ -114,6 +112,10 @@ public class RoomFinderActivity extends ActivityForSearching implements TUMRoomF
             val += entry.getKey() + "=" + entry.getValue() + ";";
         }
         recentsManager.replaceIntoDb(val);
+
+        Intent intent = new Intent(this, RoomFinderDetailsActivity.class);
+        intent.putExtra("roomId", currentlySelectedRoomId);
+        startActivity(intent);
     }
 
     @Override

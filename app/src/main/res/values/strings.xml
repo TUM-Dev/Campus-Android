@@ -350,5 +350,6 @@
     <string name="enable_wifi">Enable Wifi</string>
     <string name="loading_first_time">The first start may take a few minutes</string>
     <string name="password_gets_not_saved">TUM Campus App does not save the password, but Android WifiManager does.</string>
+    <string name="website">Website</string>
 
 </resources>

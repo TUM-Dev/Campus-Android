@@ -31,12 +31,10 @@ public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<St
         mImage.setDisplayType(ImageViewTouchBase.DisplayType.FIT_TO_SCREEN);
 
         String roomId = getIntent().getExtras().getString("roomId");
-        String mapId = getIntent().getExtras().getString("mapId");
 
         try {
-            startLoading("http://vmbaumgarten3.informatik.tu-muenchen.de/roommaps/room/map?id="
-                    + URLEncoder.encode(roomId, "UTF-8") + "&mapid="
-                    + URLEncoder.encode(mapId, "UTF-8"));
+            startLoading("http://vmbaumgarten3.informatik.tu-muenchen.de/roommaps/building/defaultMap?id="
+                    + URLEncoder.encode(roomId.substring(roomId.indexOf('@')+1), "UTF-8"));
         } catch (UnsupportedEncodingException e) {
             Utils.log(e);
         }

@@ -190,7 +190,7 @@ public class Utils {
      */
     public static File downloadImage(Context context, String url) {
         try {
-            url=url.replaceAll(" ", "%20");
+            url = url.replaceAll(" ", "%20");
 
             CacheManager cacheManager = new CacheManager(context);
             String file = cacheManager.getFromCache(url);

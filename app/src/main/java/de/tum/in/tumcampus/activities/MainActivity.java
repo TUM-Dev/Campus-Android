@@ -132,7 +132,7 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
     @Override
     protected void onResume() {
         super.onResume();
-        if (CardManager.shouldRefresh) {
+        if (CardManager.shouldRefresh || CardManager.getCards()==null) {
             refreshCards();
         } else {
             initAdapter();
@@ -280,6 +280,11 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
      */
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
+        Card card = (Card) mAdapter.getItem(info.position);
+        String key = card.getSettings();
+        if(key==null)
+            return;
         menu.setHeaderTitle(R.string.options);
         menu.add(Menu.NONE, MENU_OPEN_SETTINGS, Menu.NONE, R.string.open_card_settings);
         menu.add(Menu.NONE, MENU_HIDE_ALWAYS, Menu.NONE, R.string.always_hide_card);

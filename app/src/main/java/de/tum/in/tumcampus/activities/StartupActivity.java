@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -69,7 +68,6 @@ public class StartupActivity extends ActionBarActivity {
         }
         if(prevVersion<currentVersion) {
             setupNewVersion();
-            findViewById(R.id.startup_loading_first).setVisibility(View.VISIBLE);
             Utils.setInternalSetting(this, Const.APP_VERSION, currentVersion);
         }
 
@@ -80,6 +78,12 @@ public class StartupActivity extends ActionBarActivity {
             startActivity(new Intent(this, WizNavStartActivity.class));
             finish();
             return;
+        }
+
+        // On first setup show remark that loading could last longer than normally
+        boolean isSetup = Utils.getInternalSettingBool(this, Const.EVERYTHING_SETUP, false);
+        if(!isSetup) {
+            findViewById(R.id.startup_loading_first).setVisibility(View.VISIBLE);
         }
 
         // Register receiver for background service
@@ -123,6 +127,7 @@ public class StartupActivity extends ActionBarActivity {
         final ImageView drawerIndicator = (ImageView) findViewById(R.id.startup_drawer_indicator);
         final TextView actionBarTitle = (TextView) findViewById(R.id.startup_actionbar_title);
         final ImageView settings = (ImageView) findViewById(R.id.startup_settings);
+        final TextView first = (TextView) findViewById(R.id.startup_loading_first);
 
         // Make some position calculations
         float density = getResources().getDisplayMetrics().density;
@@ -142,6 +147,8 @@ public class StartupActivity extends ActionBarActivity {
                 ObjectAnimator.ofFloat(tumLogo, "scaleY", 1, tumScale, tumScale),
                 ObjectAnimator.ofFloat(loadingText, "alpha", 1, 0, 0, 0),
                 ObjectAnimator.ofFloat(loadingText, "translationY", 0, -screenHeight),
+                ObjectAnimator.ofFloat(first, "alpha", 1, 0, 0, 0),
+                ObjectAnimator.ofFloat(first, "translationY", 0, -screenHeight),
                 ObjectAnimator.ofFloat(drawerIndicator, "translationX", -50*density, 0),
                 ObjectAnimator.ofFloat(actionBarTitle, "alpha", 0, 0, 1),
                 ObjectAnimator.ofFloat(settings, "alpha", 0, 0, 1)
@@ -194,21 +201,12 @@ public class StartupActivity extends ActionBarActivity {
      * Delete stuff from old version
      */
     private void setupNewVersion() {
-        SQLiteDatabase db = DatabaseManager.getDb(this);
-        // reset sync manager
-        db.execSQL("DROP TABLE IF EXISTS syncs");
+        // drop database
+        DatabaseManager.resetDb(this);
 
-        // drop cafeterias table
-        db.execSQL("DROP TABLE IF EXISTS cafeterias");
-
-        // drop transportation table
-        db.execSQL("DROP TABLE IF EXISTS transports");
-
-        // drop locations table
-        db.execSQL("DROP TABLE IF EXISTS locations");
-
-        // drop news table
-        db.execSQL("DROP TABLE IF EXISTS news");
+        // delete tumcampus directory
+        File f = new File(Environment.getExternalStorageDirectory().getPath() + "/tumcampus");
+        FileUtils.deleteRecursive(f);
 
         // rename hide_wizzard_on_startup
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
@@ -216,9 +214,5 @@ public class StartupActivity extends ActionBarActivity {
         e.putBoolean(Const.HIDE_WIZARD_ON_STARTUP, sp.getBoolean("hide_wizzard_on_startup", false));
         e.remove("hide_wizzard_on_startup");
         e.apply();
-
-        // delete tumcampus directory
-        File f = new File(Environment.getExternalStorageDirectory().getPath() + "/tumcampus");
-        FileUtils.deleteRecursive(f);
     }
 }

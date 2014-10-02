@@ -3,6 +3,8 @@ package de.tum.in.tumcampus.fragments;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -68,8 +70,8 @@ public class OpeningHoursDetailFragment extends Fragment implements ViewBinder {
 
 		@SuppressWarnings("deprecation")
 		SimpleCursorAdapter adapter = new SimpleCursorAdapter(getActivity(),
-				android.R.layout.two_line_list_item, c, c.getColumnNames(),
-				new int[] { android.R.id.text1, android.R.id.text2 }) {
+				R.layout.two_line_list_item, c, c.getColumnNames(),
+				new int[] { android.R.id.text1, android.R.id.text2, R.id.text3 }) {
 
 			@Override
 			public boolean isEnabled(int position) {
@@ -80,6 +82,7 @@ public class OpeningHoursDetailFragment extends Fragment implements ViewBinder {
 		adapter.setViewBinder(this);
 
 		ListView lv2 = (ListView) rootView.findViewById(R.id.fragment_item_detail_listview);
+        lv2.setDividerHeight(0);
 		lv2.setAdapter(adapter);
 
 		return rootView;
@@ -96,7 +99,6 @@ public class OpeningHoursDetailFragment extends Fragment implements ViewBinder {
 			String hours = c.getString(c.getColumnIndex(Const.HOURS_COLUMN));
 			String remark = c.getString(c.getColumnIndex(Const.REMARK_COLUMN));
 			String room = c.getString(c.getColumnIndex(Const.ROOM_COLUMN));
-            String url = c.getString(c.getColumnIndex(Const.URL_COLUMN));
 
 			StringBuilder sb = new StringBuilder(hours + "\n" + address);
 			if (room.length() > 0) {
@@ -108,19 +110,25 @@ public class OpeningHoursDetailFragment extends Fragment implements ViewBinder {
 			if (remark.length() > 0) {
 				sb.append("\n").append(remark.replaceAll("\\\\n", "\n"));
 			}
-            if (url.length() > 0) {
-                sb.append("\n").append(url.replaceAll("\\\\n", "\n"));
-            }
 			TextView tv = (TextView) view;
 			tv.setText(sb.toString());
 
-			// link email addresses and phone numbers (e.g. 089-123456)
-			// don't link room numbers 00.01.123
-			Linkify.addLinks(tv, Linkify.EMAIL_ADDRESSES);
-            Linkify.addLinks(tv, Linkify.WEB_URLS);
-			Linkify.addLinks(tv, Pattern.compile("[0-9-]{6,}"), "tel:");
+            // link email addresses and phone numbers (e.g. 089-123456)
+            Linkify.addLinks(tv, Linkify.EMAIL_ADDRESSES);
+            Linkify.addLinks(tv, Pattern.compile("[0-9-]{6,}"), "tel:");
 			return true;
-		}
+		} else if (view.getId() == R.id.text3) {
+            String url = c.getString(c.getColumnIndex(Const.URL_COLUMN));
+            TextView tv = (TextView) view;
+            if (url.length() > 0) {
+                url = "<a href=\""+url+"\">"+getString(R.string.website)+"</a>";
+                tv.setMovementMethod(LinkMovementMethod.getInstance());
+                tv.setText(Html.fromHtml(url));
+            } else {
+                tv.setVisibility(View.GONE);
+            }
+            return true;
+        }
 		return false;
 	}
 }
