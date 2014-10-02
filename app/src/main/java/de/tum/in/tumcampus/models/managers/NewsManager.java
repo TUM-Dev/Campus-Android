@@ -43,7 +43,7 @@ public class NewsManager implements Card.ProvidesCard {
 
         // create table if needed
         db.execSQL("CREATE TABLE IF NOT EXISTS news (id VARCHAR PRIMARY KEY, src INTEGER, title TEXT, description TEXT, link VARCHAR, "
-                + "image VARCHAR, date VARCHAR, created VARCHAR)");
+                + "image VARCHAR, date VARCHAR, created VARCHAR, dismissed INTEGER)");
     }
 
     /**
@@ -123,10 +123,27 @@ public class NewsManager implements Card.ProvidesCard {
      *
      * @return Database cursor (_id, src, title, description, link, image, date, created, icon, source)
      */
-    public Cursor getAllFromDb() {
+    public Cursor getAllFromDb(Context context) {
+        String and = "";
+        Cursor c = getNewsSources();
+        if(c.moveToFirst()) {
+            do {
+                String id = c.getString(0);
+                boolean show = Utils.getSettingBool(context, "news_source_"+id, true);
+                if(show) {
+                    if(!and.isEmpty())
+                        and += " OR ";
+                    and += "s.id=\""+id+"\"";
+                }
+            } while(c.moveToNext());
+        }
+        c.close();
         return db.rawQuery("SELECT n.id AS _id, n.src, n.title, n.description, " +
-                "n.link, n.image, n.date, n.created, s.icon, s.title AS source " +
-                "FROM news n, news_sources s WHERE n.src=s.id ORDER BY date DESC", null);
+                "n.link, n.image, n.date, n.created, s.icon, s.title AS source, n.dismissed, " +
+                "(julianday('now') - julianday(date)) AS diff " +
+                "FROM news n, news_sources s " +
+                "WHERE n.src=s.id AND (" + and + ") " +
+                "ORDER BY date DESC", null);
     }
 
     /**
@@ -139,7 +156,7 @@ public class NewsManager implements Card.ProvidesCard {
         if(c.moveToFirst()) {
             int res = c.getInt(0);
             c.close();
-            return res;
+            return res==0?0:res-1;
         }
         c.close();
         return 0;
@@ -153,6 +170,10 @@ public class NewsManager implements Card.ProvidesCard {
         }
         c.close();
         return lastId;
+    }
+
+    public Cursor getNewsSources() {
+        return db.rawQuery("SELECT id, icon, title FROM news_sources", null);
     }
 
     /**
@@ -171,8 +192,10 @@ public class NewsManager implements Card.ProvidesCard {
     void replaceIntoDb(News n) throws Exception {
         Utils.logv(n.toString());
 
-        db.execSQL("REPLACE INTO news (id, src, title, description, link, image, date, created) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-                new String[]{n.id, n.src, n.title, n.description, n.link, n.image, Utils.getDateTimeString(n.date), Utils.getDateTimeString(n.created)});
+        db.execSQL("REPLACE INTO news (id, src, title, description, link, image, date, " +
+                        "created, dismissed) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 0)",
+                new String[]{n.id, n.src, n.title, n.description, n.link, n.image,
+                        Utils.getDateTimeString(n.date), Utils.getDateTimeString(n.created)});
     }
 
     /**
@@ -185,7 +208,12 @@ public class NewsManager implements Card.ProvidesCard {
         Utils.logv(n.toString());
 
         db.execSQL("REPLACE INTO news_sources (id, icon, title) VALUES (?, ?, ?)",
-                new String[]{n.getString(Const.JSON_SOURCE), n.getString(Const.JSON_ICON), n.getString(Const.JSON_TITLE)});
+                new String[]{n.getString(Const.JSON_SOURCE), n.getString(Const.JSON_ICON),
+                        n.getString(Const.JSON_TITLE)});
+    }
+
+    public void setDismissed(String id, int d) {
+        db.execSQL("UPDATE news SET dismissed=? WHERE id=?", new String[]{""+d, id});
     }
 
     /**
@@ -195,11 +223,53 @@ public class NewsManager implements Card.ProvidesCard {
      */
     @Override
     public void onRequestCard(Context context) {
-        Cursor cur = getAllFromDb();
-        if (cur.moveToFirst()) {
-            NewsCard card = new NewsCard(context);
-            card.setNews(cur, 0);
-            card.apply();
+        String and = "";
+        Cursor c = getNewsSources();
+        if(c.moveToFirst()) {
+            do {
+                String id = c.getString(0);
+                boolean show = Utils.getSettingBool(context, "card_news_source_"+id, false);
+                if(show) {
+                    if(!and.isEmpty())
+                        and += " OR ";
+                    and += "s.id=\""+id+"\"";
+                }
+            } while(c.moveToNext());
+        }
+        c.close();
+
+        if(!and.isEmpty()) {
+            String query;
+            if(Utils.getSettingBool(context, "card_news_latest_only", true)) {
+                // Limit to one entry per source
+                query = "SELECT n.id AS _id, n.src, n.title, n.description, n.link, " +
+                        "n.image, n.date, n.created, s.icon, s.title AS source, n.dismissed " +
+                        "FROM (news n JOIN ( " +
+                        "SELECT src, MIN(abs(julianday(date()) - julianday(date))) AS diff " +
+                        "FROM news GROUP BY src) last ON n.src = last.src " +
+                        "AND abs(julianday(date()) - julianday(n.date)) = last.diff), news_sources s " +
+                        "WHERE s.id=n.src AND (" + and + ") ORDER BY n.src ASC";
+            } else {
+                query = "SELECT n.id AS _id, n.src, n.title, n.description, " +
+                        "n.link, n.image, n.date, n.created, s.icon, s.title AS source, n.dismissed, " +
+                        "(julianday('now') - julianday(date)) AS diff " +
+                        "FROM news n, news_sources s " +
+                        "WHERE n.src=s.id AND (" + and + ") " +
+                        "ORDER BY diff ASC";
+            }
+            Cursor cur = db.rawQuery(query, null);
+
+            int i = 0;
+            if (cur.moveToFirst()) {
+                do {
+                    NewsCard card = new NewsCard(context);
+                    card.setNews(cur, i);
+                    card.apply();
+                    i++;
+                } while (cur.moveToNext());
+            } else {
+                cur.close();
+            }
         }
     }
 }

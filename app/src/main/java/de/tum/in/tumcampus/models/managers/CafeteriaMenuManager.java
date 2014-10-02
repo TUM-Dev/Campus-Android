@@ -146,7 +146,7 @@ public class CafeteriaMenuManager {
 	 */
 	public Cursor getDatesFromDb() {
 		return db.rawQuery("SELECT DISTINCT strftime('%d.%m.%Y', date) as date_de, date as _id "
-				+ "FROM cafeterias_menus WHERE date >= date() ORDER BY date", null);
+				+ "FROM cafeterias_menus WHERE date >= date('now','localtime') ORDER BY date", null);
 	}
 
 	/**

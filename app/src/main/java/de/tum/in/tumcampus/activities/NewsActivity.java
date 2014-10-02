@@ -5,6 +5,8 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -24,47 +26,49 @@ public class NewsActivity extends ActivityForDownloadingExternal implements OnIt
 
     private ListView lv;
     private Parcelable state;
+    private NewsManager nm;
 
     public NewsActivity() {
-		super(Const.NEWS, R.layout.activity_news);
-	}
+        super(Const.NEWS, R.layout.activity_news);
+    }
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		requestDownload(false);
-	}
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        requestDownload(false);
+    }
 
-	@Override
-	protected void onStart() {
-		super.onStart();
+    @Override
+    protected void onStart() {
+        super.onStart();
 
-		// Gets all news from database
-		NewsManager nm = new NewsManager(this);
-		Cursor cursor = nm.getAllFromDb();
-		if (cursor.getCount() > 0) {
-			NewsAdapter adapter = new NewsAdapter(this, cursor);
+        // Gets all news from database
+        nm = new NewsManager(this);
+        Cursor cursor = nm.getAllFromDb(this);
+        if (cursor.getCount() > 0) {
+            NewsAdapter adapter = new NewsAdapter(this, cursor);
 
-			lv = (ListView) findViewById(R.id.activity_news_list_view);
-			lv.setAdapter(adapter);
-			lv.setOnItemClickListener(this);
+            lv = (ListView) findViewById(R.id.activity_news_list_view);
+            lv.setOnItemClickListener(this);
             lv.setDividerHeight(0);
+            lv.setAdapter(adapter);
             lv.setSelection(nm.getTodayIndex());
 
             /** Restore previous state (including selected item index and scroll position) */
-            if(state!=null)
+            if (state != null)
                 lv.onRestoreInstanceState(state);
-		} else {
-			showErrorLayout();
-		}
-	}
+        } else {
+            showErrorLayout();
+        }
+    }
 
     /**
      * If news item has been clicked open the corresponding link
+     *
      * @param adapterView Containing listView
-     * @param view Item view
-     * @param position Index of the item
-     * @param id Item id
+     * @param view        Item view
+     * @param position    Index of the item
+     * @param id          Item id
      */
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
@@ -79,15 +83,45 @@ public class NewsActivity extends ActivityForDownloadingExternal implements OnIt
         startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
     }
 
-    @Override
-    public void onRefreshStarted(View view) {
-        requestDownload(true);
-    }
-
-    /** Save ListView state */
+    /**
+     * Save ListView state
+     */
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         state = lv.onSaveInstanceState();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        Cursor cur = nm.getNewsSources();
+        int i = 0;
+        if (cur.moveToFirst()) {
+            do {
+                MenuItem item = menu.add(Menu.NONE, i, Menu.NONE, cur.getString(2));
+                item.setCheckable(true);
+                boolean checked = Utils.getSettingBool(this, "news_source_" + cur.getString(0), true);
+                item.setChecked(checked);
+                i++;
+            } while (cur.moveToNext());
+        }
+        cur.close();
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Cursor cur = nm.getNewsSources();
+        if (item.getItemId() < cur.getCount()) {
+            if (cur.moveToPosition(item.getItemId())) {
+                boolean checked = !item.isChecked();
+                Utils.setSetting(this, "news_source_" + cur.getString(0), checked);
+                item.setChecked(checked);
+                state = lv.onSaveInstanceState();
+                requestDownload(false);
+                return true;
+            }
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

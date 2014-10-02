@@ -77,7 +77,9 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
                 String menu = cursorCafeteriaMenu.getString(1);
 
                 // Skip "Beilagen" if showing card
-                if (typeShort.equals("bei") && !big)
+                boolean shouldShow = Utils.getSettingBool(context, "card_cafeteria_" + typeShort,
+                        typeShort.equals("tg")||typeShort.equals("ae"));
+                if (!big && !shouldShow)
                     continue;
 
                 // Add header if we start with a new category

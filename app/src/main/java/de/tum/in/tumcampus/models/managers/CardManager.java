@@ -157,6 +157,7 @@ public class CardManager {
     public static void restoreCards() {
         SharedPreferences prefs = mContext.getSharedPreferences(Card.DISCARD_SETTINGS_START, 0);
         prefs.edit().clear().apply();
+        DatabaseManager.getDb(mContext).execSQL("UPDATE news SET dismissed=0");
     }
 
     public static List<Card> getCards() {

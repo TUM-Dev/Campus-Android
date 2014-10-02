@@ -77,7 +77,7 @@ public class CacheManager {
 
         // Cache news images
         NewsManager news = new NewsManager(mContext);
-        Cursor cur = news.getAllFromDb();
+        Cursor cur = news.getAllFromDb(mContext);
         if(cur.moveToFirst()) {
             do {
                 String imgUrl = cur.getString(5);

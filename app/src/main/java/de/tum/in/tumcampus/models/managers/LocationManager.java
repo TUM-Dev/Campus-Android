@@ -77,7 +77,6 @@ public class LocationManager {
             }
         }
         if (bestDistance < 1000) {
-            Utils.logv("Location belongs to campus "+campusShort[bestCampus]);
             return bestCampus;
         } else {
             return -1;
@@ -239,7 +238,6 @@ public class LocationManager {
         Geo geo = manager.getNextCalendarItemGeo();
         Location location = new Location("roomfinder");
         if (geo != null) {
-            Utils.logv("Use next location: "+geo);
             location.setLatitude(Double.parseDouble(geo.getLatitude()));
             location.setLongitude(Double.parseDouble(geo.getLongitude()));
         } else {

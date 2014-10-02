@@ -1,10 +1,14 @@
 package de.tum.in.tumcampus.activities;
 
+import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -12,6 +16,7 @@ import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
+import android.preference.PreferenceCategory;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
 import android.view.MenuItem;
@@ -35,6 +40,7 @@ import de.tum.in.tumcampus.services.SilenceService;
 /**
  * Provides the preferences, encapsulated into an own activity.
  */
+@SuppressWarnings("deprecation")
 public class UserPreferencesActivity extends PreferenceActivity implements
         SharedPreferences.OnSharedPreferenceChangeListener, Preference.OnPreferenceClickListener {
 
@@ -76,6 +82,9 @@ public class UserPreferencesActivity extends PreferenceActivity implements
         PreferenceManager.getDefaultSharedPreferences(this)
                 .registerOnSharedPreferenceChangeListener(this);
 
+        // Populate news sources
+        populateNewsSources();
+
         // Open a card's preference screen if selected from it's context menu
         Intent intent = getIntent();
         if(intent!=null && intent.getExtras()!=null && intent.getExtras().containsKey(Const.PREFERENCE_SCREEN)) {
@@ -93,7 +102,39 @@ public class UserPreferencesActivity extends PreferenceActivity implements
         }
     }
 
-    @SuppressWarnings("deprecation")
+    private void populateNewsSources() {
+        PreferenceCategory news_sources = (PreferenceCategory) findPreference("card_news_sources");
+        NewsManager cm = new NewsManager(this);
+        Cursor cur = cm.getNewsSources();
+        if(cur.moveToFirst()) {
+            do {
+                final CheckBoxPreference pref = new CheckBoxPreference(this);
+                pref.setKey("card_news_source_"+cur.getString(0));
+                pref.setDefaultValue(false);
+                if(Build.VERSION.SDK_INT>=11) {
+                    // Load news source icon in background and set it
+                    final String url = cur.getString(1);
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            final Bitmap bmp = Utils.downloadImageToBitmap(UserPreferencesActivity.this, url);
+                            runOnUiThread(new Runnable() {
+                                @TargetApi(11)
+                                @Override
+                                public void run() {
+                                    pref.setIcon(new BitmapDrawable(getResources(), bmp));
+                                }
+                            });
+                        }
+                    }).start();
+                }
+                pref.setTitle(cur.getString(2));
+                news_sources.addPreference(pref);
+            } while(cur.moveToNext());
+        }
+        cur.close();
+    }
+
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         Preference pref = findPreference(key);

@@ -57,6 +57,32 @@
                     android:key="card_cafeteria_default_W"
                     android:title="@string/campus_weihenstephan" />
             </PreferenceCategory>
+            <PreferenceCategory android:title="@string/categories_to_show">
+                <CheckBoxPreference
+                    android:defaultValue="true"
+                    android:key="card_cafeteria_tg"
+                    android:title="Tagesgerichte" />
+                <CheckBoxPreference
+                    android:defaultValue="true"
+                    android:key="card_cafeteria_ae"
+                    android:title="Aktionsessen" />
+                <CheckBoxPreference
+                    android:defaultValue="false"
+                    android:key="card_cafeteria_akt"
+                    android:title="Aktion" />
+                <CheckBoxPreference
+                    android:defaultValue="false"
+                    android:key="card_cafeteria_bei"
+                    android:title="Beilagen" />
+                <CheckBoxPreference
+                    android:defaultValue="false"
+                    android:key="card_cafeteria_bg"
+                    android:title="Biogericht" />
+                <CheckBoxPreference
+                    android:defaultValue="false"
+                    android:key="card_cafeteria_bio"
+                    android:title="Bio" />
+            </PreferenceCategory>
             <PreferenceCategory android:title="@string/extra">
                 <ListPreference
                     android:defaultValue="0"
@@ -179,6 +205,17 @@
                     android:key="card_news_phone"
                     android:summary="@string/phone_summary"
                     android:title="@string/phone" />
+            </PreferenceCategory>
+            <PreferenceCategory android:title="@string/news_sources"
+                android:key="card_news_sources">
+                <!-- News sources get inserted here automatically -->
+            </PreferenceCategory>
+            <PreferenceCategory android:title="@string/extra">
+                <CheckBoxPreference
+                    android:defaultValue="true"
+                    android:key="card_news_latest_only"
+                    android:summary="@string/only_latest_article_summary"
+                    android:title="@string/only_latest_article" />
             </PreferenceCategory>
         </PreferenceScreen>
 

@@ -353,5 +353,9 @@
     <string name="website">Website</string>
     <string name="switch_map">Switch map</string>
     <string name="navigate">Navigate</string>
+    <string name="categories_to_show">Categories to show</string>
+    <string name="news_sources">News sources</string>
+    <string name="only_latest_article">Only latest article</string>
+    <string name="only_latest_article_summary">Shows only the latest article. Otherwise all articles of the selected sources are shown.</string>
 
 </resources>

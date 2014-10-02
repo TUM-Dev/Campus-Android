@@ -136,7 +136,7 @@ public abstract class Card {
     private void discardNotification() {
         SharedPreferences prefs = mContext.getSharedPreferences(DISCARD_SETTINGS_PHONE, 0);
         Editor editor = prefs.edit();
-        discard(editor);
+        discardNotification(editor);
         editor.apply();
     }
 
@@ -146,6 +146,15 @@ public abstract class Card {
      * @param editor Editor to be used for saving values
      * */
     void discard(Editor editor) {}
+
+    /**
+     * Save information about the dismissed notification to don't shown again the notification
+     *
+     * @param editor Editor to be used for saving values
+     * */
+    void discardNotification(Editor editor) {
+        discard(editor);
+    }
 
     /**
      * Must be called after information has been set
@@ -162,7 +171,7 @@ public abstract class Card {
         // Should be shown on phone or watch?
         if(mShowWear || mShowPhone) {
             SharedPreferences prefs = mContext.getSharedPreferences(DISCARD_SETTINGS_PHONE, 0);
-            if (shouldShow(prefs))
+            if (shouldShowNotification(prefs))
                 notifyUser();
         }
     }
@@ -175,6 +184,16 @@ public abstract class Card {
      * */
     boolean shouldShow(SharedPreferences prefs) {
         return true;
+    }
+
+    /**
+     * Determines if the card should be shown. Decision is based on the given SharedPreferences.
+     * This method should be overridden in most cases.
+     *
+     * @return returns true if the card should be shown
+     * */
+    boolean shouldShowNotification(SharedPreferences prefs) {
+        return shouldShow(prefs);
     }
 
     /**
@@ -267,6 +286,10 @@ public abstract class Card {
         e.putBoolean(mSettings+"_wear", false);
         e.putBoolean(mSettings+"_phone", false);
         e.apply();
+    }
+
+    public int getId() {
+        return 0;
     }
 
     /**

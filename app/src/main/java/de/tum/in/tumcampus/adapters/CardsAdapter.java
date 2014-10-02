@@ -33,7 +33,7 @@ public class CardsAdapter extends BaseAdapter implements SwipeDismissList.SwipeD
     @Override
     public long getItemId(int i) {
         Card card = CardManager.getCard(i);
-        return card.getTyp();
+        return card.getTyp()+card.getId()<<4;
     }
 
     @Override

@@ -231,7 +231,7 @@ public class CalendarManager implements Card.ProvidesCard {
         Cursor cur = db.rawQuery("SELECT title, dtstart " +
                 " FROM calendar " +
                 " WHERE datetime('now', '-1800 seconds') < dtstart AND " +
-                " datetime() < dtend " +
+                " datetime('now','localtime') < dtend " +
                 " ORDER BY dtstart LIMIT 1", null);
 
         CalendarRow row = null;
@@ -252,7 +252,7 @@ public class CalendarManager implements Card.ProvidesCard {
         Cursor cur = db.rawQuery("SELECT r.latitude, r.longitude " +
                 "FROM calendar c, room_locations r " +
                 "WHERE datetime('now', '-1800 seconds') < c.dtstart AND " +
-                "datetime() < c.dtend AND r.title != c.location " +
+                "datetime('now','localtime') < c.dtend AND r.title != c.location " +
                 "ORDER BY dtstart LIMIT 1", null);
 
         Geo geo = null;
