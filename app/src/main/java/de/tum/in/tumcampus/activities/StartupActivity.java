@@ -18,7 +18,6 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bugsense.trace.BugSenseHandler;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorSet;
 import com.nineoldandroids.animation.ObjectAnimator;
@@ -33,6 +32,7 @@ import de.tum.in.tumcampus.auxiliary.FileUtils;
 import de.tum.in.tumcampus.auxiliary.ImplicitCounter;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.managers.DatabaseManager;
+import de.tum.in.tumcampus.trace.ExceptionHandler;
 import de.tum.in.tumcampus.services.DownloadService;
 import de.tum.in.tumcampus.services.StartSyncReceiver;
 
@@ -40,7 +40,6 @@ import de.tum.in.tumcampus.services.StartSyncReceiver;
  * Entrance point of the App.
  */
 public class StartupActivity extends ActionBarActivity {
-    private static final boolean TRACK_ERRORS_WITH_BUG_SENSE = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,11 +49,8 @@ public class StartupActivity extends ActionBarActivity {
         //Show a loading screen during boot
         setContentView(R.layout.activity_startup);
 
-        // Init a Bug Report to https://www.bugsense.com
-        if (TRACK_ERRORS_WITH_BUG_SENSE) {
-            Utils.log("BugSense initialized");
-            BugSenseHandler.initAndStartSession(this, "19d18764");
-        }
+        //Our own Custom exception handler
+        ExceptionHandler.setup(this);
 
         // For compatibility reasons
         int prevVersion = Utils.getInternalSettingInt(this, Const.APP_VERSION, 35);
