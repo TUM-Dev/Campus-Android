@@ -220,10 +220,10 @@ public abstract class ActivityForSearching extends ProgressActivity {
             return;
         }
 
-		if (!Utils.isConnected(this)) {
-            showError(R.string.no_internet_connection);
-			return;
-		}
+        /*if (!Utils.isConnected(this)) {
+            showNoInternetLayout();
+            return;
+        }*/
 
         // Add query to recents
         SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this, mAuthority, SearchRecentSuggestionsProvider.DATABASE_MODE_QUERIES);

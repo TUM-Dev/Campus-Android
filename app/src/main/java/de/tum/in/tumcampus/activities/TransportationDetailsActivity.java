@@ -46,11 +46,7 @@ public class TransportationDetailsActivity extends ActivityForLoadingInBackgroun
         String location = intent.getStringExtra(EXTRA_STATION);
         setTitle(location);
 
-        if (!Utils.isConnected(this)) {
-            showError(R.string.no_internet_connection);
-        } else {
-            startLoading(location);
-        }
+        startLoading(location);
     }
 
     /**
@@ -65,6 +61,12 @@ public class TransportationDetailsActivity extends ActivityForLoadingInBackgroun
         // save clicked station into db
         recentsManager.replaceIntoDb(location);
 
+        // Check for internet connectivity
+        if (!Utils.isConnected(this)) {
+            showNoInternetLayout();
+            return null;
+        }
+
         // get departures from website
         List<TransportManager.Departure> departureCursor = null;
         try {
@@ -72,7 +74,7 @@ public class TransportationDetailsActivity extends ActivityForLoadingInBackgroun
         } catch (NoSuchElementException e) {
             showError(R.string.no_departures_found);
         } catch (TimeoutException e) {
-            showError(R.string.exception_timeout);
+            showNoInternetLayout();
         } catch (Exception e) {
             showError(R.string.exception_unknown);
         }
@@ -86,6 +88,9 @@ public class TransportationDetailsActivity extends ActivityForLoadingInBackgroun
      */
     @Override
     protected void onLoadFinished(List<TransportManager.Departure> result) {
+        showLoadingEnded();
+        if(result==null)
+            return;
         mViewResults.removeAllViews();
         for(TransportManager.Departure d : result) {
             DepartureView view = new DepartureView(this, true);
@@ -94,6 +99,5 @@ public class TransportationDetailsActivity extends ActivityForLoadingInBackgroun
             view.setTime(System.currentTimeMillis()+d.time*60000);
             mViewResults.addView(view);
         }
-        showLoadingEnded();
     }
 }

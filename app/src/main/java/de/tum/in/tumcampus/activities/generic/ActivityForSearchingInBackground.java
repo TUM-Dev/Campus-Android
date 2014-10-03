@@ -2,6 +2,8 @@ package de.tum.in.tumcampus.activities.generic;
 
 import android.os.AsyncTask;
 
+import de.tum.in.tumcampus.auxiliary.Utils;
+
 /**
  * Generic class which can handle a long running search in background.
  * Class parameter should be the class that holds the results of the background task.
@@ -85,6 +87,12 @@ public abstract class ActivityForSearchingInBackground<T> extends ActivityForSea
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+
+            if (!Utils.isConnected(ActivityForSearchingInBackground.this)) {
+                showNoInternetLayout();
+                return;
+            }
+
             showLoadingStart();
         }
 

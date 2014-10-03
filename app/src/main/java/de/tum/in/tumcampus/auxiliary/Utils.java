@@ -220,7 +220,7 @@ public class Utils {
      */
     public static Bitmap downloadImageToBitmap(Context context, final String url) {
         File f = downloadImage(context, url);
-        if(f==null)
+        if (f == null)
             return null;
         return BitmapFactory.decodeFile(f.getAbsolutePath());
     }
@@ -228,8 +228,8 @@ public class Utils {
     /**
      * Download an image in background and sets the image to the image view
      *
-     * @param context Context
-     * @param url URL
+     * @param context   Context
+     * @param url       URL
      * @param imageView Image
      */
     public static void loadAndSetImage(final Context context, final String url, final ImageView imageView) {
@@ -255,6 +255,8 @@ public class Utils {
 
             @Override
             protected void onPostExecute(Bitmap bitmap) {
+                if (bitmap == null)
+                    return;
                 synchronized (CacheManager.bitmapCache) {
                     CacheManager.bitmapCache.put(url, bitmap);
                 }
@@ -602,7 +604,7 @@ public class Utils {
 
     /**
      * Splits a line from a CSV file into column values
-     *
+     * <p/>
      * e.g. "aaa;aaa";"bbb";1 gets aaa,aaa;bbb;1;
      *
      * @param str CSV line
