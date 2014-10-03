@@ -9,6 +9,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.View;
 
+import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.services.DownloadService;
@@ -91,14 +92,13 @@ public abstract class ActivityForDownloadingExternal extends ProgressActivity {
      *                      to throw away cached data and re-download instead.
      */
     protected void requestDownload(boolean forceDownload) {
-		if (Utils.isConnected(this)) {
-            showLoadingStart();
-			Intent service = new Intent(this, DownloadService.class);
-			service.putExtra(Const.ACTION_EXTRA, method);
-			service.putExtra(Const.FORCE_DOWNLOAD, forceDownload);
-			startService(service);
-		} else {
-			showNoInternetLayout();
-		}
+		if (!Utils.isConnected(this)) {
+            Utils.showToast(this, R.string.no_internet_connection);
+        }
+        showLoadingStart();
+        Intent service = new Intent(this, DownloadService.class);
+        service.putExtra(Const.ACTION_EXTRA, method);
+        service.putExtra(Const.FORCE_DOWNLOAD, forceDownload);
+        startService(service);
 	}
 }

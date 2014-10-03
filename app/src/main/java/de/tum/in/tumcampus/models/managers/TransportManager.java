@@ -106,6 +106,7 @@ public class TransportManager implements Card.ProvidesCard {
                 jsonArray.put(obj);
             }
         } catch (Exception e) {
+            Utils.log(e);
             throw new NoSuchElementException("No station found");
         }
 

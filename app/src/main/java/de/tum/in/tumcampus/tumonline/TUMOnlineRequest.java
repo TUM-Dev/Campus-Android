@@ -63,10 +63,14 @@ public  class TUMOnlineRequest<T> {
 
     private final CacheManager cacheManager;
 
+    /** Context */
+    private final Context mContext;
+
     private String lastError = "";
 
     @SuppressWarnings("unchecked")
     private TUMOnlineRequest(Context context) {
+        mContext = context;
         cacheManager = new CacheManager(context);
 		client = getThreadSafeClient();
 		resetParameters();
@@ -102,6 +106,7 @@ public  class TUMOnlineRequest<T> {
 	 * @return output will be a raw String
 	 */
 	public T fetch() {
+        // set parameter on the TUMOnline request an fetch the results
 		String result;
 		String url = getRequestURL();
 		Utils.log("fetching URL " + url);
@@ -110,6 +115,11 @@ public  class TUMOnlineRequest<T> {
         try {
             result = cacheManager.getFromCache(url);
             if(result==null || fillCache) {
+                boolean isOnline = Utils.isConnected(mContext);
+                if (!isOnline) {
+                    // not online, fetch does not make sense
+                    return null;
+                }
                 HttpEntity responseEntity;
                 //try {
                     HttpGet request = new HttpGet(url);
@@ -170,17 +180,8 @@ public  class TUMOnlineRequest<T> {
 		// meantime
 		backgroundTask = new AsyncTask<Void, Void, T>() {
 
-			/** property to determine if there is an internet connection */
-			boolean isOnline;
-
 			@Override
 			protected T doInBackground(Void... params) {
-				// set parameter on the TUMOnline request an fetch the results
-				isOnline = Utils.isConnected(context);
-				if (!isOnline) {
-					// not online, fetch does not make sense
-					return null;
-				}
 				// we are online, return fetch result
 				return fetch();
 			}
@@ -193,9 +194,13 @@ public  class TUMOnlineRequest<T> {
                     Utils.log("No result available");
                 }
                 // Handles result
-                if (!isOnline) {
-                    listener.onNoInternetError();
-                    return;
+                if (!Utils.isConnected(mContext)) {
+                    if(result==null) {
+                        listener.onNoInternetError();
+                        return;
+                    } else {
+                        Utils.showToast(mContext, R.string.no_internet_connection);
+                    }
                 }
                 if (result == null) {
                     if (lastError.contains(TOKEN_NOT_CONFIRMED)) {

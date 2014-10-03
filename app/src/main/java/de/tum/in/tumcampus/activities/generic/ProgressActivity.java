@@ -1,7 +1,10 @@
 package de.tum.in.tumcampus.activities.generic;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -38,6 +41,7 @@ public abstract class ProgressActivity extends ActionBarActivity implements OnRe
     private RelativeLayout noInternetLayout;
     private RelativeLayout failedTokenLayout;
     private PullToRefreshLayout refreshLayout;
+    private boolean registered = false;
 
     /**
      * Standard constructor for ProgressActivity.
@@ -119,6 +123,7 @@ public abstract class ProgressActivity extends ActionBarActivity implements OnRe
 
     /**
      * Shows failed layout
+     *
      * @param error Error Text to be toasted
      */
     protected void showFailedTokenLayout(String error) {
@@ -145,9 +150,21 @@ public abstract class ProgressActivity extends ActionBarActivity implements OnRe
         showLoadingEnded();
         noInternetLayout.setVisibility(View.VISIBLE);
         allErrorsLayout.setVisibility(View.VISIBLE);
-        WifiManager wifi = (WifiManager)getSystemService(Context.WIFI_SERVICE);
+        WifiManager wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
         Button but = (Button) findViewById(R.id.button_enable_wifi);
         but.setVisibility(wifi.isWifiEnabled() ? View.GONE : View.VISIBLE);
+        registerReceiver(connectivityChangeReceiver,
+                new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+        registered = true;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(registered) {
+            unregisterReceiver(connectivityChangeReceiver);
+            registered = false;
+        }
     }
 
     /**
@@ -155,6 +172,10 @@ public abstract class ProgressActivity extends ActionBarActivity implements OnRe
      * if present in the xml layout
      */
     protected void showLoadingStart() {
+        if(registered) {
+            unregisterReceiver(connectivityChangeReceiver);
+            registered = false;
+        }
         if (refreshLayout == null) {
             noInternetLayout.setVisibility(View.GONE);
             noTokenLayout.setVisibility(View.GONE);
@@ -210,6 +231,7 @@ public abstract class ProgressActivity extends ActionBarActivity implements OnRe
 
     /**
      * Handle click on error_layout, failed_layout and no_token_layout
+     *
      * @param view Handle of layout view
      */
     public void onClick(View view) {
@@ -232,4 +254,13 @@ public abstract class ProgressActivity extends ActionBarActivity implements OnRe
         WifiManager wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
         wifi.setWifiEnabled(true);
     }
+
+    BroadcastReceiver connectivityChangeReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (Utils.isConnected(context)) {
+                onRefreshStarted(null);
+            }
+        }
+    };
 }

@@ -42,7 +42,7 @@ public class NewsManager implements Card.ProvidesCard {
         db.execSQL("CREATE TABLE IF NOT EXISTS news_sources (id VARCHAR PRIMARY KEY, icon INTEGER, title VARCHAR)");
 
         // create table if needed
-        db.execSQL("CREATE TABLE IF NOT EXISTS news (id VARCHAR PRIMARY KEY, src INTEGER, title TEXT, description TEXT, link VARCHAR, "
+        db.execSQL("CREATE TABLE IF NOT EXISTS news (id INTEGER PRIMARY KEY, src INTEGER, title TEXT, description TEXT, link VARCHAR, "
                 + "image VARCHAR, date VARCHAR, created VARCHAR, dismissed INTEGER)");
     }
 
