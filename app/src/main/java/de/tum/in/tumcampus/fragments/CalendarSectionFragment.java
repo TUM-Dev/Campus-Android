@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 
 import de.tum.in.tumcampus.R;
@@ -138,21 +140,25 @@ public class CalendarSectionFragment extends Fragment {
                 String room = cursor.getString(7);
                 if (room != null && room.length() != 0) {
                     String title = cursor.getString(3);
-                    title = title.replaceAll("[A-Z 0-9(LV\\.Nr\\.)=]+$","");
-                    title = title.replaceAll("\\([A-Z]+[0-9]+\\)","");
+                    title = title.replaceAll("[A-Z 0-9(LV\\.Nr\\.)=]+$", "");
+                    title = title.replaceAll("\\([A-Z]+[0-9]+\\)", "");
 
                     setText(eventView, title + " / " + cursor.getString(7));
                     eventView.setTag(cursor.getString(7));
+                    Log.e("cal ",title);
                 } else {
+                    Log.e("cal 2",cursor.getString(3));
                     setText(eventView, cursor.getString(3));
                 }
 
                 eventView.setLayoutParams(params);
                 eventList.add(eventView);
 
+                Log.e("cal 3"," "+event);
                 //Remember times for overlap check
                 eventTimes[event][0] = Math.round(start);
                 eventTimes[event][1] = Math.round(end);
+                event++;
             }
         }
     }
@@ -183,14 +189,20 @@ public class CalendarSectionFragment extends Fragment {
             //Adapt width and offset when colliding events are added
             //Check previous item
             boolean collisionPrev = false, collisionNext = false;
-            if (currentEvent > 0 && overlap(eventTimes[currentEvent][0], eventTimes[currentEvent][1], eventTimes[currentEvent - 1][0], eventTimes[currentEvent - 1][1])) {
+            if (currentEvent > 0 && this.overlap(eventTimes[currentEvent][0], eventTimes[currentEvent][1], eventTimes[currentEvent - 1][0], eventTimes[currentEvent - 1][1])) {
                 collisionPrev = true;
+            } else {
+                collisionPrev = false;
             }
 
             //Check next item
-            if (currentEvent < (eventTimes.length - 1) && overlap(eventTimes[currentEvent][0], eventTimes[currentEvent][1], eventTimes[currentEvent + 1][0], eventTimes[currentEvent + 1][1])) {
+            if (currentEvent < (eventTimes.length - 1) && this.overlap(eventTimes[currentEvent][0], eventTimes[currentEvent][1], eventTimes[currentEvent + 1][0], eventTimes[currentEvent + 1][1])) {
                 collisionNext = true;
+            } else {
+                collisionNext = false;
             }
+
+            Log.e("Cal", ""+collisionPrev+" "+collisionNext+ " "+eventTimes.length+" "+currentEvent +" "+ Arrays.toString(eventTimes));
 
             //Fetch current parameters
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) event.getLayoutParams();
@@ -214,7 +226,7 @@ public class CalendarSectionFragment extends Fragment {
 
             } else if (collisionPrev) {
                 //Set previous
-                RelativeLayout prevEvent=eventList.get(currentEvent - 1);
+                RelativeLayout prevEvent = eventList.get(currentEvent - 1);
                 RelativeLayout.LayoutParams prevLp = (RelativeLayout.LayoutParams) prevEvent.getLayoutParams();
                 prevLp.width = Math.round(availableSpace / 3);
                 prevEvent.setLayoutParams(prevLp);

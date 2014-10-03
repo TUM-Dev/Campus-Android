@@ -31,8 +31,8 @@ public class Util {
             }
             return log.toString();
 
-        } catch (IOException e) {
-
+        } catch (Exception e) {
+            //Catch em all, we don't want any trouble here
         }
         return "";
     }
@@ -42,7 +42,7 @@ public class Util {
         String connected = "false";
 
         PackageManager packageManager = G.context.getPackageManager();
-        if (packageManager.checkPermission("android.permission.ACCESS_NETWORK_STATE", G.appPackage) == PackageManager.PERMISSION_GRANTED){
+        if (packageManager.checkPermission("android.permission.ACCESS_NETWORK_STATE", G.appPackage) == PackageManager.PERMISSION_GRANTED) {
             ConnectivityManager cm = (ConnectivityManager) G.context.getSystemService(Context.CONNECTIVITY_SERVICE);
             NetworkInfo[] netInfo = cm.getAllNetworkInfo();
             for (NetworkInfo ni : netInfo) {
@@ -51,8 +51,7 @@ public class Util {
                         connected = "true";
             }
 
-        }
-        else {
+        } else {
             connected = "not available [permissions]";
         }
 
@@ -71,14 +70,13 @@ public class Util {
         String gps_status = "true";
 
         PackageManager packageManager = G.context.getPackageManager();
-        if (packageManager.checkPermission("android.permission.ACCESS_FINE_LOCATION", G.appPackage) == PackageManager.PERMISSION_GRANTED){
+        if (packageManager.checkPermission("android.permission.ACCESS_FINE_LOCATION", G.appPackage) == PackageManager.PERMISSION_GRANTED) {
             LocationManager locManager;
-            locManager = (LocationManager)G.context.getSystemService(Context.LOCATION_SERVICE);
-            if (!locManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
+            locManager = (LocationManager) G.context.getSystemService(Context.LOCATION_SERVICE);
+            if (!locManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
                 gps_status = "false";
             }
-        }
-        else {
+        } else {
             gps_status = "not available [permissions]";
         }
 
@@ -90,7 +88,7 @@ public class Util {
 
         DisplayMetrics dm = new DisplayMetrics();
         PackageManager packageManager = G.context.getPackageManager();
-        Display display = ((WindowManager)G.context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+        Display display = ((WindowManager) G.context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
 
         int width = display.getWidth();
         int height = display.getHeight();
@@ -107,11 +105,19 @@ public class Util {
         screen[1] = Integer.toString(height);
 
         String rotation = "";
-        switch(orientation) {
-            case Surface.ROTATION_0:      rotation = "normal"; break;
-            case Surface.ROTATION_180:    rotation = "180"; break;
-            case Surface.ROTATION_270:    rotation = "270"; break;
-            case Surface.ROTATION_90:     rotation = "90"; break;
+        switch (orientation) {
+            case Surface.ROTATION_0:
+                rotation = "normal";
+                break;
+            case Surface.ROTATION_180:
+                rotation = "180";
+                break;
+            case Surface.ROTATION_270:
+                rotation = "270";
+                break;
+            case Surface.ROTATION_90:
+                rotation = "90";
+                break;
         }
         screen[2] = rotation;
 
