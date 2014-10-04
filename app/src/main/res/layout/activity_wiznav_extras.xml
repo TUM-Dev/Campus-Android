@@ -3,6 +3,17 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <include
+        layout="@layout/layout_all_errors"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true" />
+
     <TextView
         android:id="@+id/pager_title_strip"
         style="@style/SectionHeadline"
@@ -61,12 +72,6 @@
                 android:layout_height="wrap_content"
                 android:padding="@dimen/padding_default"
                 android:text="@string/set_group_chat" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/padding_default"
-                android:text="@string/display_name" />
 
             <RelativeLayout
                 android:layout_width="match_parent"

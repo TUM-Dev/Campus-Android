@@ -138,7 +138,6 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline<Lectu
         }
     }
 
-
     @Override
     public void onFetch(LecturesSearchRowSet lecturesList) {
         List<LecturesSearchRow> lectures = lecturesList.getLehrveranstaltungen();

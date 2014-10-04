@@ -69,7 +69,7 @@ public class NewsAdapter extends CursorAdapter {
         ViewHolder holder = (ViewHolder) view.getTag();
 
         // Set image
-        String imgUrl = cursor.getString(5);
+        String imgUrl = cursor.getString(4);
         if(imgUrl == null || imgUrl.isEmpty() || imgUrl.equals("null")) {
             holder.img.setVisibility(View.GONE);
         } else {
@@ -80,13 +80,13 @@ public class NewsAdapter extends CursorAdapter {
         holder.title.setText(cursor.getString(2));
 
         // Adds date
-        String date = cursor.getString(6);
+        String date = cursor.getString(5);
         Date d = Utils.getISODateTime(date);
         DateFormat sdf = SimpleDateFormat.getDateInstance();
         holder.src_date.setText(sdf.format(d));
 
-        holder.src_title.setText(cursor.getString(9));
-        String icon = cursor.getString(8);
+        holder.src_title.setText(cursor.getString(8));
+        String icon = cursor.getString(7);
         if(icon.isEmpty() || icon.equals("null")) {
             holder.src_icon.setImageResource(R.drawable.ic_comment);
         } else {

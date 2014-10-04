@@ -113,7 +113,7 @@ public class CacheManager {
         cur = news.getAllFromDb(mContext);
         if(cur.moveToFirst()) {
             do {
-                String imgUrl = cur.getString(5);
+                String imgUrl = cur.getString(4);
                 if(!imgUrl.isEmpty())
                     net.downloadImage(imgUrl);
             } while(cur.moveToNext());

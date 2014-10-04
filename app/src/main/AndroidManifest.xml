@@ -88,7 +88,7 @@
                 <!--
                 <action android:name="android.net.wifi.STATE_CHANGED"/>
                 <action android:name="android.net.wifi.WIFI_STATE_CHANGED"/>-->
-                <action android:name="android.net.wifi.SCAN_RESULTS"/>
+                <action android:name="android.net.wifi.SCAN_RESULTS" />
             </intent-filter>
         </receiver>
 
@@ -378,8 +378,7 @@
         <activity
             android:name=".activities.SetupEduroamActivity"
             android:configChanges="orientation|screenSize"
-            android:label="@string/campus_app">
-        </activity>
+            android:label="@string/campus_app"></activity>
         <activity
             android:name="de.tum.in.tumcampus.activities.wizard.WizNavStartActivity"
             android:configChanges="orientation|screenSize"
@@ -391,7 +390,8 @@
         <activity
             android:name="de.tum.in.tumcampus.activities.wizard.WizNavExtrasActivity"
             android:configChanges="orientation|screenSize"
-            android:label="@string/campus_app" />
+            android:label="@string/campus_app"
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name="de.tum.in.tumcampus.activities.CalendarActivity"
             android:configChanges="orientation|screenSize"
