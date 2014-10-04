@@ -4,6 +4,7 @@ import android.app.IntentService;
 import android.content.Intent;
 
 import de.tum.in.tumcampus.auxiliary.Const;
+import de.tum.in.tumcampus.auxiliary.ImplicitCounter;
 import de.tum.in.tumcampus.auxiliary.Utils;
 
 /**
@@ -41,6 +42,9 @@ public class BackgroundService extends IntentService {
         service.putExtra(Const.FORCE_DOWNLOAD, false);
         service.putExtra(Const.APP_LAUNCHES, intent.getBooleanExtra(Const.APP_LAUNCHES,false));
         startService(service);
+
+        //Upload Usage statistics
+        (new ImplicitCounter()).submitCounter(this);
 	}
 
 
