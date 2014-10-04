@@ -44,7 +44,6 @@ public class StartupActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ImplicitCounter.Counter(this);
 
         //Show a loading screen during boot
         setContentView(R.layout.activity_startup);
@@ -53,6 +52,7 @@ public class StartupActivity extends ActionBarActivity {
         ExceptionHandler.setup(this);
 
         //Upload stats
+        ImplicitCounter.Counter(this);
         (new ImplicitCounter()).submitCounter(this);
 
         // For compatibility reasons

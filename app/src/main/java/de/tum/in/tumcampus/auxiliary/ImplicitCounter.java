@@ -39,11 +39,11 @@ public class ImplicitCounter extends AsyncTask<String, Integer, Void> {
      * Only call this in the {@link android.support.v7.app.ActionBarActivity#onCreate(android.os.Bundle)}
      * method of a direct subclass of {@link android.support.v7.app.ActionBarActivity}
      *
-     * @param context Pointer to the activity that has been opened
+     * @param c Pointer to the activity that has been opened
      */
-    public static void Counter(ActionBarActivity context) {
-        SharedPreferences sp = context.getSharedPreferences(settings, Context.MODE_PRIVATE);
-        final String identifier = context.getClass().getSimpleName();
+    public static void Counter(Context c) {
+        SharedPreferences sp = c.getSharedPreferences(settings, Context.MODE_PRIVATE);
+        final String identifier = c.getClass().getSimpleName();
 
         final int currentUsages = sp.getInt(identifier, 0);
         sp.edit().putInt(identifier, currentUsages + 1).apply();

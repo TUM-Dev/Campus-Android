@@ -27,6 +27,7 @@ import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.wizard.WizNavStartActivity;
 import de.tum.in.tumcampus.auxiliary.AccessTokenManager;
 import de.tum.in.tumcampus.auxiliary.Const;
+import de.tum.in.tumcampus.auxiliary.ImplicitCounter;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.managers.CafeteriaManager;
 import de.tum.in.tumcampus.models.managers.CafeteriaMenuManager;
@@ -50,9 +51,12 @@ public class UserPreferencesActivity extends PreferenceActivity implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ImplicitCounter.Counter(this);
+
+        //Load all the available settings
         addPreferencesFromResource(R.xml.settings);
 
-
+        // @kb: ??? What is this supposed to do
         CheckBoxPreference silent = (CheckBoxPreference) findPreference("silent_mode");
         if(!new AccessTokenManager(this).hasValidAccessToken()) {
             silent.setEnabled(false);
