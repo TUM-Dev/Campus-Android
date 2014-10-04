@@ -12,7 +12,6 @@ import android.view.Surface;
 import android.view.WindowManager;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 
 
@@ -27,7 +26,7 @@ public class Util {
             StringBuilder log = new StringBuilder();
             String line = "";
             while ((line = bufferedReader.readLine()) != null) {
-                log.append(line);
+                log.append(line + "\n");
             }
             return log.toString();
 
@@ -59,10 +58,12 @@ public class Util {
     }
 
     public static String isWifiOn() {
+
         return CheckNetworkConnection("WIFI");
     }
 
     public static String isMobileNetworkOn() {
+
         return CheckNetworkConnection("MOBILE");
     }
 
