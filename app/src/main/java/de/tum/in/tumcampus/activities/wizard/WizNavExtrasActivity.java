@@ -73,41 +73,46 @@ public class WizNavExtrasActivity extends ActionBarActivity {
      */
     @SuppressWarnings("UnusedParameters")
     public void onClickDone(View done) {
-        if (groupChatMode.isChecked() && !acceptedTerms.isChecked()) {
-            Utils.showToast(this, R.string.have_to_accept_terms);
-            return;
-        } else if (nickName.getText().toString().trim().isEmpty()) {
-            Utils.showToast(this, R.string.nickname_empty);
-            return;
-        }
-
-
-        // If the user is opening the chat for the first time, we need to display
-        // a dialog where they can enter their desired display name
-        String nickname = nickName.getText().toString();
-        String lrzId = Utils.getSetting(this, Const.LRZ_ID);
-        ChatMember currentChatMember = new ChatMember(lrzId);
-        currentChatMember.setDisplayName(nickname);
-
-
-        // After the user has entered their display name,
-        // send a request to the server to create the new member
-        currentChatMember = ChatClient.getInstance().createMember(currentChatMember);
-
-
         // Gets the editor for editing preferences and updates the preference
         // values with the chosen state
         Editor editor = preferences.edit();
+
+        //Save Group Chat values
+        editor.putBoolean(Const.GROUP_CHAT_ENABLED, groupChatMode.isChecked());
+        if(groupChatMode.isChecked()) {
+            if (!acceptedTerms.isChecked()) {
+                Utils.showToast(this, R.string.have_to_accept_terms);
+                return;
+            } else if (nickName.getText().toString().trim().isEmpty()) {
+                Utils.showToast(this, R.string.nickname_empty);
+                return;
+            }
+
+
+            // If the user is opening the chat for the first time, we need to display
+            // a dialog where they can enter their desired display name
+            String nickname = nickName.getText().toString();
+            String lrzId = Utils.getSetting(this, Const.LRZ_ID);
+            ChatMember currentChatMember = new ChatMember(lrzId);
+            currentChatMember.setDisplayName(nickname);
+
+
+            // After the user has entered their display name,
+            // send a request to the server to create the new member
+            currentChatMember = ChatClient.getInstance().createMember(currentChatMember);
+
+            // Save display name in shared preferences
+            editor.putString(Const.CHAT_ROOM_DISPLAY_NAME, nickname);
+        }
+
+        //Save other settings
         editor.putBoolean(Const.SILENCE_SERVICE, checkSilentMode.isChecked());
         editor.putBoolean(Const.BACKGROUND_MODE, checkBackgroundMode.isChecked());
-        editor.putBoolean(Const.GROUP_CHAT_ENABLED, groupChatMode.isChecked());
-
-        // Save display name in shared preferences
-        editor.putString(Const.CHAT_ROOM_DISPLAY_NAME, nickname);
-
         editor.putBoolean(Const.HIDE_WIZARD_ON_STARTUP, true);
+        //Apply them to the shared prefs
         editor.apply();
 
+        //Exit and start the main activity
         finish();
         startActivity(new Intent(this, StartupActivity.class));
     }
