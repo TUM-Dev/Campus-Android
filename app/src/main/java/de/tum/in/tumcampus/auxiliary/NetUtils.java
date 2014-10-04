@@ -1,6 +1,7 @@
 package de.tum.in.tumcampus.auxiliary;
 
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
@@ -58,7 +59,7 @@ public class NetUtils {
      * @throws IOException
      */
     public HttpEntity getHttpEntity(String url) throws IOException {
-        // if not online, fetch does not make sense
+        // if we are not online, fetch makes no sense
         boolean isOnline = isConnected(mContext);
         if (!isOnline) {
             return null;
@@ -66,7 +67,16 @@ public class NetUtils {
 
         Utils.logv("Download URL: " + url);
         HttpGet request = new HttpGet(url);
-        request.addHeader("X-DEVICE-ID", getDeviceID(mContext));
+        request.addHeader("X-DEVICE-ID", NetUtils.getDeviceID(mContext));
+
+        //Add some useful statical data
+        request.addHeader("X-ANDROID-VERSION", android.os.Build.VERSION.RELEASE);
+        try {
+            request.addHeader("X-APP-VERSION", mContext.getPackageManager().getPackageInfo(mContext.getPackageName(), 0).versionName);
+        } catch (PackageManager.NameNotFoundException e) {
+        }
+
+        //Execute the request
         HttpResponse response = client.execute(request);
         return response.getEntity();
     }
