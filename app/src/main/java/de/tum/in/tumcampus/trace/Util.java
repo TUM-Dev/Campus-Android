@@ -25,8 +25,9 @@ public class Util {
 
             StringBuilder log = new StringBuilder();
             String line = "";
+            String newLine = System.getProperty("line.separator");
             while ((line = bufferedReader.readLine()) != null) {
-                log.append(line + "\n");
+                log.append(line + newLine);
             }
             return log.toString();
 
