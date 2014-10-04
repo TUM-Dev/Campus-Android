@@ -370,7 +370,7 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
                 else
                     mAdapter.notifyDataSetChanged();
                 mPullToRefreshLayout.setRefreshComplete();
-                if(!registered) {
+                if(!registered && !NetUtils.isConnected(MainActivity.this)) {
                     registerReceiver(connectivityChangeReceiver,
                             new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
                     registered = true;

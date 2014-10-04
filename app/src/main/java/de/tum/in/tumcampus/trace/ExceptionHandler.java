@@ -28,10 +28,6 @@ import java.util.List;
 
 import de.tum.in.tumcampus.auxiliary.NetUtils;
 
-import static de.tum.in.tumcampus.auxiliary.NetUtils.getDeviceID;
-
-
-
 public class ExceptionHandler {
 
     // Stores loaded stack traces in memory. Each element is contains a full stacktrace

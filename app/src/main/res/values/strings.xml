@@ -369,5 +369,6 @@
     <string name="nickname_empty">Nickname must not be empty!</string>
     <string name="activate_key">Please activate your public key first</string>
     <string name="joined_chatroom">You joined the chatroom!</string>
+    <string name="nickname_too_short">Nickname must be at least 3 characters long!</string>
 
 </resources>

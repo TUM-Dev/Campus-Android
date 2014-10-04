@@ -141,21 +141,21 @@ public class NewsManager implements Card.ProvidesCard {
             } while (c.moveToNext());
         }
         c.close();
-        return db.rawQuery("SELECT n.id AS _id, n.src, n.title, n.description, " +
+        return db.rawQuery("SELECT n.id AS _id, n.src, n.title, " +
                 "n.link, n.image, n.date, n.created, s.icon, s.title AS source, n.dismissed, " +
                 "(julianday('now') - julianday(date)) AS diff " +
                 "FROM news n, news_sources s " +
-                "WHERE n.src=s.id AND (" + and + ") " +
+                "WHERE n.src=s.id "+(and.isEmpty()?"":"AND (" + and + ") ") +
                 "ORDER BY date DESC", null);
     }
 
     /**
      * Get the index of the newest item that is older than 'now'
      *
-     * @return Database cursor (_id, src, title, description, link, image, date, created, icon, source)
+     * @return index of the newest item that is older than 'now' - 1
      */
     public int getTodayIndex() {
-        Cursor c = db.rawQuery("SELECT COUNT(*) FROM news WHERE date>datetime()", null);
+        Cursor c = db.rawQuery("SELECT COUNT(*) FROM news WHERE date(date)>date()", null);
         if (c.moveToFirst()) {
             int res = c.getInt(0);
             c.close();
@@ -245,7 +245,7 @@ public class NewsManager implements Card.ProvidesCard {
         //boolean showImportant = Utils.getSettingBool(context, "card_news_alert", true);
         if (!and.isEmpty()) {
 
-            String query = "SELECT n.id AS _id, n.src, n.title, n.description, " +
+            String query = "SELECT n.id AS _id, n.src, n.title, " +
                     "n.link, n.image, n.date, n.created, s.icon, s.title AS source, n.dismissed, " +
                     "ABS(julianday(date()) - julianday(n.date)) AS date_diff ";
 

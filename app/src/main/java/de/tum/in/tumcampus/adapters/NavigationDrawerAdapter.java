@@ -45,7 +45,7 @@ public class NavigationDrawerAdapter extends BaseAdapter {
         for(SideNavigationItem item : menuItems) {
             if(!mHasTUMOAccess && item.needsTUMO)
                 continue;
-            if(item.activity!=null && item.activity.equals(ChatRoomsSearchActivity.class) && chat_enabled)
+            if(item.activity!=null && item.activity.equals(ChatRoomsSearchActivity.class) && !chat_enabled)
                 continue;
             mVisibleMenuItems.add(item);
         }

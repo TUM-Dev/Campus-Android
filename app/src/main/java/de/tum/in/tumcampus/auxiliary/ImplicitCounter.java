@@ -3,7 +3,6 @@ package de.tum.in.tumcampus.auxiliary;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -29,7 +28,7 @@ import java.util.Map;
  */
 public class ImplicitCounter extends AsyncTask<String, Integer, Void> {
     private static final String settings = "usage_counter";
-    private static String URL = "https://tumcabe.in.tum.de/Api/statistics/";
+    private static final String URL = "https://tumcabe.in.tum.de/Api/statistics/";
     private static final String tag = "ImplicitCounter";
 
     private Context c = null;
@@ -82,7 +81,8 @@ public class ImplicitCounter extends AsyncTask<String, Integer, Void> {
         DefaultHttpClient httpClient = new DefaultHttpClient();
         HttpParams params = httpClient.getParams();
         HttpProtocolParams.setUseExpectContinue(params, false);
-        HttpPut request = new HttpPut(this.URL);
+
+        HttpPut request = new HttpPut(URL);
         request.addHeader("X-DEVICE-ID", NetUtils.getDeviceID(this.c)); // Add our device identifier
 
         List<NameValuePair> nvps = new ArrayList<NameValuePair>();
