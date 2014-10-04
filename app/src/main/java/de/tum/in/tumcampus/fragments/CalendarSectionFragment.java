@@ -187,8 +187,17 @@ public class CalendarSectionFragment extends Fragment {
         //Iterate through all items
         for (RelativeLayout event : eventList) {
             //Adapt width and offset when colliding events are added
+            boolean collisionPrevPrev = false,collisionPrev = false, collisionNext = false, collisionNextNext = false;
+
+            //Check previous previous item
+            if (currentEvent > 1 && this.overlap(eventTimes[currentEvent][0], eventTimes[currentEvent][1], eventTimes[currentEvent - 2][0], eventTimes[currentEvent - 2][1])) {
+                collisionPrevPrev = true;
+            } else {
+                collisionPrevPrev = false;
+            }
+
             //Check previous item
-            boolean collisionPrev = false, collisionNext = false;
+
             if (currentEvent > 0 && this.overlap(eventTimes[currentEvent][0], eventTimes[currentEvent][1], eventTimes[currentEvent - 1][0], eventTimes[currentEvent - 1][1])) {
                 collisionPrev = true;
             } else {
@@ -202,13 +211,20 @@ public class CalendarSectionFragment extends Fragment {
                 collisionNext = false;
             }
 
+            //Check next next item
+            if (currentEvent < (eventTimes.length - 2) && this.overlap(eventTimes[currentEvent][0], eventTimes[currentEvent][1], eventTimes[currentEvent + 2][0], eventTimes[currentEvent + 2][1])) {
+                collisionNextNext = true;
+            } else {
+                collisionNextNext = false;
+            }
+
             Log.e("Cal", ""+collisionPrev+" "+collisionNext+ " "+eventTimes.length+" "+currentEvent +" "+ Arrays.toString(eventTimes));
 
             //Fetch current parameters
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) event.getLayoutParams();
 
             // When collision detected: set width and offset
-            if (collisionPrev && !collisionNext) {
+            if (collisionPrev && !collisionNext || collisionPrev && collisionPrevPrev) {
                 //When three events overlap we need to double the offset
                 if (tripleCollision) {
                     tripleCollision = false;
@@ -224,7 +240,7 @@ public class CalendarSectionFragment extends Fragment {
                 params.width = Math.round(availableSpace / 2);
                 params.setMargins(0, params.topMargin, params.rightMargin, params.bottomMargin);
 
-            } else if (collisionPrev) {
+            } else if (collisionPrev ^ collisionPrevPrev) {
                 //Set previous
                 RelativeLayout prevEvent = eventList.get(currentEvent - 1);
                 RelativeLayout.LayoutParams prevLp = (RelativeLayout.LayoutParams) prevEvent.getLayoutParams();
