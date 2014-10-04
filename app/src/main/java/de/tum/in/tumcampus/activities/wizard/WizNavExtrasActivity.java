@@ -17,6 +17,7 @@ import de.tum.in.tumcampus.auxiliary.AccessTokenManager;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.NetUtils;
 import de.tum.in.tumcampus.auxiliary.Utils;
+import de.tum.in.tumcampus.models.ChatClient;
 import de.tum.in.tumcampus.models.ChatMember;
 import retrofit.RetrofitError;
 
@@ -79,7 +80,6 @@ public class WizNavExtrasActivity extends ActivityForLoadingInBackground<String,
      */
     @SuppressWarnings("UnusedParameters")
     public void onClickDone(View done) {
-<<<<<<< HEAD
         String nickname = nickName.getText().toString().trim();
         if (groupChatMode.isChecked() && !acceptedTerms.isChecked()) {
             Utils.showToast(this, R.string.have_to_accept_terms);
@@ -92,10 +92,7 @@ public class WizNavExtrasActivity extends ActivityForLoadingInBackground<String,
             return;
         }
 
-
         startLoading(nickname);
-
-
     }
 
     @Override
@@ -144,7 +141,7 @@ public class WizNavExtrasActivity extends ActivityForLoadingInBackground<String,
             finish();
             startActivity(new Intent(this, StartupActivity.class));
         }
-=======
+
         // Gets the editor for editing preferences and updates the preference
         // values with the chosen state
         Editor editor = preferences.edit();
@@ -160,14 +157,12 @@ public class WizNavExtrasActivity extends ActivityForLoadingInBackground<String,
                 return;
             }
 
-
             // If the user is opening the chat for the first time, we need to display
             // a dialog where they can enter their desired display name
             String nickname = nickName.getText().toString();
             String lrzId = Utils.getSetting(this, Const.LRZ_ID);
             ChatMember currentChatMember = new ChatMember(lrzId);
             currentChatMember.setDisplayName(nickname);
-
 
             // After the user has entered their display name,
             // send a request to the server to create the new member
@@ -181,13 +176,13 @@ public class WizNavExtrasActivity extends ActivityForLoadingInBackground<String,
         editor.putBoolean(Const.SILENCE_SERVICE, checkSilentMode.isChecked());
         editor.putBoolean(Const.BACKGROUND_MODE, checkBackgroundMode.isChecked());
         editor.putBoolean(Const.HIDE_WIZARD_ON_STARTUP, true);
+
         //Apply them to the shared prefs
         editor.apply();
 
         //Exit and start the main activity
         finish();
         startActivity(new Intent(this, StartupActivity.class));
->>>>>>> origin/master
     }
 
     public void onClickTerms(View view) {

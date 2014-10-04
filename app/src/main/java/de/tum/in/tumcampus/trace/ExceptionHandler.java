@@ -27,13 +27,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.tum.in.tumcampus.auxiliary.NetUtils;
-<<<<<<< HEAD
-=======
-
-import static de.tum.in.tumcampus.auxiliary.NetUtils.getDeviceID;
->>>>>>> origin/master
-
-
 
 public class ExceptionHandler {
 

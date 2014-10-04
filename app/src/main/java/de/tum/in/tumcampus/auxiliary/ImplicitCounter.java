@@ -81,11 +81,8 @@ public class ImplicitCounter extends AsyncTask<String, Integer, Void> {
         DefaultHttpClient httpClient = new DefaultHttpClient();
         HttpParams params = httpClient.getParams();
         HttpProtocolParams.setUseExpectContinue(params, false);
-<<<<<<< HEAD
+
         HttpPut request = new HttpPut(URL);
-=======
-        HttpPut request = new HttpPut(this.URL);
->>>>>>> origin/master
         request.addHeader("X-DEVICE-ID", NetUtils.getDeviceID(this.c)); // Add our device identifier
 
         List<NameValuePair> nvps = new ArrayList<NameValuePair>();
