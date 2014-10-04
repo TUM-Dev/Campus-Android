@@ -24,6 +24,7 @@ import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.generic.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampus.adapters.ExamListAdapter;
 import de.tum.in.tumcampus.auxiliary.Const;
+import de.tum.in.tumcampus.auxiliary.NetUtils;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.Exam;
 import de.tum.in.tumcampus.models.ExamList;
@@ -341,7 +342,7 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		Intent intent;
 
-		if (Utils.isConnected(this)) {
+		if (NetUtils.isConnected(this)) {
 			switch (item.getItemId()) {
 			case R.id.columnChart:
 				intent = new Intent(this, GradeChartActivity.class);

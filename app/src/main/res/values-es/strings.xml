@@ -78,7 +78,7 @@
     <string name="services">Servicios</string>
     <string name="silence_phone">Servicio silencioso</string>
     <string name="silence_phone_info">El dispositivo se configura automáticamente durante una conferencia en el modo silencioso.</string>
-    <string name="background_mode">Modo fondo</string>
+    <string name="background_mode">Modo fondo (Recomendado)</string>
     <string name="background_info">Actualiza el contenido de la aplicación una vez al día para mantenerte al día, incluso cuando la aplicación no está abierta.</string>
     <string name="demo_mode">In-App Tutorial</string>
     <string name="demo_info">Activar el modo de ayuda para obtener información sobre el funcionamiento de la aplicación.</string>

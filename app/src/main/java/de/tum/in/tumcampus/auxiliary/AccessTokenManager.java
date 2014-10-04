@@ -76,13 +76,8 @@ public class AccessTokenManager {
 	 */
 	public boolean requestAccessToken(Activity activity, String lrzId) {
 		try {
-			if (!Utils.isConnected(context)) {
-                activity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Utils.showToast(context, R.string.no_internet_connection);
-                    }
-                });
+			if (!NetUtils.isConnected(context)) {
+                Utils.showToastOnUIThread(activity, R.string.no_internet_connection);
 				return false;
 			}
 			// ok, do the request now
@@ -98,12 +93,7 @@ public class AccessTokenManager {
 			// set access token to null
 			Utils.setSetting(context, Const.ACCESS_TOKEN, null);
 
-            activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    Utils.showToast(context, R.string.access_token_wasnt_generated);
-                }
-            });
+            Utils.showToastOnUIThread(activity, R.string.access_token_wasnt_generated);
 		}
 		return false;
 	}

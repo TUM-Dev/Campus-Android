@@ -18,6 +18,7 @@ import android.widget.Toast;
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.UserPreferencesActivity;
 import de.tum.in.tumcampus.auxiliary.ImplicitCounter;
+import de.tum.in.tumcampus.auxiliary.NetUtils;
 import de.tum.in.tumcampus.auxiliary.StickyListViewDelegate;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
@@ -150,6 +151,7 @@ public abstract class ProgressActivity extends ActionBarActivity implements OnRe
         showLoadingEnded();
         noInternetLayout.setVisibility(View.VISIBLE);
         allErrorsLayout.setVisibility(View.VISIBLE);
+        noInternetLayout.findViewById(R.id.progressWifi).setVisibility(View.INVISIBLE);
         WifiManager wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
         Button but = (Button) findViewById(R.id.button_enable_wifi);
         but.setVisibility(wifi.isWifiEnabled() ? View.GONE : View.VISIBLE);
@@ -253,12 +255,13 @@ public abstract class ProgressActivity extends ActionBarActivity implements OnRe
     public void onEnableWifi(View view) {
         WifiManager wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
         wifi.setWifiEnabled(true);
+        noInternetLayout.findViewById(R.id.progressWifi).setVisibility(View.VISIBLE);
     }
 
     BroadcastReceiver connectivityChangeReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (Utils.isConnected(context)) {
+            if (NetUtils.isConnected(context)) {
                 onRefreshStarted(null);
             }
         }

@@ -1,34 +1,17 @@
 package de.tum.in.tumcampus.auxiliary;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.os.AsyncTask;
-import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.widget.ImageView;
 import android.widget.Toast;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
-import org.apache.http.util.EntityUtils;
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -39,17 +22,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
-
-import de.tum.in.tumcampus.models.managers.CacheManager;
 
 /**
  * Class for common helper functions used by a lot of classes
  */
 public class Utils {
-    /* Device id */
-    private static String uniqueID = null;
-    private static final String PREF_UNIQUE_ID = "PREF_UNIQUE_ID";
 
     /**
      * Builds a HTML document out of a css file and the body content.
@@ -103,262 +80,6 @@ public class Utils {
             return c.getInt(0);
         }
         return 0;
-    }
-
-    /**
-     * Start loading a file in the same thread
-     *
-     * @param url Download location
-     * @return Gets an InputStream to the file
-     * @throws Exception
-     */
-    private static InputStream downloadFileStream(String url) throws Exception {
-        logv("Download file: " + url);
-        HttpClient httpclient = new DefaultHttpClient();
-        HttpEntity entity = httpclient.execute(new HttpGet(url)).getEntity();
-
-        if (entity == null) {
-            return null;
-        }
-        return entity.getContent();
-    }
-
-
-    public static String downloadFileAndCache(Context context, String url, int validity) {
-        try {
-            CacheManager cacheManager = new CacheManager(context);
-            String content = cacheManager.getFromCache(url);
-            if (content != null) {
-                return content;
-            }
-
-            HttpClient httpClient = new DefaultHttpClient();
-
-            HttpParams params = httpClient.getParams();
-            HttpConnectionParams.setSoTimeout(params, Const.HTTP_TIMEOUT);
-            HttpConnectionParams.setConnectionTimeout(params, Const.HTTP_TIMEOUT);
-
-            HttpEntity entity = httpClient.execute(new HttpGet(url)).getEntity();
-
-            content = EntityUtils.toString(entity);
-
-            cacheManager.addToCache(url, content, validity, CacheManager.CACHE_TYP_DATA);
-            return content;
-        } catch (Exception e) {
-            log(e);
-            return null;
-        }
-    }
-
-    /**
-     * Download a file in the same thread.
-     * If file already exists the method returns immediately
-     * without downloading anything
-     *
-     * @param url    Download location
-     * @param target Target filename in local file system
-     * @throws Exception
-     */
-    private static void downloadToFile(String url, String target) throws Exception {
-        File f = new File(target);
-        if (f.exists()) {
-            return;
-        }
-
-        File file = new File(target);
-        InputStream in = downloadFileStream(url);
-        if (in == null) {
-            return;
-        }
-
-        FileOutputStream out = new FileOutputStream(file);
-        byte[] buffer = new byte[8192];
-        int count;
-        while ((count = in.read(buffer)) != -1) {
-            out.write(buffer, 0, count);
-        }
-        out.flush();
-        out.close();
-        in.close();
-    }
-
-    /**
-     * Downloads an image synchronously from the given url
-     *
-     * @param url Image url
-     * @return Downloaded image as {@link Bitmap}
-     */
-    public static File downloadImage(Context context, String url) {
-        try {
-            url = url.replaceAll(" ", "%20");
-
-            CacheManager cacheManager = new CacheManager(context);
-            String file = cacheManager.getFromCache(url);
-            if (file == null) {
-                File cache = context.getCacheDir();
-                file = cache.getAbsolutePath() + "/" + md5(url) + ".jpg";
-                cacheManager.addToCache(url, file, CacheManager.VALIDITY_TEN_DAYS, CacheManager.CACHE_TYP_IMAGE);
-            }
-
-            // If file already exists/was loaded it will return immediately
-            // Use this to be sure cache has not been cleaned manually
-            File f = new File(file);
-            downloadToFile(url, file);
-
-            return f;
-        } catch (Exception e) {
-            log(e, url);
-            return null;
-        }
-    }
-
-    /**
-     * Downloads an image synchronously from the given url
-     *
-     * @param url Image url
-     * @return Downloaded image as {@link Bitmap}
-     */
-    public static Bitmap downloadImageToBitmap(Context context, final String url) {
-        File f = downloadImage(context, url);
-        if (f == null)
-            return null;
-        return BitmapFactory.decodeFile(f.getAbsolutePath());
-    }
-
-    /**
-     * Download an image in background and sets the image to the image view
-     *
-     * @param context   Context
-     * @param url       URL
-     * @param imageView Image
-     */
-    public static void loadAndSetImage(final Context context, final String url, final ImageView imageView) {
-        synchronized (CacheManager.bitmapCache) {
-            Bitmap bmp = CacheManager.bitmapCache.get(url);
-            if (bmp != null) {
-                imageView.setImageBitmap(bmp);
-                return;
-            }
-        }
-        new AsyncTask<Void, Void, Bitmap>() {
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-                CacheManager.imageViews.put(imageView, url);
-                imageView.setImageBitmap(null);
-            }
-
-            @Override
-            protected Bitmap doInBackground(Void... voids) {
-                return downloadImageToBitmap(context, url);
-            }
-
-            @Override
-            protected void onPostExecute(Bitmap bitmap) {
-                if (bitmap == null)
-                    return;
-                synchronized (CacheManager.bitmapCache) {
-                    CacheManager.bitmapCache.put(url, bitmap);
-                }
-                String tag = CacheManager.imageViews.get(imageView);
-                if (tag != null && tag.equals(url)) {
-                    imageView.setImageBitmap(bitmap);
-                }
-            }
-        }.execute();
-    }
-
-    /**
-     * Download a JSON stream from a URL
-     *
-     * @param url Valid URL
-     * @return JSONObject
-     * @throws Exception
-     */
-    public static JSONObject downloadJson(String url) throws Exception {
-        logv("DownloadJson load from " + url);
-
-        HttpClient httpClient = new DefaultHttpClient();
-
-        HttpParams params = httpClient.getParams();
-        HttpConnectionParams.setSoTimeout(params, Const.HTTP_TIMEOUT);
-        HttpConnectionParams.setConnectionTimeout(params, Const.HTTP_TIMEOUT);
-
-        HttpEntity entity = httpClient.execute(new HttpGet(url)).getEntity();
-
-        String data = "";
-        if (entity != null) {
-            // JSON Response Read
-            data = EntityUtils.toString(entity);
-            logv("downloadJson " + data);
-        }
-        return new JSONObject(data);
-    }
-
-    /**
-     * Download a JSON stream from a URL or load it from cache
-     *
-     * @param context   Context
-     * @param url       Valid URL
-     * @param fillCache Load data anyway and fill cache, even if valid cached version exists
-     * @return JSONObject
-     */
-    public static JSONArray downloadJsonArray(Context context, String url, boolean fillCache, int validity) {
-        logv("downloadJson load from " + url);
-
-        String result;
-        try {
-            CacheManager cacheManager = new CacheManager(context);
-            result = cacheManager.getFromCache(url);
-            if (result == null || fillCache) {
-                HttpClient httpClient = new DefaultHttpClient();
-
-                HttpParams params = httpClient.getParams();
-                HttpConnectionParams.setSoTimeout(params, Const.HTTP_TIMEOUT);
-                HttpConnectionParams.setConnectionTimeout(params, Const.HTTP_TIMEOUT);
-
-                HttpGet get = new HttpGet(url);
-                get.addHeader("X-DEVICE-ID", getDeviceID(context));
-
-                HttpEntity entity = httpClient.execute(get).getEntity();
-
-                if (entity != null) {
-                    // do something with the response
-                    result = EntityUtils.toString(entity);
-                    cacheManager.addToCache(url, result, validity, CacheManager.CACHE_TYP_DATA);
-                    logv("added to cache " + url);
-                    logv("downloadJson " + result);
-                }
-            } else {
-                logv("loaded from cache " + url);
-            }
-
-            return new JSONArray(result);
-        } catch (Exception e) {
-            log(e);
-            return null;
-        }
-    }
-
-    /**
-     * Returns the full path of a cache directory and checks if it is readable and writable
-     *
-     * @param directory directory postfix (e.g. feeds/cache)
-     * @return full path of the cache directory
-     * @throws IOException
-     */
-    public static String getCacheDir(String directory) throws IOException {
-        File f = new File(Environment.getExternalStorageDirectory().getPath() + "/tumcampus/" + directory);
-        if (!f.exists()) {
-            f.mkdirs();
-        }
-        if (!f.canRead()) {
-            throw new IOException("Cannot read from SD-Card");
-        }
-        if (!f.canWrite()) {
-            throw new IOException("Cannot write to SD-Card");
-        }
-        return f.getPath() + "/";
     }
 
     /**
@@ -438,33 +159,6 @@ public class Utils {
     public static boolean getSettingBool(Context c, String name, boolean defaultVal) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(c);
         return sp.getBoolean(name, defaultVal);
-    }
-
-    /**
-     * Check if a network connection is available or can be available soon
-     *
-     * @return true if available
-     */
-    public static boolean isConnected(Context con) {
-        ConnectivityManager cm = (ConnectivityManager) con
-                .getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo netInfo = cm.getActiveNetworkInfo();
-
-        return netInfo != null && netInfo.isConnectedOrConnecting();
-    }
-
-    /**
-     * Check if a network connection is available or can be available soon
-     * and if the available connection is a mobile internet connection
-     *
-     * @return true if available
-     */
-    public static boolean isConnectedMobileData(Context con) {
-        ConnectivityManager cm = (ConnectivityManager) con
-                .getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo netInfo = cm.getActiveNetworkInfo();
-
-        return netInfo != null && netInfo.isConnectedOrConnecting() && netInfo.getType() == ConnectivityManager.TYPE_MOBILE;
     }
 
     /**
@@ -726,20 +420,27 @@ public class Utils {
         return prefs.getString(key, value);
     }
 
+
     /**
-     * Gets an unique id that identifies this device
-     *
-     * @param context Context
-     * @return Unique device id
+     * @return Application's version code from the {@code PackageManager}.
      */
-    public synchronized static String getDeviceID(Context context) {
-        if (uniqueID == null) {
-            uniqueID = getInternalSettingString(context, PREF_UNIQUE_ID, null);
-            if (uniqueID == null) {
-                uniqueID = UUID.randomUUID().toString();
-                setInternalSetting(context, PREF_UNIQUE_ID, uniqueID);
-            }
+    public static int getAppVersion(Context context) {
+        try {
+            PackageInfo packageInfo = context.getPackageManager()
+                    .getPackageInfo(context.getPackageName(), 0);
+            return packageInfo.versionCode;
+        } catch (PackageManager.NameNotFoundException e) {
+            // should never happen
+            throw new RuntimeException("Could not get package name: " + e);
         }
-        return uniqueID;
+    }
+
+    public static void showToastOnUIThread(final Activity activity, final int s) {
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Utils.showToast(activity, s);
+            }
+        });
     }
 }

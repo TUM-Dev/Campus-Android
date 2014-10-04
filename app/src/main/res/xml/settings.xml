@@ -216,6 +216,11 @@
                     android:key="card_news_latest_only"
                     android:summary="@string/only_latest_article_summary"
                     android:title="@string/only_latest_article" />
+                <!--<CheckBoxPreference
+                    android:defaultValue="true"
+                    android:key="card_news_alert"
+                    android:summary="@string/show_important_news_summary"
+                    android:title="@string/show_important_news" />-->
             </PreferenceCategory>
         </PreferenceScreen>
 

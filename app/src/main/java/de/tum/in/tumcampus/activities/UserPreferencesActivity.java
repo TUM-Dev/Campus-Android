@@ -27,13 +27,13 @@ import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.wizard.WizNavStartActivity;
 import de.tum.in.tumcampus.auxiliary.AccessTokenManager;
 import de.tum.in.tumcampus.auxiliary.Const;
+import de.tum.in.tumcampus.auxiliary.NetUtils;
 import de.tum.in.tumcampus.auxiliary.Utils;
-import de.tum.in.tumcampus.models.managers.CafeteriaManager;
-import de.tum.in.tumcampus.models.managers.CafeteriaMenuManager;
+import de.tum.in.tumcampus.models.managers.CacheManager;
 import de.tum.in.tumcampus.models.managers.CalendarManager;
 import de.tum.in.tumcampus.models.managers.CardManager;
+import de.tum.in.tumcampus.models.managers.DatabaseManager;
 import de.tum.in.tumcampus.models.managers.NewsManager;
-import de.tum.in.tumcampus.models.managers.SyncManager;
 import de.tum.in.tumcampus.services.BackgroundService;
 import de.tum.in.tumcampus.services.SilenceService;
 
@@ -117,7 +117,8 @@ public class UserPreferencesActivity extends PreferenceActivity implements
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            final Bitmap bmp = Utils.downloadImageToBitmap(UserPreferencesActivity.this, url);
+                            NetUtils net = new NetUtils(UserPreferencesActivity.this);
+                            final Bitmap bmp = net.downloadImageToBitmap(url);
                             runOnUiThread(new Runnable() {
                                 @TargetApi(11)
                                 @Override
@@ -273,30 +274,11 @@ public class UserPreferencesActivity extends PreferenceActivity implements
     /**
      * Clears all downloaded data from SD card and database
      */
-    //TODO remove this option/clean up too old cache content on startup
     private void clearCache() {
-        try {
-            Utils.getCacheDir("");
-        } catch (Exception e) {
-            Utils.showToast(this, R.string.exception_sdcard);
-            return;
-        }
+        DatabaseManager.resetDb(this);
 
-        CafeteriaManager cm = new CafeteriaManager(this);
-        cm.removeCache();
-
-        CafeteriaMenuManager cmm = new CafeteriaMenuManager(this);
-        cmm.removeCache();
-
-        NewsManager nm = new NewsManager(this);
-        nm.removeCache();
-
-        CalendarManager calendarManager = new CalendarManager(this);
-        calendarManager.removeCache();
-
-        // table of all download events
-        SyncManager sm = new SyncManager(this);
-        sm.deleteFromDb();
+        CacheManager manager = new CacheManager(this);
+        manager.clearCache();
 
         // delete local calendar
         if (Build.VERSION.SDK_INT >= 14) {

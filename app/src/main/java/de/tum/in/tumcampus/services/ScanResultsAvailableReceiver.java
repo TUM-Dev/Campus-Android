@@ -15,6 +15,7 @@ import java.util.List;
 
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.SetupEduroamActivity;
+import de.tum.in.tumcampus.auxiliary.NetUtils;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.managers.EduroamManager;
 
@@ -30,7 +31,7 @@ public class ScanResultsAvailableReceiver extends BroadcastReceiver {
         // Test if user has eduroam configured already
         EduroamManager man = new EduroamManager(context);
         boolean show = Utils.getSettingBool(context, "card_eduroam_phone", true);
-        if(man.isConfigured() || Utils.isConnected(context) || Build.VERSION.SDK_INT<18 || !show)
+        if(man.isConfigured() || NetUtils.isConnected(context) || Build.VERSION.SDK_INT<18 || !show)
             return;
 
         // Test if eduroam is available

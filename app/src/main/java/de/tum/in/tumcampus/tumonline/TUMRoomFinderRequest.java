@@ -3,12 +3,6 @@ package de.tum.in.tumcampus.tumonline;
 import android.content.Context;
 import android.os.AsyncTask;
 
-import org.apache.http.client.HttpClient;
-import org.apache.http.conn.ClientConnectionManager;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -21,7 +15,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import de.tum.in.tumcampus.R;
-import de.tum.in.tumcampus.auxiliary.Const;
+import de.tum.in.tumcampus.auxiliary.NetUtils;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.auxiliary.XMLParser;
 import de.tum.in.tumcampus.models.Geo;
@@ -61,11 +55,6 @@ public class TUMRoomFinderRequest {
     private final String SERVICE_BASE_URL = "http://vmbaumgarten3.informatik.tu-muenchen.de/";
 
     public TUMRoomFinderRequest() {
-        /* http client instance for fetching */
-        HttpClient client = getThreadSafeClient();
-        HttpParams params = client.getParams();
-        HttpConnectionParams.setSoTimeout(params, Const.HTTP_TIMEOUT);
-        HttpConnectionParams.setConnectionTimeout(params, Const.HTTP_TIMEOUT);
         parameters = new HashMap<String, String>();
         method = "search";
     }
@@ -164,8 +153,8 @@ public class TUMRoomFinderRequest {
     }
 
     String fetchDefaultMapId(String buildingID) {
-        method = "defaultMapId";
         setParameter("id", buildingID);
+        method = "defaultMapId";
 
         String ROOM_SERVICE_DEFAULT_MAP_URL = SERVICE_BASE_URL + "roommaps/building/";
         String url = getRequestURL(ROOM_SERVICE_DEFAULT_MAP_URL);
@@ -193,8 +182,8 @@ public class TUMRoomFinderRequest {
     }
 
     public ArrayList<HashMap<String, String>> fetchAvailableMaps(String room) {
-        method = "availableMaps";
         setParameter("id", room);
+        method = "availableMaps";
 
         String url = getRequestURL(SERVICE_BASE_URL + "roommaps/room/");
         Utils.log("fetching Map URL " + url);
@@ -243,7 +232,7 @@ public class TUMRoomFinderRequest {
             protected String doInBackground(String... buildingID) {
                 // set parameter on the TUMRoomFinder request an fetch the
                 // results
-                isOnline = Utils.isConnected(context);
+                isOnline = NetUtils.isConnected(context);
                 if (!isOnline) {
                     // not online, fetch does not make sense
                     return null;
@@ -302,7 +291,7 @@ public class TUMRoomFinderRequest {
                     String... searchString) {
                 // set parameter on the TUMRoomFinder request an fetch the
                 // results
-                isOnline = Utils.isConnected(context);
+                isOnline = NetUtils.isConnected(context);
                 if (!isOnline) {
                     // not online, fetch does not make sense
                     return null;
@@ -313,8 +302,7 @@ public class TUMRoomFinderRequest {
             }
 
             @Override
-            protected void onPostExecute(
-                    ArrayList<HashMap<String, String>> result) {
+            protected void onPostExecute(ArrayList<HashMap<String, String>> result) {
                 // handle result
                 if (!isOnline) {
                     listener.onNoInternetError();
@@ -349,17 +337,6 @@ public class TUMRoomFinderRequest {
         return url;
     }
 
-    private DefaultHttpClient getThreadSafeClient() {
-        DefaultHttpClient client = new DefaultHttpClient();
-        ClientConnectionManager mgr = client.getConnectionManager();
-        HttpParams params = client.getParams();
-
-        client = new DefaultHttpClient(new ThreadSafeClientConnManager(params,
-                mgr.getSchemeRegistry()), params);
-
-        return client;
-    }
-
     /**
      * Sets one parameter name to its given value and deletes all others
      *
@@ -374,7 +351,6 @@ public class TUMRoomFinderRequest {
             Utils.log(e);
         }
     }
-
 
     /**
      * Converts UTM based coordinates to latitude and longitude based format

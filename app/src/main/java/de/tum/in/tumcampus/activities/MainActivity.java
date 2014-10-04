@@ -1,7 +1,11 @@
 package de.tum.in.tumcampus.activities;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.Configuration;
+import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -22,6 +26,7 @@ import de.tum.in.tumcampus.adapters.CardsAdapter;
 import de.tum.in.tumcampus.adapters.NavigationDrawerAdapter;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.ImplicitCounter;
+import de.tum.in.tumcampus.auxiliary.NetUtils;
 import de.tum.in.tumcampus.auxiliary.SwipeDismissList;
 import de.tum.in.tumcampus.cards.Card;
 import de.tum.in.tumcampus.models.managers.CardManager;
@@ -43,6 +48,7 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
     private ListView mDrawerList;
+    private boolean registered;
 
     /**
      * Card list
@@ -156,6 +162,15 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
     protected void onStop() {
         super.onStop();
         mSwipeList.discardUndo();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(registered) {
+            unregisterReceiver(connectivityChangeReceiver);
+            registered = false;
+        }
     }
 
     /**
@@ -355,7 +370,28 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
                 else
                     mAdapter.notifyDataSetChanged();
                 mPullToRefreshLayout.setRefreshComplete();
+                if(!registered) {
+                    registerReceiver(connectivityChangeReceiver,
+                            new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+                    registered = true;
+                }
             }
         }.execute();
     }
+
+    BroadcastReceiver connectivityChangeReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (NetUtils.isConnected(context)) {
+                refreshCards();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        unregisterReceiver(connectivityChangeReceiver);
+                        registered = false;
+                    }
+                });
+            }
+        }
+    };
 }

@@ -81,7 +81,7 @@
     <string name="services">Dienste</string>
     <string name="silence_phone">Lautlos Service</string>
     <string name="silence_phone_info">Das Gerät wird während einer Vorlesung automatisch in den lautlosen Modus gestellt.</string>
-    <string name="background_mode">Hintergrund Modus</string>
+    <string name="background_mode">Hintergrund Modus (Empfohlen)</string>
     <string name="background_info">Aktualisiert die Inhalte der App einmal täglich, um dich auf dem neusten Stand zu halten, sogar wenn die App nicht geöffnet ist.</string>
     <string name="demo_mode">In-App-Tutorial</string>
     <string name="demo_info">Hilfemodus aktivieren, um Informationen zur Bedienung der App zu erhalten.</string>

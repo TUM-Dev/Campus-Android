@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.adapters.NewsAdapter;
+import de.tum.in.tumcampus.auxiliary.NetUtils;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.managers.CardManager;
 import de.tum.in.tumcampus.models.managers.NewsManager;
@@ -25,9 +26,11 @@ public class NewsCard extends Card {
 
     private Cursor mCursor;
     private int mPosition;
+    private NetUtils net;
 
     public NewsCard(Context context) {
         super(context, "card_news", false, false);
+        net = new NetUtils(context);
     }
 
     @Override
@@ -52,7 +55,7 @@ public class NewsCard extends Card {
         mCursor.moveToPosition(mPosition);
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View card = NewsAdapter.newNewsView(mInflater, mCursor, parent);
-        NewsAdapter.bindNewsView(card, mContext, mCursor);
+        NewsAdapter.bindNewsView(net, card, mCursor);
         return card;
     }
 
@@ -99,7 +102,7 @@ public class NewsCard extends Card {
         notificationBuilder.setContentText(mCursor.getString(2));
         notificationBuilder.setContentInfo(mCursor.getString(9));
         notificationBuilder.setTicker(mCursor.getString(2));
-        Bitmap img = Utils.downloadImageToBitmap(mContext, mCursor.getString(5));
+        Bitmap img = net.downloadImageToBitmap(mCursor.getString(5));
         notificationBuilder.extend(new NotificationCompat.WearableExtender().setBackground(img));
         return notificationBuilder.build();
     }

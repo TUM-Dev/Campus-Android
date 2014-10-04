@@ -85,20 +85,20 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
     @Override
     public void onFetch(final CalendarRowSet rawResponse) {
         // parsing and saving xml response
-        new AsyncTask<Void, Void, Boolean>() {
+        new AsyncTask<Void, Void, Void>() {
             @Override
             protected void onPreExecute() {
                 isFetched = true;
             }
 
             @Override
-            protected Boolean doInBackground(Void... params) {
+            protected Void doInBackground(Void... params) {
                 calendarManager.importCalendar(rawResponse);
-                return true;
+                return null;
             }
 
             @Override
-            protected void onPostExecute(Boolean result) {
+            protected void onPostExecute(Void result) {
                 showLoadingEnded();
                 attachSectionPagerAdapter();
                 // update the action bar to display the enabled menu options

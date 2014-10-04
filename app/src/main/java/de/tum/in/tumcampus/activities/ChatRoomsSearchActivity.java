@@ -1,22 +1,13 @@
 package de.tum.in.tumcampus.activities;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.util.Base64;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.EditText;
-import android.widget.LinearLayout;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -114,7 +105,7 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline<Lectu
                         // so we are trying to retrieve it with an additional GET request
                         Utils.logv("Failure creating chat room - trying to GET it from the server: " + arg0.toString());
                         List<ChatRoom> chatRooms = ChatClient.getInstance().getChatRoomWithName(currentChatRoom);
-                        if(chatRooms!=null)
+                        if (chatRooms != null)
                             currentChatRoom = chatRooms.get(0);
 
                         showTermsIfNeeded(intent);
@@ -124,65 +115,22 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline<Lectu
         });
 
         requestFetch();
-
-        final SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-        populateCurrentChatMember(sharedPrefs);
     }
 
     /**
      * Checks device for Play Services APK.
      * Initializes current chat member, if not already initialized
      * shows dialog to enter display name.
-     *
-     * @param sharedPrefs Default shared preferences object
      */
-    private void populateCurrentChatMember(final SharedPreferences sharedPrefs) {
+    private void populateCurrentChatMember() {
         try {
             if (currentChatMember == null) {
-                String lrzId = sharedPrefs.getString(Const.LRZ_ID, "");
-                if (sharedPrefs.contains(Const.CHAT_ROOM_DISPLAY_NAME)) {
-                    // If this is not the first time this user is opening the chat,
-                    // we GET their data from the server using their lrzId
-                    List<ChatMember> members = ChatClient.getInstance().getMember(lrzId);
-                    currentChatMember = members.get(0);
+                String lrzId = Utils.getSetting(this, Const.LRZ_ID);
+                // GET their data from the server using their lrzId
+                List<ChatMember> members = ChatClient.getInstance().getMember(lrzId);
+                currentChatMember = members.get(0);
 
-                    checkPlayServicesAndRegister();
-                } else {
-                    // If the user is opening the chat for the first time, we need to display
-                    // a dialog where they can enter their desired display name
-                    currentChatMember = new ChatMember(lrzId);
-
-                    LinearLayout layout = new LinearLayout(this);
-                    layout.setOrientation(LinearLayout.VERTICAL);
-
-                    final EditText etDisplayName = new EditText(this);
-                    etDisplayName.setHint(R.string.display_name);
-                    layout.addView(etDisplayName);
-
-                    AlertDialog.Builder builder = new AlertDialog.Builder(ChatRoomsSearchActivity.this);
-                    builder.setTitle(R.string.chat_display_name_title)
-                            .setView(layout)
-                            .setPositiveButton(getResources().getString(android.R.string.ok), new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    currentChatMember.setDisplayName(etDisplayName.getText().toString()); // TODO: Disallow empty display name
-
-                                    // Save display name in shared preferences
-                                    Editor editor = sharedPrefs.edit();
-                                    editor.putString(Const.CHAT_ROOM_DISPLAY_NAME, currentChatMember.getDisplayName());
-                                    editor.apply();
-
-                                    // After the user has entered their display name,
-                                    // send a request to the server to create the new member
-                                    currentChatMember = ChatClient.getInstance().createMember(currentChatMember);
-
-                                    checkPlayServicesAndRegister();
-                                }
-                            });
-
-                    AlertDialog alertDialog = builder.create();
-                    alertDialog.show();
-                }
+                checkPlayServicesAndRegister();
             }
         } catch (RetrofitError e) {
             Utils.log(e);
@@ -195,7 +143,7 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline<Lectu
     public void onFetch(LecturesSearchRowSet lecturesList) {
         List<LecturesSearchRow> lectures = lecturesList.getLehrveranstaltungen();
 
-        if (lectures == null) { //TODO set required false in model
+        if (lectures == null) {
             // no results found
             lvMyLecturesList.setAdapter(new NoResultsAdapter(this));
             return;
@@ -213,50 +161,44 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline<Lectu
     protected void onResume() {
         super.onResume();
         // Check device for Play Services APK.
-        populateCurrentChatMember(PreferenceManager.getDefaultSharedPreferences(this));
+        populateCurrentChatMember();
     }
 
     /**
      * Displays chat terms if activity is opened for the first time
+     *
      * @param intent Intent to start after chat terms have been accepted
      */
     private void showTermsIfNeeded(final Intent intent) {
         // If the terms have not been shown for this chat room, show them
         if (!Utils.getInternalSettingBool(this, Const.CHAT_TERMS_SHOWN + "_" + currentChatRoom.getName(), false)) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(ChatRoomsSearchActivity.this);
-            builder.setTitle(R.string.chat_terms_title)
-                    .setMessage(getResources().getString(R.string.chat_terms_body))
-                    .setPositiveButton(getResources().getString(android.R.string.ok), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            if (currentChatMember.getLrzId() != null) {
-                                // Generate signature
-                                RSASigner signer = new RSASigner(currentPrivateKey);
-                                String signature = signer.sign(currentChatMember.getLrzId());
-                                currentChatMember.setSignature(signature);
 
-                                ChatClient.getInstance().joinChatRoom(currentChatRoom, currentChatMember, new Callback<ChatRoom>() {
-                                    @Override
-                                    public void success(ChatRoom arg0, Response arg1) {
-                                        Utils.logv("Success joining chat room: " + arg0.toString());
-                                        // Remember in sharedPrefs that the terms dialog was shown
-                                        Utils.setInternalSetting(ChatRoomsSearchActivity.this, Const.CHAT_TERMS_SHOWN + "_" + currentChatRoom.getName(), true);
+            if (currentChatMember.getLrzId() != null) {
+                // Generate signature
+                RSASigner signer = new RSASigner(currentPrivateKey);
+                String signature = signer.sign(currentChatMember.getLrzId());
+                currentChatMember.setSignature(signature);
 
-                                        moveToChatActivity(intent);
-                                    }
+                ChatClient.getInstance().joinChatRoom(currentChatRoom, currentChatMember, new Callback<ChatRoom>() {
+                    @Override
+                    public void success(ChatRoom arg0, Response arg1) {
+                        Utils.logv("Success joining chat room: " + arg0.toString());
+                        // Remember in sharedPrefs that the terms dialog was shown
+                        Utils.setInternalSetting(ChatRoomsSearchActivity.this, Const.CHAT_TERMS_SHOWN + "_" + currentChatRoom.getName(), true);
 
-                                    @Override
-                                    public void failure(RetrofitError e) {
-                                        Utils.log(e, "Failure joining chat room");
-                                        Utils.showToast(ChatRoomsSearchActivity.this, "Please activate your public key first");
-                                    }
-                                });
-                            }
-                        }
-                    });
+                        Utils.showToastOnUIThread(ChatRoomsSearchActivity.this, R.string.joined_chatroom);
 
-            AlertDialog alertDialog = builder.create();
-            alertDialog.show();
+                        moveToChatActivity(intent);
+                    }
+
+                    @Override
+                    public void failure(RetrofitError e) {
+                        Utils.log(e, "Failure joining chat room");
+                        Utils.showToastOnUIThread(ChatRoomsSearchActivity.this, R.string.activate_key);
+                    }
+                });
+            }
+
         } else { // If the terms were already shown, just enter the chat room
             moveToChatActivity(intent);
         }
@@ -264,6 +206,7 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline<Lectu
 
     /**
      * Opens {@link ChatActivity}
+     *
      * @param intent Intent for {@link ChatActivity}
      */
     private void moveToChatActivity(final Intent intent) {
@@ -276,6 +219,7 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline<Lectu
 
     /**
      * Gets private key from preferences or generates one.
+     *
      * @return Private key instance
      */
     private PrivateKey retrieveOrGeneratePrivateKey() {
@@ -383,7 +327,7 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline<Lectu
 
     /**
      * Gets the current registration ID for application on GCM service.
-     *
+     * <p/>
      * If result is empty, the app needs to register.
      *
      * @return registration ID, or empty string if there is no existing
@@ -399,7 +343,7 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline<Lectu
         // since the existing regID is not guaranteed to work with the new
         // app version.
         int registeredVersion = Utils.getInternalSettingInt(this, PROPERTY_APP_VERSION, Integer.MIN_VALUE);
-        int currentVersion = getAppVersion(context);
+        int currentVersion = Utils.getAppVersion(context);
         if (registeredVersion != currentVersion) {
             Utils.log("App version changed.");
             return "";
@@ -408,22 +352,8 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline<Lectu
     }
 
     /**
-     * @return Application's version code from the {@code PackageManager}.
-     */
-    private static int getAppVersion(Context context) {
-        try {
-            PackageInfo packageInfo = context.getPackageManager()
-                    .getPackageInfo(context.getPackageName(), 0);
-            return packageInfo.versionCode;
-        } catch (NameNotFoundException e) {
-            // should never happen
-            throw new RuntimeException("Could not get package name: " + e);
-        }
-    }
-
-    /**
      * Registers the application with GCM servers asynchronously.
-     *
+     * <p/>
      * Stores the registration ID and app versionCode in the application's
      * shared preferences.
      */
@@ -463,7 +393,7 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline<Lectu
             protected void onPostExecute(String msg) {
                 Utils.log(msg);
             }
-        }.execute(null, null, null);
+        }.execute();
     }
 
     /**
@@ -501,7 +431,7 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline<Lectu
      * @param regId   registration ID
      */
     private void storeRegistrationId(Context context, String regId) {
-        int appVersion = getAppVersion(context);
+        int appVersion = Utils.getAppVersion(context);
 
         Utils.logv("Saving regId on app version " + appVersion);
         Utils.setInternalSetting(this, Const.GCM_REG_ID, regId);

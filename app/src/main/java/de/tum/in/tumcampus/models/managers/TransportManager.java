@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import de.tum.in.tumcampus.auxiliary.Const;
+import de.tum.in.tumcampus.auxiliary.NetUtils;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.cards.Card;
 import de.tum.in.tumcampus.cards.MVVCard;
@@ -31,7 +32,7 @@ public class TransportManager implements Card.ProvidesCard {
      * @return List of departures
      * @throws Exception
      */
-    public static List<Departure> getDeparturesFromExternal(String location) throws Exception {
+    public static List<Departure> getDeparturesFromExternal(Context context, String location) throws Exception {
 
         String baseUrl = "http://query.yahooapis.com/v1/public/yql?format=json&q=";
         // ISO needed for mvv
@@ -40,7 +41,7 @@ public class TransportManager implements Card.ProvidesCard {
         String query = URLEncoder.encode("select content from html where url=\"" + lookupUrl + "\" and xpath=\"//td[contains(@class,'Column')]/p\"", "UTF-8");
         Utils.log(query);
 
-        JSONArray jsonArray = Utils.downloadJson(baseUrl + query)
+        JSONArray jsonArray = NetUtils.downloadJson(context, baseUrl + query)
                 .getJSONObject("query").getJSONObject("results")
                 .getJSONArray("p");
 
@@ -82,7 +83,7 @@ public class TransportManager implements Card.ProvidesCard {
      * @return Database Cursor (name, _id)
      * @throws Exception
      */
-    public static Cursor getStationsFromExternal(String location) throws Exception {
+    public static Cursor getStationsFromExternal(Context context, String location) throws Exception {
 
         String baseUrl = "http://query.yahooapis.com/v1/public/yql?format=json&q=";
         String lookupUrl = "http://www.mvg-live.de/ims/dfiStaticAuswahl.svc?haltestelle=" + URLEncoder.encode(location, "ISO-8859-1");
@@ -91,9 +92,14 @@ public class TransportManager implements Card.ProvidesCard {
                         + "\" and xpath=\"//a[contains(@href,'haltestelle')]\"", "UTF-8");
         Utils.log(query);
 
-        JSONObject jsonObj = Utils.downloadJson(baseUrl + query).getJSONObject(
-                "query");
+        JSONObject jsonObj = NetUtils.downloadJson(context, baseUrl + query);
+        if(jsonObj==null)
+            return null;
+
+        jsonObj = jsonObj.getJSONObject("query");
+
         JSONArray jsonArray = new JSONArray();
+        MatrixCursor mc = new MatrixCursor(new String[]{"name", "_id"});
 
         try {
             Object obj = jsonObj.getJSONObject(Const.JSON_RESULTS).get("a");
@@ -101,16 +107,14 @@ public class TransportManager implements Card.ProvidesCard {
                 jsonArray = (JSONArray) obj;
             } else {
                 if (obj.toString().contains("aktualisieren")) {
-                    throw new NoSuchElementException("No station found");
+                    return mc;
                 }
                 jsonArray.put(obj);
             }
         } catch (Exception e) {
             Utils.log(e);
-            throw new NoSuchElementException("No station found");
+            return mc;
         }
-
-        MatrixCursor mc = new MatrixCursor(new String[]{"name", "_id"});
 
         for (int j = 0; j < jsonArray.length(); j++) {
             String station = jsonArray.getString(j).replaceAll("\\s+", " ");
@@ -125,7 +129,7 @@ public class TransportManager implements Card.ProvidesCard {
      */
     @Override
     public void onRequestCard(Context context) {
-        if(!Utils.isConnected(context))
+        if(!NetUtils.isConnected(context))
             return;
 
         // Get station for current campus
@@ -135,7 +139,7 @@ public class TransportManager implements Card.ProvidesCard {
 
         List<Departure> cur;
         try {
-            cur = getDeparturesFromExternal(station);
+            cur = getDeparturesFromExternal(context, station);
             MVVCard card = new MVVCard(context);
             card.setStation(station);
             card.setDepartures(cur);

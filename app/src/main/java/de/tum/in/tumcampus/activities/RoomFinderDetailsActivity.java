@@ -16,6 +16,7 @@ import java.util.HashMap;
 
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.generic.ActivityForLoadingInBackground;
+import de.tum.in.tumcampus.auxiliary.NetUtils;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.Geo;
 import de.tum.in.tumcampus.tumonline.TUMRoomFinderRequest;
@@ -33,6 +34,7 @@ public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<St
     private boolean mapsLoaded = false;
     private TUMRoomFinderRequest request;
     private ArrayList<HashMap<String, String>> mapsList;
+    private NetUtils net;
 
     public RoomFinderDetailsActivity() {
         super(R.layout.activity_roomfinderdetails);
@@ -42,6 +44,7 @@ public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<St
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        net = new NetUtils(this);
         mImage = (ImageViewTouch) findViewById(R.id.activity_roomfinder_details);
         mImage.setDisplayType(ImageViewTouchBase.DisplayType.FIT_TO_SCREEN);
 
@@ -132,7 +135,7 @@ public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<St
 
     @Override
     protected Bitmap onLoadInBackground(String... arg) {
-        return Utils.downloadImageToBitmap(this, arg[0]);
+        return net.downloadImageToBitmap(arg[0]);
     }
 
     @Override

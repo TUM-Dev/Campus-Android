@@ -17,21 +17,6 @@ import java.io.InputStream;
  */
 public class FileUtils {
 
-	/**
-	 * Returns a file on SD card. Creates it if not exists.
-	 * 
-	 * @param folder The file's folder, relative to the cache directory.
-	 * @param filename The file's name.
-	 * 
-	 * @return The file.
-	 * @throws Exception If SD-card does not exist
-	 */
-	public static File getFileOnSD(String folder, String filename) throws Exception {
-		// Save the file to/open from SD
-		File path = new File(Utils.getCacheDir(folder));
-
-		return new File(path, filename);
-	}
 
 	/**
 	 * Gets a document from a URL and returns the source code as text.

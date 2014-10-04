@@ -15,6 +15,7 @@ import java.util.WeakHashMap;
 
 import de.tum.in.tumcampus.activities.CurriculaActivity;
 import de.tum.in.tumcampus.auxiliary.AccessTokenManager;
+import de.tum.in.tumcampus.auxiliary.NetUtils;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.CalendarRowSet;
 import de.tum.in.tumcampus.models.LecturesSearchRowSet;
@@ -89,9 +90,11 @@ public class CacheManager {
      * Download usual tumOnline requests
      */
     public void fillCache() {
+
+        NetUtils net = new NetUtils(mContext);
         // Cache curricula urls
         if (shouldRefresh(CurriculaActivity.CURRICULA_URL)) {
-            Utils.downloadJsonArray(mContext, CurriculaActivity.CURRICULA_URL, true, CacheManager.VALIDITY_ONE_MONTH);
+            net.downloadJsonArray(CurriculaActivity.CURRICULA_URL, CacheManager.VALIDITY_ONE_MONTH, true);
         }
 
         // Cache news source images
@@ -101,7 +104,7 @@ public class CacheManager {
             do {
                 String imgUrl = cur.getString(1);
                 if(!imgUrl.isEmpty() && !imgUrl.equals("null"))
-                    Utils.downloadImage(mContext, imgUrl);
+                    net.downloadImage(imgUrl);
             } while(cur.moveToNext());
         }
         cur.close();
@@ -112,7 +115,7 @@ public class CacheManager {
             do {
                 String imgUrl = cur.getString(5);
                 if(!imgUrl.isEmpty())
-                    Utils.downloadImage(mContext, imgUrl);
+                    net.downloadImage(imgUrl);
             } while(cur.moveToNext());
         }
         cur.close();
@@ -140,18 +143,21 @@ public class CacheManager {
         importLecturesFromTUMOnline();
 
         // Sync calendar
-        TUMOnlineRequest<CalendarRowSet> requestHandler3 = new TUMOnlineRequest<CalendarRowSet>(TUMOnlineConst.CALENDER, mContext);
+        syncCalendar();
+    }
+
+    public void syncCalendar() {
+        TUMOnlineRequest<CalendarRowSet> requestHandler = new TUMOnlineRequest<CalendarRowSet>(TUMOnlineConst.CALENDER, mContext);
         requestHandler.setParameter("pMonateVor", "0");
         requestHandler.setParameter("pMonateNach", "3");
-        if (shouldRefresh(requestHandler3.getRequestURL())) {
-            CalendarRowSet set = requestHandler3.fetch();
+        if (shouldRefresh(requestHandler.getRequestURL())) {
+            CalendarRowSet set = requestHandler.fetch();
             if (set != null) {
                 CalendarManager calendarManager = new CalendarManager(mContext);
                 calendarManager.importCalendar(set);
                 CalendarManager.QueryLocationsService.loadGeo(mContext);
             }
         }
-
     }
 
     /**
@@ -241,5 +247,17 @@ public class CacheManager {
             req2.setParameter("pLVNr", currentLecture.getStp_sp_nr());
             req2.fetch();
         }*/
+    }
+
+    public void clearCache() {
+        // Delete all entries that are too old and delete corresponding image files
+        Cursor cur = db.rawQuery("SELECT data FROM cache WHERE typ=1",null);
+        if(cur.moveToFirst()) {
+            do {
+                File f = new File(cur.getString(0));
+                f.delete();
+            } while (cur.moveToNext());
+        }
+        cur.close();
     }
 }

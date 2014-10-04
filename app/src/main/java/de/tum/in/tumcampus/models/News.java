@@ -28,7 +28,6 @@ public class News {
      * Content
      */
     public final String title;
-    public final String description;
 
     /**
      * Date
@@ -43,16 +42,14 @@ public class News {
 	 *
 	 * @param id News Facebook-ID
      * @param title Title
-     * @param description Description
 	 * @param link Url, e.g. http://www.in.tum.de
 	 * @param image Image url e.g. http://www.tu-film.de/img/film/poster/Fack%20ju%20Ghte.jpg
 	 * @param date Date
      * @param created Creation date
 	 */
-	public News(String id, String title, String description, String link, String src, String image, Date date, Date created) {
+	public News(String id, String title, String link, String src, String image, Date date, Date created) {
 		this.id = id;
         this.title = title;
-        this.description = description;
 		this.link = link;
         this.src = src;
 		this.image = image;

@@ -12,7 +12,6 @@ public final class Const {
 	public static final String CAFETERIA_ID = "cafeteriasId";
 	public static final String CAFETERIAS = "cafeterias";
 	public static final String COMPLETED = "completed";
-	public static final String CURRICULA = "curricula";
 	public final static String DATABASE_NAME = "database.db";
 	public static final String DATE = "date";
 	public static final String DE = "de";
@@ -25,7 +24,6 @@ public final class Const {
 			"4,4", "4,7", "5,0" };
 	public static final String HIDE_WIZARD_ON_STARTUP = "hide_wizard_on_startup";
 	public static final String HOURS_COLUMN = "hours";
-	public static final int HTTP_TIMEOUT = 25000;
 	public static final String ID_COLUMN = "_id";
 	public static final String JSON_ADDRESS = "address";
 	public static final String JSON_DESCRIPTION = "description";
@@ -40,7 +38,6 @@ public final class Const {
 	public static final String ORG_ID = "orgId";
 	public static final String ORG_NAME = "orgName";
 	public static final String ORG_PARENT_ID = "orgParentId";
-	public static final String ORGANISATIONS = "organisations";
 	public static final String REMARK_COLUMN = "remark";
 	public static final String ROLE = "card_role";
 	public static final String ROOM_COLUMN = "room";
@@ -78,4 +75,8 @@ public final class Const {
     public static final String JSON_SOURCE = "source";
     public static final String EVERYTHING_SETUP = "everything_setup";
     public static final String SYNC_CALENDAR_IMPORT = "calendar_import";
+    public static final String JSON_HIDDEN = "hidden";
+    public static final String JSON_ALERTS = "alerts";
+    public static final String GROUP_CHAT_ENABLED = "group_chat_enabled";
+    public static final String TOKEN_IS_SETUP = "token_is_setup";
 }

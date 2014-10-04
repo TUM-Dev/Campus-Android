@@ -14,14 +14,17 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import de.tum.in.tumcampus.R;
+import de.tum.in.tumcampus.auxiliary.NetUtils;
 import de.tum.in.tumcampus.auxiliary.Utils;
 
 public class NewsAdapter extends CursorAdapter {
     private final LayoutInflater mInflater;
+    private final NetUtils net;
 
     public NewsAdapter(Context context, Cursor c) {
         super(context, c, false);
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        net = new NetUtils(context);
     }
 
     @Override
@@ -42,7 +45,7 @@ public class NewsAdapter extends CursorAdapter {
 
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
-        bindNewsView(view, context, cursor);
+        bindNewsView(net, view, cursor);
     }
 
     public static View newNewsView(LayoutInflater inflater, Cursor cursor, ViewGroup parent) {
@@ -62,16 +65,16 @@ public class NewsAdapter extends CursorAdapter {
         return card;
     }
 
-    public static void bindNewsView(View view, Context context, Cursor cursor) {
+    public static void bindNewsView(NetUtils net, View view, Cursor cursor) {
         ViewHolder holder = (ViewHolder) view.getTag();
 
         // Set image
         String imgUrl = cursor.getString(5);
-        if(imgUrl.isEmpty() || imgUrl.equals("null")) {
+        if(imgUrl == null || imgUrl.isEmpty() || imgUrl.equals("null")) {
             holder.img.setVisibility(View.GONE);
         } else {
             holder.img.setVisibility(View.VISIBLE);
-            Utils.loadAndSetImage(context, imgUrl, holder.img);
+            net.loadAndSetImage(imgUrl, holder.img);
         }
 
         holder.title.setText(cursor.getString(2));
@@ -87,7 +90,7 @@ public class NewsAdapter extends CursorAdapter {
         if(icon.isEmpty() || icon.equals("null")) {
             holder.src_icon.setImageResource(R.drawable.ic_comment);
         } else {
-            Utils.loadAndSetImage(context, icon, holder.src_icon);
+            net.loadAndSetImage(icon, holder.src_icon);
         }
     }
 

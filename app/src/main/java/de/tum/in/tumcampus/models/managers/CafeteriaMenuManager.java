@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import de.tum.in.tumcampus.auxiliary.NetUtils;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.CafeteriaMenu;
 
@@ -96,7 +97,7 @@ public class CafeteriaMenuManager {
 	 * @param force True to force download over normal sync period, else false
 	 * @throws Exception
 	 */
-	public void downloadFromExternal(boolean force) throws Exception {
+	public void downloadFromExternal(Context context, boolean force) throws Exception {
 
 		if (!force && !SyncManager.needSync(db, this, TIME_TO_SYNC)) {
 			return;
@@ -115,7 +116,7 @@ public class CafeteriaMenuManager {
 		c.close();
 
 		String url = "http://lu32kap.typo3.lrz.de/mensaapp/exportDB.php?mensa_id=all";
-		JSONObject json = Utils.downloadJson(url);
+		JSONObject json = NetUtils.downloadJson(context, url);
 
 		removeCache();
 		db.beginTransaction();

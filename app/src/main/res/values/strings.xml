@@ -84,7 +84,7 @@
     <string name="services">Services</string>
     <string name="silence_phone">Silent Service</string>
     <string name="silence_phone_info">The device will be automatically put into silent mode during a lecture.</string>
-    <string name="background_mode">Background Mode</string>
+    <string name="background_mode">Background Mode (Recommended)</string>
     <string name="background_info">Content will be fetched once per day to keep you up-to-date even if you don\'t open the app.</string>
     <string name="demo_mode">In-App-Tutorial</string>
     <string name="demo_info">Activates help mode for instruction on how to use this App.</string>
@@ -289,6 +289,8 @@
         \n\n<b>Further Developers:</b>
         \nSascha Moecker, Haris Iltifat, Anas Chakfeh, Thomas Krex, Marius Muntean, Christoph Richter, Thomas Bley, Vincenz Dölle, Daniel Mayr, Thomas Behrens, Florian Schulz, Vasyl Malinskyi,
         Andreas Bernhofer (IT-Support/TUMonline), Nils T. Kannengiesser (F13)
+        \n\n<b>UX Testing:</b>
+        \nXenia Eifler
         \n\n<b>Important information:</b>\nThis App is not published by the Technical University Muenchen officially. It is a project by and for students. The software is used at your own risk. We are not responsible for any damage that might be caused by using this App or its presented information. For security reasons the access to private information of TUMOnline is regulated by using tokens. You need to enable different features within TUMOnline for a certain token to be able to use those information within the App.
         \n\n<b>Privacy information:</b>\nThe application stores data on request only. Critical information requires the user\'s permission (clearance by token) and is stored locally or received from TUMOnline directly. We are using BugSense for bug tracking. Crash reports contain detailed technical information on the phone, the operating system and the error itself. This information is helpful for the developers in order to improve the app. Furthermore BugSense collects anonymous usage information (e.g. users of the app per day). Detailed information on BugSense can be found below.
 		\n\n<b>Support:</b>\nhttps://www.facebook.com/TUMCampus
@@ -357,5 +359,15 @@
     <string name="news_sources">News sources</string>
     <string name="only_latest_article">Only latest article</string>
     <string name="only_latest_article_summary">Shows only the latest article. Otherwise all articles of the selected sources are shown.</string>
+    <string name="show_important_news">Important news</string>
+    <string name="show_important_news_summary">Additionally shows news that are marked as important</string>
+    <string name="group_chat">Group chat</string>
+    <string name="set_group_chat">Activate or deactivate <i>Group chat</i>. If activated, you will be able to join lecture chat rooms, where you and your colleges can discuss.</string>
+    <string name="open_chat_terms">Open chat terms</string>
+    <string name="accept_chat_terms">Accept chat terms</string>
+    <string name="have_to_accept_terms">Terms must be accepted to use group chat!</string>
+    <string name="nickname_empty">Nickname must not be empty!</string>
+    <string name="activate_key">Please activate your public key first</string>
+    <string name="joined_chatroom">You joined the chatroom!</string>
 
 </resources>

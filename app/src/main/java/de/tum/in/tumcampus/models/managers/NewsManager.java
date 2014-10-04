@@ -10,6 +10,7 @@ import org.json.JSONObject;
 import java.util.Date;
 
 import de.tum.in.tumcampus.auxiliary.Const;
+import de.tum.in.tumcampus.auxiliary.NetUtils;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.cards.Card;
 import de.tum.in.tumcampus.cards.NewsCard;
@@ -26,7 +27,9 @@ public class NewsManager implements Card.ProvidesCard {
     private static final String NEWS_URL = "https://tumcabe.in.tum.de/Api/news/";
     private static final String NEWS_SOURCES_URL = NEWS_URL + "sources";
 
-    /** Database connection */
+    /**
+     * Database connection
+     */
     private final SQLiteDatabase db;
 
     /**
@@ -39,10 +42,10 @@ public class NewsManager implements Card.ProvidesCard {
         mContext = context;
 
         // create news sources table
-        db.execSQL("CREATE TABLE IF NOT EXISTS news_sources (id VARCHAR PRIMARY KEY, icon INTEGER, title VARCHAR)");
+        db.execSQL("CREATE TABLE IF NOT EXISTS news_sources (id INTEGER PRIMARY KEY, icon VARCHAR, title VARCHAR, alerts BOOLEAN, hidden BOOLEAN)");
 
         // create table if needed
-        db.execSQL("CREATE TABLE IF NOT EXISTS news (id INTEGER PRIMARY KEY, src INTEGER, title TEXT, description TEXT, link VARCHAR, "
+        db.execSQL("CREATE TABLE IF NOT EXISTS news (id INTEGER PRIMARY KEY, src INTEGER, title TEXT, link VARCHAR, "
                 + "image VARCHAR, date VARCHAR, created VARCHAR, dismissed INTEGER)");
     }
 
@@ -65,8 +68,9 @@ public class NewsManager implements Card.ProvidesCard {
             return;
         }
 
+        NetUtils net = new NetUtils(mContext);
         // Load all news sources
-        JSONArray jsonArray = Utils.downloadJsonArray(mContext, NEWS_SOURCES_URL, force, CacheManager.VALIDITY_ONE_MONTH);
+        JSONArray jsonArray = net.downloadJsonArray(NEWS_SOURCES_URL, CacheManager.VALIDITY_ONE_MONTH, force);
 
         db.beginTransaction();
         try {
@@ -80,7 +84,7 @@ public class NewsManager implements Card.ProvidesCard {
         }
 
         // Load all news since the last sync
-        jsonArray = Utils.downloadJsonArray(mContext, NEWS_URL + getLastId(), force, CacheManager.VALIDITY_ONE_DAY);
+        jsonArray = net.downloadJsonArray(NEWS_URL + getLastId(), CacheManager.VALIDITY_ONE_DAY, force);
 
         // Delete all too old items
         cleanupDb();
@@ -109,13 +113,12 @@ public class NewsManager implements Card.ProvidesCard {
         String id = json.getString(Const.JSON_NEWS);
         String src = json.getString(Const.JSON_SRC);
         String title = json.getString(Const.JSON_TITLE);
-        String description = json.getString(Const.JSON_DESCRIPTION);
         String link = json.getString(Const.JSON_LINK);
         String image = json.getString(Const.JSON_IMAGE);
         Date date = Utils.getISODateTime(json.getString(Const.JSON_DATE));
         Date created = Utils.getISODateTime(json.getString(Const.JSON_CREATED));
 
-        return new News(id, title, description, link, src, image, date, created);
+        return new News(id, title, link, src, image, date, created);
     }
 
     /**
@@ -126,16 +129,16 @@ public class NewsManager implements Card.ProvidesCard {
     public Cursor getAllFromDb(Context context) {
         String and = "";
         Cursor c = getNewsSources();
-        if(c.moveToFirst()) {
+        if (c.moveToFirst()) {
             do {
                 String id = c.getString(0);
-                boolean show = Utils.getSettingBool(context, "news_source_"+id, true);
-                if(show) {
-                    if(!and.isEmpty())
+                boolean show = Utils.getSettingBool(context, "news_source_" + id, true);
+                if (show) {
+                    if (!and.isEmpty())
                         and += " OR ";
-                    and += "s.id=\""+id+"\"";
+                    and += "s.id=\"" + id + "\"";
                 }
-            } while(c.moveToNext());
+            } while (c.moveToNext());
         }
         c.close();
         return db.rawQuery("SELECT n.id AS _id, n.src, n.title, n.description, " +
@@ -153,10 +156,10 @@ public class NewsManager implements Card.ProvidesCard {
      */
     public int getTodayIndex() {
         Cursor c = db.rawQuery("SELECT COUNT(*) FROM news WHERE date>datetime()", null);
-        if(c.moveToFirst()) {
+        if (c.moveToFirst()) {
             int res = c.getInt(0);
             c.close();
-            return res==0?0:res-1;
+            return res == 0 ? 0 : res - 1;
         }
         c.close();
         return 0;
@@ -165,7 +168,7 @@ public class NewsManager implements Card.ProvidesCard {
     private String getLastId() {
         String lastId = "";
         Cursor c = db.rawQuery("SELECT id FROM news ORDER BY id DESC LIMIT 1", null);
-        if(c.moveToFirst()) {
+        if (c.moveToFirst()) {
             lastId = c.getString(0);
         }
         c.close();
@@ -181,6 +184,7 @@ public class NewsManager implements Card.ProvidesCard {
      */
     public void removeCache() {
         db.execSQL("DELETE FROM news");
+        db.execSQL("DELETE FROM news_sources");
     }
 
     /**
@@ -192,9 +196,9 @@ public class NewsManager implements Card.ProvidesCard {
     void replaceIntoDb(News n) throws Exception {
         Utils.logv(n.toString());
 
-        db.execSQL("REPLACE INTO news (id, src, title, description, link, image, date, " +
-                        "created, dismissed) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 0)",
-                new String[]{n.id, n.src, n.title, n.description, n.link, n.image,
+        db.execSQL("REPLACE INTO news (id, src, title, link, image, date, " +
+                        "created, dismissed) VALUES (?, ?, ?, ?, ?, ?, ?, 0)",
+                new String[]{n.id, n.src, n.title, n.link, n.image,
                         Utils.getDateTimeString(n.date), Utils.getDateTimeString(n.created)});
     }
 
@@ -207,13 +211,13 @@ public class NewsManager implements Card.ProvidesCard {
     void replaceIntoSourcesDb(JSONObject n) throws Exception {
         Utils.logv(n.toString());
 
-        db.execSQL("REPLACE INTO news_sources (id, icon, title) VALUES (?, ?, ?)",
-                new String[]{n.getString(Const.JSON_SOURCE), n.getString(Const.JSON_ICON),
-                        n.getString(Const.JSON_TITLE)});
+        db.execSQL("REPLACE INTO news_sources (id, icon, title, alerts, hidden) VALUES (?, ?, ?, ?, ?)",
+                new String[]{n.getString(Const.JSON_SOURCE), n.has(Const.JSON_ICON) ? n.getString(Const.JSON_ICON) : "",
+                        n.getString(Const.JSON_TITLE), n.getString(Const.JSON_ALERTS), n.getString(Const.JSON_HIDDEN)});
     }
 
     public void setDismissed(String id, int d) {
-        db.execSQL("UPDATE news SET dismissed=? WHERE id=?", new String[]{""+d, id});
+        db.execSQL("UPDATE news SET dismissed=? WHERE id=?", new String[]{"" + d, id});
     }
 
     /**
@@ -225,38 +229,41 @@ public class NewsManager implements Card.ProvidesCard {
     public void onRequestCard(Context context) {
         String and = "";
         Cursor c = getNewsSources();
-        if(c.moveToFirst()) {
+        if (c.moveToFirst()) {
             do {
                 String id = c.getString(0);
-                boolean show = Utils.getSettingBool(context, "card_news_source_"+id, false);
-                if(show) {
-                    if(!and.isEmpty())
+                boolean show = Utils.getSettingBool(context, "card_news_source_" + id, false);
+                if (show) {
+                    if (!and.isEmpty())
                         and += " OR ";
-                    and += "s.id=\""+id+"\"";
+                    and += "s.id=\"" + id + "\"";
                 }
-            } while(c.moveToNext());
+            } while (c.moveToNext());
         }
         c.close();
 
-        if(!and.isEmpty()) {
-            String query;
-            if(Utils.getSettingBool(context, "card_news_latest_only", true)) {
+        //boolean showImportant = Utils.getSettingBool(context, "card_news_alert", true);
+        if (!and.isEmpty()) {
+
+            String query = "SELECT n.id AS _id, n.src, n.title, n.description, " +
+                    "n.link, n.image, n.date, n.created, s.icon, s.title AS source, n.dismissed, " +
+                    "ABS(julianday(date()) - julianday(n.date)) AS date_diff ";
+
+            if (Utils.getSettingBool(context, "card_news_latest_only", true)) {
                 // Limit to one entry per source
-                query = "SELECT n.id AS _id, n.src, n.title, n.description, n.link, " +
-                        "n.image, n.date, n.created, s.icon, s.title AS source, n.dismissed " +
-                        "FROM (news n JOIN ( " +
+                query += "FROM (news n JOIN ( " +
                         "SELECT src, MIN(abs(julianday(date()) - julianday(date))) AS diff " +
-                        "FROM news GROUP BY src) last ON n.src = last.src " +
-                        "AND abs(julianday(date()) - julianday(n.date)) = last.diff), news_sources s " +
-                        "WHERE s.id=n.src AND (" + and + ") ORDER BY n.src ASC";
+                        "FROM news WHERE src!=\"2\" OR (julianday(date()) - julianday(date))<0 " +
+                        "GROUP BY src) last ON (n.src = last.src " +
+                        "AND date_diff = last.diff) " + //(showImportant ? "OR n.alerts=\"true\"" : "") +
+                        "), news_sources s ";
             } else {
-                query = "SELECT n.id AS _id, n.src, n.title, n.description, " +
-                        "n.link, n.image, n.date, n.created, s.icon, s.title AS source, n.dismissed, " +
-                        "(julianday('now') - julianday(date)) AS diff " +
-                        "FROM news n, news_sources s " +
-                        "WHERE n.src=s.id AND (" + and + ") " +
-                        "ORDER BY diff ASC";
+                query += "FROM news n, news_sources s ";
             }
+
+            query += "WHERE n.src = s.id AND ((" + and + ") " +
+                  //  (showImportant ? "OR n.alerts=\"true\"" : "") +
+                    ") ORDER BY date_diff ASC";
             Cursor cur = db.rawQuery(query, null);
 
             int i = 0;

@@ -2,6 +2,7 @@ package de.tum.in.tumcampus.activities;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.database.MatrixCursor;
 import android.os.Bundle;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.View;
@@ -9,7 +10,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
-import java.util.NoSuchElementException;
+import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
 import de.tum.in.tumcampus.R;
@@ -17,6 +18,7 @@ import de.tum.in.tumcampus.activities.generic.ActivityForSearchingInBackground;
 import de.tum.in.tumcampus.adapters.NoResultsAdapter;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.MVVStationSuggestionProvider;
+import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.managers.RecentsManager;
 import de.tum.in.tumcampus.models.managers.TransportManager;
 
@@ -105,12 +107,13 @@ public class TransportationActivity extends ActivityForSearchingInBackground<Cur
         // Get Information
         Cursor stationCursor = null;
         try {
-            stationCursor = TransportManager.getStationsFromExternal(inputText);
-        } catch (NoSuchElementException e) {
-            return null;
+            stationCursor = TransportManager.getStationsFromExternal(this, inputText);
         } catch (TimeoutException e) {
             showNoInternetLayout();
+        } catch (IOException e) {
+            showNoInternetLayout();
         } catch (Exception e) {
+            Utils.log(e);
             showError(R.string.exception_unknown);
         }
 
@@ -129,16 +132,21 @@ public class TransportationActivity extends ActivityForSearchingInBackground<Cur
     @Override
     protected void onSearchFinished(Cursor stationCursor) {
         // If there is exactly one station open results directly
-        if(stationCursor!=null && stationCursor.getCount()==1 && mQuery!=null) {
+        if(stationCursor==null)
+            return;
+
+        if(stationCursor.getCount()==1 && mQuery!=null) {
             stationCursor.moveToFirst();
             showStation(stationCursor.getString(0));
             return;
-        } else if(stationCursor==null) {
+        } else if(stationCursor.getCount()==0 && stationCursor instanceof MatrixCursor) {
+            showLoadingEnded();
             listViewResults.setAdapter(new NoResultsAdapter(this));
             listViewResults.requestFocus();
             return;
         }
 
+        showLoadingEnded();
         adapterStations.changeCursor(stationCursor);
         listViewResults.setAdapter(adapterStations);
         listViewResults.requestFocus();

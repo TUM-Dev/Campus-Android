@@ -11,6 +11,7 @@ import android.view.View;
 
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.auxiliary.Const;
+import de.tum.in.tumcampus.auxiliary.NetUtils;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.services.DownloadService;
 
@@ -92,7 +93,7 @@ public abstract class ActivityForDownloadingExternal extends ProgressActivity {
      *                      to throw away cached data and re-download instead.
      */
     protected void requestDownload(boolean forceDownload) {
-		if (!Utils.isConnected(this)) {
+		if (!NetUtils.isConnected(this)) {
             Utils.showToast(this, R.string.no_internet_connection);
         }
         showLoadingStart();

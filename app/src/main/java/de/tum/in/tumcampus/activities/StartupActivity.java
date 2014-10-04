@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -26,15 +25,16 @@ import com.nineoldandroids.view.ViewHelper;
 import java.io.File;
 
 import de.tum.in.tumcampus.R;
+import de.tum.in.tumcampus.activities.wizard.WizNavExtrasActivity;
 import de.tum.in.tumcampus.activities.wizard.WizNavStartActivity;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.FileUtils;
 import de.tum.in.tumcampus.auxiliary.ImplicitCounter;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.managers.DatabaseManager;
-import de.tum.in.tumcampus.trace.ExceptionHandler;
 import de.tum.in.tumcampus.services.DownloadService;
 import de.tum.in.tumcampus.services.StartSyncReceiver;
+import de.tum.in.tumcampus.trace.ExceptionHandler;
 
 /**
  * Entrance point of the App.
@@ -56,15 +56,12 @@ public class StartupActivity extends ActionBarActivity {
         int prevVersion = Utils.getInternalSettingInt(this, Const.APP_VERSION, 35);
 
         // get current app version
-        int currentVersion = 0;
-        try {
-            currentVersion = getPackageManager().getPackageInfo(getPackageName(), 0).versionCode;
-        } catch (PackageManager.NameNotFoundException e) {
-            Utils.log(e);
-        }
-        if(prevVersion<currentVersion) {
+        int currentVersion = Utils.getAppVersion(this);
+        boolean newVersion = prevVersion < currentVersion;
+        if (newVersion) {
             setupNewVersion();
             Utils.setInternalSetting(this, Const.APP_VERSION, currentVersion);
+
         }
 
         // Also First run setup of id and token
@@ -74,11 +71,18 @@ public class StartupActivity extends ActionBarActivity {
             startActivity(new Intent(this, WizNavStartActivity.class));
             finish();
             return;
+        } else if (newVersion) {
+            Utils.setSetting(this, Const.BACKGROUND_MODE, true);
+            Intent intent = new Intent(this, WizNavExtrasActivity.class);
+            intent.putExtra(Const.TOKEN_IS_SETUP, true);
+            startActivity(intent);
+            finish();
+            return;
         }
 
         // On first setup show remark that loading could last longer than normally
         boolean isSetup = Utils.getInternalSettingBool(this, Const.EVERYTHING_SETUP, false);
-        if(!isSetup) {
+        if (!isSetup) {
             findViewById(R.id.startup_loading_first).setVisibility(View.VISIBLE);
         }
 
@@ -88,7 +92,7 @@ public class StartupActivity extends ActionBarActivity {
 
         // Start background service and ensure cards are set
         Intent i = new Intent(this, StartSyncReceiver.class);
-        i.putExtra(Const.APP_LAUNCHES,true);
+        i.putExtra(Const.APP_LAUNCHES, true);
         sendBroadcast(i);
     }
 
@@ -128,15 +132,15 @@ public class StartupActivity extends ActionBarActivity {
         // Make some position calculations
         float density = getResources().getDisplayMetrics().density;
         final int actionBarHeight = getActionBarHeight();
-        final float tumScale = (actionBarHeight-density*16)/(float)tumLogo.getHeight();
+        final float tumScale = (actionBarHeight - density * 16) / (float) tumLogo.getHeight();
         final float screenHeight = background.getHeight();
-        float moveToLeft = -ViewHelper.getX(tumLogo)-(tumLogo.getWidth()*(1-tumScale))/2.0f+8*density;
-        float moveToTop = -ViewHelper.getY(tumLogo)-(tumLogo.getHeight()*(1-tumScale))/2.0f+8*density;
+        float moveToLeft = -ViewHelper.getX(tumLogo) - (tumLogo.getWidth() * (1 - tumScale)) / 2.0f + 8 * density;
+        float moveToTop = -ViewHelper.getY(tumLogo) - (tumLogo.getHeight() * (1 - tumScale)) / 2.0f + 8 * density;
 
         // Setup animation
         AnimatorSet set = new AnimatorSet();
         set.playTogether(
-                ObjectAnimator.ofFloat(background, "translationY", ViewHelper.getTranslationX(background), actionBarHeight-screenHeight),
+                ObjectAnimator.ofFloat(background, "translationY", ViewHelper.getTranslationX(background), actionBarHeight - screenHeight),
                 ObjectAnimator.ofFloat(tumLogo, "translationX", 0, moveToLeft, moveToLeft),
                 ObjectAnimator.ofFloat(tumLogo, "translationY", 0, moveToTop, moveToTop),
                 ObjectAnimator.ofFloat(tumLogo, "scaleX", 1, tumScale, tumScale),
@@ -145,7 +149,7 @@ public class StartupActivity extends ActionBarActivity {
                 ObjectAnimator.ofFloat(loadingText, "translationY", 0, -screenHeight),
                 ObjectAnimator.ofFloat(first, "alpha", 1, 0, 0, 0),
                 ObjectAnimator.ofFloat(first, "translationY", 0, -screenHeight),
-                ObjectAnimator.ofFloat(drawerIndicator, "translationX", -50*density, 0),
+                ObjectAnimator.ofFloat(drawerIndicator, "translationX", -50 * density, 0),
                 ObjectAnimator.ofFloat(actionBarTitle, "alpha", 0, 0, 1),
                 ObjectAnimator.ofFloat(settings, "alpha", 0, 0, 1)
         );
@@ -167,16 +171,21 @@ public class StartupActivity extends ActionBarActivity {
                 //overridePendingTransition(0,0);
                 overridePendingTransition(R.anim.fadein, R.anim.fadeout);
             }
+
             @Override
-            public void onAnimationCancel(Animator animation) {}
+            public void onAnimationCancel(Animator animation) {
+            }
+
             @Override
-            public void onAnimationRepeat(Animator animation) {}
+            public void onAnimationRepeat(Animator animation) {
+            }
         });
         set.setDuration(600).start();
     }
 
     /**
      * Gets the height of the actionbar
+     *
      * @return Actionbar height
      */
     private int getActionBarHeight() {

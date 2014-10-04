@@ -17,6 +17,7 @@ import java.util.Hashtable;
 
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.generic.ActivityForLoadingInBackground;
+import de.tum.in.tumcampus.auxiliary.NetUtils;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.managers.CacheManager;
 
@@ -31,6 +32,7 @@ public class CurriculaActivity extends ActivityForLoadingInBackground<Void,JSONA
 
     private Hashtable<String, String> options;
     private ArrayAdapter<String> arrayAdapter;
+    private NetUtils net;
 
     public CurriculaActivity() {
         super(R.layout.activity_curricula);
@@ -40,6 +42,7 @@ public class CurriculaActivity extends ActivityForLoadingInBackground<Void,JSONA
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        net = new NetUtils(this);
         // Sets the adapter
         ListView list = (ListView) this.findViewById(R.id.activity_curricula_list_view);
         arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
@@ -52,7 +55,7 @@ public class CurriculaActivity extends ActivityForLoadingInBackground<Void,JSONA
 
     @Override
     protected JSONArray onLoadInBackground(Void... arg) {
-        return Utils.downloadJsonArray(this, CURRICULA_URL, false, CacheManager.VALIDITY_ONE_MONTH);
+        return net.downloadJsonArray(CURRICULA_URL, CacheManager.VALIDITY_ONE_MONTH, false);
     }
 
     @Override

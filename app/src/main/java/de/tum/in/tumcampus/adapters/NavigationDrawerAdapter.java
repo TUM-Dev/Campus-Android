@@ -25,6 +25,8 @@ import de.tum.in.tumcampus.activities.RoomFinderActivity;
 import de.tum.in.tumcampus.activities.TransportationActivity;
 import de.tum.in.tumcampus.activities.TuitionFeesActivity;
 import de.tum.in.tumcampus.auxiliary.AccessTokenManager;
+import de.tum.in.tumcampus.auxiliary.Const;
+import de.tum.in.tumcampus.auxiliary.Utils;
 
 /**
  * This class handles the output of the navigation drawer
@@ -39,8 +41,11 @@ public class NavigationDrawerAdapter extends BaseAdapter {
         mContext = context;
         boolean mHasTUMOAccess = new AccessTokenManager(context).hasValidAccessToken();
         mVisibleMenuItems = new ArrayList<SideNavigationItem>();
+        boolean chat_enabled = Utils.getSettingBool(context, Const.GROUP_CHAT_ENABLED, true);
         for(SideNavigationItem item : menuItems) {
             if(!mHasTUMOAccess && item.needsTUMO)
+                continue;
+            if(item.activity!=null && item.activity.equals(ChatRoomsSearchActivity.class) && chat_enabled)
                 continue;
             mVisibleMenuItems.add(item);
         }

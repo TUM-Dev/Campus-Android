@@ -11,7 +11,7 @@ import android.widget.TextView;
 import java.util.Date;
 
 import de.tum.in.tumcampus.R;
-import de.tum.in.tumcampus.auxiliary.Utils;
+import de.tum.in.tumcampus.auxiliary.NetUtils;
 import de.tum.in.tumcampus.models.managers.CardManager;
 import de.tum.in.tumcampus.services.DownloadService;
 
@@ -43,7 +43,7 @@ public class NoInternetCard extends Card {
 
     @Override
     protected boolean shouldShow(SharedPreferences prefs) {
-        return !Utils.isConnected(mContext);
+        return !NetUtils.isConnected(mContext);
     }
 
     @Override

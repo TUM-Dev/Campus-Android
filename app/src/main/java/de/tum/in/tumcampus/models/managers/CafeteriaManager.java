@@ -14,6 +14,7 @@ import java.util.Date;
 import java.util.List;
 
 import de.tum.in.tumcampus.auxiliary.Const;
+import de.tum.in.tumcampus.auxiliary.NetUtils;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.cards.CafeteriaMenuCard;
 import de.tum.in.tumcampus.cards.Card;
@@ -76,7 +77,7 @@ public class CafeteriaManager implements Card.ProvidesCard {
 			return;
 		}
 
-		JSONArray jsonArray = Utils.downloadJsonArray(mContext, CAFETERIAS_URL, false, CacheManager.VALIDITY_ONE_MONTH);
+		JSONArray jsonArray = new NetUtils(mContext).downloadJsonArray(CAFETERIAS_URL, CacheManager.VALIDITY_ONE_MONTH, false);
 		removeCache();
 
 		// write cafeterias into database, transaction = speedup

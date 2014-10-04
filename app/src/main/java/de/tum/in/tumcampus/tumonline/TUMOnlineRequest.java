@@ -5,14 +5,6 @@ import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 
 import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.conn.ClientConnectionManager;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
@@ -25,6 +17,7 @@ import java.util.Map.Entry;
 
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.auxiliary.Const;
+import de.tum.in.tumcampus.auxiliary.NetUtils;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.managers.CacheManager;
 
@@ -35,7 +28,8 @@ import de.tum.in.tumcampus.models.managers.CacheManager;
  */
 public  class TUMOnlineRequest<T> {
 	// server address
-	private static final String SERVICE_BASE_URL = "https://campus.tum.de/tumonline/wbservicesbasic.";
+	//private static final String SERVICE_BASE_URL = "https://campus.tum.de/tumonline/wbservicesbasic."; //TODO reset
+    private static final String SERVICE_BASE_URL = "https://campusquality.tum.de/QSYSTEM_TUM/wbservicesbasic.";
 
     /** String possibly contained in response from server */
     private static final String NO_FUNCTION_RIGHTS = "Keine Rechte für Funktion";
@@ -52,8 +46,8 @@ public  class TUMOnlineRequest<T> {
 	/** asynchronous task for interactive fetch */
     private AsyncTask<Void, Void, T> backgroundTask = null;
 
-	/** http client instance for fetching */
-	private final HttpClient client;
+	/** NetUtils instance for fetching */
+    private final NetUtils net;
 
 	/** method to call */
 	private TUMOnlineConst<T> method = null;
@@ -68,15 +62,11 @@ public  class TUMOnlineRequest<T> {
 
     private String lastError = "";
 
-    @SuppressWarnings("unchecked")
     private TUMOnlineRequest(Context context) {
         mContext = context;
         cacheManager = new CacheManager(context);
-		client = getThreadSafeClient();
+        net = new NetUtils(context);
 		resetParameters();
-		HttpParams params = client.getParams();
-		HttpConnectionParams.setSoTimeout(params, Const.HTTP_TIMEOUT);
-		HttpConnectionParams.setConnectionTimeout(params, Const.HTTP_TIMEOUT);
 	}
 
 	public TUMOnlineRequest(TUMOnlineConst<T> method, Context context, boolean needsToken) {
@@ -88,7 +78,7 @@ public  class TUMOnlineRequest<T> {
         }
 	}
 
-    public TUMOnlineRequest(TUMOnlineConst method, Context context) {
+    public TUMOnlineRequest(TUMOnlineConst<T> method, Context context) {
         this(method, context, true);
         this.fillCache = true;
     }
@@ -115,30 +105,17 @@ public  class TUMOnlineRequest<T> {
         try {
             result = cacheManager.getFromCache(url);
             if(result==null || fillCache) {
-                boolean isOnline = Utils.isConnected(mContext);
+                boolean isOnline = NetUtils.isConnected(mContext);
                 if (!isOnline) {
                     // not online, fetch does not make sense
                     return null;
                 }
-                HttpEntity responseEntity;
-                //try {
-                    HttpGet request = new HttpGet(url);
-                    HttpResponse response = client.execute(request);
-                    responseEntity = response.getEntity();
-                //TODO implement with more generic method from Utils
-                /*} catch (ConnectTimeoutException e) {
-                    Utils.log(e);
-                    Utils.logv("Second try");
-                    HttpGet request = new HttpGet(url);
-                    HttpResponse response = client.execute(request);
-                    responseEntity = response.getEntity();
-                }*/
 
+                HttpEntity responseEntity = net.getHttpEntity(url);
                 if (responseEntity != null) {
                     addToCache = true;
                     // do something with the response
                     result = EntityUtils.toString(responseEntity);
-                    Utils.logv("added to cache " + url);
                 }
             } else {
                 Utils.logv("loaded from cache " + url);
@@ -153,8 +130,10 @@ public  class TUMOnlineRequest<T> {
         try {
             T res =  serializer.read(method.getResponse(), result);
             // Only add to cache if data is valid
-            if(addToCache)
+            if(addToCache) {
                 cacheManager.addToCache(url, result, method.getValidity(), CacheManager.CACHE_TYP_DATA);
+                Utils.logv("added to cache " + url);
+            }
             return res;
         } catch (Exception e) {
             Utils.log(e);
@@ -194,7 +173,7 @@ public  class TUMOnlineRequest<T> {
                     Utils.log("No result available");
                 }
                 // Handles result
-                if (!Utils.isConnected(mContext)) {
+                if (!NetUtils.isConnected(mContext)) {
                     if(result==null) {
                         listener.onNoInternetError();
                         return;
@@ -236,13 +215,6 @@ public  class TUMOnlineRequest<T> {
             url += pairs.getKey() + "=" + pairs.getValue() + "&";
         }
 		return url;
-	}
-
-	private DefaultHttpClient getThreadSafeClient() {
-		DefaultHttpClient client = new DefaultHttpClient();
-		ClientConnectionManager mgr = client.getConnectionManager();
-		HttpParams params = client.getParams();
-		return new DefaultHttpClient(new ThreadSafeClientConnManager(params, mgr.getSchemeRegistry()), params);
 	}
 
 	/**

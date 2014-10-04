@@ -34,6 +34,10 @@ public class FillCacheService extends IntentService {
         new Thread(new Runnable() {
             @Override
             public void run() {
+                // Send usage statistics
+
+
+                // Fill cache service
                 CacheManager cache = new CacheManager(FillCacheService.this);
                 cache.fillCache();
             }

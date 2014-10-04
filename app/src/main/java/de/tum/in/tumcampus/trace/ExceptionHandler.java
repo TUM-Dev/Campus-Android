@@ -26,7 +26,7 @@ import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.ArrayList;
 import java.util.List;
 
-import static de.tum.in.tumcampus.auxiliary.Utils.getDeviceID;
+import static de.tum.in.tumcampus.auxiliary.NetUtils.getDeviceID;
 
 
 public class ExceptionHandler {

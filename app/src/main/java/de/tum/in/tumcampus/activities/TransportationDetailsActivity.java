@@ -11,7 +11,7 @@ import java.util.concurrent.TimeoutException;
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.generic.ActivityForLoadingInBackground;
 import de.tum.in.tumcampus.auxiliary.DepartureView;
-import de.tum.in.tumcampus.auxiliary.Utils;
+import de.tum.in.tumcampus.auxiliary.NetUtils;
 import de.tum.in.tumcampus.models.managers.RecentsManager;
 import de.tum.in.tumcampus.models.managers.TransportManager;
 
@@ -62,7 +62,7 @@ public class TransportationDetailsActivity extends ActivityForLoadingInBackgroun
         recentsManager.replaceIntoDb(location);
 
         // Check for internet connectivity
-        if (!Utils.isConnected(this)) {
+        if (!NetUtils.isConnected(this)) {
             showNoInternetLayout();
             return null;
         }
@@ -70,7 +70,7 @@ public class TransportationDetailsActivity extends ActivityForLoadingInBackgroun
         // get departures from website
         List<TransportManager.Departure> departureCursor = null;
         try {
-            departureCursor = TransportManager.getDeparturesFromExternal(location);
+            departureCursor = TransportManager.getDeparturesFromExternal(this, location);
         } catch (NoSuchElementException e) {
             showError(R.string.no_departures_found);
         } catch (TimeoutException e) {

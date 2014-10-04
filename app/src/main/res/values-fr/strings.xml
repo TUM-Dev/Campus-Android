@@ -79,7 +79,7 @@
     <string name="services">Services</string>
     <string name="silence_phone">Silent Service</string>
     <string name="silence_phone_info">Pendant des cours magistral, l\'appareil est réglée automatiquemen en mode silencieux.</string>
-    <string name="background_mode">Le mode d\'arrière-plan</string>
+    <string name="background_mode">Le mode d\'arrière-plan (recommandé)</string>
     <string name="background_info">Les capacités vont actualiser une fois par jour pour t\'informer sur les nouvelles actuelles. Même l\'appli n\'est pas ouverte.</string>
     <string name="demo_mode">In-App Tutorial</string>
     <string name="demo_info">Activer le mode d\'aide pour obtenir des informations sur le fonctionnement de l\'application.</string>

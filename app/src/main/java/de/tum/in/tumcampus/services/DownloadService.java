@@ -13,6 +13,7 @@ import java.util.concurrent.TimeoutException;
 
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.auxiliary.Const;
+import de.tum.in.tumcampus.auxiliary.NetUtils;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.Location;
 import de.tum.in.tumcampus.models.managers.CacheManager;
@@ -21,7 +22,6 @@ import de.tum.in.tumcampus.models.managers.CafeteriaMenuManager;
 import de.tum.in.tumcampus.models.managers.CardManager;
 import de.tum.in.tumcampus.models.managers.NewsManager;
 import de.tum.in.tumcampus.models.managers.OpenHoursManager;
-import de.tum.in.tumcampus.models.managers.OrganisationManager;
 import de.tum.in.tumcampus.models.managers.SyncManager;
 
 /**
@@ -81,7 +81,7 @@ public class DownloadService extends IntentService {
         }
 
         // Check if device has a internet connection
-        if(Utils.isConnected(this) && (launch || !Utils.isConnectedMobileData(this))) {
+        if(NetUtils.isConnected(this) && (launch || !NetUtils.isConnectedMobileData(this))) {
             Log.i(getClass().getSimpleName(), "Handle action <" + action + ">");
             try {
                 if ((action.equals(Const.DOWNLOAD_ALL_FROM_EXTERNAL))) {
@@ -107,7 +107,7 @@ public class DownloadService extends IntentService {
                     boolean isSetup = Utils.getInternalSettingBool(this, Const.EVERYTHING_SETUP, false);
                     if(!isSetup) {
                         CacheManager cm = new CacheManager(this);
-                        cm.fillCache();
+                        cm.syncCalendar();
                         if(successful)
                             Utils.setInternalSetting(this, Const.EVERYTHING_SETUP, true);
                     }
@@ -115,8 +115,6 @@ public class DownloadService extends IntentService {
                     downloadNews(force);
                 } else if ((action.equals(Const.CAFETERIAS))) {
                     downloadCafeterias(force);
-                } else if ((action.equals(Const.ORGANISATIONS))) {
-                    downloadOrganisations(force);
                 }
             } catch (TimeoutException e) {
                 Utils.log(e);
@@ -182,25 +180,12 @@ public class DownloadService extends IntentService {
 		CafeteriaManager cm = new CafeteriaManager(this);
 		CafeteriaMenuManager cmm = new CafeteriaMenuManager(this);
 		cm.downloadFromExternal(force);
-		cmm.downloadFromExternal(force);
+		cmm.downloadFromExternal(this, force);
 	}
 
 	private void downloadNews(boolean force) throws Exception {
 		NewsManager nm = new NewsManager(this);
 		nm.downloadFromExternal(force);
-	}
-
-	private void downloadOrganisations(boolean force) throws Exception {
-		OrganisationManager om = new OrganisationManager(this);
-		String accessToken = Utils.getSetting(this, Const.ACCESS_TOKEN);
-		if (accessToken.isEmpty()) {
-			throw new Exception("No Access Token");
-		}
-		try {
-			om.downloadFromExternal(force, accessToken);
-		} catch (Exception e) {
-			Utils.log(e);
-		}
 	}
 
     /**
