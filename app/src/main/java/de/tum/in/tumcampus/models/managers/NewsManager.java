@@ -211,9 +211,9 @@ public class NewsManager implements Card.ProvidesCard {
     void replaceIntoSourcesDb(JSONObject n) throws Exception {
         Utils.logv(n.toString());
 
-        db.execSQL("REPLACE INTO news_sources (id, icon, title, alerts, hidden) VALUES (?, ?, ?, ?, ?)",
+        db.execSQL("REPLACE INTO news_sources (id, icon, title) VALUES (?, ?, ?)",
                 new String[]{n.getString(Const.JSON_SOURCE), n.has(Const.JSON_ICON) ? n.getString(Const.JSON_ICON) : "",
-                        n.getString(Const.JSON_TITLE), n.getString(Const.JSON_ALERTS), n.getString(Const.JSON_HIDDEN)});
+                        n.getString(Const.JSON_TITLE)});
     }
 
     public void setDismissed(String id, int d) {
