@@ -46,8 +46,8 @@ public class CurriculaActivity extends ActivityForLoadingInBackground<Void,JSONA
         list.setAdapter(arrayAdapter);
         list.setOnItemClickListener(this);
 
-        // Fetch all curricula from webservice
-        startLoading();
+        // Fetch all curricula from webservice via parent async class
+        this.startLoading();
     }
 
     @Override

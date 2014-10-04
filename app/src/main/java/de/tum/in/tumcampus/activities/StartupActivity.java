@@ -52,6 +52,9 @@ public class StartupActivity extends ActionBarActivity {
         //Our own Custom exception handler
         ExceptionHandler.setup(this);
 
+        //Upload stats
+        (new ImplicitCounter()).submitCounter(this);
+
         // For compatibility reasons
         int prevVersion = Utils.getInternalSettingInt(this, Const.APP_VERSION, 35);
 
