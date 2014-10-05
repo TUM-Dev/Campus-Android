@@ -1,6 +1,5 @@
 package de.tum.in.tumcampus.adapters;
 
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -13,8 +12,7 @@ import java.util.GregorianCalendar;
 import java.util.Locale;
 
 import de.tum.in.tumcampus.activities.CalendarActivity;
-import de.tum.in.tumcampus.auxiliary.Utils;
-import de.tum.in.tumcampus.fragments.CalendarSectionFragment;
+import de.tum.in.tumcampus.fragments.DayFragment;
 
 /**
  * A {@link FragmentPagerAdapter} that returns a fragment corresponding to one
@@ -51,13 +49,15 @@ public class CalendarSectionsPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
+        return new DayFragment(0, 1);
+        /*
         Fragment fragment = new CalendarSectionFragment();
         Bundle args = new Bundle();
 
         args.putString("date", Utils.getDateTimeString(getCurrentDate(position)));
 
         fragment.setArguments(args);
-        return fragment;
+        return fragment;*/
     }
 
     @Override

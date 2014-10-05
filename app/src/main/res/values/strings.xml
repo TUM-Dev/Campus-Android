@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources xmlns:tools="http://schemas.android.com/tools"
+    xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 
     <!-- START Translated, please do not change identifiers -->
 
@@ -371,4 +372,12 @@
     <string name="joined_chatroom">You joined the chatroom!</string>
     <string name="nickname_too_short">Nickname must be at least 3 characters long!</string>
 
+    <string name="template_announce_item_index">Event <xliff:g id="item_index">%1$s</xliff:g> of <xliff:g id="item_count">%2$s</xliff:g>.</string>
+    <plurals name="month_more_events">
+        <!-- additional events message for 1 event, the quotes force a literal interpretation of the
+            string [CHAR LIMIT = 10] -->
+        <item quantity="one">"+1"</item>
+        <!-- additional events message for multiple events [CHAR LIMIT = 10] -->
+        <item quantity="other">+<xliff:g id="number">%d</xliff:g></item>
+    </plurals>
 </resources>
