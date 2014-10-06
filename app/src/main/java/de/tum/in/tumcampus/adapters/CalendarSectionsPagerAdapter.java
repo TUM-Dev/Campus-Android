@@ -22,9 +22,13 @@ public class CalendarSectionsPagerAdapter extends FragmentPagerAdapter {
 
     private final Calendar calendar = new GregorianCalendar();
     private final Date today = new Date();
+    private final boolean mWeekMode;
+    private int mNumDays;
 
-    public CalendarSectionsPagerAdapter(FragmentManager fm) {
+    public CalendarSectionsPagerAdapter(FragmentManager fm, boolean weekMode) {
         super(fm);
+        mWeekMode = weekMode;
+        mNumDays = mWeekMode?7:1;
     }
 
     @Override
@@ -37,27 +41,24 @@ public class CalendarSectionsPagerAdapter extends FragmentPagerAdapter {
         calendar.add(Calendar.MONTH, CalendarActivity.MONTH_AFTER);
         Date lastDate = calendar.getTime();
 
-        return (int) ((lastDate.getTime() - firstDate.getTime()) / DateUtils.DAY_IN_MILLIS);
+        return (int) ((lastDate.getTime() - firstDate.getTime()) / (DateUtils.DAY_IN_MILLIS*mNumDays));
     }
 
     private Date getCurrentDate(int position) {
         calendar.setTime(today);
         calendar.add(Calendar.MONTH, -CalendarActivity.MONTH_BEFORE);
-        calendar.add(Calendar.DAY_OF_MONTH, position);
+        calendar.add(Calendar.DAY_OF_MONTH, position*mNumDays);
         return calendar.getTime();
     }
 
     @Override
     public Fragment getItem(int position) {
-        return new DayFragment(0, 1);
-        /*
-        Fragment fragment = new CalendarSectionFragment();
-        Bundle args = new Bundle();
+        return new DayFragment(getCurrentDate(position).getTime(), mNumDays);
+    }
 
-        args.putString("date", Utils.getDateTimeString(getCurrentDate(position)));
-
-        fragment.setArguments(args);
-        return fragment;*/
+    @Override
+    public long getItemId(int position) {
+        return position<<3+mNumDays;
     }
 
     @Override
@@ -65,16 +66,10 @@ public class CalendarSectionsPagerAdapter extends FragmentPagerAdapter {
         Date date = getCurrentDate(position);
         Locale l = Locale.getDefault();
 
-        // return getCurrentDate(position).toLocaleString().subSequence(0, 10);
-        SimpleDateFormat formatEE = new SimpleDateFormat("EEEE");
-        String finalDay = formatEE.format(date);
-
-        SimpleDateFormat formatDefaultStyle = new SimpleDateFormat("dd.MM.yyy");
+        SimpleDateFormat formatDefaultStyle = new SimpleDateFormat("EEEE, dd.MM.yyy");
         String dateDefaultStyle = formatDefaultStyle.format(date);
 
-        String pageTitleToShow = finalDay + ", " + dateDefaultStyle;
-
-        return (pageTitleToShow).toUpperCase(l);
+        return dateDefaultStyle.toUpperCase(l);
     }
 
 

@@ -27,7 +27,6 @@ import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.ProgressBar;
 import android.widget.ViewSwitcher;
 import android.widget.ViewSwitcher.ViewFactory;
 
@@ -53,7 +52,6 @@ public class DayFragment extends Fragment implements CalendarController.EventHan
 
     protected static final String BUNDLE_KEY_RESTORE_TIME = "key_restore_time";
 
-    protected ProgressBar mProgressBar;
     protected ViewSwitcher mViewSwitcher;
     protected Animation mInAnimationForward;
     protected Animation mOutAnimationForward;
@@ -145,6 +143,24 @@ public class DayFragment extends Fragment implements CalendarController.EventHan
         view.restartCurrentTimeUpdates();
     }
 
+   /* @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if(mViewSwitcher==null)
+            return;
+        DayView view = (DayView) mViewSwitcher.getCurrentView();
+        if (isVisibleToUser && view!=null) {
+            view.handleOnResume();
+            view.restartCurrentTimeUpdates();
+
+            view = (DayView) mViewSwitcher.getNextView();
+            if(view!=null) {
+                view.handleOnResume();
+                view.restartCurrentTimeUpdates();
+            }
+        }
+    }*/
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -167,16 +183,6 @@ public class DayFragment extends Fragment implements CalendarController.EventHan
         // Stop events cross-fade animation
         view.stopEventsAnimation();
         ((DayView) mViewSwitcher.getNextView()).stopEventsAnimation();
-    }
-
-    void startProgressSpinner() {
-        // start the progress spinner
-        mProgressBar.setVisibility(View.VISIBLE);
-    }
-
-    void stopProgressSpinner() {
-        // stop the progress spinner
-        mProgressBar.setVisibility(View.GONE);
     }
 
     private void goTo(Time goToTime, boolean ignoreTime, boolean animateToday) {
@@ -273,9 +279,6 @@ public class DayFragment extends Fragment implements CalendarController.EventHan
 
     public void handleEvent(EventInfo msg) {
         if (msg.eventType == EventType.GO_TO) {
-// TODO support a range of time
-// TODO support event_id
-// TODO support select message
             goTo(msg.selectedTime, (msg.extraLong & CalendarController.EXTRA_GOTO_DATE) != 0,
                     (msg.extraLong & CalendarController.EXTRA_GOTO_TODAY) != 0);
         } else if (msg.eventType == EventType.EVENTS_CHANGED) {

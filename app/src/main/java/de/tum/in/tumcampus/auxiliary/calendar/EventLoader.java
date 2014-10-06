@@ -144,7 +144,7 @@ public class EventLoader {
 
         public void processRequest(EventLoader eventLoader) {
             Event.loadEvents(eventLoader.mContext, events, startDay,
-                    numDays, id, eventLoader.mSequenceNumber);
+                    numDays);
 
             // Check if we are still the most recent request.
             if (id == eventLoader.mSequenceNumber.get()) {

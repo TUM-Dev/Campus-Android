@@ -103,6 +103,7 @@ public class NextLectureCard extends Card {
         // Extract course title
         title = title.replaceAll("[A-Z 0-9(LV\\.Nr\\.)=]+$","");
         title = title.replaceAll("\\([A-Z]+[0-9]+\\)","");
+        title = title.replaceAll("\\[[A-Z]+[0-9]+\\]","");
 
         mTitle = title.trim();
         mDate = Utils.getISODateTime(date);

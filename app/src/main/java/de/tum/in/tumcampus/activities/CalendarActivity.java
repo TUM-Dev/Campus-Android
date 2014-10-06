@@ -16,6 +16,7 @@ import android.support.v4.view.ViewPager;
 import android.text.format.DateUtils;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -37,28 +38,33 @@ import de.tum.in.tumcampus.tumonline.TUMOnlineConst;
  */
 public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowSet> implements OnClickListener {
 
-	/** The space between the first and the last date */
-	public static final int MONTH_AFTER = 3;
-	public static final int MONTH_BEFORE = 0;
+    /**
+     * The space between the first and the last date
+     */
+    public static final int MONTH_AFTER = 3;
+    public static final int MONTH_BEFORE = 0;
 
     private static final int TIME_TO_SYNC_CALENDAR = 604800; // 1 week
 
     private final Calendar calendar = new GregorianCalendar();
 
-	private CalendarManager calendarManager;
+    private CalendarManager calendarManager;
 
     private ViewPager mViewPager;
 
-	// Objects for disabling or enabling the options menu items
-	private MenuItem menuItemExportGoogle;
-	private MenuItem menuItemDeleteCalendar;
+    // Objects for disabling or enabling the options menu items
+    private MenuItem menuItemExportGoogle;
+    private MenuItem menuItemDeleteCalendar;
 
-    /** Used as a flag, if there are results fetched from internet */
-	private boolean isFetched;
+    /**
+     * Used as a flag, if there are results fetched from internet
+     */
+    private boolean isFetched;
+    private boolean mWeekMode = false;
 
-	public CalendarActivity() {
-		super(TUMOnlineConst.CALENDER, R.layout.activity_calendar);
-	}
+    public CalendarActivity() {
+        super(TUMOnlineConst.CALENDER, R.layout.activity_calendar);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -139,6 +145,10 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.action_switch_view_mode:
+                mWeekMode = !mWeekMode;
+                attachSectionPagerAdapter();
+                return true;
             case R.id.action_export_calendar:
                 detachSectionPagerAdapter();
                 exportCalendarToGoogle();
@@ -157,22 +167,23 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
         }
     }
 
-	/**
-	 * Link the Sections with the content with a section adapter. Additionally put the current date at the start position.
-	 */
-	private void attachSectionPagerAdapter() {
-        CalendarSectionsPagerAdapter mSectionsPagerAdapter = new CalendarSectionsPagerAdapter(getSupportFragmentManager());
-		mViewPager.setAdapter(mSectionsPagerAdapter);
+    /**
+     * Link the Sections with the content with a section adapter. Additionally put the current date at the start position.
+     */
+    private void attachSectionPagerAdapter() {
+        findViewById(R.id.pager_title_strip).setVisibility(mWeekMode ? View.GONE : View.VISIBLE);
+        CalendarSectionsPagerAdapter mSectionsPagerAdapter = new CalendarSectionsPagerAdapter(getSupportFragmentManager(), mWeekMode);
+        mViewPager.setAdapter(mSectionsPagerAdapter);
 
-		Date now = new Date();
-		calendar.setTime(now);
+        Date now = new Date();
+        calendar.setTime(now);
 
-		calendar.add(Calendar.MONTH, -CalendarActivity.MONTH_BEFORE);
-		Date firstDate = calendar.getTime();
+        calendar.add(Calendar.MONTH, -CalendarActivity.MONTH_BEFORE);
+        Date firstDate = calendar.getTime();
 
-		long days = (now.getTime() - firstDate.getTime()) / DateUtils.DAY_IN_MILLIS;
-		mViewPager.setCurrentItem((int) days);
-	}
+        long days = (now.getTime() - firstDate.getTime()) / DateUtils.DAY_IN_MILLIS;
+        mViewPager.setCurrentItem((int) days);
+    }
 
     /**
      * Detach the adapter form the Pager to make the asynch task not conflicting with the UI thread.
@@ -181,46 +192,46 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
         mViewPager.setAdapter(null);
     }
 
-	/**
-	 * Asynchronous task for exporting the calendar to a local Google calendar
-	 */
+    /**
+     * Asynchronous task for exporting the calendar to a local Google calendar
+     */
     void exportCalendarToGoogle() {
-		AsyncTask<Void, Void, Boolean> backgroundTask;
+        AsyncTask<Void, Void, Boolean> backgroundTask;
 
-		backgroundTask = new AsyncTask<Void, Void, Boolean>() {
-			@Override
-			protected Boolean doInBackground(Void... params) {
+        backgroundTask = new AsyncTask<Void, Void, Boolean>() {
+            @Override
+            protected Boolean doInBackground(Void... params) {
                 CalendarManager.syncCalendar(CalendarActivity.this);
-				return true;
-			}
+                return true;
+            }
 
-			@Override
-			protected void onPostExecute(Boolean result) {
-				// Informs the user about the ongoing action
-				if (!CalendarActivity.this.isFinishing()) {
-					AlertDialog.Builder builder = new AlertDialog.Builder(CalendarActivity.this);
-					builder.setMessage(CalendarActivity.this.getString(R.string.dialog_show_calendar))
-							.setPositiveButton(CalendarActivity.this.getString(R.string.yes), CalendarActivity.this)
-							.setNegativeButton(CalendarActivity.this.getString(R.string.no), CalendarActivity.this).show();
-					attachSectionPagerAdapter();
-					showLoadingEnded();
-				}
-			}
+            @Override
+            protected void onPostExecute(Boolean result) {
+                // Informs the user about the ongoing action
+                if (!CalendarActivity.this.isFinishing()) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(CalendarActivity.this);
+                    builder.setMessage(CalendarActivity.this.getString(R.string.dialog_show_calendar))
+                            .setPositiveButton(CalendarActivity.this.getString(R.string.yes), CalendarActivity.this)
+                            .setNegativeButton(CalendarActivity.this.getString(R.string.no), CalendarActivity.this).show();
+                    attachSectionPagerAdapter();
+                    showLoadingEnded();
+                }
+            }
 
-			@Override
-			protected void onPreExecute() {
-				showLoadingStart();
-			}
-		};
-		backgroundTask.execute();
-	}
+            @Override
+            protected void onPreExecute() {
+                showLoadingStart();
+            }
+        };
+        backgroundTask.execute();
+    }
 
-	@Override
-	public void onClick(DialogInterface dialog, int which) {
-		if (which == DialogInterface.BUTTON_POSITIVE) {
-			displayCalendarOnGoogleCalendar();
-		}
-	}
+    @Override
+    public void onClick(DialogInterface dialog, int which) {
+        if (which == DialogInterface.BUTTON_POSITIVE) {
+            displayCalendarOnGoogleCalendar();
+        }
+    }
 
     /**
      * Starts the Google calendar Activity to display the exported calendar.

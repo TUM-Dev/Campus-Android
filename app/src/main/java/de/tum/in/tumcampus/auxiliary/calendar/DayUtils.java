@@ -16,11 +16,9 @@
 
 package de.tum.in.tumcampus.auxiliary.calendar;
 
-import android.accounts.Account;
 import android.app.Activity;
 import android.app.SearchManager;
 import android.content.BroadcastReceiver;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -31,9 +29,7 @@ import android.database.MatrixCursor;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Bundle;
 import android.os.Handler;
-import android.provider.CalendarContract.Calendars;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -943,10 +939,6 @@ public class DayUtils {
         for (Event currEvent : events) {
             // if this event is outside the weeks range skip it
             if (currEvent.endDay < firstJulianDay || currEvent.startDay > lastJulianDay) {
-                continue;
-            }
-            if (currEvent.drawAsAllday()) {
-                addAllDayToStrands(currEvent, strands, firstJulianDay, dayXs.length);
                 continue;
             }
             // Copy the event over so we can clip its start and end to our range

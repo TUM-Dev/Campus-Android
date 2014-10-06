@@ -1,44 +1,52 @@
 package de.tum.in.tumcampus.fragments;
 
 import android.app.Activity;
-import android.app.SearchManager;
-import android.content.Context;
-import android.content.Intent;
-import android.database.Cursor;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
+import android.text.format.DateUtils;
+import android.text.format.Time;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.RelativeLayout;
-import android.widget.RelativeLayout.LayoutParams;
-import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.ViewSwitcher;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 
 import de.tum.in.tumcampus.R;
-import de.tum.in.tumcampus.activities.RoomFinderActivity;
-import de.tum.in.tumcampus.auxiliary.Utils;
+import de.tum.in.tumcampus.auxiliary.calendar.CalendarController;
+import de.tum.in.tumcampus.auxiliary.calendar.DayView;
+import de.tum.in.tumcampus.auxiliary.calendar.EventLoader;
 import de.tum.in.tumcampus.models.managers.CalendarManager;
 
 /**
  * Fragment for each calendar-page.
  */
 public class CalendarSectionFragment extends Fragment {
+    private boolean mWeekViewMode = false;
+    private final Time mSelectedDay = new Time();
     private Activity activity;
 
     private CalendarManager calendarManager;
     private Date today = new Date();
-    private RelativeLayout mainScheduleLayout;
 
     private final ArrayList<RelativeLayout> eventList = new ArrayList<RelativeLayout>();
     private int[][] eventTimes;
+    private DayView view;
+
+
+    public CalendarSectionFragment() {}
+
+    public CalendarSectionFragment(long time, boolean weekViewMode) {
+        mWeekViewMode = weekViewMode;
+        if (time == 0) {
+            mSelectedDay.setToNow();
+        } else {
+            mSelectedDay.set(time);
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -48,49 +56,26 @@ public class CalendarSectionFragment extends Fragment {
         calendarManager = new CalendarManager(activity);
 
         //Inflate the view for today only
-        View rootView = inflater.inflate(R.layout.fragment_calendar_section, container, false);
+        view = new DayView(getActivity(), CalendarController
+                .getInstance(getActivity()), null, new EventLoader(getActivity()), mWeekViewMode?7:1);
+        view.setLayoutParams(new ViewSwitcher.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        view.setSelected(mSelectedDay, !DateUtils.isToday(mSelectedDay.toMillis(true)), false);
+        view.reloadEvents();
 
-        // Parse the date we want to show events for
-        String date = getArguments().getString("date");
-        today = Utils.getISODateTime(date);
+        return view;
+    }
 
-        // Scroll to a default position
-        final ScrollView scrollview = ((ScrollView) rootView.findViewById(R.id.scrollview));
-        scrollview.post(new Runnable() {
-            @Override
-            public void run() {
-                scrollview.scrollTo(0, (int) getResources().getDimension(R.dimen.default_scroll_position));
-            }
-        });
-
-        // Make the event items clickable
-        mainScheduleLayout = (RelativeLayout) rootView.findViewById(R.id.main_schedule_layout);
-        mainScheduleLayout.setClickable(true);
-
-        // Add the entries when layout is displayed, thus not blocking
-        mainScheduleLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-
-            @SuppressWarnings("deprecation")
-            @Override
-            public void onGlobalLayout() {
-                // Ensure we call it only once
-                if (Build.VERSION.SDK_INT < 16) {
-                    mainScheduleLayout.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-                } else {
-                    mainScheduleLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                }
-
-                // Fetch entries and add them to our view
-                updateCalendarView();
-            }
-        });
-
-
-        return rootView;
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser && view!=null) {
+            view.handleOnResume();
+        }
     }
 
     @SuppressWarnings("deprecation")
-    private void parseEvents() {
+    /*private void parseEvents() {
         Date dateStart;
         Date dateEnd;
         float start;
@@ -161,13 +146,13 @@ public class CalendarSectionFragment extends Fragment {
                 event++;
             }
         }
-    }
+    }*/
 
     private void setText(RelativeLayout entry, String text) {
         TextView textView = (TextView) entry.findViewById(R.id.entry_title);
         textView.setText(text);
     }
-
+/*
     private void updateCalendarView() {
 
         //Clear previous stuff
@@ -263,18 +248,18 @@ public class CalendarSectionFragment extends Fragment {
             mainScheduleLayout.addView(event);
             this.Listener(event);
         }
-    }
-
+    }*/
+/*
     private boolean overlap(long startTime1, long endTime1, long startTime2, long endTime2) {
         return !(endTime1 < startTime2 || startTime1 > endTime2);
-    }
+    }*/
 
     /**
      * Setup an click listener which is connected to the room finder to locate rooms of the shown lectures
      *
      * @param v View to bind to
      */
-    private void Listener(View v) {
+    /*private void Listener(View v) {
         v.setClickable(true);
         v.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -294,5 +279,5 @@ public class CalendarSectionFragment extends Fragment {
                 activity.startActivity(i);
             }
         });
-    }
+    }*/
 }

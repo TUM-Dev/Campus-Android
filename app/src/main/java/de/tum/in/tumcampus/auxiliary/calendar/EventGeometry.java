@@ -46,10 +46,6 @@ public class EventGeometry {
     // Computes the rectangle coordinates of the given event on the screen.
     // Returns true if the rectangle is visible on the screen.
     public boolean computeEventRect(int date, int left, int top, int cellWidth, Event event) {
-        if (event.drawAsAllday()) {
-            return false;
-        }
-
         float cellMinuteHeight = mMinuteHeight;
         int startDay = event.startDay;
         int endDay = event.endDay;

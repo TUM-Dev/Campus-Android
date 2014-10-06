@@ -100,8 +100,8 @@ public class StartupActivity extends ActionBarActivity {
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
+    protected void onDestroy() {
+        super.onDestroy();
         LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
     }
 
