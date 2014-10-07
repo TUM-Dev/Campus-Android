@@ -17,6 +17,7 @@ import de.tum.in.tumcampus.auxiliary.AccessTokenManager;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.NetUtils;
 import de.tum.in.tumcampus.auxiliary.Utils;
+import de.tum.in.tumcampus.models.ChatClient;
 import de.tum.in.tumcampus.models.ChatMember;
 import retrofit.RetrofitError;
 
@@ -113,7 +114,7 @@ public class WizNavExtrasActivity extends ActivityForLoadingInBackground<String,
         try {
             // After the user has entered their display name,
             // send a request to the server to create the new member
-            //ChatClient.getInstance().createMember(currentChatMember); //TODO remove comment if chat is setup on webservice
+            ChatClient.getInstance().createMember(currentChatMember); //TODO remove comment if chat is setup on webservice
         } catch(RetrofitError e) {
             showErrorLayout();
             return false;

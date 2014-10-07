@@ -35,34 +35,35 @@ public class ChatClient {
 	}
 	
 	private interface ChatService {
-		
-		@POST("/chat_rooms/")
+
+		@POST("/rooms/")
 		void createChatRoom(@Body ChatRoom chatRoom, Callback<ChatRoom> cb);
 		
-		@GET("/chat_rooms/")
-		List<ChatRoom> getChatRoomWithName(@Query("name") String name);
+		@GET("/rooms/{roomName}/")
+		List<ChatRoom> getChatRoomWithName(@Path("roomName") String roomName);
 		
-		@GET("/chat_rooms/{groupId}")
+		@GET("/rooms/{groupId}")
 		ChatRoom getChatRoom(@Path("groupId") String id);
+
 		
-		@POST("/members/")
-		ChatMember createMember(@Body ChatMember chatMember);
-		
-		@GET("/members/")
-		List<ChatMember> getMember(@Query("lrz_id") String lrzId);
-		
-		@POST("/chat_rooms/{groupId}/add_member/")
+		@POST("/rooms/{groupId}/join/")
 		void joinChatRoom(@Path("groupId") String groupId, @Body ChatMember chatMember, Callback<ChatRoom> cb);
 		
-		@POST("/chat_rooms/{groupId}/remove_member/")
+		@POST("/rooms/{groupId}/leave/")
 		void leaveChatRoom(@Path("groupId") String groupId, @Body ChatMember chatMember, Callback<ChatRoom> cb);
 		
-		@POST("/chat_rooms/{groupId}/messages/")
+		@POST("/rooms/{groupId}/messages/")
 		CreateChatMessage sendMessage(@Path("groupId") String groupId, @Body CreateChatMessage chatMessage);
 		
-		@GET("/chat_rooms/{groupId}/messages/")
+		@GET("/rooms/{groupId}/messages/")
 		void getMessages(@Path("groupId") String groupId, @Query("page") int page, Callback<ArrayList<ListChatMessage>> cb);
-		
+
+        @POST("/members/")
+        ChatMember createMember(@Body ChatMember chatMember);
+
+        @GET("/members/")
+        List<ChatMember> getMember(@Query("lrz_id") String lrzId);
+
 		@POST("/members/{memberId}/pubkeys/")
 		void uploadPublicKey(@Path("memberId") String memberId, @Body ChatPublicKey publicKey, Callback<ChatPublicKey> cb);
 		

@@ -49,7 +49,7 @@ public final class Const {
 	public static final String WARNING = "warning";
 	public static final String WARNING_MESSAGE = "warning_message";
 	
-	public static final String CHAT_URL = "http://ec2-54-75-107-15.eu-west-1.compute.amazonaws.com";
+	public static final String CHAT_URL = "https://tumcabe.in.tum.de/Api/chat/";
 	public static final String CURRENT_CHAT_ROOM = "current_chat_room";
 	public static final String CURRENT_CHAT_MEMBER = "current_chat_member";
 	public static final String CHAT_ROOM_DISPLAY_NAME = "chat_room_display_name";
