@@ -2,17 +2,6 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     android:key="cards_pref_container">
 
-    <PreferenceCategory android:title="@string/tumonline_settings">
-        <EditTextPreference
-            android:key="lrz_id"
-            android:summary="@string/lrz_id_detail"
-            android:title="@string/lrz_id" />
-
-        <Preference
-            android:key="button_token"
-            android:summary="@string/generate_tumonline_token_detail"
-            android:title="@string/generate_tumonline_token" />
-    </PreferenceCategory>
     <PreferenceCategory android:title="@string/cards_settings">
 
         <!-- Cafeteria card -->
@@ -265,16 +254,6 @@
             </PreferenceCategory>
         </PreferenceScreen>
     </PreferenceCategory>
-    <PreferenceCategory android:title="@string/extras">
-        <Preference
-            android:key="button_wizard"
-            android:summary="@string/open_wizard_detail"
-            android:title="@string/open_wizard" />
-        <Preference
-            android:key="button_clear_cache"
-            android:summary="@string/clear_cache_detail"
-            android:title="@string/clear_cache" />
-    </PreferenceCategory>
     <PreferenceCategory android:title="@string/services">
         <CheckBoxPreference
             android:key="silent_mode"
@@ -284,6 +263,16 @@
             android:key="background_mode"
             android:summary="@string/background_info"
             android:title="@string/background_mode" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/extras">
+        <Preference
+            android:key="button_wizard"
+            android:summary="@string/open_wizard_detail"
+            android:title="@string/open_wizard" />
+        <Preference
+            android:key="button_clear_cache"
+            android:summary="@string/clear_cache_detail"
+            android:title="@string/clear_cache" />
         <Preference
             android:key="first_run"
             android:summary="@string/demo_info"

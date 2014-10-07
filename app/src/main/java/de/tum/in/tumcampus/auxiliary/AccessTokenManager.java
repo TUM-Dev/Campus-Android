@@ -1,10 +1,7 @@
 package de.tum.in.tumcampus.auxiliary;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.models.AccessToken;
@@ -50,14 +47,6 @@ public class AccessTokenManager {
 	}
 
     /**
-     * Gets the users lrz id
-     * @return LRZ id, if it is set, an empty string otherwise
-     */
-	private String getLrzId() {
-		return Utils.getSetting(context, Const.LRZ_ID);
-	}
-
-    /**
      * Test if a valid access token already exists
      * @return True, if access token is set
      */
@@ -97,43 +86,4 @@ public class AccessTokenManager {
 		}
 		return false;
 	}
-
-    /**
-     * Generates an access token and if there already is an access token a dialog is shown which
-     * asks the user if he wants to generate a new one
-     */
-	public void setupAccessToken(final Activity activity) {
-        String lrzId = Utils.getSetting(context, Const.LRZ_ID);
-		// check if lrz could be valid?
-		if (lrzId.length() >= MIN_LRZ_LENGTH) {
-			// is access token already set?
-            if (hasValidAccessToken()) {
-				// show Dialog first
-				new AlertDialog.Builder(context)
-                        .setMessage(context.getString(R.string.dialog_new_token))
-						.setPositiveButton(context.getString(R.string.yes),
-								new OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
-                                        requestAccessTokenInThread(activity, getLrzId());
-                                    }
-                                })
-						.setNegativeButton(context.getString(R.string.no), null)
-						.show();
-			} else {
-                requestAccessTokenInThread(activity, lrzId);
-			}
-		} else {
-			Utils.showToast(context, R.string.error_lrz_wrong);
-		}
-	}
-
-    private void requestAccessTokenInThread(final Activity activity, final String lrz) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                requestAccessToken(activity, lrz);
-            }
-        }).start();
-    }
 }

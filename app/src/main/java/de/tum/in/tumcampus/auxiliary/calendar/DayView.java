@@ -16,7 +16,6 @@
 
 package de.tum.in.tumcampus.auxiliary.calendar;
 
-import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -60,14 +59,15 @@ import com.nineoldandroids.animation.AnimatorListenerAdapter;
 import com.nineoldandroids.animation.ObjectAnimator;
 import com.nineoldandroids.animation.ValueAnimator;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import de.tum.in.tumcampus.R;
-import de.tum.in.tumcampus.activities.RoomFinderActivity;
 import de.tum.in.tumcampus.activities.RoomFinderDetailsActivity;
 import de.tum.in.tumcampus.auxiliary.calendar.CalendarController.EventType;
 import de.tum.in.tumcampus.auxiliary.calendar.CalendarController.ViewType;
@@ -393,6 +393,7 @@ public class DayView extends View implements View.OnCreateContextMenuListener,
      */
     private int mHoursWidth;
     private int mDateStrWidth;
+    private int mDateStrWidthLong;
     /**
      * Top of the scrollable region i.e. below date labels and all day events
      */
@@ -406,6 +407,7 @@ public class DayView extends View implements View.OnCreateContextMenuListener,
      */
     private int mFirstHourOffset;
     private String[] mHourStrs;
+    private String[] mDayStrsLong;
     private String[] mDayStrs;
     private String[] mDayStrs2Letter;
     private boolean mIs24HourFormat;
@@ -483,7 +485,7 @@ public class DayView extends View implements View.OnCreateContextMenuListener,
 
         DATE_HEADER_FONT_SIZE = (int) mResources.getDimension(R.dimen.date_header_text_size);
         DAY_HEADER_FONT_SIZE = (int) mResources.getDimension(R.dimen.day_label_text_size);
-        ONE_DAY_HEADER_HEIGHT = (int) mResources.getDimension(R.dimen.one_day_header_height);
+        ONE_DAY_HEADER_HEIGHT = (int) mResources.getDimension(R.dimen.day_header_height);
         DAY_HEADER_BOTTOM_MARGIN = (int) mResources.getDimension(R.dimen.day_header_bottom_margin);
         HOURS_TEXT_SIZE = (int) mResources.getDimension(R.dimen.hours_text_size);
         AMPM_TEXT_SIZE = (int) mResources.getDimension(R.dimen.ampm_text_size);
@@ -604,6 +606,9 @@ public class DayView extends View implements View.OnCreateContextMenuListener,
         p = mPaint;
         p.setAntiAlias(true);
 
+        // Long day names
+        mDayStrsLong = new String[14];
+
         // Allocate space for 2 weeks worth of weekday names so that we can
         // easily start the week display at any week day.
         mDayStrs = new String[14];
@@ -613,6 +618,10 @@ public class DayView extends View implements View.OnCreateContextMenuListener,
 
         for (int i = Calendar.SUNDAY; i <= Calendar.SATURDAY; i++) {
             int index = i - Calendar.SUNDAY;
+
+            mDayStrsLong[index] = DateUtils.getDayOfWeekString(i, DateUtils.LENGTH_LONG)
+                    .toUpperCase();
+            mDayStrsLong[index + 7] = mDayStrsLong[index];
             // e.g. Tue for Tuesday
             mDayStrs[index] = DateUtils.getDayOfWeekString(i, DateUtils.LENGTH_MEDIUM)
                     .toUpperCase();
@@ -635,8 +644,13 @@ public class DayView extends View implements View.OnCreateContextMenuListener,
         p.setTypeface(mBold);
         String[] dateStrs = {" 28", " 30"};
         mDateStrWidth = computeMaxStringWidth(0, dateStrs, p);
+        Time time = new Time();
+        time.setJulianDay(mFirstJulianDay);
+        String s = SimpleDateFormat.getDateInstance().format(new Date(time.toMillis(false)));
+        mDateStrWidthLong = computeMaxStringWidth(0, new String[] {s}, p);
         p.setTextSize(DAY_HEADER_FONT_SIZE);
         mDateStrWidth += computeMaxStringWidth(0, mDayStrs, p);
+        mDateStrWidthLong += computeMaxStringWidth(0, mDayStrsLong, p);
 
         p.setTextSize(HOURS_TEXT_SIZE);
         p.setTypeface(null);
@@ -1431,16 +1445,14 @@ public class DayView extends View implements View.OnCreateContextMenuListener,
     }
 
     private void drawDayHeaderLoop(Rect r, Canvas canvas, Paint p) {
-        if (mNumDays == 1 && ONE_DAY_HEADER_HEIGHT == 0) {
-            return;
-        }
-
         p.setTypeface(mBold);
         p.setTextAlign(Align.RIGHT);
         int cell = mFirstJulianDay;
 
         String[] dayNames;
-        if (mDateStrWidth < mCellWidth) {
+        if (mDateStrWidthLong < mCellWidth && mNumDays==1) {
+            dayNames = mDayStrsLong;
+        } else if(mDateStrWidth < mCellWidth) {
             dayNames = mDayStrs;
         } else {
             dayNames = mDayStrs2Letter;
@@ -1470,7 +1482,14 @@ public class DayView extends View implements View.OnCreateContextMenuListener,
             }
 
             p.setColor(color);
-            drawDayHeader(dayNames[dayOfWeek], day, cell, canvas, p);
+            if(mNumDays==1) {
+                Time time = new Time();
+                time.setJulianDay(mFirstJulianDay);
+                String s = SimpleDateFormat.getDateInstance().format(new Date(time.toMillis(false)));
+                drawDayHeader(dayNames[dayOfWeek], day, s, cell, canvas, p);
+            } else {
+                drawDayHeader(dayNames[dayOfWeek], day, String.valueOf(day), cell, canvas, p);
+            }
         }
         p.setTypeface(null);
     }
@@ -1570,7 +1589,7 @@ public class DayView extends View implements View.OnCreateContextMenuListener,
         p.setAntiAlias(true);
     }
 
-    private void drawDayHeader(String dayStr, int day, int cell, Canvas canvas, Paint p) {
+    private void drawDayHeader(String dayStr, int day, String dateNumStr, int cell, Canvas canvas, Paint p) {
         int dateNum = mFirstVisibleDate + day;
         int x;
         if (dateNum > mMonthLength) {
@@ -1580,7 +1599,6 @@ public class DayView extends View implements View.OnCreateContextMenuListener,
 
         int todayIndex = mTodayJulianDay - mFirstJulianDay;
         // Draw day of the month
-        String dateNumStr = String.valueOf(dateNum);
         if (mNumDays > 1) {
             float y = DAY_HEADER_HEIGHT - DAY_HEADER_BOTTOM_MARGIN;
 
@@ -1601,9 +1619,9 @@ public class DayView extends View implements View.OnCreateContextMenuListener,
             float y = ONE_DAY_HEADER_HEIGHT - DAY_HEADER_ONE_DAY_BOTTOM_MARGIN;
             p.setTextAlign(Align.LEFT);
 
-
             // Draw day of the week
             x = computeDayLeftPosition(day) + DAY_HEADER_ONE_DAY_LEFT_MARGIN;
+            x = x+((mCellWidth-mDateStrWidthLong)/2); //TODO
             p.setTextSize(DAY_HEADER_FONT_SIZE);
             p.setTypeface(Typeface.DEFAULT);
             canvas.drawText(dayStr, x, y, p);
