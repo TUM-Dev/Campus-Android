@@ -40,6 +40,7 @@ public class WizNavExtrasActivity extends ActivityForLoadingInBackground<String,
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+        disableRefresh();
 
         preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 

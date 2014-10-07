@@ -278,11 +278,13 @@ public class UserPreferencesActivity extends PreferenceActivity implements
         manager.clearCache();
 
         // delete local calendar
+        Utils.setInternalSetting(this, Const.SYNC_CALENDAR, false);
         if (Build.VERSION.SDK_INT >= 14) {
             CalendarManager.deleteLocalCalendar(this);
         }
 
         Utils.showToast(this, R.string.success_clear_cache);
+        Utils.setInternalSetting(this, Const.EVERYTHING_SETUP, false);
 
         finish();
         startActivity(new Intent(this, StartupActivity.class));
