@@ -228,7 +228,7 @@ public class CalendarManager implements Card.ProvidesCard {
      * if it started during the last 30 minutes
      */
     public CalendarRow getNextCalendarItem() {
-        Cursor cur = db.rawQuery("SELECT title, dtstart " +
+        Cursor cur = db.rawQuery("SELECT title, dtstart, location " +
                 " FROM calendar " +
                 " WHERE datetime('now', 'localtime') < datetime(dtstart, '+1800 seconds') AND " +
                 " datetime('now','localtime') < dtend " +
@@ -239,6 +239,7 @@ public class CalendarManager implements Card.ProvidesCard {
             row = new CalendarRow();
             row.setTitle(cur.getString(0));
             row.setDtstart(cur.getString(1));
+            row.setLocation(cur.getString(2));
         }
         cur.close();
         return row;
@@ -273,7 +274,7 @@ public class CalendarManager implements Card.ProvidesCard {
         CalendarRow row = getNextCalendarItem();
         if (row != null) {
             NextLectureCard card = new NextLectureCard(context);
-            card.setLecture(row.getTitle(), row.getDtstart(), row.getDtend());
+            card.setLecture(row.getTitle(), row.getDtstart(), row.getLocation());
             card.apply();
         }
     }

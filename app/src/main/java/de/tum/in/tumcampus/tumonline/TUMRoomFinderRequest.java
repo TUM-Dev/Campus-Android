@@ -163,7 +163,7 @@ public class TUMRoomFinderRequest {
         return roomsList;
     }
 
-    String fetchDefaultMapId(String buildingID) {
+    public String fetchDefaultMapId(String buildingID) {
         setParameter("id", buildingID);
         method = "defaultMapId";
 

@@ -33,9 +33,6 @@ public class RoomFinderActivity extends ActivityForSearching implements TUMRoomF
     private StickyListHeadersListView list;
     private RoomFinderListAdapter adapter;
 
-    private String currentlySelectedBuildingId;
-    private String currentlySelectedRoomId;
-
     public RoomFinderActivity() {
         super(R.layout.activity_roomfinder, RoomFinderSuggestionProvider.AUTHORITY, 3);
     }
@@ -84,11 +81,6 @@ public class RoomFinderActivity extends ActivityForSearching implements TUMRoomF
 
     @Override
     public void onFetchDefaultMapId(String mapId) {
-        Intent intent = new Intent(this, RoomFinderDetailsActivity.class);
-        intent.putExtra("buildingId", currentlySelectedBuildingId);
-        intent.putExtra("roomId", currentlySelectedRoomId);
-        intent.putExtra("mapId", mapId);
-        startActivity(intent);
     }
 
     @Override
@@ -102,9 +94,6 @@ public class RoomFinderActivity extends ActivityForSearching implements TUMRoomF
         @SuppressWarnings("unchecked")
         HashMap<String, String> room = (HashMap<String, String>) list.getAdapter().getItem(position);
 
-        currentlySelectedBuildingId = room.get(TUMRoomFinderRequest.KEY_Building + TUMRoomFinderRequest.KEY_ID);
-        currentlySelectedRoomId = room.get(TUMRoomFinderRequest.KEY_ARCHITECT_NUMBER);
-        roomFinderRequest.fetchDefaultMapIdJob(this, this, currentlySelectedBuildingId);
 
         // Add to recents
         String val = "";
@@ -112,6 +101,18 @@ public class RoomFinderActivity extends ActivityForSearching implements TUMRoomF
             val += entry.getKey() + "=" + entry.getValue() + ";";
         }
         recentsManager.replaceIntoDb(val);
+
+        Bundle b = new Bundle();
+        b.putString(RoomFinderDetailsActivity.BUILDING_ID, room.get(TUMRoomFinderRequest.KEY_Building + TUMRoomFinderRequest.KEY_ID));
+        b.putString(RoomFinderDetailsActivity.BUILDING_TITLE, room.get(TUMRoomFinderRequest.KEY_Building + TUMRoomFinderRequest.KEY_TITLE));
+        b.putString(RoomFinderDetailsActivity.ROOM_ID, room.get(TUMRoomFinderRequest.KEY_ARCHITECT_NUMBER));
+        b.putString(RoomFinderDetailsActivity.CAMPUS_TITLE, room.get(TUMRoomFinderRequest.KEY_Campus + TUMRoomFinderRequest.KEY_TITLE));
+        b.putString(RoomFinderDetailsActivity.ROOM_TITLE, room.get(TUMRoomFinderRequest.KEY_ROOM + TUMRoomFinderRequest.KEY_TITLE));
+
+        // Start detail activity
+        Intent intent = new Intent(this, RoomFinderDetailsActivity.class);
+        intent.putExtra(RoomFinderDetailsActivity.EXTRA_ROOM_INFO,b);
+        startActivity(intent);
     }
 
     @Override
