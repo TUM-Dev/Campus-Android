@@ -47,7 +47,6 @@ public class UserPreferencesActivity extends PreferenceActivity implements
 
     private final AccessTokenManager accessTokenManager = new AccessTokenManager(this);
 
-    @SuppressWarnings("deprecation")
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,7 +63,6 @@ public class UserPreferencesActivity extends PreferenceActivity implements
 
         // Click listener for preference list entries. Used to simulate a button
         // (since it is not possible to add a button to the preferences screen)
-        findPreference("button_token").setOnPreferenceClickListener(this);
         findPreference("button_wizard").setOnPreferenceClickListener(this);
         findPreference("button_clear_cache").setOnPreferenceClickListener(this);
         findPreference("facebook").setOnPreferenceClickListener(this);
@@ -203,12 +201,7 @@ public class UserPreferencesActivity extends PreferenceActivity implements
     public boolean onPreferenceClick(Preference preference) {
         final String key = preference.getKey();
 
-        if (key.equals("button_token")) {
-            // Querys for a access token from TUMOnline
-            accessTokenManager.setupAccessToken(this);
-
-
-        } else if (key.equals("button_wizard")) {
+        if (key.equals("button_wizard")) {
             finish();
             startActivity(new Intent(this, WizNavStartActivity.class));
 
