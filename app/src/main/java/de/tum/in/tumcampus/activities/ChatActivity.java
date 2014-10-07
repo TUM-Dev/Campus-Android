@@ -107,7 +107,7 @@ public class ChatActivity extends ActionBarActivity implements OnClickListener, 
  			while (!messageSentSuccessfully && numberOfAttempts < 5) {
 				try {
 					// Send the message to the server
-					CreateChatMessage newlyCreatedMessage = ChatClient.getInstance().sendMessage(currentChatRoom.getGroupId(), newMessage);
+					CreateChatMessage newlyCreatedMessage = ChatClient.getInstance(this).sendMessage(currentChatRoom.getGroupId(), newMessage);
 					
 					chatHistory.add(new ListChatMessage(newlyCreatedMessage, currentChatMember));
 					chatHistoryAdapter.notifyDataSetChanged();
@@ -144,7 +144,7 @@ public class ChatActivity extends ActionBarActivity implements OnClickListener, 
 	@Override
 	public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 		ListChatMessage message = chatHistory.get(position - 1);
-        ArrayList<ChatPublicKey> publicKeys = (ArrayList<ChatPublicKey>) ChatClient.getInstance().getPublicKeysForMember(message.getMember().getUserId());
+        ArrayList<ChatPublicKey> publicKeys = (ArrayList<ChatPublicKey>) ChatClient.getInstance(this).getPublicKeysForMember(message.getMember().getUserId());
 		ChatMessageValidator validator = new ChatMessageValidator(publicKeys);
 		boolean result = validator.validate(message);
 		Utils.showToast(this, "Selected message is " + (result ? "" : "not ") + "valid");
@@ -204,7 +204,7 @@ public class ChatActivity extends ActionBarActivity implements OnClickListener, 
      * @param page Page number
      */
 	private void getHistoryPageFromServer(final int page) {
-		ChatClient.getInstance().getMessages(currentChatRoom.getGroupId(), page, new Callback<ArrayList<ListChatMessage>>() {
+		ChatClient.getInstance(this).getMessages(currentChatRoom.getGroupId(), page, new Callback<ArrayList<ListChatMessage>>() {
 			@Override
 			public void success(ArrayList<ListChatMessage> downloadedChatHistory, Response arg1) {
 				Utils.logv("Success loading additional chat history: " + arg1.toString());
@@ -279,7 +279,7 @@ public class ChatActivity extends ActionBarActivity implements OnClickListener, 
 							PreferenceManager.getDefaultSharedPreferences(ChatActivity.this).edit().remove(Const.CHAT_TERMS_SHOWN + "_" + currentChatRoom.getName()).commit();
 							
 							// Send request to the server to remove the user from this room
-							ChatClient.getInstance().leaveChatRoom(currentChatRoom, currentChatMember, new Callback<ChatRoom>() {
+							ChatClient.getInstance(ChatActivity.this).leaveChatRoom(currentChatRoom, currentChatMember, new Callback<ChatRoom>() {
 								@Override
 								public void success(ChatRoom arg0, Response arg1) {
 									Utils.logv("Success leaving chat room: " + arg0.toString());
