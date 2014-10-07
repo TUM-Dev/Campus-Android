@@ -85,7 +85,6 @@ public class Event implements Cloneable {
 
     public static Event newInstance() {
         Event e = new Event();
-
         e.id = 0;
         e.title = null;
         e.color = 0;

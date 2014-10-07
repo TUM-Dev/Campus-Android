@@ -12,21 +12,19 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.CalendarContract;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
-import android.text.format.DateUtils;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.generic.ActivityForAccessingTumOnline;
-import de.tum.in.tumcampus.adapters.CalendarSectionsPagerAdapter;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.Utils;
+import de.tum.in.tumcampus.fragments.DayFragment;
 import de.tum.in.tumcampus.models.CalendarRowSet;
 import de.tum.in.tumcampus.models.managers.CalendarManager;
 import de.tum.in.tumcampus.models.managers.DatabaseManager;
@@ -70,7 +68,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mViewPager = (ViewPager) findViewById(R.id.pager);
+        //mViewPager = (ViewPager) findViewById(R.id.pager);
         calendarManager = new CalendarManager(this);
 
         // Set the time space between now and after this date and before this
@@ -171,25 +169,28 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
      * Link the Sections with the content with a section adapter. Additionally put the current date at the start position.
      */
     private void attachSectionPagerAdapter() {
-        findViewById(R.id.pager_title_strip).setVisibility(mWeekMode ? View.GONE : View.VISIBLE);
-        CalendarSectionsPagerAdapter mSectionsPagerAdapter = new CalendarSectionsPagerAdapter(getSupportFragmentManager(), mWeekMode);
-        mViewPager.setAdapter(mSectionsPagerAdapter);
-
-        Date now = new Date();
+        //findViewById(R.id.pager_title_strip).setVisibility(mWeekMode ? View.GONE : View.VISIBLE);
+        //CalendarSectionsPagerAdapter mSectionsPagerAdapter = new CalendarSectionsPagerAdapter(getSupportFragmentManager(), mWeekMode);
+        //mViewPager.setAdapter(mSectionsPagerAdapter);
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.fragment_container, new DayFragment(0,mWeekMode?7:1));
+        ft.commit();
+        /*Date now = new Date();
         calendar.setTime(now);
 
         calendar.add(Calendar.MONTH, -CalendarActivity.MONTH_BEFORE);
         Date firstDate = calendar.getTime();
 
         long days = (now.getTime() - firstDate.getTime()) / DateUtils.DAY_IN_MILLIS;
-        mViewPager.setCurrentItem((int) days);
+        mViewPager.setCurrentItem((int) days);*/
     }
 
     /**
      * Detach the adapter form the Pager to make the asynch task not conflicting with the UI thread.
      */
     private void detachSectionPagerAdapter() {
-        mViewPager.setAdapter(null);
+
+        //mViewPager.setAdapter(null);
     }
 
     /**
