@@ -88,7 +88,7 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline<Lectu
                 String chatRoomUid = item.getSemester_id() + ":" + item.getTitel();
 
                 currentChatRoom = new ChatRoom(chatRoomUid);
-                ChatClient.getInstance().createGroup(currentChatRoom, new Callback<ChatRoom>() {
+                ChatClient.getInstance(ChatRoomsSearchActivity.this).createGroup(currentChatRoom, new Callback<ChatRoom>() {
                     @Override
                     public void success(ChatRoom newlyCreatedChatRoom, Response arg1) {
                         // The POST request is successful because the chat room did not exist
@@ -104,7 +104,7 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline<Lectu
                         // The POST request in unsuccessful because the chat room already exists,
                         // so we are trying to retrieve it with an additional GET request
                         Utils.logv("Failure creating chat room - trying to GET it from the server: " + arg0.toString());
-                        List<ChatRoom> chatRooms = ChatClient.getInstance().getChatRoomWithName(currentChatRoom);
+                        List<ChatRoom> chatRooms = ChatClient.getInstance(ChatRoomsSearchActivity.this).getChatRoomWithName(currentChatRoom);
                         if (chatRooms != null)
                             currentChatRoom = chatRooms.get(0);
 
@@ -130,15 +130,16 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline<Lectu
                     if (currentChatMember == null) {
                         String lrzId = Utils.getSetting(ChatRoomsSearchActivity.this, Const.LRZ_ID);
                         // GET their data from the server using their lrzId
-                        List<ChatMember> members = ChatClient.getInstance().getMember(lrzId);
+                        List<ChatMember> members = ChatClient.getInstance(ChatRoomsSearchActivity.this).getMember(lrzId);
                         currentChatMember = members.get(0);
 
                         checkPlayServicesAndRegister();
                     }
                 } catch (RetrofitError e) {
-                    Utils.log(e);
+                    Utils.log(e, e.getMessage());
                     Utils.showToastOnUIThread(ChatRoomsSearchActivity.this, R.string.no_internet_connection);
                 }
+
             }
         }).start();
     }
@@ -183,7 +184,7 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline<Lectu
                 String signature = signer.sign(currentChatMember.getLrzId());
                 currentChatMember.setSignature(signature);
 
-                ChatClient.getInstance().joinChatRoom(currentChatRoom, currentChatMember, new Callback<ChatRoom>() {
+                ChatClient.getInstance(ChatRoomsSearchActivity.this).joinChatRoom(currentChatRoom, currentChatMember, new Callback<ChatRoom>() {
                     @Override
                     public void success(ChatRoom arg0, Response arg1) {
                         Utils.logv("Success joining chat room: " + arg0.toString());
@@ -258,7 +259,7 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline<Lectu
                 Utils.setInternalSetting(this, Const.PRIVATE_KEY, privateKeyString);
 
                 // Upload public key to the server
-                ChatClient.getInstance().uploadPublicKey(currentChatMember.getUserId(), new ChatPublicKey(publicKeyString), new Callback<ChatPublicKey>() {
+                ChatClient.getInstance(ChatRoomsSearchActivity.this).uploadPublicKey(currentChatMember.getUserId(), new ChatPublicKey(publicKeyString), new Callback<ChatPublicKey>() {
                     @Override
                     public void success(ChatPublicKey arg0, Response arg1) {
                         Utils.logv("Success uploading public key: " + arg0.toString());
@@ -411,10 +412,10 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline<Lectu
         RSASigner signer = new RSASigner(currentPrivateKey);
         String signature = signer.sign(currentChatMember.getLrzId());
 
-        ChatClient.getInstance().uploadRegistrationId(currentChatMember.getUserId(), new ChatRegistrationId(regId, signature), new Callback<ChatRegistrationId>() {
+        ChatClient.getInstance(ChatRoomsSearchActivity.this).uploadRegistrationId(currentChatMember.getUserId(), new ChatRegistrationId(regId, signature), new Callback<ChatRegistrationId>() {
             @Override
             public void success(ChatRegistrationId arg0, Response arg1) {
-                Utils.logv("Success uploading GCM registration id: " + arg0.toString());
+                Utils.logv("Success uploading GCM registration id: " + arg0);
                 // Store in shared preferences the information that the
                 // GCM registration id was sent to the TCA server successfully
                 Utils.setInternalSetting(ChatRoomsSearchActivity.this, Const.GCM_REG_ID_SENT_TO_SERVER, true);

@@ -115,7 +115,7 @@ public class WizNavExtrasActivity extends ActivityForLoadingInBackground<String,
         try {
             // After the user has entered their display name,
             // send a request to the server to create the new member
-            ChatClient.getInstance().createMember(currentChatMember); //TODO remove comment if chat is setup on webservice
+            ChatClient.getInstance(this).createMember(currentChatMember); //TODO remove comment if chat is setup on webservice
         } catch(RetrofitError e) {
             showErrorLayout();
             return false;

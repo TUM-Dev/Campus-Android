@@ -1,10 +1,15 @@
 package de.tum.in.tumcampus.models;
 
+import android.content.Context;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import de.tum.in.tumcampus.auxiliary.Const;
+import de.tum.in.tumcampus.auxiliary.NetUtils;
+import de.tum.in.tumcampus.trace.G;
 import retrofit.Callback;
+import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
 import retrofit.http.Body;
 import retrofit.http.GET;
@@ -18,21 +23,33 @@ public class ChatClient {
 	
 	private static ChatClient instance = null;
 	private ChatService service = null;
+
+    private static Context c=null;
+
 	
 	private ChatClient() {
 		RestAdapter restAdapter = new RestAdapter.Builder()
 				.setEndpoint(API_URL)
 				.setLogLevel(RestAdapter.LogLevel.FULL)
+                .setRequestInterceptor(requestInterceptor)
 				.build();
 		service = restAdapter.create(ChatService.class);
 	}
 	
-	public static ChatClient getInstance() {
+	public static ChatClient getInstance(Context c) {
+        ChatClient.c=c;
 		if (instance == null) {
 			instance = new ChatClient();
 		}
 		return instance;
 	}
+
+    RequestInterceptor requestInterceptor = new RequestInterceptor() {
+        @Override
+        public void intercept(RequestFacade request) {
+            request.addHeader("X-DEVICE-ID", NetUtils.getDeviceID(ChatClient.c));
+        }
+    };
 	
 	private interface ChatService {
 
@@ -61,8 +78,8 @@ public class ChatClient {
         @POST("/members/")
         ChatMember createMember(@Body ChatMember chatMember);
 
-        @GET("/members/")
-        List<ChatMember> getMember(@Query("lrz_id") String lrzId);
+        @GET("/members/{lrz_id}/")
+        List<ChatMember> getMember(@Path("lrz_id") String lrzId);
 
 		@POST("/members/{memberId}/pubkeys/")
 		void uploadPublicKey(@Path("memberId") String memberId, @Body ChatPublicKey publicKey, Callback<ChatPublicKey> cb);

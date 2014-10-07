@@ -103,8 +103,8 @@ public class GcmIntentService extends IntentService {
         
         // Get the data necessary for the ChatActivity
         String lrzId = PreferenceManager.getDefaultSharedPreferences(this).getString(Const.LRZ_ID, "");
-        List<ChatMember> members = ChatClient.getInstance().getMember(lrzId);
-        ChatRoom chatRoom = ChatClient.getInstance().getChatRoom(chatRoomId);
+        List<ChatMember> members = ChatClient.getInstance(this).getMember(lrzId);
+        ChatRoom chatRoom = ChatClient.getInstance(this).getChatRoom(chatRoomId);
         // Put the data into the intent
         notificationIntent.putExtra(Const.CURRENT_CHAT_ROOM, new Gson().toJson(chatRoom));
         notificationIntent.putExtra(Const.CURRENT_CHAT_MEMBER, new Gson().toJson(members.get(0)));
