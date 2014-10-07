@@ -79,31 +79,35 @@
 
                 <EditText
                     android:id="@+id/nickname"
-                    android:layout_width="wrap_content"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"
                     android:layout_toLeftOf="@+id/button_open_chat_terms"
                     android:layout_toStartOf="@+id/button_open_chat_terms"
                     android:hint="@string/display_name"
                     android:inputType="text"
                     android:padding="@dimen/padding_default" />
 
+                <CheckBox
+                    android:id="@+id/chk_group_chat_terms"
+                    android:layout_toLeftOf="@+id/button_open_chat_terms"
+                    android:layout_toStartOf="@+id/button_open_chat_terms"
+                    android:layout_below="@+id/nickname"
+                    android:layout_alignParentLeft="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="fill_parent"
+                    android:text="@string/accept_chat_terms"
+                    android:layout_alignParentStart="false" />
+
                 <Button
                     android:id="@+id/button_open_chat_terms"
                     style="@style/FlatButton"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
                     android:onClick="onClickTerms"
-                    android:text="@string/open_chat_terms" />
+                    android:text="@string/open_chat_terms"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true" />
             </RelativeLayout>
-
-            <CheckBox
-                android:id="@+id/chk_group_chat_terms"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/accept_chat_terms" />
 
             <CheckBox
                 android:id="@+id/chk_background_mode"
@@ -118,6 +122,22 @@
                 android:layout_height="wrap_content"
                 android:padding="@dimen/padding_default"
                 android:text="@string/set_background_mode" />
+
+            <CheckBox
+                android:id="@+id/chk_bug_reports"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/bug_reports"
+                android:textStyle="bold"
+                android:checked="true" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/padding_default"
+                android:text="@string/set_bug_reports"
+                android:id="@+id/textView" />
         </LinearLayout>
     </ScrollView>
 

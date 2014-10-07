@@ -32,6 +32,7 @@ Peter Hewitt
 package de.tum.in.tumcampus.trace;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 
 public class G {
     // Since the exception handler doesn't have access to the context, or anything really, the library prepares these values for when the handler needs them.
@@ -48,5 +49,8 @@ public class G {
 
     public static String traceVersion = "1.0";
 
-    public static Context context=null;
+    public static Context context = null;
+
+    public static SharedPreferences preferences = null;
+    public static Boolean bugReportDefault = true;
 }

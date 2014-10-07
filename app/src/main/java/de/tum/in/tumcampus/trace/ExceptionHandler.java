@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import org.apache.http.NameValuePair;
@@ -26,6 +27,7 @@ import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.NetUtils;
 
 public class ExceptionHandler {
@@ -342,6 +344,12 @@ public class ExceptionHandler {
      * If any are present, submit them to the trace server.
      */
     private static void submitStackTraces(ArrayList<String> list) {
+        //Check if we user gave permission to send these reports
+        G.preferences = PreferenceManager.getDefaultSharedPreferences(G.context);
+        if (G.preferences.getBoolean(Const.BUG_REPORTS, G.bugReportDefault) == false) {
+            return;
+        }
+
 
         //If nothing passed we have nothing to submit
         if (list == null) {

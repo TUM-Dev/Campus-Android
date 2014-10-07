@@ -28,8 +28,8 @@ import de.tum.in.tumcampus.models.managers.CacheManager;
  */
 public  class TUMOnlineRequest<T> {
 	// server address
-	//private static final String SERVICE_BASE_URL = "https://campus.tum.de/tumonline/wbservicesbasic."; //TODO reset
-    private static final String SERVICE_BASE_URL = "https://campusquality.tum.de/QSYSTEM_TUM/wbservicesbasic.";
+	private static final String SERVICE_BASE_URL = "https://campus.tum.de/tumonline/wbservicesbasic.";
+    //private static final String SERVICE_BASE_URL = "https://campusquality.tum.de/QSYSTEM_TUM/wbservicesbasic.";
 
     /** String possibly contained in response from server */
     private static final String NO_FUNCTION_RIGHTS = "Keine Rechte für Funktion";

@@ -27,6 +27,7 @@ public class WizNavExtrasActivity extends ActivityForLoadingInBackground<String,
     private CheckBox checkSilentMode;
     private CheckBox groupChatMode;
     private CheckBox acceptedTerms;
+    private CheckBox bugReport;
     private EditText nickName;
     private boolean tokenSetup = false;
 
@@ -53,6 +54,7 @@ public class WizNavExtrasActivity extends ActivityForLoadingInBackground<String,
         checkBackgroundMode = (CheckBox) findViewById(R.id.chk_background_mode);
         groupChatMode = (CheckBox) findViewById(R.id.chk_group_chat);
         acceptedTerms = (CheckBox) findViewById(R.id.chk_group_chat_terms);
+        bugReport = (CheckBox) findViewById(R.id.chk_bug_reports);
         nickName = (EditText) findViewById(R.id.nickname);
 
         // Only make silent service selectable if access token exists
@@ -126,12 +128,13 @@ public class WizNavExtrasActivity extends ActivityForLoadingInBackground<String,
             return;
         }
         if(result) {
-            // Gets the editor for editing preferences and updates the preference
-            // values with the chosen state
+            // Gets the editor for editing preferences and
+            // updates the preference values with the chosen state
             Editor editor = preferences.edit();
             editor.putBoolean(Const.SILENCE_SERVICE, checkSilentMode.isChecked());
             editor.putBoolean(Const.BACKGROUND_MODE, checkBackgroundMode.isChecked());
             editor.putBoolean(Const.GROUP_CHAT_ENABLED, groupChatMode.isChecked());
+            editor.putBoolean(Const.BUG_REPORTS, bugReport.isChecked());
 
             // Save display name in shared preferences
             editor.putString(Const.CHAT_ROOM_DISPLAY_NAME, nickName.getText().toString().trim());
@@ -148,7 +151,7 @@ public class WizNavExtrasActivity extends ActivityForLoadingInBackground<String,
         new AlertDialog.Builder(this).setTitle(R.string.chat_terms_title)
                 .setMessage(getResources().getString(R.string.chat_terms_body))
                 .setPositiveButton(android.R.string.ok, null).create().show();
-        //TODO show chat terms
+        //TODO show chat terms: update string to correct terms
     }
 
     /**

@@ -79,4 +79,5 @@ public final class Const {
     public static final String JSON_ALERTS = "alerts";
     public static final String GROUP_CHAT_ENABLED = "group_chat_enabled";
     public static final String TOKEN_IS_SETUP = "token_is_setup";
+    public static final String BUG_REPORTS = "bug_reports";
 }
