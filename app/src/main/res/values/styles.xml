@@ -31,12 +31,6 @@
         <item name="actionBarStyle">@style/BlueActionBar</item>
     </style>
 
-    <style name="AppTheme.Extended" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="android:actionBarStyle" tools:ignore="NewApi">@style/BlueActionBar.Extended</item>
-        <item name="actionBarStyle">@style/BlueActionBar.Extended</item>
-        <item name="android:windowContentOverlay">@null</item>
-    </style>
-
     <style name="SmallListSeparatorTextViewStyle">
         <item name="android:drawableBottom">@drawable/section_header</item>
         <item name="android:drawablePadding">4dp</item>
@@ -49,11 +43,6 @@
     <style name="BlueActionBar" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
         <item name="android:background"  tools:ignore="NewApi">@drawable/ab_solid_blue</item>
         <item name="background">@drawable/ab_solid_blue</item>
-    </style>
-
-    <style name="BlueActionBar.Extended" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
-        <item name="android:background"  tools:ignore="NewApi">@drawable/ab_solid_blue_extended</item>
-        <item name="background">@drawable/ab_solid_blue_extended</item>
     </style>
 
     <style name="NoActionBar" parent="Theme.AppCompat.Light.DarkActionBar">

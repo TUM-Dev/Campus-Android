@@ -66,7 +66,7 @@ public class TuitionFeesCard extends Card {
     }
 
     @Override
-    public boolean shouldShow(SharedPreferences prefs) { //TODO: Rethink
+    public boolean shouldShow(SharedPreferences prefs) {
         String prevFrist = prefs.getString(LAST_FEE_FRIST, "");
         String prevSoll = prefs.getString(LAST_FEE_SOLL, mTuition.getSoll());
 

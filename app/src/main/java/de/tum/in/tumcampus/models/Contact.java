@@ -24,7 +24,6 @@ public class Contact implements Serializable {
 	@Element(name = "mobiltelefon", required = false)
 	private String mobilephone;
 
-	// TODO Think of exporting to string.xml or constants
 	@Element(name = "telefon", required = false)
 	private String telefon;
 

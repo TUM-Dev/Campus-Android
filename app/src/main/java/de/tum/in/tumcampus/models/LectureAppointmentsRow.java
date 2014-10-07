@@ -55,9 +55,6 @@ public class LectureAppointmentsRow {
 		return ort;
 	}
 
-	/*
-	 * Florian Schulz added TODO Review Vasyl
-	 */
 	public String getRaum_nr() {
 		return raum_nr;
 	}

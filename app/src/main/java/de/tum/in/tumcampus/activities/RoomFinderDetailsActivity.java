@@ -8,7 +8,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -38,8 +37,6 @@ public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<Vo
     public static final String EXTRA_LOCATION = "location";
 
     private ImageViewTouch mImage;
-    private TextView mDetails1;
-    private TextView mDetails2;
 
     private boolean mapsLoaded = false;
     private TUMRoomFinderRequest request;
@@ -61,8 +58,6 @@ public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<Vo
         net = new NetUtils(this);
         mImage = (ImageViewTouch) findViewById(R.id.activity_roomfinder_details);
         mImage.setDisplayType(ImageViewTouchBase.DisplayType.FIT_TO_SCREEN);
-        mDetails1 = (TextView)findViewById(R.id.textView);
-        mDetails2 = (TextView)findViewById(R.id.textView2);
 
         location = getIntent().getExtras().getString(EXTRA_LOCATION);
         roomInfo = getIntent().getExtras().getBundle(EXTRA_ROOM_INFO);
@@ -185,8 +180,8 @@ public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<Vo
     @Override
     protected void onLoadFinished(Bitmap result) {
         mImage.setImageBitmap(result);
-        mDetails1.setText(roomInfo.getString(ROOM_TITLE));
-        mDetails2.setText(roomInfo.getString(BUILDING_TITLE));
+        getSupportActionBar().setTitle(roomInfo.getString(ROOM_TITLE));
+        getSupportActionBar().setSubtitle(roomInfo.getString(BUILDING_TITLE));
         showLoadingEnded();
         new Thread(new Runnable() {
             @Override

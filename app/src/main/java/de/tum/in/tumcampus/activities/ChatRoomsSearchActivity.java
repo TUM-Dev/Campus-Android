@@ -123,19 +123,24 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline<Lectu
      * shows dialog to enter display name.
      */
     private void populateCurrentChatMember() {
-        try {
-            if (currentChatMember == null) {
-                String lrzId = Utils.getSetting(this, Const.LRZ_ID);
-                // GET their data from the server using their lrzId
-                List<ChatMember> members = ChatClient.getInstance().getMember(lrzId);
-                currentChatMember = members.get(0);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    if (currentChatMember == null) {
+                        String lrzId = Utils.getSetting(ChatRoomsSearchActivity.this, Const.LRZ_ID);
+                        // GET their data from the server using their lrzId
+                        List<ChatMember> members = ChatClient.getInstance().getMember(lrzId);
+                        currentChatMember = members.get(0);
 
-                checkPlayServicesAndRegister();
+                        checkPlayServicesAndRegister();
+                    }
+                } catch (RetrofitError e) {
+                    Utils.log(e);
+                    Utils.showToastOnUIThread(ChatRoomsSearchActivity.this, R.string.no_internet_connection);
+                }
             }
-        } catch (RetrofitError e) {
-            Utils.log(e);
-            Utils.showToast(this, "Server is currently unavailable");
-        }
+        }).start();
     }
 
     @Override

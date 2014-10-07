@@ -60,7 +60,7 @@ public class CardManager {
     public static int getCardCount() {
         if (cards == null)
             return 0;
-        return cards.size(); //TODO investigate why cards is sometimes null
+        return cards.size();
     }
 
     /**
