@@ -46,6 +46,7 @@ public class RoomFinderActivity extends ActivityForSearching implements TUMRoomF
         roomFinderRequest = new TUMRoomFinderRequest();
 
         list = (StickyListHeadersListView) findViewById(R.id.list);
+        list.setOnItemClickListener(this);
 
         recentsManager = new RecentsManager(this, RecentsManager.ROOMS);
         adapter = new RoomFinderListAdapter(this, getRecents());
@@ -55,7 +56,6 @@ public class RoomFinderActivity extends ActivityForSearching implements TUMRoomF
                 openSearch();
             } else {
                 list.setAdapter(adapter);
-                list.setOnItemClickListener(this);
             }
         }
     }
@@ -75,11 +75,9 @@ public class RoomFinderActivity extends ActivityForSearching implements TUMRoomF
     public void onFetch(ArrayList<HashMap<String, String>> result) {
         if (result.size() == 0) {
             list.setAdapter(new NoResultsAdapter(this));
-            list.setOnItemClickListener(null);
         } else {
             adapter = new RoomFinderListAdapter(this, result);
             list.setAdapter(adapter);
-            list.setOnItemClickListener(this);
             showLoadingEnded();
         }
     }

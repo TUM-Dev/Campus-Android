@@ -85,6 +85,17 @@ public class TUMRoomFinderRequest {
 
             XMLParser parser = new XMLParser();
             String xml = parser.getXmlFromUrl(url); // getting XML from URL
+            if(xml.contains("<error>")) {
+                Utils.logv("Room location not found!");
+                setParameter("id", roomId.substring(roomId.indexOf('@') + 1));
+
+                url = getRequestURL(SERVICE_BASE_URL + "roommaps/building/");
+                Utils.log("fetching URL " + url);
+
+                parser = new XMLParser();
+                xml = parser.getXmlFromUrl(url); // getting XML from URL
+            }
+
             Document doc = parser.getDomElement(xml); // getting DOM element
 
             Element location = doc.getDocumentElement();

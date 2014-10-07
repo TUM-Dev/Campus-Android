@@ -35,6 +35,7 @@ public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<St
     private TUMRoomFinderRequest request;
     private ArrayList<HashMap<String, String>> mapsList;
     private NetUtils net;
+    private String location;
 
     public RoomFinderDetailsActivity() {
         super(R.layout.activity_roomfinderdetails);
@@ -48,6 +49,7 @@ public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<St
         mImage = (ImageViewTouch) findViewById(R.id.activity_roomfinder_details);
         mImage.setDisplayType(ImageViewTouchBase.DisplayType.FIT_TO_SCREEN);
 
+        location = getIntent().getExtras().getString("location");
         roomId = getIntent().getExtras().getString("roomId");
         mapId = getIntent().getExtras().getString("mapId");
         request = new TUMRoomFinderRequest();

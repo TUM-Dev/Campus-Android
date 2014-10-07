@@ -27,8 +27,8 @@ import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.wizard.WizNavStartActivity;
 import de.tum.in.tumcampus.auxiliary.AccessTokenManager;
 import de.tum.in.tumcampus.auxiliary.Const;
-import de.tum.in.tumcampus.auxiliary.NetUtils;
 import de.tum.in.tumcampus.auxiliary.ImplicitCounter;
+import de.tum.in.tumcampus.auxiliary.NetUtils;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.managers.CacheManager;
 import de.tum.in.tumcampus.models.managers.CalendarManager;
@@ -58,7 +58,7 @@ public class UserPreferencesActivity extends PreferenceActivity implements
 
         // @kb: ??? What is this supposed to do
         CheckBoxPreference silent = (CheckBoxPreference) findPreference("silent_mode");
-        if(!new AccessTokenManager(this).hasValidAccessToken()) {
+        if (!new AccessTokenManager(this).hasValidAccessToken()) {
             silent.setEnabled(false);
         }
 
@@ -91,7 +91,7 @@ public class UserPreferencesActivity extends PreferenceActivity implements
 
         // Open a card's preference screen if selected from it's context menu
         Intent intent = getIntent();
-        if(intent!=null && intent.getExtras()!=null && intent.getExtras().containsKey(Const.PREFERENCE_SCREEN)) {
+        if (intent != null && intent.getExtras() != null && intent.getExtras().containsKey(Const.PREFERENCE_SCREEN)) {
             final String key = intent.getExtras().getString(Const.PREFERENCE_SCREEN);
             PreferenceScreen screen = (PreferenceScreen) findPreference("cards_pref_container");
             Preference cardPreferenceScreen = findPreference(key);
@@ -110,12 +110,12 @@ public class UserPreferencesActivity extends PreferenceActivity implements
         PreferenceCategory news_sources = (PreferenceCategory) findPreference("card_news_sources");
         NewsManager cm = new NewsManager(this);
         Cursor cur = cm.getNewsSources();
-        if(cur.moveToFirst()) {
+        if (cur.moveToFirst()) {
             do {
                 final CheckBoxPreference pref = new CheckBoxPreference(this);
-                pref.setKey("card_news_source_"+cur.getString(0));
+                pref.setKey("card_news_source_" + cur.getString(0));
                 pref.setDefaultValue(false);
-                if(Build.VERSION.SDK_INT>=11) {
+                if (Build.VERSION.SDK_INT >= 11) {
                     // Load news source icon in background and set it
                     final String url = cur.getString(1);
                     new Thread(new Runnable() {
@@ -135,7 +135,7 @@ public class UserPreferencesActivity extends PreferenceActivity implements
                 }
                 pref.setTitle(cur.getString(2));
                 news_sources.addPreference(pref);
-            } while(cur.moveToNext());
+            } while (cur.moveToNext());
         }
         cur.close();
     }
@@ -143,12 +143,12 @@ public class UserPreferencesActivity extends PreferenceActivity implements
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         Preference pref = findPreference(key);
-        if(pref instanceof ListPreference) {
-            ListPreference listPreference = (ListPreference)pref;
+        if (pref instanceof ListPreference) {
+            ListPreference listPreference = (ListPreference) pref;
             listPreference.setSummary(listPreference.getEntry());
         }
 
-        if(key.startsWith("card_")) {
+        if (key.startsWith("card_")) {
             CardManager.shouldRefresh = true;
         }
 
@@ -178,15 +178,15 @@ public class UserPreferencesActivity extends PreferenceActivity implements
     @SuppressWarnings("deprecation")
     void setSummary(String key) {
         Preference t = findPreference(key);
-        if(t instanceof ListPreference) {
-            ListPreference pref = (ListPreference)t;
+        if (t instanceof ListPreference) {
+            ListPreference pref = (ListPreference) t;
             pref.setSummary(pref.getEntry());
         }
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId()==android.R.id.home) {
+        if (item.getItemId() == android.R.id.home) {
             finish();
             return true;
         }
@@ -195,6 +195,7 @@ public class UserPreferencesActivity extends PreferenceActivity implements
 
     /**
      * Handle all clicks on 'button'-preferences
+     *
      * @param preference Preference that has been clicked
      * @return True, if handled
      */
@@ -202,17 +203,17 @@ public class UserPreferencesActivity extends PreferenceActivity implements
     public boolean onPreferenceClick(Preference preference) {
         final String key = preference.getKey();
 
-        if(key.equals("button_token")) {
+        if (key.equals("button_token")) {
             // Querys for a access token from TUMOnline
             accessTokenManager.setupAccessToken(this);
 
 
-        } else if(key.equals("button_wizard")) {
+        } else if (key.equals("button_wizard")) {
             finish();
             startActivity(new Intent(this, WizNavStartActivity.class));
 
 
-        } else if(key.equals("button_clear_cache")) {
+        } else if (key.equals("button_clear_cache")) {
             // This button invokes the clear cache method
             new AlertDialog.Builder(this)
                     .setMessage(R.string.delete_chache_sure)
@@ -224,8 +225,7 @@ public class UserPreferencesActivity extends PreferenceActivity implements
                     })
                     .setNegativeButton(R.string.no, null).show();
 
-
-        } else if(key.equals("facebook")) {
+        } else if (key.equals("facebook")) {
             // Open the facebook app or view in a browser when not installed
             Intent facebook;
             try {
@@ -239,12 +239,12 @@ public class UserPreferencesActivity extends PreferenceActivity implements
             startActivity(facebook);
 
 
-        } else if(key.equals("github")) {
+        } else if (key.equals("github")) {
             // Open TCA-github web page
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.github_link))));
 
 
-        } else if(key.equals("first_run")) {
+        } else if (key.equals("first_run")) {
             // Show first use tutorial
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
             SharedPreferences.Editor e = prefs.edit();
@@ -255,12 +255,12 @@ public class UserPreferencesActivity extends PreferenceActivity implements
             startActivity(new Intent(this, MainActivity.class));
 
 
-        } else if(key.equals("licenses")) {
+        } else if (key.equals("licenses")) {
             // Show licences
             new LicensesDialog(this, R.raw.notices, false, true).show();
 
 
-        } else if(key.equals("feedback")) {
+        } else if (key.equals("feedback")) {
             /* Create the Intent */
             Intent emailIntent = new Intent(Intent.ACTION_SENDTO);
             emailIntent.setType("plain/text");
@@ -290,5 +290,8 @@ public class UserPreferencesActivity extends PreferenceActivity implements
         }
 
         Utils.showToast(this, R.string.success_clear_cache);
+
+        finish();
+        startActivity(new Intent(this, StartupActivity.class));
     }
 }

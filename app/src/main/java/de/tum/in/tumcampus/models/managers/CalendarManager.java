@@ -230,7 +230,7 @@ public class CalendarManager implements Card.ProvidesCard {
     public CalendarRow getNextCalendarItem() {
         Cursor cur = db.rawQuery("SELECT title, dtstart " +
                 " FROM calendar " +
-                " WHERE datetime('now', '-1800 seconds') < dtstart AND " +
+                " WHERE datetime('now', 'localtime') < datetime(dtstart, '+1800 seconds') AND " +
                 " datetime('now','localtime') < dtend " +
                 " ORDER BY dtstart LIMIT 1", null);
 

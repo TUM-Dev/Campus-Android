@@ -73,26 +73,26 @@ public class NewsCard extends Card {
     protected void discard(SharedPreferences.Editor editor) {
         NewsManager newsManager = new NewsManager(mContext);
         mCursor.moveToPosition(mPosition);
-        newsManager.setDismissed(mCursor.getString(0), mCursor.getInt(10)|1);
+        newsManager.setDismissed(mCursor.getString(0), mCursor.getInt(9)|1);
     }
 
     @Override
     protected void discardNotification(SharedPreferences.Editor editor) {
         NewsManager newsManager = new NewsManager(mContext);
         mCursor.moveToPosition(mPosition);
-        newsManager.setDismissed(mCursor.getString(0), mCursor.getInt(10)|2);
+        newsManager.setDismissed(mCursor.getString(0), mCursor.getInt(9)|2);
     }
 
     @Override
     boolean shouldShow(SharedPreferences prefs) {
         mCursor.moveToPosition(mPosition);
-        return (mCursor.getInt(10)&1) == 0;
+        return (mCursor.getInt(9)&1) == 0;
     }
 
     @Override
     boolean shouldShowNotification(SharedPreferences prefs) {
         mCursor.moveToPosition(mPosition);
-        return (mCursor.getInt(10)&2) == 0;
+        return (mCursor.getInt(9)&2) == 0;
     }
 
     @Override
@@ -100,9 +100,9 @@ public class NewsCard extends Card {
         mCursor.moveToPosition(mPosition);
         notificationBuilder.setContentTitle(mContext.getString(R.string.news));
         notificationBuilder.setContentText(mCursor.getString(2));
-        notificationBuilder.setContentInfo(mCursor.getString(9));
+        notificationBuilder.setContentInfo(mCursor.getString(8));
         notificationBuilder.setTicker(mCursor.getString(2));
-        Bitmap img = net.downloadImageToBitmap(mCursor.getString(5));
+        Bitmap img = net.downloadImageToBitmap(mCursor.getString(4));
         notificationBuilder.extend(new NotificationCompat.WearableExtender().setBackground(img));
         return notificationBuilder.build();
     }
@@ -110,7 +110,7 @@ public class NewsCard extends Card {
     @Override
     public Intent getIntent() {
         mCursor.moveToPosition(mPosition);
-        String url = mCursor.getString(4);
+        String url = mCursor.getString(3);
         if (url.length() == 0) {
             Utils.showToast(mContext, R.string.no_link_existing);
             return null;

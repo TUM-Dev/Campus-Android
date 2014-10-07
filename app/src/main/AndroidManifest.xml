@@ -330,7 +330,8 @@
             android:name="de.tum.in.tumcampus.activities.RoomFinderDetailsActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/roomfinder"
-            android:parentActivityName=".activities.RoomFinderActivity">
+            android:parentActivityName=".activities.RoomFinderActivity"
+            android:theme="@style/AppTheme.Extended">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.tum.in.tumcampus.activities.RoomfinderActivity" />
