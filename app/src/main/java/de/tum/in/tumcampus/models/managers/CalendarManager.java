@@ -246,14 +246,14 @@ public class CalendarManager implements Card.ProvidesCard {
     }
 
     /**
-     * Gets the next lecture or the current running lecture,
+     * Gets the coordinates of the next lecture or the current running lecture,
      * if it started during the last 30 minutes
      */
     public Geo getNextCalendarItemGeo() {
         Cursor cur = db.rawQuery("SELECT r.latitude, r.longitude " +
                 "FROM calendar c, room_locations r " +
-                "WHERE datetime('now', '-1800 seconds') < c.dtstart AND " +
-                "datetime('now','localtime') < c.dtend AND r.title != c.location " +
+                "WHERE datetime('now', 'localtime') < datetime(c.dtstart, '+1800 seconds') AND " +
+                "datetime('now','localtime') < c.dtend AND r.title == c.location AND c.status!=\"CANCEL\"" +
                 "ORDER BY dtstart LIMIT 1", null);
 
         Geo geo = null;

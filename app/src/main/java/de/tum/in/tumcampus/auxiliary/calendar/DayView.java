@@ -1486,9 +1486,13 @@ public class DayView extends View implements View.OnCreateContextMenuListener,
                 Time time = new Time();
                 time.setJulianDay(mFirstJulianDay);
                 String s = SimpleDateFormat.getDateInstance().format(new Date(time.toMillis(false)));
-                drawDayHeader(dayNames[dayOfWeek], day, s, cell, canvas, p);
+                drawDayHeader(dayNames[dayOfWeek], day, s, canvas, p);
             } else {
-                drawDayHeader(dayNames[dayOfWeek], day, String.valueOf(day), cell, canvas, p);
+                int dateNum = mFirstVisibleDate + day;
+                if (dateNum > mMonthLength) {
+                    dateNum -= mMonthLength;
+                }
+                drawDayHeader(dayNames[dayOfWeek], day, String.valueOf(dateNum), canvas, p);
             }
         }
         p.setTypeface(null);
@@ -1589,12 +1593,8 @@ public class DayView extends View implements View.OnCreateContextMenuListener,
         p.setAntiAlias(true);
     }
 
-    private void drawDayHeader(String dayStr, int day, String dateNumStr, int cell, Canvas canvas, Paint p) {
-        int dateNum = mFirstVisibleDate + day;
+    private void drawDayHeader(String dayStr, int day, String dateNumStr, Canvas canvas, Paint p) {
         int x;
-        if (dateNum > mMonthLength) {
-            dateNum -= mMonthLength;
-        }
         p.setAntiAlias(true);
 
         int todayIndex = mTodayJulianDay - mFirstJulianDay;
@@ -1621,7 +1621,7 @@ public class DayView extends View implements View.OnCreateContextMenuListener,
 
             // Draw day of the week
             x = computeDayLeftPosition(day) + DAY_HEADER_ONE_DAY_LEFT_MARGIN;
-            x = x+((mCellWidth-mDateStrWidthLong)/2); //TODO
+            x = x+((mCellWidth-mDateStrWidthLong)/2);
             p.setTextSize(DAY_HEADER_FONT_SIZE);
             p.setTypeface(Typeface.DEFAULT);
             canvas.drawText(dayStr, x, y, p);
