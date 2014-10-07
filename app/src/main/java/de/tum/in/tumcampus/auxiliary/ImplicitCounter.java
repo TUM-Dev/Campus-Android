@@ -20,6 +20,7 @@ import org.apache.http.protocol.HTTP;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -30,6 +31,7 @@ public class ImplicitCounter extends AsyncTask<String, Integer, Void> {
     private static final String settings = "usage_counter";
     private static final String URL = "https://tumcabe.in.tum.de/Api/statistics/";
     private static final String tag = "ImplicitCounter";
+    private static Date lastSync = null;
 
     private Context c = null;
 
@@ -50,11 +52,22 @@ public class ImplicitCounter extends AsyncTask<String, Integer, Void> {
 
 
     public void submitCounter(Context c) {
+        //Check first: sync only every so often - in this case one hour
+        Date interval = new Date();
+        interval.setTime(interval.getTime() - 1000 * 3600);
+        if (lastSync != null && lastSync.after(interval)) {
+            return;
+        }
+        lastSync = new Date();
+
+        //Check if context passed
         if (c == null) {
             Log.e("Stats submit", "No context passed!");
             return;
         }
         this.c = c;
+
+        //Get the prefs
         SharedPreferences sp = this.c.getSharedPreferences(settings, Context.MODE_PRIVATE);
 
         // Get all current entries

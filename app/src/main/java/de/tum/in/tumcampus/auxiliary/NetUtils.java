@@ -61,7 +61,7 @@ public class NetUtils {
     public HttpEntity getHttpEntity(String url) throws IOException {
         // if we are not online, fetch makes no sense
         boolean isOnline = isConnected(mContext);
-        if (!isOnline) {
+        if (!isOnline || url == null) {
             return null;
         }
 
@@ -100,7 +100,7 @@ public class NetUtils {
     public String downloadStringAndCache(String url, int validity, boolean force) {
         try {
             String content;
-            if(!force) {
+            if (!force) {
                 content = cacheManager.getFromCache(url);
                 if (content != null) {
                     return content;
@@ -108,7 +108,7 @@ public class NetUtils {
             }
 
             HttpEntity entity = getHttpEntity(url);
-            if(entity!=null) {
+            if (entity != null) {
                 content = EntityUtils.toString(entity);
 
                 cacheManager.addToCache(url, content, validity, CacheManager.CACHE_TYP_DATA);
@@ -258,14 +258,14 @@ public class NetUtils {
     /**
      * Download a JSON stream from a URL or load it from cache
      *
-     * @param url       Valid URL
+     * @param url   Valid URL
      * @param force Load data anyway and fill cache, even if valid cached version exists
      * @return JSONObject
      */
-    public JSONArray downloadJsonArray(String url, int validity,  boolean force) {
+    public JSONArray downloadJsonArray(String url, int validity, boolean force) {
         try {
             String result = downloadStringAndCache(url, validity, force);
-            if(result==null)
+            if (result == null)
                 return null;
 
             return new JSONArray(result);
