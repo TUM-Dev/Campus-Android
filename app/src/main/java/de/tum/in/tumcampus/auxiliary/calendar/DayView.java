@@ -68,6 +68,7 @@ import java.util.regex.Pattern;
 
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.RoomFinderActivity;
+import de.tum.in.tumcampus.activities.RoomFinderDetailsActivity;
 import de.tum.in.tumcampus.auxiliary.calendar.CalendarController.EventType;
 import de.tum.in.tumcampus.auxiliary.calendar.CalendarController.ViewType;
 
@@ -160,11 +161,8 @@ public class DayView extends View implements View.OnCreateContextMenuListener,
         @Override
         public void run() {
             if (mClickedEvent != null) {
-                //TODO open roomfinder
-
-                Intent i = new Intent(getContext(), RoomFinderActivity.class);
-                i.setAction(Intent.ACTION_SEARCH);
-                i.putExtra(SearchManager.QUERY, mClickedEvent.location);
+                Intent i = new Intent(getContext(), RoomFinderDetailsActivity.class);
+                i.putExtra(RoomFinderDetailsActivity.EXTRA_LOCATION, mClickedEvent.location);
                 getContext().startActivity(i);
             }
             mClickedEvent = null;

@@ -129,7 +129,7 @@ public class Event implements Cloneable {
         e.id = cEvents.getLong(0);
         String location = cEvents.getString(7);
         location = location.replaceAll("\\([A-Z0-9\\.]+\\)","");
-        e.location = location;
+        e.location = location.trim();
 
         String title = cEvents.getString(3);
         if(title.endsWith("VO") || title.endsWith("VU")) {
@@ -143,7 +143,6 @@ public class Event implements Cloneable {
         title = title.replaceAll("\\([A-Z]+[0-9]+\\)","");
         title = title.replaceAll("\\[[A-Z]+[0-9]+\\]","");
         e.title = title;
-
 
         String eStart = cEvents.getString(5);
         String eEnd = cEvents.getString(6);
