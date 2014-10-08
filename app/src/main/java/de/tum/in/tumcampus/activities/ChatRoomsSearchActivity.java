@@ -104,11 +104,17 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline<Lectu
                         // The POST request in unsuccessful because the chat room already exists,
                         // so we are trying to retrieve it with an additional GET request
                         Utils.logv("Failure creating chat room - trying to GET it from the server: " + arg0.toString());
-                        List<ChatRoom> chatRooms = ChatClient.getInstance(ChatRoomsSearchActivity.this).getChatRoomWithName(currentChatRoom);
-                        if (chatRooms != null)
-                            currentChatRoom = chatRooms.get(0);
 
-                        showTermsIfNeeded(intent);
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                List<ChatRoom> chatRooms = ChatClient.getInstance(ChatRoomsSearchActivity.this).getChatRoomWithName(currentChatRoom);
+                                if (chatRooms != null)
+                                    currentChatRoom = chatRooms.get(0);
+
+                                showTermsIfNeeded(intent);
+                            }
+                        }).start();
                     }
                 });
             }
@@ -319,8 +325,7 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline<Lectu
         int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
         if (resultCode != ConnectionResult.SUCCESS) {
             if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
-                GooglePlayServicesUtil.getErrorDialog(resultCode, this,
-                        PLAY_SERVICES_RESOLUTION_REQUEST).show();
+                GooglePlayServicesUtil.getErrorDialog(resultCode, this, PLAY_SERVICES_RESOLUTION_REQUEST).show();
             } else {
                 Utils.log("This device is not supported by Google Play services.");
                 finish();

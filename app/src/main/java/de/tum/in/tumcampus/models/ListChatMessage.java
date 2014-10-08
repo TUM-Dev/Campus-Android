@@ -63,7 +63,7 @@ public class ListChatMessage {
 	}
 	public String getTimestampString() {
 		try {
-			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.ENGLISH); // 2014-06-30T16:31:57.878Z
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ENGLISH); // 2014-06-30T16:31:57.878Z
 			Date date = formatter.parse(timestamp);
 			if (isToday(date)) {
 				return new SimpleDateFormat("HH:mm", Locale.ENGLISH).format(date);

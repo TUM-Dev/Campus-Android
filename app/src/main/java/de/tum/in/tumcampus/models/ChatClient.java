@@ -1,6 +1,7 @@
 package de.tum.in.tumcampus.models;
 
 import android.content.Context;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +12,7 @@ import de.tum.in.tumcampus.trace.G;
 import retrofit.Callback;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
+import retrofit.android.AndroidLog;
 import retrofit.http.Body;
 import retrofit.http.GET;
 import retrofit.http.POST;
@@ -31,6 +33,7 @@ public class ChatClient {
 		RestAdapter restAdapter = new RestAdapter.Builder()
 				.setEndpoint(API_URL)
 				.setLogLevel(RestAdapter.LogLevel.FULL)
+                .setLog(new AndroidLog("suqmadiq"))
                 .setRequestInterceptor(requestInterceptor)
 				.build();
 		service = restAdapter.create(ChatService.class);
@@ -47,6 +50,7 @@ public class ChatClient {
     RequestInterceptor requestInterceptor = new RequestInterceptor() {
         @Override
         public void intercept(RequestFacade request) {
+            Log.e("TCA Chat", "hooking ID: "+ NetUtils.getDeviceID(ChatClient.c));
             request.addHeader("X-DEVICE-ID", NetUtils.getDeviceID(ChatClient.c));
         }
     };
@@ -72,8 +76,8 @@ public class ChatClient {
 		@POST("/rooms/{groupId}/messages/")
 		CreateChatMessage sendMessage(@Path("groupId") String groupId, @Body CreateChatMessage chatMessage);
 		
-		@GET("/rooms/{groupId}/messages/")
-		void getMessages(@Path("groupId") String groupId, @Query("page") int page, Callback<ArrayList<ListChatMessage>> cb);
+		@GET("/rooms/{groupId}/messages/{page}/")
+		void getMessages(@Path("groupId") String groupId, @Path("page") int page, Callback<ArrayList<ListChatMessage>> cb);
 
         @POST("/members/")
         ChatMember createMember(@Body ChatMember chatMember);

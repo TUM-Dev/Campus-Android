@@ -1,6 +1,7 @@
 package de.tum.in.tumcampus.auxiliary;
 
 import android.util.Base64;
+import android.util.Log;
 
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
@@ -71,7 +72,7 @@ public class ChatMessageValidator {
 		// Try validating the message using any of the known public keys
 		// If any of them succeed, the message is valid
 		for (PublicKey key: publicKeys) {
-			if (verifySignature(text, signature, key)) {
+            if (verifySignature(text, signature, key)) {
 				return true;
 			}
 		}
