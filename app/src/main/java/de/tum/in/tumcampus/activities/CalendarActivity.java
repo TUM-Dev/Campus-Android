@@ -43,6 +43,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
     public static final int MONTH_BEFORE = 0;
 
     private static final int TIME_TO_SYNC_CALENDAR = 604800; // 1 week
+    public static final String EVENT_TIME = "event_time";
 
     private final Calendar calendar = new GregorianCalendar();
 
@@ -59,6 +60,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
      */
     private boolean isFetched;
     private boolean mWeekMode = false;
+    private long mEventTime = 0;
 
     public CalendarActivity() {
         super(TUMOnlineConst.CALENDER, R.layout.activity_calendar);
@@ -67,6 +69,11 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Get time to show e.g. a lectures starting time or 0 for now
+        Intent i = getIntent();
+        if (i != null && i.hasExtra(EVENT_TIME))
+            mEventTime = i.getLongExtra(EVENT_TIME, 0);
 
         //mViewPager = (ViewPager) findViewById(R.id.pager);
         calendarManager = new CalendarManager(this);
@@ -169,20 +176,9 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
      * Link the Sections with the content with a section adapter. Additionally put the current date at the start position.
      */
     private void attachSectionPagerAdapter() {
-        //findViewById(R.id.pager_title_strip).setVisibility(mWeekMode ? View.GONE : View.VISIBLE);
-        //CalendarSectionsPagerAdapter mSectionsPagerAdapter = new CalendarSectionsPagerAdapter(getSupportFragmentManager(), mWeekMode);
-        //mViewPager.setAdapter(mSectionsPagerAdapter);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.fragment_container, new DayFragment(0,mWeekMode?7:1));
+        ft.replace(R.id.fragment_container, new DayFragment(mEventTime, mWeekMode ? 7 : 1));
         ft.commit();
-        /*Date now = new Date();
-        calendar.setTime(now);
-
-        calendar.add(Calendar.MONTH, -CalendarActivity.MONTH_BEFORE);
-        Date firstDate = calendar.getTime();
-
-        long days = (now.getTime() - firstDate.getTime()) / DateUtils.DAY_IN_MILLIS;
-        mViewPager.setCurrentItem((int) days);*/
     }
 
     /**

@@ -103,7 +103,9 @@ public class NextLectureCard extends Card {
 
     @Override
     public Intent getIntent() {
-        return new Intent(mContext, CalendarActivity.class);
+        Intent i = new Intent(mContext, CalendarActivity.class);
+        i.putExtra(CalendarActivity.EVENT_TIME, mDate.getTime());
+        return i;
     }
 
     public void setLecture(String title, String date, String loc) {

@@ -147,12 +147,10 @@ public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<Vo
             }
         }
 
-        if(roomInfo==null) {
-            showErrorLayout();
+        if(roomInfo==null)
             return null;
-        }
 
-        if (mapId.isEmpty()) {
+        if (mapId==null || mapId.isEmpty()) {
             mapId = requestHandler.fetchDefaultMapId(roomInfo.getString(BUILDING_ID));
         }
 
@@ -171,15 +169,22 @@ public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<Vo
             Utils.log(e);
         }
 
-        if (url == null) {
-            showErrorLayout();
+        if (url == null)
             return null;
-        }
+
         return net.downloadImageToBitmap(url);
     }
 
     @Override
     protected void onLoadFinished(Bitmap result) {
+        if(result==null) {
+            if(!NetUtils.isConnected(this)) {
+                showNoInternetLayout();
+            } else {
+                showErrorLayout();
+            }
+            return;
+        }
         mImage.setImageBitmap(result);
         getSupportActionBar().setTitle(roomInfo.getString(ROOM_TITLE));
         getSupportActionBar().setSubtitle(roomInfo.getString(BUILDING_TITLE));

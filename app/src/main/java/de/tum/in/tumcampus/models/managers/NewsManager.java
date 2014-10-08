@@ -72,15 +72,17 @@ public class NewsManager implements Card.ProvidesCard {
         // Load all news sources
         JSONArray jsonArray = net.downloadJsonArray(NEWS_SOURCES_URL, CacheManager.VALIDITY_ONE_MONTH, force);
 
-        db.beginTransaction();
-        try {
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject obj = jsonArray.getJSONObject(i);
-                replaceIntoSourcesDb(obj);
+        if(jsonArray!=null) {
+            db.beginTransaction();
+            try {
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject obj = jsonArray.getJSONObject(i);
+                    replaceIntoSourcesDb(obj);
+                }
+                db.setTransactionSuccessful();
+            } finally {
+                db.endTransaction();
             }
-            db.setTransactionSuccessful();
-        } finally {
-            db.endTransaction();
         }
 
         // Load all news since the last sync
@@ -88,6 +90,9 @@ public class NewsManager implements Card.ProvidesCard {
 
         // Delete all too old items
         cleanupDb();
+
+        if(jsonArray==null)
+            return;
 
         db.beginTransaction();
         try {

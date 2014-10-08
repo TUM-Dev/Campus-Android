@@ -67,6 +67,8 @@ public class ChatActivity extends ActionBarActivity implements OnClickListener, 
     private ChatHistoryAdapter chatHistoryAdapter = null;
     private EditText etMessage;
     private ImageButton btnSend;
+    private ProgressBar bar;
+    private ImageButton btnEmoji;
 
     private ChatRoom currentChatRoom;
     private ChatMember currentChatMember;
@@ -74,7 +76,6 @@ public class ChatActivity extends ActionBarActivity implements OnClickListener, 
     private boolean messageSentSuccessfully = false;
     private int numberOfAttempts = 0;
     private boolean loadingMore = false;
-    private ProgressBar bar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -227,6 +228,9 @@ public class ChatActivity extends ActionBarActivity implements OnClickListener, 
         etMessage = (EditText) findViewById(R.id.etMessage);
         btnSend = (ImageButton) findViewById(R.id.btnSend);
         btnSend.setOnClickListener(this);
+
+        btnEmoji = (ImageButton) findViewById(R.id.btnEmoji);
+        btnEmoji.setOnClickListener(this);
     }
 
     @Override

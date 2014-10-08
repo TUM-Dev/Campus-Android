@@ -104,28 +104,30 @@ public class WizNavExtrasActivity extends ActivityForLoadingInBackground<String,
     protected Boolean onLoadInBackground(String... arg) {
         // If the user is opening the chat for the first time, we need to display
         // a dialog where they can enter their desired display name
-        String lrzId = Utils.getSetting(this, Const.LRZ_ID);
-        ChatMember currentChatMember = new ChatMember(lrzId);
-        currentChatMember.setDisplayName(arg[0]);
+        if(groupChatMode.isChecked()) {
+            String lrzId = Utils.getSetting(this, Const.LRZ_ID);
+            ChatMember currentChatMember = new ChatMember(lrzId);
+            currentChatMember.setDisplayName(arg[0]);
 
-        if(!NetUtils.isConnected(this)) {
-            return false;
-        }
+            if (!NetUtils.isConnected(this)) {
+                return false;
+            }
 
-        try {
-            // After the user has entered their display name, send a request to the server to create the new member
-            ChatClient.getInstance(this.getApplicationContext()).createMember(currentChatMember);
-        } catch(RetrofitError e) {
-            showErrorLayout();
-            Utils.log(e);
-            return false;
+            try {
+                // After the user has entered their display name, send a request to the server to create the new member
+                ChatClient.getInstance(this.getApplicationContext()).createMember(currentChatMember);
+            } catch (RetrofitError e) {
+                showErrorLayout();
+                Utils.log(e);
+                return false;
+            }
         }
         return true;
     }
 
     @Override
     protected void onLoadFinished(Boolean result) {
-        if(!NetUtils.isConnected(this)) {
+        if(!result && !NetUtils.isConnected(this)) {
             showNoInternetLayout();
             return;
         }
@@ -135,13 +137,15 @@ public class WizNavExtrasActivity extends ActivityForLoadingInBackground<String,
             Editor editor = preferences.edit();
             editor.putBoolean(Const.SILENCE_SERVICE, checkSilentMode.isChecked());
             editor.putBoolean(Const.BACKGROUND_MODE, checkBackgroundMode.isChecked());
-            editor.putBoolean(Const.GROUP_CHAT_ENABLED, groupChatMode.isChecked());
             editor.putBoolean(Const.BUG_REPORTS, bugReport.isChecked());
+            editor.putBoolean(Const.HIDE_WIZARD_ON_STARTUP, true);
+
+            editor.putBoolean(Const.GROUP_CHAT_ENABLED, groupChatMode.isChecked());
 
             // Save display name in shared preferences
-            editor.putString(Const.CHAT_ROOM_DISPLAY_NAME, nickName.getText().toString().trim());
+            if(groupChatMode.isChecked())
+                editor.putString(Const.CHAT_ROOM_DISPLAY_NAME, nickName.getText().toString().trim());
 
-            editor.putBoolean(Const.HIDE_WIZARD_ON_STARTUP, true);
             editor.apply();
 
             finish();
