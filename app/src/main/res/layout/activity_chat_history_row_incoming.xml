@@ -15,7 +15,7 @@
         android:id="@+id/chatMessageLayout"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:background="@drawable/message_incoming"
+        android:background="@drawable/bg_message_incoming"
         android:orientation="vertical"
         android:paddingBottom="5dp"
         android:paddingEnd="12dp"

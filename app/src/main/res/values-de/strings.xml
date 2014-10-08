@@ -51,7 +51,6 @@
     <string name="mode">Modus</string>
     <string name="all_programs">Alle Programme</string>
     <string name="date">Datum</string>
-    <string name="credits" translatable="false">ECTS</string>
 
     <!-- Preferences -->
     <string name="tumonline_settings">TUMOnline Einstellungen</string>
@@ -89,10 +88,7 @@
     <string name="about_tca">Über TCA</string>
     <string name="information">Informationen</string>
     <string name="facebook">Facebook</string>
-    <string name="facebook_link" translatable="false">https://m.facebook.com/TUMCampus</string>
-    <string name="facebook_link_app" translatable="false">fb://page/162327853831856</string>
     <string name="github">Mitmachen auf Github</string>
-    <string name="github_link" translatable="false">https://github.com/TCA-Team/TumCampusApp</string>
     <string name="licences">Open Source-Lizenzen</string>
     <string name="licences_summary">Rechtliche Hinweise zu Lizenzen</string>
 
@@ -270,7 +266,6 @@
     <string name="version">Version</string>
     <string name="send_email">E-Mail Feedback senden</string>
     <string name="show_feedback">Feedback senden</string>
-    <string name="feedbackAddr" translatable="false">tca-support.os.in@tum.de</string>
     <string name="feedbackSubj">Feedback für TUM Campus App</string>
     <!-- END Translated, please do not change identifiers -->
 
