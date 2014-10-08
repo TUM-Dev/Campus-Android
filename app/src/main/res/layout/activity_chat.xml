@@ -1,43 +1,49 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#E1E1E1">
+    android:background="#EEEEEE">
 
     <ListView
         android:id="@+id/lvMessageHistory"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginBottom="48dip"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
+        android:dividerHeight="0px"
+        android:scrollbars="none"
         android:stackFromBottom="true"
         android:transcriptMode="alwaysScroll" />
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="48dip"
         android:layout_alignParentBottom="true"
-        android:layout_margin="0dp"
-        android:background="#FFFFFF"
-        android:orientation="horizontal"
-        android:padding="0dp">
+        android:background="#FFFFFF">
 
         <EditText
             android:id="@+id/etMessage"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_weight="10"
+            android:layout_height="match_parent"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_margin="5dp"
+            android:layout_toLeftOf="@+id/btnSend"
+            android:layout_toStartOf="@+id/btnSend"
             android:hint="@string/send" />
 
         <ImageButton
             android:id="@+id/btnSend"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/etMessage"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
             android:layout_gravity="center_vertical"
-            android:layout_weight="1"
             android:background="#FFFFFF"
+            android:contentDescription="@string/send"
             android:src="@drawable/ic_action_send_now" />
-    </LinearLayout>
+    </RelativeLayout>
 
 </RelativeLayout>

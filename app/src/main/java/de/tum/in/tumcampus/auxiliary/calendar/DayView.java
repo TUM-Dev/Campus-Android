@@ -37,7 +37,6 @@ import android.text.format.DateFormat;
 import android.text.format.DateUtils;
 import android.text.format.Time;
 import android.text.style.StyleSpan;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.GestureDetector;
@@ -77,8 +76,6 @@ import de.tum.in.tumcampus.auxiliary.calendar.CalendarController.ViewType;
  */
 public class DayView extends View implements View.OnCreateContextMenuListener,
         ScaleGestureDetector.OnScaleGestureListener {
-    private static String TAG = "DayView";
-    private static boolean DEBUG = false;
 
     private static float mScale = 0; // Used for supporting different screen densities
     // duration of the scroll to go to a specified time
@@ -92,7 +89,7 @@ public class DayView extends View implements View.OnCreateContextMenuListener,
     private static final int MENU_DAY = 3;
     private static final int MENU_EVENT_VIEW = 5;
 
-    private static int DEFAULT_CELL_HEIGHT = 32;//64;
+    private static int DEFAULT_CELL_HEIGHT = 32;
     private static int MAX_CELL_HEIGHT = 150;
     private static int MIN_Y_SPAN = 100;
 
@@ -129,7 +126,6 @@ public class DayView extends View implements View.OnCreateContextMenuListener,
     private Event mClickedEvent;           // The event the user clicked on
     private Event mSavedClickedEvent;
     private static int mOnDownDelay;
-    private int mClickedYLocation;
     private long mDownTouchTime;
 
     private int mEventsAlpha = 255;
@@ -290,12 +286,9 @@ public class DayView extends View implements View.OnCreateContextMenuListener,
 
     /* package */ static final int MINUTES_PER_HOUR = 60;
     /* package */ static final int MINUTES_PER_DAY = MINUTES_PER_HOUR * 24;
-    /* package */ static final int MILLIS_PER_MINUTE = 60 * 1000;
     /* package */ static final int MILLIS_PER_HOUR = (3600 * 1000);
-    /* package */ static final int MILLIS_PER_DAY = MILLIS_PER_HOUR * 24;
 
     // More events text will transition between invisible and this alpha
-    private static final int MORE_EVENTS_MAX_ALPHA = 0x4C;
     private static int DAY_HEADER_ONE_DAY_LEFT_MARGIN = 0;
     private static int DAY_HEADER_ONE_DAY_RIGHT_MARGIN = 5;
     private static int DAY_HEADER_ONE_DAY_BOTTOM_MARGIN = 6;
@@ -375,15 +368,7 @@ public class DayView extends View implements View.OnCreateContextMenuListener,
     /**
      * The height of the day names/numbers
      */
-    private static int DAY_HEADER_HEIGHT = 45;
-    /**
-     * The height of the day names/numbers for multi-day views
-     */
-    private static int MULTI_DAY_HEADER_HEIGHT = DAY_HEADER_HEIGHT;
-    /**
-     * The height of the day names/numbers when viewing a single day
-     */
-    private static int ONE_DAY_HEADER_HEIGHT = DAY_HEADER_HEIGHT;
+    private static int DAY_HEADER_HEIGHT;
 
     protected int mNumDays = 7;
     private int mNumHours = 10;
@@ -485,14 +470,13 @@ public class DayView extends View implements View.OnCreateContextMenuListener,
 
         DATE_HEADER_FONT_SIZE = (int) mResources.getDimension(R.dimen.date_header_text_size);
         DAY_HEADER_FONT_SIZE = (int) mResources.getDimension(R.dimen.day_label_text_size);
-        ONE_DAY_HEADER_HEIGHT = (int) mResources.getDimension(R.dimen.day_header_height);
+        DAY_HEADER_HEIGHT = (int) mResources.getDimension(R.dimen.day_header_height);
         DAY_HEADER_BOTTOM_MARGIN = (int) mResources.getDimension(R.dimen.day_header_bottom_margin);
         HOURS_TEXT_SIZE = (int) mResources.getDimension(R.dimen.hours_text_size);
         AMPM_TEXT_SIZE = (int) mResources.getDimension(R.dimen.ampm_text_size);
         MIN_HOURS_WIDTH = (int) mResources.getDimension(R.dimen.min_hours_width);
         HOURS_LEFT_MARGIN = (int) mResources.getDimension(R.dimen.hours_left_margin);
         HOURS_RIGHT_MARGIN = (int) mResources.getDimension(R.dimen.hours_right_margin);
-        MULTI_DAY_HEADER_HEIGHT = (int) mResources.getDimension(R.dimen.day_header_height);
         int eventTextSizeId;
         if (mNumDays == 1) {
             eventTextSizeId = R.dimen.day_view_event_text_size;
@@ -523,7 +507,6 @@ public class DayView extends View implements View.OnCreateContextMenuListener,
                 MIN_Y_SPAN *= mScale;
                 MAX_CELL_HEIGHT *= mScale;
                 DEFAULT_CELL_HEIGHT *= mScale;
-                DAY_HEADER_HEIGHT *= mScale;
                 DAY_HEADER_RIGHT_MARGIN *= mScale;
                 DAY_HEADER_ONE_DAY_LEFT_MARGIN *= mScale;
                 DAY_HEADER_ONE_DAY_RIGHT_MARGIN *= mScale;
@@ -536,7 +519,6 @@ public class DayView extends View implements View.OnCreateContextMenuListener,
             }
         }
         HOURS_MARGIN = HOURS_LEFT_MARGIN + HOURS_RIGHT_MARGIN;
-        DAY_HEADER_HEIGHT = mNumDays == 1 ? ONE_DAY_HEADER_HEIGHT : MULTI_DAY_HEADER_HEIGHT;
 
         mCurrentTimeLine = mResources.getDrawable(R.drawable.timeline_indicator_holo_light);
         mCurrentTimeAnimateLine = mResources
@@ -782,12 +764,6 @@ public class DayView extends View implements View.OnCreateContextMenuListener,
                 }
             }
 
-            if (DEBUG) {
-                Log.e(TAG, "Go " + gotoY + " 1st " + mFirstHour + ":" + mFirstHourOffset + "CH "
-                        + (mCellHeight + HOUR_GAP) + " lh " + lastHour + " gh " + mGridAreaHeight
-                        + " ymax " + mMaxViewStartY);
-            }
-
             if (gotoY > mMaxViewStartY) {
                 gotoY = mMaxViewStartY;
             } else if (gotoY < 0 && gotoY != Integer.MIN_VALUE) {
@@ -898,11 +874,6 @@ public class DayView extends View implements View.OnCreateContextMenuListener,
         mBaseDate.minute = 0;
         mBaseDate.second = 0;
 
-        if (DEBUG) {
-            Log.d(TAG, "Begin " + mBaseDate.toString());
-            Log.d(TAG, "Diff  " + time.toString());
-        }
-
         // Compare beginning of range
         int diff = Time.compare(time, mBaseDate);
         if (diff > 0) {
@@ -910,8 +881,6 @@ public class DayView extends View implements View.OnCreateContextMenuListener,
             mBaseDate.monthDay += mNumDays;
             mBaseDate.normalize(true);
             diff = Time.compare(time, mBaseDate);
-
-            if (DEBUG) Log.d(TAG, "End   " + mBaseDate.toString());
 
             mBaseDate.monthDay -= mNumDays;
             mBaseDate.normalize(true);
@@ -923,8 +892,6 @@ public class DayView extends View implements View.OnCreateContextMenuListener,
                 diff = 1;
             }
         }
-
-        if (DEBUG) Log.d(TAG, "Diff: " + diff);
 
         mBaseDate.hour = savedHour;
         mBaseDate.minute = savedMinute;
@@ -1010,10 +977,7 @@ public class DayView extends View implements View.OnCreateContextMenuListener,
 
         // Compute the top of our reachable view
         mMaxViewStartY = HOUR_GAP + 24 * (mCellHeight + HOUR_GAP) - mGridAreaHeight;
-        if (DEBUG) {
-            Log.e(TAG, "mViewStartY: " + mViewStartY);
-            Log.e(TAG, "mMaxViewStartY: " + mMaxViewStartY);
-        }
+
         if (mViewStartY > mMaxViewStartY) {
             mViewStartY = mMaxViewStartY;
             computeFirstHour();
@@ -1094,9 +1058,6 @@ public class DayView extends View implements View.OnCreateContextMenuListener,
 
     private View switchViews(boolean forward, float xOffSet, float width, float velocity) {
         mAnimationDistance = width - xOffSet;
-        if (DEBUG) {
-            Log.d(TAG, "switchViews(" + forward + ") O:" + xOffSet + " Dist:" + mAnimationDistance);
-        }
 
         float progress = Math.abs(xOffSet) / width;
         if (progress > 1.0f) {
@@ -1616,7 +1577,7 @@ public class DayView extends View implements View.OnCreateContextMenuListener,
             p.setTypeface(Typeface.DEFAULT);
             canvas.drawText(dayStr, x, y, p);
         } else {
-            float y = ONE_DAY_HEADER_HEIGHT - DAY_HEADER_ONE_DAY_BOTTOM_MARGIN;
+            float y = DAY_HEADER_HEIGHT - DAY_HEADER_ONE_DAY_BOTTOM_MARGIN;
             p.setTextAlign(Align.LEFT);
 
             // Draw day of the week
@@ -2075,14 +2036,6 @@ public class DayView extends View implements View.OnCreateContextMenuListener,
         }
 
         if (mSelectedEvent != null) {
-            // If the tap is on an event, launch the "View event" view
-
-            int yLocation = (int) ((mSelectedEvent.top + mSelectedEvent.bottom) / 2);
-            // Y location is affected by the position of the event in the scrolling
-            // view (mViewStartY) and the presence of all day events (mFirstCell)
-
-            yLocation += (mFirstCell - mViewStartY);
-            mClickedYLocation = yLocation;
             long clearDelay = (CLICK_DISPLAY_DURATION + mOnDownDelay) -
                     (System.currentTimeMillis() - mDownTouchTime);
             if (clearDelay > 0) {
@@ -2249,7 +2202,7 @@ public class DayView extends View implements View.OnCreateContextMenuListener,
             // Horizontal fling.
             // initNextView(deltaX);
             mTouchMode = TOUCH_MODE_INITIAL_STATE;
-            if (DEBUG) Log.d(TAG, "doFling: velocityX " + velocityX);
+
             int deltaX = (int) e2.getX() - (int) e1.getX();
             switchViews(deltaX < 0, mViewStartX, mViewWidth, velocityX);
             mViewStartX = 0;
@@ -2257,17 +2210,12 @@ public class DayView extends View implements View.OnCreateContextMenuListener,
         }
 
         if ((mTouchMode & TOUCH_MODE_VSCROLL) == 0) {
-            if (DEBUG) Log.d(TAG, "doFling: no fling");
             return;
         }
 
         // Vertical fling.
         mTouchMode = TOUCH_MODE_INITIAL_STATE;
         mViewStartX = 0;
-
-        if (DEBUG) {
-            Log.d(TAG, "doFling: mViewStartY" + mViewStartY + " velocityY " + velocityY);
-        }
 
         // Continue scrolling vertically
         mScrolling = true;
@@ -2288,7 +2236,6 @@ public class DayView extends View implements View.OnCreateContextMenuListener,
         mHandler.post(mContinueScroll);
     }
 
-    //TODO use this?
     private boolean initNextView(int deltaX) {
         // Change the view to the previous day or week
         DayView view = (DayView) mViewSwitcher.getNextView();
@@ -2332,7 +2279,7 @@ public class DayView extends View implements View.OnCreateContextMenuListener,
 
     // ScaleGestureDetector.OnScaleGestureListener
     public boolean onScale(ScaleGestureDetector detector) {
-        float spanY = Math.max(MIN_Y_SPAN, Math.abs(detector.getCurrentSpanY()));
+        float spanY = Math.max(MIN_Y_SPAN, Math.abs(detector.getCurrentSpan()));//TODO .getCurrentSpanY()
 
         mCellHeight = (int) (mCellHeightBeforeScaleGesture * spanY / mStartingSpanY);
 
@@ -2379,7 +2326,6 @@ public class DayView extends View implements View.OnCreateContextMenuListener,
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
         int action = ev.getAction();
-        if (DEBUG) Log.e(TAG, "" + action + " ev.getPointerCount() = " + ev.getPointerCount());
 
         if ((ev.getActionMasked() == MotionEvent.ACTION_DOWN) ||
                 (ev.getActionMasked() == MotionEvent.ACTION_UP) ||
@@ -2395,22 +2341,16 @@ public class DayView extends View implements View.OnCreateContextMenuListener,
         switch (action) {
             case MotionEvent.ACTION_DOWN:
                 mStartingScroll = true;
-                if (DEBUG) {
-                    Log.e(TAG, "ACTION_DOWN ev.getDownTime = " + ev.getDownTime() + " Cnt="
-                            + ev.getPointerCount());
-                }
 
                 mHandleActionUp = true;
                 mGestureDetector.onTouchEvent(ev);
                 return true;
 
             case MotionEvent.ACTION_MOVE:
-                if (DEBUG) Log.e(TAG, "ACTION_MOVE Cnt=" + ev.getPointerCount() + DayView.this);
                 mGestureDetector.onTouchEvent(ev);
                 return true;
 
             case MotionEvent.ACTION_UP:
-                if (DEBUG) Log.e(TAG, "ACTION_UP Cnt=" + ev.getPointerCount() + mHandleActionUp);
                 mEdgeEffectTop.onRelease();
                 mEdgeEffectBottom.onRelease();
                 mStartingScroll = false;
@@ -2437,7 +2377,6 @@ public class DayView extends View implements View.OnCreateContextMenuListener,
                     mTouchMode = TOUCH_MODE_INITIAL_STATE;
                     if (Math.abs(mViewStartX) > mHorizontalSnapBackThreshold) {
                         // The user has gone beyond the threshold so switch views
-                        if (DEBUG) Log.d(TAG, "- horizontal scroll: switch views");
                         switchViews(mViewStartX > 0, mViewStartX, mViewWidth, 0);
                         mViewStartX = 0;
                         return true;
@@ -2445,7 +2384,6 @@ public class DayView extends View implements View.OnCreateContextMenuListener,
                         // Not beyond the threshold so invalidate which will cause
                         // the view to snap back. Also call recalc() to ensure
                         // that we have the correct starting date and title.
-                        if (DEBUG) Log.d(TAG, "- horizontal scroll: snap back");
                         recalc();
                         invalidate();
                         mViewStartX = 0;
@@ -2456,14 +2394,12 @@ public class DayView extends View implements View.OnCreateContextMenuListener,
 
             // This case isn't expected to happen.
             case MotionEvent.ACTION_CANCEL:
-                if (DEBUG) Log.e(TAG, "ACTION_CANCEL");
                 mGestureDetector.onTouchEvent(ev);
                 mScrolling = false;
                 resetSelectedHour();
                 return true;
 
             default:
-                if (DEBUG) Log.e(TAG, "Not MotionEvent " + ev.toString());
                 if (mGestureDetector.onTouchEvent(ev)) {
                     return true;
                 }
@@ -2743,8 +2679,6 @@ public class DayView extends View implements View.OnCreateContextMenuListener,
             mHandler.removeCallbacks(mUpdateCurrentTime);
         }
 
-        //TODO DayUtils.setSharedPreference(mContext, GeneralPreferences.KEY_DEFAULT_CELL_HEIGHT,
-        // mCellHeight);
         // Clear all click animations
         eventClickCleanup();
         // Turn off redraw
@@ -2807,20 +2741,17 @@ public class DayView extends View implements View.OnCreateContextMenuListener,
     class CalendarGestureListener extends GestureDetector.SimpleOnGestureListener {
         @Override
         public boolean onSingleTapUp(MotionEvent ev) {
-            if (DEBUG) Log.e(TAG, "GestureDetector.onSingleTapUp");
             DayView.this.doSingleTapUp(ev);
             return true;
         }
 
         @Override
         public void onLongPress(MotionEvent ev) {
-            if (DEBUG) Log.e(TAG, "GestureDetector.onLongPress");
             DayView.this.doLongPress(ev);
         }
 
         @Override
         public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-            if (DEBUG) Log.e(TAG, "GestureDetector.onScroll");
             eventClickCleanup();
 
             DayView.this.doScroll(e1, e2, distanceX, distanceY);
@@ -2829,7 +2760,6 @@ public class DayView extends View implements View.OnCreateContextMenuListener,
 
         @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-            if (DEBUG) Log.e(TAG, "GestureDetector.onFling");
 
 
             DayView.this.doFling(e1, e2, velocityX, velocityY);
@@ -2838,7 +2768,6 @@ public class DayView extends View implements View.OnCreateContextMenuListener,
 
         @Override
         public boolean onDown(MotionEvent ev) {
-            if (DEBUG) Log.e(TAG, "GestureDetector.onDown");
             DayView.this.doDown(ev);
             return true;
         }
@@ -2885,14 +2814,7 @@ public class DayView extends View implements View.OnCreateContextMenuListener,
          * the derivative of the scroll interpolator at zero, ie. 5. We use 6 to
          * make it a little slower.
          */
-        long duration = 6 * Math.round(1000 * Math.abs(distance / velocity));
-        if (DEBUG) {
-            Log.e(TAG, "halfScreenSize:" + halfScreenSize + " delta:" + delta + " distanceRatio:"
-                    + distanceRatio + " distance:" + distance + " velocity:" + velocity
-                    + " duration:" + duration + " distanceInfluenceForSnapDuration:"
-                    + distanceInfluenceForSnapDuration);
-        }
-        return duration;
+        return (long) (6 * Math.round(1000 * Math.abs(distance / velocity)));
     }
 
     /*

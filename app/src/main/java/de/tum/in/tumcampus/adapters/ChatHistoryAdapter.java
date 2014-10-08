@@ -1,14 +1,10 @@
 package de.tum.in.tumcampus.adapters;
 
 import android.content.Context;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.FrameLayout;
-import android.widget.FrameLayout.LayoutParams;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.List;
@@ -53,12 +49,26 @@ public class ChatHistoryAdapter extends BaseAdapter {
 		return position;
 	}
 
-	@Override
+    @Override
+    public int getViewTypeCount() {
+        return 2;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        ListChatMessage chatMessage = messageHistory.get(position);
+        return currentChatMember.getUrl().equals(chatMessage.getMember().getUrl())?0:1;
+    }
+
+    @Override
 	public View getView(int position, View convertView, ViewGroup parent) {		
 		ViewHolder holder;
+        ListChatMessage chatMessage = messageHistory.get(position);
+        boolean outgoing = currentChatMember.getUrl().equals(chatMessage.getMember().getUrl());
 
 		if (convertView == null) {
-			convertView = inflater.inflate(R.layout.activity_chat_history_row, parent, false);
+            int layout = outgoing?R.layout.activity_chat_history_row_outgoing:R.layout.activity_chat_history_row_incoming;
+			convertView = inflater.inflate(layout, parent, false);
 			holder = new ViewHolder();
 
 			// set UI elements
@@ -70,37 +80,16 @@ public class ChatHistoryAdapter extends BaseAdapter {
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
-		
-		ListChatMessage chatMessage = messageHistory.get(position);
-		if (chatMessage != null) {
-			holder.tvUser.setText(chatMessage.getMember().getDisplayName());
-			holder.tvMessage.setText(chatMessage.getText());
-			holder.tvTimestamp.setText(chatMessage.getTimestampString());
-			
-			LinearLayout chatMessageLayout = (LinearLayout) convertView.findViewById(R.id.chatMessageLayout);
-			LayoutParams chatMessageLayoutParams = (LayoutParams) chatMessageLayout.getLayoutParams();
-			
-			FrameLayout chatFrameLayout = (FrameLayout) convertView.findViewById(R.id.chatFrameLayout);
-			
-			if ("bot".equals(chatMessage.getMember().getLrzId())) {
-                //noinspection deprecation
-                chatMessageLayout.setBackgroundDrawable(null);
-				chatMessageLayoutParams.gravity = Gravity.CENTER;
-				chatFrameLayout.setPadding(100, 0, 100, 0); // Add left and right padding
-				holder.tvUser.setText("");
-				holder.tvTimestamp.setText("");
-			} else if (currentChatMember.getUrl().equals(chatMessage.getMember().getUrl())) {
-				chatMessageLayout.setBackgroundResource(R.drawable.bubble_right);
-				chatMessageLayoutParams.gravity = Gravity.RIGHT;
-				chatFrameLayout.setPadding(100, 0, 0, 0); // Add left padding
-			} else {
-				chatMessageLayout.setBackgroundResource(R.drawable.bubble_left);
-				chatMessageLayoutParams.gravity = Gravity.LEFT;
-				chatFrameLayout.setPadding(0, 0, 100, 0); // Add right padding
-			}
-			
-			chatMessageLayout.setLayoutParams(chatMessageLayoutParams);
-		}
+
+        holder.tvUser.setText(chatMessage.getMember().getDisplayName());
+        holder.tvMessage.setText(chatMessage.getText());
+        holder.tvTimestamp.setText(chatMessage.getTimestampString());
+
+        if ("bot".equals(chatMessage.getMember().getLrzId())) {
+            //noinspection deprecation
+            holder.tvUser.setText("");
+            holder.tvTimestamp.setText("");
+        }
 
 		return convertView;
 	}	

@@ -15,12 +15,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 
 import com.google.gson.Gson;
 
@@ -57,23 +58,23 @@ import retrofit.client.Response;
  * NEEDS: Const.CURRENT_CHAT_ROOM set in incoming bundle (json serialised object of class ChatRoom)
  * Const.CURRENT_CHAT_MEMBER set in incoming bundle (json serialised object of class ChatMember)
  */
-public class ChatActivity extends ActionBarActivity implements OnClickListener, OnItemLongClickListener {
+public class ChatActivity extends ActionBarActivity implements OnClickListener, OnItemLongClickListener, AbsListView.OnScrollListener {
 
     /**
      * UI elements
      */
     private ListView lvMessageHistory;
-    private ChatHistoryAdapter chatHistoryAdapter;
+    private ChatHistoryAdapter chatHistoryAdapter = null;
     private ArrayList<ListChatMessage> chatHistory = new ArrayList<ListChatMessage>();
     private EditText etMessage;
     private ImageButton btnSend;
-    private Button btnLoadMore;
 
     private ChatRoom currentChatRoom;
     private ChatMember currentChatMember;
 
     private boolean messageSentSuccessfully = false;
     private int numberOfAttempts = 0;
+    private boolean loadingMore = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -143,17 +144,8 @@ public class ChatActivity extends ActionBarActivity implements OnClickListener, 
                 }
             }).start();
 
-            //Set textfield to empty, when done
+            //Set TextField to empty, when done
             etMessage.setText("");
-        } else if (view.getId() == btnLoadMore.getId()) { // Load more messages
-            int chatHistorySize = chatHistory.size();
-            // Round the number of already downloaded messages to multiple of 10
-            // Then divide this by 10 to get the number of downloaded pages
-            // according to current state on the server
-            // Worst case scenario, we have to download 9 messages again
-            int numberOfAlreadyDownloadedPages = (chatHistorySize - (chatHistorySize % 10)) / 10;
-
-            getHistoryPageFromServer(numberOfAlreadyDownloadedPages + 1);
         }
     }
 
@@ -225,16 +217,36 @@ public class ChatActivity extends ActionBarActivity implements OnClickListener, 
     private void bindUIElements() {
         lvMessageHistory = (ListView) findViewById(R.id.lvMessageHistory);
         lvMessageHistory.setOnItemLongClickListener(this);
+        lvMessageHistory.setDividerHeight(0);
+        lvMessageHistory.setOnScrollListener(this);
 
         // Add the button for loading more messages to list header
-        btnLoadMore = new Button(this);
-        btnLoadMore.setText(R.string.load_earlier_messages);
-        btnLoadMore.setOnClickListener(this);
-        lvMessageHistory.addHeaderView(btnLoadMore);
+        ProgressBar bar = new ProgressBar(this);
+        //bar.setText(R.string.load_earlier_messages);
+        lvMessageHistory.addHeaderView(bar);
 
         etMessage = (EditText) findViewById(R.id.etMessage);
         btnSend = (ImageButton) findViewById(R.id.btnSend);
         btnSend.setOnClickListener(this);
+    }
+
+    @Override
+    public void onScrollStateChanged(AbsListView view, int scrollState) {
+    }
+
+    @Override
+    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+        //is the top item is visible & not loading more already ? Load more !
+        if ((firstVisibleItem == 0) && !(loadingMore)) {
+            int chatHistorySize = chatHistory.size();
+            // Round the number of already downloaded messages to multiple of 10
+            // Then divide this by 10 to get the number of downloaded pages
+            // according to current state on the server
+            // Worst case scenario, we have to download 9 messages again
+            int numberOfAlreadyDownloadedPages = (chatHistorySize - (chatHistorySize % 10)) / 10;
+
+            getHistoryPageFromServer(numberOfAlreadyDownloadedPages + 1);
+        }
     }
 
     /**
@@ -243,28 +255,45 @@ public class ChatActivity extends ActionBarActivity implements OnClickListener, 
      * @param page Page number
      */
     private void getHistoryPageFromServer(final int page) {
-        ChatClient.getInstance(this).getMessages(currentChatRoom.getGroupId(), page, new Callback<ArrayList<ListChatMessage>>() {
+        loadingMore = true;
+        new Thread(new Runnable() {
             @Override
-            public void success(ArrayList<ListChatMessage> downloadedChatHistory, Response arg1) {
-                Utils.logv("Success loading additional chat history: " + arg1.toString());
-                if (page == 1) {
-                    Collections.reverse(downloadedChatHistory);
-                    chatHistory = downloadedChatHistory;
-                    chatHistoryAdapter = new ChatHistoryAdapter(ChatActivity.this, chatHistory, currentChatMember);
-                    lvMessageHistory.setAdapter(chatHistoryAdapter);
-                } else {
-                    for (ListChatMessage downloadedMessage : downloadedChatHistory) {
-                        chatHistory.add(0, downloadedMessage);
+            public void run() {
+                // Download chat messages in new Thread
+                ChatClient.getInstance(ChatActivity.this).getMessages(currentChatRoom.getGroupId(), page, new Callback<ArrayList<ListChatMessage>>() {
+                    @Override
+                    public void success(final ArrayList<ListChatMessage> downloadedChatHistory, Response arg1) {
+                        // Got results from webservice
+                        Utils.logv("Success loading additional chat history: " + arg1.toString());
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                // Update results in UI
+                                if (chatHistoryAdapter == null) {
+                                    Collections.reverse(downloadedChatHistory);
+                                    chatHistory = downloadedChatHistory;
+                                    chatHistoryAdapter = new ChatHistoryAdapter(ChatActivity.this, chatHistory, currentChatMember);
+                                    lvMessageHistory.setAdapter(chatHistoryAdapter);
+                                } else {
+                                    // TODO ensure we don't already loaded these messages
+                                    for (ListChatMessage downloadedMessage : downloadedChatHistory) {
+                                        chatHistory.add(0, downloadedMessage);
+                                    }
+                                    chatHistoryAdapter.notifyDataSetChanged();
+                                }
+                                loadingMore = false;
+                            }
+                        });
                     }
-                    chatHistoryAdapter.notifyDataSetChanged();
-                }
-            }
 
-            @Override
-            public void failure(RetrofitError e) {
-                Utils.log(e, "Failure loading additional chat history");
+                    @Override
+                    public void failure(RetrofitError e) {
+                        Utils.log(e, "Failure loading additional chat history");
+                        loadingMore = false;
+                    }
+                });
             }
-        });
+        }).start();
     }
 
     @Override

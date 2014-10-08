@@ -28,6 +28,7 @@ public class PlansDetailsActivity extends ActionBarActivity {
 		ImageViewTouch imageViewTouch = (ImageViewTouch) findViewById(R.id.activity_plans_plan);
         imageViewTouch.setImageResource(img);
         imageViewTouch.setDisplayType(ImageViewTouchBase.DisplayType.FIT_TO_SCREEN);
+        imageViewTouch.setDoubleTapEnabled(false);
 
 	    setTitle(getString(title));
 	}

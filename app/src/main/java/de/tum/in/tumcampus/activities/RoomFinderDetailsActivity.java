@@ -58,6 +58,7 @@ public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<Vo
         net = new NetUtils(this);
         mImage = (ImageViewTouch) findViewById(R.id.activity_roomfinder_details);
         mImage.setDisplayType(ImageViewTouchBase.DisplayType.FIT_TO_SCREEN);
+        mImage.setDoubleTapEnabled(false);
 
         location = getIntent().getExtras().getString(EXTRA_LOCATION);
         roomInfo = getIntent().getExtras().getBundle(EXTRA_ROOM_INFO);
