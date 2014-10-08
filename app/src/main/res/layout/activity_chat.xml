@@ -19,7 +19,7 @@
         android:layout_alignParentBottom="true"
         android:background="#FFFFFF">
 
-        <EditText
+        <com.rockerhieu.emojicon.EmojiconEditText
             android:id="@+id/etMessage"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"

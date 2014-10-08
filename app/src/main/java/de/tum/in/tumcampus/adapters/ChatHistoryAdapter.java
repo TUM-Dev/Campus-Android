@@ -15,7 +15,7 @@ import de.tum.in.tumcampus.models.ListChatMessage;
 
 public class ChatHistoryAdapter extends BaseAdapter {
 
-	// Layout of the list row
+    // Layout of the list row
 	static class ViewHolder {
 		TextView tvUser;
 		TextView tvMessage;
@@ -92,5 +92,25 @@ public class ChatHistoryAdapter extends BaseAdapter {
         }
 
 		return convertView;
-	}	
+	}
+
+    public boolean add(int i, ListChatMessage downloadedMessage) {
+        for(ListChatMessage message : messageHistory) {
+            if(message.getTimestamp().equals(downloadedMessage.getTimestamp()) &&
+                    message.getText().equals(downloadedMessage.getText()))
+                return false;
+        }
+        messageHistory.add(i, downloadedMessage);
+        return true;
+    }
+
+    public void add(ListChatMessage downloadedMessage) {
+        for(ListChatMessage message : messageHistory) {
+            if(message.getTimestamp().equals(downloadedMessage.getTimestamp()) &&
+                    message.getText().equals(downloadedMessage.getText()))
+                return;
+        }
+        messageHistory.add(downloadedMessage);
+        notifyDataSetChanged();
+    }
 }

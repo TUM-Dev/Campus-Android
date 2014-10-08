@@ -65,7 +65,6 @@ public class ChatActivity extends ActionBarActivity implements OnClickListener, 
      */
     private ListView lvMessageHistory;
     private ChatHistoryAdapter chatHistoryAdapter = null;
-    private ArrayList<ListChatMessage> chatHistory = new ArrayList<ListChatMessage>();
     private EditText etMessage;
     private ImageButton btnSend;
 
@@ -75,6 +74,7 @@ public class ChatActivity extends ActionBarActivity implements OnClickListener, 
     private boolean messageSentSuccessfully = false;
     private int numberOfAttempts = 0;
     private boolean loadingMore = false;
+    private ProgressBar bar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,8 +126,7 @@ public class ChatActivity extends ActionBarActivity implements OnClickListener, 
                             ChatActivity.this.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    chatHistory.add(new ListChatMessage(newlyCreatedMessage, currentChatMember));
-                                    chatHistoryAdapter.notifyDataSetChanged();
+                                    chatHistoryAdapter.add(new ListChatMessage(newlyCreatedMessage, currentChatMember));
                                 }
                             });
 
@@ -164,7 +163,7 @@ public class ChatActivity extends ActionBarActivity implements OnClickListener, 
         new Thread(new Runnable() {
             @Override
             public void run() {
-                ListChatMessage message = chatHistory.get(position - 1);
+                ListChatMessage message = (ListChatMessage) chatHistoryAdapter.getItem(position - 1);
 
                 ArrayList<ChatPublicKey> publicKeys = (ArrayList<ChatPublicKey>) ChatClient.getInstance(ChatActivity.this).getPublicKeysForMember(message.getMember().getUserId());
                 ChatMessageValidator validator = new ChatMessageValidator(publicKeys);
@@ -221,7 +220,7 @@ public class ChatActivity extends ActionBarActivity implements OnClickListener, 
         lvMessageHistory.setOnScrollListener(this);
 
         // Add the button for loading more messages to list header
-        ProgressBar bar = new ProgressBar(this);
+        bar = new ProgressBar(this);
         //bar.setText(R.string.load_earlier_messages);
         lvMessageHistory.addHeaderView(bar);
 
@@ -237,8 +236,8 @@ public class ChatActivity extends ActionBarActivity implements OnClickListener, 
     @Override
     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
         //is the top item is visible & not loading more already ? Load more !
-        if ((firstVisibleItem == 0) && !(loadingMore)) {
-            int chatHistorySize = chatHistory.size();
+        if ((firstVisibleItem == 0) && !(loadingMore) && chatHistoryAdapter!=null) {
+            int chatHistorySize = chatHistoryAdapter.getCount();
             // Round the number of already downloaded messages to multiple of 10
             // Then divide this by 10 to get the number of downloaded pages
             // according to current state on the server
@@ -271,17 +270,23 @@ public class ChatActivity extends ActionBarActivity implements OnClickListener, 
                                 // Update results in UI
                                 if (chatHistoryAdapter == null) {
                                     Collections.reverse(downloadedChatHistory);
-                                    chatHistory = downloadedChatHistory;
-                                    chatHistoryAdapter = new ChatHistoryAdapter(ChatActivity.this, chatHistory, currentChatMember);
+                                    chatHistoryAdapter = new ChatHistoryAdapter(ChatActivity.this, downloadedChatHistory, currentChatMember);
                                     lvMessageHistory.setAdapter(chatHistoryAdapter);
+                                    loadingMore = false;
                                 } else {
-                                    // TODO ensure we don't already loaded these messages
+                                    boolean messageAdded = false;
                                     for (ListChatMessage downloadedMessage : downloadedChatHistory) {
-                                        chatHistory.add(0, downloadedMessage);
+                                        if(chatHistoryAdapter.add(0, downloadedMessage)) {
+                                            messageAdded = true;
+                                        }
                                     }
-                                    chatHistoryAdapter.notifyDataSetChanged();
+                                    if(messageAdded) {
+                                        loadingMore = false;
+                                        chatHistoryAdapter.notifyDataSetChanged();
+                                    } else {
+                                        lvMessageHistory.removeHeaderView(bar);
+                                    }
                                 }
-                                loadingMore = false;
                             }
                         });
                     }
@@ -318,8 +323,7 @@ public class ChatActivity extends ActionBarActivity implements OnClickListener, 
 
                 ChatMember member = new Gson().fromJson(extras.getString("member"), ChatMember.class);
                 newMessage.setMember(member);
-                chatHistory.add(newMessage);
-                chatHistoryAdapter.notifyDataSetChanged();
+                chatHistoryAdapter.add(newMessage);
             }
         }, new IntentFilter("chat-message-received"));
 

@@ -112,10 +112,8 @@ public class Event implements Cloneable {
             date.setJulianDay(curDay);
             Cursor cEvents = cm.getFromDbForDate(new Date(date.toMillis(false)));
 
-            while (cEvents.moveToNext()) {
-                if (!cEvents.getString(cEvents.getColumnIndex("status")).equals("CANCEL"))
-                    events.add(generateEventFromCursor(cEvents));
-            }
+            while (cEvents.moveToNext())
+                events.add(generateEventFromCursor(cEvents));
         }
     }
 

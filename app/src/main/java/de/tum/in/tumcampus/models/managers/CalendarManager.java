@@ -64,7 +64,7 @@ public class CalendarManager implements Card.ProvidesCard {
      * (nr, status, url, title, description, dtstart, dtend, location)
      */
     Cursor getAllFromDb() {
-        return db.rawQuery("SELECT * FROM calendar", null);
+        return db.rawQuery("SELECT * FROM calendar WHERE status!=\"CANCEL\"", null);
     }
 
     public Cursor getFromDbForDate(Date date) {
@@ -72,7 +72,7 @@ public class CalendarManager implements Card.ProvidesCard {
         String requestedDateString = Utils.getDateString(date);
 
         // Fetch the data
-        return db.rawQuery("SELECT * FROM calendar WHERE dtstart LIKE ? ORDER BY dtstart ASC", new String[]{"%" + requestedDateString + "%"});
+        return db.rawQuery("SELECT * FROM calendar WHERE dtstart LIKE ? AND status!=\"CANCEL\" ORDER BY dtstart ASC", new String[]{"%" + requestedDateString + "%"});
     }
 
     /**
@@ -81,8 +81,7 @@ public class CalendarManager implements Card.ProvidesCard {
      * @return Database cursor (name, location, _id)
      */
     public Cursor getCurrentFromDb() {
-        return db.rawQuery("SELECT title, location, nr "
-                + "FROM calendar WHERE datetime('now', 'localtime') BETWEEN dtstart AND dtend", null);
+        return db.rawQuery("SELECT title, location, nr FROM calendar WHERE datetime('now', 'localtime') BETWEEN dtstart AND dtend AND status!=\"CANCEL\"", null);
     }
 
     /**
@@ -188,37 +187,35 @@ public class CalendarManager implements Card.ProvidesCard {
             final String strend = cursor.getString(6);
             final String location = cursor.getString(7);
 
-            if (!status.equals("CANCEL")) {
-                try {
-                    // Get the correct date and time from database
-                    dtstart = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.ENGLISH).parse(strstart);
-                    dtend = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.ENGLISH).parse(strend);
+            try {
+                // Get the correct date and time from database
+                dtstart = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.ENGLISH).parse(strstart);
+                dtend = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.ENGLISH).parse(strend);
 
-                    Calendar beginTime = Calendar.getInstance();
-                    beginTime.setTime(dtstart);
-                    Calendar endTime = Calendar.getInstance();
-                    endTime.setTime(dtend);
+                Calendar beginTime = Calendar.getInstance();
+                beginTime.setTime(dtstart);
+                Calendar endTime = Calendar.getInstance();
+                endTime.setTime(dtend);
 
-                    // Get start and end time
-                    long startMillis = beginTime.getTimeInMillis();
-                    long endMillis = endTime.getTimeInMillis();
+                // Get start and end time
+                long startMillis = beginTime.getTimeInMillis();
+                long endMillis = endTime.getTimeInMillis();
 
-                    ContentValues values = new ContentValues();
+                ContentValues values = new ContentValues();
 
-                    // Put the received values into a contentResolver to
-                    // transmit the to Google Calendar
-                    values.put(CalendarContract.Events.DTSTART, startMillis);
-                    values.put(CalendarContract.Events.DTEND, endMillis);
-                    values.put(CalendarContract.Events.TITLE, title);
-                    values.put(CalendarContract.Events.DESCRIPTION, description);
-                    values.put(CalendarContract.Events.CALENDAR_ID, id);
-                    values.put(CalendarContract.Events.EVENT_LOCATION, location);
-                    values.put(CalendarContract.Events.EVENT_TIMEZONE, R.string.calendarTimeZone);
-                    contentResolver.insert(CalendarContract.Events.CONTENT_URI, values);
+                // Put the received values into a contentResolver to
+                // transmit the to Google Calendar
+                values.put(CalendarContract.Events.DTSTART, startMillis);
+                values.put(CalendarContract.Events.DTEND, endMillis);
+                values.put(CalendarContract.Events.TITLE, title);
+                values.put(CalendarContract.Events.DESCRIPTION, description);
+                values.put(CalendarContract.Events.CALENDAR_ID, id);
+                values.put(CalendarContract.Events.EVENT_LOCATION, location);
+                values.put(CalendarContract.Events.EVENT_TIMEZONE, R.string.calendarTimeZone);
+                contentResolver.insert(CalendarContract.Events.CONTENT_URI, values);
 
-                } catch (ParseException e) {
-                    Utils.log(e);
-                }
+            } catch (ParseException e) {
+                Utils.log(e);
             }
         }
     }
