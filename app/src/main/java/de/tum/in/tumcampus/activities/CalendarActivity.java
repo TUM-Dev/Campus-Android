@@ -14,16 +14,20 @@ import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.text.format.DateUtils;
+import android.text.format.Time;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.generic.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.Utils;
+import de.tum.in.tumcampus.auxiliary.calendar.DayView;
 import de.tum.in.tumcampus.fragments.DayFragment;
 import de.tum.in.tumcampus.models.CalendarRowSet;
 import de.tum.in.tumcampus.models.managers.CalendarManager;
@@ -44,8 +48,6 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
 
     private static final int TIME_TO_SYNC_CALENDAR = 604800; // 1 week
     public static final String EVENT_TIME = "event_time";
-
-    private final Calendar calendar = new GregorianCalendar();
 
     private CalendarManager calendarManager;
 
@@ -176,6 +178,17 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
      * Link the Sections with the content with a section adapter. Additionally put the current date at the start position.
      */
     private void attachSectionPagerAdapter() {
+        Time t = new Time();
+        t.setToNow();
+        DayView.mLeftBoundary = Time.getJulianDay(t.toMillis(true), t.gmtoff);
+        Date now = new Date();
+        Calendar calendar = new GregorianCalendar();
+        calendar.setTime(now);
+        calendar.add(Calendar.MONTH, CalendarActivity.MONTH_AFTER);
+        Date lastDate = calendar.getTime();
+        int days = (int) ((lastDate.getTime()-now.getTime()) / DateUtils.DAY_IN_MILLIS);
+        DayView.mRightBoundary = DayView.mLeftBoundary + days;
+
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.fragment_container, new DayFragment(mEventTime, mWeekMode ? 7 : 1));
         ft.commit();

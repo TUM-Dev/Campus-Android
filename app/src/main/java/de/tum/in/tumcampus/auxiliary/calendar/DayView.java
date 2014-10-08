@@ -167,6 +167,8 @@ public class DayView extends View implements View.OnCreateContextMenuListener,
     };
 
     private final TodayAnimatorListener mTodayAnimatorListener = new TodayAnimatorListener();
+    public static int mLeftBoundary = 0;
+    public static int mRightBoundary = Integer.MAX_VALUE;
 
     class TodayAnimatorListener extends AnimatorListenerAdapter {
         private volatile Animator mAnimator = null;
@@ -2103,7 +2105,9 @@ public class DayView extends View implements View.OnCreateContextMenuListener,
 
             if (absDistanceX > absDistanceY) {
                 int slopFactor = mScaleGestureDetector.isInProgress() ? 20 : 2;
-                if (absDistanceX > mScaledPagingTouchSlop * slopFactor) {
+                if (absDistanceX > mScaledPagingTouchSlop * slopFactor &&
+                        ((mLeftBoundary<mFirstJulianDay && distanceX<0)
+                        || (mRightBoundary>mFirstJulianDay+mNumDays && distanceX>0))) {
                     mTouchMode = TOUCH_MODE_HSCROLL;
                     mViewStartX = distanceX;
                     initNextView(-mViewStartX);

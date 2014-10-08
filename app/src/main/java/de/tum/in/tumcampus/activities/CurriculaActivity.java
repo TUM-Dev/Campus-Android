@@ -60,6 +60,14 @@ public class CurriculaActivity extends ActivityForLoadingInBackground<Void,JSONA
 
     @Override
     protected void onLoadFinished(JSONArray jsonData) {
+        if(jsonData==null) {
+            if(!NetUtils.isConnected(this)) {
+                showNoInternetLayout();
+            } else {
+                showErrorLayout();
+            }
+            return;
+        }
         try {
             options = new Hashtable<String, String>();
             for (int i = 0; i < jsonData.length(); i++) {

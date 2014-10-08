@@ -143,24 +143,6 @@ public class DayFragment extends Fragment implements CalendarController.EventHan
         view.restartCurrentTimeUpdates();
     }
 
-   /* @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        if(mViewSwitcher==null)
-            return;
-        DayView view = (DayView) mViewSwitcher.getCurrentView();
-        if (isVisibleToUser && view!=null) {
-            view.handleOnResume();
-            view.restartCurrentTimeUpdates();
-
-            view = (DayView) mViewSwitcher.getNextView();
-            if(view!=null) {
-                view.handleOnResume();
-                view.restartCurrentTimeUpdates();
-            }
-        }
-    }*/
-
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
