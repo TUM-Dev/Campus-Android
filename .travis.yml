@@ -1,0 +1,23 @@
+branches:
+  only:
+    - master
+
+language: android
+jdk: oraclejdk7
+android:
+  components:
+    - tools
+    - platform-tools
+    - extra-android-support
+    - extra-android-m2repository
+    - android-20
+    - build-tools-20.0.0
+
+before_install:
+ - chmod +x gradlew
+
+install:
+  - ./gradlew dependencies
+
+script:
+  - ./gradlew build
