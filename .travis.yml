@@ -21,6 +21,3 @@ install:
 
 script:
   - ./gradlew build
-
-after_success:
-  - ./gradlew uploadArchives
