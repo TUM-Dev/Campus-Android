@@ -16,7 +16,6 @@
 
 package de.tum.in.tumcampus.auxiliary.calendar;
 
-import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Build;
@@ -27,7 +26,6 @@ import java.util.Date;
 import java.util.Iterator;
 
 import de.tum.in.tumcampus.auxiliary.Utils;
-import de.tum.in.tumcampus.models.managers.CalendarManager;
 
 public class Event implements Cloneable {
 
@@ -100,28 +98,10 @@ public class Event implements Cloneable {
     }
 
     /**
-     * Loads <i>days</i> days worth of instances starting at <i>startDay</i>.
-     */
-    public static void loadEvents(Context context, ArrayList<Event> events, int startDay, int days) {
-        events.clear();
-
-        CalendarManager cm = new CalendarManager(context);
-        Time date = new Time();
-
-        for(int curDay=startDay;curDay<startDay+days;curDay++) {
-            date.setJulianDay(curDay);
-            Cursor cEvents = cm.getFromDbForDate(new Date(date.toMillis(false)));
-
-            while (cEvents.moveToNext())
-                events.add(generateEventFromCursor(cEvents));
-        }
-    }
-
-    /**
      * @param cEvents Cursor pointing at event
      * @return An event created from the cursor
      */
-    private static Event generateEventFromCursor(Cursor cEvents) {
+    static Event generateEventFromCursor(Cursor cEvents) {
         Event e = new Event();
 
         e.id = cEvents.getLong(0);
@@ -145,21 +125,30 @@ public class Event implements Cloneable {
         String eStart = cEvents.getString(5);
         String eEnd = cEvents.getString(6);
 
-        e.startMillis = Utils.getISODateTime(eStart).getTime();
-        Time t = new Time();
-        t.set(e.startMillis);
-        e.startTime = t.hour*60+t.minute;
-        Time current = new Time();
-        current.set(System.currentTimeMillis());
-        e.startDay = Time.getJulianDay(e.startMillis, current.gmtoff);
-
-        e.endMillis = Utils.getISODateTime(eEnd).getTime();
-        t = new Time();
-        t.set(e.endMillis);
-        e.endTime = t.hour*60+t.minute;
-        e.endDay = Time.getJulianDay(e.endMillis, current.gmtoff);
+        e.setStart(Utils.getISODateTime(eStart));
+        e.setEnd(Utils.getISODateTime(eEnd));
 
         return e;
+    }
+
+    public void setStart(Date date) {
+        startMillis = date.getTime();
+        Time t = new Time();
+        t.set(startMillis);
+        startTime = t.hour*60+t.minute;
+        Time current = new Time();
+        current.set(System.currentTimeMillis());
+        startDay = Time.getJulianDay(startMillis, current.gmtoff);
+    }
+
+    public void setEnd(Date date) {
+        endMillis = date.getTime();
+        Time t = new Time();
+        t.set(endMillis);
+        endTime = t.hour*60+t.minute;
+        Time current = new Time();
+        current.set(System.currentTimeMillis());
+        endDay = Time.getJulianDay(endMillis, current.gmtoff);
     }
 
     /**
@@ -296,7 +285,7 @@ public class Event implements Cloneable {
 
     private static final float SATURATION_ADJUST = 1.3f;
     private static final float INTENSITY_ADJUST = 0.8f;
-    private static int getDisplayColorFromColor(int color) {
+    public static int getDisplayColorFromColor(int color) {
         if (!(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)) {
             return color;
         }

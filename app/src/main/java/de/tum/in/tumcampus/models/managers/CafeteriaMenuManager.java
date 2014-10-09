@@ -80,7 +80,7 @@ public class CafeteriaMenuManager {
 
 		// create table if needed
 		db.execSQL("CREATE TABLE IF NOT EXISTS cafeterias_menus ("
-				+ "id INTEGER, mensaId INTEGER KEY, date VARCHAR, typeShort VARCHAR, "
+				+ "id INTEGER PRIMARY KEY, mensaId INTEGER KEY, date VARCHAR, typeShort VARCHAR, "
 				+ "typeLong VARCHAR, typeNr INTEGER, name VARCHAR)");
 	}
 

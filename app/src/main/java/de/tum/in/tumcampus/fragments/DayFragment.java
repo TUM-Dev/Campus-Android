@@ -80,13 +80,14 @@ public class DayFragment extends Fragment implements CalendarController.EventHan
     }
 
     @SuppressLint("ValidFragment")
-    public DayFragment(long timeMillis, int numOfDays) {
+    public DayFragment(long timeMillis, int numOfDays, EventLoader el) {
         mNumDays = numOfDays;
         if (timeMillis == 0) {
             mSelectedDay.setToNow();
         } else {
             mSelectedDay.set(timeMillis);
         }
+        mEventLoader = el;
     }
 
     @Override
@@ -94,18 +95,14 @@ public class DayFragment extends Fragment implements CalendarController.EventHan
         super.onCreate(icicle);
 
         Context context = getActivity();
-
         mInAnimationForward = AnimationUtils.loadAnimation(context, R.anim.slide_left_in);
         mOutAnimationForward = AnimationUtils.loadAnimation(context, R.anim.slide_left_out);
         mInAnimationBackward = AnimationUtils.loadAnimation(context, R.anim.slide_right_in);
         mOutAnimationBackward = AnimationUtils.loadAnimation(context, R.anim.slide_right_out);
-
-        mEventLoader = new EventLoader(context);
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.day_activity, null);
 
         mViewSwitcher = (ViewSwitcher) v.findViewById(R.id.switcher);

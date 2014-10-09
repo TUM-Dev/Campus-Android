@@ -18,6 +18,7 @@ import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.auxiliary.NetUtils;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.auxiliary.XMLParser;
+import de.tum.in.tumcampus.auxiliary.calendar.Event;
 import de.tum.in.tumcampus.models.Geo;
 
 /**
@@ -38,7 +39,13 @@ public class TUMRoomFinderRequest {
     private static final String KEY_MapId = "mapId";
     public static final String KEY_ROOM = "room";
     public static final String KEY_TITLE = "title";
-    private static final String KEY_WEB_CODE = "web_code";
+    public static final String KEY_WEB_CODE = "web_code";
+    public static final String KEY_ROOM_API_CODE = "room_api_code";
+    public static final String KEY_CAMPUS_ID = "campusId";
+    public static final String KEY_CAMPUS_TITLE = "campusTitle";
+    public static final String KEY_BUILDING_TITLE = "buildingTitle";
+    public static final String KEY_ROOM_TITLE = "roomTitle";
+    public static final String KEY_BUILDING_ID = "buildingId";
     /**
      * asynchronous task for interactive fetch
      */
@@ -135,7 +142,7 @@ public class TUMRoomFinderRequest {
             String xml = parser.getXmlFromUrl(url); // getting XML from URL
             Document doc = parser.getDomElement(xml); // getting DOM element
 
-            NodeList roomList = doc.getElementsByTagName(KEY_ROOM);// building.getChildNodes();
+            NodeList roomList = doc.getElementsByTagName(KEY_ROOM);
 
             for (int k = 0; k < roomList.getLength(); k++) {
 
@@ -146,12 +153,13 @@ public class TUMRoomFinderRequest {
                 String buildingId = building.getAttribute(KEY_WEB_CODE);
 
                 Element campus = (Element) building.getParentNode();
-                roomMap.put(KEY_Campus + KEY_ID, campus.getAttribute("id"));
-                roomMap.put(KEY_Campus + KEY_TITLE, parser.getValue(campus, KEY_TITLE));
-                roomMap.put(KEY_Building + KEY_TITLE, parser.getValue(building, KEY_TITLE));
-                roomMap.put(KEY_ROOM + KEY_TITLE, parser.getValue(room, KEY_TITLE));
-                roomMap.put(KEY_Building + KEY_ID, buildingId);
+                roomMap.put(KEY_CAMPUS_ID, campus.getAttribute("id"));
+                roomMap.put(KEY_CAMPUS_TITLE, parser.getValue(campus, KEY_TITLE));
+                roomMap.put(KEY_BUILDING_TITLE, parser.getValue(building, KEY_TITLE));
+                roomMap.put(KEY_ROOM_TITLE, parser.getValue(room, KEY_TITLE));
+                roomMap.put(KEY_BUILDING_ID, buildingId);
                 roomMap.put(KEY_ARCHITECT_NUMBER, parser.getValue(room, KEY_ARCHITECT_NUMBER));
+                roomMap.put(KEY_ROOM_API_CODE, room.getAttribute("api_code"));
 
                 // adding HashList to ArrayList
                 roomsList.add(roomMap);
@@ -229,52 +237,45 @@ public class TUMRoomFinderRequest {
         return mapsList;
     }
 
-    public void fetchDefaultMapIdJob(final Context context,
-                                     final TUMRoomFinderRequestFetchListener listener, String mapID) {
+    /**
+     * fetches the room schedule for a given room e.g. 62015 = Interims HS 2
+     * @param roomApiCode rooms api code
+     * @return List of Events
+     */
+    public ArrayList<Event> fetchRoomSchedule(String roomApiCode, String startDate, String endDate, ArrayList<Event> scheduleList) {
+        setParameter("start_date", startDate);
+        setParameter("end_date", endDate);
+        method = roomApiCode;
 
-        // fetch information in a background task and show progress dialog in
-        // meantime
-        AsyncTask<String, Void, String> backgroundTaskMap = new AsyncTask<String, Void, String>() {
+        String ROOM_SERVICE_DEFAULT_MAP_URL = SERVICE_BASE_URL + "schedule/room/";
+        String url = getRequestURL(ROOM_SERVICE_DEFAULT_MAP_URL);
+        Utils.log("fetching Map URL " + url);
 
-            /** property to determine if there is an internet connection */
-            boolean isOnline;
+        try {
 
-            @Override
-            protected String doInBackground(String... buildingID) {
-                // set parameter on the TUMRoomFinder request an fetch the
-                // results
-                isOnline = NetUtils.isConnected(context);
-                if (!isOnline) {
-                    // not online, fetch does not make sense
-                    return null;
-                }
-                // we are online, return fetch result
-                return fetchDefaultMapId(buildingID[0]);
+            XMLParser parser = new XMLParser();
+            String xml = parser.getXmlFromUrl(url); // getting XML from URL
+            Document doc = parser.getDomElement(xml); // getting DOM element
+
+            NodeList scheduleNodes = doc.getElementsByTagName("event");
+
+            for (int k = 0; k < scheduleNodes.getLength(); k++) {
+                Element schedule = (Element) scheduleNodes.item(k);
+                Event event = Event.newInstance();
+                event.id = Long.parseLong(parser.getValue(schedule, "eventID"));
+                event.title = parser.getValue(schedule, "title");
+                String start = parser.getValue(schedule, "begin_time");
+                String end = parser.getValue(schedule, "end_time");
+                event.setStart(Utils.getISODateTime(start));
+                event.setEnd(Utils.getISODateTime(end));
+                event.color = Event.getDisplayColorFromColor(0xff28921f);
+                scheduleList.add(event);
             }
-
-            @Override
-            protected void onPostExecute(String resultId) {
-                // handle result
-                if (!isOnline) {
-                    listener.onNoInternetError();
-                    return;
-                }
-                if (resultId == null) {
-                    listener.onFetchError(context.getString(R.string.empty_result));
-                    return;
-                }
-                /*if (resultId.equals("10")) {
-                    listener.onFetchError(context.getString(R.string.no_map_available));
-                    return;
-                }*/
-                // If there could not be found any problems return usual on
-                // Fetch method
-                listener.onFetchDefaultMapId(resultId);
-            }
-
-        };
-
-        backgroundTaskMap.execute(mapID);
+        } catch (Exception e) {
+            Utils.log(e, "FetchError");
+            // return e.getMessage();
+        }
+        return scheduleList;
     }
 
     /**

@@ -24,40 +24,37 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Process;
 import android.provider.CalendarContract.EventDays;
+import android.text.format.Time;
 import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class EventLoader {
+import de.tum.in.tumcampus.models.managers.CalendarManager;
 
-    private final LoadRequestClone mRequest;
-    Context mContext;
-    Handler mHandler = new Handler();
-    AtomicInteger mSequenceNumber = new AtomicInteger();
+public class EventLoaderCalendar {
+
+    private Context mContext;
+    private Handler mHandler = new Handler();
+    private AtomicInteger mSequenceNumber = new AtomicInteger();
 
     private LinkedBlockingQueue<LoadRequest> mLoaderQueue;
     private LoaderThread mLoaderThread;
     private ContentResolver mResolver;
 
-    static interface LoadRequest {
-        public void processRequest(EventLoader eventLoader);
-        public void skipRequest(EventLoader eventLoader);
-    }
-
-
-    static interface LoadRequestClone extends LoadRequest {
-        LoadRequestClone clone(int id, int startDay, int numDays, ArrayList<Event> events,
-                               Runnable successCallback, Runnable cancelCallback);
+    private static interface LoadRequest {
+        public void processRequest(EventLoaderCalendar eventLoader);
+        public void skipRequest(EventLoaderCalendar eventLoader);
     }
 
     private static class ShutdownRequest implements LoadRequest {
-        public void processRequest(EventLoader eventLoader) {
+        public void processRequest(EventLoaderCalendar eventLoader) {
         }
 
-        public void skipRequest(EventLoader eventLoader) {
+        public void skipRequest(EventLoaderCalendar eventLoader) {
         }
     }
 
@@ -91,7 +88,7 @@ public class EventLoader {
 
         @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
         @Override
-        public void processRequest(EventLoader eventLoader)
+        public void processRequest(EventLoaderCalendar eventLoader)
         {
             final Handler handler = eventLoader.mHandler;
             ContentResolver cr = eventLoader.mResolver;
@@ -126,15 +123,69 @@ public class EventLoader {
         }
 
         @Override
-        public void skipRequest(EventLoader eventLoader) {
+        public void skipRequest(EventLoaderCalendar eventLoader) {
+        }
+    }
+
+    private static class LoadEventsRequest implements LoadRequest {
+
+        public int id;
+        public int startDay;
+        public int numDays;
+        public ArrayList<Event> events;
+        public Runnable successCallback;
+        public Runnable cancelCallback;
+
+        public LoadEventsRequest(int id, int startDay, int numDays, ArrayList<Event> events,
+                final Runnable successCallback, final Runnable cancelCallback) {
+            this.id = id;
+            this.startDay = startDay;
+            this.numDays = numDays;
+            this.events = events;
+            this.successCallback = successCallback;
+            this.cancelCallback = cancelCallback;
+        }
+
+        public void processRequest(EventLoaderCalendar eventLoader) {
+            loadEvents(eventLoader.mContext, events, startDay, numDays);
+
+            // Check if we are still the most recent request.
+            if (id == eventLoader.mSequenceNumber.get()) {
+                eventLoader.mHandler.post(successCallback);
+            } else {
+                eventLoader.mHandler.post(cancelCallback);
+            }
+        }
+
+        public void skipRequest(EventLoaderCalendar eventLoader) {
+            eventLoader.mHandler.post(cancelCallback);
+        }
+
+
+        /**
+         * Loads <i>days</i> days worth of instances starting at <i>startDay</i>.
+         */
+        public static void loadEvents(Context context, ArrayList<Event> events, int startDay, int days) {
+            events.clear();
+
+            CalendarManager cm = new CalendarManager(context);
+            Time date = new Time();
+
+            for(int curDay=startDay;curDay<startDay+days;curDay++) {
+                date.setJulianDay(curDay);
+                Cursor cEvents = cm.getFromDbForDate(new Date(date.toMillis(false)));
+
+                while (cEvents.moveToNext())
+                    events.add(Event.generateEventFromCursor(cEvents));
+            }
         }
     }
 
     private static class LoaderThread extends Thread {
         LinkedBlockingQueue<LoadRequest> mQueue;
-        EventLoader mEventLoader;
+        EventLoaderCalendar mEventLoader;
 
-        public LoaderThread(LinkedBlockingQueue<LoadRequest> queue, EventLoader eventLoader) {
+        public LoaderThread(LinkedBlockingQueue<LoadRequest> queue, EventLoaderCalendar eventLoader) {
             mQueue = queue;
             mEventLoader = eventLoader;
         }
@@ -179,11 +230,10 @@ public class EventLoader {
         }
     }
 
-    public EventLoader(Context context, LoadRequestClone request) {
+    public EventLoaderCalendar(Context context) {
         mContext = context;
         mLoaderQueue = new LinkedBlockingQueue<LoadRequest>();
         mResolver = context.getContentResolver();
-        mRequest = request;
     }
 
     /**
@@ -219,7 +269,8 @@ public class EventLoader {
         int id = mSequenceNumber.incrementAndGet();
 
         // Send the load request to the background thread
-        LoadRequestClone request = mRequest.clone(id, startDay, numDays, events, successCallback, cancelCallback);
+        LoadEventsRequest request = new LoadEventsRequest(id, startDay, numDays,
+                events, successCallback, cancelCallback);
 
         try {
             mLoaderQueue.put(request);
@@ -241,9 +292,12 @@ public class EventLoader {
      * @param eventDays Whether or not an event exists on that day
      * @param uiCallback What to do when done (log data, redraw screen)
      */
-    void loadEventDaysInBackground(int startDay, int numDays, boolean[] eventDays, final Runnable uiCallback) {
+    void loadEventDaysInBackground(int startDay, int numDays, boolean[] eventDays,
+        final Runnable uiCallback)
+    {
         // Send load request to the background thread
-        LoadEventDaysRequest request = new LoadEventDaysRequest(startDay, numDays, eventDays, uiCallback);
+        LoadEventDaysRequest request = new LoadEventDaysRequest(startDay, numDays,
+                eventDays, uiCallback);
         try {
             mLoaderQueue.put(request);
         } catch (InterruptedException ex) {

@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
+import android.text.format.Time;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -13,11 +15,16 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.generic.ActivityForLoadingInBackground;
 import de.tum.in.tumcampus.auxiliary.NetUtils;
 import de.tum.in.tumcampus.auxiliary.Utils;
+import de.tum.in.tumcampus.auxiliary.calendar.DayView;
+import de.tum.in.tumcampus.auxiliary.calendar.EventLoader;
+import de.tum.in.tumcampus.auxiliary.calendar.LoadEventsRequestTimeTable;
+import de.tum.in.tumcampus.fragments.DayFragment;
 import de.tum.in.tumcampus.models.Geo;
 import de.tum.in.tumcampus.tumonline.TUMRoomFinderRequest;
 import it.sephiroth.android.library.imagezoom.ImageViewTouch;
@@ -28,11 +35,6 @@ import it.sephiroth.android.library.imagezoom.ImageViewTouchBase;
  */
 public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<Void, Bitmap> implements DialogInterface.OnClickListener {
 
-    public static final String BUILDING_ID = "buildingId";
-    public static final String BUILDING_TITLE = "buildingTitle";
-    public static final String ROOM_ID = "roomId";
-    public static final String CAMPUS_TITLE = "campusTitle";
-    public static final String ROOM_TITLE = "roomTitle";
     public static final String EXTRA_ROOM_INFO = "roomInfo";
     public static final String EXTRA_LOCATION = "location";
 
@@ -46,6 +48,8 @@ public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<Vo
     private Bundle roomInfo;
     private String mapId = "";
     private ArrayList<HashMap<String, String>> mapsList;
+    private boolean infoLoaded = false;
+    private DayFragment fragment;
 
     public RoomFinderDetailsActivity() {
         super(R.layout.activity_roomfinderdetails);
@@ -72,12 +76,17 @@ public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<Vo
         getMenuInflater().inflate(R.menu.menu_roomfinder_detail, menu);
         MenuItem switchMap = menu.findItem(R.id.action_switch_map);
         switchMap.setVisible(!mapId.equals("10") && mapsLoaded);
+        menu.findItem(R.id.action_room_timetable).setVisible(infoLoaded);
+        menu.findItem(R.id.action_directions).setVisible(infoLoaded);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.action_room_timetable:
+                getRoomTimetable();
+                return true;
             case R.id.action_directions:
                 getDirections();
                 return true;
@@ -87,6 +96,35 @@ public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<Vo
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        // Remove fragment with room timetable if present and show map again
+        if(fragment!=null) {
+            getRoomTimetable();
+            return;
+        }
+
+        super.onBackPressed();
+    }
+
+    private void getRoomTimetable() {
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        // Remove if fragment is already present
+        if(fragment!=null) {
+            ft.remove(fragment);
+            ft.commit();
+            fragment = null;
+            return;
+        }
+        Time t = new Time();
+        t.setToNow();
+        DayView.mLeftBoundary = Time.getJulianDay(t.toMillis(true), t.gmtoff);
+        LoadEventsRequestTimeTable req = new LoadEventsRequestTimeTable(roomInfo.getString(TUMRoomFinderRequest.KEY_ROOM_API_CODE));
+        fragment = new DayFragment(0, 1, new EventLoader(this, req));
+        ft.add(android.R.id.content, fragment);
+        ft.commit();
     }
 
     private void showMapSwitch() {
@@ -112,7 +150,7 @@ public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<Vo
         new Thread(new Runnable() {
             @Override
             public void run() {
-                final Geo geo = request.fetchCoordinates(roomInfo.getString(ROOM_ID));
+                final Geo geo = request.fetchCoordinates(roomInfo.getString(TUMRoomFinderRequest.KEY_ARCHITECT_NUMBER));
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -139,11 +177,9 @@ public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<Vo
                 HashMap<String, String> room = request.get(0);
 
                 roomInfo = new Bundle();
-                roomInfo.putString(RoomFinderDetailsActivity.BUILDING_ID, room.get(TUMRoomFinderRequest.KEY_Building + TUMRoomFinderRequest.KEY_ID));
-                roomInfo.putString(RoomFinderDetailsActivity.BUILDING_TITLE, room.get(TUMRoomFinderRequest.KEY_Building + TUMRoomFinderRequest.KEY_TITLE));
-                roomInfo.putString(RoomFinderDetailsActivity.ROOM_ID, room.get(TUMRoomFinderRequest.KEY_ARCHITECT_NUMBER));
-                roomInfo.putString(RoomFinderDetailsActivity.CAMPUS_TITLE, room.get(TUMRoomFinderRequest.KEY_Campus + TUMRoomFinderRequest.KEY_TITLE));
-                roomInfo.putString(RoomFinderDetailsActivity.ROOM_TITLE, room.get(TUMRoomFinderRequest.KEY_ROOM + TUMRoomFinderRequest.KEY_TITLE));
+                for (Map.Entry<String, String> entry : room.entrySet()) {
+                    roomInfo.putString(entry.getKey(), entry.getValue());
+                }
             }
         }
 
@@ -151,12 +187,12 @@ public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<Vo
             return null;
 
         if (mapId==null || mapId.isEmpty()) {
-            mapId = requestHandler.fetchDefaultMapId(roomInfo.getString(BUILDING_ID));
+            mapId = requestHandler.fetchDefaultMapId(roomInfo.getString(TUMRoomFinderRequest.KEY_BUILDING_ID));
         }
 
         String url = null;
         try {
-            String roomId = roomInfo.getString(ROOM_ID);
+            String roomId = roomInfo.getString(TUMRoomFinderRequest.KEY_ARCHITECT_NUMBER);
             if (mapId.equals("10")) {
                 url = "http://vmbaumgarten3.informatik.tu-muenchen.de/roommaps/building/defaultMap?id="
                         + URLEncoder.encode(roomId.substring(roomId.indexOf('@') + 1), "UTF-8");
@@ -185,14 +221,16 @@ public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<Vo
             }
             return;
         }
+        infoLoaded = true;
+        supportInvalidateOptionsMenu();
         mImage.setImageBitmap(result);
-        getSupportActionBar().setTitle(roomInfo.getString(ROOM_TITLE));
-        getSupportActionBar().setSubtitle(roomInfo.getString(BUILDING_TITLE));
+        getSupportActionBar().setTitle(roomInfo.getString(TUMRoomFinderRequest.KEY_ROOM_TITLE));
+        getSupportActionBar().setSubtitle(roomInfo.getString(TUMRoomFinderRequest.KEY_BUILDING_TITLE));
         showLoadingEnded();
         new Thread(new Runnable() {
             @Override
             public void run() {
-                mapsList = request.fetchAvailableMaps(roomInfo.getString(ROOM_ID));
+                mapsList = request.fetchAvailableMaps(roomInfo.getString(TUMRoomFinderRequest.KEY_ARCHITECT_NUMBER));
                 if (mapsList.size() > 1) {
                     mapsLoaded = true;
                     runOnUiThread(new Runnable() {

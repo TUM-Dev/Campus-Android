@@ -98,7 +98,7 @@ public class PersonsSearchActivity extends ActivityForSearchingTumOnline<PersonL
                 String[] t = recent.split("$");
                 Person p = new Person();
                 p.setId(t[0]);
-                p.setName(t[1]);
+                p.setName(t[1]); //TODO ArrayIndex Out of bounds exception
                 list.add(p);
             } while(personsCursor.moveToNext());
         }

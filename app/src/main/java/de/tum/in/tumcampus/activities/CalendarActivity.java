@@ -28,6 +28,8 @@ import de.tum.in.tumcampus.activities.generic.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.auxiliary.calendar.DayView;
+import de.tum.in.tumcampus.auxiliary.calendar.EventLoader;
+import de.tum.in.tumcampus.auxiliary.calendar.LoadEventsRequest;
 import de.tum.in.tumcampus.fragments.DayFragment;
 import de.tum.in.tumcampus.models.CalendarRowSet;
 import de.tum.in.tumcampus.models.managers.CalendarManager;
@@ -190,7 +192,9 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
         DayView.mRightBoundary = DayView.mLeftBoundary + days;
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.fragment_container, new DayFragment(mEventTime, mWeekMode ? 7 : 1));
+
+        LoadEventsRequest request = new LoadEventsRequest();
+        ft.replace(R.id.fragment_container, new DayFragment(mEventTime, mWeekMode ? 7 : 1, new EventLoader(this, request)));
         ft.commit();
     }
 

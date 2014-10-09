@@ -377,6 +377,7 @@
     <string name="bug_reports">Anonymous Bug Reports</string>
     <string name="set_bug_reports">Support the TCA Team by sending anonymous bug reports to our server which include: stacktrace, logfile, android version, app version and screen information</string>
     <string name="error_setup_chat_member">Something is wrong with your chat registration!</string>
+    <string name="room_timetable">Room timetable</string>
     <plurals name="month_more_events">
         <!-- additional events message for 1 event, the quotes force a literal interpretation of the
             string [CHAR LIMIT = 10] -->

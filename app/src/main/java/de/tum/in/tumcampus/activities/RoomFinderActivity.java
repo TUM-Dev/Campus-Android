@@ -94,24 +94,18 @@ public class RoomFinderActivity extends ActivityForSearching implements TUMRoomF
         @SuppressWarnings("unchecked")
         HashMap<String, String> room = (HashMap<String, String>) list.getAdapter().getItem(position);
 
-
         // Add to recents
         String val = "";
+        Bundle b = new Bundle();
         for (Map.Entry<String, String> entry : room.entrySet()) {
             val += entry.getKey() + "=" + entry.getValue() + ";";
+            b.putString(entry.getKey(), entry.getValue());
         }
         recentsManager.replaceIntoDb(val);
 
-        Bundle b = new Bundle();
-        b.putString(RoomFinderDetailsActivity.BUILDING_ID, room.get(TUMRoomFinderRequest.KEY_Building + TUMRoomFinderRequest.KEY_ID));
-        b.putString(RoomFinderDetailsActivity.BUILDING_TITLE, room.get(TUMRoomFinderRequest.KEY_Building + TUMRoomFinderRequest.KEY_TITLE));
-        b.putString(RoomFinderDetailsActivity.ROOM_ID, room.get(TUMRoomFinderRequest.KEY_ARCHITECT_NUMBER));
-        b.putString(RoomFinderDetailsActivity.CAMPUS_TITLE, room.get(TUMRoomFinderRequest.KEY_Campus + TUMRoomFinderRequest.KEY_TITLE));
-        b.putString(RoomFinderDetailsActivity.ROOM_TITLE, room.get(TUMRoomFinderRequest.KEY_ROOM + TUMRoomFinderRequest.KEY_TITLE));
-
         // Start detail activity
         Intent intent = new Intent(this, RoomFinderDetailsActivity.class);
-        intent.putExtra(RoomFinderDetailsActivity.EXTRA_ROOM_INFO,b);
+        intent.putExtra(RoomFinderDetailsActivity.EXTRA_ROOM_INFO, b);
         startActivity(intent);
     }
 
