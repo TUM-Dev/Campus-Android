@@ -127,7 +127,7 @@ public class ChatActivity extends ActionBarActivity implements OnClickListener, 
                     String signature = signer.sign(newMessage.getText());
                     newMessage.setSignature(signature);
 
-                    while (!messageSentSuccessfully && numberOfAttempts < 1) {
+                    while (!messageSentSuccessfully && numberOfAttempts < 5) {
                         try {
                             // Send the message to the server
                             final CreateChatMessage newlyCreatedMessage = ChatClient.getInstance(ChatActivity.this).sendMessage(currentChatRoom.getGroupId(), newMessage);

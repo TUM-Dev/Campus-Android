@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -395,6 +396,7 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline<Lectu
                         gcm = GoogleCloudMessaging.getInstance(context);
                     }
                     regId = gcm.register(SENDER_ID);
+                    Log.e("TCA Chat regid", regId);
                     msg = "GCM registration successful";
 
                     // You should send the registration ID to your server over HTTP,
