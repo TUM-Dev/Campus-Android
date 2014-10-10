@@ -45,7 +45,7 @@ public class SetupEduroamActivity extends ActionBarActivity {
         }
 
         lrz = (EditText) findViewById(R.id.wifi_lrz_id);
-        lrz.setText(Utils.getSetting(this, Const.LRZ_ID));
+        lrz.setText(Utils.getSetting(this, Const.LRZ_ID, ""));
         password = (EditText) findViewById(R.id.wifi_password);
         password.requestFocus();
     }

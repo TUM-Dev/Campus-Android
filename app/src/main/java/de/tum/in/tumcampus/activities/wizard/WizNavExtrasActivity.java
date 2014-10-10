@@ -105,7 +105,7 @@ public class WizNavExtrasActivity extends ActivityForLoadingInBackground<String,
         // If the user is opening the chat for the first time, we need to display
         // a dialog where they can enter their desired display name
         if(groupChatMode.isChecked()) {
-            String lrzId = Utils.getSetting(this, Const.LRZ_ID);
+            String lrzId = Utils.getSetting(this, Const.LRZ_ID, "");
             ChatMember currentChatMember = new ChatMember(lrzId);
             currentChatMember.setDisplayName(arg[0]);
 

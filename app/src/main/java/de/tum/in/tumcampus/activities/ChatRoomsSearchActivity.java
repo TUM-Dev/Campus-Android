@@ -90,7 +90,7 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline<Lectu
             public void run() {
                 try {
                     if (currentChatMember == null) {
-                        String lrzId = Utils.getSetting(ChatRoomsSearchActivity.this, Const.LRZ_ID);
+                        String lrzId = Utils.getSetting(ChatRoomsSearchActivity.this, Const.LRZ_ID, "");
                         // GET their data from the server using their lrzId
                         List<ChatMember> members = ChatClient.getInstance(ChatRoomsSearchActivity.this).getMember(lrzId);
                         if(members.size()==0) {

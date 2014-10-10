@@ -195,8 +195,9 @@
                     android:summary="@string/phone_summary"
                     android:title="@string/phone" />
             </PreferenceCategory>
-            <PreferenceCategory android:title="@string/news_sources"
-                android:key="card_news_sources">
+            <PreferenceCategory
+                android:key="card_news_sources"
+                android:title="@string/news_sources">
                 <!-- News sources get inserted here automatically -->
             </PreferenceCategory>
             <PreferenceCategory android:title="@string/extra">
@@ -205,11 +206,13 @@
                     android:key="card_news_latest_only"
                     android:summary="@string/only_latest_article_summary"
                     android:title="@string/only_latest_article" />
-                <!--<CheckBoxPreference
-                    android:defaultValue="true"
-                    android:key="card_news_alert"
-                    android:summary="@string/show_important_news_summary"
-                    android:title="@string/show_important_news" />-->
+                <ListPreference
+                    android:defaultValue="7"
+                    android:entries="@array/newspread_entries"
+                    android:entryValues="@array/newspread_values"
+                    android:key="news_newspread"
+                    android:summary="@string/newspread_summary"
+                    android:title="@string/newspread" />
             </PreferenceCategory>
         </PreferenceScreen>
 

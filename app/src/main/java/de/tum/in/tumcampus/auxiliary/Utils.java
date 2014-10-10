@@ -141,11 +141,12 @@ public class Utils {
      *
      * @param c   Context
      * @param key setting name
+     * @param defaultVal default value
      * @return setting value, "" if undefined
      */
-    public static String getSetting(Context c, String key) {
+    public static String getSetting(Context c, String key, String defaultVal) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(c);
-        return sp.getString(key, "");
+        return sp.getString(key, defaultVal);
     }
 
     /**

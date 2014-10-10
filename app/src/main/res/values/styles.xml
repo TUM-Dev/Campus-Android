@@ -81,7 +81,6 @@
 
     <style name="SpinnerBlue" parent="@style/Widget.AppCompat.Light.Spinner.DropDown.ActionBar">
         <item name="android:dropDownSelector">@drawable/abc_spinner_ab_holo_blue</item>
-       <!-- <item name="android:popupBackground">@drawable/abc_spinner_ab_holo_blue</item>-->
         <item name="android:background">@drawable/abc_spinner_ab_holo_blue</item>
     </style>
 

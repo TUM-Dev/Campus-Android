@@ -42,7 +42,7 @@ public class NewsManager implements Card.ProvidesCard {
         mContext = context;
 
         // create news sources table
-        db.execSQL("CREATE TABLE IF NOT EXISTS news_sources (id INTEGER PRIMARY KEY, icon VARCHAR, title VARCHAR, alerts BOOLEAN, hidden BOOLEAN)");
+        db.execSQL("CREATE TABLE IF NOT EXISTS news_sources (id INTEGER PRIMARY KEY, icon VARCHAR, title VARCHAR)");
 
         // create table if needed
         db.execSQL("CREATE TABLE IF NOT EXISTS news (id INTEGER PRIMARY KEY, src INTEGER, title TEXT, link VARCHAR, "
@@ -132,12 +132,13 @@ public class NewsManager implements Card.ProvidesCard {
      * @return Database cursor (_id, src, title, description, link, image, date, created, icon, source)
      */
     public Cursor getAllFromDb(Context context) {
+        String selectedNewspread = Utils.getSetting(mContext, "news_newspread", "7");
         String and = "";
         Cursor c = getNewsSources();
         if (c.moveToFirst()) {
             do {
-                String id = c.getString(0);
-                boolean show = Utils.getSettingBool(context, "news_source_" + id, true);
+                int id = c.getInt(0);
+                boolean show = Utils.getSettingBool(context, "news_source_" + id, id<=7);
                 if (show) {
                     if (!and.isEmpty())
                         and += " OR ";
@@ -151,7 +152,8 @@ public class NewsManager implements Card.ProvidesCard {
                 "(julianday('now') - julianday(date)) AS diff " +
                 "FROM news n, news_sources s " +
                 "WHERE n.src=s.id "+(and.isEmpty()?"":"AND (" + and + ") ") +
-                "ORDER BY date DESC", null);
+                "AND (s.id < 7 OR s.id > 13 OR s.id=?) "+
+                "ORDER BY date DESC", new String[]{selectedNewspread});
     }
 
     /**
@@ -160,7 +162,8 @@ public class NewsManager implements Card.ProvidesCard {
      * @return index of the newest item that is older than 'now' - 1
      */
     public int getTodayIndex() {
-        Cursor c = db.rawQuery("SELECT COUNT(*) FROM news WHERE date(date)>date()", null);
+        String selectedNewspread = Utils.getSetting(mContext, "news_newspread", "7");
+        Cursor c = db.rawQuery("SELECT COUNT(*) FROM news WHERE date(date)>date() AND (src < 7 OR src > 13 OR src=?)", new String[]{selectedNewspread});
         if (c.moveToFirst()) {
             int res = c.getInt(0);
             c.close();
@@ -181,7 +184,10 @@ public class NewsManager implements Card.ProvidesCard {
     }
 
     public Cursor getNewsSources() {
-        return db.rawQuery("SELECT id, icon, title FROM news_sources", null);
+        String selectedNewspread = Utils.getSetting(mContext, "news_newspread", "7");
+        return db.rawQuery("SELECT id, icon, " +
+                "CASE WHEN title LIKE 'newspread%' THEN \"Newspread\" ELSE title END " +
+                "FROM news_sources WHERE id < 7 OR id > 13 OR id=?", new String[]{selectedNewspread});
     }
 
     /**
@@ -260,14 +266,13 @@ public class NewsManager implements Card.ProvidesCard {
                         "SELECT src, MIN(abs(julianday(date()) - julianday(date))) AS diff " +
                         "FROM news WHERE src!=\"2\" OR (julianday(date()) - julianday(date))<0 " +
                         "GROUP BY src) last ON (n.src = last.src " +
-                        "AND date_diff = last.diff) " + //(showImportant ? "OR n.alerts=\"true\"" : "") +
+                        "AND date_diff = last.diff) " +
                         "), news_sources s ";
             } else {
                 query += "FROM news n, news_sources s ";
             }
 
             query += "WHERE n.src = s.id AND ((" + and + ") " +
-                  //  (showImportant ? "OR n.alerts=\"true\"" : "") +
                     ") ORDER BY date_diff ASC";
             Cursor cur = db.rawQuery(query, null);
 

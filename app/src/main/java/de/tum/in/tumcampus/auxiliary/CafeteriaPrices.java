@@ -106,7 +106,7 @@ public class CafeteriaPrices {
      * @return hash map
      */
     public static HashMap<String, String> getRolePrices(Context context) {
-        String type = Utils.getSetting(context, Const.ROLE);
+        String type = Utils.getSetting(context, Const.ROLE, "");
         if (type.equals("0")) {
             return student_prices;
         } else if (type.equals("1")) {

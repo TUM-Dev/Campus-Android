@@ -150,6 +150,23 @@ public class UserPreferencesActivity extends PreferenceActivity implements
             CardManager.shouldRefresh = true;
         }
 
+        // When newspread selection changes
+        // deselect all newspread sources and select only the
+        // selected source if one of all was selected before
+        if(key.equals("news_newspread")) {
+            SharedPreferences.Editor e = sharedPreferences.edit();
+            boolean value = false;
+            for(int i=7;i<14;i++) {
+                if(sharedPreferences.getBoolean("card_news_source_"+i, false))
+                    value = true;
+                e.putBoolean("card_news_source_"+i, false);
+            }
+            String new_source = sharedPreferences.getString(key,"7");
+            e.putBoolean("card_news_source_"+new_source, value);
+            e.apply();
+            CardManager.shouldRefresh = true;
+        }
+
         // If the silent mode was activated, start the service. This will invoke
         // the service to call onHandleIntent which checks available lectures
         if (key.equals(Const.SILENCE_SERVICE)) {

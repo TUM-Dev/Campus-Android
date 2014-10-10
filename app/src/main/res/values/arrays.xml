@@ -61,5 +61,24 @@
         <item>526</item>
         <item>525</item>
     </string-array>
+
+    <string-array name="newspread_entries">
+        <item>FMI Magistrale</item>
+        <item>CH Magistrale</item>
+        <item>SG Zentrale Bildschirme</item>
+        <item>WI Fakult\u00e4tsgeb\u00e4ude</item>
+        <item>PH Magistrale</item>
+        <item>TUM Lab Deutsches Museum</item>
+        <item>Weihenstephan</item>
+    </string-array>
+    <string-array name="newspread_values">
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+        <item>11</item>
+        <item>12</item>
+        <item>13</item>
+    </string-array>
 </resources>
 
