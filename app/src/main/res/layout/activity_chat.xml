@@ -1,4 +1,5 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/chat_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#EEEEEE">
@@ -17,7 +18,7 @@
         android:id="@+id/relativeLayout"
         android:layout_width="match_parent"
         android:layout_height="48dip"
-        android:layout_above="@+id/emojicons_layout"
+        android:layout_alignParentBottom="true"
         android:background="#FFFFFF">
 
         <ImageButton
@@ -29,17 +30,21 @@
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginStart="8dp"
             android:background="#FFFFFF"
-            android:src="@drawable/emoji_btn" />
+            android:src="@drawable/ic_emoticon" />
 
-        <com.rockerhieu.emojicon.EmojiconEditText
+        <github.ankushsachdeva.emojicon.EmojiconEditText
             android:id="@+id/etMessage"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentBottom="true"
             android:layout_alignParentTop="true"
             android:layout_marginBottom="5dp"
+            android:layout_marginEnd="5dp"
             android:layout_marginRight="5dp"
             android:layout_marginTop="5dp"
             android:layout_toEndOf="@+id/btnEmoji"
@@ -57,31 +62,12 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
             android:layout_gravity="center_vertical"
+            android:layout_marginEnd="5dp"
+            android:layout_marginRight="5dp"
             android:background="#FFFFFF"
             android:contentDescription="@string/send"
             android:src="@drawable/ic_action_send_now" />
 
     </RelativeLayout>
-
-    <LinearLayout
-        android:id="@+id/emojicons_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:orientation="vertical">
-
-        <LinearLayout
-            android:id="@+id/emojicons"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:visibility="gone">
-
-            <fragment
-                class="com.rockerhieu.emojicon.EmojiconsFragment"
-                android:layout_width="match_parent"
-                android:layout_height="255dp" />
-        </LinearLayout>
-    </LinearLayout>
 
 </RelativeLayout>

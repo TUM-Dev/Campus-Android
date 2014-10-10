@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merger version="2" >
+
+    <dataSet config="main" >
+        <source path="C:\Users\Florian\Documents\Repositories\TumCampusApp\libraries\emojicon\assets" />
+    </dataSet>
+    <dataSet config="release" >
+        <source path="C:\Users\Florian\Documents\Repositories\TumCampusApp\libraries\emojicon\src\release\assets" />
+    </dataSet>
+
+</merger>

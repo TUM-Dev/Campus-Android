@@ -11,6 +11,7 @@ import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Base64;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,9 +24,6 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 
 import com.google.gson.Gson;
-import com.rockerhieu.emojicon.EmojiconGridFragment;
-import com.rockerhieu.emojicon.EmojiconsFragment;
-import com.rockerhieu.emojicon.emoji.Emojicon;
 
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
@@ -48,6 +46,9 @@ import de.tum.in.tumcampus.models.ChatMember;
 import de.tum.in.tumcampus.models.ChatRoom;
 import de.tum.in.tumcampus.models.CreateChatMessage;
 import de.tum.in.tumcampus.models.ListChatMessage;
+import github.ankushsachdeva.emojicon.EmojiconGridView;
+import github.ankushsachdeva.emojicon.EmojiconsPopup;
+import github.ankushsachdeva.emojicon.emoji.Emojicon;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -58,8 +59,7 @@ import retrofit.client.Response;
  * NEEDS: Const.CURRENT_CHAT_ROOM set in incoming bundle (json serialised object of class ChatRoom)
  * Const.CURRENT_CHAT_MEMBER set in incoming bundle (json serialised object of class ChatMember)
  */
-public class ChatActivity extends ActionBarActivity implements OnClickListener, AbsListView.OnScrollListener,
-        EmojiconGridFragment.OnEmojiconClickedListener, EmojiconsFragment.OnEmojiconBackspaceClickedListener {
+public class ChatActivity extends ActionBarActivity implements OnClickListener, AbsListView.OnScrollListener, EmojiconGridView.OnEmojiconClickedListener, EmojiconsPopup.OnSoftKeyboardOpenCloseListener, EmojiconsPopup.OnEmojiconBackspaceClickedListener {
 
     /**
      * UI elements
@@ -69,7 +69,7 @@ public class ChatActivity extends ActionBarActivity implements OnClickListener, 
     private EditText etMessage;
     private ImageButton btnSend;
     private ProgressBar bar;
-    private ImageButton btnEmoji;
+    private ImageButton btnEmotion;
 
     private ChatRoom currentChatRoom;
     private ChatMember currentChatMember;
@@ -77,6 +77,8 @@ public class ChatActivity extends ActionBarActivity implements OnClickListener, 
     private boolean messageSentSuccessfully = false;
     private int numberOfAttempts = 0;
     private boolean loadingMore = false;
+    private EmojiconsPopup popup;
+    private boolean iconShow = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,13 +95,6 @@ public class ChatActivity extends ActionBarActivity implements OnClickListener, 
     protected void onResume() {
         super.onResume();
         getHistoryPageFromServer(1);
-        View l = findViewById(R.id.emojicons);
-        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-        if(l.getVisibility()==View.GONE) {
-            imm.showSoftInput(etMessage, 0);
-        } else {
-            imm.hideSoftInputFromWindow(etMessage.getWindowToken(), 0);
-        }
     }
 
     /**
@@ -154,27 +149,19 @@ public class ChatActivity extends ActionBarActivity implements OnClickListener, 
 
             //Set TextField to empty, when done
             etMessage.setText("");
-        } else if (view.getId() == btnEmoji.getId()) { // Show/hide emoticons
-            View l = findViewById(R.id.emojicons);
-            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-            if(l.getVisibility()==View.GONE) {
-                imm.hideSoftInputFromWindow(etMessage.getWindowToken(), 0);
-                l.setVisibility(View.VISIBLE);
+        } else if (view.getId() == btnEmotion.getId()) { // Show/hide emoticons
+            if(!iconShow && popup.isKeyBoardOpen()) {
+                popup.showAtBottom();
+                btnEmotion.setImageResource(R.drawable.ic_keyboard);
+            } else if(!iconShow) {
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.showSoftInput(etMessage, InputMethodManager.SHOW_IMPLICIT);
             } else {
-                imm.showSoftInput(etMessage, 0);
-                l.setVisibility(View.GONE);
+                popup.dismiss();
+                btnEmotion.setImageResource(R.drawable.ic_emoticon);
             }
+            iconShow = !iconShow;
         }
-    }
-
-    @Override
-    public void onEmojiconClicked(Emojicon emojicon) {
-        EmojiconsFragment.input(etMessage, emojicon);
-    }
-
-    @Override
-    public void onEmojiconBackspaceClicked(View v) {
-        EmojiconsFragment.backspace(etMessage);
     }
 
     /**
@@ -236,7 +223,7 @@ public class ChatActivity extends ActionBarActivity implements OnClickListener, 
         Bundle extras = getIntent().getExtras();
         currentChatRoom = new Gson().fromJson(extras.getString(Const.CURRENT_CHAT_ROOM), ChatRoom.class);
         currentChatMember = new Gson().fromJson(extras.getString(Const.CURRENT_CHAT_MEMBER), ChatMember.class);
-        getSupportActionBar().setTitle(currentChatRoom.getName());
+        getSupportActionBar().setSubtitle(currentChatRoom.getName().substring(4));
 
     }
 
@@ -258,8 +245,46 @@ public class ChatActivity extends ActionBarActivity implements OnClickListener, 
         btnSend = (ImageButton) findViewById(R.id.btnSend);
         btnSend.setOnClickListener(this);
 
-        btnEmoji = (ImageButton) findViewById(R.id.btnEmoji);
-        btnEmoji.setOnClickListener(this);
+        btnEmotion = (ImageButton) findViewById(R.id.btnEmoji);
+        btnEmotion.setOnClickListener(this);
+
+        // Give the topmost view of your activity layout hierarchy. This will be used to measure soft keyboard height
+        popup = new EmojiconsPopup(findViewById(R.id.chat_layout), this);
+
+        //Will automatically set size according to the soft keyboard size
+        popup.setSizeForSoftKeyboard();
+        popup.setOnEmojiconClickedListener(this);
+        popup.setOnEmojiconBackspaceClickedListener(this);
+        popup.setOnSoftKeyboardOpenCloseListener(this);
+    }
+
+
+    @Override
+    public void onEmojiconClicked(Emojicon emojicon) {
+        etMessage.append(emojicon.getEmoji());
+    }
+
+    @Override
+    public void onKeyboardOpen(int keyBoardHeight) {
+        if(iconShow && !popup.isShowing()) {
+            popup.showAtBottom();
+            btnEmotion.setImageResource(R.drawable.ic_keyboard);
+        }
+    }
+
+    @Override
+    public void onKeyboardClose() {
+        if(popup.isShowing()) {
+            popup.dismiss();
+            iconShow = false;
+            btnEmotion.setImageResource(R.drawable.ic_emoticon);
+        }
+    }
+
+    @Override
+    public void onEmojiconBackspaceClicked(View v) {
+        KeyEvent event = new KeyEvent(0, 0, 0, KeyEvent.KEYCODE_DEL, 0, 0, 0, 0, KeyEvent.KEYCODE_ENDCALL);
+        etMessage.dispatchKeyEvent(event);
     }
 
     @Override

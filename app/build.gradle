@@ -33,9 +33,6 @@ dependencies {
     compile 'com.squareup.retrofit:retrofit:1.6.1'
     compile 'it.sephiroth.android.library.imagezoom:imagezoom:1.0.5'
     compile 'com.nhaarman.listviewanimations:lib-core:3.1.0@aar'
-    compile('com.rockerhieu.emojicon:library:1.0') {
-        exclude module: 'support-v4'
-    }
     compile('com.github.chrisbanes.actionbarpulltorefresh:extra-abc:0.9.9') {
         exclude group: 'com.android.support', module: 'appcompat-v7'
     }
@@ -48,4 +45,5 @@ dependencies {
     }
     compile 'com.squareup.okhttp:okhttp-urlconnection:2.0.0'
     compile 'com.squareup.okhttp:okhttp:2.0.0'
+    compile project(":libraries:emojicon")
 }
