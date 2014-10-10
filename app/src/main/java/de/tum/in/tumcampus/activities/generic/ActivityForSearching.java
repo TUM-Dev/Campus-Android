@@ -78,12 +78,6 @@ public abstract class ActivityForSearching extends ProgressActivity {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        onNewIntent(getIntent());
-    }
-
-    @Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
 		// Inflate the menu; this adds a SearchView to the ActionBar

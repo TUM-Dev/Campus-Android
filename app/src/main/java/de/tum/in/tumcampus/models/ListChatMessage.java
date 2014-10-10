@@ -1,5 +1,8 @@
 package de.tum.in.tumcampus.models;
 
+import android.content.Context;
+import android.text.format.DateUtils;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -61,16 +64,12 @@ public class ListChatMessage {
 	public void setTimestamp(String timestamp) {
 		this.timestamp = timestamp;
 	}
-	public String getTimestampString() {
+	public String getTimestampString(Context context) {
 		try {
 			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ENGLISH); // 2014-06-30T16:31:57.878Z
 			Date date = formatter.parse(timestamp);
-			if (isToday(date)) {
-				return new SimpleDateFormat("HH:mm", Locale.ENGLISH).format(date);
-			} else if (isYesterday(date)) {
-				return "Yesterday " + new SimpleDateFormat("HH:mm", Locale.ENGLISH).format(date);
-			}
-			return new SimpleDateFormat("dd-mm-yyyy HH:mm", Locale.ENGLISH).format(date);
+            return DateUtils.getRelativeDateTimeString(context, date.getTime(),
+                    DateUtils.MINUTE_IN_MILLIS, DateUtils.DAY_IN_MILLIS*2, 0).toString();
 		} catch (Exception e) {
 			Utils.log(e);
 		}

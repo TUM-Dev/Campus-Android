@@ -64,8 +64,7 @@ public class LecturesPersonalActivity extends ActivityForSearchingTumOnline<Lect
             }
         });
 
-        if(mQuery==null)
-            onStartSearch();
+        onStartSearch();
 	}
 
     @Override

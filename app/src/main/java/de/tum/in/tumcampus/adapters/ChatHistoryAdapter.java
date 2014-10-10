@@ -15,6 +15,8 @@ import de.tum.in.tumcampus.models.ListChatMessage;
 
 public class ChatHistoryAdapter extends BaseAdapter {
 
+    private final Context mContext;
+
     // Layout of the list row
 	static class ViewHolder {
 		TextView tvUser;
@@ -32,6 +34,7 @@ public class ChatHistoryAdapter extends BaseAdapter {
 		this.messageHistory = messageHistory;
 		inflater = LayoutInflater.from(context);
 		this.currentChatMember = currentChatMember;
+        mContext = context;
 	}
 	
 	@Override
@@ -83,7 +86,7 @@ public class ChatHistoryAdapter extends BaseAdapter {
 
         holder.tvUser.setText(chatMessage.getMember().getDisplayName());
         holder.tvMessage.setText(chatMessage.getText());
-        holder.tvTimestamp.setText(chatMessage.getTimestampString());
+        holder.tvTimestamp.setText(chatMessage.getTimestampString(mContext));
 
         if ("bot".equals(chatMessage.getMember().getLrzId())) {
             //noinspection deprecation

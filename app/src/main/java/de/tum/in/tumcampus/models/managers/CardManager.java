@@ -77,7 +77,7 @@ public class CardManager {
      * Refreshes or initialises all cards.
      * WARNING: Must not be called from UI thread.
      * <p/>
-     * HOWTO ADD A NEW CARD:
+     * HOW TO ADD A NEW CARD:
      * 1. Let the manager class implement {@link de.tum.in.tumcampus.cards.Card.ProvidesCard}
      * 2. Create a new class extending {@link Card}
      * 3. Implement the getCardView method in this class
@@ -87,7 +87,7 @@ public class CardManager {
      * {@link de.tum.in.tumcampus.cards.Card.ProvidesCard#onRequestCard(android.content.Context)}
      * 6. Add an instance of the manager class to the managers list below
      */
-    public static void update(Context context) {
+    public static synchronized void update(Context context) {
         mContext = context;
 
         // Use temporary array to avoid that the main thread is

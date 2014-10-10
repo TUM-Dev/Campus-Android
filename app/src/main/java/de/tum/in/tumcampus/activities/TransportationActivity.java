@@ -51,13 +51,11 @@ public class TransportationActivity extends ActivityForSearchingInBackground<Cur
         adapterStations = new SimpleCursorAdapter(this, android.R.layout.simple_list_item_1, stationCursor,
                 stationCursor.getColumnNames(), new int[]{android.R.id.text1});
 
-        if(mQuery==null) {
-            if(adapterStations.getCount()==0) {
-                openSearch();
-            } else {
-                listViewResults.setAdapter(adapterStations);
-                listViewResults.requestFocus();
-            }
+        if(adapterStations.getCount()==0) {
+            openSearch();
+        } else {
+            listViewResults.setAdapter(adapterStations);
+            listViewResults.requestFocus();
         }
     }
 
@@ -131,22 +129,30 @@ public class TransportationActivity extends ActivityForSearchingInBackground<Cur
      */
     @Override
     protected void onSearchFinished(Cursor stationCursor) {
-        // If there is exactly one station open results directly
+        showLoadingEnded();
         if(stationCursor==null)
             return;
 
+        // mQuery is not null if it was a real search
+        // If there is exactly one station, open results directly
         if(stationCursor.getCount()==1 && mQuery!=null) {
             stationCursor.moveToFirst();
             showStation(stationCursor.getString(0));
             return;
-        } else if(stationCursor.getCount()==0 && stationCursor instanceof MatrixCursor) {
-            showLoadingEnded();
-            listViewResults.setAdapter(new NoResultsAdapter(this));
-            listViewResults.requestFocus();
+        } else if(stationCursor.getCount()==0) {
+            // When stationCursor is a MatrixCursor the result comes from querying a station name
+            if(stationCursor instanceof MatrixCursor) {
+                // So show no results found
+                listViewResults.setAdapter(new NoResultsAdapter(this));
+                listViewResults.requestFocus();
+            } else {
+                // if the loading came from the user canceling search
+                // and there are no recents to show close activity
+                finish();
+            }
             return;
         }
 
-        showLoadingEnded();
         adapterStations.changeCursor(stationCursor);
         listViewResults.setAdapter(adapterStations);
         listViewResults.requestFocus();

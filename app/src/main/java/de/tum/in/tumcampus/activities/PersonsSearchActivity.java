@@ -61,14 +61,12 @@ public class PersonsSearchActivity extends ActivityForSearchingTumOnline<PersonL
         ArrayAdapter<Person> adapter = new ArrayAdapter<Person>(this,
                 android.R.layout.simple_list_item_1, android.R.id.text1, list);
 
-        if(mQuery==null) {
-            if(adapter.getCount()==0) {
-                openSearch();
-            } else {
-                lvPersons.setAdapter(adapter);
-                lvPersons.setOnItemClickListener(this);
-                lvPersons.requestFocus();
-            }
+        if(adapter.getCount()==0) {
+            openSearch();
+        } else {
+            lvPersons.setAdapter(adapter);
+            lvPersons.setOnItemClickListener(this);
+            lvPersons.requestFocus();
         }
     }
 
@@ -91,14 +89,20 @@ public class PersonsSearchActivity extends ActivityForSearchingTumOnline<PersonL
     @Override
     protected void onStartSearch() {
         Cursor personsCursor = recentsManager.getAllFromDb();
+
+        if(personsCursor.getCount()==0) {
+            finish();
+            return;
+        }
+
         ArrayList<Person> list = new ArrayList<Person>(personsCursor.getCount());
         if(personsCursor.moveToFirst()) {
             do {
                 String recent = personsCursor.getString(0);
-                String[] t = recent.split("$");
+                String[] t = recent.split("\\$");
                 Person p = new Person();
                 p.setId(t[0]);
-                p.setName(t[1]); //TODO ArrayIndex Out of bounds exception
+                p.setName(t[1]);
                 list.add(p);
             } while(personsCursor.moveToNext());
         }

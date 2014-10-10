@@ -108,11 +108,21 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline<Lectu
                         new Thread(new Runnable() {
                             @Override
                             public void run() {
-                                List<ChatRoom> chatRooms = ChatClient.getInstance(ChatRoomsSearchActivity.this).getChatRoomWithName(currentChatRoom);
-                                if (chatRooms != null)
-                                    currentChatRoom = chatRooms.get(0);
+                                try {
+                                    List<ChatRoom> chatRooms = ChatClient.getInstance(ChatRoomsSearchActivity.this).getChatRoomWithName(currentChatRoom);
+                                    if (chatRooms != null)
+                                        currentChatRoom = chatRooms.get(0);
 
-                                showTermsIfNeeded(intent);
+                                    showTermsIfNeeded(intent);
+                                } catch (RetrofitError e) {
+                                    Utils.log(e);
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            showNoInternetLayout();
+                                        }
+                                    });
+                                }
                             }
                         }).start();
                     }
