@@ -31,15 +31,10 @@ public class TUMRoomFinderRequest {
     // "http://vmbaumgarten3.informatik.tu-muenchen.de/";
 
     public static final String KEY_ARCHITECT_NUMBER = "architect_number";
-    public static final String KEY_Building = "building";
-    public static final String KEY_Campus = "Campus";
 
     // XML node keys
-    public static final String KEY_ID = "Id";
-    private static final String KEY_MapId = "mapId";
-    public static final String KEY_ROOM = "room";
+    public static final String KEY_MAP_ID = "Id";
     public static final String KEY_TITLE = "title";
-    public static final String KEY_WEB_CODE = "web_code";
     public static final String KEY_ROOM_API_CODE = "room_api_code";
     public static final String KEY_CAMPUS_ID = "campusId";
     public static final String KEY_CAMPUS_TITLE = "campusTitle";
@@ -142,7 +137,7 @@ public class TUMRoomFinderRequest {
             String xml = parser.getXmlFromUrl(url); // getting XML from URL
             Document doc = parser.getDomElement(xml); // getting DOM element
 
-            NodeList roomList = doc.getElementsByTagName(KEY_ROOM);
+            NodeList roomList = doc.getElementsByTagName("room");
 
             for (int k = 0; k < roomList.getLength(); k++) {
 
@@ -150,7 +145,7 @@ public class TUMRoomFinderRequest {
                 HashMap<String, String> roomMap = new HashMap<String, String>();
                 // adding each child node to HashMap key =&gt; value
                 Element building = (Element) room.getParentNode();
-                String buildingId = building.getAttribute(KEY_WEB_CODE);
+                String buildingId = building.getAttribute("web_code");
 
                 Element campus = (Element) building.getParentNode();
                 roomMap.put(KEY_CAMPUS_ID, campus.getAttribute("id"));
@@ -187,7 +182,7 @@ public class TUMRoomFinderRequest {
             String xml = parser.getXmlFromUrl(url); // getting XML from URL
             Document doc = parser.getDomElement(xml); // getting DOM element
 
-            NodeList defaultMapIdList = doc.getElementsByTagName(KEY_MapId);
+            NodeList defaultMapIdList = doc.getElementsByTagName("mapId");
             Element defaultMapId = (Element) defaultMapIdList.item(0);
             result = parser.getElementValue(defaultMapId);
             if (result.equals(""))
@@ -224,7 +219,7 @@ public class TUMRoomFinderRequest {
                     continue;
 
                 HashMap<String, String> mapMap = new HashMap<String, String>();
-                mapMap.put(KEY_ID, parser.getValue(map, "id"));
+                mapMap.put(KEY_MAP_ID, parser.getValue(map, "id"));
                 mapMap.put(KEY_TITLE, parser.getValue(map, "description"));
 
                 // adding HashList to ArrayList

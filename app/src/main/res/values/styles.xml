@@ -29,6 +29,8 @@
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="android:actionBarStyle" tools:ignore="NewApi">@style/BlueActionBar</item>
         <item name="actionBarStyle">@style/BlueActionBar</item>
+        <item name="android:actionDropDownStyle" tools:ignore="NewApi">@style/SpinnerBlue</item>
+        <item name="actionDropDownStyle">@style/SpinnerBlue</item>
     </style>
 
     <style name="SmallListSeparatorTextViewStyle">
@@ -41,7 +43,7 @@
     </style>
 
     <style name="BlueActionBar" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
-        <item name="android:background"  tools:ignore="NewApi">@drawable/ab_solid_blue</item>
+        <item name="android:background" tools:ignore="NewApi">@drawable/ab_solid_blue</item>
         <item name="background">@drawable/ab_solid_blue</item>
     </style>
 
@@ -75,6 +77,12 @@
         <item name="android:paddingTop">5dp</item>
         <item name="android:paddingBottom">5dp</item>
         <item name="android:layout_margin">5dp</item>
+    </style>
+
+    <style name="SpinnerBlue" parent="@style/Widget.AppCompat.Light.Spinner.DropDown.ActionBar">
+        <item name="android:dropDownSelector">@drawable/abc_spinner_ab_holo_blue</item>
+       <!-- <item name="android:popupBackground">@drawable/abc_spinner_ab_holo_blue</item>-->
+        <item name="android:background">@drawable/abc_spinner_ab_holo_blue</item>
     </style>
 
 </resources>

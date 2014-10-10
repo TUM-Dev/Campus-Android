@@ -65,8 +65,8 @@ public class RoomFinderListAdapter extends BaseAdapter implements StickyListHead
 		HashMap<String, String> room = data.get(position);
 
 		// Setting all values in listView
-		holder.tvRoomTitle.setText(room.get(TUMRoomFinderRequest.KEY_ROOM + TUMRoomFinderRequest.KEY_TITLE));
-        holder.tvBuildingTitle.setText(room.get(TUMRoomFinderRequest.KEY_Building + TUMRoomFinderRequest.KEY_TITLE));
+		holder.tvRoomTitle.setText(room.get(TUMRoomFinderRequest.KEY_ROOM_TITLE));
+        holder.tvBuildingTitle.setText(room.get(TUMRoomFinderRequest.KEY_BUILDING_TITLE));
 		return convertView;
 	}
 
@@ -85,19 +85,19 @@ public class RoomFinderListAdapter extends BaseAdapter implements StickyListHead
 
         //set header text as first char in name
         HashMap<String, String> room = data.get(position);
-        String headerText = room.get(TUMRoomFinderRequest.KEY_Campus + TUMRoomFinderRequest.KEY_TITLE);
+        String headerText = room.get(TUMRoomFinderRequest.KEY_CAMPUS_TITLE);
         holder.text.setText(headerText);
         return convertView;
     }
 
     @Override
     public long getHeaderId(int i) {
-        String headerText = data.get(i).get(TUMRoomFinderRequest.KEY_Campus + TUMRoomFinderRequest.KEY_TITLE);
+        String headerText = data.get(i).get(TUMRoomFinderRequest.KEY_CAMPUS_TITLE);
         if(headerText.equals("Garching-Hochbrück"))
             return 'X';
         if(headerText.equals("Sonstiges"))
             return 'Z';
-        return data.get(i).get(TUMRoomFinderRequest.KEY_Campus + TUMRoomFinderRequest.KEY_ID).charAt(0);
+        return data.get(i).get(TUMRoomFinderRequest.KEY_CAMPUS_ID).charAt(0);
     }
 
     static class HeaderViewHolder {

@@ -132,7 +132,7 @@ public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<Vo
         int curPos = 0;
         for (int i = 0; i < mapsList.size(); i++) {
             list[i] = mapsList.get(i).get(TUMRoomFinderRequest.KEY_TITLE);
-            if (mapsList.get(i).get(TUMRoomFinderRequest.KEY_ID).equals(mapId)) {
+            if (mapsList.get(i).get(TUMRoomFinderRequest.KEY_MAP_ID).equals(mapId)) {
                 curPos = i;
             }
         }
@@ -142,7 +142,7 @@ public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<Vo
     public void onClick(DialogInterface dialog, int whichButton) {
         dialog.dismiss();
         int selectedPosition = ((AlertDialog) dialog).getListView().getCheckedItemPosition();
-        mapId = mapsList.get(selectedPosition).get(TUMRoomFinderRequest.KEY_ID);
+        mapId = mapsList.get(selectedPosition).get(TUMRoomFinderRequest.KEY_MAP_ID);
         startLoading();
     }
 
