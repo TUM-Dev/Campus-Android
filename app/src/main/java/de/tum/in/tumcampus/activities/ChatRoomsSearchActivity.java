@@ -49,7 +49,7 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
  * This activity presents the chat rooms of user's
  * lectures using the TUMOnline web service
  */
-public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline<LecturesSearchRowSet> {
+public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline<LecturesSearchRowSet> implements OnItemClickListener {
     private static final String PROPERTY_APP_VERSION = "appVersion";
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     private static final String SENDER_ID = "1028528438269";
@@ -73,62 +73,7 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline<Lectu
 
         // bind UI elements
         lvMyLecturesList = (StickyListHeadersListView) findViewById(R.id.lvMyLecturesList);
-        lvMyLecturesList.setOnItemClickListener(new OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> a, View v, int position, long id) {
-                LecturesSearchRow item = (LecturesSearchRow) lvMyLecturesList.getItemAtPosition(position);
-
-                checkPlayServicesAndRegister();
-
-                // set bundle for LectureDetails and show it
-                Bundle bundle = new Bundle();
-                final Intent intent = new Intent(ChatRoomsSearchActivity.this, ChatActivity.class);
-                intent.putExtras(bundle);
-
-                String chatRoomUid = item.getSemester_id() + ":" + item.getTitel();
-
-                currentChatRoom = new ChatRoom(chatRoomUid);
-                ChatClient.getInstance(ChatRoomsSearchActivity.this).createGroup(currentChatRoom, new Callback<ChatRoom>() {
-                    @Override
-                    public void success(ChatRoom newlyCreatedChatRoom, Response arg1) {
-                        // The POST request is successful because the chat room did not exist
-                        // The newly created chat room is returned
-                        Utils.logv("Success creating chat room: " + newlyCreatedChatRoom.toString());
-                        currentChatRoom = newlyCreatedChatRoom;
-
-                        showTermsIfNeeded(intent);
-                    }
-
-                    @Override
-                    public void failure(RetrofitError arg0) {
-                        // The POST request in unsuccessful because the chat room already exists,
-                        // so we are trying to retrieve it with an additional GET request
-                        Utils.logv("Failure creating chat room - trying to GET it from the server: " + arg0.toString());
-
-                        new Thread(new Runnable() {
-                            @Override
-                            public void run() {
-                                try {
-                                    List<ChatRoom> chatRooms = ChatClient.getInstance(ChatRoomsSearchActivity.this).getChatRoomWithName(currentChatRoom);
-                                    if (chatRooms != null)
-                                        currentChatRoom = chatRooms.get(0);
-
-                                    showTermsIfNeeded(intent);
-                                } catch (RetrofitError e) {
-                                    Utils.log(e);
-                                    runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            showNoInternetLayout();
-                                        }
-                                    });
-                                }
-                            }
-                        }).start();
-                    }
-                });
-            }
-        });
+        lvMyLecturesList.setOnItemClickListener(this);
 
         requestFetch();
     }
@@ -187,6 +132,64 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline<Lectu
         super.onResume();
         // Check device for Play Services APK.
         populateCurrentChatMember();
+    }
+
+    /**
+     * Handle click on chat room
+     * */
+    @Override
+    public void onItemClick(AdapterView<?> a, View v, int position, long id) {
+        LecturesSearchRow item = (LecturesSearchRow) lvMyLecturesList.getItemAtPosition(position);
+
+        checkPlayServicesAndRegister();
+
+        // set bundle for LectureDetails and show it
+        Bundle bundle = new Bundle();
+        final Intent intent = new Intent(this, ChatActivity.class);
+        intent.putExtras(bundle);
+
+        String chatRoomUid = item.getSemester_id() + ":" + item.getTitel();
+
+        currentChatRoom = new ChatRoom(chatRoomUid);
+        ChatClient.getInstance(this).createGroup(currentChatRoom, new Callback<ChatRoom>() {
+            @Override
+            public void success(ChatRoom newlyCreatedChatRoom, Response arg1) {
+                // The POST request is successful because the chat room did not exist
+                // The newly created chat room is returned
+                Utils.logv("Success creating chat room: " + newlyCreatedChatRoom.toString());
+                currentChatRoom = newlyCreatedChatRoom;
+
+                showTermsIfNeeded(intent);
+            }
+
+            @Override
+            public void failure(RetrofitError arg0) {
+                // The POST request in unsuccessful because the chat room already exists,
+                // so we are trying to retrieve it with an additional GET request
+                Utils.logv("Failure creating chat room - trying to GET it from the server: " + arg0.toString());
+
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            List<ChatRoom> chatRooms = ChatClient.getInstance(ChatRoomsSearchActivity.this).getChatRoomWithName(currentChatRoom);
+                            if (chatRooms != null)
+                                currentChatRoom = chatRooms.get(0);
+
+                            showTermsIfNeeded(intent);
+                        } catch (RetrofitError e) {
+                            Utils.log(e);
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    showNoInternetLayout();
+                                }
+                            });
+                        }
+                    }
+                }).start();
+            }
+        });
     }
 
     /**

@@ -7,16 +7,17 @@
         android:id="@+id/lvMessageHistory"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="48dip"
+        android:layout_above="@+id/relativeLayout"
         android:dividerHeight="0px"
         android:scrollbars="none"
         android:stackFromBottom="true"
         android:transcriptMode="alwaysScroll" />
 
     <RelativeLayout
+        android:id="@+id/relativeLayout"
         android:layout_width="match_parent"
         android:layout_height="48dip"
-        android:layout_alignParentBottom="true"
+        android:layout_above="@+id/emojicons_layout"
         android:background="#FFFFFF">
 
         <ImageButton
@@ -59,6 +60,28 @@
             android:background="#FFFFFF"
             android:contentDescription="@string/send"
             android:src="@drawable/ic_action_send_now" />
+
     </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/emojicons_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/emojicons"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <fragment
+                class="com.rockerhieu.emojicon.EmojiconsFragment"
+                android:layout_width="match_parent"
+                android:layout_height="255dp" />
+        </LinearLayout>
+    </LinearLayout>
 
 </RelativeLayout>

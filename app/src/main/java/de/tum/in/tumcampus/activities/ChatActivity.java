@@ -15,15 +15,17 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
 import com.google.gson.Gson;
+import com.rockerhieu.emojicon.EmojiconGridFragment;
+import com.rockerhieu.emojicon.EmojiconsFragment;
+import com.rockerhieu.emojicon.emoji.Emojicon;
 
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
@@ -37,14 +39,12 @@ import java.util.regex.Pattern;
 
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.adapters.ChatHistoryAdapter;
-import de.tum.in.tumcampus.auxiliary.ChatMessageValidator;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.ImplicitCounter;
 import de.tum.in.tumcampus.auxiliary.RSASigner;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.ChatClient;
 import de.tum.in.tumcampus.models.ChatMember;
-import de.tum.in.tumcampus.models.ChatPublicKey;
 import de.tum.in.tumcampus.models.ChatRoom;
 import de.tum.in.tumcampus.models.CreateChatMessage;
 import de.tum.in.tumcampus.models.ListChatMessage;
@@ -58,7 +58,8 @@ import retrofit.client.Response;
  * NEEDS: Const.CURRENT_CHAT_ROOM set in incoming bundle (json serialised object of class ChatRoom)
  * Const.CURRENT_CHAT_MEMBER set in incoming bundle (json serialised object of class ChatMember)
  */
-public class ChatActivity extends ActionBarActivity implements OnClickListener, OnItemLongClickListener, AbsListView.OnScrollListener {
+public class ChatActivity extends ActionBarActivity implements OnClickListener, AbsListView.OnScrollListener,
+        EmojiconGridFragment.OnEmojiconClickedListener, EmojiconsFragment.OnEmojiconBackspaceClickedListener {
 
     /**
      * UI elements
@@ -92,6 +93,13 @@ public class ChatActivity extends ActionBarActivity implements OnClickListener, 
     protected void onResume() {
         super.onResume();
         getHistoryPageFromServer(1);
+        View l = findViewById(R.id.emojicons);
+        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        if(l.getVisibility()==View.GONE) {
+            imm.showSoftInput(etMessage, 0);
+        } else {
+            imm.hideSoftInputFromWindow(etMessage.getWindowToken(), 0);
+        }
     }
 
     /**
@@ -146,7 +154,27 @@ public class ChatActivity extends ActionBarActivity implements OnClickListener, 
 
             //Set TextField to empty, when done
             etMessage.setText("");
+        } else if (view.getId() == btnEmoji.getId()) { // Show/hide emoticons
+            View l = findViewById(R.id.emojicons);
+            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            if(l.getVisibility()==View.GONE) {
+                imm.hideSoftInputFromWindow(etMessage.getWindowToken(), 0);
+                l.setVisibility(View.VISIBLE);
+            } else {
+                imm.showSoftInput(etMessage, 0);
+                l.setVisibility(View.GONE);
+            }
         }
+    }
+
+    @Override
+    public void onEmojiconClicked(Emojicon emojicon) {
+        EmojiconsFragment.input(etMessage, emojicon);
+    }
+
+    @Override
+    public void onEmojiconBackspaceClicked(View v) {
+        EmojiconsFragment.backspace(etMessage);
     }
 
     /**
@@ -158,7 +186,7 @@ public class ChatActivity extends ActionBarActivity implements OnClickListener, 
      * @param id       Id of the selected item
      * @return True if the method consumed the on long click event
      */
-    @Override
+    /*@Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
         //todo currently always fails
         new Thread(new Runnable() {
@@ -178,7 +206,7 @@ public class ChatActivity extends ActionBarActivity implements OnClickListener, 
             }
         }).start();
         return true;
-    }
+    }*/
 
     /**
      * Loads the private key from preferences
@@ -209,6 +237,7 @@ public class ChatActivity extends ActionBarActivity implements OnClickListener, 
         currentChatRoom = new Gson().fromJson(extras.getString(Const.CURRENT_CHAT_ROOM), ChatRoom.class);
         currentChatMember = new Gson().fromJson(extras.getString(Const.CURRENT_CHAT_MEMBER), ChatMember.class);
         getSupportActionBar().setTitle(currentChatRoom.getName());
+
     }
 
     /**
@@ -216,7 +245,7 @@ public class ChatActivity extends ActionBarActivity implements OnClickListener, 
      */
     private void bindUIElements() {
         lvMessageHistory = (ListView) findViewById(R.id.lvMessageHistory);
-        lvMessageHistory.setOnItemLongClickListener(this);
+        //lvMessageHistory.setOnItemLongClickListener(this);
         lvMessageHistory.setDividerHeight(0);
         lvMessageHistory.setOnScrollListener(this);
 
