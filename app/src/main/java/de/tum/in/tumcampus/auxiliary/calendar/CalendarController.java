@@ -450,8 +450,7 @@ public class CalendarController {
         } else if (event.viewType != ViewType.EDIT) {
             mViewType = event.viewType;
 
-            if (event.viewType == ViewType.AGENDA || event.viewType == ViewType.DAY
-                    || (DayUtils.getAllowWeekForDetailView() && event.viewType == ViewType.WEEK)) {
+            if (event.viewType == ViewType.AGENDA || event.viewType == ViewType.DAY) {
                 mDetailViewType = mViewType;
             }
         }

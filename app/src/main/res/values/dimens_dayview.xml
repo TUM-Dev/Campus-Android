@@ -13,7 +13,7 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <dimen name="day_label_text_size">11sp</dimen>
     <dimen name="all_day_bottom_margin">8dip</dimen>
     <dimen name="one_day_header_height">0dip</dimen>
@@ -34,7 +34,6 @@
     <dimen name="hours_right_margin">4dip</dimen>
     <!-- size of day header in day and week views  -->
     <dimen name="day_header_height">16dip</dimen>
-    <dimen name="widget_day_num_size">36sp</dimen>
     <dimen name="widget_day_num_top_padding">-4dip</dimen>
     <dimen name="action_bar_date_text_size">22sp</dimen>
     <dimen name="new_event_hint_text_size">12sp</dimen>

@@ -11,7 +11,6 @@
     <dimen name="time_line_thickness">1px</dimen>
     <dimen name="time_timeline_width">50dp</dimen>
     <dimen name="time_timeline_height">1800px</dimen>
-    <dimen name="default_scroll_position">525px</dimen>
     <dimen name="icon_small">56dp</dimen>
     <dimen name="card_text_padding">10dp</dimen>
 

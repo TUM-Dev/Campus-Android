@@ -570,7 +570,7 @@ public class DayView extends View implements View.OnCreateContextMenuListener,
         setClickable(true);
         setOnCreateContextMenuListener(this);
 
-        mFirstDayOfWeek = DayUtils.getFirstDayOfWeek(context);
+        mFirstDayOfWeek = Time.MONDAY;
 
         mCurrentTime = new Time(DayUtils.getTimeZone(context, mTZUpdater));
         long currentTime = System.currentTimeMillis();
@@ -685,7 +685,6 @@ public class DayView extends View implements View.OnCreateContextMenuListener,
         mFutureBgColor = mFutureBgColorRes;
         mIs24HourFormat = DateFormat.is24HourFormat(mContext);
         mHourStrs = mIs24HourFormat ? s24Hours : s12HoursNoAmPm;
-        mFirstDayOfWeek = DayUtils.getFirstDayOfWeek(mContext);
     }
 
     /**

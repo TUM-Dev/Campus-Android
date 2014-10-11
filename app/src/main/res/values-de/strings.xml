@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- START Translated, please do not change identifiers -->
 
@@ -27,7 +27,6 @@
 
     <!-- Roomfinder -->
     <string name="no_map_available">Keine Karte verfügbar</string>
-    <string name="no_rooms_found">Keine Räume gefunden</string>
     <string name="search_rooms">Suche nach Räumen</string>
 
     <!-- Auxiliary -->
@@ -53,12 +52,7 @@
     <string name="date">Datum</string>
 
     <!-- Preferences -->
-    <string name="tumonline_settings">TUMOnline Einstellungen</string>
     <string name="lrz_id">LRZ Kennung</string>
-    <string name="lrz_id_detail">Deine LRZ Kennung z.B. go42tum.</string>
-    <string name="generate_tumonline_token">TUMOnline-Access-Token erzeugen</string>
-    <string name="generate_tumonline_token_detail">Erzeugt ein Token, um die TUMOnline Dienste nutzen zu können.
-        Du musst dieses noch auf TUMOnline akzeptieren und die entsprechenden Rechte aktivieren.</string>
 
     <string name="role">Rolle</string>
     <string name="role_summary">Deine Rolle an der TUM. Entweder Student, Mitarbeiter oder Gast.</string>
@@ -152,7 +146,6 @@
 
     <!-- MVV -->
     <string name="no_departures_found">Keine Abfahrtszeiten verfügbar</string>
-    <string name="no_station_found">Keine Stationen gefunden</string>
     <string name="exception_unknown">Unbekannter Fehler</string>
     <string name="exception_timeout">Probleme bei der Internetverbindung, bitte später erneut versuchen.</string>
     <string name="search_station">Suche nach Stationen</string>
@@ -222,11 +215,9 @@
     <string name="send">Senden</string>
     <string name="chat_terms_title">Chat Bedingungen</string>
     <string name="chat_terms_body">Chat Bedingungen</string>
-    <string name="chat_display_name_title">Geben Sie Ihren Nickname ein</string>
     <string name="display_name">Nickname</string>
     <string name="leave_chat_room">Chatroom verlassen</string>
     <string name="leave_chat_room_body">Bist du sicher, dass du den chatroom verlassen willst?</string>
-    <string name="load_earlier_messages">Ältere Nachrichten laden</string>
 
     <!-- Cards -->
     <string name="last_updated">Der Inhalt wurde zuletzt %s aktualisiert.</string>
@@ -285,7 +276,6 @@
     <string name="always_hide_card">Karte immer ausblenden</string>
     <string name="options">Optionen</string>
     <string name="phone_summary">Um Benachrichtigungen auf dem Telefon zu erhalten muss Wearable aktiviert sein</string>
-    <string name="retry">Wiederholen</string>
     <string name="display">Anzeige</string>
 
     <string name="opens">Öffnet</string>
@@ -316,10 +306,30 @@
     <string name="install_certificate">Zertifikat installieren</string>
     <string name="certificate">Zertifikat</string>
     <string name="certificate_desc">Du musst ein CA-Root-Zertifikat installieren um eine sichere Verbindung mit dem Server aufbauen zu können. Tippe einfach auf \'Zertifikat installieren\' und bestätige mit \'OK\'.</string>
+
     <string name="enable_wifi">WLAN aktivieren</string>
     <string name="loading_first_time">Der erste Start könnte ein paar Minuten dauern</string>
-    <string name="password_gets_not_saved">TUM Campus App does not save the password, but Android WifiManager does.</string>
+    <string name="password_gets_not_saved">Das Passwort wird nicht von der TUM Campus App gespeichert, aber vom Android WLAN Manager.</string>
     <string name="website">Website</string>
-    <string name="room_timetable">Room timetable</string>
-
+    <string name="switch_map">Karte wählen</string>
+    <string name="navigate">Navigation starten</string>
+    <string name="categories_to_show">Anzuzeigende Kategorien</string>
+    <string name="news_sources">News Quellen</string>
+    <string name="only_latest_article">Nur neusten Artikel</string>
+    <string name="only_latest_article_summary">Zeigt jeweils nur den neusten Artikel. Ansonsten werden alle Artikel der ausgewählten Quellen angezeigt.</string>
+    <string name="lecture_chat">Vorlesungs-Chat</string>
+    <string name="set_lecture_chat">Aktiviere oder deaktiviere <i>Vorlesungs-Chat</i>. Wenn es aktiviert ist kannst du Vorlesungs-Chatrooms beitreten und mit deinen Komilitonen diskutieren.</string>
+    <string name="open_chat_terms">Chatbedingungen anzeigen</string>
+    <string name="accept_chat_terms">Chatbedingungen akzeptieren</string>
+    <string name="have_to_accept_terms">Chatbedingungen müssen akzeptiert werden, damit du den Vorlesungs-Chat verwenden kannst!</string>
+    <string name="nickname_empty">Nickname darf nicht leer sein!</string>
+    <string name="activate_key">Bitte aktiviere zuerst deinen Public Key</string>
+    <string name="joined_chat_room">Du bist dem Chatroom beigetreten!</string>
+    <string name="nickname_too_short">Nickname muss mindestens 3 Buchstaben lang sein!</string>
+    <string name="view_mode">Ansicht wechseln</string>
+    <string name="bug_reports">Anonyme Fehlerberichte</string>
+    <string name="set_bug_reports">Unterstütze das TCA Team indem du anonyme Fehlerberichte zu unseren Server schicken lässt. Diese beinhalten: Stacktrace, Logdatei, Android Version, App Version und Bildschirm Auflösung</string>
+    <string name="error_setup_chat_member">Etwas stimmt nicht mit deiner Chat Registrierung!</string>
+    <string name="room_timetable">Belegungsplan</string>
+    <string name="newspread_summary">Wähle aus welches newspread angezeigt werden soll. Das sind die Folien die auf den Info Monitoren in deiner Fakultät angezeigt werden.</string>
 </resources>

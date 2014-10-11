@@ -215,7 +215,7 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline<Lectu
                         // Remember in sharedPrefs that the terms dialog was shown
                         Utils.setInternalSetting(ChatRoomsSearchActivity.this, Const.CHAT_TERMS_SHOWN + "_" + currentChatRoom.getName(), true);
 
-                        Utils.showToastOnUIThread(ChatRoomsSearchActivity.this, R.string.joined_chatroom);
+                        Utils.showToastOnUIThread(ChatRoomsSearchActivity.this, R.string.joined_chat_room);
 
                         moveToChatActivity(intent);
                     }

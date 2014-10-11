@@ -26,7 +26,6 @@
 
     <!-- Roomfinder -->
     <string name="no_map_available">No hay ningún mapa disponible</string>
-    <string name="no_rooms_found">No hay habitaciones disponibles</string>
     <string name="search_rooms">Buscar Habitaciones</string>
 
     <!-- Auxiliary -->
@@ -52,11 +51,7 @@
     <string name="date">Fecha</string>
 
     <!-- Preferences -->
-    <string name="tumonline_settings">Ajustes TUMOnline</string>
     <string name="lrz_id">Identificador LRZ</string>
-    <string name="lrz_id_detail">Su identificador LRZ por ejemplo go42tum.</string>
-    <string name="generate_tumonline_token">Generar TUMOnline acceso Token</string>
-    <string name="generate_tumonline_token_detail">Crea un token para usar los servicios de TUMOnline. Usted todavía tiene que aceptar esto en TUMOnline y activar los derechos adecuados.</string>
 
     <string name="role">papel</string>
     <string name="role_summary">Su papel en la TUM. De cualquier estudiante, empleado o invitado.</string>
@@ -149,7 +144,6 @@
 
     <!-- MVV -->
     <string name="no_departures_found">No hay horarios de salida disponibles</string>
-    <string name="no_station_found">No encontró ninguna de las estaciones</string>
     <string name="exception_unknown">Error desconocido</string>
     <string name="exception_timeout">Problemas con la conexión al Internet, por favor intente de nuevo más tarde.</string>
     <string name="search_station">Búsqueda a estaciones</string>
@@ -220,11 +214,9 @@
     <string name="send">Enviar</string>
     <string name="chat_terms_title">Condiciones del chat</string>
     <string name="chat_terms_body">Condiciones del chat</string>
-    <string name="chat_display_name_title">Introduzca su nombre de representación</string>
     <string name="display_name">Nombre de representación</string>
     <string name="leave_chat_room">Dejar la sala de chat</string>
     <string name="leave_chat_room_body">¿Seguro que quieres salir la sala de chat?</string>
-    <string name="load_earlier_messages">Cargue los mensajes antiguos</string>
 
     <!-- Cards -->
     <string name="next_lecture">Siguiente lección</string>

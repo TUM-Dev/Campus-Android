@@ -69,14 +69,14 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
-                        android:text="@string/group_chat"
+                        android:text="@string/lecture_chat"
                         android:textStyle="bold" />
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:padding="@dimen/padding_default"
-                        android:text="@string/set_group_chat" />
+                        android:text="@string/set_lecture_chat" />
 
                     <RelativeLayout
                         android:layout_width="match_parent"
