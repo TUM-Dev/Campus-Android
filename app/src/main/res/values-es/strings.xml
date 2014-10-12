@@ -159,8 +159,8 @@
     <string name="examination_aids">Ayuda del examen</string>
 
     <!-- Tuition fees -->
-    <string name="amount_dots">Monto atrasado: </string>
-    <string name="deadline_dots">Fecha tope:</string>
+    <string name="amount_dots">Monto atrasado</string>
+    <string name="deadline_dots">Fecha tope</string>
 
     <!-- Persons -->
     <string name="no_search_result">No hay resultados de la búsqueda</string>

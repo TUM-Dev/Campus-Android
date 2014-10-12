@@ -83,7 +83,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:background="@drawable/selectable_item_background"
+                android:background="?attr/selectableItemBackground"
                 android:onClick="onClickSkip"
                 android:text="@string/button_skip" />
 
@@ -98,7 +98,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:background="@drawable/selectable_item_background"
+                android:background="?attr/selectableItemBackground"
                 android:onClick="onClickNext"
                 android:text="@string/button_next" />
         </LinearLayout>

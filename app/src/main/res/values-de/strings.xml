@@ -161,8 +161,8 @@
     <string name="examination_aids">Prüfungshilfsmittel</string>
 
     <!-- Tuition fees -->
-    <string name="amount_dots">Offener Betrag:</string>
-    <string name="deadline_dots">Deadline:</string>
+    <string name="amount_dots">Offener Betrag</string>
+    <string name="deadline_dots">Deadline</string>
 
     <!-- Persons -->
     <string name="no_search_result">Keine Suchergebnisse</string>
@@ -332,4 +332,5 @@
     <string name="error_setup_chat_member">Etwas stimmt nicht mit deiner Chat Registrierung!</string>
     <string name="room_timetable">Belegungsplan</string>
     <string name="newspread_summary">Wähle aus welches newspread angezeigt werden soll. Das sind die Folien die auf den Info Monitoren in deiner Fakultät angezeigt werden.</string>
+    <string name="tuition_fee_more">Informationen zu Beiträgen und Befreiungen, Darlehen, BAföG oder Stipendien finden Sie unter: <a href="http://www.tum.de/studium/studienfinanzierung/">Studienfinanzierung</a></string>
 </resources>

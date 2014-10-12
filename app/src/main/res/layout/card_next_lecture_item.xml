@@ -1,4 +1,5 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="4dp"
@@ -14,31 +15,120 @@
         android:orientation="vertical"
         android:padding="10dp">
 
-        <TextView
-            android:id="@+id/card_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:typeface="sans" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_toLeftOf="@+id/linearLayout"
+                android:layout_toStartOf="@+id/linearLayout"
+                android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/card_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+                <TextView
+                    android:id="@+id/card_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="20sp"
+                    android:typeface="sans" />
 
-        <TextView
-            android:id="@+id/card_location_action"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:drawableLeft="@drawable/ic_location"
-            android:drawablePadding="5dp"
-            android:drawableStart="@drawable/ic_location"
-            android:gravity="center_vertical"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="#00a7de"
-            android:visibility="gone" />
+                <TextView
+                    android:id="@+id/card_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
 
+                <TextView
+                    android:id="@+id/card_location_action"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="2dp"
+                    android:background="?attr/selectableItemBackground"
+                    android:drawableLeft="@drawable/ic_location"
+                    android:drawablePadding="10dp"
+                    android:drawableStart="@drawable/ic_location"
+                    android:gravity="center_vertical"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="#00a7de" />
+
+                <TextView
+                    android:id="@+id/card_event_action"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="2dp"
+                    android:background="?attr/selectableItemBackground"
+                    android:drawableLeft="@drawable/ic_event"
+                    android:drawablePadding="5dp"
+                    android:drawableStart="@drawable/ic_event"
+                    android:gravity="center_vertical"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="#00a7de" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linearLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:id="@+id/linearLayout2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <Button
+                        android:id="@+id/lecture_1"
+                        android:layout_width="@dimen/next_lecture_select_width"
+                        android:layout_height="@dimen/next_lecture_select_width"
+                        android:layout_margin="1dp"
+                        android:background="@drawable/next_lecture_select"
+                        android:text="1"
+                        android:textColor="#ffffffff"
+                        tools:ignore="HardcodedText" />
+
+                    <Button
+                        android:id="@+id/lecture_2"
+                        android:layout_width="@dimen/next_lecture_select_width"
+                        android:layout_height="@dimen/next_lecture_select_width"
+                        android:layout_margin="1dp"
+                        android:background="@drawable/next_lecture_select"
+                        android:text="2"
+                        android:textColor="#ffffffff"
+                        tools:ignore="HardcodedText" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <Button
+                        android:id="@+id/lecture_3"
+                        android:layout_width="@dimen/next_lecture_select_width"
+                        android:layout_height="@dimen/next_lecture_select_width"
+                        android:layout_margin="1dp"
+                        android:background="@drawable/next_lecture_select"
+                        android:text="3"
+                        android:textColor="#ffffffff"
+                        tools:ignore="HardcodedText" />
+
+                    <Button
+                        android:id="@+id/lecture_4"
+                        android:layout_width="@dimen/next_lecture_select_width"
+                        android:layout_height="@dimen/next_lecture_select_width"
+                        android:layout_margin="1dp"
+                        android:background="@drawable/next_lecture_select"
+                        android:text="4"
+                        android:textColor="#ffffffff"
+                        tools:ignore="HardcodedText" />
+                </LinearLayout>
+            </LinearLayout>
+
+        </RelativeLayout>
     </LinearLayout>
 </FrameLayout>

@@ -160,8 +160,8 @@
     <string name="examination_aids">Aides examen</string>
 
     <!-- Tuition fees -->
-    <string name="amount_dots">Montant ouvert:</string>
-    <string name="deadline_dots">dernière limite:</string>
+    <string name="amount_dots">Montant ouvert</string>
+    <string name="deadline_dots">dernière limite</string>
 
     <!-- Persons -->
     <string name="no_search_result">Aucun résultat de recherche</string>

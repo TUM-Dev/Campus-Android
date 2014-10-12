@@ -221,25 +221,13 @@ public class CalendarManager implements Card.ProvidesCard {
     }
 
     /**
-     * Gets the next lecture or the current running lecture,
-     * if it started during the last 30 minutes
+     * Gets the next lectures that could be important to the user
      */
-    public CalendarRow getNextCalendarItem() {
-        Cursor cur = db.rawQuery("SELECT title, dtstart, location " +
-                " FROM calendar " +
-                " WHERE datetime('now', 'localtime') < datetime(dtstart, '+1800 seconds') AND " +
-                " datetime('now','localtime') < dtend AND status!=\"CANCEL\"" +
-                " ORDER BY dtstart LIMIT 1", null);
-
-        CalendarRow row = null;
-        if (cur.moveToFirst()) {
-            row = new CalendarRow();
-            row.setTitle(cur.getString(0));
-            row.setDtstart(cur.getString(1));
-            row.setLocation(cur.getString(2));
-        }
-        cur.close();
-        return row;
+    public Cursor getNextCalendarItem() {
+        return db.rawQuery("SELECT title, dtstart, dtend, location FROM calendar JOIN " +
+                "(SELECT dtstart AS maxstart FROM calendar WHERE status!=\"CANCEL\" AND datetime('now', 'localtime')<dtstart " +
+                "ORDER BY dtstart LIMIT 1) ON status!=\"CANCEL\" AND datetime('now', 'localtime')<dtend AND dtstart<=maxstart " +
+                "ORDER BY dtend, dtstart LIMIT 4", null);
     }
 
     /**
@@ -268,10 +256,10 @@ public class CalendarManager implements Card.ProvidesCard {
      */
     @Override
     public void onRequestCard(Context context) {
-        CalendarRow row = getNextCalendarItem();
-        if (row != null) {
+        Cursor rows = getNextCalendarItem();
+        if (rows.moveToFirst()) {
             NextLectureCard card = new NextLectureCard(context);
-            card.setLecture(row.getTitle(), row.getDtstart(), row.getLocation());
+            card.setLectures(rows);
             card.apply();
         }
     }

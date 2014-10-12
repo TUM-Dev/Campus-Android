@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <include
         layout="@layout/layout_all_errors"
@@ -17,75 +17,47 @@
         android:text="semester" />
 
     <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:orientation="horizontal"
-        android:paddingBottom="@dimen/padding_default"
-        android:paddingTop="@dimen/padding_default" >
+        android:layout_height="match_parent"
+        android:padding="12dp">
 
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:src="@drawable/finance" />
+        <TextView
+            style="@style/SmallListSeparatorTextViewStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16dp"
+            android:text="@string/amount_dots" />
 
-        <LinearLayout
+        <TextView
+            android:id="@+id/soll"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical" >
+            android:layout_margin="16dp"
+            android:text="soll"
+            android:textSize="@dimen/large_text_size" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/amount_dots"
-                android:textSize="@dimen/large_text_size" />
-
-            <TextView
-                android:id="@+id/soll"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="soll"
-                android:textSize="@dimen/large_text_size"
-                android:textStyle="bold" />
-        </LinearLayout>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal" >
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_weight="1"
-            android:src="@drawable/go" />
-
-        <LinearLayout
+        <TextView
+            style="@style/SmallListSeparatorTextViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical" >
+            android:textSize="16dp"
+            android:text="@string/deadline_dots" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="left"
-                android:paddingRight="@dimen/padding_default"
-                android:text="@string/deadline_dots"
-                android:textSize="@dimen/large_text_size" />
+        <TextView
+            android:id="@+id/frist"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:text="frist"
+            android:textSize="@dimen/large_text_size" />
 
-            <TextView
-                android:id="@+id/frist"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="frist"
-                android:textSize="@dimen/large_text_size"
-                android:textStyle="bold" />
-        </LinearLayout>
+        <TextView
+            android:padding="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16dp"
+            android:linksClickable="true"
+            android:text="@string/tuition_fee_more" />
     </LinearLayout>
-
 </LinearLayout>

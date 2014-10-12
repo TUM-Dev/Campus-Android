@@ -5,7 +5,7 @@
 
     <item
         android:id="@+id/action_room_timetable"
-        android:icon="@drawable/ic_action_event"
+        android:icon="@drawable/ic_room_timetable"
         android:title="@string/room_timetable"
         tumcampus:showAsAction="ifRoom" />
 
