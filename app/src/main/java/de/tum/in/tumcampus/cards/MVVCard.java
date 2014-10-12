@@ -12,7 +12,6 @@ import android.text.format.DateUtils;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.Date;
 import java.util.List;
 
 import de.tum.in.tumcampus.R;
@@ -29,7 +28,6 @@ public class MVVCard extends Card {
     private static final String MVV_TIME = "mvv_time";
     private String mStationName;
     private List<TransportManager.Departure> mDepartures;
-    private Date mTime;
 
     public MVVCard(Context context) {
         super(context, "card_mvv");
@@ -53,7 +51,7 @@ public class MVVCard extends Card {
             DepartureView view = new DepartureView(mContext);
             view.setSymbol(d.symbol);
             view.setLine(d.line);
-            view.setTime(mTime.getTime() + d.time * 60000);
+            view.setTime(d.time);
             mLinearLayout.addView(view);
         }
         return mCard;
@@ -68,13 +66,13 @@ public class MVVCard extends Card {
 
     @Override
     protected void discard(Editor editor) {
-        editor.putLong(MVV_TIME, mTime.getTime());
+        editor.putLong(MVV_TIME, System.currentTimeMillis());
     }
 
     @Override
     protected boolean shouldShow(SharedPreferences prefs) {
         final long prevDate = prefs.getLong(MVV_TIME, 0);
-        return prevDate+DateUtils.HOUR_IN_MILLIS < mTime.getTime();
+        return prevDate+DateUtils.HOUR_IN_MILLIS < System.currentTimeMillis();
     }
 
     @Override
@@ -109,9 +107,5 @@ public class MVVCard extends Card {
 
     public void setDepartures(List<TransportManager.Departure> departures) {
         this.mDepartures = departures;
-    }
-
-    public void setTime(long time) {
-        this.mTime = new Date(time);
     }
 }

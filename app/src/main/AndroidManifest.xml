@@ -217,7 +217,6 @@
             android:name="de.tum.in.tumcampus.activities.TransportationActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/mvv"
-            android:launchMode="singleTop"
             android:parentActivityName=".activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />

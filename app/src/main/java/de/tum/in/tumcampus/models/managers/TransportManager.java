@@ -41,27 +41,23 @@ public class TransportManager implements Card.ProvidesCard {
         String query = URLEncoder.encode("select content from html where url=\"" + lookupUrl + "\" and xpath=\"//td[contains(@class,'Column')]/p\"", "UTF-8");
         Utils.log(query);
 
-        JSONArray jsonArray = NetUtils.downloadJson(context, baseUrl + query)
-                .getJSONObject("query").getJSONObject("results")
-                .getJSONArray("p");
+        JSONArray jsonArray = NetUtils.downloadJson(context, baseUrl + query).getJSONObject("query")
+                .getJSONObject("results").getJSONArray("p");
 
         if (jsonArray.length() < 3) {
             throw new NoSuchElementException("No departures found");
         }
-
-        //TODO read server time
 
         ArrayList<Departure> list = new ArrayList<Departure>(jsonArray.length());
         for (int j = 2; j < jsonArray.length(); j = j + 3) {
             Departure dep = new Departure();
             dep.symbol = jsonArray.getString(j);
             dep.line = jsonArray.getString(j + 1).trim();
-            dep.time = jsonArray.getLong(j + 2);
+            dep.time = System.currentTimeMillis() + jsonArray.getLong(j + 2) * 60000;
             list.add(dep);
         }
 
         Collections.sort(list);
-
         return list;
     }
 
@@ -72,7 +68,7 @@ public class TransportManager implements Card.ProvidesCard {
 
         @Override
         public int compareTo(@NonNull Departure departure) {
-            return time<departure.time?-1:1;
+            return time < departure.time ? -1 : 1;
         }
     }
 
@@ -89,11 +85,11 @@ public class TransportManager implements Card.ProvidesCard {
         String lookupUrl = "http://www.mvg-live.de/ims/dfiStaticAuswahl.svc?haltestelle=" + URLEncoder.encode(location, "ISO-8859-1");
 
         String query = URLEncoder.encode("select content from html where url=\"" + lookupUrl
-                        + "\" and xpath=\"//a[contains(@href,'haltestelle')]\"", "UTF-8");
+                + "\" and xpath=\"//a[contains(@href,'haltestelle')]\"", "UTF-8");
         Utils.log(query);
 
         JSONObject jsonObj = NetUtils.downloadJson(context, baseUrl + query);
-        if(jsonObj==null)
+        if (jsonObj == null)
             return null;
 
         jsonObj = jsonObj.getJSONObject("query");
@@ -125,16 +121,17 @@ public class TransportManager implements Card.ProvidesCard {
 
     /**
      * Inserts a MVV card for the nearest public transport station
+     *
      * @param context Context
      */
     @Override
     public void onRequestCard(Context context) {
-        if(!NetUtils.isConnected(context))
+        if (!NetUtils.isConnected(context))
             return;
 
         // Get station for current campus
         final String station = new LocationManager(context).getStation();
-        if(station==null)
+        if (station == null)
             return;
 
         List<Departure> cur;
@@ -143,7 +140,6 @@ public class TransportManager implements Card.ProvidesCard {
             MVVCard card = new MVVCard(context);
             card.setStation(station);
             card.setDepartures(cur);
-            card.setTime(System.currentTimeMillis());
             card.apply();
         } catch (Exception e) {
             Utils.log(e);

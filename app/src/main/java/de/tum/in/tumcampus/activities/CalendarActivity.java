@@ -13,7 +13,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.ViewPager;
 import android.text.format.DateUtils;
 import android.text.format.Time;
 import android.view.Menu;
@@ -53,8 +52,6 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
 
     private CalendarManager calendarManager;
 
-    private ViewPager mViewPager;
-
     // Objects for disabling or enabling the options menu items
     private MenuItem menuItemExportGoogle;
     private MenuItem menuItemDeleteCalendar;
@@ -65,6 +62,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
     private boolean isFetched;
     private boolean mWeekMode = false;
     private long mEventTime = 0;
+    private MenuItem menuItemSwitchView;
 
     public CalendarActivity() {
         super(TUMOnlineConst.CALENDER, R.layout.activity_calendar);
@@ -129,6 +127,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.menu_sync_calendar, menu);
+        menuItemSwitchView = menu.findItem(R.id.action_switch_view_mode);
         return true;
     }
 
@@ -156,6 +155,11 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
         switch (item.getItemId()) {
             case R.id.action_switch_view_mode:
                 mWeekMode = !mWeekMode;
+                if(mWeekMode) {
+                    menuItemSwitchView.setIcon(R.drawable.ic_action_day_view);
+                } else {
+                    menuItemSwitchView.setIcon(R.drawable.ic_action_week_view);
+                }
                 attachSectionPagerAdapter();
                 return true;
             case R.id.action_export_calendar:

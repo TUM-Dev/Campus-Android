@@ -191,14 +191,6 @@ public class NewsManager implements Card.ProvidesCard {
     }
 
     /**
-     * Removes all cache items
-     */
-    public void removeCache() {
-        db.execSQL("DELETE FROM news");
-        db.execSQL("DELETE FROM news_sources");
-    }
-
-    /**
      * Replace or Insert a event in the database
      *
      * @param n News object
@@ -242,8 +234,8 @@ public class NewsManager implements Card.ProvidesCard {
         Cursor c = getNewsSources();
         if (c.moveToFirst()) {
             do {
-                String id = c.getString(0);
-                boolean show = Utils.getSettingBool(context, "card_news_source_" + id, false);
+                int id = c.getInt(0);
+                boolean show = Utils.getSettingBool(context, "card_news_source_" + id, id==2);
                 if (show) {
                     if (!and.isEmpty())
                         and += " OR ";

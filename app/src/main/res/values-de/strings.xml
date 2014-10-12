@@ -319,7 +319,7 @@
     <string name="only_latest_article_summary">Zeigt jeweils nur den neusten Artikel. Ansonsten werden alle Artikel der ausgewählten Quellen angezeigt.</string>
     <string name="lecture_chat">Vorlesungs-Chat</string>
     <string name="set_lecture_chat">Aktiviere oder deaktiviere <i>Vorlesungs-Chat</i>. Wenn es aktiviert ist kannst du Vorlesungs-Chatrooms beitreten und mit deinen Komilitonen diskutieren.</string>
-    <string name="open_chat_terms">Chatbedingungen anzeigen</string>
+    <string name="open_chat_terms">Chatbedingungen</string>
     <string name="accept_chat_terms">Chatbedingungen akzeptieren</string>
     <string name="have_to_accept_terms">Chatbedingungen müssen akzeptiert werden, damit du den Vorlesungs-Chat verwenden kannst!</string>
     <string name="nickname_empty">Nickname darf nicht leer sein!</string>

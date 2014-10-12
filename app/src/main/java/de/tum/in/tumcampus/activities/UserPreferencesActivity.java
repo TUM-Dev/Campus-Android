@@ -112,7 +112,7 @@ public class UserPreferencesActivity extends PreferenceActivity implements
             do {
                 final CheckBoxPreference pref = new CheckBoxPreference(this);
                 pref.setKey("card_news_source_" + cur.getString(0));
-                pref.setDefaultValue(false);
+                pref.setDefaultValue(cur.getInt(0)==2);
                 if (Build.VERSION.SDK_INT >= 11) {
                     // Load news source icon in background and set it
                     final String url = cur.getString(1);

@@ -64,7 +64,6 @@ public class StartupActivity extends ActionBarActivity {
         if (newVersion) {
             setupNewVersion();
             Utils.setInternalSetting(this, Const.APP_VERSION, currentVersion);
-
         }
 
         // Also First run setup of id and token

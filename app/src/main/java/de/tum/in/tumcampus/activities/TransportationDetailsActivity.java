@@ -96,7 +96,7 @@ public class TransportationDetailsActivity extends ActivityForLoadingInBackgroun
             DepartureView view = new DepartureView(this, true);
             view.setSymbol(d.symbol);
             view.setLine(d.line);
-            view.setTime(System.currentTimeMillis()+d.time*60000);
+            view.setTime(d.time);
             mViewResults.addView(view);
         }
     }
