@@ -26,40 +26,40 @@ import de.tum.in.tumcampus.models.managers.OpenHoursManager;
  */
 public class CafeteriaDetailsSectionFragment extends Fragment {
 
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View rootView = inflater.inflate(R.layout.fragment_cafeteriadetails_section, container, false);
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.fragment_cafeteriadetails_section, container, false);
         LinearLayout root = (LinearLayout) rootView.findViewById(R.id.layout);
 
         int cafeteriaId = getArguments().getInt(Const.CAFETERIA_ID);
         String date = getArguments().getString(Const.DATE);
 
-		showMenu(root, cafeteriaId, date, true);
-		return rootView;
-	}
+        showMenu(root, cafeteriaId, date, true);
+        return rootView;
+    }
 
     /**
      * Inflates the cafeteria menu layout.
      * This is put into an extra static method to be able to
      * reuse it in {@link de.tum.in.tumcampus.cards.CafeteriaMenuCard}
      *
-     * @param rootView Parent layout
+     * @param rootView    Parent layout
      * @param cafeteriaId Cafeteria id
-     * @param dateStr Date in yyyy-mm-dd format
-     * @param big True to show big lines
+     * @param dateStr     Date in yyyy-mm-dd format
+     * @param big         True to show big lines
      */
     public static void showMenu(LinearLayout rootView, int cafeteriaId, String dateStr, boolean big) {
         // initialize a few often used things
         final Context context = rootView.getContext();
         final HashMap<String, String> rolePrices = CafeteriaPrices.getRolePrices(context);
-        final int padding = (int)context.getResources().getDimension(R.dimen.card_text_padding);
+        final int padding = (int) context.getResources().getDimension(R.dimen.card_text_padding);
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         // Get menu items
         Cursor cursorCafeteriaMenu = new CafeteriaMenuManager(context).getTypeNameFromDbCard(cafeteriaId, dateStr);
 
         TextView textview;
-        if(!big) {
+        if (!big) {
             // Show opening hours
             OpenHoursManager lm = new OpenHoursManager(context);
             textview = new TextView(context);
@@ -70,22 +70,22 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
 
         // Show cafeteria menu
         String curShort = "";
-        if(cursorCafeteriaMenu.moveToFirst()) {
+        if (cursorCafeteriaMenu.moveToFirst()) {
             do {
                 String typeShort = cursorCafeteriaMenu.getString(3);
                 String typeLong = cursorCafeteriaMenu.getString(0);
                 String menu = cursorCafeteriaMenu.getString(1);
 
-                // Skip "Beilagen" if showing card
+                // Skip unchecked categories if showing card
                 boolean shouldShow = Utils.getSettingBool(context, "card_cafeteria_" + typeShort,
-                        typeShort.equals("tg")||typeShort.equals("ae"));
+                        typeShort.equals("tg") || typeShort.equals("ae"));
                 if (!big && !shouldShow)
                     continue;
 
                 // Add header if we start with a new category
                 if (!typeShort.equals(curShort)) {
                     curShort = typeShort;
-                    View view = inflater.inflate(big?R.layout.list_header_big:R.layout.card_list_header, rootView, false);
+                    View view = inflater.inflate(big ? R.layout.list_header_big : R.layout.card_list_header, rootView, false);
                     textview = (TextView) view.findViewById(R.id.list_header);
                     textview.setText(typeLong.replaceAll("[0-9]", "").trim());
                     rootView.addView(view);
@@ -95,7 +95,7 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
                 SpannableString text = menuToSpan(context, big ? menu : prepare(menu));
                 if (rolePrices.containsKey(typeLong)) {
                     // If price is available
-                    View view = inflater.inflate(big?R.layout.price_line_big:R.layout.card_price_line, rootView, false);
+                    View view = inflater.inflate(big ? R.layout.price_line_big : R.layout.card_price_line, rootView, false);
                     textview = (TextView) view.findViewById(R.id.line_name);
                     TextView priceView = (TextView) view.findViewById(R.id.line_price);
                     textview.setText(text);
@@ -111,13 +111,14 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
             } while (cursorCafeteriaMenu.moveToNext());
         }
         cursorCafeteriaMenu.close();
-	}
+    }
 
     /**
      * Converts menu text to {@link SpannableString}.
      * Replaces all (v), ... annotations with images
+     *
      * @param context Context
-     * @param menu Text with annotations
+     * @param menu    Text with annotations
      * @return Spannable text with images
      */
     public static SpannableString menuToSpan(Context context, String menu) {
@@ -147,6 +148,7 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
 
     /**
      * Replaces all annotations that cannot be replaces with images such as (1), ...
+     *
      * @param menu Text to delete annotations from
      * @return Text without un-replaceable annotations
      */

@@ -75,9 +75,11 @@ public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<Vo
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_roomfinder_detail, menu);
         MenuItem switchMap = menu.findItem(R.id.action_switch_map);
-        switchMap.setVisible(!mapId.equals("10") && mapsLoaded);
-        menu.findItem(R.id.action_room_timetable).setVisible(infoLoaded);
-        menu.findItem(R.id.action_directions).setVisible(infoLoaded);
+        switchMap.setVisible(!mapId.equals("10") && mapsLoaded && fragment == null);
+        MenuItem timetable = menu.findItem(R.id.action_room_timetable);
+        timetable.setVisible(infoLoaded);
+        timetable.setIcon(fragment == null ? R.drawable.ic_action_event : R.drawable.ic_action_map);
+        menu.findItem(R.id.action_directions).setVisible(infoLoaded && fragment == null);
         return true;
     }
 
@@ -86,6 +88,7 @@ public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<Vo
         switch (item.getItemId()) {
             case R.id.action_room_timetable:
                 getRoomTimetable();
+                supportInvalidateOptionsMenu();
                 return true;
             case R.id.action_directions:
                 getDirections();
@@ -101,8 +104,9 @@ public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<Vo
     @Override
     public void onBackPressed() {
         // Remove fragment with room timetable if present and show map again
-        if(fragment!=null) {
+        if (fragment != null) {
             getRoomTimetable();
+            supportInvalidateOptionsMenu();
             return;
         }
 
@@ -112,7 +116,7 @@ public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<Vo
     private void getRoomTimetable() {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         // Remove if fragment is already present
-        if(fragment!=null) {
+        if (fragment != null) {
             ft.remove(fragment);
             ft.commit();
             fragment = null;
@@ -183,10 +187,10 @@ public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<Vo
             }
         }
 
-        if(roomInfo==null)
+        if (roomInfo == null)
             return null;
 
-        if (mapId==null || mapId.isEmpty()) {
+        if (mapId == null || mapId.isEmpty()) {
             mapId = requestHandler.fetchDefaultMapId(roomInfo.getString(TUMRoomFinderRequest.KEY_BUILDING_ID));
         }
 
@@ -213,8 +217,8 @@ public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<Vo
 
     @Override
     protected void onLoadFinished(Bitmap result) {
-        if(result==null) {
-            if(!NetUtils.isConnected(this)) {
+        if (result == null) {
+            if (!NetUtils.isConnected(this)) {
                 showNoInternetLayout();
             } else {
                 showErrorLayout();

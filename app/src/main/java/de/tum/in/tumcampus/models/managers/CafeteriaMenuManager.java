@@ -80,7 +80,7 @@ public class CafeteriaMenuManager {
 
 		// create table if needed
 		db.execSQL("CREATE TABLE IF NOT EXISTS cafeterias_menus ("
-				+ "id INTEGER PRIMARY KEY, mensaId INTEGER KEY, date VARCHAR, typeShort VARCHAR, "
+				+ "id INTEGER PRIMARY KEY AUTOINCREMENT, mensaId INTEGER KEY, date VARCHAR, typeShort VARCHAR, "
 				+ "typeLong VARCHAR, typeNr INTEGER, name VARCHAR)");
 	}
 
@@ -105,10 +105,7 @@ public class CafeteriaMenuManager {
 		cleanupDb();
 		int count = Utils.dbGetTableCount(db, "cafeterias_menus");
 
-		Cursor c = db
-				.rawQuery(
-						"SELECT 1 FROM cafeterias_menus WHERE date > date('now', '+6 day') LIMIT 1",
-						null);
+		Cursor c = db.rawQuery("SELECT 1 FROM cafeterias_menus WHERE date > date('now', '+6 day') LIMIT 1", null);
 		if (c.getCount() > 0) {
 			c.close();
 			return;
@@ -216,10 +213,9 @@ public class CafeteriaMenuManager {
 		if (c.date.before(Utils.getDate("2012-01-01"))) {
 			throw new Exception("Invalid date.");
 		}
-		db.execSQL("REPLACE INTO cafeterias_menus (id, mensaId, date, typeShort, "
-						+ "typeLong, typeNr, name) VALUES (?, ?, ?, ?, ?, ?, ?)",
-				new String[] { String.valueOf(c.id),
-						String.valueOf(c.cafeteriaId),
+		db.execSQL("REPLACE INTO cafeterias_menus (mensaId, date, typeShort, "
+						+ "typeLong, typeNr, name) VALUES (?, ?, ?, ?, ?, ?)",
+				new String[] { String.valueOf(c.cafeteriaId),
 						Utils.getDateString(c.date), c.typeShort, c.typeLong,
 						String.valueOf(c.typeNr), c.name });
 	}

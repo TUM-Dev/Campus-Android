@@ -251,6 +251,7 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
             case R.id.cards_view:
                 Card card = CardManager.getCard(position);
                 if (card.getTyp() == CardManager.CARD_RESTORE) {
+                    mSwipeList.discardUndo();
                     CardManager.restoreCards();
                     refreshCards();
                 } else {

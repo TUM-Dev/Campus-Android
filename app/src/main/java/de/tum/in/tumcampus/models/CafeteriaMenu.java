@@ -67,7 +67,6 @@ public class CafeteriaMenu {
 		this.typeLong = typeLong;
 		this.typeNr = typeNr;
 		this.name = name;
-		// this.prize = prize;
 	}
 
     @Override

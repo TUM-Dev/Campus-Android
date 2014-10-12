@@ -48,18 +48,21 @@ public class RoomFinderActivity extends ActivityForSearching implements TUMRoomF
         recentsManager = new RecentsManager(this, RecentsManager.ROOMS);
         adapter = new RoomFinderListAdapter(this, getRecents());
 
-        if (mQuery == null) {
-            if (adapter.getCount() == 0) {
-                openSearch();
-            } else {
-                list.setAdapter(adapter);
-            }
+        if (adapter.getCount() == 0) {
+            openSearch();
+        } else {
+            list.setAdapter(adapter);
         }
     }
 
     @Override
     protected void onStartSearch() {
-        adapter = new RoomFinderListAdapter(this, getRecents());
+        ArrayList<HashMap<String, String>> recents = getRecents();
+        if(recents.size()==0) {
+            finish();
+            return;
+        }
+        adapter = new RoomFinderListAdapter(this, recents);
         list.setAdapter(adapter);
     }
 

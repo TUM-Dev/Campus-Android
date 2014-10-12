@@ -44,5 +44,9 @@ public abstract class DatabaseManager {
         db.execSQL("DROP TABLE IF EXISTS recents");
         db.execSQL("DROP TABLE IF EXISTS room_locations");
         db.execSQL("DROP TABLE IF EXISTS syncs");
+        db.execSQL("DROP TABLE IF EXISTS suggestions_lecture");
+        db.execSQL("DROP TABLE IF EXISTS suggestions_mvv");
+        db.execSQL("DROP TABLE IF EXISTS suggestions_persons");
+        db.execSQL("DROP TABLE IF EXISTS suggestions_rooms");
     }
 }

@@ -12,41 +12,38 @@
         android:dividerHeight="0px"
         android:scrollbars="none"
         android:stackFromBottom="true"
-        android:transcriptMode="alwaysScroll" />
+        android:transcriptMode="normal" />
 
     <RelativeLayout
         android:id="@+id/relativeLayout"
         android:layout_width="match_parent"
-        android:layout_height="48dip"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:background="#FFFFFF">
 
         <ImageButton
             android:id="@+id/btnEmoji"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_alignBottom="@+id/etMessage"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:layout_gravity="center_vertical"
-            android:layout_marginEnd="5dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="5dp"
-            android:layout_marginStart="8dp"
-            android:background="#FFFFFF"
+            android:background="?attr/selectableItemBackground"
+            android:paddingEnd="5dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="5dp"
+            android:paddingStart="8dp"
             android:src="@drawable/ic_emoticon" />
 
         <github.ankushsachdeva.emojicon.EmojiconEditText
             android:id="@+id/etMessage"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentBottom="true"
+            android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:layout_marginBottom="5dp"
-            android:layout_marginEnd="5dp"
-            android:layout_marginRight="5dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginBottom="3dp"
+            android:layout_marginTop="3dp"
             android:layout_toEndOf="@+id/btnEmoji"
             android:layout_toLeftOf="@+id/btnSend"
             android:layout_toRightOf="@+id/btnEmoji"
@@ -56,16 +53,16 @@
         <ImageButton
             android:id="@+id/btnSend"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_alignBottom="@+id/etMessage"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
             android:layout_gravity="center_vertical"
-            android:layout_marginEnd="5dp"
-            android:layout_marginRight="5dp"
-            android:background="#FFFFFF"
+            android:background="?attr/selectableItemBackground"
             android:contentDescription="@string/send"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
             android:src="@drawable/ic_action_send_now" />
 
     </RelativeLayout>

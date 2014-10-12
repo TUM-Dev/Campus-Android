@@ -67,8 +67,7 @@ public class DayFragment extends Fragment implements CalendarController.EventHan
             if (!DayFragment.this.isAdded()) {
                 return;
             }
-            String tz = DayUtils.getTimeZone(getActivity(), mTZUpdater);
-            mSelectedDay.timezone = tz;
+            mSelectedDay.timezone = DayUtils.getTimeZone(getActivity(), mTZUpdater);
             mSelectedDay.normalize(true);
         }
     };
