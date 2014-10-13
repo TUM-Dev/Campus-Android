@@ -299,8 +299,9 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
         Card card = (Card) mAdapter.getItem(info.position);
         String key = card.getSettings();
-        if(key==null)
+        if(key==null) {
             return;
+        }
         menu.setHeaderTitle(R.string.options);
         menu.add(Menu.NONE, MENU_OPEN_SETTINGS, Menu.NONE, R.string.open_card_settings);
         menu.add(Menu.NONE, MENU_HIDE_ALWAYS, Menu.NONE, R.string.always_hide_card);
@@ -324,6 +325,7 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
                     return true;
                 Intent intent = new Intent(this, UserPreferencesActivity.class);
                 intent.putExtra(Const.PREFERENCE_SCREEN, key);
+                intent.putExtra("returnHome", true);
                 startActivity(intent);
                 return true;
             case MENU_HIDE_ALWAYS:

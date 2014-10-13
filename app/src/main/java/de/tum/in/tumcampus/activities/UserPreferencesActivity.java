@@ -2,8 +2,8 @@ package de.tum.in.tumcampus.activities;
 
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -19,7 +19,13 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
+import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewParent;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 
 import de.psdev.licensesdialog.LicensesDialog;
@@ -44,6 +50,8 @@ import de.tum.in.tumcampus.services.SilenceService;
 @SuppressWarnings("deprecation")
 public class UserPreferencesActivity extends PreferenceActivity implements
         SharedPreferences.OnSharedPreferenceChangeListener, Preference.OnPreferenceClickListener {
+
+    private boolean returnHome = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -90,6 +98,8 @@ public class UserPreferencesActivity extends PreferenceActivity implements
         Intent intent = getIntent();
         if (intent != null && intent.getExtras() != null && intent.getExtras().containsKey(Const.PREFERENCE_SCREEN)) {
             final String key = intent.getExtras().getString(Const.PREFERENCE_SCREEN);
+            this.returnHome = intent.getExtras().getBoolean("returnHome", false); // Check for flag to return directly home
+
             PreferenceScreen screen = (PreferenceScreen) findPreference("cards_pref_container");
             Preference cardPreferenceScreen = findPreference(key);
             final ListAdapter listAdapter = screen.getRootAdapter();
@@ -111,7 +121,7 @@ public class UserPreferencesActivity extends PreferenceActivity implements
             do {
                 final CheckBoxPreference pref = new CheckBoxPreference(this);
                 pref.setKey("card_news_source_" + cur.getString(0));
-                pref.setDefaultValue(cur.getInt(0)==2);
+                pref.setDefaultValue(cur.getInt(0) == 2);
                 if (Build.VERSION.SDK_INT >= 11) {
                     // Load news source icon in background and set it
                     final String url = cur.getString(1);
@@ -152,16 +162,16 @@ public class UserPreferencesActivity extends PreferenceActivity implements
         // When newspread selection changes
         // deselect all newspread sources and select only the
         // selected source if one of all was selected before
-        if(key.equals("news_newspread")) {
+        if (key.equals("news_newspread")) {
             SharedPreferences.Editor e = sharedPreferences.edit();
             boolean value = false;
-            for(int i=7;i<14;i++) {
-                if(sharedPreferences.getBoolean("card_news_source_"+i, false))
+            for (int i = 7; i < 14; i++) {
+                if (sharedPreferences.getBoolean("card_news_source_" + i, false))
                     value = true;
-                e.putBoolean("card_news_source_"+i, false);
+                e.putBoolean("card_news_source_" + i, false);
             }
-            String new_source = sharedPreferences.getString(key,"7");
-            e.putBoolean("card_news_source_"+new_source, value);
+            String new_source = sharedPreferences.getString(key, "7");
+            e.putBoolean("card_news_source_" + new_source, value);
             e.apply();
             CardManager.shouldRefresh = true;
         }
@@ -226,7 +236,7 @@ public class UserPreferencesActivity extends PreferenceActivity implements
             // This button invokes the clear cache method
             new AlertDialog.Builder(this)
                     .setMessage(R.string.delete_chache_sure)
-                    .setPositiveButton(R.string.yes, new OnClickListener() {
+                    .setPositiveButton(R.string.yes, new Dialog.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             clearCache();
@@ -282,6 +292,89 @@ public class UserPreferencesActivity extends PreferenceActivity implements
             return false;
         }
         return true;
+    }
+
+    /**
+     * Listen for opening subscreens (nested) settings
+     *
+     * @param preferenceScreen
+     * @param preference
+     * @return
+     */
+    @Override
+    public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen, Preference preference) {
+        super.onPreferenceTreeClick(preferenceScreen, preference);
+
+        // If the user has clicked on a preference screen, set up the action bar
+        if (preference instanceof PreferenceScreen) {
+            initializeActionBar((PreferenceScreen) preference);
+        }
+
+        return false;
+    }
+
+    /**
+     * Sets up the action bar for an {@link PreferenceScreen}
+     */
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    public void initializeActionBar(PreferenceScreen preferenceScreen) {
+        final Dialog dialog = preferenceScreen.getDialog();
+
+        //Check if dialog is open and if we are on a supported android version
+        if (dialog != null && android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            // Initialize the action bar
+            dialog.getActionBar().setDisplayHomeAsUpEnabled(true);
+
+            //Setup a dialog back button pressed listener
+            dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                @Override
+                public void onCancel(DialogInterface dialog) {
+                    if (returnHome) {
+                        finish();
+                        startActivity(new Intent(UserPreferencesActivity.this, MainActivity.class));
+                    }
+                }
+            });
+
+            // Apply custom home button area click listener to close the PreferenceScreen because PreferenceScreens are dialogs which swallow events instead of passing to the activity
+            // Related Issue: https://code.google.com/p/android/issues/detail?id=4611
+            View homeBtn = dialog.findViewById(android.R.id.home);
+
+            if (homeBtn != null) {
+                View.OnClickListener dismissDialogClickListener = new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        //Hide this
+                        dialog.dismiss();
+
+                        //Go back to home if we came from the startscreen
+                        if (returnHome) {
+                            finish();
+                            startActivity(new Intent(UserPreferencesActivity.this, MainActivity.class));
+                        }
+                    }
+                };
+                // Prepare yourselves for some hacky programming
+                ViewParent homeBtnContainer = homeBtn.getParent();
+
+                // The home button is an ImageView inside a FrameLayout
+                if (homeBtnContainer instanceof FrameLayout) {
+                    ViewGroup containerParent = (ViewGroup) homeBtnContainer.getParent();
+
+                    if (containerParent instanceof LinearLayout) {
+                        // This view also contains the title text, set the whole view as clickable
+                        ((LinearLayout) containerParent).setOnClickListener(dismissDialogClickListener);
+                    } else {
+                        // Just set it on the home button
+                        ((FrameLayout) homeBtnContainer).setOnClickListener(dismissDialogClickListener);
+                    }
+                } else {
+                    // The 'If all else fails' default case
+                    homeBtn.setOnClickListener(dismissDialogClickListener);
+                }
+            }
+        }
     }
 
     /**
