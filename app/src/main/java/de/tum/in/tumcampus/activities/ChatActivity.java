@@ -32,8 +32,6 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.adapters.ChatHistoryAdapter;
@@ -150,10 +148,10 @@ public class ChatActivity extends ActionBarActivity implements OnClickListener, 
             //Set TextField to empty, when done
             etMessage.setText("");
         } else if (view.getId() == btnEmotion.getId()) { // Show/hide emoticons
-            if(!iconShow && popup.isKeyBoardOpen()) {
+            if (!iconShow && popup.isKeyBoardOpen()) {
                 popup.showAtBottom();
                 btnEmotion.setImageResource(R.drawable.ic_keyboard);
-            } else if(!iconShow) {
+            } else if (!iconShow) {
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.showSoftInput(etMessage, InputMethodManager.SHOW_IMPLICIT);
             } else {
@@ -265,7 +263,7 @@ public class ChatActivity extends ActionBarActivity implements OnClickListener, 
 
     @Override
     public void onKeyboardOpen(int keyBoardHeight) {
-        if(iconShow && !popup.isShowing()) {
+        if (iconShow && !popup.isShowing()) {
             popup.showAtBottom();
             btnEmotion.setImageResource(R.drawable.ic_keyboard);
         }
@@ -273,7 +271,7 @@ public class ChatActivity extends ActionBarActivity implements OnClickListener, 
 
     @Override
     public void onKeyboardClose() {
-        if(popup.isShowing()) {
+        if (popup.isShowing()) {
             popup.dismiss();
             iconShow = false;
             btnEmotion.setImageResource(R.drawable.ic_emoticon);
@@ -293,7 +291,7 @@ public class ChatActivity extends ActionBarActivity implements OnClickListener, 
     @Override
     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
         //is the top item is visible & not loading more already ? Load more !
-        if ((firstVisibleItem == 0) && !(loadingMore) && chatHistoryAdapter!=null) {
+        if ((firstVisibleItem == 0) && !(loadingMore) && chatHistoryAdapter != null) {
             int chatHistorySize = chatHistoryAdapter.getCount();
             // Round the number of already downloaded messages to multiple of 10
             // Then divide this by 10 to get the number of downloaded pages
@@ -333,11 +331,11 @@ public class ChatActivity extends ActionBarActivity implements OnClickListener, 
                                 } else {
                                     boolean messageAdded = false;
                                     for (ListChatMessage downloadedMessage : downloadedChatHistory) {
-                                        if(chatHistoryAdapter.add(0, downloadedMessage)) {
+                                        if (chatHistoryAdapter.add(0, downloadedMessage)) {
                                             messageAdded = true;
                                         }
                                     }
-                                    if(messageAdded) {
+                                    if (messageAdded) {
                                         loadingMore = false;
                                         chatHistoryAdapter.notifyDataSetChanged();
                                     } else {
@@ -364,17 +362,20 @@ public class ChatActivity extends ActionBarActivity implements OnClickListener, 
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_activity_chat, menu);
 
+        //TODO make this implementation for the receiver nicer!
         LocalBroadcastManager.getInstance(this).registerReceiver(new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 Bundle extras = intent.getExtras();
 
-                String chatRoomString = extras.getString("chat_room"); // chat_room={"id":3}
-                Pattern pattern = Pattern.compile("\\{\"id\":(.*)\\}");
-                Matcher matcher = pattern.matcher(chatRoomString);
-                if (!matcher.find() || !matcher.group(1).equals(currentChatRoom.getGroupId())) {
+                String chatRoomString = extras.getString("room");
+
+                //If same room no action required?
+                if (chatRoomString.equals(currentChatRoom.getGroupId())) {
                     return;
                 }
+
+
                 ListChatMessage newMessage = new ListChatMessage(extras.getString("text"));
                 newMessage.setTimestamp(extras.getString("timestamp"));
 

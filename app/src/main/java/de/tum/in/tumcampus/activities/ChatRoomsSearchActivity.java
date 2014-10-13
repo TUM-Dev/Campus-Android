@@ -53,7 +53,7 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline<LecturesSearchRowSet> implements OnItemClickListener {
     private static final String PROPERTY_APP_VERSION = "appVersion";
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
-    private static final String SENDER_ID = "840992786720";
+    private static final String SENDER_ID = "944892355389";
 
     private StickyListHeadersListView lvMyLecturesList;
 
@@ -396,7 +396,7 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline<Lectu
                         gcm = GoogleCloudMessaging.getInstance(context);
                     }
                     regId = gcm.register(SENDER_ID);
-                    Log.e("TCA Chat regid", regId);
+                    Log.e("----------------TCA Chat regid", regId);
                     msg = "GCM registration successful";
 
                     // You should send the registration ID to your server over HTTP,
