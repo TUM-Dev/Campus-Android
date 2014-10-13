@@ -62,14 +62,15 @@ public class StartupActivity extends ActionBarActivity {
         int currentVersion = Utils.getAppVersion(this);
         boolean newVersion = prevVersion < currentVersion;
         if (newVersion) {
-            setupNewVersion();
+            this.setupNewVersion();
             Utils.setInternalSetting(this, Const.APP_VERSION, currentVersion);
         }
 
-        // Also First run setup of id and token
+        // Also First run wizard for setup of id and token
         // Check the flag if user wants the wizard to open at startup
         Boolean hideWizardOnStartup = Utils.getSettingBool(this, Const.HIDE_WIZARD_ON_STARTUP, false);
-        if (!hideWizardOnStartup) {
+        String lrzId = Utils.getSetting(this, Const.LRZ_ID, ""); // If new version and LRZ ID is empty, start the full wizard
+        if (!hideWizardOnStartup || (newVersion && lrzId.length() == 0)) {
             startActivity(new Intent(this, WizNavStartActivity.class));
             finish();
             return;
