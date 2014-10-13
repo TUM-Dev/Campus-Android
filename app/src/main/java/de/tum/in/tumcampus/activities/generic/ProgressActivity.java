@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import de.tum.in.tumcampus.R;
@@ -122,7 +123,8 @@ public abstract class ProgressActivity extends ActionBarActivity implements OnRe
      * @param errorReason Error text
      */
     protected void showError(String errorReason) {
-        Utils.showToast(this, errorReason);
+        TextView error = (TextView) errorLayout.findViewById(R.id.textView1);
+        error.setText(errorReason);
         showErrorLayout();
     }
 

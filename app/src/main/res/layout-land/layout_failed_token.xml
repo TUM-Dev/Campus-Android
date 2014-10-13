@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/failed_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -13,7 +14,8 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:alpha="0.5"
-        android:src="@drawable/exclamation" />
+        android:src="@drawable/exclamation"
+        tools:ignore="UnusedAttribute" />
 
     <TextView
         android:id="@+id/textView1"
@@ -21,6 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_toRightOf="@+id/imageView1"
+        android:layout_toEndOf="@+id/imageView1"
         android:gravity="center"
         android:text="@string/error_fetching_tumonline"
         android:textAppearance="?android:attr/textAppearanceSmall"

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
 
     <!-- START Translated, please do not change identifiers -->
 
@@ -32,7 +32,8 @@
     <!-- Auxiliary -->
     <string name="error_fetching_tumonline">Fehler beim Zugriff auf TUMOnline.\nBitte stelle sicher, dass das TUMOnline-Access-Token \nakzeptiert und die entsprechenden Rechte aktiviert wurden.\n\n<b>Klicke hier zum Wiederholen.</b></string>
     <string name="error_no_token_setup">Kein TUMOnline-Access-Token gefunden.\nBitte erzeuge ein TUMOnline-Access-Token in den\n <i>Einstellungen</i>, um TUMOnline Dienste nutzen zu können.\n\n<b>Klicke hier, um zu den <i>Einstellungen</i> zu gelangen.</b></string>
-    <string name="error_something_wrong">Entschuldigung, irgendetwas ist schief gegangen.\n\n<b>Klicke hier zum Wiederholen.</b></string>
+    <string name="error_something_wrong">Entschuldigung, irgendetwas ist schief gegangen.</string>
+    <string name="click_to_try_again"><b>Klicke hier zum Wiederholen.</b></string>
     <string name="dialog_new_token">Dein TUMOnline-Access-Token ist bereits gesetzt.\n\nKlicke auf <i>Ja</i> um ein neues zu generieren.\nDabei wird dein altes Token unbrauchbar.</string>
     <string name="error_lrz_wrong">Deine LRZ Kennung ist ungültig</string>
     <string name="access_token_wasnt_generated">TUMOnline-Access-Token konnte nicht erzeugt werden</string>
@@ -333,4 +334,8 @@
     <string name="room_timetable">Belegungsplan</string>
     <string name="newspread_summary">Wähle aus welches newspread angezeigt werden soll. Das sind die Folien die auf den Info Monitoren in deiner Fakultät angezeigt werden.</string>
     <string name="tuition_fee_more">Informationen zu Beiträgen und Befreiungen, Darlehen, BAföG oder Stipendien finden Sie unter: <a href="http://www.tum.de/studium/studienfinanzierung/">Studienfinanzierung</a></string>
+    <string name="no_rights_to_access_id">Konnte Identität nicht abfragen. Bitte überprüfe die Rechte deines TUMOnline Tokens!</string>
+    <string name="vibration">Vibration</string>
+    <string name="silent">Leise</string>
+    <string name="mode_silent_mode">Modus während Vorlesung</string>
 </resources>

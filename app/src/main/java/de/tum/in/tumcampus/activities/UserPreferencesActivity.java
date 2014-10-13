@@ -45,8 +45,6 @@ import de.tum.in.tumcampus.services.SilenceService;
 public class UserPreferencesActivity extends PreferenceActivity implements
         SharedPreferences.OnSharedPreferenceChangeListener, Preference.OnPreferenceClickListener {
 
-    private final AccessTokenManager accessTokenManager = new AccessTokenManager(this);
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,6 +77,7 @@ public class UserPreferencesActivity extends PreferenceActivity implements
         setSummary("card_stations_default_G");
         setSummary("card_stations_default_C");
         setSummary("card_stations_default_K");
+        setSummary("silent_mode_set_to");
 
         // Register the change listener to react immediately on changes
         PreferenceManager.getDefaultSharedPreferences(this)

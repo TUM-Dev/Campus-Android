@@ -62,7 +62,7 @@
         <item>525</item>
     </string-array>
 
-    <string-array name="newspread_entries">
+    <string-array name="newspread_entries" tools:ignore="MissingTranslation">
         <item>FMI Magistrale</item>
         <item>CH Magistrale</item>
         <item>SG Zentrale Bildschirme</item>
@@ -71,7 +71,7 @@
         <item>TUM Lab Deutsches Museum</item>
         <item>Weihenstephan</item>
     </string-array>
-    <string-array name="newspread_values">
+    <string-array name="newspread_values" tools:ignore="MissingTranslation">
         <item>7</item>
         <item>8</item>
         <item>9</item>
@@ -79,6 +79,14 @@
         <item>11</item>
         <item>12</item>
         <item>13</item>
+    </string-array>
+    <string-array name="silent_entries">
+        <item>@string/vibration</item>
+        <item>@string/silent</item>
+    </string-array>
+    <string-array name="silent_mode_values" tools:ignore="MissingTranslation">
+        <item>0</item>
+        <item>1</item>
     </string-array>
 </resources>
 

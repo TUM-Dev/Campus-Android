@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools"
     xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 
@@ -33,9 +33,10 @@
     <!-- Auxiliary -->
     <string name="empty_string" translatable="false" />
     <string name="error_fetching_tumonline">Error accessing TUMOnline.\nPlease make sure your TUMOnline-Access-Token has
-		been\nactivated and the corresponding rights are set.\n\n<b>Click here for retry.</b></string>
+		been\nactivated and the corresponding rights are set.\n\n<b>Click here to retry.</b></string>
     <string name="error_no_token_setup">No TUMOnline-Access-Token was set.\nPlease set your TUMOnline-Access-Token in the\n <i>Settings</i> screen to access TUMOnline features.\n\n<b>Click here for the <i>Settings</i> screen.</b></string>
-    <string name="error_something_wrong"><![CDATA[Sorry, something went wrong.\n\n<b>Click here to retry.</b>]]></string>
+    <string name="error_something_wrong">Sorry, something went wrong.</string>
+    <string name="click_to_try_again"><b>Click here to retry.</b></string>
     <string name="dialog_new_token">Your TUMOnline-Access-Token is already set.\n\nClick <i>Yes</i> to generate a new one. \nAs a result, the old Token becomes useless.</string>
     <string name="error_lrz_wrong">Your LRZ Identification is invalid</string>
     <string name="access_token_wasnt_generated">TUMOnline-Access-Token could not be generated</string>
@@ -366,4 +367,8 @@
     <string name="newspread" translateable="false">Newspread</string>
     <string name="newspread_summary">Select which newspread you want to be shown. This are the slides on the info monitors in your faculty buildings.</string>
     <string name="tuition_fee_more">Information on contributions and exemptions, loans, training assistance and scholarships, go to: <a href="http://www.tum.de/studium/studienfinanzierung/">Student Financial Aid</a></string>
+    <string name="no_rights_to_access_id">No rights to access identity. Please check TUMOnline token rights!</string>
+    <string name="vibration">Vibration</string>
+    <string name="silent">Silent</string>
+    <string name="mode_silent_mode">State during lectures</string>
 </resources>

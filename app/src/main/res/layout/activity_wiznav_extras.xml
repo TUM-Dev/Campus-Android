@@ -78,41 +78,19 @@
                         android:padding="@dimen/padding_default"
                         android:text="@string/set_lecture_chat" />
 
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <EditText
-                            android:id="@+id/nickname"
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_toLeftOf="@+id/button_open_chat_terms"
-                            android:layout_toStartOf="@+id/button_open_chat_terms"
-                            android:hint="@string/display_name"
-                            android:inputType="text"
-                            android:padding="@dimen/padding_default" />
-
                         <CheckBox
                             android:id="@+id/chk_group_chat_terms"
                             android:layout_width="wrap_content"
                             android:layout_height="fill_parent"
-                            android:layout_alignParentLeft="true"
-                            android:layout_alignParentStart="false"
-                            android:layout_below="@+id/nickname"
-                            android:layout_toLeftOf="@+id/button_open_chat_terms"
-                            android:layout_toStartOf="@+id/button_open_chat_terms"
                             android:text="@string/accept_chat_terms" />
 
                         <Button
                             android:id="@+id/button_open_chat_terms"
                             style="@style/FlatButton"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_alignParentEnd="true"
-                            android:layout_alignParentRight="true"
-                            android:layout_centerVertical="true"
                             android:onClick="onClickTerms"
                             android:text="@string/open_chat_terms" />
-                    </RelativeLayout>
 
                     <CheckBox
                         android:id="@+id/chk_background_mode"

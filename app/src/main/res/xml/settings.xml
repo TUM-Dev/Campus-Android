@@ -262,6 +262,13 @@
             android:key="silent_mode"
             android:summary="@string/silence_phone_info"
             android:title="@string/silence_phone" />
+        <ListPreference
+            android:defaultValue="0"
+            android:dependency="silent_mode"
+            android:entries="@array/silent_entries"
+            android:entryValues="@array/silent_mode_values"
+            android:key="silent_mode_set_to"
+            android:title="@string/mode_silent_mode" />
         <CheckBoxPreference
             android:key="background_mode"
             android:summary="@string/background_info"
