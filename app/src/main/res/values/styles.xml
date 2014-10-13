@@ -1,6 +1,4 @@
-<resources
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" >
+<resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools">
 
     <style name="SectionHeadline">
         <item name="android:layout_width">fill_parent</item>
@@ -44,7 +42,15 @@
 
     <style name="BlueActionBar" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
         <item name="android:background" tools:ignore="NewApi">@drawable/ab_solid_blue</item>
+        <item name="android:subtitleTextStyle" tools:ignore="NewApi">@style/BlueActionBar.Subtitle
+        </item>
+        <!-- Support library compatibility -->
         <item name="background">@drawable/ab_solid_blue</item>
+        <item name="subtitleTextStyle">@style/BlueActionBar.Subtitle</item>
+    </style>
+
+    <style name="BlueActionBar.Subtitle" parent="android:style/TextAppearance.Holo.Widget.ActionBar.Subtitle">
+        <item name="android:textColor">@color/actionbar_subtitle</item>
     </style>
 
     <style name="NoActionBar" parent="Theme.AppCompat.Light.DarkActionBar">
