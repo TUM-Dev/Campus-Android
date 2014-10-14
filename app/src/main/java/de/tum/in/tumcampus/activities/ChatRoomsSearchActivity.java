@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Base64;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -24,6 +23,7 @@ import java.security.PrivateKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import de.tum.in.tumcampus.R;
@@ -74,7 +74,8 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline<Lectu
         lvMyLecturesList = (StickyListHeadersListView) findViewById(R.id.lvMyLecturesList);
         lvMyLecturesList.setOnItemClickListener(this);
 
-        requestFetch();
+        //Load the lectures list
+        this.requestFetch();
     }
 
     /**
@@ -88,16 +89,26 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline<Lectu
             public void run() {
                 try {
                     if (currentChatMember == null) {
+                        //Fetch the stored LRZ ID from shared prefs
                         String lrzId = Utils.getSetting(ChatRoomsSearchActivity.this, Const.LRZ_ID, "");
+
                         // GET their data from the server using their lrzId
                         List<ChatMember> members = ChatClient.getInstance(ChatRoomsSearchActivity.this).getMember(lrzId);
+
+                        //Catch a possible error, when we didn't get something returned
                         if (members.size() == 0) {
                             Utils.showToastOnUIThread(ChatRoomsSearchActivity.this, R.string.error_setup_chat_member);
                             return;
                         }
+
+                        //Remember this locally
                         currentChatMember = members.get(0);
 
-                        checkPlayServicesAndRegister();
+                        //Load the private key from the shared prefs
+                        currentPrivateKey = ChatRoomsSearchActivity.this.retrieveOrGeneratePrivateKey();
+
+                        //Proceed with registering
+                        ChatRoomsSearchActivity.this.checkPlayServicesAndRegister();
                     }
                 } catch (RetrofitError e) {
                     Utils.log(e, e.getMessage());
@@ -140,7 +151,7 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline<Lectu
     public void onItemClick(AdapterView<?> a, View v, int position, long id) {
         LecturesSearchRow item = (LecturesSearchRow) lvMyLecturesList.getItemAtPosition(position);
 
-        checkPlayServicesAndRegister();
+        this.checkPlayServicesAndRegister();
 
         // set bundle for LectureDetails and show it
         Bundle bundle = new Bundle();
@@ -307,8 +318,6 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline<Lectu
      * Checks if play services are available and registers for GCM
      */
     private void checkPlayServicesAndRegister() {
-        currentPrivateKey = retrieveOrGeneratePrivateKey();
-
         // Check device for Play Services APK. If check succeeds, proceed with GCM registration.
         if (this.checkPlayServices()) {
 
@@ -323,6 +332,9 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline<Lectu
                 if (!Utils.getInternalSettingBool(this, Const.GCM_REG_ID_SENT_TO_SERVER, false)) {
                     this.sendRegistrationIdToBackend(regId);
                 }
+
+                //Update the reg id in steady intervals
+                this.checkRegisterIdUpdate(regId);
             }
         } else {
             Utils.log("No valid Google Play Services APK found.");
@@ -395,6 +407,7 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline<Lectu
 
                     //Reset the lock in case we are updating and maybe failed
                     Utils.setInternalSetting(ChatRoomsSearchActivity.this, Const.GCM_REG_ID_SENT_TO_SERVER, false);
+                    Utils.setInternalSetting(ChatRoomsSearchActivity.this, Const.GCM_REG_ID_LAST_TRANSMISSION, (new Date()).getTime());
 
                     // Let the server know of our new registration id
                     ChatRoomsSearchActivity.this.sendRegistrationIdToBackend(regId);
@@ -457,5 +470,18 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline<Lectu
         Utils.setInternalSetting(this, PROPERTY_APP_VERSION, appVersion);
 
         Utils.logv("Saving regId on app version " + appVersion);
+    }
+
+    /**
+     * Helper function to check if we need to update the regid
+     * @param regId
+     */
+    private void checkRegisterIdUpdate(String regId) {
+        //Regularly (once a day) update the server with the reg id
+        long lastTransmission = Utils.getInternalSettingLong(this, Const.GCM_REG_ID_LAST_TRANSMISSION, 0);
+        Date now = new Date();
+        if (now.getTime() - 24 * 3600000 > lastTransmission) {
+            this.sendRegistrationIdToBackend(regId);
+        }
     }
 }

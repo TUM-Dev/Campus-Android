@@ -368,6 +368,18 @@ public class Utils {
     }
 
     /**
+     * Sets an internal preference's long value
+     *
+     * @param context Context
+     * @param key     Key
+     * @param value   Value
+     */
+    public static void setInternalSetting(Context context, String key, long value) {
+        SharedPreferences prefs = context.getSharedPreferences(Const.INTERNAL_PREFS, Context.MODE_PRIVATE);
+        prefs.edit().putLong(key, value).apply();
+    }
+
+    /**
      * Sets an internal preference's string value
      *
      * @param context Context
@@ -405,6 +417,20 @@ public class Utils {
     public static int getInternalSettingInt(Context context, String key, int value) {
         SharedPreferences prefs = context.getSharedPreferences(Const.INTERNAL_PREFS, Context.MODE_PRIVATE);
         return prefs.getInt(key, value);
+    }
+
+    /**
+     * Gets an internal preference's long value
+     *
+     * @param context Context
+     * @param key     Key
+     * @param value   Default value
+     * @return The value of the setting or the default value,
+     * if no setting with the specified key exists
+     */
+    public static long getInternalSettingLong(Context context, String key, long value) {
+        SharedPreferences prefs = context.getSharedPreferences(Const.INTERNAL_PREFS, Context.MODE_PRIVATE);
+        return prefs.getLong(key, value);
     }
 
     /**

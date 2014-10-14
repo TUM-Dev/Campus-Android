@@ -85,13 +85,12 @@ public class GcmIntentService extends IntentService {
 
         //Get the update details
         String chatRoomId = extras.getString("room"); // chat_room={"id":3}
-        String msg = extras.getString("text");
+        //String msg = extras.getString("text");
 
-        // Notify chat activity that a message has been received
+        // Notify any open chat activity that a message has been received
         Intent intent = new Intent("chat-message-received");
         intent.putExtras(extras);
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
-
 
         // Get the data necessary for the ChatActivity
         String lrzId = PreferenceManager.getDefaultSharedPreferences(this).getString(Const.LRZ_ID, "");
@@ -110,8 +109,8 @@ public class GcmIntentService extends IntentService {
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.drawable.tum_logo_notification)
                         .setContentTitle("TCA Chat")
-                        .setStyle(new NotificationCompat.BigTextStyle().bigText(msg))
-                        .setContentText(msg)
+                        .setStyle(new NotificationCompat.BigTextStyle().bigText("New message arrived"))
+                        .setContentText("New message arrived")
                         .setContentIntent(contentIntent)
                         .setDefaults(Notification.DEFAULT_ALL)
                         .setAutoCancel(true);

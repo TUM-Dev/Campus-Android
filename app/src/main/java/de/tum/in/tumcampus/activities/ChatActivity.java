@@ -142,7 +142,7 @@ public class ChatActivity extends ActionBarActivity implements OnClickListener, 
                         try {
                             // Send the message to the server
                             final CreateChatMessage newlyCreatedMessage = ChatClient.getInstance(ChatActivity.this).sendMessage(currentChatRoom.getGroupId(), newMessage);
-                            Log.e("msg: ", newlyCreatedMessage.getText());
+
                             ChatActivity.this.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -334,7 +334,8 @@ public class ChatActivity extends ActionBarActivity implements OnClickListener, 
                     @Override
                     public void success(final ArrayList<ListChatMessage> downloadedChatHistory, Response arg1) {
                         // Got results from webservice
-                        Utils.logv("Success loading additional chat history: " + arg1.toString());
+                        Log.e("TCA Chat","Success loading additional chat history: " + downloadedChatHistory.size());
+
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -345,17 +346,8 @@ public class ChatActivity extends ActionBarActivity implements OnClickListener, 
                                     lvMessageHistory.setAdapter(chatHistoryAdapter);
                                     loadingMore = false;
                                 } else {
-                                    boolean messageAdded = false;
                                     for (ListChatMessage downloadedMessage : downloadedChatHistory) {
-                                        if (chatHistoryAdapter.add(0, downloadedMessage)) {
-                                            messageAdded = true;
-                                        }
-                                    }
-                                    if (messageAdded) {
-                                        loadingMore = false;
-                                        chatHistoryAdapter.notifyDataSetChanged();
-                                    } else {
-                                        lvMessageHistory.removeHeaderView(bar);
+                                        chatHistoryAdapter.add(downloadedMessage);
                                     }
                                 }
                             }
@@ -382,21 +374,18 @@ public class ChatActivity extends ActionBarActivity implements OnClickListener, 
         LocalBroadcastManager.getInstance(this).registerReceiver(new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
+                Log.e("TCA Chat","got new msg: "+intent.getExtras().toString());
                 Bundle extras = intent.getExtras();
-
                 String chatRoomString = extras.getString("room");
 
-                //If same room no action required?
+                //If same room just refresh
                 if (chatRoomString.equals(currentChatRoom.getGroupId())) {
+                    Log.e("TCA Chat", "loading from server");
+                    ChatActivity.this.getHistoryPageFromServer(1);
                     return;
                 }
-
-                ListChatMessage newMessage = new ListChatMessage(extras.getString("text"));
-                newMessage.setTimestamp(extras.getString("timestamp"));
-
-                ChatMember member = new Gson().fromJson(extras.getString("member"), ChatMember.class);
-                newMessage.setMember(member);
-                chatHistoryAdapter.add(newMessage);
+                //Otherwise do nothing :)
+                //User can switch to the other room himself
             }
         }, new IntentFilter("chat-message-received"));
 

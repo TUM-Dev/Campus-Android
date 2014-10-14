@@ -1,7 +1,6 @@
 package de.tum.in.tumcampus.adapters;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -110,9 +109,9 @@ public class ChatHistoryAdapter extends BaseAdapter {
      */
     public boolean add(int i, ListChatMessage downloadedMessage) {
         for (ListChatMessage message : messageHistory) {
-            if (message.getTimestamp().equals(downloadedMessage.getTimestamp()) &&
-                    message.getText().equals(downloadedMessage.getText()))
+            if (message.getTimestamp().equals(downloadedMessage.getTimestamp()) && message.getText().equals(downloadedMessage.getText())) {
                 return false;
+            }
         }
         messageHistory.add(i, downloadedMessage);
         return true;
