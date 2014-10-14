@@ -199,7 +199,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
 
         LoadEventsRequest request = new LoadEventsRequest();
         ft.replace(R.id.fragment_container, new DayFragment(mEventTime, mWeekMode ? 7 : 1, new EventLoader(this, request)));
-        ft.commit();
+        ft.commitAllowingStateLoss();
     }
 
     /**
