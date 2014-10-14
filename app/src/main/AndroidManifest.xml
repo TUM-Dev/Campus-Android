@@ -37,6 +37,9 @@
     <!-- Keeps the processor from sleeping when a message is received. -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
+    <!-- Check if chat activity is open -->
+    <uses-permission android:name="android.permission.GET_TASKS" />
+
     <!--
      Creates a custom permission so only this app can receive its messages.
 
