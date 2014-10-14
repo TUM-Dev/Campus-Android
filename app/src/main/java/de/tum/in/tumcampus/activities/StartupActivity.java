@@ -218,9 +218,11 @@ public class StartupActivity extends ActionBarActivity {
 
         // rename hide_wizzard_on_startup
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-        SharedPreferences.Editor e = sp.edit();
-        e.putBoolean(Const.HIDE_WIZARD_ON_STARTUP, sp.getBoolean("hide_wizzard_on_startup", false));
-        e.remove("hide_wizzard_on_startup");
-        e.apply();
+        if(!sp.contains(Const.HIDE_WIZARD_ON_STARTUP)) {
+            SharedPreferences.Editor e = sp.edit();
+            e.putBoolean(Const.HIDE_WIZARD_ON_STARTUP, sp.getBoolean("hide_wizzard_on_startup", false));
+            e.remove("hide_wizzard_on_startup");
+            e.apply();
+        }
     }
 }

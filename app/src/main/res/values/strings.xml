@@ -265,7 +265,6 @@
     <string name="version">Version</string>
     <string name="send_email">Send e-mail feedback</string>
     <string name="show_feedback">Send feedback</string>
-    <string name="feedbackAddr" translatable="false">tca-support.os.in@tum.de</string>
     <string name="feedbackSubj">Feedback for TUM Campus App</string>
     <string name="app_info_text" translatable="false"><b>TUM Campus App</b>\nThe TUM Campus App is developed by students of the Android practical course, other voluntary freelancers and chair members.
         \n\n<b>Project Management:</b>\nTUM - Computer Science / F13

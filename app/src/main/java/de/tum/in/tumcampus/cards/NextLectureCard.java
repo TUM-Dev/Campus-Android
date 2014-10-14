@@ -49,7 +49,7 @@ public class NextLectureCard extends Card {
 
     @Override
     public String getTitle() {
-        return lectures.get(0).title;
+        return lectures.get(mSelected).title;
     }
 
     private final static int[] ids = {
@@ -66,7 +66,6 @@ public class NextLectureCard extends Card {
         mCard = mInflater.inflate(R.layout.card_next_lecture_item, parent, false);
         mLinearLayout = (LinearLayout) mCard.findViewById(R.id.card_view);
         mTitleView = (TextView) mCard.findViewById(R.id.card_title);
-        mTitleView.setText(getTitle());
         mTimeView = (TextView) mCard.findViewById(R.id.card_time);
         mLocation = (TextView) mCard.findViewById(R.id.card_location_action);
         mEvent = (TextView) mCard.findViewById(R.id.card_event_action);
@@ -102,6 +101,9 @@ public class NextLectureCard extends Card {
         }
 
         final CalendarItem item = lectures.get(sel);
+
+        // Set current title
+        mTitleView.setText(getTitle());
 
         //Add content
         mTimeView.setText(DateUtils.getRelativeTimeSpanString(item.start.getTime(),

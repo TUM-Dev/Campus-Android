@@ -19,7 +19,6 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -281,13 +280,14 @@ public class UserPreferencesActivity extends PreferenceActivity implements
 
         } else if (key.equals("feedback")) {
             /* Create the Intent */
-            Intent emailIntent = new Intent(Intent.ACTION_SENDTO);
-            emailIntent.setType("plain/text");
-            emailIntent.putExtra(Intent.EXTRA_EMAIL, getString(R.string.feedbackAddr));
-            emailIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.feedbackSubj));
+            Uri uri = Uri.parse("mailto:tca-support.os.in@tum.de" +
+                    "?subject=" + getString(R.string.feedbackSubj));
+
+            Intent sendIntent = new Intent(Intent.ACTION_SENDTO);
+            sendIntent.setData(uri);
 
 		    /* Send it off to the Activity-Chooser */
-            startActivity(Intent.createChooser(emailIntent, getString(R.string.send_email)));
+            startActivity(Intent.createChooser(sendIntent, getString(R.string.send_email)));
         } else {
             return false;
         }
@@ -295,7 +295,7 @@ public class UserPreferencesActivity extends PreferenceActivity implements
     }
 
     /**
-     * Listen for opening subscreens (nested) settings
+     * Listen for opening sub-screens (nested) settings
      *
      * @param preferenceScreen
      * @param preference
@@ -348,7 +348,7 @@ public class UserPreferencesActivity extends PreferenceActivity implements
                         //Hide this
                         dialog.dismiss();
 
-                        //Go back to home if we came from the startscreen
+                        //Go back to home if we came from the start screen
                         if (returnHome) {
                             finish();
                             startActivity(new Intent(UserPreferencesActivity.this, MainActivity.class));
@@ -364,7 +364,7 @@ public class UserPreferencesActivity extends PreferenceActivity implements
 
                     if (containerParent instanceof LinearLayout) {
                         // This view also contains the title text, set the whole view as clickable
-                        ((LinearLayout) containerParent).setOnClickListener(dismissDialogClickListener);
+                        containerParent.setOnClickListener(dismissDialogClickListener);
                     } else {
                         // Just set it on the home button
                         ((FrameLayout) homeBtnContainer).setOnClickListener(dismissDialogClickListener);
