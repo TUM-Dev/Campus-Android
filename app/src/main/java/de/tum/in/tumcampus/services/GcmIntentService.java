@@ -92,7 +92,6 @@ public class GcmIntentService extends IntentService {
         intent.putExtras(extras);
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
 
-        Intent notificationIntent = new Intent(this, ChatActivity.class);
 
         // Get the data necessary for the ChatActivity
         String lrzId = PreferenceManager.getDefaultSharedPreferences(this).getString(Const.LRZ_ID, "");
@@ -100,6 +99,7 @@ public class GcmIntentService extends IntentService {
         ChatRoom chatRoom = ChatClient.getInstance(this).getChatRoom(chatRoomId);
 
         // Put the data into the intent
+        Intent notificationIntent = new Intent(this, ChatActivity.class);
         notificationIntent.putExtra(Const.CURRENT_CHAT_ROOM, new Gson().toJson(chatRoom));
         notificationIntent.putExtra(Const.CURRENT_CHAT_MEMBER, new Gson().toJson(members.get(0)));
 

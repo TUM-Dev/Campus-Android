@@ -11,6 +11,7 @@ import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Base64;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -95,6 +96,23 @@ public class ChatActivity extends ActionBarActivity implements OnClickListener, 
         getHistoryPageFromServer(1);
     }
 
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        final ChatRoom room = new Gson().fromJson(intent.getExtras().getString(Const.CURRENT_CHAT_ROOM), ChatRoom.class);
+
+        if (room != null) {
+            //TODO compare ids instead of names, currently null
+            if (!room.getName().equals(currentChatRoom.getName())) {
+                currentChatRoom = room;
+                getSupportActionBar().setSubtitle(currentChatRoom.getName().substring(4));
+                chatHistoryAdapter.clear();
+                getHistoryPageFromServer(1);
+                chatHistoryAdapter.notifyDataSetChanged();
+            }
+        }
+    }
+
     /**
      * Handles clicks on send and load messages buttons
      *
@@ -124,15 +142,13 @@ public class ChatActivity extends ActionBarActivity implements OnClickListener, 
                         try {
                             // Send the message to the server
                             final CreateChatMessage newlyCreatedMessage = ChatClient.getInstance(ChatActivity.this).sendMessage(currentChatRoom.getGroupId(), newMessage);
-
+                            Log.e("msg: ", newlyCreatedMessage.getText());
                             ChatActivity.this.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
                                     chatHistoryAdapter.add(new ListChatMessage(newlyCreatedMessage, currentChatMember));
                                 }
                             });
-
-
                             messageSentSuccessfully = true;
                         } catch (RetrofitError e) {
                             Utils.log(e);
@@ -374,7 +390,6 @@ public class ChatActivity extends ActionBarActivity implements OnClickListener, 
                 if (chatRoomString.equals(currentChatRoom.getGroupId())) {
                     return;
                 }
-
 
                 ListChatMessage newMessage = new ListChatMessage(extras.getString("text"));
                 newMessage.setTimestamp(extras.getString("timestamp"));

@@ -415,7 +415,8 @@
             android:name="de.tum.in.tumcampus.activities.ChatActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/my_chat_rooms"
-            android:parentActivityName="de.tum.in.tumcampus.activities.ChatRoomsSearchActivity">
+            android:parentActivityName="de.tum.in.tumcampus.activities.ChatRoomsSearchActivity"
+            android:launchMode="singleTop">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.tum.in.tumcampus.activities.ChatRoomsSearchActivity" />

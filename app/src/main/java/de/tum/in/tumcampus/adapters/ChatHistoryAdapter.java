@@ -1,6 +1,7 @@
 package de.tum.in.tumcampus.adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,39 +19,44 @@ public class ChatHistoryAdapter extends BaseAdapter {
     private final Context mContext;
 
     // Layout of the list row
-	static class ViewHolder {
-		TextView tvUser;
-		TextView tvMessage;
-		TextView tvTimestamp;
-	}
-	
-	private final List<ListChatMessage> messageHistory;
-	
-	private final LayoutInflater inflater;
-	
-	private final ChatMember currentChatMember;
-	
-	public ChatHistoryAdapter(Context context, List<ListChatMessage> messageHistory, ChatMember currentChatMember) {
-		this.messageHistory = messageHistory;
-		inflater = LayoutInflater.from(context);
-		this.currentChatMember = currentChatMember;
+    static class ViewHolder {
+        TextView tvUser;
+        TextView tvMessage;
+        TextView tvTimestamp;
+    }
+
+    private final List<ListChatMessage> messageHistory;
+
+    private final LayoutInflater inflater;
+
+    private final ChatMember currentChatMember;
+
+    public ChatHistoryAdapter(Context context, List<ListChatMessage> messageHistory, ChatMember currentChatMember) {
+        this.messageHistory = messageHistory;
+        inflater = LayoutInflater.from(context);
+        this.currentChatMember = currentChatMember;
         mContext = context;
-	}
-	
-	@Override
-	public int getCount() {
-		return messageHistory.size();
-	}
+    }
 
-	@Override
-	public Object getItem(int position) {
-		return messageHistory.get(position);
-	}
+    public void clear() {
+        this.messageHistory.clear();
+        this.notifyDataSetChanged();
+    }
 
-	@Override
-	public long getItemId(int position) {
-		return position;
-	}
+    @Override
+    public int getCount() {
+        return messageHistory.size();
+    }
+
+    @Override
+    public Object getItem(int position) {
+        return messageHistory.get(position);
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
 
     @Override
     public int getViewTypeCount() {
@@ -60,29 +66,29 @@ public class ChatHistoryAdapter extends BaseAdapter {
     @Override
     public int getItemViewType(int position) {
         ListChatMessage chatMessage = messageHistory.get(position);
-        return currentChatMember.getUrl().equals(chatMessage.getMember().getUrl())?0:1;
+        return currentChatMember.getUrl().equals(chatMessage.getMember().getUrl()) ? 0 : 1;
     }
 
     @Override
-	public View getView(int position, View convertView, ViewGroup parent) {		
-		ViewHolder holder;
+    public View getView(int position, View convertView, ViewGroup parent) {
+        ViewHolder holder;
         ListChatMessage chatMessage = messageHistory.get(position);
         boolean outgoing = currentChatMember.getUrl().equals(chatMessage.getMember().getUrl());
 
-		if (convertView == null) {
-            int layout = outgoing?R.layout.activity_chat_history_row_outgoing:R.layout.activity_chat_history_row_incoming;
-			convertView = inflater.inflate(layout, parent, false);
-			holder = new ViewHolder();
+        if (convertView == null) {
+            int layout = outgoing ? R.layout.activity_chat_history_row_outgoing : R.layout.activity_chat_history_row_incoming;
+            convertView = inflater.inflate(layout, parent, false);
+            holder = new ViewHolder();
 
-			// set UI elements
-			holder.tvUser = (TextView) convertView.findViewById(R.id.tvUser);
-			holder.tvMessage = (TextView) convertView.findViewById(R.id.tvMessage);
-			holder.tvTimestamp = (TextView) convertView.findViewById(R.id.tvTime);
+            // set UI elements
+            holder.tvUser = (TextView) convertView.findViewById(R.id.tvUser);
+            holder.tvMessage = (TextView) convertView.findViewById(R.id.tvMessage);
+            holder.tvTimestamp = (TextView) convertView.findViewById(R.id.tvTime);
 
-			convertView.setTag(holder);
-		} else {
-			holder = (ViewHolder) convertView.getTag();
-		}
+            convertView.setTag(holder);
+        } else {
+            holder = (ViewHolder) convertView.getTag();
+        }
 
         holder.tvUser.setText(chatMessage.getMember().getDisplayName());
         holder.tvMessage.setText(chatMessage.getText());
@@ -94,12 +100,17 @@ public class ChatHistoryAdapter extends BaseAdapter {
             holder.tvTimestamp.setText("");
         }
 
-		return convertView;
-	}
+        return convertView;
+    }
 
+    /**
+     * @param i
+     * @param downloadedMessage
+     * @return
+     */
     public boolean add(int i, ListChatMessage downloadedMessage) {
-        for(ListChatMessage message : messageHistory) {
-            if(message.getTimestamp().equals(downloadedMessage.getTimestamp()) &&
+        for (ListChatMessage message : messageHistory) {
+            if (message.getTimestamp().equals(downloadedMessage.getTimestamp()) &&
                     message.getText().equals(downloadedMessage.getText()))
                 return false;
         }
@@ -107,13 +118,21 @@ public class ChatHistoryAdapter extends BaseAdapter {
         return true;
     }
 
+    /**
+     * @param downloadedMessage
+     */
     public void add(ListChatMessage downloadedMessage) {
-        for(ListChatMessage message : messageHistory) {
-            if(message.getTimestamp().equals(downloadedMessage.getTimestamp()) &&
-                    message.getText().equals(downloadedMessage.getText()))
-                return;
+        if (downloadedMessage == null) {
+            return;
         }
-        messageHistory.add(downloadedMessage);
-        notifyDataSetChanged();
+
+        for (ListChatMessage message : messageHistory) {
+            if (message == null || (message.getTimestamp().equals(downloadedMessage.getTimestamp()) && message.getText().equals(downloadedMessage.getText()))) {
+                return;
+            }
+        }
+
+        this.messageHistory.add(downloadedMessage);
+        this.notifyDataSetChanged();
     }
 }
