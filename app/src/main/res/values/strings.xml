@@ -370,4 +370,7 @@
     <string name="vibration">Vibration</string>
     <string name="silent">Silent</string>
     <string name="mode_silent_mode">State during lectures</string>
+    <string name="url_chat_terms">https://tumcabe.in.tum.de/landing/chatterms/</string>
+    <string name="url_privacy_policy">https://tumcabe.in.tum.de/landing/privacy/</string>
+    <string name="privacy_policy">Privacy Policy</string>
 </resources>

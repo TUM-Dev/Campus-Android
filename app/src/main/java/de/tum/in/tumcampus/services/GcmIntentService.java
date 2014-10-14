@@ -82,8 +82,6 @@ public class GcmIntentService extends IntentService {
     // This is just one simple example of what you
     // might choose to do with a GCM message.
     private void sendNotification(Bundle extras) {
-        Log.e("TCA Chat", extras.toString());
-
         //Get the update details
         String chatRoomId = extras.getString("room"); // chat_room={"id":3}
         //String msg = extras.getString("text");

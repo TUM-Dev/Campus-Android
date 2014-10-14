@@ -75,6 +75,7 @@ public class UserPreferencesActivity extends PreferenceActivity implements
         findPreference("first_run").setOnPreferenceClickListener(this);
         findPreference("licenses").setOnPreferenceClickListener(this);
         findPreference("feedback").setOnPreferenceClickListener(this);
+        findPreference("privacy").setOnPreferenceClickListener(this);
 
         // Set summary for these preferences
         setSummary("card_cafeteria_default_G");
@@ -280,17 +281,20 @@ public class UserPreferencesActivity extends PreferenceActivity implements
 
         } else if (key.equals("feedback")) {
             /* Create the Intent */
-            Uri uri = Uri.parse("mailto:tca-support.os.in@tum.de" +
-                    "?subject=" + getString(R.string.feedbackSubj));
+            Uri uri = Uri.parse("mailto:tca-support.os.in@tum.de?subject=" + getString(R.string.feedbackSubj));
 
             Intent sendIntent = new Intent(Intent.ACTION_SENDTO);
             sendIntent.setData(uri);
 
 		    /* Send it off to the Activity-Chooser */
             startActivity(Intent.createChooser(sendIntent, getString(R.string.send_email)));
+        } else if (key.equals("privacy")) {
+            Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.url_privacy_policy)));
+            startActivity(myIntent);
         } else {
             return false;
         }
+
         return true;
     }
 

@@ -334,7 +334,7 @@ public class ChatActivity extends ActionBarActivity implements OnClickListener, 
                     @Override
                     public void success(final ArrayList<ListChatMessage> downloadedChatHistory, Response arg1) {
                         // Got results from webservice
-                        Log.e("TCA Chat","Success loading additional chat history: " + downloadedChatHistory.size());
+                        Utils.logv("Success loading additional chat history: " + downloadedChatHistory.size());
 
                         runOnUiThread(new Runnable() {
                             @Override
@@ -374,13 +374,11 @@ public class ChatActivity extends ActionBarActivity implements OnClickListener, 
         LocalBroadcastManager.getInstance(this).registerReceiver(new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                Log.e("TCA Chat","got new msg: "+intent.getExtras().toString());
                 Bundle extras = intent.getExtras();
                 String chatRoomString = extras.getString("room");
 
                 //If same room just refresh
                 if (chatRoomString.equals(currentChatRoom.getGroupId())) {
-                    Log.e("TCA Chat", "loading from server");
                     ChatActivity.this.getHistoryPageFromServer(1);
                     return;
                 }
