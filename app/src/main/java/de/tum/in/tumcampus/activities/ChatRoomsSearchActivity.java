@@ -61,8 +61,6 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline<Lectu
     private ChatMember currentChatMember;
     private PrivateKey currentPrivateKey;
 
-    private GoogleCloudMessaging gcm;
-    private String regId;
 
     public ChatRoomsSearchActivity() {
         super(TUMOnlineConst.LECTURES_PERSONAL, R.layout.activity_lectures);
@@ -93,7 +91,7 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline<Lectu
                         String lrzId = Utils.getSetting(ChatRoomsSearchActivity.this, Const.LRZ_ID, "");
                         // GET their data from the server using their lrzId
                         List<ChatMember> members = ChatClient.getInstance(ChatRoomsSearchActivity.this).getMember(lrzId);
-                        if(members.size()==0) {
+                        if (members.size() == 0) {
                             Utils.showToastOnUIThread(ChatRoomsSearchActivity.this, R.string.error_setup_chat_member);
                             return;
                         }
@@ -137,7 +135,7 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline<Lectu
 
     /**
      * Handle click on chat room
-     * */
+     */
     @Override
     public void onItemClick(AdapterView<?> a, View v, int position, long id) {
         LecturesSearchRow item = (LecturesSearchRow) lvMyLecturesList.getItemAtPosition(position);
@@ -311,22 +309,19 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline<Lectu
     private void checkPlayServicesAndRegister() {
         currentPrivateKey = retrieveOrGeneratePrivateKey();
 
-        // Check device for Play Services APK. If check succeeds,
-        // proceed with GCM registration.
-        if (checkPlayServices()) {
-            gcm = GoogleCloudMessaging.getInstance(this);
-            //getGCMPreferences(getApplicationContext()).edit().remove(Const.GCM_REG_ID).commit();
-            regId = getRegistrationId(getApplicationContext());
+        // Check device for Play Services APK. If check succeeds, proceed with GCM registration.
+        if (this.checkPlayServices()) {
 
+            //Check if already registered
+            String regId = this.getRegistrationId(getApplicationContext());
+
+            //If we failed, we need to re register
             if (regId.isEmpty()) {
-                registerInBackground();
+                this.registerInBackground();
             } else {
-                // If the regId is not empty, we still need to check whether
-                // it was successfully sent to the TCA server, because this
-                // can fail due to user not confirming their private key
-                boolean sentToTCAServer = Utils.getInternalSettingBool(this, Const.GCM_REG_ID_SENT_TO_SERVER, false);
-                if (!sentToTCAServer) {
-                    sendRegistrationIdToBackend();
+                // If the regId is not empty, we still need to check whether it was successfully sent to the TCA server, because this can fail due to user not confirming their private key
+                if (!Utils.getInternalSettingBool(this, Const.GCM_REG_ID_SENT_TO_SERVER, false)) {
+                    this.sendRegistrationIdToBackend(regId);
                 }
             }
         } else {
@@ -362,16 +357,20 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline<Lectu
      * registration ID.
      */
     private String getRegistrationId(Context context) {
+        //Get the locally stored id
         String registrationId = Utils.getInternalSettingString(this, Const.GCM_REG_ID, "");
+
+        //return if no available to trigger getting a new id
         if (registrationId.isEmpty()) {
             Utils.log("Registration not found.");
             return "";
         }
-        // Check if app was updated; if so, it must clear the registration ID
-        // since the existing regID is not guaranteed to work with the new
-        // app version.
+
+        // Check if app was updated; if so, it must clear the registration ID since the existing regID is not guaranteed to work with the new app version.
         int registeredVersion = Utils.getInternalSettingInt(this, PROPERTY_APP_VERSION, Integer.MIN_VALUE);
         int currentVersion = Utils.getAppVersion(context);
+
+        //return if no available to trigger getting a new id
         if (registeredVersion != currentVersion) {
             Utils.log("App version changed.");
             return "";
@@ -389,33 +388,26 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline<Lectu
         new AsyncTask<Void, Void, String>() {
             @Override
             protected String doInBackground(Void... params) {
-                String msg;
                 try {
-                    Context context = getApplicationContext();
-                    if (gcm == null) {
-                        gcm = GoogleCloudMessaging.getInstance(context);
-                    }
-                    regId = gcm.register(SENDER_ID);
-                    Log.e("----------------TCA Chat regid", regId);
-                    msg = "GCM registration successful";
+                    //Get the services and register a new id
+                    GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(ChatRoomsSearchActivity.this);
+                    String regId = gcm.register(SENDER_ID);
 
-                    // You should send the registration ID to your server over HTTP,
-                    // so it can use GCM/HTTP or CCS to send messages to your app.
-                    sendRegistrationIdToBackend();
+                    //Reset the lock in case we are updating and maybe failed
+                    Utils.setInternalSetting(ChatRoomsSearchActivity.this, Const.GCM_REG_ID_SENT_TO_SERVER, false);
 
-                    // For this demo: we don't need to send it because the device will send
-                    // upstream messages to a server that echo back the message using the
-                    // 'from' address in the message.
+                    // Let the server know of our new registration id
+                    ChatRoomsSearchActivity.this.sendRegistrationIdToBackend(regId);
 
                     // Persist the regID - no need to register again.
-                    storeRegistrationId(context, regId);
+                    ChatRoomsSearchActivity.this.storeRegistrationId(regId);
+
+                    return "GCM registration successful";
                 } catch (IOException ex) {
-                    msg = "Error :" + ex.getMessage();
-                    // If there is an error, don't just keep trying to register.
-                    // Require the user to click a button again, or perform
-                    // exponential back-off.
+
+                    //Return the error message
+                    return "Error :" + ex.getMessage();
                 }
-                return msg;
             }
 
             @Override
@@ -431,7 +423,7 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline<Lectu
      * device sends upstream messages to a server that echoes back the message
      * using the 'from' address in the message.
      */
-    private void sendRegistrationIdToBackend() {
+    private void sendRegistrationIdToBackend(String regId) {
         // Generate signature
         RSASigner signer = new RSASigner(currentPrivateKey);
         String signature = signer.sign(currentChatMember.getLrzId());
@@ -440,8 +432,8 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline<Lectu
             @Override
             public void success(ChatRegistrationId arg0, Response arg1) {
                 Utils.logv("Success uploading GCM registration id: " + arg0);
-                // Store in shared preferences the information that the
-                // GCM registration id was sent to the TCA server successfully
+
+                // Store in shared preferences the information that the GCM registration id was sent to the TCA server successfully
                 Utils.setInternalSetting(ChatRoomsSearchActivity.this, Const.GCM_REG_ID_SENT_TO_SERVER, true);
             }
 
@@ -456,14 +448,14 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline<Lectu
      * Stores the registration ID and app versionCode in the application's
      * {@code SharedPreferences}.
      *
-     * @param context application's context.
-     * @param regId   registration ID
+     * @param regId registration ID
      */
-    private void storeRegistrationId(Context context, String regId) {
-        int appVersion = Utils.getAppVersion(context);
+    private void storeRegistrationId(String regId) {
+        int appVersion = Utils.getAppVersion(this);
 
-        Utils.logv("Saving regId on app version " + appVersion);
         Utils.setInternalSetting(this, Const.GCM_REG_ID, regId);
         Utils.setInternalSetting(this, PROPERTY_APP_VERSION, appVersion);
+
+        Utils.logv("Saving regId on app version " + appVersion);
     }
 }
