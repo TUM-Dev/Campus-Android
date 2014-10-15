@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.View;
@@ -146,10 +147,11 @@ public class WizNavExtrasActivity extends ActivityForLoadingInBackground<Void, B
     }
 
     public void onClickTerms(View view) {
-        new AlertDialog.Builder(this).setTitle(R.string.chat_terms_title)
+        /*new AlertDialog.Builder(this).setTitle(R.string.chat_terms_title)
                 .setMessage(getResources().getString(R.string.chat_terms_body))
-                .setPositiveButton(android.R.string.ok, null).create().show();
-        //TODO show chat terms: update string to correct terms
+                .setPositiveButton(android.R.string.ok, null).create().show();*/
+        Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.url_chat_terms)));
+        startActivity(myIntent);
     }
 
     /**

@@ -56,6 +56,7 @@ public final class Const {
 	public static final String PRIVATE_KEY = "chat_member_private_key";
 	public static final String GCM_REG_ID = "gcm_registration_id";
 	public static final String GCM_REG_ID_SENT_TO_SERVER = "gcm_registration_id_sent_to_server";
+    public static final String GCM_REG_ID_LAST_TRANSMISSION = "gcm_registration_id_last_transmission";
 	public static final String CHAT_TERMS_SHOWN = "chat_terms_shown";
     public static final String APP_LAUNCHES = "app_launches";
     public static final String INTERNAL_PREFS = "internal_prefs";
@@ -80,4 +81,5 @@ public final class Const {
     public static final String GROUP_CHAT_ENABLED = "group_chat_enabled";
     public static final String TOKEN_IS_SETUP = "token_is_setup";
     public static final String BUG_REPORTS = "bug_reports";
+
 }

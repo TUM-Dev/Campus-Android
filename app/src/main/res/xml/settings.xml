@@ -307,6 +307,10 @@
             <intent android:action="de.tum.in.tumcampus.activities.InformationActivity" />
         </Preference>
         <Preference
+            android:key="privacy"
+            android:title="@string/privacy_policy">
+        </Preference>
+        <Preference
             android:key="licenses"
             android:summary="@string/licences_summary"
             android:title="@string/licences" />

@@ -16,6 +16,7 @@
 
 package de.tum.in.tumcampus.services;
 
+import android.app.ActivityManager;
 import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -83,21 +84,25 @@ public class GcmIntentService extends IntentService {
     private void sendNotification(Bundle extras) {
         //Get the update details
         String chatRoomId = extras.getString("room"); // chat_room={"id":3}
-        String msg = extras.getString("text");
+        //String msg = extras.getString("text");
 
-        // Notify chat activity that a message has been received
+        // Notify any open chat activity that a message has been received
         Intent intent = new Intent("chat-message-received");
         intent.putExtras(extras);
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
-
-        Intent notificationIntent = new Intent(this, ChatActivity.class);
 
         // Get the data necessary for the ChatActivity
         String lrzId = Utils.getSetting(this, Const.LRZ_ID, "");
         List<ChatMember> members = ChatClient.getInstance(this).getMember(lrzId);
         ChatRoom chatRoom = ChatClient.getInstance(this).getChatRoom(chatRoomId);
 
+        //Check if chat is currently open then don't show a notification if it is
+        if (this.isChatOpen()) {
+            return;
+        }
+
         // Put the data into the intent
+        Intent notificationIntent = new Intent(this, ChatActivity.class);
         notificationIntent.putExtra(Const.CURRENT_CHAT_ROOM, new Gson().toJson(chatRoom));
         notificationIntent.putExtra(Const.CURRENT_CHAT_MEMBER, new Gson().toJson(members.get(0)));
 
@@ -114,8 +119,8 @@ public class GcmIntentService extends IntentService {
                     new NotificationCompat.Builder(this)
                             .setSmallIcon(R.drawable.tum_logo_notification)
                             .setContentTitle("TCA Chat")
-                            .setStyle(new NotificationCompat.BigTextStyle().bigText(msg))
-                            .setContentText(msg)
+                        .setStyle(new NotificationCompat.BigTextStyle().bigText("New message arrived"))
+                        .setContentText("New message arrived")
                             .setContentIntent(contentIntent)
                             .setDefaults(Notification.DEFAULT_ALL)
                             .setAutoCancel(true);
@@ -123,6 +128,17 @@ public class GcmIntentService extends IntentService {
             Notification notification = mBuilder.build();
             NotificationManager mNotificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
             mNotificationManager.notify(NOTIFICATION_ID, notification);
+    }
+
+    private Boolean isChatOpen() {
+        ActivityManager am = (ActivityManager) this.getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningTaskInfo> allTasks = am.getRunningTasks(1);
+
+        for (ActivityManager.RunningTaskInfo aTask : allTasks) {
+            if (aTask.topActivity.getClassName().equals("de.tum.in.tumcampus.activities.ChatActivity")) {
+                return true;
+            }
         }
+        return false;
     }
 }

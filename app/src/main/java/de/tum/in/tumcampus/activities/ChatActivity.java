@@ -12,6 +12,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Html;
 import android.util.Base64;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -110,6 +111,23 @@ public class ChatActivity extends ActionBarActivity implements OnClickListener, 
     protected void onPause() {
         super.onPause();
         mCurrentlyOpenChatRoom = null;
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        final ChatRoom room = new Gson().fromJson(intent.getExtras().getString(Const.CURRENT_CHAT_ROOM), ChatRoom.class);
+
+        if (room != null) {
+            //TODO compare ids instead of names, currently null
+            if (!room.getName().equals(currentChatRoom.getName())) {
+                currentChatRoom = room;
+                getSupportActionBar().setSubtitle(currentChatRoom.getName().substring(4));
+                chatHistoryAdapter.clear();
+                getHistoryPageFromServer(1);
+                chatHistoryAdapter.notifyDataSetChanged();
+            }
+        }
     }
 
     /**
@@ -348,7 +366,8 @@ public class ChatActivity extends ActionBarActivity implements OnClickListener, 
                         chatManager.replaceInto(downloadedChatHistory, currentChatRoom.getGroupId());
 
                         // Got results from webservice
-                        Utils.logv("Success loading additional chat history: " + arg1.toString());
+                        Utils.logv("Success loading additional chat history: " + downloadedChatHistory.size());
+
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -358,12 +377,6 @@ public class ChatActivity extends ActionBarActivity implements OnClickListener, 
                                     lvMessageHistory.setAdapter(chatHistoryAdapter);
                                     loadingMore = false;
                                 } else {
-                                    boolean messageAdded = true;
-                                    if (messageAdded) {
-                                        loadingMore = false;
-                                        chatHistoryAdapter.notifyDataSetChanged();
-                                    } else {
-                                        lvMessageHistory.removeHeaderView(bar);
                                     }
                                 }
                             }
@@ -391,20 +404,15 @@ public class ChatActivity extends ActionBarActivity implements OnClickListener, 
             @Override
             public void onReceive(Context context, Intent intent) {
                 Bundle extras = intent.getExtras();
-
                 String chatRoomString = extras.getString("room");
 
-                //If same room no action required?
+                //If same room just refresh
                 if (chatRoomString.equals(currentChatRoom.getGroupId())) {
+                    ChatActivity.this.getHistoryPageFromServer(1);
                     return;
                 }
-
-                ListChatMessage newMessage = new ListChatMessage(extras.getString("text"));
-                newMessage.setTimestamp(extras.getString("timestamp"));
-
-                ChatMember member = new Gson().fromJson(extras.getString("member"), ChatMember.class);
-                newMessage.setMember(member);
-                chatHistoryAdapter.add(newMessage);
+                //Otherwise do nothing :)
+                //User can switch to the other room himself
             }
         }, new IntentFilter("chat-message-received"));
 
