@@ -34,6 +34,7 @@ public class ListChatMessage {
 	}
 	
 	public ListChatMessage(CreateChatMessage newlyCreatedMessage, ChatMember currentChatMember) {
+        this.id = newlyCreatedMessage.getId();
 		this.text = newlyCreatedMessage.getText();
 		this.timestamp = newlyCreatedMessage.getTimestamp();
 		this.member = currentChatMember;
@@ -47,9 +48,10 @@ public class ListChatMessage {
     public void setStatus(int status) {
         sendingStatus = status;
     }
-	
-	public ListChatMessage(String url, String text, ChatMember member, String timestamp) {
+
+	public ListChatMessage(int id, String url, String text, ChatMember member, String timestamp) {
 		super();
+        this.id = id;
 		this.url = url;
 		this.text = text;
 		this.member = member;

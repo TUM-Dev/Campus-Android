@@ -6,13 +6,13 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Html;
 import android.util.Base64;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -85,7 +85,6 @@ public class ChatActivity extends ActionBarActivity implements OnClickListener, 
     private boolean loadingMore = false;
     private EmojiconsPopup popup;
     private boolean iconShow = false;
-    public static ChatRoom mCurrentlyOpenChatRoom = null;
     private ChatMessageManager chatManager;
 
     @Override
@@ -98,19 +97,27 @@ public class ChatActivity extends ActionBarActivity implements OnClickListener, 
 
         getIntentData();
         bindUIElements();
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter("chat-message-received"));
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         getHistoryPageFromServer(1);
-        mCurrentlyOpenChatRoom = currentChatRoom;
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        mCurrentlyOpenChatRoom = null;
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
     }
 
     @Override
@@ -123,7 +130,7 @@ public class ChatActivity extends ActionBarActivity implements OnClickListener, 
             if (!room.getName().equals(currentChatRoom.getName())) {
                 currentChatRoom = room;
                 getSupportActionBar().setSubtitle(currentChatRoom.getName().substring(4));
-                chatHistoryAdapter.clear();
+                chatHistoryAdapter = null;
                 getHistoryPageFromServer(1);
                 chatHistoryAdapter.notifyDataSetChanged();
             }
@@ -144,6 +151,7 @@ public class ChatActivity extends ActionBarActivity implements OnClickListener, 
             }
 
             final CreateChatMessage newMessage = new CreateChatMessage(etMessage.getText().toString(), currentChatMember.getUrl());
+            newMessage.setNow();
             final ListChatMessage msg = new ListChatMessage(newMessage, currentChatMember);
             chatHistoryAdapter.add(msg);
 
@@ -162,11 +170,12 @@ public class ChatActivity extends ActionBarActivity implements OnClickListener, 
                             // Send the message to the server
                             final CreateChatMessage newlyCreatedMessage = ChatClient.getInstance(ChatActivity.this).sendMessage(currentChatRoom.getGroupId(), newMessage);
                             chatManager.replaceInto(new ListChatMessage(newlyCreatedMessage, currentChatMember), currentChatRoom.getGroupId());
+                            final Cursor cur = chatManager.getAll(currentChatRoom.getGroupId());
 
                             ChatActivity.this.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    chatHistoryAdapter.sent(msg);
+                                    chatHistoryAdapter.sent(msg, cur);
                                 }
                             });
                             messageSentSuccessfully = true;
@@ -337,7 +346,7 @@ public class ChatActivity extends ActionBarActivity implements OnClickListener, 
     @Override
     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
         //is the top item is visible & not loading more already ? Load more !
-        if ((firstVisibleItem == 0) && !(loadingMore) && chatHistoryAdapter != null) {
+        if ((firstVisibleItem == 0) && !loadingMore && chatHistoryAdapter != null) {
             int chatHistorySize = chatHistoryAdapter.getCount();
             // Round the number of already downloaded messages to multiple of 10
             // Then divide this by 10 to get the number of downloaded pages
@@ -363,8 +372,7 @@ public class ChatActivity extends ActionBarActivity implements OnClickListener, 
                 ChatClient.getInstance(ChatActivity.this).getMessages(currentChatRoom.getGroupId(), page, new Callback<ArrayList<ListChatMessage>>() {
                     @Override
                     public void success(final ArrayList<ListChatMessage> downloadedChatHistory, Response arg1) {
-                        chatManager.replaceInto(downloadedChatHistory, currentChatRoom.getGroupId());
-
+                        loadingMore = !chatManager.replaceInto(downloadedChatHistory, currentChatRoom.getGroupId());
                         // Got results from webservice
                         Utils.logv("Success loading additional chat history: " + downloadedChatHistory.size());
 
@@ -375,10 +383,12 @@ public class ChatActivity extends ActionBarActivity implements OnClickListener, 
                                 if (chatHistoryAdapter == null) {
                                     chatHistoryAdapter = new ChatHistoryAdapter(ChatActivity.this, chatManager.getAll(currentChatRoom.getGroupId()), currentChatMember);
                                     lvMessageHistory.setAdapter(chatHistoryAdapter);
-                                    loadingMore = false;
-                                } else {
-                                    }
+                                } else if(!loadingMore) {
+                                    chatHistoryAdapter.changeCursor(chatManager.getAll(currentChatRoom.getGroupId()));
+                                    chatHistoryAdapter.notifyDataSetChanged();
                                 }
+                                if (loadingMore)
+                                    lvMessageHistory.removeHeaderView(bar);
                             }
                         });
                     }
@@ -399,25 +409,23 @@ public class ChatActivity extends ActionBarActivity implements OnClickListener, 
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_activity_chat, menu);
 
-        //TODO make this implementation for the receiver nicer!
-        LocalBroadcastManager.getInstance(this).registerReceiver(new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                Bundle extras = intent.getExtras();
-                String chatRoomString = extras.getString("room");
-
-                //If same room just refresh
-                if (chatRoomString.equals(currentChatRoom.getGroupId())) {
-                    ChatActivity.this.getHistoryPageFromServer(1);
-                    return;
-                }
-                //Otherwise do nothing :)
-                //User can switch to the other room himself
-            }
-        }, new IntentFilter("chat-message-received"));
-
         return true;
     }
+
+    private BroadcastReceiver receiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Bundle extras = intent.getExtras();
+            String chatRoomString = extras.getString("room");
+
+            //If same room just refresh
+            if (chatRoomString.equals(currentChatRoom.getGroupId())) {
+                ChatActivity.this.getHistoryPageFromServer(1);
+            }
+            //Otherwise do nothing :)
+            //User can switch to the other room himself
+        }
+    };
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

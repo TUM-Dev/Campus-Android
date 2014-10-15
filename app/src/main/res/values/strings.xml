@@ -374,12 +374,12 @@
     <string name="url_privacy_policy">https://tumcabe.in.tum.de/landing/privacy/</string>
     <string name="privacy_policy">Privacy Policy</string>
     <string name="message_details">Message info</string>
-    <string name="message_detail_text">&lt;b>Sender information&lt;/b>\n
- Name: %1$s\n
- E-Mail: %2$s@mytum.de\n
-&lt;b>Message&lt;/b>\n
- Time: %3$s\n
- Status: %4$s</string>
+    <string name="message_detail_text">Sender information:\n
+\tName: %1$s\n
+\tE-Mail: %2$s@mytum.de\n\n
+Message:\n
+\tTime: %3$s\n
+\tStatus: %4$s</string>
     <string name="status_sent">Sent</string>
     <string name="status_sending">Sending</string>
     <string name="status_sending_failed">Sending failed</string>

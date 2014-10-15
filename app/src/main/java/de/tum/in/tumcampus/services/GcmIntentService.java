@@ -108,10 +108,6 @@ public class GcmIntentService extends IntentService {
 
         if(Utils.getSettingBool(this, "card_chat_phone", true)) {
 
-            // Don't show notification if chat room is open
-            if(ChatActivity.mCurrentlyOpenChatRoom!=null && ChatActivity.mCurrentlyOpenChatRoom.getGroupId().equals(chatRoomId))
-                return;
-
             PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_ONE_SHOT);
 
             //Show a nice notification
@@ -119,8 +115,8 @@ public class GcmIntentService extends IntentService {
                     new NotificationCompat.Builder(this)
                             .setSmallIcon(R.drawable.tum_logo_notification)
                             .setContentTitle("TCA Chat")
-                        .setStyle(new NotificationCompat.BigTextStyle().bigText("New message arrived"))
-                        .setContentText("New message arrived")
+                            .setStyle(new NotificationCompat.BigTextStyle().bigText("New message arrived"))
+                            .setContentText("New message arrived")
                             .setContentIntent(contentIntent)
                             .setDefaults(Notification.DEFAULT_ALL)
                             .setAutoCancel(true);
@@ -128,6 +124,7 @@ public class GcmIntentService extends IntentService {
             Notification notification = mBuilder.build();
             NotificationManager mNotificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
             mNotificationManager.notify(NOTIFICATION_ID, notification);
+        }
     }
 
     private Boolean isChatOpen() {

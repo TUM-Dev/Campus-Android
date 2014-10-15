@@ -74,7 +74,7 @@ public class StartupActivity extends ActionBarActivity {
             startActivity(new Intent(this, WizNavStartActivity.class));
             finish();
             return;
-        } else if (newVersion) {
+        } else if (prevVersion<=35) {
             Utils.setSetting(this, Const.BACKGROUND_MODE, true);
             Intent intent = new Intent(this, WizNavExtrasActivity.class);
             intent.putExtra(Const.TOKEN_IS_SETUP, true);
@@ -215,6 +215,9 @@ public class StartupActivity extends ActionBarActivity {
         // delete tumcampus directory
         File f = new File(Environment.getExternalStorageDirectory().getPath() + "/tumcampus");
         FileUtils.deleteRecursive(f);
+
+        // Load all on start
+        Utils.setInternalSetting(this, Const.EVERYTHING_SETUP, false);
 
         // rename hide_wizzard_on_startup
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);

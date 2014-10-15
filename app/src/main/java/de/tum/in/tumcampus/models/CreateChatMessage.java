@@ -55,7 +55,7 @@ public class CreateChatMessage {
 	}
 	public String getTimestampString() {
 		try {
-			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.ENGLISH); // 2014-06-30T16:31:57.878Z
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ENGLISH); // 2014-06-30T16:31:57.878Z
 			Date date = formatter.parse(timestamp);
 			if (isToday(date)) {
 				return new SimpleDateFormat("HH:mm", Locale.ENGLISH).format(date);
@@ -98,5 +98,10 @@ public class CreateChatMessage {
 		yesterday.add(Calendar.DAY_OF_YEAR, -1); // yesterday
 
         return yesterday.get(Calendar.YEAR) == passedDate.get(Calendar.YEAR) && yesterday.get(Calendar.DAY_OF_YEAR) == passedDate.get(Calendar.DAY_OF_YEAR);
+    }
+
+    public void setNow() {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ENGLISH); // 2014-06-30T16:31:57.878Z
+        timestamp = formatter.format(new Date());
     }
 }
