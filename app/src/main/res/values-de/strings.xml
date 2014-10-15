@@ -218,7 +218,7 @@
     <string name="chat_terms_body">Chat Bedingungen</string>
     <string name="display_name">Nickname</string>
     <string name="leave_chat_room">Chatroom verlassen</string>
-    <string name="leave_chat_room_body">Bist du sicher, dass du den chatroom verlassen willst?</string>
+    <string name="leave_chat_room_body">Bist du sicher, dass du den Chatroom verlassen willst?</string>
 
     <!-- Cards -->
     <string name="last_updated">Der Inhalt wurde zuletzt %s aktualisiert.</string>
@@ -348,4 +348,6 @@ Nachricht:\n
     <string name="status_sent">Gesendet</string>
     <string name="status_sending">Wird gesendet</string>
     <string name="status_sending_failed">Senden fehlgeschlagen</string>
+    <string name="joined">Meine</string>
+    <string name="not_joined">Weitere</string>
 </resources>

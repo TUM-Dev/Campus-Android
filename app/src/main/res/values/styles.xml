@@ -29,6 +29,12 @@
         <item name="actionBarStyle">@style/BlueActionBar</item>
         <item name="android:actionDropDownStyle" tools:ignore="NewApi">@style/SpinnerBlue</item>
         <item name="actionDropDownStyle">@style/SpinnerBlue</item>
+        <item name="android:actionBarTabStyle" tools:ignore="NewApi">@style/MyActionBarTabView</item>
+        <item name="actionBarTabStyle">@style/MyActionBarTabView</item>
+    </style>
+
+    <style name="MyActionBarTabView" parent="Widget.AppCompat.Base.ActionBar.TabView">
+        <item name="android:background">@color/sections_blue</item>
     </style>
 
     <style name="SmallListSeparatorTextViewStyle">

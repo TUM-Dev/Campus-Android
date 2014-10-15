@@ -383,4 +383,7 @@ Message:\n
     <string name="status_sent">Sent</string>
     <string name="status_sending">Sending</string>
     <string name="status_sending_failed">Sending failed</string>
+    <string name="add_chat_rooms">Add chat rooms</string>
+    <string name="joined">My</string>
+    <string name="not_joined">Other</string>
 </resources>

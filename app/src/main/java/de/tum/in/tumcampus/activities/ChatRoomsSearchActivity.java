@@ -2,8 +2,11 @@ package de.tum.in.tumcampus.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBar;
 import android.util.Base64;
 import android.view.View;
 import android.widget.AdapterView;
@@ -22,13 +25,12 @@ import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
 import de.tum.in.tumcampus.R;
-import de.tum.in.tumcampus.activities.generic.ActivityForAccessingTumOnline;
-import de.tum.in.tumcampus.adapters.LecturesListAdapter;
+import de.tum.in.tumcampus.activities.generic.ActivityForLoadingInBackground;
+import de.tum.in.tumcampus.adapters.ChatRoomListAdapter;
 import de.tum.in.tumcampus.adapters.NoResultsAdapter;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.RSASigner;
@@ -40,7 +42,9 @@ import de.tum.in.tumcampus.models.ChatRegistrationId;
 import de.tum.in.tumcampus.models.ChatRoom;
 import de.tum.in.tumcampus.models.LecturesSearchRow;
 import de.tum.in.tumcampus.models.LecturesSearchRowSet;
+import de.tum.in.tumcampus.models.managers.ChatRoomManager;
 import de.tum.in.tumcampus.tumonline.TUMOnlineConst;
+import de.tum.in.tumcampus.tumonline.TUMOnlineRequest;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -50,7 +54,7 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
  * This activity presents the chat rooms of user's
  * lectures using the TUMOnline web service
  */
-public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline<LecturesSearchRowSet> implements OnItemClickListener {
+public class ChatRoomsSearchActivity extends ActivityForLoadingInBackground<Integer, Cursor> implements OnItemClickListener {
     private static final String PROPERTY_APP_VERSION = "appVersion";
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     private static final String SENDER_ID = "944892355389";
@@ -60,10 +64,14 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline<Lectu
     private ChatRoom currentChatRoom;
     private ChatMember currentChatMember;
     private PrivateKey currentPrivateKey;
+    private TUMOnlineRequest<LecturesSearchRowSet> requestHandler;
+    private ChatRoomManager manager;
+    private int mCurrentMode = 1;
+    private ChatRoomListAdapter adapter;
 
 
     public ChatRoomsSearchActivity() {
-        super(TUMOnlineConst.LECTURES_PERSONAL, R.layout.activity_lectures);
+        super(R.layout.activity_lectures);
     }
 
     @Override
@@ -74,8 +82,44 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline<Lectu
         lvMyLecturesList = (StickyListHeadersListView) findViewById(R.id.lvMyLecturesList);
         lvMyLecturesList.setOnItemClickListener(this);
 
+        manager = new ChatRoomManager(this);
+
         //Load the lectures list
-        this.requestFetch();
+        requestHandler = new TUMOnlineRequest<LecturesSearchRowSet>(TUMOnlineConst.LECTURES_PERSONAL, this, true);
+
+        final ActionBar actionBar = getSupportActionBar();
+
+        // Specify that tabs should be displayed in the action bar.
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+
+        // Create a tab listener that is called when the user changes tabs.
+        ActionBar.TabListener tabListener = new ActionBar.TabListener() {
+            public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
+                // show the given tab
+                mCurrentMode = 1-tab.getPosition();
+                startLoading(mCurrentMode);
+            }
+
+            public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
+                // hide the given tab
+            }
+
+            public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
+                // probably ignore this event
+            }
+        };
+
+        actionBar.addTab(actionBar.newTab().setText(R.string.joined).setTabListener(tabListener));
+        actionBar.addTab(actionBar.newTab().setText(R.string.not_joined).setTabListener(tabListener));
+
+        startLoading(mCurrentMode);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Check device for Play Services APK.
+        populateCurrentChatMember();
     }
 
     /**
@@ -120,28 +164,30 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline<Lectu
     }
 
     @Override
-    public void onFetch(LecturesSearchRowSet lecturesList) {
-        List<LecturesSearchRow> lectures = lecturesList.getLehrveranstaltungen();
+    protected Cursor onLoadInBackground(Integer... arg) {
+        LecturesSearchRowSet lecturesList = requestHandler.fetch();
+        if (lecturesList != null) {
+            List<LecturesSearchRow> lectures = lecturesList.getLehrveranstaltungen();
+            manager.replaceInto(lectures);
+        } else {
+            Utils.showToastOnUIThread(this, R.string.no_internet_connection);
+        }
 
-        if (lectures == null) {
+        return manager.getAllByStatus(arg[0]);
+    }
+
+    @Override
+    protected void onLoadFinished(Cursor result) {
+        showLoadingEnded();
+        if (result.getCount() == 0) {
             // no results found
             lvMyLecturesList.setAdapter(new NoResultsAdapter(this));
             return;
         }
 
-        // Sort lectures by semester id
-        Collections.sort(lectures);
-
         // set ListView to data via the LecturesListAdapter
-        lvMyLecturesList.setAdapter(new LecturesListAdapter(ChatRoomsSearchActivity.this, lectures));
-        showLoadingEnded();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        // Check device for Play Services APK.
-        populateCurrentChatMember();
+        adapter = new ChatRoomListAdapter(this, result);
+        lvMyLecturesList.setAdapter(adapter);
     }
 
     /**
@@ -149,16 +195,17 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline<Lectu
      */
     @Override
     public void onItemClick(AdapterView<?> a, View v, int position, long id) {
-        LecturesSearchRow item = (LecturesSearchRow) lvMyLecturesList.getItemAtPosition(position);
+        Cursor item = (Cursor) lvMyLecturesList.getItemAtPosition(position);
 
-        this.checkPlayServicesAndRegister();
+        checkPlayServicesAndRegister();
 
         // set bundle for LectureDetails and show it
         Bundle bundle = new Bundle();
         final Intent intent = new Intent(this, ChatActivity.class);
         intent.putExtras(bundle);
 
-        String chatRoomUid = item.getSemester_id() + ":" + item.getTitel();
+        String chatRoomUid = item.getString(ChatRoomManager.COL_SEMESTER_ID) + ":"
+                + item.getString(ChatRoomManager.COL_NAME);
 
         currentChatRoom = new ChatRoom(chatRoomUid);
         ChatClient.getInstance(this).createGroup(currentChatRoom, new Callback<ChatRoom>() {
@@ -168,8 +215,7 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline<Lectu
                 // The newly created chat room is returned
                 Utils.logv("Success creating chat room: " + newlyCreatedChatRoom.toString());
                 currentChatRoom = newlyCreatedChatRoom;
-
-                showTermsIfNeeded(intent);
+                moveToChatActivity(intent);
             }
 
             @Override
@@ -186,7 +232,14 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline<Lectu
                             if (chatRooms != null)
                                 currentChatRoom = chatRooms.get(0);
 
-                            showTermsIfNeeded(intent);
+                            // When we show joined chat rooms open chat room directly
+                            if (mCurrentMode == 1)
+                                moveToChatActivity(intent);
+
+                                // otherwise join chat room
+                            else
+                                joinChatRoom(intent);
+
                         } catch (RetrofitError e) {
                             Utils.log(e);
                             runOnUiThread(new Runnable() {
@@ -207,38 +260,35 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline<Lectu
      *
      * @param intent Intent to start after chat terms have been accepted
      */
-    private void showTermsIfNeeded(final Intent intent) {
-        // If the terms have not been shown for this chat room, show them
-        if (!Utils.getInternalSettingBool(this, Const.CHAT_TERMS_SHOWN + "_" + currentChatRoom.getName(), false)) {
+    private void joinChatRoom(final Intent intent) {
+        if (currentChatMember.getLrzId() != null) {
+            // Generate signature
+            RSASigner signer = new RSASigner(currentPrivateKey);
+            String signature = signer.sign(currentChatMember.getLrzId());
+            currentChatMember.setSignature(signature);
 
-            if (currentChatMember.getLrzId() != null) {
-                // Generate signature
-                RSASigner signer = new RSASigner(currentPrivateKey);
-                String signature = signer.sign(currentChatMember.getLrzId());
-                currentChatMember.setSignature(signature);
+            ChatClient.getInstance(ChatRoomsSearchActivity.this).joinChatRoom(currentChatRoom, currentChatMember, new Callback<ChatRoom>() {
+                @Override
+                public void success(ChatRoom arg0, Response arg1) {
+                    Utils.logv("Success joining chat room: " + arg0.toString());
+                    // Remember in sharedPrefs that the terms dialog was shown
+                    manager.join(currentChatRoom);
+                    final Cursor newCursor = manager.getAllByStatus(mCurrentMode);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            adapter.changeCursor(newCursor);
+                            Utils.showToast(ChatRoomsSearchActivity.this, R.string.joined_chat_room);
+                        }
+                    });
+                }
 
-                ChatClient.getInstance(ChatRoomsSearchActivity.this).joinChatRoom(currentChatRoom, currentChatMember, new Callback<ChatRoom>() {
-                    @Override
-                    public void success(ChatRoom arg0, Response arg1) {
-                        Utils.logv("Success joining chat room: " + arg0.toString());
-                        // Remember in sharedPrefs that the terms dialog was shown
-                        Utils.setInternalSetting(ChatRoomsSearchActivity.this, Const.CHAT_TERMS_SHOWN + "_" + currentChatRoom.getName(), true);
-
-                        Utils.showToastOnUIThread(ChatRoomsSearchActivity.this, R.string.joined_chat_room);
-
-                        moveToChatActivity(intent);
-                    }
-
-                    @Override
-                    public void failure(RetrofitError e) {
-                        Utils.log(e, "Failure joining chat room");
-                        Utils.showToastOnUIThread(ChatRoomsSearchActivity.this, R.string.activate_key);
-                    }
-                });
-            }
-
-        } else { // If the terms were already shown, just enter the chat room
-            moveToChatActivity(intent);
+                @Override
+                public void failure(RetrofitError e) {
+                    Utils.log(e, "Failure joining chat room");
+                    Utils.showToastOnUIThread(ChatRoomsSearchActivity.this, R.string.activate_key);
+                }
+            });
         }
     }
 
@@ -474,6 +524,7 @@ public class ChatRoomsSearchActivity extends ActivityForAccessingTumOnline<Lectu
 
     /**
      * Helper function to check if we need to update the regid
+     *
      * @param regId
      */
     private void checkRegisterIdUpdate(String regId) {

@@ -16,13 +16,14 @@
 
 package de.tum.in.tumcampus.services;
 
-import android.app.ActivityManager;
 import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
@@ -40,6 +41,7 @@ import de.tum.in.tumcampus.models.ChatClient;
 import de.tum.in.tumcampus.models.ChatMember;
 import de.tum.in.tumcampus.models.ChatRoom;
 import de.tum.in.tumcampus.models.managers.CardManager;
+import de.tum.in.tumcampus.models.managers.ChatMessageManager;
 
 /**
  * This {@code IntentService} does the actual handling of the GCM message.
@@ -96,9 +98,22 @@ public class GcmIntentService extends IntentService {
         List<ChatMember> members = ChatClient.getInstance(this).getMember(lrzId);
         ChatRoom chatRoom = ChatClient.getInstance(this).getChatRoom(chatRoomId);
 
+        ChatMessageManager manager = new ChatMessageManager(this, chatRoom);
+        Cursor messages = manager.getNewMessages();
+
         //Check if chat is currently open then don't show a notification if it is
-        if (this.isChatOpen()) {
+        if (ChatActivity.mCurrentOpenChatRoom != null && ChatActivity.mCurrentOpenChatRoom.getGroupId().equals(chatRoomId)) {
             return;
+        }
+
+        String txt = null;
+        if(messages.moveToFirst()) {
+            do {
+                if(txt==null)
+                    txt = messages.getString(3);
+                else
+                    txt += "\n"+messages.getString(3);
+            } while(messages.moveToNext());
         }
 
         // Put the data into the intent
@@ -110,32 +125,25 @@ public class GcmIntentService extends IntentService {
 
             PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_ONE_SHOT);
 
+            // Notification sound
+            Uri sound = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.message);
+
             //Show a nice notification
             NotificationCompat.Builder mBuilder =
                     new NotificationCompat.Builder(this)
                             .setSmallIcon(R.drawable.tum_logo_notification)
-                            .setContentTitle("TCA Chat")
-                            .setStyle(new NotificationCompat.BigTextStyle().bigText("New message arrived"))
-                            .setContentText("New message arrived")
+                            .setContentTitle(chatRoom.getName().substring(4))
+                            .setStyle(new NotificationCompat.BigTextStyle().bigText(txt))
+                            .setContentText(txt)
                             .setContentIntent(contentIntent)
-                            .setDefaults(Notification.DEFAULT_ALL)
+                            .setDefaults(Notification.DEFAULT_VIBRATE)
+                            .setLights(0xff0000ff, 500, 500)
+                            .setSound(sound)
                             .setAutoCancel(true);
 
             Notification notification = mBuilder.build();
             NotificationManager mNotificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
             mNotificationManager.notify(NOTIFICATION_ID, notification);
         }
-    }
-
-    private Boolean isChatOpen() {
-        ActivityManager am = (ActivityManager) this.getSystemService(Context.ACTIVITY_SERVICE);
-        List<ActivityManager.RunningTaskInfo> allTasks = am.getRunningTasks(1);
-
-        for (ActivityManager.RunningTaskInfo aTask : allTasks) {
-            if (aTask.topActivity.getClassName().equals("de.tum.in.tumcampus.activities.ChatActivity")) {
-                return true;
-            }
-        }
-        return false;
     }
 }

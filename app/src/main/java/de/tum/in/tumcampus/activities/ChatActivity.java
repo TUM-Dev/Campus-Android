@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
@@ -86,14 +87,13 @@ public class ChatActivity extends ActionBarActivity implements OnClickListener, 
     private EmojiconsPopup popup;
     private boolean iconShow = false;
     private ChatMessageManager chatManager;
+    public static ChatRoom mCurrentOpenChatRoom = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ImplicitCounter.Counter(this);
         setContentView(R.layout.activity_chat);
-
-        chatManager = new ChatMessageManager(this);
 
         getIntentData();
         bindUIElements();
@@ -105,13 +105,15 @@ public class ChatActivity extends ActionBarActivity implements OnClickListener, 
     protected void onResume() {
         super.onResume();
         getHistoryPageFromServer(1);
+        mCurrentOpenChatRoom = currentChatRoom;
+        chatManager = new ChatMessageManager(this, currentChatRoom);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        mCurrentOpenChatRoom = null;
     }
-
 
     @Override
     protected void onDestroy() {
@@ -131,6 +133,7 @@ public class ChatActivity extends ActionBarActivity implements OnClickListener, 
                 currentChatRoom = room;
                 getSupportActionBar().setSubtitle(currentChatRoom.getName().substring(4));
                 chatHistoryAdapter = null;
+                chatManager = new ChatMessageManager(this, currentChatRoom);
                 getHistoryPageFromServer(1);
                 chatHistoryAdapter.notifyDataSetChanged();
             }
@@ -169,8 +172,8 @@ public class ChatActivity extends ActionBarActivity implements OnClickListener, 
                         try {
                             // Send the message to the server
                             final CreateChatMessage newlyCreatedMessage = ChatClient.getInstance(ChatActivity.this).sendMessage(currentChatRoom.getGroupId(), newMessage);
-                            chatManager.replaceInto(new ListChatMessage(newlyCreatedMessage, currentChatMember), currentChatRoom.getGroupId());
-                            final Cursor cur = chatManager.getAll(currentChatRoom.getGroupId());
+                            chatManager.replaceInto(new ListChatMessage(newlyCreatedMessage, currentChatMember));
+                            final Cursor cur = chatManager.getAll();
 
                             ChatActivity.this.runOnUiThread(new Runnable() {
                                 @Override
@@ -372,7 +375,7 @@ public class ChatActivity extends ActionBarActivity implements OnClickListener, 
                 ChatClient.getInstance(ChatActivity.this).getMessages(currentChatRoom.getGroupId(), page, new Callback<ArrayList<ListChatMessage>>() {
                     @Override
                     public void success(final ArrayList<ListChatMessage> downloadedChatHistory, Response arg1) {
-                        loadingMore = !chatManager.replaceInto(downloadedChatHistory, currentChatRoom.getGroupId());
+                        loadingMore = !chatManager.replaceInto(downloadedChatHistory);
                         // Got results from webservice
                         Utils.logv("Success loading additional chat history: " + downloadedChatHistory.size());
 
@@ -381,10 +384,10 @@ public class ChatActivity extends ActionBarActivity implements OnClickListener, 
                             public void run() {
                                 // Update results in UI
                                 if (chatHistoryAdapter == null) {
-                                    chatHistoryAdapter = new ChatHistoryAdapter(ChatActivity.this, chatManager.getAll(currentChatRoom.getGroupId()), currentChatMember);
+                                    chatHistoryAdapter = new ChatHistoryAdapter(ChatActivity.this, chatManager.getAll(), currentChatMember);
                                     lvMessageHistory.setAdapter(chatHistoryAdapter);
                                 } else if(!loadingMore) {
-                                    chatHistoryAdapter.changeCursor(chatManager.getAll(currentChatRoom.getGroupId()));
+                                    chatHistoryAdapter.changeCursor(chatManager.getAll());
                                     chatHistoryAdapter.notifyDataSetChanged();
                                 }
                                 if (loadingMore)
@@ -420,7 +423,9 @@ public class ChatActivity extends ActionBarActivity implements OnClickListener, 
 
             //If same room just refresh
             if (chatRoomString.equals(currentChatRoom.getGroupId())) {
-                ChatActivity.this.getHistoryPageFromServer(1);
+                MediaPlayer mediaPlayer = MediaPlayer.create(ChatActivity.this, R.raw.message);
+                mediaPlayer.start();
+                chatHistoryAdapter.changeCursor(chatManager.getAll());
             }
             //Otherwise do nothing :)
             //User can switch to the other room himself

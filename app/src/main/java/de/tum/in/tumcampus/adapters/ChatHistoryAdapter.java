@@ -130,12 +130,13 @@ public class ChatHistoryAdapter extends CursorAdapter {
 
     private void bindViewChatMessage(View view, ListChatMessage chatMessage, boolean sending) {
         ViewHolder holder = (ViewHolder) view.getTag();
-        boolean outgoing = currentChatMember.getUrl().equals(chatMessage.getMember().getUrl());
 
         holder.tvUser.setText(chatMessage.getMember().getDisplayName());
         holder.tvMessage.setText(chatMessage.getText());
         holder.tvTimestamp.setText(chatMessage.getTimestampString(mContext));
-        if (outgoing) {
+
+        // Set status for outgoing messages (ivSent is not null)
+        if (holder.ivSent != null) {
             holder.ivSent.setVisibility(sending ? View.GONE : View.VISIBLE);
             holder.pbSending.setVisibility(sending ? View.VISIBLE : View.GONE);
         }
