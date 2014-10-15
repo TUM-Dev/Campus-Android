@@ -23,10 +23,8 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.gson.Gson;
@@ -36,9 +34,11 @@ import java.util.List;
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.ChatActivity;
 import de.tum.in.tumcampus.auxiliary.Const;
+import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.ChatClient;
 import de.tum.in.tumcampus.models.ChatMember;
 import de.tum.in.tumcampus.models.ChatRoom;
+import de.tum.in.tumcampus.models.managers.CardManager;
 
 /**
  * This {@code IntentService} does the actual handling of the GCM message.
@@ -48,7 +48,7 @@ import de.tum.in.tumcampus.models.ChatRoom;
  * wake lock.
  */
 public class GcmIntentService extends IntentService {
-    private static final int NOTIFICATION_ID = 1;
+    private static final int NOTIFICATION_ID = CardManager.CARD_CHAT;
 
     public GcmIntentService() {
         super("GcmIntentService");
@@ -62,7 +62,7 @@ public class GcmIntentService extends IntentService {
         // in your BroadcastReceiver.
         String messageType = gcm.getMessageType(intent);
 
-        if (!extras.isEmpty()) {  // has effect of unparcelling Bundle
+        if (!extras.isEmpty()) {  // has effect of un-parcelling Bundle
             /*
              * Filter messages based on message type. Since it is likely that GCM will be
              * extended in the future with new message types, just ignore any message types you're
@@ -81,8 +81,6 @@ public class GcmIntentService extends IntentService {
     // This is just one simple example of what you
     // might choose to do with a GCM message.
     private void sendNotification(Bundle extras) {
-        Log.e("TCA Chat", extras.toString());
-
         //Get the update details
         String chatRoomId = extras.getString("room"); // chat_room={"id":3}
         String msg = extras.getString("text");
@@ -95,7 +93,7 @@ public class GcmIntentService extends IntentService {
         Intent notificationIntent = new Intent(this, ChatActivity.class);
 
         // Get the data necessary for the ChatActivity
-        String lrzId = PreferenceManager.getDefaultSharedPreferences(this).getString(Const.LRZ_ID, "");
+        String lrzId = Utils.getSetting(this, Const.LRZ_ID, "");
         List<ChatMember> members = ChatClient.getInstance(this).getMember(lrzId);
         ChatRoom chatRoom = ChatClient.getInstance(this).getChatRoom(chatRoomId);
 
@@ -103,21 +101,28 @@ public class GcmIntentService extends IntentService {
         notificationIntent.putExtra(Const.CURRENT_CHAT_ROOM, new Gson().toJson(chatRoom));
         notificationIntent.putExtra(Const.CURRENT_CHAT_MEMBER, new Gson().toJson(members.get(0)));
 
-        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_ONE_SHOT);
+        if(Utils.getSettingBool(this, "card_chat_phone", true)) {
 
-        //Show a nice notification
-        NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(this)
-                        .setSmallIcon(R.drawable.tum_logo_notification)
-                        .setContentTitle("TCA Chat")
-                        .setStyle(new NotificationCompat.BigTextStyle().bigText(msg))
-                        .setContentText(msg)
-                        .setContentIntent(contentIntent)
-                        .setDefaults(Notification.DEFAULT_ALL)
-                        .setAutoCancel(true);
+            // Don't show notification if chat room is open
+            if(ChatActivity.mCurrentlyOpenChatRoom!=null && ChatActivity.mCurrentlyOpenChatRoom.getGroupId().equals(chatRoomId))
+                return;
 
-        Notification notification = mBuilder.build();
-        NotificationManager mNotificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
-        mNotificationManager.notify(NOTIFICATION_ID, notification);
+            PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_ONE_SHOT);
+
+            //Show a nice notification
+            NotificationCompat.Builder mBuilder =
+                    new NotificationCompat.Builder(this)
+                            .setSmallIcon(R.drawable.tum_logo_notification)
+                            .setContentTitle("TCA Chat")
+                            .setStyle(new NotificationCompat.BigTextStyle().bigText(msg))
+                            .setContentText(msg)
+                            .setContentIntent(contentIntent)
+                            .setDefaults(Notification.DEFAULT_ALL)
+                            .setAutoCancel(true);
+
+            Notification notification = mBuilder.build();
+            NotificationManager mNotificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+            mNotificationManager.notify(NOTIFICATION_ID, notification);
+        }
     }
 }

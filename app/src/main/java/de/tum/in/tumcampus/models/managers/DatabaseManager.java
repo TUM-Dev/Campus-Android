@@ -48,5 +48,6 @@ public abstract class DatabaseManager {
         db.execSQL("DROP TABLE IF EXISTS suggestions_mvv");
         db.execSQL("DROP TABLE IF EXISTS suggestions_persons");
         db.execSQL("DROP TABLE IF EXISTS suggestions_rooms");
+        db.execSQL("DROP TABLE IF EXISTS chat_message");
     }
 }

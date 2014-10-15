@@ -10,6 +10,7 @@ import de.tum.in.tumcampus.auxiliary.Utils;
 @SuppressWarnings("UnusedDeclaration")
 public class CreateChatMessage {
 
+    private int id;
 	private String url;
 	private String text;
 	private String member;
@@ -21,7 +22,13 @@ public class CreateChatMessage {
 		this.text = text;
 		this.member = member;
 	}
-	
+
+    public int getId() {
+        return id;
+    }
+    public void setId(int i) {
+        id = i;
+    }
 	public String getUrl() {
 		return url;
 	}

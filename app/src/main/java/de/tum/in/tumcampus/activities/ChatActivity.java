@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBarActivity;
+import android.text.Html;
 import android.util.Base64;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -18,6 +19,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -30,8 +32,12 @@ import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Date;
+import java.util.Locale;
 
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.adapters.ChatHistoryAdapter;
@@ -44,6 +50,7 @@ import de.tum.in.tumcampus.models.ChatMember;
 import de.tum.in.tumcampus.models.ChatRoom;
 import de.tum.in.tumcampus.models.CreateChatMessage;
 import de.tum.in.tumcampus.models.ListChatMessage;
+import de.tum.in.tumcampus.models.managers.ChatMessageManager;
 import github.ankushsachdeva.emojicon.EmojiconGridView;
 import github.ankushsachdeva.emojicon.EmojiconsPopup;
 import github.ankushsachdeva.emojicon.emoji.Emojicon;
@@ -57,7 +64,7 @@ import retrofit.client.Response;
  * NEEDS: Const.CURRENT_CHAT_ROOM set in incoming bundle (json serialised object of class ChatRoom)
  * Const.CURRENT_CHAT_MEMBER set in incoming bundle (json serialised object of class ChatMember)
  */
-public class ChatActivity extends ActionBarActivity implements OnClickListener, AbsListView.OnScrollListener, EmojiconGridView.OnEmojiconClickedListener, EmojiconsPopup.OnSoftKeyboardOpenCloseListener, EmojiconsPopup.OnEmojiconBackspaceClickedListener {
+public class ChatActivity extends ActionBarActivity implements OnClickListener, AbsListView.OnScrollListener, EmojiconGridView.OnEmojiconClickedListener, EmojiconsPopup.OnSoftKeyboardOpenCloseListener, EmojiconsPopup.OnEmojiconBackspaceClickedListener, AdapterView.OnItemLongClickListener {
 
     /**
      * UI elements
@@ -77,6 +84,8 @@ public class ChatActivity extends ActionBarActivity implements OnClickListener, 
     private boolean loadingMore = false;
     private EmojiconsPopup popup;
     private boolean iconShow = false;
+    public static ChatRoom mCurrentlyOpenChatRoom = null;
+    private ChatMessageManager chatManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,15 +93,23 @@ public class ChatActivity extends ActionBarActivity implements OnClickListener, 
         ImplicitCounter.Counter(this);
         setContentView(R.layout.activity_chat);
 
+        chatManager = new ChatMessageManager(this);
+
         getIntentData();
         bindUIElements();
-        getHistoryPageFromServer(1);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         getHistoryPageFromServer(1);
+        mCurrentlyOpenChatRoom = currentChatRoom;
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mCurrentlyOpenChatRoom = null;
     }
 
     /**
@@ -102,18 +119,20 @@ public class ChatActivity extends ActionBarActivity implements OnClickListener, 
      */
     @Override
     public void onClick(View view) {
-
         if (view.getId() == btnSend.getId()) { // SEND MESSAGE
             //Check if something was entered
             if (etMessage.getText().toString().length() == 0) {
                 return;
             }
 
+            final CreateChatMessage newMessage = new CreateChatMessage(etMessage.getText().toString(), currentChatMember.getUrl());
+            final ListChatMessage msg = new ListChatMessage(newMessage, currentChatMember);
+            chatHistoryAdapter.add(msg);
+
             //Post to webservice
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    CreateChatMessage newMessage = new CreateChatMessage(etMessage.getText().toString(), currentChatMember.getUrl());
 
                     // Generate signature
                     RSASigner signer = new RSASigner(getPrivateKeyFromSharedPrefs());
@@ -124,22 +143,20 @@ public class ChatActivity extends ActionBarActivity implements OnClickListener, 
                         try {
                             // Send the message to the server
                             final CreateChatMessage newlyCreatedMessage = ChatClient.getInstance(ChatActivity.this).sendMessage(currentChatRoom.getGroupId(), newMessage);
+                            chatManager.replaceInto(new ListChatMessage(newlyCreatedMessage, currentChatMember), currentChatRoom.getGroupId());
 
                             ChatActivity.this.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    chatHistoryAdapter.add(new ListChatMessage(newlyCreatedMessage, currentChatMember));
+                                    chatHistoryAdapter.sent(msg);
                                 }
                             });
-
-
                             messageSentSuccessfully = true;
                         } catch (RetrofitError e) {
                             Utils.log(e);
                             numberOfAttempts++;
                         }
                     }
-
                     messageSentSuccessfully = false;
                     numberOfAttempts = 0;
                 }
@@ -171,27 +188,38 @@ public class ChatActivity extends ActionBarActivity implements OnClickListener, 
      * @param id       Id of the selected item
      * @return True if the method consumed the on long click event
      */
-    /*@Override
+    @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
-        //todo currently always fails
-        new Thread(new Runnable() {
+        ListChatMessage message = (ListChatMessage) chatHistoryAdapter.getItem(position - 1);
+
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ENGLISH);
+        Date time;
+        try {
+            time = formatter.parse(message.getTimestamp());
+        } catch (ParseException e) {
+            Utils.log(e);
+            time = new Date();
+        }
+        String messageStr = String.format(getString(R.string.message_detail_text),
+                message.getMember().getDisplayName(),
+                message.getMember().getLrzId(),
+                DateFormat.getDateTimeInstance().format(time),
+                Html.fromHtml(getString(message.getStatusStringRes())));
+
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.message_details).setMessage(messageStr).create().show();
+
+        /*ArrayList<ChatPublicKey> publicKeys = (ArrayList<ChatPublicKey>) ChatClient.getInstance(ChatActivity.this).getPublicKeysForMember(message.getMember().getUserId());
+        ChatMessageValidator validator = new ChatMessageValidator(publicKeys);
+        final boolean result = validator.validate(message);
+        ChatActivity.this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                ListChatMessage message = (ListChatMessage) chatHistoryAdapter.getItem(position - 1);
-
-                ArrayList<ChatPublicKey> publicKeys = (ArrayList<ChatPublicKey>) ChatClient.getInstance(ChatActivity.this).getPublicKeysForMember(message.getMember().getUserId());
-                ChatMessageValidator validator = new ChatMessageValidator(publicKeys);
-                final boolean result = validator.validate(message);
-                ChatActivity.this.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Utils.showToast(ChatActivity.this, "Selected message is " + (result ? "" : "not ") + "valid");
-                    }
-                });
+                Utils.showToast(ChatActivity.this, "Selected message is " + (result ? "" : "not ") + "valid");
             }
-        }).start();
+        });*/
         return true;
-    }*/
+    }
 
     /**
      * Loads the private key from preferences
@@ -229,7 +257,7 @@ public class ChatActivity extends ActionBarActivity implements OnClickListener, 
      */
     private void bindUIElements() {
         lvMessageHistory = (ListView) findViewById(R.id.lvMessageHistory);
-        //lvMessageHistory.setOnItemLongClickListener(this);
+        lvMessageHistory.setOnItemLongClickListener(this);
         lvMessageHistory.setDividerHeight(0);
         lvMessageHistory.setOnScrollListener(this);
 
@@ -317,6 +345,8 @@ public class ChatActivity extends ActionBarActivity implements OnClickListener, 
                 ChatClient.getInstance(ChatActivity.this).getMessages(currentChatRoom.getGroupId(), page, new Callback<ArrayList<ListChatMessage>>() {
                     @Override
                     public void success(final ArrayList<ListChatMessage> downloadedChatHistory, Response arg1) {
+                        chatManager.replaceInto(downloadedChatHistory, currentChatRoom.getGroupId());
+
                         // Got results from webservice
                         Utils.logv("Success loading additional chat history: " + arg1.toString());
                         runOnUiThread(new Runnable() {
@@ -324,17 +354,11 @@ public class ChatActivity extends ActionBarActivity implements OnClickListener, 
                             public void run() {
                                 // Update results in UI
                                 if (chatHistoryAdapter == null) {
-                                    Collections.reverse(downloadedChatHistory);
-                                    chatHistoryAdapter = new ChatHistoryAdapter(ChatActivity.this, downloadedChatHistory, currentChatMember);
+                                    chatHistoryAdapter = new ChatHistoryAdapter(ChatActivity.this, chatManager.getAll(currentChatRoom.getGroupId()), currentChatMember);
                                     lvMessageHistory.setAdapter(chatHistoryAdapter);
                                     loadingMore = false;
                                 } else {
-                                    boolean messageAdded = false;
-                                    for (ListChatMessage downloadedMessage : downloadedChatHistory) {
-                                        if (chatHistoryAdapter.add(0, downloadedMessage)) {
-                                            messageAdded = true;
-                                        }
-                                    }
+                                    boolean messageAdded = true;
                                     if (messageAdded) {
                                         loadingMore = false;
                                         chatHistoryAdapter.notifyDataSetChanged();
@@ -374,7 +398,6 @@ public class ChatActivity extends ActionBarActivity implements OnClickListener, 
                 if (chatRoomString.equals(currentChatRoom.getGroupId())) {
                     return;
                 }
-
 
                 ListChatMessage newMessage = new ListChatMessage(extras.getString("text"));
                 newMessage.setTimestamp(extras.getString("timestamp"));

@@ -8,18 +8,25 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.auxiliary.Utils;
 
 
 @SuppressWarnings("UnusedDeclaration")
 public class ListChatMessage {
 
-	private String url;
+    public static final int STATUS_SENDING = 1;
+    public static final int STATUS_SENT = 0;
+    public static final int STATUS_SENDING_FAILED = -1;
+
+    private String url;
+    private int id;
 	private String text;
 	private ChatMember member;
 	private String timestamp;
 	private String signature;
 	private boolean valid;
+    private int sendingStatus;
 	
 	public ListChatMessage(String text) {
 		super();
@@ -30,7 +37,16 @@ public class ListChatMessage {
 		this.text = newlyCreatedMessage.getText();
 		this.timestamp = newlyCreatedMessage.getTimestamp();
 		this.member = currentChatMember;
+        this.sendingStatus = STATUS_SENDING;
 	}
+
+    public int getStatus() {
+        return sendingStatus;
+    }
+
+    public void setStatus(int status) {
+        sendingStatus = status;
+    }
 	
 	public ListChatMessage(String url, String text, ChatMember member, String timestamp) {
 		super();
@@ -38,8 +54,15 @@ public class ListChatMessage {
 		this.text = text;
 		this.member = member;
 		this.timestamp = timestamp;
+        this.sendingStatus = STATUS_SENT;
 	}
 
+    public int getId() {
+        return id;
+    }
+    public void setId(int id) {
+        this.id = id;
+    }
 	public String getUrl() {
 		return url;
 	}
@@ -105,5 +128,15 @@ public class ListChatMessage {
 		yesterday.add(Calendar.DAY_OF_YEAR, -1); // yesterday
 
         return yesterday.get(Calendar.YEAR) == passedDate.get(Calendar.YEAR) && yesterday.get(Calendar.DAY_OF_YEAR) == passedDate.get(Calendar.DAY_OF_YEAR);
+    }
+
+    public int getStatusStringRes() {
+        if (sendingStatus==STATUS_SENT) {
+            return R.string.status_sent;
+        } else if (sendingStatus==STATUS_SENDING) {
+            return R.string.status_sending;
+        } else {
+            return R.string.status_sending_failed;
+        }
     }
 }

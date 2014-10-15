@@ -35,6 +35,7 @@ public class CardManager {
     public static final int CARD_MVV = 8;
     public static final int CARD_NEWS = 9;
     public static final int CARD_EDUROAM = 10;
+    public static final int CARD_CHAT = 11;
 
     private static List<Card> cards;
     private static ArrayList<Card> newCards;

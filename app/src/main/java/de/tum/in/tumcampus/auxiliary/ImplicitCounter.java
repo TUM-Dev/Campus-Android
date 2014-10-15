@@ -74,7 +74,7 @@ public class ImplicitCounter extends AsyncTask<String, Integer, Void> {
         Map<String, ?> allEntries = sp.getAll();
 
         // Submit this to webservice via parent async class
-        this.execute((new Gson().toJson(allEntries)).toString());
+        this.execute(new Gson().toJson(allEntries));
 
         // Delete / Reset
         SharedPreferences.Editor e = sp.edit();
