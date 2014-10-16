@@ -47,11 +47,15 @@ public class MVVCard extends Card {
     public View getCardView(Context context, ViewGroup parent) {
         super.getCardView(context, parent);
         mPlaceHolder.setVisibility(View.VISIBLE);
-        for(TransportManager.Departure d : mDepartures) {
+
+        for(int i=0;i<mDepartures.size() && i<5;i++) {
+            TransportManager.Departure curr=mDepartures.get(i);
+
             DepartureView view = new DepartureView(mContext);
-            view.setSymbol(d.symbol);
-            view.setLine(d.line);
-            view.setTime(d.time);
+            view.setSymbol(curr.symbol);
+            view.setLine(curr.line);
+            view.setTime(curr.time);
+
             mLinearLayout.addView(view);
         }
         return mCard;

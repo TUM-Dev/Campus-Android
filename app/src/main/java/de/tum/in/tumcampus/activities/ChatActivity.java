@@ -7,8 +7,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBarActivity;
@@ -386,7 +388,7 @@ public class ChatActivity extends ActionBarActivity implements OnClickListener, 
                                 if (chatHistoryAdapter == null) {
                                     chatHistoryAdapter = new ChatHistoryAdapter(ChatActivity.this, chatManager.getAll(), currentChatMember);
                                     lvMessageHistory.setAdapter(chatHistoryAdapter);
-                                } else if(!loadingMore) {
+                                } else if (!loadingMore) {
                                     chatHistoryAdapter.changeCursor(chatManager.getAll());
                                     chatHistoryAdapter.notifyDataSetChanged();
                                 }
@@ -423,8 +425,18 @@ public class ChatActivity extends ActionBarActivity implements OnClickListener, 
 
             //If same room just refresh
             if (chatRoomString.equals(currentChatRoom.getGroupId())) {
-                MediaPlayer mediaPlayer = MediaPlayer.create(ChatActivity.this, R.raw.message);
-                mediaPlayer.start();
+
+                //Check first, if sounds are enabled
+                AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+                if (am.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
+
+                    //Play a nice notification sound
+                    MediaPlayer mediaPlayer = MediaPlayer.create(ChatActivity.this, R.raw.message);
+                    mediaPlayer.start();
+                }else if (am.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
+                    Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+                    v.vibrate(500);
+                }
                 chatHistoryAdapter.changeCursor(chatManager.getAll());
             }
             //Otherwise do nothing :)

@@ -3,6 +3,7 @@ package de.tum.in.tumcampus.models.managers;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.google.gson.Gson;
 
@@ -70,7 +71,7 @@ public class ChatMessageManager {
      * Saves the given message into database
      */
     public void replaceInto(ListChatMessage m) {
-        Utils.logv("replace " + m.getText());
+       Log.e("TCA Chat", "replace " + m.getText() + " " + m.getId());
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ENGLISH);
         Date date;
         try {
