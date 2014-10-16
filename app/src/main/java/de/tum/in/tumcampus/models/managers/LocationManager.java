@@ -15,6 +15,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
+import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.Cafeteria;
 import de.tum.in.tumcampus.models.Geo;
@@ -39,6 +40,19 @@ public class LocationManager {
     Location getCurrentLocation() {
         if (servicesConnected()) {
             return getLastLocation();
+        }
+
+        // If location services are not available use default location if set
+        final String defaultCampus = Utils.getSetting(mContext, Const.DEFAULT_CAMPUS, "G");
+        if(!defaultCampus.equals("X")) {
+            for(int i=0;i<campusShort.length;i++) {
+                if(campusShort[i].equals(defaultCampus)) {
+                    Location location = new Location("defaultLocation");
+                    location.setLatitude(campusLocations[i][0]);
+                    location.setLongitude(campusLocations[i][1]);
+                    return location;
+                }
+            }
         }
         return null;
     }

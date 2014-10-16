@@ -350,4 +350,6 @@ Nachricht:\n
     <string name="status_sending_failed">Senden fehlgeschlagen</string>
     <string name="joined">Meine</string>
     <string name="not_joined">Weitere</string>
+    <string name="default_campus">Standard Campus</string>
+    <string name="no_default_campus">Kein Standard Campus</string>
 </resources>

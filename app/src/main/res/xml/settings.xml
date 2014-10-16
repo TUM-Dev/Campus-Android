@@ -256,6 +256,12 @@
                     android:title="@string/phone" />
             </PreferenceCategory>
         </PreferenceScreen>
+        <ListPreference
+            android:defaultValue="G"
+            android:entries="@array/default_campus_entries"
+            android:entryValues="@array/default_campus_values"
+            android:key="card_default_campus"
+            android:title="@string/default_campus" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/services">
         <CheckBoxPreference

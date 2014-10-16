@@ -386,4 +386,9 @@ Message:\n
     <string name="add_chat_rooms">Add chat rooms</string>
     <string name="joined">My</string>
     <string name="not_joined">Other</string>
+    <string name="default_campus">Default campus</string>
+    <string name="campus_garching_hochbrueck">Campus Garching Hochbrück</string>
+    <string name="campus_leopoldstrasse">Campus Leopoldstraße</string>
+    <string name="campus_geschwister_scholl">Campus Geschwister Scholl-Platz</string>
+    <string name="no_default_campus">No default campus</string>
 </resources>

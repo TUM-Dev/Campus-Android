@@ -26,7 +26,6 @@ public final class Const {
 	public static final String HOURS_COLUMN = "hours";
 	public static final String ID_COLUMN = "_id";
 	public static final String JSON_ADDRESS = "address";
-	public static final String JSON_DESCRIPTION = "description";
 	public static final String JSON_ID = "id";
 	public static final String JSON_LINK = "link";
 	public static final String JSON_NAME = "name";
@@ -76,10 +75,8 @@ public final class Const {
     public static final String JSON_SOURCE = "source";
     public static final String EVERYTHING_SETUP = "everything_setup";
     public static final String SYNC_CALENDAR_IMPORT = "calendar_import";
-    public static final String JSON_HIDDEN = "hidden";
-    public static final String JSON_ALERTS = "alerts";
     public static final String GROUP_CHAT_ENABLED = "group_chat_enabled";
     public static final String TOKEN_IS_SETUP = "token_is_setup";
     public static final String BUG_REPORTS = "bug_reports";
-
+    public static final String DEFAULT_CAMPUS = "card_default_campus";
 }

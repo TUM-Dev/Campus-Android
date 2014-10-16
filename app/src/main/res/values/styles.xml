@@ -33,8 +33,8 @@
         <item name="actionBarTabStyle">@style/MyActionBarTabView</item>
     </style>
 
-    <style name="MyActionBarTabView" parent="Widget.AppCompat.Base.ActionBar.TabView">
-        <item name="android:background">@color/sections_blue</item>
+    <style name="MyActionBarTabView" parent="@style/Widget.AppCompat.ActionBar.TabView">
+        <item name="android:background">@drawable/tab_indicator_ab_blue</item>
     </style>
 
     <style name="SmallListSeparatorTextViewStyle">
@@ -53,6 +53,12 @@
         <!-- Support library compatibility -->
         <item name="background">@drawable/ab_solid_blue</item>
         <item name="subtitleTextStyle">@style/BlueActionBar.Subtitle</item>
+
+
+        <item name="android:backgroundStacked" tools:ignore="NewApi">@drawable/ab_stacked_solid_blue</item>
+        <item name="android:backgroundSplit" tools:ignore="NewApi">@drawable/ab_bottom_solid_blue</item>
+        <item name="backgroundStacked">@drawable/ab_stacked_solid_blue</item>
+        <item name="backgroundSplit">@drawable/ab_bottom_solid_blue</item>
     </style>
 
     <style name="BlueActionBar.Subtitle" parent="android:style/TextAppearance.Holo.Widget.ActionBar.Subtitle">

@@ -85,6 +85,7 @@ public class UserPreferencesActivity extends PreferenceActivity implements
         setSummary("card_stations_default_G");
         setSummary("card_stations_default_C");
         setSummary("card_stations_default_K");
+        setSummary("card_default_campus");
         setSummary("silent_mode_set_to");
 
         // Register the change listener to react immediately on changes
