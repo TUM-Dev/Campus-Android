@@ -310,12 +310,14 @@
         <Preference
             android:key="about"
             android:title="@string/information">
-            <intent android:action="de.tum.in.tumcampus.activities.InformationActivity" />
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:targetPackage="de.tum.in.tumcampus"
+                android:targetClass="de.tum.in.tumcampus.activities.InformationActivity" />
         </Preference>
         <Preference
             android:key="privacy"
-            android:title="@string/privacy_policy">
-        </Preference>
+            android:title="@string/privacy_policy" />
         <Preference
             android:key="licenses"
             android:summary="@string/licences_summary"

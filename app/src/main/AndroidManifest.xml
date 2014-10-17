@@ -38,7 +38,7 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <!-- Allow vibration for chat messages -->
-    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <!--
      Creates a custom permission so only this app can receive its messages.
@@ -252,8 +252,7 @@
         <activity
             android:name="de.tum.in.tumcampus.activities.LecturesAppointmentsActivity"
             android:configChanges="orientation|screenSize"
-            android:label="@string/lectures_appointments">
-        </activity>
+            android:label="@string/lectures_appointments"></activity>
         <activity
             android:name="de.tum.in.tumcampus.activities.LecturesDetailsActivity"
             android:configChanges="orientation|screenSize"
@@ -356,7 +355,12 @@
             android:name="de.tum.in.tumcampus.activities.InformationActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/information"
-            android:launchMode="singleTop" />
+            android:launchMode="singleTop"
+            android:parentActivityName=".activities.UserPreferencesActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="de.tum.in.tumcampus.activities.UserPreferencesActivity" />
+        </activity>
         <activity
             android:name="de.tum.in.tumcampus.activities.OrganisationActivity"
             android:configChanges="orientation|screenSize"
