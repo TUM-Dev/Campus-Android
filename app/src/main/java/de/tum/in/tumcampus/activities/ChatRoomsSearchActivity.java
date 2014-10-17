@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.util.Base64;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -32,6 +31,7 @@ import java.util.List;
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.generic.ActivityForLoadingInBackground;
 import de.tum.in.tumcampus.adapters.ChatRoomListAdapter;
+import de.tum.in.tumcampus.adapters.ChatRoomListArrayAdapter;
 import de.tum.in.tumcampus.adapters.NoResultsAdapter;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.RSASigner;
@@ -41,6 +41,7 @@ import de.tum.in.tumcampus.models.ChatMember;
 import de.tum.in.tumcampus.models.ChatPublicKey;
 import de.tum.in.tumcampus.models.ChatRegistrationId;
 import de.tum.in.tumcampus.models.ChatRoom;
+import de.tum.in.tumcampus.models.ChatVerfication;
 import de.tum.in.tumcampus.models.LecturesSearchRow;
 import de.tum.in.tumcampus.models.LecturesSearchRowSet;
 import de.tum.in.tumcampus.models.managers.ChatRoomManager;
@@ -181,8 +182,28 @@ public class ChatRoomsSearchActivity extends ActivityForLoadingInBackground<Inte
     protected void onLoadFinished(Cursor result) {
         showLoadingEnded();
         if (result.getCount() == 0) {
-            // no results found
-            lvMyLecturesList.setAdapter(new NoResultsAdapter(this));
+            //Try to restore from server
+            // Upload public key to the server
+            RSASigner signer = new RSASigner(currentPrivateKey);
+            String signature = signer.sign(currentChatMember.getLrzId());
+            ChatClient.getInstance(this).getMemberRooms(currentChatMember.getUserId(), new ChatVerfication(signature), new Callback<List<ChatRoom>>() {
+                @Override
+                public void success(List<ChatRoom> rooms, Response arg1) {
+                    Utils.logv("Got rooms: " + rooms.size());
+                    Utils.showToast(ChatRoomsSearchActivity.this, "Public key activation mail sent to " + currentChatMember.getLrzId() + "@mytum.de");
+
+                    lvMyLecturesList.setAdapter(new ChatRoomListArrayAdapter(ChatRoomsSearchActivity.this, rooms));
+                }
+
+                @Override
+                public void failure(RetrofitError e) {
+                    Utils.log(e, "Failure getting joined rooms from api");
+                    // no results found
+                    lvMyLecturesList.setAdapter(new NoResultsAdapter(ChatRoomsSearchActivity.this));
+                    return;
+                }
+            });
+
             return;
         }
 

@@ -50,6 +50,7 @@ public class ChatClient {
         @Override
         public void intercept(RequestFacade request) {
             //Log.e("TCA Chat", "hooking ID: " + NetUtils.getDeviceID(ChatClient.c) + " " + Utils.getInternalSettingString(ChatClient.c, Const.GCM_REG_ID, ""));
+            Log.e("TCA Chat",request.toString());
             request.addHeader("X-DEVICE-ID", NetUtils.getDeviceID(ChatClient.c));
         }
     };
@@ -89,6 +90,9 @@ public class ChatClient {
 
         @POST("/members/{memberId}/pubkeys/")
         void uploadPublicKey(@Path("memberId") String memberId, @Body ChatPublicKey publicKey, Callback<ChatPublicKey> cb);
+
+        @POST("/members/{memberId}/rooms/")
+        void getMemberRooms(@Path("memberId") String memberId, @Body ChatVerfication verfication, Callback<List<ChatRoom>> cb);
 
         @GET("/members/{memberId}/pubkeys/")
         List<ChatPublicKey> getPublicKeysForMember(@Path("memberId") String memberId);
@@ -140,6 +144,10 @@ public class ChatClient {
 
     public void uploadPublicKey(String memberId, ChatPublicKey publicKey, Callback<ChatPublicKey> cb) {
         service.uploadPublicKey(memberId, publicKey, cb);
+    }
+
+    public void getMemberRooms(String memberId, ChatVerfication verfication, Callback<List<ChatRoom>> cb) {
+        service.getMemberRooms(memberId, verfication, cb);
     }
 
     public List<ChatPublicKey> getPublicKeysForMember(String memberId) {
