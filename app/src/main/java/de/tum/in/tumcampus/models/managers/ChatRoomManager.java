@@ -91,8 +91,15 @@ public class ChatRoomManager {
      */
     public void replaceIntoRooms(List<ChatRoom> rooms) {
         for (ChatRoom room : rooms) {
+            String roomName=room.getName();
+            String semster="";
+            if(roomName.contains(":")){
+                semster=roomName.substring(0,3);
+                roomName=roomName.substring(4);
+            }
+
             db.execSQL("UPDATE chat_room SET group_id=?, status=1 WHERE name=? AND semester_id=?",
-                    new String[]{room.getId(), room.getName().substring(4), room.getName().substring(0, 3)});
+                    new String[]{room.getId(), roomName, semster});
         }
     }
 
