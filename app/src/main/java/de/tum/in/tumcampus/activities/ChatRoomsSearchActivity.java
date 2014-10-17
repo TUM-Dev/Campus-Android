@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.util.Base64;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -216,6 +215,7 @@ public class ChatRoomsSearchActivity extends ActivityForLoadingInBackground<Inte
                 // The newly created chat room is returned
                 Utils.logv("Success creating chat room: " + newlyCreatedChatRoom.toString());
                 currentChatRoom = newlyCreatedChatRoom;
+                manager.join(currentChatRoom);
                 moveToChatActivity(intent);
             }
 
@@ -238,7 +238,7 @@ public class ChatRoomsSearchActivity extends ActivityForLoadingInBackground<Inte
                             if (mCurrentMode == 1) {
                                 ChatRoomsSearchActivity.this.moveToChatActivity(intent);
                             } else { // otherwise join chat room
-                                ChatRoomsSearchActivity.this.joinChatRoom(intent);
+                                ChatRoomsSearchActivity.this.joinChatRoom();
                             }
                         } catch (RetrofitError e) {
                             Utils.log(e);
@@ -256,11 +256,9 @@ public class ChatRoomsSearchActivity extends ActivityForLoadingInBackground<Inte
     }
 
     /**
-     * Displays chat terms if activity is opened for the first time
-     *
-     * @param intent Intent to start after chat terms have been accepted
+     * Joins the chat room and adds it to the list of my chat rooms
      */
-    private void joinChatRoom(final Intent intent) {
+    private void joinChatRoom() {
         if (currentChatMember.getLrzId() != null) {
             // Generate signature
             RSASigner signer = new RSASigner(currentPrivateKey);

@@ -90,4 +90,9 @@ public class ChatRoomManager {
         db.execSQL("UPDATE chat_room SET group_id=?, status=1 WHERE name=? AND semester_id=?",
                 new String[]{currentChatRoom.getGroupId(), currentChatRoom.getName().substring(4), currentChatRoom.getName().substring(0, 3)});
     }
+
+    public void leave(ChatRoom currentChatRoom) {
+        db.execSQL("UPDATE chat_room SET group_id=?, status=0 WHERE name=? AND semester_id=?",
+                new String[]{currentChatRoom.getGroupId(), currentChatRoom.getName().substring(4), currentChatRoom.getName().substring(0, 3)});
+    }
 }

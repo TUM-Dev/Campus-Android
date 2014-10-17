@@ -11,7 +11,6 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Vibrator;
-import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Html;
@@ -55,6 +54,7 @@ import de.tum.in.tumcampus.models.ChatRoom;
 import de.tum.in.tumcampus.models.CreateChatMessage;
 import de.tum.in.tumcampus.models.ListChatMessage;
 import de.tum.in.tumcampus.models.managers.ChatMessageManager;
+import de.tum.in.tumcampus.models.managers.ChatRoomManager;
 import github.ankushsachdeva.emojicon.EmojiconGridView;
 import github.ankushsachdeva.emojicon.EmojiconsPopup;
 import github.ankushsachdeva.emojicon.emoji.Emojicon;
@@ -433,7 +433,7 @@ public class ChatActivity extends ActionBarActivity implements OnClickListener, 
                     //Play a nice notification sound
                     MediaPlayer mediaPlayer = MediaPlayer.create(ChatActivity.this, R.raw.message);
                     mediaPlayer.start();
-                }else if (am.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
+                } else if (am.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
                     Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
                     v.vibrate(500);
                 }
@@ -461,14 +461,14 @@ public class ChatActivity extends ActionBarActivity implements OnClickListener, 
                                     String signature = signer.sign(currentChatMember.getLrzId());
                                     currentChatMember.setSignature(signature);
 
-                                    // Remove CHAT_TERMS_SHOWN for this room to enable rejoining the room
-                                    PreferenceManager.getDefaultSharedPreferences(ChatActivity.this).edit().remove(Const.CHAT_TERMS_SHOWN + "_" + currentChatRoom.getName()).commit();
-
                                     // Send request to the server to remove the user from this room
                                     ChatClient.getInstance(ChatActivity.this).leaveChatRoom(currentChatRoom, currentChatMember, new Callback<ChatRoom>() {
                                         @Override
                                         public void success(ChatRoom arg0, Response arg1) {
                                             Utils.logv("Success leaving chat room: " + arg0.toString());
+                                            new ChatRoomManager(ChatActivity.this).leave(currentChatRoom);
+
+
                                             // Move back to ChatRoomsSearchActivity
                                             Intent intent = new Intent(ChatActivity.this, ChatRoomsSearchActivity.class);
                                             startActivity(intent);
