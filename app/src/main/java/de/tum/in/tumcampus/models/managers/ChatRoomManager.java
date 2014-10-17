@@ -60,11 +60,11 @@ public class ChatRoomManager {
         db.execSQL("REPLACE INTO chat_room (group_id,name,semester_id,semester,status,_id, contributor) " +
                         "VALUES (-1,?,?,?,0,?,?)",
                 new String[]{lecture.getTitel(), lecture.getSemester_id(),
-                        lecture.getSemester_name(), lecture.getStp_lv_nr(),lecture.getVortragende_mitwirkende()});
+                        lecture.getSemester_name(), lecture.getStp_lv_nr(), lecture.getVortragende_mitwirkende()});
     }
 
     /**
-     * Saves the given message into database
+     * Saves the given lectures into database
      */
     public void replaceInto(List<LecturesSearchRow> lectures) {
         db.beginTransaction();
@@ -86,13 +86,23 @@ public class ChatRoomManager {
         db.endTransaction();
     }
 
+    /**
+     * Saves the given chat rooms into database
+     */
+    public void replaceIntoRooms(List<ChatRoom> rooms) {
+        for (ChatRoom room : rooms) {
+            db.execSQL("UPDATE chat_room SET group_id=?, status=1 WHERE name=? AND semester_id=?",
+                    new String[]{room.getId(), room.getName().substring(4), room.getName().substring(0, 3)});
+        }
+    }
+
     public void join(ChatRoom currentChatRoom) {
         db.execSQL("UPDATE chat_room SET group_id=?, status=1 WHERE name=? AND semester_id=?",
-                new String[]{currentChatRoom.getGroupId(), currentChatRoom.getName().substring(4), currentChatRoom.getName().substring(0, 3)});
+                new String[]{currentChatRoom.getId(), currentChatRoom.getName().substring(4), currentChatRoom.getName().substring(0, 3)});
     }
 
     public void leave(ChatRoom currentChatRoom) {
         db.execSQL("UPDATE chat_room SET group_id=?, status=0 WHERE name=? AND semester_id=?",
-                new String[]{currentChatRoom.getGroupId(), currentChatRoom.getName().substring(4), currentChatRoom.getName().substring(0, 3)});
+                new String[]{currentChatRoom.getId(), currentChatRoom.getName().substring(4), currentChatRoom.getName().substring(0, 3)});
     }
 }

@@ -16,7 +16,7 @@ public class CreateChatMessage {
 	private String member;
 	private String timestamp;
 	private String signature;
-	private boolean valid;
+    private int previous;
 	
 	public CreateChatMessage(String text, String member) {
 		this.text = text;
@@ -29,12 +29,6 @@ public class CreateChatMessage {
     public void setId(int i) {
         id = i;
     }
-	public String getUrl() {
-		return url;
-	}
-	public void setUrl(String url) {
-		this.url = url;
-	}
 	public String getText() {
 		return text;
 	}
@@ -68,18 +62,18 @@ public class CreateChatMessage {
 		}
 		return "";
 	}
-	public boolean isValid() {
-		return valid;
-	}
-	public void setValid(boolean valid) {
-		this.valid = valid;
-	}
 	public String getSignature() {
 		return signature;
 	}
 	public void setSignature(String signature) {
 		this.signature = signature;
 	}
+    public int getPrevious() {
+        return previous;
+    }
+    public void getPrevious(int previous) {
+        this.previous = previous;
+    }
 	
 	private boolean isToday(Date date) {
 		Calendar passedDate = Calendar.getInstance();

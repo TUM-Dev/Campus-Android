@@ -8,7 +8,6 @@ import java.util.List;
 
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.NetUtils;
-import de.tum.in.tumcampus.auxiliary.Utils;
 import retrofit.Callback;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
@@ -66,7 +65,6 @@ public class ChatClient {
         @GET("/rooms/{groupId}")
         ChatRoom getChatRoom(@Path("groupId") String id);
 
-
         @POST("/rooms/{groupId}/join/")
         void joinChatRoom(@Path("groupId") String groupId, @Body ChatMember chatMember, Callback<ChatRoom> cb);
 
@@ -80,7 +78,10 @@ public class ChatClient {
         void getMessages(@Path("groupId") String groupId, @Path("page") int page, Callback<ArrayList<ListChatMessage>> cb);
 
         @GET("/rooms/{groupId}/messages/{page}/")
-        ArrayList<ListChatMessage> getMessages(@Path("groupId") String groupId, @Path("page") int page);
+        ArrayList<ListChatMessage> getMessages(@Path("groupId") String groupId, @Path("page") long page);
+
+        @GET("/rooms/{groupId}/messages/")
+        ArrayList<ListChatMessage> getNewMessages(@Path("groupId") String groupId);
 
         @POST("/members/")
         ChatMember createMember(@Body ChatMember chatMember);
@@ -92,7 +93,7 @@ public class ChatClient {
         void uploadPublicKey(@Path("memberId") String memberId, @Body ChatPublicKey publicKey, Callback<ChatPublicKey> cb);
 
         @POST("/members/{memberId}/rooms/")
-        void getMemberRooms(@Path("memberId") String memberId, @Body ChatVerfication verfication, Callback<List<ChatRoom>> cb);
+        List<ChatRoom> getMemberRooms(@Path("memberId") String memberId, @Body ChatVerfication verfication);
 
         @GET("/members/{memberId}/pubkeys/")
         List<ChatPublicKey> getPublicKeysForMember(@Path("memberId") String memberId);
@@ -138,16 +139,20 @@ public class ChatClient {
         service.getMessages(groupId, page, cb);
     }
 
-    public ArrayList<ListChatMessage> getMessages(String groupId, int page) {
+    public ArrayList<ListChatMessage> getMessages(String groupId, long page) {
         return service.getMessages(groupId, page);
+    }
+
+    public ArrayList<ListChatMessage> getNewMessages(String groupId) {
+        return service.getNewMessages(groupId);
     }
 
     public void uploadPublicKey(String memberId, ChatPublicKey publicKey, Callback<ChatPublicKey> cb) {
         service.uploadPublicKey(memberId, publicKey, cb);
     }
 
-    public void getMemberRooms(String memberId, ChatVerfication verfication, Callback<List<ChatRoom>> cb) {
-        service.getMemberRooms(memberId, verfication, cb);
+    public List<ChatRoom> getMemberRooms(String memberId, ChatVerfication verfication) {
+        return service.getMemberRooms(memberId, verfication);
     }
 
     public List<ChatPublicKey> getPublicKeysForMember(String memberId) {

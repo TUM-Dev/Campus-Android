@@ -19,14 +19,13 @@ public class ListChatMessage {
     public static final int STATUS_SENT = 0;
     public static final int STATUS_SENDING_FAILED = -1;
 
-    private String url;
     private int id;
 	private String text;
 	private ChatMember member;
 	private String timestamp;
 	private String signature;
-	private boolean valid;
     private int sendingStatus;
+    private int previous;
 	
 	public ListChatMessage(String text) {
 		super();
@@ -39,6 +38,7 @@ public class ListChatMessage {
 		this.timestamp = newlyCreatedMessage.getTimestamp();
 		this.member = currentChatMember;
         this.sendingStatus = STATUS_SENDING;
+        this.previous = 0;
 	}
 
     public int getStatus() {
@@ -49,14 +49,14 @@ public class ListChatMessage {
         sendingStatus = status;
     }
 
-	public ListChatMessage(int id, String url, String text, ChatMember member, String timestamp) {
+	public ListChatMessage(int id, String text, ChatMember member, String timestamp, int previous) {
 		super();
         this.id = id;
-		this.url = url;
 		this.text = text;
 		this.member = member;
 		this.timestamp = timestamp;
         this.sendingStatus = STATUS_SENT;
+        this.previous = previous;
 	}
 
     public int getId() {
@@ -65,12 +65,12 @@ public class ListChatMessage {
     public void setId(int id) {
         this.id = id;
     }
-	public String getUrl() {
-		return url;
-	}
-	public void setUrl(String url) {
-		this.url = url;
-	}
+    public int getPrevious() {
+        return previous;
+    }
+    public void setPrevious(int previous) {
+        this.previous = previous;
+    }
 	public String getText() {
 		return text;
 	}
@@ -99,12 +99,6 @@ public class ListChatMessage {
 			Utils.log(e);
 		}
 		return "";
-	}
-	public boolean isValid() {
-		return valid;
-	}
-	public void setValid(boolean valid) {
-		this.valid = valid;
 	}
 	public String getSignature() {
 		return signature;

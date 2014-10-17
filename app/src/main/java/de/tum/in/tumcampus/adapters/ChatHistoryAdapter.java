@@ -22,6 +22,10 @@ public class ChatHistoryAdapter extends CursorAdapter {
     private final Context mContext;
     private ArrayList<ListChatMessage> unsentMessages = new ArrayList<ListChatMessage>();
 
+    public int getSentCount() {
+        return super.getCount();
+    }
+
     // Layout of the list row
     static class ViewHolder {
         TextView tvUser;
@@ -65,7 +69,7 @@ public class ChatHistoryAdapter extends CursorAdapter {
         if (position < count) {
             Cursor cursor = getCursor();
             cursor.moveToPosition(position);
-            return cursor.getLong(0);
+            return cursor.getLong(ChatMessageManager.COL_ID);
         } else {
             return unsentMessages.get(position - count).getId();
         }

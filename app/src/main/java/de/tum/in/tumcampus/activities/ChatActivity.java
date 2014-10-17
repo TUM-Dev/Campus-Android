@@ -68,7 +68,9 @@ import retrofit.client.Response;
  * NEEDS: Const.CURRENT_CHAT_ROOM set in incoming bundle (json serialised object of class ChatRoom)
  * Const.CURRENT_CHAT_MEMBER set in incoming bundle (json serialised object of class ChatMember)
  */
-public class ChatActivity extends ActionBarActivity implements OnClickListener, AbsListView.OnScrollListener, EmojiconGridView.OnEmojiconClickedListener, EmojiconsPopup.OnSoftKeyboardOpenCloseListener, EmojiconsPopup.OnEmojiconBackspaceClickedListener, AdapterView.OnItemLongClickListener {
+public class ChatActivity extends ActionBarActivity implements DialogInterface.OnClickListener, OnClickListener, AbsListView.OnScrollListener,
+        EmojiconGridView.OnEmojiconClickedListener, EmojiconsPopup.OnSoftKeyboardOpenCloseListener,
+        EmojiconsPopup.OnEmojiconBackspaceClickedListener, AdapterView.OnItemLongClickListener {
 
     /**
      * UI elements
@@ -106,7 +108,7 @@ public class ChatActivity extends ActionBarActivity implements OnClickListener, 
     @Override
     protected void onResume() {
         super.onResume();
-        getHistoryPageFromServer(1);
+        getNextHistoryFromServer();
         mCurrentOpenChatRoom = currentChatRoom;
         chatManager = new ChatMessageManager(this, currentChatRoom);
     }
@@ -136,9 +138,35 @@ public class ChatActivity extends ActionBarActivity implements OnClickListener, 
                 getSupportActionBar().setSubtitle(currentChatRoom.getName().substring(4));
                 chatHistoryAdapter = null;
                 chatManager = new ChatMessageManager(this, currentChatRoom);
-                getHistoryPageFromServer(1);
+                getNextHistoryFromServer();
                 chatHistoryAdapter.notifyDataSetChanged();
             }
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.menu_activity_chat, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_leave_chat_room:
+                new AlertDialog.Builder(ChatActivity.this).setTitle(R.string.leave_chat_room)
+                        .setMessage(getResources().getString(R.string.leave_chat_room_body))
+                        .setPositiveButton(getResources().getString(android.R.string.ok), this)
+                        .setNegativeButton(getResources().getString(android.R.string.cancel), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        }).create().show();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 
@@ -352,69 +380,57 @@ public class ChatActivity extends ActionBarActivity implements OnClickListener, 
     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
         //is the top item is visible & not loading more already ? Load more !
         if ((firstVisibleItem == 0) && !loadingMore && chatHistoryAdapter != null) {
-            int chatHistorySize = chatHistoryAdapter.getCount();
-            // Round the number of already downloaded messages to multiple of 10
-            // Then divide this by 10 to get the number of downloaded pages
-            // according to current state on the server
-            // Worst case scenario, we have to download 9 messages again
-            int numberOfAlreadyDownloadedPages = (chatHistorySize - (chatHistorySize % 10)) / 10;
-
-            getHistoryPageFromServer(numberOfAlreadyDownloadedPages + 1);
+            getNextHistoryFromServer();
         }
     }
 
     /**
      * Loads older chat messages from the server and sets the adapter accordingly
-     *
-     * @param page Page number
      */
-    private void getHistoryPageFromServer(final int page) {
+    private void getNextHistoryFromServer() {
         loadingMore = true;
         new Thread(new Runnable() {
             @Override
             public void run() {
                 // Download chat messages in new Thread
-                ChatClient.getInstance(ChatActivity.this).getMessages(currentChatRoom.getGroupId(), page, new Callback<ArrayList<ListChatMessage>>() {
-                    @Override
-                    public void success(final ArrayList<ListChatMessage> downloadedChatHistory, Response arg1) {
-                        loadingMore = !chatManager.replaceInto(downloadedChatHistory);
-                        // Got results from webservice
-                        Utils.logv("Success loading additional chat history: " + downloadedChatHistory.size());
+                ArrayList<ListChatMessage> downloadedChatHistory;
+                // If currently nothing has been shown load newest messages from server
+                if(chatHistoryAdapter==null || chatHistoryAdapter.getSentCount()==0) {
+                    downloadedChatHistory = ChatClient.getInstance(ChatActivity.this).getNewMessages(currentChatRoom.getId());
+                } else {
+                    long id = chatHistoryAdapter.getItemId(ChatMessageManager.COL_ID);
+                    downloadedChatHistory = ChatClient.getInstance(ChatActivity.this).getMessages(currentChatRoom.getId(), id);
+                }
 
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                // Update results in UI
-                                if (chatHistoryAdapter == null) {
-                                    chatHistoryAdapter = new ChatHistoryAdapter(ChatActivity.this, chatManager.getAll(), currentChatMember);
-                                    lvMessageHistory.setAdapter(chatHistoryAdapter);
-                                } else if (!loadingMore) {
-                                    chatHistoryAdapter.changeCursor(chatManager.getAll());
-                                    chatHistoryAdapter.notifyDataSetChanged();
-                                }
-                                if (loadingMore)
-                                    lvMessageHistory.removeHeaderView(bar);
-                            }
-                        });
-                    }
+                chatManager.replaceInto(downloadedChatHistory);
 
+                // Got results from webservice
+                Utils.logv("Success loading additional chat history: " + downloadedChatHistory.size());
+
+                final Cursor cur = chatManager.getAll();
+
+                runOnUiThread(new Runnable() {
                     @Override
-                    public void failure(RetrofitError e) {
-                        Utils.log(e, "Failure loading additional chat history");
-                        loadingMore = false;
+                    public void run() {
+                        // Update results in UI
+                        if (chatHistoryAdapter == null) {
+                            chatHistoryAdapter = new ChatHistoryAdapter(ChatActivity.this, cur, currentChatMember);
+                            lvMessageHistory.setAdapter(chatHistoryAdapter);
+                        } else if (!loadingMore) {
+                            chatHistoryAdapter.changeCursor(cur);
+                            chatHistoryAdapter.notifyDataSetChanged();
+                        }
+
+                        // If all messages are loaded hide header view
+                        if ((cur.moveToFirst() && cur.getLong(ChatMessageManager.COL_PREVIOUS) == 0) ||cur.getCount()==0) {
+                            lvMessageHistory.removeHeaderView(bar);
+                        } else {
+                            loadingMore = false;
+                        }
                     }
                 });
             }
         }).start();
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_activity_chat, menu);
-
-        return true;
     }
 
     private BroadcastReceiver receiver = new BroadcastReceiver() {
@@ -433,69 +449,40 @@ public class ChatActivity extends ActionBarActivity implements OnClickListener, 
                     //Play a nice notification sound
                     MediaPlayer mediaPlayer = MediaPlayer.create(ChatActivity.this, R.raw.message);
                     mediaPlayer.start();
-                } else if (am.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
+                } else if (am.getRingerMode() == AudioManager.RINGER_MODE_VIBRATE) {
                     Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
                     v.vibrate(500);
                 }
                 chatHistoryAdapter.changeCursor(chatManager.getAll());
             }
-            //Otherwise do nothing :)
-            //User can switch to the other room himself
         }
     };
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_leave_chat_room:
+    public void onClick(DialogInterface dialog, int which) {
+        if (currentChatMember.getLrzId() != null) {
+            // Generate signature
+            RSASigner signer = new RSASigner(getPrivateKeyFromSharedPrefs());
+            String signature = signer.sign(currentChatMember.getLrzId());
+            currentChatMember.setSignature(signature);
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(ChatActivity.this);
-                builder.setTitle(R.string.leave_chat_room)
-                        .setMessage(getResources().getString(R.string.leave_chat_room_body))
-                        .setPositiveButton(getResources().getString(android.R.string.ok), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                if (currentChatMember.getLrzId() != null) {
-                                    // Generate signature
-                                    RSASigner signer = new RSASigner(getPrivateKeyFromSharedPrefs());
-                                    String signature = signer.sign(currentChatMember.getLrzId());
-                                    currentChatMember.setSignature(signature);
+            // Send request to the server to remove the user from this room
+            ChatClient.getInstance(ChatActivity.this).leaveChatRoom(currentChatRoom, currentChatMember, new Callback<ChatRoom>() {
+                @Override
+                public void success(ChatRoom arg0, Response arg1) {
+                    Utils.logv("Success leaving chat room: " + arg0.toString());
+                    new ChatRoomManager(ChatActivity.this).leave(currentChatRoom);
 
-                                    // Send request to the server to remove the user from this room
-                                    ChatClient.getInstance(ChatActivity.this).leaveChatRoom(currentChatRoom, currentChatMember, new Callback<ChatRoom>() {
-                                        @Override
-                                        public void success(ChatRoom arg0, Response arg1) {
-                                            Utils.logv("Success leaving chat room: " + arg0.toString());
-                                            new ChatRoomManager(ChatActivity.this).leave(currentChatRoom);
+                    // Move back to ChatRoomsSearchActivity
+                    Intent intent = new Intent(ChatActivity.this, ChatRoomsSearchActivity.class);
+                    startActivity(intent);
+                }
 
-
-                                            // Move back to ChatRoomsSearchActivity
-                                            Intent intent = new Intent(ChatActivity.this, ChatRoomsSearchActivity.class);
-                                            startActivity(intent);
-                                        }
-
-                                        @Override
-                                        public void failure(RetrofitError e) {
-                                            Utils.log(e, "Failure leaving chat room");
-                                        }
-                                    });
-                                }
-                            }
-                        })
-                        .setNegativeButton(getResources().getString(android.R.string.cancel), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        });
-
-                AlertDialog alertDialog = builder.create();
-                alertDialog.show();
-
-                return true;
-
-            default:
-                return super.onOptionsItemSelected(item);
+                @Override
+                public void failure(RetrofitError e) {
+                    Utils.log(e, "Failure leaving chat room");
+                }
+            });
         }
     }
 }

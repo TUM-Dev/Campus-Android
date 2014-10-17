@@ -26,6 +26,16 @@ import de.tum.in.tumcampus.models.ListChatMessage;
  */
 public class ChatMessageManager {
 
+
+    public static final int COL_ID = 0;
+    public static final int COL_PREVIOUS = 1;
+    public static final int COL_ROOM = 2;
+    public static final int COL_TEXT = 3;
+    public static final int COL_TIMESTAMP = 4;
+    public static final int COL_SIGNATURE = 5;
+    public static final int COL_MEMBER = 6;
+    public static final int COL_STATUS = 7;
+
     /**
      * Database connection
      */
@@ -44,8 +54,8 @@ public class ChatMessageManager {
         mChatRoom = room;
 
         // create table if needed
-        db.execSQL("CREATE TABLE IF NOT EXISTS chat_message (_id INTEGER PRIMARY KEY, room INTEGER, url VARCHAR, " +
-                "text TEXT, timestamp VARCHAR, signature TEXT, member BLOB, valid INTEGER, status INTEGER)");
+        db.execSQL("CREATE TABLE IF NOT EXISTS chat_message (_id INTEGER PRIMARY KEY, previous INTEGER, room INTEGER, " +
+                "text TEXT, timestamp VARCHAR, signature TEXT, member BLOB, status INTEGER)");
 
         // Delete all entries that are too old
         db.rawQuery("DELETE FROM chat_message WHERE timestamp<datetime('now','-1 month')", null);
@@ -57,14 +67,26 @@ public class ChatMessageManager {
      * @return List of chat messages
      */
     public Cursor getAll() {
-        return db.rawQuery("SELECT * FROM chat_message WHERE room=? ORDER BY _id", new String[]{mChatRoom.getGroupId()});
+        return db.rawQuery("SELECT c.* FROM chat_message c, (SELECT c1._id " +
+                "FROM chat_message c1 LEFT JOIN chat_message c2 ON c2._id=c1.previous " +
+                "WHERE c2._id IS NULL AND c1.room=? " +
+                "ORDER BY c1._id DESC " +
+                "LIMIT 1) AS until " +
+                "WHERE c._id>=until._id AND c.room=? " +
+                "ORDER BY c._id", new String[]{mChatRoom.getId(),mChatRoom.getId()});
     }
 
     /**
      * Gets all messages marked as unread
     * */
     private Cursor getUnread() {
-        return db.rawQuery("SELECT * FROM chat_message WHERE room=? ORDER BY _id", new String[]{mChatRoom.getGroupId()});
+        return db.rawQuery("SELECT c.* FROM chat_message c, (SELECT c1._id " +
+                "FROM chat_message c1 LEFT JOIN chat_message c2 ON c2._id=c1.previous " +
+                "WHERE (c2._id IS NULL OR c1.status=1) AND c1.room=? " +
+                "ORDER BY c1._id DESC " +
+                "LIMIT 1) AS until " +
+                "WHERE c._id>=until._id AND c.room=? " +
+                "ORDER BY c._id", new String[]{mChatRoom.getId(),mChatRoom.getId()});
     }
 
     /**
@@ -79,9 +101,9 @@ public class ChatMessageManager {
         } catch (ParseException e) {
             date = new Date();
         }
-        db.execSQL("REPLACE INTO chat_message (_id,room,url,text,timestamp,signature,member,valid,status) VALUES (?,?,?,?,?,?,?,?,0)",
-                new String[]{"" + m.getId(), mChatRoom.getGroupId(), m.getUrl(), m.getText(), Utils.getDateTimeString(date),
-                        m.getSignature(), (new Gson().toJson(m.getMember())), m.isValid() ? "1" : "0"});
+        db.execSQL("REPLACE INTO chat_message (_id,previous,room,text,timestamp,signature,member,status) VALUES (?,?,?,?,?,?,?,0)",
+                new String[]{"" + m.getId(), ""+m.getPrevious(), mChatRoom.getId(), m.getText(), Utils.getDateTimeString(date),
+                        m.getSignature(), (new Gson().toJson(m.getMember()))});
     }
 
     /**
@@ -118,38 +140,19 @@ public class ChatMessageManager {
 
     public static ListChatMessage toObject(Cursor cursor) {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ENGLISH);
-        int id = cursor.getInt(0);
-        String url = cursor.getString(2);
-        String text = cursor.getString(3);
-        String time = formatter.format(Utils.getISODateTime(cursor.getString(4)));
-        ChatMember member = new Gson().fromJson(cursor.getString(6), ChatMember.class);
-        ListChatMessage msg = new ListChatMessage(id, url, text, member, time);
-        msg.setId(cursor.getInt(0));
-        msg.setSignature(cursor.getString(5));
-        msg.setValid(cursor.getInt(7) == 1);
+        int id = cursor.getInt(COL_ID);
+        String text = cursor.getString(COL_TEXT);
+        String time = formatter.format(Utils.getISODateTime(cursor.getString(COL_TIMESTAMP)));
+        int previous = cursor.getInt(COL_PREVIOUS);
+        ChatMember member = new Gson().fromJson(cursor.getString(COL_MEMBER), ChatMember.class);
+        ListChatMessage msg = new ListChatMessage(id, text, member, time, previous);
+        msg.setSignature(cursor.getString(COL_SIGNATURE));
         return msg;
     }
 
     public Cursor getNewMessages() {
-        ArrayList<ListChatMessage> messages = ChatClient.getInstance(mContext).getMessages(mChatRoom.getGroupId(), 1);
+        ArrayList<ListChatMessage> messages = ChatClient.getInstance(mContext).getNewMessages(mChatRoom.getId());
         replaceInto(messages);
         return getUnread();
     }
-
-    /*
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                // Update results in UI
-                if (chatHistoryAdapter == null) {
-                    chatHistoryAdapter = new ChatHistoryAdapter(ChatActivity.this, chatManager.getAll(currentChatRoom.getGroupId()), currentChatMember);
-                    lvMessageHistory.setAdapter(chatHistoryAdapter);
-                } else if (!loadingMore) {
-                    chatHistoryAdapter.changeCursor(chatManager.getAll(currentChatRoom.getGroupId()));
-                    chatHistoryAdapter.notifyDataSetChanged();
-                }
-                if (loadingMore)
-                    lvMessageHistory.removeHeaderView(bar);
-            }
-        });*/
 }
