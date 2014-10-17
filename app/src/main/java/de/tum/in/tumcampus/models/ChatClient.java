@@ -49,7 +49,7 @@ public class ChatClient {
     RequestInterceptor requestInterceptor = new RequestInterceptor() {
         @Override
         public void intercept(RequestFacade request) {
-            Log.e("TCA Chat", "hooking ID: " + NetUtils.getDeviceID(ChatClient.c) + " " + Utils.getInternalSettingString(ChatClient.c, Const.GCM_REG_ID, ""));
+            //Log.e("TCA Chat", "hooking ID: " + NetUtils.getDeviceID(ChatClient.c) + " " + Utils.getInternalSettingString(ChatClient.c, Const.GCM_REG_ID, ""));
             request.addHeader("X-DEVICE-ID", NetUtils.getDeviceID(ChatClient.c));
         }
     };

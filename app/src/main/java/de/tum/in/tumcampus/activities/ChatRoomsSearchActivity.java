@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -96,7 +97,7 @@ public class ChatRoomsSearchActivity extends ActivityForLoadingInBackground<Inte
         ActionBar.TabListener tabListener = new ActionBar.TabListener() {
             public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
                 // show the given tab
-                mCurrentMode = 1-tab.getPosition();
+                mCurrentMode = 1 - tab.getPosition();
                 startLoading(mCurrentMode);
             }
 
@@ -229,17 +230,16 @@ public class ChatRoomsSearchActivity extends ActivityForLoadingInBackground<Inte
                     public void run() {
                         try {
                             List<ChatRoom> chatRooms = ChatClient.getInstance(ChatRoomsSearchActivity.this).getChatRoomWithName(currentChatRoom);
-                            if (chatRooms != null)
+                            if (chatRooms != null) {
                                 currentChatRoom = chatRooms.get(0);
+                            }
 
                             // When we show joined chat rooms open chat room directly
-                            if (mCurrentMode == 1)
-                                moveToChatActivity(intent);
-
-                                // otherwise join chat room
-                            else
-                                joinChatRoom(intent);
-
+                            if (mCurrentMode == 1) {
+                                ChatRoomsSearchActivity.this.moveToChatActivity(intent);
+                            } else { // otherwise join chat room
+                                ChatRoomsSearchActivity.this.joinChatRoom(intent);
+                            }
                         } catch (RetrofitError e) {
                             Utils.log(e);
                             runOnUiThread(new Runnable() {
