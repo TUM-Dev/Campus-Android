@@ -7,10 +7,7 @@ import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
-import android.support.v4.app.TaskStackBuilder;
-import android.support.v7.app.ActionBarActivity;
-import android.view.MenuItem;
+import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -20,7 +17,6 @@ import android.widget.Toast;
 
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.UserPreferencesActivity;
-import de.tum.in.tumcampus.auxiliary.ImplicitCounter;
 import de.tum.in.tumcampus.auxiliary.NetUtils;
 import de.tum.in.tumcampus.auxiliary.StickyListViewDelegate;
 import de.tum.in.tumcampus.auxiliary.Utils;
@@ -32,12 +28,11 @@ import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 /**
  * Generic class which handles can handle a long running background task
  */
-public abstract class ProgressActivity extends ActionBarActivity implements OnRefreshListener {
+public abstract class ProgressActivity extends BaseActivity implements OnRefreshListener {
 
     /**
      * Default layouts for user interaction
      */
-    private final int mLayoutId;
     private LinearLayout allErrorsLayout;
     private RelativeLayout errorLayout;
     private RelativeLayout progressLayout;
@@ -46,6 +41,7 @@ public abstract class ProgressActivity extends ActionBarActivity implements OnRe
     private RelativeLayout failedTokenLayout;
     private PullToRefreshLayout refreshLayout;
     private boolean registered = false;
+    private Handler mLoadingHandler = new Handler();
 
     /**
      * Standard constructor for ProgressActivity.
@@ -56,15 +52,14 @@ public abstract class ProgressActivity extends ActionBarActivity implements OnRe
      * @param layoutId Resource id of the xml layout that should be used to inflate the activity
      */
     public ProgressActivity(int layoutId) {
-        mLayoutId = layoutId;
+        super(layoutId);
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ImplicitCounter.Counter(this);
-        setContentView(mLayoutId);
 
+        // Get handles to all error layouts
         allErrorsLayout = (LinearLayout) findViewById(R.id.errors_layout);
         progressLayout = (RelativeLayout) findViewById(R.id.progress_layout);
         errorLayout = (RelativeLayout) findViewById(R.id.error_layout);
@@ -83,27 +78,6 @@ public abstract class ProgressActivity extends ActionBarActivity implements OnRe
         if (progressLayout == null) {
             Utils.log("Cannot find layouts, did you forget to provide all_error_layout?");
         }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            // Respond to the action bar's Up/Home button
-            case android.R.id.home:
-                Intent upIntent = NavUtils.getParentActivityIntent(this);
-                upIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
-                    // This activity is NOT part of this apps task, so create a new task
-                    // when navigating up, with a synthesized back stack.
-                    TaskStackBuilder.create(this).addNextIntentWithParentStack(upIntent).startActivities();
-                } else {
-                    // This activity is part of this apps task, so simply
-                    // navigate up to the logical parent activity.
-                    NavUtils.navigateUpTo(this, upIntent);
-                }
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     /**
@@ -179,7 +153,7 @@ public abstract class ProgressActivity extends ActionBarActivity implements OnRe
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(registered) {
+        if (registered) {
             unregisterReceiver(connectivityChangeReceiver);
             registered = false;
         }
@@ -190,10 +164,11 @@ public abstract class ProgressActivity extends ActionBarActivity implements OnRe
      * if present in the xml layout
      */
     protected void showLoadingStart() {
-        if(registered) {
+        if (registered) {
             unregisterReceiver(connectivityChangeReceiver);
             registered = false;
         }
+
         if (refreshLayout == null) {
             noInternetLayout.setVisibility(View.GONE);
             noTokenLayout.setVisibility(View.GONE);
@@ -201,7 +176,12 @@ public abstract class ProgressActivity extends ActionBarActivity implements OnRe
             progressLayout.setVisibility(View.VISIBLE);
             allErrorsLayout.setVisibility(View.VISIBLE);
         } else {
-            refreshLayout.setRefreshing(true);
+            mLoadingHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    refreshLayout.setRefreshing(true);
+                }
+            }, 600);
         }
     }
 
@@ -210,6 +190,7 @@ public abstract class ProgressActivity extends ActionBarActivity implements OnRe
      * and setting {@link PullToRefreshLayout}'s state to completed
      */
     protected void showLoadingEnded() {
+        mLoadingHandler.removeCallbacksAndMessages(null);
         failedTokenLayout.setVisibility(View.GONE);
         noInternetLayout.setVisibility(View.GONE);
         noTokenLayout.setVisibility(View.GONE);

@@ -117,7 +117,7 @@ public class Event implements Cloneable {
         } else {
             e.color = getDisplayColorFromColor(0xff0000ff);
         }
-        title = title.replaceAll("[A-Z 0-9(LV\\.Nr\\.)=]+$","");
+        title = title.replaceAll("[A-Z, 0-9(LV\\.Nr\\.)=]+$","");
         title = title.replaceAll("\\([A-Z]+[0-9]+\\)","");
         title = title.replaceAll("\\[[A-Z]+[0-9]+\\]","");
         e.title = title;

@@ -2,11 +2,9 @@ package de.tum.in.tumcampus.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
-import android.view.MenuItem;
 
 import de.tum.in.tumcampus.R;
-import de.tum.in.tumcampus.auxiliary.ImplicitCounter;
+import de.tum.in.tumcampus.activities.generic.BaseActivity;
 import de.tum.in.tumcampus.fragments.OpeningHoursDetailFragment;
 import de.tum.in.tumcampus.fragments.OpeningHoursListFragment;
 
@@ -26,7 +24,7 @@ import de.tum.in.tumcampus.fragments.OpeningHoursListFragment;
  * {@link de.tum.in.tumcampus.fragments.OpeningHoursListFragment.Callbacks} interface to listen for item
  * selections.
  */
-public class OpeningHoursListActivity extends ActionBarActivity implements
+public class OpeningHoursListActivity extends BaseActivity implements
 		OpeningHoursListFragment.Callbacks {
 
 	/**
@@ -35,11 +33,13 @@ public class OpeningHoursListActivity extends ActionBarActivity implements
 	 */
 	private boolean mTwoPane;
 
-	@Override
+    public OpeningHoursListActivity() {
+        super(R.layout.activity_openinghourslist);
+    }
+
+    @Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-        ImplicitCounter.Counter(this);
-		setContentView(R.layout.activity_openinghourslist);
 
 		if (findViewById(R.id.item_detail_container) != null) {
 			// The detail container view will be present only in the
@@ -87,13 +87,4 @@ public class OpeningHoursListActivity extends ActionBarActivity implements
 			startActivity(detailIntent);
 		}
 	}
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId()==android.R.id.home) {
-            finish();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
 }

@@ -175,7 +175,7 @@ public class NextLectureCard extends Card {
 
             // Extract course title
             item.title = cur.getString(0);
-            item.title = item.title.replaceAll("[A-Z 0-9(LV\\.Nr\\.)=]+$", "");
+            item.title = item.title.replaceAll("[A-Z, 0-9(LV\\.Nr\\.)=]+$", "");
             item.title = item.title.replaceAll("\\([A-Z]+[0-9]+\\)", "");
             item.title = item.title.replaceAll("\\[[A-Z]+[0-9]+\\]", "");
             item.title = item.title.trim();

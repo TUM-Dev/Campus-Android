@@ -9,8 +9,6 @@ import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarActivity;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,10 +20,9 @@ import android.widget.ListView;
 import com.nhaarman.listviewanimations.appearance.simple.SwingBottomInAnimationAdapter;
 
 import de.tum.in.tumcampus.R;
+import de.tum.in.tumcampus.activities.generic.BaseActivity;
 import de.tum.in.tumcampus.adapters.CardsAdapter;
-import de.tum.in.tumcampus.adapters.NavigationDrawerAdapter;
 import de.tum.in.tumcampus.auxiliary.Const;
-import de.tum.in.tumcampus.auxiliary.ImplicitCounter;
 import de.tum.in.tumcampus.auxiliary.NetUtils;
 import de.tum.in.tumcampus.auxiliary.SwipeDismissList;
 import de.tum.in.tumcampus.cards.Card;
@@ -38,16 +35,14 @@ import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 /**
  * Main activity displaying the cards and providing navigation with navigation drawer
  */
-public class MainActivity extends ActionBarActivity implements AdapterView.OnItemClickListener, SwipeDismissList.OnDismissCallback, OnRefreshListener {
+public class MainActivity extends BaseActivity implements AdapterView.OnItemClickListener, SwipeDismissList.OnDismissCallback, OnRefreshListener {
     private static final int MENU_OPEN_SETTINGS = 0;
     private static final int MENU_HIDE_ALWAYS = 1;
 
     /**
      * Navigation Drawer
      */
-    private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
-    private ListView mDrawerList;
     private boolean registered;
 
     /**
@@ -58,11 +53,13 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
     private SwipeDismissList mSwipeList;
     private PullToRefreshLayout mPullToRefreshLayout;
 
+    public MainActivity() {
+        super(R.layout.activity_main);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ImplicitCounter.Counter(this);
-        setContentView(R.layout.activity_start);
 
         // Must be set because label declared in manifest file is "TUM Campus App"
         // in order to let the app show up as TUM Campus app in the launcher.
@@ -92,15 +89,7 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
         Intent service = new Intent(this, SilenceService.class);
         this.startService(service);
 
-        // Setup the navigation drawer
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerList = (ListView) findViewById(R.id.left_drawer);
-
-        // Set the adapter for the list view
-        mDrawerList.setAdapter(new NavigationDrawerAdapter(this));
-
         // Set the list's click listener
-        mDrawerList.setOnItemClickListener(this);
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
                 R.drawable.ic_drawer, R.string.drawer_open, R.string.drawer_close) {
 
@@ -138,7 +127,7 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
     @Override
     protected void onResume() {
         super.onResume();
-        if (CardManager.shouldRefresh || CardManager.getCards()==null) {
+        if (CardManager.shouldRefresh || CardManager.getCards() == null) {
             refreshCards();
         } else {
             initAdapter();
@@ -167,7 +156,7 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(registered) {
+        if (registered) {
             unregisterReceiver(connectivityChangeReceiver);
             registered = false;
         }
@@ -229,8 +218,7 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
     }
 
     /**
-     * Handle navigation drawer item click and
-     * on card click
+     * Handle on card click
      *
      * @param adapterView Containing listView
      * @param view        Item view
@@ -239,27 +227,15 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
      */
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-        switch (adapterView.getId()) {
-            case R.id.left_drawer:
-                NavigationDrawerAdapter.SideNavigationItem sideNavigationItem = (NavigationDrawerAdapter.SideNavigationItem) adapterView.getAdapter().getItem(position);
-                if (sideNavigationItem.getActivity() == null)
-                    break;
-                startActivity(new Intent(this, sideNavigationItem.getActivity()));
-                mDrawerList.setItemChecked(position, true);
-                mDrawerLayout.closeDrawer(mDrawerList);
-                break;
-            case R.id.cards_view:
-                Card card = CardManager.getCard(position);
-                if (card.getTyp() == CardManager.CARD_RESTORE) {
-                    mSwipeList.discardUndo();
-                    CardManager.restoreCards();
-                    refreshCards();
-                } else {
-                    Intent i = card.getIntent();
-                    if (i != null)
-                        startActivity(i);
-                }
-                break;
+        Card card = CardManager.getCard(position);
+        if (card.getTyp() == CardManager.CARD_RESTORE) {
+            mSwipeList.discardUndo();
+            CardManager.restoreCards();
+            refreshCards();
+        } else {
+            Intent i = card.getIntent();
+            if (i != null)
+                startActivity(i);
         }
     }
 
@@ -299,7 +275,7 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
         Card card = (Card) mAdapter.getItem(info.position);
         String key = card.getSettings();
-        if(key==null) {
+        if (key == null) {
             return;
         }
         menu.setHeaderTitle(R.string.options);
@@ -348,6 +324,7 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
     /**
      * Starts updating cards in background
      * Called when {@link PullToRefreshLayout} gets triggered.
+     *
      * @param view Refreshed view
      */
     @Override
@@ -373,7 +350,7 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
                 else
                     mAdapter.notifyDataSetChanged();
                 mPullToRefreshLayout.setRefreshComplete();
-                if(!registered && !NetUtils.isConnected(MainActivity.this)) {
+                if (!registered && !NetUtils.isConnected(MainActivity.this)) {
                     registerReceiver(connectivityChangeReceiver,
                             new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
                     registered = true;

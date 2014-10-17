@@ -1,6 +1,8 @@
 package de.tum.in.tumcampus.adapters;
 
 import android.content.Context;
+import android.graphics.Typeface;
+import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,19 +35,19 @@ import de.tum.in.tumcampus.auxiliary.Utils;
  */
 public class NavigationDrawerAdapter extends BaseAdapter {
     private final LayoutInflater mInflater;
-    private final Context mContext;
+    private final ActionBarActivity mContext;
     private final ArrayList<SideNavigationItem> mVisibleMenuItems;
 
-    public NavigationDrawerAdapter(Context context) {
+    public NavigationDrawerAdapter(ActionBarActivity context) {
         mInflater = LayoutInflater.from(context);
         mContext = context;
         boolean mHasTUMOAccess = new AccessTokenManager(context).hasValidAccessToken();
         mVisibleMenuItems = new ArrayList<SideNavigationItem>();
         boolean chat_enabled = Utils.getSettingBool(context, Const.GROUP_CHAT_ENABLED, true);
-        for(SideNavigationItem item : menuItems) {
-            if(!mHasTUMOAccess && item.needsTUMO)
+        for (SideNavigationItem item : menuItems) {
+            if (!mHasTUMOAccess && item.needsTUMO)
                 continue;
-            if(item.activity!=null && item.activity.equals(ChatRoomsSearchActivity.class) && !chat_enabled)
+            if (item.activity != null && item.activity.equals(ChatRoomsSearchActivity.class) && !chat_enabled)
                 continue;
             mVisibleMenuItems.add(item);
         }
@@ -72,6 +74,7 @@ public class NavigationDrawerAdapter extends BaseAdapter {
         ViewHolder holder = null;
         View view = convertView;
 
+        // Setup new navigation item
         if (view == null) {
             int layout = R.layout.navigation_drawer_item;
             if (item.isHeader())
@@ -85,6 +88,7 @@ public class NavigationDrawerAdapter extends BaseAdapter {
             view.setTag(holder);
         }
 
+        // Get holder from convertView
         if (holder == null) {
             Object tag = view.getTag();
             if (tag instanceof ViewHolder) {
@@ -92,13 +96,22 @@ public class NavigationDrawerAdapter extends BaseAdapter {
             }
         }
 
-
-        if(item != null && holder != null) {
+        if (item != null && holder != null) {
             holder.text.setText(item.getText(mContext));
 
-            if (holder.icon != null && item.getIcon()!=SideNavigationItem.NO_ICON_VALUE) {
+            if (holder.icon != null && item.getIcon() != SideNavigationItem.NO_ICON_VALUE) {
                 holder.icon.setImageResource(item.getIcon());
+
+                // Disable view if the activity represented by the item is currently open
+                if(item.getActivity().getName().equals(mContext.getClass().getName())) {
+                    view.setBackgroundColor(0xFFEEEEEE);
+                    holder.text.setTypeface(null, Typeface.BOLD);
+                } else {
+                    view.setBackgroundColor(0xFFFFFFFF);
+                    holder.text.setTypeface(null, Typeface.NORMAL);
+                }
             }
+
         }
 
         return view;
@@ -159,28 +172,28 @@ public class NavigationDrawerAdapter extends BaseAdapter {
         }
 
         public boolean isHeader() {
-            return icon==NO_ICON_VALUE;
+            return icon == NO_ICON_VALUE;
         }
 
     }
 
     private static final SideNavigationItem[] menuItems = {
             new SideNavigationItem(R.string.my_tum, true),
-            new SideNavigationItem(R.string.schedule,R.drawable.ic_calendar, true, CalendarActivity.class),
-            new SideNavigationItem(R.string.my_lectures,R.drawable.ic_my_lectures, true, LecturesPersonalActivity.class),
-           // new SideNavigationItem(R.string.my_grades,R.drawable.ic_my_grades, true, GradesActivity.class),
+            new SideNavigationItem(R.string.schedule, R.drawable.ic_calendar, true, CalendarActivity.class),
+            new SideNavigationItem(R.string.my_lectures, R.drawable.ic_my_lectures, true, LecturesPersonalActivity.class),
+            // new SideNavigationItem(R.string.my_grades,R.drawable.ic_my_grades, true, GradesActivity.class),
             new SideNavigationItem(R.string.chat_rooms, R.drawable.ic_comment, true, ChatRoomsSearchActivity.class),
-            new SideNavigationItem(R.string.tuition_fees,R.drawable.ic_money, true, TuitionFeesActivity.class),
+            new SideNavigationItem(R.string.tuition_fees, R.drawable.ic_money, true, TuitionFeesActivity.class),
             new SideNavigationItem(R.string.tum_common, false),
-            new SideNavigationItem(R.string.menues,R.drawable.ic_cutlery, false, CafeteriaActivity.class),
-            new SideNavigationItem(R.string.news,R.drawable.ic_rss, false, NewsActivity.class),
-            new SideNavigationItem(R.string.mvv,R.drawable.ic_mvv, false, TransportationActivity.class),
-            new SideNavigationItem(R.string.plans,R.drawable.ic_plans, false, PlansActivity.class),
-            new SideNavigationItem(R.string.roomfinder,R.drawable.ic_place, false, RoomFinderActivity.class),
-            new SideNavigationItem(R.string.opening_hours,R.drawable.ic_time, false, OpeningHoursListActivity.class),
-            new SideNavigationItem(R.string.person_search,R.drawable.ic_users, true, PersonsSearchActivity.class),
-            new SideNavigationItem(R.string.organisations,R.drawable.ic_organisations, true, OrganisationActivity.class),
-            new SideNavigationItem(R.string.study_plans,R.drawable.ic_study_plans, false, CurriculaActivity.class)
+            new SideNavigationItem(R.string.menues, R.drawable.ic_cutlery, false, CafeteriaActivity.class),
+            new SideNavigationItem(R.string.news, R.drawable.ic_rss, false, NewsActivity.class),
+            new SideNavigationItem(R.string.mvv, R.drawable.ic_mvv, false, TransportationActivity.class),
+            new SideNavigationItem(R.string.plans, R.drawable.ic_plans, false, PlansActivity.class),
+            new SideNavigationItem(R.string.roomfinder, R.drawable.ic_place, false, RoomFinderActivity.class),
+            new SideNavigationItem(R.string.opening_hours, R.drawable.ic_time, false, OpeningHoursListActivity.class),
+            new SideNavigationItem(R.string.person_search, R.drawable.ic_users, true, PersonsSearchActivity.class),
+            new SideNavigationItem(R.string.organisations, R.drawable.ic_organisations, true, OrganisationActivity.class),
+            new SideNavigationItem(R.string.study_plans, R.drawable.ic_study_plans, false, CurriculaActivity.class)
     };
 
 }

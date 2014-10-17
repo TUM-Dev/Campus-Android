@@ -2,10 +2,6 @@ package de.tum.in.tumcampus.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
-import android.support.v4.app.TaskStackBuilder;
-import android.support.v7.app.ActionBarActivity;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -14,22 +10,24 @@ import android.widget.ListView;
 import java.util.ArrayList;
 
 import de.tum.in.tumcampus.R;
+import de.tum.in.tumcampus.activities.generic.BaseActivity;
 import de.tum.in.tumcampus.adapters.PlanListAdapter;
 import de.tum.in.tumcampus.adapters.PlanListAdapter.PlanListEntry;
-import de.tum.in.tumcampus.auxiliary.ImplicitCounter;
 
 /**
  * Activity to show plans.
  */
-public class PlansActivity extends ActionBarActivity implements OnItemClickListener {
+public class PlansActivity extends BaseActivity implements OnItemClickListener {
 
     private PlanListAdapter mListAdapter;
+
+    public PlansActivity() {
+        super(R.layout.activity_plans);
+    }
 
     @Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-        ImplicitCounter.Counter(this);
-		setContentView(R.layout.activity_plans);
 
 		ListView list = (ListView) findViewById(R.id.activity_plans_list_view);
 		ArrayList<PlanListEntry> listMenuEntrySet = new ArrayList<PlanListEntry>();
@@ -76,24 +74,4 @@ public class PlansActivity extends ActionBarActivity implements OnItemClickListe
 		intent.putExtra(PlansDetailsActivity.PLAN_IMG_ID, entry.imgId);
 		startActivity(intent);
 	}
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            // Respond to the action bar's Up/Home button
-            case android.R.id.home:
-                Intent upIntent = NavUtils.getParentActivityIntent(this);
-                if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
-                    // This activity is NOT part of this apps task, so create a new task
-                    // when navigating up, with a synthesized back stack.
-                    TaskStackBuilder.create(this).addNextIntentWithParentStack(upIntent).startActivities();
-                } else {
-                    // This activity is part of this apps task, so simply
-                    // navigate up to the logical parent activity.
-                    NavUtils.navigateUpTo(this, upIntent);
-                }
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
 }

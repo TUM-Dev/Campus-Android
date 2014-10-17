@@ -3,6 +3,7 @@
     android:id="@+id/ns_menu_row"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?attr/selectableItemBackground"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -13,7 +14,7 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginBottom="1dp"
-            android:background="#DADADC" />
+            android:background="#EEEEEE" />
 
         <ImageView
             android:id="@+id/side_navigation_icon"

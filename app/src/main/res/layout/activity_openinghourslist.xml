@@ -1,8 +1,32 @@
-<fragment xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/item_list"
-    android:name="de.tum.in.tumcampus.fragments.OpeningHoursListFragment"
+    android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".OpeningHoursListActivity"
-    tools:layout="@android:layout/list_content" />
+    tools:context=".StartActivity">
+    <!-- The main content view -->
+    <FrameLayout
+        android:id="@+id/content_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <fragment
+            android:id="@+id/item_list"
+            android:name="de.tum.in.tumcampus.fragments.OpeningHoursListFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context=".OpeningHoursListActivity"
+            tools:layout="@android:layout/list_content" />
+
+    </FrameLayout>
+    <!-- The navigation drawer -->
+    <ListView
+        android:id="@+id/left_drawer"
+        android:layout_width="280dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="@android:color/white"
+        android:choiceMode="singleChoice"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="0dp" />
+</android.support.v4.widget.DrawerLayout>

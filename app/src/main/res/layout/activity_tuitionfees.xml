@@ -1,63 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical">
-
-    <include
-        layout="@layout/layout_all_errors"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent" />
-
-    <TextView
-        android:id="@+id/semester"
-        style="@style/SectionHeadline"
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".StartActivity">
+    <!-- The main content view -->
+    <FrameLayout
+        android:id="@+id/content_frame"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="semester" />
+        android:layout_height="match_parent">
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical">
+
+            <include
+                layout="@layout/layout_all_errors"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent" />
+
+            <TextView
+                android:id="@+id/semester"
+                style="@style/SectionHeadline"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="semester" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="12dp">
+
+                <TextView
+                    style="@style/SmallListSeparatorTextViewStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/amount_dots"
+                    android:textSize="16dp" />
+
+                <TextView
+                    android:id="@+id/soll"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
+                    android:text="soll"
+                    android:textSize="@dimen/large_text_size" />
+
+                <TextView
+                    style="@style/SmallListSeparatorTextViewStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/deadline_dots"
+                    android:textSize="16dp" />
+
+                <TextView
+                    android:id="@+id/frist"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
+                    android:text="frist"
+                    android:textSize="@dimen/large_text_size" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:linksClickable="true"
+                    android:padding="16dp"
+                    android:text="@string/tuition_fee_more"
+                    android:textSize="16dp" />
+            </LinearLayout>
+        </LinearLayout>
+
+    </FrameLayout>
+    <!-- The navigation drawer -->
+    <ListView
+        android:id="@+id/left_drawer"
+        android:layout_width="280dp"
         android:layout_height="match_parent"
-        android:padding="12dp">
-
-        <TextView
-            style="@style/SmallListSeparatorTextViewStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="16dp"
-            android:text="@string/amount_dots" />
-
-        <TextView
-            android:id="@+id/soll"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:text="soll"
-            android:textSize="@dimen/large_text_size" />
-
-        <TextView
-            style="@style/SmallListSeparatorTextViewStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="16dp"
-            android:text="@string/deadline_dots" />
-
-        <TextView
-            android:id="@+id/frist"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:text="frist"
-            android:textSize="@dimen/large_text_size" />
-
-        <TextView
-            android:padding="16dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="16dp"
-            android:linksClickable="true"
-            android:text="@string/tuition_fee_more" />
-    </LinearLayout>
-</LinearLayout>
+        android:layout_gravity="start"
+        android:background="@android:color/white"
+        android:choiceMode="singleChoice"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="0dp" />
+</android.support.v4.widget.DrawerLayout>
