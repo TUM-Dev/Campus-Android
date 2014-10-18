@@ -27,13 +27,9 @@
 
                 <android.support.v4.view.PagerTitleStrip
                     android:id="@+id/pager_title_strip"
+                    style="@style/SectionHeadline"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="top"
-                    android:background="@color/sections_blue"
-                    android:paddingBottom="4dp"
-                    android:paddingTop="4dp"
-                    android:textColor="#fff" />
+                    android:layout_height="wrap_content" />
             </android.support.v4.view.ViewPager>
 
         </LinearLayout>
@@ -45,7 +41,7 @@
         android:layout_width="280dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:background="@android:color/white"
+        android:background="#fff"
         android:choiceMode="singleChoice"
         android:divider="@android:color/transparent"
         android:dividerHeight="0dp" />

@@ -4,28 +4,49 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".StartActivity">
+
     <!-- The main content view -->
     <FrameLayout
         android:id="@+id/content_frame"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <uk.co.senab.actionbarpulltorefresh.extras.actionbarcompat.PullToRefreshLayout
-            android:id="@+id/ptr_layout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
 
-            <ListView
-                android:id="@+id/cards_view"
+            <uk.co.senab.actionbarpulltorefresh.extras.actionbarcompat.PullToRefreshLayout
+                android:id="@+id/ptr_layout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="#EEEEEE"
-                android:descendantFocusability="blocksDescendants"
-                android:dividerHeight="0dip"
-                android:listSelector="@android:color/transparent"
-                android:scrollbars="none" />
+                android:layout_height="match_parent">
 
-        </uk.co.senab.actionbarpulltorefresh.extras.actionbarcompat.PullToRefreshLayout>
+                <ListView
+                    android:id="@+id/cards_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="#EEEEEE"
+                    android:descendantFocusability="blocksDescendants"
+                    android:dividerHeight="0dip"
+                    android:listSelector="@android:color/transparent"
+                    android:scrollbars="none" />
+
+            </uk.co.senab.actionbarpulltorefresh.extras.actionbarcompat.PullToRefreshLayout>
+
+            <ImageButton
+                android:id="@+id/fab"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:layout_gravity="bottom|right"
+                android:layout_marginBottom="16dp"
+                android:layout_marginRight="16dp"
+                android:background="@drawable/fab_ripple"
+                android:elevation="@dimen/cardview_elevation"
+                android:onClick="onFabClicked"
+                android:src="@drawable/ic_action_settings" />
+        </RelativeLayout>
+
 
     </FrameLayout>
     <!-- The navigation drawer -->
@@ -34,7 +55,7 @@
         android:layout_width="280dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:background="@android:color/white"
+        android:background="#fff"
         android:choiceMode="singleChoice"
         android:divider="@android:color/transparent"
         android:dividerHeight="0dp" />

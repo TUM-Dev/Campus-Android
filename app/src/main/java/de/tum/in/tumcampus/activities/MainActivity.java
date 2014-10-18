@@ -8,7 +8,7 @@ import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -61,12 +61,6 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Must be set because label declared in manifest file is "TUM Campus App"
-        // in order to let the app show up as TUM Campus app in the launcher.
-        // But we already have the TUM in the actionbar as logo so we want to set title to
-        // "Campus App".
-        setTitle(R.string.campus_app);
-
         // Setup card list view
         mCardsView = (ListView) findViewById(R.id.cards_view);
         mCardsView.setOnItemClickListener(this);
@@ -90,8 +84,7 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
         this.startService(service);
 
         // Set the list's click listener
-        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
-                R.drawable.ic_drawer, R.string.drawer_open, R.string.drawer_close) {
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.drawer_open, R.string.drawer_close) {
 
             /**
              * Called when a drawer has settled in a completely closed state.
@@ -234,9 +227,14 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
             refreshCards();
         } else {
             Intent i = card.getIntent();
-            if (i != null)
+            if (i != null) {
                 startActivity(i);
+            }
         }
+    }
+
+    public void onFabClicked(View v) {
+        startActivity(new Intent(this, UserPreferencesActivity.class));
     }
 
     /**

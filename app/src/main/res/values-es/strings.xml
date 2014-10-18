@@ -7,7 +7,6 @@
     <string name="campus_app">Campus App</string>
     <string name="search">Buscar</string>
     <string name="tum_logo">TUM Logo</string>
-    <string name="update">Actualización</string>
     <string name="loading">Cargando…</string>
     <string name="settings">Configuración</string>
     <string name="yes">Sí</string>
@@ -128,7 +127,6 @@
     <string name="lectures_appointments">Calendario de Conferencias</string>
     <string name="person_information">Información sobre la gente</string>
     <string name="organisation_details">Detalles de la Organización</string>
-    <string name="cafeterias">Comedores</string>
 
     <!-- Organisations -->
     <string name="tum">Universidad Técnica de Munich</string>
@@ -213,9 +211,6 @@
     <string name="last_updated">El contenido se actualizó por última vez hace %s.</string>
     <string name="my_chat_rooms">Mis Salas de Chat</string>
     <string name="send">Enviar</string>
-    <string name="chat_terms_title">Condiciones del chat</string>
-    <string name="chat_terms_body">Condiciones del chat</string>
-    <string name="display_name">Nombre de representación</string>
     <string name="leave_chat_room">Dejar la sala de chat</string>
     <string name="leave_chat_room_body">¿Seguro que quieres salir la sala de chat?</string>
 

@@ -130,7 +130,6 @@
     <string name="lectures_appointments">Vorlesungstermine</string>
     <string name="person_information">Personeninformationen</string>
     <string name="organisation_details">Organisationsdetails</string>
-    <string name="cafeterias">Mensen</string>
 
     <!-- Organisations -->
     <string name="tum">Technische Universität München</string>
@@ -214,9 +213,6 @@
     <!-- Chat rooms -->
     <string name="my_chat_rooms">Meine Chatrooms</string>
     <string name="send">Senden</string>
-    <string name="chat_terms_title">Chat Bedingungen</string>
-    <string name="chat_terms_body">Chat Bedingungen</string>
-    <string name="display_name">Nickname</string>
     <string name="leave_chat_room">Chatroom verlassen</string>
     <string name="leave_chat_room_body">Bist du sicher, dass du den Chatroom verlassen willst?</string>
 
@@ -323,10 +319,8 @@
     <string name="open_chat_terms">Chatbedingungen</string>
     <string name="accept_chat_terms">Chatbedingungen akzeptieren</string>
     <string name="have_to_accept_terms">Chatbedingungen müssen akzeptiert werden, damit du den Vorlesungs-Chat verwenden kannst!</string>
-    <string name="nickname_empty">Nickname darf nicht leer sein!</string>
     <string name="activate_key">Bitte aktiviere zuerst deinen Public Key</string>
     <string name="joined_chat_room">Du bist dem Chatroom beigetreten!</string>
-    <string name="nickname_too_short">Nickname muss mindestens 3 Buchstaben lang sein!</string>
     <string name="view_mode">Ansicht wechseln</string>
     <string name="bug_reports">Anonyme Fehlerberichte</string>
     <string name="set_bug_reports">Unterstütze das TCA Team indem du anonyme Fehlerberichte zu unseren Server schicken lässt. Diese beinhalten: Stacktrace, Logdatei, Android Version, App Version und Bildschirm Auflösung</string>

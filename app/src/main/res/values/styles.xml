@@ -4,11 +4,11 @@
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:autoLink">none</item>
-        <item name="android:background">@color/sections_blue</item>
+        <item name="android:background">@color/color_primary_dark</item>
         <item name="android:gravity">center</item>
         <item name="android:padding">4dp</item>
         <item name="android:scrollHorizontally">false</item>
-        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textColor">#fff</item>
         <item name="android:textSize">@dimen/section_text_size</item>
     </style>
 
@@ -25,16 +25,15 @@
     </style>
 
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="android:actionBarStyle" tools:ignore="NewApi">@style/BlueActionBar</item>
-        <item name="actionBarStyle">@style/BlueActionBar</item>
-        <item name="android:actionDropDownStyle" tools:ignore="NewApi">@style/SpinnerBlue</item>
-        <item name="actionDropDownStyle">@style/SpinnerBlue</item>
-        <item name="android:actionBarTabStyle" tools:ignore="NewApi">@style/MyActionBarTabView</item>
-        <item name="actionBarTabStyle">@style/MyActionBarTabView</item>
+        <item name="colorPrimary">@color/color_primary</item>
+        <item name="colorPrimaryDark">@color/color_primary_dark</item>
+        <item name="colorAccent">@color/color_primary</item>
     </style>
 
-    <style name="MyActionBarTabView" parent="@style/Widget.AppCompat.ActionBar.TabView">
-        <item name="android:background">@drawable/tab_indicator_ab_blue</item>
+    <style name="AppThemeStartup" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/color_primary</item>
+        <item name="colorPrimaryDark">@color/color_primary</item>
+        <item name="colorAccent">@color/color_primary</item>
     </style>
 
     <style name="SmallListSeparatorTextViewStyle">
@@ -44,29 +43,6 @@
         <item name="android:paddingLeft">4dp</item>
         <item name="android:textSize">14sp</item>
         <item name="android:textStyle">bold</item>
-    </style>
-
-    <style name="BlueActionBar" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
-        <item name="android:background" tools:ignore="NewApi">@drawable/ab_solid_blue</item>
-        <item name="android:subtitleTextStyle" tools:ignore="NewApi">@style/BlueActionBar.Subtitle
-        </item>
-        <!-- Support library compatibility -->
-        <item name="background">@drawable/ab_solid_blue</item>
-        <item name="subtitleTextStyle">@style/BlueActionBar.Subtitle</item>
-
-
-        <item name="android:backgroundStacked" tools:ignore="NewApi">@drawable/ab_stacked_solid_blue</item>
-        <item name="android:backgroundSplit" tools:ignore="NewApi">@drawable/ab_bottom_solid_blue</item>
-        <item name="backgroundStacked">@drawable/ab_stacked_solid_blue</item>
-        <item name="backgroundSplit">@drawable/ab_bottom_solid_blue</item>
-    </style>
-
-    <style name="BlueActionBar.Subtitle" parent="android:style/TextAppearance.Holo.Widget.ActionBar.Subtitle">
-        <item name="android:textColor">@color/actionbar_subtitle</item>
-    </style>
-
-    <style name="NoActionBar" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="android:windowNoTitle">true</item>
     </style>
 
     <style name="ButtonBar" parent="@android:style/ButtonBar">
@@ -101,5 +77,4 @@
         <item name="android:dropDownSelector">@drawable/abc_spinner_ab_holo_blue</item>
         <item name="android:background">@drawable/abc_spinner_ab_holo_blue</item>
     </style>
-
 </resources>

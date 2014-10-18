@@ -13,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import de.tum.in.tumcampus.R;
+import de.tum.in.tumcampus.activities.MainActivity;
 import de.tum.in.tumcampus.adapters.NavigationDrawerAdapter;
 import de.tum.in.tumcampus.auxiliary.ImplicitCounter;
 
@@ -63,6 +64,12 @@ public abstract class BaseActivity extends ActionBarActivity {
                     scheduleLaunchAndCloseDrawer(item);
                 }
             });
+        }
+
+        String parent = NavUtils.getParentActivityName(this);
+        if(parent!=null && parent.equals(MainActivity.class.getName())) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setHomeButtonEnabled(true);
         }
     }
 

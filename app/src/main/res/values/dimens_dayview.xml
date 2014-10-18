@@ -15,8 +15,6 @@
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
     <dimen name="day_label_text_size">11sp</dimen>
-    <dimen name="all_day_bottom_margin">8dip</dimen>
-    <dimen name="one_day_header_height">0dip</dimen>
     <dimen name="day_header_bottom_margin">4dip</dimen>
     <dimen name="date_header_text_size">12sp</dimen>
     <dimen name="hours_text_size">12sp</dimen>
@@ -39,20 +37,11 @@
     <dimen name="new_event_hint_text_size">12sp</dimen>
     <dimen name="edit_event_view_width">800dip</dimen>
     <dimen name="edit_event_view_padding_left">80dip</dimen>
-    <dimen name="edit_event_view_padding_right">80dip</dimen>
     <dimen name="edit_reminder_min_size">36dip</dimen>
-    <dimen name="event_info_text_size">14dip</dimen>
     <dimen name="event_info_desc_margin_left">0dip</dimen>
     <dimen name="event_info_desc_margin_right">0dip</dimen>
-    <dimen name="event_info_padding">0dip</dimen>
-    <dimen name="calendar_controls_width">280dip</dimen>
     <dimen name="min_portrait_calendar_controls_width">300dip</dimen>
     <dimen name="max_portrait_calendar_controls_width">350dip</dimen>
-    <dimen name="calendar_controls_height">300dip</dimen>
     <dimen name="agenda_item_right_margin">4dip</dimen>
     <dimen name="today_icon_text_size">14sp</dimen>
-    <dimen name="color_view_touch_area_increase">16dp</dimen>
-
-    <dimen name="recurrence_picker_height">340dp</dimen>
-    <dimen name="recurrence_picker_width">300dp</dimen>
 </resources>

@@ -1,7 +1,6 @@
 package de.tum.in.tumcampus.models;
 
 import android.content.Context;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,8 +47,6 @@ public class ChatClient {
     RequestInterceptor requestInterceptor = new RequestInterceptor() {
         @Override
         public void intercept(RequestFacade request) {
-            //Log.e("TCA Chat", "hooking ID: " + NetUtils.getDeviceID(ChatClient.c) + " " + Utils.getInternalSettingString(ChatClient.c, Const.GCM_REG_ID, ""));
-            Log.e("TCA Chat",request.toString());
             request.addHeader("X-DEVICE-ID", NetUtils.getDeviceID(ChatClient.c));
         }
     };

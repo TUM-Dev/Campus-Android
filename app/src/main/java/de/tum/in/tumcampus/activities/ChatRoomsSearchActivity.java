@@ -112,15 +112,12 @@ public class ChatRoomsSearchActivity extends ActivityForLoadingInBackground<Inte
 
         actionBar.addTab(actionBar.newTab().setText(R.string.joined).setTabListener(tabListener));
         actionBar.addTab(actionBar.newTab().setText(R.string.not_joined).setTabListener(tabListener));
-
-        startLoading(mCurrentMode);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        // Check device for Play Services APK.
-        populateCurrentChatMember();
+        startLoading(mCurrentMode);
     }
 
     /**
@@ -129,39 +126,33 @@ public class ChatRoomsSearchActivity extends ActivityForLoadingInBackground<Inte
      * shows dialog to enter display name.
      */
     private void populateCurrentChatMember() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    if (currentChatMember == null) {
-                        //Fetch the stored LRZ ID from shared prefs
-                        String lrzId = Utils.getSetting(ChatRoomsSearchActivity.this, Const.LRZ_ID, "");
+        try {
+            if (currentChatMember == null) {
+                //Fetch the stored LRZ ID from shared prefs
+                String lrzId = Utils.getSetting(ChatRoomsSearchActivity.this, Const.LRZ_ID, "");
 
-                        // GET their data from the server using their lrzId
-                        List<ChatMember> members = ChatClient.getInstance(ChatRoomsSearchActivity.this).getMember(lrzId);
+                // GET their data from the server using their lrzId
+                List<ChatMember> members = ChatClient.getInstance(ChatRoomsSearchActivity.this).getMember(lrzId);
 
-                        //Catch a possible error, when we didn't get something returned
-                        if (members.size() == 0) {
-                            Utils.showToastOnUIThread(ChatRoomsSearchActivity.this, R.string.error_setup_chat_member);
-                            return;
-                        }
-
-                        //Remember this locally
-                        currentChatMember = members.get(0);
-
-                        //Load the private key from the shared prefs
-                        currentPrivateKey = ChatRoomsSearchActivity.this.retrieveOrGeneratePrivateKey();
-
-                        //Proceed with registering
-                        ChatRoomsSearchActivity.this.checkPlayServicesAndRegister();
-                    }
-                } catch (RetrofitError e) {
-                    Utils.log(e, e.getMessage());
-                    Utils.showToastOnUIThread(ChatRoomsSearchActivity.this, R.string.no_internet_connection);
+                //Catch a possible error, when we didn't get something returned
+                if (members.size() == 0) {
+                    Utils.showToastOnUIThread(ChatRoomsSearchActivity.this, R.string.error_setup_chat_member);
+                    return;
                 }
 
+                //Remember this locally
+                currentChatMember = members.get(0);
+
+                //Load the private key from the shared prefs
+                currentPrivateKey = ChatRoomsSearchActivity.this.retrieveOrGeneratePrivateKey();
+
+                //Proceed with registering
+                ChatRoomsSearchActivity.this.checkPlayServicesAndRegister();
             }
-        }).start();
+        } catch (RetrofitError e) {
+            Utils.log(e, e.getMessage());
+            Utils.showToastOnUIThread(ChatRoomsSearchActivity.this, R.string.no_internet_connection);
+        }
     }
 
     @Override
@@ -173,6 +164,8 @@ public class ChatRoomsSearchActivity extends ActivityForLoadingInBackground<Inte
         } else {
             Utils.showToastOnUIThread(this, R.string.no_internet_connection);
         }
+
+        populateCurrentChatMember();
 
         // Try to restore from server
         // Upload public key to the server
@@ -191,7 +184,7 @@ public class ChatRoomsSearchActivity extends ActivityForLoadingInBackground<Inte
     @Override
     protected void onLoadFinished(Cursor result) {
         showLoadingEnded();
-        if(result==null) {
+        if (result == null) {
             Utils.showToast(this, "Have you activated your key?\nPublic key activation mail sent to " + currentChatMember.getLrzId() + "@mytum.de");
         } else if (result.getCount() == 0) {
             lvMyLecturesList.setAdapter(new NoResultsAdapter(this));
@@ -535,7 +528,7 @@ public class ChatRoomsSearchActivity extends ActivityForLoadingInBackground<Inte
     /**
      * Helper function to check if we need to update the regid
      *
-     * @param regId
+     * @param regId registration ID
      */
     private void checkRegisterIdUpdate(String regId) {
         //Regularly (once a day) update the server with the reg id

@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="actionbar_subtitle">#FFFFFF</color>
-
     <color name="text_light_blue">#0065BD</color>
     <color name="text_light_gray">#C0C0C0</color>
     <color name="text_dark_gray">#a5a5a5</color>
     <color name="sections_blue">#303f9f</color>
     <color name="sections_green">#7cbc49</color>
     <color name="sections_gray">#a5a5a5</color>
+
+
+    <color name="color_primary" >#4285f4</color>
+    <color name="color_primary_dark">#303f9f</color>
 
     <color name="card_pressed">#fff8f8f8</color>
     <color name="card_activated">#500099CC</color>
@@ -24,7 +26,6 @@
     <color name="popup_bg_color">#EE666666</color>
     <color name="separator_color">#BBBBBB</color>
     <color name="popup_text_color">#FFFFFF</color>
-    <color name="searchview_hint_color">#ffffff</color>
 
     <color name="borderless_button_normal">#3f5ca9</color>
     <color name="borderless_button_pressed">#374f91</color>

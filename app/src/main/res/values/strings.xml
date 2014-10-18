@@ -137,7 +137,6 @@
     <string name="lectures_appointments">Lecture Appointments</string>
     <string name="person_information">Person Information</string>
     <string name="organisation_details">Organization Details</string>
-    <string name="cafeterias">Cafeterias</string>
 
     <!-- Organisations -->
     <string name="tum">Technical university of Munich</string>
@@ -221,9 +220,6 @@
     <!-- Chat rooms -->
     <string name="my_chat_rooms">My Chat Rooms</string>
     <string name="send">Send</string>
-    <string name="chat_terms_title">Chat Terms</string>
-    <string name="chat_terms_body">Chat Terms</string>
-    <string name="display_name">Display name</string>
     <string name="leave_chat_room">Leave chat room</string>
     <string name="leave_chat_room_body">Are you sure you want to leave this chat room?</string>
 
@@ -354,10 +350,8 @@
     <string name="open_chat_terms">chat terms</string>
     <string name="accept_chat_terms">Accept chat terms</string>
     <string name="have_to_accept_terms">Terms must be accepted to use group chat!</string>
-    <string name="nickname_empty">Nickname must not be empty!</string>
     <string name="activate_key">Please activate your public key first</string>
     <string name="joined_chat_room">You joined the chat room!</string>
-    <string name="nickname_too_short">Nickname must be at least 3 characters long!</string>
     <string name="view_mode">Change view mode</string>
     <string name="bug_reports">Anonymous Bug Reports</string>
     <string name="set_bug_reports">Support the TCA Team by sending anonymous bug reports to our server which include: stack trace, logfile, android version, app version and screen resolution</string>
@@ -383,7 +377,6 @@ Message:\n
     <string name="status_sent">Sent</string>
     <string name="status_sending">Sending</string>
     <string name="status_sending_failed">Sending failed</string>
-    <string name="add_chat_rooms">Add chat rooms</string>
     <string name="joined">My</string>
     <string name="not_joined">Other</string>
     <string name="default_campus">Default campus</string>

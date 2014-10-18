@@ -6,20 +6,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SearchRecentSuggestionsProvider;
 import android.database.Cursor;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.provider.SearchRecentSuggestions;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
-import android.text.Spannable;
-import android.text.SpannableStringBuilder;
-import android.text.style.ImageSpan;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
-import android.widget.ImageView;
 
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.auxiliary.Utils;
@@ -91,9 +84,6 @@ public abstract class ActivityForSearching extends ProgressActivity {
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchableInfo info = searchManager.getSearchableInfo(getComponentName());
         mSearchView.setSearchableInfo(info);
-
-        // Optical tweaks to match application theme
-        styleSearchView(info.getHintId());
 
         // If activity gets called via Intent with a search query set SearchView accordingly
         if(mQuery!=null) {
@@ -167,38 +157,6 @@ public abstract class ActivityForSearching extends ProgressActivity {
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             requestSearch(intent.getStringExtra(SearchManager.QUERY));
         }
-    }
-
-    /**
-     * Make some optical adjustments to SearchView to match blue actionbar color
-     * @param hintId Resource id of the hint text to be shown in empty SearchView
-     */
-    private void styleSearchView(int hintId) {
-        // Adjust small lense icon and hint text
-        SearchView.SearchAutoComplete searchAutoComplete = (SearchView.SearchAutoComplete)mSearchView.findViewById(android.support.v7.appcompat.R.id.search_src_text);
-        SpannableStringBuilder ssb = new SpannableStringBuilder("   ");
-        ssb.append(getString(hintId));
-        Drawable searchIcon = getResources().getDrawable(R.drawable.ic_action_search);
-        int textSize = (int) (searchAutoComplete.getTextSize() * 1.4);
-        searchIcon.setBounds(0, 0, textSize, textSize);
-        ssb.setSpan(new ImageSpan(searchIcon), 1, 2, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        searchAutoComplete.setHint(ssb);
-        searchAutoComplete.setHintTextColor(getResources().getColor(R.color.searchview_hint_color));
-        searchAutoComplete.setTextColor(Color.WHITE);
-        searchAutoComplete.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI|EditorInfo.IME_ACTION_SEARCH);
-
-        // Adjust the color of the border shown below the EditText
-        View searchPlate = mSearchView.findViewById(android.support.v7.appcompat.R.id.search_plate);
-        searchPlate.setBackgroundResource(R.drawable.searchview_textfield_holo_blue);
-
-        // Set a new x symbol
-        ImageView searchCloseIcon = (ImageView)mSearchView.findViewById(android.support.v7.appcompat.R.id.search_close_btn);
-        searchCloseIcon.setImageResource(R.drawable.ic_action_cancel);
-
-        // Replace collapsed icon
-        ImageView collapsedSearchIcon = (ImageView) mSearchView.findViewById(android.support.v7.appcompat.R.id.search_button);
-        Drawable bigSearchIcon = getResources().getDrawable(R.drawable.ic_action_search);
-        collapsedSearchIcon.setImageDrawable(bigSearchIcon);
     }
 
     /**

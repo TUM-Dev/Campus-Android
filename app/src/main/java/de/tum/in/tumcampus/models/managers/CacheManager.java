@@ -31,19 +31,22 @@ public class CacheManager {
     public static final int CACHE_TYP_DATA = 0;
     public static final int CACHE_TYP_IMAGE = 1;
 
-    /** Validity's for entries in seconds */
+    /**
+     * Validity's for entries in seconds
+     */
     public static final int VALIDITY_DO_NOT_CACHE = 0;
     public static final int VALIDITY_ONE_DAY = 86400;
-    public static final int VALIDITY_TWO_DAYS = 2*86400;
-    public static final int VALIDITY_FIFE_DAYS = 5*86400;
-    public static final int VALIDITY_TEN_DAYS = 10*86400;
-    public static final int VALIDITY_ONE_MONTH = 30*86400;
+    public static final int VALIDITY_TWO_DAYS = 2 * 86400;
+    public static final int VALIDITY_FIFE_DAYS = 5 * 86400;
+    public static final int VALIDITY_TEN_DAYS = 10 * 86400;
+    public static final int VALIDITY_ONE_MONTH = 30 * 86400;
 
     public static Map<ImageView, String> imageViews = Collections.synchronizedMap(new WeakHashMap<ImageView, String>());
-    public static final LruCache<String,Bitmap> bitmapCache;
+    public static final LruCache<String, Bitmap> bitmapCache;
+
     static {
         int cacheSize = 4 * 1024 * 1024; // 4MiB
-        bitmapCache = new LruCache<String,Bitmap>(cacheSize) {
+        bitmapCache = new LruCache<String, Bitmap>(cacheSize) {
             @Override
             protected int sizeOf(String key, Bitmap bitmap) {
                 return bitmap.getRowBytes() * bitmap.getHeight();
@@ -73,8 +76,8 @@ public class CacheManager {
 
         // Delete all entries that are too old and delete corresponding image files
         db.beginTransaction();
-        Cursor cur = db.rawQuery("SELECT data FROM cache WHERE datetime()>max_age AND typ=1",null);
-        if(cur.moveToFirst()) {
+        Cursor cur = db.rawQuery("SELECT data FROM cache WHERE datetime()>max_age AND typ=1", null);
+        if (cur.moveToFirst()) {
             do {
                 File f = new File(cur.getString(0));
                 f.delete();
@@ -100,23 +103,23 @@ public class CacheManager {
         // Cache news source images
         NewsManager news = new NewsManager(mContext);
         Cursor cur = news.getNewsSources();
-        if(cur.moveToFirst()) {
+        if (cur.moveToFirst()) {
             do {
                 String imgUrl = cur.getString(1);
-                if(!imgUrl.isEmpty() && !imgUrl.equals("null"))
+                if (!imgUrl.isEmpty() && !imgUrl.equals("null"))
                     net.downloadImage(imgUrl);
-            } while(cur.moveToNext());
+            } while (cur.moveToNext());
         }
         cur.close();
 
         // Cache news images
         cur = news.getAllFromDb(mContext);
-        if(cur.moveToFirst()) {
+        if (cur.moveToFirst()) {
             do {
                 String imgUrl = cur.getString(4);
-                if(!imgUrl.isEmpty())
+                if (!imgUrl.equals("null"))
                     net.downloadImage(imgUrl);
-            } while(cur.moveToNext());
+            } while (cur.moveToNext());
         }
         cur.close();
 
@@ -211,12 +214,12 @@ public class CacheManager {
      * @param data result
      */
     public void addToCache(String url, String data, int validity, int typ) {
-        if(validity==VALIDITY_DO_NOT_CACHE)
+        if (validity == VALIDITY_DO_NOT_CACHE)
             return;
         Utils.logv("replace " + url + " " + data);
         db.execSQL("REPLACE INTO cache (url, data, validity, max_age, typ) " +
-                        "VALUES (?, ?, datetime('now','+"+(validity/2)+" seconds'), " +
-                        "datetime('now','+"+validity+" seconds'), ?)",
+                        "VALUES (?, ?, datetime('now','+" + (validity / 2) + " seconds'), " +
+                        "datetime('now','+" + validity + " seconds'), ?)",
                 new String[]{url, data, "" + typ});
     }
 
@@ -226,11 +229,11 @@ public class CacheManager {
     void importLecturesFromTUMOnline() {
         // get my lectures
         TUMOnlineRequest<LecturesSearchRowSet> requestHandler = new TUMOnlineRequest<LecturesSearchRowSet>(TUMOnlineConst.LECTURES_PERSONAL, mContext);
-        if(!shouldRefresh(requestHandler.getRequestURL()))
+        if (!shouldRefresh(requestHandler.getRequestURL()))
             return;
 
         //LecturesSearchRowSet myLecturesList =
-                requestHandler.fetch();
+        requestHandler.fetch();
     /*    if (myLecturesList == null)
             return;
 
@@ -251,8 +254,8 @@ public class CacheManager {
 
     public void clearCache() {
         // Delete all entries that are too old and delete corresponding image files
-        Cursor cur = db.rawQuery("SELECT data FROM cache WHERE typ=1",null);
-        if(cur.moveToFirst()) {
+        Cursor cur = db.rawQuery("SELECT data FROM cache WHERE typ=1", null);
+        if (cur.moveToFirst()) {
             do {
                 File f = new File(cur.getString(0));
                 f.delete();

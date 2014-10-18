@@ -7,7 +7,6 @@
     <string name="campus_app">Campus App</string>
     <string name="search">Chercher</string>
     <string name="tum_logo">TUM Logo</string>
-    <string name="update">Mise à jour</string>
     <string name="loading">Chargement en cours …</string>
     <string name="settings">Paramètres</string>
     <string name="yes">Oui</string>
@@ -129,7 +128,6 @@
     <string name="lectures_appointments">horaire des cours</string>
     <string name="person_information">des informations sur les personnes</string>
     <string name="organisation_details">Détails d\'organisation</string>
-    <string name="cafeterias">cafétérias</string>
 
     <!-- Organisations -->
     <string name="tum">Université technique de Munich</string>
@@ -213,9 +211,6 @@
     <!-- Chat rooms -->
     <string name="my_chat_rooms">Mes forums de discussions</string>
     <string name="send">Envoyer</string>
-    <string name="chat_terms_title">Condition de forum de discussion</string>
-    <string name="chat_terms_body">Condition de forum de discussion</string>
-    <string name="display_name">Nickname</string>
     <string name="leave_chat_room">Quitté le forum de discussion</string>
     <string name="leave_chat_room_body">Es-tu sûr que tu veux quitter le forum de discussion?</string>
 
@@ -322,10 +317,8 @@
     <string name="open_chat_terms">Modalités de chat</string>
     <string name="accept_chat_terms">Accepter les conditions de chat</string>
     <string name="have_to_accept_terms">Les termes doivent être acceptées pour utiliser le chat en groupe!</string>
-    <string name="nickname_empty">Pseudo ne doit pas être vide!</string>
     <string name="activate_key">S\'il vous plaît activer votre clé publique première</string>
     <string name="joined_chat_room">Tu as rejoint la salle de chat!</string>
-    <string name="nickname_too_short">Pseudo doit être d\'au moins 3 caractères!</string>
     <string name="view_mode">Changer le mode d\'affichage</string>
     <string name="bug_reports">Rapports de bogues anonymes</string>
     <string name="set_bug_reports">Soutenir l\'équipe de TCA en envoyant des rapports de bogues anonymes à notre serveur qui comprennent: trace de la pile, fichier journal, la version Android, version de l\'application et de la résolution de l\'écran</string>

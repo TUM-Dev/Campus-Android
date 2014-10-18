@@ -32,7 +32,7 @@ public class EduroamManager {
     private static final String INT_EAP = "eap";
     private static final String INT_CA_CERT = "ca_cert";
     private static final String INT_ANONYMOUS_IDENTITY = "anonymous_identity";
-    private final String INT_ENTERPRISE_FIELD_NAME = "android.net.wifi.WifiConfiguration$EnterpriseField";
+    private static final String INT_ENTERPRISE_FIELD_NAME = "android.net.wifi.WifiConfiguration$EnterpriseField";
 
     private final Context mContext;
 

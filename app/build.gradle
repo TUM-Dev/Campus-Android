@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 19
+    compileSdkVersion 21
     buildToolsVersion '20.0.0'
 
     defaultConfig {
         applicationId "de.tum.in.tumcampus"
         minSdkVersion 10
-        targetSdkVersion 19
+        targetSdkVersion 21
         versionCode 38
         versionName "1.2.0 beta 3"
     }
@@ -24,18 +24,16 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:appcompat-v7:20.0.0'
-    compile 'com.android.support:support-v4:20.0.0'
-    compile 'com.google.android.gms:play-services:5.0.89'
+    compile 'com.android.support:appcompat-v7:21.0.0'
+    compile 'com.android.support:support-v4:21.0.0'
+    compile 'com.android.support:cardview-v7:21.0.0'
+    compile 'com.google.android.gms:play-services:6.1.11'
     compile 'com.google.code.gson:gson:2.2.4'
     compile 'com.nineoldandroids:library:2.4.0'
     compile 'se.emilsjolander:stickylistheaders:2.5.0'
     compile 'com.squareup.retrofit:retrofit:1.6.1'
     compile 'it.sephiroth.android.library.imagezoom:imagezoom:1.0.5'
     compile 'com.nhaarman.listviewanimations:lib-core:3.1.0@aar'
-    compile('com.github.chrisbanes.actionbarpulltorefresh:extra-abc:0.9.9') {
-        exclude group: 'com.android.support', module: 'appcompat-v7'
-    }
     compile('org.simpleframework:simple-xml:2.7.1') {
         exclude group: 'stax', module: 'stax-api'
         exclude group: 'xpp3', module: 'xpp3'
@@ -46,4 +44,5 @@ dependencies {
     compile 'com.squareup.okhttp:okhttp-urlconnection:2.0.0'
     compile 'com.squareup.okhttp:okhttp:2.0.0'
     compile project(":libraries:emojicon")
+    compile project(":libraries:PullToRefresh")
 }

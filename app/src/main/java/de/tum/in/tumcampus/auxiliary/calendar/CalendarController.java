@@ -593,23 +593,17 @@ public class CalendarController {
                 launchCreateEvent(event.startTime.toMillis(false), endTime,
                         event.extraLong == EXTRA_CREATE_ALL_DAY, event.eventTitle,
                         event.calendarId);
-                return;
             } else if (event.eventType == EventType.VIEW_EVENT) {
                 launchViewEvent(event.id, event.startTime.toMillis(false), endTime,
                         event.getResponse());
-                return;
             } else if (event.eventType == EventType.EDIT_EVENT) {
                 launchEditEvent(event.id, event.startTime.toMillis(false), endTime, true);
-                return;
             } else if (event.eventType == EventType.VIEW_EVENT_DETAILS) {
                 launchEditEvent(event.id, event.startTime.toMillis(false), endTime, false);
-                return;
             } else if (event.eventType == EventType.DELETE_EVENT) {
                 launchDeleteEvent(event.id, event.startTime.toMillis(false), endTime);
-                return;
             } else if (event.eventType == EventType.SEARCH) {
                 launchSearch(event.id, event.query, event.componentName);
-                return;
             }
         }
     }

@@ -13,14 +13,6 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBarActivity;
 import android.util.TypedValue;
 import android.view.View;
-import android.view.animation.AccelerateDecelerateInterpolator;
-import android.widget.ImageView;
-import android.widget.TextView;
-
-import com.nineoldandroids.animation.Animator;
-import com.nineoldandroids.animation.AnimatorSet;
-import com.nineoldandroids.animation.ObjectAnimator;
-import com.nineoldandroids.view.ViewHelper;
 
 import java.io.File;
 
@@ -68,7 +60,7 @@ public class StartupActivity extends ActionBarActivity {
 
         // Also First run wizard for setup of id and token
         // Check the flag if user wants the wizard to open at startup
-        Boolean hideWizardOnStartup = Utils.getSettingBool(this, Const.HIDE_WIZARD_ON_STARTUP, false);
+        boolean hideWizardOnStartup = Utils.getSettingBool(this, Const.HIDE_WIZARD_ON_STARTUP, false);
         String lrzId = Utils.getSetting(this, Const.LRZ_ID, ""); // If new version and LRZ ID is empty, start the full wizard
         if (!hideWizardOnStartup || (newVersion && lrzId.length() == 0)) {
             startActivity(new Intent(this, WizNavStartActivity.class));
@@ -123,8 +115,14 @@ public class StartupActivity extends ActionBarActivity {
      * Afterwards {@link MainActivity} gets started
      */
     private void startApp() {
+
+        Intent intent = new Intent(StartupActivity.this, MainActivity.class);
+        startActivity(intent);
+        finish();
+        overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+
         // Get views to be moved
-        final View background = findViewById(R.id.startup_background);
+        /*final View background = findViewById(R.id.startup_background);
         final ImageView tumLogo = (ImageView) findViewById(R.id.startup_tum_logo);
         final TextView loadingText = (TextView) findViewById(R.id.startup_loading);
         final ImageView drawerIndicator = (ImageView) findViewById(R.id.startup_drawer_indicator);
@@ -183,7 +181,7 @@ public class StartupActivity extends ActionBarActivity {
             public void onAnimationRepeat(Animator animation) {
             }
         });
-        set.setDuration(600).start();
+        set.setDuration(600).start();*/
     }
 
     /**

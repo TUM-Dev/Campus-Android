@@ -1,18 +1,18 @@
 <resources>
 
     <dimen name="padding_default">8dp</dimen>
-    <dimen name="padding_large">16dp</dimen>
     <dimen name="mid_text_size">14sp</dimen>
     <dimen name="semilarge_text_size">16sp</dimen>
     <dimen name="large_text_size">18sp</dimen>
     <dimen name="section_text_size">15sp</dimen>
-    <dimen name="time_gap">74px</dimen>
-    <dimen name="time_one_hour">75px</dimen>
     <dimen name="time_line_thickness">1px</dimen>
     <dimen name="time_timeline_width">50dp</dimen>
     <dimen name="time_timeline_height">1800px</dimen>
     <dimen name="icon_small">56dp</dimen>
     <dimen name="card_text_padding">10dp</dimen>
     <dimen name="next_lecture_select_width">30dp</dimen>
+
+    <dimen name="card_padding_vertical">4dp</dimen>
+    <dimen name="cardview_elevation">6dp</dimen>
 
 </resources>
