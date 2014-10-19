@@ -40,7 +40,7 @@ import de.tum.in.tumcampus.models.ChatMember;
 import de.tum.in.tumcampus.models.ChatPublicKey;
 import de.tum.in.tumcampus.models.ChatRegistrationId;
 import de.tum.in.tumcampus.models.ChatRoom;
-import de.tum.in.tumcampus.models.ChatVerfication;
+import de.tum.in.tumcampus.models.ChatVerification;
 import de.tum.in.tumcampus.models.LecturesSearchRow;
 import de.tum.in.tumcampus.models.LecturesSearchRowSet;
 import de.tum.in.tumcampus.models.managers.ChatRoomManager;
@@ -168,11 +168,8 @@ public class ChatRoomsSearchActivity extends ActivityForLoadingInBackground<Inte
         populateCurrentChatMember();
 
         // Try to restore from server
-        // Upload public key to the server
-        RSASigner signer = new RSASigner(currentPrivateKey);
-        String signature = signer.sign(currentChatMember.getLrzId());
         try {
-            List<ChatRoom> rooms = ChatClient.getInstance(this).getMemberRooms(currentChatMember.getUserId(), new ChatVerfication(signature));
+            List<ChatRoom> rooms = ChatClient.getInstance(this).getMemberRooms(currentChatMember.getUserId(), new ChatVerification(currentPrivateKey, currentChatMember));
             manager.replaceIntoRooms(rooms);
             return manager.getAllByStatus(arg[0]);
         } catch (RetrofitError e) {

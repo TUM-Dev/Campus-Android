@@ -66,19 +66,19 @@ public class ChatClient {
         void joinChatRoom(@Path("groupId") String groupId, @Body ChatMember chatMember, Callback<ChatRoom> cb);
 
         @POST("/rooms/{groupId}/leave/")
-        void leaveChatRoom(@Path("groupId") String groupId, @Body ChatMember chatMember, Callback<ChatRoom> cb);
+        void leaveChatRoom(@Path("groupId") String groupId, @Body ChatVerification verification, Callback<ChatRoom> cb);
 
         @POST("/rooms/{groupId}/messages/")
-        CreateChatMessage sendMessage(@Path("groupId") String groupId, @Body CreateChatMessage chatMessage);
+        ChatMessage sendMessage(@Path("groupId") String groupId, @Body ChatMessage message);
 
         @GET("/rooms/{groupId}/messages/{page}/")
-        void getMessages(@Path("groupId") String groupId, @Path("page") int page, Callback<ArrayList<ListChatMessage>> cb);
+        void getMessages(@Path("groupId") String groupId, @Path("page") int page, Callback<ArrayList<ChatMessage>> cb);
 
         @GET("/rooms/{groupId}/messages/{page}/")
-        ArrayList<ListChatMessage> getMessages(@Path("groupId") String groupId, @Path("page") long page);
+        ArrayList<ChatMessage> getMessages(@Path("groupId") String groupId, @Path("page") long page);
 
         @GET("/rooms/{groupId}/messages/")
-        ArrayList<ListChatMessage> getNewMessages(@Path("groupId") String groupId);
+        ArrayList<ChatMessage> getNewMessages(@Path("groupId") String groupId);
 
         @POST("/members/")
         ChatMember createMember(@Body ChatMember chatMember);
@@ -90,7 +90,7 @@ public class ChatClient {
         void uploadPublicKey(@Path("memberId") String memberId, @Body ChatPublicKey publicKey, Callback<ChatPublicKey> cb);
 
         @POST("/members/{memberId}/rooms/")
-        List<ChatRoom> getMemberRooms(@Path("memberId") String memberId, @Body ChatVerfication verfication);
+        List<ChatRoom> getMemberRooms(@Path("memberId") String memberId, @Body ChatVerification verification);
 
         @GET("/members/{memberId}/pubkeys/")
         List<ChatPublicKey> getPublicKeysForMember(@Path("memberId") String memberId);
@@ -124,23 +124,19 @@ public class ChatClient {
         service.joinChatRoom(chatRoom.getGroupId(), chatMember, cb);
     }
 
-    public void leaveChatRoom(ChatRoom chatRoom, ChatMember chatMember, Callback<ChatRoom> cb) {
-        service.leaveChatRoom(chatRoom.getGroupId(), chatMember, cb);
+    public void leaveChatRoom(ChatRoom chatRoom, ChatVerification verification, Callback<ChatRoom> cb) {
+        service.leaveChatRoom(chatRoom.getGroupId(), verification, cb);
     }
 
-    public CreateChatMessage sendMessage(String groupId, CreateChatMessage chatMessage) {
-        return service.sendMessage(groupId, chatMessage);
+    public ChatMessage sendMessage(String groupId, ChatMessage chatMessageCreate) {
+        return service.sendMessage(groupId, chatMessageCreate);
     }
 
-    public void getMessages(String groupId, int page, Callback<ArrayList<ListChatMessage>> cb) {
-        service.getMessages(groupId, page, cb);
-    }
-
-    public ArrayList<ListChatMessage> getMessages(String groupId, long page) {
+    public ArrayList<ChatMessage> getMessages(String groupId, long page) {
         return service.getMessages(groupId, page);
     }
 
-    public ArrayList<ListChatMessage> getNewMessages(String groupId) {
+    public ArrayList<ChatMessage> getNewMessages(String groupId) {
         return service.getNewMessages(groupId);
     }
 
@@ -148,8 +144,8 @@ public class ChatClient {
         service.uploadPublicKey(memberId, publicKey, cb);
     }
 
-    public List<ChatRoom> getMemberRooms(String memberId, ChatVerfication verfication) {
-        return service.getMemberRooms(memberId, verfication);
+    public List<ChatRoom> getMemberRooms(String memberId, ChatVerification verification) {
+        return service.getMemberRooms(memberId, verification);
     }
 
     public List<ChatPublicKey> getPublicKeysForMember(String memberId) {

@@ -14,13 +14,13 @@ import java.util.ArrayList;
 
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.models.ChatMember;
-import de.tum.in.tumcampus.models.ListChatMessage;
+import de.tum.in.tumcampus.models.ChatMessage;
 import de.tum.in.tumcampus.models.managers.ChatMessageManager;
 
 public class ChatHistoryAdapter extends CursorAdapter {
 
     private final Context mContext;
-    private ArrayList<ListChatMessage> unsentMessages = new ArrayList<ListChatMessage>();
+    private ArrayList<ChatMessage> unsentMessages = new ArrayList<ChatMessage>();
 
     public int getSentCount() {
         return super.getCount();
@@ -84,7 +84,7 @@ public class ChatHistoryAdapter extends CursorAdapter {
     public int getItemViewType(int position) {
         if (position > super.getCount())
             return 0;
-        ListChatMessage msg = (ListChatMessage) getItem(position);
+        ChatMessage msg = (ChatMessage) getItem(position);
         return currentChatMember.getUrl().equals(msg.getMember().getUrl()) ? 0 : 1;
     }
 
@@ -94,7 +94,7 @@ public class ChatHistoryAdapter extends CursorAdapter {
         if (position < count)
             return super.getView(position, convertView, viewGroup);
 
-        ListChatMessage chatMessage = unsentMessages.get(position - count);
+        ChatMessage chatMessage = unsentMessages.get(position - count);
         View v = newView(mContext, null, viewGroup);
         bindViewChatMessage(v, chatMessage, true);
         return v;
@@ -105,7 +105,7 @@ public class ChatHistoryAdapter extends CursorAdapter {
         ViewHolder holder;
         boolean outgoing = true;
         if (cursor != null) {
-            ListChatMessage msg = ChatMessageManager.toObject(cursor);
+            ChatMessage msg = ChatMessageManager.toObject(cursor);
             outgoing = currentChatMember.getUrl().equals(msg.getMember().getUrl());
         }
 
@@ -128,11 +128,11 @@ public class ChatHistoryAdapter extends CursorAdapter {
 
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
-        ListChatMessage chatMessage = ChatMessageManager.toObject(cursor);
+        ChatMessage chatMessage = ChatMessageManager.toObject(cursor);
         bindViewChatMessage(view, chatMessage, false);
     }
 
-    private void bindViewChatMessage(View view, ListChatMessage chatMessage, boolean sending) {
+    private void bindViewChatMessage(View view, ChatMessage chatMessage, boolean sending) {
         ViewHolder holder = (ViewHolder) view.getTag();
 
         holder.tvUser.setText(chatMessage.getMember().getDisplayName());
@@ -152,12 +152,12 @@ public class ChatHistoryAdapter extends CursorAdapter {
         }
     }
 
-    public void add(ListChatMessage unsentMessage) {
+    public void add(ChatMessage unsentMessage) {
         unsentMessages.add(unsentMessage);
         notifyDataSetChanged();
     }
 
-    public void sent(ListChatMessage sentMessage, Cursor cur) {
+    public void sent(ChatMessage sentMessage, Cursor cur) {
         unsentMessages.remove(sentMessage);
         changeCursor(cur);
     }

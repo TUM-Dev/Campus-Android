@@ -12,13 +12,13 @@ import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.ArrayList;
 
 import de.tum.in.tumcampus.auxiliary.RSASigner;
-import de.tum.in.tumcampus.models.ListChatMessage;
+import de.tum.in.tumcampus.models.ChatMessage;
 
 public class RSASignerTestCase extends TestCase {
 	
 	private RSASigner signer;
 	private PrivateKey privateKeyFixture;
-	private ArrayList<ListChatMessage> messageFixtures;
+	private ArrayList<ChatMessage> messageFixtures;
 	
 	
 	private PrivateKey buildPrivateKey(String privateKeyString) {
@@ -52,7 +52,7 @@ public class RSASignerTestCase extends TestCase {
 			"9tg4rD0aCHQZ6kEquwN6emc9QM0X6DR0dx6Bqq8CGDkVdk0hXHBR9VUBGE4YSsxpn+LnyWSWyJum" +
 			"dWuepeUKig==");
 		
-		messageFixtures = new ArrayList<ListChatMessage>();
+		messageFixtures = new ArrayList<ChatMessage>();
 		messageFixtures.add(buildChatMessage(
 			"This is a message!",
 			"MwBZFVhzIGehiGAVaoxp0k04BJN8YyyqlPQg1hXwg1bQxgjtEXz6KsVzYOWo40/TdhcbUHo+hUhk\n" +
@@ -70,8 +70,8 @@ public class RSASignerTestCase extends TestCase {
 			"L4WYKETiNiP1Oc6d58w="));
 	}
 	
-	protected ListChatMessage buildChatMessage(String text, String signature) {
-		ListChatMessage message = new ListChatMessage(text);
+	protected ChatMessage buildChatMessage(String text, String signature) {
+		ChatMessage message = new ChatMessage(text);
 		message.setSignature(signature);
 		
 		return message;
@@ -82,7 +82,7 @@ public class RSASignerTestCase extends TestCase {
 	 */
 	public void testAsciiMessageSigning() {
 		signer = new RSASigner(privateKeyFixture);
-		ListChatMessage message = messageFixtures.get(0);
+		ChatMessage message = messageFixtures.get(0);
 		
 		assertEquals(message.getSignature(), signer.sign(message.getText()));
 	}
@@ -92,7 +92,7 @@ public class RSASignerTestCase extends TestCase {
 	 */
 	public void testUnicodeMessageSigning() {
 		signer = new RSASigner(privateKeyFixture);
-		ListChatMessage message = messageFixtures.get(1);
+		ChatMessage message = messageFixtures.get(1);
 		
 		assertEquals(message.getSignature(), signer.sign(message.getText()));
 	}
@@ -102,7 +102,7 @@ public class RSASignerTestCase extends TestCase {
 	 */
 	public void testUnicodeKoreanMessageSigning() {
 		signer = new RSASigner(privateKeyFixture);
-		ListChatMessage message = messageFixtures.get(2);
+		ChatMessage message = messageFixtures.get(2);
 		
 		assertEquals(message.getSignature(), signer.sign(message.getText()));
 	}
@@ -113,7 +113,7 @@ public class RSASignerTestCase extends TestCase {
 	 */
 	public void testPrivateKeyNull() {
 		signer = new RSASigner(null);
-		ListChatMessage message = messageFixtures.get(0);
+		ChatMessage message = messageFixtures.get(0);
 		
 		assertNull(signer.sign(message.getText()));
 	}

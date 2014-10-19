@@ -16,6 +16,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Html;
 import android.util.Base64;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -51,9 +52,9 @@ import de.tum.in.tumcampus.auxiliary.RSASigner;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.ChatClient;
 import de.tum.in.tumcampus.models.ChatMember;
+import de.tum.in.tumcampus.models.ChatMessage;
 import de.tum.in.tumcampus.models.ChatRoom;
-import de.tum.in.tumcampus.models.CreateChatMessage;
-import de.tum.in.tumcampus.models.ListChatMessage;
+import de.tum.in.tumcampus.models.ChatVerification;
 import de.tum.in.tumcampus.models.managers.ChatMessageManager;
 import de.tum.in.tumcampus.models.managers.ChatRoomManager;
 import github.ankushsachdeva.emojicon.EmojiconGridView;
@@ -101,10 +102,10 @@ public class ChatActivity extends ActionBarActivity implements DialogInterface.O
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ImplicitCounter.Counter(this);
-        setContentView(R.layout.activity_chat);
+        this.setContentView(R.layout.activity_chat);
 
-        getIntentData();
-        bindUIElements();
+        this.getIntentData();
+        this.bindUIElements();
 
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter("chat-message-received"));
     }
@@ -130,14 +131,23 @@ public class ChatActivity extends ActionBarActivity implements DialogInterface.O
         LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
     }
 
+    /**
+     * User pressed on the notification and wants to view the room with the new messages
+     *
+     * @param intent
+     */
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
+
+        //Try to get the room from the extras
         final ChatRoom room = new Gson().fromJson(intent.getExtras().getString(Const.CURRENT_CHAT_ROOM), ChatRoom.class);
 
+        //Check, maybe it wasn't there
         if (room != null) {
-            //TODO compare ids instead of names, currently null
-            if (!room.getName().equals(currentChatRoom.getName())) {
+
+            //If currently in a room which does not match the one from the notification --> Switch
+            if (!room.getId().equals(currentChatRoom.getId())) {
                 currentChatRoom = room;
                 getSupportActionBar().setSubtitle(currentChatRoom.getName().substring(4));
                 chatHistoryAdapter = null;
@@ -181,13 +191,15 @@ public class ChatActivity extends ActionBarActivity implements DialogInterface.O
      */
     @Override
     public void onClick(View view) {
-        if (view.getId() == btnSend.getId()) { // SEND MESSAGE
+        // Create / send message
+        if (view.getId() == btnSend.getId()) {
+
             //Check if something was entered
             if (etMessage.getText().toString().length() == 0) {
                 return;
             }
 
-            sendMessage(etMessage.getText().toString());
+            this.sendMessage(etMessage.getText().toString());
 
             //Set TextField to empty, when done
             etMessage.setText("");
@@ -206,11 +218,9 @@ public class ChatActivity extends ActionBarActivity implements DialogInterface.O
         }
     }
 
-    private void sendMessage(String message) {
-        final CreateChatMessage newMessage = new CreateChatMessage(message, currentChatMember.getUrl());
-        newMessage.setNow();
-        final ListChatMessage msg = new ListChatMessage(newMessage, currentChatMember);
-        chatHistoryAdapter.add(msg);
+    private void sendMessage(String text) {
+        final ChatMessage message = new ChatMessage(text, currentChatMember);
+        chatHistoryAdapter.add(message);
 
         //Post to webservice
         new Thread(new Runnable() {
@@ -219,26 +229,39 @@ public class ChatActivity extends ActionBarActivity implements DialogInterface.O
 
                 // Generate signature
                 RSASigner signer = new RSASigner(getPrivateKeyFromSharedPrefs());
-                String signature = signer.sign(newMessage.getText());
-                newMessage.setSignature(signature);
+                String signature = signer.sign(message.getText());
+                message.setSignature(signature);
 
                 while (!messageSentSuccessfully && numberOfAttempts < 5) {
+                    //Try to send the message
                     try {
                         // Send the message to the server
-                        final CreateChatMessage newlyCreatedMessage = ChatClient.getInstance(ChatActivity.this).sendMessage(currentChatRoom.getGroupId(), newMessage);
-                        chatManager.replaceInto(new ListChatMessage(newlyCreatedMessage, currentChatMember));
+                        final ChatMessage createdMessage = ChatClient.getInstance(ChatActivity.this).sendMessage(currentChatRoom.getGroupId(), message);
+                        Log.e("Tca chat", "message: " + createdMessage);
+                        chatManager.replaceInto(createdMessage);
                         final Cursor cur = chatManager.getAll();
 
+                        //Update the currently shown history
                         ChatActivity.this.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                chatHistoryAdapter.sent(msg, cur);
+                                chatHistoryAdapter.sent(message, cur);
                             }
                         });
+
+                        //Exit the loop
                         messageSentSuccessfully = true;
+                        return;
                     } catch (RetrofitError e) {
                         Utils.log(e);
                         numberOfAttempts++;
+                    }
+
+                    //Sleep for five seconds, maybe the server is currently really busy
+                    try {
+                        Thread.sleep(5000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
                     }
                 }
                 messageSentSuccessfully = false;
@@ -258,7 +281,7 @@ public class ChatActivity extends ActionBarActivity implements DialogInterface.O
      */
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
-        ListChatMessage message = (ListChatMessage) chatHistoryAdapter.getItem(position - 1);
+        ChatMessage message = (ChatMessage) chatHistoryAdapter.getItem(position - 1);
 
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ENGLISH);
         Date time;
@@ -320,7 +343,7 @@ public class ChatActivity extends ActionBarActivity implements DialogInterface.O
         getSupportActionBar().setSubtitle(currentChatRoom.getName().substring(4));
 
         CharSequence message = getMessageText(getIntent());
-        if(message!=null) {
+        if (message != null) {
             sendMessage(message.toString());
         }
     }
@@ -405,8 +428,10 @@ public class ChatActivity extends ActionBarActivity implements DialogInterface.O
         new Thread(new Runnable() {
             @Override
             public void run() {
+
                 // Download chat messages in new Thread
-                ArrayList<ListChatMessage> downloadedChatHistory;
+                ArrayList<ChatMessage> downloadedChatHistory;
+
                 // If currently nothing has been shown load newest messages from server
                 if (chatHistoryAdapter == null || chatHistoryAdapter.getSentCount() == 0) {
                     downloadedChatHistory = ChatClient.getInstance(ChatActivity.this).getNewMessages(currentChatRoom.getId());
@@ -415,17 +440,17 @@ public class ChatActivity extends ActionBarActivity implements DialogInterface.O
                     downloadedChatHistory = ChatClient.getInstance(ChatActivity.this).getMessages(currentChatRoom.getId(), id);
                 }
 
+                //Save it to our local cache
                 chatManager.replaceInto(downloadedChatHistory);
 
                 // Got results from webservice
                 Utils.logv("Success loading additional chat history: " + downloadedChatHistory.size());
-
                 final Cursor cur = chatManager.getAll();
 
+                // Update results in UI
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        // Update results in UI
                         if (chatHistoryAdapter == null) {
                             chatHistoryAdapter = new ChatHistoryAdapter(ChatActivity.this, cur, currentChatMember);
                             lvMessageHistory.setAdapter(chatHistoryAdapter);
@@ -462,41 +487,43 @@ public class ChatActivity extends ActionBarActivity implements DialogInterface.O
                     //Play a nice notification sound
                     MediaPlayer mediaPlayer = MediaPlayer.create(ChatActivity.this, R.raw.message);
                     mediaPlayer.start();
-                } else if (am.getRingerMode() == AudioManager.RINGER_MODE_VIBRATE) {
+                } else if (am.getRingerMode() == AudioManager.RINGER_MODE_VIBRATE) { //Possibly only vibration is enabled
                     Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
                     v.vibrate(500);
                 }
+
+                //Update the history
                 chatHistoryAdapter.changeCursor(chatManager.getAll());
             }
         }
     };
 
+    /**
+     * When user confirms the leave dialog send the request to the server
+     *
+     * @param dialog
+     * @param which
+     */
     @Override
     public void onClick(DialogInterface dialog, int which) {
-        if (currentChatMember.getLrzId() != null) {
-            // Generate signature
-            RSASigner signer = new RSASigner(getPrivateKeyFromSharedPrefs());
-            String signature = signer.sign(currentChatMember.getLrzId());
-            currentChatMember.setSignature(signature);
+        // Send request to the server to remove the user from this room
+        ChatClient.getInstance(ChatActivity.this).leaveChatRoom(currentChatRoom, new ChatVerification(this.getPrivateKeyFromSharedPrefs(), currentChatMember), new Callback<ChatRoom>() {
+            @Override
+            public void success(ChatRoom room, Response arg1) {
+                Utils.logv("Success leaving chat room: " + room.getName());
+                new ChatRoomManager(ChatActivity.this).leave(currentChatRoom);
 
-            // Send request to the server to remove the user from this room
-            ChatClient.getInstance(ChatActivity.this).leaveChatRoom(currentChatRoom, currentChatMember, new Callback<ChatRoom>() {
-                @Override
-                public void success(ChatRoom arg0, Response arg1) {
-                    Utils.logv("Success leaving chat room: " + arg0.toString());
-                    new ChatRoomManager(ChatActivity.this).leave(currentChatRoom);
+                // Move back to ChatRoomsSearchActivity
+                Intent intent = new Intent(ChatActivity.this, ChatRoomsSearchActivity.class);
+                startActivity(intent);
+            }
 
-                    // Move back to ChatRoomsSearchActivity
-                    Intent intent = new Intent(ChatActivity.this, ChatRoomsSearchActivity.class);
-                    startActivity(intent);
-                }
+            @Override
+            public void failure(RetrofitError e) {
+                Utils.log(e, "Failure leaving chat room");
+            }
+        });
 
-                @Override
-                public void failure(RetrofitError e) {
-                    Utils.log(e, "Failure leaving chat room");
-                }
-            });
-        }
     }
 
     /**

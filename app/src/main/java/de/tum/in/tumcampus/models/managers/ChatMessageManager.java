@@ -18,8 +18,8 @@ import java.util.Locale;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.ChatClient;
 import de.tum.in.tumcampus.models.ChatMember;
+import de.tum.in.tumcampus.models.ChatMessage;
 import de.tum.in.tumcampus.models.ChatRoom;
-import de.tum.in.tumcampus.models.ListChatMessage;
 
 /**
  * TUMOnline cache manager, allows caching of TUMOnline requests
@@ -73,12 +73,12 @@ public class ChatMessageManager {
                 "ORDER BY c1._id DESC " +
                 "LIMIT 1) AS until " +
                 "WHERE c._id>=until._id AND c.room=? " +
-                "ORDER BY c._id", new String[]{mChatRoom.getId(),mChatRoom.getId()});
+                "ORDER BY c._id", new String[]{mChatRoom.getId(), mChatRoom.getId()});
     }
 
     /**
      * Gets all messages marked as unread
-    * */
+     */
     private Cursor getUnread() {
         return db.rawQuery("SELECT c.* FROM chat_message c, (SELECT c1._id " +
                 "FROM chat_message c1 LEFT JOIN chat_message c2 ON c2._id=c1.previous " +
@@ -86,14 +86,19 @@ public class ChatMessageManager {
                 "ORDER BY c1._id DESC " +
                 "LIMIT 1) AS until " +
                 "WHERE c._id>=until._id AND c.room=? " +
-                "ORDER BY c._id", new String[]{mChatRoom.getId(),mChatRoom.getId()});
+                "ORDER BY c._id", new String[]{mChatRoom.getId(), mChatRoom.getId()});
     }
 
     /**
      * Saves the given message into database
      */
-    public void replaceInto(ListChatMessage m) {
-       Log.e("TCA Chat", "replace " + m.getText() + " " + m.getId());
+    public void replaceInto(ChatMessage m) {
+        if (m == null || m.getText() == null) {
+            Log.e("TCA Chat", "Message empty");
+            return;
+        }
+
+        Log.e("TCA Chat", "replace " + m.getText() + " " + m.getId());
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ENGLISH);
         Date date;
         try {
@@ -102,14 +107,14 @@ public class ChatMessageManager {
             date = new Date();
         }
         db.execSQL("REPLACE INTO chat_message (_id,previous,room,text,timestamp,signature,member,status) VALUES (?,?,?,?,?,?,?,0)",
-                new String[]{"" + m.getId(), ""+m.getPrevious(), mChatRoom.getId(), m.getText(), Utils.getDateTimeString(date),
+                new String[]{"" + m.getId(), "" + m.getPrevious(), mChatRoom.getId(), m.getText(), Utils.getDateTimeString(date),
                         m.getSignature(), (new Gson().toJson(m.getMember()))});
     }
 
     /**
      * Saves the given message into database
      */
-    public boolean replaceInto(List<ListChatMessage> m) {
+    public boolean replaceInto(List<ChatMessage> m) {
         db.beginTransaction();
         Cursor cur = db.rawQuery("SELECT _id FROM chat_message WHERE room=?", new String[]{mChatRoom.getGroupId()});
         HashSet<Integer> set = new HashSet<Integer>();
@@ -125,33 +130,33 @@ public class ChatMessageManager {
         cur.close();
         int minNew = Integer.MAX_VALUE;
         boolean newMessages = false;
-        for (ListChatMessage msg : m) {
+        for (ChatMessage msg : m) {
             if (!set.contains(msg.getId())) {
                 newMessages = true;
                 replaceInto(msg);
             }
-            if(msg.getId()<minNew)
+            if (msg.getId() < minNew)
                 minNew = msg.getId();
         }
         db.setTransactionSuccessful();
         db.endTransaction();
-        return newMessages || minNew>min;
+        return newMessages || minNew > min;
     }
 
-    public static ListChatMessage toObject(Cursor cursor) {
+    public static ChatMessage toObject(Cursor cursor) {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ENGLISH);
         int id = cursor.getInt(COL_ID);
         String text = cursor.getString(COL_TEXT);
         String time = formatter.format(Utils.getISODateTime(cursor.getString(COL_TIMESTAMP)));
         int previous = cursor.getInt(COL_PREVIOUS);
         ChatMember member = new Gson().fromJson(cursor.getString(COL_MEMBER), ChatMember.class);
-        ListChatMessage msg = new ListChatMessage(id, text, member, time, previous);
+        ChatMessage msg = new ChatMessage(id, text, member, time, previous);
         msg.setSignature(cursor.getString(COL_SIGNATURE));
         return msg;
     }
 
     public Cursor getNewMessages() {
-        ArrayList<ListChatMessage> messages = ChatClient.getInstance(mContext).getNewMessages(mChatRoom.getId());
+        ArrayList<ChatMessage> messages = ChatClient.getInstance(mContext).getNewMessages(mChatRoom.getId());
         replaceInto(messages);
         return getUnread();
     }

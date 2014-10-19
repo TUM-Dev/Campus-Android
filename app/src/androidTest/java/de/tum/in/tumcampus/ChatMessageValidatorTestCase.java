@@ -6,14 +6,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.tum.in.tumcampus.auxiliary.ChatMessageValidator;
+import de.tum.in.tumcampus.models.ChatMessage;
 import de.tum.in.tumcampus.models.ChatPublicKey;
-import de.tum.in.tumcampus.models.ListChatMessage;
 
 public class ChatMessageValidatorTestCase extends TestCase {
 
 	private ChatMessageValidator validator;
 	private ArrayList<ChatPublicKey> publicKeyFixtures;
-	private ArrayList<ListChatMessage> messageFixtures;
+	private ArrayList<ChatMessage> messageFixtures;
 
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -23,7 +23,7 @@ public class ChatMessageValidatorTestCase extends TestCase {
 			"ZAy78cE/tja8qcD4DXXiQYCKC8BdI68W+DqYLohPuOs6rTYfD/pLsbPKaJLHEb4dw0Uchq36pb60\n" +
 			"6G6aCjZrYM0JJYO/pKbwl6ceF6EJRacGswUQ8qY3ZYd6W7R3J7MQxzJ+lQIDAQAB"));
 		
-		messageFixtures = new ArrayList<ListChatMessage>();
+		messageFixtures = new ArrayList<ChatMessage>();
 		messageFixtures.add(buildChatMessage(
 			"This is a message!",
 			"MwBZFVhzIGehiGAVaoxp0k04BJN8YyyqlPQg1hXwg1bQxgjtEXz6KsVzYOWo40/TdhcbUHo+hUhk\n" +
@@ -55,8 +55,8 @@ public class ChatMessageValidatorTestCase extends TestCase {
 		return list;
 	}
 
-	protected ListChatMessage buildChatMessage(String text, String signature) {
-		ListChatMessage message = new ListChatMessage(text);
+	protected ChatMessage buildChatMessage(String text, String signature) {
+		ChatMessage message = new ChatMessage(text);
 		message.setSignature(signature);
 		
 		return message;
@@ -67,7 +67,7 @@ public class ChatMessageValidatorTestCase extends TestCase {
 	 */
 	public void testAsciiValidMessageOneKey() {
 		validator = new ChatMessageValidator(buildPubkeyList(0, 1));
-		ListChatMessage message = messageFixtures.get(0);
+		ChatMessage message = messageFixtures.get(0);
 		
 		assertTrue(validator.validate(message));
 	}
@@ -78,7 +78,7 @@ public class ChatMessageValidatorTestCase extends TestCase {
 	 */
 	public void testAsciiInvalidMessageOneKey() {
 		validator = new ChatMessageValidator(buildPubkeyList(0, 1));
-		ListChatMessage message = messageFixtures.get(0);
+		ChatMessage message = messageFixtures.get(0);
 		// Take a signature of a different message
 		message.setSignature(messageFixtures.get(1).getSignature());
 		
@@ -90,7 +90,7 @@ public class ChatMessageValidatorTestCase extends TestCase {
 	 */
 	public void testUnicodeValidMessageOneKey() {
 		validator = new ChatMessageValidator(buildPubkeyList(0, 1));
-		ListChatMessage message = messageFixtures.get(1);
+		ChatMessage message = messageFixtures.get(1);
 		
 		assertTrue(validator.validate(message));
 	}
@@ -100,7 +100,7 @@ public class ChatMessageValidatorTestCase extends TestCase {
 	 */
 	public void testUnicodeKoreanValidMessageOneKey() {
 		validator = new ChatMessageValidator(buildPubkeyList(0, 1));
-		ListChatMessage message = messageFixtures.get(2);
+		ChatMessage message = messageFixtures.get(2);
 		
 		assertTrue(validator.validate(message));
 	}
@@ -111,7 +111,7 @@ public class ChatMessageValidatorTestCase extends TestCase {
 	 */
 	public void testInvalidBase64Signature() {
 		validator = new ChatMessageValidator(buildPubkeyList(0, 1));
-		ListChatMessage message = buildChatMessage("This is a message!", "This is not valid base64...");
+		ChatMessage message = buildChatMessage("This is a message!", "This is not valid base64...");
 		
 		assertFalse(validator.validate(message));		
 	}
@@ -124,7 +124,7 @@ public class ChatMessageValidatorTestCase extends TestCase {
 		List<ChatPublicKey> list = buildPubkeyList(0, 1);
 		list.get(0).setKey("This is not valid base 64");
 		validator = new ChatMessageValidator(list);
-		ListChatMessage message = messageFixtures.get(0);
+		ChatMessage message = messageFixtures.get(0);
 		
 		assertFalse(validator.validate(message));
 	}
@@ -136,7 +136,7 @@ public class ChatMessageValidatorTestCase extends TestCase {
 	public void testNoPublicKeys() {
 		validator = new ChatMessageValidator(new ArrayList<ChatPublicKey>());
 		
-		for (ListChatMessage message: messageFixtures) {
+		for (ChatMessage message: messageFixtures) {
 			assertFalse(validator.validate(message));
 		}
 	}
@@ -150,7 +150,7 @@ public class ChatMessageValidatorTestCase extends TestCase {
 		list.add(new ChatPublicKey("This is not a valid key"));
 		list.add(publicKeyFixtures.get(0));
 		validator = new ChatMessageValidator(list);
-		ListChatMessage message = messageFixtures.get(0);
+		ChatMessage message = messageFixtures.get(0);
 		
 		assertTrue(validator.validate(message));
 	}

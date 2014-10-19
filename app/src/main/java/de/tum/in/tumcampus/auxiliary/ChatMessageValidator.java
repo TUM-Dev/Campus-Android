@@ -14,8 +14,8 @@ import java.security.spec.X509EncodedKeySpec;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.tum.in.tumcampus.models.ChatMessage;
 import de.tum.in.tumcampus.models.ChatPublicKey;
-import de.tum.in.tumcampus.models.ListChatMessage;
 
 
 /**
@@ -60,7 +60,7 @@ public class ChatMessageValidator {
 	 * @param message The message to be validated
 	 * @return True if the signature is valid, False otherwise
 	 */
-	public boolean validate(ListChatMessage message) {
+	public boolean validate(ChatMessage message) {
 		if (publicKeys == null) {
 			generatePublicKeys();
 		}
