@@ -21,7 +21,7 @@ import de.tum.in.tumcampus.models.News;
  */
 public class NewsManager implements Card.ProvidesCard {
 
-    private static final int TIME_TO_SYNC = 86400; // 1 day
+    private static final int TIME_TO_SYNC = 1800; // 1/2 hour
     private final Context mContext;
 
     private static final String NEWS_URL = "https://tumcabe.in.tum.de/Api/news/";

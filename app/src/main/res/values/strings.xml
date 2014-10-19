@@ -384,4 +384,5 @@ Message:\n
     <string name="campus_leopoldstrasse">Campus Leopoldstraße</string>
     <string name="campus_geschwister_scholl">Campus Geschwister Scholl-Platz</string>
     <string name="no_default_campus">No default campus</string>
+    <string name="reply_label">Reply</string>
 </resources>

@@ -45,4 +45,5 @@ dependencies {
     compile 'com.squareup.okhttp:okhttp:2.0.0'
     compile project(":libraries:emojicon")
     compile project(":libraries:PullToRefresh")
+    compile 'com.github.machinarius:preferencefragment:0.1.1'
 }

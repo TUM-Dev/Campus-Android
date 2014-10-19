@@ -16,6 +16,6 @@
 -->
 <resources>
 
-    <dimen name="ptr_progress_bar_stroke_width">2dp</dimen>
+    <dimen name="ptr_progress_bar_stroke_width">3dp</dimen>
 
 </resources>

@@ -11,6 +11,7 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Vibrator;
+import android.support.v4.app.RemoteInput;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Html;
@@ -71,6 +72,9 @@ import retrofit.client.Response;
 public class ChatActivity extends ActionBarActivity implements DialogInterface.OnClickListener, OnClickListener, AbsListView.OnScrollListener,
         EmojiconGridView.OnEmojiconClickedListener, EmojiconsPopup.OnSoftKeyboardOpenCloseListener,
         EmojiconsPopup.OnEmojiconBackspaceClickedListener, AdapterView.OnItemLongClickListener {
+
+    // Key for the string that's delivered in the action's intent
+    public static final String EXTRA_VOICE_REPLY = "extra_voice_reply";
 
     /**
      * UI elements
@@ -183,44 +187,7 @@ public class ChatActivity extends ActionBarActivity implements DialogInterface.O
                 return;
             }
 
-            final CreateChatMessage newMessage = new CreateChatMessage(etMessage.getText().toString(), currentChatMember.getUrl());
-            newMessage.setNow();
-            final ListChatMessage msg = new ListChatMessage(newMessage, currentChatMember);
-            chatHistoryAdapter.add(msg);
-
-            //Post to webservice
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-
-                    // Generate signature
-                    RSASigner signer = new RSASigner(getPrivateKeyFromSharedPrefs());
-                    String signature = signer.sign(newMessage.getText());
-                    newMessage.setSignature(signature);
-
-                    while (!messageSentSuccessfully && numberOfAttempts < 5) {
-                        try {
-                            // Send the message to the server
-                            final CreateChatMessage newlyCreatedMessage = ChatClient.getInstance(ChatActivity.this).sendMessage(currentChatRoom.getGroupId(), newMessage);
-                            chatManager.replaceInto(new ListChatMessage(newlyCreatedMessage, currentChatMember));
-                            final Cursor cur = chatManager.getAll();
-
-                            ChatActivity.this.runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    chatHistoryAdapter.sent(msg, cur);
-                                }
-                            });
-                            messageSentSuccessfully = true;
-                        } catch (RetrofitError e) {
-                            Utils.log(e);
-                            numberOfAttempts++;
-                        }
-                    }
-                    messageSentSuccessfully = false;
-                    numberOfAttempts = 0;
-                }
-            }).start();
+            sendMessage(etMessage.getText().toString());
 
             //Set TextField to empty, when done
             etMessage.setText("");
@@ -237,6 +204,47 @@ public class ChatActivity extends ActionBarActivity implements DialogInterface.O
             }
             iconShow = !iconShow;
         }
+    }
+
+    private void sendMessage(String message) {
+        final CreateChatMessage newMessage = new CreateChatMessage(message, currentChatMember.getUrl());
+        newMessage.setNow();
+        final ListChatMessage msg = new ListChatMessage(newMessage, currentChatMember);
+        chatHistoryAdapter.add(msg);
+
+        //Post to webservice
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                // Generate signature
+                RSASigner signer = new RSASigner(getPrivateKeyFromSharedPrefs());
+                String signature = signer.sign(newMessage.getText());
+                newMessage.setSignature(signature);
+
+                while (!messageSentSuccessfully && numberOfAttempts < 5) {
+                    try {
+                        // Send the message to the server
+                        final CreateChatMessage newlyCreatedMessage = ChatClient.getInstance(ChatActivity.this).sendMessage(currentChatRoom.getGroupId(), newMessage);
+                        chatManager.replaceInto(new ListChatMessage(newlyCreatedMessage, currentChatMember));
+                        final Cursor cur = chatManager.getAll();
+
+                        ChatActivity.this.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                chatHistoryAdapter.sent(msg, cur);
+                            }
+                        });
+                        messageSentSuccessfully = true;
+                    } catch (RetrofitError e) {
+                        Utils.log(e);
+                        numberOfAttempts++;
+                    }
+                }
+                messageSentSuccessfully = false;
+                numberOfAttempts = 0;
+            }
+        }).start();
     }
 
     /**
@@ -310,6 +318,11 @@ public class ChatActivity extends ActionBarActivity implements DialogInterface.O
         currentChatRoom = new Gson().fromJson(extras.getString(Const.CURRENT_CHAT_ROOM), ChatRoom.class);
         currentChatMember = new Gson().fromJson(extras.getString(Const.CURRENT_CHAT_MEMBER), ChatMember.class);
         getSupportActionBar().setSubtitle(currentChatRoom.getName().substring(4));
+
+        CharSequence message = getMessageText(getIntent());
+        if(message!=null) {
+            sendMessage(message.toString());
+        }
     }
 
     /**
@@ -395,7 +408,7 @@ public class ChatActivity extends ActionBarActivity implements DialogInterface.O
                 // Download chat messages in new Thread
                 ArrayList<ListChatMessage> downloadedChatHistory;
                 // If currently nothing has been shown load newest messages from server
-                if(chatHistoryAdapter==null || chatHistoryAdapter.getSentCount()==0) {
+                if (chatHistoryAdapter == null || chatHistoryAdapter.getSentCount() == 0) {
                     downloadedChatHistory = ChatClient.getInstance(ChatActivity.this).getNewMessages(currentChatRoom.getId());
                 } else {
                     long id = chatHistoryAdapter.getItemId(ChatMessageManager.COL_ID);
@@ -422,7 +435,7 @@ public class ChatActivity extends ActionBarActivity implements DialogInterface.O
                         }
 
                         // If all messages are loaded hide header view
-                        if ((cur.moveToFirst() && cur.getLong(ChatMessageManager.COL_PREVIOUS) == 0) ||cur.getCount()==0) {
+                        if ((cur.moveToFirst() && cur.getLong(ChatMessageManager.COL_PREVIOUS) == 0) || cur.getCount() == 0) {
                             lvMessageHistory.removeHeaderView(bar);
                         } else {
                             loadingMore = false;
@@ -484,5 +497,16 @@ public class ChatActivity extends ActionBarActivity implements DialogInterface.O
                 }
             });
         }
+    }
+
+    /**
+     * Gets the text from speech input and returns null if no input was provided
+     */
+    private CharSequence getMessageText(Intent intent) {
+        Bundle remoteInput = RemoteInput.getResultsFromIntent(intent);
+        if (remoteInput != null) {
+            return remoteInput.getCharSequence(EXTRA_VOICE_REPLY);
+        }
+        return null;
     }
 }

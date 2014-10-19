@@ -11,42 +11,22 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <RelativeLayout
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent">
+        <uk.co.senab.actionbarpulltorefresh.extras.actionbarcompat.PullToRefreshLayout
+            android:id="@+id/ptr_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-            <uk.co.senab.actionbarpulltorefresh.extras.actionbarcompat.PullToRefreshLayout
-                android:id="@+id/ptr_layout"
+            <ListView
+                android:id="@+id/cards_view"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:background="#EEEEEE"
+                android:descendantFocusability="blocksDescendants"
+                android:dividerHeight="0dip"
+                android:listSelector="@android:color/transparent"
+                android:scrollbars="none" />
 
-                <ListView
-                    android:id="@+id/cards_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="#EEEEEE"
-                    android:descendantFocusability="blocksDescendants"
-                    android:dividerHeight="0dip"
-                    android:listSelector="@android:color/transparent"
-                    android:scrollbars="none" />
-
-            </uk.co.senab.actionbarpulltorefresh.extras.actionbarcompat.PullToRefreshLayout>
-
-            <ImageButton
-                android:id="@+id/fab"
-                android:layout_width="56dp"
-                android:layout_height="56dp"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentRight="true"
-                android:layout_gravity="bottom|right"
-                android:layout_marginBottom="16dp"
-                android:layout_marginRight="16dp"
-                android:background="@drawable/fab_ripple"
-                android:elevation="@dimen/cardview_elevation"
-                android:onClick="onFabClicked"
-                android:src="@drawable/ic_action_settings" />
-        </RelativeLayout>
-
+        </uk.co.senab.actionbarpulltorefresh.extras.actionbarcompat.PullToRefreshLayout>
 
     </FrameLayout>
     <!-- The navigation drawer -->

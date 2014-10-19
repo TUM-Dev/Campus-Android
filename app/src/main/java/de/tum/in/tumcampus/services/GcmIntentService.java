@@ -26,6 +26,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.RemoteInput;
 import android.support.v4.content.LocalBroadcastManager;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
@@ -128,20 +129,34 @@ public class GcmIntentService extends IntentService {
             // Notification sound
             Uri sound = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.message);
 
-            //Show a nice notification
-            NotificationCompat.Builder mBuilder =
-                    new NotificationCompat.Builder(this)
-                            .setSmallIcon(R.drawable.tum_logo_notification)
-                            .setContentTitle(chatRoom.getName().substring(4))
-                            .setStyle(new NotificationCompat.BigTextStyle().bigText(txt))
-                            .setContentText(txt)
-                            .setContentIntent(contentIntent)
-                            .setDefaults(Notification.DEFAULT_VIBRATE)
-                            .setLights(0xff0000ff, 500, 500)
-                            .setSound(sound)
-                            .setAutoCancel(true);
 
-            Notification notification = mBuilder.build();
+            String replyLabel = getResources().getString(R.string.reply_label);
+
+            RemoteInput remoteInput = new RemoteInput.Builder(ChatActivity.EXTRA_VOICE_REPLY)
+                    .setLabel(replyLabel)
+                    .build();
+
+            // Create the reply action and add the remote input
+            NotificationCompat.Action action =
+                    new NotificationCompat.Action.Builder(R.drawable.ic_reply,
+                            getString(R.string.reply_label), contentIntent)
+                            .addRemoteInput(remoteInput)
+                            .build();
+
+            //Show a nice notification
+            Notification notification = new NotificationCompat.Builder(this)
+                    .setSmallIcon(R.drawable.tum_logo_notification)
+                    .setContentTitle(chatRoom.getName().substring(4))
+                    .setStyle(new NotificationCompat.BigTextStyle().bigText(txt))
+                    .setContentText(txt)
+                    .setContentIntent(contentIntent)
+                    .setDefaults(Notification.DEFAULT_VIBRATE)
+                    .setLights(0xff0000ff, 500, 500)
+                    .setSound(sound)
+                    .setAutoCancel(true)
+                    .extend(new NotificationCompat.WearableExtender().addAction(action))
+                    .build();
+
             NotificationManager mNotificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
             mNotificationManager.notify(NOTIFICATION_ID, notification);
         }

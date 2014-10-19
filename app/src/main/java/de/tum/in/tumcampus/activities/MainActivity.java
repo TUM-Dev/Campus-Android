@@ -299,7 +299,6 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
                     return true;
                 Intent intent = new Intent(this, UserPreferencesActivity.class);
                 intent.putExtra(Const.PREFERENCE_SCREEN, key);
-                intent.putExtra("returnHome", true);
                 startActivity(intent);
                 return true;
             case MENU_HIDE_ALWAYS:
