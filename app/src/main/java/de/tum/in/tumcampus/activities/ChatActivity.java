@@ -235,7 +235,7 @@ public class ChatActivity extends ActionBarActivity implements DialogInterface.O
                     //Try to send the message
                     try {
                         // Send the message to the server
-                        final ChatMessage createdMessage = ChatClient.getInstance(ChatActivity.this).sendMessage(currentChatRoom.getGroupId(), message);
+                        final ChatMessage createdMessage = ChatClient.getInstance(ChatActivity.this).sendMessage(currentChatRoom.getId(), message);
                         Log.e("Tca chat", "message: " + createdMessage.getId() + "  " + createdMessage.getText());
                         createdMessage.setStatus(ChatMessage.STATUS_SENT);
                         chatManager.replaceInto(createdMessage);

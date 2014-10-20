@@ -105,7 +105,7 @@ public class ChatRoomManager {
                         new String[]{room.getId(), roomName, semester});
             } else {
                 db.execSQL("REPLACE INTO chat_room (group_id,name,semester_id,semester,status,_id, contributor) " +
-                                "VALUES (-1,?,'ZZZ','',1,0,'')", new String[]{roomName});
+                                "VALUES (-1,?,?,'',1,0,'')", new String[]{roomName,semester});
             }
         }
     }
