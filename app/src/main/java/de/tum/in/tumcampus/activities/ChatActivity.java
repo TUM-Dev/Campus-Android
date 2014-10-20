@@ -237,6 +237,7 @@ public class ChatActivity extends ActionBarActivity implements DialogInterface.O
                         // Send the message to the server
                         final ChatMessage createdMessage = ChatClient.getInstance(ChatActivity.this).sendMessage(currentChatRoom.getGroupId(), message);
                         Log.e("Tca chat", "message: " + createdMessage);
+                        createdMessage.setStatus(ChatMessage.STATUS_SENT);
                         chatManager.replaceInto(createdMessage);
                         final Cursor cur = chatManager.getAll();
 
@@ -432,10 +433,10 @@ public class ChatActivity extends ActionBarActivity implements DialogInterface.O
 
                 // If currently nothing has been shown load newest messages from server
                 if (chatHistoryAdapter == null || chatHistoryAdapter.getSentCount() == 0) {
-                    downloadedChatHistory = ChatClient.getInstance(ChatActivity.this).getNewMessages(currentChatRoom.getId());
+                    downloadedChatHistory = ChatClient.getInstance(ChatActivity.this).getNewMessages(currentChatRoom.getId(), new ChatVerification(getPrivateKeyFromSharedPrefs(), currentChatMember));
                 } else {
                     long id = chatHistoryAdapter.getItemId(ChatMessageManager.COL_ID);
-                    downloadedChatHistory = ChatClient.getInstance(ChatActivity.this).getMessages(currentChatRoom.getId(), id);
+                    downloadedChatHistory = ChatClient.getInstance(ChatActivity.this).getMessages(currentChatRoom.getId(), id, new ChatVerification(getPrivateKeyFromSharedPrefs(), currentChatMember));
                 }
 
                 //Save it to our local cache

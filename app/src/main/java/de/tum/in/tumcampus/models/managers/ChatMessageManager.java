@@ -3,10 +3,16 @@ package de.tum.in.tumcampus.models.managers;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Base64;
 import android.util.Log;
 
 import com.google.gson.Gson;
 
+import java.security.KeyFactory;
+import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.PKCS8EncodedKeySpec;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -15,11 +21,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 
+import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.ChatClient;
 import de.tum.in.tumcampus.models.ChatMember;
 import de.tum.in.tumcampus.models.ChatMessage;
 import de.tum.in.tumcampus.models.ChatRoom;
+import de.tum.in.tumcampus.models.ChatVerification;
 
 /**
  * TUMOnline cache manager, allows caching of TUMOnline requests
@@ -98,7 +106,7 @@ public class ChatMessageManager {
             return;
         }
 
-        Log.e("TCA Chat", "replace " + m.getText() + " " + m.getId());
+        Log.e("TCA Chat", "replace " + m.getText() + " " + m.getId() + " "+ m.getPrevious()+ " "+ m.getStatus());
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ENGLISH);
         Date date;
         try {
@@ -155,8 +163,8 @@ public class ChatMessageManager {
         return msg;
     }
 
-    public Cursor getNewMessages() {
-        ArrayList<ChatMessage> messages = ChatClient.getInstance(mContext).getNewMessages(mChatRoom.getId());
+    public Cursor getNewMessages(PrivateKey pk, ChatMember member) {
+        ArrayList<ChatMessage> messages = ChatClient.getInstance(mContext).getNewMessages(mChatRoom.getId(), new ChatVerification(pk, member));
         replaceInto(messages);
         return getUnread();
     }

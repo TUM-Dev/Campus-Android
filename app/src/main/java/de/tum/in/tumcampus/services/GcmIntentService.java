@@ -28,11 +28,16 @@ import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.RemoteInput;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Base64;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.gson.Gson;
 
-import java.util.List;
+import java.security.KeyFactory;
+import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.PKCS8EncodedKeySpec;
 
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.ChatActivity;
@@ -96,11 +101,11 @@ public class GcmIntentService extends IntentService {
 
         // Get the data necessary for the ChatActivity
         String lrzId = Utils.getSetting(this, Const.LRZ_ID, "");
-        List<ChatMember> members = ChatClient.getInstance(this).getMember(lrzId);
+        ChatMember member = ChatClient.getInstance(this).getMember(lrzId);
         ChatRoom chatRoom = ChatClient.getInstance(this).getChatRoom(chatRoomId);
 
         ChatMessageManager manager = new ChatMessageManager(this, chatRoom);
-        Cursor messages = manager.getNewMessages();
+        Cursor messages = manager.getNewMessages(this.getPrivateKeyFromSharedPrefs(), member);
 
         //Check if chat is currently open then don't show a notification if it is
         if (ChatActivity.mCurrentOpenChatRoom != null && ChatActivity.mCurrentOpenChatRoom.getGroupId().equals(chatRoomId)) {
@@ -108,21 +113,21 @@ public class GcmIntentService extends IntentService {
         }
 
         String txt = null;
-        if(messages.moveToFirst()) {
+        if (messages.moveToFirst()) {
             do {
-                if(txt==null)
+                if (txt == null)
                     txt = messages.getString(3);
                 else
-                    txt += "\n"+messages.getString(3);
-            } while(messages.moveToNext());
+                    txt += "\n" + messages.getString(3);
+            } while (messages.moveToNext());
         }
 
         // Put the data into the intent
         Intent notificationIntent = new Intent(this, ChatActivity.class);
         notificationIntent.putExtra(Const.CURRENT_CHAT_ROOM, new Gson().toJson(chatRoom));
-        notificationIntent.putExtra(Const.CURRENT_CHAT_MEMBER, new Gson().toJson(members.get(0)));
+        notificationIntent.putExtra(Const.CURRENT_CHAT_MEMBER, new Gson().toJson(member));
 
-        if(Utils.getSettingBool(this, "card_chat_phone", true)) {
+        if (Utils.getSettingBool(this, "card_chat_phone", true)) {
 
             PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_ONE_SHOT);
 
@@ -160,5 +165,26 @@ public class GcmIntentService extends IntentService {
             NotificationManager mNotificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
             mNotificationManager.notify(NOTIFICATION_ID, notification);
         }
+    }
+
+    /**
+     * Loads the private key from preferences
+     *
+     * @return The private key object
+     */
+    private PrivateKey getPrivateKeyFromSharedPrefs() {
+        String privateKeyString = Utils.getInternalSettingString(this, Const.PRIVATE_KEY, "");
+        byte[] privateKeyBytes = Base64.decode(privateKeyString, Base64.DEFAULT);
+        KeyFactory keyFactory;
+        try {
+            keyFactory = KeyFactory.getInstance("RSA");
+            PKCS8EncodedKeySpec privateKeySpec = new PKCS8EncodedKeySpec(privateKeyBytes);
+            return keyFactory.generatePrivate(privateKeySpec);
+        } catch (NoSuchAlgorithmException e) {
+            Utils.log(e);
+        } catch (InvalidKeySpecException e) {
+            Utils.log(e);
+        }
+        return null;
     }
 }

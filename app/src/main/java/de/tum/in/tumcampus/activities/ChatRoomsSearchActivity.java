@@ -132,16 +132,16 @@ public class ChatRoomsSearchActivity extends ActivityForLoadingInBackground<Inte
                 String lrzId = Utils.getSetting(ChatRoomsSearchActivity.this, Const.LRZ_ID, "");
 
                 // GET their data from the server using their lrzId
-                List<ChatMember> members = ChatClient.getInstance(ChatRoomsSearchActivity.this).getMember(lrzId);
+                ChatMember member = ChatClient.getInstance(ChatRoomsSearchActivity.this).getMember(lrzId);
 
                 //Catch a possible error, when we didn't get something returned
-                if (members.size() == 0) {
+                if (member == null || member.getLrzId() == null) {
                     Utils.showToastOnUIThread(ChatRoomsSearchActivity.this, R.string.error_setup_chat_member);
                     return;
                 }
 
                 //Remember this locally
-                currentChatMember = members.get(0);
+                currentChatMember = member;
 
                 //Load the private key from the shared prefs
                 currentPrivateKey = ChatRoomsSearchActivity.this.retrieveOrGeneratePrivateKey();

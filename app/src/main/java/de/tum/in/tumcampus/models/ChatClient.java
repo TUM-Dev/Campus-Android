@@ -14,6 +14,7 @@ import retrofit.android.AndroidLog;
 import retrofit.http.Body;
 import retrofit.http.GET;
 import retrofit.http.POST;
+import retrofit.http.PUT;
 import retrofit.http.Path;
 
 public class ChatClient {
@@ -68,20 +69,20 @@ public class ChatClient {
         @POST("/rooms/{groupId}/leave/")
         void leaveChatRoom(@Path("groupId") String groupId, @Body ChatVerification verification, Callback<ChatRoom> cb);
 
-        @POST("/rooms/{groupId}/messages/")
+        @PUT("/rooms/{groupId}/messages/")
         ChatMessage sendMessage(@Path("groupId") String groupId, @Body ChatMessage message);
 
-        @GET("/rooms/{groupId}/messages/{page}/")
-        ArrayList<ChatMessage> getMessages(@Path("groupId") String groupId, @Path("page") long page);
+        @POST("/rooms/{groupId}/messages/{page}/")
+        ArrayList<ChatMessage> getMessages(@Path("groupId") String groupId, @Path("page") long page, @Body ChatVerification verification);
 
-        @GET("/rooms/{groupId}/messages/")
-        ArrayList<ChatMessage> getNewMessages(@Path("groupId") String groupId);
+        @POST("/rooms/{groupId}/messages/")
+        ArrayList<ChatMessage> getNewMessages(@Path("groupId") String groupId, @Body ChatVerification verification);
 
         @POST("/members/")
         ChatMember createMember(@Body ChatMember chatMember);
 
         @GET("/members/{lrz_id}/")
-        List<ChatMember> getMember(@Path("lrz_id") String lrzId);
+        ChatMember getMember(@Path("lrz_id") String lrzId);
 
         @POST("/members/{memberId}/pubkeys/")
         void uploadPublicKey(@Path("memberId") String memberId, @Body ChatPublicKey publicKey, Callback<ChatPublicKey> cb);
@@ -113,7 +114,7 @@ public class ChatClient {
         return service.createMember(chatMember);
     }
 
-    public List<ChatMember> getMember(String lrzId) {
+    public ChatMember getMember(String lrzId) {
         return service.getMember(lrzId);
     }
 
@@ -129,12 +130,12 @@ public class ChatClient {
         return service.sendMessage(groupId, chatMessageCreate);
     }
 
-    public ArrayList<ChatMessage> getMessages(String groupId, long page) {
-        return service.getMessages(groupId, page);
+    public ArrayList<ChatMessage> getMessages(String groupId, long page, @Body ChatVerification verification) {
+        return service.getMessages(groupId, page, verification);
     }
 
-    public ArrayList<ChatMessage> getNewMessages(String groupId) {
-        return service.getNewMessages(groupId);
+    public ArrayList<ChatMessage> getNewMessages(String groupId, @Body ChatVerification verification) {
+        return service.getNewMessages(groupId, verification);
     }
 
     public void uploadPublicKey(String memberId, ChatPublicKey publicKey, Callback<ChatPublicKey> cb) {

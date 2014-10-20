@@ -27,6 +27,13 @@ public class ChatMessage {
 	private String signature;
     private int sendingStatus;
     private int previous;
+
+    /**
+     * Default constructor: called by gson when parsing an element
+     */
+    public ChatMessage(){
+        this.sendingStatus=STATUS_SENT;
+    }
 	
 	public ChatMessage(String text) {
 		super();
