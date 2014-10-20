@@ -89,8 +89,6 @@ public class ChatActivity extends ActionBarActivity implements DialogInterface.O
     private ChatRoom currentChatRoom;
     private ChatMember currentChatMember;
 
-    private boolean messageSentSuccessfully = false;
-    private int numberOfAttempts = 0;
     private boolean loadingMore = false;
     private EmojiconsPopup popup;
     private boolean iconShow = false;
@@ -231,7 +229,9 @@ public class ChatActivity extends ActionBarActivity implements DialogInterface.O
                 String signature = signer.sign(message.getText());
                 message.setSignature(signature);
 
-                while (!messageSentSuccessfully && numberOfAttempts < 5) {
+                int numberOfAttempts = 0;
+
+                while (numberOfAttempts < 5) {
                     //Try to send the message
                     try {
                         // Send the message to the server
@@ -251,7 +251,6 @@ public class ChatActivity extends ActionBarActivity implements DialogInterface.O
                         });
 
                         //Exit the loop
-                        messageSentSuccessfully = true;
                         return;
                     } catch (RetrofitError e) {
                         Utils.log(e);
@@ -265,8 +264,6 @@ public class ChatActivity extends ActionBarActivity implements DialogInterface.O
                         e.printStackTrace();
                     }
                 }
-                messageSentSuccessfully = false;
-                numberOfAttempts = 0;
             }
         }).start();
     }
