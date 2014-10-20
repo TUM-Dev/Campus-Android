@@ -39,7 +39,7 @@ public class ChatRoomManager {
 
         // create table if needed
         db.execSQL("CREATE TABLE IF NOT EXISTS chat_room (group_id INTEGER, name VARCHAR, " +
-                "semester VARCHAR, semester_id VARCHAR, status INTEGER, _id INTEGER, contributor VARCHAR, PRIMARY KEY(_id, name, semester_id))");
+                "semester VARCHAR, semester_id VARCHAR, status INTEGER, _id INTEGER, contributor VARCHAR, PRIMARY KEY(name, semester_id))");
     }
 
     /**
@@ -57,10 +57,18 @@ public class ChatRoomManager {
      */
     public void replaceInto(LecturesSearchRow lecture) {
         Utils.logv("replace " + lecture.getTitel());
-        db.execSQL("REPLACE INTO chat_room (group_id,name,semester_id,semester,status,_id, contributor) " +
-                        "VALUES (-1,?,?,?,0,?,?)",
-                new String[]{lecture.getTitel(), lecture.getSemester_id(),
-                        lecture.getSemester_name(), lecture.getStp_lv_nr(), lecture.getVortragende_mitwirkende()});
+
+        Cursor cur = db.rawQuery("SELECT _id FROM chat_room WHERE name=? AND semester_id=?", new String[] {lecture.getTitel(),lecture.getSemester_id()});
+        cur.moveToFirst();
+        if(cur.getCount()>=1) {
+            db.execSQL("UPDATE chat_room SET semester=?, _id=?, contributor=?)",
+                    new String[]{lecture.getSemester_name(), lecture.getStp_lv_nr(), lecture.getVortragende_mitwirkende()});
+        } else {
+            db.execSQL("REPLACE INTO chat_room (group_id,name,semester_id,semester,status,_id,contributor) " +
+                            "VALUES (-1,?,?,?,0,?,?)",
+                    new String[]{lecture.getTitel(), lecture.getSemester_id(),
+                            lecture.getSemester_name(), lecture.getStp_lv_nr(), lecture.getVortragende_mitwirkende()});
+        }
     }
 
     /**
@@ -104,7 +112,7 @@ public class ChatRoomManager {
                 db.execSQL("UPDATE chat_room SET group_id=?, status=1 WHERE name=? AND semester_id=?",
                         new String[]{room.getId(), roomName, semester});
             } else {
-                db.execSQL("REPLACE INTO chat_room (group_id,name,semester_id,semester,status,_id, contributor) " +
+                db.execSQL("REPLACE INTO chat_room (group_id,name,semester_id,semester,status,_id,contributor) " +
                                 "VALUES (-1,?,?,'',1,0,'')", new String[]{roomName,semester});
             }
         }
