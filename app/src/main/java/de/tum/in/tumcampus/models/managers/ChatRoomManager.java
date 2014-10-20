@@ -92,13 +92,14 @@ public class ChatRoomManager {
     public void replaceIntoRooms(List<ChatRoom> rooms) {
         for (ChatRoom room : rooms) {
             String roomName=room.getName();
-            String semester="";
+            String semester="ZZZ";
             if(roomName.contains(":")){
                 semester=roomName.substring(0,3);
                 roomName=roomName.substring(4);
             }
 
-            Cursor cur = db.rawQuery("SELECT _id FROM chat_room WHERE name=?", new String[] {room.getName()});
+            Cursor cur = db.rawQuery("SELECT _id FROM chat_room WHERE name=? AND semester_id=?", new String[] {roomName,semester});
+            cur.moveToFirst();
             if(cur.getCount()>=1) {
                 db.execSQL("UPDATE chat_room SET group_id=?, status=1 WHERE name=? AND semester_id=?",
                         new String[]{room.getId(), roomName, semester});
