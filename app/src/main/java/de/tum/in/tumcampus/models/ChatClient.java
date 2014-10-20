@@ -85,7 +85,7 @@ public class ChatClient {
         ChatMember getMember(@Path("lrz_id") String lrzId);
 
         @POST("/members/{memberId}/pubkeys/")
-        void uploadPublicKey(@Path("memberId") String memberId, @Body ChatPublicKey publicKey, Callback<ChatPublicKey> cb);
+        ChatPublicKey uploadPublicKey(@Path("memberId") String memberId, @Body ChatPublicKey publicKey);
 
         @POST("/members/{memberId}/rooms/")
         List<ChatRoom> getMemberRooms(@Path("memberId") String memberId, @Body ChatVerification verification);
@@ -138,8 +138,8 @@ public class ChatClient {
         return service.getNewMessages(groupId, verification);
     }
 
-    public void uploadPublicKey(String memberId, ChatPublicKey publicKey, Callback<ChatPublicKey> cb) {
-        service.uploadPublicKey(memberId, publicKey, cb);
+    public ChatPublicKey uploadPublicKey(String memberId, ChatPublicKey publicKey) {
+        return service.uploadPublicKey(memberId, publicKey);
     }
 
     public List<ChatRoom> getMemberRooms(String memberId, ChatVerification verification) {
@@ -147,7 +147,7 @@ public class ChatClient {
     }
 
     public void getPublicKeysForMember(ChatMember member, Callback<List<ChatPublicKey>> cb) {
-        service.getPublicKeysForMember(member.getUserId(), cb);
+        service.getPublicKeysForMember(member.getId(), cb);
     }
 
     public void uploadRegistrationId(String memberId, ChatRegistrationId regId, Callback<ChatRegistrationId> cb) {

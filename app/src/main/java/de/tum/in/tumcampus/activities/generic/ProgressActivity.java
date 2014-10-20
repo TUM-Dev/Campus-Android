@@ -181,7 +181,7 @@ public abstract class ProgressActivity extends BaseActivity implements OnRefresh
                 public void run() {
                     refreshLayout.setRefreshing(true);
                 }
-            }, 600);
+            }, 1000);
         }
     }
 

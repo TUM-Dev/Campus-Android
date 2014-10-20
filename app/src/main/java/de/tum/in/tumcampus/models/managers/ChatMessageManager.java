@@ -3,16 +3,11 @@ package de.tum.in.tumcampus.models.managers;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Base64;
 import android.util.Log;
 
 import com.google.gson.Gson;
 
-import java.security.KeyFactory;
-import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.PKCS8EncodedKeySpec;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -21,7 +16,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 
-import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.ChatClient;
 import de.tum.in.tumcampus.models.ChatMember;
@@ -65,6 +59,8 @@ public class ChatMessageManager {
         db.execSQL("CREATE TABLE IF NOT EXISTS chat_message (_id INTEGER PRIMARY KEY, previous INTEGER, room INTEGER, " +
                 "text TEXT, timestamp VARCHAR, signature TEXT, member BLOB, status INTEGER)");
 
+        db.execSQL("CREATE TABLE IF NOT EXISTS unsent_chat_message (_id INTEGER PRIMARY KEY AUTOINCREMENT, room INTEGER, text TEXT, member BLOB)");
+
         // Delete all entries that are too old
         db.rawQuery("DELETE FROM chat_message WHERE timestamp<datetime('now','-1 month')", null);
     }
@@ -75,6 +71,7 @@ public class ChatMessageManager {
      * @return List of chat messages
      */
     public Cursor getAll() {
+        db.execSQL("UPDATE chat_message SET status=1 WHERE status=0 AND room=?", new String[] {mChatRoom.getId()});
         return db.rawQuery("SELECT c.* FROM chat_message c, (SELECT c1._id " +
                 "FROM chat_message c1 LEFT JOIN chat_message c2 ON c2._id=c1.previous " +
                 "WHERE c2._id IS NULL AND c1.room=? " +
@@ -82,6 +79,47 @@ public class ChatMessageManager {
                 "LIMIT 1) AS until " +
                 "WHERE c._id>=until._id AND c.room=? " +
                 "ORDER BY c._id", new String[]{mChatRoom.getId(), mChatRoom.getId()});
+    }
+
+    /**
+     * Gets all unsent chat messages
+     */
+    public ArrayList<ChatMessage> getAllUnsent() {
+        Cursor cur = db.rawQuery("SELECT member, text FROM unsent_chat_message " +
+                "WHERE room=? " +
+                "ORDER BY _id", new String[]{ mChatRoom.getId()});
+        ArrayList<ChatMessage> list = new ArrayList<ChatMessage>(cur.getCount());
+        if(cur.moveToFirst()) {
+            do {
+                ChatMember member = new Gson().fromJson(cur.getString(0), ChatMember.class);
+                list.add(new ChatMessage(cur.getString(1), member));
+            } while(cur.moveToNext());
+        }
+        cur.close();
+        return list;
+    }
+
+    /**
+     * Saves the given message into database
+     */
+    public void addToUnsent(ChatMessage m) {
+        Log.e("TCA Chat", "replace " + m.getText() + " " + m.getId() + " "+ m.getPrevious()+ " "+ m.getStatus());
+        db.beginTransaction();
+        db.execSQL("REPLACE INTO unsent_chat_message (text,room,member) VALUES (?,?,?)",
+                new String[]{"" + m.getText(), mChatRoom.getId(), new Gson().toJson(m.getMember())});
+        Cursor cur = db.rawQuery("SELECT MAX(_id) FROM unsent_chat_message", null);
+        cur.moveToFirst();
+        m.setId(cur.getInt(0));
+        cur.close();
+        db.setTransactionSuccessful();
+        db.endTransaction();
+    }
+
+    /**
+     * Removes the message from unsent database
+     * */
+    public void removeFromUnsent(ChatMessage message) {
+        db.execSQL("DELETE FROM unsent_chat_message WHERE _id=?", new String[]{"" + message.getId()});
     }
 
     /**

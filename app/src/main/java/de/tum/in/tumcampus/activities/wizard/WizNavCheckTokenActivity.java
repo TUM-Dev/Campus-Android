@@ -8,18 +8,22 @@ import android.view.View;
 import android.widget.TextView;
 
 import de.tum.in.tumcampus.R;
-import de.tum.in.tumcampus.activities.generic.ActivityForAccessingTumOnline;
+import de.tum.in.tumcampus.activities.generic.ActivityForLoadingInBackground;
+import de.tum.in.tumcampus.auxiliary.Const;
+import de.tum.in.tumcampus.auxiliary.NetUtils;
 import de.tum.in.tumcampus.auxiliary.Utils;
+import de.tum.in.tumcampus.models.IdentitySet;
 import de.tum.in.tumcampus.models.TokenConfirmation;
 import de.tum.in.tumcampus.tumonline.TUMOnlineConst;
+import de.tum.in.tumcampus.tumonline.TUMOnlineRequest;
 
 /**
  *
  */
-public class WizNavCheckTokenActivity extends ActivityForAccessingTumOnline<TokenConfirmation> {
+public class WizNavCheckTokenActivity extends ActivityForLoadingInBackground<Void, Integer> {
 
 	public WizNavCheckTokenActivity() {
-		super(TUMOnlineConst.TOKEN_CONFIRMED, R.layout.activity_wiznav_checktoken);
+		super(R.layout.activity_wiznav_checktoken);
 	}
 
     @Override
@@ -44,7 +48,9 @@ public class WizNavCheckTokenActivity extends ActivityForAccessingTumOnline<Toke
      */
     @SuppressWarnings("UnusedParameters")
     public void onClickSkip(View skip) {
-        startNextActivity();
+        finish();
+        startActivity(new Intent(this, WizNavExtrasActivity.class));
+        overridePendingTransition(R.anim.fadein, R.anim.fadeout);
     }
 
     /**
@@ -53,22 +59,54 @@ public class WizNavCheckTokenActivity extends ActivityForAccessingTumOnline<Toke
      */
 	@SuppressWarnings("UnusedParameters")
     public void onClickNext(View next) {
-		requestFetch();
+        if (!NetUtils.isConnected(this)) {
+            showNoInternetLayout();
+            return;
+        }
+		startLoading();
 	}
 
     /**
-     * When fetch was successful, start next activity or show error
-     * @param confirmation this will be the raw return of the fetch
-     */
-	@Override
-	public void onFetch(TokenConfirmation confirmation) {
-        if (confirmation.isConfirmed()) {
+     * Check in background if token has been enabled and get identity for enabling chat
+     * */
+    @Override
+    protected Integer onLoadInBackground(Void... arg) {
+        // Check if token has been enabled
+        TUMOnlineRequest<TokenConfirmation> request = new TUMOnlineRequest<TokenConfirmation>(TUMOnlineConst.TOKEN_CONFIRMED, this, true);
+        TokenConfirmation confirmation = request.fetch();
+        if (confirmation!=null && confirmation.isConfirmed()) {
+
+            // Get users full name
+            TUMOnlineRequest<IdentitySet> request2 = new TUMOnlineRequest<IdentitySet>(TUMOnlineConst.IDENTITY, this, true);
+            IdentitySet id = request2.fetch();
+            if (id == null) {
+                return R.string.no_rights_to_access_id;
+            }
+
+            // Save the name to preferences
+            Utils.setSetting(this, Const.CHAT_ROOM_DISPLAY_NAME, id.toString());
+            return null;
+        } else {
+            if(!NetUtils.isConnected(this))
+                return R.string.no_internet_connection;
+            else
+                return R.string.token_not_enabled;
+        }
+    }
+
+    /**
+     * If everything worked, start the next activity page
+     * otherwise give the user the possibility to retry
+     * */
+    @Override
+    protected void onLoadFinished(Integer errorMessageStrResId) {
+        if(errorMessageStrResId==null) {
             startNextActivity();
         } else {
-            Utils.showToast(this, R.string.token_not_enabled);
+            Utils.showToast(this, errorMessageStrResId);
             showLoadingEnded();
         }
-	}
+    }
 
     /**
      * Adds clickable link to activity
@@ -88,7 +126,7 @@ public class WizNavCheckTokenActivity extends ActivityForAccessingTumOnline<Toke
      */
 	private void startNextActivity() {
 		finish();
-		startActivity(new Intent(this, WizNavExtrasActivity.class));
+		startActivity(new Intent(this, WizNavChatActivity.class));
         overridePendingTransition(R.anim.fadein, R.anim.fadeout);
 	}
 }

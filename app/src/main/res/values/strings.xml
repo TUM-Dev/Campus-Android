@@ -104,6 +104,7 @@
     <string name="step_1">Step 1</string>
     <string name="step_2">Step 2</string>
     <string name="step_3">Step 3</string>
+    <string name="step_4">Step 4</string>
     <string name="set_silent_mode">Activate or deactivate <i>Silent Service</i>. If activated, the device will go into silent mode if a lecture appointment has been recognized.</string>
     <string name="set_background_mode">Activate or deactivate <i>Background Mode</i>. If activated, content will be fetched once per day to keep your TUM Campus App up to date.</string>
     <string name="goto_tumcampus">Go to TUM Campus App</string>
@@ -236,7 +237,7 @@
 
     <!-- first use tutorial -->
     <string name="swipe_instruction">Swipe left or right to hide a card.</string>
-    <string name="card_settings_instruction">If you want to hide a card permanently or you want to be notified if a new card is available open Settings &#x2192; Cards</string>
+    <string name="card_settings_instruction">If you want to hide a card permanently or you want to be notified if a new card is available open card-settings by long pressing on a card</string>
 
     <!-- Cafeteria -->
     <string name="cafeteria_ingredients">(f) meatless dish
@@ -360,7 +361,7 @@
     <string name="newspread" translateable="false">Newspread</string>
     <string name="newspread_summary">Select which newspread you want to be shown. This are the slides on the info monitors in your faculty buildings.</string>
     <string name="tuition_fee_more">Information on contributions and exemptions, loans, training assistance and scholarships, go to: <a href="http://www.tum.de/studium/studienfinanzierung/">Student Financial Aid</a></string>
-    <string name="no_rights_to_access_id">No rights to access identity. Please check TUMOnline token rights!</string>
+    <string name="no_rights_to_access_id">Identity could not be accessed. Please check the rights of your TUMOnline token!</string>
     <string name="vibration">Vibration</string>
     <string name="silent">Silent</string>
     <string name="mode_silent_mode">State during lectures</string>
@@ -385,4 +386,9 @@ Message:\n
     <string name="campus_geschwister_scholl">Campus Geschwister Scholl-Platz</string>
     <string name="no_default_campus">No default campus</string>
     <string name="reply_label">Reply</string>
+    <string name="public_key_mail">Public key activation mail sent to %s@mytum.de</string>
+    <string name="failure_uploading_public_key">Failure uploading public key</string>
+    <string name="no_private_key">No private key found! Reset the app\'s data to solve this!</string>
+    <string name="key_activated">Have you activated your key?</string>
+    <string name="chat_key_expl">If you want to use lecture chat you will get an e-mail to activate your public key. In order to use it click the link provided in this e-mail.</string>
 </resources>

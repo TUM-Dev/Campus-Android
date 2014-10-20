@@ -392,6 +392,10 @@
             android:configChanges="orientation|screenSize"
             android:label="@string/app_name" />
         <activity
+            android:name="de.tum.in.tumcampus.activities.wizard.WizNavChatActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/app_name" />
+        <activity
             android:name="de.tum.in.tumcampus.activities.wizard.WizNavExtrasActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/app_name"

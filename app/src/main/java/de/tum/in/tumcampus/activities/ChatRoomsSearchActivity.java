@@ -19,8 +19,6 @@ import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.security.KeyFactory;
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.spec.InvalidKeySpecException;
@@ -37,7 +35,6 @@ import de.tum.in.tumcampus.auxiliary.RSASigner;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.ChatClient;
 import de.tum.in.tumcampus.models.ChatMember;
-import de.tum.in.tumcampus.models.ChatPublicKey;
 import de.tum.in.tumcampus.models.ChatRegistrationId;
 import de.tum.in.tumcampus.models.ChatRoom;
 import de.tum.in.tumcampus.models.ChatVerification;
@@ -128,30 +125,29 @@ public class ChatRoomsSearchActivity extends ActivityForLoadingInBackground<Inte
     private void populateCurrentChatMember() {
         try {
             if (currentChatMember == null) {
-                //Fetch the stored LRZ ID from shared prefs
-                String lrzId = Utils.getSetting(ChatRoomsSearchActivity.this, Const.LRZ_ID, "");
+                // Fetch the stored LRZ ID from shared prefs
+                String lrzId = Utils.getSetting(this, Const.LRZ_ID, "");
 
                 // GET their data from the server using their lrzId
-                ChatMember member = ChatClient.getInstance(ChatRoomsSearchActivity.this).getMember(lrzId);
+                ChatMember member = ChatClient.getInstance(this).getMember(lrzId); //FIXME throws InterruptedIOException every time
 
-                //Catch a possible error, when we didn't get something returned
+                // Catch a possible error, when we didn't get something returned
                 if (member == null || member.getLrzId() == null) {
-                    Utils.showToastOnUIThread(ChatRoomsSearchActivity.this, R.string.error_setup_chat_member);
+                    Utils.showToastOnUIThread(this, R.string.error_setup_chat_member);
                     return;
                 }
 
-                //Remember this locally
+                // Remember this locally
                 currentChatMember = member;
 
-                //Load the private key from the shared prefs
-                currentPrivateKey = ChatRoomsSearchActivity.this.retrieveOrGeneratePrivateKey();
+                // Load the private key from the shared prefs
+                currentPrivateKey = this.retrievePrivateKey();
 
-                //Proceed with registering
-                ChatRoomsSearchActivity.this.checkPlayServicesAndRegister();
+                // Proceed with registering
+                this.checkPlayServicesAndRegister();
             }
         } catch (RetrofitError e) {
-            Utils.log(e, e.getMessage());
-            Utils.showToastOnUIThread(ChatRoomsSearchActivity.this, R.string.no_internet_connection);
+            Utils.log(e);
         }
     }
 
@@ -167,9 +163,9 @@ public class ChatRoomsSearchActivity extends ActivityForLoadingInBackground<Inte
 
         populateCurrentChatMember();
 
-        // Try to restore from server
+        // Try to restore joined chat rooms from server
         try {
-            List<ChatRoom> rooms = ChatClient.getInstance(this).getMemberRooms(currentChatMember.getUserId(), new ChatVerification(currentPrivateKey, currentChatMember));
+            List<ChatRoom> rooms = ChatClient.getInstance(this).getMemberRooms(currentChatMember.getId(), new ChatVerification(currentPrivateKey, currentChatMember));
             manager.replaceIntoRooms(rooms);
             return manager.getAllByStatus(arg[0]);
         } catch (RetrofitError e) {
@@ -182,7 +178,8 @@ public class ChatRoomsSearchActivity extends ActivityForLoadingInBackground<Inte
     protected void onLoadFinished(Cursor result) {
         showLoadingEnded();
         if (result == null) {
-            Utils.showToast(this, "Have you activated your key?\nPublic key activation mail sent to " + currentChatMember.getLrzId() + "@mytum.de");
+            Utils.showToast(this, getString(R.string.key_activated) + "\n" +
+                    String.format(getString(R.string.public_key_mail), currentChatMember.getLrzId()));
         } else if (result.getCount() == 0) {
             lvMyLecturesList.setAdapter(new NoResultsAdapter(this));
         } else {
@@ -199,7 +196,8 @@ public class ChatRoomsSearchActivity extends ActivityForLoadingInBackground<Inte
     public void onItemClick(AdapterView<?> a, View v, int position, long id) {
         Cursor item = (Cursor) lvMyLecturesList.getItemAtPosition(position);
 
-        checkPlayServicesAndRegister();
+        if(!checkPlayServicesAndRegister())
+            return;
 
         // set bundle for LectureDetails and show it
         Bundle bundle = new Bundle();
@@ -303,7 +301,7 @@ public class ChatRoomsSearchActivity extends ActivityForLoadingInBackground<Inte
      *
      * @return Private key instance
      */
-    private PrivateKey retrieveOrGeneratePrivateKey() {
+    private PrivateKey retrievePrivateKey() {
         // Generate/Retrieve private key
         String privateKeyString = Utils.getInternalSettingString(this, Const.PRIVATE_KEY, "");
 
@@ -320,47 +318,15 @@ public class ChatRoomsSearchActivity extends ActivityForLoadingInBackground<Inte
             } catch (InvalidKeySpecException e) {
                 Utils.log(e);
             }
-        } else {
-            // If the key is not in shared preferences, generate key-pair
-            KeyPairGenerator keyGen;
-            try {
-                keyGen = KeyPairGenerator.getInstance("RSA");
-                keyGen.initialize(1024);
-                KeyPair keyPair = keyGen.generateKeyPair();
-
-                String publicKeyString = Base64.encodeToString(keyPair.getPublic().getEncoded(), Base64.DEFAULT);
-                privateKeyString = Base64.encodeToString(keyPair.getPrivate().getEncoded(), Base64.DEFAULT);
-
-                // Save private key in shared preferences
-                Utils.setInternalSetting(this, Const.PRIVATE_KEY, privateKeyString);
-
-                // Upload public key to the server
-                ChatClient.getInstance(ChatRoomsSearchActivity.this).uploadPublicKey(currentChatMember.getUserId(), new ChatPublicKey(publicKeyString), new Callback<ChatPublicKey>() {
-                    @Override
-                    public void success(ChatPublicKey arg0, Response arg1) {
-                        Utils.logv("Success uploading public key: " + arg0.toString());
-                        Utils.showToast(ChatRoomsSearchActivity.this, "Public key activation mail sent to " + currentChatMember.getLrzId() + "@mytum.de");
-                    }
-
-                    @Override
-                    public void failure(RetrofitError e) {
-                        Utils.log(e, "Failure uploading public key");
-                    }
-                });
-
-                return keyPair.getPrivate();
-            } catch (NoSuchAlgorithmException e) {
-                Utils.log(e);
-            }
-            return null;
         }
+        Utils.showToast(this, R.string.no_private_key);
         return null;
     }
 
     /**
      * Checks if play services are available and registers for GCM
      */
-    private void checkPlayServicesAndRegister() {
+    private boolean checkPlayServicesAndRegister() {
         // Check device for Play Services APK. If check succeeds, proceed with GCM registration.
         if (this.checkPlayServices()) {
 
@@ -379,8 +345,10 @@ public class ChatRoomsSearchActivity extends ActivityForLoadingInBackground<Inte
                 //Update the reg id in steady intervals
                 this.checkRegisterIdUpdate(regId);
             }
+            return true;
         } else {
             Utils.log("No valid Google Play Services APK found.");
+            return false;
         }
     }
 
@@ -484,7 +452,7 @@ public class ChatRoomsSearchActivity extends ActivityForLoadingInBackground<Inte
         RSASigner signer = new RSASigner(currentPrivateKey);
         String signature = signer.sign(currentChatMember.getLrzId());
 
-        ChatClient.getInstance(ChatRoomsSearchActivity.this).uploadRegistrationId(currentChatMember.getUserId(), new ChatRegistrationId(regId, signature), new Callback<ChatRegistrationId>() {
+        ChatClient.getInstance(ChatRoomsSearchActivity.this).uploadRegistrationId(currentChatMember.getId(), new ChatRegistrationId(regId, signature), new Callback<ChatRegistrationId>() {
             @Override
             public void success(ChatRegistrationId arg0, Response arg1) {
                 Utils.logv("Success uploading GCM registration id: " + arg0);

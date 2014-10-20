@@ -85,7 +85,7 @@ public class ChatHistoryAdapter extends CursorAdapter {
         if (position > super.getCount())
             return 0;
         ChatMessage msg = (ChatMessage) getItem(position);
-        return currentChatMember.getUrl().equals(msg.getMember().getUrl()) ? 0 : 1;
+        return currentChatMember.getId().equals(msg.getMember().getId()) ? 0 : 1;
     }
 
     @Override
@@ -106,7 +106,7 @@ public class ChatHistoryAdapter extends CursorAdapter {
         boolean outgoing = true;
         if (cursor != null) {
             ChatMessage msg = ChatMessageManager.toObject(cursor);
-            outgoing = currentChatMember.getUrl().equals(msg.getMember().getUrl());
+            outgoing = currentChatMember.getId().equals(msg.getMember().getId());
         }
 
         int layout = outgoing ? R.layout.activity_chat_history_row_outgoing : R.layout.activity_chat_history_row_incoming;
@@ -158,6 +158,7 @@ public class ChatHistoryAdapter extends CursorAdapter {
     }
 
     public void sent(ChatMessage sentMessage, Cursor cur) {
+
         unsentMessages.remove(sentMessage);
         changeCursor(cur);
     }

@@ -229,7 +229,7 @@
 
     <!-- first use tutorial -->
     <string name="swipe_instruction">Wische nach links oder rechts um eine Karte auszublenden.</string>
-    <string name="card_settings_instruction">Wenn du eine Karte dauerhaft ausblenden willst oder bei neuen Karten benachrichtigt werden willst öffne Einstellungen &#x2192; Karten</string>
+    <string name="card_settings_instruction">Wenn du eine Karte dauerhaft ausblenden willst oder bei neuen Karten benachrichtigt werden willst öffne die Karten-Einstellungen indem du lange auf eine Karte drückst</string>
 
     <!-- Cafeteria -->
     <string name="cafeteria_ingredients">(f) fleischloses Gericht
@@ -328,7 +328,7 @@
     <string name="room_timetable">Belegungsplan</string>
     <string name="newspread_summary">Wähle aus welches newspread angezeigt werden soll. Das sind die Folien die auf den Info Monitoren in deiner Fakultät angezeigt werden.</string>
     <string name="tuition_fee_more">Informationen zu Beiträgen und Befreiungen, Darlehen, BAföG oder Stipendien finden Sie unter: <a href="http://www.tum.de/studium/studienfinanzierung/">Studienfinanzierung</a></string>
-    <string name="no_rights_to_access_id">Konnte Identität nicht abfragen. Bitte überprüfe die Rechte deines TUMOnline Tokens!</string>
+    <string name="no_rights_to_access_id">Identität konnte nicht abgefragt werden. Bitte überprüfe die Rechte deines TUMOnline Tokens!</string>
     <string name="vibration">Vibration</string>
     <string name="silent">Leise</string>
     <string name="mode_silent_mode">Modus während Vorlesung</string>
@@ -346,4 +346,9 @@ Nachricht:\n
     <string name="not_joined">Weitere</string>
     <string name="default_campus">Standard Campus</string>
     <string name="no_default_campus">Kein Standard Campus</string>
+    <string name="public_key_mail">Public Key Aktivierungs-E-Mail wurde an %s@mytum.de gesendet!</string>
+    <string name="failure_uploading_public_key">Fehler beim Hochladen des Public Key</string>
+    <string name="no_private_key">Kein private key gefunden! Setze die App zurück um den Fehler zu beheben!</string>
+    <string name="key_activated">Have you activated your key?</string>
+    <string name="chat_key_expl">Wenn du den Vorlesungs-Chat nutzen willst, bekommst du eine E-Mail um deinen Public Key zu bestätigen. Damit du den chat verwenden kannst musst du auf den Link in der E-Mail klicken.</string>
 </resources>

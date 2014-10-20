@@ -470,4 +470,13 @@ public class Utils {
             }
         });
     }
+
+    public static void showToastOnUIThread(final Activity activity, final String s) {
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Utils.showToast(activity, s);
+            }
+        });
+    }
 }

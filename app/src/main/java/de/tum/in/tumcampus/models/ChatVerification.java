@@ -19,7 +19,7 @@ public class ChatVerification {
         //Create some data
         this.date = (new Date()).toString();
         this.rand = new BigInteger(130, new SecureRandom()).toString(32);
-        this.member = member.getUserId();
+        this.member = member.getId();
 
         //Sign this data for verification
         RSASigner signer = new RSASigner(pk);

@@ -42,57 +42,50 @@
                     android:padding="@dimen/padding_default">
 
                     <TextView
-                        android:id="@+id/step_4"
+                        android:id="@+id/step_3"
                         style="?android:attr/listSeparatorTextViewStyle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/step_4"
+                        android:text="@string/step_3"
                         android:textColor="@color/text_light_gray" />
 
-
                     <CheckBox
-                        android:id="@+id/chk_silent_mode"
+                        android:id="@+id/chk_group_chat"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
-                        android:text="@string/silence_phone"
+                        android:text="@string/lecture_chat"
                         android:textStyle="bold" />
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:padding="@dimen/padding_default"
-                        android:text="@string/set_silent_mode" />
+                        android:text="@string/set_lecture_chat" />
 
                     <CheckBox
-                        android:id="@+id/chk_background_mode"
+                        android:id="@+id/chk_group_chat_terms"
+                        android:layout_width="wrap_content"
+                        android:layout_height="fill_parent"
+                        android:text="@string/accept_chat_terms" />
+
+                    <Button
+                        android:id="@+id/button_open_chat_terms"
+                        style="@style/FlatButton"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:text="@string/background_mode"
-                        android:textStyle="bold" />
+                        android:onClick="onClickTerms"
+                        android:text="@string/open_chat_terms" />
 
                     <TextView
-                        android:layout_width="match_parent"
+                        android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:padding="@dimen/padding_default"
-                        android:text="@string/set_background_mode" />
+                        android:text="@string/chat_key_expl"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginRight="15dp"
+                        android:layout_marginBottom="15dp" />
 
-                    <CheckBox
-                        android:id="@+id/chk_bug_reports"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:checked="true"
-                        android:text="@string/bug_reports"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/textView"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:padding="@dimen/padding_default"
-                        android:text="@string/set_bug_reports" />
                 </LinearLayout>
             </ScrollView>
         </uk.co.senab.actionbarpulltorefresh.extras.actionbarcompat.PullToRefreshLayout>
@@ -113,14 +106,29 @@
             android:orientation="horizontal">
 
             <Button
+                android:id="@+id/prev_button"
+                style="@style/ButtonBarButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="?attr/selectableItemBackground"
+                android:onClick="onClickSkip"
+                android:text="@string/button_skip" />
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="?android:attr/listDivider" />
+
+            <Button
                 android:id="@+id/next_button"
                 style="@style/ButtonBarButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="?attr/selectableItemBackground"
-                android:onClick="onClickDone"
-                android:text="@string/goto_tumcampus" />
+                android:onClick="onClickNext"
+                android:text="@string/button_next" />
         </LinearLayout>
 
     </RelativeLayout>

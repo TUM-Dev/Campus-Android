@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 @SuppressWarnings("UnusedDeclaration")
 public class ChatMember {
 
-	private String url = null;
+	private String id;
 	@SerializedName("lrz_id")
 	private String lrzId;
 	@SerializedName("display_name")
@@ -17,18 +17,18 @@ public class ChatMember {
 		this.lrzId = lrzId;
 	}
 	
-	public ChatMember(String url, String lrzId, String displayName) {
+	public ChatMember(String id, String lrzId, String displayName) {
 		super();
-		this.url = url;
+		this.id = id;
 		this.lrzId = lrzId;
 		this.displayName = displayName;
 	}
 
-	public String getUrl() {
-		return url;
+	public String getId() {
+		return id;
 	}
-	public void setUrl(String url) {
-		this.url = url;
+	public void setId(String id) {
+		this.id = id;
 	}
 	public String getLrzId() {
 		return lrzId;
@@ -47,10 +47,5 @@ public class ChatMember {
 	}
 	public void setSignature(String signature) {
 		this.signature = signature;
-	}
-	
-	public String getUserId() {
-		String[] splitString = getUrl().split("/");
-		return splitString[splitString.length-1];
 	}
 }

@@ -56,7 +56,11 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<Void,Boo
     @SuppressWarnings("UnusedParameters")
     public void onClickSkip(View skip) {
         finish();
-        startActivity(new Intent(this, WizNavExtrasActivity.class));
+        if (new AccessTokenManager(this).hasValidAccessToken()) {
+            startActivity(new Intent(this, WizNavChatActivity.class));
+        } else {
+            startActivity(new Intent(this, WizNavExtrasActivity.class));
+        }
         overridePendingTransition(R.anim.fadein, R.anim.fadeout);
     }
 
