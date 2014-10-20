@@ -99,7 +99,7 @@ public class ChatRoomManager {
             }
 
             Cursor cur = db.rawQuery("SELECT _id FROM chat_room WHERE name=?", new String[] {room.getName()});
-            if(cur.getCount()>1) {
+            if(cur.getCount()>=1) {
                 db.execSQL("UPDATE chat_room SET group_id=?, status=1 WHERE name=? AND semester_id=?",
                         new String[]{room.getId(), roomName, semester});
             } else {
