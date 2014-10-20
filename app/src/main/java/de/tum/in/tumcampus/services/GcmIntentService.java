@@ -92,12 +92,6 @@ public class GcmIntentService extends IntentService {
     private void sendNotification(Bundle extras) {
         //Get the update details
         String chatRoomId = extras.getString("room"); // chat_room={"id":3}
-        //String msg = extras.getString("text");
-
-        // Notify any open chat activity that a message has been received
-        Intent intent = new Intent("chat-message-received");
-        intent.putExtras(extras);
-        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
 
         // Get the data necessary for the ChatActivity
         String lrzId = Utils.getSetting(this, Const.LRZ_ID, "");
@@ -106,6 +100,11 @@ public class GcmIntentService extends IntentService {
 
         ChatMessageManager manager = new ChatMessageManager(this, chatRoom);
         Cursor messages = manager.getNewMessages(this.getPrivateKeyFromSharedPrefs(), member);
+
+        // Notify any open chat activity that a message has been received
+        Intent intent = new Intent("chat-message-received");
+        intent.putExtras(extras);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
 
         //Check if chat is currently open then don't show a notification if it is
         if (ChatActivity.mCurrentOpenChatRoom != null && ChatActivity.mCurrentOpenChatRoom.getGroupId().equals(chatRoomId)) {
