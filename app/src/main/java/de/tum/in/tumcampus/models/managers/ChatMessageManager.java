@@ -103,7 +103,7 @@ public class ChatMessageManager {
      * Saves the given message into database
      */
     public void addToUnsent(ChatMessage m) {
-        Log.e("TCA Chat", "replace " + m.getText() + " " + m.getId() + " "+ m.getPrevious()+ " "+ m.getStatus());
+        Log.e("TCA Chat", "replace into unsent " + m.getText() + " " + m.getId() + " "+ m.getPrevious()+ " "+ m.getStatus());
         db.beginTransaction();
         db.execSQL("REPLACE INTO unsent_chat_message (text,room,member) VALUES (?,?,?)",
                 new String[]{"" + m.getText(), mChatRoom.getId(), new Gson().toJson(m.getMember())});

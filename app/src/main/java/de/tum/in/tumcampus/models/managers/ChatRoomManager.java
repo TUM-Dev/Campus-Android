@@ -39,7 +39,7 @@ public class ChatRoomManager {
 
         // create table if needed
         db.execSQL("CREATE TABLE IF NOT EXISTS chat_room (group_id INTEGER, name VARCHAR, " +
-                "semester VARCHAR, semester_id VARCHAR, status INTEGER, _id INTEGER PRIMARY KEY, contributor VARCHAR)");
+                "semester VARCHAR, semester_id VARCHAR, status INTEGER, _id INTEGER, contributor VARCHAR, PRIMARY KEY(_id, name, semester_id))");
     }
 
     /**
@@ -92,14 +92,20 @@ public class ChatRoomManager {
     public void replaceIntoRooms(List<ChatRoom> rooms) {
         for (ChatRoom room : rooms) {
             String roomName=room.getName();
-            String semster="";
+            String semester="";
             if(roomName.contains(":")){
-                semster=roomName.substring(0,3);
+                semester=roomName.substring(0,3);
                 roomName=roomName.substring(4);
             }
 
-            db.execSQL("UPDATE chat_room SET group_id=?, status=1 WHERE name=? AND semester_id=?",
-                    new String[]{room.getId(), roomName, semster});
+            Cursor cur = db.rawQuery("SELECT _id FROM chat_room WHERE name=?", new String[] {room.getName()});
+            if(cur.getCount()>1) {
+                db.execSQL("UPDATE chat_room SET group_id=?, status=1 WHERE name=? AND semester_id=?",
+                        new String[]{room.getId(), roomName, semester});
+            } else {
+                db.execSQL("REPLACE INTO chat_room (group_id,name,semester_id,semester,status,_id, contributor) " +
+                                "VALUES (-1,?,'ZZZ','',1,0,'')", new String[]{roomName});
+            }
         }
     }
 

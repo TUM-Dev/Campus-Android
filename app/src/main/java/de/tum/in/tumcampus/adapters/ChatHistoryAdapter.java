@@ -71,7 +71,7 @@ public class ChatHistoryAdapter extends CursorAdapter {
             cursor.moveToPosition(position);
             return cursor.getLong(ChatMessageManager.COL_ID);
         } else {
-            return unsentMessages.get(position - count).getId();
+            return 0;
         }
     }
 

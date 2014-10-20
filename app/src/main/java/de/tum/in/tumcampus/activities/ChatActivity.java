@@ -152,7 +152,6 @@ public class ChatActivity extends ActionBarActivity implements DialogInterface.O
                 chatHistoryAdapter = null;
                 chatManager = new ChatMessageManager(this, currentChatRoom);
                 getNextHistoryFromServer();
-                chatHistoryAdapter.notifyDataSetChanged();
             }
         }
     }
@@ -237,19 +236,19 @@ public class ChatActivity extends ActionBarActivity implements DialogInterface.O
                     try {
                         // Send the message to the server
                         final ChatMessage createdMessage = ChatClient.getInstance(ChatActivity.this).sendMessage(currentChatRoom.getGroupId(), message);
-                        Log.e("Tca chat", "message: " + createdMessage.getId()+"  "+createdMessage.getText());
+                        Log.e("Tca chat", "message: " + createdMessage.getId() + "  " + createdMessage.getText());
                         createdMessage.setStatus(ChatMessage.STATUS_SENT);
                         chatManager.replaceInto(createdMessage);
                         final Cursor cur = chatManager.getAll();
-
-                        //Update the currently shown history
-                       // ChatActivity.this.runOnUiThread(new Runnable() {
-                       //     @Override
-                       //     public void run() {
                         chatManager.removeFromUnsent(message);
-                        chatHistoryAdapter.sent(message, cur);
-                       //     }
-                       // });
+
+                        // Update the currently shown history
+                        ChatActivity.this.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                chatHistoryAdapter.sent(message, cur);
+                            }
+                        });
 
                         //Exit the loop
                         messageSentSuccessfully = true;

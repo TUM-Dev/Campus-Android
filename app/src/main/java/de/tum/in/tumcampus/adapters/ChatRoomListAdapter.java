@@ -77,6 +77,8 @@ public class ChatRoomListAdapter extends CursorAdapter implements StickyListHead
         //set header text as first char in name
         Cursor item = (Cursor) getItem(pos);
         String semester = item.getString(ChatRoomManager.COL_SEMESTER);
+        if(semester.isEmpty())
+            semester = mContext.getString(R.string.my_chat_rooms);
         holder.text.setText(semester);
         return convertView;
     }
