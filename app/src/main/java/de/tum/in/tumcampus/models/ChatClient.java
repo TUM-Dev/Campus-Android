@@ -63,16 +63,13 @@ public class ChatClient {
         ChatRoom getChatRoom(@Path("groupId") String id);
 
         @POST("/rooms/{groupId}/join/")
-        void joinChatRoom(@Path("groupId") String groupId, @Body ChatMember chatMember, Callback<ChatRoom> cb);
+        void joinChatRoom(@Path("groupId") String groupId, @Body ChatVerification verification, Callback<ChatRoom> cb);
 
         @POST("/rooms/{groupId}/leave/")
         void leaveChatRoom(@Path("groupId") String groupId, @Body ChatVerification verification, Callback<ChatRoom> cb);
 
         @POST("/rooms/{groupId}/messages/")
         ChatMessage sendMessage(@Path("groupId") String groupId, @Body ChatMessage message);
-
-        @GET("/rooms/{groupId}/messages/{page}/")
-        void getMessages(@Path("groupId") String groupId, @Path("page") int page, Callback<ArrayList<ChatMessage>> cb);
 
         @GET("/rooms/{groupId}/messages/{page}/")
         ArrayList<ChatMessage> getMessages(@Path("groupId") String groupId, @Path("page") long page);
@@ -93,7 +90,7 @@ public class ChatClient {
         List<ChatRoom> getMemberRooms(@Path("memberId") String memberId, @Body ChatVerification verification);
 
         @GET("/members/{memberId}/pubkeys/")
-        List<ChatPublicKey> getPublicKeysForMember(@Path("memberId") String memberId);
+        void getPublicKeysForMember(@Path("memberId") String memberId, Callback<List<ChatPublicKey>> cb);
 
         @POST("/members/{memberId}/registration_ids/add_id")
         void uploadRegistrationId(@Path("memberId") String memberId, @Body ChatRegistrationId regId, Callback<ChatRegistrationId> cb);
@@ -120,8 +117,8 @@ public class ChatClient {
         return service.getMember(lrzId);
     }
 
-    public void joinChatRoom(ChatRoom chatRoom, ChatMember chatMember, Callback<ChatRoom> cb) {
-        service.joinChatRoom(chatRoom.getGroupId(), chatMember, cb);
+    public void joinChatRoom(ChatRoom chatRoom, ChatVerification verification, Callback<ChatRoom> cb) {
+        service.joinChatRoom(chatRoom.getGroupId(), verification, cb);
     }
 
     public void leaveChatRoom(ChatRoom chatRoom, ChatVerification verification, Callback<ChatRoom> cb) {
@@ -148,8 +145,8 @@ public class ChatClient {
         return service.getMemberRooms(memberId, verification);
     }
 
-    public List<ChatPublicKey> getPublicKeysForMember(String memberId) {
-        return service.getPublicKeysForMember(memberId);
+    public void getPublicKeysForMember(ChatMember member, Callback<List<ChatPublicKey>> cb) {
+        service.getPublicKeysForMember(member.getUserId(), cb);
     }
 
     public void uploadRegistrationId(String memberId, ChatRegistrationId regId, Callback<ChatRegistrationId> cb) {

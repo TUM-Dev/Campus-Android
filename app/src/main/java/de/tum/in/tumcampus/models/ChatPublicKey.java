@@ -5,21 +5,10 @@ import com.google.gson.annotations.SerializedName;
 @SuppressWarnings("UnusedDeclaration")
 public class ChatPublicKey {
 
-	private String url;
-	@SerializedName("key_text")
 	private String key;
-	private boolean active;
 	
 	public ChatPublicKey(String key) {
 		this.key = key;
-	}
-
-	public String getUrl() {
-		return url;
-	}
-
-	public void setUrl(String url) {
-		this.url = url;
 	}
 
 	public String getKey() {
@@ -30,11 +19,4 @@ public class ChatPublicKey {
 		this.key = key;
 	}
 
-	public boolean isActive() {
-		return active;
-	}
-
-	public void setActive(boolean active) {
-		this.active = active;
-	}
 }

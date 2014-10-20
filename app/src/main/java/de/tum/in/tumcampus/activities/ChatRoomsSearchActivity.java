@@ -261,35 +261,28 @@ public class ChatRoomsSearchActivity extends ActivityForLoadingInBackground<Inte
      * Joins the chat room and adds it to the list of my chat rooms
      */
     private void joinChatRoom() {
-        if (currentChatMember.getLrzId() != null) {
-            // Generate signature
-            RSASigner signer = new RSASigner(currentPrivateKey);
-            String signature = signer.sign(currentChatMember.getLrzId());
-            currentChatMember.setSignature(signature);
+        ChatClient.getInstance(ChatRoomsSearchActivity.this).joinChatRoom(currentChatRoom, new ChatVerification(currentPrivateKey, currentChatMember), new Callback<ChatRoom>() {
+            @Override
+            public void success(ChatRoom arg0, Response arg1) {
+                Utils.logv("Success joining chat room: " + arg0.toString());
+                // Remember in sharedPrefs that the terms dialog was shown
+                manager.join(currentChatRoom);
+                final Cursor newCursor = manager.getAllByStatus(mCurrentMode);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        adapter.changeCursor(newCursor);
+                        Utils.showToast(ChatRoomsSearchActivity.this, R.string.joined_chat_room);
+                    }
+                });
+            }
 
-            ChatClient.getInstance(ChatRoomsSearchActivity.this).joinChatRoom(currentChatRoom, currentChatMember, new Callback<ChatRoom>() {
-                @Override
-                public void success(ChatRoom arg0, Response arg1) {
-                    Utils.logv("Success joining chat room: " + arg0.toString());
-                    // Remember in sharedPrefs that the terms dialog was shown
-                    manager.join(currentChatRoom);
-                    final Cursor newCursor = manager.getAllByStatus(mCurrentMode);
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            adapter.changeCursor(newCursor);
-                            Utils.showToast(ChatRoomsSearchActivity.this, R.string.joined_chat_room);
-                        }
-                    });
-                }
-
-                @Override
-                public void failure(RetrofitError e) {
-                    Utils.log(e, "Failure joining chat room");
-                    Utils.showToastOnUIThread(ChatRoomsSearchActivity.this, R.string.activate_key);
-                }
-            });
-        }
+            @Override
+            public void failure(RetrofitError e) {
+                Utils.log(e, "Failure joining chat room");
+                Utils.showToastOnUIThread(ChatRoomsSearchActivity.this, R.string.activate_key);
+            }
+        });
     }
 
     /**

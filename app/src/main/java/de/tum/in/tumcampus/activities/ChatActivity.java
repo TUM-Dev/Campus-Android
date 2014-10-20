@@ -38,14 +38,12 @@ import java.security.PrivateKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Locale;
+import java.util.List;
 
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.adapters.ChatHistoryAdapter;
+import de.tum.in.tumcampus.auxiliary.ChatMessageValidator;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.ImplicitCounter;
 import de.tum.in.tumcampus.auxiliary.RSASigner;
@@ -53,6 +51,7 @@ import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.ChatClient;
 import de.tum.in.tumcampus.models.ChatMember;
 import de.tum.in.tumcampus.models.ChatMessage;
+import de.tum.in.tumcampus.models.ChatPublicKey;
 import de.tum.in.tumcampus.models.ChatRoom;
 import de.tum.in.tumcampus.models.ChatVerification;
 import de.tum.in.tumcampus.models.managers.ChatMessageManager;
@@ -281,34 +280,33 @@ public class ChatActivity extends ActionBarActivity implements DialogInterface.O
      */
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
-        ChatMessage message = (ChatMessage) chatHistoryAdapter.getItem(position - 1);
+        final ChatMessage message = (ChatMessage) chatHistoryAdapter.getItem(position - 1);
 
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ENGLISH);
-        Date time;
-        try {
-            time = formatter.parse(message.getTimestamp());
-        } catch (ParseException e) {
-            Utils.log(e);
-            time = new Date();
-        }
+        //Show a nice dialog with more information about the message
         String messageStr = String.format(getString(R.string.message_detail_text),
                 message.getMember().getDisplayName(),
                 message.getMember().getLrzId(),
-                DateFormat.getDateTimeInstance().format(time),
+                DateFormat.getDateTimeInstance().format(message.getTimestampDate()),
                 Html.fromHtml(getString(message.getStatusStringRes())));
 
-        new AlertDialog.Builder(this)
-                .setTitle(R.string.message_details).setMessage(messageStr).create().show();
+        new AlertDialog.Builder(this).setTitle(R.string.message_details).setMessage(messageStr).create().show();
 
-        /*ArrayList<ChatPublicKey> publicKeys = (ArrayList<ChatPublicKey>) ChatClient.getInstance(ChatActivity.this).getPublicKeysForMember(message.getMember().getUserId());
-        ChatMessageValidator validator = new ChatMessageValidator(publicKeys);
-        final boolean result = validator.validate(message);
-        ChatActivity.this.runOnUiThread(new Runnable() {
+        //Verify the message with RSA
+        ChatClient.getInstance(ChatActivity.this).getPublicKeysForMember(message.getMember(), new Callback<List<ChatPublicKey>>() {
             @Override
-            public void run() {
-                Utils.showToast(ChatActivity.this, "Selected message is " + (result ? "" : "not ") + "valid");
+            public void success(List<ChatPublicKey> publicKeys, Response arg1) {
+                ChatMessageValidator validator = new ChatMessageValidator(publicKeys);
+                final boolean result = validator.validate(message);
+
+                Utils.showToast(ChatActivity.this, "Selected message is " + (result ? "" : "not ") + "RSA verified/signed!");
             }
-        });*/
+
+            @Override
+            public void failure(RetrofitError e) {
+                Utils.log(e, "Failure verifying message");
+            }
+        });
+
         return true;
     }
 
