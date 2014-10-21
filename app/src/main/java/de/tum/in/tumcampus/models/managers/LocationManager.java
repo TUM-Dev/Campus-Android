@@ -270,7 +270,8 @@ public class LocationManager {
      */
     public Geo roomLocationStringToGeo(String loc) {
         TUMRoomFinderRequest requestHandler = new TUMRoomFinderRequest();
-        loc = loc.substring(0,loc.indexOf('(')).trim();
+        if(loc.contains("("))
+           loc = loc.substring(0,loc.indexOf('(')).trim();
 
         ArrayList<HashMap<String, String>> request = requestHandler.fetchRooms(loc);
         if(request.size()>0) {

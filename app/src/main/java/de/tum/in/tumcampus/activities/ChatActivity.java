@@ -121,7 +121,6 @@ public class ChatActivity extends ActionBarActivity implements DialogInterface.O
         super.onResume();
         getNextHistoryFromServer();
         mCurrentOpenChatRoom = currentChatRoom;
-        chatManager = new ChatMessageManager(this, currentChatRoom.getId());
     }
 
     @Override
@@ -282,6 +281,7 @@ public class ChatActivity extends ActionBarActivity implements DialogInterface.O
         currentChatRoom = new Gson().fromJson(extras.getString(Const.CURRENT_CHAT_ROOM), ChatRoom.class);
         currentChatMember = new Gson().fromJson(extras.getString(Const.CURRENT_CHAT_MEMBER), ChatMember.class);
         getSupportActionBar().setTitle(currentChatRoom.getName().substring(4));
+        chatManager = new ChatMessageManager(this, currentChatRoom.getId());
 
         CharSequence message = getMessageText(getIntent());
         if (message != null) {
@@ -421,7 +421,7 @@ public class ChatActivity extends ActionBarActivity implements DialogInterface.O
             String chatRoomString = extras.getString("room");
 
             //If same room just refresh
-            if (chatRoomString.equals(""+currentChatRoom.getId())) {
+            if (chatRoomString.equals(""+currentChatRoom.getId()) && chatHistoryAdapter!=null) {
                 if (extras.getBoolean("mine", false)) {
                     // Remove this message from the adapter
                     chatHistoryAdapter.setUnsentMessages(chatManager.getAllUnsent());
