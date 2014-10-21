@@ -511,8 +511,8 @@ public class ChatActivity extends ActionBarActivity implements DialogInterface.O
                 Utils.logv("Success leaving chat room: " + room.getName());
                 new ChatRoomManager(ChatActivity.this).leave(currentChatRoom);
 
-                // Move back to ChatRoomsSearchActivity
-                Intent intent = new Intent(ChatActivity.this, ChatRoomsSearchActivity.class);
+                // Move back to ChatRoomsActivity
+                Intent intent = new Intent(ChatActivity.this, ChatRoomsActivity.class);
                 startActivity(intent);
             }
 

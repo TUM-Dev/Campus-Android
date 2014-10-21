@@ -351,4 +351,5 @@ Nachricht:\n
     <string name="no_private_key">Kein private key gefunden! Setze die App zurück um den Fehler zu beheben!</string>
     <string name="key_activated">Have you activated your key?</string>
     <string name="chat_key_expl">Wenn du den Vorlesungs-Chat nutzen willst, bekommst du eine E-Mail um deinen Public Key zu bestätigen. Damit du den chat verwenden kannst musst du auf den Link in der E-Mail klicken.</string>
+    <string name="no_rights_to_access_lectures">Vorlesungen konnten nicht abgerufen werden. Bitte überprüfe die Rechte deines TUMOnline Tokens!</string>
 </resources>

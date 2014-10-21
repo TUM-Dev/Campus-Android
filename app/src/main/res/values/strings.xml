@@ -391,4 +391,5 @@ Message:\n
     <string name="no_private_key">No private key found! Reset the app\'s data to solve this!</string>
     <string name="key_activated">Have you activated your key?</string>
     <string name="chat_key_expl">If you want to use lecture chat you will get an e-mail to activate your public key. In order to use it click the link provided in this e-mail.</string>
+    <string name="no_rights_to_access_lectures">Lectures could not be accessed. Please check the rights of your TUMOnline token!</string>
 </resources>

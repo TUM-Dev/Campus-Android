@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.CafeteriaActivity;
 import de.tum.in.tumcampus.activities.CalendarActivity;
-import de.tum.in.tumcampus.activities.ChatRoomsSearchActivity;
+import de.tum.in.tumcampus.activities.ChatRoomsActivity;
 import de.tum.in.tumcampus.activities.CurriculaActivity;
 import de.tum.in.tumcampus.activities.LecturesPersonalActivity;
 import de.tum.in.tumcampus.activities.NewsActivity;
@@ -47,7 +47,7 @@ public class NavigationDrawerAdapter extends BaseAdapter {
         for (SideNavigationItem item : menuItems) {
             if (!mHasTUMOAccess && item.needsTUMO)
                 continue;
-            if (item.activity != null && item.activity.equals(ChatRoomsSearchActivity.class) && !chat_enabled)
+            if (item.activity != null && item.activity.equals(ChatRoomsActivity.class) && !chat_enabled)
                 continue;
             mVisibleMenuItems.add(item);
         }
@@ -182,7 +182,7 @@ public class NavigationDrawerAdapter extends BaseAdapter {
             new SideNavigationItem(R.string.schedule, R.drawable.ic_calendar, true, CalendarActivity.class),
             new SideNavigationItem(R.string.my_lectures, R.drawable.ic_my_lectures, true, LecturesPersonalActivity.class),
             // new SideNavigationItem(R.string.my_grades,R.drawable.ic_my_grades, true, GradesActivity.class),
-            new SideNavigationItem(R.string.chat_rooms, R.drawable.ic_comment, true, ChatRoomsSearchActivity.class),
+            new SideNavigationItem(R.string.chat_rooms, R.drawable.ic_comment, true, ChatRoomsActivity.class),
             new SideNavigationItem(R.string.tuition_fees, R.drawable.ic_money, true, TuitionFeesActivity.class),
             new SideNavigationItem(R.string.tum_common, false),
             new SideNavigationItem(R.string.menues, R.drawable.ic_cutlery, false, CafeteriaActivity.class),

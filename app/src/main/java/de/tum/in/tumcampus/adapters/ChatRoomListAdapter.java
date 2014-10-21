@@ -17,7 +17,7 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 /**
  * This class handles the view output of the results for finding lectures via
  * TUMOnline used in {@link de.tum.in.tumcampus.activities.LecturesPersonalActivity}
- * and {@link de.tum.in.tumcampus.activities.ChatRoomsSearchActivity}. It
+ * and {@link de.tum.in.tumcampus.activities.ChatRoomsActivity}. It
  * implements {@link se.emilsjolander.stickylistheaders.StickyListHeadersAdapter} to
  * show semester info as sticky header.
  */

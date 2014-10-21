@@ -52,7 +52,7 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
  * This activity presents the chat rooms of user's
  * lectures using the TUMOnline web service
  */
-public class ChatRoomsSearchActivity extends ActivityForLoadingInBackground<Integer, Cursor> implements OnItemClickListener {
+public class ChatRoomsActivity extends ActivityForLoadingInBackground<Integer, Cursor> implements OnItemClickListener {
     private static final String PROPERTY_APP_VERSION = "appVersion";
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     private static final String SENDER_ID = "944892355389";
@@ -68,7 +68,7 @@ public class ChatRoomsSearchActivity extends ActivityForLoadingInBackground<Inte
     private ChatRoomListAdapter adapter;
 
 
-    public ChatRoomsSearchActivity() {
+    public ChatRoomsActivity() {
         super(R.layout.activity_lectures);
     }
 
@@ -157,8 +157,6 @@ public class ChatRoomsSearchActivity extends ActivityForLoadingInBackground<Inte
         if (lecturesList != null) {
             List<LecturesSearchRow> lectures = lecturesList.getLehrveranstaltungen();
             manager.replaceInto(lectures);
-        } else {
-            Utils.showToastOnUIThread(this, R.string.no_internet_connection);
         }
 
         populateCurrentChatMember();
@@ -229,16 +227,16 @@ public class ChatRoomsSearchActivity extends ActivityForLoadingInBackground<Inte
                     @Override
                     public void run() {
                         try {
-                            List<ChatRoom> chatRooms = ChatClient.getInstance(ChatRoomsSearchActivity.this).getChatRoomWithName(currentChatRoom);
+                            List<ChatRoom> chatRooms = ChatClient.getInstance(ChatRoomsActivity.this).getChatRoomWithName(currentChatRoom);
                             if (chatRooms != null) {
                                 currentChatRoom = chatRooms.get(0);
                             }
 
                             // When we show joined chat rooms open chat room directly
                             if (mCurrentMode == 1) {
-                                ChatRoomsSearchActivity.this.moveToChatActivity(intent);
+                                ChatRoomsActivity.this.moveToChatActivity(intent);
                             } else { // otherwise join chat room
-                                ChatRoomsSearchActivity.this.joinChatRoom();
+                                ChatRoomsActivity.this.joinChatRoom();
                             }
                         } catch (RetrofitError e) {
                             Utils.log(e);
@@ -259,7 +257,7 @@ public class ChatRoomsSearchActivity extends ActivityForLoadingInBackground<Inte
      * Joins the chat room and adds it to the list of my chat rooms
      */
     private void joinChatRoom() {
-        ChatClient.getInstance(ChatRoomsSearchActivity.this).joinChatRoom(currentChatRoom, new ChatVerification(currentPrivateKey, currentChatMember), new Callback<ChatRoom>() {
+        ChatClient.getInstance(ChatRoomsActivity.this).joinChatRoom(currentChatRoom, new ChatVerification(currentPrivateKey, currentChatMember), new Callback<ChatRoom>() {
             @Override
             public void success(ChatRoom arg0, Response arg1) {
                 Utils.logv("Success joining chat room: " + arg0.toString());
@@ -270,7 +268,7 @@ public class ChatRoomsSearchActivity extends ActivityForLoadingInBackground<Inte
                     @Override
                     public void run() {
                         adapter.changeCursor(newCursor);
-                        Utils.showToast(ChatRoomsSearchActivity.this, R.string.joined_chat_room);
+                        Utils.showToast(ChatRoomsActivity.this, R.string.joined_chat_room);
                     }
                 });
             }
@@ -278,7 +276,7 @@ public class ChatRoomsSearchActivity extends ActivityForLoadingInBackground<Inte
             @Override
             public void failure(RetrofitError e) {
                 Utils.log(e, "Failure joining chat room");
-                Utils.showToastOnUIThread(ChatRoomsSearchActivity.this, R.string.activate_key);
+                Utils.showToastOnUIThread(ChatRoomsActivity.this, R.string.activate_key);
             }
         });
     }
@@ -413,18 +411,18 @@ public class ChatRoomsSearchActivity extends ActivityForLoadingInBackground<Inte
             protected String doInBackground(Void... params) {
                 try {
                     //Get the services and register a new id
-                    GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(ChatRoomsSearchActivity.this);
+                    GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(ChatRoomsActivity.this);
                     String regId = gcm.register(SENDER_ID);
 
                     //Reset the lock in case we are updating and maybe failed
-                    Utils.setInternalSetting(ChatRoomsSearchActivity.this, Const.GCM_REG_ID_SENT_TO_SERVER, false);
-                    Utils.setInternalSetting(ChatRoomsSearchActivity.this, Const.GCM_REG_ID_LAST_TRANSMISSION, (new Date()).getTime());
+                    Utils.setInternalSetting(ChatRoomsActivity.this, Const.GCM_REG_ID_SENT_TO_SERVER, false);
+                    Utils.setInternalSetting(ChatRoomsActivity.this, Const.GCM_REG_ID_LAST_TRANSMISSION, (new Date()).getTime());
 
                     // Let the server know of our new registration id
-                    ChatRoomsSearchActivity.this.sendRegistrationIdToBackend(regId);
+                    ChatRoomsActivity.this.sendRegistrationIdToBackend(regId);
 
                     // Persist the regID - no need to register again.
-                    ChatRoomsSearchActivity.this.storeRegistrationId(regId);
+                    ChatRoomsActivity.this.storeRegistrationId(regId);
 
                     return "GCM registration successful";
                 } catch (IOException ex) {
@@ -452,13 +450,13 @@ public class ChatRoomsSearchActivity extends ActivityForLoadingInBackground<Inte
         RSASigner signer = new RSASigner(currentPrivateKey);
         String signature = signer.sign(currentChatMember.getLrzId());
 
-        ChatClient.getInstance(ChatRoomsSearchActivity.this).uploadRegistrationId(currentChatMember.getId(), new ChatRegistrationId(regId, signature), new Callback<ChatRegistrationId>() {
+        ChatClient.getInstance(ChatRoomsActivity.this).uploadRegistrationId(currentChatMember.getId(), new ChatRegistrationId(regId, signature), new Callback<ChatRegistrationId>() {
             @Override
             public void success(ChatRegistrationId arg0, Response arg1) {
                 Utils.logv("Success uploading GCM registration id: " + arg0);
 
                 // Store in shared preferences the information that the GCM registration id was sent to the TCA server successfully
-                Utils.setInternalSetting(ChatRoomsSearchActivity.this, Const.GCM_REG_ID_SENT_TO_SERVER, true);
+                Utils.setInternalSetting(ChatRoomsActivity.this, Const.GCM_REG_ID_SENT_TO_SERVER, true);
             }
 
             @Override
