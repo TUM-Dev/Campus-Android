@@ -10,6 +10,7 @@ import android.widget.ImageView;
 
 import java.io.File;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
 
@@ -18,6 +19,7 @@ import de.tum.in.tumcampus.auxiliary.AccessTokenManager;
 import de.tum.in.tumcampus.auxiliary.NetUtils;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.CalendarRowSet;
+import de.tum.in.tumcampus.models.LecturesSearchRow;
 import de.tum.in.tumcampus.models.LecturesSearchRowSet;
 import de.tum.in.tumcampus.models.OrgItemList;
 import de.tum.in.tumcampus.models.TuitionList;
@@ -232,8 +234,10 @@ public class CacheManager {
         if (!shouldRefresh(requestHandler.getRequestURL()))
             return;
 
-        //LecturesSearchRowSet myLecturesList =
-        requestHandler.fetch();
+        LecturesSearchRowSet lecturesList = requestHandler.fetch();
+        List<LecturesSearchRow> lectures = lecturesList.getLehrveranstaltungen();
+        ChatRoomManager manager = new ChatRoomManager(mContext);
+        manager.replaceInto(lectures);
     /*    if (myLecturesList == null)
             return;
 

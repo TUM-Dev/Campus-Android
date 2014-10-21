@@ -86,11 +86,11 @@ public class ChatRoomListAdapter extends CursorAdapter implements StickyListHead
     @Override
     public long getHeaderId(int i) {
         Cursor item = (Cursor) getItem(i);
-        String semesterId = item.getString(ChatRoomManager.COL_SEMESTER_ID);
-        if (!filters.contains(semesterId)) {
-            filters.add(semesterId);
+        String semester = item.getString(ChatRoomManager.COL_SEMESTER);
+        if (!filters.contains(semester)) {
+            filters.add(semester);
         }
-        return filters.indexOf(semesterId);
+        return filters.indexOf(semester);
     }
 
     static class HeaderViewHolder {

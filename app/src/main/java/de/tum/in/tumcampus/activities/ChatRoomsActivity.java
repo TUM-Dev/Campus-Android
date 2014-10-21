@@ -52,7 +52,7 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
  * This activity presents the chat rooms of user's
  * lectures using the TUMOnline web service
  */
-public class ChatRoomsActivity extends ActivityForLoadingInBackground<Integer, Cursor> implements OnItemClickListener {
+public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Cursor> implements OnItemClickListener {
     private static final String PROPERTY_APP_VERSION = "appVersion";
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     private static final String SENDER_ID = "944892355389";
@@ -66,6 +66,7 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Integer, C
     private ChatRoomManager manager;
     private int mCurrentMode = 1;
     private ChatRoomListAdapter adapter;
+    private boolean firstLoad = true;
 
 
     public ChatRoomsActivity() {
@@ -95,7 +96,8 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Integer, C
             public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
                 // show the given tab
                 mCurrentMode = 1 - tab.getPosition();
-                startLoading(mCurrentMode);
+                firstLoad = true;
+                startLoading();
             }
 
             public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
@@ -109,12 +111,6 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Integer, C
 
         actionBar.addTab(actionBar.newTab().setText(R.string.joined).setTabListener(tabListener));
         actionBar.addTab(actionBar.newTab().setText(R.string.not_joined).setTabListener(tabListener));
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        startLoading(mCurrentMode);
     }
 
     /**
@@ -152,24 +148,29 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Integer, C
     }
 
     @Override
-    protected Cursor onLoadInBackground(Integer... arg) {
-        LecturesSearchRowSet lecturesList = requestHandler.fetch();
-        if (lecturesList != null) {
-            List<LecturesSearchRow> lectures = lecturesList.getLehrveranstaltungen();
-            manager.replaceInto(lectures);
+    protected Cursor onLoadInBackground(Void... arg) {
+        if(!firstLoad) {
+            LecturesSearchRowSet lecturesList = requestHandler.fetch();
+            if (lecturesList != null) {
+                List<LecturesSearchRow> lectures = lecturesList.getLehrveranstaltungen();
+                manager.replaceInto(lectures);
+            }
         }
 
         populateCurrentChatMember();
 
         // Try to restore joined chat rooms from server
-        try {
-            List<ChatRoom> rooms = ChatClient.getInstance(this).getMemberRooms(currentChatMember.getId(), new ChatVerification(currentPrivateKey, currentChatMember));
-            manager.replaceIntoRooms(rooms);
-            return manager.getAllByStatus(arg[0]);
-        } catch (RetrofitError e) {
-            Utils.log(e);
-            return null;
+        if(!firstLoad) {
+            try {
+                List<ChatRoom> rooms = ChatClient.getInstance(this).getMemberRooms(currentChatMember.getId(), new ChatVerification(currentPrivateKey, currentChatMember));
+                manager.replaceIntoRooms(rooms);
+            } catch (RetrofitError e) {
+                Utils.log(e);
+                return null;
+            }
         }
+        firstLoad = false;
+        return manager.getAllByStatus(mCurrentMode);
     }
 
     @Override
