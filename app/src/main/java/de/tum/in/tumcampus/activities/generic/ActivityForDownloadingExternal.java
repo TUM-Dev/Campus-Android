@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 import android.view.View;
 
 import de.tum.in.tumcampus.R;
@@ -55,7 +54,7 @@ public abstract class ActivityForDownloadingExternal extends ProgressActivity {
 
 			String action = intent.getStringExtra(Const.ACTION_EXTRA);
 			if (action.length() != 0) {
-				Log.i(ActivityForDownloadingExternal.this.getClass().getSimpleName(), "Broadcast received  <" + action + ">");
+				Utils.logv("Broadcast received  <" + action + ">");
 				if (action.equals(Const.COMPLETED)) {
 					showLoadingEnded();
 					// Calls onStart() to simulate a new start of the activity

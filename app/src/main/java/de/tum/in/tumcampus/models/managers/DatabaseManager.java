@@ -35,7 +35,7 @@ public abstract class DatabaseManager {
         getDb(c);
         db.execSQL("DROP TABLE IF EXISTS cache");
         db.execSQL("DROP TABLE IF EXISTS cafeterias");
-        db.execSQL("DROP TABLE IF EXISTS cafeteria_menus");
+        db.execSQL("DROP TABLE IF EXISTS cafeterias_menus");
         db.execSQL("DROP TABLE IF EXISTS calendar");
         db.execSQL("DROP TABLE IF EXISTS kalendar_events");
         db.execSQL("DROP TABLE IF EXISTS locations");

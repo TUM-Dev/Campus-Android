@@ -19,6 +19,7 @@ import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.generic.ActivityForDownloadingExternal;
 import de.tum.in.tumcampus.adapters.CafeteriaDetailsSectionsPagerAdapter;
 import de.tum.in.tumcampus.auxiliary.Const;
+import de.tum.in.tumcampus.auxiliary.NetUtils;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.Cafeteria;
 import de.tum.in.tumcampus.models.managers.LocationManager;
@@ -81,6 +82,16 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
         // Get all available cafeterias from database
         mCafeterias = new LocationManager(this).getCafeterias();
 
+        // If something went wrong or no cafeterias found
+        if (mCafeterias.size() == 0) {
+            if(!NetUtils.isConnected(this)) {
+                showNoInternetLayout();
+            } else {
+                showErrorLayout();
+            }
+            return;
+        }
+
         int selIndex = -1;
         for(int i=0;i<mCafeterias.size();i++) {
             Cafeteria c = mCafeterias.get(i);
@@ -89,12 +100,6 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
                 selIndex = i;
                 break;
             }
-        }
-
-        if (mCafeterias.size() == 0) {
-            // If something went wrong or no cafeterias found
-            showErrorLayout();
-            return;
         }
 
         // Adapter for drop-down navigation

@@ -160,7 +160,7 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
         populateCurrentChatMember();
 
         // Try to restore joined chat rooms from server
-        if(!firstLoad) {
+        if(!firstLoad && currentChatMember!=null) {
             try {
                 List<ChatRoom> rooms = ChatClient.getInstance(this).getMemberRooms(currentChatMember.getId(), new ChatVerification(currentPrivateKey, currentChatMember));
                 manager.replaceIntoRooms(rooms);

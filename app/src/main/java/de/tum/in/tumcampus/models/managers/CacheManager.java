@@ -235,7 +235,11 @@ public class CacheManager {
             return;
 
         LecturesSearchRowSet lecturesList = requestHandler.fetch();
+        if(lecturesList==null)
+            return;
         List<LecturesSearchRow> lectures = lecturesList.getLehrveranstaltungen();
+        if(lectures==null)
+            return;
         ChatRoomManager manager = new ChatRoomManager(mContext);
         manager.replaceInto(lectures);
     /*    if (myLecturesList == null)

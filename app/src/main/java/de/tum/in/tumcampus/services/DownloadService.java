@@ -97,12 +97,6 @@ public class DownloadService extends IntentService {
                         Utils.log(e);
                         successful = false;
                     }
-                    try {
-                        importLocationsDefaults();
-                    } catch (Exception e) {
-                        Utils.log(e);
-                        successful = false;
-                    }
 
                     boolean isSetup = Utils.getInternalSettingBool(this, Const.EVERYTHING_SETUP, false);
                     if(!isSetup) {
@@ -130,9 +124,17 @@ public class DownloadService extends IntentService {
                 broadcastError(getResources().getString(R.string.exception_unknown));
                 successful = false;
             }
+        } else {
+            successful = false;
         }
 
         if ((action.equals(Const.DOWNLOAD_ALL_FROM_EXTERNAL))) {
+            try {
+                importLocationsDefaults();
+            } catch (Exception e) {
+                Utils.log(e);
+                successful = false;
+            }
             if (successful) {
                 SharedPreferences prefs = getSharedPreferences(Const.INTERNAL_PREFS, 0);
                 prefs.edit().putLong(LAST_UPDATE, System.currentTimeMillis()).apply();

@@ -129,9 +129,10 @@ public class TransportationActivity extends ActivityForSearchingInBackground<Cur
      */
     @Override
     protected void onSearchFinished(Cursor stationCursor) {
-        showLoadingEnded();
         if(stationCursor==null)
             return;
+
+        showLoadingEnded();
 
         // mQuery is not null if it was a real search
         // If there is exactly one station, open results directly

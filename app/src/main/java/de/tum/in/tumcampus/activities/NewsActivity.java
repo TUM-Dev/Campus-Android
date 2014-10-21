@@ -16,6 +16,7 @@ import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.generic.ActivityForDownloadingExternal;
 import de.tum.in.tumcampus.adapters.NewsAdapter;
 import de.tum.in.tumcampus.auxiliary.Const;
+import de.tum.in.tumcampus.auxiliary.NetUtils;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.managers.NewsManager;
 
@@ -57,6 +58,8 @@ public class NewsActivity extends ActivityForDownloadingExternal implements OnIt
             /** Restore previous state (including selected item index and scroll position) */
             if (state != null)
                 lv.onRestoreInstanceState(state);
+        } else if(!NetUtils.isConnected(this)) {
+            showNoInternetLayout();
         } else {
             showErrorLayout();
         }
