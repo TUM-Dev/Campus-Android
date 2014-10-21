@@ -95,6 +95,9 @@ public class ChatActivity extends ActionBarActivity implements DialogInterface.O
         ImplicitCounter.Counter(this);
         this.setContentView(R.layout.activity_chat);
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+
         this.getIntentData();
         this.bindUIElements();
 
@@ -278,7 +281,7 @@ public class ChatActivity extends ActionBarActivity implements DialogInterface.O
         Bundle extras = getIntent().getExtras();
         currentChatRoom = new Gson().fromJson(extras.getString(Const.CURRENT_CHAT_ROOM), ChatRoom.class);
         currentChatMember = new Gson().fromJson(extras.getString(Const.CURRENT_CHAT_MEMBER), ChatMember.class);
-        getSupportActionBar().setSubtitle(currentChatRoom.getName().substring(4));
+        getSupportActionBar().setTitle(currentChatRoom.getName().substring(4));
 
         CharSequence message = getMessageText(getIntent());
         if (message != null) {

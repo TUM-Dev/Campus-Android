@@ -110,6 +110,7 @@ public class CardManager {
         if (new AccessTokenManager(context).hasValidAccessToken()) {
             managers.add(new CalendarManager(context));
             managers.add(new TuitionFeeManager());
+            managers.add(new ChatRoomManager(context));
         }
 
         // Those don't need TUMOnline access

@@ -214,7 +214,13 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Integer, C
                 Utils.logv("Success creating chat room: " + newlyCreatedChatRoom.toString());
                 currentChatRoom = newlyCreatedChatRoom;
                 manager.join(currentChatRoom);
-                moveToChatActivity(intent);
+
+                // When we show joined chat rooms open chat room directly
+                if (mCurrentMode == 1) {
+                    ChatRoomsActivity.this.moveToChatActivity(intent);
+                } else { // otherwise join chat room
+                    ChatRoomsActivity.this.joinChatRoom();
+                }
             }
 
             @Override

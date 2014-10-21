@@ -74,7 +74,7 @@ public class SendMessageService extends IntentService {
                     createdMessage.setStatus(ChatMessage.STATUS_SENT);
 
                     ChatMessageManager messageManager = new ChatMessageManager(this, message.getRoom());
-                    messageManager.replaceInto(createdMessage);
+                    messageManager.replaceInto(createdMessage, true);
                     messageManager.removeFromUnsent(message);
 
                     // Send broadcast to eventually open ChatActivity

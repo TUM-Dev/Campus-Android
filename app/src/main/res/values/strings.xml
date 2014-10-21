@@ -389,7 +389,7 @@ Signature: %5$s</string>
     <string name="campus_geschwister_scholl">Campus Geschwister Scholl-Platz</string>
     <string name="no_default_campus">No default campus</string>
     <string name="reply_label">Reply</string>
-    <string name="public_key_mail">Public key activation mail sent to %s@mytum.de</string>
+    <string name="public_key_mail">Public key activation mail sent to %s@mytum.de.\nPlease activate it now!</string>
     <string name="failure_uploading_public_key">Failure uploading public key</string>
     <string name="no_private_key">No private key found! Reset the app\'s data to solve this!</string>
     <string name="key_activated">Have you activated your key?</string>

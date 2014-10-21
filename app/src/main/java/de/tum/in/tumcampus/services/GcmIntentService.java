@@ -91,7 +91,7 @@ public class GcmIntentService extends IntentService {
     // might choose to do with a GCM message.
     private void sendNotification(Bundle extras) {
         //Get the update details
-        String chatRoomId = extras.getString("room"); // chat_room={"id":3}
+        int chatRoomId = Integer.parseInt(extras.getString("room")); // chat_room={"id":3}
         extras.putBoolean("mine", false);
 
         // Get the data necessary for the ChatActivity
@@ -108,7 +108,7 @@ public class GcmIntentService extends IntentService {
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
 
         //Check if chat is currently open then don't show a notification if it is
-        if (ChatActivity.mCurrentOpenChatRoom != null && chatRoomId.equals(""+ChatActivity.mCurrentOpenChatRoom.getId())) {
+        if (ChatActivity.mCurrentOpenChatRoom != null && chatRoomId == ChatActivity.mCurrentOpenChatRoom.getId()) {
             return;
         }
 
@@ -153,7 +153,6 @@ public class GcmIntentService extends IntentService {
                     .setSmallIcon(R.drawable.tum_logo_notification)
                     .setContentTitle(chatRoom.getName().substring(4))
                     .setStyle(new NotificationCompat.BigTextStyle().bigText(txt))
-                    .setContentText(txt)
                     .setContentIntent(contentIntent)
                     .setDefaults(Notification.DEFAULT_VIBRATE)
                     .setLights(0xff0000ff, 500, 500)
@@ -163,7 +162,7 @@ public class GcmIntentService extends IntentService {
                     .build();
 
             NotificationManager mNotificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
-            mNotificationManager.notify(NOTIFICATION_ID, notification);
+            mNotificationManager.notify(chatRoomId<<4+NOTIFICATION_ID, notification);
         }
     }
 

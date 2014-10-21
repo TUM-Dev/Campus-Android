@@ -8,13 +8,15 @@ import java.util.HashSet;
 import java.util.List;
 
 import de.tum.in.tumcampus.auxiliary.Utils;
+import de.tum.in.tumcampus.cards.Card;
+import de.tum.in.tumcampus.cards.ChatMessagesCard;
 import de.tum.in.tumcampus.models.ChatRoom;
 import de.tum.in.tumcampus.models.LecturesSearchRow;
 
 /**
  * TUMOnline cache manager, allows caching of TUMOnline requests
  */
-public class ChatRoomManager {
+public class ChatRoomManager implements Card.ProvidesCard {
 
     public static final int COL_GROUP_ID = 0;
     public static final int COL_NAME = 1;
@@ -126,5 +128,32 @@ public class ChatRoomManager {
     public void leave(ChatRoom currentChatRoom) {
         db.execSQL("UPDATE chat_room SET group_id=?, status=0 WHERE name=? AND semester_id=?",
                 new String[]{""+currentChatRoom.getId(), currentChatRoom.getName().substring(4), currentChatRoom.getName().substring(0, 3)});
+    }
+
+
+
+    @Override
+    public void onRequestCard(Context context) {
+        // Use this to make sure chat_message table exists
+        new ChatMessageManager(context, 0);
+
+        // Get all rooms that have unread messages
+        Cursor cur = new ChatRoomManager(context).getUnreadRooms();
+        if(cur.moveToFirst()) {
+            do {
+                ChatMessagesCard card = new ChatMessagesCard(context);
+                card.setChatRoom(cur.getString(0), cur.getInt(1));
+                card.apply();
+            } while(cur.moveToNext());
+        }
+        cur.close();
+    }
+
+    private Cursor getUnreadRooms() {
+        return db.rawQuery("SELECT r.name,r.group_id " +
+                "FROM chat_room r, (SELECT room FROM chat_message " +
+                "WHERE status=0 GROUP BY room) AS c " +
+                "WHERE r.group_id=c.room " +
+                "ORDER BY r.semester_id DESC, r.name", null);
     }
 }

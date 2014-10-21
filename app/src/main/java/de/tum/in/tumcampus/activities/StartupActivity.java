@@ -75,7 +75,7 @@ public class StartupActivity extends ActionBarActivity {
             startActivity(new Intent(this, WizNavStartActivity.class));
             finish();
             return;
-        } else if (prevVersion<=35) {
+        } else if (newVersion) {
             Utils.setSetting(this, Const.BACKGROUND_MODE, true);
             Intent intent;
             if (new AccessTokenManager(this).hasValidAccessToken())

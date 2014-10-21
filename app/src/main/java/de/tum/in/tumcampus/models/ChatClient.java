@@ -61,7 +61,7 @@ public class ChatClient {
         List<ChatRoom> getChatRoomWithName(@Path("roomName") String roomName);
 
         @GET("/rooms/{groupId}")
-        ChatRoom getChatRoom(@Path("groupId") String id);
+        ChatRoom getChatRoom(@Path("groupId") int id);
 
         @POST("/rooms/{groupId}/join/")
         void joinChatRoom(@Path("groupId") int roomId, @Body ChatVerification verification, Callback<ChatRoom> cb);
@@ -106,7 +106,7 @@ public class ChatClient {
         return service.getChatRoomWithName(chatRoom.getName());
     }
 
-    public ChatRoom getChatRoom(String id) {
+    public ChatRoom getChatRoom(int id) {
         return service.getChatRoom(id);
     }
 
