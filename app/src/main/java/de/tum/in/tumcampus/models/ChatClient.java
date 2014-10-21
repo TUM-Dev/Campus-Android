@@ -60,23 +60,26 @@ public class ChatClient {
         @GET("/rooms/{roomName}/")
         List<ChatRoom> getChatRoomWithName(@Path("roomName") String roomName);
 
-        @GET("/rooms/{groupId}")
-        ChatRoom getChatRoom(@Path("groupId") int id);
+        @GET("/rooms/{room}")
+        ChatRoom getChatRoom(@Path("room") int id);
 
-        @POST("/rooms/{groupId}/join/")
-        void joinChatRoom(@Path("groupId") int roomId, @Body ChatVerification verification, Callback<ChatRoom> cb);
+        @POST("/rooms/{room}/join/")
+        void joinChatRoom(@Path("room") int roomId, @Body ChatVerification verification, Callback<ChatRoom> cb);
 
-        @POST("/rooms/{groupId}/leave/")
-        void leaveChatRoom(@Path("groupId") int roomId, @Body ChatVerification verification, Callback<ChatRoom> cb);
+        @POST("/rooms/{room}/leave/")
+        void leaveChatRoom(@Path("room") int roomId, @Body ChatVerification verification, Callback<ChatRoom> cb);
 
-        @PUT("/rooms/{groupId}/messages/")
-        ChatMessage sendMessage(@Path("groupId") int roomId, @Body ChatMessage message);
+        @PUT("/rooms/{room}/message/")
+        ChatMessage sendMessage(@Path("room") int roomId, @Body ChatMessage message);
 
-        @POST("/rooms/{groupId}/messages/{page}/")
-        ArrayList<ChatMessage> getMessages(@Path("groupId") int roomId, @Path("page") long page, @Body ChatVerification verification);
+        @PUT("/rooms/{room}/message/{message}/")
+        ChatMessage updateMessage(@Path("room") int roomId, @Path("message") int messageId, @Body ChatMessage message);
 
-        @POST("/rooms/{groupId}/messages/")
-        ArrayList<ChatMessage> getNewMessages(@Path("groupId") int roomId, @Body ChatVerification verification);
+        @POST("/rooms/{room}/messages/{page}/")
+        ArrayList<ChatMessage> getMessages(@Path("room") int roomId, @Path("page") long page, @Body ChatVerification verification);
+
+        @POST("/rooms/{room}/messages/")
+        ArrayList<ChatMessage> getNewMessages(@Path("room") int roomId, @Body ChatVerification verification);
 
         @POST("/members/")
         ChatMember createMember(@Body ChatMember chatMember);
@@ -128,6 +131,10 @@ public class ChatClient {
 
     public ChatMessage sendMessage(int roomId, ChatMessage chatMessageCreate) {
         return service.sendMessage(roomId, chatMessageCreate);
+    }
+
+    public ChatMessage updateMessage(int roomId, ChatMessage message) {
+        return service.updateMessage(roomId, message.getId(), message);
     }
 
     public ArrayList<ChatMessage> getMessages(int roomId, long page, @Body ChatVerification verification) {
