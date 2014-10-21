@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.preference.PreferenceManager;
+import android.util.Base64;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -17,7 +18,12 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.math.BigInteger;
+import java.security.KeyFactory;
 import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.PKCS8EncodedKeySpec;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -478,5 +484,27 @@ public class Utils {
                 Utils.showToast(activity, s);
             }
         });
+    }
+
+
+    /**
+     * Loads the private key from preferences
+     *
+     * @return The private key object
+     */
+    public static PrivateKey getPrivateKeyFromSharedPrefs(Context context) {
+        String privateKeyString = Utils.getInternalSettingString(context, Const.PRIVATE_KEY, "");
+        byte[] privateKeyBytes = Base64.decode(privateKeyString, Base64.DEFAULT);
+        KeyFactory keyFactory;
+        try {
+            keyFactory = KeyFactory.getInstance("RSA");
+            PKCS8EncodedKeySpec privateKeySpec = new PKCS8EncodedKeySpec(privateKeyBytes);
+            return keyFactory.generatePrivate(privateKeySpec);
+        } catch (NoSuchAlgorithmException e) {
+            Utils.log(e);
+        } catch (InvalidKeySpecException e) {
+            Utils.log(e);
+        }
+        return null;
     }
 }

@@ -157,9 +157,7 @@ public class ChatHistoryAdapter extends CursorAdapter {
         notifyDataSetChanged();
     }
 
-    public void sent(ChatMessage sentMessage, Cursor cur) {
-
-        unsentMessages.remove(sentMessage);
-        changeCursor(cur);
+    public void setUnsentMessages(ArrayList<ChatMessage> unsent) {
+        unsentMessages = unsent;
     }
 }

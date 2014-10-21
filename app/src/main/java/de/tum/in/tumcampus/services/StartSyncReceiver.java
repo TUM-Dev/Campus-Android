@@ -33,6 +33,8 @@ public class StartSyncReceiver extends BroadcastReceiver {
             i.putExtra(Const.APP_LAUNCHES,launch);
             context.startService(i);
         }
+
+        context.startService(new Intent(context, SendMessageService.class));
     }
 
     private void setAlarm(Context context) {

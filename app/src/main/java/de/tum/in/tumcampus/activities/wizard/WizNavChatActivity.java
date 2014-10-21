@@ -191,7 +191,7 @@ public class WizNavChatActivity extends ActivityForLoadingInBackground<Void, Boo
 
             // Try to restore already joined chat rooms from server
             try {
-                List<ChatRoom> rooms = ChatClient.getInstance(this).getMemberRooms(currentChatMember.getId(), new ChatVerification(privateKey, currentChatMember));
+                List<ChatRoom> rooms = ChatClient.getInstance(this).getMemberRooms(member.getId(), new ChatVerification(privateKey, member));
                 manager.replaceIntoRooms(rooms);
             } catch (RetrofitError e) {
                 Utils.log(e);

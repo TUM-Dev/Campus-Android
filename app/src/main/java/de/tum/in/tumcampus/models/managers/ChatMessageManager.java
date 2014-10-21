@@ -20,7 +20,6 @@ import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.ChatClient;
 import de.tum.in.tumcampus.models.ChatMember;
 import de.tum.in.tumcampus.models.ChatMessage;
-import de.tum.in.tumcampus.models.ChatRoom;
 import de.tum.in.tumcampus.models.ChatVerification;
 
 /**
@@ -36,13 +35,12 @@ public class ChatMessageManager {
     public static final int COL_TIMESTAMP = 4;
     public static final int COL_SIGNATURE = 5;
     public static final int COL_MEMBER = 6;
-    public static final int COL_STATUS = 7;
 
     /**
      * Database connection
      */
     private final SQLiteDatabase db;
-    private final ChatRoom mChatRoom;
+    private final int mChatRoom;
     private Context mContext;
 
     /**
@@ -50,7 +48,7 @@ public class ChatMessageManager {
      *
      * @param context Context
      */
-    public ChatMessageManager(Context context, ChatRoom room) {
+    public ChatMessageManager(Context context, int room) {
         db = DatabaseManager.getDb(context);
         mContext = context;
         mChatRoom = room;
@@ -71,28 +69,50 @@ public class ChatMessageManager {
      * @return List of chat messages
      */
     public Cursor getAll() {
-        db.execSQL("UPDATE chat_message SET status=1 WHERE status=0 AND room=?", new String[] {mChatRoom.getId()});
+        db.execSQL("UPDATE chat_message SET status=1 WHERE status=0 AND room=?", new String[] {""+mChatRoom});
         return db.rawQuery("SELECT c.* FROM chat_message c, (SELECT c1._id " +
                 "FROM chat_message c1 LEFT JOIN chat_message c2 ON c2._id=c1.previous " +
                 "WHERE c2._id IS NULL AND c1.room=? " +
                 "ORDER BY c1._id DESC " +
                 "LIMIT 1) AS until " +
                 "WHERE c._id>=until._id AND c.room=? " +
-                "ORDER BY c._id", new String[]{mChatRoom.getId(), mChatRoom.getId()});
+                "ORDER BY c._id", new String[]{""+mChatRoom, ""+mChatRoom});
     }
 
     /**
      * Gets all unsent chat messages
      */
-    public ArrayList<ChatMessage> getAllUnsent() {
-        Cursor cur = db.rawQuery("SELECT member, text FROM unsent_chat_message " +
-                "WHERE room=? " +
-                "ORDER BY _id", new String[]{ mChatRoom.getId()});
+    public static ArrayList<ChatMessage> getAllUnsent(Context context) {
+        SQLiteDatabase db = DatabaseManager.getDb(context);
+        db.execSQL("CREATE TABLE IF NOT EXISTS unsent_chat_message (_id INTEGER PRIMARY KEY AUTOINCREMENT, room INTEGER, text TEXT, member BLOB)");
+        Cursor cur = db.rawQuery("SELECT member, text, room, _id FROM unsent_chat_message ORDER BY _id", null);
         ArrayList<ChatMessage> list = new ArrayList<ChatMessage>(cur.getCount());
         if(cur.moveToFirst()) {
             do {
                 ChatMember member = new Gson().fromJson(cur.getString(0), ChatMember.class);
-                list.add(new ChatMessage(cur.getString(1), member));
+                ChatMessage msg = new ChatMessage(cur.getString(1), member);
+                msg.setRoom(cur.getInt(2));
+                msg.setId(cur.getInt(3));
+                list.add(msg);
+            } while(cur.moveToNext());
+        }
+        cur.close();
+        return list;
+    }
+
+    /**
+     * Gets all unsent chat messages from the current room
+     */
+    public ArrayList<ChatMessage> getAllUnsent() {
+        Cursor cur = db.rawQuery("SELECT member, text, room, _id FROM unsent_chat_message ORDER BY _id", null);
+        ArrayList<ChatMessage> list = new ArrayList<ChatMessage>(cur.getCount());
+        if(cur.moveToFirst()) {
+            do {
+                ChatMember member = new Gson().fromJson(cur.getString(0), ChatMember.class);
+                ChatMessage msg = new ChatMessage(cur.getString(1), member);
+                msg.setRoom(cur.getInt(2));
+                msg.setId(cur.getInt(3));
+                list.add(msg);
             } while(cur.moveToNext());
         }
         cur.close();
@@ -104,15 +124,8 @@ public class ChatMessageManager {
      */
     public void addToUnsent(ChatMessage m) {
         Log.e("TCA Chat", "replace into unsent " + m.getText() + " " + m.getId() + " "+ m.getPrevious()+ " "+ m.getStatus());
-        db.beginTransaction();
         db.execSQL("REPLACE INTO unsent_chat_message (text,room,member) VALUES (?,?,?)",
-                new String[]{"" + m.getText(), mChatRoom.getId(), new Gson().toJson(m.getMember())});
-        Cursor cur = db.rawQuery("SELECT MAX(_id) FROM unsent_chat_message", null);
-        cur.moveToFirst();
-        m.setId(cur.getInt(0));
-        cur.close();
-        db.setTransactionSuccessful();
-        db.endTransaction();
+                new String[]{"" + m.getText(), ""+mChatRoom, new Gson().toJson(m.getMember())});
     }
 
     /**
@@ -132,7 +145,7 @@ public class ChatMessageManager {
                 "ORDER BY c1._id DESC " +
                 "LIMIT 1) AS until " +
                 "WHERE c._id>=until._id AND c.room=? " +
-                "ORDER BY c._id", new String[]{mChatRoom.getId(), mChatRoom.getId()});
+                "ORDER BY c._id", new String[]{""+mChatRoom, ""+mChatRoom});
     }
 
     /**
@@ -153,7 +166,7 @@ public class ChatMessageManager {
             date = new Date();
         }
         db.execSQL("REPLACE INTO chat_message (_id,previous,room,text,timestamp,signature,member,status) VALUES (?,?,?,?,?,?,?,0)",
-                new String[]{"" + m.getId(), "" + m.getPrevious(), mChatRoom.getId(), m.getText(), Utils.getDateTimeString(date),
+                new String[]{"" + m.getId(), "" + m.getPrevious(), ""+mChatRoom, m.getText(), Utils.getDateTimeString(date),
                         m.getSignature(), (new Gson().toJson(m.getMember()))});
     }
 
@@ -162,7 +175,7 @@ public class ChatMessageManager {
      */
     public boolean replaceInto(List<ChatMessage> m) {
         db.beginTransaction();
-        Cursor cur = db.rawQuery("SELECT _id FROM chat_message WHERE room=?", new String[]{mChatRoom.getGroupId()});
+        Cursor cur = db.rawQuery("SELECT _id FROM chat_message WHERE room=?", new String[]{""+mChatRoom});
         HashSet<Integer> set = new HashSet<Integer>();
         int min = Integer.MAX_VALUE;
         if (cur.moveToFirst()) {
@@ -198,11 +211,12 @@ public class ChatMessageManager {
         ChatMember member = new Gson().fromJson(cursor.getString(COL_MEMBER), ChatMember.class);
         ChatMessage msg = new ChatMessage(id, text, member, time, previous);
         msg.setSignature(cursor.getString(COL_SIGNATURE));
+        msg.setRoom(cursor.getInt(COL_ROOM));
         return msg;
     }
 
     public Cursor getNewMessages(PrivateKey pk, ChatMember member) {
-        ArrayList<ChatMessage> messages = ChatClient.getInstance(mContext).getNewMessages(mChatRoom.getId(), new ChatVerification(pk, member));
+        ArrayList<ChatMessage> messages = ChatClient.getInstance(mContext).getNewMessages(mChatRoom, new ChatVerification(pk, member));
         replaceInto(messages);
         return getUnread();
     }

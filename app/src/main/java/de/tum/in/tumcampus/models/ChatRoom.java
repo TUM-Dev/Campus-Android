@@ -8,7 +8,7 @@ public class ChatRoom {
 	private String messages;
 	private String url;
 	private String name;
-	private String id;
+	private int id;
 	
 	private ArrayList<String> members = new ArrayList<String>();
 	
@@ -35,10 +35,10 @@ public class ChatRoom {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public String getId() {
+	public int getId() {
 		return id;
 	}
-	public void setId(String id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 	public ArrayList<String> getMembers() {
@@ -46,9 +46,5 @@ public class ChatRoom {
 	}
 	public void setMembers(ArrayList<String> members) {
 		this.members = members;
-	}
-	public String getGroupId() {
-		String[] splitString = getUrl().split("/");
-		return splitString[splitString.length-1];
 	}
 }

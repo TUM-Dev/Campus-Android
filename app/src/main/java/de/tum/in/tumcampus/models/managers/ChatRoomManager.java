@@ -110,7 +110,7 @@ public class ChatRoomManager {
             cur.moveToFirst();
             if(cur.getCount()>=1) {
                 db.execSQL("UPDATE chat_room SET group_id=?, status=1 WHERE name=? AND semester_id=?",
-                        new String[]{room.getId(), roomName, semester});
+                        new String[]{""+room.getId(), roomName, semester});
             } else {
                 db.execSQL("REPLACE INTO chat_room (group_id,name,semester_id,semester,status,_id,contributor) " +
                                 "VALUES (-1,?,?,'',1,0,'')", new String[]{roomName,semester});
@@ -120,11 +120,11 @@ public class ChatRoomManager {
 
     public void join(ChatRoom currentChatRoom) {
         db.execSQL("UPDATE chat_room SET group_id=?, status=1 WHERE name=? AND semester_id=?",
-                new String[]{currentChatRoom.getId(), currentChatRoom.getName().substring(4), currentChatRoom.getName().substring(0, 3)});
+                new String[]{""+currentChatRoom.getId(), currentChatRoom.getName().substring(4), currentChatRoom.getName().substring(0, 3)});
     }
 
     public void leave(ChatRoom currentChatRoom) {
         db.execSQL("UPDATE chat_room SET group_id=?, status=0 WHERE name=? AND semester_id=?",
-                new String[]{currentChatRoom.getId(), currentChatRoom.getName().substring(4), currentChatRoom.getName().substring(0, 3)});
+                new String[]{""+currentChatRoom.getId(), currentChatRoom.getName().substring(4), currentChatRoom.getName().substring(0, 3)});
     }
 }

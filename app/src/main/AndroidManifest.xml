@@ -447,6 +447,9 @@
             android:name="de.tum.in.tumcampus.services.SilenceService"
             android:exported="false" />
         <service
+            android:name="de.tum.in.tumcampus.services.SendMessageService"
+            android:exported="false" />
+        <service
             android:name="de.tum.in.tumcampus.services.BackgroundService"
             android:exported="false" />
         <service

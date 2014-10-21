@@ -27,6 +27,7 @@ public class ChatMessage {
 	private String signature;
     private int sendingStatus;
     private int previous;
+    private int room;
 
     /**
      * Default constructor: called by gson when parsing an element
@@ -42,8 +43,8 @@ public class ChatMessage {
 
     /**
      * Called when creating a new chat message
-     * @param text
-     * @param member
+     * @param text Chat message text
+     * @param member Member who sent the message
      */
     public ChatMessage(String text, ChatMember member) {
         super();
@@ -52,6 +53,14 @@ public class ChatMessage {
         this.sendingStatus = STATUS_SENDING;
         this.previous = 0;
         this.setNow();
+    }
+
+    public int getRoom() {
+        return room;
+    }
+
+    public void setRoom(int room) {
+        this.room = room;
     }
 
     public int getStatus() {

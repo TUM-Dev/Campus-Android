@@ -10,13 +10,12 @@ import android.database.Cursor;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Vibrator;
 import android.support.v4.app.RemoteInput;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Html;
-import android.util.Base64;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -32,11 +31,6 @@ import android.widget.ProgressBar;
 
 import com.google.gson.Gson;
 
-import java.security.KeyFactory;
-import java.security.NoSuchAlgorithmException;
-import java.security.PrivateKey;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.PKCS8EncodedKeySpec;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +40,6 @@ import de.tum.in.tumcampus.adapters.ChatHistoryAdapter;
 import de.tum.in.tumcampus.auxiliary.ChatMessageValidator;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.ImplicitCounter;
-import de.tum.in.tumcampus.auxiliary.RSASigner;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.ChatClient;
 import de.tum.in.tumcampus.models.ChatMember;
@@ -56,6 +49,7 @@ import de.tum.in.tumcampus.models.ChatRoom;
 import de.tum.in.tumcampus.models.ChatVerification;
 import de.tum.in.tumcampus.models.managers.ChatMessageManager;
 import de.tum.in.tumcampus.models.managers.ChatRoomManager;
+import de.tum.in.tumcampus.services.SendMessageService;
 import github.ankushsachdeva.emojicon.EmojiconGridView;
 import github.ankushsachdeva.emojicon.EmojiconsPopup;
 import github.ankushsachdeva.emojicon.emoji.Emojicon;
@@ -104,15 +98,27 @@ public class ChatActivity extends ActionBarActivity implements DialogInterface.O
         this.getIntentData();
         this.bindUIElements();
 
+        // Update the times shown in the list every 10 seconds
+        mUpdateHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if(chatHistoryAdapter!=null)
+                    chatHistoryAdapter.notifyDataSetChanged();
+                mUpdateHandler.postDelayed(this, 10000);
+            }
+        }, 10000);
+
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter("chat-message-received"));
     }
+
+    private Handler mUpdateHandler = new Handler();
 
     @Override
     protected void onResume() {
         super.onResume();
         getNextHistoryFromServer();
         mCurrentOpenChatRoom = currentChatRoom;
-        chatManager = new ChatMessageManager(this, currentChatRoom);
+        chatManager = new ChatMessageManager(this, currentChatRoom.getId());
     }
 
     @Override
@@ -131,7 +137,7 @@ public class ChatActivity extends ActionBarActivity implements DialogInterface.O
     /**
      * User pressed on the notification and wants to view the room with the new messages
      *
-     * @param intent
+     * @param intent Intent
      */
     @Override
     protected void onNewIntent(Intent intent) {
@@ -142,13 +148,12 @@ public class ChatActivity extends ActionBarActivity implements DialogInterface.O
 
         //Check, maybe it wasn't there
         if (room != null) {
-
             //If currently in a room which does not match the one from the notification --> Switch
-            if (!room.getId().equals(currentChatRoom.getId())) {
+            if (room.getId() != currentChatRoom.getId()) {
                 currentChatRoom = room;
                 getSupportActionBar().setSubtitle(currentChatRoom.getName().substring(4));
                 chatHistoryAdapter = null;
-                chatManager = new ChatMessageManager(this, currentChatRoom);
+                chatManager = new ChatMessageManager(this, currentChatRoom.getId());
                 getNextHistoryFromServer();
             }
         }
@@ -219,53 +224,8 @@ public class ChatActivity extends ActionBarActivity implements DialogInterface.O
         chatHistoryAdapter.add(message);
         chatManager.addToUnsent(message);
 
-        //Post to webservice
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-
-                // Generate signature
-                RSASigner signer = new RSASigner(getPrivateKeyFromSharedPrefs());
-                String signature = signer.sign(message.getText());
-                message.setSignature(signature);
-
-                int numberOfAttempts = 0;
-
-                while (numberOfAttempts < 5) {
-                    //Try to send the message
-                    try {
-                        // Send the message to the server
-                        final ChatMessage createdMessage = ChatClient.getInstance(ChatActivity.this).sendMessage(currentChatRoom.getId(), message);
-                        Log.e("Tca chat", "message: " + createdMessage.getId() + "  " + createdMessage.getText());
-                        createdMessage.setStatus(ChatMessage.STATUS_SENT);
-                        chatManager.replaceInto(createdMessage);
-                        final Cursor cur = chatManager.getAll();
-                        chatManager.removeFromUnsent(message);
-
-                        // Update the currently shown history
-                        ChatActivity.this.runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                chatHistoryAdapter.sent(message, cur);
-                            }
-                        });
-
-                        //Exit the loop
-                        return;
-                    } catch (RetrofitError e) {
-                        Utils.log(e);
-                        numberOfAttempts++;
-                    }
-
-                    //Sleep for five seconds, maybe the server is currently really busy
-                    try {
-                        Thread.sleep(5000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }).start();
+        // start service to send the message
+        startService(new Intent(this, SendMessageService.class));
     }
 
     /**
@@ -279,16 +239,7 @@ public class ChatActivity extends ActionBarActivity implements DialogInterface.O
      */
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
-        final ChatMessage message = (ChatMessage) chatHistoryAdapter.getItem(position - 1);
-
-        //Show a nice dialog with more information about the message
-        String messageStr = String.format(getString(R.string.message_detail_text),
-                message.getMember().getDisplayName(),
-                message.getMember().getLrzId(),
-                DateFormat.getDateTimeInstance().format(message.getTimestampDate()),
-                Html.fromHtml(getString(message.getStatusStringRes())));
-
-        new AlertDialog.Builder(this).setTitle(R.string.message_details).setMessage(messageStr).create().show();
+        final ChatMessage message = (ChatMessage) chatHistoryAdapter.getItem(position);
 
         //Verify the message with RSA
         ChatClient.getInstance(ChatActivity.this).getPublicKeysForMember(message.getMember(), new Callback<List<ChatPublicKey>>() {
@@ -297,7 +248,18 @@ public class ChatActivity extends ActionBarActivity implements DialogInterface.O
                 ChatMessageValidator validator = new ChatMessageValidator(publicKeys);
                 final boolean result = validator.validate(message);
 
-                Utils.showToast(ChatActivity.this, "Selected message is " + (result ? "" : "not ") + "RSA verified/signed!");
+                //Show a nice dialog with more information about the message
+                String messageStr = String.format(getString(R.string.message_detail_text),
+                        message.getMember().getDisplayName(),
+                        message.getMember().getLrzId(),
+                        DateFormat.getDateTimeInstance().format(message.getTimestampDate()),
+                        getString(message.getStatusStringRes()),
+                        getString(result ? R.string.valid : R.string.not_valid));
+
+                new AlertDialog.Builder(ChatActivity.this)
+                        .setTitle(R.string.message_details)
+                        .setMessage(Html.fromHtml(messageStr))
+                        .create().show();
             }
 
             @Override
@@ -307,27 +269,6 @@ public class ChatActivity extends ActionBarActivity implements DialogInterface.O
         });
 
         return true;
-    }
-
-    /**
-     * Loads the private key from preferences
-     *
-     * @return The private key object
-     */
-    private PrivateKey getPrivateKeyFromSharedPrefs() {
-        String privateKeyString = Utils.getInternalSettingString(this, Const.PRIVATE_KEY, "");
-        byte[] privateKeyBytes = Base64.decode(privateKeyString, Base64.DEFAULT);
-        KeyFactory keyFactory;
-        try {
-            keyFactory = KeyFactory.getInstance("RSA");
-            PKCS8EncodedKeySpec privateKeySpec = new PKCS8EncodedKeySpec(privateKeyBytes);
-            return keyFactory.generatePrivate(privateKeySpec);
-        } catch (NoSuchAlgorithmException e) {
-            Utils.log(e);
-        } catch (InvalidKeySpecException e) {
-            Utils.log(e);
-        }
-        return null;
     }
 
     /**
@@ -430,11 +371,12 @@ public class ChatActivity extends ActionBarActivity implements DialogInterface.O
                 ArrayList<ChatMessage> downloadedChatHistory;
 
                 // If currently nothing has been shown load newest messages from server
+                ChatVerification verification = new ChatVerification(Utils.getPrivateKeyFromSharedPrefs(ChatActivity.this), currentChatMember);
                 if (chatHistoryAdapter == null || chatHistoryAdapter.getSentCount() == 0) {
-                    downloadedChatHistory = ChatClient.getInstance(ChatActivity.this).getNewMessages(currentChatRoom.getId(), new ChatVerification(getPrivateKeyFromSharedPrefs(), currentChatMember));
+                    downloadedChatHistory = ChatClient.getInstance(ChatActivity.this).getNewMessages(currentChatRoom.getId(), verification);
                 } else {
                     long id = chatHistoryAdapter.getItemId(ChatMessageManager.COL_ID);
-                    downloadedChatHistory = ChatClient.getInstance(ChatActivity.this).getMessages(currentChatRoom.getId(), id, new ChatVerification(getPrivateKeyFromSharedPrefs(), currentChatMember));
+                    downloadedChatHistory = ChatClient.getInstance(ChatActivity.this).getMessages(currentChatRoom.getId(), id, verification);
                 }
 
                 //Save it to our local cache
@@ -476,18 +418,22 @@ public class ChatActivity extends ActionBarActivity implements DialogInterface.O
             String chatRoomString = extras.getString("room");
 
             //If same room just refresh
-            if (chatRoomString.equals(currentChatRoom.getGroupId())) {
+            if (chatRoomString.equals(""+currentChatRoom.getId())) {
+                if (extras.getBoolean("mine", false)) {
+                    // Remove this message from the adapter
+                    chatHistoryAdapter.setUnsentMessages(chatManager.getAllUnsent());
+                } else {
+                    //Check first, if sounds are enabled
+                    AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+                    if (am.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
 
-                //Check first, if sounds are enabled
-                AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-                if (am.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
-
-                    //Play a nice notification sound
-                    MediaPlayer mediaPlayer = MediaPlayer.create(ChatActivity.this, R.raw.message);
-                    mediaPlayer.start();
-                } else if (am.getRingerMode() == AudioManager.RINGER_MODE_VIBRATE) { //Possibly only vibration is enabled
-                    Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-                    v.vibrate(500);
+                        //Play a nice notification sound
+                        MediaPlayer mediaPlayer = MediaPlayer.create(ChatActivity.this, R.raw.message);
+                        mediaPlayer.start();
+                    } else if (am.getRingerMode() == AudioManager.RINGER_MODE_VIBRATE) { //Possibly only vibration is enabled
+                        Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+                        v.vibrate(500);
+                    }
                 }
 
                 //Update the history
@@ -499,13 +445,15 @@ public class ChatActivity extends ActionBarActivity implements DialogInterface.O
     /**
      * When user confirms the leave dialog send the request to the server
      *
-     * @param dialog
-     * @param which
+     * @param dialog Dialog handle
+     * @param which  The users choice (ignored because this is only called when the user confirms)
      */
     @Override
     public void onClick(DialogInterface dialog, int which) {
+
         // Send request to the server to remove the user from this room
-        ChatClient.getInstance(ChatActivity.this).leaveChatRoom(currentChatRoom, new ChatVerification(this.getPrivateKeyFromSharedPrefs(), currentChatMember), new Callback<ChatRoom>() {
+        ChatVerification verification = new ChatVerification(Utils.getPrivateKeyFromSharedPrefs(this), currentChatMember);
+        ChatClient.getInstance(ChatActivity.this).leaveChatRoom(currentChatRoom, verification, new Callback<ChatRoom>() {
             @Override
             public void success(ChatRoom room, Response arg1) {
                 Utils.logv("Success leaving chat room: " + room.getName());
@@ -521,7 +469,6 @@ public class ChatActivity extends ActionBarActivity implements DialogInterface.O
                 Utils.log(e, "Failure leaving chat room");
             }
         });
-
     }
 
     /**

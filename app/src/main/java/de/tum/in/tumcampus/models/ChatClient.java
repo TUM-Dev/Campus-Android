@@ -64,19 +64,19 @@ public class ChatClient {
         ChatRoom getChatRoom(@Path("groupId") String id);
 
         @POST("/rooms/{groupId}/join/")
-        void joinChatRoom(@Path("groupId") String groupId, @Body ChatVerification verification, Callback<ChatRoom> cb);
+        void joinChatRoom(@Path("groupId") int roomId, @Body ChatVerification verification, Callback<ChatRoom> cb);
 
         @POST("/rooms/{groupId}/leave/")
-        void leaveChatRoom(@Path("groupId") String groupId, @Body ChatVerification verification, Callback<ChatRoom> cb);
+        void leaveChatRoom(@Path("groupId") int roomId, @Body ChatVerification verification, Callback<ChatRoom> cb);
 
         @PUT("/rooms/{groupId}/messages/")
-        ChatMessage sendMessage(@Path("groupId") String groupId, @Body ChatMessage message);
+        ChatMessage sendMessage(@Path("groupId") int roomId, @Body ChatMessage message);
 
         @POST("/rooms/{groupId}/messages/{page}/")
-        ArrayList<ChatMessage> getMessages(@Path("groupId") String groupId, @Path("page") long page, @Body ChatVerification verification);
+        ArrayList<ChatMessage> getMessages(@Path("groupId") int roomId, @Path("page") long page, @Body ChatVerification verification);
 
         @POST("/rooms/{groupId}/messages/")
-        ArrayList<ChatMessage> getNewMessages(@Path("groupId") String groupId, @Body ChatVerification verification);
+        ArrayList<ChatMessage> getNewMessages(@Path("groupId") int roomId, @Body ChatVerification verification);
 
         @POST("/members/")
         ChatMember createMember(@Body ChatMember chatMember);
@@ -119,23 +119,23 @@ public class ChatClient {
     }
 
     public void joinChatRoom(ChatRoom chatRoom, ChatVerification verification, Callback<ChatRoom> cb) {
-        service.joinChatRoom(chatRoom.getGroupId(), verification, cb);
+        service.joinChatRoom(chatRoom.getId(), verification, cb);
     }
 
     public void leaveChatRoom(ChatRoom chatRoom, ChatVerification verification, Callback<ChatRoom> cb) {
-        service.leaveChatRoom(chatRoom.getGroupId(), verification, cb);
+        service.leaveChatRoom(chatRoom.getId(), verification, cb);
     }
 
-    public ChatMessage sendMessage(String groupId, ChatMessage chatMessageCreate) {
-        return service.sendMessage(groupId, chatMessageCreate);
+    public ChatMessage sendMessage(int roomId, ChatMessage chatMessageCreate) {
+        return service.sendMessage(roomId, chatMessageCreate);
     }
 
-    public ArrayList<ChatMessage> getMessages(String groupId, long page, @Body ChatVerification verification) {
-        return service.getMessages(groupId, page, verification);
+    public ArrayList<ChatMessage> getMessages(int roomId, long page, @Body ChatVerification verification) {
+        return service.getMessages(roomId, page, verification);
     }
 
-    public ArrayList<ChatMessage> getNewMessages(String groupId, @Body ChatVerification verification) {
-        return service.getNewMessages(groupId, verification);
+    public ArrayList<ChatMessage> getNewMessages(int roomId, @Body ChatVerification verification) {
+        return service.getNewMessages(roomId, verification);
     }
 
     public ChatPublicKey uploadPublicKey(String memberId, ChatPublicKey publicKey) {

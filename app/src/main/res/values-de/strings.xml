@@ -333,12 +333,15 @@
     <string name="silent">Leise</string>
     <string name="mode_silent_mode">Modus während Vorlesung</string>
     <string name="message_details">Nachricht-Info</string>
-    <string name="message_detail_text">Sender information:\n
-\tName: %1$s\n
-\tE-Mail: %2$s@mytum.de\n\n
-Nachricht:\n
-\tZeit: %3$s\n
-\tStatus: %4$s</string>
+    <string name="message_detail_text">&lt;b>Sender information&lt;/b>&lt;br>
+Name: %1$s&lt;br>
+E-Mail: %2$s@mytum.de&lt;br>&lt;br>
+&lt;b>Nachricht&lt;/b>&lt;br>
+Zeit: %3$s&lt;br>
+Status: %4$s&lt;br>
+Signatur: %5$s</string>
+    <string name="valid">Gültig</string>
+    <string name="not_valid">Nicht gültig</string>
     <string name="status_sent">Gesendet</string>
     <string name="status_sending">Wird gesendet</string>
     <string name="status_sending_failed">Senden fehlgeschlagen</string>
