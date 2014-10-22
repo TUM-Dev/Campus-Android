@@ -1,6 +1,8 @@
 package de.tum.in.tumcampus.activities;
 
 import android.app.AlertDialog;
+import android.app.NotificationManager;
+import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -15,9 +17,11 @@ import android.os.Vibrator;
 import android.support.v4.app.RemoteInput;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.view.ActionMode;
 import android.text.Html;
 import android.view.KeyEvent;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -47,6 +51,7 @@ import de.tum.in.tumcampus.models.ChatMessage;
 import de.tum.in.tumcampus.models.ChatPublicKey;
 import de.tum.in.tumcampus.models.ChatRoom;
 import de.tum.in.tumcampus.models.ChatVerification;
+import de.tum.in.tumcampus.models.managers.CardManager;
 import de.tum.in.tumcampus.models.managers.ChatMessageManager;
 import de.tum.in.tumcampus.models.managers.ChatRoomManager;
 import de.tum.in.tumcampus.services.SendMessageService;
@@ -121,18 +126,14 @@ public class ChatActivity extends ActionBarActivity implements DialogInterface.O
         super.onResume();
         getNextHistoryFromServer();
         mCurrentOpenChatRoom = currentChatRoom;
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.cancel(currentChatRoom.getId()<<4+ CardManager.CARD_CHAT);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         mCurrentOpenChatRoom = null;
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
         LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
     }
 
@@ -222,55 +223,19 @@ public class ChatActivity extends ActionBarActivity implements DialogInterface.O
     }
 
     private void sendMessage(String text) {
-        final ChatMessage message = new ChatMessage(text, currentChatMember);
-        chatHistoryAdapter.add(message);
-        chatManager.addToUnsent(message);
+        if (mEditedItem == null) {
+            final ChatMessage message = new ChatMessage(text, currentChatMember);
+            chatHistoryAdapter.add(message);
+            chatManager.addToUnsent(message);
+        } else {
+            chatManager.addToUnsent(mEditedItem);
+            mEditedItem.setStatus(ChatMessage.STATUS_SENDING);
+            chatManager.replaceMessage(mEditedItem);
+            chatHistoryAdapter.notifyDataSetChanged();
+        }
 
         // start service to send the message
         startService(new Intent(this, SendMessageService.class));
-    }
-
-    /**
-     * Validates chat message if long clicked on an item
-     *
-     * @param parent   ListView
-     * @param view     View of the selected message
-     * @param position Index of the selected view
-     * @param id       Id of the selected item
-     * @return True if the method consumed the on long click event
-     */
-    @Override
-    public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
-        final ChatMessage message = (ChatMessage) chatHistoryAdapter.getItem(position);
-
-        //Verify the message with RSA
-        ChatClient.getInstance(ChatActivity.this).getPublicKeysForMember(message.getMember(), new Callback<List<ChatPublicKey>>() {
-            @Override
-            public void success(List<ChatPublicKey> publicKeys, Response arg1) {
-                ChatMessageValidator validator = new ChatMessageValidator(publicKeys);
-                final boolean result = validator.validate(message);
-
-                //Show a nice dialog with more information about the message
-                String messageStr = String.format(getString(R.string.message_detail_text),
-                        message.getMember().getDisplayName(),
-                        message.getMember().getLrzId(),
-                        DateFormat.getDateTimeInstance().format(message.getTimestampDate()),
-                        getString(message.getStatusStringRes()),
-                        getString(result ? R.string.valid : R.string.not_valid));
-
-                new AlertDialog.Builder(ChatActivity.this)
-                        .setTitle(R.string.message_details)
-                        .setMessage(Html.fromHtml(messageStr))
-                        .create().show();
-            }
-
-            @Override
-            public void failure(RetrofitError e) {
-                Utils.log(e, "Failure verifying message");
-            }
-        });
-
-        return true;
     }
 
     /**
@@ -300,8 +265,8 @@ public class ChatActivity extends ActionBarActivity implements DialogInterface.O
 
         // Add the button for loading more messages to list header
         bar = new ProgressBar(this);
-        //bar.setText(R.string.load_earlier_messages);
         lvMessageHistory.addHeaderView(bar);
+        lvMessageHistory.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 
         etMessage = (EditText) findViewById(R.id.etMessage);
         btnSend = (ImageButton) findViewById(R.id.btnSend);
@@ -419,10 +384,11 @@ public class ChatActivity extends ActionBarActivity implements DialogInterface.O
         public void onReceive(Context context, Intent intent) {
             Bundle extras = intent.getExtras();
             String chatRoomString = extras.getString("room");
+            String memberString = extras.getString("member");
 
             //If same room just refresh
             if (chatRoomString.equals(""+currentChatRoom.getId()) && chatHistoryAdapter!=null) {
-                if (extras.getBoolean("mine", false)) {
+                if (memberString.equals(""+currentChatMember.getId())) {
                     // Remove this message from the adapter
                     chatHistoryAdapter.setUnsentMessages(chatManager.getAllUnsent());
                 } else {
@@ -483,5 +449,125 @@ public class ChatActivity extends ActionBarActivity implements DialogInterface.O
             return remoteInput.getCharSequence(EXTRA_VOICE_REPLY);
         }
         return null;
+    }
+
+    private ActionMode mActionMode = null;
+
+    /**
+     * Validates chat message if long clicked on an item
+     *
+     * @param parent   ListView
+     * @param view     View of the selected message
+     * @param position Index of the selected view
+     * @param id       Id of the selected item
+     * @return True if the method consumed the on long click event
+     */
+    @Override
+    public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+        if (mActionMode != null) {
+            return false;
+        }
+        ChatMessage message = (ChatMessage) chatHistoryAdapter.getItem(position);
+
+        if((System.currentTimeMillis()-message.getTimestampDate().getTime())<120000 &&
+                message.getMember().getId() == currentChatMember.getId()) {
+            // Hide keyboard if opened
+            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(etMessage.getWindowToken(), 0);
+
+            // Start the CAB using the ActionMode.Callback defined above
+            mActionMode = startSupportActionMode(mActionModeCallback);
+            chatHistoryAdapter.mCheckedItem = message;
+            chatHistoryAdapter.notifyDataSetChanged();
+        } else {
+            showInfo(message);
+        }
+        return true;
+    }
+
+
+    private ChatMessage mEditedItem = null;
+
+    private ActionMode.Callback mActionModeCallback = new ActionMode.Callback() {
+
+        // Called when the action mode is created; startActionMode() was called
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            // Inflate a menu resource providing context menu items
+            MenuInflater inflater = mode.getMenuInflater();
+            inflater.inflate(R.menu.chat_context_menu, menu);
+            return true;
+        }
+
+        // Called each time the action mode is shown. Always called after onCreateActionMode, but
+        // may be called multiple times if the mode is invalidated.
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            return false; // Return false if nothing is done
+        }
+
+        // Called when the user selects a contextual menu item
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            ChatMessage msg = chatHistoryAdapter.mCheckedItem;
+            switch (item.getItemId()) {
+                case R.id.action_edit:
+                    // If item is not sent at the moment, stop sending
+                    if(msg.getStatus()==ChatMessage.STATUS_SENDING) {
+                        chatManager.removeFromUnsent(msg);
+                        chatHistoryAdapter.removeUnsent(msg);
+                    } else { // set editing item
+                        mEditedItem = msg;
+                    }
+                    etMessage.setText(msg.getText());
+                    InputMethodManager imm = (InputMethodManager)ChatActivity.this.getSystemService(Service.INPUT_METHOD_SERVICE);
+                    imm.showSoftInput(etMessage, 0);
+                    mode.finish();
+                    return true;
+                case R.id.action_info:
+                    showInfo(msg);
+                    mode.finish();
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
+        // Called when the user exits the action mode
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+            mActionMode = null;
+            chatHistoryAdapter.mCheckedItem = null;
+            chatHistoryAdapter.notifyDataSetChanged();
+        }
+    };
+
+    private void showInfo(final ChatMessage message) {
+        //Verify the message with RSA
+        ChatClient.getInstance(ChatActivity.this).getPublicKeysForMember(message.getMember(), new Callback<List<ChatPublicKey>>() {
+            @Override
+            public void success(List<ChatPublicKey> publicKeys, Response arg1) {
+                ChatMessageValidator validator = new ChatMessageValidator(publicKeys);
+                final boolean result = validator.validate(message);
+
+                //Show a nice dialog with more information about the message
+                String messageStr = String.format(getString(R.string.message_detail_text),
+                        message.getMember().getDisplayName(),
+                        message.getMember().getLrzId(),
+                        DateFormat.getDateTimeInstance().format(message.getTimestampDate()),
+                        getString(message.getStatusStringRes()),
+                        getString(result ? R.string.valid : R.string.not_valid));
+
+                new AlertDialog.Builder(ChatActivity.this)
+                        .setTitle(R.string.message_details)
+                        .setMessage(Html.fromHtml(messageStr))
+                        .create().show();
+            }
+
+            @Override
+            public void failure(RetrofitError e) {
+                Utils.log(e, "Failure verifying message");
+            }
+        });
     }
 }

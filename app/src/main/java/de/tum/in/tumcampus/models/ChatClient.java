@@ -57,6 +57,9 @@ public class ChatClient {
         @POST("/rooms/")
         void createChatRoom(@Body ChatRoom chatRoom, Callback<ChatRoom> cb);
 
+        @POST("/rooms/")
+        ChatRoom createChatRoom(@Body ChatRoom chatRoom);
+
         @GET("/rooms/{roomName}/")
         List<ChatRoom> getChatRoomWithName(@Path("roomName") String roomName);
 
@@ -76,7 +79,7 @@ public class ChatClient {
         ChatMessage updateMessage(@Path("room") int roomId, @Path("message") int messageId, @Body ChatMessage message);
 
         @POST("/rooms/{room}/messages/{page}/")
-        ArrayList<ChatMessage> getMessages(@Path("room") int roomId, @Path("page") long page, @Body ChatVerification verification);
+        ArrayList<ChatMessage> getMessages(@Path("room") int roomId, @Path("page") long messageId, @Body ChatVerification verification);
 
         @POST("/rooms/{room}/messages/")
         ArrayList<ChatMessage> getNewMessages(@Path("room") int roomId, @Body ChatVerification verification);
@@ -88,21 +91,25 @@ public class ChatClient {
         ChatMember getMember(@Path("lrz_id") String lrzId);
 
         @POST("/members/{memberId}/pubkeys/")
-        ChatPublicKey uploadPublicKey(@Path("memberId") String memberId, @Body ChatPublicKey publicKey);
+        ChatPublicKey uploadPublicKey(@Path("memberId") int memberId, @Body ChatPublicKey publicKey);
 
         @POST("/members/{memberId}/rooms/")
-        List<ChatRoom> getMemberRooms(@Path("memberId") String memberId, @Body ChatVerification verification);
+        List<ChatRoom> getMemberRooms(@Path("memberId") int memberId, @Body ChatVerification verification);
 
         @GET("/members/{memberId}/pubkeys/")
-        void getPublicKeysForMember(@Path("memberId") String memberId, Callback<List<ChatPublicKey>> cb);
+        void getPublicKeysForMember(@Path("memberId") int memberId, Callback<List<ChatPublicKey>> cb);
 
         @POST("/members/{memberId}/registration_ids/add_id")
-        void uploadRegistrationId(@Path("memberId") String memberId, @Body ChatRegistrationId regId, Callback<ChatRegistrationId> cb);
+        void uploadRegistrationId(@Path("memberId") int memberId, @Body ChatRegistrationId regId, Callback<ChatRegistrationId> cb);
 
     }
 
     public void createGroup(ChatRoom chatRoom, Callback<ChatRoom> cb) {
         service.createChatRoom(chatRoom, cb);
+    }
+
+    public ChatRoom createGroup(ChatRoom chatRoom) {
+        return service.createChatRoom(chatRoom);
     }
 
     public List<ChatRoom> getChatRoomWithName(ChatRoom chatRoom) {
@@ -137,19 +144,19 @@ public class ChatClient {
         return service.updateMessage(roomId, message.getId(), message);
     }
 
-    public ArrayList<ChatMessage> getMessages(int roomId, long page, @Body ChatVerification verification) {
-        return service.getMessages(roomId, page, verification);
+    public ArrayList<ChatMessage> getMessages(int roomId, long messageId, @Body ChatVerification verification) {
+        return service.getMessages(roomId, messageId, verification);
     }
 
     public ArrayList<ChatMessage> getNewMessages(int roomId, @Body ChatVerification verification) {
         return service.getNewMessages(roomId, verification);
     }
 
-    public ChatPublicKey uploadPublicKey(String memberId, ChatPublicKey publicKey) {
+    public ChatPublicKey uploadPublicKey(int memberId, ChatPublicKey publicKey) {
         return service.uploadPublicKey(memberId, publicKey);
     }
 
-    public List<ChatRoom> getMemberRooms(String memberId, ChatVerification verification) {
+    public List<ChatRoom> getMemberRooms(int memberId, ChatVerification verification) {
         return service.getMemberRooms(memberId, verification);
     }
 
@@ -157,7 +164,7 @@ public class ChatClient {
         service.getPublicKeysForMember(member.getId(), cb);
     }
 
-    public void uploadRegistrationId(String memberId, ChatRegistrationId regId, Callback<ChatRegistrationId> cb) {
+    public void uploadRegistrationId(int memberId, ChatRegistrationId regId, Callback<ChatRegistrationId> cb) {
         service.uploadRegistrationId(memberId, regId, cb);
     }
 }

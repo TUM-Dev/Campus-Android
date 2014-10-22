@@ -79,4 +79,5 @@ public final class Const {
     public static final String TOKEN_IS_SETUP = "token_is_setup";
     public static final String BUG_REPORTS = "bug_reports";
     public static final String DEFAULT_CAMPUS = "card_default_campus";
+    public static final String AUTO_JOIN_NEW_ROOMS = "auto_join_new_rooms";
 }

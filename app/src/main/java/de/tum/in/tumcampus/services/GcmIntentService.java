@@ -92,7 +92,12 @@ public class GcmIntentService extends IntentService {
     private void sendNotification(Bundle extras) {
         //Get the update details
         int chatRoomId = Integer.parseInt(extras.getString("room")); // chat_room={"id":3}
-        extras.putBoolean("mine", false);
+        int memberId = Integer.parseInt(extras.getString("member"));
+        int messageId = -1;
+        if(extras.containsKey("message"))
+            messageId = Integer.parseInt(extras.getString("message"));
+
+        Utils.logv("Received GCM notification: room="+chatRoomId+" member="+memberId+" message="+messageId);
 
         // Get the data necessary for the ChatActivity
         String lrzId = Utils.getSetting(this, Const.LRZ_ID, "");
@@ -100,7 +105,7 @@ public class GcmIntentService extends IntentService {
         ChatRoom chatRoom = ChatClient.getInstance(this).getChatRoom(chatRoomId);
 
         ChatMessageManager manager = new ChatMessageManager(this, chatRoom.getId());
-        Cursor messages = manager.getNewMessages(this.getPrivateKeyFromSharedPrefs(), member);
+        Cursor messages = manager.getNewMessages(this.getPrivateKeyFromSharedPrefs(), member, messageId);
 
         // Notify any open chat activity that a message has been received
         Intent intent = new Intent("chat-message-received");
@@ -153,6 +158,7 @@ public class GcmIntentService extends IntentService {
                     .setSmallIcon(R.drawable.tum_logo_notification)
                     .setContentTitle(chatRoom.getName().substring(4))
                     .setStyle(new NotificationCompat.BigTextStyle().bigText(txt))
+                    .setContentText(txt)
                     .setContentIntent(contentIntent)
                     .setDefaults(Notification.DEFAULT_VIBRATE)
                     .setLights(0xff0000ff, 500, 500)

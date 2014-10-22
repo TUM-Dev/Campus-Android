@@ -41,10 +41,8 @@ import retrofit.RetrofitError;
  */
 public class WizNavChatActivity extends ActivityForLoadingInBackground<Void, Boolean> {
 
-    private SharedPreferences preferences;
     private boolean tokenSetup = false;
-    private CheckBox groupChatMode;
-    private CheckBox acceptedTerms;
+    private CheckBox groupChatMode, autoJoin, acceptedTerms;
 
     public WizNavChatActivity() {
 		super(R.layout.activity_wiznav_chat);
@@ -56,7 +54,7 @@ public class WizNavChatActivity extends ActivityForLoadingInBackground<Void, Boo
         overridePendingTransition(R.anim.fadein, R.anim.fadeout);
         disableRefresh();
 
-        preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
         // If called because app version changed remove "Step 3" and close on back pressed
         Intent i = getIntent();
@@ -67,25 +65,28 @@ public class WizNavChatActivity extends ActivityForLoadingInBackground<Void, Boo
 
         // Get handles to all UI elements
         groupChatMode = (CheckBox) findViewById(R.id.chk_group_chat);
+        autoJoin = (CheckBox) findViewById(R.id.chk_auto_join_chat);
         acceptedTerms = (CheckBox) findViewById(R.id.chk_group_chat_terms);
+
 
         // Only make silent service selectable if access token exists
         // Otherwise the app cannot load lectures so silence service makes no sense
         if (new AccessTokenManager(this).hasValidAccessToken()) {
             groupChatMode.setChecked(preferences.getBoolean(Const.GROUP_CHAT_ENABLED, true));
+            autoJoin.setChecked(preferences.getBoolean(Const.AUTO_JOIN_NEW_ROOMS, true));
+            acceptedTerms.setChecked(preferences.getBoolean(Const.GROUP_CHAT_ENABLED, false));
         } else {
             groupChatMode.setChecked(false);
             groupChatMode.setEnabled(false);
+            autoJoin.setEnabled(false);
             acceptedTerms.setEnabled(false);
         }
     }
 
     public void onClickTerms(View view) {
-        /*new AlertDialog.Builder(this).setTitle(R.string.chat_terms_title)
-                .setMessage(getResources().getString(R.string.chat_terms_body))
-                .setPositiveButton(android.R.string.ok, null).create().show();*/
-        Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.url_chat_terms)));
-        startActivity(myIntent);
+        Uri uri = Uri.parse("https://tumcabe.in.tum.de/landing/chatterms/");
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        startActivity(intent);
     }
 
     /**
@@ -205,6 +206,7 @@ public class WizNavChatActivity extends ActivityForLoadingInBackground<Void, Boo
     protected void onLoadFinished(Boolean result) {
         if (result) {
             Utils.setSetting(this, Const.GROUP_CHAT_ENABLED, groupChatMode.isChecked());
+            Utils.setSetting(this, Const.AUTO_JOIN_NEW_ROOMS, groupChatMode.isChecked() && autoJoin.isChecked());
             startNextActivity();
         } else {
             showLoadingEnded();

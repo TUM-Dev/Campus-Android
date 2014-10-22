@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -21,9 +22,14 @@ public class ChatHistoryAdapter extends CursorAdapter {
 
     private final Context mContext;
     private ArrayList<ChatMessage> unsentMessages = new ArrayList<ChatMessage>();
+    public ChatMessage mCheckedItem;
 
     public int getSentCount() {
         return super.getCount();
+    }
+
+    public void removeUnsent(ChatMessage msg) {
+        unsentMessages.remove(msg);
     }
 
     // Layout of the list row
@@ -33,6 +39,7 @@ public class ChatHistoryAdapter extends CursorAdapter {
         TextView tvTimestamp;
         public ProgressBar pbSending;
         public ImageView ivSent;
+        public LinearLayout layout;
     }
 
     private final LayoutInflater inflater;
@@ -85,7 +92,7 @@ public class ChatHistoryAdapter extends CursorAdapter {
         if (position > super.getCount())
             return 0;
         ChatMessage msg = (ChatMessage) getItem(position);
-        return currentChatMember.getId().equals(msg.getMember().getId()) ? 0 : 1;
+        return currentChatMember.getId() == msg.getMember().getId() ? 0 : 1;
     }
 
     @Override
@@ -96,7 +103,7 @@ public class ChatHistoryAdapter extends CursorAdapter {
 
         ChatMessage chatMessage = unsentMessages.get(position - count);
         View v = newView(mContext, null, viewGroup);
-        bindViewChatMessage(v, chatMessage, true);
+        bindViewChatMessage(v, chatMessage);
         return v;
     }
 
@@ -106,7 +113,7 @@ public class ChatHistoryAdapter extends CursorAdapter {
         boolean outgoing = true;
         if (cursor != null) {
             ChatMessage msg = ChatMessageManager.toObject(cursor);
-            outgoing = currentChatMember.getId().equals(msg.getMember().getId());
+            outgoing = currentChatMember.getId() == msg.getMember().getId();
         }
 
         int layout = outgoing ? R.layout.activity_chat_history_row_outgoing : R.layout.activity_chat_history_row_incoming;
@@ -114,6 +121,7 @@ public class ChatHistoryAdapter extends CursorAdapter {
         holder = new ViewHolder();
 
         // set UI elements
+        holder.layout = (LinearLayout) view.findViewById(R.id.chatMessageLayout);
         holder.tvUser = (TextView) view.findViewById(R.id.tvUser);
         holder.tvMessage = (TextView) view.findViewById(R.id.tvMessage);
         holder.tvTimestamp = (TextView) view.findViewById(R.id.tvTime);
@@ -129,10 +137,10 @@ public class ChatHistoryAdapter extends CursorAdapter {
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
         ChatMessage chatMessage = ChatMessageManager.toObject(cursor);
-        bindViewChatMessage(view, chatMessage, false);
+        bindViewChatMessage(view, chatMessage);
     }
 
-    private void bindViewChatMessage(View view, ChatMessage chatMessage, boolean sending) {
+    private void bindViewChatMessage(View view, ChatMessage chatMessage) {
         ViewHolder holder = (ViewHolder) view.getTag();
 
         holder.tvUser.setText(chatMessage.getMember().getDisplayName());
@@ -141,6 +149,7 @@ public class ChatHistoryAdapter extends CursorAdapter {
 
         // Set status for outgoing messages (ivSent is not null)
         if (holder.ivSent != null) {
+            boolean sending = chatMessage.getStatus()==ChatMessage.STATUS_SENDING;
             holder.ivSent.setVisibility(sending ? View.GONE : View.VISIBLE);
             holder.pbSending.setVisibility(sending ? View.VISIBLE : View.GONE);
         }
@@ -149,6 +158,12 @@ public class ChatHistoryAdapter extends CursorAdapter {
             //noinspection deprecation
             holder.tvUser.setText("");
             holder.tvTimestamp.setText("");
+        }
+
+        if(mCheckedItem!=null && mCheckedItem.getId()==chatMessage.getId() && mCheckedItem.getStatus()==chatMessage.getStatus()) {
+            holder.layout.setBackgroundResource(R.drawable.bg_message_outgoing_selected);
+        } else if(holder.ivSent != null) {
+            holder.layout.setBackgroundResource(R.drawable.bg_message_outgoing);
         }
     }
 

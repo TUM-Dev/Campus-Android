@@ -28,6 +28,8 @@ public class ChatMessage {
     private int sendingStatus;
     private int previous;
     private int room;
+    private boolean read;
+    public int internalID;
 
     /**
      * Default constructor: called by gson when parsing an element
@@ -174,5 +176,17 @@ public class ChatMessage {
     public void setNow() {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ENGLISH); // 2014-06-30T16:31:57.878Z
         timestamp = formatter.format(new Date());
+    }
+
+    public void setRead(boolean read) {
+        this.read = read;
+    }
+
+    public boolean isRead() {
+        return read;
+    }
+
+    public boolean getRead() {
+        return read;
     }
 }

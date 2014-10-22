@@ -365,11 +365,10 @@
     <string name="vibration">Vibration</string>
     <string name="silent">Silent</string>
     <string name="mode_silent_mode">State during lectures</string>
-    <string name="url_chat_terms">https://tumcabe.in.tum.de/landing/chatterms/</string>
     <string name="url_privacy_policy">https://tumcabe.in.tum.de/landing/privacy/</string>
     <string name="privacy_policy">Privacy Policy</string>
     <string name="message_details">Message info</string>
-    <string name="message_detail_text">&lt;b>Sender information&lt;/b>&lt;br>
+    <string name="message_detail_text">&lt;b>Sender&lt;/b>&lt;br>
 Name: %1$s&lt;br>
 E-Mail: %2$s@mytum.de&lt;br>&lt;br>
 &lt;b>Message&lt;/b>&lt;br>
@@ -395,4 +394,7 @@ Signature: %5$s</string>
     <string name="key_activated">Have you activated your key?</string>
     <string name="chat_key_expl">If you want to use lecture chat you will get an e-mail to activate your public key. In order to use it click the link provided in this e-mail.</string>
     <string name="no_rights_to_access_lectures">Lectures could not be accessed. Please check the rights of your TUMOnline token!</string>
+    <string name="edit">Edit</string>
+    <string name="auto_join_chat">Join new lecture rooms</string>
+    <string name="set_auto_join_chat">If you subscribe for a new lecture the app will automatically add you to the lecture\'s chat room.</string>
 </resources>

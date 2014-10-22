@@ -494,6 +494,9 @@ public class Utils {
      */
     public static PrivateKey getPrivateKeyFromSharedPrefs(Context context) {
         String privateKeyString = Utils.getInternalSettingString(context, Const.PRIVATE_KEY, "");
+        if(privateKeyString.isEmpty())
+            return null;
+
         byte[] privateKeyBytes = Base64.decode(privateKeyString, Base64.DEFAULT);
         KeyFactory keyFactory;
         try {

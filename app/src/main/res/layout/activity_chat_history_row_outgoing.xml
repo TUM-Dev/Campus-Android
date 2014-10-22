@@ -48,9 +48,9 @@
                 android:id="@+id/tvTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="12sp"
+                android:paddingEnd="8dp"
                 android:paddingRight="8dp"
-                android:paddingEnd="8dp"/>
+                android:textSize="12sp" />
 
             <ProgressBar
                 android:id="@+id/progressBar"

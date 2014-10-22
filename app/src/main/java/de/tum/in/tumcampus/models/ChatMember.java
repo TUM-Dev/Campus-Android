@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 @SuppressWarnings("UnusedDeclaration")
 public class ChatMember {
 
-	private String id;
+	private int id;
 	@SerializedName("lrz_id")
 	private String lrzId;
 	@SerializedName("display_name")
@@ -17,17 +17,17 @@ public class ChatMember {
 		this.lrzId = lrzId;
 	}
 	
-	public ChatMember(String id, String lrzId, String displayName) {
+	public ChatMember(int id, String lrzId, String displayName) {
 		super();
 		this.id = id;
 		this.lrzId = lrzId;
 		this.displayName = displayName;
 	}
 
-	public String getId() {
+	public int getId() {
 		return id;
 	}
-	public void setId(String id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 	public String getLrzId() {

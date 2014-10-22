@@ -93,6 +93,14 @@ public class XMLParser {
         value = value.replace("M??bauer","Mößbauer");
         value = value.replace("F?ppl","Föppl");
         value = value.replace("Sch?nleutner","Schönleutner");
+        value = value.replace("f?r","für");
+        value = value.replace("Einf?hrung","Einführung");
+        value = value.replace("Tutor?bung","Tutorübung");
+        value = value.replace("Tutor-?bung","Tutor-übung");
+        value = value.replace("er?te","eräte");
+        value = value.replace("Ma?","Maß");
+        value = value.replace("Prop?deutikum","Propädeutikum");
+        value = value.replace("geb?ude","gebäude");
         return value;
 	}
 

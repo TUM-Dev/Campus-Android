@@ -13,7 +13,7 @@ public class ChatVerification {
     private String signature;
     private String date;
     private String rand;
-    private String member;
+    private int member;
 
     public ChatVerification(PrivateKey pk, ChatMember member) {
         //Create some data

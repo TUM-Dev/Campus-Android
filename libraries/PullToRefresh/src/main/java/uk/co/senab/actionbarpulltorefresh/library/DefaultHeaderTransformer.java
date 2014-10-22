@@ -75,6 +75,7 @@ public class DefaultHeaderTransformer extends HeaderTransformer {
 
         // Get ProgressBar and TextView
         mHeaderProgressBar = (SmoothProgressBar) headerView.findViewById(R.id.ptr_progress);
+        mHeaderProgressBar.setInterpolator(new AccelerateInterpolator());
         mHeaderTextView = (TextView) headerView.findViewById(R.id.ptr_text);
         mContentLayout = (ViewGroup) headerView.findViewById(R.id.ptr_content);
 

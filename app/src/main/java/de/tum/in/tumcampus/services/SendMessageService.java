@@ -51,7 +51,7 @@ public class SendMessageService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         // Get all unsent messages from database
-        ArrayList<ChatMessage> unsentMsg = ChatMessageManager.getAllUnsent(this);
+        ArrayList<ChatMessage> unsentMsg = ChatMessageManager.getAllUnsentUpdated(this);
         if (unsentMsg.size() == 0)
             return;
 
@@ -68,9 +68,16 @@ public class SendMessageService extends IntentService {
                     String signature = signer.sign(message.getText());
                     message.setSignature(signature);
 
-                    // Send the message to the server
-                    final ChatMessage createdMessage = ChatClient.getInstance(this).sendMessage(message.getRoom(), message);
-                    Utils.logv("successfully sent message: " + createdMessage.getText() + "  (" + createdMessage.getId() + ")");
+                    ChatMessage createdMessage;
+                    if(message.getId()==0) {
+                        // Send the message to the server
+                        createdMessage = ChatClient.getInstance(this).sendMessage(message.getRoom(), message);
+                        Utils.logv("successfully sent message: " + createdMessage.getText());
+                    } else {
+                        // Send the message to the server
+                        createdMessage = ChatClient.getInstance(this).updateMessage(message.getRoom(), message);
+                        Utils.logv("successfully updated message: " + createdMessage.getText());
+                    }
                     createdMessage.setStatus(ChatMessage.STATUS_SENT);
 
                     ChatMessageManager messageManager = new ChatMessageManager(this, message.getRoom());
@@ -80,8 +87,8 @@ public class SendMessageService extends IntentService {
                     // Send broadcast to eventually open ChatActivity
                     Intent i = new Intent("chat-message-received");
                     Bundle extras = new Bundle();
-                    extras.putString("room",""+message.getRoom());
-                    extras.putBoolean("mine", true);
+                    extras.putString("room", "" + message.getRoom());
+                    extras.putString("member", "" + message.getMember().getId());
                     i.putExtras(extras);
                     LocalBroadcastManager.getInstance(this).sendBroadcast(i);
                 }
