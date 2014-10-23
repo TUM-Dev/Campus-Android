@@ -233,6 +233,7 @@ public class ChatActivity extends ActionBarActivity implements DialogInterface.O
             mEditedItem.setStatus(ChatMessage.STATUS_SENDING);
             chatManager.replaceMessage(mEditedItem);
             chatHistoryAdapter.notifyDataSetChanged();
+            mEditedItem = null;
         }
 
         // start service to send the message
