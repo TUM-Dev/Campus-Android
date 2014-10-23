@@ -116,7 +116,6 @@ public class ChatActivity extends ActionBarActivity implements DialogInterface.O
             }
         }, 10000);
 
-        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter("chat-message-received"));
     }
 
     private Handler mUpdateHandler = new Handler();
@@ -128,6 +127,7 @@ public class ChatActivity extends ActionBarActivity implements DialogInterface.O
         mCurrentOpenChatRoom = currentChatRoom;
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancel(currentChatRoom.getId()<<4+ CardManager.CARD_CHAT);
+        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter("chat-message-received"));
     }
 
     @Override
@@ -386,6 +386,8 @@ public class ChatActivity extends ActionBarActivity implements DialogInterface.O
             Bundle extras = intent.getExtras();
             String chatRoomString = extras.getString("room");
             String memberString = extras.getString("member");
+
+            Utils.log("Broadcast receiver got room="+chatRoomString+" member="+memberString);
 
             //If same room just refresh
             if (chatRoomString.equals(""+currentChatRoom.getId()) && chatHistoryAdapter!=null) {
