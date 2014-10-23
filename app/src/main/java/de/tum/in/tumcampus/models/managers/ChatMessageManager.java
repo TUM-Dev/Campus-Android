@@ -252,7 +252,7 @@ public class ChatMessageManager {
         if(messageId==-1)
             messages = ChatClient.getInstance(mContext).getNewMessages(mChatRoom, new ChatVerification(pk, member));
         else
-            messages = ChatClient.getInstance(mContext).getMessages(mChatRoom, messageId+1, new ChatVerification(pk, member));
+            messages = ChatClient.getInstance(mContext).getMessages(mChatRoom, messageId, new ChatVerification(pk, member));
         replaceInto(messages);
         return getUnread();
     }

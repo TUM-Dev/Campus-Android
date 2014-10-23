@@ -13,6 +13,7 @@ import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.cards.Card;
 import de.tum.in.tumcampus.cards.ChatMessagesCard;
 import de.tum.in.tumcampus.models.ChatClient;
+import de.tum.in.tumcampus.models.ChatMember;
 import de.tum.in.tumcampus.models.ChatRoom;
 import de.tum.in.tumcampus.models.LecturesSearchRow;
 import retrofit.RetrofitError;
@@ -150,19 +151,34 @@ public class ChatRoomManager implements Card.ProvidesCard {
         // Use this to make sure chat_message table exists
         new ChatMessageManager(context, 0);
 
-        // Join all new chat rooms
-        if(Utils.getSettingBool(context, Const.AUTO_JOIN_NEW_ROOMS, false)) {
-            ArrayList<String> newRooms = manager.getNewUnjoined();
+        ChatMember member;
+        try {
+            // Join all new chat rooms
+            if(Utils.getSettingBool(context, Const.AUTO_JOIN_NEW_ROOMS, false)) {
+                ArrayList<String> newRooms = manager.getNewUnjoined();
 
-            for (String roomId : newRooms) {
-                try {
-                    ChatRoom currentChatRoom = new ChatRoom(roomId);
-                    currentChatRoom = ChatClient.getInstance(context).createGroup(currentChatRoom);
-                    manager.join(currentChatRoom);
-                } catch (RetrofitError e) {
-                    Utils.log(e);
+                for (String roomId : newRooms) {
+                    try {
+                        ChatRoom currentChatRoom = new ChatRoom(roomId);
+                        currentChatRoom = ChatClient.getInstance(context).createGroup(currentChatRoom);
+                        manager.join(currentChatRoom);
+                    } catch (RetrofitError e) {
+                        Utils.log(e);
+                    }
                 }
             }
+
+            // Get member instance
+            String lrzId = Utils.getSetting(context, Const.LRZ_ID, "");
+            member = ChatClient.getInstance(context).getMember(lrzId);
+
+            // Catch a possible error, when we didn't get something returned
+            if (member == null || member.getLrzId() == null) {
+                return;
+            }
+        } catch(RetrofitError e) {
+            Utils.log(e);
+            return;
         }
 
         // Get all rooms that have unread messages
@@ -170,7 +186,7 @@ public class ChatRoomManager implements Card.ProvidesCard {
         if (cur.moveToFirst()) {
             do {
                 ChatMessagesCard card = new ChatMessagesCard(context);
-                card.setChatRoom(cur.getString(0), cur.getInt(1));
+                card.setChatRoom(cur.getString(0), cur.getInt(1), cur.getString(2)+":"+cur.getString(0), member);
                 card.apply();
             } while (cur.moveToNext());
         }
@@ -194,7 +210,7 @@ public class ChatRoomManager implements Card.ProvidesCard {
     }
 
     private Cursor getUnreadRooms() {
-        return db.rawQuery("SELECT r.name,r.group_id " +
+        return db.rawQuery("SELECT r.name,r.group_id,r.semester_id " +
                 "FROM chat_room r, (SELECT room FROM chat_message " +
                 "WHERE read=0 GROUP BY room) AS c " +
                 "WHERE r.group_id=c.room " +
