@@ -228,6 +228,7 @@ public class ChatActivity extends ActionBarActivity implements DialogInterface.O
             chatHistoryAdapter.add(message);
             chatManager.addToUnsent(message);
         } else {
+            mEditedItem.setText(etMessage.getText().toString());
             chatManager.addToUnsent(mEditedItem);
             mEditedItem.setStatus(ChatMessage.STATUS_SENDING);
             chatManager.replaceMessage(mEditedItem);

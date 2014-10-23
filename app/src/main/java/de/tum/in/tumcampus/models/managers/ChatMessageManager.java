@@ -12,7 +12,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 
@@ -168,7 +167,7 @@ public class ChatMessageManager {
                 "ORDER BY c1._id DESC " +
                 "LIMIT 1) AS until " +
                 "WHERE c._id>until._id AND c.room=? " +
-                "ORDER BY c._id " +
+                "ORDER BY c._id DESC " +
                 "LIMIT 5", new String[]{"" + mChatRoom, "" + mChatRoom});
         ArrayList<ChatMessage> list = new ArrayList<ChatMessage>(cur.getCount());
         if(cur.moveToFirst()) {
@@ -224,33 +223,13 @@ public class ChatMessageManager {
     /**
      * Saves the given message into database
      */
-    public boolean replaceInto(List<ChatMessage> m) {
+    public void replaceInto(List<ChatMessage> m) {
         db.beginTransaction();
-        Cursor cur = db.rawQuery("SELECT _id FROM chat_message WHERE room=?", new String[]{"" + mChatRoom});
-        HashSet<Integer> set = new HashSet<Integer>();
-        int min = Integer.MAX_VALUE;
-        if (cur.moveToFirst()) {
-            do {
-                final int val = cur.getInt(0);
-                if (val < min)
-                    min = val;
-                set.add(val);
-            } while (cur.moveToNext());
-        }
-        cur.close();
-        int minNew = Integer.MAX_VALUE;
-        boolean newMessages = false;
         for (ChatMessage msg : m) {
-            if (!set.contains(msg.getId())) {
-                newMessages = true;
-                replaceInto(msg, false);
-            }
-            if (msg.getId() < minNew)
-                minNew = msg.getId();
+            replaceInto(msg, false);
         }
         db.setTransactionSuccessful();
         db.endTransaction();
-        return newMessages || minNew > min;
     }
 
     public static ChatMessage toObject(Cursor cursor) {
@@ -273,7 +252,7 @@ public class ChatMessageManager {
         if(messageId==-1)
             messages = ChatClient.getInstance(mContext).getNewMessages(mChatRoom, new ChatVerification(pk, member));
         else
-            messages = ChatClient.getInstance(mContext).getMessages(mChatRoom, messageId, new ChatVerification(pk, member));
+            messages = ChatClient.getInstance(mContext).getMessages(mChatRoom, messageId+1, new ChatVerification(pk, member));
         replaceInto(messages);
         return getUnread();
     }
