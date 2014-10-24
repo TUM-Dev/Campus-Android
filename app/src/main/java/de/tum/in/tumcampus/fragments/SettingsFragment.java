@@ -131,7 +131,7 @@ public class SettingsFragment extends PreferenceFragment implements
             do {
                 final CheckBoxPreference pref = new CheckBoxPreference(mContext);
                 pref.setKey("card_news_source_" + cur.getString(0));
-                pref.setDefaultValue(cur.getInt(0) == 2);
+                pref.setDefaultValue(true);
                 if (Build.VERSION.SDK_INT >= 11) {
                     // Load news source icon in background and set it
                     final String url = cur.getString(1);

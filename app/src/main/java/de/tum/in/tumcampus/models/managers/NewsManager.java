@@ -235,7 +235,7 @@ public class NewsManager implements Card.ProvidesCard {
         if (c.moveToFirst()) {
             do {
                 int id = c.getInt(0);
-                boolean show = Utils.getSettingBool(context, "card_news_source_" + id, id==2);
+                boolean show = Utils.getSettingBool(context, "card_news_source_" + id, true);
                 if (show) {
                     if (!and.isEmpty())
                         and += " OR ";
