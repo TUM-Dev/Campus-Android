@@ -97,7 +97,7 @@ public class ImplicitCounter extends AsyncTask<String, Integer, Void> {
         // Delete / Reset
         SharedPreferences.Editor e = sp.edit();
         for (Map.Entry<String, ?> entry : allEntries.entrySet()) {
-            e.putInt(entry.getKey(), 0);
+            e.remove(entry.getKey());
         }
         e.apply();
     }
