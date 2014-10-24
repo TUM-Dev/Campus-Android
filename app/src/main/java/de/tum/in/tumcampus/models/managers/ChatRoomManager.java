@@ -72,7 +72,7 @@ public class ChatRoomManager implements Card.ProvidesCard {
         Cursor cur = db.rawQuery("SELECT _id FROM chat_room WHERE name=? AND semester_id=?", new String[]{lecture.getTitel(), lecture.getSemester_id()});
         cur.moveToFirst();
         if (cur.getCount() >= 1) {
-            db.execSQL("UPDATE chat_room SET semester=?, _id=?, contributor=?)",
+            db.execSQL("UPDATE chat_room SET semester=?, _id=?, contributor=?",
                     new String[]{lecture.getSemester_name(), lecture.getStp_lv_nr(), lecture.getVortragende_mitwirkende()});
         } else {
             db.execSQL("REPLACE INTO chat_room (group_id,name,semester_id,semester,joined,_id,contributor) " +
