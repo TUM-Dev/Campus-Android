@@ -59,8 +59,10 @@ public class ImplicitCounter extends AsyncTask<String, Integer, Void> {
 
         //Add the news id when showing a news card so we can check which feeds are used
         if (card instanceof NewsCard) {
-            identifier += ((NewsCard) card).getId();
+            identifier += ((NewsCard) card).getSource();
         }
+
+        Log.e("counter",identifier);
 
         final int currentUsages = sp.getInt(identifier, 0);
         sp.edit().putInt(identifier, currentUsages + 1).apply();

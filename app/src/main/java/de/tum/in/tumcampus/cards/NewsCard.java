@@ -50,6 +50,11 @@ public class NewsCard extends Card {
         return mCursor.getString(2);
     }
 
+    public String getSource() {
+        mCursor.moveToPosition(mPosition);
+        return mCursor.getString(1);
+    }
+
     @Override
     public View getCardView(Context context, ViewGroup parent) {
         super.getCardView(context, parent);

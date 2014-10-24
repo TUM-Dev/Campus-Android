@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v4.app.NotificationCompat;
 import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -83,8 +84,7 @@ public class MVVCard extends Card {
 
     @Override
     protected Notification fillNotification(NotificationCompat.Builder notificationBuilder) {
-        NotificationCompat.WearableExtender morePageNotification =
-                new NotificationCompat.WearableExtender();
+        NotificationCompat.WearableExtender morePageNotification = new NotificationCompat.WearableExtender();
 
         String firstContent = "", firstTime = "";
         for(TransportManager.Departure d : mDepartures) {
