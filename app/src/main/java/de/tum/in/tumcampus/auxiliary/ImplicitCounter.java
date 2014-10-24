@@ -62,8 +62,6 @@ public class ImplicitCounter extends AsyncTask<String, Integer, Void> {
             identifier += ((NewsCard) card).getSource();
         }
 
-        Log.e("counter",identifier);
-
         final int currentUsages = sp.getInt(identifier, 0);
         sp.edit().putInt(identifier, currentUsages + 1).apply();
     }
