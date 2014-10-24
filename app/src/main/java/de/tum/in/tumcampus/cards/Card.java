@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import de.tum.in.tumcampus.R;
+import de.tum.in.tumcampus.auxiliary.ImplicitCounter;
 import de.tum.in.tumcampus.models.managers.CardManager;
 
 /**
@@ -92,6 +93,8 @@ public abstract class Card {
      * @return Card view
      */
     public View getCardView(Context context, ViewGroup parent) {
+        ImplicitCounter.CounterCard(context, this);
+
         mContext = context;
         mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mCard = mInflater.inflate(R.layout.card_item, parent, false);
@@ -100,6 +103,8 @@ public abstract class Card {
         mTitleView.setText(getTitle());
         mDateView = (TextView) mCard.findViewById(R.id.card_date);
         mPlaceHolder = mCard.findViewById(R.id.place_holder);
+
+
         return mCard;
     }
 

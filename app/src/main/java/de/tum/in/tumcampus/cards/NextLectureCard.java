@@ -61,8 +61,8 @@ public class NextLectureCard extends Card {
 
     @Override
     public View getCardView(Context context, ViewGroup parent) {
-        mContext = context;
-        mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        super.getCardView(context, parent);
+
         mCard = mInflater.inflate(R.layout.card_next_lecture_item, parent, false);
         mLinearLayout = (LinearLayout) mCard.findViewById(R.id.card_view);
         mTitleView = (TextView) mCard.findViewById(R.id.card_title);

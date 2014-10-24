@@ -27,8 +27,8 @@ public class FirstUseCard2 extends Card {
 
     @Override
     public View getCardView(Context context, ViewGroup parent) {
-        mContext = context;
-        mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        super.getCardView(context, parent);
+
         return mInflater.inflate(R.layout.card_first_use2, parent, false);
     }
 

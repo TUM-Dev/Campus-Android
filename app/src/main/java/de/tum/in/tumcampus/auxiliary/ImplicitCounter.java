@@ -24,6 +24,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import de.tum.in.tumcampus.cards.Card;
+import de.tum.in.tumcampus.cards.NewsCard;
+
 /**
  * Counts the usage of a specific activity
  */
@@ -45,6 +48,19 @@ public class ImplicitCounter extends AsyncTask<String, Integer, Void> {
     public static void Counter(Context c) {
         SharedPreferences sp = c.getSharedPreferences(settings, Context.MODE_PRIVATE);
         final String identifier = c.getClass().getSimpleName();
+
+        final int currentUsages = sp.getInt(identifier, 0);
+        sp.edit().putInt(identifier, currentUsages + 1).apply();
+    }
+
+    public static void CounterCard(Context c, Card card) {
+        SharedPreferences sp = c.getSharedPreferences(settings, Context.MODE_PRIVATE);
+        String identifier = card.getClass().getSimpleName();
+
+        //Add the news id when showing a news card so we can check which feeds are used
+        if (card instanceof NewsCard) {
+            identifier += ((NewsCard) card).getId();
+        }
 
         final int currentUsages = sp.getInt(identifier, 0);
         sp.edit().putInt(identifier, currentUsages + 1).apply();

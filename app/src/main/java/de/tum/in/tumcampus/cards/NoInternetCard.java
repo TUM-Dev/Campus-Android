@@ -31,7 +31,8 @@ public class NoInternetCard extends Card {
 
     @Override
     public View getCardView(Context context, ViewGroup parent) {
-        mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        super.getCardView(context, parent);
+
         View v = mInflater.inflate(R.layout.card_no_internet, parent, false);
         TextView lastUpdate = (TextView) v.findViewById(R.id.card_last_update);
         Date lastUpdated = new Date(DownloadService.lastUpdate(context));

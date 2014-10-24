@@ -24,7 +24,7 @@ public class RestoreCard extends Card {
 
     @Override
     public View getCardView(Context context, ViewGroup parent) {
-        mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        super.getCardView(context, parent);
         return mInflater.inflate(R.layout.card_restore, parent, false);
     }
 

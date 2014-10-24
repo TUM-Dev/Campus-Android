@@ -52,8 +52,9 @@ public class NewsCard extends Card {
 
     @Override
     public View getCardView(Context context, ViewGroup parent) {
+        super.getCardView(context, parent);
+
         mCursor.moveToPosition(mPosition);
-        mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View card = NewsAdapter.newNewsView(mInflater, mCursor, parent);
         NewsAdapter.bindNewsView(net, card, mCursor);
         return card;
