@@ -1,8 +1,11 @@
 package de.tum.in.tumcampus.activities;
 
 import android.app.AlertDialog;
+import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -15,6 +18,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import de.tum.in.tumcampus.R;
@@ -155,14 +159,29 @@ public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<Vo
             @Override
             public void run() {
                 final Geo geo = request.fetchCoordinates(roomInfo.getString(TUMRoomFinderRequest.KEY_ARCHITECT_NUMBER));
+                if (geo == null) {
+                    Utils.showToastOnUIThread(RoomFinderDetailsActivity.this, R.string.no_map_available);
+                    return;
+                }
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if (geo == null) {
-                            Utils.showToast(RoomFinderDetailsActivity.this, R.string.no_map_available);
-                        } else {
-                            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("google.navigation:q=" +
-                                    geo.getLatitude() + "," + geo.getLongitude())));
+                        // Build get directions intent and see if some app can handle it
+                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("google.navigation:q=" + geo.getLatitude() + "," + geo.getLongitude()));
+                        List<ResolveInfo> pkgAppsList = getApplicationContext().getPackageManager().queryIntentActivities(intent, PackageManager.GET_RESOLVED_FILTER);
+
+                        // If some app can handle this intent start it
+                        if (pkgAppsList.size() > 0) {
+                            startActivity(intent);
+                            return;
+                        }
+
+                        // If no app is capable of opening it link to google maps market entry
+                        try {
+                            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.google.android.apps.maps")));
+                        } catch (ActivityNotFoundException e) {
+                            Utils.log(e);
+                            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=com.google.android.apps.maps")));
                         }
                     }
                 });

@@ -31,6 +31,14 @@ public class PlansActivity extends BaseActivity implements OnItemClickListener {
 
 		ListView list = (ListView) findViewById(R.id.activity_plans_list_view);
 		ArrayList<PlanListEntry> listMenuEntrySet = new ArrayList<PlanListEntry>();
+        listMenuEntrySet.add(new PlanListEntry(R.drawable.plan_mvv_icon,
+                R.string.mvv_fast_train_net, R.string.empty_string, R.drawable.mvv));
+        listMenuEntrySet.add(new PlanListEntry(R.drawable.plan_mvv_night_icon,
+                R.string.mvv_nightlines, R.string.empty_string, R.drawable.mvv_night));
+        listMenuEntrySet.add(new PlanListEntry(R.drawable.plan_tram_icon,
+                R.string.mvv_tram, R.string.empty_string, R.drawable.tram));
+        listMenuEntrySet.add(new PlanListEntry(R.drawable.mvv_entire_net_icon,
+                R.string.mvv_entire_net, R.string.empty_string, R.drawable.mvv_entire_net));
 		listMenuEntrySet.add(new PlanListEntry(
 				R.drawable.plan_campus_garching_icon, R.string.campus_garching,
 				R.string.campus_garching_adress, R.drawable.campus_garching));
@@ -52,14 +60,6 @@ public class PlansActivity extends BaseActivity implements OnItemClickListener {
 				R.drawable.plan_campus_weihenstephan_icon,
 				R.string.campus_weihenstephan,
 				R.string.campus_weihenstephan_adress, R.drawable.campus_weihenstephan));
-		listMenuEntrySet.add(new PlanListEntry(R.drawable.plan_mvv_icon,
-				R.string.mvv_fast_train_net, R.string.empty_string, R.drawable.mvv));
-		listMenuEntrySet.add(new PlanListEntry(R.drawable.plan_mvv_night_icon,
-				R.string.mvv_nightlines, R.string.empty_string, R.drawable.mvv_night));
-		listMenuEntrySet.add(new PlanListEntry(R.drawable.plan_tram_icon,
-				R.string.mvv_tram, R.string.empty_string, R.drawable.tram));
-		listMenuEntrySet.add(new PlanListEntry(R.drawable.mvv_entire_net_icon,
-				R.string.mvv_entire_net, R.string.empty_string, R.drawable.mvv_entire_net));
 
 		mListAdapter = new PlanListAdapter(this, listMenuEntrySet);
 		list.setAdapter(mListAdapter);

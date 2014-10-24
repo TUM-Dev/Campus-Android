@@ -14,7 +14,7 @@ import java.util.List;
 @Root(name = "rowset")
 public class PersonList {
 
-	@ElementList(inline = true)
+	@ElementList(inline = true, required = false)
 	private List<Person> persons;
 
 	public List<Person> getPersons() {

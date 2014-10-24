@@ -232,7 +232,7 @@ public class ChatActivity extends ActionBarActivity implements DialogInterface.O
             chatManager.addToUnsent(mEditedItem);
             mEditedItem.setStatus(ChatMessage.STATUS_SENDING);
             chatManager.replaceMessage(mEditedItem);
-            chatHistoryAdapter.notifyDataSetChanged();
+            chatHistoryAdapter.changeCursor(chatManager.getAll());
             mEditedItem = null;
         }
 
