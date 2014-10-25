@@ -50,7 +50,6 @@ public final class Const {
 	
 	public static final String CHAT_URL = "https://tumcabe.in.tum.de/Api/chat/";
 	public static final String CURRENT_CHAT_ROOM = "current_chat_room";
-	public static final String CURRENT_CHAT_MEMBER = "current_chat_member";
 	public static final String CHAT_ROOM_DISPLAY_NAME = "chat_room_display_name";
 	public static final String PRIVATE_KEY = "chat_member_private_key";
 	public static final String GCM_REG_ID = "gcm_registration_id";
@@ -80,4 +79,5 @@ public final class Const {
     public static final String BUG_REPORTS = "bug_reports";
     public static final String DEFAULT_CAMPUS = "card_default_campus";
     public static final String AUTO_JOIN_NEW_ROOMS = "auto_join_new_rooms";
+    public static final String CHAT_MEMBER = "chat_member";
 }

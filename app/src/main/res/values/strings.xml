@@ -105,6 +105,7 @@
     <string name="step_2">Step 2</string>
     <string name="step_3">Step 3</string>
     <string name="step_4">Step 4</string>
+    <string name="step_5">Step 5</string>
     <string name="set_silent_mode">Activate or deactivate <i>Silent Service</i>. If activated, the device will go into silent mode if a lecture appointment has been recognized.</string>
     <string name="set_background_mode">Activate or deactivate <i>Background Mode</i>. If activated, content will be fetched once per day to keep your TUM Campus App up to date.</string>
     <string name="goto_tumcampus">Go to TUM Campus App</string>
@@ -388,13 +389,16 @@ Signature: %5$s</string>
     <string name="campus_geschwister_scholl">Campus Geschwister Scholl-Platz</string>
     <string name="no_default_campus">No default campus</string>
     <string name="reply_label">Reply</string>
-    <string name="public_key_mail">Public key activation mail sent to %s@mytum.de.\nPlease activate it now!</string>
+    <string name="public_key_mail">Public key activation mail sent to %s@mytum.de.\n\n<b>Please activate it now!</b></string>
     <string name="failure_uploading_public_key">Failure uploading public key</string>
     <string name="no_private_key">No private key found! Reset the app\'s data to solve this!</string>
-    <string name="key_activated">Have you activated your key?</string>
-    <string name="chat_key_expl">If you want to use lecture chat you will get an e-mail to activate your public key. In order to use it click the link provided in this e-mail.</string>
+    <string name="key_not_activated">You have not activated your key!</string>
     <string name="no_rights_to_access_lectures">Lectures could not be accessed. Please check the rights of your TUMOnline token!</string>
     <string name="edit">Edit</string>
     <string name="auto_join_chat">Join new lecture rooms</string>
     <string name="set_auto_join_chat">If you subscribe for a new lecture the app will automatically add you to the lecture\'s chat room.</string>
+    <string name="add_chat_member">Add person to chat room</string>
+    <string name="add_chat_room">New chat room</string>
+    <string name="join_chat_room">Join chat room</string>
+    <string name="invalid_chat_room">Invalid chat room</string>
 </resources>

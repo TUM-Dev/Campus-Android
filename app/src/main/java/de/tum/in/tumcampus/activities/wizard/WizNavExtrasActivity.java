@@ -37,7 +37,6 @@ public class WizNavExtrasActivity extends BaseActivity {
         Intent i = getIntent();
         if (i != null && i.hasExtra(Const.TOKEN_IS_SETUP)) {
             tokenSetup = i.getBooleanExtra(Const.TOKEN_IS_SETUP, false);
-            findViewById(R.id.step_4).setVisibility(View.GONE);
         }
 
         // Get handles to all UI elements

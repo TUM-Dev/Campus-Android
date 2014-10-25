@@ -47,4 +47,9 @@ public class ChatRoom {
 	public void setMembers(ArrayList<String> members) {
 		this.members = members;
 	}
+
+    @Override
+    public String toString() {
+        return id+": "+name;
+    }
 }

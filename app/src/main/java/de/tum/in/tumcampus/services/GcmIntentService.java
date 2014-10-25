@@ -91,7 +91,7 @@ public class GcmIntentService extends IntentService {
     // might choose to do with a GCM message.
     private void sendNotification(Bundle extras) {
         //Get the update details
-        int chatRoomId = Integer.parseInt(extras.getString("room")); // chat_room={"id":3}
+        int chatRoomId = Integer.parseInt(extras.getString("room"));
         int memberId = Integer.parseInt(extras.getString("member"));
         int messageId = -1;
         if(extras.containsKey("message"))
@@ -100,8 +100,7 @@ public class GcmIntentService extends IntentService {
         Utils.logv("Received GCM notification: room="+chatRoomId+" member="+memberId+" message="+messageId);
 
         // Get the data necessary for the ChatActivity
-        String lrzId = Utils.getSetting(this, Const.LRZ_ID, "");
-        ChatMember member = ChatClient.getInstance(this).getMember(lrzId);
+        ChatMember member = Utils.getSetting(this, Const.CHAT_MEMBER, ChatMember.class);
         ChatRoom chatRoom = ChatClient.getInstance(this).getChatRoom(chatRoomId);
 
         ChatMessageManager manager = new ChatMessageManager(this, chatRoom.getId());
@@ -130,7 +129,6 @@ public class GcmIntentService extends IntentService {
         // Put the data into the intent
         Intent notificationIntent = new Intent(this, ChatActivity.class);
         notificationIntent.putExtra(Const.CURRENT_CHAT_ROOM, new Gson().toJson(chatRoom));
-        notificationIntent.putExtra(Const.CURRENT_CHAT_MEMBER, new Gson().toJson(member));
 
         if (Utils.getSettingBool(this, "card_chat_phone", true)) {
 

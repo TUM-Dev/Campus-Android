@@ -5,6 +5,7 @@
       <w>aktionsessen</w>
       <w>aosp</w>
       <w>attacher</w>
+      <w>barcodescanner</w>
       <w>biogericht</w>
       <w>cardview</w>
       <w>castorflex</w>
@@ -42,6 +43,7 @@
       <w>urlconnection</w>
       <w>xmlns</w>
       <w>yyyy</w>
+      <w>zxing</w>
     </words>
   </dictionary>
 </component>

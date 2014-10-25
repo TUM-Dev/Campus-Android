@@ -9,13 +9,11 @@ import android.util.Base64;
 import android.view.View;
 import android.widget.CheckBox;
 
-import java.security.KeyFactory;
+import com.google.gson.Gson;
+
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
-import java.security.PrivateKey;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.List;
 
 import de.tum.in.tumcampus.R;
@@ -27,8 +25,6 @@ import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.ChatClient;
 import de.tum.in.tumcampus.models.ChatMember;
 import de.tum.in.tumcampus.models.ChatPublicKey;
-import de.tum.in.tumcampus.models.ChatRoom;
-import de.tum.in.tumcampus.models.ChatVerification;
 import de.tum.in.tumcampus.models.LecturesSearchRow;
 import de.tum.in.tumcampus.models.LecturesSearchRowSet;
 import de.tum.in.tumcampus.models.managers.ChatRoomManager;
@@ -39,10 +35,11 @@ import retrofit.RetrofitError;
 /**
  *
  */
-public class WizNavChatActivity extends ActivityForLoadingInBackground<Void, Boolean> {
+public class WizNavChatActivity extends ActivityForLoadingInBackground<Void, ChatMember> {
 
     private boolean tokenSetup = false;
     private CheckBox groupChatMode, autoJoin, acceptedTerms;
+    private boolean mPublicKeyMustBeActivated = false;
 
     public WizNavChatActivity() {
 		super(R.layout.activity_wiznav_chat);
@@ -60,7 +57,6 @@ public class WizNavChatActivity extends ActivityForLoadingInBackground<Void, Boo
         Intent i = getIntent();
         if (i != null && i.hasExtra(Const.TOKEN_IS_SETUP)) {
             tokenSetup = i.getBooleanExtra(Const.TOKEN_IS_SETUP, false);
-            findViewById(R.id.step_3).setVisibility(View.GONE);
         }
 
         // Get handles to all UI elements
@@ -134,18 +130,23 @@ public class WizNavChatActivity extends ActivityForLoadingInBackground<Void, Boo
      */
 	private void startNextActivity() {
 		finish();
-        Intent intent = new Intent(this, WizNavExtrasActivity.class);
+        Intent intent;
+        if(mPublicKeyMustBeActivated) {
+            intent = new Intent(this, WizNavActivatePublicKeyActivity.class);
+        } else {
+            intent = new Intent(this, WizNavExtrasActivity.class);
+        }
         intent.putExtra(Const.TOKEN_IS_SETUP, tokenSetup);
 		startActivity(intent);
         overridePendingTransition(R.anim.fadein, R.anim.fadeout);
 	}
 
     @Override
-    protected Boolean onLoadInBackground(Void... arg) {
+    protected ChatMember onLoadInBackground(Void... arg) {
         if (groupChatMode.isChecked()) {
             if (!NetUtils.isConnected(this)) {
                 showNoInternetLayout();
-                return false;
+                return null;
             }
 
             // Get all of the users lectures and save them as possible chat rooms
@@ -157,7 +158,7 @@ public class WizNavChatActivity extends ActivityForLoadingInBackground<Void, Boo
                 manager.replaceInto(lectures);
             } else {
                 Utils.showToastOnUIThread(this, R.string.no_rights_to_access_lectures);
-                return false;
+                return null;
             }
 
             // Get the users full name
@@ -177,36 +178,28 @@ public class WizNavChatActivity extends ActivityForLoadingInBackground<Void, Boo
                 //Catch a possible error, when we didn't get something returned
                 if (member == null || member.getLrzId() == null) {
                     Utils.showToastOnUIThread(this, R.string.error_setup_chat_member);
-                    return false;
+                    return null;
                 }
             } catch (RetrofitError e) {
                 Utils.log(e);
                 Utils.showToastOnUIThread(this, R.string.error_setup_chat_member);
-                return false;
+                return null;
             }
 
             // Generate the private key and upload the public key to the server
-            PrivateKey privateKey = generatePrivateKey(member);
-            if(privateKey==null)
-                return false;
-
-            // Try to restore already joined chat rooms from server
-            try {
-                List<ChatRoom> rooms = ChatClient.getInstance(this).getMemberRooms(member.getId(), new ChatVerification(privateKey, member));
-                manager.replaceIntoRooms(rooms);
-            } catch (RetrofitError e) {
-                Utils.log(e);
-                return false;
-            }
+            if(generatePrivateKey(member))
+                return member;
         }
-        return true;
+        return null;
     }
 
     @Override
-    protected void onLoadFinished(Boolean result) {
-        if (result) {
+    protected void onLoadFinished(ChatMember member) {
+        if (member!=null) {
             Utils.setSetting(this, Const.GROUP_CHAT_ENABLED, groupChatMode.isChecked());
             Utils.setSetting(this, Const.AUTO_JOIN_NEW_ROOMS, groupChatMode.isChecked() && autoJoin.isChecked());
+            Utils.setSetting(this, Const.CHAT_MEMBER, member);
+            Utils.log("Set member to settings: "+new Gson().toJson(member));
             startNextActivity();
         } else {
             showLoadingEnded();
@@ -217,7 +210,7 @@ public class WizNavChatActivity extends ActivityForLoadingInBackground<Void, Boo
      *
      * @return Private key instance
      */
-    private PrivateKey generatePrivateKey(ChatMember member) {
+    private boolean generatePrivateKey(ChatMember member) {
         // Retrieve private key
         String privateKeyString = Utils.getInternalSettingString(this, Const.PRIVATE_KEY, "");
 
@@ -240,8 +233,9 @@ public class WizNavChatActivity extends ActivityForLoadingInBackground<Void, Boo
                     Utils.setInternalSetting(this, Const.PRIVATE_KEY, privateKeyString);
 
                     Utils.logv("Success uploading public key: " + publicKeyString);
-                    Utils.showToastOnUIThread(this, String.format(getString(R.string.public_key_mail), member.getLrzId()));
-                    return keyPair.getPrivate();
+
+                    mPublicKeyMustBeActivated = true;
+                    return true;
                 } catch (RetrofitError e) {
                     Utils.showToastOnUIThread(this, getString(R.string.failure_uploading_public_key));
                     Utils.log(e, "Failure uploading public key");
@@ -250,19 +244,9 @@ public class WizNavChatActivity extends ActivityForLoadingInBackground<Void, Boo
                 Utils.log(e);
             }
         } else {
-            // If the key is already generated, retrieve it from shared preferences
-            byte[] privateKeyBytes = Base64.decode(privateKeyString, Base64.DEFAULT);
-            KeyFactory keyFactory;
-            try {
-                keyFactory = KeyFactory.getInstance("RSA");
-                PKCS8EncodedKeySpec privateKeySpec = new PKCS8EncodedKeySpec(privateKeyBytes);
-                return keyFactory.generatePrivate(privateKeySpec);
-            } catch (NoSuchAlgorithmException e) {
-                Utils.log(e);
-            } catch (InvalidKeySpecException e) {
-                Utils.log(e);
-            }
+            return true;
         }
-        return null;
+        mPublicKeyMustBeActivated = false;
+        return false;
     }
 }

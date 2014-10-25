@@ -30,15 +30,13 @@ public abstract class Card {
     Context mContext;
     LayoutInflater mInflater;
     private String mSettings;
-    
+
     // UI Elements
     View mCard;
     LinearLayout mLinearLayout;
     TextView mTitleView;
-    TextView mDateView;
-    View mPlaceHolder;
     
-    // Settings for showing this card on startpage or as notification
+    // Settings for showing this card on start page or as notification
     // Default values set for restore card, no internet card, etc.
     private boolean mShowStart = true;
     private boolean mShowWear = false;
@@ -94,18 +92,9 @@ public abstract class Card {
      */
     public View getCardView(Context context, ViewGroup parent) {
         ImplicitCounter.CounterCard(context, this);
-
         mContext = context;
         mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        mCard = mInflater.inflate(R.layout.card_item, parent, false);
-        mLinearLayout = (LinearLayout) mCard.findViewById(R.id.card_view);
-        mTitleView = (TextView) mCard.findViewById(R.id.card_title);
-        mTitleView.setText(getTitle());
-        mDateView = (TextView) mCard.findViewById(R.id.card_date);
-        mPlaceHolder = mCard.findViewById(R.id.place_holder);
-
-
-        return mCard;
+        return null;
     }
 
     /**

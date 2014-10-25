@@ -184,7 +184,7 @@ public class ChatMessageManager {
     /**
      * Saves the given message into database
      */
-    public void replaceInto(ChatMessage m, boolean mine) {
+    public void replaceInto(ChatMessage m, boolean read) {
         if (m == null || m.getText() == null) {
             Log.e("TCA Chat", "Message empty");
             return;
@@ -197,11 +197,17 @@ public class ChatMessageManager {
         Cursor cur = db.rawQuery("SELECT read FROM chat_message WHERE _id=?", new String[] {""+m.getPrevious()});
         if(cur.moveToFirst()) {
             if(cur.getInt(0)==0)
-                mine = false;
+                read = false;
+        }
+        cur.close();
+        cur = db.rawQuery("SELECT read FROM chat_message WHERE _id=?", new String[] {""+m.getId()});
+        if(cur.moveToFirst()) {
+            if(cur.getInt(0)==1)
+                read = true;
         }
         cur.close();
         m.setStatus(ChatMessage.STATUS_SENT);
-        m.setRead(mine);
+        m.setRead(read);
         replaceMessage(m);
         db.setTransactionSuccessful();
         db.endTransaction();

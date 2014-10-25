@@ -95,6 +95,8 @@
     <string name="step_1">Etape 1</string>
     <string name="step_2">Etape 2</string>
     <string name="step_3">Etape 3</string>
+    <string name="step_4">Etape 4</string>
+    <string name="step_5">Etape 5</string>
     <string name="set_silent_mode">Après une activation, l\'appareil va se met en <i>mode silencieux</i> lors d\'une conférence actuellement détenu.</string>
     <string name="set_background_mode">Active ou désactiver l\' <i>arrière-plan mode</i>. Après une activation, toutes les capacités vont télécharger une fois par jour et en l\'arrière-plan pour.</string>
     <string name="goto_tumcampus">Lancer TUM campus App</string>

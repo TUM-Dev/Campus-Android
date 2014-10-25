@@ -9,7 +9,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v4.app.NotificationCompat;
 import android.text.format.DateUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -49,7 +48,11 @@ public class MVVCard extends Card {
     @Override
     public View getCardView(Context context, ViewGroup parent) {
         super.getCardView(context, parent);
-        mPlaceHolder.setVisibility(View.VISIBLE);
+        mCard = mInflater.inflate(R.layout.card_item, parent, false);
+        mLinearLayout = (LinearLayout) mCard.findViewById(R.id.card_view);
+        mTitleView = (TextView) mCard.findViewById(R.id.card_title);
+        mTitleView.setText(getTitle());
+        mCard.findViewById(R.id.place_holder).setVisibility(View.VISIBLE);
 
         for(int i=0;i<mDepartures.size() && i<5;i++) {
             TransportManager.Departure curr=mDepartures.get(i);

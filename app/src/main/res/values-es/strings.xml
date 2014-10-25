@@ -94,6 +94,8 @@
     <string name="step_1">Paso 1</string>
     <string name="step_2">Paso 2</string>
     <string name="step_3">Paso 3</string>
+    <string name="step_4">Paso 4</string>
+    <string name="step_5">Paso 5</string>
     <string name="set_silent_mode">Activar o desactivar el <i>Servicio silencioso</i>. Cuando se activa, el dispositivo se apagará en silencio en una conferencia actualmente realizada.</string>
     <string name="set_background_mode">Aktivar o desactivar el <i>modo de fondo</i>. Cuando se activa, se descarga todo el contenido una vez el día en el fondo para poner su Campus TUM aplicación al día.</string>
     <string name="goto_tumcampus">Iniciar TUM campus App</string>

@@ -12,6 +12,8 @@ import android.util.Base64;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -156,6 +158,23 @@ public class Utils {
     }
 
     /**
+     * Get a value from the default shared preferences
+     *
+     * @param c   Context
+     * @param key setting name
+     * @param classInst e.g. ChatMember.class
+     * @return setting value, "" if undefined
+     */
+    public static <T> T getSetting(Context c, String key, Class<T> classInst) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(c);
+        String val = sp.getString(key, null);
+        if(val != null) {
+            return new Gson().fromJson(val, classInst);
+        }
+        return null;
+    }
+
+    /**
      * Return the boolean value of a setting
      *
      * @param c          Context
@@ -277,10 +296,22 @@ public class Utils {
      *
      * @param c   Context
      * @param key setting key
+     * @param value String value
      */
     public static void setSetting(Context c, String key, String value) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(c);
         sp.edit().putString(key, value).apply();
+    }
+
+    /**
+     * Sets the value of a setting
+     *
+     * @param c   Context
+     * @param key setting key
+     */
+    public static void setSetting(Context c, String key, Object value) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(c);
+        sp.edit().putString(key, new Gson().toJson(value)).apply();
     }
 
     /**

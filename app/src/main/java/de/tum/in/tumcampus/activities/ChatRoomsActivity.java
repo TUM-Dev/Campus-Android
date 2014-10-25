@@ -1,16 +1,20 @@
 package de.tum.in.tumcampus.activities;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
-import android.util.Base64;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.EditText;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -18,11 +22,7 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.gson.Gson;
 
 import java.io.IOException;
-import java.security.KeyFactory;
-import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.Date;
 import java.util.List;
 
@@ -121,26 +121,15 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
     private void populateCurrentChatMember() {
         try {
             if (currentChatMember == null) {
-                // Fetch the stored LRZ ID from shared prefs
-                String lrzId = Utils.getSetting(this, Const.LRZ_ID, "");
-
-                // GET their data from the server using their lrzId
-                ChatMember member = ChatClient.getInstance(this).getMember(lrzId); //FIXME throws InterruptedIOException every time
-
-                // Catch a possible error, when we didn't get something returned
-                if (member == null || member.getLrzId() == null) {
-                    Utils.showToastOnUIThread(this, R.string.error_setup_chat_member);
-                    return;
-                }
 
                 // Remember this locally
-                currentChatMember = member;
+                currentChatMember = Utils.getSetting(this, Const.CHAT_MEMBER, ChatMember.class);
 
                 // Load the private key from the shared prefs
-                currentPrivateKey = this.retrievePrivateKey();
+                currentPrivateKey = Utils.getPrivateKeyFromSharedPrefs(this);
 
                 // Proceed with registering
-                this.checkPlayServicesAndRegister();
+                checkPlayServicesAndRegister();
             }
         } catch (RetrofitError e) {
             Utils.log(e);
@@ -148,65 +137,65 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
     }
 
     @Override
-    protected Cursor onLoadInBackground(Void... arg) {
-        if(!firstLoad) {
-            LecturesSearchRowSet lecturesList = requestHandler.fetch();
-            if (lecturesList != null) {
-                List<LecturesSearchRow> lectures = lecturesList.getLehrveranstaltungen();
-                manager.replaceInto(lectures);
-            }
-        }
-
-        populateCurrentChatMember();
-
-        // Try to restore joined chat rooms from server
-        if(!firstLoad && currentChatMember!=null) {
-            try {
-                List<ChatRoom> rooms = ChatClient.getInstance(this).getMemberRooms(currentChatMember.getId(), new ChatVerification(currentPrivateKey, currentChatMember));
-                manager.replaceIntoRooms(rooms);
-            } catch (RetrofitError e) {
-                Utils.log(e);
-                return null;
-            }
-        }
-        firstLoad = false;
-        return manager.getAllByStatus(mCurrentMode);
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.menu_activity_chat_rooms, menu);
+        return true;
     }
 
     @Override
-    protected void onLoadFinished(Cursor result) {
-        showLoadingEnded();
-        if (result == null) {
-            Utils.showToast(this, getString(R.string.key_activated) + "\n" +
-                    String.format(getString(R.string.public_key_mail), currentChatMember.getLrzId()));
-        } else if (result.getCount() == 0) {
-            lvMyLecturesList.setAdapter(new NoResultsAdapter(this));
-        } else {
-            // set ListView to data via the LecturesListAdapter
-            adapter = new ChatRoomListAdapter(this, result);
-            lvMyLecturesList.setAdapter(adapter);
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_add_chat_room:
+                newChatRoom();
+                return true;
+            case R.id.action_join_chat_room:
+                startActivityForResult(new Intent(this, JoinRoomScanActivity.class), 1);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode==1 && resultCode==RESULT_OK && data!=null) {
+            String name = data.getStringExtra("name");
+            if(name.charAt(3)==':')
+                createOrJoinChatRoom(name);
+            else
+                Utils.showToast(this, R.string.invalid_chat_room);
         }
     }
 
     /**
-     * Handle click on chat room
+     * Prompt the user to type in a name for the new chat room
      */
-    @Override
-    public void onItemClick(AdapterView<?> a, View v, int position, long id) {
-        Cursor item = (Cursor) lvMyLecturesList.getItemAtPosition(position);
+    private void newChatRoom() {
+        // Set an EditText view to get user input
+        final EditText input = new EditText(this);
 
-        if(!checkPlayServicesAndRegister())
-            return;
+        new AlertDialog.Builder(this)
+                .setTitle("Title")
+                .setMessage("Message")
+                .setView(input)
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        String value = input.getText().toString();
+                        String randId = Integer.toHexString((int)(Math.random()*4096));
+                        createOrJoinChatRoom(randId + ":" + value);
+                    }
+                })
+                .setNegativeButton(android.R.string.cancel, null).show();
+    }
 
-        // set bundle for LectureDetails and show it
-        Bundle bundle = new Bundle();
-        final Intent intent = new Intent(this, ChatActivity.class);
-        intent.putExtras(bundle);
-
-        String chatRoomUid = item.getString(ChatRoomManager.COL_SEMESTER_ID) + ":"
-                + item.getString(ChatRoomManager.COL_NAME);
-
-        currentChatRoom = new ChatRoom(chatRoomUid);
+    /**
+     * Creates a given chat room if it does not exist and joins it
+     * Works asynchronously.
+     * */
+    private void createOrJoinChatRoom(String name) {
+        Utils.logv("create or join chat room " + name);
+        currentChatRoom = new ChatRoom(name);
         ChatClient.getInstance(this).createGroup(currentChatRoom, new Callback<ChatRoom>() {
             @Override
             public void success(ChatRoom newlyCreatedChatRoom, Response arg1) {
@@ -218,9 +207,9 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
 
                 // When we show joined chat rooms open chat room directly
                 if (mCurrentMode == 1) {
-                    ChatRoomsActivity.this.moveToChatActivity(intent);
+                    moveToChatActivity();
                 } else { // otherwise join chat room
-                    ChatRoomsActivity.this.joinChatRoom();
+                    joinChatRoom();
                 }
             }
 
@@ -241,9 +230,9 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
 
                             // When we show joined chat rooms open chat room directly
                             if (mCurrentMode == 1) {
-                                ChatRoomsActivity.this.moveToChatActivity(intent);
+                                moveToChatActivity();
                             } else { // otherwise join chat room
-                                ChatRoomsActivity.this.joinChatRoom();
+                                joinChatRoom();
                             }
                         } catch (RetrofitError e) {
                             Utils.log(e);
@@ -258,6 +247,63 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
                 }).start();
             }
         });
+    }
+
+    @Override
+    protected Cursor onLoadInBackground(Void... arg) {
+        if (!firstLoad) {
+            LecturesSearchRowSet lecturesList = requestHandler.fetch();
+            if (lecturesList != null) {
+                List<LecturesSearchRow> lectures = lecturesList.getLehrveranstaltungen();
+                manager.replaceInto(lectures);
+            }
+        }
+
+        populateCurrentChatMember();
+
+        // Try to restore joined chat rooms from server
+        if (!firstLoad && currentChatMember != null) {
+            try {
+                List<ChatRoom> rooms = ChatClient.getInstance(this).getMemberRooms(currentChatMember.getId(), new ChatVerification(currentPrivateKey, currentChatMember));
+                manager.replaceIntoRooms(rooms);
+            } catch (RetrofitError e) {
+                Utils.log(e);
+            }
+        }
+        firstLoad = false;
+        return manager.getAllByStatus(mCurrentMode);
+    }
+
+    @Override
+    protected void onLoadFinished(Cursor result) {
+        showLoadingEnded();
+        if (result.getCount() == 0) {
+            lvMyLecturesList.setAdapter(new NoResultsAdapter(this));
+        } else {
+            // set ListView to data via the LecturesListAdapter
+            adapter = new ChatRoomListAdapter(this, result);
+            lvMyLecturesList.setAdapter(adapter);
+        }
+    }
+
+    /**
+     * Handle click on chat room
+     */
+    @Override
+    public void onItemClick(AdapterView<?> a, View v, int position, long id) {
+        Cursor item = (Cursor) lvMyLecturesList.getItemAtPosition(position);
+
+        if (!checkPlayServicesAndRegister())
+            return;
+
+        // set bundle for LectureDetails and show it
+        Bundle bundle = new Bundle();
+        final Intent intent = new Intent(this, ChatActivity.class);
+        intent.putExtras(bundle);
+
+        String chatRoomUid = item.getString(ChatRoomManager.COL_SEMESTER_ID)
+                + ":" + item.getString(ChatRoomManager.COL_NAME);
+        createOrJoinChatRoom(chatRoomUid);
     }
 
     /**
@@ -290,42 +336,13 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
 
     /**
      * Opens {@link ChatActivity}
-     *
-     * @param intent Intent for {@link ChatActivity}
      */
-    private void moveToChatActivity(final Intent intent) {
+    private void moveToChatActivity() {
         // We need to move to the next activity now and provide the necessary data for it
         // We are sure that both currentChatRoom and currentChatMember exist
+        Intent intent = new Intent(this, ChatActivity.class);
         intent.putExtra(Const.CURRENT_CHAT_ROOM, new Gson().toJson(currentChatRoom));
-        intent.putExtra(Const.CURRENT_CHAT_MEMBER, new Gson().toJson(currentChatMember));
         startActivity(intent);
-    }
-
-    /**
-     * Gets private key from preferences or generates one.
-     *
-     * @return Private key instance
-     */
-    private PrivateKey retrievePrivateKey() {
-        // Generate/Retrieve private key
-        String privateKeyString = Utils.getInternalSettingString(this, Const.PRIVATE_KEY, "");
-
-        if (!privateKeyString.isEmpty()) {
-            // If the key is already generated, retrieve it from shared preferences
-            byte[] privateKeyBytes = Base64.decode(privateKeyString, Base64.DEFAULT);
-            KeyFactory keyFactory;
-            try {
-                keyFactory = KeyFactory.getInstance("RSA");
-                PKCS8EncodedKeySpec privateKeySpec = new PKCS8EncodedKeySpec(privateKeyBytes);
-                return keyFactory.generatePrivate(privateKeySpec);
-            } catch (NoSuchAlgorithmException e) {
-                Utils.log(e);
-            } catch (InvalidKeySpecException e) {
-                Utils.log(e);
-            }
-        }
-        Utils.showToast(this, R.string.no_private_key);
-        return null;
     }
 
     /**

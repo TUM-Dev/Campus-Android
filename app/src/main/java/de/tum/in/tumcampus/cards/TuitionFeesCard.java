@@ -10,6 +10,8 @@ import android.graphics.BitmapFactory;
 import android.support.v4.app.NotificationCompat;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -46,6 +48,10 @@ public class TuitionFeesCard extends Card {
     @Override
     public View getCardView(Context context, ViewGroup parent) {
         super.getCardView(context, parent);
+        mCard = mInflater.inflate(R.layout.card_item, parent, false);
+        mLinearLayout = (LinearLayout) mCard.findViewById(R.id.card_view);
+        mTitleView = (TextView) mCard.findViewById(R.id.card_title);
+        mTitleView.setText(getTitle());
 
         if (mTuition.getSoll().equals("0")) {
             addTextView(String.format(mContext.getString(R.string.reregister_success), mTuition.getSemesterBez()));

@@ -7,14 +7,16 @@ import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
 
+import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.ChatActivity;
 import de.tum.in.tumcampus.auxiliary.Const;
-import de.tum.in.tumcampus.models.ChatMember;
 import de.tum.in.tumcampus.models.ChatMessage;
 import de.tum.in.tumcampus.models.ChatRoom;
 import de.tum.in.tumcampus.models.managers.ChatMessageManager;
@@ -30,7 +32,6 @@ public class ChatMessagesCard extends Card {
     private String mRoomName;
     private int mRoomId;
     private String mRoomIdString;
-    private ChatMember mMember;
 
     public ChatMessagesCard(Context context) {
         super(context, "card_chat");
@@ -50,6 +51,11 @@ public class ChatMessagesCard extends Card {
     public View getCardView(Context context, ViewGroup parent) {
         super.getCardView(context, parent);
 
+        mCard = mInflater.inflate(R.layout.card_item, parent, false);
+        mLinearLayout = (LinearLayout) mCard.findViewById(R.id.card_view);
+        mTitleView = (TextView) mCard.findViewById(R.id.card_title);
+        mTitleView.setText(getTitle());
+
         // Show cafeteria menu
         for(ChatMessage message : mUnread) {
             addTextView(message.getMember().getDisplayName()+": "+message.getText());
@@ -62,7 +68,7 @@ public class ChatMessagesCard extends Card {
      * @param roomName Name of the chat room
      * @param roomId Id of the chat room
      */
-    public void setChatRoom(String roomName, int roomId, String roomIdString, ChatMember member) {
+    public void setChatRoom(String roomName, int roomId, String roomIdString) {
         mRoomName = roomName;
         mRoomName = mRoomName.replaceAll("[A-Z, 0-9(LV\\.Nr\\.)=]+$", "");
         mRoomName = mRoomName.replaceAll("\\([A-Z]+[0-9]+\\)", "");
@@ -72,7 +78,6 @@ public class ChatMessagesCard extends Card {
         mUnread = manager.getLastUnread();
         mRoomIdString = roomIdString;
         mRoomId = roomId;
-        mMember = member;
     }
 
     @Override
@@ -82,7 +87,6 @@ public class ChatMessagesCard extends Card {
         ChatRoom currentChatRoom = new ChatRoom(mRoomIdString);
         currentChatRoom.setId(mRoomId);
         intent.putExtra(Const.CURRENT_CHAT_ROOM, new Gson().toJson(currentChatRoom));
-        intent.putExtra(Const.CURRENT_CHAT_MEMBER, new Gson().toJson(mMember));
         intent.putExtras(bundle);
         return intent;
     }

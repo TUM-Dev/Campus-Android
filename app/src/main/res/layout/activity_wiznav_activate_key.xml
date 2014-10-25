@@ -12,6 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+
         <TextView
             android:id="@+id/pager_title_strip"
             style="@style/SectionHeadline"
@@ -21,18 +22,12 @@
             android:id="@+id/ptr_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_alignBottom="@+id/divider"
-            android:layout_below="@+id/pager_title_strip">
+            android:layout_below="@+id/pager_title_strip"
+            android:layout_alignBottom="@+id/divider">
 
             <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_above="@+id/divider"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentStart="true"
-                android:layout_below="@+id/pager_title_strip">
+                android:layout_height="wrap_content">
 
                 <LinearLayout
                     android:id="@+id/tableLayout1"
@@ -42,59 +37,50 @@
                     android:padding="@dimen/padding_default">
 
                     <TextView
-                        android:id="@+id/step_5"
                         style="?android:attr/listSeparatorTextViewStyle"
-                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/step_5"
+                        android:text="@string/step_4"
                         android:textColor="@color/text_light_gray" />
 
-
-                    <CheckBox
-                        android:id="@+id/chk_silent_mode"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:text="@string/silence_phone"
-                        android:textStyle="bold" />
-
                     <TextView
+                        android:id="@+id/tvSucc"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:padding="@dimen/padding_default"
-                        android:text="@string/set_silent_mode" />
-
-                    <CheckBox
-                        android:id="@+id/chk_background_mode"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:text="@string/background_mode"
-                        android:textStyle="bold" />
+                        android:padding="@dimen/padding_default" />
 
                     <TextView
+                        android:id="@+id/tvBrowse"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:padding="@dimen/padding_default"
-                        android:text="@string/set_background_mode" />
+                        android:padding="@dimen/padding_default" />
 
-                    <CheckBox
-                        android:id="@+id/chk_bug_reports"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:checked="true"
-                        android:text="@string/bug_reports"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/textView"
+                    <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:padding="@dimen/padding_default"
-                        android:text="@string/set_bug_reports" />
+                        android:layout_gravity="center"
+                        android:paddingBottom="@dimen/padding_default"
+                        android:paddingTop="@dimen/padding_default"
+                        android:src="@drawable/key1" />
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:paddingBottom="@dimen/padding_default"
+                        android:paddingTop="@dimen/padding_default"
+                        android:src="@drawable/key2" />
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:paddingBottom="@dimen/padding_default"
+                        android:paddingTop="@dimen/padding_default"
+                        android:src="@drawable/key3" />
+
                 </LinearLayout>
             </ScrollView>
+
         </uk.co.senab.actionbarpulltorefresh.extras.actionbarcompat.PullToRefreshLayout>
 
         <View
@@ -113,15 +99,29 @@
             android:orientation="horizontal">
 
             <Button
+                android:id="@+id/prev_button"
+                style="@style/ButtonBarButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="?attr/selectableItemBackground"
+                android:onClick="onClickSkip"
+                android:text="@string/button_skip" />
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="?android:attr/listDivider" />
+
+            <Button
                 android:id="@+id/next_button"
                 style="@style/ButtonBarButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="?attr/selectableItemBackground"
-                android:onClick="onClickDone"
-                android:text="@string/goto_tumcampus" />
+                android:onClick="onClickNext"
+                android:text="@string/button_next" />
         </LinearLayout>
-
     </RelativeLayout>
 </LinearLayout>

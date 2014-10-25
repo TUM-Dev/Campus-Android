@@ -30,11 +30,14 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
 import com.google.gson.Gson;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +47,7 @@ import de.tum.in.tumcampus.adapters.ChatHistoryAdapter;
 import de.tum.in.tumcampus.auxiliary.ChatMessageValidator;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.ImplicitCounter;
+import de.tum.in.tumcampus.auxiliary.NetUtils;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.ChatClient;
 import de.tum.in.tumcampus.models.ChatMember;
@@ -123,7 +127,7 @@ public class ChatActivity extends ActionBarActivity implements DialogInterface.O
     @Override
     protected void onResume() {
         super.onResume();
-        getNextHistoryFromServer();
+        getNextHistoryFromServer(true);
         mCurrentOpenChatRoom = currentChatRoom;
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancel(currentChatRoom.getId()<<4+ CardManager.CARD_CHAT);
@@ -157,7 +161,7 @@ public class ChatActivity extends ActionBarActivity implements DialogInterface.O
                 getSupportActionBar().setSubtitle(currentChatRoom.getName().substring(4));
                 chatHistoryAdapter = null;
                 chatManager = new ChatMessageManager(this, currentChatRoom.getId());
-                getNextHistoryFromServer();
+                getNextHistoryFromServer(true);
             }
         }
     }
@@ -172,11 +176,14 @@ public class ChatActivity extends ActionBarActivity implements DialogInterface.O
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.action_add_chat_member:
+                showQRCode();
+                return true;
             case R.id.action_leave_chat_room:
-                new AlertDialog.Builder(ChatActivity.this).setTitle(R.string.leave_chat_room)
+                new AlertDialog.Builder(this).setTitle(R.string.leave_chat_room)
                         .setMessage(getResources().getString(R.string.leave_chat_room_body))
-                        .setPositiveButton(getResources().getString(android.R.string.ok), this)
-                        .setNegativeButton(getResources().getString(android.R.string.cancel), new DialogInterface.OnClickListener() {
+                        .setPositiveButton(android.R.string.ok, this)
+                        .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
@@ -186,6 +193,24 @@ public class ChatActivity extends ActionBarActivity implements DialogInterface.O
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void showQRCode() {
+        String url = "http://chart.apis.google.com/chart?cht=qr&chs=500x500&chld=M&choe=UTF-8&chl=";
+        try {
+            url += URLEncoder.encode(currentChatRoom.getName(), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            Utils.log(e);
+            return;
+        }
+
+        final ImageView qrCode = new ImageView(this);
+        new NetUtils(this).loadAndSetImage(url, qrCode);
+
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.add_chat_member)
+                .setView(qrCode)
+                .setPositiveButton(android.R.string.ok, null).show();
     }
 
     /**
@@ -246,7 +271,7 @@ public class ChatActivity extends ActionBarActivity implements DialogInterface.O
     private void getIntentData() {
         Bundle extras = getIntent().getExtras();
         currentChatRoom = new Gson().fromJson(extras.getString(Const.CURRENT_CHAT_ROOM), ChatRoom.class);
-        currentChatMember = new Gson().fromJson(extras.getString(Const.CURRENT_CHAT_MEMBER), ChatMember.class);
+        currentChatMember = Utils.getSetting(this, Const.CHAT_MEMBER, ChatMember.class);
         getSupportActionBar().setTitle(currentChatRoom.getName().substring(4));
         chatManager = new ChatMessageManager(this, currentChatRoom.getId());
 
@@ -324,14 +349,14 @@ public class ChatActivity extends ActionBarActivity implements DialogInterface.O
     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
         //is the top item is visible & not loading more already ? Load more !
         if ((firstVisibleItem == 0) && !loadingMore && chatHistoryAdapter != null) {
-            getNextHistoryFromServer();
+            getNextHistoryFromServer(false);
         }
     }
 
     /**
      * Loads older chat messages from the server and sets the adapter accordingly
      */
-    private void getNextHistoryFromServer() {
+    private void getNextHistoryFromServer(final boolean newMsg) {
         loadingMore = true;
         new Thread(new Runnable() {
             @Override
@@ -342,7 +367,7 @@ public class ChatActivity extends ActionBarActivity implements DialogInterface.O
 
                 // If currently nothing has been shown load newest messages from server
                 ChatVerification verification = new ChatVerification(Utils.getPrivateKeyFromSharedPrefs(ChatActivity.this), currentChatMember);
-                if (chatHistoryAdapter == null || chatHistoryAdapter.getSentCount() == 0) {
+                if (chatHistoryAdapter == null || chatHistoryAdapter.getSentCount() == 0 || newMsg) {
                     downloadedChatHistory = ChatClient.getInstance(ChatActivity.this).getNewMessages(currentChatRoom.getId(), verification);
                 } else {
                     long id = chatHistoryAdapter.getItemId(ChatMessageManager.COL_ID);
@@ -364,7 +389,7 @@ public class ChatActivity extends ActionBarActivity implements DialogInterface.O
                         if (chatHistoryAdapter == null) {
                             chatHistoryAdapter = new ChatHistoryAdapter(ChatActivity.this, cur, currentChatMember);
                             lvMessageHistory.setAdapter(chatHistoryAdapter);
-                        } else if (!loadingMore) {
+                        } else {
                             chatHistoryAdapter.changeCursor(cur);
                             chatHistoryAdapter.notifyDataSetChanged();
                         }
@@ -523,9 +548,14 @@ public class ChatActivity extends ActionBarActivity implements DialogInterface.O
                     } else { // set editing item
                         mEditedItem = msg;
                     }
-                    etMessage.setText(msg.getText());
+                    // Show soft keyboard
                     InputMethodManager imm = (InputMethodManager)ChatActivity.this.getSystemService(Service.INPUT_METHOD_SERVICE);
                     imm.showSoftInput(etMessage, 0);
+
+                    // Set text and set cursor to end of the text
+                    etMessage.setText(msg.getText());
+                    int position = msg.getText().length();
+                    etMessage.setSelection(position);
                     mode.finish();
                     return true;
                 case R.id.action_info:
