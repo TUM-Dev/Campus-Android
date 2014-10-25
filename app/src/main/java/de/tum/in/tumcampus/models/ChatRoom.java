@@ -4,31 +4,17 @@ import java.util.ArrayList;
 
 @SuppressWarnings("UnusedDeclaration")
 public class ChatRoom {
-	
-	private String messages;
-	private String url;
+
 	private String name;
 	private int id;
 	
-	private ArrayList<String> members = new ArrayList<String>();
+	private int members = -1;
 	
 	public ChatRoom(String name) {
 		super();
 		this.name = name;
 	}
-	
-	public String getMessages() {
-		return messages;
-	}
-	public void setMessages(String messages) {
-		this.messages = messages;
-	}
-	String getUrl() {
-		return url;
-	}
-	public void setUrl(String url) {
-		this.url = url;
-	}
+
 	public String getName() {
 		return name;
 	}
@@ -41,10 +27,10 @@ public class ChatRoom {
 	public void setId(int id) {
 		this.id = id;
 	}
-	public ArrayList<String> getMembers() {
+	public int getMembers() {
 		return members;
 	}
-	public void setMembers(ArrayList<String> members) {
+	public void setMembers(int members) {
 		this.members = members;
 	}
 

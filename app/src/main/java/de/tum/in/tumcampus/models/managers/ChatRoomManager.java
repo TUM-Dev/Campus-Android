@@ -13,7 +13,9 @@ import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.cards.Card;
 import de.tum.in.tumcampus.cards.ChatMessagesCard;
 import de.tum.in.tumcampus.models.ChatClient;
+import de.tum.in.tumcampus.models.ChatMember;
 import de.tum.in.tumcampus.models.ChatRoom;
+import de.tum.in.tumcampus.models.ChatVerification;
 import de.tum.in.tumcampus.models.LecturesSearchRow;
 import retrofit.RetrofitError;
 
@@ -157,11 +159,11 @@ public class ChatRoomManager implements Card.ProvidesCard {
         // Join all new chat rooms
         if (Utils.getSettingBool(context, Const.AUTO_JOIN_NEW_ROOMS, false)) {
             ArrayList<String> newRooms = manager.getNewUnjoined();
-
+            ChatMember currentChatMember = Utils.getSetting(context, Const.CHAT_MEMBER, ChatMember.class);
             for (String roomId : newRooms) {
                 try {
                     ChatRoom currentChatRoom = new ChatRoom(roomId);
-                    currentChatRoom = ChatClient.getInstance(context).createGroup(currentChatRoom);
+                    currentChatRoom = ChatClient.getInstance(context).createRoom(currentChatRoom, new ChatVerification(Utils.getPrivateKeyFromSharedPrefs(context), currentChatMember));
                     //TODO add join here a.k.a. replace with new API
                     manager.join(currentChatRoom);
                 } catch (RetrofitError e) {

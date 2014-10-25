@@ -55,19 +55,19 @@ public class ChatClient {
     private interface ChatService {
 
         @POST("/rooms/")
-        void createChatRoom(@Body ChatRoom chatRoom, Callback<ChatRoom> cb);
+        void createRoom(@Body ChatVerification verification, Callback<ChatRoom> cb);
 
         @POST("/rooms/")
-        ChatRoom createChatRoom(@Body ChatRoom chatRoom);
+        ChatRoom createRoom(@Body ChatVerification verification);
 
-        @GET("/rooms/{roomName}/")
-        List<ChatRoom> getChatRoomWithName(@Path("roomName") String roomName);
+        /*@GET("/rooms/{roomName}/")
+        List<ChatRoom> getChatRoomWithName(@Path("roomName") String roomName);*/
 
         @GET("/rooms/{room}")
         ChatRoom getChatRoom(@Path("room") int id);
 
-        @POST("/rooms/{room}/join/")
-        void joinChatRoom(@Path("room") int roomId, @Body ChatVerification verification, Callback<ChatRoom> cb);
+       /* @POST("/rooms/{room}/join/")
+        void joinChatRoom(@Path("room") int roomId, @Body ChatVerification verification, Callback<ChatRoom> cb);*/
 
         @POST("/rooms/{room}/leave/")
         void leaveChatRoom(@Path("room") int roomId, @Body ChatVerification verification, Callback<ChatRoom> cb);
@@ -104,17 +104,19 @@ public class ChatClient {
 
     }
 
-    public void createGroup(ChatRoom chatRoom, Callback<ChatRoom> cb) {
-        service.createChatRoom(chatRoom, cb);
+    public void createRoom(ChatRoom chatRoom, ChatVerification verification, Callback<ChatRoom> cb) {
+        verification.setData(chatRoom);
+        service.createRoom(verification, cb);
     }
 
-    public ChatRoom createGroup(ChatRoom chatRoom) {
-        return service.createChatRoom(chatRoom);
+    public ChatRoom createRoom(ChatRoom chatRoom, ChatVerification verification) {
+        verification.setData(chatRoom);
+        return service.createRoom(verification);
     }
 
-    public List<ChatRoom> getChatRoomWithName(ChatRoom chatRoom) {
+    /*public List<ChatRoom> getChatRoomWithName(ChatRoom chatRoom) {
         return service.getChatRoomWithName(chatRoom.getName());
-    }
+    }*/
 
     public ChatRoom getChatRoom(int id) {
         return service.getChatRoom(id);
@@ -124,13 +126,12 @@ public class ChatClient {
         return service.createMember(chatMember);
     }
 
-    public ChatMember getMember(String lrzId) {
+   /* public ChatMember getMember(String lrzId) {
         return service.getMember(lrzId);
     }
-
-    public void joinChatRoom(ChatRoom chatRoom, ChatVerification verification, Callback<ChatRoom> cb) {
+     public void joinChatRoom(ChatRoom chatRoom, ChatVerification verification, Callback<ChatRoom> cb) {
         service.joinChatRoom(chatRoom.getId(), verification, cb);
-    }
+    }*/
 
     public void leaveChatRoom(ChatRoom chatRoom, ChatVerification verification, Callback<ChatRoom> cb) {
         service.leaveChatRoom(chatRoom.getId(), verification, cb);

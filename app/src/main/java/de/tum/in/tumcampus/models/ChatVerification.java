@@ -14,6 +14,7 @@ public class ChatVerification {
     private String date;
     private String rand;
     private int member;
+    private Object data;
 
     public ChatVerification(PrivateKey pk, ChatMember member) {
         //Create some data
@@ -32,5 +33,9 @@ public class ChatVerification {
 
     public void setSignature(String signature) {
         this.signature = signature;
+    }
+
+    public void setData(Object o){
+        this.data=o;
     }
 }

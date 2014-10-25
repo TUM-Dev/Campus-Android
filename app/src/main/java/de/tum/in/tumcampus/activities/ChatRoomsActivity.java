@@ -159,9 +159,9 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode==1 && resultCode==RESULT_OK && data!=null) {
+        if (requestCode == 1 && resultCode == RESULT_OK && data != null) {
             String name = data.getStringExtra("name");
-            if(name.charAt(3)==':')
+            if (name.charAt(3) == ':')
                 createOrJoinChatRoom(name);
             else
                 Utils.showToast(this, R.string.invalid_chat_room);
@@ -182,7 +182,7 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         String value = input.getText().toString();
-                        String randId = Integer.toHexString((int)(Math.random()*4096));
+                        String randId = Integer.toHexString((int) (Math.random() * 4096));
                         createOrJoinChatRoom(randId + ":" + value);
                     }
                 })
@@ -192,59 +192,41 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
     /**
      * Creates a given chat room if it does not exist and joins it
      * Works asynchronously.
-     * */
+     */
     private void createOrJoinChatRoom(String name) {
         Utils.logv("create or join chat room " + name);
         currentChatRoom = new ChatRoom(name);
-        ChatClient.getInstance(this).createGroup(currentChatRoom, new Callback<ChatRoom>() {
+
+        ChatClient.getInstance(this).createRoom(currentChatRoom, new ChatVerification(this.currentPrivateKey, this.currentChatMember), new Callback<ChatRoom>() {
             @Override
             public void success(ChatRoom newlyCreatedChatRoom, Response arg1) {
-                // The POST request is successful because the chat room did not exist
-                // The newly created chat room is returned
-                Utils.logv("Success creating chat room: " + newlyCreatedChatRoom.toString());
+                // The POST request is successful: go to room. API should have auto joined it
+                Utils.logv("Success creating&joining chat room: " + newlyCreatedChatRoom.toString());
                 currentChatRoom = newlyCreatedChatRoom;
+
+
                 manager.join(currentChatRoom);
 
                 // When we show joined chat rooms open chat room directly
                 if (mCurrentMode == 1) {
                     moveToChatActivity();
-                } else { // otherwise join chat room
-                    joinChatRoom();
+                } else { //Otherwise show a nice information, that we added the room
+                    final Cursor newCursor = manager.getAllByStatus(mCurrentMode);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            adapter.changeCursor(newCursor);
+                            Utils.showToast(ChatRoomsActivity.this, R.string.joined_chat_room);
+                        }
+                    });
                 }
             }
 
             @Override
             public void failure(RetrofitError arg0) {
-                // The POST request in unsuccessful because the chat room already exists,
-                // so we are trying to retrieve it with an additional GET request
-                Utils.logv("Failure creating chat room - trying to GET it from the server: " + arg0.toString());
-
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            List<ChatRoom> chatRooms = ChatClient.getInstance(ChatRoomsActivity.this).getChatRoomWithName(currentChatRoom);
-                            if (chatRooms != null) {
-                                currentChatRoom = chatRooms.get(0);
-                            }
-
-                            // When we show joined chat rooms open chat room directly
-                            if (mCurrentMode == 1) {
-                                moveToChatActivity();
-                            } else { // otherwise join chat room
-                                joinChatRoom();
-                            }
-                        } catch (RetrofitError e) {
-                            Utils.log(e);
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    showNoInternetLayout();
-                                }
-                            });
-                        }
-                    }
-                }).start();
+                //Something went wrong while joining
+                Utils.logv("Failure creating/joining chat room - trying to GET it from the server: " + arg0.toString());
+                Utils.showToastOnUIThread(ChatRoomsActivity.this, R.string.activate_key);
             }
         });
     }
@@ -259,7 +241,7 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
             }
         }
 
-        populateCurrentChatMember();
+        this.populateCurrentChatMember();
 
         // Try to restore joined chat rooms from server
         if (!firstLoad && currentChatMember != null) {
@@ -301,37 +283,8 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
         final Intent intent = new Intent(this, ChatActivity.class);
         intent.putExtras(bundle);
 
-        String chatRoomUid = item.getString(ChatRoomManager.COL_SEMESTER_ID)
-                + ":" + item.getString(ChatRoomManager.COL_NAME);
-        createOrJoinChatRoom(chatRoomUid);
-    }
-
-    /**
-     * Joins the chat room and adds it to the list of my chat rooms
-     */
-    private void joinChatRoom() {
-        ChatClient.getInstance(ChatRoomsActivity.this).joinChatRoom(currentChatRoom, new ChatVerification(currentPrivateKey, currentChatMember), new Callback<ChatRoom>() {
-            @Override
-            public void success(ChatRoom arg0, Response arg1) {
-                Utils.logv("Success joining chat room: " + arg0.toString());
-                // Remember in sharedPrefs that the terms dialog was shown
-                manager.join(currentChatRoom);
-                final Cursor newCursor = manager.getAllByStatus(mCurrentMode);
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        adapter.changeCursor(newCursor);
-                        Utils.showToast(ChatRoomsActivity.this, R.string.joined_chat_room);
-                    }
-                });
-            }
-
-            @Override
-            public void failure(RetrofitError e) {
-                Utils.log(e, "Failure joining chat room");
-                Utils.showToastOnUIThread(ChatRoomsActivity.this, R.string.activate_key);
-            }
-        });
+        String chatRoomUid = item.getString(ChatRoomManager.COL_SEMESTER_ID) + ":" + item.getString(ChatRoomManager.COL_NAME);
+        this.createOrJoinChatRoom(chatRoomUid);
     }
 
     /**
