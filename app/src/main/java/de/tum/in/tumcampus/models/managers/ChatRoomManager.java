@@ -58,9 +58,9 @@ public class ChatRoomManager implements Card.ProvidesCard {
      */
     public Cursor getAllByStatus(int joined) {
         if (joined == 0) {
-            return db.rawQuery("SELECT * FROM chat_room WHERE joined=0 OR joined=-1 ORDER BY semester_id DESC, name", null);
+            return db.rawQuery("SELECT * FROM chat_room WHERE joined=0 OR joined=-1 ORDER BY semester!='', semester_id DESC, name", null);
         } else {
-            return db.rawQuery("SELECT * FROM chat_room WHERE joined=1 ORDER BY semester_id DESC, name", null);
+            return db.rawQuery("SELECT * FROM chat_room WHERE joined=1 ORDER BY semester!='', semester_id DESC, name", null);
         }
     }
 
