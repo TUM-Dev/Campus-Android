@@ -161,15 +161,14 @@ public class ChatRoomManager implements Card.ProvidesCard {
             ArrayList<String> newRooms = manager.getNewUnjoined();
             ChatMember currentChatMember = Utils.getSetting(context, Const.CHAT_MEMBER, ChatMember.class);
             for (String roomId : newRooms) {
+                // Join chat room
                 try {
                     ChatRoom currentChatRoom = new ChatRoom(roomId);
                     currentChatRoom = ChatClient.getInstance(context).createRoom(currentChatRoom, new ChatVerification(Utils.getPrivateKeyFromSharedPrefs(context), currentChatMember));
-                    //TODO add join here a.k.a. replace with new API
                     manager.join(currentChatRoom);
                 } catch (RetrofitError e) {
                     Utils.log(e, "Room already exists");
                 }
-                // Join chat room
             }
         }
 
@@ -188,7 +187,7 @@ public class ChatRoomManager implements Card.ProvidesCard {
     private ArrayList<String> getNewUnjoined() {
         Cursor cursor = db.rawQuery("SELECT r.semester_id, r.name " +
                 "FROM chat_room r, (SELECT semester_id FROM chat_room " +
-                "WHERE (NOT semester_id IS NULL) AND semester_id!='' " +
+                "WHERE (NOT semester_id IS NULL) AND semester_id!='' AND semester!='' " +
                 "ORDER BY semester_id DESC LIMIT 1) AS new " +
                 "WHERE r.semester_id=new.semester_id AND r.joined=-1", null);
         ArrayList<String> list = new ArrayList<String>();

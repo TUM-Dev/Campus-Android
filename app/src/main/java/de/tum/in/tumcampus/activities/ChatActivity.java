@@ -114,7 +114,7 @@ public class ChatActivity extends ActionBarActivity implements DialogInterface.O
         mUpdateHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                if(chatHistoryAdapter!=null)
+                if (chatHistoryAdapter != null)
                     chatHistoryAdapter.notifyDataSetChanged();
                 mUpdateHandler.postDelayed(this, 10000);
             }
@@ -130,7 +130,7 @@ public class ChatActivity extends ActionBarActivity implements DialogInterface.O
         getNextHistoryFromServer(true);
         mCurrentOpenChatRoom = currentChatRoom;
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.cancel(currentChatRoom.getId()<<4+ CardManager.CARD_CHAT);
+        notificationManager.cancel(currentChatRoom.getId() << 4 + CardManager.CARD_CHAT);
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter("chat-message-received"));
     }
 
@@ -248,17 +248,17 @@ public class ChatActivity extends ActionBarActivity implements DialogInterface.O
     }
 
     private void sendMessage(String text) {
-        if (mEditedItem == null) {
+        if (chatHistoryAdapter.mEditedItem == null) {
             final ChatMessage message = new ChatMessage(text, currentChatMember);
             chatHistoryAdapter.add(message);
             chatManager.addToUnsent(message);
         } else {
-            mEditedItem.setText(etMessage.getText().toString());
-            chatManager.addToUnsent(mEditedItem);
-            mEditedItem.setStatus(ChatMessage.STATUS_SENDING);
-            chatManager.replaceMessage(mEditedItem);
+            chatHistoryAdapter.mEditedItem.setText(etMessage.getText().toString());
+            chatManager.addToUnsent(chatHistoryAdapter.mEditedItem);
+            chatHistoryAdapter.mEditedItem.setStatus(ChatMessage.STATUS_SENDING);
+            chatManager.replaceMessage(chatHistoryAdapter.mEditedItem);
+            chatHistoryAdapter.mEditedItem = null;
             chatHistoryAdapter.changeCursor(chatManager.getAll());
-            mEditedItem = null;
         }
 
         // start service to send the message
@@ -412,15 +412,18 @@ public class ChatActivity extends ActionBarActivity implements DialogInterface.O
             Bundle extras = intent.getExtras();
             String chatRoomString = extras.getString("room");
             String memberString = extras.getString("member");
+            int messageId = -1;
+            if (extras.containsKey("message"))
+                messageId = Integer.parseInt(extras.getString("message"));
 
-            Utils.log("Broadcast receiver got room="+chatRoomString+" member="+memberString);
+            Utils.log("Broadcast receiver got room=" + chatRoomString + " member=" + memberString);
 
             //If same room just refresh
-            if (chatRoomString.equals(""+currentChatRoom.getId()) && chatHistoryAdapter!=null) {
-                if (memberString.equals(""+currentChatMember.getId())) {
+            if (chatRoomString.equals("" + currentChatRoom.getId()) && chatHistoryAdapter != null) {
+                if (memberString.equals("" + currentChatMember.getId())) {
                     // Remove this message from the adapter
                     chatHistoryAdapter.setUnsentMessages(chatManager.getAllUnsent());
-                } else {
+                } else if (messageId == -1) {
                     //Check first, if sounds are enabled
                     AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
                     if (am.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
@@ -498,10 +501,10 @@ public class ChatActivity extends ActionBarActivity implements DialogInterface.O
         }
         ChatMessage message = (ChatMessage) chatHistoryAdapter.getItem(position);
 
-        if((System.currentTimeMillis()-message.getTimestampDate().getTime())<120000 &&
+        if ((System.currentTimeMillis() - message.getTimestampDate().getTime()) < 120000 &&
                 message.getMember().getId() == currentChatMember.getId()) {
             // Hide keyboard if opened
-            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(etMessage.getWindowToken(), 0);
 
             // Start the CAB using the ActionMode.Callback defined above
@@ -513,9 +516,6 @@ public class ChatActivity extends ActionBarActivity implements DialogInterface.O
         }
         return true;
     }
-
-
-    private ChatMessage mEditedItem = null;
 
     private ActionMode.Callback mActionModeCallback = new ActionMode.Callback() {
 
@@ -542,14 +542,14 @@ public class ChatActivity extends ActionBarActivity implements DialogInterface.O
             switch (item.getItemId()) {
                 case R.id.action_edit:
                     // If item is not sent at the moment, stop sending
-                    if(msg.getStatus()==ChatMessage.STATUS_SENDING) {
+                    if (msg.getStatus() == ChatMessage.STATUS_SENDING) {
                         chatManager.removeFromUnsent(msg);
                         chatHistoryAdapter.removeUnsent(msg);
                     } else { // set editing item
-                        mEditedItem = msg;
+                        chatHistoryAdapter.mEditedItem = msg;
                     }
                     // Show soft keyboard
-                    InputMethodManager imm = (InputMethodManager)ChatActivity.this.getSystemService(Service.INPUT_METHOD_SERVICE);
+                    InputMethodManager imm = (InputMethodManager) ChatActivity.this.getSystemService(Service.INPUT_METHOD_SERVICE);
                     imm.showSoftInput(etMessage, 0);
 
                     // Set text and set cursor to end of the text

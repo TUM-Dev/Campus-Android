@@ -94,10 +94,10 @@ public class GcmIntentService extends IntentService {
         int chatRoomId = Integer.parseInt(extras.getString("room"));
         int memberId = Integer.parseInt(extras.getString("member"));
         int messageId = -1;
-        if(extras.containsKey("message"))
+        if (extras.containsKey("message"))
             messageId = Integer.parseInt(extras.getString("message"));
 
-        Utils.logv("Received GCM notification: room="+chatRoomId+" member="+memberId+" message="+messageId);
+        Utils.logv("Received GCM notification: room=" + chatRoomId + " member=" + memberId + " message=" + messageId);
 
         // Get the data necessary for the ChatActivity
         ChatMember member = Utils.getSetting(this, Const.CHAT_MEMBER, ChatMember.class);
@@ -130,7 +130,7 @@ public class GcmIntentService extends IntentService {
         Intent notificationIntent = new Intent(this, ChatActivity.class);
         notificationIntent.putExtra(Const.CURRENT_CHAT_ROOM, new Gson().toJson(chatRoom));
 
-        if (Utils.getSettingBool(this, "card_chat_phone", true)) {
+        if (Utils.getSettingBool(this, "card_chat_phone", true) && messageId == -1) {
 
             PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_ONE_SHOT);
 
@@ -166,7 +166,7 @@ public class GcmIntentService extends IntentService {
                     .build();
 
             NotificationManager mNotificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
-            mNotificationManager.notify(chatRoomId<<4+NOTIFICATION_ID, notification);
+            mNotificationManager.notify(chatRoomId << 4 + NOTIFICATION_ID, notification);
         }
     }
 

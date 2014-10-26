@@ -45,9 +45,6 @@ public class CafeteriaDetailsSectionsPagerAdapter extends FragmentStatePagerAdap
             dates.add(cursorCafeteriaDates.getString(cursorCafeteriaDates.getColumnIndex(Const.ID_COLUMN)));
         }
 
-        // reset new items counter
-        CafeteriaMenuManager.lastInserted = 0;
-
         // Tell we just update the data
         this.notifyDataSetChanged();
     }

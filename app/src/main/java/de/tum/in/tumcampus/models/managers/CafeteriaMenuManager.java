@@ -19,10 +19,6 @@ import de.tum.in.tumcampus.models.CafeteriaMenu;
  * Cafeteria Menu Manager, handles database stuff, external imports
  */
 public class CafeteriaMenuManager {
-	/**
-	 * Last insert counter
-	 */
-	public static int lastInserted = 0;
 
 	private static final int TIME_TO_SYNC = 86400; // 1 day
 
@@ -85,13 +81,6 @@ public class CafeteriaMenuManager {
 	}
 
 	/**
-	 * Removes all old items (older than 7 days)
-	 */
-    void cleanupDb() {
-		db.execSQL("DELETE FROM cafeterias_menus WHERE date < date('now','-7 day')");
-	}
-
-	/**
 	 * Download cafeteria menus from external interface (JSON)
 	 *
 	 * @param force True to force download over normal sync period, else false
@@ -102,21 +91,12 @@ public class CafeteriaMenuManager {
 		if (!force && !SyncManager.needSync(db, this, TIME_TO_SYNC)) {
 			return;
 		}
-		cleanupDb();
-		int count = Utils.dbGetTableCount(db, "cafeterias_menus");
-
-		Cursor c = db.rawQuery("SELECT 1 FROM cafeterias_menus WHERE date > date('now', '+6 day') LIMIT 1", null);
-		if (c.getCount() > 0) {
-			c.close();
-			return;
-		}
-		c.close();
 
 		String url = "http://lu32kap.typo3.lrz.de/mensaapp/exportDB.php?mensa_id=all";
 		JSONObject json = NetUtils.downloadJson(context, url);
 
-		removeCache();
 		db.beginTransaction();
+        removeCache();
 		try {
 			JSONArray menu = json.getJSONArray("mensa_menu");
 			for (int j = 0; j < menu.length(); j++) {
@@ -132,9 +112,6 @@ public class CafeteriaMenuManager {
 			db.endTransaction();
 		}
 		SyncManager.replaceIntoDb(db, this);
-
-		// update last insert counter
-		lastInserted += Utils.dbGetTableCount(db, "cafeterias_menus") - count;
 	}
 
 	/**

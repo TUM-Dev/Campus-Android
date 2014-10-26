@@ -15,6 +15,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.ChatClient;
 import de.tum.in.tumcampus.models.ChatMember;
@@ -184,7 +185,7 @@ public class ChatMessageManager {
     /**
      * Saves the given message into database
      */
-    public void replaceInto(ChatMessage m, boolean read) {
+    public void replaceInto(ChatMessage m, int memberId) {
         if (m == null || m.getText() == null) {
             Log.e("TCA Chat", "Message empty");
             return;
@@ -194,13 +195,8 @@ public class ChatMessageManager {
 
         db.beginTransaction();
         // Query read status from the previous message and use this read status as well if it is "0"
-        Cursor cur = db.rawQuery("SELECT read FROM chat_message WHERE _id=?", new String[] {""+m.getPrevious()});
-        if(cur.moveToFirst()) {
-            if(cur.getInt(0)==0)
-                read = false;
-        }
-        cur.close();
-        cur = db.rawQuery("SELECT read FROM chat_message WHERE _id=?", new String[] {""+m.getId()});
+        boolean read = memberId==m.getMember().getId();
+        Cursor cur = db.rawQuery("SELECT read FROM chat_message WHERE _id=?", new String[] {""+m.getId()});
         if(cur.moveToFirst()) {
             if(cur.getInt(0)==1)
                 read = true;
@@ -230,9 +226,10 @@ public class ChatMessageManager {
      * Saves the given message into database
      */
     public void replaceInto(List<ChatMessage> m) {
+        ChatMember member = Utils.getSetting(mContext, Const.CHAT_MEMBER, ChatMember.class);
         db.beginTransaction();
         for (ChatMessage msg : m) {
-            replaceInto(msg, false);
+            replaceInto(msg, member.getId());
         }
         db.setTransactionSuccessful();
         db.endTransaction();

@@ -23,6 +23,7 @@ public class ChatHistoryAdapter extends CursorAdapter {
     private final Context mContext;
     private ArrayList<ChatMessage> unsentMessages = new ArrayList<ChatMessage>();
     public ChatMessage mCheckedItem;
+    public ChatMessage mEditedItem;
 
     public int getSentCount() {
         return super.getCount();
@@ -149,7 +150,7 @@ public class ChatHistoryAdapter extends CursorAdapter {
 
         // Set status for outgoing messages (ivSent is not null)
         if (holder.ivSent != null) {
-            boolean sending = chatMessage.getStatus()==ChatMessage.STATUS_SENDING;
+            boolean sending = chatMessage.getStatus() == ChatMessage.STATUS_SENDING;
             holder.ivSent.setVisibility(sending ? View.GONE : View.VISIBLE);
             holder.pbSending.setVisibility(sending ? View.VISIBLE : View.GONE);
         }
@@ -160,9 +161,12 @@ public class ChatHistoryAdapter extends CursorAdapter {
             holder.tvTimestamp.setText("");
         }
 
-        if(mCheckedItem!=null && mCheckedItem.getId()==chatMessage.getId() && mCheckedItem.getStatus()==chatMessage.getStatus()) {
+        if ((mCheckedItem != null && mCheckedItem.getId() == chatMessage.getId()
+                && mCheckedItem.getStatus() == chatMessage.getStatus()) ||
+                (mEditedItem != null && mEditedItem.getId() == chatMessage.getId()
+                        && mEditedItem.getStatus() == chatMessage.getStatus())) {
             holder.layout.setBackgroundResource(R.drawable.bg_message_outgoing_selected);
-        } else if(holder.ivSent != null) {
+        } else if (holder.ivSent != null) {
             holder.layout.setBackgroundResource(R.drawable.bg_message_outgoing);
         }
     }

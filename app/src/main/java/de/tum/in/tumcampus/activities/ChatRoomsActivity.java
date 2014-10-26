@@ -113,6 +113,13 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
         actionBar.addTab(actionBar.newTab().setText(R.string.not_joined).setTabListener(tabListener));
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        firstLoad = true;
+        startLoading();
+    }
+
     /**
      * Checks device for Play Services APK.
      * Initializes current chat member, if not already initialized
@@ -176,8 +183,8 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
         final EditText input = new EditText(this);
 
         new AlertDialog.Builder(this)
-                .setTitle("Title")
-                .setMessage("Message")
+                .setTitle(R.string.new_chat_room)
+                .setMessage(R.string.new_chat_room_desc)
                 .setView(input)
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
@@ -203,8 +210,6 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
                 // The POST request is successful: go to room. API should have auto joined it
                 Utils.logv("Success creating&joining chat room: " + newlyCreatedChatRoom.toString());
                 currentChatRoom = newlyCreatedChatRoom;
-
-
                 manager.join(currentChatRoom);
 
                 // When we show joined chat rooms open chat room directly

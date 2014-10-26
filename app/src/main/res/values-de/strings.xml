@@ -363,4 +363,6 @@ Signatur: %5$s</string>
     <string name="add_chat_room">Neuer Chatroom</string>
     <string name="join_chat_room">Chatroom betreten</string>
     <string name="invalid_chat_room">Ungültiger Chatroom</string>
+    <string name="new_chat_room">Neuer Chatroom</string>
+    <string name="new_chat_room_desc">Wähle einen Namen für den Chatroom. Der Name kann später nicht mehr geändert werden!\n\n</string>
 </resources>
