@@ -428,6 +428,12 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
      * using the 'from' address in the message.
      */
     private void sendRegistrationIdToBackend(String regId) {
+        //Check if all parameters are present
+        if (regId == null || currentPrivateKey == null || currentChatMember == null || currentChatMember.getLrzId() == null) {
+            Utils.logv("Parameter missing for sending reg id");
+            return;
+        }
+
         // Generate signature
         RSASigner signer = new RSASigner(currentPrivateKey);
         String signature = signer.sign(currentChatMember.getLrzId());

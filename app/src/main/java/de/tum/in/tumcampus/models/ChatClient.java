@@ -30,8 +30,8 @@ public class ChatClient {
     private ChatClient() {
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint(API_URL)
-                .setLogLevel(RestAdapter.LogLevel.FULL)
-                .setLog(new AndroidLog("suqmadiq"))
+                //.setLogLevel(RestAdapter.LogLevel.FULL)
+               // .setLog(new AndroidLog("suqmadiq"))
                 .setRequestInterceptor(requestInterceptor)
                 .build();
         service = restAdapter.create(ChatService.class);
