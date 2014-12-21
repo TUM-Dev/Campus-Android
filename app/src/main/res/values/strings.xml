@@ -1,6 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools"
-    xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+<resources>
 
     <!-- START Translated, please do not change identifiers -->
 
@@ -264,31 +263,53 @@
     <string name="send_email">Send e-mail feedback</string>
     <string name="show_feedback">Send feedback</string>
     <string name="feedbackSubj">Feedback for TUM Campus App</string>
-    <string name="app_info_text" translatable="false"><b>TUM Campus App</b>\nThe TUM Campus App is developed by students of the Android practical course, other voluntary freelancers and chair members.
-        \n\n<b>Project Management:</b>\nTUM - Computer Science / F13
+    <string name="app_info_text" translatable="false">
+        Die inoffizielle TUM Campus App (kein Support/Haftung durch die TU München) wird von Studierenden des Android Praktikums, freiwilligen
+        Helfern und Lehrstuhlmitarbeitern entwickelt. Die App eignet sich sowohl zur Verwendung auf Smartphones, wie auch Tablets und bietet folgende
+        \n\n
+        Funktionen (exemplarisch):
+        \nPersönliche Vorlesungstermine, Nachrichten der TUM und anderer Quellen, Veranstaltungshinweise, Mensa Speiseplan, MVV Abfahrtszeiten, Umgebungspläne und viele weiteren Informationen. Die App ist sowohl für Studierende, wie auch Mitarbeiter gedacht.
+        \n\nProjektmanagement:
+        \nTUM - Fakultät für Informatik / F13
         \nProf. Dr. Uwe Baumgarten
         \nNils T. Kannengiesser
-        \n\n<b>Most recent Developers:</b>
-        \nJana Pejic
-        \nMarko Lalic
+        \n\nDerzeitige Entwickler (2014):
         \nKordian Bruck
         \nFlorian Dreier
-        \nSepideh Mesbah
-        \nShabnam Najafian
-        \n\n<b>Further Developers:</b>
-        \nSascha Moecker, Haris Iltifat, Anas Chakfeh, Thomas Krex, Marius Muntean, Christoph Richter, Thomas Bley, Vincenz Dölle, Daniel Mayr, Thomas Behrens, Florian Schulz, Vasyl Malinskyi,
-        Andreas Bernhofer (IT-Support/TUMonline), Nils T. Kannengiesser (F13)
-        \n\n<b>UX Testing:</b>
-        \nXenia Eifler
-        \n\n<b>Important information:</b>\nThis App is not published by the Technical University Muenchen officially. It is a project by and for students. The software is used at your own risk. We are not responsible for any damage that might be caused by using this App or its presented information. For security reasons the access to private information of TUMOnline is regulated by using tokens. You need to enable different features within TUMOnline for a certain token to be able to use those information within the App.
-        \n\n<b>Privacy information:</b>\nThe application stores data on request only. Critical information requires the user\'s permission (clearance by token) and is stored locally or received from TUMOnline directly. We are using BugSense for bug tracking. Crash reports contain detailed technical information on the phone, the operating system and the error itself. This information is helpful for the developers in order to improve the app. Furthermore BugSense collects anonymous usage information (e.g. users of the app per day). Detailed information on BugSense can be found below.
-		\n\n<b>Support:</b>\nhttps://www.facebook.com/TUMCampus
-		\nPlease take a look at the offered manual as well. In addition please contact us at tca-support.os.in@tum.de for any special requests.
-		\n\n<b>Licenses:</b>\nGNU GPL v3 - http://www.gnu.org/licenses/gpl.html or
-		\nNew BSD License - http://www.opensource.org/licenses/bsd-license.php
-		\n\nThe source code is available on GitHub (https://github.com/TCA-Team/)
-		\n\n<b>TUM Campus App on Facebook:</b>\nhttps://www.facebook.com/TUMCampus
-	    \n\n<b>Detailed information on BugSense:</b>\nBugSense will not collect any sensitive user data, but gathers the following information (as provided by the BugSense support team):\n\nOn Session start:\nUnique device identifier (random string), App version, OS version, Device model, Locale, Timestamp, Event type, SDK version\n\nWhen an exception occurs:\nStacktrace, Error message, App version, OS version, Device model, Locale, Timestamp, SDK version, GPS on/off/NA, WiFi on/off, Cellular data on/off, Device orientation, Screen size, Uncaught or handled exception, custom data\n\nFurthermore it collects the user ip, user country, date/time of crash and application date. BugSense may use the collected information for various general purposes like products and services provision, error analysis, identification and authentication, services improvement, contact, and research. They may publish aggregated and anonymized reports, too.\n\n\nMay 9th 2014\n</string>
+        \n\nWeitere Entwickler und involvierte Personen:
+        \nSepideh Mesbah, Shabnam Najafian, Sascha Moecker, Haris Iltifat, Anas
+        Chakfeh, Thomas Krex, Marius Muntean, Christoph Richter, Thomas Bley,
+        Vincenz Dölle, Daniel Mayr, Thomas Behrens, Florian Schulz, Vasyl
+        Malinskyi, Andreas Bernhofer (IT-Support/TUMonline), Paul Nieleck
+        (Administrator), Nils T. Kannengiesser (F13)
+        \n\nWichtiger Hinweis:
+        \nDies ist keine offizielle App der Technischen Universität München. Es
+        erfolgt daher auch kein offizieller Support oder eine Haftung. Die App
+        wird von und für Studierende entwickelt. Die Benutzung erfolgt auf
+        eigene Gefahr und eine Haftung ist ausgeschlossen. Aus
+        Sicherheitsgründen wird der Zugriff auf private Daten in TUMonline über
+        Tokens realisiert, die jeweils in TUMonline durch den Nutzer freigegeben
+        und mit den jeweiligen Rechten versehen werden müssen. Für die Nutzung
+        der neuen Chat-Funktionen gelten nachfolgende Bedingungen, denen Sie
+        separat auch in der App zustimmen müssen. Mit der Installation der App
+        akzeptieren Sie zudem die Erfassung diverser, technischer Daten.
+
+        \n\nWeitere Hinweise finden Sie unten unter "Datenschutzerklärung".
+        \n\nSupport:
+        \nhttps://www.facebook.com/TUMCampus
+        \n\nFür besondere Anliegen erreichen Sie uns auch via E-Mail unter
+        \n"tca-support.os.in AT tum.de"
+        \n\nBitte gehen Sie von mehreren Wochen Bearbeitungszeit aus. Die E-Mails werden nur sporadisch abgerufen.
+        \n\nDatenschutzerklärung: https://tumcabe.in.tum.de/landing/privacy/
+        \n\nChatbedingungen: https://tumcabe.in.tum.de/landing/chatterms/
+        \n\nLizenz:
+        \nGNU GPL v3 - http://www.gnu.org/licenses/gpl.html oder
+        \nNew BSD License - http://www.opensource.org/licenses/bsd-license.php
+        \n\n\nDer Quellcode kann hier bezogen werden:
+        \nhttps://github.com/TCA-Team/
+        \n\nWir suchen weiterhin Unterstuetzung! Bitte melden Sie sich unter:
+        \n"tca-support.os.in AT tum.de"
+    </string>
 
     <!-- END Translated, please do not change identifiers -->
     <string name="min_search_len">Query must be at least %d chars long</string>
