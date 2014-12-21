@@ -339,15 +339,14 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
      */
     private boolean checkPlayServices() {
 
-            int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
+            final int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
             if (resultCode != ConnectionResult.SUCCESS) {
                 if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
-                    try {
-                        GooglePlayServicesUtil.getErrorDialog(resultCode, this, PLAY_SERVICES_RESOLUTION_REQUEST).show();
-                    } catch (Exception e) {
-                        Utils.log(e);
-                        return false;
-                    }
+                    this.runOnUiThread(new Runnable() {
+                        public void run() {
+                            GooglePlayServicesUtil.getErrorDialog(resultCode, ChatRoomsActivity.this, PLAY_SERVICES_RESOLUTION_REQUEST).show();
+                        }
+                    });
                 } else {
                     Utils.log("This device is not supported by Google Play services.");
                     finish();

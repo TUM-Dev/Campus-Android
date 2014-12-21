@@ -41,9 +41,11 @@ public class TransportManager implements Card.ProvidesCard {
         String query = URLEncoder.encode("select content from html where url=\"" + lookupUrl + "\" and xpath=\"//td[contains(@class,'Column')]/p\"", "UTF-8");
         Utils.log(query);
 
-        JSONArray jsonArray = NetUtils.downloadJson(context, baseUrl + query).getJSONObject("query")
-                .getJSONObject("results").getJSONArray("p");
+        JSONArray jsonArray = NetUtils.downloadJson(context, baseUrl + query).getJSONObject("query").getJSONObject("results").getJSONArray("p");
+        //NetUtils n = new NetUtils(context);
+        //Utils.log(n.downloadStringHttp( baseUrl + query));
 
+        //Abort if our json is 'empty'
         if (jsonArray.length() < 3) {
             throw new NoSuchElementException("No departures found");
         }

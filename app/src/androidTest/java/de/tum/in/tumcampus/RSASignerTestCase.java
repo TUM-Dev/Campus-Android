@@ -12,6 +12,7 @@ import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.ArrayList;
 
 import de.tum.in.tumcampus.auxiliary.RSASigner;
+import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.ChatMessage;
 
 public class RSASignerTestCase extends TestCase {
