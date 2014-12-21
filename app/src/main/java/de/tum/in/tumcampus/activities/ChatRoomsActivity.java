@@ -338,17 +338,24 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
      * the Google Play Store or enable it in the device's system settings.
      */
     private boolean checkPlayServices() {
-        int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
-        if (resultCode != ConnectionResult.SUCCESS) {
-            if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
-                GooglePlayServicesUtil.getErrorDialog(resultCode, this, PLAY_SERVICES_RESOLUTION_REQUEST).show();
-            } else {
-                Utils.log("This device is not supported by Google Play services.");
-                finish();
+
+            int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
+            if (resultCode != ConnectionResult.SUCCESS) {
+                if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
+                    try {
+                        GooglePlayServicesUtil.getErrorDialog(resultCode, this, PLAY_SERVICES_RESOLUTION_REQUEST).show();
+                    } catch (Exception e) {
+                        Utils.log(e);
+                        return false;
+                    }
+                } else {
+                    Utils.log("This device is not supported by Google Play services.");
+                    finish();
+                }
+                return false;
             }
-            return false;
-        }
-        return true;
+            return true;
+
     }
 
     /**

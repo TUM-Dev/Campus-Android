@@ -31,6 +31,7 @@ public class ChatRoomManager implements Card.ProvidesCard {
     public static final int COL_JOINED = 4;
     public static final int COL_LV_NR = 5;
     public static final int COL_CONTRIBUTOR = 6;
+    public static final int COL_MEMBERS = 7;
 
     /**
      * Database connection
@@ -47,7 +48,7 @@ public class ChatRoomManager implements Card.ProvidesCard {
 
         // create table if needed
         db.execSQL("CREATE TABLE IF NOT EXISTS chat_room (group_id INTEGER, name VARCHAR, " +
-                "semester VARCHAR, semester_id VARCHAR, joined INTEGER, _id INTEGER, contributor VARCHAR, PRIMARY KEY(name, semester_id))");
+                "semester VARCHAR, semester_id VARCHAR, joined INTEGER, _id INTEGER, contributor VARCHAR, members INTEGER, PRIMARY KEY(name, semester_id))");
     }
 
     /**
@@ -65,7 +66,7 @@ public class ChatRoomManager implements Card.ProvidesCard {
     }
 
     /**
-     * Saves the given message into database
+     * Saves the given lecture into database
      */
     public void replaceInto(LecturesSearchRow lecture) {
         Utils.logv("replace " + lecture.getTitel());
@@ -78,8 +79,8 @@ public class ChatRoomManager implements Card.ProvidesCard {
                     new String[]{lecture.getSemester_name(), lecture.getStp_lv_nr(),
                             lecture.getVortragende_mitwirkende(), lecture.getTitel(), lecture.getSemester_id()});
         } else {
-            db.execSQL("REPLACE INTO chat_room (group_id,name,semester_id,semester,joined,_id,contributor) " +
-                            "VALUES (-1,?,?,?,-1,?,?)",
+            db.execSQL("REPLACE INTO chat_room (group_id,name,semester_id,semester,joined,_id,contributor,members) " +
+                            "VALUES (-1,?,?,?,-1,?,?,0)",
                     new String[]{lecture.getTitel(), lecture.getSemester_id(),
                             lecture.getSemester_name(), lecture.getStp_lv_nr(), lecture.getVortragende_mitwirkende()});
         }
@@ -94,7 +95,7 @@ public class ChatRoomManager implements Card.ProvidesCard {
         HashSet<String> set = new HashSet<String>();
         if (cur.moveToFirst()) {
             do {
-                set.add(cur.getString(0));
+                set.add(cur.getString(COL_GROUP_ID));
             } while (cur.moveToNext());
         }
         cur.close();
@@ -123,15 +124,15 @@ public class ChatRoomManager implements Card.ProvidesCard {
                 semester = roomName.substring(0, 3);
                 roomName = roomName.substring(4);
             }
-
+            Utils.logv("members2 "+room.getMembers());
             Cursor cur = db.rawQuery("SELECT _id FROM chat_room WHERE name=? AND semester_id=?", new String[]{roomName, semester});
             cur.moveToFirst();
             if (cur.getCount() >= 1) {
-                db.execSQL("UPDATE chat_room SET group_id=?, joined=1 WHERE name=? AND semester_id=?",
-                        new String[]{"" + room.getId(), roomName, semester});
+                db.execSQL("UPDATE chat_room SET group_id=?, joined=1, members=? WHERE name=? AND semester_id=?",
+                        new String[]{"" + room.getId(), "" +room.getMembers(), roomName, semester});
             } else {
-                db.execSQL("REPLACE INTO chat_room (group_id,name,semester_id,semester,joined,_id,contributor) " +
-                        "VALUES (?,?,?,'',1,0,'')", new String[]{"" + room.getId(), roomName, semester});
+                db.execSQL("REPLACE INTO chat_room (group_id,name,semester_id,semester,joined,_id,contributor,members) " +
+                        "VALUES (?,?,?,'',1,0,'',)", new String[]{"" + room.getId(), roomName, semester,"" + room.getMembers()});
             }
         }
         db.setTransactionSuccessful();

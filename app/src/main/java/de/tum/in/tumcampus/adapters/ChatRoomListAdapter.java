@@ -11,6 +11,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import de.tum.in.tumcampus.R;
+import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.managers.ChatRoomManager;
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 
@@ -28,6 +29,7 @@ public class ChatRoomListAdapter extends CursorAdapter implements StickyListHead
     static class ViewHolder {
         TextView tvDozent;
         TextView tvLectureName;
+        TextView tvMembers;
     }
 
     private final ArrayList<String> filters;
@@ -49,6 +51,7 @@ public class ChatRoomListAdapter extends CursorAdapter implements StickyListHead
         // set UI elements
         holder.tvLectureName = (TextView) convertView.findViewById(R.id.tvLectureName);
         holder.tvDozent = (TextView) convertView.findViewById(R.id.tvDozent);
+        holder.tvMembers = (TextView) convertView.findViewById(R.id.tvMembers);
         convertView.findViewById(R.id.tvTypeSWSSemester).setVisibility(View.GONE);
 
         convertView.setTag(holder);
@@ -60,6 +63,8 @@ public class ChatRoomListAdapter extends CursorAdapter implements StickyListHead
         ViewHolder holder = (ViewHolder) view.getTag();
         holder.tvLectureName.setText(cursor.getString(ChatRoomManager.COL_NAME));
         holder.tvDozent.setText(cursor.getString(ChatRoomManager.COL_CONTRIBUTOR));
+        holder.tvMembers.setText(cursor.getString(ChatRoomManager.COL_MEMBERS));
+        Utils.logv("members "+cursor.getString(ChatRoomManager.COL_MEMBERS));
     }
 
     // Generate header view

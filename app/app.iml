@@ -79,31 +79,32 @@
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/rs" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/symbols" />
       <excludeFolder url="file://$MODULE_DIR$/build/outputs" />
+      <excludeFolder url="file://$MODULE_DIR$/build/tmp" />
     </content>
     <orderEntry type="jdk" jdkName="Android API 21 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" exported="" name="okhttp-urlconnection-2.0.0" level="project" />
     <orderEntry type="library" exported="" name="cardview-v7-21.0.0" level="project" />
     <orderEntry type="library" exported="" name="android-easing-1.0.3" level="project" />
-    <orderEntry type="library" exported="" name="imagezoom-1.0.5" level="project" />
-    <orderEntry type="library" exported="" name="stickylistheaders-2.5.0" level="project" />
-    <orderEntry type="library" exported="" name="play-services-6.5.87" level="project" />
-    <orderEntry type="library" exported="" name="support-v4-21.0.3" level="project" />
-    <orderEntry type="library" exported="" name="okio-1.0.0" level="project" />
-    <orderEntry type="library" exported="" name="core-3.1.0" level="project" />
-    <orderEntry type="library" exported="" name="lib-core-3.1.0" level="project" />
-    <orderEntry type="library" exported="" name="preferencefragment-0.1.1" level="project" />
-    <orderEntry type="library" exported="" name="appcompat-v7-21.0.3" level="project" />
-    <orderEntry type="library" exported="" name="retrofit-1.6.1" level="project" />
-    <orderEntry type="library" exported="" name="support-annotations-21.0.3" level="project" />
-    <orderEntry type="library" exported="" name="stax-1.2.0" level="project" />
-    <orderEntry type="library" exported="" name="core-1.5" level="project" />
-    <orderEntry type="library" exported="" name="licensesdialog-1.5.0" level="project" />
-    <orderEntry type="library" exported="" name="simple-xml-2.7.1" level="project" />
-    <orderEntry type="library" exported="" name="okhttp-2.0.0" level="project" />
     <orderEntry type="library" exported="" name="library-2.4.0" level="project" />
-    <orderEntry type="library" exported="" name="gson-2.3" level="project" />
     <orderEntry type="library" exported="" name="zxing-1.5" level="project" />
+    <orderEntry type="library" exported="" name="gson-2.3" level="project" />
+    <orderEntry type="library" exported="" name="support-v4-21.0.3" level="project" />
+    <orderEntry type="library" exported="" name="retrofit-1.6.1" level="project" />
+    <orderEntry type="library" exported="" name="stickylistheaders-2.5.0" level="project" />
+    <orderEntry type="library" exported="" name="licensesdialog-1.5.0" level="project" />
+    <orderEntry type="library" exported="" name="preferencefragment-0.1.1" level="project" />
+    <orderEntry type="library" exported="" name="play-services-6.5.87" level="project" />
+    <orderEntry type="library" exported="" name="appcompat-v7-21.0.3" level="project" />
+    <orderEntry type="library" exported="" name="stax-1.2.0" level="project" />
+    <orderEntry type="library" exported="" name="lib-core-3.1.0" level="project" />
+    <orderEntry type="library" exported="" name="okhttp-2.0.0" level="project" />
+    <orderEntry type="library" exported="" name="imagezoom-1.0.5" level="project" />
+    <orderEntry type="library" exported="" name="core-3.1.0" level="project" />
+    <orderEntry type="library" exported="" name="support-annotations-21.0.3" level="project" />
+    <orderEntry type="library" exported="" name="okio-1.0.0" level="project" />
+    <orderEntry type="library" exported="" name="simple-xml-2.7.1" level="project" />
+    <orderEntry type="library" exported="" name="core-1.5" level="project" />
+    <orderEntry type="library" exported="" name="okhttp-urlconnection-2.0.0" level="project" />
     <orderEntry type="module" module-name="emojicon" exported="" />
     <orderEntry type="module" module-name="PullToRefresh" exported="" />
   </component>
