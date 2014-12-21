@@ -132,7 +132,7 @@ public class ChatRoomManager implements Card.ProvidesCard {
                         new String[]{"" + room.getId(), "" +room.getMembers(), roomName, semester});
             } else {
                 db.execSQL("REPLACE INTO chat_room (group_id,name,semester_id,semester,joined,_id,contributor,members) " +
-                        "VALUES (?,?,?,'',1,0,'',)", new String[]{"" + room.getId(), roomName, semester,"" + room.getMembers()});
+                        "VALUES (?,?,?,'',1,0,'',?)", new String[]{"" + room.getId(), roomName, semester,"" + room.getMembers()});
             }
         }
         db.setTransactionSuccessful();

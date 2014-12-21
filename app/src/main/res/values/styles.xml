@@ -36,6 +36,13 @@
         <item name="colorAccent">@color/color_primary</item>
     </style>
 
+    <style name="AppThemeFullscreen" parent="@style/Theme.AppCompat.Light">
+        <item name="android:windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+
     <style name="SmallListSeparatorTextViewStyle">
         <item name="android:drawableBottom">@drawable/section_header</item>
         <item name="android:drawablePadding">4dp</item>
