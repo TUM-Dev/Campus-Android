@@ -22,9 +22,9 @@ import de.tum.in.tumcampus.tumonline.TUMOnlineRequest;
  */
 public class WizNavCheckTokenActivity extends ActivityForLoadingInBackground<Void, Integer> {
 
-	public WizNavCheckTokenActivity() {
-		super(R.layout.activity_wiznav_checktoken);
-	}
+    public WizNavCheckTokenActivity() {
+        super(R.layout.activity_wiznav_checktoken);
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -35,15 +35,16 @@ public class WizNavCheckTokenActivity extends ActivityForLoadingInBackground<Voi
     /**
      * If back key is pressed start previous activity
      */
-	@Override
-	public void onBackPressed() {
+    @Override
+    public void onBackPressed() {
         finish();
         startActivity(new Intent(this, WizNavStartActivity.class));
         overridePendingTransition(R.anim.fadein, R.anim.fadeout);
-	}
+    }
 
     /**
      * Open next activity on skip
+     *
      * @param skip Skip button handle
      */
     @SuppressWarnings("UnusedParameters")
@@ -55,26 +56,28 @@ public class WizNavCheckTokenActivity extends ActivityForLoadingInBackground<Voi
 
     /**
      * If next is pressed, check if token has been activated
+     *
      * @param next Next button handle
      */
-	@SuppressWarnings("UnusedParameters")
+    @SuppressWarnings("UnusedParameters")
     public void onClickNext(View next) {
         if (!NetUtils.isConnected(this)) {
             showNoInternetLayout();
             return;
         }
-		startLoading();
-	}
+        startLoading();
+    }
 
     /**
      * Check in background if token has been enabled and get identity for enabling chat
-     * */
+     */
     @Override
     protected Integer onLoadInBackground(Void... arg) {
         // Check if token has been enabled
         TUMOnlineRequest<TokenConfirmation> request = new TUMOnlineRequest<TokenConfirmation>(TUMOnlineConst.TOKEN_CONFIRMED, this, true);
         TokenConfirmation confirmation = request.fetch();
-        if (confirmation!=null && confirmation.isConfirmed()) {
+
+        if (confirmation != null && confirmation.isConfirmed()) {
 
             // Get users full name
             TUMOnlineRequest<IdentitySet> request2 = new TUMOnlineRequest<IdentitySet>(TUMOnlineConst.IDENTITY, this, true);
@@ -87,20 +90,21 @@ public class WizNavCheckTokenActivity extends ActivityForLoadingInBackground<Voi
             Utils.setSetting(this, Const.CHAT_ROOM_DISPLAY_NAME, id.toString());
             return null;
         } else {
-            if(!NetUtils.isConnected(this))
+            if (!NetUtils.isConnected(this)) {
                 return R.string.no_internet_connection;
-            else
+            } else {
                 return R.string.token_not_enabled;
+            }
         }
     }
 
     /**
      * If everything worked, start the next activity page
      * otherwise give the user the possibility to retry
-     * */
+     */
     @Override
     protected void onLoadFinished(Integer errorMessageStrResId) {
-        if(errorMessageStrResId==null) {
+        if (errorMessageStrResId == null) {
             startNextActivity();
         } else {
             Utils.showToast(this, errorMessageStrResId);
@@ -111,22 +115,22 @@ public class WizNavCheckTokenActivity extends ActivityForLoadingInBackground<Voi
     /**
      * Adds clickable link to activity
      */
-	@Override
-	protected void onStart() {
-		super.onStart();
-		TextView textView = (TextView) findViewById(R.id.tvBrowse);
-		textView.setClickable(true);
-		textView.setMovementMethod(LinkMovementMethod.getInstance());
-		String url = "<a href='http://campus.tum.de'>TUMOnline</a>";
-		textView.setText(Html.fromHtml(url));
-	}
+    @Override
+    protected void onStart() {
+        super.onStart();
+        TextView textView = (TextView) findViewById(R.id.tvBrowse);
+        textView.setClickable(true);
+        textView.setMovementMethod(LinkMovementMethod.getInstance());
+        String url = "<a href='http://campus.tum.de'>TUMOnline</a>";
+        textView.setText(Html.fromHtml(url));
+    }
 
     /**
      * Opens next wizard page
      */
-	private void startNextActivity() {
-		finish();
-		startActivity(new Intent(this, WizNavChatActivity.class));
+    private void startNextActivity() {
+        finish();
+        startActivity(new Intent(this, WizNavChatActivity.class));
         overridePendingTransition(R.anim.fadein, R.anim.fadeout);
-	}
+    }
 }

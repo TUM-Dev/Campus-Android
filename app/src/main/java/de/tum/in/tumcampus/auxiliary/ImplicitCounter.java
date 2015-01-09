@@ -11,10 +11,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPut;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.params.HttpParams;
-import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.HTTP;
 
 import java.io.IOException;
@@ -107,10 +104,6 @@ public class ImplicitCounter extends AsyncTask<String, Integer, Void> {
         }
 
         // Transmit stack trace with PUT request
-        DefaultHttpClient httpClient = new DefaultHttpClient();
-        HttpParams params = httpClient.getParams();
-        HttpProtocolParams.setUseExpectContinue(params, false);
-
         HttpPut request = new HttpPut(URL);
         request.addHeader("X-DEVICE-ID", NetUtils.getDeviceID(this.c)); // Add our device identifier
 
@@ -124,7 +117,7 @@ public class ImplicitCounter extends AsyncTask<String, Integer, Void> {
             request.setEntity(new UrlEncodedFormEntity(nvps, HTTP.UTF_8));
 
             // We don't care about the response, so we just hope it went well and on with it.
-            httpClient.execute(request);
+            NetUtils.execute(request);
 
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();

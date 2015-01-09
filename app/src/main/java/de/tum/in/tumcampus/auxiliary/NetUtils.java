@@ -12,11 +12,14 @@ import android.widget.ImageView;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
+import org.apache.http.params.CoreProtocolPNames;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
+import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -27,6 +30,7 @@ import java.io.IOException;
 import java.util.UUID;
 
 import de.tum.in.tumcampus.models.managers.CacheManager;
+import de.tum.in.tumcampus.trace.G;
 
 public class NetUtils {
     private static final int HTTP_TIMEOUT = 25000;
@@ -35,19 +39,41 @@ public class NetUtils {
     private static String uniqueID = null;
     private static final String PREF_UNIQUE_ID = "PREF_UNIQUE_ID";
 
-    private final Context mContext;
-    private final CacheManager cacheManager;
+    private Context mContext;
+    private CacheManager cacheManager;
     private DefaultHttpClient client;
 
     public NetUtils(Context context) {
+        //Get the client used for all requests
+        client = NetUtils.getClient();
+
+        //Manager caches all requests
         mContext = context;
-        client = new DefaultHttpClient();
+        cacheManager = new CacheManager(mContext);
+    }
+
+    private static DefaultHttpClient getClient() {
+        //Get a basic client
+        DefaultHttpClient client = new DefaultHttpClient();
         ClientConnectionManager mgr = client.getConnectionManager();
         HttpParams params = client.getParams();
+
+        //Don't allow to continue requests
+        HttpProtocolParams.setUseExpectContinue(params, false);
+
+        //Set our max wait time for each request
         HttpConnectionParams.setSoTimeout(params, HTTP_TIMEOUT);
         HttpConnectionParams.setConnectionTimeout(params, HTTP_TIMEOUT);
-        client = new DefaultHttpClient(new ThreadSafeClientConnManager(params, mgr.getSchemeRegistry()), params);
-        cacheManager = new CacheManager(mContext);
+
+        //Clearly identify all requests from this app
+        params.setParameter(CoreProtocolPNames.USER_AGENT, "TCA Client" + (G.appVersion != null && !G.appVersion.equals("unknown") ? " " + G.appVersion : ""));
+
+        //Actually initiate our client with parameters we setup
+        return new DefaultHttpClient(new ThreadSafeClientConnManager(params, mgr.getSchemeRegistry()), params);
+    }
+
+    public static HttpResponse execute(HttpRequestBase request) throws IOException {
+        return NetUtils.getClient().execute(request);
     }
 
     /**
