@@ -42,8 +42,8 @@ public class WizNavChatActivity extends ActivityForLoadingInBackground<Void, Cha
     private boolean mPublicKeyMustBeActivated = false;
 
     public WizNavChatActivity() {
-		super(R.layout.activity_wiznav_chat);
-	}
+        super(R.layout.activity_wiznav_chat);
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -102,6 +102,7 @@ public class WizNavChatActivity extends ActivityForLoadingInBackground<Void, Cha
 
     /**
      * Open next activity on skip
+     *
      * @param skip Skip button handle
      */
     @SuppressWarnings("UnusedParameters")
@@ -111,9 +112,10 @@ public class WizNavChatActivity extends ActivityForLoadingInBackground<Void, Cha
 
     /**
      * If next is pressed, check if token has been activated
+     *
      * @param next Next button handle
      */
-	@SuppressWarnings("UnusedParameters")
+    @SuppressWarnings("UnusedParameters")
     public void onClickNext(View next) {
         if (groupChatMode.isChecked()) {
             if (!acceptedTerms.isChecked()) {
@@ -123,23 +125,23 @@ public class WizNavChatActivity extends ActivityForLoadingInBackground<Void, Cha
         }
 
         startLoading();
-	}
+    }
 
     /**
      * Opens next wizard page
      */
-	private void startNextActivity() {
-		finish();
+    private void startNextActivity() {
+        finish();
         Intent intent;
-        if(mPublicKeyMustBeActivated) {
+        if (mPublicKeyMustBeActivated) {
             intent = new Intent(this, WizNavActivatePublicKeyActivity.class);
         } else {
             intent = new Intent(this, WizNavExtrasActivity.class);
         }
         intent.putExtra(Const.TOKEN_IS_SETUP, tokenSetup);
-		startActivity(intent);
+        startActivity(intent);
         overridePendingTransition(R.anim.fadein, R.anim.fadeout);
-	}
+    }
 
     @Override
     protected ChatMember onLoadInBackground(Void... arg) {
@@ -174,37 +176,39 @@ public class WizNavChatActivity extends ActivityForLoadingInBackground<Void, Cha
             try {
                 // After the user has entered their display name, send a request to the server to create the new member
                 member = ChatClient.getInstance(this).createMember(currentChatMember);
-
-                //Catch a possible error, when we didn't get something returned
-                if (member == null || member.getLrzId() == null) {
-                    Utils.showToastOnUIThread(this, R.string.error_setup_chat_member);
-                    return null;
-                }
             } catch (RetrofitError e) {
                 Utils.log(e);
                 Utils.showToastOnUIThread(this, R.string.error_setup_chat_member);
                 return null;
             }
 
+            //Catch a possible error, when we didn't get something returned
+            if (member == null || member.getLrzId() == null) {
+                Utils.showToastOnUIThread(this, R.string.error_setup_chat_member);
+                return null;
+            }
+
             // Generate the private key and upload the public key to the server
-            if(generatePrivateKey(member))
+            if (generatePrivateKey(member)) {
                 return member;
+            }
         }
         return null;
     }
 
     @Override
     protected void onLoadFinished(ChatMember member) {
-        if (member!=null) {
+        if (member != null) {
             Utils.setSetting(this, Const.GROUP_CHAT_ENABLED, groupChatMode.isChecked());
             Utils.setSetting(this, Const.AUTO_JOIN_NEW_ROOMS, groupChatMode.isChecked() && autoJoin.isChecked());
             Utils.setSetting(this, Const.CHAT_MEMBER, member);
-            Utils.log("Set member to settings: "+new Gson().toJson(member));
+            Utils.log("Set member to settings: " + new Gson().toJson(member));
             startNextActivity();
         } else {
             showLoadingEnded();
         }
     }
+
     /**
      * Gets private key from preferences or generates one.
      *
