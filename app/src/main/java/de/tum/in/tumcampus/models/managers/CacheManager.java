@@ -86,7 +86,7 @@ public class CacheManager {
             } while (cur.moveToNext());
         }
         cur.close();
-        db.rawQuery("DELETE FROM cache WHERE datetime()>max_age", null);
+        db.execSQL("DELETE FROM cache WHERE datetime()>max_age");
         db.setTransactionSuccessful();
         db.endTransaction();
     }
@@ -235,10 +235,10 @@ public class CacheManager {
             return;
 
         LecturesSearchRowSet lecturesList = requestHandler.fetch();
-        if(lecturesList==null)
+        if (lecturesList == null)
             return;
         List<LecturesSearchRow> lectures = lecturesList.getLehrveranstaltungen();
-        if(lectures==null)
+        if (lectures == null)
             return;
         ChatRoomManager manager = new ChatRoomManager(mContext);
         manager.replaceInto(lectures);

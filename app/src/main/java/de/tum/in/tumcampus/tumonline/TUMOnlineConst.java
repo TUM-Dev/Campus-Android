@@ -33,17 +33,18 @@ public class TUMOnlineConst<T> {
     public static final TUMOnlineConst<TokenConfirmation> TOKEN_CONFIRMED = new TUMOnlineConst<TokenConfirmation>("isTokenConfirmed", CacheManager.VALIDITY_DO_NOT_CACHE, TokenConfirmation.class);
     public static final TUMOnlineConst<AccessToken> REQUEST_TOKEN = new TUMOnlineConst<AccessToken>("requestToken", CacheManager.VALIDITY_DO_NOT_CACHE, AccessToken.class);
     public static final TUMOnlineConst<IdentitySet> IDENTITY = new TUMOnlineConst<IdentitySet>("id", CacheManager.VALIDITY_DO_NOT_CACHE, IdentitySet.class);
-    
+
     private final String webservice;
     private final int validity;
 
     private final Class<T> response;
+
     private TUMOnlineConst(final String s, final int v, final Class<T> r) {
         webservice = s;
         validity = v;
         response = r;
     }
-    
+
     public int getValidity() {
         return validity;
     }
@@ -51,6 +52,8 @@ public class TUMOnlineConst<T> {
     public Class<T> getResponse() {
         return response;
     }
-    
-    public String toString() { return webservice; }
+
+    public String toString() {
+        return webservice;
+    }
 }

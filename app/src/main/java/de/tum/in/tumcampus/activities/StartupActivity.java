@@ -146,9 +146,9 @@ public class StartupActivity extends ActionBarActivity {
                 ObjectAnimator.ofFloat(tumLogo, "alpha", 1, 0, 0),
                 ObjectAnimator.ofFloat(loadingText, "alpha", 1, 0, 0),
                 ObjectAnimator.ofFloat(first, "alpha", 1, 0, 0),
-                ObjectAnimator.ofFloat(tumLogo, "translationY", 0, -screenHeight/3),
-                ObjectAnimator.ofFloat(loadingText, "translationY", 0, -screenHeight/3),
-                ObjectAnimator.ofFloat(first, "translationY", 0, -screenHeight/3)
+                ObjectAnimator.ofFloat(tumLogo, "translationY", 0, -screenHeight / 3),
+                ObjectAnimator.ofFloat(loadingText, "translationY", 0, -screenHeight / 3),
+                ObjectAnimator.ofFloat(first, "translationY", 0, -screenHeight / 3)
         );
         set.setInterpolator(new AccelerateDecelerateInterpolator());
         set.addListener(new Animator.AnimatorListener() {
@@ -182,7 +182,7 @@ public class StartupActivity extends ActionBarActivity {
      * @return Actionbar height
      */
     protected int getActionBarHeight() {
-        int[] attrs = { uk.co.senab.actionbarpulltorefresh.library.R.attr.actionBarSize };
+        int[] attrs = {uk.co.senab.actionbarpulltorefresh.library.R.attr.actionBarSize};
         TypedArray values = obtainStyledAttributes(attrs);
         try {
             return values.getDimensionPixelSize(0, 0);
@@ -207,7 +207,7 @@ public class StartupActivity extends ActionBarActivity {
 
         // rename hide_wizzard_on_startup
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-        if(!sp.contains(Const.HIDE_WIZARD_ON_STARTUP)) {
+        if (!sp.contains(Const.HIDE_WIZARD_ON_STARTUP)) {
             SharedPreferences.Editor e = sp.edit();
             e.putBoolean(Const.HIDE_WIZARD_ON_STARTUP, sp.getBoolean("hide_wizzard_on_startup", false));
             e.remove("hide_wizzard_on_startup");

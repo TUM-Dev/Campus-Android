@@ -18,42 +18,27 @@ public class DateUtils {
     private static final String formatISO = "yyyy-MM-dd'T'HH:mm:ss'Z'"; // 2014-06-30T16:31:57.878Z
 
     public static String getRelativeTimeISO(String timestamp, Context context) {
-        try {
-            SimpleDateFormat formatter = new SimpleDateFormat(formatISO, Locale.ENGLISH);
-            return DateUtils.getRelativeTime(formatter.parse(timestamp), context);
-        } catch (Exception e) {
-            Utils.log(e);
-        }
-        return "";
-    }
-
-    public static String getRelativeTimeSQL(String timestamp, Context context) {
-        try {
-            SimpleDateFormat formatter = new SimpleDateFormat(DateUtils.formatSQL, Locale.ENGLISH);
-            return DateUtils.getRelativeTime(formatter.parse(timestamp), context);
-        } catch (Exception e) {
-            Utils.log(e);
-        }
-        return "";
+            return DateUtils.getRelativeTime(DateUtils.parseIsoDate(timestamp), context);
     }
 
     private static String getRelativeTime(Date date, Context context) {
+        if (date == null) {
+            return "";
+        }
 
         return android.text.format.DateUtils.getRelativeDateTimeString(context, date.getTime(),
                 android.text.format.DateUtils.MINUTE_IN_MILLIS, android.text.format.DateUtils.DAY_IN_MILLIS * 2L, 0).toString();
     }
 
-    public static String getTimeOrDay(String time) {
-        try {
-            SimpleDateFormat formatter = new SimpleDateFormat(DateUtils.formatSQL, Locale.ENGLISH); // 2014-06-30 16:31:57
-            return DateUtils.getTimeOrDay(formatter.parse(time));
-        } catch (Exception e) {
-            //Utils.log(e);
-        }
-        return "";
+    public static String getTimeOrDay(String datetime) {
+        return DateUtils.getTimeOrDay(DateUtils.parseSqlDate(datetime));
     }
 
     public static String getTimeOrDay(Date time) {
+        if (time == null) {
+            return "";
+        }
+
         long timeInMilis = time.getTime();
         long now = DateUtils.getCurrentTime().toMillis(false);
 
@@ -75,6 +60,24 @@ public class DateUtils {
             SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy", Locale.ENGLISH);
             return formatter.format(time);
         }
+    }
+
+    public static Date parseSqlDate(String datetime) {
+        try {
+            SimpleDateFormat formatter = new SimpleDateFormat(DateUtils.formatSQL, Locale.ENGLISH); // 2014-06-30 16:31:57
+            return formatter.parse(datetime);
+        } catch (Exception e) {
+        }
+        return null;
+    }
+
+    public static Date parseIsoDate(String datetime) {
+        try {
+            SimpleDateFormat formatter = new SimpleDateFormat(formatISO, Locale.ENGLISH);
+            return formatter.parse(datetime);
+        } catch (Exception e) {
+        }
+        return null;
     }
 
     private static Time getCurrentTime() {

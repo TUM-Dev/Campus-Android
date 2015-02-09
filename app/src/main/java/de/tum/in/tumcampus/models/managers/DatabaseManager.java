@@ -51,5 +51,6 @@ public abstract class DatabaseManager {
         db.execSQL("DROP TABLE IF EXISTS unsent_chat_message");
         db.execSQL("DROP TABLE IF EXISTS chat_message");
         db.execSQL("DROP TABLE IF EXISTS chat_room");
+        db.execSQL("DROP TABLE IF EXISTS tumLocks");
     }
 }

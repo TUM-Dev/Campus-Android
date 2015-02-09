@@ -147,8 +147,8 @@ public class Utils {
     /**
      * Get a value from the default shared preferences
      *
-     * @param c   Context
-     * @param key setting name
+     * @param c          Context
+     * @param key        setting name
      * @param defaultVal default value
      * @return setting value, "" if undefined
      */
@@ -160,15 +160,15 @@ public class Utils {
     /**
      * Get a value from the default shared preferences
      *
-     * @param c   Context
-     * @param key setting name
+     * @param c         Context
+     * @param key       setting name
      * @param classInst e.g. ChatMember.class
      * @return setting value, "" if undefined
      */
     public static <T> T getSetting(Context c, String key, Class<T> classInst) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(c);
         String val = sp.getString(key, null);
-        if(val != null) {
+        if (val != null) {
             return new Gson().fromJson(val, classInst);
         }
         return null;
@@ -294,8 +294,8 @@ public class Utils {
     /**
      * Sets the value of a setting
      *
-     * @param c   Context
-     * @param key setting key
+     * @param c     Context
+     * @param key   setting key
      * @param value String value
      */
     public static void setSetting(Context c, String key, String value) {
@@ -525,7 +525,7 @@ public class Utils {
      */
     public static PrivateKey getPrivateKeyFromSharedPrefs(Context context) {
         String privateKeyString = Utils.getInternalSettingString(context, Const.PRIVATE_KEY, "");
-        if(privateKeyString.isEmpty())
+        if (privateKeyString.isEmpty())
             return null;
 
         byte[] privateKeyBytes = Base64.decode(privateKeyString, Base64.DEFAULT);
