@@ -63,12 +63,12 @@ public class ChatRoomManager implements Card.ProvidesCard {
             condition = "joined=0 OR joined=-1";
         }
 
-        return db.rawQuery("SELECT r.*, m.timestamp, m.text " +
+        return db.rawQuery("SELECT r.*, m.ts, m.text " +
                 "FROM chat_room r " +
-                "LEFT JOIN chat_message m ON (m.room=r.room) " +
+                "LEFT JOIN (SELECT MAX(timestamp) ts, text, room FROM chat_message GROUP BY room) m ON (m.room=r.room) " +
                 "WHERE " + condition + " " +
-                "GROUP BY r.room " +
-                "ORDER BY r.semester!='', r.semester_id DESC, m.timestamp DESC, r.name", null);
+                " " +
+                "ORDER BY r.semester!='', r.semester_id DESC, datetime(m.ts) DESC, r.name", null);
     }
 
     /**

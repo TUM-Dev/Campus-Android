@@ -54,8 +54,8 @@ public class MVVCard extends Card {
         mTitleView.setText(getTitle());
         mCard.findViewById(R.id.place_holder).setVisibility(View.VISIBLE);
 
-        for(int i=0;i<mDepartures.size() && i<5;i++) {
-            TransportManager.Departure curr=mDepartures.get(i);
+        for (int i = 0; i < mDepartures.size() && i < 5; i++) {
+            TransportManager.Departure curr = mDepartures.get(i);
 
             DepartureView view = new DepartureView(mContext);
             view.setSymbol(curr.symbol);
@@ -82,7 +82,7 @@ public class MVVCard extends Card {
     @Override
     protected boolean shouldShow(SharedPreferences prefs) {
         final long prevDate = prefs.getLong(MVV_TIME, 0);
-        return prevDate+DateUtils.HOUR_IN_MILLIS < System.currentTimeMillis();
+        return prevDate + DateUtils.HOUR_IN_MILLIS < System.currentTimeMillis();
     }
 
     @Override
@@ -90,16 +90,16 @@ public class MVVCard extends Card {
         NotificationCompat.WearableExtender morePageNotification = new NotificationCompat.WearableExtender();
 
         String firstContent = "", firstTime = "";
-        for(TransportManager.Departure d : mDepartures) {
-            if(firstTime.isEmpty()) {
+        for (TransportManager.Departure d : mDepartures) {
+            if (firstTime.isEmpty()) {
                 firstTime = d.time + "min";
                 firstContent = d.symbol + " " + d.line;
             }
 
             NotificationCompat.Builder pageNotification =
                     new NotificationCompat.Builder(mContext)
-                            .setContentTitle(d.time+"min")
-                            .setContentText(d.symbol+" "+d.line);
+                            .setContentTitle(d.time + "min")
+                            .setContentText(d.symbol + " " + d.line);
             morePageNotification.addPage(pageNotification.build());
         }
 

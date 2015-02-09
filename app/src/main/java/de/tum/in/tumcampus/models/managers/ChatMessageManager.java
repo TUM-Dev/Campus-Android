@@ -60,7 +60,7 @@ public class ChatMessageManager {
     private static void init(SQLiteDatabase db) {
         // create tables if needed
         db.execSQL("CREATE TABLE IF NOT EXISTS chat_message (_id INTEGER PRIMARY KEY, previous INTEGER, room INTEGER, " +
-                "text TEXT, timestamp VARCHAR, signature TEXT, member BLOB, read INTEGER, sending INTEGER)");
+                "text TEXT, timestamp DATETIME, signature TEXT, member BLOB, read INTEGER, sending INTEGER)");
         db.execSQL("CREATE TABLE IF NOT EXISTS unsent_chat_message (_id INTEGER PRIMARY KEY AUTOINCREMENT, room INTEGER, text TEXT, member BLOB, msg_id INTEGER)");
 
         // Delete all entries that are too old

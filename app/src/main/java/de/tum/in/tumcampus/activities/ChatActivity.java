@@ -315,7 +315,13 @@ public class ChatActivity extends ActionBarActivity implements DialogInterface.O
 
     @Override
     public void onEmojiconClicked(Emojicon emojicon) {
-        etMessage.append(emojicon.getEmoji());
+        //Find the start position of the selection
+        int start = Math.max(etMessage.getSelectionStart(), 0);
+        //Find the end position of the selection
+        int end = Math.max(etMessage.getSelectionEnd(), 0);
+
+        //Replace the selection with the smiley
+        etMessage.getText().replace(Math.min(start, end), Math.max(start, end), emojicon.getEmoji(), 0, emojicon.getEmoji().length());
     }
 
     @Override
