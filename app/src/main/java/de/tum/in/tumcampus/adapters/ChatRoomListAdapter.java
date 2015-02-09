@@ -6,11 +6,13 @@ import android.support.v4.widget.CursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 
 import de.tum.in.tumcampus.R;
+import de.tum.in.tumcampus.auxiliary.DateUtils;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.managers.ChatRoomManager;
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
@@ -30,6 +32,8 @@ public class ChatRoomListAdapter extends CursorAdapter implements StickyListHead
         TextView tvDozent;
         TextView tvLectureName;
         TextView tvMembers;
+        TextView tvLastmsg;
+        LinearLayout llAdditionalInfo;
     }
 
     private final ArrayList<String> filters;
@@ -52,6 +56,8 @@ public class ChatRoomListAdapter extends CursorAdapter implements StickyListHead
         holder.tvLectureName = (TextView) convertView.findViewById(R.id.tvLectureName);
         holder.tvDozent = (TextView) convertView.findViewById(R.id.tvDozent);
         holder.tvMembers = (TextView) convertView.findViewById(R.id.tvMembers);
+        holder.tvLastmsg = (TextView) convertView.findViewById(R.id.tvLastmsg);
+        holder.llAdditionalInfo = (LinearLayout) convertView.findViewById(R.id.llAdditionalInfo);
         convertView.findViewById(R.id.tvTypeSWSSemester).setVisibility(View.GONE);
 
         convertView.setTag(holder);
@@ -62,9 +68,12 @@ public class ChatRoomListAdapter extends CursorAdapter implements StickyListHead
     public void bindView(View view, Context context, Cursor cursor) {
         ViewHolder holder = (ViewHolder) view.getTag();
         holder.tvLectureName.setText(cursor.getString(ChatRoomManager.COL_NAME));
-        holder.tvDozent.setText(cursor.getString(ChatRoomManager.COL_CONTRIBUTOR));
+        holder.tvDozent.setText(cursor.getString(9));
         holder.tvMembers.setText(cursor.getString(ChatRoomManager.COL_MEMBERS));
-        Utils.logv("members "+cursor.getString(ChatRoomManager.COL_MEMBERS));
+        holder.tvLastmsg.setText(DateUtils.getTimeOrDay(cursor.getString(8)));
+        holder.llAdditionalInfo.setVisibility(View.VISIBLE);
+
+        Utils.logv("members " + cursor.getString(ChatRoomManager.COL_MEMBERS) + " " + cursor.getString(8));
     }
 
     // Generate header view
@@ -82,7 +91,7 @@ public class ChatRoomListAdapter extends CursorAdapter implements StickyListHead
         //set header text as first char in name
         Cursor item = (Cursor) getItem(pos);
         String semester = item.getString(ChatRoomManager.COL_SEMESTER);
-        if(semester.isEmpty())
+        if (semester.isEmpty())
             semester = mContext.getString(R.string.my_chat_rooms);
         holder.text.setText(semester);
         return convertView;

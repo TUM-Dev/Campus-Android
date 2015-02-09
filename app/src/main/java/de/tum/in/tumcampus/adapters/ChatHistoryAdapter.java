@@ -14,6 +14,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import de.tum.in.tumcampus.R;
+import de.tum.in.tumcampus.auxiliary.DateUtils;
 import de.tum.in.tumcampus.models.ChatMember;
 import de.tum.in.tumcampus.models.ChatMessage;
 import de.tum.in.tumcampus.models.managers.ChatMessageManager;
@@ -146,7 +147,7 @@ public class ChatHistoryAdapter extends CursorAdapter {
 
         holder.tvUser.setText(chatMessage.getMember().getDisplayName());
         holder.tvMessage.setText(chatMessage.getText());
-        holder.tvTimestamp.setText(chatMessage.getTimestampString(mContext));
+        holder.tvTimestamp.setText(DateUtils.getRelativeTimeISO(chatMessage.getTimestamp(), mContext));
 
         // Set status for outgoing messages (ivSent is not null)
         if (holder.ivSent != null) {

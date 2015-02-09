@@ -24,7 +24,7 @@ import retrofit.RetrofitError;
  */
 public class ChatRoomManager implements Card.ProvidesCard {
 
-    public static final int COL_GROUP_ID = 0;
+    public static final int COL_ROOM = 0;
     public static final int COL_NAME = 1;
     public static final int COL_SEMESTER = 2;
     public static final int COL_SEMESTER_ID = 3;
@@ -47,22 +47,28 @@ public class ChatRoomManager implements Card.ProvidesCard {
         db = DatabaseManager.getDb(context);
 
         // create table if needed
-        db.execSQL("CREATE TABLE IF NOT EXISTS chat_room (group_id INTEGER, name VARCHAR, " +
+        db.execSQL("CREATE TABLE IF NOT EXISTS chat_room (room INTEGER, name VARCHAR, " +
                 "semester VARCHAR, semester_id VARCHAR, joined INTEGER, _id INTEGER, contributor VARCHAR, members INTEGER, PRIMARY KEY(name, semester_id))");
     }
 
     /**
      * Gets all chat rooms that you have joined(1)/not joined(0) for the specified room
      *
-     * @param joined 1=joined, 0=not joined/left chat room, -1=not joined
+     * @param joined chat room 1=joined, 0=not joined/left chat room, -1=not joined
      * @return List of chat messages
      */
     public Cursor getAllByStatus(int joined) {
+        String condition = "joined=1";
         if (joined == 0) {
-            return db.rawQuery("SELECT * FROM chat_room WHERE joined=0 OR joined=-1 ORDER BY semester!='', semester_id DESC, name", null);
-        } else {
-            return db.rawQuery("SELECT * FROM chat_room WHERE joined=1 ORDER BY semester!='', semester_id DESC, name", null);
+            condition = "joined=0 OR joined=-1";
         }
+
+        return db.rawQuery("SELECT r.*, m.timestamp, m.text " +
+                "FROM chat_room r " +
+                "LEFT JOIN chat_message m ON (m.room=r.room) " +
+                "WHERE " + condition + " " +
+                "GROUP BY r.room " +
+                "ORDER BY r.semester!='', r.semester_id DESC, m.timestamp DESC, r.name", null);
     }
 
     /**
@@ -79,7 +85,7 @@ public class ChatRoomManager implements Card.ProvidesCard {
                     new String[]{lecture.getSemester_name(), lecture.getStp_lv_nr(),
                             lecture.getVortragende_mitwirkende(), lecture.getTitel(), lecture.getSemester_id()});
         } else {
-            db.execSQL("REPLACE INTO chat_room (group_id,name,semester_id,semester,joined,_id,contributor,members) " +
+            db.execSQL("REPLACE INTO chat_room (room,name,semester_id,semester,joined,_id,contributor,members) " +
                             "VALUES (-1,?,?,?,-1,?,?,0)",
                     new String[]{lecture.getTitel(), lecture.getSemester_id(),
                             lecture.getSemester_name(), lecture.getStp_lv_nr(), lecture.getVortragende_mitwirkende()});
@@ -95,7 +101,7 @@ public class ChatRoomManager implements Card.ProvidesCard {
         HashSet<String> set = new HashSet<String>();
         if (cur.moveToFirst()) {
             do {
-                set.add(cur.getString(COL_GROUP_ID));
+                set.add(cur.getString(COL_ROOM));
             } while (cur.moveToNext());
         }
         cur.close();
@@ -124,15 +130,15 @@ public class ChatRoomManager implements Card.ProvidesCard {
                 semester = roomName.substring(0, 3);
                 roomName = roomName.substring(4);
             }
-            Utils.logv("members2 "+room.getMembers());
+            Utils.logv("members2 " + room.getMembers());
             Cursor cur = db.rawQuery("SELECT _id FROM chat_room WHERE name=? AND semester_id=?", new String[]{roomName, semester});
             cur.moveToFirst();
             if (cur.getCount() >= 1) {
-                db.execSQL("UPDATE chat_room SET group_id=?, joined=1, members=? WHERE name=? AND semester_id=?",
-                        new String[]{"" + room.getId(), "" +room.getMembers(), roomName, semester});
+                db.execSQL("UPDATE chat_room SET room=?, joined=1, members=? WHERE name=? AND semester_id=?",
+                        new String[]{"" + room.getId(), "" + room.getMembers(), roomName, semester});
             } else {
-                db.execSQL("REPLACE INTO chat_room (group_id,name,semester_id,semester,joined,_id,contributor,members) " +
-                        "VALUES (?,?,?,'',1,0,'',?)", new String[]{"" + room.getId(), roomName, semester,"" + room.getMembers()});
+                db.execSQL("REPLACE INTO chat_room (room,name,semester_id,semester,joined,_id,contributor,members) " +
+                        "VALUES (?,?,?,'',1,0,'',?)", new String[]{"" + room.getId(), roomName, semester, "" + room.getMembers()});
             }
         }
         db.setTransactionSuccessful();
@@ -140,12 +146,12 @@ public class ChatRoomManager implements Card.ProvidesCard {
     }
 
     public void join(ChatRoom currentChatRoom) {
-        db.execSQL("UPDATE chat_room SET group_id=?, joined=1 WHERE name=? AND semester_id=?",
+        db.execSQL("UPDATE chat_room SET room=?, joined=1 WHERE name=? AND semester_id=?",
                 new String[]{"" + currentChatRoom.getId(), currentChatRoom.getName().substring(4), currentChatRoom.getName().substring(0, 3)});
     }
 
     public void leave(ChatRoom currentChatRoom) {
-        db.execSQL("UPDATE chat_room SET group_id=?, joined=0 WHERE name=? AND semester_id=?",
+        db.execSQL("UPDATE chat_room SET room=?, joined=0 WHERE name=? AND semester_id=?",
                 new String[]{"" + currentChatRoom.getId(), currentChatRoom.getName().substring(4), currentChatRoom.getName().substring(0, 3)});
     }
 
@@ -202,10 +208,10 @@ public class ChatRoomManager implements Card.ProvidesCard {
     }
 
     private Cursor getUnreadRooms() {
-        return db.rawQuery("SELECT r.name,r.group_id,r.semester_id " +
+        return db.rawQuery("SELECT r.name,r.room,r.semester_id " +
                 "FROM chat_room r, (SELECT room FROM chat_message " +
                 "WHERE read=0 GROUP BY room) AS c " +
-                "WHERE r.group_id=c.room " +
+                "WHERE r.room=c.room " +
                 "ORDER BY r.semester_id DESC, r.name", null);
     }
 }

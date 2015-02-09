@@ -113,25 +113,13 @@ public class ChatMessage {
 	public void setTimestamp(String timestamp) {
 		this.timestamp = timestamp;
 	}
-    public String getTimestampString(Context context) {
-        try {
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ENGLISH); // 2014-06-30T16:31:57.878Z
-            Date date = formatter.parse(timestamp);
-            return DateUtils.getRelativeDateTimeString(context, date.getTime(),
-                    DateUtils.MINUTE_IN_MILLIS, DateUtils.DAY_IN_MILLIS*2, 0).toString();
-        } catch (Exception e) {
-            Utils.log(e);
-        }
-        return "";
-    }
     public Date getTimestampDate(){
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ENGLISH);
-        Date time;
+        Date time = new Date();
         try {
             time = formatter.parse(this.getTimestamp());
         } catch (ParseException e) {
             Utils.log(e);
-            time = new Date();
         }
         return time;
     }
