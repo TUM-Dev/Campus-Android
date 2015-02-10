@@ -56,7 +56,7 @@ public class StartupActivity extends ActionBarActivity {
         ImplicitCounter.Counter(this);
         (new ImplicitCounter()).submitCounter(this);
 
-        // For compatibility reasons
+        // For compatibility reasons: big update happend with version 35
         int prevVersion = Utils.getInternalSettingInt(this, Const.APP_VERSION, 35);
 
         // get current app version

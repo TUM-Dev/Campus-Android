@@ -29,20 +29,22 @@ import de.tum.in.tumcampus.models.managers.SyncManager;
  */
 public class DownloadService extends IntentService {
 
-	/**
-	 * Download broadcast identifier
-	 */
-	public final static String BROADCAST_NAME = "de.tum.in.newtumcampus.intent.action.BROADCAST_DOWNLOAD";
-	private static final String DOWNLOAD_SERVICE = "DownloadService";
+    /**
+     * Download broadcast identifier
+     */
+    public final static String BROADCAST_NAME = "de.tum.in.newtumcampus.intent.action.BROADCAST_DOWNLOAD";
+    private static final String DOWNLOAD_SERVICE = "DownloadService";
     private static final String LAST_UPDATE = "last_update";
     private static final String CSV_LOCATIONS = "locations.csv";
 
+    private static boolean running = false;
+
     /**
-	 * default init (run intent in new thread)
-	 */
-	public DownloadService() {
-		super(DOWNLOAD_SERVICE);
-	}
+     * default init (run intent in new thread)
+     */
+    public DownloadService() {
+        super(DOWNLOAD_SERVICE);
+    }
 
     @Override
     public void onCreate() {
@@ -70,6 +72,12 @@ public class DownloadService extends IntentService {
     }
 
     private void download(Intent intent) {
+        //Semaphore
+        if (running) {
+            return;
+        }
+        running = true;
+
         boolean successful = true;
         String action = intent.getStringExtra(Const.ACTION_EXTRA);
         boolean force = intent.getBooleanExtra(Const.FORCE_DOWNLOAD, false);
@@ -77,11 +85,13 @@ public class DownloadService extends IntentService {
 
         // No action: leave service
         if (action == null) {
+            //Unlock semaphore and return
+            running = false;
             return;
         }
 
         // Check if device has a internet connection
-        if(NetUtils.isConnected(this) && (launch || !NetUtils.isConnectedMobileData(this))) {
+        if (NetUtils.isConnected(this) && (launch || !NetUtils.isConnectedMobileData(this))) {
             Log.i(getClass().getSimpleName(), "Handle action <" + action + ">");
             try {
                 if ((action.equals(Const.DOWNLOAD_ALL_FROM_EXTERNAL))) {
@@ -99,10 +109,10 @@ public class DownloadService extends IntentService {
                     }
 
                     boolean isSetup = Utils.getInternalSettingBool(this, Const.EVERYTHING_SETUP, false);
-                    if(!isSetup) {
+                    if (!isSetup) {
                         CacheManager cm = new CacheManager(this);
                         cm.syncCalendar();
-                        if(successful)
+                        if (successful)
                             Utils.setInternalSetting(this, Const.EVERYTHING_SETUP, true);
                     }
                 } else if ((action.equals(Const.NEWS))) {
@@ -146,49 +156,52 @@ public class DownloadService extends IntentService {
         // After done the job, create an broadcast intent and send it. The
         // receivers will be informed that the download service has finished.
         if (successful) {
-            broadcastDownloadCompleted();
+            this.broadcastDownloadCompleted();
         }
 
         // Do all other import stuff that is not relevant for creating the viewing the start page
         if ((action.equals(Const.DOWNLOAD_ALL_FROM_EXTERNAL))) {
-            startService(new Intent(this, FillCacheService.class));
+            this.startService(new Intent(this, FillCacheService.class));
         }
+
+        //Unlock semaphore and return
+        running = false;
     }
 
-	private void broadcastDownloadCompleted() {
-		Intent intentSend = new Intent();
-		intentSend.setAction(BROADCAST_NAME);
-		intentSend.putExtra(Const.ACTION_EXTRA, Const.COMPLETED);
+    private void broadcastDownloadCompleted() {
+        Intent intentSend = new Intent();
+        intentSend.setAction(BROADCAST_NAME);
+        intentSend.putExtra(Const.ACTION_EXTRA, Const.COMPLETED);
         LocalBroadcastManager.getInstance(this).sendBroadcast(intentSend);
-	}
+    }
 
-	private void broadcastError(String message) {
-		Intent intentSend = new Intent();
-		intentSend.setAction(BROADCAST_NAME);
-		intentSend.putExtra(Const.ACTION_EXTRA, Const.ERROR);
-		intentSend.putExtra(Const.ERROR_MESSAGE, message);
+    private void broadcastError(String message) {
+        Intent intentSend = new Intent();
+        intentSend.setAction(BROADCAST_NAME);
+        intentSend.putExtra(Const.ACTION_EXTRA, Const.ERROR);
+        intentSend.putExtra(Const.ERROR_MESSAGE, message);
         LocalBroadcastManager.getInstance(this).sendBroadcast(intentSend);
-	}
+    }
 
-	private void broadcastWarning(String message) {
-		Intent intentSend = new Intent();
-		intentSend.setAction(BROADCAST_NAME);
-		intentSend.putExtra(Const.ACTION_EXTRA, Const.WARNING);
-		intentSend.putExtra(Const.WARNING_MESSAGE, message);
+    private void broadcastWarning(String message) {
+        Intent intentSend = new Intent();
+        intentSend.setAction(BROADCAST_NAME);
+        intentSend.putExtra(Const.ACTION_EXTRA, Const.WARNING);
+        intentSend.putExtra(Const.WARNING_MESSAGE, message);
         LocalBroadcastManager.getInstance(this).sendBroadcast(intentSend);
-	}
+    }
 
-	private void downloadCafeterias(boolean force) throws Exception {
-		CafeteriaManager cm = new CafeteriaManager(this);
-		CafeteriaMenuManager cmm = new CafeteriaMenuManager(this);
-		cm.downloadFromExternal(force);
-		cmm.downloadFromExternal(this, force);
-	}
+    private void downloadCafeterias(boolean force) throws Exception {
+        CafeteriaManager cm = new CafeteriaManager(this);
+        CafeteriaMenuManager cmm = new CafeteriaMenuManager(this);
+        cm.downloadFromExternal(force);
+        cmm.downloadFromExternal(this, force);
+    }
 
-	private void downloadNews(boolean force) throws Exception {
-		NewsManager nm = new NewsManager(this);
-		nm.downloadFromExternal(force);
-	}
+    private void downloadNews(boolean force) throws Exception {
+        NewsManager nm = new NewsManager(this);
+        nm.downloadFromExternal(force);
+    }
 
     /**
      * Import default location and opening hours from assets
@@ -207,9 +220,10 @@ public class DownloadService extends IntentService {
 
     /**
      * Gets the time when BackgroundService was called last time
+     *
      * @param c Context
      * @return time when BackgroundService was executed last time
-     * */
+     */
     public static long lastUpdate(Context c) {
         SharedPreferences prefs = c.getSharedPreferences(Const.INTERNAL_PREFS, 0);
         return prefs.getLong(LAST_UPDATE, 0);

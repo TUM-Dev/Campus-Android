@@ -91,8 +91,9 @@ public class NewsManager implements Card.ProvidesCard {
         // Delete all too old items
         cleanupDb();
 
-        if(jsonArray==null)
+        if(jsonArray==null) {
             return;
+        }
 
         db.beginTransaction();
         try {
