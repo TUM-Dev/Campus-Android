@@ -34,7 +34,8 @@
 
 -keepnames class * implements android.os.Parcelable {
     public static final ** CREATOR;
-}# Add project specific ProGuard rules here.
+}
+# Add project specific ProGuard rules here.
 # By default, the flags in this file are appended to flags specified
 # in C:\Users\Florian\AppData\Local\Android\android-studio\sdk/tools/proguard/proguard-android.txt
 # You can edit the include path and order by changing the proguardFiles
@@ -51,3 +52,8 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+
+# Allow obfuscation of android.support.v7.internal.view.menu.**
+# to avoid problem on Samsung 4.2.2 devices with appcompat v21
+# see https://code.google.com/p/android/issues/detail?id=78377
+-keep class !android.support.v7.internal.view.menu.**,android.support.** {*;}
