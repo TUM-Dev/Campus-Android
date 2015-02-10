@@ -42,7 +42,7 @@ public class NavigationDrawerAdapter extends BaseAdapter {
         mInflater = LayoutInflater.from(context);
         mContext = context;
         boolean mHasTUMOAccess = new AccessTokenManager(context).hasValidAccessToken();
-        mVisibleMenuItems = new ArrayList<SideNavigationItem>();
+        mVisibleMenuItems = new ArrayList<>();
         boolean chat_enabled = Utils.getSettingBool(context, Const.GROUP_CHAT_ENABLED, true);
         for (SideNavigationItem item : menuItems) {
             if (!mHasTUMOAccess && item.needsTUMO)

@@ -223,7 +223,7 @@ public class PersonsDetailsActivity extends ActivityForAccessingTumOnline<Employ
      */
     private void addContact(Employee employee) {
         ArrayList<ContentProviderOperation> ops =
-                new ArrayList<ContentProviderOperation>();
+                new ArrayList<>();
 
         int rawContactID = ops.size();
 
@@ -334,9 +334,7 @@ public class PersonsDetailsActivity extends ActivityForAccessingTumOnline<Employ
         try{
             getContentResolver().applyBatch(ContactsContract.AUTHORITY, ops);
             Utils.showToast(this, R.string.contact_added);
-        }catch (RemoteException e) {
-            Utils.log(e);
-        }catch (OperationApplicationException e) {
+        }catch (RemoteException | OperationApplicationException e) {
             Utils.log(e);
         }
     }

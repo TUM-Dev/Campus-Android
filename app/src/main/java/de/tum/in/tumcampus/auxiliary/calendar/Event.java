@@ -27,6 +27,7 @@ import java.util.Iterator;
 
 import de.tum.in.tumcampus.auxiliary.Utils;
 
+@SuppressWarnings("ALL")
 public class Event implements Cloneable {
 
     public long id;
@@ -179,8 +180,8 @@ public class Event implements Cloneable {
 
     private static void doComputePositions(ArrayList<Event> eventsList,
             long minimumDurationMillis, boolean doAlldayEvents) {
-        final ArrayList<Event> activeList = new ArrayList<Event>();
-        final ArrayList<Event> groupList = new ArrayList<Event>();
+        final ArrayList<Event> activeList = new ArrayList<>();
+        final ArrayList<Event> groupList = new ArrayList<>();
 
         if (minimumDurationMillis < 0) {
             minimumDurationMillis = 0;

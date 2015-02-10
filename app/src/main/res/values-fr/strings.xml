@@ -4,7 +4,6 @@
 
     <!-- Generic -->
     <string name="app_name">TUM Campus App</string>
-    <string name="campus_app">Campus App</string>
     <string name="search">Chercher</string>
     <string name="tum_logo">TUM Logo</string>
     <string name="loading">Chargement en cours …</string>
@@ -17,7 +16,6 @@
     <!-- Calendar -->
     <string name="dialog_show_calendar">Succès à l\'exportation.\nCalendrier locale <i>TUM_CAMPUS_APP</i> dans le <i>Google Calendrier App</i>?</string>
     <string name="export_to_google">Exporter vers Google</string>
-    <string name="calendarTimeZone">Germany/Munich</string>
     <string name="delete_from_google">Supprimer de Google</string>
     <string name="dialog_delete_calendar">Veux-tu supprimer le calendrier locale <i>TUM_CAMPUS_APP</i> de votre appareil?</string>
     <string name="calendar_deleted_toast">Le calendrier a supprimé avec succès</string>
@@ -80,7 +78,6 @@
 
     <string name="about_tca">À propos de TCA</string>
     <string name="information">Informations</string>
-    <string name="facebook">Facebook</string>
     <string name="github">Contribuer à Github</string>
     <string name="licences">Licences open source</string>
     <string name="licences_summary">Des notes juridiques licences</string>
@@ -194,7 +191,6 @@
     <string name="mensa_weihenstephan">cafétéria Weihenstephan</string>
 
     <!-- Plans -->
-    <string name="campus_garching">Campus Garching</string>
     <string name="campus_klinikum">Campus Klinikum</string>
     <string name="campus_olympiapark">Campus Olympiapark</string>
     <string name="campus_olympiapark_gyms">Campus Olympiapark plan de salle de gym</string>
@@ -326,6 +322,8 @@
     <string name="set_bug_reports">Soutenir l\'équipe de TCA en envoyant des rapports de bogues anonymes à notre serveur qui comprennent: trace de la pile, fichier journal, la version Android, version de l\'application et de la résolution de l\'écran</string>
     <string name="error_setup_chat_member">Quelque chose ne va pas avec l\'enregistrement de ta conversation!</string>
     <string name="room_timetable">calendrier de chambre</string>
-    <string name="newspread" translateable="false">Newspread</string>
     <string name="newspread_summary">Sélectionnez les newspread tu souhaites afficher. Ce sont les lames sur les informations moniteurs dans tes bâtiments de la faculté.</string>
+    <string name="valid">Valide</string>
+    <string name="vibration">Vibration</string>
+    <string name="status_sent">expédié</string>
 </resources>

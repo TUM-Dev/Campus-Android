@@ -100,6 +100,7 @@ public class NetUtils {
         try {
             request.addHeader("X-APP-VERSION", mContext.getPackageManager().getPackageInfo(mContext.getPackageName(), 0).versionName);
         } catch (PackageManager.NameNotFoundException e) {
+            Utils.log(e);
         }
 
         //Execute the request

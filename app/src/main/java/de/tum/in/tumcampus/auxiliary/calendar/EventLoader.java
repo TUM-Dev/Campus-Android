@@ -181,7 +181,7 @@ public class EventLoader {
 
     public EventLoader(Context context, LoadRequestClone request) {
         mContext = context;
-        mLoaderQueue = new LinkedBlockingQueue<LoadRequest>();
+        mLoaderQueue = new LinkedBlockingQueue<>();
         mResolver = context.getContentResolver();
         mRequest = request;
     }

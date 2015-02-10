@@ -5,7 +5,7 @@
 
     <!-- Generic -->
     <string name="app_name">TUM Campus App</string>
-    <string name="campus_app">Campus App</string>
+    <string name="campus_app" translatable="false">Campus App</string>
     <string name="search">Search</string>
     <string name="tum_logo">TUM Logo</string>
     <string name="update">Update</string>
@@ -19,7 +19,7 @@
     <!-- Calendar -->
     <string name="dialog_show_calendar">Export successful.\nShow local calendar <i>TUM_CAMPUS_APP</i> on <i>Google Calendar App</i>?</string>
     <string name="export_to_google">Export to Google</string>
-    <string name="calendarTimeZone">Germany/Munich</string>
+    <string name="calendarTimeZone" translatable="false">Germany/Munich</string>
     <string name="delete_from_google">Delete from Google</string>
     <string name="dialog_delete_calendar">Do you want to delete  the <i>TUM_CAMPUS_APP</i>  calendar from your device?</string>
     <string name="calendar_deleted_toast">Calender deleted successfully</string>
@@ -85,7 +85,7 @@
 
     <string name="about_tca">About TCA</string>
     <string name="information">Information</string>
-    <string name="facebook">Facebook</string>
+    <string name="facebook" translatable="false">Facebook</string>
     <string name="facebook_link" translatable="false">https://m.facebook.com/TUMCampus</string>
     <string name="facebook_link_app" translatable="false">fb://page/162327853831856</string>
     <string name="github">Contribute on Github</string>
@@ -202,7 +202,7 @@
     <string name="mensa_weihenstephan">Cafeteria Weihenstephan</string>
 
     <!-- Plans -->
-    <string name="campus_garching">Campus Garching</string>
+    <string name="campus_garching" translatable="false">Campus Garching</string>
     <string name="campus_klinikum">Campus Klinikum</string>
     <string name="campus_olympiapark">Campus Olympiapark</string>
     <string name="campus_olympiapark_gyms">Campus Olympiapark hall plan</string>
@@ -380,14 +380,14 @@
     <string name="set_bug_reports">Support the TCA Team by sending anonymous bug reports to our server which include: stack trace, logfile, android version, app version and screen resolution</string>
     <string name="error_setup_chat_member">Something is wrong with your chat registration!</string>
     <string name="room_timetable">Room timetable</string>
-    <string name="newspread" translateable="false">Newspread</string>
+    <string name="newspread" translateable="false" translatable="false">Newspread</string>
     <string name="newspread_summary">Select which newspread you want to be shown. This are the slides on the info monitors in your faculty buildings.</string>
     <string name="tuition_fee_more">Information on contributions and exemptions, loans, training assistance and scholarships, go to: <a href="http://www.tum.de/studium/studienfinanzierung/">Student Financial Aid</a></string>
     <string name="no_rights_to_access_id">Identity could not be accessed. Please check the rights of your TUMOnline token!</string>
     <string name="vibration">Vibration</string>
     <string name="silent">Silent</string>
     <string name="mode_silent_mode">State during lectures</string>
-    <string name="url_privacy_policy">https://tumcabe.in.tum.de/landing/privacy/</string>
+    <string name="url_privacy_policy" translatable="false">https://tumcabe.in.tum.de/landing/privacy/</string>
     <string name="privacy_policy">Privacy Policy</string>
     <string name="message_details">Message info</string>
     <string name="message_detail_text">&lt;b>Sender&lt;/b>&lt;br>
@@ -405,9 +405,9 @@ Signature: %5$s</string>
     <string name="joined">My</string>
     <string name="not_joined">Other</string>
     <string name="default_campus">Default campus</string>
-    <string name="campus_garching_hochbrueck">Campus Garching Hochbrück</string>
-    <string name="campus_leopoldstrasse">Campus Leopoldstraße</string>
-    <string name="campus_geschwister_scholl">Campus Geschwister Scholl-Platz</string>
+    <string name="campus_garching_hochbrueck" translatable="false">Campus Garching Hochbrück</string>
+    <string name="campus_leopoldstrasse" translatable="false">Campus Leopoldstraße</string>
+    <string name="campus_geschwister_scholl" translatable="false">Campus Geschwister Scholl-Platz</string>
     <string name="no_default_campus">No default campus</string>
     <string name="reply_label">Reply</string>
     <string name="public_key_mail">Public key activation mail sent to %s@mytum.de.\n\n<b>Please activate it now!</b></string>

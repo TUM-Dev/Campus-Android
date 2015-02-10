@@ -43,7 +43,7 @@ public class LecturesListAdapter extends BaseAdapter implements StickyListHeader
 		lecturesList = results;
 		mInflater = LayoutInflater.from(context);
 
-        filters = new ArrayList<String>();
+        filters = new ArrayList<>();
         for (LecturesSearchRow result : results) {
             String item = result.getSemester_id();
             if (filters.indexOf(item) == -1) {

@@ -167,7 +167,7 @@ public class OrganisationActivity extends ActivityForAccessingTumOnline<OrgItemL
 		// set caption (organisation "folder" name)
 		tvCaption.setText(orgName.toUpperCase());
 
-		List<OrgItem> organisationList = new ArrayList<OrgItem>();
+		List<OrgItem> organisationList = new ArrayList<>();
 
 		// go through the XML file and give each organisation its Id, German
 		// name, English name and parent-Id

@@ -232,7 +232,7 @@ public class EventLoaderCalendar {
 
     public EventLoaderCalendar(Context context) {
         mContext = context;
-        mLoaderQueue = new LinkedBlockingQueue<LoadRequest>();
+        mLoaderQueue = new LinkedBlockingQueue<>();
         mResolver = context.getContentResolver();
     }
 

@@ -98,7 +98,7 @@ public class ChatRoomManager implements Card.ProvidesCard {
     public void replaceInto(List<LecturesSearchRow> lectures) {
         db.beginTransaction();
         Cursor cur = db.rawQuery("SELECT _id FROM chat_room", null);
-        HashSet<String> set = new HashSet<String>();
+        HashSet<String> set = new HashSet<>();
         if (cur.moveToFirst()) {
             do {
                 set.add(cur.getString(COL_ROOM));
@@ -197,7 +197,7 @@ public class ChatRoomManager implements Card.ProvidesCard {
                 "WHERE (NOT semester_id IS NULL) AND semester_id!='' AND semester!='' " +
                 "ORDER BY semester_id DESC LIMIT 1) AS new " +
                 "WHERE r.semester_id=new.semester_id AND r.joined=-1", null);
-        ArrayList<String> list = new ArrayList<String>();
+        ArrayList<String> list = new ArrayList<>();
         if (cursor.moveToFirst()) {
             do {
                 list.add(cursor.getString(0) + ":" + cursor.getString(1));

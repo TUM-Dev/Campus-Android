@@ -4,7 +4,6 @@
 
     <!-- Generic -->
     <string name="app_name">TUM campus App</string>
-    <string name="campus_app">Campus App</string>
     <string name="search">Buscar</string>
     <string name="tum_logo">TUM Logo</string>
     <string name="loading">Cargando…</string>
@@ -17,7 +16,6 @@
     <!-- Calendar -->
     <string name="dialog_show_calendar">Exportación exitosa.\n Calendario local <i>TUM_CAMPUS_APP</i>mostrar en el espectáculo de la <i>Google Calendar aplicación</i>?</string>
     <string name="export_to_google">Exportar a Google</string>
-    <string name="calendarTimeZone">Germany/Munich</string>
     <string name="delete_from_google">Borrar de Google</string>
     <string name="dialog_delete_calendar">Eliminar el calendario local de la <i>TUM_CAMPUS_APP</i> de su dispositivo?</string>
     <string name="calendar_deleted_toast">Calendario eliminado con éxito</string>
@@ -79,7 +77,6 @@
 
     <string name="about_tca">Sobre TCA</string>
     <string name="information">Información</string>
-    <string name="facebook">Facebook</string>
     <string name="github">Contribuir a Github</string>
     <string name="licences">Licencias de código abierto</string>
     <string name="licences_summary">Licencias Aviso legal</string>
@@ -193,7 +190,6 @@
     <string name="mensa_weihenstephan">Mensa Weihenstephan</string>
 
     <!-- Plans -->
-    <string name="campus_garching">Campus Garching</string>
     <string name="campus_klinikum">Campus Clínico</string>
     <string name="campus_olympiapark">Campus Parque Olímpico</string>
     <string name="campus_olympiapark_gyms">Plan del campus Parque Olímpico</string>
@@ -254,6 +250,10 @@
     <string name="send_email">Enviar comentarios por correo electrónico</string>
     <string name="show_feedback">Envíar comentarios</string>
     <string name="feedbackSubj">Comentarios para la TUM campus App</string>
+    <string name="valid">válido</string>
+    <string name="vibration">Vibración</string>
+    <string name="website">sitio web</string>
+    <string name="status_sent">enviado</string>
     <!-- END Translated, please do not change identifiers -->
 
 

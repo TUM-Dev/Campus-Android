@@ -122,11 +122,11 @@ public class RoomFinderActivity extends ActivityForSearching implements TUMRoomF
      */
     private ArrayList<HashMap<String, String>> getRecents() {
         Cursor recentStations = recentsManager.getAllFromDb();
-        ArrayList<HashMap<String, String>> map = new ArrayList<HashMap<String, String>>(recentStations.getCount());
+        ArrayList<HashMap<String, String>> map = new ArrayList<>(recentStations.getCount());
         if (recentStations.moveToFirst()) {
             do {
                 String[] values = recentStations.getString(0).split(";");
-                HashMap<String, String> e = new HashMap<String, String>();
+                HashMap<String, String> e = new HashMap<>();
                 for (String entry : values) {
                     if (entry.isEmpty())
                         continue;

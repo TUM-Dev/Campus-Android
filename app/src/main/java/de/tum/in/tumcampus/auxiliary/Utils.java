@@ -266,7 +266,7 @@ public class Utils {
      * @return String[]-List with Columns matched to array values
      */
     public static List<String[]> readCsv(InputStream fin) {
-        List<String[]> list = new ArrayList<String[]>();
+        List<String[]> list = new ArrayList<>();
         try {
             BufferedReader in = new BufferedReader(new InputStreamReader(fin, "ISO-8859-1"));
             String reader;
@@ -534,9 +534,7 @@ public class Utils {
             keyFactory = KeyFactory.getInstance("RSA");
             PKCS8EncodedKeySpec privateKeySpec = new PKCS8EncodedKeySpec(privateKeyBytes);
             return keyFactory.generatePrivate(privateKeySpec);
-        } catch (NoSuchAlgorithmException e) {
-            Utils.log(e);
-        } catch (InvalidKeySpecException e) {
+        } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
             Utils.log(e);
         }
         return null;

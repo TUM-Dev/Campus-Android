@@ -13,7 +13,7 @@ public class CafeteriaPrices {
 	private static final HashMap<String, String> student_prices;
 
 	static {
-		student_prices = new HashMap<String, String>();
+		student_prices = new HashMap<>();
 		student_prices.put("Tagesgericht 1", "1,00");
 		student_prices.put("Tagesgericht 2", "1,55");
 		student_prices.put("Tagesgericht 3", "1,90");
@@ -41,7 +41,7 @@ public class CafeteriaPrices {
 		student_prices.put("Biogericht 9", "4,00");
 		student_prices.put("Biogericht 10", "4,50");
 
-		employee_prices = new HashMap<String, String>();
+		employee_prices = new HashMap<>();
 		employee_prices.put("Tagesgericht 1", "1,90");
 		employee_prices.put("Tagesgericht 2", "2,20");
 		employee_prices.put("Tagesgericht 3", "2,40");
@@ -69,7 +69,7 @@ public class CafeteriaPrices {
 		employee_prices.put("Biogericht 9", "4,40");
 		employee_prices.put("Biogericht 10", "4,90");
 
-		guest_prices = new HashMap<String, String>();
+		guest_prices = new HashMap<>();
 		guest_prices.put("Tagesgericht 1", "2,40");
 		guest_prices.put("Tagesgericht 2", "2,70");
 		guest_prices.put("Tagesgericht 3", "2,90");
@@ -107,14 +107,15 @@ public class CafeteriaPrices {
      */
     public static HashMap<String, String> getRolePrices(Context context) {
         String type = Utils.getSetting(context, Const.ROLE, "");
-        if (type.equals("0")) {
-            return student_prices;
-        } else if (type.equals("1")) {
-            return employee_prices;
-        } else if (type.equals("2")) {
-            return guest_prices;
-        } else {
-            return student_prices;
+        switch (type) {
+            case "0":
+                return student_prices;
+            case "1":
+                return employee_prices;
+            case "2":
+                return guest_prices;
+            default:
+                return student_prices;
         }
     }
 }

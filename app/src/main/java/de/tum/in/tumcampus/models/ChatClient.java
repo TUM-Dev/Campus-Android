@@ -10,7 +10,6 @@ import de.tum.in.tumcampus.auxiliary.NetUtils;
 import retrofit.Callback;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
-import retrofit.android.AndroidLog;
 import retrofit.http.Body;
 import retrofit.http.GET;
 import retrofit.http.POST;
@@ -45,7 +44,7 @@ public class ChatClient {
         return instance;
     }
 
-    RequestInterceptor requestInterceptor = new RequestInterceptor() {
+    final RequestInterceptor requestInterceptor = new RequestInterceptor() {
         @Override
         public void intercept(RequestFacade request) {
             request.addHeader("X-DEVICE-ID", NetUtils.getDeviceID(ChatClient.c));

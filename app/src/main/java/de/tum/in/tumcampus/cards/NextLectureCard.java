@@ -10,7 +10,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v4.app.NotificationCompat;
 import android.text.format.DateUtils;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -33,7 +32,7 @@ public class NextLectureCard extends Card {
 
     private static final String NEXT_LECTURE_DATE = "next_date";
     private TextView mLocation;
-    private ArrayList<CalendarItem> lectures = new ArrayList<CalendarItem>();
+    private ArrayList<CalendarItem> lectures = new ArrayList<>();
     private TextView mTimeView;
     private int mSelected = 0;
     private TextView mEvent;

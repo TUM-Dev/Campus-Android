@@ -15,7 +15,6 @@ import org.apache.http.protocol.HTTP;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FilenameFilter;
 import java.io.IOException;
@@ -34,7 +33,6 @@ public class ExceptionHandler {
     private static ActivityAsyncTask<Processor, Object, Object, Object> sTask;
     private static boolean sVerbose = false;
     private static int sMinDelay = 0;
-    private static Integer sTimeout = null;
     private static boolean sSetupCalled = false;
 
     public static interface Processor {
@@ -49,8 +47,8 @@ public class ExceptionHandler {
      * Setup the handler for unhandled exceptions, and submit stack
      * traces from a previous crash.
      *
-     * @param context
-     * @param processor
+     * @param context context
+     * @param processor processor
      */
     public static boolean setup(Context context, final Processor processor) {
 
@@ -122,7 +120,7 @@ public class ExceptionHandler {
      * <p/>
      * Simplified version that uses a default processor.
      *
-     * @param context
+     * @param context context
      */
     public static boolean setup(Context context) {
         return setup(context, new Processor() {
@@ -198,11 +196,6 @@ public class ExceptionHandler {
                             }
                         }
                         return null;
-                    }
-
-                    @Override
-                    protected void onCancelled() {
-                        super.onCancelled();
                     }
 
                     @Override
@@ -288,8 +281,8 @@ public class ExceptionHandler {
         //Try to read all of them
         try {
 
-            sStackTraces = new ArrayList<String>();
-            for (int i = 0; i < list.length; i++) {
+            sStackTraces = new ArrayList<>();
+            for (String aList : list) {
 
                 // Limit to a certain number of SUCCESSFULLY read traces
                 if (sStackTraces.size() >= G.MAX_TRACES) {
@@ -297,14 +290,14 @@ public class ExceptionHandler {
                 }
 
                 //Full File path
-                String filePath = G.filesPath + "/" + list[i];
+                String filePath = G.filesPath + "/" + aList;
 
                 try {
                     // Read contents of stacktrace
                     StringBuilder stacktrace = new StringBuilder();
                     BufferedReader input = new BufferedReader(new FileReader(filePath));
                     try {
-                        String line = null;
+                        String line;
                         while ((line = input.readLine()) != null) {
                             stacktrace.append(line);
                             stacktrace.append(System.getProperty("line.separator"));
@@ -314,8 +307,6 @@ public class ExceptionHandler {
                     }
                     sStackTraces.add(stacktrace.toString());
 
-                } catch (FileNotFoundException e) {
-                    Log.e(G.tag, "Failed to load stack trace", e);
                 } catch (IOException e) {
                     Log.e(G.tag, "Failed to load stack trace", e);
                 }
@@ -325,12 +316,12 @@ public class ExceptionHandler {
         } finally {
             // Delete ALL the stack traces, even those not read (if there were too many), and do this within a finally clause so that even if something very unexpected went
             // wrong above, it hopefully won't happen again the next time around (because the offending files are gone).
-            for (int i = 0; i < list.length; i++) {
+            for (String aList : list) {
                 try {
-                    File file = new File(G.filesPath + "/" + list[i]);
+                    File file = new File(G.filesPath + "/" + aList);
                     file.delete();
                 } catch (Exception e) {
-                    Log.e(G.tag, "Error deleting trace file: " + list[i], e);
+                    Log.e(G.tag, "Error deleting trace file: " + aList, e);
                 }
             }
         }
@@ -342,7 +333,7 @@ public class ExceptionHandler {
     private static void submitStackTraces(ArrayList<String> list) {
         //Check if we user gave permission to send these reports
         G.preferences = PreferenceManager.getDefaultSharedPreferences(G.context);
-        if (G.preferences.getBoolean(Const.BUG_REPORTS, G.bugReportDefault) == false) {
+        if (!G.preferences.getBoolean(Const.BUG_REPORTS, G.bugReportDefault)) {
             return;
         }
 
@@ -365,7 +356,7 @@ public class ExceptionHandler {
                 HttpPut request = new HttpPut(G.URL);
                 request.addHeader("X-DEVICE-ID", G.deviceId); // Add our device identifier
 
-                List<NameValuePair> nvps = new ArrayList<NameValuePair>();
+                List<NameValuePair> nvps = new ArrayList<>();
 
                 //Add some Device infos
                 nvps.add(new BasicNameValuePair("packageName", G.appPackage));

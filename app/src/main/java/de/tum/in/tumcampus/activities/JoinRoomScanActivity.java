@@ -21,7 +21,7 @@ public class JoinRoomScanActivity extends ActionBarActivity implements ZXingScan
         super.onCreate(state);
 
         mScannerView = new ZXingScannerView(this);   // Programmatically initialize the scanner view
-        List<BarcodeFormat> formats = new ArrayList<BarcodeFormat>();
+        List<BarcodeFormat> formats = new ArrayList<>();
         formats.add(BarcodeFormat.QR_CODE);
         mScannerView.setFormats(formats);
 

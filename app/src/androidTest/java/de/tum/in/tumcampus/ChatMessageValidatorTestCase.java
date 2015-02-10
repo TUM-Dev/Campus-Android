@@ -17,13 +17,13 @@ public class ChatMessageValidatorTestCase extends TestCase {
 
 	protected void setUp() throws Exception {
 		super.setUp();
-		publicKeyFixtures = new ArrayList<ChatPublicKey>();
+		publicKeyFixtures = new ArrayList<>();
 		publicKeyFixtures.add(new ChatPublicKey(
 			"MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDR4+3zbRYVRAecvMcn0vLswZAI1z7JqQ2Q0Mkq\n" +
 			"ZAy78cE/tja8qcD4DXXiQYCKC8BdI68W+DqYLohPuOs6rTYfD/pLsbPKaJLHEb4dw0Uchq36pb60\n" +
 			"6G6aCjZrYM0JJYO/pKbwl6ceF6EJRacGswUQ8qY3ZYd6W7R3J7MQxzJ+lQIDAQAB"));
 		
-		messageFixtures = new ArrayList<ChatMessage>();
+		messageFixtures = new ArrayList<>();
 		messageFixtures.add(buildChatMessage(
 			"This is a message!",
 			"MwBZFVhzIGehiGAVaoxp0k04BJN8YyyqlPQg1hXwg1bQxgjtEXz6KsVzYOWo40/TdhcbUHo+hUhk\n" +
@@ -47,7 +47,7 @@ public class ChatMessageValidatorTestCase extends TestCase {
 	 * @param end The index after the last element to include in the list
 	 */
 	protected List<ChatPublicKey> buildPubkeyList(int start, int end) {
-		List<ChatPublicKey> list = new ArrayList<ChatPublicKey>();
+		List<ChatPublicKey> list = new ArrayList<>();
 		for (int i = start; i < end; ++i) {
 			list.add(publicKeyFixtures.get(i));
 		}
@@ -146,7 +146,7 @@ public class ChatMessageValidatorTestCase extends TestCase {
 	 * key in the list of public keys.
 	 */
 	public void testOneInvalidKey() {
-		List<ChatPublicKey> list = new ArrayList<ChatPublicKey>();
+		List<ChatPublicKey> list = new ArrayList<>();
 		list.add(new ChatPublicKey("This is not a valid key"));
 		list.add(publicKeyFixtures.get(0));
 		validator = new ChatMessageValidator(list);

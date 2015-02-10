@@ -112,7 +112,7 @@ public class LocationManager {
         float results[] = new float[1];
         CafeteriaManager manager = new CafeteriaManager(mContext);
         Cursor cur = manager.getAllFromDb();
-        List<Cafeteria> list = new ArrayList<Cafeteria>(cur.getCount());
+        List<Cafeteria> list = new ArrayList<>(cur.getCount());
 
         if (cur.moveToFirst()) {
             do {

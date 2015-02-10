@@ -93,7 +93,7 @@ public class CardManager {
 
         // Use temporary array to avoid that the main thread is
         // trying to access an empty array
-        newCards = new ArrayList<Card>();
+        newCards = new ArrayList<>();
 
         // Add no internet card
         new NoInternetCard(context).apply();
@@ -104,7 +104,7 @@ public class CardManager {
 
         new EduroamCard(context).apply();
 
-        List<Card.ProvidesCard> managers = new ArrayList<Card.ProvidesCard>();
+        List<Card.ProvidesCard> managers = new ArrayList<>();
 
         // Add those managers only if valid access token is available
         if (new AccessTokenManager(context).hasValidAccessToken()) {

@@ -45,7 +45,7 @@ public class CurriculaActivity extends ActivityForLoadingInBackground<Void,JSONA
         net = new NetUtils(this);
         // Sets the adapter
         ListView list = (ListView) this.findViewById(R.id.activity_curricula_list_view);
-        arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
+        arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
         list.setAdapter(arrayAdapter);
         list.setOnItemClickListener(this);
 
@@ -69,7 +69,7 @@ public class CurriculaActivity extends ActivityForLoadingInBackground<Void,JSONA
             return;
         }
         try {
-            options = new Hashtable<String, String>();
+            options = new Hashtable<>();
             for (int i = 0; i < jsonData.length(); i++) {
                 JSONObject item = jsonData.getJSONObject(i);
 

@@ -19,6 +19,7 @@ package de.tum.in.tumcampus.auxiliary.calendar;
 import android.content.Context;
 import android.text.format.Time;
 
+@SuppressWarnings("ALL")
 public class DayUtils {
 
     // The name of the shared preferences file. This name must be maintained for

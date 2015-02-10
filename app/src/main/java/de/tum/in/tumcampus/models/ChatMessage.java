@@ -1,8 +1,5 @@
 package de.tum.in.tumcampus.models;
 
-import android.content.Context;
-import android.text.format.DateUtils;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;

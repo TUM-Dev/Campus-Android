@@ -96,31 +96,35 @@ public class DownloadService extends IntentService {
         if (NetUtils.isConnected(this) && (launch || !NetUtils.isConnectedMobileData(this))) {
             Log.i(getClass().getSimpleName(), "Handle action <" + action + ">");
             try {
-                if ((action.equals(Const.DOWNLOAD_ALL_FROM_EXTERNAL))) {
-                    try {
-                        downloadNews(force);
-                    } catch (Exception e) {
-                        Utils.log(e);
-                        successful = false;
-                    }
-                    try {
-                        downloadCafeterias(force);
-                    } catch (Exception e) {
-                        Utils.log(e);
-                        successful = false;
-                    }
+                switch (action) {
+                    case Const.DOWNLOAD_ALL_FROM_EXTERNAL:
+                        try {
+                            downloadNews(force);
+                        } catch (Exception e) {
+                            Utils.log(e);
+                            successful = false;
+                        }
+                        try {
+                            downloadCafeterias(force);
+                        } catch (Exception e) {
+                            Utils.log(e);
+                            successful = false;
+                        }
 
-                    boolean isSetup = Utils.getInternalSettingBool(this, Const.EVERYTHING_SETUP, false);
-                    if (!isSetup) {
-                        CacheManager cm = new CacheManager(this);
-                        cm.syncCalendar();
-                        if (successful)
-                            Utils.setInternalSetting(this, Const.EVERYTHING_SETUP, true);
-                    }
-                } else if ((action.equals(Const.NEWS))) {
-                    downloadNews(force);
-                } else if ((action.equals(Const.CAFETERIAS))) {
-                    downloadCafeterias(force);
+                        boolean isSetup = Utils.getInternalSettingBool(this, Const.EVERYTHING_SETUP, false);
+                        if (!isSetup) {
+                            CacheManager cm = new CacheManager(this);
+                            cm.syncCalendar();
+                            if (successful)
+                                Utils.setInternalSetting(this, Const.EVERYTHING_SETUP, true);
+                        }
+                        break;
+                    case Const.NEWS:
+                        downloadNews(force);
+                        break;
+                    case Const.CAFETERIAS:
+                        downloadCafeterias(force);
+                        break;
                 }
             } catch (TimeoutException e) {
                 Utils.log(e);

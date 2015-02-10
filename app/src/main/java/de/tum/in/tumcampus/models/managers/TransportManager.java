@@ -50,7 +50,7 @@ public class TransportManager implements Card.ProvidesCard {
             throw new NoSuchElementException("No departures found");
         }
 
-        ArrayList<Departure> list = new ArrayList<Departure>(jsonArray.length());
+        ArrayList<Departure> list = new ArrayList<>(jsonArray.length());
         for (int j = 2; j < jsonArray.length(); j = j + 3) {
             Departure dep = new Departure();
             dep.symbol = jsonArray.getString(j);

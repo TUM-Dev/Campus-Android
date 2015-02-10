@@ -3,7 +3,6 @@ package de.tum.in.tumcampus.cards;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.format.DateUtils;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;

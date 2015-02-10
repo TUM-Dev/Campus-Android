@@ -84,7 +84,7 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
         manager = new ChatRoomManager(this);
 
         //Load the lectures list
-        requestHandler = new TUMOnlineRequest<LecturesSearchRowSet>(TUMOnlineConst.LECTURES_PERSONAL, this, true);
+        requestHandler = new TUMOnlineRequest<>(TUMOnlineConst.LECTURES_PERSONAL, this, true);
 
         final ActionBar actionBar = getSupportActionBar();
 

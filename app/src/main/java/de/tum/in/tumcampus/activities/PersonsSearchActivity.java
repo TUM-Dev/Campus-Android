@@ -45,7 +45,7 @@ public class PersonsSearchActivity extends ActivityForSearchingTumOnline<PersonL
 
         // Initialize persons adapter
         Cursor personsCursor = recentsManager.getAllFromDb();
-        ArrayList<Person> list = new ArrayList<Person>(personsCursor.getCount());
+        ArrayList<Person> list = new ArrayList<>(personsCursor.getCount());
         if(personsCursor.moveToFirst()) {
             do {
                 String recent = personsCursor.getString(0);
@@ -58,7 +58,7 @@ public class PersonsSearchActivity extends ActivityForSearchingTumOnline<PersonL
         }
         personsCursor.close();
 
-        ArrayAdapter<Person> adapter = new ArrayAdapter<Person>(this,
+        ArrayAdapter<Person> adapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_list_item_1, android.R.id.text1, list);
 
         if(adapter.getCount()==0) {
@@ -95,7 +95,7 @@ public class PersonsSearchActivity extends ActivityForSearchingTumOnline<PersonL
             return;
         }
 
-        ArrayList<Person> list = new ArrayList<Person>(personsCursor.getCount());
+        ArrayList<Person> list = new ArrayList<>(personsCursor.getCount());
         if(personsCursor.moveToFirst()) {
             do {
                 String recent = personsCursor.getString(0);
@@ -108,7 +108,7 @@ public class PersonsSearchActivity extends ActivityForSearchingTumOnline<PersonL
         }
         personsCursor.close();
 
-        ArrayAdapter<Person> adapter = new ArrayAdapter<Person>(this,
+        ArrayAdapter<Person> adapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_list_item_1, android.R.id.text1, list);
         lvPersons.setAdapter(adapter);
     }
@@ -130,7 +130,7 @@ public class PersonsSearchActivity extends ActivityForSearchingTumOnline<PersonL
         if(response.getPersons()==null) {
             lvPersons.setAdapter(new NoResultsAdapter(this));
         } else {
-            ArrayAdapter<Person> adapter = new ArrayAdapter<Person>(this,
+            ArrayAdapter<Person> adapter = new ArrayAdapter<>(this,
                     android.R.layout.simple_list_item_1, android.R.id.text1, response.getPersons());
             lvPersons.setAdapter(adapter);
         }

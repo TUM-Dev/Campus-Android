@@ -29,9 +29,7 @@ public class RSASignerTestCase extends TestCase {
 			keyFactory = KeyFactory.getInstance("RSA");
 			PKCS8EncodedKeySpec privateKeySpec = new PKCS8EncodedKeySpec(privateKeyBytes);
 			return keyFactory.generatePrivate(privateKeySpec);
-		} catch (NoSuchAlgorithmException e) {
-			Utils.log(e);
-		} catch (InvalidKeySpecException e) {
+		} catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
 			Utils.log(e);
 		}
 		return null;
@@ -53,7 +51,7 @@ public class RSASignerTestCase extends TestCase {
 			"9tg4rD0aCHQZ6kEquwN6emc9QM0X6DR0dx6Bqq8CGDkVdk0hXHBR9VUBGE4YSsxpn+LnyWSWyJum" +
 			"dWuepeUKig==");
 		
-		messageFixtures = new ArrayList<ChatMessage>();
+		messageFixtures = new ArrayList<>();
 		messageFixtures.add(buildChatMessage(
 			"This is a message!",
 			"MwBZFVhzIGehiGAVaoxp0k04BJN8YyyqlPQg1hXwg1bQxgjtEXz6KsVzYOWo40/TdhcbUHo+hUhk\n" +

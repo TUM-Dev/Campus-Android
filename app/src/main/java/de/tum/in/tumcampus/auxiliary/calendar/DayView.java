@@ -74,6 +74,7 @@ import de.tum.in.tumcampus.auxiliary.calendar.CalendarController.ViewType;
 /**
  * View for multi-day view. So far only 1 and 7 day have been tested.
  */
+@SuppressWarnings("ALL")
 public class DayView extends View implements View.OnCreateContextMenuListener,
         ScaleGestureDetector.OnScaleGestureListener {
 

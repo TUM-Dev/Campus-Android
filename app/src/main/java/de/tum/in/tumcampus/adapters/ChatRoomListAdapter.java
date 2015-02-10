@@ -38,15 +38,15 @@ public class ChatRoomListAdapter extends CursorAdapter implements StickyListHead
 
     private final ArrayList<String> filters;
     private final LayoutInflater mInflater;
-    private boolean showDateAndNumber;
+    private final boolean showDateAndNumber;
 
     // constructor
     public ChatRoomListAdapter(Context context, Cursor results, int mode) {
         super(context, results, false);
 
         this.mInflater = LayoutInflater.from(context);
-        this.filters = new ArrayList<String>();
-        this.showDateAndNumber = (mode == 1 ? true : false);
+        this.filters = new ArrayList<>();
+        this.showDateAndNumber = (mode == 1);
     }
 
     @Override

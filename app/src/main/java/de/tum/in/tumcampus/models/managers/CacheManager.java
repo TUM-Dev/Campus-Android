@@ -43,7 +43,7 @@ public class CacheManager {
     public static final int VALIDITY_TEN_DAYS = 10 * 86400;
     public static final int VALIDITY_ONE_MONTH = 30 * 86400;
 
-    public static Map<ImageView, String> imageViews = Collections.synchronizedMap(new WeakHashMap<ImageView, String>());
+    public static final Map<ImageView, String> imageViews = Collections.synchronizedMap(new WeakHashMap<ImageView, String>());
     public static final LruCache<String, Bitmap> bitmapCache;
 
     static {
@@ -133,13 +133,13 @@ public class CacheManager {
         // ALL STUFF BELOW HERE NEEDS A VALID ACCESS TOKEN
 
         // Sync organisation tree
-        TUMOnlineRequest<OrgItemList> requestHandler = new TUMOnlineRequest<OrgItemList>(TUMOnlineConst.ORG_TREE, mContext);
+        TUMOnlineRequest<OrgItemList> requestHandler = new TUMOnlineRequest<>(TUMOnlineConst.ORG_TREE, mContext);
         if (shouldRefresh(requestHandler.getRequestURL())) {
             requestHandler.fetch();
         }
 
         // Sync fee status
-        TUMOnlineRequest<TuitionList> requestHandler2 = new TUMOnlineRequest<TuitionList>(TUMOnlineConst.TUITION_FEE_STATUS, mContext);
+        TUMOnlineRequest<TuitionList> requestHandler2 = new TUMOnlineRequest<>(TUMOnlineConst.TUITION_FEE_STATUS, mContext);
         if (shouldRefresh(requestHandler2.getRequestURL())) {
             requestHandler2.fetch();
         }
@@ -152,7 +152,7 @@ public class CacheManager {
     }
 
     public void syncCalendar() {
-        TUMOnlineRequest<CalendarRowSet> requestHandler = new TUMOnlineRequest<CalendarRowSet>(TUMOnlineConst.CALENDER, mContext);
+        TUMOnlineRequest<CalendarRowSet> requestHandler = new TUMOnlineRequest<>(TUMOnlineConst.CALENDER, mContext);
         requestHandler.setParameter("pMonateVor", "0");
         requestHandler.setParameter("pMonateNach", "3");
         if (shouldRefresh(requestHandler.getRequestURL())) {
@@ -230,7 +230,7 @@ public class CacheManager {
      */
     void importLecturesFromTUMOnline() {
         // get my lectures
-        TUMOnlineRequest<LecturesSearchRowSet> requestHandler = new TUMOnlineRequest<LecturesSearchRowSet>(TUMOnlineConst.LECTURES_PERSONAL, mContext);
+        TUMOnlineRequest<LecturesSearchRowSet> requestHandler = new TUMOnlineRequest<>(TUMOnlineConst.LECTURES_PERSONAL, mContext);
         if (!shouldRefresh(requestHandler.getRequestURL()))
             return;
 

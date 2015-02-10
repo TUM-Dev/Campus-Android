@@ -24,10 +24,11 @@ public class Util {
                     new InputStreamReader(process.getInputStream()));
 
             StringBuilder log = new StringBuilder();
-            String line = "";
+            String line;
             String newLine = System.getProperty("line.separator");
             while ((line = bufferedReader.readLine()) != null) {
-                log.append(line + newLine);
+                log.append(line);
+                log.append(newLine);
             }
             return log.toString();
 
@@ -89,7 +90,6 @@ public class Util {
         String screen[] = {"Not available", "Not available", "Not available", "Not available", "Not available"};
 
         DisplayMetrics dm = new DisplayMetrics();
-        PackageManager packageManager = G.context.getPackageManager();
         Display display = ((WindowManager) G.context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
 
         int width = display.getWidth();

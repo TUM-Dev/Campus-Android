@@ -13,7 +13,7 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <dimen name="day_label_text_size">11sp</dimen>
     <dimen name="day_header_bottom_margin">4dip</dimen>
     <dimen name="date_header_text_size">12sp</dimen>

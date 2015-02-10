@@ -195,9 +195,8 @@ public class NewsManager implements Card.ProvidesCard {
      * Replace or Insert a event in the database
      *
      * @param n News object
-     * @throws Exception
      */
-    void replaceIntoDb(News n) throws Exception {
+    void replaceIntoDb(News n) {
         Utils.logv(n.toString());
 
         db.execSQL("REPLACE INTO news (id, src, title, link, image, date, " +
