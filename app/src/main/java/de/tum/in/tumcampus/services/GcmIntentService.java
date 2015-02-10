@@ -27,6 +27,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.RemoteInput;
+import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Base64;
 
@@ -41,6 +42,8 @@ import java.security.spec.PKCS8EncodedKeySpec;
 
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.ChatActivity;
+import de.tum.in.tumcampus.activities.ChatRoomsActivity;
+import de.tum.in.tumcampus.activities.MainActivity;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.ChatClient;
@@ -87,15 +90,14 @@ public class GcmIntentService extends IntentService {
     }
 
     // Put the message into a notification and post it.
-    // This is just one simple example of what you
-    // might choose to do with a GCM message.
     private void sendNotification(Bundle extras) {
         //Get the update details
         int chatRoomId = Integer.parseInt(extras.getString("room"));
         int memberId = Integer.parseInt(extras.getString("member"));
         int messageId = -1;
-        if (extras.containsKey("message"))
+        if (extras.containsKey("message")) {
             messageId = Integer.parseInt(extras.getString("message"));
+        }
 
         Utils.logv("Received GCM notification: room=" + chatRoomId + " member=" + memberId + " message=" + messageId);
 
@@ -130,9 +132,14 @@ public class GcmIntentService extends IntentService {
         Intent notificationIntent = new Intent(this, ChatActivity.class);
         notificationIntent.putExtra(Const.CURRENT_CHAT_ROOM, new Gson().toJson(chatRoom));
 
+        TaskStackBuilder sBuilder = TaskStackBuilder.create(this);
+        sBuilder.addNextIntent(new Intent(this, MainActivity.class));
+        sBuilder.addNextIntent(new Intent(this, ChatRoomsActivity.class));
+        sBuilder.addNextIntent(notificationIntent);
+
         if (Utils.getSettingBool(this, "card_chat_phone", true) && messageId == -1) {
 
-            PendingIntent contentIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_ONE_SHOT);
+            PendingIntent contentIntent = sBuilder.getPendingIntent( 0, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_ONE_SHOT );
 
             // Notification sound
             Uri sound = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.message);
