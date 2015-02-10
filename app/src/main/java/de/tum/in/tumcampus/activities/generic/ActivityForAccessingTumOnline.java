@@ -60,7 +60,7 @@ public abstract class ActivityForAccessingTumOnline<T> extends ProgressActivity 
      * If an error occurred it is handled by {@link ActivityForAccessingTumOnline}.
      *
      * @param force Force reload of content */
-    protected void requestFetch(boolean force) {
+    void requestFetch(boolean force) {
         String accessToken = PreferenceManager.getDefaultSharedPreferences(this).getString(Const.ACCESS_TOKEN, null);
         if (accessToken != null) {
             Log.i(getClass().getSimpleName(), "TUMOnline token is <" + accessToken + ">");

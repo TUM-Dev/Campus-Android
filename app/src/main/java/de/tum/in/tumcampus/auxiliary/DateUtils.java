@@ -11,10 +11,9 @@ import java.util.Locale;
 
 public class DateUtils {
 
-    private static final long SECOND_MILLIS = 1000L;
-    private static final long MINUTE_MILLIS = 60L * SECOND_MILLIS;
-    private static final long HOUR_MILLIS = 60L * MINUTE_MILLIS;
-    private static final long DAY_MILLIS = 24L * HOUR_MILLIS;
+    private static final long MINUTE_MILLIS = android.text.format.DateUtils.MINUTE_IN_MILLIS;
+    private static final long HOUR_MILLIS = android.text.format.DateUtils.HOUR_IN_MILLIS;
+    private static final long DAY_MILLIS = android.text.format.DateUtils.DAY_IN_MILLIS;
 
     private static final String formatSQL = "yyyy-MM-dd HH:mm:ss"; // 2014-06-30 16:31:57
     private static final String formatISO = "yyyy-MM-dd'T'HH:mm:ss'Z'"; // 2014-06-30T16:31:57.878Z
@@ -30,7 +29,7 @@ public class DateUtils {
         }
 
         return android.text.format.DateUtils.getRelativeDateTimeString(context, date.getTime(),
-                android.text.format.DateUtils.MINUTE_IN_MILLIS, android.text.format.DateUtils.DAY_IN_MILLIS * 2L, 0).toString();
+                MINUTE_MILLIS, DAY_MILLIS * 2L, 0).toString();
     }
 
     public static String getTimeOrDay(String datetime) {
@@ -66,6 +65,9 @@ public class DateUtils {
     }
 
     public static Date parseSqlDate(String datetime) {
+        if(datetime == null) {
+            return null;
+        }
         try {
             SimpleDateFormat formatter = new SimpleDateFormat(DateUtils.formatSQL, Locale.ENGLISH); // 2014-06-30 16:31:57
             return formatter.parse(datetime);
@@ -76,6 +78,9 @@ public class DateUtils {
     }
 
     public static Date parseIsoDate(String datetime) {
+        if(datetime == null) {
+            return null;
+        }
         try {
             SimpleDateFormat formatter = new SimpleDateFormat(formatISO, Locale.ENGLISH);
             return formatter.parse(datetime);

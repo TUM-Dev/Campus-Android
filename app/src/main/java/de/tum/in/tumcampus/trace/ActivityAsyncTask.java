@@ -35,6 +35,7 @@ package de.tum.in.tumcampus.trace;
  * for mWrapped and setting mPostProcessingDone. We should fix those
  * by using a lock.
  */
+@SuppressWarnings("ALL")
 public abstract class ActivityAsyncTask<Connect, Params, Progress, Result>
         extends AsyncTask<Params, Progress, Result> {
 

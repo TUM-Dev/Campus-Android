@@ -2,7 +2,6 @@ package de.tum.in.tumcampus.auxiliary;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
@@ -15,7 +14,6 @@ import org.xml.sax.SAXException;
 
 import java.io.IOException;
 import java.io.StringReader;
-import java.io.UnsupportedEncodingException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -123,8 +121,6 @@ public class XMLParser {
                 // do something with the response
                 xml = EntityUtils.toString(httpEntity, HTTP.UTF_8);
             }
-        } catch (UnsupportedEncodingException | ClientProtocolException e) {
-            Utils.log(e);
         } catch (IOException e) {
             Utils.log(e);
         }

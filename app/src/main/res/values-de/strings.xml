@@ -5,7 +5,6 @@
 
     <!-- Generic -->
     <string name="app_name">TUM Campus App</string>
-    <string name="campus_app">Campus App</string>
     <string name="search">Suchen</string>
     <string name="tum_logo">TUM Logo</string>
     <string name="update">Update</string>
@@ -19,7 +18,6 @@
     <!-- Calendar -->
     <string name="dialog_show_calendar">Exportieren erfolgreich.\nLokalen Kalender <i>TUM_CAMPUS_APP</i> in der <i>Google Calendar App</i> anzeigen?</string>
     <string name="export_to_google">Exportiere nach Google</string>
-    <string name="calendarTimeZone">Germany/Munich</string>
     <string name="delete_from_google">Löschen aus Google</string>
     <string name="dialog_delete_calendar">Den lokalen <i>TUM_CAMPUS_APP</i> Kalender von deinem Gerät löschen?</string>
     <string name="calendar_deleted_toast">Kalender erfolgreich gelöscht</string>
@@ -82,7 +80,6 @@
 
     <string name="about_tca">Über TCA</string>
     <string name="information">Informationen</string>
-    <string name="facebook">Facebook</string>
     <string name="github">Mitmachen auf Github</string>
     <string name="licences">Open Source-Lizenzen</string>
     <string name="licences_summary">Rechtliche Hinweise zu Lizenzen</string>
@@ -196,7 +193,6 @@
     <string name="mensa_weihenstephan">Mensa Weihenstephan</string>
 
     <!-- Plans -->
-    <string name="campus_garching">Campus Garching</string>
     <string name="campus_klinikum">Campus Klinikum</string>
     <string name="campus_olympiapark">Campus Olympiapark</string>
     <string name="campus_olympiapark_gyms">Campus Olympiapark Hallenplan</string>
@@ -365,4 +361,6 @@ Signatur: %5$s</string>
     <string name="invalid_chat_room">Ungültiger Chatroom</string>
     <string name="new_chat_room">Neuer Chatroom</string>
     <string name="new_chat_room_desc">Wähle einen Namen für den Chatroom. Der Name kann später nicht mehr geändert werden!\n\n</string>
+    <string name="reply_label">Antworten</string>
+    <string name="privacy_policy">Datenschutzerklärung</string>
 </resources>

@@ -15,7 +15,6 @@ import org.apache.http.protocol.HTTP;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FilenameFilter;
 import java.io.IOException;
@@ -34,7 +33,6 @@ public class ExceptionHandler {
     private static ActivityAsyncTask<Processor, Object, Object, Object> sTask;
     private static boolean sVerbose = false;
     private static int sMinDelay = 0;
-    private static Integer sTimeout = null;
     private static boolean sSetupCalled = false;
 
     public static interface Processor {
@@ -49,8 +47,8 @@ public class ExceptionHandler {
      * Setup the handler for unhandled exceptions, and submit stack
      * traces from a previous crash.
      *
-     * @param context
-     * @param processor
+     * @param context context
+     * @param processor processor
      */
     public static boolean setup(Context context, final Processor processor) {
 
@@ -122,7 +120,7 @@ public class ExceptionHandler {
      * <p/>
      * Simplified version that uses a default processor.
      *
-     * @param context
+     * @param context context
      */
     public static boolean setup(Context context) {
         return setup(context, new Processor() {
@@ -198,11 +196,6 @@ public class ExceptionHandler {
                             }
                         }
                         return null;
-                    }
-
-                    @Override
-                    protected void onCancelled() {
-                        super.onCancelled();
                     }
 
                     @Override
@@ -314,8 +307,6 @@ public class ExceptionHandler {
                     }
                     sStackTraces.add(stacktrace.toString());
 
-                } catch (FileNotFoundException e) {
-                    Log.e(G.tag, "Failed to load stack trace", e);
                 } catch (IOException e) {
                     Log.e(G.tag, "Failed to load stack trace", e);
                 }
