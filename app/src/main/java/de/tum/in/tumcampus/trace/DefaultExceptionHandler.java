@@ -12,7 +12,7 @@ import java.util.Random;
 
 public class DefaultExceptionHandler implements UncaughtExceptionHandler {
 
-    private UncaughtExceptionHandler defaultExceptionHandler;
+    private final UncaughtExceptionHandler defaultExceptionHandler;
 
     // constructor
     public DefaultExceptionHandler(UncaughtExceptionHandler pDefaultExceptionHandler) {

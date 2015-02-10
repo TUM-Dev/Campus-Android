@@ -18,6 +18,7 @@ package de.tum.in.tumcampus.auxiliary.calendar;
 
 import android.graphics.Rect;
 
+@SuppressWarnings("ALL")
 public class EventGeometry {
     // This is the space from the grid line to the event rectangle.
     private int mCellMargin = 0;

@@ -28,7 +28,6 @@ public class TumManager {
     private static final int defaultLock = 60; //Base value for the first error: 60 seconds
 
     private final SQLiteDatabase db;
-    private final Context mContext;
 
     public static class reqStatus {
         private String url;
@@ -44,7 +43,6 @@ public class TumManager {
      * @param context Context
      */
     public TumManager(Context context) {
-        mContext = context;
         db = DatabaseManager.getDb(context);
 
         // create table if needed

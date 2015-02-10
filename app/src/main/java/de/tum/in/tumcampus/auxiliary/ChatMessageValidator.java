@@ -1,7 +1,6 @@
 package de.tum.in.tumcampus.auxiliary;
 
 import android.util.Base64;
-import android.util.Log;
 
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;

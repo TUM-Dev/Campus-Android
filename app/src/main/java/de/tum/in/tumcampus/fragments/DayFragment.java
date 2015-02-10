@@ -59,7 +59,7 @@ public class DayFragment extends Fragment implements CalendarController.EventHan
     protected Animation mOutAnimationBackward;
     EventLoader mEventLoader;
 
-    Time mSelectedDay = new Time();
+    final Time mSelectedDay = new Time();
 
     private final Runnable mTZUpdater = new Runnable() {
         @Override

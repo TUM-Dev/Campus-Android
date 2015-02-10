@@ -2,7 +2,9 @@ package de.tum.in.tumcampus.auxiliary;
 
 import android.content.Context;
 import android.text.format.Time;
+import android.util.Log;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -16,6 +18,7 @@ public class DateUtils {
 
     private static final String formatSQL = "yyyy-MM-dd HH:mm:ss"; // 2014-06-30 16:31:57
     private static final String formatISO = "yyyy-MM-dd'T'HH:mm:ss'Z'"; // 2014-06-30T16:31:57.878Z
+    private static final String logTag = "DateUtils";
 
     public static String getRelativeTimeISO(String timestamp, Context context) {
             return DateUtils.getRelativeTime(DateUtils.parseIsoDate(timestamp), context);
@@ -39,16 +42,16 @@ public class DateUtils {
             return "";
         }
 
-        long timeInMilis = time.getTime();
+        long timeInMillis = time.getTime();
         long now = DateUtils.getCurrentTime().toMillis(false);
 
         //Catch future dates: current clock might be running behind
-        if (timeInMilis > now || timeInMilis <= 0) {
+        if (timeInMillis > now || timeInMillis <= 0) {
             return "Gerade eben";
         }
 
         // TODO: localize
-        final long diff = now - timeInMilis;
+        final long diff = now - timeInMillis;
         if (diff < MINUTE_MILLIS) {
             return "Gerade eben";
         } else if (diff < 24 * HOUR_MILLIS) {
@@ -66,7 +69,8 @@ public class DateUtils {
         try {
             SimpleDateFormat formatter = new SimpleDateFormat(DateUtils.formatSQL, Locale.ENGLISH); // 2014-06-30 16:31:57
             return formatter.parse(datetime);
-        } catch (Exception e) {
+        } catch (ParseException e) {
+            Log.e(logTag, "Parsing SQL date failed");
         }
         return null;
     }
@@ -75,7 +79,8 @@ public class DateUtils {
         try {
             SimpleDateFormat formatter = new SimpleDateFormat(formatISO, Locale.ENGLISH);
             return formatter.parse(datetime);
-        } catch (Exception e) {
+        } catch (ParseException e) {
+            Log.e(logTag, "Parsing SQL date failed");
         }
         return null;
     }

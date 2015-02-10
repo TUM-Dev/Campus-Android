@@ -19,6 +19,7 @@ package de.tum.in.tumcampus.auxiliary.calendar;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
@@ -26,6 +27,7 @@ import java.util.Map;
 /**
  * A cache for event colors and event color keys stored based upon calendar account name and type.
  */
+@SuppressWarnings("ALL")
 public class EventColorCache implements Serializable {
 
     private static final long serialVersionUID = 2L;
@@ -86,9 +88,7 @@ public class EventColorCache implements Serializable {
             Integer[] sortedColors = new Integer[palette.size()];
             Arrays.sort(palette.toArray(sortedColors), comparator);
             palette.clear();
-            for (Integer color : sortedColors) {
-                palette.add(color);
-            }
+            Collections.addAll(palette, sortedColors);
             mColorPaletteMap.put(key, palette);
         }
     }

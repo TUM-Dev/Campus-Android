@@ -43,7 +43,7 @@ public class ChatMessageManager {
      */
     private final SQLiteDatabase db;
     private final int mChatRoom;
-    private Context mContext;
+    private final Context mContext;
 
     /**
      * Constructor, open/create database, create table if necessary

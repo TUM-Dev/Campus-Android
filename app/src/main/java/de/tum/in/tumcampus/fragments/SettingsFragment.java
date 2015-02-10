@@ -228,72 +228,81 @@ public class SettingsFragment extends PreferenceFragment implements
     public boolean onPreferenceClick(Preference preference) {
         final String key = preference.getKey();
 
-        if (key.equals("button_wizard")) {
-            mContext.finish();
-            startActivity(new Intent(mContext, WizNavStartActivity.class));
+        switch (key) {
+            case "button_wizard":
+                mContext.finish();
+                startActivity(new Intent(mContext, WizNavStartActivity.class));
 
 
-        } else if (key.equals("button_clear_cache")) {
-            // This button invokes the clear cache method
-            new AlertDialog.Builder(mContext)
-                    .setMessage(R.string.delete_chache_sure)
-                    .setPositiveButton(R.string.yes, new Dialog.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            clearCache();
-                        }
-                    })
-                    .setNegativeButton(R.string.no, null).show();
+                break;
+            case "button_clear_cache":
+                // This button invokes the clear cache method
+                new AlertDialog.Builder(mContext)
+                        .setMessage(R.string.delete_chache_sure)
+                        .setPositiveButton(R.string.yes, new Dialog.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                clearCache();
+                            }
+                        })
+                        .setNegativeButton(R.string.no, null).show();
 
-        } else if (key.equals("facebook")) {
-            // Open the facebook app or view in a browser when not installed
-            Intent facebook;
-            try {
-                //Try to get facebook package to check if fb app is installed
-                mContext.getPackageManager().getPackageInfo("com.facebook.katana", 0);
-                facebook = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.facebook_link_app)));
-            } catch (Exception e) {
-                //otherwise just open the normal url
-                facebook = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.facebook_link)));
-            }
-            startActivity(facebook);
-
-
-        } else if (key.equals("github")) {
-            // Open TCA-github web page
-            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.github_link))));
+                break;
+            case "facebook":
+                // Open the facebook app or view in a browser when not installed
+                Intent facebook;
+                try {
+                    //Try to get facebook package to check if fb app is installed
+                    mContext.getPackageManager().getPackageInfo("com.facebook.katana", 0);
+                    facebook = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.facebook_link_app)));
+                } catch (Exception e) {
+                    //otherwise just open the normal url
+                    facebook = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.facebook_link)));
+                }
+                startActivity(facebook);
 
 
-        } else if (key.equals("first_run")) {
-            // Show first use tutorial
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-            SharedPreferences.Editor e = prefs.edit();
-            e.putBoolean(CardManager.SHOW_TUTORIAL_1, true);
-            e.putBoolean(CardManager.SHOW_TUTORIAL_2, true);
-            e.apply();
-            CardManager.update(mContext);
-            startActivity(new Intent(mContext, MainActivity.class));
+                break;
+            case "github":
+                // Open TCA-github web page
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.github_link))));
 
 
-        } else if (key.equals("licenses")) {
-            // Show licences
-            new LicensesDialog(mContext, R.raw.notices, false, true).show();
+                break;
+            case "first_run":
+                // Show first use tutorial
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+                SharedPreferences.Editor e = prefs.edit();
+                e.putBoolean(CardManager.SHOW_TUTORIAL_1, true);
+                e.putBoolean(CardManager.SHOW_TUTORIAL_2, true);
+                e.apply();
+                CardManager.update(mContext);
+                startActivity(new Intent(mContext, MainActivity.class));
 
 
-        } else if (key.equals("feedback")) {
+                break;
+            case "licenses":
+                // Show licences
+                new LicensesDialog(mContext, R.raw.notices, false, true).show();
+
+
+                break;
+            case "feedback":
             /* Create the Intent */
-            Uri uri = Uri.parse("mailto:tca-support.os.in@tum.de?subject=" + getString(R.string.feedbackSubj));
+                Uri uri = Uri.parse("mailto:tca-support.os.in@tum.de?subject=" + getString(R.string.feedbackSubj));
 
-            Intent sendIntent = new Intent(Intent.ACTION_SENDTO);
-            sendIntent.setData(uri);
+                Intent sendIntent = new Intent(Intent.ACTION_SENDTO);
+                sendIntent.setData(uri);
 
 		    /* Send it off to the Activity-Chooser */
-            startActivity(Intent.createChooser(sendIntent, getString(R.string.send_email)));
-        } else if (key.equals("privacy")) {
-            Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.url_privacy_policy)));
-            startActivity(myIntent);
-        } else {
-            return false;
+                startActivity(Intent.createChooser(sendIntent, getString(R.string.send_email)));
+                break;
+            case "privacy":
+                Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.url_privacy_policy)));
+                startActivity(myIntent);
+                break;
+            default:
+                return false;
         }
 
         return true;

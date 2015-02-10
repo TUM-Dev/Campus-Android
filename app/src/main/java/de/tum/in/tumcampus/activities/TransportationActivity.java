@@ -106,9 +106,7 @@ public class TransportationActivity extends ActivityForSearchingInBackground<Cur
         Cursor stationCursor = null;
         try {
             stationCursor = TransportManager.getStationsFromExternal(this, inputText);
-        } catch (TimeoutException e) {
-            showNoInternetLayout();
-        } catch (IOException e) {
+        } catch (TimeoutException | IOException e) {
             showNoInternetLayout();
         } catch (Exception e) {
             Utils.log(e);

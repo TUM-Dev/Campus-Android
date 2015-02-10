@@ -27,6 +27,7 @@ import java.util.Iterator;
 
 import de.tum.in.tumcampus.auxiliary.Utils;
 
+@SuppressWarnings("ALL")
 public class Event implements Cloneable {
 
     public long id;

@@ -107,14 +107,15 @@ public class CafeteriaPrices {
      */
     public static HashMap<String, String> getRolePrices(Context context) {
         String type = Utils.getSetting(context, Const.ROLE, "");
-        if (type.equals("0")) {
-            return student_prices;
-        } else if (type.equals("1")) {
-            return employee_prices;
-        } else if (type.equals("2")) {
-            return guest_prices;
-        } else {
-            return student_prices;
+        switch (type) {
+            case "0":
+                return student_prices;
+            case "1":
+                return employee_prices;
+            case "2":
+                return guest_prices;
+            default:
+                return student_prices;
         }
     }
 }

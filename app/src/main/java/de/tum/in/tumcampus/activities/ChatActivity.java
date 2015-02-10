@@ -122,7 +122,7 @@ public class ChatActivity extends ActionBarActivity implements DialogInterface.O
 
     }
 
-    private Handler mUpdateHandler = new Handler();
+    private final Handler mUpdateHandler = new Handler();
 
     @Override
     protected void onResume() {
@@ -412,7 +412,7 @@ public class ChatActivity extends ActionBarActivity implements DialogInterface.O
         }).start();
     }
 
-    private BroadcastReceiver receiver = new BroadcastReceiver() {
+    private final BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             Bundle extras = intent.getExtras();
@@ -523,7 +523,7 @@ public class ChatActivity extends ActionBarActivity implements DialogInterface.O
         return true;
     }
 
-    private ActionMode.Callback mActionModeCallback = new ActionMode.Callback() {
+    private final ActionMode.Callback mActionModeCallback = new ActionMode.Callback() {
 
         // Called when the action mode is created; startActionMode() was called
         @Override

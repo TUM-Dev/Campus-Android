@@ -9,6 +9,7 @@ import java.util.Date;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.tumonline.TUMRoomFinderRequest;
 
+@SuppressWarnings("ALL")
 public class LoadEventsRequestTimeTable implements EventLoader.LoadRequestClone {
 
     public int id;

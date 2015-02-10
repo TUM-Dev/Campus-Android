@@ -170,9 +170,7 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
             try {
                 weightedGrade += format.parse(item.getGrade()).doubleValue()
                         * Double.valueOf(item.getCredits());
-            } catch (NumberFormatException e) {
-                Utils.log(e);
-            } catch (ParseException e) {
+            } catch (NumberFormatException | ParseException e) {
                 Utils.log(e);
             }
 

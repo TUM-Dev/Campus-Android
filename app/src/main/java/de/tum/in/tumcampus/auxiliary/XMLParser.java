@@ -123,9 +123,7 @@ public class XMLParser {
                 // do something with the response
                 xml = EntityUtils.toString(httpEntity, HTTP.UTF_8);
             }
-        } catch (UnsupportedEncodingException e) {
-            Utils.log(e);
-        } catch (ClientProtocolException e) {
+        } catch (UnsupportedEncodingException | ClientProtocolException e) {
             Utils.log(e);
         } catch (IOException e) {
             Utils.log(e);

@@ -9,6 +9,7 @@ import java.util.Date;
 
 import de.tum.in.tumcampus.models.managers.CalendarManager;
 
+@SuppressWarnings("ALL")
 public class LoadEventsRequest implements EventLoader.LoadRequestClone {
 
     public int id;

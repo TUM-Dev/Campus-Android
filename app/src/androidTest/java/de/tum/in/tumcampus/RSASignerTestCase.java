@@ -29,9 +29,7 @@ public class RSASignerTestCase extends TestCase {
 			keyFactory = KeyFactory.getInstance("RSA");
 			PKCS8EncodedKeySpec privateKeySpec = new PKCS8EncodedKeySpec(privateKeyBytes);
 			return keyFactory.generatePrivate(privateKeySpec);
-		} catch (NoSuchAlgorithmException e) {
-			Utils.log(e);
-		} catch (InvalidKeySpecException e) {
+		} catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
 			Utils.log(e);
 		}
 		return null;

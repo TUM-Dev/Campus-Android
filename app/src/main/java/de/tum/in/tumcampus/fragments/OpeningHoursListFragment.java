@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import de.tum.in.tumcampus.R;
@@ -116,8 +117,8 @@ public class OpeningHoursListFragment extends ListFragment {
 
 		// Notify the active callbacks interface (the activity, if the
 		// fragment is attached to one) that an item has been selected.
-        ArrayAdapter<String> adapter = (ArrayAdapter<String>) getListAdapter();
-		mCallbacks.onItemSelected(position, adapter.getItem(position));
+        final ListAdapter adapter = getListAdapter();
+		mCallbacks.onItemSelected(position, adapter.getItem(position).toString());
 	}
 
 	@Override

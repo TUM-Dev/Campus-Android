@@ -289,7 +289,7 @@ public class ExceptionHandler {
         try {
 
             sStackTraces = new ArrayList<>();
-            for (int i = 0; i < list.length; i++) {
+            for (String aList : list) {
 
                 // Limit to a certain number of SUCCESSFULLY read traces
                 if (sStackTraces.size() >= G.MAX_TRACES) {
@@ -297,7 +297,7 @@ public class ExceptionHandler {
                 }
 
                 //Full File path
-                String filePath = G.filesPath + "/" + list[i];
+                String filePath = G.filesPath + "/" + aList;
 
                 try {
                     // Read contents of stacktrace
@@ -325,12 +325,12 @@ public class ExceptionHandler {
         } finally {
             // Delete ALL the stack traces, even those not read (if there were too many), and do this within a finally clause so that even if something very unexpected went
             // wrong above, it hopefully won't happen again the next time around (because the offending files are gone).
-            for (int i = 0; i < list.length; i++) {
+            for (String aList : list) {
                 try {
-                    File file = new File(G.filesPath + "/" + list[i]);
+                    File file = new File(G.filesPath + "/" + aList);
                     file.delete();
                 } catch (Exception e) {
-                    Log.e(G.tag, "Error deleting trace file: " + list[i], e);
+                    Log.e(G.tag, "Error deleting trace file: " + aList, e);
                 }
             }
         }
@@ -342,7 +342,7 @@ public class ExceptionHandler {
     private static void submitStackTraces(ArrayList<String> list) {
         //Check if we user gave permission to send these reports
         G.preferences = PreferenceManager.getDefaultSharedPreferences(G.context);
-        if (G.preferences.getBoolean(Const.BUG_REPORTS, G.bugReportDefault) == false) {
+        if (!G.preferences.getBoolean(Const.BUG_REPORTS, G.bugReportDefault)) {
             return;
         }
 
