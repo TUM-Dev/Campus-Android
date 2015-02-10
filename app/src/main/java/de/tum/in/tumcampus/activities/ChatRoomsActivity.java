@@ -268,7 +268,7 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
             lvMyLecturesList.setAdapter(new NoResultsAdapter(this));
         } else {
             // set ListView to data via the LecturesListAdapter
-            adapter = new ChatRoomListAdapter(this, result);
+            adapter = new ChatRoomListAdapter(this, result, mCurrentMode);
             lvMyLecturesList.setAdapter(adapter);
         }
     }

@@ -38,13 +38,15 @@ public class ChatRoomListAdapter extends CursorAdapter implements StickyListHead
 
     private final ArrayList<String> filters;
     private final LayoutInflater mInflater;
+    private boolean showDateAndNumber;
 
     // constructor
-    public ChatRoomListAdapter(Context context, Cursor results) {
+    public ChatRoomListAdapter(Context context, Cursor results, int mode) {
         super(context, results, false);
-        mInflater = LayoutInflater.from(context);
 
-        filters = new ArrayList<String>();
+        this.mInflater = LayoutInflater.from(context);
+        this.filters = new ArrayList<String>();
+        this.showDateAndNumber = (mode == 1 ? true : false);
     }
 
     @Override
@@ -69,9 +71,14 @@ public class ChatRoomListAdapter extends CursorAdapter implements StickyListHead
         ViewHolder holder = (ViewHolder) view.getTag();
         holder.tvLectureName.setText(cursor.getString(ChatRoomManager.COL_NAME));
         holder.tvDozent.setText(cursor.getString(9));
-        holder.tvMembers.setText(cursor.getString(ChatRoomManager.COL_MEMBERS));
-        holder.tvLastmsg.setText(DateUtils.getTimeOrDay(cursor.getString(8)));
-        holder.llAdditionalInfo.setVisibility(View.VISIBLE);
+
+        if (showDateAndNumber) {
+            holder.tvMembers.setText(cursor.getString(ChatRoomManager.COL_MEMBERS));
+            holder.tvLastmsg.setText(DateUtils.getTimeOrDay(cursor.getString(8)));
+            holder.llAdditionalInfo.setVisibility(View.VISIBLE);
+        }else{
+            holder.tvDozent.setText(cursor.getString(ChatRoomManager.COL_CONTRIBUTOR));
+        }
 
         Utils.logv("members " + cursor.getString(ChatRoomManager.COL_MEMBERS) + " " + cursor.getString(8));
     }
