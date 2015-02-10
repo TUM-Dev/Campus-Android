@@ -9,6 +9,7 @@ import android.util.Log;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeoutException;
 
 import de.tum.in.tumcampus.R;
@@ -37,7 +38,7 @@ public class DownloadService extends IntentService {
     private static final String LAST_UPDATE = "last_update";
     private static final String CSV_LOCATIONS = "locations.csv";
 
-    private static boolean running = false;
+    private static final Semaphore sem = new Semaphore(1, true);
 
     /**
      * default init (run intent in new thread)
@@ -66,17 +67,18 @@ public class DownloadService extends IntentService {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                download(intent);
+                try{
+                    download(intent);
+                }catch (Exception e){
+                    Utils.log("Could not aquire lock!");
+                }
             }
         }).start();
     }
 
-    private void download(Intent intent) {
+    private void download(Intent intent) throws InterruptedException {
         //Semaphore
-        if (running) {
-            return;
-        }
-        running = true;
+        sem.acquire();
 
         boolean successful = true;
         String action = intent.getStringExtra(Const.ACTION_EXTRA);
@@ -86,7 +88,7 @@ public class DownloadService extends IntentService {
         // No action: leave service
         if (action == null) {
             //Unlock semaphore and return
-            running = false;
+            sem.release();
             return;
         }
 
@@ -165,7 +167,7 @@ public class DownloadService extends IntentService {
         }
 
         //Unlock semaphore and return
-        running = false;
+        sem.release();
     }
 
     private void broadcastDownloadCompleted() {
