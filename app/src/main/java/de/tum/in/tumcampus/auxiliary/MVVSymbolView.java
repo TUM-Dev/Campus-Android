@@ -30,48 +30,52 @@ class MVVSymbolView extends Drawable {
         mTriangle = 0;
         int backgroundColor = 0;
 
-        switch (line.charAt(0)) {
-            case 'S':
-                int num = Integer.parseInt(line.substring(1));
-                mRounded = true;
-                if(num<=8)
-                    backgroundColor = sLineColor[num-1];
-                else if(num==20)
-                    backgroundColor = 0xffca536a;
-                else if(num==27)
-                    backgroundColor = 0xffd99098;
-                mTextColor = num==8?0xfff1cb00:0xffffffff;
-                break;
-            case 'U':
-                num = Integer.parseInt(line.substring(1));
-                if(num==7) {
-                    mTriangle = 1;
-                    backgroundColor = 0xffc10134;
-                } else if(num==8) {
-                    mTriangle = 2;
-                    backgroundColor = 0xffeb6a27;
-                } else {
-                    backgroundColor = uLineColor[num-1];
-                }
-                mTextColor = 0xfffcfefc;
-                break;
-            case 'N':
-                backgroundColor = 0xff000000;
-                mTextColor = 0xffebd22e;
-                break;
-            case 'X':
-                backgroundColor = 0xff477f70;
-                break;
-            default:
-                num = Integer.parseInt(line);
-                if(num<50) {
-                    backgroundColor = 0xffdc261c;
+        try {
+            switch (line.charAt(0)) {
+                case 'S':
+                    int num = Integer.parseInt(line.substring(1));
+                    mRounded = true;
+                    if (num <= 8)
+                        backgroundColor = sLineColor[num - 1];
+                    else if (num == 20)
+                        backgroundColor = 0xffca536a;
+                    else if (num == 27)
+                        backgroundColor = 0xffd99098;
+                    mTextColor = num == 8 ? 0xfff1cb00 : 0xffffffff;
+                    break;
+                case 'U':
+                    num = Integer.parseInt(line.substring(1));
+                    if (num == 7) {
+                        mTriangle = 1;
+                        backgroundColor = 0xffc10134;
+                    } else if (num == 8) {
+                        mTriangle = 2;
+                        backgroundColor = 0xffeb6a27;
+                    } else {
+                        backgroundColor = uLineColor[num - 1];
+                    }
                     mTextColor = 0xfffcfefc;
-                } else if(num<90) {
-                    backgroundColor = 0xfffc6604;
-                } else {
-                    backgroundColor = 0xff004a5d;
-                }
+                    break;
+                case 'N':
+                    backgroundColor = 0xff000000;
+                    mTextColor = 0xffebd22e;
+                    break;
+                case 'X':
+                    backgroundColor = 0xff477f70;
+                    break;
+                default:
+                    num = Integer.parseInt(line);
+                    if (num < 50) {
+                        backgroundColor = 0xffdc261c;
+                        mTextColor = 0xfffcfefc;
+                    } else if (num < 90) {
+                        backgroundColor = 0xfffc6604;
+                    } else {
+                        backgroundColor = 0xff004a5d;
+                    }
+            }
+        } catch (NumberFormatException e) {
+            //Leave default
         }
         mBgPaint = new Paint();
         mBgPaint.setStyle(Paint.Style.FILL);
