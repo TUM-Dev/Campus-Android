@@ -25,7 +25,7 @@ public class CafeteriaDetailsSectionsPagerAdapter extends FragmentStatePagerAdap
     private Cursor cursorCafeteriaDates;
 
     /** Current Date selected (ISO format) */
-    private final ArrayList<String> dates = new ArrayList<String>();
+    private final ArrayList<String> dates = new ArrayList<>();
 
     public CafeteriaDetailsSectionsPagerAdapter(FragmentManager fm) {
         super(fm);

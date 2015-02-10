@@ -35,6 +35,7 @@ import java.util.TimeZone;
  * This is a convenient way for storing information needed by the UI to write to
  * the events table. Only fields that are important to the UI are included.
  */
+@SuppressWarnings("ALL")
 public class CalendarEventModel implements Serializable {
     private static final String TAG = "CalendarEventModel";
 

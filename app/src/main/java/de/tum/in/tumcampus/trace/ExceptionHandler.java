@@ -288,7 +288,7 @@ public class ExceptionHandler {
         //Try to read all of them
         try {
 
-            sStackTraces = new ArrayList<String>();
+            sStackTraces = new ArrayList<>();
             for (int i = 0; i < list.length; i++) {
 
                 // Limit to a certain number of SUCCESSFULLY read traces
@@ -304,7 +304,7 @@ public class ExceptionHandler {
                     StringBuilder stacktrace = new StringBuilder();
                     BufferedReader input = new BufferedReader(new FileReader(filePath));
                     try {
-                        String line = null;
+                        String line;
                         while ((line = input.readLine()) != null) {
                             stacktrace.append(line);
                             stacktrace.append(System.getProperty("line.separator"));
@@ -365,7 +365,7 @@ public class ExceptionHandler {
                 HttpPut request = new HttpPut(G.URL);
                 request.addHeader("X-DEVICE-ID", G.deviceId); // Add our device identifier
 
-                List<NameValuePair> nvps = new ArrayList<NameValuePair>();
+                List<NameValuePair> nvps = new ArrayList<>();
 
                 //Add some Device infos
                 nvps.add(new BasicNameValuePair("packageName", G.appPackage));

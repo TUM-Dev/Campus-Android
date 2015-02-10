@@ -94,7 +94,7 @@ public class ChatMessageManager {
         SQLiteDatabase db = DatabaseManager.getDb(context);
         init(db);
         Cursor cur = db.rawQuery("SELECT member, text, room, msg_id, _id FROM unsent_chat_message ORDER BY _id", null);
-        ArrayList<ChatMessage> list = new ArrayList<ChatMessage>(cur.getCount());
+        ArrayList<ChatMessage> list = new ArrayList<>(cur.getCount());
         if(cur.moveToFirst()) {
             do {
                 ChatMember member = new Gson().fromJson(cur.getString(0), ChatMember.class);
@@ -114,7 +114,7 @@ public class ChatMessageManager {
      */
     public ArrayList<ChatMessage> getAllUnsent() {
         Cursor cur = db.rawQuery("SELECT member, text, room, _id FROM unsent_chat_message WHERE msg_id=0 ORDER BY _id", null);
-        ArrayList<ChatMessage> list = new ArrayList<ChatMessage>(cur.getCount());
+        ArrayList<ChatMessage> list = new ArrayList<>(cur.getCount());
         if(cur.moveToFirst()) {
             do {
                 ChatMember member = new Gson().fromJson(cur.getString(0), ChatMember.class);
@@ -170,7 +170,7 @@ public class ChatMessageManager {
                 "WHERE c._id>until._id AND c.room=? " +
                 "ORDER BY c._id DESC " +
                 "LIMIT 5", new String[]{"" + mChatRoom, "" + mChatRoom});
-        ArrayList<ChatMessage> list = new ArrayList<ChatMessage>(cur.getCount());
+        ArrayList<ChatMessage> list = new ArrayList<>(cur.getCount());
         if(cur.moveToFirst()) {
             do {
                 ChatMember member = new Gson().fromJson(cur.getString(0), ChatMember.class);

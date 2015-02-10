@@ -36,8 +36,8 @@ public class EventColorCache implements Serializable {
     private Map<String, Integer> mColorKeyMap;
 
     public EventColorCache() {
-        mColorPaletteMap = new HashMap<String, ArrayList<Integer>>();
-        mColorKeyMap = new HashMap<String, Integer>();
+        mColorPaletteMap = new HashMap<>();
+        mColorKeyMap = new HashMap<>();
     }
 
     /**
@@ -49,7 +49,7 @@ public class EventColorCache implements Serializable {
         String key = createKey(accountName, accountType);
         ArrayList<Integer> colorPalette;
         if ((colorPalette = mColorPaletteMap.get(key)) == null) {
-            colorPalette = new ArrayList<Integer>();
+            colorPalette = new ArrayList<>();
         }
         colorPalette.add(displayColor);
         mColorPaletteMap.put(key, colorPalette);

@@ -148,7 +148,7 @@ public class CafeteriaMenuManager {
      */
     public List<CafeteriaMenu> getTypeNameFromDbCardList(int mensaId, String dateStr, Date date) {
         Cursor cursorCafeteriaMenu = getTypeNameFromDbCard(mensaId, dateStr);
-        ArrayList<CafeteriaMenu> menus = new ArrayList<CafeteriaMenu>();
+        ArrayList<CafeteriaMenu> menus = new ArrayList<>();
         if(cursorCafeteriaMenu.moveToFirst()) {
             do {
                 CafeteriaMenu menu = new CafeteriaMenu(Integer.parseInt(cursorCafeteriaMenu.getString(2)),

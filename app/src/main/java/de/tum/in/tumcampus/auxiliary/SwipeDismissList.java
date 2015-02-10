@@ -72,7 +72,7 @@ public final class SwipeDismissList implements View.OnTouchListener {
 	private int mViewWidth = 1; // 1 and not 0 to prevent dividing by zero
 	
 	// Transient properties
-	private final SortedSet<PendingDismissData> mPendingDismisses = new TreeSet<PendingDismissData>();
+	private final SortedSet<PendingDismissData> mPendingDismisses = new TreeSet<>();
 	private int mDismissAnimationRefCount = 0;
 	private float mDownX;
 	private boolean mSwiping;
@@ -246,10 +246,10 @@ public final class SwipeDismissList implements View.OnTouchListener {
 
 		switch(UndoMode.MULTI_UNDO) {
 			case SINGLE_UNDO:
-				mUndoActions = new ArrayList<Undoable>(1);
+				mUndoActions = new ArrayList<>(1);
 				break;
 			default:
-				mUndoActions = new ArrayList<Undoable>(10);
+				mUndoActions = new ArrayList<>(10);
 				break;
 		}
 

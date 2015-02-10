@@ -266,7 +266,7 @@ public class Utils {
      * @return String[]-List with Columns matched to array values
      */
     public static List<String[]> readCsv(InputStream fin) {
-        List<String[]> list = new ArrayList<String[]>();
+        List<String[]> list = new ArrayList<>();
         try {
             BufferedReader in = new BufferedReader(new InputStreamReader(fin, "ISO-8859-1"));
             String reader;

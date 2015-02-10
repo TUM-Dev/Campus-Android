@@ -284,7 +284,7 @@ public class TUMOnlineRequest<T> {
      * Reset parameters to an empty Map
      */
     void resetParameters() {
-        parameters = new HashMap<String, String>();
+        parameters = new HashMap<>();
         // set accessToken as parameter if available
         if (accessToken != null) {
             parameters.put(Const.P_TOKEN, accessToken);

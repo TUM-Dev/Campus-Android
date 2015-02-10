@@ -189,7 +189,7 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
 	 */
     HashMap<String, Integer> calculateGradeDistribution(
             List<Exam> filteredExamList) {
-		HashMap<String, Integer> gradeDistrubution_hash = new HashMap<String, Integer>();
+		HashMap<String, Integer> gradeDistrubution_hash = new HashMap<>();
         for (Exam item : filteredExamList) {
             // increment hash value
             int curCount = gradeDistrubution_hash.containsKey(item.getGrade()) ? gradeDistrubution_hash
@@ -206,7 +206,7 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
 	private void initSpinner() {
 
 		// set Spinner data
-		List<String> filters = new ArrayList<String>();
+		List<String> filters = new ArrayList<>();
 		filters.add(getString(R.string.all_programs));
 
 		// get all program ids from the results
@@ -218,7 +218,7 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
 		}
 
 		// init the spinner
-		ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(
+		ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(
 				this, android.R.layout.simple_list_item_checked, filters);
 		spFilter.setAdapter(spinnerArrayAdapter);
 		spFilter.setSelection(LAST_CHOICE);
@@ -240,7 +240,7 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
 							GradesActivity.this, examList.getExams()));
 					average_tx.setVisibility(View.GONE);
 					// convert examlist
-					List<Exam> convertedList = new ArrayList<Exam>();
+					List<Exam> convertedList = new ArrayList<>();
 					for (int i = 0; i < examList.getExams().size(); i++) {
 						Exam item = examList.getExams().get(i);
 						convertedList.add(item);
@@ -252,7 +252,7 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
 
 				} else {
 					// do filtering according to selected program
-					List<Exam> filteredExamList = new ArrayList<Exam>();
+					List<Exam> filteredExamList = new ArrayList<>();
 					for (int i = 0; i < examList.getExams().size(); i++) {
 						Exam item = examList.getExams().get(i);
 						if (item.getProgramID().equals(filter)) {
@@ -383,7 +383,7 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
 	 * @return List with duplicate items removed
 	 */
     List<Exam> removeDuplicates(List<Exam> filteredExamList) {
-		List<Exam> removedDoubles = new ArrayList<Exam>();
+		List<Exam> removedDoubles = new ArrayList<>();
 
 		// find and remove duplicates
 		for (int i = 0; i < filteredExamList.size(); i++) {

@@ -46,6 +46,7 @@ import static android.provider.CalendarContract.Attendees.ATTENDEE_STATUS;
 import static android.provider.CalendarContract.EXTRA_EVENT_BEGIN_TIME;
 import static android.provider.CalendarContract.EXTRA_EVENT_END_TIME;
 
+@SuppressWarnings("ALL")
 public class CalendarController {
     private static final boolean DEBUG = false;
     private static final String TAG = "CalendarController";
@@ -63,18 +64,17 @@ public class CalendarController {
     // view id they are being expanded into since we can't guarantee a reference
     // to the handler will be findable
     private final LinkedHashMap<Integer,EventHandler> eventHandlers =
-            new LinkedHashMap<Integer,EventHandler>(5);
-    private final LinkedList<Integer> mToBeRemovedEventHandlers = new LinkedList<Integer>();
-    private final LinkedHashMap<Integer, EventHandler> mToBeAddedEventHandlers = new LinkedHashMap<
-            Integer, EventHandler>();
+            new LinkedHashMap<>(5);
+    private final LinkedList<Integer> mToBeRemovedEventHandlers = new LinkedList<>();
+    private final LinkedHashMap<Integer, EventHandler> mToBeAddedEventHandlers = new LinkedHashMap<>();
     private Pair<Integer, EventHandler> mFirstEventHandler;
     private Pair<Integer, EventHandler> mToBeAddedFirstEventHandler;
     private volatile int mDispatchInProgressCounter = 0;
 
     private static WeakHashMap<Context, WeakReference<CalendarController>> instances =
-        new WeakHashMap<Context, WeakReference<CalendarController>>();
+        new WeakHashMap<>();
 
-    private final WeakHashMap<Object, Long> filters = new WeakHashMap<Object, Long>(1);
+    private final WeakHashMap<Object, Long> filters = new WeakHashMap<>(1);
 
     private int mViewType = -1;
     private int mDetailViewType = -1;
@@ -629,9 +629,9 @@ public class CalendarController {
         synchronized (this) {
             registerEventHandler(key, eventHandler);
             if (mDispatchInProgressCounter > 0) {
-                mToBeAddedFirstEventHandler = new Pair<Integer, EventHandler>(key, eventHandler);
+                mToBeAddedFirstEventHandler = new Pair<>(key, eventHandler);
             } else {
-                mFirstEventHandler = new Pair<Integer, EventHandler>(key, eventHandler);
+                mFirstEventHandler = new Pair<>(key, eventHandler);
             }
         }
     }

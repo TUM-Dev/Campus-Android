@@ -38,6 +38,7 @@ import java.util.Locale;
  *
  * This class is expected to move into the app framework eventually.
  */
+@SuppressWarnings("ALL")
 public class CalendarUtils {
     private static final boolean DEBUG = false;
     private static final String TAG = "CalendarUtils";

@@ -99,7 +99,7 @@ public class OpeningHoursListFragment extends ListFragment {
 				getString(R.string.mensa_pasing),
 				getString(R.string.mensa_weihenstephan) };
 
-		setListAdapter(new ArrayAdapter<String>(getActivity(), layout, android.R.id.text1, names));
+		setListAdapter(new ArrayAdapter<>(getActivity(), layout, android.R.id.text1, names));
 	}
 
 	@Override

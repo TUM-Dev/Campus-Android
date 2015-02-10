@@ -153,7 +153,7 @@ public class WizNavChatActivity extends ActivityForLoadingInBackground<Void, Cha
 
             // Get all of the users lectures and save them as possible chat rooms
             ChatRoomManager manager = new ChatRoomManager(this);
-            TUMOnlineRequest<LecturesSearchRowSet> requestHandler = new TUMOnlineRequest<LecturesSearchRowSet>(TUMOnlineConst.LECTURES_PERSONAL, this, true);
+            TUMOnlineRequest<LecturesSearchRowSet> requestHandler = new TUMOnlineRequest<>(TUMOnlineConst.LECTURES_PERSONAL, this, true);
             LecturesSearchRowSet lecturesList = requestHandler.fetch();
             if (lecturesList != null) {
                 List<LecturesSearchRow> lectures = lecturesList.getLehrveranstaltungen();

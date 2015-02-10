@@ -30,7 +30,7 @@ public class PlansActivity extends BaseActivity implements OnItemClickListener {
 		super.onCreate(savedInstanceState);
 
 		ListView list = (ListView) findViewById(R.id.activity_plans_list_view);
-		ArrayList<PlanListEntry> listMenuEntrySet = new ArrayList<PlanListEntry>();
+		ArrayList<PlanListEntry> listMenuEntrySet = new ArrayList<>();
         listMenuEntrySet.add(new PlanListEntry(R.drawable.plan_mvv_icon,
                 R.string.mvv_fast_train_net, R.string.empty_string, R.drawable.mvv));
         listMenuEntrySet.add(new PlanListEntry(R.drawable.plan_mvv_night_icon,

@@ -24,7 +24,7 @@ public class Util {
                     new InputStreamReader(process.getInputStream()));
 
             StringBuilder log = new StringBuilder();
-            String line = "";
+            String line;
             String newLine = System.getProperty("line.separator");
             while ((line = bufferedReader.readLine()) != null) {
                 log.append(line + newLine);

@@ -57,7 +57,7 @@ public class TUMRoomFinderRequest {
     private final String SERVICE_BASE_URL = "http://vmbaumgarten3.informatik.tu-muenchen.de/";
 
     public TUMRoomFinderRequest() {
-        parameters = new HashMap<String, String>();
+        parameters = new HashMap<>();
         method = "search";
     }
 
@@ -125,7 +125,7 @@ public class TUMRoomFinderRequest {
         setParameter("s", searchString);
         method = "search";
 
-        ArrayList<HashMap<String, String>> roomsList = new ArrayList<HashMap<String, String>>();
+        ArrayList<HashMap<String, String>> roomsList = new ArrayList<>();
 
         String ROOM_SERVICE_URL = SERVICE_BASE_URL + "roommaps/room/";
         String url = getRequestURL(ROOM_SERVICE_URL);
@@ -142,7 +142,7 @@ public class TUMRoomFinderRequest {
             for (int k = 0; k < roomList.getLength(); k++) {
 
                 Element room = (Element) roomList.item(k);
-                HashMap<String, String> roomMap = new HashMap<String, String>();
+                HashMap<String, String> roomMap = new HashMap<>();
                 // adding each child node to HashMap key =&gt; value
                 Element building = (Element) room.getParentNode();
                 String buildingId = building.getAttribute("web_code");
@@ -202,7 +202,7 @@ public class TUMRoomFinderRequest {
         String url = getRequestURL(SERVICE_BASE_URL + "roommaps/room/");
         Utils.log("fetching Map URL " + url);
 
-        ArrayList<HashMap<String, String>> mapsList = new ArrayList<HashMap<String, String>>();
+        ArrayList<HashMap<String, String>> mapsList = new ArrayList<>();
 
         try {
 
@@ -218,7 +218,7 @@ public class TUMRoomFinderRequest {
                 if(scale>400000)
                     continue;
 
-                HashMap<String, String> mapMap = new HashMap<String, String>();
+                HashMap<String, String> mapMap = new HashMap<>();
                 mapMap.put(KEY_MAP_ID, parser.getValue(map, "id"));
                 mapMap.put(KEY_TITLE, parser.getValue(map, "description"));
 

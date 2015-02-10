@@ -107,7 +107,7 @@ public class ImplicitCounter extends AsyncTask<String, Integer, Void> {
         HttpPut request = new HttpPut(URL);
         request.addHeader("X-DEVICE-ID", NetUtils.getDeviceID(this.c)); // Add our device identifier
 
-        List<NameValuePair> nvps = new ArrayList<NameValuePair>();
+        List<NameValuePair> nvps = new ArrayList<>();
 
         //Add our payload which should be json encoded
         nvps.add(new BasicNameValuePair("data", data[0]));

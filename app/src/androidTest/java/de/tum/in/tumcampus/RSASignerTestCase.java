@@ -53,7 +53,7 @@ public class RSASignerTestCase extends TestCase {
 			"9tg4rD0aCHQZ6kEquwN6emc9QM0X6DR0dx6Bqq8CGDkVdk0hXHBR9VUBGE4YSsxpn+LnyWSWyJum" +
 			"dWuepeUKig==");
 		
-		messageFixtures = new ArrayList<ChatMessage>();
+		messageFixtures = new ArrayList<>();
 		messageFixtures.add(buildChatMessage(
 			"This is a message!",
 			"MwBZFVhzIGehiGAVaoxp0k04BJN8YyyqlPQg1hXwg1bQxgjtEXz6KsVzYOWo40/TdhcbUHo+hUhk\n" +

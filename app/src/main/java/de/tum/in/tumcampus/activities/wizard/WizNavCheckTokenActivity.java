@@ -74,13 +74,13 @@ public class WizNavCheckTokenActivity extends ActivityForLoadingInBackground<Voi
     @Override
     protected Integer onLoadInBackground(Void... arg) {
         // Check if token has been enabled
-        TUMOnlineRequest<TokenConfirmation> request = new TUMOnlineRequest<TokenConfirmation>(TUMOnlineConst.TOKEN_CONFIRMED, this, true);
+        TUMOnlineRequest<TokenConfirmation> request = new TUMOnlineRequest<>(TUMOnlineConst.TOKEN_CONFIRMED, this, true);
         TokenConfirmation confirmation = request.fetch();
 
         if (confirmation != null && confirmation.isConfirmed()) {
 
             // Get users full name
-            TUMOnlineRequest<IdentitySet> request2 = new TUMOnlineRequest<IdentitySet>(TUMOnlineConst.IDENTITY, this, true);
+            TUMOnlineRequest<IdentitySet> request2 = new TUMOnlineRequest<>(TUMOnlineConst.IDENTITY, this, true);
             IdentitySet id = request2.fetch();
             if (id == null) {
                 return R.string.no_rights_to_access_id;

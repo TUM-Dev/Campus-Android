@@ -223,7 +223,7 @@ public class PersonsDetailsActivity extends ActivityForAccessingTumOnline<Employ
      */
     private void addContact(Employee employee) {
         ArrayList<ContentProviderOperation> ops =
-                new ArrayList<ContentProviderOperation>();
+                new ArrayList<>();
 
         int rawContactID = ops.size();
 

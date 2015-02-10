@@ -22,7 +22,7 @@ import de.tum.in.tumcampus.models.managers.ChatMessageManager;
 public class ChatHistoryAdapter extends CursorAdapter {
 
     private final Context mContext;
-    private ArrayList<ChatMessage> unsentMessages = new ArrayList<ChatMessage>();
+    private ArrayList<ChatMessage> unsentMessages = new ArrayList<>();
     public ChatMessage mCheckedItem;
     public ChatMessage mEditedItem;
 

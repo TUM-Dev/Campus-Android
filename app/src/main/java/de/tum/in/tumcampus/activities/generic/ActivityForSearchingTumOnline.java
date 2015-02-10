@@ -47,7 +47,7 @@ public abstract class ActivityForSearchingTumOnline<T> extends ActivityForSearch
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        requestHandler = new TUMOnlineRequest<T>(method, this, true);
+        requestHandler = new TUMOnlineRequest<>(method, this, true);
     }
 
     /**

@@ -42,7 +42,7 @@ public abstract class ActivityForAccessingTumOnline<T> extends ProgressActivity 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        requestHandler = new TUMOnlineRequest<T>(method, this, true);
+        requestHandler = new TUMOnlineRequest<>(method, this, true);
     }
 
     /**

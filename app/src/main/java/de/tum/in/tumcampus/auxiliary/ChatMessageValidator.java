@@ -134,7 +134,7 @@ public class ChatMessageValidator {
      * instances based on the given list of TCA public keys.
      */
     private void generatePublicKeys() {
-        publicKeys = new ArrayList<PublicKey>();
+        publicKeys = new ArrayList<>();
 
         for (ChatPublicKey chatPublicKey : chatPublicKeys) {
             PublicKey key = this.convertToPublicKey(chatPublicKey);

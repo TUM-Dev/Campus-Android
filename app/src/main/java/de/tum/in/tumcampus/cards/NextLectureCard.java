@@ -33,7 +33,7 @@ public class NextLectureCard extends Card {
 
     private static final String NEXT_LECTURE_DATE = "next_date";
     private TextView mLocation;
-    private ArrayList<CalendarItem> lectures = new ArrayList<CalendarItem>();
+    private ArrayList<CalendarItem> lectures = new ArrayList<>();
     private TextView mTimeView;
     private int mSelected = 0;
     private TextView mEvent;
