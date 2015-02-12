@@ -2,8 +2,6 @@ package de.tum.in.tumcampus.trace;
 
 import android.content.Context;
 import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.PackageManager.NameNotFoundException;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
@@ -86,14 +84,11 @@ public class ExceptionHandler {
         G.deviceId = NetUtils.getDeviceID(context);
 
         // Get information about the Package
-        PackageManager pm = context.getPackageManager();
-        try {
-            PackageInfo pi = pm.getPackageInfo(context.getPackageName(), 0);
+        PackageInfo pi = Util.getPackageInfo(context);
+        if (pi != null) {
             G.appVersion = pi.versionName; // Version
             G.appPackage = pi.packageName; // Package name
-
-        } catch (NameNotFoundException e) {
-            Log.e(G.tag, "Error collecting trace information", e);
+            G.appVersionCode = pi.versionCode; //Version code e.g.: 45
         }
 
         if (sVerbose) {
@@ -364,6 +359,7 @@ public class ExceptionHandler {
                 //Add some Device infos
                 nvps.add(new BasicNameValuePair("packageName", G.appPackage));
                 nvps.add(new BasicNameValuePair("packageVersion", G.appVersion));
+                nvps.add(new BasicNameValuePair("packageVersionCode", "" + G.appVersionCode));
                 nvps.add(new BasicNameValuePair("phoneModel", G.phoneModel));
                 nvps.add(new BasicNameValuePair("androidVersion", G.androidVersion));
 

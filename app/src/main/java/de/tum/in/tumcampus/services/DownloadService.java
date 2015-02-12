@@ -4,6 +4,8 @@ import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
@@ -24,6 +26,8 @@ import de.tum.in.tumcampus.models.managers.CardManager;
 import de.tum.in.tumcampus.models.managers.NewsManager;
 import de.tum.in.tumcampus.models.managers.OpenHoursManager;
 import de.tum.in.tumcampus.models.managers.SyncManager;
+import de.tum.in.tumcampus.trace.G;
+import de.tum.in.tumcampus.trace.Util;
 
 /**
  * Service used to download files from external pages
@@ -79,6 +83,15 @@ public class DownloadService extends IntentService {
     private void download(Intent intent) throws InterruptedException {
         //Semaphore
         sem.acquire();
+
+        //Set the app version if not set
+        PackageInfo pi = Util.getPackageInfo(this);
+        if (pi != null) {
+            G.appVersion = pi.versionName; // Version
+            G.appPackage = pi.packageName; // Package name
+            G.appVersionCode = pi.versionCode; //Version code e.g.: 45
+        }
+
 
         boolean successful = true;
         String action = intent.getStringExtra(Const.ACTION_EXTRA);
