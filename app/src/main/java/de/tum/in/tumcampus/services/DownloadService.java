@@ -74,7 +74,7 @@ public class DownloadService extends IntentService {
                 try{
                     download(intent);
                 }catch (Exception e){
-                    Utils.log("Could not aquire lock!");
+                    Utils.log("Could not acquire lock!");
                 }
             }
         }).start();

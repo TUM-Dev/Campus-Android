@@ -34,7 +34,7 @@ public class LecturesDetailsActivity extends ActivityForAccessingTumOnline<Lectu
 	private Button btnLDetailsTermine;
 
 	/** the current processing Lecture item (model: LectureDetailsRow) */
-	private LectureDetailsRow currentitem;
+	private LectureDetailsRow currentItem;
 	private TextView tvLDetailsDozent;
 	private TextView tvLDetailsInhalt;
 	private TextView tvLDetailsLiteratur;
@@ -57,8 +57,8 @@ public class LecturesDetailsActivity extends ActivityForAccessingTumOnline<Lectu
 			// start LectureAppointments
 			Bundle bundle = new Bundle();
 			// LectureAppointments need the name and id of the facing lecture
-			bundle.putString("stp_sp_nr", currentitem.getStp_sp_nr());
-			bundle.putString(Const.TITLE_EXTRA, currentitem.getStp_sp_titel());
+			bundle.putString("stp_sp_nr", currentItem.getStp_sp_nr());
+			bundle.putString(Const.TITLE_EXTRA, currentItem.getStp_sp_titel());
 
 			Intent i = new Intent(this, LecturesAppointmentsActivity.class);
 			i.putExtras(bundle);
@@ -98,23 +98,23 @@ public class LecturesDetailsActivity extends ActivityForAccessingTumOnline<Lectu
 	@Override
 	public void onFetch(LectureDetailsRowSet xmllv) {
         // we got exactly one row, that's fine
-        currentitem = xmllv.getLehrveranstaltungenDetails().get(0);
-        tvLDetailsName.setText(currentitem.getStp_sp_titel().toUpperCase());
+        currentItem = xmllv.getLehrveranstaltungenDetails().get(0);
+        tvLDetailsName.setText(currentItem.getStp_sp_titel().toUpperCase());
 
-        String strLectureLanguage = currentitem.getSemester_name();
-        if (currentitem.getHaupt_unterrichtssprache() != null) {
-            strLectureLanguage += " - " + currentitem.getHaupt_unterrichtssprache();
+        String strLectureLanguage = currentItem.getSemester_name();
+        if (currentItem.getHaupt_unterrichtssprache() != null) {
+            strLectureLanguage += " - " + currentItem.getHaupt_unterrichtssprache();
         }
         tvLDetailsSemester.setText(strLectureLanguage);
-        tvLDetailsSWS.setText(currentitem.getStp_lv_art_name() + " - "
-                + currentitem.getDauer_info() + " SWS");
-        tvLDetailsDozent.setText(currentitem.getVortragende_mitwirkende());
-        tvLDetailsOrg.setText(currentitem.getOrg_name_betreut());
-        tvLDetailsInhalt.setText(currentitem.getLehrinhalt());
-        tvLDetailsMethode.setText(currentitem.getLehrmethode());
-        tvLDetailsZiele.setText(currentitem.getLehrziel());
-        tvLDetailsLiteratur.setText(currentitem.getStudienbehelfe());
-        tvLDetailsTermin.setText(currentitem.getErsttermin());
+        tvLDetailsSWS.setText(currentItem.getStp_lv_art_name() + " - "
+                + currentItem.getDauer_info() + " SWS");
+        tvLDetailsDozent.setText(currentItem.getVortragende_mitwirkende());
+        tvLDetailsOrg.setText(currentItem.getOrg_name_betreut());
+        tvLDetailsInhalt.setText(currentItem.getLehrinhalt());
+        tvLDetailsMethode.setText(currentItem.getLehrmethode());
+        tvLDetailsZiele.setText(currentItem.getLehrziel());
+        tvLDetailsLiteratur.setText(currentItem.getStudienbehelfe());
+        tvLDetailsTermin.setText(currentItem.getErsttermin());
 
         showLoadingEnded();
 	}

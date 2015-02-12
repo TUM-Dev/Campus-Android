@@ -60,7 +60,7 @@ public class ScanResultsAvailableReceiver extends BroadcastReceiver {
         if(!Utils.getInternalSettingBool(context, SHOULD_SHOW, true))
             return;
 
-        // Prepate intents for notification actions
+        // Prepare intents for notification actions
         Intent intent = new Intent(context, SetupEduroamActivity.class);
         Intent hide = new Intent(context, NeverShowAgain.class);
 

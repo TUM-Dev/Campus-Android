@@ -71,14 +71,14 @@ public class InformationActivity extends ActionBarActivity {
 
                 //Show at five clicks
                 if (debugOptionsCount == 5) {
-                    InformationActivity.this.displayDebugInfos();
+                    InformationActivity.this.displayDebugInfo();
                 }
             }
 
         });
     }
 
-    private void displayDebugInfos() {
+    private void displayDebugInfo() {
 
         TableLayout table = (TableLayout) findViewById(R.id.debugInfos);
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);

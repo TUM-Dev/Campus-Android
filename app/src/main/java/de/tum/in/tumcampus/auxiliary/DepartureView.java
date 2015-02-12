@@ -32,7 +32,7 @@ public class DepartureView extends LinearLayout {
 
     /**
      * Standard constructor for DepartureView
-     * Usees a thin departure line
+     * Uses a thin departure line
      * @param context Context
      */
     public DepartureView(Context context) {

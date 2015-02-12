@@ -9,6 +9,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import de.tum.in.tumcampus.R;
+
 public class DateUtils {
 
     private static final long MINUTE_MILLIS = android.text.format.DateUtils.MINUTE_IN_MILLIS;
@@ -32,11 +34,11 @@ public class DateUtils {
                 MINUTE_MILLIS, DAY_MILLIS * 2L, 0).toString();
     }
 
-    public static String getTimeOrDay(String datetime) {
-        return DateUtils.getTimeOrDay(DateUtils.parseSqlDate(datetime));
+    public static String getTimeOrDay(String datetime, Context context) {
+        return DateUtils.getTimeOrDay(DateUtils.parseSqlDate(datetime), context);
     }
 
-    public static String getTimeOrDay(Date time) {
+    public static String getTimeOrDay(Date time, Context context) {
         if (time == null) {
             return "";
         }
@@ -46,18 +48,17 @@ public class DateUtils {
 
         //Catch future dates: current clock might be running behind
         if (timeInMillis > now || timeInMillis <= 0) {
-            return "Gerade eben";
+            return context.getString(R.string.just_now);
         }
 
-        // TODO: localize
         final long diff = now - timeInMillis;
         if (diff < MINUTE_MILLIS) {
-            return "Gerade eben";
+            return context.getString(R.string.just_now);
         } else if (diff < 24 * HOUR_MILLIS) {
             SimpleDateFormat formatter = new SimpleDateFormat("HH:mm", Locale.ENGLISH);
             return formatter.format(time);
         } else if (diff < 48 * HOUR_MILLIS) {
-            return "Gestern";
+            return context.getString(R.string.yesterday);
         } else {
             SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy", Locale.ENGLISH);
             return formatter.format(time);
