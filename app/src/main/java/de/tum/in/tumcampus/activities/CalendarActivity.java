@@ -203,7 +203,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
     }
 
     /**
-     * Detach the adapter form the Pager to make the asynch task not conflicting with the UI thread.
+     * Detach the adapter form the Pager to make the async task not conflicting with the UI thread.
      */
     private void detachSectionPagerAdapter() {
 

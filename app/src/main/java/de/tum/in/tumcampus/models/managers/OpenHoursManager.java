@@ -158,7 +158,7 @@ public class OpenHoursManager {
             relativeTo = closes;
         }
 
-        //Get the realtive string
+        //Get the relative string
         String relStr = DateUtils.getRelativeTimeSpanString(relativeTo.getTimeInMillis(), now.getTimeInMillis(), DateUtils.MINUTE_IN_MILLIS).toString();
 
         //Return an assembly

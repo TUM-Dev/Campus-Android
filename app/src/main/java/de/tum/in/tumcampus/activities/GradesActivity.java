@@ -64,17 +64,17 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
 	 * @return content string
 	 */
     String buildColumnChartContentString(List<Exam> filteredExamList) {
-		HashMap<String, Integer> gradeDistrubution_hash = calculateGradeDistribution(filteredExamList);
+		HashMap<String, Integer> gradeDistribution_hash = calculateGradeDistribution(filteredExamList);
 
 		String datas = "";
 		// Build data string
 		for (int i = 0; i < Const.GRADES.length; i++) {
 			if (i == Const.GRADES.length - 1)
 				datas += "['" + Const.GRADES[i] + "', "
-						+ gradeDistrubution_hash.get(Const.GRADES[i]) + "]";
+						+ gradeDistribution_hash.get(Const.GRADES[i]) + "]";
 			else
 				datas += "['" + Const.GRADES[i] + "', "
-						+ gradeDistrubution_hash.get(Const.GRADES[i]) + "],";
+						+ gradeDistribution_hash.get(Const.GRADES[i]) + "],";
 		}
 
 		// Build content String
@@ -187,15 +187,15 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
 	 */
     HashMap<String, Integer> calculateGradeDistribution(
             List<Exam> filteredExamList) {
-		HashMap<String, Integer> gradeDistrubution_hash = new HashMap<>();
+		HashMap<String, Integer> gradeDistribution_hash = new HashMap<>();
         for (Exam item : filteredExamList) {
             // increment hash value
-            int curCount = gradeDistrubution_hash.containsKey(item.getGrade()) ? gradeDistrubution_hash
+            int curCount = gradeDistribution_hash.containsKey(item.getGrade()) ? gradeDistribution_hash
                     .get(item.getGrade()) : 0;
 
-            gradeDistrubution_hash.put(item.getGrade(), curCount + 1);
+            gradeDistribution_hash.put(item.getGrade(), curCount + 1);
         }
-		return gradeDistrubution_hash;
+		return gradeDistribution_hash;
 	}
 
 	/**
@@ -237,7 +237,7 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
 					lvGrades.setAdapter(new ExamListAdapter(
 							GradesActivity.this, examList.getExams()));
 					average_tx.setVisibility(View.GONE);
-					// convert examlist
+					// convert exam list
 					List<Exam> convertedList = new ArrayList<>();
 					for (int i = 0; i < examList.getExams().size(); i++) {
 						Exam item = examList.getExams().get(i);

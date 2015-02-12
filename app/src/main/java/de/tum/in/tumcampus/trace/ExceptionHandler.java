@@ -159,7 +159,7 @@ public class ExceptionHandler {
         if (!sSetupCalled)
             throw new RuntimeException("you need to call setup() first");
 
-        boolean stackTracesFound = hasStrackTraces();
+        boolean stackTracesFound = hasStackTraces();
 
         // If traces exist, we need to submit them
         if (stackTracesFound) {
@@ -234,7 +234,7 @@ public class ExceptionHandler {
      * before submitting. You can then use Processor.beginSubmit() to
      * stop the submission from occurring.
      */
-    public static boolean hasStrackTraces() {
+    public static boolean hasStackTraces() {
         return (getStackTraces().size() > 0);
     }
 
