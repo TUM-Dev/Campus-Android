@@ -22,11 +22,10 @@ Die TUM Campus App wird von Studierenden des Android Praktikums, freiwilligen He
 #### Derzeitige Entwickler (Sommersemester 2014):
 + Florian Dreier
 + Kordian Bruck
++ Philipp Fent
 
 #### Weitere Entwickler:
 Jana Pejic, Marko Lalic, Sascha Moecker, Haris Iltifat, Anas Chakfeh, Thomas Krex, Marius Muntean, Christoph Richter, Thomas Bley, Vincenz Dölle, Daniel Mayr, Thomas Behrens, Florian Schulz, Vasyl Malinskyi, Andreas Bernhofer (IT-Support/TUMonline), Nils T. Kannengiesser (F13)
-
-
 
 #### Wichtiger Hinweis:
 Dies ist keine offizielle App der Technischen Universität München. Es erfolgt daher auch **kein offzieller Support oder eine Haftung**. Die App wird von und für Studierende entwickelt. Die Benutzung erfolgt auf eigene Gefahr und die Entwickler sind in keinem Fall haftbar zu machen. Aus Sicherheitsgründen wird der Zugriff auf private Daten in TUMonline über Tokens realisiert, die jeweils in TUMonline durch den Nutzer freigegeben und mit den jeweiligen Rechten versehen werden müssen.

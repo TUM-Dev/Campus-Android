@@ -8,7 +8,7 @@ android {
         applicationId "de.tum.in.tumcampus"
         minSdkVersion 10
         targetSdkVersion 21
-        versionCode 46
+        versionCode 48
         versionName "1.2.2"
     }
     buildTypes {
