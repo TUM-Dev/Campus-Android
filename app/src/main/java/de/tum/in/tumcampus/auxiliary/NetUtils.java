@@ -66,7 +66,14 @@ public class NetUtils {
         HttpConnectionParams.setConnectionTimeout(params, HTTP_TIMEOUT);
 
         //Clearly identify all requests from this app
-        params.setParameter(CoreProtocolPNames.USER_AGENT, "TCA Client" + (G.appVersion != null && !G.appVersion.equals("unknown") ? " " + G.appVersion : ""));
+        String version = "";
+        if (G.appVersion != null && !G.appVersion.equals("unknown")) {
+            version = " " + G.appVersion;
+            if (G.appVersionCode != -1) {
+                version += "/" + G.appVersionCode;
+            }
+        }
+        params.setParameter(CoreProtocolPNames.USER_AGENT, "TCA Client" + version);
 
         //Actually initiate our client with parameters we setup
         return new DefaultHttpClient(new ThreadSafeClientConnManager(params, mgr.getSchemeRegistry()), params);

@@ -34,14 +34,20 @@ public class DefaultExceptionHandler implements UncaughtExceptionHandler {
 
             // Embed version in stacktrace filename
             String filename = G.appVersion + "-" + Integer.toString(random);
-            Log.d(G.tag, "Writing unhandled exception to: " + G.filesPath + "/" + filename + ".stacktrace");
+            if (ExceptionHandler.sVerbose) {
+                Log.d(G.tag, "Writing unhandled exception to: " + G.filesPath + "/" + filename + ".stacktrace");
+            }
 
             // Write the stacktrace to disk
             BufferedWriter bos = new BufferedWriter(new FileWriter(G.filesPath + "/" + filename + ".stacktrace"));
             bos.write(result.toString());
             bos.flush();
+            bos.close();
 
-            // Close up everything
+            //Write the current log to file
+            bos = new BufferedWriter(new FileWriter(G.filesPath + "/" + filename + ".stacktrace.log"));
+            bos.write(Util.getLog());
+            bos.flush();
             bos.close();
 
         } catch (Exception ebos) {

@@ -1,6 +1,7 @@
 package de.tum.in.tumcampus.trace;
 
 import android.content.Context;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
@@ -128,5 +129,17 @@ public class Util {
         screen[4] = Float.toString(dm.ydpi);
 
         return screen;
+    }
+
+    public static PackageInfo getPackageInfo(Context c){
+        // Get information about the Package
+        PackageManager pm = c.getPackageManager();
+        try {
+            return pm.getPackageInfo(c.getPackageName(), 0);
+
+        } catch (PackageManager.NameNotFoundException e) {
+            Log.e(G.tag, "Error collecting trace information", e);
+        }
+        return null;
     }
 }

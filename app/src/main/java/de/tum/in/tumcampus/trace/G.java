@@ -39,6 +39,7 @@ public class G {
     public static String filesPath = null;
     public static String appVersion = "unknown";
     public static String appPackage = "unknown";
+    public static int appVersionCode = -1;
     public static String URL = "https://tumcabe.in.tum.de/Api/report/";
     public static String tag = "TCA Error Reporting";
     public static String androidVersion = null;

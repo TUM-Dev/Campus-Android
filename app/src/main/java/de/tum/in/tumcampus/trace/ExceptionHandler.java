@@ -2,8 +2,6 @@ package de.tum.in.tumcampus.trace;
 
 import android.content.Context;
 import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.PackageManager.NameNotFoundException;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
@@ -23,15 +21,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.tum.in.tumcampus.auxiliary.Const;
+import de.tum.in.tumcampus.auxiliary.FileUtils;
 import de.tum.in.tumcampus.auxiliary.NetUtils;
 
 public class ExceptionHandler {
 
     // Stores loaded stack traces in memory. Each element is contains a full stacktrace
-    private static ArrayList<String> sStackTraces = null;
+    private static ArrayList<String[]> sStackTraces = null;
 
     private static ActivityAsyncTask<Processor, Object, Object, Object> sTask;
-    private static boolean sVerbose = false;
+    public static boolean sVerbose = false;
     private static int sMinDelay = 0;
     private static boolean sSetupCalled = false;
 
@@ -47,7 +46,7 @@ public class ExceptionHandler {
      * Setup the handler for unhandled exceptions, and submit stack
      * traces from a previous crash.
      *
-     * @param context context
+     * @param context   context
      * @param processor processor
      */
     public static boolean setup(Context context, final Processor processor) {
@@ -85,14 +84,11 @@ public class ExceptionHandler {
         G.deviceId = NetUtils.getDeviceID(context);
 
         // Get information about the Package
-        PackageManager pm = context.getPackageManager();
-        try {
-            PackageInfo pi = pm.getPackageInfo(context.getPackageName(), 0);
+        PackageInfo pi = Util.getPackageInfo(context);
+        if (pi != null) {
             G.appVersion = pi.versionName; // Version
             G.appPackage = pi.packageName; // Package name
-
-        } catch (NameNotFoundException e) {
-            Log.e(G.tag, "Error collecting trace information", e);
+            G.appVersionCode = pi.versionCode; //Version code e.g.: 45
         }
 
         if (sVerbose) {
@@ -156,13 +152,12 @@ public class ExceptionHandler {
      * This is public because in some cases you might want to manually ask the traces to be submitted, for example after asking the user's permission.
      */
     public static boolean submit(final Processor processor) {
-        if (!sSetupCalled)
+        if (!sSetupCalled) {
             throw new RuntimeException("you need to call setup() first");
-
-        boolean stackTracesFound = hasStackTraces();
+        }
 
         // If traces exist, we need to submit them
-        if (stackTracesFound) {
+        if (ExceptionHandler.hasStrackTraces()) {
             boolean proceed = processor.beginSubmit();
             if (proceed) {
                 // Move the list of traces to a private variable. This ensures that subsequent calls to hasStackTraces()
@@ -170,7 +165,7 @@ public class ExceptionHandler {
                 //
                 // Yes, it would not be a problem from our side to have two of these submission threads ongoing at the same time (although it wouldn't currently happen as no new
                 // traces can be added to the list besides through crashing the process); however, the user's callback processor might not be written to deal with that scenario.
-                final ArrayList<String> tracesNowSubmitting = sStackTraces;
+                final ArrayList<String[]> tracesNowSubmitting = sStackTraces;
                 sStackTraces = null;
 
                 sTask = new ActivityAsyncTask<Processor, Object, Object, Object>(processor) {
@@ -185,7 +180,7 @@ public class ExceptionHandler {
 
                     @Override
                     protected Object doInBackground(Object... params) {
-                        submitStackTraces(tracesNowSubmitting);
+                        ExceptionHandler.submitStackTraces(tracesNowSubmitting);
 
                         long rest = sMinDelay - (System.currentTimeMillis() - mTimeStarted);
                         if (rest > 0) {
@@ -207,7 +202,7 @@ public class ExceptionHandler {
             }
         }
 
-        return stackTracesFound;
+        return ExceptionHandler.hasStrackTraces();
     }
 
     /**
@@ -234,7 +229,7 @@ public class ExceptionHandler {
      * before submitting. You can then use Processor.beginSubmit() to
      * stop the submission from occurring.
      */
-    public static boolean hasStackTraces() {
+    public static boolean hasStrackTraces() {
         return (getStackTraces().size() > 0);
     }
 
@@ -255,7 +250,7 @@ public class ExceptionHandler {
      * install the exception handler right away, and only then try
      * and submit the traces.
      */
-    private static ArrayList<String> getStackTraces() {
+    private static ArrayList<String[]> getStackTraces() {
         if (sStackTraces != null) {
             return sStackTraces;
         }
@@ -305,7 +300,10 @@ public class ExceptionHandler {
                     } finally {
                         input.close();
                     }
-                    sStackTraces.add(stacktrace.toString());
+
+                    //Create the array containing the trace and the log file
+                    String[] a = {stacktrace.toString(), FileUtils.getStringFromFile(filePath + ".log")};
+                    sStackTraces.add(a);
 
                 } catch (IOException e) {
                     Log.e(G.tag, "Failed to load stack trace", e);
@@ -330,7 +328,7 @@ public class ExceptionHandler {
     /**
      * If any are present, submit them to the trace server.
      */
-    private static void submitStackTraces(ArrayList<String> list) {
+    private static void submitStackTraces(ArrayList<String[]> list) {
         //Check if we user gave permission to send these reports
         G.preferences = PreferenceManager.getDefaultSharedPreferences(G.context);
         if (!G.preferences.getBoolean(Const.BUG_REPORTS, G.bugReportDefault)) {
@@ -348,10 +346,10 @@ public class ExceptionHandler {
             String[] screenProperties = Util.ScreenProperties();
 
             for (int i = 0; i < list.size(); i++) {
-                String stacktrace = list.get(i);
-
-                Log.d(G.tag, "Transmitting stack trace: " + stacktrace);
-
+                String stacktrace = list.get(i)[0];
+                if (ExceptionHandler.sVerbose) {
+                    Log.d(G.tag, "Transmitting stack trace: " + stacktrace);
+                }
                 // Transmit stack trace with PUT request
                 HttpPut request = new HttpPut(G.URL);
                 request.addHeader("X-DEVICE-ID", G.deviceId); // Add our device identifier
@@ -361,6 +359,7 @@ public class ExceptionHandler {
                 //Add some Device infos
                 nvps.add(new BasicNameValuePair("packageName", G.appPackage));
                 nvps.add(new BasicNameValuePair("packageVersion", G.appVersion));
+                nvps.add(new BasicNameValuePair("packageVersionCode", "" + G.appVersionCode));
                 nvps.add(new BasicNameValuePair("phoneModel", G.phoneModel));
                 nvps.add(new BasicNameValuePair("androidVersion", G.androidVersion));
 
@@ -375,7 +374,7 @@ public class ExceptionHandler {
 
                 //Add the stacktrace
                 nvps.add(new BasicNameValuePair("stacktrace", stacktrace));
-                nvps.add(new BasicNameValuePair("log", Util.getLog()));
+                nvps.add(new BasicNameValuePair("log", list.get(i)[1]));
                 request.setEntity(new UrlEncodedFormEntity(nvps, HTTP.UTF_8));
 
                 // We don't care about the response, so we just hope it went well and on with it.
