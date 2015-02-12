@@ -280,7 +280,8 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
     public void onItemClick(AdapterView<?> a, View v, int position, long id) {
         Cursor item = (Cursor) lvMyLecturesList.getItemAtPosition(position);
 
-        if (!checkPlayServicesAndRegister())
+        if (firstLoad || //No clicking until everything is loaded
+                !checkPlayServicesAndRegister())
             return;
 
         // set bundle for LectureDetails and show it
