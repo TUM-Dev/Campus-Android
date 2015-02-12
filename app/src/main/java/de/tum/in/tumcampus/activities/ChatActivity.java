@@ -78,6 +78,7 @@ public class ChatActivity extends ActionBarActivity implements DialogInterface.O
 
     // Key for the string that's delivered in the action's intent
     public static final String EXTRA_VOICE_REPLY = "extra_voice_reply";
+    private static final int maxEditTimespan = 120000;
 
     /**
      * UI elements
@@ -505,20 +506,25 @@ public class ChatActivity extends ActionBarActivity implements DialogInterface.O
         if (mActionMode != null) {
             return false;
         }
-        ChatMessage message = (ChatMessage) chatHistoryAdapter.getItem(position);
+        //Calculate the proper position of the item without the header from pull to refresh
+        int positionActual = position-lvMessageHistory.getHeaderViewsCount();
 
-        if ((System.currentTimeMillis() - message.getTimestampDate().getTime()) < 120000 &&
-                message.getMember().getId() == currentChatMember.getId()) {
+        //Get the correct message
+        ChatMessage message = (ChatMessage) chatHistoryAdapter.getItem(positionActual);
+
+        // If we are in a certain timespan and its the users own message allow editing
+        if ((System.currentTimeMillis() - message.getTimestampDate().getTime()) < ChatActivity.maxEditTimespan && message.getMember().getId() == currentChatMember.getId()) {
+
             // Hide keyboard if opened
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(etMessage.getWindowToken(), 0);
 
             // Start the CAB using the ActionMode.Callback defined above
-            mActionMode = startSupportActionMode(mActionModeCallback);
+            mActionMode = this.startSupportActionMode(mActionModeCallback);
             chatHistoryAdapter.mCheckedItem = message;
             chatHistoryAdapter.notifyDataSetChanged();
         } else {
-            showInfo(message);
+            this.showInfo(message);
         }
         return true;
     }

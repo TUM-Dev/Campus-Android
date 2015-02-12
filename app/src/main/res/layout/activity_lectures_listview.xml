@@ -53,7 +53,8 @@
             android:gravity="right"
             android:layout_gravity="right"
             android:visibility="visible"
-            android:layout_width="wrap_content" />
+            android:layout_width="wrap_content"
+            android:singleLine="true"/>
 
         <TextView
             android:layout_height="wrap_content"
