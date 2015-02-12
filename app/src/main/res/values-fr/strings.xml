@@ -326,4 +326,6 @@
     <string name="valid">Valide</string>
     <string name="vibration">Vibration</string>
     <string name="status_sent">expédié</string>
+    <string name="just_now">Juste maintenant</string>
+    <string name="yesterday">Hier</string>
 </resources>

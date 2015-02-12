@@ -183,14 +183,14 @@ public class CalendarManager implements Card.ProvidesCard {
             final String status = cursor.getString(1);
             final String title = cursor.getString(3);
             final String description = cursor.getString(4);
-            final String strstart = cursor.getString(5);
-            final String strend = cursor.getString(6);
+            final String strStart = cursor.getString(5);
+            final String strEnd = cursor.getString(6);
             final String location = cursor.getString(7);
 
             try {
                 // Get the correct date and time from database
-                dtstart = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.ENGLISH).parse(strstart);
-                dtend = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.ENGLISH).parse(strend);
+                dtstart = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.ENGLISH).parse(strStart);
+                dtend = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.ENGLISH).parse(strEnd);
 
                 Calendar beginTime = Calendar.getInstance();
                 beginTime.setTime(dtstart);

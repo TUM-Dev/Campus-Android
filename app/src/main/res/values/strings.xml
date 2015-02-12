@@ -424,4 +424,6 @@ Signature: %5$s</string>
     <string name="invalid_chat_room">Invalid chat room</string>
     <string name="new_chat_room">New chat room</string>
     <string name="new_chat_room_desc">Select a name for your chat room. The name can not be changed afterwards!\n\n</string>
+    <string name="just_now">Just now</string>
+    <string name="yesterday">Yesterday</string>
 </resources>

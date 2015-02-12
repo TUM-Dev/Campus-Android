@@ -74,7 +74,7 @@ public class ChatRoomListAdapter extends CursorAdapter implements StickyListHead
 
         if (showDateAndNumber) {
             holder.tvMembers.setText(cursor.getString(ChatRoomManager.COL_MEMBERS));
-            holder.tvLastmsg.setText(DateUtils.getTimeOrDay(cursor.getString(8)));
+            holder.tvLastmsg.setText(DateUtils.getTimeOrDay(cursor.getString(8), context));
             holder.llAdditionalInfo.setVisibility(View.VISIBLE);
         }else{
             holder.tvDozent.setText(cursor.getString(ChatRoomManager.COL_CONTRIBUTOR));

@@ -9,7 +9,7 @@ public class FileUtils {
 
     /**
      * Delete all files and folder contained in a folder
-     * @param fileOrDirectory
+     * @param fileOrDirectory File or Directory to delete
      */
     public static void deleteRecursive(File fileOrDirectory) {
         // Check if current item is a dir, then we need to delete all files inside

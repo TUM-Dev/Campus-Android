@@ -254,6 +254,8 @@
     <string name="vibration">Vibración</string>
     <string name="website">sitio web</string>
     <string name="status_sent">enviado</string>
+    <string name="just_now">En este momento</string>
+    <string name="yesterday">Ayer</string>
     <!-- END Translated, please do not change identifiers -->
 
 
