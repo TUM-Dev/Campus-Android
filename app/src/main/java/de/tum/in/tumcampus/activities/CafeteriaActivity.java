@@ -150,7 +150,9 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
             mSectionsPagerAdapter.setCafeteriaId(this, mCafeteriaId);
             mViewPager.setAdapter(mSectionsPagerAdapter);
         } else {
+            mViewPager.setAdapter(null); //unset the adapter for updating
             mSectionsPagerAdapter.setCafeteriaId(this, mCafeteriaId);
+            mViewPager.setAdapter(mSectionsPagerAdapter);
         }
         return true;
     }
