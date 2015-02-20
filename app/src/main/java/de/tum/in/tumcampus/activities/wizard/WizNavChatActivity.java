@@ -155,7 +155,7 @@ public class WizNavChatActivity extends ActivityForLoadingInBackground<Void, Cha
             ChatRoomManager manager = new ChatRoomManager(this);
             TUMOnlineRequest<LecturesSearchRowSet> requestHandler = new TUMOnlineRequest<>(TUMOnlineConst.LECTURES_PERSONAL, this, true);
             LecturesSearchRowSet lecturesList = requestHandler.fetch();
-            if (lecturesList != null) {
+            if (lecturesList != null && lecturesList.getLehrveranstaltungen() != null) {
                 List<LecturesSearchRow> lectures = lecturesList.getLehrveranstaltungen();
                 manager.replaceInto(lectures);
             } else {
