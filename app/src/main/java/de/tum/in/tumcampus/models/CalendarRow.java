@@ -7,34 +7,34 @@ import org.simpleframework.xml.Root;
 @Root(name = "event")
 public class CalendarRow {
 	@Element(required = false)
-	private String description;
+	private String description = "";
 
 	@Element(required = false)
-	private String dtend;
+	private String dtend = "";
 
 	@Element(required = false)
-	private String dtstart;
+	private String dtstart = "";
 
 	@Element(required = false)
 	private Geo geo;
 
 	@Element(required = false)
-	private String location;
+	private String location = "";
 
 	@Element(required = false)
-	private String nr;
+	private String nr = "";
 	// <org_kennung_betreut>TUEIEDA</org_kennung_betreut>
 
 	@Element(required = false)
-	private String status;
+	private String status = "";
 	// <org_name_betreut>Lehrstuhl für Entwurfsautomatisierung (Prof.
 	// Schlichtmann)</org_name_betreut>
 
 	@Element(required = false)
-	private String title;
+	private String title = "";
 
 	@Element(required = false)
-	private String url;
+	private String url = "";
 
 	// <org_nr_betreut>15393</org_nr_betreut>
 
