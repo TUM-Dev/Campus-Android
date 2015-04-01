@@ -105,31 +105,56 @@ public class Event implements Cloneable {
     static Event generateEventFromCursor(Cursor cEvents) {
         Event e = new Event();
 
-        e.id = cEvents.getLong(0);
-        String location = cEvents.getString(7);
-        location = location.replaceAll("\\([A-Z0-9\\.]+\\)","");
-        e.location = location.trim();
-
-        String title = cEvents.getString(3);
-        if(title.endsWith("VO") || title.endsWith("VU")) {
-            e.color = getDisplayColorFromColor(0xff28921f);
-        } else if(title.endsWith("UE")) {
-            e.color = getDisplayColorFromColor(0xffFF8000);
-        } else {
-            e.color = getDisplayColorFromColor(0xff0000ff);
-        }
-        title = title.replaceAll("[A-Z, 0-9(LV\\.Nr\\.)=]+$","");
-        title = title.replaceAll("\\([A-Z]+[0-9]+\\)","");
-        title = title.replaceAll("\\[[A-Z]+[0-9]+\\]","");
-        e.title = title;
-
-        String eStart = cEvents.getString(5);
-        String eEnd = cEvents.getString(6);
-
-        e.setStart(Utils.getISODateTime(eStart));
-        e.setEnd(Utils.getISODateTime(eEnd));
+        e.id = getEventIdFromCursor(cEvents);
+        e.location = getEventLocationFromCursor(cEvents);
+        e.color = getEventColorFromCursor(cEvents);
+        e.title = getEventTitleFromCursor(cEvents);
+        e.setStart(getEventStartFromCursor(cEvents));
+        e.setEnd(getEventEndFromCursor(cEvents));
 
         return e;
+    }
+
+    private static Date getEventEndFromCursor(Cursor cEvents) {
+        String eventEnd = cEvents.getString(6);
+        return Utils.getISODateTime(eventEnd);
+    }
+
+    private static Date getEventStartFromCursor(Cursor cEvents) {
+        String eventStart = cEvents.getString(5);
+        return Utils.getISODateTime(eventStart);
+    }
+
+    private static String getEventTitleFromCursor(Cursor cEvents) {
+        String eventTitle = cEvents.getString(3);
+        if(eventTitle == null) eventTitle = "";
+        eventTitle = eventTitle.replaceAll("[A-Z, 0-9(LV\\.Nr\\.)=]+$","");
+        eventTitle = eventTitle.replaceAll("\\([A-Z]+[0-9]+\\)","");
+        eventTitle = eventTitle.replaceAll("\\[[A-Z]+[0-9]+\\]","");
+        return eventTitle;
+    }
+
+    private static int getEventColorFromCursor(Cursor cEvents) {
+        String eventTitle = cEvents.getString(3);
+        if(eventTitle ==  null) eventTitle = "";
+        if(eventTitle.endsWith("VO") || eventTitle.endsWith("VU")) {
+            return getDisplayColorFromColor(0xff28921f);
+        } else if(eventTitle.endsWith("UE")) {
+            return getDisplayColorFromColor(0xffFF8000);
+        } else {
+            return getDisplayColorFromColor(0xff0000ff);
+        }
+    }
+
+    private static String getEventLocationFromCursor(Cursor cEvents) {
+        String eventLocation = cEvents.getString(7);
+        if(eventLocation == null) eventLocation = "";
+        eventLocation = eventLocation.replaceAll("\\([A-Z0-9\\.]+\\)","");
+        return eventLocation.trim();
+    }
+
+    private static long getEventIdFromCursor(Cursor cEvents) {
+        return cEvents.getLong(0);
     }
 
     public void setStart(Date date) {
