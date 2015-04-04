@@ -8,7 +8,7 @@ import org.simpleframework.xml.Root;
 public class Error {
 
     @Element(name = "message")
-    private String message;
+    private String message = "";
 
     // Getter and Setter Functions
     public String getMessage() {

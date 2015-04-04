@@ -7,7 +7,7 @@ import org.simpleframework.xml.Text;
 @Root(name = "confirmed")
 public class TokenConfirmation {
     @Text
-    private String confirmed;
+    private String confirmed = "";
 
     public boolean isConfirmed() {
         return confirmed.equals("true");

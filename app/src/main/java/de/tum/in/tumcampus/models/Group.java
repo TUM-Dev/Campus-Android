@@ -15,42 +15,42 @@ import java.io.Serializable;
 @Root(name = "gruppe", strict = false)
 public class Group implements Serializable {
 
-	private static final long serialVersionUID = -3430225489964912473L;
+    private static final long serialVersionUID = -3430225489964912473L;
 
-	@Element(name = "beschreibung", required = false)
-	private String description;
+    @Element(name = "beschreibung", required = false)
+    private String description = "";
 
-	@Element(name = "kennung")
-	private String id;
+    @Element(name = "kennung")
+    private String id = "";
 
-	@Element(name = "org")
-	private String org;
+    @Element(name = "org")
+    private String org = "";
 
-	@Element(name = "titel", required = false)
-	private String title;
+    @Element(name = "titel", required = false)
+    private String title = "";
 
-	public String getId() {
-		return id;
-	}
+    public String getId() {
+        return id;
+    }
 
-	public String getOrg() {
-		return org;
-	}
+    public String getOrg() {
+        return org;
+    }
 
-	public String getTitle() {
-		return title;
-	}
+    public String getTitle() {
+        return title;
+    }
 
-	public void setId(String id) {
-		this.id = id;
-	}
+    public void setId(String id) {
+        this.id = id;
+    }
 
-	public void setOrg(String org) {
-		this.org = org;
-	}
+    public void setOrg(String org) {
+        this.org = org;
+    }
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
 }

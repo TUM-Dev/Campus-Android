@@ -7,7 +7,7 @@ import org.simpleframework.xml.Text;
 @Root(name = "token")
 public class AccessToken {
     @Text
-    private String token;
+    private String token = "";
 
     public String getToken() {
         return token;

@@ -13,27 +13,27 @@ import java.io.Serializable;
 @Root(name = "raum", strict = false)
 public class Room implements Serializable {
 
-	private static final long serialVersionUID = -5328581629897735774L;
+    private static final long serialVersionUID = -5328581629897735774L;
 
-	@Element(name = "ortsbeschreibung")
-	private String location;
+    @Element(name = "ortsbeschreibung")
+    private String location = "";
 
-	@Element(name = "kurz")
-	private String number;
+    @Element(name = "kurz")
+    private String number = "";
 
-	public String getLocation() {
-		return location;
-	}
+    public String getLocation() {
+        return location;
+    }
 
-	public String getNumber() {
-		return number;
-	}
+    public String getNumber() {
+        return number;
+    }
 
-	public void setLocation(String location) {
-		this.location = location;
-	}
+    public void setLocation(String location) {
+        this.location = location;
+    }
 
-	public void setNumber(String number) {
-		this.number = number;
-	}
+    public void setNumber(String number) {
+        this.number = number;
+    }
 }

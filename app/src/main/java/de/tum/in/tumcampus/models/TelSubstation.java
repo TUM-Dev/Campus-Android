@@ -12,16 +12,16 @@ import java.io.Serializable;
 @Root(name = "nebenstelle", strict = false)
 public class TelSubstation implements Serializable {
 
-	private static final long serialVersionUID = -3289209179488515142L;
+    private static final long serialVersionUID = -3289209179488515142L;
 
-	@Element(name = "telefonnummer")
-	private String number;
+    @Element(name = "telefonnummer")
+    private String number = "";
 
-	public String getNumber() {
-		return number;
-	}
+    public String getNumber() {
+        return number;
+    }
 
-	public void setNumber(String number) {
-		this.number = number;
-	}
+    public void setNumber(String number) {
+        this.number = number;
+    }
 }

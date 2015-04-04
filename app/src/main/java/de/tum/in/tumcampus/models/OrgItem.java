@@ -7,6 +7,7 @@ import org.simpleframework.xml.Root;
  * An Element of the Organisation Tree. In the App a List of those Elements is
  * showed ({@link OrgItemList}). The shown Elements are for Navigation to an
  * Element without child-Element, whose details are then shown.
+ *
  * @see <a href="http://simple.sourceforge.net/download/stream/doc/tutorial/tutorial.php">SimpleXML tutorial</a>
  */
 
@@ -14,81 +15,81 @@ import org.simpleframework.xml.Root;
 @Root(name = "row")
 public class OrgItem {
 
-	/**
-	 * Organisation ID -> to identify
-	 */
+    /**
+     * Organisation ID -> to identify
+     */
     @Element(name = "nr")
-	private String id;
+    private String id = "";
 
-	/**
-	 * German Description of the Organisation
-	 */
+    /**
+     * German Description of the Organisation
+     */
     @Element(name = "name_de")
-	private String nameDe;
+    private String nameDe = "";
 
-	/**
-	 * English Description of the Organisation
-	 */
+    /**
+     * English Description of the Organisation
+     */
     @Element(name = "name_en")
-	private String nameEn;
+    private String nameEn = "";
 
     /**
      * Organisation ID of the parent Organisation
      */
     @Element(name = "parent")
-    private String parentId;
+    private String parentId = "";
 
     /**
      * Organisation ID of the parent Organisation
      */
     @Element(required = false)
-    private String ebene;
+    private String ebene = "";
 
     @Element(required = false)
-    private String org_gruppe_name;
+    private String org_gruppe_name = "";
 
     @Element(required = false)
-    private String child_cnt;
+    private String child_cnt = "";
 
     @Element(required = false)
-    private String sort_hierarchie;
+    private String sort_hierarchie = "";
 
     @Element(required = false)
-    private String kennung;
+    private String kennung = "";
 
     @Element(required = false)
-    private String org_typ_name;
+    private String org_typ_name = "";
 
-	// Getter and Setter Functions
-	public String getId() {
-		return id;
-	}
+    // Getter and Setter Functions
+    public String getId() {
+        return id;
+    }
 
-	public String getNameDe() {
-		return nameDe;
-	}
+    public String getNameDe() {
+        return nameDe;
+    }
 
-	public String getNameEn() {
-		return nameEn;
-	}
+    public String getNameEn() {
+        return nameEn;
+    }
 
-	public String getParentId() {
-		return parentId;
-	}
+    public String getParentId() {
+        return parentId;
+    }
 
-	public void setId(String id) {
-		this.id = id;
-	}
+    public void setId(String id) {
+        this.id = id;
+    }
 
-	public void setNameDe(String name) {
-		this.nameDe = name;
-	}
+    public void setNameDe(String name) {
+        this.nameDe = name;
+    }
 
-	public void setNameEn(String nameEn) {
-		this.nameEn = nameEn;
-	}
+    public void setNameEn(String nameEn) {
+        this.nameEn = nameEn;
+    }
 
-	public void setParentId(String id) {
-		this.parentId = id;
-	}
+    public void setParentId(String id) {
+        this.parentId = id;
+    }
 }

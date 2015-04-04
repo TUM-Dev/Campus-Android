@@ -11,39 +11,39 @@ import java.io.Serializable;
  */
 public class Contact implements Serializable {
 
-	private static final long serialVersionUID = 4413581972047241018L;
-	@Element(name = "zusatz_info", required = false)
-	private String addInfo;
+    private static final long serialVersionUID = 4413581972047241018L;
+    @Element(name = "zusatz_info", required = false)
+    private String addInfo = "";
 
-	@Element(name = "fax", required = false)
-	private String fax;
+    @Element(name = "fax", required = false)
+    private String fax = "";
 
-	@Element(name = "www_homepage", required = false)
-	private String homepage;
+    @Element(name = "www_homepage", required = false)
+    private String homepage = "";
 
-	@Element(name = "mobiltelefon", required = false)
-	private String mobilephone;
+    @Element(name = "mobiltelefon", required = false)
+    private String mobilephone = "";
 
-	@Element(name = "telefon", required = false)
-	private String telefon;
+    @Element(name = "telefon", required = false)
+    private String telefon = "";
 
-	public String getAdditionalInfo() {
-		return addInfo;
-	}
+    public String getAdditionalInfo() {
+        return addInfo;
+    }
 
-	public String getFax() {
-		return fax;
-	}
+    public String getFax() {
+        return fax;
+    }
 
-	public String getHomepage() {
-		return homepage;
-	}
+    public String getHomepage() {
+        return homepage;
+    }
 
-	public String getMobilephone() {
-		return mobilephone;
-	}
+    public String getMobilephone() {
+        return mobilephone;
+    }
 
-	public String getTelefon() {
-		return telefon;
-	}
+    public String getTelefon() {
+        return telefon;
+    }
 }
