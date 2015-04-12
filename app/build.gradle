@@ -8,8 +8,8 @@ android {
         applicationId "de.tum.in.tumcampus"
         minSdkVersion 10
         targetSdkVersion 21
-        versionCode 50
-        versionName "1.2.2"
+        versionCode 51
+        versionName "1.2.3"
     }
     buildTypes {
         release {
