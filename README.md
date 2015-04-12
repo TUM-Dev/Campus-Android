@@ -42,34 +42,13 @@ Dies ist keine offizielle App der Technischen Universität München. Es erfolgt 
 Die Anwendung speichert Daten nur auf Anweisung des Nutzers bzw. durch Benutzung der App. Der Zugriff auf kritische Informationen erfolgt ausschließlich über (durch den Nutzer zuvor freigegebene) Tokens. Im Fehlerfall erhebt die App mittels "BugSense" detaillierte technische Informationen, die zur Behebung des Fehlers notwendig sind. BugSense erfasst zudem auch anonyme Nutzungsdaten zur App (z.B. Anzahl der Nutzer an einem Tag). Weitere Informationen zu BugSense finden Sie unten.
 
 #### Support:
-- https://www.facebook.com/TUMCampus
-- Für besondere Anliegen erreichen Sie uns auch via E-Mail unter: "tca-support.os.in AT tum.de"
+Auf [Facebook](https://www.facebook.com/TUMCampus) oder für besondere Anliegen erreichen Sie uns auch via E-Mail unter: "tca-support.os.in AT tum.de"
 
 #### Lizenz:
-- GNU GPL v3 - http://www.gnu.org/licenses/gpl.html
+GNU GPL v3 - http://www.gnu.org/licenses/gpl.html
+
 Der Quellcode kann hier bezogen werden: https://github.com/TCA-Team/
 
-#### Wir sind auch auf Facebook: https://www.facebook.com/TUMCampus
+#### [Wir sind auch auf Facebook](https://www.facebook.com/TUMCampus)
 
-#### Weitere Informationen zu BugSense (nach Auskunft des BugSense-Support):
-
-BugSense erfasst keine vertraulichen Daten, erhebt aber - insbesondere im Fehlerfall - nachfolgende Informationen.
-
-Zu Beginn einer Session:
-Anonym. Geräte-ID (zufällige Zeichenfolge zur Identifizierung), Appversion, Betriebssystemversion, Gerät, Land, Zeitstempel, Ereignistyp und SDK Version
-
-Im Fehlerfall werden zudem erfasst:
-Stacktrace, Fehlermeldung, Appversion, Betriebssystemversion, Gerät, Land, Zeitstempel, SDK version, GPS ein/aus/n.v., WLAN an/aus, Datenverbindung an/aus, Geräteausrichtung, Auflösung des Bildschirms, abgefangene oder nicht abgefangener Fehler, vom Entwickler festgelegte Daten (keine)
-
-Weiterhin erhebt BugSense die IP-Adresse, das Herkunftsland, die Uhrzeit/Datum des Crashes und das Versionsdatum der App. BugSense verwendet diese (anonymen) Informationen für verschiedene Zwecke, wie z.B. Produktverbesserung, Fehleranalyse, Forschung usw. und veröffentlicht diese ggf. in Berichten. Weitere Informationen können Sie unter BugSense.com abrufen bzw. dort erfragen.
-
-
-## Antworten zu bisherigen Fragen in den Kommentaren
-> **F: Wann gibt es ein Update?**
-
-> A: Die App wird im Rahmen des Android Praktikums regelmaßig weiterentwickelt. Ein Update gibt es meist alle 6-12 Monate. Die Inhalte werden von uns sporadisch gepflegt. Wir sind weiterhin auf der Suche nach ehrenamtlichen Helfern.
-
-> **F: How can I contribute?**
-
-> A: Help translating https://crowdin.com/project/TUMCampus or create a feature you think would be cool: https://github.com/TCA-Team/TumCampusApp/issues
 
