@@ -74,7 +74,7 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
         mSwipeRefreshlayout = (SwipeRefreshLayout) findViewById(R.id.ptr_layout);
         mSwipeRefreshlayout.setOnRefreshListener(this);
         //TODO: set colors
-        //mSwipeRefreshlayout.setColorSchemeColors();
+        //mSwipeRefreshlayout.setColorSchemeResources(R.color.);
 
         // Start silence Service (if already started it will just invoke a check)
         Intent service = new Intent(this, SilenceService.class);

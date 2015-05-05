@@ -19,10 +19,7 @@ import android.widget.Toast;
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.UserPreferencesActivity;
 import de.tum.in.tumcampus.auxiliary.NetUtils;
-import de.tum.in.tumcampus.auxiliary.StickyListViewDelegate;
 import de.tum.in.tumcampus.auxiliary.Utils;
-import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
-import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
 
 /**
  * Generic class which handles can handle a long running background task
