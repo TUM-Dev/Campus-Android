@@ -2,6 +2,7 @@ package de.tum.in.tumcampus.activities.generic;
 
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.View;
 
@@ -9,7 +10,6 @@ import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.tumonline.TUMOnlineConst;
 import de.tum.in.tumcampus.tumonline.TUMOnlineRequest;
 import de.tum.in.tumcampus.tumonline.TUMOnlineRequestFetchListener;
-import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 
 /**
  * Generic class which handles all basic tasks to communicate with TUMOnline and
@@ -18,7 +18,7 @@ import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
  * TUMOnline and implements a rich user feedback with error progress and token
  * related layouts. Generic class parameter specifies the type of data returned by TumOnline.
  */
-public abstract class ActivityForSearchingTumOnline<T> extends ActivityForSearching implements TUMOnlineRequestFetchListener<T>, OnRefreshListener {
+public abstract class ActivityForSearchingTumOnline<T> extends ActivityForSearching implements TUMOnlineRequestFetchListener<T>, SwipeRefreshLayout.OnRefreshListener {
 
 	/** The method which should be invoked by the TUmOnline Fetcher */
 	private final TUMOnlineConst<T> method;
@@ -30,7 +30,7 @@ public abstract class ActivityForSearchingTumOnline<T> extends ActivityForSearch
      * Standard constructor for ActivityForSearchingTumOnline.
      * The given layout must include a all_error_layout.
      * If the Activity should support Pull-To-Refresh it can also contain a
-     * {@link uk.co.senab.actionbarpulltorefresh.extras.actionbarcompat.PullToRefreshLayout} named ptr_layout
+     * {@link SwipeRefreshLayout} named ptr_layout
      *
      * @param method A identifier specifying what kind of data should be fetched from TumOnline
      * @param layoutId Resource id of the xml layout that should be used to inflate the activity
@@ -113,7 +113,7 @@ public abstract class ActivityForSearchingTumOnline<T> extends ActivityForSearch
 	}
 
     @Override
-    public void onRefreshStarted(View view) {
+    public void onRefresh() {
         requestFetch(true);
     }
 }

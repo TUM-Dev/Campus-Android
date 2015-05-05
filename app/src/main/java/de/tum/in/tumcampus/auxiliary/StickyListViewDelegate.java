@@ -1,5 +1,6 @@
 package de.tum.in.tumcampus.auxiliary;
 
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
@@ -7,7 +8,7 @@ import uk.co.senab.actionbarpulltorefresh.library.viewdelegates.ViewDelegate;
 
 /**
  * Wrapper class to make {@link se.emilsjolander.stickylistheaders.StickyListHeadersListView} usable
- * with {@link uk.co.senab.actionbarpulltorefresh.extras.actionbarcompat.PullToRefreshLayout}
+ * with {@link SwipeRefreshLayout}
  */
 public class StickyListViewDelegate implements ViewDelegate {
 

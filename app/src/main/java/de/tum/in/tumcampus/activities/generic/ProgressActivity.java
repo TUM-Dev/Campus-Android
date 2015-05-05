@@ -8,6 +8,7 @@ import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -21,14 +22,12 @@ import de.tum.in.tumcampus.auxiliary.NetUtils;
 import de.tum.in.tumcampus.auxiliary.StickyListViewDelegate;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
-import uk.co.senab.actionbarpulltorefresh.extras.actionbarcompat.PullToRefreshLayout;
 import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
-import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 
 /**
  * Generic class which handles can handle a long running background task
  */
-public abstract class ProgressActivity extends BaseActivity implements OnRefreshListener {
+public abstract class ProgressActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener {
 
     /**
      * Default layouts for user interaction
@@ -39,7 +38,7 @@ public abstract class ProgressActivity extends BaseActivity implements OnRefresh
     private RelativeLayout noTokenLayout;
     private RelativeLayout noInternetLayout;
     private RelativeLayout failedTokenLayout;
-    private PullToRefreshLayout refreshLayout;
+    private SwipeRefreshLayout swipeRefreshLayout;
     private boolean registered = false;
     private Handler mLoadingHandler = new Handler();
 
@@ -47,7 +46,7 @@ public abstract class ProgressActivity extends BaseActivity implements OnRefresh
      * Standard constructor for ProgressActivity.
      * The given layout must include a errors_layout.
      * If the Activity should support Pull-To-Refresh it can also contain a
-     * {@link PullToRefreshLayout} named ptr_layout
+     * {@link SwipeRefreshLayout} named ptr_layout
      *
      * @param layoutId Resource id of the xml layout that should be used to inflate the activity
      */
@@ -63,16 +62,18 @@ public abstract class ProgressActivity extends BaseActivity implements OnRefresh
         allErrorsLayout = (LinearLayout) findViewById(R.id.errors_layout);
         progressLayout = (RelativeLayout) findViewById(R.id.progress_layout);
         errorLayout = (RelativeLayout) findViewById(R.id.error_layout);
-        refreshLayout = (PullToRefreshLayout) findViewById(R.id.ptr_layout);
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.ptr_layout);
         noInternetLayout = (RelativeLayout) findViewById(R.id.no_internet_layout);
         failedTokenLayout = (RelativeLayout) findViewById(R.id.failed_layout);
         noTokenLayout = (RelativeLayout) findViewById(R.id.no_token_layout);
 
-        // If content is refreshable setup the PullToRefreshLayout
-        if (refreshLayout != null) {
-            ActionBarPullToRefresh.from(this).allChildrenArePullable()
-                    .useViewDelegate(StickyListHeadersListView.class, new StickyListViewDelegate())
-                    .listener(this).setup(refreshLayout);
+        // If content is refreshable setup the SwipeRefreshLayout
+        if (swipeRefreshLayout != null) {
+            swipeRefreshLayout.setOnRefreshListener(this);
+            //TODO refresh layout and end refreshing
+            //ActionBarPullToRefresh.from(this).allChildrenArePullable()
+            //.useViewDelegate(StickyListHeadersListView.class, new StickyListViewDelegate())
+            //        .listener(this).setup(refreshLayout);
         }
 
         if (progressLayout == null) {
@@ -160,7 +161,7 @@ public abstract class ProgressActivity extends BaseActivity implements OnRefresh
     }
 
     /**
-     * Shows progress layout or sets {@link PullToRefreshLayout}'s state to refreshing
+     * Shows progress layout or sets {@link SwipeRefreshLayout}'s state to refreshing
      * if present in the xml layout
      */
     protected void showLoadingStart() {
@@ -169,7 +170,7 @@ public abstract class ProgressActivity extends BaseActivity implements OnRefresh
             registered = false;
         }
 
-        if (refreshLayout == null) {
+        if (swipeRefreshLayout == null) {
             noInternetLayout.setVisibility(View.GONE);
             noTokenLayout.setVisibility(View.GONE);
             errorLayout.setVisibility(View.GONE);
@@ -179,7 +180,7 @@ public abstract class ProgressActivity extends BaseActivity implements OnRefresh
             mLoadingHandler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    refreshLayout.setRefreshing(true);
+                    swipeRefreshLayout.setRefreshing(true);
                 }
             }, 1000);
         }
@@ -187,7 +188,7 @@ public abstract class ProgressActivity extends BaseActivity implements OnRefresh
 
     /**
      * Indicates that the background progress ended by hiding error and progress layout
-     * and setting {@link PullToRefreshLayout}'s state to completed
+     * and setting {@link SwipeRefreshLayout}'s state to completed
      */
     protected void showLoadingEnded() {
         mLoadingHandler.removeCallbacksAndMessages(null);
@@ -197,36 +198,34 @@ public abstract class ProgressActivity extends BaseActivity implements OnRefresh
         errorLayout.setVisibility(View.GONE);
         progressLayout.setVisibility(View.GONE);
         allErrorsLayout.setVisibility(View.GONE);
-        if (refreshLayout != null) {
-            refreshLayout.setRefreshComplete();
+        if (swipeRefreshLayout != null) {
+            swipeRefreshLayout.setRefreshing(false);
         }
     }
 
     /**
-     * Enables {@link PullToRefreshLayout}
+     * Enables {@link SwipeRefreshLayout}
      */
     protected void enableRefresh() {
-        if (refreshLayout != null)
-            refreshLayout.setEnabled(true);
+        if (swipeRefreshLayout != null)
+            swipeRefreshLayout.setEnabled(true);
     }
 
     /**
-     * Disables {@link PullToRefreshLayout}
+     * Disables {@link SwipeRefreshLayout}
      */
     protected void disableRefresh() {
-        if (refreshLayout != null)
-            refreshLayout.setEnabled(false);
+        if (swipeRefreshLayout != null)
+            swipeRefreshLayout.setEnabled(false);
     }
 
     /**
      * Gets called when Pull-To-Refresh layout was used to refresh content.
      * Should start the background refresh task.
-     * Override this if you use a {@link PullToRefreshLayout}
-     *
-     * @param view View that should be refreshed
+     * Override this if you use a {@link SwipeRefreshLayout}
      */
     @Override
-    public abstract void onRefreshStarted(View view);
+    public abstract void onRefresh();
 
     /**
      * Handle click on error_layout, failed_layout and no_token_layout
@@ -238,7 +237,7 @@ public abstract class ProgressActivity extends BaseActivity implements OnRefresh
         switch (viewId) {
             case R.id.failed_layout:
             case R.id.error_layout:
-                onRefreshStarted(view);
+                onRefresh();
                 break;
             case R.id.no_token_layout:
                 startActivity(new Intent(this, UserPreferencesActivity.class));
@@ -259,7 +258,7 @@ public abstract class ProgressActivity extends BaseActivity implements OnRefresh
         @Override
         public void onReceive(Context context, Intent intent) {
             if (NetUtils.isConnected(context)) {
-                onRefreshStarted(null);
+                onRefresh();
             }
         }
     };

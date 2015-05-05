@@ -9,6 +9,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.SearchRecentSuggestions;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -51,7 +52,7 @@ public abstract class ActivityForSearching extends ProgressActivity {
     /**
      * Initializes an activity for searching.
      * The xml layout must include an error_layout and a progress_layout.
-     * A {@link uk.co.senab.actionbarpulltorefresh.extras.actionbarcompat.PullToRefreshLayout}
+     * A {@link SwipeRefreshLayout}
      * called ptr_layout is required if the activity should support PullToRefresh method
      *
      * @param layoutId Resource id of the xml layout that should be used to inflate the activity
@@ -196,7 +197,7 @@ public abstract class ActivityForSearching extends ProgressActivity {
     }
 
     @Override
-    public void onRefreshStarted(View view) {
+    public void onRefresh() {
         requestSearch(mQuery);
     }
 }
