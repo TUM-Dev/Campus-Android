@@ -10,6 +10,13 @@ import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.URLUtil;
+import android.widget.RemoteViews;
+
+import org.apache.http.client.utils.URIUtils;
+
+import java.net.URL;
+import java.net.URLEncoder;
 
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.adapters.NewsAdapter;
@@ -44,7 +51,7 @@ public class NewsCard extends Card {
     }
 
     @Override
-    protected String getTitle() {
+    public String getTitle() {
         mCursor.moveToPosition(mPosition);
         return mCursor.getString(2);
     }
@@ -123,5 +130,15 @@ public class NewsCard extends Card {
 
         // Opens url in browser
         return new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+    }
+
+    @Override
+    public RemoteViews getRemoteViews(Context context) {
+        mCursor.moveToPosition(mPosition);
+        final RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.cards_widget_card);
+        remoteViews.setTextViewText(R.id.widgetCardTextView, this.getTitle());
+        Bitmap img = net.downloadImageToBitmap(mCursor.getString(4));
+        remoteViews.setImageViewBitmap(R.id.widgetCardImageView, img);
+        return remoteViews;
     }
 }
