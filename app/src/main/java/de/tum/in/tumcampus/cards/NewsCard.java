@@ -137,8 +137,10 @@ public class NewsCard extends Card {
         mCursor.moveToPosition(mPosition);
         final RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.cards_widget_card);
         remoteViews.setTextViewText(R.id.widgetCardTextView, this.getTitle());
-        Bitmap img = net.downloadImageToBitmap(mCursor.getString(4));
-        remoteViews.setImageViewBitmap(R.id.widgetCardImageView, img);
+        if(mCursor.getString(4) != null) {
+            Bitmap img = net.downloadImageToBitmap(mCursor.getString(4));
+            remoteViews.setImageViewBitmap(R.id.widgetCardImageView, img);
+        }
         return remoteViews;
     }
 }

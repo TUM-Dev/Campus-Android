@@ -1,34 +1,47 @@
 package de.tum.in.tumcampus.widgets;
 
+import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import de.tum.in.tumcampus.cards.Card;
 import de.tum.in.tumcampus.models.managers.CardManager;
 
 public class CardsWidgetService extends RemoteViewsService {
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
-        return new CardsRemoteViewsFactory(this.getApplicationContext());
+        final int appID = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
+        return new CardsRemoteViewsFactory(this.getApplicationContext(), appID);
     }
 }
 
 class CardsRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 
     Context mContext;
+    int appWidgetId;
+    SharedPreferences prefs;
+    List<RemoteViews> views = new ArrayList<>();
 
-    CardsRemoteViewsFactory(Context context) {
+    CardsRemoteViewsFactory(Context context, int appWidgetId) {
         this.mContext = context;
+        this.appWidgetId = appWidgetId;
+        prefs = context.getSharedPreferences(CardsWidgetConfigureActivity.PREFS_NAME, 0);
     }
 
     @Override
     public void onCreate() {
+        updateContent();
     }
 
     @Override
     public void onDataSetChanged() {
-        CardManager.update(mContext);
+        updateContent();
     }
 
     @Override
@@ -37,12 +50,12 @@ class CardsRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 
     @Override
     public int getCount() {
-        return CardManager.getCardCount();
+        return views.size();
     }
 
     @Override
     public RemoteViews getViewAt(int i) {
-        return CardManager.getCard(i).getRemoteViews(mContext);
+        return views.get(i);
     }
 
     @Override
@@ -63,5 +76,18 @@ class CardsRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
     @Override
     public boolean hasStableIds() {
         return false;
+    }
+
+    private void updateContent(){
+        final String prefix = CardsWidgetConfigureActivity.PREF_PREFIX_KEY + appWidgetId;
+        views.clear();
+        CardManager.update(mContext);
+        List<Card> cards = CardManager.getCards();
+        for (Card card : cards) {
+            final boolean getsShown = prefs.getBoolean(prefix + card.getTyp(), false);
+            if(getsShown) {
+                views.add(card.getRemoteViews(mContext));
+            }
+        }
     }
 }
