@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="1dp"
+    android:padding="5dp"
     android:background="@android:color/background_light">
 
     <TextView
@@ -10,13 +10,15 @@
         android:layout_height="wrap_content"
         android:text="Nothing to see here"
         android:id="@+id/widgetCardTextView"
-        android:layout_gravity="center_horizontal"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
         android:textColor="@android:color/black"/>
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/widgetCardImageView"
-        android:layout_gravity="end"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
         android:src="@drawable/abc_btn_check_to_on_mtrl_015" />
-</LinearLayout>
+</RelativeLayout>

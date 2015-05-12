@@ -8,24 +8,88 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.EditText;
+import android.widget.CheckBox;
 import android.widget.RemoteViews;
 
 import de.tum.in.tumcampus.R;
-import de.tum.in.tumcampus.adapters.CardsAdapter;
+import de.tum.in.tumcampus.models.managers.CardManager;
 
 /**
  * The configuration screen for the {@link CardsWidget CardsWidget} AppWidget.
  */
 public class CardsWidgetConfigureActivity extends Activity {
 
+    public static final String PREFS_NAME = "de.tum.in.tumcampus.widgets.CardsWidget";
+    public static final String PREF_PREFIX_KEY = "appwidget_";
     int mAppWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
-    EditText mAppWidgetText;
-    private static final String PREFS_NAME = "de.tum.in.tumcampus.widgets.CardsWidget";
-    private static final String PREF_PREFIX_KEY = "appwidget_";
+    CheckBox mCafeteriaCheck, mChatCheck, mEduroamCheck, mMVVCheck, mNewsCheck, mLectureCheck, mTutionFeesCheck;
+    View.OnClickListener mOnClickListener = new View.OnClickListener() {
+        public void onClick(View v) {
+            final Context context = CardsWidgetConfigureActivity.this;
+
+            //TODO save button states
+            // When the button is clicked, store the settings locally
+            saveTitlePref(context, mAppWidgetId, mCafeteriaCheck.isChecked(), mChatCheck.isChecked(), mEduroamCheck.isChecked(), mMVVCheck.isChecked(), mNewsCheck.isChecked(), mLectureCheck.isChecked(), mTutionFeesCheck.isChecked());
+
+            // It is the responsibility of the configuration activity to update the app widget
+            AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+
+            Intent serviceIntent = new Intent(context, CardsWidgetService.class);
+            // Add the app widget ID to the intent extras.
+            serviceIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId);
+            serviceIntent.setData(Uri.parse(serviceIntent.toUri(Intent.URI_INTENT_SCHEME)));
+            // Instantiate the RemoteViews object for the app widget layout.
+            RemoteViews rv = new RemoteViews(context.getPackageName(), R.layout.cards_widget);
+
+            rv.setRemoteAdapter(mAppWidgetId, R.id.card_widget_listview, serviceIntent);
+
+            // The empty view is displayed when the collection has no items.
+            // It should be in the same layout used to instantiate the RemoteViews
+            // object above.
+            rv.setEmptyView(R.id.card_widget_listview, R.layout.cards_widget_card);
+
+            appWidgetManager.updateAppWidget(mAppWidgetId, rv);
+
+            CardsWidget.updateAppWidget(context, appWidgetManager, mAppWidgetId);
+
+            // Make sure we pass back the original appWidgetId
+            Intent resultValue = new Intent();
+            resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId);
+            setResult(RESULT_OK, resultValue);
+            finish();
+        }
+    };
 
     public CardsWidgetConfigureActivity() {
         super();
+    }
+
+    // Write the prefix to the SharedPreferences object for this widget
+    //TODO rewrite this into a preferenceactivity
+    static void saveTitlePref(Context context, int appWidgetId, boolean showCafeteria, boolean showChat, boolean showEduroam, boolean showMVV, boolean showNews, boolean showLectures, boolean showTutionFees) {
+        final String prefix = PREF_PREFIX_KEY + appWidgetId;
+        SharedPreferences.Editor prefs = context.getSharedPreferences(PREFS_NAME, 0).edit();
+        prefs.putBoolean(prefix + CardManager.CARD_CAFETERIA, showCafeteria);
+        prefs.putBoolean(prefix + CardManager.CARD_CHAT, showChat);
+        prefs.putBoolean(prefix + CardManager.CARD_EDUROAM, showEduroam);
+        prefs.putBoolean(prefix + CardManager.CARD_MVV, showMVV);
+        prefs.putBoolean(prefix + CardManager.CARD_NEWS, showNews);
+        prefs.putBoolean(prefix + CardManager.CARD_NEXT_LECTURE, showLectures);
+        prefs.putBoolean(prefix + CardManager.CARD_TUITION_FEE, showTutionFees);
+        prefs.apply();
+    }
+
+    static void deleteTitlePref(Context context, int appWidgetId) {
+        final String prefix = PREF_PREFIX_KEY + appWidgetId;
+        SharedPreferences.Editor prefs = context.getSharedPreferences(PREFS_NAME, 0).edit();
+        prefs.remove(prefix + CardManager.CARD_CAFETERIA);
+        prefs.remove(prefix + CardManager.CARD_CHAT);
+        prefs.remove(prefix + CardManager.CARD_EDUROAM);
+        prefs.remove(prefix + CardManager.CARD_MVV);
+        prefs.remove(prefix + CardManager.CARD_NEWS);
+        prefs.remove(prefix + CardManager.CARD_NEXT_LECTURE);
+        prefs.remove(prefix + CardManager.CARD_TUITION_FEE);
+        prefs.apply();
     }
 
     @Override
@@ -39,7 +103,15 @@ public class CardsWidgetConfigureActivity extends Activity {
         setResult(RESULT_CANCELED);
 
         setContentView(R.layout.cards_widget_configure);
-        mAppWidgetText = (EditText) findViewById(R.id.appwidget_text);
+
+        mCafeteriaCheck = (CheckBox) findViewById(R.id.chk_cafeteria);
+        mChatCheck = (CheckBox) findViewById(R.id.chk_chatmessages);
+        mEduroamCheck = (CheckBox) findViewById(R.id.chk_eduroam);
+        mMVVCheck = (CheckBox) findViewById(R.id.chk_mvv);
+        mNewsCheck = (CheckBox) findViewById(R.id.chk_newspread);
+        mLectureCheck = (CheckBox) findViewById(R.id.chk_lecture);
+        mTutionFeesCheck = (CheckBox) findViewById(R.id.chk_tutionFee);
+
         findViewById(R.id.add_button).setOnClickListener(mOnClickListener);
 
         // Find the widget id from the intent.
@@ -56,79 +128,6 @@ public class CardsWidgetConfigureActivity extends Activity {
             return;
         }
 
-        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-
-        Intent serviceIntent = new Intent(context, CardsWidgetService.class);
-        // Add the app widget ID to the intent extras.
-        serviceIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId);
-        serviceIntent.setData(Uri.parse(serviceIntent.toUri(Intent.URI_INTENT_SCHEME)));
-        // Instantiate the RemoteViews object for the app widget layout.
-        RemoteViews rv = new RemoteViews(context.getPackageName(), R.layout.cards_widget);
-        // Set up the RemoteViews object to use a RemoteViews adapter.
-        // This adapter connects
-        // to a RemoteViewsService  through the specified intent.
-        // This is how you populate the data.
-        rv.setRemoteAdapter(mAppWidgetId, R.id.card_widget_listview, serviceIntent);
-
-        // The empty view is displayed when the collection has no items.
-        // It should be in the same layout used to instantiate the RemoteViews
-        // object above.
-        rv.setEmptyView(R.id.card_widget_listview, R.layout.cards_widget_card);
-
-        //TODO perform app widget configuration
-
-        appWidgetManager.updateAppWidget(mAppWidgetId, rv);
-
-
-
-        mAppWidgetText.setText(loadTitlePref(CardsWidgetConfigureActivity.this, mAppWidgetId));
-
-
-    }
-
-    View.OnClickListener mOnClickListener = new View.OnClickListener() {
-        public void onClick(View v) {
-            final Context context = CardsWidgetConfigureActivity.this;
-
-            // When the button is clicked, store the string locally
-            String widgetText = mAppWidgetText.getText().toString();
-            saveTitlePref(context, mAppWidgetId, widgetText);
-
-            // It is the responsibility of the configuration activity to update the app widget
-            AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-            CardsWidget.updateAppWidget(context, appWidgetManager, mAppWidgetId);
-
-            // Make sure we pass back the original appWidgetId
-            Intent resultValue = new Intent();
-            resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId);
-            setResult(RESULT_OK, resultValue);
-            finish();
-        }
-    };
-
-    // Write the prefix to the SharedPreferences object for this widget
-    static void saveTitlePref(Context context, int appWidgetId, String text) {
-        SharedPreferences.Editor prefs = context.getSharedPreferences(PREFS_NAME, 0).edit();
-        prefs.putString(PREF_PREFIX_KEY + appWidgetId, text);
-        prefs.commit();
-    }
-
-    // Read the prefix from the SharedPreferences object for this widget.
-    // If there is no preference saved, get the default from a resource
-    static String loadTitlePref(Context context, int appWidgetId) {
-        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
-        String titleValue = prefs.getString(PREF_PREFIX_KEY + appWidgetId, null);
-        if (titleValue != null) {
-            return titleValue;
-        } else {
-            return context.getString(R.string.appwidget_text);
-        }
-    }
-
-    static void deleteTitlePref(Context context, int appWidgetId) {
-        SharedPreferences.Editor prefs = context.getSharedPreferences(PREFS_NAME, 0).edit();
-        prefs.remove(PREF_PREFIX_KEY + appWidgetId);
-        prefs.commit();
     }
 }
 
