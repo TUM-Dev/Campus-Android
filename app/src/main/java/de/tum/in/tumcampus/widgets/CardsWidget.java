@@ -18,7 +18,8 @@ import de.tum.in.tumcampus.models.managers.CardManager;
  */
 public class CardsWidget extends AppWidgetProvider {
 
-    public static final String BROADCAST_NAME = "de.tum.in.newtumcampus.intent.action.BROADCAST_CARDSWIDGET";
+    private static final String BROADCAST_NAME = "de.tum.in.newtumcampus.intent.action.BROADCAST_CARDSWIDGET";
+    static final String CARDID = "CardID";
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
@@ -63,6 +64,7 @@ public class CardsWidget extends AppWidgetProvider {
         // Set up the RemoteViews object to use a RemoteViews adapter.
         // This adapter connects to a RemoteViewsService  through the specified intent.
         // This is how you populate the data.
+        //TODO replace deprecated API call (avaidable only on API 14+)
         rv.setRemoteAdapter(appWidgetId, R.id.card_widget_listview, intent);
 
         // The empty view is displayed when the collection has no items.
@@ -83,7 +85,7 @@ public class CardsWidget extends AppWidgetProvider {
     @Override
     public void onReceive(@NonNull Context context, @NonNull Intent intent) {
         if (intent.getAction().equals(BROADCAST_NAME)) {
-            int index = intent.getIntExtra("ID", -1);
+            int index = intent.getIntExtra(CARDID, -1);
 
             if(index != -1) {
                 Intent i = CardManager.getCard(index).getIntent();

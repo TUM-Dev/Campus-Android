@@ -10,9 +10,9 @@ import android.widget.RemoteViewsService;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.cards.Card;
 import de.tum.in.tumcampus.models.managers.CardManager;
-import de.tum.in.tumcampus.R;
 
 public class CardsWidgetService extends RemoteViewsService {
     @Override
@@ -24,10 +24,10 @@ public class CardsWidgetService extends RemoteViewsService {
 
 class CardsRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 
-    Context mContext;
-    int appWidgetId;
-    SharedPreferences prefs;
-    List<RemoteViews> views = new ArrayList<>();
+    final private Context mContext;
+    final private int appWidgetId;
+    final private SharedPreferences prefs;
+    final private List<RemoteViews> views = new ArrayList<>();
 
     CardsRemoteViewsFactory(Context context, int appWidgetId) {
         this.mContext = context;
@@ -91,7 +91,7 @@ class CardsRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
                 if (remote != null) {
                     //Set the intent to fill in
                     Intent fillInIntent = new Intent();
-                    fillInIntent.putExtra("ID", cards.indexOf(card));
+                    fillInIntent.putExtra(CardsWidget.CARDID, cards.indexOf(card));
                     remote.setOnClickFillInIntent(R.id.cards_widget_card, fillInIntent);
                 }
 
