@@ -12,6 +12,7 @@ import java.util.List;
 
 import de.tum.in.tumcampus.cards.Card;
 import de.tum.in.tumcampus.models.managers.CardManager;
+import de.tum.in.tumcampus.R;
 
 public class CardsWidgetService extends RemoteViewsService {
     @Override
@@ -78,15 +79,24 @@ class CardsRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
         return false;
     }
 
-    private void updateContent(){
+    private void updateContent() {
         final String prefix = CardsWidgetConfigureActivity.PREF_PREFIX_KEY + appWidgetId;
         views.clear();
         CardManager.update(mContext);
         List<Card> cards = CardManager.getCards();
         for (Card card : cards) {
             final boolean getsShown = prefs.getBoolean(prefix + card.getTyp(), false);
-            if(getsShown) {
-                views.add(card.getRemoteViews(mContext));
+            if (getsShown) {
+                final RemoteViews remote = card.getRemoteViews(mContext);
+
+                if (remote != null) {
+                    //Set the intent to fill in
+                    Intent fillInIntent = new Intent();
+                    fillInIntent.putExtra("ID", cards.indexOf(card));
+                    remote.setOnClickFillInIntent(R.id.cards_widget_card, fillInIntent);
+                }
+
+                views.add(remote);
             }
         }
     }

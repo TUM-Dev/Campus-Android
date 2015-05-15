@@ -1,5 +1,6 @@
 package de.tum.in.tumcampus.widgets;
 
+import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
@@ -8,6 +9,7 @@ import android.net.Uri;
 import android.widget.RemoteViews;
 
 import de.tum.in.tumcampus.R;
+import de.tum.in.tumcampus.models.managers.CardManager;
 
 /**
  * Implementation of App Widget functionality.
@@ -15,12 +17,13 @@ import de.tum.in.tumcampus.R;
  */
 public class CardsWidget extends AppWidgetProvider {
 
+    public static final String BROADCAST_NAME = "de.tum.in.newtumcampus.intent.action.BROADCAST_CARDSWIDGET";
+
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         // There may be multiple widgets active, so update all of them
-        final int N = appWidgetIds.length;
-        for (int i = 0; i < N; i++) {
-            updateAppWidget(context, appWidgetManager, appWidgetIds[i]);
+        for (int appWidgetId : appWidgetIds) {
+            updateAppWidget(context, appWidgetManager, appWidgetId);
         }
         super.onUpdate(context, appWidgetManager, appWidgetIds);
     }
@@ -28,9 +31,8 @@ public class CardsWidget extends AppWidgetProvider {
     @Override
     public void onDeleted(Context context, int[] appWidgetIds) {
         // When the user deletes the widget, delete the preference associated with it.
-        final int N = appWidgetIds.length;
-        for (int i = 0; i < N; i++) {
-            CardsWidgetConfigureActivity.deleteTitlePref(context, appWidgetIds[i]);
+        for (int appWidgetId : appWidgetIds) {
+            CardsWidgetConfigureActivity.deleteTitlePref(context, appWidgetId);
         }
     }
 
@@ -67,8 +69,28 @@ public class CardsWidget extends AppWidgetProvider {
         // object above.
         rv.setEmptyView(R.id.card_widget_listview, R.layout.cards_widget_card);
 
+        //Set the pendingIntent Template
+        Intent broadcastIntent = new Intent(context, CardsWidget.class);
+        broadcastIntent.setAction(BROADCAST_NAME);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, broadcastIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        rv.setPendingIntentTemplate(R.id.card_widget_listview, pendingIntent);
+
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, rv);
+    }
+
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        if (intent.getAction().equals(BROADCAST_NAME)) {
+            int index = intent.getIntExtra("ID", -1);
+
+            if(index != -1) {
+                Intent i = CardManager.getCard(index).getIntent();
+                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(i);
+            }
+        }
+        super.onReceive(context, intent);
     }
 }
 
