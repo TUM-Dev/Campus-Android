@@ -34,22 +34,6 @@ public class CardsWidgetConfigureActivity extends Activity {
             // It is the responsibility of the configuration activity to update the app widget
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
 
-            Intent serviceIntent = new Intent(context, CardsWidgetService.class);
-            // Add the app widget ID to the intent extras.
-            serviceIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId);
-            serviceIntent.setData(Uri.parse(serviceIntent.toUri(Intent.URI_INTENT_SCHEME)));
-            // Instantiate the RemoteViews object for the app widget layout.
-            RemoteViews rv = new RemoteViews(context.getPackageName(), R.layout.cards_widget);
-
-            rv.setRemoteAdapter(mAppWidgetId, R.id.card_widget_listview, serviceIntent);
-
-            // The empty view is displayed when the collection has no items.
-            // It should be in the same layout used to instantiate the RemoteViews
-            // object above.
-            rv.setEmptyView(R.id.card_widget_listview, R.layout.cards_widget_card);
-
-            appWidgetManager.updateAppWidget(mAppWidgetId, rv);
-
             CardsWidget.updateAppWidget(context, appWidgetManager, mAppWidgetId);
 
             // Make sure we pass back the original appWidgetId
