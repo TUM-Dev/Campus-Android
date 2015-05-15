@@ -37,7 +37,6 @@ class CardsRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 
     @Override
     public void onCreate() {
-        updateContent();
     }
 
     @Override
