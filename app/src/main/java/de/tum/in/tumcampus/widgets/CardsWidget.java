@@ -6,6 +6,7 @@ import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.widget.RemoteViews;
 
 import de.tum.in.tumcampus.R;
@@ -80,14 +81,16 @@ public class CardsWidget extends AppWidgetProvider {
     }
 
     @Override
-    public void onReceive(Context context, Intent intent) {
+    public void onReceive(@NonNull Context context, @NonNull Intent intent) {
         if (intent.getAction().equals(BROADCAST_NAME)) {
             int index = intent.getIntExtra("ID", -1);
 
             if(index != -1) {
                 Intent i = CardManager.getCard(index).getIntent();
-                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                context.startActivity(i);
+                if(i != null) {
+                    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    context.startActivity(i);
+                }
             }
         }
         super.onReceive(context, intent);
