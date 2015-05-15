@@ -10,13 +10,7 @@ import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.URLUtil;
 import android.widget.RemoteViews;
-
-import org.apache.http.client.utils.URIUtils;
-
-import java.net.URL;
-import java.net.URLEncoder;
 
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.adapters.NewsAdapter;
@@ -137,7 +131,8 @@ public class NewsCard extends Card {
         mCursor.moveToPosition(mPosition);
         final RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.cards_widget_card);
         remoteViews.setTextViewText(R.id.widgetCardTextView, this.getTitle());
-        if(mCursor.getString(4) != null) {
+        final String imgURL = mCursor.getString(4);
+        if(imgURL != null && !imgURL.trim().isEmpty()) {
             Bitmap img = net.downloadImageToBitmap(mCursor.getString(4));
             remoteViews.setImageViewBitmap(R.id.widgetCardImageView, img);
         }

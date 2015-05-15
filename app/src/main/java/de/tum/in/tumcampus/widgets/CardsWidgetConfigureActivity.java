@@ -5,11 +5,9 @@ import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.CheckBox;
-import android.widget.RemoteViews;
 
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.models.managers.CardManager;
@@ -21,15 +19,17 @@ public class CardsWidgetConfigureActivity extends Activity {
 
     public static final String PREFS_NAME = "de.tum.in.tumcampus.widgets.CardsWidget";
     public static final String PREF_PREFIX_KEY = "appwidget_";
-    int mAppWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
-    CheckBox mCafeteriaCheck, mChatCheck, mEduroamCheck, mMVVCheck, mNewsCheck, mLectureCheck, mTutionFeesCheck;
-    View.OnClickListener mOnClickListener = new View.OnClickListener() {
+    private int mAppWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
+    private CheckBox mCafeteriaCheck, mChatCheck, mEduroamCheck, mMVVCheck,
+            mNewsCheck, mLectureCheck, mTutionFeesCheck;
+    final private View.OnClickListener mOnClickListener = new View.OnClickListener() {
         public void onClick(View v) {
             final Context context = CardsWidgetConfigureActivity.this;
 
-            //TODO save button states
             // When the button is clicked, store the settings locally
-            saveTitlePref(context, mAppWidgetId, mCafeteriaCheck.isChecked(), mChatCheck.isChecked(), mEduroamCheck.isChecked(), mMVVCheck.isChecked(), mNewsCheck.isChecked(), mLectureCheck.isChecked(), mTutionFeesCheck.isChecked());
+            saveTitlePref(context, mAppWidgetId, mCafeteriaCheck.isChecked(), mChatCheck.isChecked(),
+                    mEduroamCheck.isChecked(), mMVVCheck.isChecked(), mNewsCheck.isChecked(),
+                    mLectureCheck.isChecked(), mTutionFeesCheck.isChecked());
 
             // It is the responsibility of the configuration activity to update the app widget
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
@@ -49,8 +49,9 @@ public class CardsWidgetConfigureActivity extends Activity {
     }
 
     // Write the prefix to the SharedPreferences object for this widget
-    //TODO rewrite this into a preferenceactivity
-    static void saveTitlePref(Context context, int appWidgetId, boolean showCafeteria, boolean showChat, boolean showEduroam, boolean showMVV, boolean showNews, boolean showLectures, boolean showTutionFees) {
+    private static void saveTitlePref(Context context, int appWidgetId, boolean showCafeteria,
+                                      boolean showChat, boolean showEduroam, boolean showMVV,
+                                      boolean showNews, boolean showLectures, boolean showTutionFees) {
         final String prefix = PREF_PREFIX_KEY + appWidgetId;
         SharedPreferences.Editor prefs = context.getSharedPreferences(PREFS_NAME, 0).edit();
         prefs.putBoolean(prefix + CardManager.CARD_CAFETERIA, showCafeteria);
@@ -79,8 +80,6 @@ public class CardsWidgetConfigureActivity extends Activity {
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-
-        Context context = getApplicationContext();
 
         // Set the result to CANCELED.  This will cause the widget host to cancel
         // out of the widget placement if the user presses the back button.
