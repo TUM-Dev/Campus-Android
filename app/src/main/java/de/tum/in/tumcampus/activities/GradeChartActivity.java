@@ -2,7 +2,7 @@ package de.tum.in.tumcampus.activities;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 
@@ -14,7 +14,7 @@ import de.tum.in.tumcampus.auxiliary.ImplicitCounter;
  *
  * NEEDS: chartContent set in incoming bundle (html content to show)
  */
-public class GradeChartActivity extends ActionBarActivity {
+public class GradeChartActivity extends AppCompatActivity {
 
 	@SuppressLint("SetJavaScriptEnabled")
 	@Override
