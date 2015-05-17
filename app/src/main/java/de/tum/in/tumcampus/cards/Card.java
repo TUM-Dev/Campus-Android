@@ -7,14 +7,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
-import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.RemoteViews;
 import android.widget.TextView;
 
 import de.tum.in.tumcampus.R;
@@ -239,11 +237,6 @@ public abstract class Card {
         return notificationBuilder.build();
     }
 
-    @Nullable
-    public RemoteViews getRemoteViews(Context context) {
-        return null;
-    }
-
     /**
      * @return Should return the intent that should be launched if the card
      * or the notification gets clicked, null if nothing should happen
@@ -255,7 +248,7 @@ public abstract class Card {
     /**
      * Gets the title of the card
      * */
-    public String getTitle() {
+    String getTitle() {
         return null;
     }
 

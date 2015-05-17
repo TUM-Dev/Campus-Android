@@ -8,7 +8,6 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RemoteViews;
 
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.SetupEduroamActivity;
@@ -55,13 +54,5 @@ public class EduroamCard extends Card {
     @Override
     public Intent getIntent() {
         return new Intent(mContext, SetupEduroamActivity.class);
-    }
-
-    @Override
-    public RemoteViews getRemoteViews(Context context) {
-        final RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.cards_widget_card);
-        remoteViews.setTextViewText(R.id.widgetCardTextView, this.getTitle());
-        remoteViews.setImageViewResource(R.id.widgetCardImageView, R.drawable.ic_action_network_wifi);
-        return remoteViews;
     }
 }

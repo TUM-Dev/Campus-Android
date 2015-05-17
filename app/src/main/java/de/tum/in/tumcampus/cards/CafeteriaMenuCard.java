@@ -11,7 +11,6 @@ import android.support.v4.app.NotificationCompat;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.RemoteViews;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
@@ -146,13 +145,5 @@ public class CafeteriaMenuCard extends Card {
         Bitmap bm = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.wear_cafeteria);
         morePageNotification.setBackground(bm);
         return morePageNotification.extend(notificationBuilder).build();
-    }
-
-    @Override
-    public RemoteViews getRemoteViews(Context context) {
-        final RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.cards_widget_card);
-        remoteViews.setTextViewText(R.id.widgetCardTextView, this.getTitle());
-        remoteViews.setImageViewResource(R.id.widgetCardImageView, R.drawable.ic_cutlery);
-        return remoteViews;
     }
 }

@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.text.format.DateUtils;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RemoteViews;
 import android.widget.TextView;
 
 import java.util.Date;
@@ -50,13 +49,5 @@ public class NoInternetCard extends Card {
     @Override
     public boolean isDismissable() {
         return false;
-    }
-
-    @Override
-    public RemoteViews getRemoteViews(Context context) {
-        final RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.cards_widget_card);
-        remoteViews.setTextViewText(R.id.widgetCardTextView, this.getTitle());
-        remoteViews.setImageViewResource(R.id.widgetCardImageView, R.drawable.ic_no_wifi);
-        return remoteViews;
     }
 }
