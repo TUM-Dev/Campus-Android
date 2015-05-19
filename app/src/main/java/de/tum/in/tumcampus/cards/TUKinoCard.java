@@ -13,7 +13,7 @@ import de.tum.in.tumcampus.models.managers.CardManager;
 public class TUKinoCard extends Card {
 
     public TUKinoCard(Context context){
-        super(context, "tu_kino");
+        super(context, "card_kino");
     }
 
     @Override
