@@ -10,6 +10,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -225,6 +226,8 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
         } else {
             Intent i = card.getIntent();
             if (i != null) {
+                Log.v("Intent", i.toString());
+                Log.v("Item_Click", "Clicked on an item");
                 startActivity(i);
             }
         }

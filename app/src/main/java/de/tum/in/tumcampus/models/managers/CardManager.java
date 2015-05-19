@@ -14,6 +14,7 @@ import de.tum.in.tumcampus.cards.FirstUseCard1;
 import de.tum.in.tumcampus.cards.FirstUseCard2;
 import de.tum.in.tumcampus.cards.NoInternetCard;
 import de.tum.in.tumcampus.cards.RestoreCard;
+import de.tum.in.tumcampus.cards.TUKinoCard;
 
 /**
  * Card manager, manages inserting, dismissing, updating and displaying of cards
@@ -36,6 +37,7 @@ public class CardManager {
     public static final int CARD_NEWS = 9;
     public static final int CARD_EDUROAM = 10;
     public static final int CARD_CHAT = 11;
+    public static final int CARD_KINO = 12;
 
     private static List<Card> cards;
     private static ArrayList<Card> newCards;
@@ -125,6 +127,10 @@ public class CardManager {
                 Utils.log(ex, "Error while creating card");
             }
         }
+
+        // there's no manager for the TU Kino yet
+        // just hard coded
+        new TUKinoCard(context).apply();
 
         // Always append the restore card at the end of our list
         new RestoreCard(context).apply();
