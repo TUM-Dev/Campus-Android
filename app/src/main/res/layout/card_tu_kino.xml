@@ -32,7 +32,7 @@
                 android:layout_marginRight="10dp"
                 android:layout_toLeftOf="@+id/textView"
                 android:layout_toStartOf="@+id/textView"
-                android:src="@drawable/error" />
+                android:src="@drawable/ic_kino" />
 
             <TextView
                 android:id="@+id/textView"
