@@ -119,6 +119,7 @@ public class CardManager {
         managers.add(new CafeteriaManager(context));
         managers.add(new TransportManager());
         managers.add(new NewsManager(context));
+        managers.add(new TUKinoManager());
 
         for (Card.ProvidesCard manager : managers) {
             try {
@@ -127,10 +128,6 @@ public class CardManager {
                 Utils.log(ex, "Error while creating card");
             }
         }
-
-        // there's no manager for the TU Kino yet
-        // just hard coded
-        new TUKinoCard(context).apply();
 
         // Always append the restore card at the end of our list
         new RestoreCard(context).apply();

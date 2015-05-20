@@ -9,7 +9,9 @@ import android.view.ViewGroup;
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.models.managers.CardManager;
 
-
+/**
+ * Card for the TU Kino details page
+ */
 public class TUKinoCard extends Card {
 
     public TUKinoCard(Context context){
@@ -21,6 +23,8 @@ public class TUKinoCard extends Card {
         return CardManager.CARD_KINO;
     }
 
+    //only start imdb.com at the moment
+    //TODO: change to own activity
     @Override
     public Intent getIntent(){
         return new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.imdb.com"));

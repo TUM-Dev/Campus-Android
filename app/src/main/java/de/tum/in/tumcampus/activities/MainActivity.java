@@ -226,8 +226,6 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
         } else {
             Intent i = card.getIntent();
             if (i != null) {
-                Log.v("Intent", i.toString());
-                Log.v("Item_Click", "Clicked on an item");
                 startActivity(i);
             }
         }
