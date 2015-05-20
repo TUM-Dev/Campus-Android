@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import de.tum.in.tumcampus.R;
+import de.tum.in.tumcampus.activities.TUKinoActivity;
 import de.tum.in.tumcampus.models.managers.CardManager;
 
 /**
@@ -23,11 +24,10 @@ public class TUKinoCard extends Card {
         return CardManager.CARD_KINO;
     }
 
-    //only start imdb.com at the moment
-    //TODO: change to own activity
     @Override
     public Intent getIntent(){
-        return new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.imdb.com"));
+        Intent i = new Intent(mContext, TUKinoActivity.class);
+        return i;
     }
 
     @Override

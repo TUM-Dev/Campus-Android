@@ -141,6 +141,16 @@
                 android:value="de.tum.in.tumcampus.activities.MainActivity" />
         </activity>
         <activity
+            android:name="de.tum.in.tumcampus.activities.TUKinoActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/kino"
+            android:launchMode="singleTop"
+            android:parentActivityName=".activities.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="de.tum.in.tumcampus.activities.MainActivity" />
+        </activity>
+        <activity
             android:name="de.tum.in.tumcampus.activities.PlansActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/plans"

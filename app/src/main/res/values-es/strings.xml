@@ -120,6 +120,7 @@
     <string name="organisations">Árbol de Organización</string>
     <string name="mvv">MVV</string>
     <string name="news">Noticias</string>
+    <string name="kino">TU Kino</string>
 
     <!-- Activity titles -->
     <string name="lectures_information">Información de conferencias</string>
