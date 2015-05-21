@@ -10,7 +10,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ImageView;
@@ -40,7 +40,7 @@ import de.tum.in.tumcampus.trace.ExceptionHandler;
 /**
  * Entrance point of the App.
  */
-public class StartupActivity extends ActionBarActivity {
+public class StartupActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
