@@ -10,8 +10,8 @@ android:
     - platform-tools
     - extra-android-support
     - extra-android-m2repository
-    - android-20
-    - build-tools-20.0.0
+    - android-22
+    - build-tools-22.0.0
 
 before_install:
  - chmod +x gradlew
