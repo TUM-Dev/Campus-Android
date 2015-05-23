@@ -426,4 +426,7 @@ Signature: %5$s</string>
     <string name="new_chat_room_desc">Select a name for your chat room. The name can not be changed afterwards!\n\n</string>
     <string name="just_now">Just now</string>
     <string name="yesterday">Yesterday</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="widget_configure_description">Configure the cards to show</string>
+    <string name="add_widget">Add widget</string>
 </resources>

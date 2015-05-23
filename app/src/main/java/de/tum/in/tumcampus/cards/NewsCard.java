@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RemoteViews;
 
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.adapters.NewsAdapter;
@@ -44,7 +45,7 @@ public class NewsCard extends Card {
     }
 
     @Override
-    protected String getTitle() {
+    public String getTitle() {
         mCursor.moveToPosition(mPosition);
         return mCursor.getString(2);
     }
@@ -123,5 +124,18 @@ public class NewsCard extends Card {
 
         // Opens url in browser
         return new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+    }
+
+    @Override
+    public RemoteViews getRemoteViews(Context context) {
+        mCursor.moveToPosition(mPosition);
+        final RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.cards_widget_card);
+        remoteViews.setTextViewText(R.id.widgetCardTextView, this.getTitle());
+        final String imgURL = mCursor.getString(4);
+        if(imgURL != null && !imgURL.trim().isEmpty()) {
+            Bitmap img = net.downloadImageToBitmap(mCursor.getString(4));
+            remoteViews.setImageViewBitmap(R.id.widgetCardImageView, img);
+        }
+        return remoteViews;
     }
 }
