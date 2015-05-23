@@ -88,13 +88,21 @@ class CardsRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
             if (getsShown) {
                 final RemoteViews remote = card.getRemoteViews(mContext);
 
-                if (remote != null) {
-                    //Set the intent to fill in
-                    Intent fillInIntent = new Intent();
-                    fillInIntent.putExtra(CardsWidget.CARDID, cards.indexOf(card));
+                //So, here is what we do now:
+                //Since it is not guaranteed, that anything is running when the user clicks on
+                //any card, we need to make sure, we can start the targeted intent only with the
+                //data filled in via the FillInIntent.
+                //To do this, we try our best to fill in the targeted intent into the FillInIntent
+                final Intent target = card.getIntent();
+
+                if (remote != null && target != null) {
+                    final Intent fillInIntent = new Intent();
+                    if(target.getExtras() != null) {
+                        fillInIntent.putExtras(target.getExtras());
+                    }
+                    fillInIntent.putExtra(CardsWidget.TARGET_INTENT, target.toUri(Intent.URI_INTENT_SCHEME));
                     remote.setOnClickFillInIntent(R.id.cards_widget_card, fillInIntent);
                 }
-
                 views.add(remote);
             }
         }
