@@ -50,10 +50,7 @@ public class CardsWidget extends AppWidgetProvider {
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId) {
-
-        //TODO Filter cards based on user preferences
-
-        // Set up the intent that starts the StackViewService, which will
+         // Set up the intent that starts the StackViewService, which will
         // provide the views for this collection.
         Intent intent = new Intent(context, CardsWidgetService.class);
         // Add the app widget ID to the intent extras.
@@ -64,8 +61,7 @@ public class CardsWidget extends AppWidgetProvider {
         // Set up the RemoteViews object to use a RemoteViews adapter.
         // This adapter connects to a RemoteViewsService  through the specified intent.
         // This is how you populate the data.
-        //TODO replace deprecated API call (avaidable only on API 14+)
-        rv.setRemoteAdapter(appWidgetId, R.id.card_widget_listview, intent);
+        rv.setRemoteAdapter(R.id.card_widget_listview, intent);
 
         // The empty view is displayed when the collection has no items.
         // It should be in the same layout used to instantiate the RemoteViews
