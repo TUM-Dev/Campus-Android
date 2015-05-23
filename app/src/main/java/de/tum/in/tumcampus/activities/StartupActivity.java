@@ -182,7 +182,7 @@ public class StartupActivity extends AppCompatActivity {
      * @return Actionbar height
      */
     protected int getActionBarHeight() {
-        int[] attrs = {R.attr.actionBarSize};
+        int[] attrs = {uk.co.senab.actionbarpulltorefresh.library.R.attr.actionBarSize};
         TypedArray values = obtainStyledAttributes(attrs);
         try {
             return values.getDimensionPixelSize(0, 0);

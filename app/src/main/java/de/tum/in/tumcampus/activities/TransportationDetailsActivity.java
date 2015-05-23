@@ -4,9 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.LinearLayout;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.concurrent.TimeoutException;
 
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.generic.ActivityForLoadingInBackground;
@@ -73,8 +73,10 @@ public class TransportationDetailsActivity extends ActivityForLoadingInBackgroun
             departureCursor = TransportManager.getDeparturesFromExternal(this, location);
         } catch (NoSuchElementException e) {
             showError(R.string.no_departures_found);
-        } catch (IOException e) {
+        } catch (TimeoutException e) {
             showNoInternetLayout();
+        } catch (Exception e) {
+            showError(R.string.exception_unknown);
         }
 
         return departureCursor;

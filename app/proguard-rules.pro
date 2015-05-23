@@ -19,15 +19,6 @@
 #   public *;
 #}
 
--dontobfuscate
-
-#Don't warn about our various dependencies, they should work
--dontwarn com.bea.xml.stream.**
--dontwarn com.squareup.okhttp.internal.**
--dontwarn okio.**
--dontwarn org.simpleframework.xml.stream.**
--dontwarn retrofit.**
-
 -keep class * extends java.util.ListResourceBundle {
     protected Object[][] getContents();
 }
