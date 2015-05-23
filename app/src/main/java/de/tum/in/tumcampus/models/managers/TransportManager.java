@@ -6,8 +6,10 @@ import android.database.MatrixCursor;
 import android.support.annotation.NonNull;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -31,7 +33,7 @@ public class TransportManager implements Card.ProvidesCard {
      * @param location Station name
      * @return List of departures
      */
-    public static List<Departure> getDeparturesFromExternal(Context context, String location) {
+    public static List<Departure> getDeparturesFromExternal(Context context, String location) throws IOException {
         try {
             String baseUrl = "http://query.yahooapis.com/v1/public/yql?format=json&q=";
             // ISO needed for mvv
@@ -60,7 +62,9 @@ public class TransportManager implements Card.ProvidesCard {
 
             Collections.sort(list);
             return list;
-        } catch (Exception e) {
+        } catch (JSONException e) {
+            //We got no valid JSON, mvg-live is probably bugged
+            Utils.log(e, "invalid JSON from mvg-live");
             return new ArrayList<>();
         }
     }
