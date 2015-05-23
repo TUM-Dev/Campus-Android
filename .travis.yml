@@ -1,7 +1,7 @@
 branches:
   only:
     - master
-	- v14
+    - v14
 
 language: android
 jdk: oraclejdk7
