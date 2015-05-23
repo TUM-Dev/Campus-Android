@@ -6,10 +6,14 @@ import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.widget.RemoteViews;
 
+import java.net.URISyntaxException;
+
 import de.tum.in.tumcampus.R;
+import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.managers.CardManager;
 
 /**
@@ -19,7 +23,7 @@ import de.tum.in.tumcampus.models.managers.CardManager;
 public class CardsWidget extends AppWidgetProvider {
 
     private static final String BROADCAST_NAME = "de.tum.in.newtumcampus.intent.action.BROADCAST_CARDSWIDGET";
-    static final String CARDID = "CardID";
+    static final String TARGET_INTENT = "TARGET_INTENT";
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
@@ -81,13 +85,19 @@ public class CardsWidget extends AppWidgetProvider {
     @Override
     public void onReceive(@NonNull Context context, @NonNull Intent intent) {
         if (intent.getAction().equals(BROADCAST_NAME)) {
-            int index = intent.getIntExtra(CARDID, -1);
-
-            if(index != -1) {
-                Intent i = CardManager.getCard(index).getIntent();
-                if(i != null) {
+            String targetIntent = intent.getStringExtra(TARGET_INTENT);
+            if(targetIntent != null) {
+                try {
+                    //We try to recreate the targeted Intent from card.getIntent()
+                    //CardsRemoteViewsFactory filled into this Broadcast
+                    final Intent i = Intent.parseUri(targetIntent, Intent.URI_INTENT_SCHEME);
+                    final Bundle extras = intent.getExtras();
+                    extras.remove(TARGET_INTENT);
                     i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    i.putExtras(extras);
                     context.startActivity(i);
+                } catch (URISyntaxException e) {
+                    Utils.log(e);
                 }
             }
         }
