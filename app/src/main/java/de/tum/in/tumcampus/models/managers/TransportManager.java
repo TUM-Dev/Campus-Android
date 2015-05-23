@@ -30,37 +30,39 @@ public class TransportManager implements Card.ProvidesCard {
      *
      * @param location Station name
      * @return List of departures
-     * @throws Exception
      */
-    public static List<Departure> getDeparturesFromExternal(Context context, String location) throws Exception {
+    public static List<Departure> getDeparturesFromExternal(Context context, String location) {
+        try {
+            String baseUrl = "http://query.yahooapis.com/v1/public/yql?format=json&q=";
+            // ISO needed for mvv
+            String lookupUrl = "http://www.mvg-live.de/ims/dfiStaticAnzeige.svc?haltestelle=" + URLEncoder.encode(location, "ISO-8859-1");
 
-        String baseUrl = "http://query.yahooapis.com/v1/public/yql?format=json&q=";
-        // ISO needed for mvv
-        String lookupUrl = "http://www.mvg-live.de/ims/dfiStaticAnzeige.svc?haltestelle=" + URLEncoder.encode(location, "ISO-8859-1");
+            String query = URLEncoder.encode("select content from html where url=\"" + lookupUrl + "\" and xpath=\"//td[contains(@class,'Column')]/p\"", "UTF-8");
+            Utils.log(query);
 
-        String query = URLEncoder.encode("select content from html where url=\"" + lookupUrl + "\" and xpath=\"//td[contains(@class,'Column')]/p\"", "UTF-8");
-        Utils.log(query);
+            JSONArray jsonArray = NetUtils.downloadJson(context, baseUrl + query).getJSONObject("query").getJSONObject("results").getJSONArray("p");
+            //NetUtils n = new NetUtils(context);
+            //Utils.log(n.downloadStringHttp( baseUrl + query));
 
-        JSONArray jsonArray = NetUtils.downloadJson(context, baseUrl + query).getJSONObject("query").getJSONObject("results").getJSONArray("p");
-        //NetUtils n = new NetUtils(context);
-        //Utils.log(n.downloadStringHttp( baseUrl + query));
+            //Abort if our json is 'empty'
+            if (jsonArray.length() < 3) {
+                throw new NoSuchElementException("No departures found");
+            }
 
-        //Abort if our json is 'empty'
-        if (jsonArray.length() < 3) {
-            throw new NoSuchElementException("No departures found");
+            ArrayList<Departure> list = new ArrayList<>(jsonArray.length());
+            for (int j = 2; j < jsonArray.length(); j = j + 3) {
+                Departure dep = new Departure();
+                dep.symbol = jsonArray.getString(j);
+                dep.line = jsonArray.getString(j + 1).trim();
+                dep.time = System.currentTimeMillis() + jsonArray.getLong(j + 2) * 60000;
+                list.add(dep);
+            }
+
+            Collections.sort(list);
+            return list;
+        } catch (Exception e) {
+            return new ArrayList<>();
         }
-
-        ArrayList<Departure> list = new ArrayList<>(jsonArray.length());
-        for (int j = 2; j < jsonArray.length(); j = j + 3) {
-            Departure dep = new Departure();
-            dep.symbol = jsonArray.getString(j);
-            dep.line = jsonArray.getString(j + 1).trim();
-            dep.time = System.currentTimeMillis() + jsonArray.getLong(j + 2) * 60000;
-            list.add(dep);
-        }
-
-        Collections.sort(list);
-        return list;
     }
 
     public static class Departure implements Comparable<Departure> {

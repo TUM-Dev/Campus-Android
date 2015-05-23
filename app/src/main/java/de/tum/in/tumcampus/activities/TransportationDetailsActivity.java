@@ -73,8 +73,6 @@ public class TransportationDetailsActivity extends ActivityForLoadingInBackgroun
             departureCursor = TransportManager.getDeparturesFromExternal(this, location);
         } catch (NoSuchElementException e) {
             showError(R.string.no_departures_found);
-        } catch (TimeoutException e) {
-            showNoInternetLayout();
         } catch (Exception e) {
             showError(R.string.exception_unknown);
         }
