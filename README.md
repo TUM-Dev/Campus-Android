@@ -1,4 +1,4 @@
-# TumCampusApp
+# TumCampusApp [![Build Status](https://travis-ci.org/TCA-Team/TumCampusApp.svg?branch=master)](https://travis-ci.org/TCA-Team/TumCampusApp) [![Build Status](https://travis-ci.org/TCA-Team/TumCampusApp.svg?branch=v14)](https://travis-ci.org/TCA-Team/TumCampusApp) 
 
 Die TUM Campus App wird von Studierenden des Android Praktikums, freiwilligen Helfern und Lehrstuhlmitarbeitern entwickelt. Die App eignet sich sowohl zur Verwendung auf Smartphones, wie auch Tablets.
 
