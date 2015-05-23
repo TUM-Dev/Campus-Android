@@ -19,6 +19,8 @@
 #   public *;
 #}
 
+-dontobfuscate
+
 -keep class * extends java.util.ListResourceBundle {
     protected Object[][] getContents();
 }
