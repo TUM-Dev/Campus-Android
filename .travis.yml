@@ -10,6 +10,7 @@ android:
     - platform-tools
     - extra-android-support
     - extra-android-m2repository
+    - extra-google-google_play_services
     - android-22
     - build-tools-22.0.0
 
