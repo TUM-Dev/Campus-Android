@@ -1,4 +1,4 @@
-# TumCampusApp
+# TumCampusApp [![Build Status](https://travis-ci.org/TCA-Team/TumCampusApp.svg?branch=master)](https://travis-ci.org/TCA-Team/TumCampusApp) [![Build Status](https://travis-ci.org/TCA-Team/TumCampusApp.svg?branch=v14)](https://travis-ci.org/TCA-Team/TumCampusApp) 
 
 Die TUM Campus App wird von Studierenden des Android Praktikums, freiwilligen Helfern und Lehrstuhlmitarbeitern entwickelt. Die App eignet sich sowohl zur Verwendung auf Smartphones, wie auch Tablets.
 
@@ -50,7 +50,9 @@ Die Anwendung speichert Daten nur auf Anweisung des Nutzers bzw. durch Benutzung
 Auf [Facebook](https://www.facebook.com/TUMCampus) oder für besondere Anliegen erreichen Sie uns auch via E-Mail unter: "tca-support.os.in AT tum.de"
 
 #### Lizenz:
-GNU GPL v3 - http://www.gnu.org/licenses/gpl.html
+GNU GPL v3 - http://www.gnu.org/licenses/gpl.html 
+oder
+New BSD License - http://www.opensource.org/licenses/bsd-license.php
 
 Der Quellcode kann hier bezogen werden: https://github.com/TCA-Team/
 

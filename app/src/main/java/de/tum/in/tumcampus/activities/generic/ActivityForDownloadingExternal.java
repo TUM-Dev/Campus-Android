@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
-import android.view.View;
+import android.support.v4.widget.SwipeRefreshLayout;
 
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.auxiliary.Const;
@@ -26,7 +26,7 @@ public abstract class ActivityForDownloadingExternal extends ProgressActivity {
      * Standard constructor for ActivityForAccessingTumOnline.
      * The given layout must include a progress_layout, failed_layout, no_token_layout and an error_layout.
      * If the Activity should support Pull-To-Refresh it can also contain a
-     * {@link uk.co.senab.actionbarpulltorefresh.extras.actionbarcompat.PullToRefreshLayout} named ptr_layout
+     * {@link SwipeRefreshLayout} named ptr_layout
      *
      * @param method Type of content to be downloaded
      * @param layoutId Resource id of the xml layout that should be used to inflate the activity
@@ -76,7 +76,7 @@ public abstract class ActivityForDownloadingExternal extends ProgressActivity {
 	};
 
     @Override
-    public void onRefreshStarted(View view) {
+    public void onRefresh() {
         requestDownload(true);
     }
 
@@ -99,6 +99,7 @@ public abstract class ActivityForDownloadingExternal extends ProgressActivity {
         Intent service = new Intent(this, DownloadService.class);
         service.putExtra(Const.ACTION_EXTRA, method);
         service.putExtra(Const.FORCE_DOWNLOAD, forceDownload);
+		service.putExtra("callback", new Bundle());
         startService(service);
 	}
 }

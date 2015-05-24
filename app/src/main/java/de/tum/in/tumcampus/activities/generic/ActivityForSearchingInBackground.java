@@ -1,6 +1,7 @@
 package de.tum.in.tumcampus.activities.generic;
 
 import android.os.AsyncTask;
+import android.support.v4.widget.SwipeRefreshLayout;
 
 import de.tum.in.tumcampus.auxiliary.NetUtils;
 
@@ -40,7 +41,7 @@ public abstract class ActivityForSearchingInBackground<T> extends ActivityForSea
     /**
      * Initializes an activity for searching in background.
      * The xml layout must include an error_layout and a progress_layout.
-     * A {@link uk.co.senab.actionbarpulltorefresh.extras.actionbarcompat.PullToRefreshLayout}
+     * A {@link SwipeRefreshLayout}
      * called ptr_layout is required if the activity should support PullToRefresh method
      *
      * @param layoutId Resource id of the xml layout that should be used to inflate the activity

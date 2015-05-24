@@ -2,6 +2,7 @@ package de.tum.in.tumcampus.activities.generic;
 
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.View;
 
@@ -28,7 +29,7 @@ public abstract class ActivityForAccessingTumOnline<T> extends ProgressActivity 
      * Standard constructor for ActivityForAccessingTumOnline.
      * The given layout must include a progress_layout, failed_layout, no_token_layout and an error_layout.
      * If the Activity should support Pull-To-Refresh it can also contain a
-     * {@link uk.co.senab.actionbarpulltorefresh.extras.actionbarcompat.PullToRefreshLayout} named ptr_layout
+     * {@link SwipeRefreshLayout} named ptr_layout
      *
      * @param method A identifier specifying what kind of data should be fetched from TumOnline
      * @param layoutId Resource id of the xml layout that should be used to inflate the activity
@@ -94,7 +95,7 @@ public abstract class ActivityForAccessingTumOnline<T> extends ProgressActivity 
 	}
 
     @Override
-    public void onRefreshStarted(View view) {
+    public void onRefresh() {
         requestFetch(true);
     }
 

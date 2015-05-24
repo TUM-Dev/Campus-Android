@@ -8,6 +8,7 @@ import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.ContextMenu;
 import android.view.Menu;
@@ -28,14 +29,11 @@ import de.tum.in.tumcampus.auxiliary.SwipeDismissList;
 import de.tum.in.tumcampus.cards.Card;
 import de.tum.in.tumcampus.models.managers.CardManager;
 import de.tum.in.tumcampus.services.SilenceService;
-import uk.co.senab.actionbarpulltorefresh.extras.actionbarcompat.PullToRefreshLayout;
-import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
-import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 
 /**
  * Main activity displaying the cards and providing navigation with navigation drawer
  */
-public class MainActivity extends BaseActivity implements AdapterView.OnItemClickListener, SwipeDismissList.OnDismissCallback, OnRefreshListener {
+public class MainActivity extends BaseActivity implements AdapterView.OnItemClickListener, SwipeDismissList.OnDismissCallback, SwipeRefreshLayout.OnRefreshListener {
     private static final int MENU_OPEN_SETTINGS = 0;
     private static final int MENU_HIDE_ALWAYS = 1;
 
@@ -51,7 +49,7 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
     private ListView mCardsView;
     private CardsAdapter mAdapter;
     private SwipeDismissList mSwipeList;
-    private PullToRefreshLayout mPullToRefreshLayout;
+    private SwipeRefreshLayout mSwipeRefreshlayout;
 
     public MainActivity() {
         super(R.layout.activity_main);
@@ -73,11 +71,10 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
         mSwipeList.setUndoMultipleString(getString(R.string.cards_dismissed));
 
         // Setup pull to refresh
-        mPullToRefreshLayout = (PullToRefreshLayout) findViewById(R.id.ptr_layout);
-
-        // Now setup the PullToRefreshLayout
-        ActionBarPullToRefresh.from(this).allChildrenArePullable()
-                .listener(this).setup(mPullToRefreshLayout);
+        mSwipeRefreshlayout = (SwipeRefreshLayout) findViewById(R.id.ptr_layout);
+        mSwipeRefreshlayout.setOnRefreshListener(this);
+        //TODO: set colors
+        //mSwipeRefreshlayout.setColorSchemeResources(R.color.);
 
         // Start silence Service (if already started it will just invoke a check)
         Intent service = new Intent(this, SilenceService.class);
@@ -314,18 +311,16 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
      * Show progress indicator and start updating cards in background
      */
     private void refreshCards() {
-        mPullToRefreshLayout.setRefreshing(true);
-        onRefreshStarted(mCardsView);
+        mSwipeRefreshlayout.setRefreshing(true);
+        onRefresh();
     }
 
     /**
      * Starts updating cards in background
-     * Called when {@link PullToRefreshLayout} gets triggered.
-     *
-     * @param view Refreshed view
+     * Called when {@link SwipeRefreshLayout} gets triggered.
      */
     @Override
-    public void onRefreshStarted(View view) {
+    public void onRefresh() {
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected void onPreExecute() {
@@ -346,7 +341,8 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
                     initAdapter();
                 else
                     mAdapter.notifyDataSetChanged();
-                mPullToRefreshLayout.setRefreshComplete();
+
+                mSwipeRefreshlayout.setRefreshing(false);
                 if (!registered && !NetUtils.isConnected(MainActivity.this)) {
                     registerReceiver(connectivityChangeReceiver,
                             new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));

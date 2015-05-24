@@ -6,7 +6,7 @@ import android.os.Handler;
 import android.support.v4.app.NavUtils;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -20,7 +20,7 @@ import de.tum.in.tumcampus.auxiliary.ImplicitCounter;
 /**
  * Takes care of the navigation drawer which might be attached to the activity and also handles up navigation
  */
-public abstract class BaseActivity extends ActionBarActivity {
+public abstract class BaseActivity extends AppCompatActivity {
 
     /**
      * Default layouts for user interaction

@@ -1,7 +1,7 @@
 package de.tum.in.tumcampus.activities;
 
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.auxiliary.ImplicitCounter;
@@ -11,7 +11,7 @@ import it.sephiroth.android.library.imagezoom.ImageViewTouchBase;
 /**
  * Activity to show plan details.
  */
-public class PlansDetailsActivity extends ActionBarActivity {
+public class PlansDetailsActivity extends AppCompatActivity {
 
     public static final String PLAN_TITLE_ID = "plan_title_id";
     public static final String PLAN_IMG_ID = "plan_img_id";
