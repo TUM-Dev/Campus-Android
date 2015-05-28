@@ -42,8 +42,6 @@ dependencies {
     compile('de.psdev.licensesdialog:licensesdialog:1.5.0') { //TODO: update to 1.7.0, but API has changed
         exclude module: 'support-v4'
     }
-    compile 'com.squareup.okhttp:okhttp-urlconnection:2.3.0'
-    compile 'com.squareup.okhttp:okhttp:2.3.0'
     compile project(":libraries:emojicon")
     compile 'com.github.machinarius:preferencefragment:0.1.2'
 }
