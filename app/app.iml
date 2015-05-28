@@ -95,7 +95,7 @@
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.google.android.gms/play-services-wearable/7.3.0/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.google.android.gms/play-services/7.3.0/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.nhaarman.listviewanimations/lib-core/3.1.0/jars" />
-      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/de.psdev.licensesdialog/licensesdialog/1.5.0/jars" />
+      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/de.psdev.licensesdialog/licensesdialog/1.7.0/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/it.sephiroth.android.library.easing/android-easing/1.0.3/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/it.sephiroth.android.library.imagezoom/imagezoom/1.0.5/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/me.dm7.barcodescanner/core/1.7/jars" />
@@ -114,6 +114,8 @@
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/rs" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/symbols" />
       <excludeFolder url="file://$MODULE_DIR$/build/outputs" />
+      <excludeFolder url="file://$MODULE_DIR$/build/reports" />
+      <excludeFolder url="file://$MODULE_DIR$/build/test-results" />
       <excludeFolder url="file://$MODULE_DIR$/build/tmp" />
     </content>
     <orderEntry type="jdk" jdkName="Android API 22 Platform" jdkType="Android SDK" />
@@ -123,11 +125,11 @@
     <orderEntry type="library" exported="" name="gson-2.3.1" level="project" />
     <orderEntry type="library" exported="" name="play-services-wallet-7.3.0" level="project" />
     <orderEntry type="library" exported="" name="play-services-drive-7.3.0" level="project" />
-    <orderEntry type="library" exported="" name="okhttp-2.3.0" level="project" />
     <orderEntry type="library" exported="" name="play-services-analytics-7.3.0" level="project" />
     <orderEntry type="library" exported="" name="support-annotations-22.1.1" level="project" />
     <orderEntry type="library" exported="" name="play-services-panorama-7.3.0" level="project" />
     <orderEntry type="library" exported="" name="preferencefragment-0.1.2" level="project" />
+    <orderEntry type="library" exported="" name="jsr305-3.0.0" level="project" />
     <orderEntry type="library" exported="" name="retrofit-1.9.0" level="project" />
     <orderEntry type="library" exported="" name="play-services-appindexing-7.3.0" level="project" />
     <orderEntry type="library" exported="" name="play-services-cast-7.3.0" level="project" />
@@ -142,16 +144,14 @@
     <orderEntry type="library" exported="" name="play-services-safetynet-7.3.0" level="project" />
     <orderEntry type="library" exported="" name="zxing-1.7" level="project" />
     <orderEntry type="library" exported="" name="play-services-appinvite-7.3.0" level="project" />
-    <orderEntry type="library" exported="" name="okio-1.3.0" level="project" />
     <orderEntry type="library" exported="" name="play-services-gcm-7.3.0" level="project" />
     <orderEntry type="library" exported="" name="android-easing-1.0.3" level="project" />
-    <orderEntry type="library" exported="" name="okhttp-urlconnection-2.3.0" level="project" />
     <orderEntry type="library" exported="" name="library-2.4.0" level="project" />
     <orderEntry type="library" exported="" name="play-services-nearby-7.3.0" level="project" />
+    <orderEntry type="library" exported="" name="licensesdialog-1.7.0" level="project" />
     <orderEntry type="library" exported="" name="support-v4-22.1.1" level="project" />
     <orderEntry type="library" exported="" name="stickylistheaders-2.6.0" level="project" />
     <orderEntry type="library" exported="" name="play-services-fitness-7.3.0" level="project" />
-    <orderEntry type="library" exported="" name="licensesdialog-1.5.0" level="project" />
     <orderEntry type="library" exported="" name="play-services-plus-7.3.0" level="project" />
     <orderEntry type="library" exported="" name="lib-core-3.1.0" level="project" />
     <orderEntry type="library" exported="" name="imagezoom-1.0.5" level="project" />
