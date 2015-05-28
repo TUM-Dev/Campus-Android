@@ -22,6 +22,7 @@ import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -273,9 +274,9 @@ public class NetUtils {
      *
      * @param url Valid URL
      * @return JSONObject
-     * @throws Exception
+     * @throws IOException, JSONException
      */
-    public JSONObject downloadJson(String url) throws Exception {
+    public JSONObject downloadJson(String url) throws IOException, JSONException {
         String data = downloadStringHttp(url);
 
         if (data != null) {
@@ -285,7 +286,7 @@ public class NetUtils {
         return null;
     }
 
-    public static JSONObject downloadJson(Context context, String url) throws Exception {
+    public static JSONObject downloadJson(Context context, String url) throws IOException, JSONException {
         return new NetUtils(context).downloadJson(url);
     }
 
