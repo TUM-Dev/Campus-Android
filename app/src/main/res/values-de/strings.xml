@@ -266,6 +266,7 @@
     <string name="card_next_lecture_summary">Zeigt Informationen zur nächsten Vorlesung an</string>
     <string name="card_tuition_fee_summary">Erinnert dich wenn du die Studiengebühren zahlen musst</string>
     <string name="card_news_summary">Schlägt ausgewählte News vor</string>
+    <string name="card_kino_summary">Zeigt Details zum TU Kino an</string>
     <string name="card_chat_summary">Benachrichtigt dich wenn neue Nachrichten verfügbar sind</string>
     <string name="chat">Chat</string>
     <string name="open_card_settings">Karte anpassen</string>

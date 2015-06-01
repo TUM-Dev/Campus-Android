@@ -323,6 +323,7 @@
     <string name="card_next_lecture_summary">Shows information about your next lecture</string>
     <string name="card_tuition_fee_summary">Reminds you if you have to pay your fees</string>
     <string name="card_news_summary">Advertises selected news</string>
+    <string name="card_kino_summary">Shows details about the TU Kino</string>
     <string name="card_chat_summary">Notifies you if new messages are available</string>
     <string name="chat">Chat</string>
     <string name="open_card_settings">Open card settings</string>
