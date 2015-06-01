@@ -16,7 +16,7 @@ import android.os.Handler;
 import android.os.Vibrator;
 import android.support.v4.app.RemoteInput;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
 import android.text.Html;
 import android.view.KeyEvent;
@@ -72,7 +72,7 @@ import retrofit.client.Response;
  * NEEDS: Const.CURRENT_CHAT_ROOM set in incoming bundle (json serialised object of class ChatRoom)
  * Const.CURRENT_CHAT_MEMBER set in incoming bundle (json serialised object of class ChatMember)
  */
-public class ChatActivity extends ActionBarActivity implements DialogInterface.OnClickListener, OnClickListener, AbsListView.OnScrollListener,
+public class ChatActivity extends AppCompatActivity implements DialogInterface.OnClickListener, OnClickListener, AbsListView.OnScrollListener,
         EmojiconGridView.OnEmojiconClickedListener, EmojiconsPopup.OnSoftKeyboardOpenCloseListener,
         EmojiconsPopup.OnEmojiconBackspaceClickedListener, AdapterView.OnItemLongClickListener {
 

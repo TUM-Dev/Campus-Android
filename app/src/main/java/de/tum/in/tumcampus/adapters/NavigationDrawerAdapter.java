@@ -2,7 +2,7 @@ package de.tum.in.tumcampus.adapters;
 
 import android.content.Context;
 import android.graphics.Typeface;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,10 +36,10 @@ import de.tum.in.tumcampus.auxiliary.Utils;
  */
 public class NavigationDrawerAdapter extends BaseAdapter {
     private final LayoutInflater mInflater;
-    private final ActionBarActivity mContext;
+    private final Context mContext;
     private final ArrayList<SideNavigationItem> mVisibleMenuItems;
 
-    public NavigationDrawerAdapter(ActionBarActivity context) {
+    public NavigationDrawerAdapter(Context context) {
         mInflater = LayoutInflater.from(context);
         mContext = context;
         boolean mHasTUMOAccess = new AccessTokenManager(context).hasValidAccessToken();
