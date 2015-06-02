@@ -24,6 +24,8 @@
     <string name="dialog_delete_calendar">Do you want to delete  the <i>TUM_CAMPUS_APP</i>  calendar from your device?</string>
     <string name="calendar_deleted_toast">Calender deleted successfully</string>
     <string name="calendar_not_existing_toast">No local calendar existing</string>
+    <string name="semester_summer">Summer term</string>
+    <string name="semester_winter">Winter term</string>
 
     <!-- Roomfinder -->
     <string name="no_map_available">No map available</string>

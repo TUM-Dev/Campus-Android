@@ -33,6 +33,7 @@ public class LecturesListAdapter extends BaseAdapter implements StickyListHeader
 		TextView tvTypeSWSSemester;
 	}
 
+	private Context context;
 	// The list of lectures
 	private static List<LecturesSearchRow> lecturesList;
 
@@ -41,6 +42,7 @@ public class LecturesListAdapter extends BaseAdapter implements StickyListHeader
 	// constructor
 	public LecturesListAdapter(Context context, List<LecturesSearchRow> results) {
 		lecturesList = results;
+		this.context = context;
 		mInflater = LayoutInflater.from(context);
 
         filters = new ArrayList<>();
@@ -116,7 +118,10 @@ public class LecturesListAdapter extends BaseAdapter implements StickyListHeader
         }
         //set header text as first char in name
         String headerText = lecturesList.get(pos).getSemester_name();
-        holder.text.setText(headerText);
+		headerText = headerText.replaceAll("Sommersemester", this.context.getString(R.string.semester_summer));
+		headerText = headerText.replaceAll("Wintersemester", this.context.getString(R.string.semester_winter));
+
+		holder.text.setText(headerText);
         return convertView;
     }
 
