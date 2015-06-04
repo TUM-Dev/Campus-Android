@@ -131,7 +131,6 @@
     <string name="opening_hours">Opening Hours</string>
     <string name="organisations">Organizations</string>
     <string name="mvv">MVV</string>
-    <string name="moodle">Moodle</string>
     <string name="news">News</string>
 
     <!-- Activity titles -->
@@ -427,4 +426,10 @@ Signature: %5$s</string>
     <string name="new_chat_room_desc">Select a name for your chat room. The name can not be changed afterwards!\n\n</string>
     <string name="just_now">Just now</string>
     <string name="yesterday">Yesterday</string>
+
+    <!-- Moodle -->
+    <string name="moodle">Moodle</string>
+    <string name="moodle_settings">Settings</string>
+    <string name="title_activity_moodle_main">MoodleMainActivity</string>
+
 </resources>
