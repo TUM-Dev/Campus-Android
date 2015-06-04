@@ -19,6 +19,7 @@ import de.tum.in.tumcampus.activities.ChatRoomsActivity;
 import de.tum.in.tumcampus.activities.CurriculaActivity;
 import de.tum.in.tumcampus.activities.LecturesPersonalActivity;
 import de.tum.in.tumcampus.activities.MainActivity;
+import de.tum.in.tumcampus.activities.MoodleMainActivity;
 import de.tum.in.tumcampus.activities.NewsActivity;
 import de.tum.in.tumcampus.activities.OpeningHoursListActivity;
 import de.tum.in.tumcampus.activities.OrganisationActivity;
@@ -189,7 +190,7 @@ public class NavigationDrawerAdapter extends BaseAdapter {
             new SideNavigationItem(R.string.menues, R.drawable.ic_cutlery, false, CafeteriaActivity.class),
             new SideNavigationItem(R.string.news, R.drawable.ic_rss, false, NewsActivity.class),
             new SideNavigationItem(R.string.mvv, R.drawable.ic_mvv, false, TransportationActivity.class),
-            new SideNavigationItem(R.string.moodle, R.drawable.ic_moodle, false, MainActivity.MoodleMainActivity.class),
+            new SideNavigationItem(R.string.moodle, R.drawable.ic_moodle, false, MoodleMainActivity.class),
             new SideNavigationItem(R.string.plans, R.drawable.ic_plans, false, PlansActivity.class),
             new SideNavigationItem(R.string.roomfinder, R.drawable.ic_place, false, RoomFinderActivity.class),
             new SideNavigationItem(R.string.opening_hours, R.drawable.ic_time, false, OpeningHoursListActivity.class),
