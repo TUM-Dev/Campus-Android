@@ -188,6 +188,7 @@ public class NavigationDrawerAdapter extends BaseAdapter {
             new SideNavigationItem(R.string.menues, R.drawable.ic_cutlery, false, CafeteriaActivity.class),
             new SideNavigationItem(R.string.news, R.drawable.ic_rss, false, NewsActivity.class),
             new SideNavigationItem(R.string.mvv, R.drawable.ic_mvv, false, TransportationActivity.class),
+            new SideNavigationItem(R.string.moodle, R.drawable.ic_mvv, false, TransportationActivity.class),
             new SideNavigationItem(R.string.plans, R.drawable.ic_plans, false, PlansActivity.class),
             new SideNavigationItem(R.string.roomfinder, R.drawable.ic_place, false, RoomFinderActivity.class),
             new SideNavigationItem(R.string.opening_hours, R.drawable.ic_time, false, OpeningHoursListActivity.class),
