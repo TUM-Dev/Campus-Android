@@ -1,25 +1,23 @@
 package de.tum.in.tumcampus.activities;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import org.json.JSONObject;
-
 import de.tum.in.tumcampus.R;
-import de.tum.in.tumcampus.auxiliary.NetUtils;
 import de.tum.in.tumcampus.auxiliary.Utils;
+import de.tum.in.tumcampus.models.managers.MoodleManager;
 
 public class MoodleMainActivity extends ActionBarActivity {
-
+    MoodleManager moodleManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Utils.log("On Create is called!");
         setContentView(R.layout.activity_moodle_main);
-        getJSON("username=student&password=moodle&service=moodle_mobile_app");
+        moodleManager = new MoodleManager();
+        moodleManager.requestUserToken("student","moodle",this);
     }
 
     @Override
@@ -44,40 +42,5 @@ public class MoodleMainActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    /**
-     * This class will handle all action needed to communicate with Moodle API.
-     * All communications is based on Moodle's API system
-     *
-     * NOTA BENE: since the APIs aren't activated on the TUM's Moodle platform
-     *            for this moment the calls will be made on the example application
-     *            available in Moodle's website.
-     *
-     *            Orange school DEMO
-     *            link:"http://school.demo.moodle.net/"
-     *
-     *            private static final String SERVICE_BASE_URL = "http://school.demo.moodle.net//login/token.php?";
-     */
-     public String getJSON(final String serviceAddress){
-     //Test for moodleAPIs
-     final Context currentContext = this;
-     final String SERVICE_BASE_URL = "http://school.demo.moodle.net//login/token.php?";
-
-     Thread backgroundThread = new Thread(new Runnable() {
-        @Override
-        public void run() {
-            Utils.log(" Hello Thread!");
-            try {
-                JSONObject testMoodleJson = NetUtils.downloadJson(currentContext, SERVICE_BASE_URL + serviceAddress);
-
-                Utils.log("JSON Object Moodle is: " + testMoodleJson.toString());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-    });
-     backgroundThread.start();
-     return "";
-     }
 
 }
