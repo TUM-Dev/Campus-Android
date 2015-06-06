@@ -1,19 +1,23 @@
 package de.tum.in.tumcampus.activities;
 
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import de.tum.in.tumcampus.R;
+import de.tum.in.tumcampus.auxiliary.Utils;
+import de.tum.in.tumcampus.models.managers.MoodleManager;
 
 public class MoodleMainActivity extends ActionBarActivity {
-
+    MoodleManager moodleManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        Utils.log("On Create is called!");
         setContentView(R.layout.activity_moodle_main);
+        moodleManager = new MoodleManager();
+        moodleManager.requestUserToken("student","moodle",this);
     }
 
     @Override
@@ -37,4 +41,6 @@ public class MoodleMainActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+
 }
