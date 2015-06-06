@@ -1,4 +1,6 @@
+/*
 package de.tum.in.tumcampus.moodle;
+ */
 
 /**
  * This class will handle all action needed to communicate with Moodle API.
@@ -11,5 +13,6 @@ package de.tum.in.tumcampus.moodle;
  *            Orange school DEMO
  *            link:"http://school.demo.moodle.net/"
  */
-public class MoodleRequest {
+/*public class MoodleRequest {
 }
+*/
