@@ -70,6 +70,7 @@ public class MoodleMainActivity extends ActionBarActivity {
                 JSONObject testMoodleJson = NetUtils.downloadJson(currentContext, SERVICE_BASE_URL + serviceAddress);
 
                 Utils.log("JSON Object Moodle is: " + testMoodleJson.toString());
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
