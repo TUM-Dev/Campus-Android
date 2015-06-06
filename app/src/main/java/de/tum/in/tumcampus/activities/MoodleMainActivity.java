@@ -6,7 +6,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import de.tum.in.tumcampus.R;
-import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.managers.MoodleManager;
 
 public class MoodleMainActivity extends ActionBarActivity {
@@ -14,10 +13,10 @@ public class MoodleMainActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Utils.log("On Create is called!");
         setContentView(R.layout.activity_moodle_main);
         moodleManager = new MoodleManager();
-        moodleManager.requestUserToken("student","moodle",this);
+        //moodleManager.requestUserToken("student","moodle",this);
+        moodleManager.requestServiceCall(this, "username=student&password=moodle&service=moodle_mobile_app");
     }
 
     @Override
