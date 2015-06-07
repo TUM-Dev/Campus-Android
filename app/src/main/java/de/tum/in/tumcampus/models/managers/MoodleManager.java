@@ -19,18 +19,23 @@ import de.tum.in.tumcampus.auxiliary.Utils;
  *
  *            private static final String SERVICE_BASE_URL = "http://school.demo.moodle.net//login/token.php?";
  */
+
 public class MoodleManager {
 
     private String moodleUserToken;
     private boolean isFetching;
+    private JSONObject currentJSONObejct;
+    final String GET_COURSES = "core_enrol_get_users_courses";
+    final String GET_COURSES_EX = "moodle_enrol_get_users_courses";
+
 
     /**
      * This method handles the calls made to the MoodleAPI
      * Input:
-     *      serviceAddress  -> the address of the service that is being called
-     *      context -> current context
+     * serviceAddress  -> the address of the service that is being called
+     * context -> current context
      */
-    public void getJSON(final String serviceAddress, Context context){
+    public void getJSON(final String serviceAddress, Context context) {
         //Test for moodleAPIs
         final Context currentContext = context;
         final String SERVICE_BASE_URL = "http://school.demo.moodle.net//login/token.php?";
@@ -44,7 +49,8 @@ public class MoodleManager {
                     JSONObject testMoodleJson = NetUtils.downloadJson(currentContext, SERVICE_BASE_URL + serviceAddress);
 
                     Utils.log("JSON Object Moodle is: " + testMoodleJson.toString());
-                    setAccessToken(testMoodleJson);
+                    setJSONObject(testMoodleJson);
+                    //setAccessToken(testMoodleJson);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -54,6 +60,7 @@ public class MoodleManager {
         });
         backgroundThread.start();
     }
+
 
     /**
      * This function creates the Token for the moodle login
@@ -108,5 +115,18 @@ public class MoodleManager {
      */
     public void setMoodleUserToken(String moodleUserToken) {
         this.moodleUserToken = moodleUserToken;
+    }
+
+    public JSONObject getJSONObject(){
+        return this.currentJSONObejct;
+    }
+
+    public void setJSONObject(JSONObject object){
+        this.currentJSONObejct = object;
+    }
+
+    public String getMoodleCourses(Context context ){
+        getJSON(GET_COURSES,context);
+        return this.currentJSONObejct.toString();
     }
 }
