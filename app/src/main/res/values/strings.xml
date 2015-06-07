@@ -132,6 +132,8 @@
     <string name="organisations">Organizations</string>
     <string name="mvv">MVV</string>
     <string name="news">News</string>
+    <string name="moodle">Moodle</string>
+
 
     <!-- Activity titles -->
     <string name="lectures_information">Lecture Information</string>
@@ -428,8 +430,7 @@ Signature: %5$s</string>
     <string name="yesterday">Yesterday</string>
 
     <!-- Moodle -->
-    <string name="moodle">Moodle</string>
     <string name="moodle_settings">Settings</string>
-    <string name="title_activity_moodle_main">MoodleMainActivity</string>
+    <string name="title_activity_moodle_main">Moodle</string>
 
 </resources>

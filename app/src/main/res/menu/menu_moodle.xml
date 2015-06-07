@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <menu xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tumcampus="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/moodle_home"
+        android:icon="@drawable/ic_moodle"
+        android:title="@string/view_mode"
+        tumcampus:showAsAction="ifRoom" />
+
+
+    <item
+         android:id="@+id/moodle_my_courses"
+         android:icon="@drawable/ic_moodle"
+         android:title="@string/view_mode"
+         tumcampus:showAsAction="ifRoom" />
+
+        <item
+        android:id="@+id/moodle_other_semesters"
+        android:icon="@drawable/ic_moodle"
+        android:title="@string/view_mode"
+        tumcampus:showAsAction="ifRoom" />
+
+
+    </menu>

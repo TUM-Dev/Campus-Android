@@ -454,6 +454,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.tum.in.tumcampus.activities.MainActivity" />
         </activity>
+        <activity
+            android:name=".activities.MoodleMainActivity"
+            android:label="@string/title_activity_moodle_main"
+            android:launchMode="singleTop"
+            android:parentActivityName=".activities.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="de.tum.in.tumcampus.activities.MainActivity" />
+        </activity>
 
         <!-- Used to reset Alarm when device has been restarted -->
         <receiver android:name=".services.StartSyncReceiver" >
@@ -486,14 +495,6 @@
             android:exported="false" />
         <service android:name=".services.GcmIntentService" />
 
-        <activity
-            android:name=".activities.MoodleMainActivity"
-            android:label="@string/title_activity_moodle_main" >
-        </activity>
-        <activity
-            android:name=".activities.MainActivity$MoodleMainActivity"
-            android:label="@string/title_activity_moodle_main" >
-        </activity>
     </application>
 
 </manifest>
