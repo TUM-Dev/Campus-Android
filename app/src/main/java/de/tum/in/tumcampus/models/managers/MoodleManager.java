@@ -2,6 +2,7 @@ package de.tum.in.tumcampus.models.managers;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import de.tum.in.tumcampus.auxiliary.NetUtils;
 import de.tum.in.tumcampus.models.MoodleToken;
@@ -107,7 +108,16 @@ public class MoodleManager {
     public final class RequestUserTokenMoodleApiCommand implements MoodleApiCommand {
         @Override
         public Object execute(String jsonString) {
+
             MoodleToken moodleToken = new MoodleToken(jsonString);
+
+            //TODO: Carlo usa gli oggetti cosi. Se isvalid è false c'è un errore e il motivo è in getMessage ecc
+            if (moodleToken.isValid()){
+               // Log.d("token", ""+moodleToken.getToken());
+            }else {
+               // Log.d("error",moodleToken.getMessage()+moodleToken.getException());
+            }
+
             return moodleToken;
         }
     }

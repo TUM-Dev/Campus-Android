@@ -29,26 +29,33 @@ public class MoodleToken extends MoodleObject {
         this.token = "";
         if (jsonObject != null) {
             if (!jsonObject.has("error")) {
+
                 token = jsonObject.optString("token");
+                this.isValid=true;
+            }else {
+                this.isValid=false;
+                this.exception = "WrongCredentialsException";
+                this.errorCode = "wrongcredentials";
+                this.message = jsonObject.optString("error");
+
+
+
             }
+
+        } else {
+            this.isValid=false;
+            this.exception= "JSONException";
+            this.errorCode= "invalidjsonstring";
+            this.message = "error while parsing jsonstring in "+this.getClass().getName();
         }
+
     }
 
 
 
-    public MoodleToken(String token) {
+    public MoodleToken(String jsonString) {
+        this(toJSONObject(jsonString));
 
-        try {
-            JSONObject tokenJSON = new JSONObject(token);
-            new MoodleToken(tokenJSON);
-            Utils.log("tokenstring is " + token);
-        } catch (JSONException e) {
-            this.token = null;
-            this.message = e.getMessage();
-            this.exception = "JSONException";
-            this.errorCode = "invalidjson";
-            e.printStackTrace();
-        }
     }
 
 }

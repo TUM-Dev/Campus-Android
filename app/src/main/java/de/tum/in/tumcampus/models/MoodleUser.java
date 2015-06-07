@@ -31,22 +31,7 @@ public class MoodleUser extends MoodleObject {
     *Used as a helper constructor if the json is passed as string
      */
     public MoodleUser(String jsonstring){
-        try{
-            JSONObject obj = new JSONObject(jsonstring);
-            new MoodleUser(obj);
-        }
-        catch (JSONException e){
-            this.firstname=null;
-            this.fullname=null;
-            this.lang=null;
-            this.lastname=null;
-            this.userid=null;
-            this.username=null;
-            this.userpictureurl=null;
-            this.message="invalid json parsing in moodle user model";
-            this.exception="JSONException";
-            this.errorCode="invalidjson";
-        }
+        this(toJSONObject(jsonstring));
 
     }
 
@@ -75,27 +60,24 @@ public class MoodleUser extends MoodleObject {
                 }
                 catch (MalformedURLException m){
                     this.userpictureurl=null;
+
                     this.message=m.getMessage();
                     this.exception="MalformedURLException";
                     this.errorCode="malformedurl";
                 }
 
-
-
-
-
             } else{
+                this.isValid=false;
                 this.exception = jsonObject.optString("exception");
                 this.errorCode = jsonObject.optString("errorcode");
                 this.message = jsonObject.optString("message");
-
             }
 
         } else {
-            this.exception = "EmptyJSONObjectException";
-            this.message = "invalid json object passed to MoodleUser model";
-            this.errorCode = "emptyjsonobject";
-
+            this.isValid=false;
+            this.exception= "JSONException";
+            this.errorCode= "invalidjsonstring";
+            this.message = "error while parsing jsonstring in "+this.getClass().getName();
         }
 
     }
