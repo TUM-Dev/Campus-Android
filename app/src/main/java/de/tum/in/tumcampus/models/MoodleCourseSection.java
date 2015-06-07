@@ -20,28 +20,7 @@ public class MoodleCourseSection extends  MoodleObject{
     private Number summaryformat;
     private Number visible;
 
-    /**
-     *Used as a helper constructor if the json is passed as string
-     */
-    public MoodleCourseSection(String jsonstring)  {
-        try{
-            JSONObject obj = new JSONObject(jsonstring);
-            new MoodleCourseSection(obj);
-        }
-        catch (JSONException e){
-            this.id=null;
-            this.modules=null;
-            this.name=null;
-            this.summary=null;
-            this.visible=null;
-            this.summaryformat=null;
 
-            this.message="invalid json parsing in MoodleCourseSection model";
-            this.exception="JSONException";
-            this.errorCode="invalidjson";
-        }
-
-    }
 
     /**
      *Constructor of the object from JSONObject
@@ -73,6 +52,7 @@ public class MoodleCourseSection extends  MoodleObject{
                     this.message="invalid json parsing in MoodleCourseSection model";
                     this.exception="JSONException";
                     this.errorCode="invalidjson";
+                    this.isValid=false;
                 }
 
                 this.id = jsonObject.optInt("id");
@@ -84,6 +64,7 @@ public class MoodleCourseSection extends  MoodleObject{
                 this.exception = jsonObject.optString("exception");
                 this.errorCode = jsonObject.optString("errorcode");
                 this.message = jsonObject.optString("message");
+                this.isValid=false;
 
             }
 
@@ -91,6 +72,7 @@ public class MoodleCourseSection extends  MoodleObject{
             this.exception = "EmptyJSONObjectException";
             this.message = "invalid json object passed to MoodleCourseSection model";
             this.errorCode = "emptyjsonobject";
+            this.isValid=false;
 
         }
 

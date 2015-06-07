@@ -27,33 +27,7 @@ public class MoodleCourseContent extends MoodleObject{
     private String author;
     private String license;
 
-    /**
-     *Used as a helper constructor if the json is passed as string
-     */
-    public MoodleCourseContent(String jsonstring)  {
-        try{
-            JSONObject obj = new JSONObject(jsonstring);
-            new MoodleCourseSection(obj);
-        }
-        catch (JSONException e){
-            this.type=null;
-            this.filename=null;
-            this.filesize=null;
-            this.filepath=null;
-            this.content=null;
-            this.timecreated=null;
-            this.timemodified=null;
-            this.fileurl=null;
-            this.userid=null;
-            this.author=null;
-            this.license=null;
 
-            this.message="invalid json parsing in MoodleUserCourses model";
-            this.exception="JSONException";
-            this.errorCode="invalidjson";
-        }
-
-    }
 
     /**
      *Constructor of the object from JSONObject
@@ -99,6 +73,7 @@ public class MoodleCourseContent extends MoodleObject{
             this.exception = "EmptyJSONObjectException";
             this.message = "invalid json object passed to MoodleUserCourses model";
             this.errorCode = "emptyjsonobject";
+            this.isValid=false;
 
         }
 

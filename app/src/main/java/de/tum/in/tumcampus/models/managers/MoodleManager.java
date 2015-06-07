@@ -1,11 +1,11 @@
 package de.tum.in.tumcampus.models.managers;
 
 import android.content.Context;
-
-import org.json.JSONObject;
+import android.os.AsyncTask;
+import android.util.Log;
 
 import de.tum.in.tumcampus.auxiliary.NetUtils;
-import de.tum.in.tumcampus.auxiliary.Utils;
+import de.tum.in.tumcampus.models.MoodleToken;
 
 /**
  * Handles all calls done with the MoodleAPIs
@@ -19,114 +19,108 @@ import de.tum.in.tumcampus.auxiliary.Utils;
  *
  *            private static final String SERVICE_BASE_URL = "http://school.demo.moodle.net//login/token.php?";
  */
-
 public class MoodleManager {
+    final String SERVICE_BASE_URL = "http://school.demo.moodle.net//login/token.php?";
 
-    private String moodleUserToken;
+    private MoodleToken moodleUserToken;
+
     private boolean isFetching;
-    private JSONObject currentJSONObejct;
-    final String GET_COURSES = "core_enrol_get_users_courses";
-    final String GET_COURSES_EX = "moodle_enrol_get_users_courses";
 
 
-    /**
-     * This method handles the calls made to the MoodleAPI
-     * Input:
-     * serviceAddress  -> the address of the service that is being called
-     * context -> current context
-     */
-    public void getJSON(final String serviceAddress, Context context) {
-        //Test for moodleAPIs
-        final Context currentContext = context;
-        final String SERVICE_BASE_URL = "http://school.demo.moodle.net//login/token.php?";
-
-        Thread backgroundThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                isFetching = true;
-                Utils.log(" Hello Thread!");
-                try {
-                    JSONObject testMoodleJson = NetUtils.downloadJson(currentContext, SERVICE_BASE_URL + serviceAddress);
-
-                    Utils.log("JSON Object Moodle is: " + testMoodleJson.toString());
-                    setJSONObject(testMoodleJson);
-                    //setAccessToken(testMoodleJson);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                isFetching = false;
-            }
-
-        });
-        backgroundThread.start();
-    }
-
-
-    /**
-     * This function creates the Token for the moodle login
-     *
-     * @param jsonObject containing the responce of the MoodleAPI call
-     */
-    public void setAccessToken(JSONObject jsonObject){
-        String token = "";
-        if (jsonObject.has("token")){
-            token = jsonObject.optString("token");
-            Utils.log("token is " + token);
-        }
-        else {
-            Utils.log("Error getting token");
-        }
-        setMoodleUserToken(token.equals("") ? null : token);
-    }
-
-    /**
-     * This function checks whether or not the HTTP request made with the Moodle APIs is completed or not
-     * @return isFetching -> bool value for the Request progress status
-     */
-    public boolean checkRequestIsDone(){
-        if (isFetching == false){
-            Utils.log("JSON Request in progress");
-        }
-        return isFetching;
-    }
-
-    /**
-     * Function performing the request for the user autentication
-     *
-     * @param username user's username
-     * @param password user's password
-     * @param context current context
-     */
-    public void requestUserToken (String username, String password, Context context){
-        final String requestURL = "username=" + username + "&password=" + password + "&service=moodle_mobile_app";
-        getJSON(requestURL, context);
-    }
     /**
      * Getter for moodleUserToken
-     * @return token
+     * @return
      */
-    public String getMoodleUserToken() {
-        return checkRequestIsDone() ? null : moodleUserToken;
+    public MoodleToken getMoodleUserToken() {
+        return moodleUserToken;
     }
 
     /**
      * Setter for moodleUserToken
      * @param moodleUserToken
      */
-    public void setMoodleUserToken(String moodleUserToken) {
+    public void setMoodleUserToken(MoodleToken moodleUserToken) {
         this.moodleUserToken = moodleUserToken;
     }
 
-    public JSONObject getJSONObject(){
-        return this.currentJSONObejct;
+    /**
+     * This method starts the API call to Moodle's server that will get the user's access token
+     * @param currentContext
+     * @param service
+     */
+    public void requestServiceCall(Context currentContext, String service){
+        GenericMoodleRequestAsyncTask userTokenTask = new GenericMoodleRequestAsyncTask(new RequestUserTokenMoodleApiCommand() , currentContext, service);
+        userTokenTask.execute();
     }
 
-    public void setJSONObject(JSONObject object){
-        this.currentJSONObejct = object;
+    /**
+     * AsyncTask that executes all Moodle's the API calls
+     *
+     * @param <Params>
+     * @param <Progress>
+     * @param <Result>
+     */
+    private class GenericMoodleRequestAsyncTask<Params, Progress, Result> extends AsyncTask<Params, Progress, Object> {
+
+        private MoodleApiCommand command;
+        private Context context;
+        private String service;
+        private String jsonString;
+
+        public GenericMoodleRequestAsyncTask(MoodleApiCommand command, Context context, String service) {
+            super();
+            this.command = command;
+            this.context = context;
+            this.service = service;
+        }
+
+        @Override
+        protected Object doInBackground(Params... params) {
+            String completeURL = SERVICE_BASE_URL + service;
+            String testMoodleString = null;
+            try {
+                testMoodleString = NetUtils.downloadJson(context, completeURL).toString();
+                return command.execute(testMoodleString);
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+
+        }
+
+        @Override
+        protected void onPostExecute(Object o) {
+            super.onPostExecute(o);
+
+        }
     }
 
-    public String getMoodleCourses(Context context ){
-        getJSON(GET_COURSES,context);
-        return this.currentJSONObejct.toString();
+    /**
+     * Interface for the command pattern. For each API call response a new Command is implemented
+     */
+    private interface MoodleApiCommand {
+        public Object execute(String jsonString);
     }
+
+    /**
+     * Command that handles the creation of a new MoodelToken object
+     */
+    public final class RequestUserTokenMoodleApiCommand implements MoodleApiCommand {
+        @Override
+        public Object execute(String jsonString) {
+
+            MoodleToken moodleToken = new MoodleToken(jsonString);
+
+            //TODO: Carlo usa gli oggetti cosi. Se isvalid è false c'è un errore e il motivo è in getMessage ecc
+            if (moodleToken.isValid()){
+               // Log.d("token", ""+moodleToken.getToken());
+            }else {
+               // Log.d("error",moodleToken.getMessage()+moodleToken.getException());
+            }
+
+            return moodleToken;
+        }
+    }
+
+
 }

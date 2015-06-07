@@ -1,12 +1,23 @@
 package de.tum.in.tumcampus.models;
 
+import android.util.Log;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 /**
  * Created by enricogiga on 05/06/2015.
  * This class is for code reuse purpose. It holds attributes common to each moodle object retrieved from calls
  * to Moodle Web Services
  */
 public class MoodleObject {
+
     protected String exception;
+    protected String errorCode;
+    protected String message;
+    protected boolean isValid = true;
+
+
 
     public String getException() {
         return exception;
@@ -32,6 +43,31 @@ public class MoodleObject {
         this.message = message;
     }
 
-    protected String errorCode;
-    protected String message;
+    public boolean isValid() {
+        return isValid;
+    }
+
+    public void setValid(boolean isValid) {
+        this.isValid = isValid;
+    }
+
+    /**
+     * Created by enricogiga on 05/06/2015.
+     * Helper method to convert a string to jsonobject.
+     * @param jsonString json in string format
+     *
+     */
+    protected static JSONObject toJSONObject(String jsonString) {
+        try{
+            JSONObject obj = new JSONObject(jsonString);
+
+            return obj;
+        }
+        catch (JSONException e){
+            Log.d("exception", e.getMessage());
+
+            return null;
+        }
+
+    }
 }

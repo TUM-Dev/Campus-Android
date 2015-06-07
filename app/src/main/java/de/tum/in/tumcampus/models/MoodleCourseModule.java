@@ -27,31 +27,7 @@ public class MoodleCourseModule extends MoodleObject{
     private Number visible;
     private List contents;
 
-    /**
-     *Used as a helper constructor if the json is passed as string
-     */
-    public MoodleCourseModule(String jsonstring)  {
-        try{
-            JSONObject obj = new JSONObject(jsonstring);
-            new MoodleCourseSection(obj);
-        }
-        catch (JSONException e){
-            this.id=null;
-            this.instance=null;
-            this.modicon=null;
-            this.modname=null;
-            this.modplural=null;
-            this.name=null;
-            this.url=null;
-            this.visible=null;
-            this.contents=null;
 
-            this.message="invalid json parsing in MoodleUserCourses model";
-            this.exception="JSONException";
-            this.errorCode="invalidjson";
-        }
-
-    }
 
     /**
      *Constructor of the object from JSONObject
@@ -85,6 +61,7 @@ public class MoodleCourseModule extends MoodleObject{
                     this.message=m.getMessage();
                     this.exception="MalformedURLException";
                     this.errorCode="malformedurl";
+
                 }
 
 
@@ -103,12 +80,14 @@ public class MoodleCourseModule extends MoodleObject{
                     this.message="invalid json parsing in MoodleCourseModule model";
                     this.exception="JSONException";
                     this.errorCode="invalidjson";
+                    this.isValid=false;
                 }
 
             } else{
                 this.exception = jsonObject.optString("exception");
                 this.errorCode = jsonObject.optString("errorcode");
                 this.message = jsonObject.optString("message");
+                this.isValid=false;
 
             }
 
@@ -116,6 +95,7 @@ public class MoodleCourseModule extends MoodleObject{
             this.exception = "EmptyJSONObjectException";
             this.message = "invalid json object passed to MoodleUserCourses model";
             this.errorCode = "emptyjsonobject";
+            this.isValid=false;
 
         }
 

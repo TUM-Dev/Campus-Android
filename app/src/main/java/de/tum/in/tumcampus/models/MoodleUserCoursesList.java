@@ -29,10 +29,39 @@ public class MoodleUserCoursesList extends  MoodleObject{
                 this.exception = jsonObject.optString("exception");
                 this.errorCode = jsonObject.optString("errorcode");
                 this.message = jsonObject.optString("message");
+                this.isValid=false;
             } else {
                 //good
                 JSONArray jsonArray = new JSONArray(jsonstring);
-                new MoodleCourse(jsonArray);
+                this.userCourses=null;
+
+
+                if (jsonArray != null){
+                    MoodleUserCourses userCourse;
+                    try{
+                        for (int i=0; i < jsonArray.length(); i++){
+                            JSONObject c = jsonArray.getJSONObject(i);
+                            userCourse = new MoodleUserCourses(c);
+                            userCourses.add(userCourse);
+                        }
+
+                    } catch (JSONException e){
+                        this.userCourses = null;
+
+                        this.message="invalid json parsing in MoodleCourse model";
+                        this.exception="JSONException";
+                        this.errorCode="invalidjson";
+                        this.isValid=false;
+                    }
+
+
+                } else {
+                    this.exception = "EmptyJSONArrayException";
+                    this.message = "invalid json object passed to MoodleCourseSection model";
+                    this.errorCode = "emptyjsonobject";
+                    this.isValid=false;
+
+                }
 
             }
 
@@ -43,44 +72,19 @@ public class MoodleUserCoursesList extends  MoodleObject{
             this.message="invalid json parsing in MoodleCourse model";
             this.exception="JSONException";
             this.errorCode="invalidjson";
+            this.isValid=false;
         }
 
     }
 
     /**
      *Constructor of the object from JSONObject
-     * @param jsonArray = JSONArray to parse
+     * @panram jsonArray = JSONArray to parse
      */
-    public MoodleUserCoursesList(JSONArray jsonArray){
-        this.userCourses=null;
+  //  public MoodleUserCoursesList(JSONArray jsonArray){
 
 
-        if (jsonArray != null){
-            MoodleUserCourses userCourse;
-            try{
-                for (int i=0; i < jsonArray.length(); i++){
-                    JSONObject c = jsonArray.getJSONObject(i);
-                    userCourse = new MoodleUserCourses(c);
-                    userCourses.add(userCourse);
-                }
-
-            } catch (JSONException e){
-                this.userCourses = null;
-
-                this.message="invalid json parsing in MoodleCourse model";
-                this.exception="JSONException";
-                this.errorCode="invalidjson";
-            }
-
-
-        } else {
-            this.exception = "EmptyJSONArrayException";
-            this.message = "invalid json object passed to MoodleCourseSection model";
-            this.errorCode = "emptyjsonobject";
-
-        }
-
-    }
+   // }
 
     public List getSections() {
         return userCourses;
