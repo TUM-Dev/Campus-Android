@@ -5,15 +5,32 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ExpandableListView;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.generic.ActivityForDownloadingExternal;
-import de.tum.in.tumcampus.models.managers.MoodleManager;
+import de.tum.in.tumcampus.adapters.MoodleExapndabaleListAdapter;
+import de.tum.in.tumcampus.auxiliary.Utils;
+import de.tum.in.tumcampus.models.managers.MoodleManagerStub;
 
+/**
+ * This class is the main activity of the moodle which shows the list of the courses
+ * and their descriptions to the user. Communicates with moodle via MoodleManager
+ */
 public class MoodleMainActivity extends ActivityForDownloadingExternal implements OnItemClickListener {
-    MoodleManager moodleManager;
 
+    //MoodleManager moodleManager;
+    MoodleManagerStub moodleManager;
 
+    private MoodleExapndabaleListAdapter coursesAdapter;
+    List<String> listDataHeaders;
+    Map<String,List<String>> listDataChild;
+    ExpandableListView expListView;
 
     public MoodleMainActivity() {
         super("Moodle", R.layout.activity_moodle_main);
@@ -24,13 +41,42 @@ public class MoodleMainActivity extends ActivityForDownloadingExternal implement
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_moodle_main);
-        moodleManager = new MoodleManager();
+        listDataHeaders = new ArrayList<String>();
+        listDataChild = new HashMap<String, List<String>>();
+        moodleManager = new MoodleManagerStub();
+        expListView = (ExpandableListView) findViewById(R.id.moodleExp);
+
+        // populate the adapter with the data returned from moodle
+        prepareCoursesData();
+
+        coursesAdapter = new MoodleExapndabaleListAdapter(this, listDataHeaders, listDataChild);
+        expListView.setAdapter(coursesAdapter);
+
+        Utils.log("here is the list of the courses....");
+        Utils.log(String.valueOf(coursesAdapter.getGroupCount()));
+        Utils.log(listDataHeaders.toString());
+
         //moodleManager.requestUserToken("student","moodle",this);
-        moodleManager.requestUserToken(this, "username=student&password=moodle&service=moodle_mobile_app");
+        //moodleManager.requestUserToken(this, "username=student&password=moodle&service=moodle_mobile_app");
 
     }
 
+    private void prepareCoursesData() {
+        /**
+         * This method populates the data for lists which will be shown
+         * on this actiivty. For now these include: course title,course description
+         *
+         */
+        Map<String, String> courses = ( Map<String, String> )moodleManager.getCoursesList();
+
+
+        for (Map.Entry <String, String >item: courses.entrySet()){
+            List<String> temp = new ArrayList<String>();
+            temp.add(item.getValue());
+            listDataChild.put(item.getKey(), temp);
+            listDataHeaders.add(item.getKey());
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
