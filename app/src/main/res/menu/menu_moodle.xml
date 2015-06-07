@@ -3,23 +3,19 @@
         xmlns:tumcampus="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/moodle_home"
-        android:icon="@drawable/ic_moodle"
-        android:title="@string/view_mode"
-        tumcampus:showAsAction="ifRoom" />
-
-
-    <item
          android:id="@+id/moodle_my_courses"
-         android:icon="@drawable/ic_moodle"
-         android:title="@string/view_mode"
+         android:title="my courses"
          tumcampus:showAsAction="ifRoom" />
 
         <item
-        android:id="@+id/moodle_other_semesters"
-        android:icon="@drawable/ic_moodle"
-        android:title="@string/view_mode"
+        android:id="@+id/events"
+        android:title="other semesters"
+        tumcampus:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/moodle_profile"
+        android:title="my profile"
         tumcampus:showAsAction="ifRoom" />
 
 
-    </menu>
+</menu>

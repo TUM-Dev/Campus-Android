@@ -13,18 +13,12 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal">
+            android:orientation="vertical">
 
-            <include
-                layout="@layout/layout_all_errors"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent" />
-
-            <FrameLayout
-                android:id="@+id/fragment_container"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
+            <ExpandableListView
+                android:id="@+id/moodleExp"
+                android:layout_height="match_parent"
+                android:layout_width="match_parent"/>
         </LinearLayout>
     </FrameLayout>
     <!-- The navigation drawer -->
