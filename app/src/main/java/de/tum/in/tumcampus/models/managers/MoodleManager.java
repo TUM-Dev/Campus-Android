@@ -2,7 +2,6 @@ package de.tum.in.tumcampus.models.managers;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import de.tum.in.tumcampus.auxiliary.NetUtils;
 import de.tum.in.tumcampus.models.MoodleToken;
@@ -48,8 +47,8 @@ public class MoodleManager {
      * @param currentContext
      * @param service
      */
-    public void requestServiceCall(Context currentContext, String service){
-        GenericMoodleRequestAsyncTask userTokenTask = new GenericMoodleRequestAsyncTask(new RequestUserTokenMoodleApiCommand() , currentContext, service);
+    public void requestUserToken(Context currentContext, String service){
+        GenericMoodleRequestAsyncTask userTokenTask = new GenericMoodleRequestAsyncTask(new RequestUserTokenMoodleAPICommand() , currentContext, service);
         userTokenTask.execute();
     }
 
@@ -105,17 +104,16 @@ public class MoodleManager {
     /**
      * Command that handles the creation of a new MoodelToken object
      */
-    public final class RequestUserTokenMoodleApiCommand implements MoodleApiCommand {
+    public final class RequestUserTokenMoodleAPICommand implements MoodleApiCommand {
         @Override
         public Object execute(String jsonString) {
 
             MoodleToken moodleToken = new MoodleToken(jsonString);
 
-            //TODO: Carlo usa gli oggetti cosi. Se isvalid è false c'è un errore e il motivo è in getMessage ecc
             if (moodleToken.isValid()){
-               // Log.d("token", ""+moodleToken.getToken());
+               setMoodleUserToken(moodleToken);
             }else {
-               // Log.d("error",moodleToken.getMessage()+moodleToken.getException());
+               setMoodleUserToken(null);
             }
 
             return moodleToken;

@@ -27,7 +27,7 @@ public class MoodleMainActivity extends ActivityForDownloadingExternal implement
         setContentView(R.layout.activity_moodle_main);
         moodleManager = new MoodleManager();
         //moodleManager.requestUserToken("student","moodle",this);
-        moodleManager.requestServiceCall(this, "username=student&password=moodle&service=moodle_mobile_app");
+        moodleManager.requestUserToken(this, "username=student&password=moodle&service=moodle_mobile_app");
 
     }
 
