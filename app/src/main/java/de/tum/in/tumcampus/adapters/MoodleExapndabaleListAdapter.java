@@ -17,8 +17,7 @@ import de.tum.in.tumcampus.auxiliary.Utils;
 
 /**
  * Created by a2k on 6/7/2015.
- * This class handles the vew output of my courses page in moodle activity
- * This class handles the view output of the results for finding lectures via
+ * This class handles the view output of my courses page in moodle activity
  */
 
 public class MoodleExapndabaleListAdapter  extends BaseExpandableListAdapter{
@@ -80,10 +79,6 @@ public class MoodleExapndabaleListAdapter  extends BaseExpandableListAdapter{
 
         TextView header = (TextView) convertView.findViewById(R.id.moodleListHeader);
         header.setText(headerTitle);
-
-        Utils.log("got the header");
-        Utils.log(header.getText().toString());
-
         header.setTypeface(null, Typeface.BOLD);
         return convertView;
     }
@@ -102,10 +97,6 @@ public class MoodleExapndabaleListAdapter  extends BaseExpandableListAdapter{
 
         TextView description = (TextView)convertView.findViewById(R.id.moodleListItem);
         description.setText(childText);
-
-
-        Utils.log("got the child");
-        Utils.log(description.getText().toString());
         return convertView;
     }
 
