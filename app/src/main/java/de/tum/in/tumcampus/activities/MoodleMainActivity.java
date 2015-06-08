@@ -16,15 +16,17 @@ import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.generic.ActivityForDownloadingExternal;
 import de.tum.in.tumcampus.adapters.MoodleExapndabaleListAdapter;
 import de.tum.in.tumcampus.auxiliary.Utils;
+import de.tum.in.tumcampus.models.managers.MoodleManager;
 import de.tum.in.tumcampus.models.managers.MoodleManagerStub;
+import de.tum.in.tumcampus.models.managers.RealMoodleManager;
 
 /**
  * This class is the main activity of the moodle which shows the list of the courses
- * and their descriptions to the user. Communicates with moodle via MoodleManager
+ * and their descriptions to the user. Communicates with moodle via RealMoodleManager
  */
 public class MoodleMainActivity extends ActivityForDownloadingExternal implements OnItemClickListener {
 
-    //MoodleManager moodleManager;
+    //RealMoodleManager moodleManager;
     MoodleManagerStub moodleManager;
 
     private MoodleExapndabaleListAdapter coursesAdapter;
@@ -55,9 +57,9 @@ public class MoodleMainActivity extends ActivityForDownloadingExternal implement
         Utils.log("here is the list of the courses....");
         Utils.log(String.valueOf(coursesAdapter.getGroupCount()));
         Utils.log(listDataHeaders.toString());
-
+        MoodleManager realManager = new RealMoodleManager();
         //moodleManager.requestUserToken("student","moodle",this);
-        //moodleManager.requestUserToken(this, "username=student&password=moodle&service=moodle_mobile_app");
+        realManager.requestUserToken(this, "student", "moodle");
 
     }
 
