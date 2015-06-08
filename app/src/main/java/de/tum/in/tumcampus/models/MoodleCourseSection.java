@@ -2,9 +2,7 @@ package de.tum.in.tumcampus.models;
 
 /**
  * Created by enricogiga on 05/06/2015.
- Object holding the information on a section of a course (components of the course main page on moodle)
- * Uses the core_course_get_contents function in the Moodle web service
- * this course section is retrieved by sending the course id retrieved from the MoodleUserCourses
+ * Object holding the information on a section of a course (components of the course main page on moodle)
  */
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -13,11 +11,29 @@ import org.json.JSONObject;
 import java.util.List;
 
 public class MoodleCourseSection extends  MoodleObject{
+    /**
+     * section's id
+     */
     private Number id;
+    /**
+     * List of MoodleCourseModules
+     */
     private List modules;
+    /**
+     * section's name
+     */
     private String name;
+    /**
+     * section's summary might be null
+     */
     private String summary;
+    /**
+     * section's summary format html=1
+     */
     private Number summaryformat;
+    /**
+     * no idea
+     */
     private Number visible;
 
 

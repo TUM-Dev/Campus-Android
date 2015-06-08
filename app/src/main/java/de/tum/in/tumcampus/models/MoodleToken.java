@@ -14,18 +14,16 @@ import de.tum.in.tumcampus.auxiliary.Utils;
  */
 public class MoodleToken extends MoodleObject {
 
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
-
+    /**
+     * token to be used in the Moodle webService calls
+     */
     private String token;
 
-
-    public MoodleToken(JSONObject jsonObject) {
+    /**
+     * Constructor by parsing the JSONObject
+     * @param jsonObject the JSONObject
+     */
+     public MoodleToken(JSONObject jsonObject) {
         this.token = "";
         if (jsonObject != null) {
             if (!jsonObject.has("error")) {
@@ -37,9 +35,6 @@ public class MoodleToken extends MoodleObject {
                 this.exception = "WrongCredentialsException";
                 this.errorCode = "wrongcredentials";
                 this.message = jsonObject.optString("error");
-
-
-
             }
 
         } else {
@@ -52,10 +47,22 @@ public class MoodleToken extends MoodleObject {
     }
 
 
-
+    /**
+     * Constructor to use if JSON is passed as a string
+     * @param jsonString JSON in string format
+     */
     public MoodleToken(String jsonString) {
         this(toJSONObject(jsonString));
 
     }
 
+
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
 }

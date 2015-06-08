@@ -1,5 +1,7 @@
 package de.tum.in.tumcampus.models;
 
+import android.text.Html;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -9,35 +11,66 @@ import java.net.URL;
 /**
  * Created by enricogiga on 05/06/2015.
  * Object holding the information on a Moodle course list element
- * Uses the core_enrol_get_users_courses function in the Moodle web service
+ * Synthesized info on a user's course to display in a list
  * the complete course is retrieved by sending the course id retrieved from this call
 
- *
- * TODO: summary may be in html, we either display it or have to parse it. I have a link to showing a html content in android
- * summaryformat=1 for html
- *
- * didn't understand what format is
- *
  */
-
-
 public class MoodleUserCourses extends  MoodleObject{
 
+    /**
+     * Number of course partecipants
+     */
     private Number enrolledusercount;
+    /**
+     * no idea
+     */
     private String format;
+    /**
+     * course full name
+     */
     private String fullname;
+    /**
+     * course id
+     */
     private Number id;
+    /**
+     * course languange
+     */
     private String lang;
+    /**
+     * course shortname
+     */
     private String shortname;
+    /**
+     * course boolean for showing grades or no
+     */
     private boolean showgrades;
+    /**
+     * course summary will be stripped of html if summaryformat = 1
+     * needs to be called with to string if used with methods not accepting CharSequences
+     */
     private String summary;
+    /**
+     * format of summary
+     */
     private Number summaryformat;
+    /**
+     * course no idea
+     */
     private Number visible;
 
 
     /**
-     *Constructor of the object from JSONObject
-     * @param jsonObject = JSONObject to parse
+     * Constructor to use if JSON is passed as a string
+     * @param jsonString JSON in string format
+     */
+    public MoodleUserCourses(String jsonString) {
+        this(toJSONObject(jsonString));
+
+    }
+    /**
+     * Constructor by parsing the JSONObject
+     * @param jsonObject the JSONObject
      */
     public MoodleUserCourses(JSONObject jsonObject){
         this.enrolledusercount=null;
@@ -52,28 +85,36 @@ public class MoodleUserCourses extends  MoodleObject{
         this.visible=null;
         if (jsonObject != null){
 
-                this.enrolledusercount = jsonObject.optInt("enrolledusercount");
-                this.format = jsonObject.optString("format");
-                this.fullname = jsonObject.optString("fullname");
-                this.id = jsonObject.optInt("id");
-                this.lang = jsonObject.optString("lang");
-                this.shortname = jsonObject.optString("shortname");
-                this.showgrades = jsonObject.optBoolean("showgrades");
-                this.summary = jsonObject.optString("summary");
-                this.summaryformat = jsonObject.optDouble("summaryformat");
-                this.visible = jsonObject.optDouble("visible");
-
-
+            this.enrolledusercount = jsonObject.optInt("enrolledusercount");
+            this.format = jsonObject.optString("format");
+            this.fullname = jsonObject.optString("fullname");
+            this.id = jsonObject.optInt("id");
+            this.lang = jsonObject.optString("lang");
+            this.shortname = jsonObject.optString("shortname");
+            this.showgrades = jsonObject.optBoolean("showgrades");
+            this.summaryformat = jsonObject.optDouble("summaryformat");
+            this.summary=jsonObject.optString("summary");
+            if (summaryformat == 1){
+                this.summary=stripHtml(summary);
+            }
+            this.visible = jsonObject.optDouble("visible");
         } else {
             this.exception = "EmptyJSONObjectException";
             this.message = "invalid json object passed to MoodleUserCourses model";
             this.errorCode = "emptyjsonobject";
             this.isValid=false;
-
         }
-
     }
 
+    /**
+     * Method to strip the html tags from the summary
+     * try escapeHtml if not happy with result
+     * @param html string with html tags
+     * @return string without html tags
+     */
+    public String stripHtml(String html) {
+        return Html.fromHtml(html).toString();
+    }
 
     public Number getEnrolledusercount(){
         return this.enrolledusercount;

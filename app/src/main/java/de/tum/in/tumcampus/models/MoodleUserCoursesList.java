@@ -9,15 +9,25 @@ import java.util.List;
 
 /**
  * Created by enricogiga on 06/06/2015.
+ * List holding MoodleUserCourses
+ * Needed to address directly the result of the call to moodle's api function
+ * Uses the core_enrol_get_users_courses function in the Moodle web service
+ *
  */
 public class MoodleUserCoursesList extends  MoodleObject{
 
+    /**
+     * The list of User Courses
+     */
     private List userCourses;
 
 
     /**
-     *Used as a helper constructor if the json is passed as string. if the jsonarray
-     * is passed it should be checked outside weather it's an array (OK) or object (ERROR)
+     *Constructor from json string since unfortunately
+     * if an error occurs a JSONObject is retrieved describing the error
+     * else a JSONArray with the right contents is retrieved
+     *
+     * @param jsonstring JSON in string format
      */
     public MoodleUserCoursesList(String jsonstring)  {
         try{
@@ -77,14 +87,7 @@ public class MoodleUserCoursesList extends  MoodleObject{
 
     }
 
-    /**
-     *Constructor of the object from JSONObject
-     * @panram jsonArray = JSONArray to parse
-     */
-  //  public MoodleUserCoursesList(JSONArray jsonArray){
 
-
-   // }
 
     public List getSections() {
         return userCourses;

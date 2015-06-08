@@ -16,19 +16,41 @@ import java.net.URL;
 public class MoodleUser extends MoodleObject {
 
 
-
+    /**
+     * user's first name
+     */
     private String firstname;
+    /**
+     * user's full name
+     */
     private String fullname;
+    /**
+     * user's language "IT" format
+     */
     private String lang;
+    /**
+     * user's last name
+     */
     private String lastname;
+    /**
+     * user's id
+     */
     private Number userid;
+    /**
+     * user's username
+     */
     private String username;
+    /**
+     * user's profile picture's URL
+     * May throw exception while parsing but I've decided to just set
+     * the URL to null and give the rest of the content anyways
+     */
     private URL userpictureurl;
 
 
     /**
-     *
-    *Used as a helper constructor if the json is passed as string
+     * Constructor to use if JSON is passed as a string
+     * @param jsonstring
      */
     public MoodleUser(String jsonstring){
         this(toJSONObject(jsonstring));
@@ -36,8 +58,8 @@ public class MoodleUser extends MoodleObject {
     }
 
     /**
-     *Constructor of the object from JSONObject
-     * @param jsonObject = JSONObject to parse
+     * Constructor by paring the JSONObject
+     * @param jsonObject the JSONObject
      */
     public MoodleUser(JSONObject jsonObject){
         this.firstname = null;
@@ -60,7 +82,6 @@ public class MoodleUser extends MoodleObject {
                 }
                 catch (MalformedURLException m){
                     this.userpictureurl=null;
-
                     this.message=m.getMessage();
                     this.exception="MalformedURLException";
                     this.errorCode="malformedurl";
