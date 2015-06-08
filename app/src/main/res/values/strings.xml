@@ -432,5 +432,9 @@ Signature: %5$s</string>
     <!-- Moodle -->
     <string name="moodle_settings">Settings</string>
     <string name="title_activity_moodle_main">Moodle</string>
+    <string name="title_activity_moodle_events">Events</string>
+    <string name="moodle_courses">courses</string>
+    <string name="moodle_events">events</string>
+    <string name="moodle_profile">profile</string>
 
 </resources>

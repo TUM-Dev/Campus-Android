@@ -4,17 +4,17 @@
 
     <item
          android:id="@+id/moodle_my_courses"
-         android:title="my courses"
+         android:title="@string/moodle_courses"
          tumcampus:showAsAction="ifRoom" />
 
         <item
         android:id="@+id/events"
-        android:title="other semesters"
+        android:title="@string/moodle_events"
         tumcampus:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/moodle_profile"
-        android:title="my profile"
+        android:title="@string/moodle_profile"
         tumcampus:showAsAction="ifRoom" />
 
 
