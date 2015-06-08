@@ -104,7 +104,6 @@ public class DateUtils {
          * returns the corresponding GeorgianCalendar
          */
         GregorianCalendar c = new GregorianCalendar();
-
         //  This method gets the epochTime in milliseconds
         c.setTimeInMillis(epochTime * 1000);
         return c;
