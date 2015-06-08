@@ -15,7 +15,7 @@ import java.util.List;
  * Uses the core_enrol_get_users_courses function in the Moodle web service
  *
  */
-public class MoodleUserCoursesList extends  MoodleObject{
+public class MoodleUserCourseList extends  MoodleObject{
 
     /**
      * The list of User Courses
@@ -30,7 +30,7 @@ public class MoodleUserCoursesList extends  MoodleObject{
      *
      * @param jsonstring JSON in string format
      */
-    public MoodleUserCoursesList(String jsonstring)  {
+    public MoodleUserCourseList(String jsonstring)  {
         try{
             Object json = new JSONTokener(jsonstring).nextValue();
             if (json instanceof  JSONObject){
@@ -44,7 +44,7 @@ public class MoodleUserCoursesList extends  MoodleObject{
             } else {
                 //good
                 JSONArray jsonArray = new JSONArray(jsonstring);
-                this.userCourses=null;
+                //this.userCourses=null;
 
 
                 if (jsonArray != null){

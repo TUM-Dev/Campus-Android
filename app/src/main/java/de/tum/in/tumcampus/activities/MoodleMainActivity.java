@@ -17,7 +17,7 @@ import de.tum.in.tumcampus.activities.generic.ActivityForDownloadingExternal;
 import de.tum.in.tumcampus.adapters.MoodleExapndabaleListAdapter;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.managers.MoodleManager;
-import de.tum.in.tumcampus.models.managers.MoodleManagerStub;
+import de.tum.in.tumcampus.models.managers.MockMoodleManager;
 import de.tum.in.tumcampus.models.managers.RealMoodleManager;
 
 /**
@@ -27,7 +27,7 @@ import de.tum.in.tumcampus.models.managers.RealMoodleManager;
 public class MoodleMainActivity extends ActivityForDownloadingExternal implements OnItemClickListener {
 
     //RealMoodleManager moodleManager;
-    MoodleManagerStub moodleManager;
+    MockMoodleManager moodleManager;
 
     private MoodleExapndabaleListAdapter coursesAdapter;
     List<String> listDataHeaders;
@@ -45,7 +45,7 @@ public class MoodleMainActivity extends ActivityForDownloadingExternal implement
 
         listDataHeaders = new ArrayList<String>();
         listDataChild = new HashMap<String, List<String>>();
-        moodleManager = new MoodleManagerStub();
+        moodleManager = new MockMoodleManager();
         expListView = (ExpandableListView) findViewById(R.id.moodleExp);
 
         // populate the adapter with the data returned from moodle

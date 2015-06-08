@@ -9,5 +9,8 @@ import android.content.Context;
  */
 public interface MoodleManager {
     public void requestUserToken(Context currentContext, String username, String password);
+    public void requestUserData(Context currentContext);
+    public void requestUserCourseList(Context currentContext);
+
 
 }

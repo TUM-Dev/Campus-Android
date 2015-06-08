@@ -9,7 +9,7 @@ import java.util.Map;
  * Created by a2k on 6/7/2015.
  * This class is a stub for RealMoodleManager
  */
-public class MoodleManagerStub implements MoodleManager{
+public class MockMoodleManager implements MoodleManager{
 
     private String userName;
     private String password;
@@ -33,7 +33,16 @@ public class MoodleManagerStub implements MoodleManager{
 
     @Override
     public void requestUserToken(Context currentContext, String username, String password) {
-        String fakeToken = "1223kkdk21";
+        //TODO create stub data and variables needed
+    }
 
+    @Override
+    public void requestUserData(Context currentContext) {
+        //TODO create stub data and variables needed
+    }
+
+    @Override
+    public void requestUserCourseList(Context currentContext) {
+        //TODO create stub data and variables needed
     }
 }
