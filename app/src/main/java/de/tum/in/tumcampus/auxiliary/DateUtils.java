@@ -8,6 +8,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.GregorianCalendar;
 
 import de.tum.in.tumcampus.R;
 
@@ -95,5 +96,17 @@ public class DateUtils {
         Time now = new Time();
         now.setToNow();
         return now;
+    }
+
+    public static GregorianCalendar epochToDate(Long epochTime){
+        /**
+         * gets the epochTime in seconds
+         * returns the corresponding GeorgianCalendar
+         */
+        GregorianCalendar c = new GregorianCalendar();
+
+        //  This method gets the epochTime in milliseconds
+        c.setTimeInMillis(epochTime * 1000);
+        return c;
     }
 }
