@@ -17,21 +17,69 @@ import java.util.List;
  * used in the array of modules of a course
  */
 public class MoodleCourseModule extends MoodleObject{
+    /**
+     * Module's id
+     */
     private Number id;
+    /**
+     * no idea
+     */
     private Number instance;
+    /**
+     * Module's url for the icon, not set as URL now
+     * there is one for each modname
+     */
     private String modicon;
+    /**
+     * distinguishes the type of content of the module
+     * it is almost always a link but it can be a downloadable file to which we
+     * have to append a token.
+     * These the types I could notice
+     * Forum, Choice, Quiz, Chat, Glossary, Label, Book, Resource, Folder,
+     *  Assign, Survey, Wiki, Feedback, Data, Workshop, Math
+     *
+     *  NB: Label is just text, might be used as section header
+     *      Resource, Book, Folder might hold an array of contents
+     **/
     private String modname;
+    /**
+     * Name of the modname in user's language
+     */
     private String modplural;
+    /**
+     * Name of the module
+     */
     private String name;
+    /**
+     * URL to the resource
+     * this parameter is not in the modules with modname=label
+     */
     private URL url;
+    /**
+     * no idea
+     */
     private Number visible;
+    /**
+     * List of MoodleCourseContents
+     * there is no heuristic to know if it will be there or not
+     * might always want to check if null before accessing it
+     * by now i noticed Resource, Book, Folder always have it
+     */
     private List contents;
 
 
 
     /**
-     *Constructor of the object from JSONObject
-     * @param jsonObject = JSONObject to parse
+     * Constructor to use if JSON is passed as a string
+     * @param jsonString JSON in string format
+     */
+    public MoodleCourseModule(String jsonString) {
+        this(toJSONObject(jsonString));
+    }
+
+    /**
+     * Constructor by parsing the JSONObject
+     * @param jsonObject the JSONObject
      */
     public MoodleCourseModule(JSONObject jsonObject){
         this.id=null;

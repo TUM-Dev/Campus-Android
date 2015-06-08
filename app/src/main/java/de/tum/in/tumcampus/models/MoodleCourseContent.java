@@ -15,23 +15,65 @@ import java.net.URL;
  * used in the array of contents in a module
  */
 public class MoodleCourseContent extends MoodleObject{
+    /**
+     * content's type
+     * if it's file it's a resource to download if it's content than
+     * the content attribute has text in html
+     */
     private String type;
+    /**
+     * Name of the file
+     */
     private String filename;
+    /**
+     * path of the file
+     */
     private String filepath;
+    /**
+     * size of the file
+     */
     private Number filesize;
+    /**
+     * content only if type = content
+     */
     private String content;
+    /**
+     * time of creation
+     */
     private String timecreated;
+    /**
+     * time of last edit
+     */
     private String timemodified;
+    /**
+     * URL to the resource token has to be appended
+     */
     private URL fileurl;
+    /**
+     * user id of the author?
+     */
     private String userid;
+    /**
+     * author
+     */
     private String author;
+    /**
+     * no idea
+     */
     private String license;
 
 
+    /**
+     * Constructor to use if JSON is passed as a string
+     * @param jsonString JSON in string format
+     */
+    public MoodleCourseContent(String jsonString) {
+        this(toJSONObject(jsonString));
+    }
 
     /**
-     *Constructor of the object from JSONObject
-     * @param jsonObject = JSONObject to parse
+     * Constructor by parsing the JSONObject
+     * @param jsonObject the JSONObject
      */
     public MoodleCourseContent(JSONObject jsonObject){
         this.type=null;
@@ -47,7 +89,6 @@ public class MoodleCourseContent extends MoodleObject{
         this.license=null;
 
         if (jsonObject != null){
-
                 this.type = jsonObject.optString("type");
                 this.filename = jsonObject.optString("filename");
                 this.filesize = jsonObject.optDouble("filesize");
