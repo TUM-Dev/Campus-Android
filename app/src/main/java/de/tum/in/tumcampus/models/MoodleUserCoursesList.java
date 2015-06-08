@@ -5,6 +5,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,7 +20,7 @@ public class MoodleUserCoursesList extends  MoodleObject{
     /**
      * The list of User Courses
      */
-    private List userCourses;
+    private List<MoodleUserCourses> userCourses = new ArrayList<MoodleUserCourses>();
 
 
     /**
@@ -52,6 +53,7 @@ public class MoodleUserCoursesList extends  MoodleObject{
                         for (int i=0; i < jsonArray.length(); i++){
                             JSONObject c = jsonArray.getJSONObject(i);
                             userCourse = new MoodleUserCourses(c);
+
                             userCourses.add(userCourse);
                         }
 
