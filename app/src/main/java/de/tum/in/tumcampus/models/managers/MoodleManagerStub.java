@@ -1,16 +1,15 @@
 package de.tum.in.tumcampus.models.managers;
 
+import android.content.Context;
+
 import java.util.HashMap;
 import java.util.Map;
 
-import de.tum.in.tumcampus.models.MoodleObject;
-import de.tum.in.tumcampus.models.MoodleUserCourses;
-
 /**
  * Created by a2k on 6/7/2015.
- * This class is a stub for MoodleManager
+ * This class is a stub for RealMoodleManager
  */
-public class MoodleManagerStub {
+public class MoodleManagerStub implements MoodleManager{
 
     private String userName;
     private String password;
@@ -32,4 +31,9 @@ public class MoodleManagerStub {
         return null;
     }
 
+    @Override
+    public void requestUserToken(Context currentContext, String username, String password) {
+        String fakeToken = "1223kkdk21";
+
+    }
 }

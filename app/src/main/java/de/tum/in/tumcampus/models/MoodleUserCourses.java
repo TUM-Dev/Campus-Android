@@ -2,11 +2,7 @@ package de.tum.in.tumcampus.models;
 
 import android.text.Html;
 
-import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.net.MalformedURLException;
-import java.net.URL;
 
 /**
  * Created by enricogiga on 05/06/2015.
@@ -94,7 +90,7 @@ public class MoodleUserCourses extends  MoodleObject{
             this.showgrades = jsonObject.optBoolean("showgrades");
             this.summaryformat = jsonObject.optDouble("summaryformat");
             this.summary=jsonObject.optString("summary");
-            if (summaryformat == 1){
+            if (summaryformat.doubleValue() == 1){
                 this.summary=stripHtml(summary);
             }
             this.visible = jsonObject.optDouble("visible");
