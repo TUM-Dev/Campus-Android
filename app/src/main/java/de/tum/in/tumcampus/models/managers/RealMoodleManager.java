@@ -5,8 +5,11 @@ import android.os.AsyncTask;
 
 import de.tum.in.tumcampus.auxiliary.NetUtils;
 import de.tum.in.tumcampus.auxiliary.Utils;
+import de.tum.in.tumcampus.models.MoodleCourse;
 import de.tum.in.tumcampus.models.MoodleToken;
 import de.tum.in.tumcampus.models.MoodleUser;
+import de.tum.in.tumcampus.models.MoodleUserCourseList;
+import de.tum.in.tumcampus.models.MoodleUserCourse;
 
 /**
  * Handles all calls done with the MoodleAPIs
@@ -20,61 +23,11 @@ import de.tum.in.tumcampus.models.MoodleUser;
  *
  *            private static final String SERVICE_BASE_URL = "http://school.demo.moodle.net//login/token.php?";
  */
-public class RealMoodleManager implements MoodleManager {
+public class RealMoodleManager extends MoodleManager {
 
     final String SERVICE_BASE_URL = "http://school.demo.moodle.net";
+    Context currentContext;
 
-    private MoodleToken moodleUserToken;
-
-    private MoodleUser moodleUserInfo;
-    /**
-     * Getter for currentContext
-     * @return currentContext
-     */
-    public Context getCurrentContext() {
-        return currentContext;
-    }
-
-    /**
-     * Setter for currentContext
-     * @param currentContext
-     */
-    public void setCurrentContext(Context currentContext) {
-        this.currentContext = currentContext;
-    }
-
-    private Context currentContext = null;
-
-    /**
-     * Getter for moodleUserToken
-     * @return
-     */
-    public MoodleToken getMoodleUserToken() {
-        return moodleUserToken;
-    }
-
-    /**
-     * Setter for moodleUserToken
-     * @param moodleUserToken
-     */
-    public void setMoodleUserToken(MoodleToken moodleUserToken) {
-        this.moodleUserToken = moodleUserToken;
-    }
-    /**
-     * Getter for MoodleUSerInfo
-     * @return
-     */
-    public MoodleUser getMoodleUserInfo() {
-        return moodleUserInfo;
-    }
-
-    /**
-     * Setter for moodleUserInfo
-     * @param moodleUserInfo
-     */
-    public void setMoodleUserInfo(MoodleUser moodleUserInfo) {
-        this.moodleUserInfo = moodleUserInfo;
-    }
 
     /**
      * This method starts the API call to Moodle's server that will get the user's access token
@@ -87,15 +40,48 @@ public class RealMoodleManager implements MoodleManager {
         GenericMoodleRequestAsyncTask userTokenTask = new GenericMoodleRequestAsyncTask(new RequestUserTokenMoodleAPICommand() , currentContext, service);
         userTokenTask.execute();
     }
-    public void requestUserData() {
-        if (moodleUserToken != null && moodleUserToken.isValid()) {
+
+    /**
+     * This method starts the API call to Moodle's server that will get the user's info data
+     * */
+    public void requestUserData(Context currentContext) {
+        if (this.getMoodleUserToken() != null && this.getMoodleUserToken().isValid()) {
             Utils.log("requesting user data...");
-            String service = "/webservice/rest/server.php?wstoken=" + moodleUserToken.getToken() + "&wsfunction=core_webservice_get_site_info&moodlewsrestformat=json";
+            String service = "/webservice/rest/server.php?wstoken=" + this.getMoodleUserToken().getToken() + "&wsfunction=core_webservice_get_site_info&moodlewsrestformat=json";
             GenericMoodleRequestAsyncTask userDataTask = new GenericMoodleRequestAsyncTask(new RequestUserInfoMoodleAPICommand() , currentContext, service);
             userDataTask.execute();
         }
         else Utils.log("error requesting user data...");
     }
+    /**
+     * This method starts the API call to Moodle's server that will get the user's course list
+     * */
+    public void requestUserCourseList(Context currentContext) {
+        if (this.getMoodleUserToken() != null && this.getMoodleUserToken().isValid()) {
+            Utils.log("requesting user course list...");
+            String service = "/webservice/rest/server.php?wstoken=" + this.getMoodleUserToken().getToken()+ "&wsfunction=core_enrol_get_users_courses&moodlewsrestformat=json&userid=" + getMoodleUserInfo().getUserid();
+
+            GenericMoodleRequestAsyncTask userDataTask = new GenericMoodleRequestAsyncTask(new RequestUserCoursesMoodleAPICommand() , currentContext, service);
+            userDataTask.execute();
+        }
+        else Utils.log("error requesting user course list...");
+
+    }
+    /**
+     * This method starts the API call to Moodle's server that will get the user's course info
+     * */
+    public void requestUserCourseInfo(Context currentContext, int courseId) {
+        if (this.getMoodleUserToken() != null && this.getMoodleUserToken().isValid()) {
+            Utils.log("requesting user course info...");
+            String service = "/webservice/rest/server.php?wstoken=" + this.getMoodleUserToken().getToken()  + "&wsfunction=core_course_get_contents&moodlewsrestformat=json&courseid=" + courseId;
+
+            GenericMoodleRequestAsyncTask userDataTask = new GenericMoodleRequestAsyncTask(new RequestUserCourseInfoMoodleAPICommand() , currentContext, service);
+            userDataTask.execute();
+        }
+        else Utils.log("error requesting user course info...");
+
+    }
+
 
     /**
      * AsyncTask that executes all Moodle's the API calls
@@ -106,12 +92,12 @@ public class RealMoodleManager implements MoodleManager {
      */
     private class GenericMoodleRequestAsyncTask<Params, Progress, Result> extends AsyncTask<Params, Progress, Object> {
 
-        private MoodleApiCommand command;
+        private MoodleAPICommand command;
         private Context context;
         private String service;
         private String jsonString;
 
-        public GenericMoodleRequestAsyncTask(MoodleApiCommand command, Context context, String service) {
+        public GenericMoodleRequestAsyncTask(MoodleAPICommand command, Context context, String service) {
             super();
             this.command = command;
             this.context = context;
@@ -122,10 +108,12 @@ public class RealMoodleManager implements MoodleManager {
         @Override
         protected Object doInBackground(Params... params) {
             String completeURL = SERVICE_BASE_URL + service;
-            String testMoodleString = null;
+            String resultAPIcallJSONString = null;
             try {
-                testMoodleString = NetUtils.downloadJson(context, completeURL).toString();
-                return command.execute(testMoodleString);
+
+                resultAPIcallJSONString = NetUtils.downloadStringHttp(completeURL, context);
+                Utils.log("Json result is " + resultAPIcallJSONString);
+                return command.execute(resultAPIcallJSONString);
             } catch (Exception e) {
                 e.printStackTrace();
                 return null;
@@ -143,14 +131,14 @@ public class RealMoodleManager implements MoodleManager {
     /**
      * Interface for the command pattern. For each API call response a new Command is implemented
      */
-    private interface MoodleApiCommand {
+    private interface MoodleAPICommand {
         public Object execute(String jsonString);
     }
 
     /**
      * Command that handles the creation of a new MoodelToken object
      */
-    public final class RequestUserTokenMoodleAPICommand implements MoodleApiCommand {
+    public final class RequestUserTokenMoodleAPICommand implements MoodleAPICommand {
         @Override
         public Object execute(String jsonString) {
 
@@ -159,7 +147,7 @@ public class RealMoodleManager implements MoodleManager {
             if (moodleToken.isValid()){
                 setMoodleUserToken(moodleToken);
                 Utils.log("UserToken is valid");
-                requestUserData();
+                requestUserData(currentContext);
                //TODO: add method to save token for future connections
             }else {
                setMoodleUserToken(null);
@@ -171,7 +159,7 @@ public class RealMoodleManager implements MoodleManager {
     /**
      * Command that handles the creation of a new MoodleUser object
      */
-    public final class RequestUserInfoMoodleAPICommand implements MoodleApiCommand {
+    public final class RequestUserInfoMoodleAPICommand implements MoodleAPICommand {
         @Override
         public Object execute(String jsonString) {
 
@@ -180,6 +168,7 @@ public class RealMoodleManager implements MoodleManager {
             if (moodleUser.isValid()){
                 setMoodleUserInfo(moodleUser);
                 Utils.log("UserInfo is valid");
+                requestUserCourseList(currentContext);
                 //TODO add method to cache user info
             }else {
                 setMoodleUserInfo(null);
@@ -189,6 +178,89 @@ public class RealMoodleManager implements MoodleManager {
 
         }
     }
+    /**
+     * Command that handles the creation of a new MoodleCoursesList object
+     */
+    public final class RequestUserCoursesMoodleAPICommand implements MoodleAPICommand {
+        @Override
+        public Object execute(String jsonString) {
 
+            MoodleUserCourseList moodleUserCourseList = new MoodleUserCourseList(jsonString);
+            if (moodleUserCourseList.isValid()){
+                setMoodleUserCourseList(moodleUserCourseList);
+                Utils.log("UserCoursesList is valid");
+                MoodleUserCourse testCourse = (MoodleUserCourse) moodleUserCourseList.getSections().get(0);
+                requestUserCourseInfo(currentContext, testCourse.getId().intValue());
+                //TODO add method to cache user courses
+            } else {
+                setMoodleUserCourseList(null);
+            }
+
+            return moodleUserCourseList;
+
+        }
+    }
+    /**
+     * Command that handles the creation of a new MoodleCourse object
+     */
+    public final class RequestUserCourseInfoMoodleAPICommand implements MoodleAPICommand {
+        @Override
+        public Object execute(String jsonString) {
+
+            MoodleCourse moodleCourse = new MoodleCourse(jsonString);
+            if (moodleCourse.isValid()){
+                setMoodleUserCourseInfo(moodleCourse);
+                Utils.log("UserCourseInfo is valid");
+                //TODO add method to cache user courses
+            }else {
+                setMoodleUserCourseInfo(null);
+            }
+
+            return moodleCourse;
+
+        }
+    }
+    /**
+     * Getters and Setters Methods
+     **/
+    public Context getCurrentContext() {
+        return currentContext;
+    }
+
+    public void setCurrentContext(Context currentContext) {
+        this.currentContext = currentContext;
+    }
+
+    public MoodleToken getMoodleUserToken() {
+        return moodleUserToken;
+    }
+
+    public void setMoodleUserToken(MoodleToken moodleUserToken) {
+        this.moodleUserToken = moodleUserToken;
+    }
+
+    public MoodleUser getMoodleUserInfo() {
+        return moodleUserInfo;
+    }
+
+    public void setMoodleUserInfo(MoodleUser moodleUserInfo) {
+        this.moodleUserInfo = moodleUserInfo;
+    }
+
+    public MoodleUserCourseList getMoodleUserCourseList() {
+        return moodleUserCourseList;
+    }
+
+    public void setMoodleUserCourseList(MoodleUserCourseList moodleUserCourseList) {
+        this.moodleUserCourseList = moodleUserCourseList;
+    }
+
+    public MoodleCourse getMoodleUserCourseInfo() {
+        return moodleUserCourseInfo;
+    }
+
+    public void setMoodleUserCourseInfo(MoodleCourse moodleUserCourseInfo) {
+        this.moodleUserCourseInfo = moodleUserCourseInfo;
+    }
 
 }

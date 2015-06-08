@@ -10,17 +10,17 @@ import java.util.List;
 
 /**
  * Created by enricogiga on 06/06/2015.
- * List holding MoodleUserCourses
+ * List holding MoodleUserCourse
  * Needed to address directly the result of the call to moodle's api function
  * Uses the core_enrol_get_users_courses function in the Moodle web service
  *
  */
-public class MoodleUserCoursesList extends  MoodleObject{
+public class MoodleUserCourseList extends  MoodleObject{
 
     /**
      * The list of User Courses
      */
-    private List<MoodleUserCourses> userCourses = new ArrayList<MoodleUserCourses>();
+    private List<MoodleUserCourse> userCourses = new ArrayList<MoodleUserCourse>();
 
 
     /**
@@ -30,7 +30,7 @@ public class MoodleUserCoursesList extends  MoodleObject{
      *
      * @param jsonstring JSON in string format
      */
-    public MoodleUserCoursesList(String jsonstring)  {
+    public MoodleUserCourseList(String jsonstring)  {
         try{
             Object json = new JSONTokener(jsonstring).nextValue();
             if (json instanceof  JSONObject){
@@ -44,15 +44,15 @@ public class MoodleUserCoursesList extends  MoodleObject{
             } else {
                 //good
                 JSONArray jsonArray = new JSONArray(jsonstring);
-                this.userCourses=null;
+                //this.userCourses=null;
 
 
                 if (jsonArray != null){
-                    MoodleUserCourses userCourse;
+                    MoodleUserCourse userCourse;
                     try{
                         for (int i=0; i < jsonArray.length(); i++){
                             JSONObject c = jsonArray.getJSONObject(i);
-                            userCourse = new MoodleUserCourses(c);
+                            userCourse = new MoodleUserCourse(c);
 
                             userCourses.add(userCourse);
                         }

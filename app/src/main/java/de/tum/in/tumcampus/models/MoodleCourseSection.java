@@ -8,6 +8,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MoodleCourseSection extends  MoodleObject{
@@ -18,7 +19,7 @@ public class MoodleCourseSection extends  MoodleObject{
     /**
      * List of MoodleCourseModules
      */
-    private List modules;
+    private List<MoodleCourseModule> modules = new ArrayList<MoodleCourseModule>();
     /**
      * section's name
      */
@@ -44,7 +45,7 @@ public class MoodleCourseSection extends  MoodleObject{
      */
     public MoodleCourseSection(JSONObject jsonObject){
         this.id=null;
-        this.modules=null;
+        this.modules=new ArrayList<MoodleCourseModule>();
         this.name=null;
         this.summary=null;
         this.visible=null;
@@ -56,6 +57,7 @@ public class MoodleCourseSection extends  MoodleObject{
                 MoodleCourseModule module;
                 try{
                     JSONArray jsonArray = jsonObject.getJSONArray("modules");
+
                     for (int i=0; i < jsonArray.length(); i++){
                         JSONObject c = jsonArray.getJSONObject(i);
                         module = new MoodleCourseModule(c);

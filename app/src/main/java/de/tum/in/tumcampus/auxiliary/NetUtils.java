@@ -131,6 +131,10 @@ public class NetUtils {
         return null;
     }
 
+    public static String downloadStringHttp(String url, Context context) throws Exception {
+        return new NetUtils(context).downloadStringHttp(url);
+    }
+
     public String downloadStringAndCache(String url, int validity, boolean force) {
         try {
             String content;

@@ -6,6 +6,7 @@ import org.json.JSONObject;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -65,7 +66,7 @@ public class MoodleCourseModule extends MoodleObject{
      * might always want to check if null before accessing it
      * by now i noticed Resource, Book, Folder always have it
      */
-    private List contents;
+    private List <MoodleCourseContent> contents = new ArrayList<MoodleCourseContent>();
 
 
 
@@ -141,7 +142,7 @@ public class MoodleCourseModule extends MoodleObject{
 
         } else {
             this.exception = "EmptyJSONObjectException";
-            this.message = "invalid json object passed to MoodleUserCourses model";
+            this.message = "invalid json object passed to MoodleUserCourse model";
             this.errorCode = "emptyjsonobject";
             this.isValid=false;
 

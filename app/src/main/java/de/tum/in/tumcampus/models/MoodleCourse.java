@@ -5,6 +5,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -12,7 +13,7 @@ import java.util.List;
  * A whole moodle course.
  * It is just composed of a list of sections
  * Uses the core_course_get_contents function in the Moodle web service
- * this course is retrieved by sending the course id retrieved from the MoodleUserCourses
+ * this course is retrieved by sending the course id retrieved from the MoodleUserCourse
  */
 public class MoodleCourse extends  MoodleObject{
 
@@ -44,7 +45,7 @@ public class MoodleCourse extends  MoodleObject{
             } else {
                 //good
                 JSONArray jsonArray = new JSONArray(jsonstring);
-                this.sections=null;
+                this.sections=new ArrayList<MoodleCourseSection>();
 
 
                 if (jsonArray != null){
