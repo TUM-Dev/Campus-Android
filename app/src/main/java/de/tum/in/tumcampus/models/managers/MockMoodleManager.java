@@ -2,10 +2,14 @@ package de.tum.in.tumcampus.models.managers;
 
 import android.content.Context;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.MoodleCourse;
+import de.tum.in.tumcampus.models.MoodleEvent;
 import de.tum.in.tumcampus.models.MoodleToken;
 import de.tum.in.tumcampus.models.MoodleUser;
 import de.tum.in.tumcampus.models.MoodleUserCourseList;
@@ -19,13 +23,14 @@ public class MockMoodleManager extends MoodleManager{
     private String userName;
     private String password;
 
-    private final Map<String, String> USER_COURSES = new HashMap<String, String>(){{
+
+    public Map<?,?> getCoursesList(){
+         Map<String, String> USER_COURSES = new HashMap<String, String>(){{
             put("Deutsch als Fremdsprache B1.2",""); put("Praktikum - Betriebssysteme - Google Android (IN0012, IN2106, IN4004)","Welcome to the Android Practical Summer Term Course  (SS15) !");
             put("Basic  Moodle and Mountaineering", "This course is for senior students planning an ascent of Mont Blanc in July. It is also designed to take Moodle newbies through a number of activities showing off the best of Moodle.");
             put("Psychology in Cinema ","In this course we study three films: Spider, A Beautiful Mind, and Fight Club. The main focus of the course will be the ways in which psychosis is represented in the films in terms of macro, plot, narrative structure and micro etc. We consider the wider cultural meaning and implication of films dealing with psychology" );
-    }};
+        }};
 
-    public Map<?,?> getCoursesList(){
         return USER_COURSES;
     }
 
@@ -35,6 +40,8 @@ public class MockMoodleManager extends MoodleManager{
          */
         return null;
     }
+
+
 
     @Override
     public MoodleToken getMoodleUserToken() {
@@ -82,6 +89,20 @@ public class MockMoodleManager extends MoodleManager{
     public void setMoodleUserCourseInfo(MoodleCourse moodleUserCourseInfo) {
         //TODO create stub data and variables needed
 
+    }
+
+    @Override
+    public List<MoodleEvent> getUserEvents() {
+        List<MoodleEvent> mockEvents = new ArrayList<MoodleEvent>();
+        mockEvents.add(new MoodleEvent("Planning Meeting for Field Trip","Our group is meeting in Room 78 to " +
+                "decide our itinerary for the Field Trip",1437575700,3600));
+
+        mockEvents.add(new MoodleEvent("Midterm examp Deautch als fremd Sprache B1.2","Every one should be available in the class. "
+                ,1437665700,1800));
+
+        mockEvents.add(new MoodleEvent("Praktikum introduction Cloud databases","Attendence is mandatory",
+                1435330800,2000));
+        return mockEvents;
     }
 
     @Override

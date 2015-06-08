@@ -3,9 +3,13 @@ package de.tum.in.tumcampus.models.managers;
 import android.content.Context;
 import android.os.AsyncTask;
 
+import java.util.List;
+import java.util.Map;
+
 import de.tum.in.tumcampus.auxiliary.NetUtils;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.MoodleCourse;
+import de.tum.in.tumcampus.models.MoodleEvent;
 import de.tum.in.tumcampus.models.MoodleToken;
 import de.tum.in.tumcampus.models.MoodleUser;
 import de.tum.in.tumcampus.models.MoodleUserCourseList;
@@ -261,6 +265,18 @@ public class RealMoodleManager extends MoodleManager {
 
     public void setMoodleUserCourseInfo(MoodleCourse moodleUserCourseInfo) {
         this.moodleUserCourseInfo = moodleUserCourseInfo;
+    }
+
+    @Override
+    public List<MoodleEvent> getUserEvents() {
+        //TODO implement this method
+        return null;
+    }
+
+    @Override
+    public Map<?, ?> getCoursesList() {
+        //TODO implement this method
+        return null;
     }
 
 }

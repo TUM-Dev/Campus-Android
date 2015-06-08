@@ -2,7 +2,11 @@ package de.tum.in.tumcampus.models.managers;
 
 import android.content.Context;
 
+import java.util.List;
+import java.util.Map;
+
 import de.tum.in.tumcampus.models.MoodleCourse;
+import de.tum.in.tumcampus.models.MoodleEvent;
 import de.tum.in.tumcampus.models.MoodleToken;
 import de.tum.in.tumcampus.models.MoodleUser;
 import de.tum.in.tumcampus.models.MoodleUserCourseList;
@@ -27,6 +31,8 @@ public abstract class MoodleManager {
     public abstract void setMoodleUserCourseList(MoodleUserCourseList moodleUserCourseList);
     public abstract MoodleCourse getMoodleUserCourseInfo();
     public abstract void setMoodleUserCourseInfo(MoodleCourse moodleUserCourseInfo);
+    public abstract List<MoodleEvent> getUserEvents();
+    public abstract Map<?,?> getCoursesList();
 
     /**
      * Moodle API Calls
