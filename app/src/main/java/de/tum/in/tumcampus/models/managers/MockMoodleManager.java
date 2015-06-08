@@ -5,11 +5,16 @@ import android.content.Context;
 import java.util.HashMap;
 import java.util.Map;
 
+import de.tum.in.tumcampus.models.MoodleCourse;
+import de.tum.in.tumcampus.models.MoodleToken;
+import de.tum.in.tumcampus.models.MoodleUser;
+import de.tum.in.tumcampus.models.MoodleUserCourseList;
+
 /**
  * Created by a2k on 6/7/2015.
  * This class is a stub for RealMoodleManager
  */
-public class MockMoodleManager implements MoodleManager{
+public class MockMoodleManager extends MoodleManager{
 
     private String userName;
     private String password;
@@ -32,6 +37,54 @@ public class MockMoodleManager implements MoodleManager{
     }
 
     @Override
+    public MoodleToken getMoodleUserToken() {
+        //TODO create stub data and variables needed
+        return null;
+    }
+
+    @Override
+    public void setMoodleUserToken(MoodleToken moodleUserToken) {
+        //TODO create stub data and variables needed
+
+    }
+
+    @Override
+    public MoodleUser getMoodleUserInfo() {
+        //TODO create stub data and variables needed
+        return null;
+    }
+
+    @Override
+    public void setMoodleUserInfo(MoodleUser moodleUserInfo) {
+
+    }
+
+    @Override
+    public MoodleUserCourseList getMoodleUserCourseList() {
+        //TODO create stub data and variables needed
+        return null;
+    }
+
+    @Override
+    public void setMoodleUserCourseList(MoodleUserCourseList moodleUserCourseList) {
+        //TODO create stub data and variables needed
+
+    }
+
+    @Override
+    public MoodleCourse getMoodleUserCourseInfo() {
+        //TODO create stub data and variables needed
+
+        return null;
+    }
+
+    @Override
+    public void setMoodleUserCourseInfo(MoodleCourse moodleUserCourseInfo) {
+        //TODO create stub data and variables needed
+
+    }
+
+    @Override
     public void requestUserToken(Context currentContext, String username, String password) {
         //TODO create stub data and variables needed
     }
@@ -44,5 +97,11 @@ public class MockMoodleManager implements MoodleManager{
     @Override
     public void requestUserCourseList(Context currentContext) {
         //TODO create stub data and variables needed
+    }
+
+    @Override
+    public void requestUserCourseInfo(Context currentContext, int courseId) {
+        //TODO create stub data and variables needed
+
     }
 }

@@ -9,7 +9,7 @@ import de.tum.in.tumcampus.models.MoodleCourse;
 import de.tum.in.tumcampus.models.MoodleToken;
 import de.tum.in.tumcampus.models.MoodleUser;
 import de.tum.in.tumcampus.models.MoodleUserCourseList;
-import de.tum.in.tumcampus.models.MoodleUserCourses;
+import de.tum.in.tumcampus.models.MoodleUserCourse;
 
 /**
  * Handles all calls done with the MoodleAPIs
@@ -23,14 +23,10 @@ import de.tum.in.tumcampus.models.MoodleUserCourses;
  *
  *            private static final String SERVICE_BASE_URL = "http://school.demo.moodle.net//login/token.php?";
  */
-public class RealMoodleManager implements MoodleManager {
+public class RealMoodleManager extends MoodleManager {
 
     final String SERVICE_BASE_URL = "http://school.demo.moodle.net";
     Context currentContext;
-    private MoodleToken moodleUserToken;
-    private MoodleUser moodleUserInfo;
-    private MoodleUserCourseList moodleUserCourseList;
-    private MoodleCourse moodleUserCourseInfo;
 
 
     /**
@@ -49,9 +45,9 @@ public class RealMoodleManager implements MoodleManager {
      * This method starts the API call to Moodle's server that will get the user's info data
      * */
     public void requestUserData(Context currentContext) {
-        if (moodleUserToken != null && moodleUserToken.isValid()) {
+        if (this.getMoodleUserToken() != null && this.getMoodleUserToken().isValid()) {
             Utils.log("requesting user data...");
-            String service = "/webservice/rest/server.php?wstoken=" + moodleUserToken.getToken() + "&wsfunction=core_webservice_get_site_info&moodlewsrestformat=json";
+            String service = "/webservice/rest/server.php?wstoken=" + this.getMoodleUserToken().getToken() + "&wsfunction=core_webservice_get_site_info&moodlewsrestformat=json";
             GenericMoodleRequestAsyncTask userDataTask = new GenericMoodleRequestAsyncTask(new RequestUserInfoMoodleAPICommand() , currentContext, service);
             userDataTask.execute();
         }
@@ -61,9 +57,9 @@ public class RealMoodleManager implements MoodleManager {
      * This method starts the API call to Moodle's server that will get the user's course list
      * */
     public void requestUserCourseList(Context currentContext) {
-        if (moodleUserToken != null && moodleUserToken.isValid()) {
+        if (this.getMoodleUserToken() != null && this.getMoodleUserToken().isValid()) {
             Utils.log("requesting user course list...");
-            String service = "/webservice/rest/server.php?wstoken=" + moodleUserToken.getToken()+ "&wsfunction=core_enrol_get_users_courses&moodlewsrestformat=json&userid=" + getMoodleUserInfo().getUserid();
+            String service = "/webservice/rest/server.php?wstoken=" + this.getMoodleUserToken().getToken()+ "&wsfunction=core_enrol_get_users_courses&moodlewsrestformat=json&userid=" + getMoodleUserInfo().getUserid();
 
             GenericMoodleRequestAsyncTask userDataTask = new GenericMoodleRequestAsyncTask(new RequestUserCoursesMoodleAPICommand() , currentContext, service);
             userDataTask.execute();
@@ -75,9 +71,9 @@ public class RealMoodleManager implements MoodleManager {
      * This method starts the API call to Moodle's server that will get the user's course info
      * */
     public void requestUserCourseInfo(Context currentContext, int courseId) {
-        if (moodleUserToken != null && moodleUserToken.isValid()) {
+        if (this.getMoodleUserToken() != null && this.getMoodleUserToken().isValid()) {
             Utils.log("requesting user course info...");
-            String service = "/webservice/rest/server.php?wstoken=" + moodleUserToken.getToken()  + "&wsfunction=core_course_get_contents&moodlewsrestformat=json&courseid=" + courseId;
+            String service = "/webservice/rest/server.php?wstoken=" + this.getMoodleUserToken().getToken()  + "&wsfunction=core_course_get_contents&moodlewsrestformat=json&courseid=" + courseId;
 
             GenericMoodleRequestAsyncTask userDataTask = new GenericMoodleRequestAsyncTask(new RequestUserCourseInfoMoodleAPICommand() , currentContext, service);
             userDataTask.execute();
@@ -193,10 +189,10 @@ public class RealMoodleManager implements MoodleManager {
             if (moodleUserCourseList.isValid()){
                 setMoodleUserCourseList(moodleUserCourseList);
                 Utils.log("UserCoursesList is valid");
-                MoodleUserCourses testCourse = (MoodleUserCourses) moodleUserCourseList.getSections().get(0);
+                MoodleUserCourse testCourse = (MoodleUserCourse) moodleUserCourseList.getSections().get(0);
                 requestUserCourseInfo(currentContext, testCourse.getId().intValue());
                 //TODO add method to cache user courses
-            }else {
+            } else {
                 setMoodleUserCourseList(null);
             }
 
@@ -215,27 +211,18 @@ public class RealMoodleManager implements MoodleManager {
             if (moodleCourse.isValid()){
                 setMoodleUserCourseInfo(moodleCourse);
                 Utils.log("UserCourseInfo is valid");
-
                 //TODO add method to cache user courses
             }else {
                 setMoodleUserCourseInfo(null);
             }
 
-            return moodleUserCourseList;
+            return moodleCourse;
 
         }
     }
     /**
      * Getters and Setters Methods
      **/
-    public MoodleCourse getMoodleUserCourseInfo() {
-        return moodleUserCourseInfo;
-    }
-
-    public void setMoodleUserCourseInfo(MoodleCourse moodleUserCourseInfo) {
-        this.moodleUserCourseInfo = moodleUserCourseInfo;
-    }
-
     public Context getCurrentContext() {
         return currentContext;
     }
@@ -268,5 +255,12 @@ public class RealMoodleManager implements MoodleManager {
         this.moodleUserCourseList = moodleUserCourseList;
     }
 
+    public MoodleCourse getMoodleUserCourseInfo() {
+        return moodleUserCourseInfo;
+    }
+
+    public void setMoodleUserCourseInfo(MoodleCourse moodleUserCourseInfo) {
+        this.moodleUserCourseInfo = moodleUserCourseInfo;
+    }
 
 }

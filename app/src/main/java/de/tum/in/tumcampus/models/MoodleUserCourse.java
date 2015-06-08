@@ -11,7 +11,7 @@ import org.json.JSONObject;
  * the complete course is retrieved by sending the course id retrieved from this call
 
  */
-public class MoodleUserCourses extends  MoodleObject{
+public class MoodleUserCourse extends  MoodleObject{
 
     /**
      * Number of course partecipants
@@ -60,7 +60,7 @@ public class MoodleUserCourses extends  MoodleObject{
      * Constructor to use if JSON is passed as a string
      * @param jsonString JSON in string format
      */
-    public MoodleUserCourses(String jsonString) {
+    public MoodleUserCourse(String jsonString) {
         this(toJSONObject(jsonString));
 
     }
@@ -68,7 +68,7 @@ public class MoodleUserCourses extends  MoodleObject{
      * Constructor by parsing the JSONObject
      * @param jsonObject the JSONObject
      */
-    public MoodleUserCourses(JSONObject jsonObject){
+    public MoodleUserCourse(JSONObject jsonObject){
         this.enrolledusercount=null;
         this.format=null;
         this.fullname=null;
@@ -96,7 +96,7 @@ public class MoodleUserCourses extends  MoodleObject{
             this.visible = jsonObject.optDouble("visible");
         } else {
             this.exception = "EmptyJSONObjectException";
-            this.message = "invalid json object passed to MoodleUserCourses model";
+            this.message = "invalid json object passed to MoodleUserCourse model";
             this.errorCode = "emptyjsonobject";
             this.isValid=false;
         }

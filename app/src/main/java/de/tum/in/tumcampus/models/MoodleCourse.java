@@ -13,7 +13,7 @@ import java.util.List;
  * A whole moodle course.
  * It is just composed of a list of sections
  * Uses the core_course_get_contents function in the Moodle web service
- * this course is retrieved by sending the course id retrieved from the MoodleUserCourses
+ * this course is retrieved by sending the course id retrieved from the MoodleUserCourse
  */
 public class MoodleCourse extends  MoodleObject{
 

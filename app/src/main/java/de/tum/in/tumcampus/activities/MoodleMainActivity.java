@@ -59,7 +59,9 @@ public class MoodleMainActivity extends ActivityForDownloadingExternal implement
         Utils.log(listDataHeaders.toString());
         MoodleManager realManager = new RealMoodleManager();
         //moodleManager.requestUserToken("student","moodle",this);
+        //TODO need login
         realManager.requestUserToken(this, "student", "moodle");
+
 
     }
 

@@ -142,7 +142,7 @@ public class MoodleCourseModule extends MoodleObject{
 
         } else {
             this.exception = "EmptyJSONObjectException";
-            this.message = "invalid json object passed to MoodleUserCourses model";
+            this.message = "invalid json object passed to MoodleUserCourse model";
             this.errorCode = "emptyjsonobject";
             this.isValid=false;
 
