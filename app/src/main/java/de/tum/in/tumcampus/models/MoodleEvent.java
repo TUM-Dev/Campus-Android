@@ -8,6 +8,7 @@ import de.tum.in.tumcampus.auxiliary.DateUtils;
 
 /**
  * Created by a2k on 6/8/2015.
+ * This class is a representation of an Event for a user in Moodle
  */
 public class MoodleEvent {
     private String name;
@@ -22,8 +23,8 @@ public class MoodleEvent {
         setDuration(duration);
     }
 
-    public void setName(String name){   }
-    public void setDescription(String desc){   }
+    public void setName(String name){  this.name = name; }
+    public void setDescription(String desc){  this.description = desc; }
     public void setDate(long date){  this.date = DateUtils.epochToDate(date); }
     public void setDuration(int duration){ this.duration = duration;}
 
@@ -39,5 +40,9 @@ public class MoodleEvent {
 
     public int getDuration() {
         return duration;
+    }
+
+    public String getDateString(){
+        return date.getTime().toString();
     }
 }
