@@ -2,20 +2,19 @@ package de.tum.in.tumcampus.cards;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.view.View;
 import android.view.ViewGroup;
 
 import de.tum.in.tumcampus.R;
-import de.tum.in.tumcampus.activities.TUKinoActivity;
+import de.tum.in.tumcampus.activities.KinoActivity;
 import de.tum.in.tumcampus.models.managers.CardManager;
 
 /**
  * Card for the TU Kino details page
  */
-public class TUKinoCard extends Card {
+public class KinoCard extends Card {
 
-    public TUKinoCard(Context context){
+    public KinoCard(Context context){
         super(context, "card_kino");
     }
 
@@ -26,13 +25,13 @@ public class TUKinoCard extends Card {
 
     @Override
     public Intent getIntent(){
-        Intent i = new Intent(mContext, TUKinoActivity.class);
+        Intent i = new Intent(mContext, KinoActivity.class);
         return i;
     }
 
     @Override
     public View getCardView(Context context, ViewGroup parent) {
         super.getCardView(context, parent);
-        return mInflater.inflate(R.layout.card_tu_kino, parent, false);
+        return mInflater.inflate(R.layout.card_kino, parent, false);
     }
 }

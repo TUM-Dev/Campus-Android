@@ -14,7 +14,6 @@ import de.tum.in.tumcampus.cards.FirstUseCard1;
 import de.tum.in.tumcampus.cards.FirstUseCard2;
 import de.tum.in.tumcampus.cards.NoInternetCard;
 import de.tum.in.tumcampus.cards.RestoreCard;
-import de.tum.in.tumcampus.cards.TUKinoCard;
 
 /**
  * Card manager, manages inserting, dismissing, updating and displaying of cards
@@ -119,7 +118,7 @@ public class CardManager {
         managers.add(new CafeteriaManager(context));
         managers.add(new TransportManager());
         managers.add(new NewsManager(context));
-        managers.add(new TUKinoManager());
+        managers.add(new KinoManager(context));
 
         for (Card.ProvidesCard manager : managers) {
             try {

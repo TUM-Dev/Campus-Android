@@ -140,7 +140,7 @@
                 android:value="de.tum.in.tumcampus.activities.MainActivity" />
         </activity>
         <activity
-            android:name="de.tum.in.tumcampus.activities.TUKinoActivity"
+            android:name=".activities.KinoActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/kino"
             android:launchMode="singleTop"
