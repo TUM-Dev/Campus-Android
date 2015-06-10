@@ -328,10 +328,13 @@ public class MoodleEvent extends MoodleObject {
          * @param eventDateString String created by an event object
          * @return an int, representing the amount of duration in seconds
          */
-        String [] values = eventDateString.split("\n");
-        String duration = values[1];
-        duration = duration.replaceAll("[^0-9]","");
-        return Integer.valueOf(duration) * 60;
+        GregorianCalendar date = getDate(eventDateString);
+        GregorianCalendar today = new GregorianCalendar();
+        int duration = (int) (date.getTime().getTime() - today.getTime().getTime());
+        //String [] values = eventDateString.split("\n");
+        //String duration = values[1];
+        //duration = duration.replaceAll("[^0-9]","");
+        return duration;//Integer.valueOf(duration) * 60;
     }
 
     public static GregorianCalendar getDate(String eventDateString){
