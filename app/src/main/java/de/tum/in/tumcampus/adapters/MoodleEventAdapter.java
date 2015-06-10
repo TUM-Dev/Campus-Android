@@ -5,10 +5,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.GregorianCalendar;
-import java.util.List;
 
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.auxiliary.DateUtils;
@@ -22,9 +23,13 @@ import de.tum.in.tumcampus.models.MoodleEvent;
  */
 public class MoodleEventAdapter extends RecyclerView.Adapter<MoodleEventAdapter.MoodleEventViewHolder> {
 
-    private List<MoodleEvent> events;
+    private ArrayList<MoodleEvent> events;
+    private AdapterView.OnItemClickListener listener;
 
-    public MoodleEventAdapter(List<MoodleEvent> events){ this.events = events;}
+    public MoodleEventAdapter(ArrayList<MoodleEvent> events, AdapterView.OnItemClickListener listener){
+        this.events = events;
+        this.listener = listener;
+    }
 
 
     @Override
@@ -35,13 +40,18 @@ public class MoodleEventAdapter extends RecyclerView.Adapter<MoodleEventAdapter.
     }
 
     @Override
-    public void onBindViewHolder(MoodleEventAdapter.MoodleEventViewHolder holder, int position) {
-
+    public void onBindViewHolder(MoodleEventAdapter.MoodleEventViewHolder holder, final int position) {
         MoodleEvent e = events.get(position);
         holder.title.setText(e.getName());
         holder.description.setText(e.getDescription());
         GregorianCalendar gc = DateUtils.epochToDate(e.getTimestart().longValue());
         holder.date.setText(gc.getTime().toString());
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.onItemClick(null, v, position, v.getId());
+            }
+        });
     }
 
     @Override

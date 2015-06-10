@@ -1,11 +1,17 @@
 package de.tum.in.tumcampus.models;
 
+
 import android.text.Html;
 
 import org.json.JSONObject;
 
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
+
+import de.tum.in.tumcampus.auxiliary.DateUtils;
+import de.tum.in.tumcampus.auxiliary.Utils;
 
 /**
  * Created by carlodidomenico on 10/06/15.
@@ -313,6 +319,39 @@ public class MoodleEvent extends MoodleObject {
      */
     public Integer getVisible() {
         return visible;
+    }
+
+    public static int getDuration(String eventDateString){
+        /**
+         * gets a DateString created by event class and returns
+         * an integer value for seconds of duration inside the String
+         * @param eventDateString String created by an event object
+         * @return an int, representing the amount of duration in seconds
+         */
+        String [] values = eventDateString.split("\n");
+        String duration = values[1];
+        duration = duration.replaceAll("[^0-9]","");
+        return Integer.valueOf(duration) * 60;
+    }
+
+    public static GregorianCalendar getDate(String eventDateString){
+        /**
+         * gets a DateString created by event class and returns
+         * an GregorianCalendar for date inside the String
+         * @param eventDateString String created by an event object
+         * @return GregorianCalendar
+         */
+        String [] values = eventDateString.split("\n");
+        String dateString = values[0];
+        Date date = DateUtils.parseSimpleDateFormat(dateString);
+        if (date!=null) {
+            GregorianCalendar g = new GregorianCalendar();
+            g.setTime(date);
+            return g;
+        }else {
+            Utils.log("#error: failed to convert to GregorianCalendar: "  + eventDateString);
+            return null;
+        }
     }
 
     /**
