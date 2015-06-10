@@ -3,17 +3,19 @@ package de.tum.in.tumcampus.models.managers;
 import android.content.Context;
 import android.os.AsyncTask;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import de.tum.in.tumcampus.activities.MoodleMainActivity;
 import de.tum.in.tumcampus.auxiliary.NetUtils;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.MoodleCourse;
 import de.tum.in.tumcampus.models.MoodleEvent;
 import de.tum.in.tumcampus.models.MoodleToken;
 import de.tum.in.tumcampus.models.MoodleUser;
-import de.tum.in.tumcampus.models.MoodleUserCourseList;
 import de.tum.in.tumcampus.models.MoodleUserCourse;
+import de.tum.in.tumcampus.models.MoodleUserCourseList;
 
 /**
  * Handles all calls done with the MoodleAPIs
@@ -117,7 +119,8 @@ public class RealMoodleManager extends MoodleManager {
 
                 resultAPIcallJSONString = NetUtils.downloadStringHttp(completeURL, context);
                 Utils.log("Json result is " + resultAPIcallJSONString);
-                return command.execute(resultAPIcallJSONString);
+                command.execute(resultAPIcallJSONString);
+                return command;
             } catch (Exception e) {
                 e.printStackTrace();
                 return null;
@@ -128,7 +131,14 @@ public class RealMoodleManager extends MoodleManager {
         @Override
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
-
+            Utils.log("on PostExecute of " + o.getClass().getName());
+            if (o instanceof RequestUserCoursesMoodleAPICommand){
+                MoodleMainActivity moodleMainActivity = (MoodleMainActivity) currentContext;
+                moodleMainActivity.refreshListView();
+                Utils.log("REFRESH");
+            }
+            else
+                Utils.log("NOT REFRESH class is " + o.getClass());
         }
     }
 
@@ -193,8 +203,6 @@ public class RealMoodleManager extends MoodleManager {
             if (moodleUserCourseList.isValid()){
                 setMoodleUserCourseList(moodleUserCourseList);
                 Utils.log("UserCoursesList is valid");
-                MoodleUserCourse testCourse = (MoodleUserCourse) moodleUserCourseList.getSections().get(0);
-                requestUserCourseInfo(currentContext, testCourse.getId().intValue());
                 //TODO add method to cache user courses
             } else {
                 setMoodleUserCourseList(null);
@@ -227,6 +235,26 @@ public class RealMoodleManager extends MoodleManager {
     /**
      * Getters and Setters Methods
      **/
+    @Override
+    public List<MoodleEvent> getUserEvents() {
+        //TODO implement this method
+        return null;
+    }
+
+    @Override
+    public Map<?, ?> getCoursesList() {
+        if (getMoodleUserCourseList() == null) return null;
+        Map<String,String> userCoursesMap = new HashMap<String,String>();
+
+        for (Object courseObj : getMoodleUserCourseList().getSections()) {
+            MoodleUserCourse course = (MoodleUserCourse) courseObj;
+
+            userCoursesMap.put(course.getFullname(),course.getSummary());
+        }
+
+        return userCoursesMap;
+    }
+
     public Context getCurrentContext() {
         return currentContext;
     }
@@ -267,16 +295,6 @@ public class RealMoodleManager extends MoodleManager {
         this.moodleUserCourseInfo = moodleUserCourseInfo;
     }
 
-    @Override
-    public List<MoodleEvent> getUserEvents() {
-        //TODO implement this method
-        return null;
-    }
 
-    @Override
-    public Map<?, ?> getCoursesList() {
-        //TODO implement this method
-        return null;
-    }
 
 }
