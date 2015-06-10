@@ -44,7 +44,7 @@ public class MoodleUserCourseList extends  MoodleObject{
             } else {
                 //good
                 JSONArray jsonArray = new JSONArray(jsonstring);
-                //this.userCourses=null;
+
 
 
                 if (jsonArray != null){

@@ -7,9 +7,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import de.tum.in.tumcampus.R;
+import de.tum.in.tumcampus.auxiliary.DateUtils;
 import de.tum.in.tumcampus.models.MoodleEvent;
 
 /**
@@ -34,11 +36,12 @@ public class MoodleEventAdapter extends RecyclerView.Adapter<MoodleEventAdapter.
 
     @Override
     public void onBindViewHolder(MoodleEventAdapter.MoodleEventViewHolder holder, int position) {
+
         MoodleEvent e = events.get(position);
         holder.title.setText(e.getName());
         holder.description.setText(e.getDescription());
-        holder.date.setText(e.getDateString());
-
+        GregorianCalendar gc = DateUtils.epochToDate(e.getTimestart().longValue());
+        holder.date.setText(gc.getTime().toString());
     }
 
     @Override

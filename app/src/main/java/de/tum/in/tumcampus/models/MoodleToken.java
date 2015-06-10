@@ -1,9 +1,6 @@
 package de.tum.in.tumcampus.models;
 
-import org.json.JSONException;
 import org.json.JSONObject;
-
-import de.tum.in.tumcampus.auxiliary.Utils;
 
 /**
  * Created by enricogiga on 05/06/2015.
@@ -53,8 +50,11 @@ public class MoodleToken extends MoodleObject {
      */
     public MoodleToken(String jsonString) {
         this(toJSONObject(jsonString));
-
     }
+    public MoodleToken(){
+        this.token = null;
+    }
+
 
 
 

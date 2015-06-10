@@ -3,15 +3,15 @@ package de.tum.in.tumcampus.models.managers;
 import android.content.Context;
 import android.os.AsyncTask;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import de.tum.in.tumcampus.activities.MoodleMainActivity;
 import de.tum.in.tumcampus.auxiliary.NetUtils;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.MoodleCourse;
 import de.tum.in.tumcampus.models.MoodleEvent;
+import de.tum.in.tumcampus.models.MoodleEventsList;
 import de.tum.in.tumcampus.models.MoodleToken;
 import de.tum.in.tumcampus.models.MoodleUser;
 import de.tum.in.tumcampus.models.MoodleUserCourse;
@@ -33,6 +33,10 @@ public class RealMoodleManager extends MoodleManager {
 
     final String SERVICE_BASE_URL = "http://school.demo.moodle.net";
     Context currentContext;
+
+    public RealMoodleManager(MoodleUpdateListViewDelegate delegate) {
+        super(delegate);
+    }
 
 
     /**
@@ -87,6 +91,20 @@ public class RealMoodleManager extends MoodleManager {
         else Utils.log("error requesting user course info...");
 
     }
+    /**
+     * This method starts the API call to Moodle's server that will get the user's course info
+     * */
+    public void requestUserEvents(Context currentContext) {
+        if (this.getMoodleUserToken() != null && this.getMoodleUserToken().isValid()) {
+            Utils.log("requesting user's events list");
+            String service = "/webservice/rest/server.php?wstoken=" + getMoodleUserToken().getToken() + "&wsfunction=Core_calendar_get_calendar_events&moodlewsrestformat=json";
+
+            GenericMoodleRequestAsyncTask userDataTask = new GenericMoodleRequestAsyncTask(new RequestUserEventsAPICommand(), currentContext, service);
+            userDataTask.execute();
+        }
+        else Utils.log("error requesting user's event list...");
+
+    }
 
 
     /**
@@ -118,7 +136,6 @@ public class RealMoodleManager extends MoodleManager {
             try {
 
                 resultAPIcallJSONString = NetUtils.downloadStringHttp(completeURL, context);
-                Utils.log("Json result is " + resultAPIcallJSONString);
                 command.execute(resultAPIcallJSONString);
                 return command;
             } catch (Exception e) {
@@ -131,14 +148,10 @@ public class RealMoodleManager extends MoodleManager {
         @Override
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
-            Utils.log("on PostExecute of " + o.getClass().getName());
-            if (o instanceof RequestUserCoursesMoodleAPICommand){
-                MoodleMainActivity moodleMainActivity = (MoodleMainActivity) currentContext;
-                moodleMainActivity.refreshListView();
-                Utils.log("REFRESH");
+            if (o instanceof RequestUserCoursesMoodleAPICommand ||
+                o instanceof RequestUserEventsAPICommand    ){
+                getDelegate().refreshListView();
             }
-            else
-                Utils.log("NOT REFRESH class is " + o.getClass());
         }
     }
 
@@ -233,12 +246,33 @@ public class RealMoodleManager extends MoodleManager {
         }
     }
     /**
+     * Command that handles the creation of a new MoodleEvents List
+     */
+    public final class RequestUserEventsAPICommand implements MoodleAPICommand {
+        @Override
+        public Object execute(String jsonString) {
+
+            MoodleEventsList eventsList;
+            eventsList = new MoodleEventsList(jsonString);
+            if (eventsList.isValid()){
+                setMoodleUserEventsList(eventsList);
+                Utils.log("MoodleUserEventsList is valid");
+                //TODO add method to cache user events
+            }else {
+                setMoodleUserEventsList(null);
+            }
+
+            return eventsList;
+
+        }
+    }
+    /**
      * Getters and Setters Methods
      **/
     @Override
-    public List<MoodleEvent> getUserEvents() {
-        //TODO implement this method
-        return null;
+    public ArrayList<MoodleEvent> getUserEvents() {
+
+        return getMoodleUserEventsList().getSections();
     }
 
     @Override
@@ -293,6 +327,15 @@ public class RealMoodleManager extends MoodleManager {
 
     public void setMoodleUserCourseInfo(MoodleCourse moodleUserCourseInfo) {
         this.moodleUserCourseInfo = moodleUserCourseInfo;
+    }
+    public MoodleEventsList getMoodleUserEventsList() {
+        return moodleUserEventsList;
+    }
+    public void setMoodleUserEventsList(MoodleEventsList moodleUserEventsList) {
+        this.moodleUserEventsList = moodleUserEventsList;
+    }
+    public String getToken(){
+        return getMoodleUserToken().getToken();
     }
 
 

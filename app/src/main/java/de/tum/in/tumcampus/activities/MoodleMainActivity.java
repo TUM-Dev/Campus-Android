@@ -21,13 +21,14 @@ import de.tum.in.tumcampus.activities.generic.ActivityForDownloadingExternal;
 import de.tum.in.tumcampus.adapters.MoodleExapndabaleListAdapter;
 import de.tum.in.tumcampus.models.managers.MockMoodleManager;
 import de.tum.in.tumcampus.models.managers.MoodleManager;
+import de.tum.in.tumcampus.models.managers.MoodleUpdateListViewDelegate;
 import de.tum.in.tumcampus.models.managers.RealMoodleManager;
 
 /**
  * This class is the main activity of the moodle which shows the list of the courses
  * and their descriptions to the user. Communicates with moodle via RealMoodleManager
  */
-public class MoodleMainActivity extends ActivityForDownloadingExternal implements OnItemClickListener {
+public class MoodleMainActivity extends ActivityForDownloadingExternal implements OnItemClickListener, MoodleUpdateListViewDelegate {
     //Moodle API Manager
     protected MoodleManager moodleManager;
     protected MoodleManager realManager;
@@ -68,6 +69,8 @@ public class MoodleMainActivity extends ActivityForDownloadingExternal implement
                 return true;
             case R.id.events:
                 Intent eventIntent = new Intent(this,MoodleEventsActivity.class);
+
+                eventIntent.putExtra("user_token", realManager.getToken());
                 startActivity(eventIntent);
                 return true;
         }
@@ -103,7 +106,7 @@ public class MoodleMainActivity extends ActivityForDownloadingExternal implement
      */
     private void baseSetUp() {
         mDialog = new ProgressDialog(this);
-        mDialog.setMessage("Loading Your Courses");
+        mDialog.setMessage(getResources().getString(R.string.loading));
         mDialog.setCancelable(true);
         mDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener() {
             @Override
@@ -113,9 +116,9 @@ public class MoodleMainActivity extends ActivityForDownloadingExternal implement
         });
 
         //creating a mock object of moodle manager
-        moodleManager = new MockMoodleManager();
+        moodleManager = new MockMoodleManager(this);
         //creating realManager
-        realManager = new RealMoodleManager();
+        realManager = new RealMoodleManager(this);
 
         expListView = (ExpandableListView) findViewById(R.id.coursesExp);
 

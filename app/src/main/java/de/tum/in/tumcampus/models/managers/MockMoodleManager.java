@@ -4,12 +4,11 @@ import android.content.Context;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.MoodleCourse;
 import de.tum.in.tumcampus.models.MoodleEvent;
+import de.tum.in.tumcampus.models.MoodleEventsList;
 import de.tum.in.tumcampus.models.MoodleToken;
 import de.tum.in.tumcampus.models.MoodleUser;
 import de.tum.in.tumcampus.models.MoodleUserCourseList;
@@ -22,6 +21,10 @@ public class MockMoodleManager extends MoodleManager{
 
     private String userName;
     private String password;
+
+    public MockMoodleManager(MoodleUpdateListViewDelegate delegate) {
+        super(delegate);
+    }
 
 
     public Map<?,?> getCoursesList(){
@@ -41,13 +44,13 @@ public class MockMoodleManager extends MoodleManager{
         return null;
     }
 
-
-
     @Override
     public MoodleToken getMoodleUserToken() {
         //TODO create stub data and variables needed
         return null;
     }
+
+
 
     @Override
     public void setMoodleUserToken(MoodleToken moodleUserToken) {
@@ -79,6 +82,17 @@ public class MockMoodleManager extends MoodleManager{
     }
 
     @Override
+    public MoodleEventsList getMoodleUserEventsList() {
+        //TODO create stub data and variables needed
+        return null;
+    }
+
+    @Override
+    public void setMoodleUserEventsList(MoodleEventsList moodleUserEventsList) {
+        //TODO create stub data and variables needed
+    }
+
+    @Override
     public MoodleCourse getMoodleUserCourseInfo() {
         //TODO create stub data and variables needed
 
@@ -92,16 +106,9 @@ public class MockMoodleManager extends MoodleManager{
     }
 
     @Override
-    public List<MoodleEvent> getUserEvents() {
-        List<MoodleEvent> mockEvents = new ArrayList<MoodleEvent>();
-        mockEvents.add(new MoodleEvent("Planning Meeting for Field Trip","Our group is meeting in Room 78 to " +
-                "decide our itinerary for the Field Trip",1437575700,3600));
+    public ArrayList<MoodleEvent> getUserEvents() {
+        ArrayList<MoodleEvent> mockEvents = new ArrayList<MoodleEvent>();
 
-        mockEvents.add(new MoodleEvent("Midterm examp Deautch als fremd Sprache B1.2","Every one should be available in the class. "
-                ,1437665700,1800));
-
-        mockEvents.add(new MoodleEvent("Praktikum introduction Cloud databases","Attendence is mandatory",
-                1435330800,2000));
         return mockEvents;
     }
 
@@ -124,5 +131,16 @@ public class MockMoodleManager extends MoodleManager{
     public void requestUserCourseInfo(Context currentContext, int courseId) {
         //TODO create stub data and variables needed
 
+    }
+
+    @Override
+    public void requestUserEvents(Context currentContext) {
+        //TODO create stub data and variables needed
+
+    }
+
+    @Override
+    public String getToken(){
+        return "thisisaToken";
     }
 }

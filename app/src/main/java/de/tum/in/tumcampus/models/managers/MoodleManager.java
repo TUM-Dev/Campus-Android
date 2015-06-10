@@ -2,11 +2,12 @@ package de.tum.in.tumcampus.models.managers;
 
 import android.content.Context;
 
-import java.util.List;
+import java.util.ArrayList;
 import java.util.Map;
 
 import de.tum.in.tumcampus.models.MoodleCourse;
 import de.tum.in.tumcampus.models.MoodleEvent;
+import de.tum.in.tumcampus.models.MoodleEventsList;
 import de.tum.in.tumcampus.models.MoodleToken;
 import de.tum.in.tumcampus.models.MoodleUser;
 import de.tum.in.tumcampus.models.MoodleUserCourseList;
@@ -21,6 +22,13 @@ public abstract class MoodleManager {
     MoodleToken moodleUserToken = null;
     MoodleUser moodleUserInfo = null;
     MoodleUserCourseList moodleUserCourseList = null;
+
+
+    MoodleUpdateListViewDelegate delegate;
+
+
+
+    MoodleEventsList moodleUserEventsList = null;
     MoodleCourse moodleUserCourseInfo = null;
 
     public abstract MoodleToken getMoodleUserToken();
@@ -31,9 +39,11 @@ public abstract class MoodleManager {
     public abstract void setMoodleUserCourseList(MoodleUserCourseList moodleUserCourseList);
     public abstract MoodleCourse getMoodleUserCourseInfo();
     public abstract void setMoodleUserCourseInfo(MoodleCourse moodleUserCourseInfo);
-    public abstract List<MoodleEvent> getUserEvents();
+    public abstract ArrayList<MoodleEvent> getUserEvents();
     public abstract Map<?,?> getCoursesList();
-
+    public abstract MoodleEventsList getMoodleUserEventsList();
+    public abstract void setMoodleUserEventsList(MoodleEventsList moodleUserEventsList);
+    public abstract String getToken();
     /**
      * Moodle API Calls
      */
@@ -41,6 +51,18 @@ public abstract class MoodleManager {
     public abstract void requestUserData(Context currentContext);
     public abstract void requestUserCourseList(Context currentContext);
     public abstract void requestUserCourseInfo(Context currentContext, int courseId);
+    public abstract void requestUserEvents(Context currentContext);
 
+    public MoodleManager(MoodleUpdateListViewDelegate delegate){
+        setDelegate(delegate);
+    }
+
+    public MoodleUpdateListViewDelegate getDelegate() {
+        return delegate;
+    }
+
+    public void setDelegate(MoodleUpdateListViewDelegate delegate) {
+        this.delegate = delegate;
+    }
 
 }
