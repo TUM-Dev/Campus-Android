@@ -61,6 +61,7 @@ public class MoodleMainActivity extends ActivityForDownloadingExternal implement
         return true;
     }
 
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()){

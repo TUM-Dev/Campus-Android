@@ -96,7 +96,9 @@ public class MoodleEventsActivity extends ActivityForDownloadingExternal impleme
             String event_desc = description_view.getText().toString();
             String dateText = date_view.getText().toString();
 
-            int duration = MoodleEvent.getDuration(dateText);
+            MoodleEvent event = userEvents.get(position);
+            int duration = event.getTimeduration();
+
             Date date = DateUtils.parseSimpleDateFormat(dateText);
             GregorianCalendar begin = new GregorianCalendar();
             begin.setTime(date);
