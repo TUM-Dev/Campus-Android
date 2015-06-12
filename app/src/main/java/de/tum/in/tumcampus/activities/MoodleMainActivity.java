@@ -119,7 +119,7 @@ public class MoodleMainActivity extends ActivityForDownloadingExternal implement
         //creating a mock object of moodle manager
         moodleManager = new MockMoodleManager(this);
         //creating realManager
-        realManager = new RealMoodleManager(this);
+        realManager = RealMoodleManager.getInstance(this, this);
 
         expListView = (ExpandableListView) findViewById(R.id.coursesExp);
 

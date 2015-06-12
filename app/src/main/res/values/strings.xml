@@ -153,7 +153,11 @@
     <string name="exception_sdcard">Error accessing the SD-Card</string>
     <string name="adress">Address</string>
     <string name="name">Name</string>
-
+    
+    <!-- Moodle -->
+    <string name="moodle_user_token_shared_prefs_key">MoodleUserTokenSharedPrefFile</string>
+    <string name="moodle_token_key">MoodleTokenKey</string>
+    
     <!-- MVV -->
     <string name="no_departures_found">No departures available</string>
     <string name="exception_unknown">Unknown error</string>
