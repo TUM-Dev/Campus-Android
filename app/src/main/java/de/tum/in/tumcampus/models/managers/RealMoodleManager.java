@@ -72,6 +72,9 @@ public class RealMoodleManager extends MoodleManager {
             GenericMoodleRequestAsyncTask userTokenTask = new GenericMoodleRequestAsyncTask(new RequestUserTokenMoodleAPICommand() , currentContext, service);
             userTokenTask.execute();
         }
+        else {
+            requestUserData(currentContext);
+        }
     }
 
     /**
@@ -394,9 +397,12 @@ public class RealMoodleManager extends MoodleManager {
             MoodleToken moodleToken = new MoodleToken();
             moodleToken.setToken(token);
             setMoodleUserToken(moodleToken);
+            Utils.log("Load cached moodle token");
+            Utils.log("Moodle token is: " + token);
             return true;
         }
 
+        Utils.log("Faild to load cached moodle token");
         return false;
     }
 
