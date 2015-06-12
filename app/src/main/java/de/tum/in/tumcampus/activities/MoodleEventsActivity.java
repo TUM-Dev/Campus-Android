@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -52,6 +53,7 @@ public class MoodleEventsActivity extends ActivityForDownloadingExternal impleme
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
+
 
         baseSetUp();
         mDialog.show();
