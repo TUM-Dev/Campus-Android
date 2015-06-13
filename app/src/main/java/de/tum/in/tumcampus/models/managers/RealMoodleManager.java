@@ -3,6 +3,7 @@ package de.tum.in.tumcampus.models.managers;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -227,6 +228,7 @@ public class RealMoodleManager extends MoodleManager {
             }else {
                 setMoodleUserInfo(null);
                 //TODO check if error is for invalid token and delete cached version of token
+                Toast.makeText(currentContext, "Login session has expired", Toast.LENGTH_LONG);
                 removeToken();
             }
 
@@ -249,6 +251,7 @@ public class RealMoodleManager extends MoodleManager {
             } else {
                 setMoodleUserCourseList(null);
                 //TODO check if error is for invalid token and delete cached version of token
+                Toast.makeText(currentContext, "Login session has expired", Toast.LENGTH_LONG);
                 removeToken();
             }
 
@@ -271,6 +274,7 @@ public class RealMoodleManager extends MoodleManager {
             }else {
                 setMoodleUserCourseInfo(null);
                 //TODO check if error is for invalid token and delete cached version of token
+                Toast.makeText(currentContext, "Login session has expired", Toast.LENGTH_LONG);
                 removeToken();
             }
 
@@ -294,6 +298,7 @@ public class RealMoodleManager extends MoodleManager {
             }else {
                 setMoodleUserEventsList(null);
                 //TODO check if error is for invalid token and delete cached version of token
+                Toast.makeText(currentContext, "Login session has expired", Toast.LENGTH_LONG);
                 removeToken();
             }
 
