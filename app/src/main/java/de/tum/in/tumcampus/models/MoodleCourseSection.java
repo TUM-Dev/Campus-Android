@@ -74,7 +74,8 @@ public class MoodleCourseSection extends  MoodleObject{
                 }
 
                 this.id = jsonObject.optInt("id");
-                this.name = jsonObject.optString("format");
+                //this.name = jsonObject.optString("format");
+                this.name = jsonObject.optString("name");
                 this.summary = jsonObject.optString("summary");
                 this.summaryformat = jsonObject.optDouble("summaryformat");
                 this.visible = jsonObject.optDouble("visible");

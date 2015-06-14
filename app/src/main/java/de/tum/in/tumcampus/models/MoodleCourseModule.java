@@ -116,7 +116,9 @@ public class MoodleCourseModule extends MoodleObject{
 
                 MoodleCourseContent content;
                 try{
-                    JSONArray jsonArray = jsonObject.getJSONArray("modules");
+                    //JSONArray jsonArray = jsonObject.getJSONArray("modules");
+                    JSONArray jsonArray = jsonObject.getJSONArray("contents");
+                    this.contents = new ArrayList<MoodleCourseContent>();
                     for (int i=0; i < jsonArray.length(); i++){
                         JSONObject c = jsonArray.getJSONObject(i);
                         content = new MoodleCourseContent(c);

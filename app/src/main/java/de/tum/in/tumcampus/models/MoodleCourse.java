@@ -8,6 +8,8 @@ import org.json.JSONTokener;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.tum.in.tumcampus.auxiliary.Utils;
+
 /**
  * Created by enricogiga on 05/06/2015.
  * A whole moodle course.
@@ -93,5 +95,17 @@ public class MoodleCourse extends  MoodleObject{
 
     public void setSections(List sections) {
         this.sections = sections;
+    }
+
+    public List<String> getSectionNames(){
+        List<String> sectionNames = new ArrayList<String>();
+        if (sections != null) {
+            for (Object s : sections)
+                sectionNames.add(((MoodleCourseSection) s).getName());
+            return sectionNames;
+        }
+        else
+            Utils.log("sections is null !");
+        return null;
     }
 }
