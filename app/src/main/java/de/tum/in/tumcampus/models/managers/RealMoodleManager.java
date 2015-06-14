@@ -1,12 +1,15 @@
 package de.tum.in.tumcampus.models.managers;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.auxiliary.NetUtils;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.MoodleCourse;
@@ -33,8 +36,27 @@ public class RealMoodleManager extends MoodleManager {
 
     final String SERVICE_BASE_URL = "http://school.demo.moodle.net";
     Context currentContext;
+    private static RealMoodleManager instance;
 
-    public RealMoodleManager(MoodleUpdateListViewDelegate delegate) {
+    /**
+     * Getting or creating singleton
+     * @param delegate
+     *        context
+     * @return
+     */
+    public static RealMoodleManager getInstance(MoodleUpdateListViewDelegate delegate, Context context) {
+        if (instance == null) {
+            instance = new RealMoodleManager(delegate);
+        }
+        else {
+            instance.setDelegate(delegate);
+        }
+        instance.setCurrentContext(context);
+        return instance;
+    }
+
+    private RealMoodleManager(MoodleUpdateListViewDelegate delegate) {
+
         super(delegate);
     }
 
@@ -46,9 +68,14 @@ public class RealMoodleManager extends MoodleManager {
      * @param password
      */
     public void requestUserToken(Context currentContext, String username, String password){
-        String service = "//login/token.php?username=" + username + "&password=" + password +"&service=moodle_mobile_app";
-        GenericMoodleRequestAsyncTask userTokenTask = new GenericMoodleRequestAsyncTask(new RequestUserTokenMoodleAPICommand() , currentContext, service);
-        userTokenTask.execute();
+        if (!loadUserToken()) {
+            String service = "//login/token.php?username=" + username + "&password=" + password +"&service=moodle_mobile_app";
+            GenericMoodleRequestAsyncTask userTokenTask = new GenericMoodleRequestAsyncTask(new RequestUserTokenMoodleAPICommand() , currentContext, service);
+            userTokenTask.execute();
+        }
+        else {
+            requestUserData(currentContext);
+        }
     }
 
     /**
@@ -175,6 +202,7 @@ public class RealMoodleManager extends MoodleManager {
                 setMoodleUserToken(moodleToken);
                 Utils.log("UserToken is valid");
                 requestUserData(currentContext);
+                saveUserToken();
                //TODO: add method to save token for future connections
             }else {
                setMoodleUserToken(null);
@@ -199,6 +227,9 @@ public class RealMoodleManager extends MoodleManager {
                 //TODO add method to cache user info
             }else {
                 setMoodleUserInfo(null);
+                //TODO check if error is for invalid token and delete cached version of token
+                Toast.makeText(currentContext, "Login session has expired", Toast.LENGTH_LONG);
+                removeToken();
             }
 
             return moodleUser;
@@ -219,6 +250,9 @@ public class RealMoodleManager extends MoodleManager {
                 //TODO add method to cache user courses
             } else {
                 setMoodleUserCourseList(null);
+                //TODO check if error is for invalid token and delete cached version of token
+                Toast.makeText(currentContext, "Login session has expired", Toast.LENGTH_LONG);
+                removeToken();
             }
 
             return moodleUserCourseList;
@@ -239,6 +273,9 @@ public class RealMoodleManager extends MoodleManager {
                 //TODO add method to cache user courses
             }else {
                 setMoodleUserCourseInfo(null);
+                //TODO check if error is for invalid token and delete cached version of token
+                Toast.makeText(currentContext, "Login session has expired", Toast.LENGTH_LONG);
+                removeToken();
             }
 
             return moodleCourse;
@@ -260,6 +297,9 @@ public class RealMoodleManager extends MoodleManager {
                 //TODO add method to cache user events
             }else {
                 setMoodleUserEventsList(null);
+                //TODO check if error is for invalid token and delete cached version of token
+                Toast.makeText(currentContext, "Login session has expired", Toast.LENGTH_LONG);
+                removeToken();
             }
 
             return eventsList;
@@ -337,6 +377,53 @@ public class RealMoodleManager extends MoodleManager {
     public String getToken(){
         return getMoodleUserToken().getToken();
     }
+
+    /**
+     * This method saves in shared preferences the user token avoiding making a
+     * login request each time
+     */
+    public void saveUserToken() {
+        if (currentContext != null) {
+            SharedPreferences sharedPreferences = currentContext.getSharedPreferences(currentContext.getResources().getString(R.string.moodle_user_token_shared_prefs_key),Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+
+            editor.putString(currentContext.getResources().getString(R.string.moodle_token_key),getToken());
+            editor.commit();
+        }
+    }
+    /**
+     * this method loads the cached version of the token
+     */
+    public boolean loadUserToken() {
+        SharedPreferences sharedPreferences = currentContext.getSharedPreferences(currentContext.getResources().getString(R.string.moodle_user_token_shared_prefs_key), Context.MODE_PRIVATE);
+        String token = sharedPreferences.getString((currentContext.getResources().getString(R.string.moodle_token_key)),null);
+
+        if (token != null){
+            MoodleToken moodleToken = new MoodleToken();
+            moodleToken.setToken(token);
+            setMoodleUserToken(moodleToken);
+            Utils.log("Load cached moodle token");
+            Utils.log("Moodle token is: " + token);
+            return true;
+        }
+
+        Utils.log("Faild to load cached moodle token");
+        return false;
+    }
+
+    /**
+     * This method removes the cached version of the moodle token
+     *
+     */
+    public boolean removeToken() {
+        SharedPreferences sharedPreferences = currentContext.getSharedPreferences(currentContext.getResources().getString(R.string.moodle_user_token_shared_prefs_key), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        editor.remove(currentContext.getResources().getString(R.string.moodle_token_key));
+        editor.commit();
+        return false;
+    }
+
 
 
 

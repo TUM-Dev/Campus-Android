@@ -24,12 +24,9 @@ public abstract class MoodleManager {
     MoodleUserCourseList moodleUserCourseList = null;
 
 
-    MoodleUpdateListViewDelegate delegate;
-
-
-
     MoodleEventsList moodleUserEventsList = null;
     MoodleCourse moodleUserCourseInfo = null;
+    MoodleUpdateListViewDelegate delegate;
 
     public abstract MoodleToken getMoodleUserToken();
     public abstract void setMoodleUserToken(MoodleToken moodleUserToken);
@@ -53,15 +50,15 @@ public abstract class MoodleManager {
     public abstract void requestUserCourseInfo(Context currentContext, int courseId);
     public abstract void requestUserEvents(Context currentContext);
 
-    public MoodleManager(MoodleUpdateListViewDelegate delegate){
+    public  MoodleManager(MoodleUpdateListViewDelegate delegate){
         setDelegate(delegate);
     }
 
-    public MoodleUpdateListViewDelegate getDelegate() {
+    public  MoodleUpdateListViewDelegate getDelegate() {
         return delegate;
     }
 
-    public void setDelegate(MoodleUpdateListViewDelegate delegate) {
+    public  void setDelegate(MoodleUpdateListViewDelegate delegate) {
         this.delegate = delegate;
     }
 

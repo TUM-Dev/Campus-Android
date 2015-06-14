@@ -5,17 +5,20 @@ import android.util.Log;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
+
 /**
  * Created by enricogiga on 05/06/2015.
  * This class is for code reuse purpose. It holds attributes common to each moodle object retrieved from calls
  * to Moodle Web Services
  */
-public class MoodleObject {
+public class MoodleObject implements Serializable{
 
     protected String exception;
     protected String errorCode;
     protected String message;
     protected boolean isValid = true;
+    private static final long serialVersionUID = -7060210544600464481L;
 
 
 

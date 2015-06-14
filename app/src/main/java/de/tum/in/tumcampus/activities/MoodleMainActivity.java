@@ -19,6 +19,7 @@ import java.util.Map;
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.generic.ActivityForDownloadingExternal;
 import de.tum.in.tumcampus.adapters.MoodleExapndabaleListAdapter;
+import de.tum.in.tumcampus.models.MoodleToken;
 import de.tum.in.tumcampus.models.managers.MockMoodleManager;
 import de.tum.in.tumcampus.models.managers.MoodleManager;
 import de.tum.in.tumcampus.models.managers.MoodleUpdateListViewDelegate;
@@ -52,6 +53,13 @@ public class MoodleMainActivity extends ActivityForDownloadingExternal implement
         mDialog.show();
         realManager.requestUserToken(this, "student", "moodle");
 
+
+
+
+
+
+
+
     }
 
     @Override
@@ -61,6 +69,7 @@ public class MoodleMainActivity extends ActivityForDownloadingExternal implement
         return true;
     }
 
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()){
@@ -69,6 +78,8 @@ public class MoodleMainActivity extends ActivityForDownloadingExternal implement
                 return true;
             case R.id.events:
                 Intent eventIntent = new Intent(this,MoodleEventsActivity.class);
+
+
 
                 eventIntent.putExtra("user_token", realManager.getToken());
                 startActivity(eventIntent);
@@ -127,7 +138,7 @@ public class MoodleMainActivity extends ActivityForDownloadingExternal implement
         //creating a mock object of moodle manager
         moodleManager = new MockMoodleManager(this);
         //creating realManager
-        realManager = new RealMoodleManager(this);
+        realManager = RealMoodleManager.getInstance(this, this);
 
         expListView = (ExpandableListView) findViewById(R.id.coursesExp);
 
