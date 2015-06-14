@@ -347,8 +347,9 @@
             android:parentActivityName=".activities.RoomFinderActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.tum.in.tumcampus.activities.RoomfinderActivity" />
+                android:value="de.tum.in.tumcampus.activities.RoomFinderActivity" />
         </activity>
+
         <activity
             android:name=".activities.TuitionFeesActivity"
             android:configChanges="orientation|screenSize"
@@ -473,6 +474,17 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.tum.in.tumcampus.activities.MainActivity" />
         </activity>
+
+        <activity
+            android:name=".activities.MoodleCourseInfoActivity"
+            android:label="@string/title_activity_moodle_course_info"
+            android:launchMode="singleTop"
+            android:parentActivityName=".activities.MoodleMainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="de.tum.in.tumcampus.activities.MoodleMainActivity" />
+        </activity>
+
 
 
         <!-- Used to reset Alarm when device has been restarted -->
