@@ -56,7 +56,7 @@ public class MoodleEventsActivity extends ActivityForDownloadingExternal impleme
         baseSetUp();
         mDialog.show();
         realManager.requestUserEvents(this);
-
+        refreshListView();
     }
 
 
@@ -78,6 +78,14 @@ public class MoodleEventsActivity extends ActivityForDownloadingExternal impleme
             case R.id.events:
                 // Do nothing
                 return true;
+
+            case R.id.moodle_profile:
+                //TODO change this part to show user profile not course with course id=62 ! Fucker!
+                Intent courseInfoIntent = new Intent(this,MoodleCourseInfoActivity.class);
+
+                courseInfoIntent.putExtra("user_token", realManager.getToken());
+                startActivity(courseInfoIntent);
+                return true;
         }
         return false;
     }
@@ -96,7 +104,7 @@ public class MoodleEventsActivity extends ActivityForDownloadingExternal impleme
             String event_desc = description_view.getText().toString();
             String dateText = date_view.getText().toString();
 
-            int duration = MoodleEvent.getDuration(dateText);
+            int duration = userEvents.get(position).getTimeduration();
             Date date = DateUtils.parseSimpleDateFormat(dateText);
             GregorianCalendar begin = new GregorianCalendar();
             begin.setTime(date);
@@ -144,10 +152,13 @@ public class MoodleEventsActivity extends ActivityForDownloadingExternal impleme
             }
         });
         intent = getIntent();
-        userToken = intent.getStringExtra("user_token");
+
+        //userToken = intent.getStringExtra("user_token");
         realManager = new RealMoodleManager(this);
-        realManager.setMoodleUserToken(new MoodleToken());
-        realManager.getMoodleUserToken().setToken(userToken);
+        realManager.requestUserToken(this, "student", "moodle");
+        //realManager.setMoodleUserToken(new MoodleToken());
+        //realManager.getMoodleUserToken().setToken(userToken);
+        //realManager.requestUserData(this);
 
         eventsRecyclerView = (RecyclerView) findViewById(R.id.moodleEventList);
         eventsLayoutManager = new LinearLayoutManager(this);

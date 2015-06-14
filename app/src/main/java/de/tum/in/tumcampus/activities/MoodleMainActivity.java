@@ -73,6 +73,15 @@ public class MoodleMainActivity extends ActivityForDownloadingExternal implement
                 eventIntent.putExtra("user_token", realManager.getToken());
                 startActivity(eventIntent);
                 return true;
+
+            case R.id.moodle_profile:
+                //TODO change this part to show user profile not course with course id=62 ! Fucker!
+                Intent courseInfoIntent = new Intent(this,MoodleCourseInfoActivity.class);
+
+                courseInfoIntent.putExtra("user_token", realManager.getToken());
+                startActivity(courseInfoIntent);
+                return true;
+
         }
         return false;
     }
