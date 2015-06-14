@@ -320,23 +320,6 @@ public class MoodleEvent extends MoodleObject {
     public Integer getVisible() {
         return visible;
     }
-
-    public static int getDuration(String eventDateString){
-        /**
-         * gets a DateString created by event class and returns
-         * an integer value for seconds of duration inside the String
-         * @param eventDateString String created by an event object
-         * @return an int, representing the amount of duration in seconds
-         */
-        GregorianCalendar date = getDate(eventDateString);
-        GregorianCalendar today = new GregorianCalendar();
-        int duration = (int) (date.getTime().getTime() - today.getTime().getTime());
-        //String [] values = eventDateString.split("\n");
-        //String duration = values[1];
-        //duration = duration.replaceAll("[^0-9]","");
-        return duration;//Integer.valueOf(duration) * 60;
-    }
-
     public static GregorianCalendar getDate(String eventDateString){
         /**
          * gets a DateString created by event class and returns
