@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ import java.util.Map;
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.generic.ActivityForDownloadingExternal;
 import de.tum.in.tumcampus.adapters.MoodleExapndabaleListAdapter;
+import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.MoodleToken;
 import de.tum.in.tumcampus.models.managers.MockMoodleManager;
 import de.tum.in.tumcampus.models.managers.MoodleManager;
@@ -29,7 +31,7 @@ import de.tum.in.tumcampus.models.managers.RealMoodleManager;
  * This class is the main activity of the moodle which shows the list of the courses
  * and their descriptions to the user. Communicates with moodle via RealMoodleManager
  */
-public class MoodleMainActivity extends ActivityForDownloadingExternal implements OnItemClickListener, MoodleUpdateListViewDelegate {
+public class MoodleMainActivity extends ActivityForDownloadingExternal implements ExpandableListView.OnChildClickListener, MoodleUpdateListViewDelegate {
     //Moodle API Manager
     protected MoodleManager moodleManager;
     protected MoodleManager realManager;
@@ -38,6 +40,7 @@ public class MoodleMainActivity extends ActivityForDownloadingExternal implement
 
     private MoodleExapndabaleListAdapter coursesAdapter;
     List<String> courseListHeaders;
+    Map <String, Integer> coursesIds;
     Map<String,List<String>> courseListChilds;
     ExpandableListView expListView;
 
@@ -52,14 +55,6 @@ public class MoodleMainActivity extends ActivityForDownloadingExternal implement
         //TODO need login
         mDialog.show();
         realManager.requestUserToken(this, "student", "moodle");
-
-
-
-
-
-
-
-
     }
 
     @Override
@@ -97,10 +92,6 @@ public class MoodleMainActivity extends ActivityForDownloadingExternal implement
         return false;
     }
 
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-    }
     /**
      * This method populates the data for lists which will be shown
      * on this actiivty. For now these include: course title,course description
@@ -110,6 +101,7 @@ public class MoodleMainActivity extends ActivityForDownloadingExternal implement
     public void refreshListView() {
         emptyListViewData();
         Map<String, String> courses = (Map<String, String>) realManager.getCoursesList();
+        coursesIds = (Map<String, Integer>)realManager.getCoursesId();
         for (Map.Entry <String, String >item: courses.entrySet()){
             List<String> temp = new ArrayList<String>();
             temp.add(item.getValue());
@@ -161,6 +153,21 @@ public class MoodleMainActivity extends ActivityForDownloadingExternal implement
     private void emptyListViewData() {
         courseListHeaders = new ArrayList<String>();
         courseListChilds = new HashMap<String, List<String>>();
+        coursesIds = new HashMap<String, Integer>();
     }
 
+    @Override
+    public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
+        try{
+            int courseId = coursesIds.get(coursesAdapter.getGroup(groupPosition));
+            Intent courseInfoIntent = new Intent(this, MoodleCourseInfoActivity.class);
+            courseInfoIntent.putExtra("course_id", courseId);
+            startActivity(courseInfoIntent);
+            return true;
+        }catch (Exception e){
+            Utils.showToast(this, getString(R.string.moodle_courses_error));
+            Utils.log(e);
+            return false;
+        }
+    }
 }
