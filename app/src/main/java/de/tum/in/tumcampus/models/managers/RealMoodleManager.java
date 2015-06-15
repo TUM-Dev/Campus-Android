@@ -329,6 +329,20 @@ public class RealMoodleManager extends MoodleManager {
         return userCoursesMap;
     }
 
+    @Override
+    public Map<?,?> getCoursesId(){
+        if (getMoodleUserCourseList() == null) return null;
+        Map<String,Integer> userCoursesMap = new HashMap<String,Integer>();
+
+        for (Object courseObj : getMoodleUserCourseList().getSections()) {
+            MoodleUserCourse course = (MoodleUserCourse) courseObj;
+
+            userCoursesMap.put(course.getFullname(),(int)course.getId());
+        }
+
+        return userCoursesMap;
+    }
+
     public Context getCurrentContext() {
         return currentContext;
     }

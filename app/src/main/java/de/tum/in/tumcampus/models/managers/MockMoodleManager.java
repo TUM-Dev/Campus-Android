@@ -37,6 +37,11 @@ public class MockMoodleManager extends MoodleManager{
         return USER_COURSES;
     }
 
+    @Override
+    public Map<?, ?> getCoursesId() {
+        return null;
+    }
+
     public Object getCourseInfo(String CourseFullName){
         /**
          * returns courses full documents. To be decided later
