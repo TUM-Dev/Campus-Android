@@ -159,9 +159,14 @@ public class MoodleMainActivity extends ActivityForDownloadingExternal implement
     @Override
     public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
         try{
-            int courseId = coursesIds.get(coursesAdapter.getGroup(groupPosition));
+			String courseName = coursesAdapter.getGroup(groupPosition);
+            int courseId = coursesIds.get(courseName);
             Intent courseInfoIntent = new Intent(this, MoodleCourseInfoActivity.class);
-            courseInfoIntent.putExtra("course_id", courseId);
+            
+			//TODO @Carlo Do we need to send user token? we have singleton, so we dont need hah?
+			courseInfoIntent.putExtra("user_token", null);
+			courseInfoIntent.putExtra("course_name", courseName);
+			courseInfoIntent.putExtra("course_id", courseId);
             startActivity(courseInfoIntent);
             return true;
         }catch (Exception e){
