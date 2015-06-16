@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
 
@@ -18,6 +17,7 @@ import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.generic.ActivityForDownloadingExternal;
 import de.tum.in.tumcampus.adapters.MoodleCourseInfoExpandableAdapter;
 import de.tum.in.tumcampus.auxiliary.Utils;
+import de.tum.in.tumcampus.models.MoodleCourse;
 import de.tum.in.tumcampus.models.MoodleCourseContent;
 import de.tum.in.tumcampus.models.MoodleCourseModule;
 import de.tum.in.tumcampus.models.MoodleCourseSection;
@@ -82,10 +82,6 @@ public class MoodleCourseInfoActivity extends ActivityForDownloadingExternal imp
         return false;
     }
 
-    @Override
-    public void refreshListView() {
-        //TODO @carlo do whatever needs to be done
-    }
 
     /**
      * handles the click events on the child items in the expandable list
@@ -105,7 +101,7 @@ public class MoodleCourseInfoActivity extends ActivityForDownloadingExternal imp
                 if (fileURL != null){
 
                     //TODO think about modifying the URL to have the token or userid
-                    Utils.log(String.format("Got this URL %s", fileURL.toString()));
+                    Utils.log("Got this URL " + fileURL.toString());
                     Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(fileURL.toString()));
                     startActivity(browserIntent);
                     return true;
@@ -122,6 +118,21 @@ public class MoodleCourseInfoActivity extends ActivityForDownloadingExternal imp
         }
     }
 
+    /**
+     *  this method completes the url sent as input adding the user toking
+     * @param urlString
+     * @return newUrlString
+     */
+    private String completeURL(String urlString ) {
+        String newUrlString;
+
+        if (urlString.contains("?")){
+            newUrlString = urlString + "token=" + realManager.getToken();
+        }
+        else newUrlString = "?token=" + realManager.getToken();
+
+        return newUrlString;
+    }
     /**
      * handles the event on clicks on the group items of the expandable list. If it is a section header,
      * does nothing. If it is a module and it has children, expand the group. if it does not have children
@@ -191,6 +202,8 @@ public class MoodleCourseInfoActivity extends ActivityForDownloadingExternal imp
             mockManager = new MockMoodleManager(this);
             sections = (List<MoodleCourseSection>) mockManager.getMoodleUserCourseInfo().getSections();
 
+            realManager = RealMoodleManager.getInstance(this, this);
+            realManager.requestUserCourseInfo(this, courseId);
             /*
             realManager = new RealMoodleManager(this);
             realManager.requestUserToken(this, "student", "moodle");
@@ -226,4 +239,15 @@ public class MoodleCourseInfoActivity extends ActivityForDownloadingExternal imp
         view_course_sections.setAdapter(dataAdapter);
 
     }
+    @Override
+    public void refreshListView() {
+        MoodleCourse moodleCourse = realManager.getMoodleUserCourseInfo();
+        sections = moodleCourse.getSections();
+        //setting the dataAdapter
+        dataAdapter = new MoodleCourseInfoExpandableAdapter(sections, this);
+        view_course_sections.setAdapter(dataAdapter);
+
+    }
+
+
 }
