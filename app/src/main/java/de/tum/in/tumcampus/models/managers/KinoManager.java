@@ -1,6 +1,7 @@
 package de.tum.in.tumcampus.models.managers;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import org.json.JSONArray;
@@ -32,7 +33,7 @@ public class KinoManager implements Card.ProvidesCard {
 
     /**
      * Constructor open/create database
-     * @param context
+     * @param context Context
      */
     public KinoManager(Context context){
         db = DatabaseManager.getDb(context);
@@ -54,7 +55,7 @@ public class KinoManager implements Card.ProvidesCard {
 
     /**
      * download kino from external interface (JSON)
-     * @param force
+     * @param force True to force download over normal sync period, else false
      * @throws Exception
      */
     public void downloadFromExternal(boolean force) throws Exception {
@@ -92,7 +93,7 @@ public class KinoManager implements Card.ProvidesCard {
 
     /**
      * Convert JSON object to Kino
-     * @param json
+     * @param json JsonObject from external
      * @return Kino
      * @throws Exception
      */
@@ -112,6 +113,16 @@ public class KinoManager implements Card.ProvidesCard {
         Date created = Utils.getISODateTime(json.getString(Const.JSON_CREATED));
 
         return new Kino(id, title, year, runtime, genre, director, actors, rating, description, cover, trailer, date, created);
+    }
+
+
+    /**
+     * get everything from the database
+     * @param context Context
+     * @return Cursor
+     */
+    public Cursor getAllFromDb(Context context){
+        return db.rawQuery("SELECT * from kino",null);
     }
 
     /**
