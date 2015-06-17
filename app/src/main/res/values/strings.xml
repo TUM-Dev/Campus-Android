@@ -154,10 +154,6 @@
     <string name="adress">Address</string>
     <string name="name">Name</string>
     
-    <!-- Moodle -->
-    <string name="moodle_user_token_shared_prefs_key">MoodleUserTokenSharedPrefFile</string>
-    <string name="moodle_token_key">MoodleTokenKey</string>
-    
     <!-- MVV -->
     <string name="no_departures_found">No departures available</string>
     <string name="exception_unknown">Unknown error</string>
@@ -443,5 +439,9 @@ Signature: %5$s</string>
     <string name="moodle_profile">profile</string>
     <string name="no_url">Sorry ! No URL is available for this item</string>
     <string name="moodle_course_name_not_found">Course Name not Found</string>
-    <string name="moodle_courses-error">Sorry! something went wrong! Cannot open the page for this course</string>
+    <string name="moodle_courses_error">Sorry! something went wrong! Cannot open the page for this course</string>
+    <string name="moodle_user_shared_prefs_key">MoodleUserTokenSharedPrefFile</string>
+    <string name="moodle_user_info">MoodleUserTokenSharedPrefFile</string>
+    <string name="moodle_token_key">MoodleTokenKey</string>
+    <string name="moodle_course_id_not_found">Warning, course id not found</string>
 </resources>

@@ -22,7 +22,7 @@ public class MockMoodleManager extends MoodleManager{
     private String userName;
     private String password;
 
-    public MockMoodleManager(MoodleUpdateListViewDelegate delegate) {
+    public MockMoodleManager(MoodleUpdateDelegate delegate) {
         super(delegate);
     }
 

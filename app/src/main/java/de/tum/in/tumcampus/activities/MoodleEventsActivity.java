@@ -23,16 +23,15 @@ import de.tum.in.tumcampus.activities.generic.ActivityForDownloadingExternal;
 import de.tum.in.tumcampus.adapters.MoodleEventAdapter;
 import de.tum.in.tumcampus.auxiliary.DateUtils;
 import de.tum.in.tumcampus.models.MoodleEvent;
-import de.tum.in.tumcampus.models.MoodleToken;
 import de.tum.in.tumcampus.models.managers.MoodleManager;
-import de.tum.in.tumcampus.models.managers.MoodleUpdateListViewDelegate;
+import de.tum.in.tumcampus.models.managers.MoodleUpdateDelegate;
 import de.tum.in.tumcampus.models.managers.RealMoodleManager;
 
 /**
  * Created by a2k on 6/8/2015.
  * Activity for showing events of a user in moodle
  */
-public class MoodleEventsActivity extends ActivityForDownloadingExternal implements AdapterView.OnItemClickListener, MoodleUpdateListViewDelegate {
+public class MoodleEventsActivity extends ActivityForDownloadingExternal implements AdapterView.OnItemClickListener, MoodleUpdateDelegate {
 
     MoodleManager realManager;
     ProgressDialog mDialog;
@@ -56,7 +55,7 @@ public class MoodleEventsActivity extends ActivityForDownloadingExternal impleme
         baseSetUp();
         mDialog.show();
         realManager.requestUserEvents(this);
-        refreshListView();
+        //refresh();
     }
 
 
@@ -128,7 +127,7 @@ public class MoodleEventsActivity extends ActivityForDownloadingExternal impleme
      * the data is retrieved from moodleManager
      *
      */
-    public void refreshListView() {
+    public void refresh() {
 
         userEvents = new ArrayList<MoodleEvent>(realManager.getUserEvents());
         eventsAdapter = new MoodleEventAdapter(userEvents, this);

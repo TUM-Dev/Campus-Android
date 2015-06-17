@@ -21,9 +21,8 @@ import de.tum.in.tumcampus.models.MoodleCourse;
 import de.tum.in.tumcampus.models.MoodleCourseContent;
 import de.tum.in.tumcampus.models.MoodleCourseModule;
 import de.tum.in.tumcampus.models.MoodleCourseSection;
-import de.tum.in.tumcampus.models.managers.MockMoodleManager;
 import de.tum.in.tumcampus.models.managers.MoodleManager;
-import de.tum.in.tumcampus.models.managers.MoodleUpdateListViewDelegate;
+import de.tum.in.tumcampus.models.managers.MoodleUpdateDelegate;
 import de.tum.in.tumcampus.models.managers.RealMoodleManager;
 
 /**
@@ -32,7 +31,7 @@ import de.tum.in.tumcampus.models.managers.RealMoodleManager;
  * is interested in, and they if they are files, they will be downloaded, otherwise a browser will be opened
  * to show the corresponding URL.
  */
-public class MoodleCourseInfoActivity extends ActivityForDownloadingExternal implements  MoodleUpdateListViewDelegate, ExpandableListView.OnChildClickListener, ExpandableListView.OnGroupClickListener {
+public class MoodleCourseInfoActivity extends ActivityForDownloadingExternal implements MoodleUpdateDelegate, ExpandableListView.OnChildClickListener, ExpandableListView.OnGroupClickListener {
 
 
     MoodleManager realManager;
@@ -194,33 +193,22 @@ public class MoodleCourseInfoActivity extends ActivityForDownloadingExternal imp
             userToken = intent.getStringExtra("user_token");
             courseName = intent.getStringExtra("course_name");
             courseName = (courseName!=null) ? courseName : getString(R.string.moodle_course_name_not_found);
-            courseId = intent.getIntExtra("course_id", 0);
-            if (courseId == 0)
+            courseId = intent.getIntExtra("course_id", -1);
+            if (courseId == -1) {
                 Utils.log(String.format("Warning! course id is 0=defaultValue for course %s", courseName));
-
-            // TODO @carlo replace it with realmanager
-            mockManager = new MockMoodleManager(this);
-            sections = (List<MoodleCourseSection>) mockManager.getMoodleUserCourseInfo().getSections();
+                Utils.showToast(this, getResources().getString(R.string.moodle_course_id_not_found));
+                return;
+            }
 
             realManager = RealMoodleManager.getInstance(this, this);
             realManager.requestUserCourseInfo(this, courseId);
-            /*
-            realManager = new RealMoodleManager(this);
-            realManager.requestUserToken(this, "student", "moodle");
-            realManager.setMoodleUserToken(new MoodleToken());
-            realManager.getMoodleUserToken().setToken(userToken);
-            realManager.requestUserData(this);
-            realManager.requestUserCourseInfo(this, courseId);
-            sections = realManager.getMoodleUserCourseInfo().getSections();
-            */
-
 
             //UI setup and adapter
             baseUISetup();
 
         }catch (Exception e){
             Utils.log(e);
-            Utils.showToast(this.getApplicationContext(), "Sorry! Something went wrong!");
+            Utils.showToast(this, getResources().getString(R.string.error_something_wrong));
             finish();
         }
     }
@@ -240,7 +228,7 @@ public class MoodleCourseInfoActivity extends ActivityForDownloadingExternal imp
 
     }
     @Override
-    public void refreshListView() {
+    public void refresh() {
         MoodleCourse moodleCourse = realManager.getMoodleUserCourseInfo();
         sections = moodleCourse.getSections();
         //setting the dataAdapter

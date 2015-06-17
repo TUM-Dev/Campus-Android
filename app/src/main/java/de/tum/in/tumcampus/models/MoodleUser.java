@@ -1,6 +1,5 @@
 package de.tum.in.tumcampus.models;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.MalformedURLException;
@@ -101,6 +100,10 @@ public class MoodleUser extends MoodleObject {
             this.message = "error while parsing jsonstring in "+this.getClass().getName();
         }
 
+    }
+
+    public MoodleUser() {
+        super();
     }
 
     public String getFirstname() {

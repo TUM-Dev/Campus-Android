@@ -1,7 +1,6 @@
 package de.tum.in.tumcampus.models.managers;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.widget.Toast;
@@ -11,7 +10,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import de.tum.in.tumcampus.R;
-import de.tum.in.tumcampus.activities.MoodleLoginActivity;
 import de.tum.in.tumcampus.auxiliary.NetUtils;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.MoodleCourse;
@@ -46,7 +44,7 @@ public class RealMoodleManager extends MoodleManager {
      *        context
      * @return
      */
-    public static RealMoodleManager getInstance(MoodleUpdateListViewDelegate delegate, Context context) {
+    public static RealMoodleManager getInstance(MoodleUpdateDelegate delegate, Context context) {
         if (instance == null) {
             instance = new RealMoodleManager(delegate);
         }
@@ -57,7 +55,7 @@ public class RealMoodleManager extends MoodleManager {
         return instance;
     }
 
-    private RealMoodleManager(MoodleUpdateListViewDelegate delegate) {
+    private RealMoodleManager(MoodleUpdateDelegate delegate) {
 
         super(delegate);
     }
@@ -70,14 +68,15 @@ public class RealMoodleManager extends MoodleManager {
      * @param password
      */
     public void requestUserToken(Context currentContext, String username, String password){
-        if (!loadUserToken()) {
+        //removeToken();
+        //if (!loadUserToken()) {
             String service = "//login/token.php?username=" + username + "&password=" + password +"&service=moodle_mobile_app";
             GenericMoodleRequestAsyncTask userTokenTask = new GenericMoodleRequestAsyncTask(new RequestUserTokenMoodleAPICommand() , currentContext, service);
             userTokenTask.execute();
-        }
-        else {
-            requestUserData(currentContext);
-        }
+        //}
+        //else {
+        //    requestUserData(currentContext);
+        //}
     }
 
     /**
@@ -148,7 +147,6 @@ public class RealMoodleManager extends MoodleManager {
         private MoodleAPICommand command;
         private Context context;
         private String service;
-        private String jsonString;
 
         public GenericMoodleRequestAsyncTask(MoodleAPICommand command, Context context, String service) {
             super();
@@ -177,11 +175,9 @@ public class RealMoodleManager extends MoodleManager {
         @Override
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
-            if (o instanceof RequestUserCoursesMoodleAPICommand ||
-                o instanceof RequestUserEventsAPICommand ||
-                    o instanceof  RequestUserCourseInfoMoodleAPICommand){
+            if (command.isUpdating()){
                 if (getDelegate()!= null)
-                    getDelegate().refreshListView();
+                    getDelegate().refresh();
             }
         }
     }
@@ -189,14 +185,28 @@ public class RealMoodleManager extends MoodleManager {
     /**
      * Interface for the command pattern. For each API call response a new Command is implemented
      */
-    private interface MoodleAPICommand {
-        public Object execute(String jsonString);
+    private abstract class MoodleAPICommand {
+        private boolean shouldUpdate;
+
+        public boolean isUpdating() {
+            return shouldUpdate;
+        }
+
+        public void setShouldUpdate(boolean shouldUpdate) {
+            this.shouldUpdate = shouldUpdate;
+        }
+
+
+        public abstract Object execute(String jsonString);
     }
 
     /**
      * Command that handles the creation of a new MoodelToken object
      */
-    public final class RequestUserTokenMoodleAPICommand implements MoodleAPICommand {
+    public final class RequestUserTokenMoodleAPICommand extends MoodleAPICommand {
+        public RequestUserTokenMoodleAPICommand() {
+            setShouldUpdate(false);
+        }
         @Override
         public Object execute(String jsonString) {
 
@@ -207,9 +217,12 @@ public class RealMoodleManager extends MoodleManager {
                 Utils.log("UserToken is valid");
                 requestUserData(currentContext);
                 saveUserToken();
-               //TODO: add method to save token for future connections
             }else {
-               setMoodleUserToken(null);
+                if (moodleToken.getErrorCode().equals("invalidtoken")){
+                    //createLoginActivity();
+                }
+                setMoodleUserToken(null);
+                //removeToken();
             }
 
             return moodleToken;
@@ -218,7 +231,10 @@ public class RealMoodleManager extends MoodleManager {
     /**
      * Command that handles the creation of a new MoodleUser object
      */
-    public final class RequestUserInfoMoodleAPICommand implements MoodleAPICommand {
+    public final class RequestUserInfoMoodleAPICommand extends MoodleAPICommand {
+        public RequestUserInfoMoodleAPICommand() {
+            setShouldUpdate(false);
+        }
         @Override
         public Object execute(String jsonString) {
 
@@ -232,7 +248,10 @@ public class RealMoodleManager extends MoodleManager {
             }else {
                 setMoodleUserInfo(null);
                 //TODO check if error is for invalid token and delete cached version of token
-                Toast.makeText(currentContext, "Login session has expired", Toast.LENGTH_LONG);
+                if (moodleUser.getMessage().contains("token")) {
+                    createLoginActivity();
+                }
+                Toast.makeText(currentContext, "Login session has expired", Toast.LENGTH_LONG).show();
                 removeToken();
             }
 
@@ -243,7 +262,10 @@ public class RealMoodleManager extends MoodleManager {
     /**
      * Command that handles the creation of a new MoodleCoursesList object
      */
-    public final class RequestUserCoursesMoodleAPICommand implements MoodleAPICommand {
+    public final class RequestUserCoursesMoodleAPICommand extends MoodleAPICommand {
+        public RequestUserCoursesMoodleAPICommand() {
+            setShouldUpdate(true);
+        }
         @Override
         public Object execute(String jsonString) {
 
@@ -251,11 +273,13 @@ public class RealMoodleManager extends MoodleManager {
             if (moodleUserCourseList.isValid()){
                 setMoodleUserCourseList(moodleUserCourseList);
                 Utils.log("UserCoursesList is valid");
-                //TODO add method to cache user courses
             } else {
                 setMoodleUserCourseList(null);
                 //TODO check if error is for invalid token and delete cached version of token
-                Toast.makeText(currentContext, "Login session has expired", Toast.LENGTH_LONG);
+                if (moodleUserCourseList.getMessage().contains("token")) {
+                    createLoginActivity();
+                }
+                Toast.makeText(currentContext, "Login session has expired", Toast.LENGTH_LONG).show();
                 removeToken();
             }
 
@@ -266,7 +290,10 @@ public class RealMoodleManager extends MoodleManager {
     /**
      * Command that handles the creation of a new MoodleCourse object
      */
-    public final class RequestUserCourseInfoMoodleAPICommand implements MoodleAPICommand {
+    public final class RequestUserCourseInfoMoodleAPICommand extends MoodleAPICommand {
+        public RequestUserCourseInfoMoodleAPICommand() {
+            setShouldUpdate(true);
+        }
         @Override
         public Object execute(String jsonString) {
 
@@ -274,11 +301,13 @@ public class RealMoodleManager extends MoodleManager {
             if (moodleCourse.isValid()){
                 setMoodleUserCourseInfo(moodleCourse);
                 Utils.log("UserCourseInfo is valid");
-                //TODO add method to cache user courses
             }else {
                 setMoodleUserCourseInfo(null);
                 //TODO check if error is for invalid token and delete cached version of token
-                Toast.makeText(currentContext, "Login session has expired", Toast.LENGTH_LONG);
+                if (moodleCourse.getMessage().contains("token")) {
+                    createLoginActivity();
+                }
+                Toast.makeText(currentContext, "Login session has expired", Toast.LENGTH_LONG).show();
                 removeToken();
             }
 
@@ -289,7 +318,10 @@ public class RealMoodleManager extends MoodleManager {
     /**
      * Command that handles the creation of a new MoodleEvents List
      */
-    public final class RequestUserEventsAPICommand implements MoodleAPICommand {
+    public final class RequestUserEventsAPICommand extends MoodleAPICommand {
+        public RequestUserEventsAPICommand() {
+            setShouldUpdate(true);
+        }
         @Override
         public Object execute(String jsonString) {
 
@@ -298,11 +330,13 @@ public class RealMoodleManager extends MoodleManager {
             if (eventsList.isValid()){
                 setMoodleUserEventsList(eventsList);
                 Utils.log("MoodleUserEventsList is valid");
-                //TODO add method to cache user events
             }else {
                 setMoodleUserEventsList(null);
                 //TODO check if error is for invalid token and delete cached version of token
-                Toast.makeText(currentContext, "Login session has expired", Toast.LENGTH_LONG);
+                if (eventsList.getMessage().contains("token")) {
+                    createLoginActivity();
+                }
+                Toast.makeText(currentContext, "Login session has expired", Toast.LENGTH_LONG).show();
                 removeToken();
             }
 
@@ -402,18 +436,18 @@ public class RealMoodleManager extends MoodleManager {
      */
     public void saveUserToken() {
         if (currentContext != null) {
-            SharedPreferences sharedPreferences = currentContext.getSharedPreferences(currentContext.getResources().getString(R.string.moodle_user_token_shared_prefs_key),Context.MODE_PRIVATE);
+            SharedPreferences sharedPreferences = currentContext.getSharedPreferences(currentContext.getResources().getString(R.string.moodle_user_shared_prefs_key),Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPreferences.edit();
 
             editor.putString(currentContext.getResources().getString(R.string.moodle_token_key),getToken());
-            editor.commit();
+            editor.apply();
         }
     }
     /**
      * this method loads the cached version of the token
      */
     public boolean loadUserToken() {
-        SharedPreferences sharedPreferences = currentContext.getSharedPreferences(currentContext.getResources().getString(R.string.moodle_user_token_shared_prefs_key), Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = currentContext.getSharedPreferences(currentContext.getResources().getString(R.string.moodle_user_shared_prefs_key), Context.MODE_PRIVATE);
         String token = sharedPreferences.getString((currentContext.getResources().getString(R.string.moodle_token_key)),null);
 
         if (token != null){
@@ -433,18 +467,23 @@ public class RealMoodleManager extends MoodleManager {
      * This method removes the cached version of the moodle token
      *
      */
-    public boolean removeToken() {
-        SharedPreferences sharedPreferences = currentContext.getSharedPreferences(currentContext.getResources().getString(R.string.moodle_user_token_shared_prefs_key), Context.MODE_PRIVATE);
+    public void removeToken() {
+        SharedPreferences sharedPreferences = currentContext.getSharedPreferences(currentContext.getResources().getString(R.string.moodle_user_shared_prefs_key), Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
         editor.remove(currentContext.getResources().getString(R.string.moodle_token_key));
-        editor.commit();
-        return false;
-    }
+        editor.apply();
 
+    }
+    /**
+     * This method creates a Login Activity whenever a token is expired
+     */
     private void createLoginActivity() {
+    /*
         Intent intent = new Intent(getCurrentContext(), MoodleLoginActivity.class);
+        intent.putExtra("class_name", currentContext.getClass());
         getCurrentContext().startActivity(intent);
+        */
     }
 
 

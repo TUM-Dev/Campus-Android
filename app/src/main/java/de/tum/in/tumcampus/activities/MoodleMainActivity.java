@@ -7,9 +7,6 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 
 import java.util.ArrayList;
@@ -21,17 +18,16 @@ import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.generic.ActivityForDownloadingExternal;
 import de.tum.in.tumcampus.adapters.MoodleExapndabaleListAdapter;
 import de.tum.in.tumcampus.auxiliary.Utils;
-import de.tum.in.tumcampus.models.MoodleToken;
 import de.tum.in.tumcampus.models.managers.MockMoodleManager;
 import de.tum.in.tumcampus.models.managers.MoodleManager;
-import de.tum.in.tumcampus.models.managers.MoodleUpdateListViewDelegate;
+import de.tum.in.tumcampus.models.managers.MoodleUpdateDelegate;
 import de.tum.in.tumcampus.models.managers.RealMoodleManager;
 
 /**
  * This class is the main activity of the moodle which shows the list of the courses
  * and their descriptions to the user. Communicates with moodle via RealMoodleManager
  */
-public class MoodleMainActivity extends ActivityForDownloadingExternal implements ExpandableListView.OnChildClickListener, MoodleUpdateListViewDelegate {
+public class MoodleMainActivity extends ActivityForDownloadingExternal implements ExpandableListView.OnChildClickListener, MoodleUpdateDelegate {
     //Moodle API Manager
     protected MoodleManager moodleManager;
     protected MoodleManager realManager;
@@ -98,7 +94,7 @@ public class MoodleMainActivity extends ActivityForDownloadingExternal implement
      * the data is retrieved from moodleManager
      *
      */
-    public void refreshListView() {
+    public void refresh() {
         emptyListViewData();
         Map<String, String> courses = (Map<String, String>) realManager.getCoursesList();
         coursesIds = (Map<String, Integer>)realManager.getCoursesId();
@@ -159,12 +155,10 @@ public class MoodleMainActivity extends ActivityForDownloadingExternal implement
     @Override
     public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
         try{
-			String courseName = coursesAdapter.getGroup(groupPosition);
+			String courseName = coursesAdapter.getGroup(groupPosition).toString();
             int courseId = coursesIds.get(courseName);
             Intent courseInfoIntent = new Intent(this, MoodleCourseInfoActivity.class);
             
-			//TODO @Carlo Do we need to send user token? we have singleton, so we dont need hah?
-			courseInfoIntent.putExtra("user_token", null);
 			courseInfoIntent.putExtra("course_name", courseName);
 			courseInfoIntent.putExtra("course_id", courseId);
             startActivity(courseInfoIntent);
