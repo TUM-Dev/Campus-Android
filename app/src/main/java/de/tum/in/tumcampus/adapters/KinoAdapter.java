@@ -48,7 +48,7 @@ public class KinoAdapter extends FragmentStatePagerAdapter{
     @Override
     public CharSequence getPageTitle(int position){
         String title = titles.get(position);
-        return title.substring(title.indexOf(':') + 1);
+        return title.substring(title.indexOf(':') + 1).trim();
     }
 
 }

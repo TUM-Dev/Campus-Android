@@ -45,22 +45,62 @@ public class KinoDetailsFragment extends Fragment{
         final Context context = rootView.getContext();
         final Cursor cursor = new KinoManager(context).getAllFromDb();
         final NetUtils net = new NetUtils(context);
-
-        ImageView cover = new ImageView(context);
-        TextView description = new TextView(context);
-        description.setTextAppearance(context, R.style.TextAppearance_AppCompat_Medium);
-        description.setLineSpacing(0, 1.2f);
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View view;
+        TextView text;
 
         cursor.moveToPosition(position);
 
-
+        // cover
+        ImageView cover = new ImageView(context);
         net.loadAndSetImage(cursor.getString(cursor.getColumnIndex(Const.JSON_COVER)), cover);
-        description.setText(cursor.getString(cursor.getColumnIndex(Const.JSON_DESCRIPTION)));
-
-
-        // add views to the rootView
         rootView.addView(cover);
-        rootView.addView(description);
+
+        // genre
+        view = inflater.inflate(R.layout.list_header_big, rootView, false);
+        text = (TextView) view.findViewById(R.id.list_header);
+        text.setText("Genre");
+        rootView.addView(view);
+        view = inflater.inflate(R.layout.kino_content, rootView, false);
+        text = (TextView) view.findViewById(R.id.line_name);
+        text.setText(cursor.getString(cursor.getColumnIndex(Const.JSON_GENRE)));
+        rootView.addView(view);
+
+        // director
+        view = inflater.inflate(R.layout.list_header_big, rootView, false);
+        text = (TextView) view.findViewById(R.id.list_header);
+        text.setText("Director");
+        rootView.addView(view);
+        view = inflater.inflate(R.layout.kino_content, rootView, false);
+        text = (TextView) view.findViewById(R.id.line_name);
+        text.setText(cursor.getString(cursor.getColumnIndex(Const.JSON_DIRECTOR)));
+        rootView.addView(view);
+
+        // actors
+        view = inflater.inflate(R.layout.list_header_big, rootView, false);
+        text = (TextView) view.findViewById(R.id.list_header);
+        text.setText("Actors");
+        rootView.addView(view);
+        view = inflater.inflate(R.layout.kino_content, rootView, false);
+        text = (TextView) view.findViewById(R.id.line_name);
+        text.setText(cursor.getString(cursor.getColumnIndex(Const.JSON_ACTORS)));
+        rootView.addView(view);
+
+        // description
+        view = inflater.inflate(R.layout.list_header_big, rootView, false);
+        text = (TextView) view.findViewById(R.id.list_header);
+        text.setText("Description");
+        rootView.addView(view);
+        view = inflater.inflate(R.layout.kino_content, rootView, false);
+        text = (TextView) view.findViewById(R.id.line_name);
+        text.setText(cursor.getString(cursor.getColumnIndex(Const.JSON_DESCRIPTION)));
+
+        // padding is done programmatically here because we need more padding at the end
+        int padding = (int) context.getResources().getDimension(R.dimen.padding_kino);
+        int padding_right = (int) context.getResources().getDimension(R.dimen.padding_kino_right);
+        int padding_end = (int) context.getResources().getDimension(R.dimen.padding_kino_end);
+        text.setPadding(padding,padding,padding_right,padding_end);
+        rootView.addView(view);
 
 
         cursor.close();
