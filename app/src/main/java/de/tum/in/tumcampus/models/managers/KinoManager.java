@@ -118,10 +118,9 @@ public class KinoManager implements Card.ProvidesCard {
 
     /**
      * get everything from the database
-     * @param context Context
      * @return Cursor
      */
-    public Cursor getAllFromDb(Context context){
+    public Cursor getAllFromDb(){
         return db.rawQuery("SELECT * from kino",null);
     }
 

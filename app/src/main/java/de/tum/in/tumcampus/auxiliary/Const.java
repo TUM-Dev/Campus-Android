@@ -91,4 +91,5 @@ public final class Const {
     public static final String DEFAULT_CAMPUS = "card_default_campus";
     public static final String AUTO_JOIN_NEW_ROOMS = "auto_join_new_rooms";
     public static final String CHAT_MEMBER = "chat_member";
+	public static final String POSITION = "position";
 }

@@ -18,6 +18,7 @@ public class KinoActivity extends ActivityForDownloadingExternal {
     private KinoManager km;
     private ViewPager mpager;
     private KinoAdapter kinoAdapter;
+    private Cursor cursor;
 
     public KinoActivity(){
         super(Const.KINO, R.layout.activity_kino);
@@ -27,10 +28,6 @@ public class KinoActivity extends ActivityForDownloadingExternal {
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         requestDownload(false);
-
-        mpager = (ViewPager) findViewById(R.id.pager);
-        kinoAdapter = new KinoAdapter(getSupportFragmentManager());
-        mpager.setAdapter(kinoAdapter);
     }
 
     @Override
@@ -38,8 +35,19 @@ public class KinoActivity extends ActivityForDownloadingExternal {
         super.onStart();
 
         km = new KinoManager(this);
-        Cursor cursor = km.getAllFromDb(this);
+        cursor = km.getAllFromDb();
 
+        // set up ViewPager and adapter
+        mpager = (ViewPager) findViewById(R.id.pager);
+        kinoAdapter = new KinoAdapter(getSupportFragmentManager(), cursor.getCount());
+        mpager.setAdapter(kinoAdapter);
+
+    }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        cursor.close();
     }
 
 }
