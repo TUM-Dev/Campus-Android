@@ -23,25 +23,27 @@ public class Kino {
     public final String trailer;
     public final Date date;
     public final Date created;
+    public final String link;
 
     /**
      * Kino Constructor
-     * @param id
-     * @param title
-     * @param year
-     * @param runtime
-     * @param genre
-     * @param director
-     * @param actors
-     * @param rating
-     * @param description
-     * @param cover
-     * @param trailer
-     * @param date
-     * @param created
+     * @param id ID
+     * @param title Title
+     * @param year Year
+     * @param runtime Runtime
+     * @param genre Genre
+     * @param director Director
+     * @param actors Actors
+     * @param rating IMDB-Rating
+     * @param description Description
+     * @param cover Cover
+     * @param trailer Trailer
+     * @param date Date
+     * @param created Created
+     * @param link Link
      */
     public Kino(String id, String title, String year, String runtime, String genre, String director, String actors,
-                String rating, String description, String cover, String trailer, Date date, Date created){
+                String rating, String description, String cover, String trailer, Date date, Date created, String link){
         this.id = id;
         this.title = title;
         this.year = year;
@@ -55,13 +57,14 @@ public class Kino {
         this.trailer = trailer;
         this.date = date;
         this.created = created;
+        this.link = link;
     }
 
     public String toString(){
         return "id=" + id + " title=" + title + " year=" + year + " runtime=" + runtime +
                 " genre=" + genre + " director=" + director + " actors=" + actors + " rating=" + rating +
                 " description=" + description + " cover=" + cover + " trailer=" + trailer +
-                " date=" + Utils.getDateString(date) + " created=" + Utils.getDateString(created);
+                " date=" + Utils.getDateString(date) + " created=" + Utils.getDateString(created) + " link=" + link;
     }
 
 }

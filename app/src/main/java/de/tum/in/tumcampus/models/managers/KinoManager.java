@@ -41,7 +41,8 @@ public class KinoManager implements Card.ProvidesCard {
 
         // create table if needed
         db.execSQL("CREATE TABLE IF NOT EXISTS kino (id INTEGER PRIMARY KEY, title TEXT, year VARCHAR, runtime VARCHAR," +
-                "genre VARCHAR, director TEXT, actors TEXT, rating VARCHAR, description TEXT, cover TEXT, trailer TEXT, date VARCHAR, created VARCHAR)");
+                "genre VARCHAR, director TEXT, actors TEXT, rating VARCHAR, description TEXT, cover TEXT, trailer TEXT, date VARCHAR, created VARCHAR," +
+                "link TEXT)");
     }
 
 
@@ -111,8 +112,9 @@ public class KinoManager implements Card.ProvidesCard {
         String trailer = json.getString(Const.JSON_TRAILER);
         Date date = Utils.getISODateTime(json.getString(Const.JSON_DATE));
         Date created = Utils.getISODateTime(json.getString(Const.JSON_CREATED));
+        String link = json.getString(Const.JSON_LINK);
 
-        return new Kino(id, title, year, runtime, genre, director, actors, rating, description, cover, trailer, date, created);
+        return new Kino(id, title, year, runtime, genre, director, actors, rating, description, cover, trailer, date, created, link);
     }
 
 
@@ -133,10 +135,10 @@ public class KinoManager implements Card.ProvidesCard {
         Utils.logv(k.toString());
 
         db.execSQL("REPLACE INTO kino (id, title, year, runtime, genre, director, actors, rating," +
-                        "description, cover, trailer, date, created) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                        "description, cover, trailer, date, created, link) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
                 new String[]{k.id, k.title, k.year, k.runtime, k.genre, k.director, k.actors, k.rating,
                         k.description, k.cover, k.trailer, Utils.getDateTimeString(k.date),
-                        Utils.getDateTimeString(k.created)});
+                        Utils.getDateTimeString(k.created), k.link});
     }
 
 
