@@ -46,7 +46,7 @@ public class RealMoodleManager extends MoodleManager {
      *        context
      * @return
      */
-    public static RealMoodleManager getInstance(MoodleUpdateListViewDelegate delegate, Context context) {
+    public static RealMoodleManager getInstance(MoodleUpdateDelegate delegate, Context context) {
         if (instance == null) {
             instance = new RealMoodleManager(delegate);
         }
@@ -57,7 +57,7 @@ public class RealMoodleManager extends MoodleManager {
         return instance;
     }
 
-    private RealMoodleManager(MoodleUpdateListViewDelegate delegate) {
+    private RealMoodleManager(MoodleUpdateDelegate delegate) {
 
         super(delegate);
     }
@@ -181,7 +181,7 @@ public class RealMoodleManager extends MoodleManager {
                 o instanceof RequestUserEventsAPICommand ||
                     o instanceof  RequestUserCourseInfoMoodleAPICommand){
                 if (getDelegate()!= null)
-                    getDelegate().refreshListView();
+                    getDelegate().refresh();
             }
         }
     }

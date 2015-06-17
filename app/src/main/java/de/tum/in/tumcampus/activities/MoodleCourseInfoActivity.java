@@ -23,7 +23,7 @@ import de.tum.in.tumcampus.models.MoodleCourseModule;
 import de.tum.in.tumcampus.models.MoodleCourseSection;
 import de.tum.in.tumcampus.models.managers.MockMoodleManager;
 import de.tum.in.tumcampus.models.managers.MoodleManager;
-import de.tum.in.tumcampus.models.managers.MoodleUpdateListViewDelegate;
+import de.tum.in.tumcampus.models.managers.MoodleUpdateDelegate;
 import de.tum.in.tumcampus.models.managers.RealMoodleManager;
 
 /**
@@ -32,7 +32,7 @@ import de.tum.in.tumcampus.models.managers.RealMoodleManager;
  * is interested in, and they if they are files, they will be downloaded, otherwise a browser will be opened
  * to show the corresponding URL.
  */
-public class MoodleCourseInfoActivity extends ActivityForDownloadingExternal implements  MoodleUpdateListViewDelegate, ExpandableListView.OnChildClickListener, ExpandableListView.OnGroupClickListener {
+public class MoodleCourseInfoActivity extends ActivityForDownloadingExternal implements MoodleUpdateDelegate, ExpandableListView.OnChildClickListener, ExpandableListView.OnGroupClickListener {
 
 
     MoodleManager realManager;
@@ -240,7 +240,7 @@ public class MoodleCourseInfoActivity extends ActivityForDownloadingExternal imp
 
     }
     @Override
-    public void refreshListView() {
+    public void refresh() {
         MoodleCourse moodleCourse = realManager.getMoodleUserCourseInfo();
         sections = moodleCourse.getSections();
         //setting the dataAdapter
