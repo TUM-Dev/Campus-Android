@@ -154,7 +154,9 @@ public class MoodleEventsActivity extends ActivityForDownloadingExternal impleme
         intent = getIntent();
 
         //userToken = intent.getStringExtra("user_token");
-        //realManager = new MoodleManager(this);
+
+        realManager = RealMoodleManager.getInstance(this, this.getBaseContext());
+
         realManager.requestUserToken(this, "student", "moodle");
         //realManager.setMoodleUserToken(new MoodleToken());
         //realManager.getMoodleUserToken().setToken(userToken);

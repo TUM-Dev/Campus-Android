@@ -38,6 +38,7 @@ public abstract class MoodleManager {
     public abstract void setMoodleUserCourseInfo(MoodleCourse moodleUserCourseInfo);
     public abstract ArrayList<MoodleEvent> getUserEvents();
     public abstract Map<?,?> getCoursesList();
+    public abstract Map<?,?> getCoursesId();
     public abstract MoodleEventsList getMoodleUserEventsList();
     public abstract void setMoodleUserEventsList(MoodleEventsList moodleUserEventsList);
     public abstract String getToken();

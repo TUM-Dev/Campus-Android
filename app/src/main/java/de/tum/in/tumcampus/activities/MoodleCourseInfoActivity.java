@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
 
@@ -18,6 +17,7 @@ import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.generic.ActivityForDownloadingExternal;
 import de.tum.in.tumcampus.adapters.MoodleCourseInfoExpandableAdapter;
 import de.tum.in.tumcampus.auxiliary.Utils;
+import de.tum.in.tumcampus.models.MoodleCourse;
 import de.tum.in.tumcampus.models.MoodleCourseContent;
 import de.tum.in.tumcampus.models.MoodleCourseModule;
 import de.tum.in.tumcampus.models.MoodleCourseSection;
@@ -32,13 +32,14 @@ import de.tum.in.tumcampus.models.managers.RealMoodleManager;
  * is interested in, and they if they are files, they will be downloaded, otherwise a browser will be opened
  * to show the corresponding URL.
  */
-public class MoodleCourseInfoActivity extends ActivityForDownloadingExternal implements AdapterView.OnItemClickListener, MoodleUpdateListViewDelegate, ExpandableListView.OnChildClickListener, ExpandableListView.OnGroupClickListener {
+public class MoodleCourseInfoActivity extends ActivityForDownloadingExternal implements  MoodleUpdateListViewDelegate, ExpandableListView.OnChildClickListener, ExpandableListView.OnGroupClickListener {
 
 
     MoodleManager realManager;
     MoodleManager mockManager;
     private Intent intent;
     private String userToken, courseName;
+    private int courseId;
     private MoodleCourseInfoExpandableAdapter dataAdapter;
     private List<MoodleCourseSection> sections;
     private ExpandableListView view_course_sections;
@@ -82,17 +83,6 @@ public class MoodleCourseInfoActivity extends ActivityForDownloadingExternal imp
     }
 
 
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-    }
-
-    @Override
-    public void refreshListView() {
-        //TODO @carlo do whatever needs to be done
-    }
-
     /**
      * handles the click events on the child items in the expandable list
      * @param parent
@@ -111,7 +101,7 @@ public class MoodleCourseInfoActivity extends ActivityForDownloadingExternal imp
                 if (fileURL != null){
 
                     //TODO think about modifying the URL to have the token or userid
-                    Utils.log(String.format("Got this URL %s", fileURL.toString()));
+                    Utils.log("Got this URL " + fileURL.toString());
                     Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(fileURL.toString()));
                     startActivity(browserIntent);
                     return true;
@@ -128,6 +118,21 @@ public class MoodleCourseInfoActivity extends ActivityForDownloadingExternal imp
         }
     }
 
+    /**
+     *  this method completes the url sent as input adding the user toking
+     * @param urlString
+     * @return newUrlString
+     */
+    private String completeURL(String urlString ) {
+        String newUrlString;
+
+        if (urlString.contains("?")){
+            newUrlString = urlString + "token=" + realManager.getToken();
+        }
+        else newUrlString = "?token=" + realManager.getToken();
+
+        return newUrlString;
+    }
     /**
      * handles the event on clicks on the group items of the expandable list. If it is a section header,
      * does nothing. If it is a module and it has children, expand the group. if it does not have children
@@ -189,21 +194,16 @@ public class MoodleCourseInfoActivity extends ActivityForDownloadingExternal imp
             userToken = intent.getStringExtra("user_token");
             courseName = intent.getStringExtra("course_name");
             courseName = (courseName!=null) ? courseName : getString(R.string.moodle_course_name_not_found);
-            int courseId = intent.getIntExtra("course_id", 0);
+            courseId = intent.getIntExtra("course_id", 0);
             if (courseId == 0)
                 Utils.log(String.format("Warning! course id is 0=defaultValue for course %s", courseName));
 
-            // initializing UI elements
-            view_course_sections = (ExpandableListView) findViewById(R.id.moodleCourseSections);
-            view_course_sections.setOnGroupClickListener(this);
-            view_course_sections.setOnChildClickListener(this);
-            title = (TextView) findViewById(R.id.courseTitle);
-            title.setText(courseName);
-
-            //TODO replace it with realmanager
+            // TODO @carlo replace it with realmanager
             mockManager = new MockMoodleManager(this);
             sections = (List<MoodleCourseSection>) mockManager.getMoodleUserCourseInfo().getSections();
 
+            realManager = RealMoodleManager.getInstance(this, this);
+            realManager.requestUserCourseInfo(this, courseId);
             /*
             realManager = new RealMoodleManager(this);
             realManager.requestUserToken(this, "student", "moodle");
@@ -214,12 +214,40 @@ public class MoodleCourseInfoActivity extends ActivityForDownloadingExternal imp
             sections = realManager.getMoodleUserCourseInfo().getSections();
             */
 
-            dataAdapter = new MoodleCourseInfoExpandableAdapter(sections, this);
-            view_course_sections.setAdapter(dataAdapter);
+
+            //UI setup and adapter
+            baseUISetup();
+
         }catch (Exception e){
             Utils.log(e);
             Utils.showToast(this.getApplicationContext(), "Sorry! Something went wrong!");
             finish();
         }
     }
+
+    public void baseUISetup(){
+
+        // initializing UI elements
+        view_course_sections = (ExpandableListView) findViewById(R.id.moodleCourseSections);
+        view_course_sections.setOnGroupClickListener(this);
+        view_course_sections.setOnChildClickListener(this);
+        title = (TextView) findViewById(R.id.courseTitle);
+        title.setText(courseName);
+
+        //setting the dataAdapter
+        dataAdapter = new MoodleCourseInfoExpandableAdapter(sections, this);
+        view_course_sections.setAdapter(dataAdapter);
+
+    }
+    @Override
+    public void refreshListView() {
+        MoodleCourse moodleCourse = realManager.getMoodleUserCourseInfo();
+        sections = moodleCourse.getSections();
+        //setting the dataAdapter
+        dataAdapter = new MoodleCourseInfoExpandableAdapter(sections, this);
+        view_course_sections.setAdapter(dataAdapter);
+
+    }
+
+
 }

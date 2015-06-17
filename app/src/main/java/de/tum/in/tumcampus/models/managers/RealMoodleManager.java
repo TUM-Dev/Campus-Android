@@ -1,6 +1,7 @@
 package de.tum.in.tumcampus.models.managers;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.widget.Toast;
@@ -10,6 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import de.tum.in.tumcampus.R;
+import de.tum.in.tumcampus.activities.MoodleLoginActivity;
 import de.tum.in.tumcampus.auxiliary.NetUtils;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.MoodleCourse;
@@ -176,8 +178,10 @@ public class RealMoodleManager extends MoodleManager {
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
             if (o instanceof RequestUserCoursesMoodleAPICommand ||
-                o instanceof RequestUserEventsAPICommand    ){
-                getDelegate().refreshListView();
+                o instanceof RequestUserEventsAPICommand ||
+                    o instanceof  RequestUserCourseInfoMoodleAPICommand){
+                if (getDelegate()!= null)
+                    getDelegate().refreshListView();
             }
         }
     }
@@ -329,6 +333,20 @@ public class RealMoodleManager extends MoodleManager {
         return userCoursesMap;
     }
 
+    @Override
+    public Map<?,?> getCoursesId(){
+        if (getMoodleUserCourseList() == null) return null;
+        Map<String,Integer> userCoursesMap = new HashMap<String,Integer>();
+
+        for (Object courseObj : getMoodleUserCourseList().getSections()) {
+            MoodleUserCourse course = (MoodleUserCourse) courseObj;
+
+            userCoursesMap.put(course.getFullname(),(int)course.getId());
+        }
+
+        return userCoursesMap;
+    }
+
     public Context getCurrentContext() {
         return currentContext;
     }
@@ -424,7 +442,10 @@ public class RealMoodleManager extends MoodleManager {
         return false;
     }
 
-
+    private void createLoginActivity() {
+        Intent intent = new Intent(getCurrentContext(), MoodleLoginActivity.class);
+        getCurrentContext().startActivity(intent);
+    }
 
 
 }

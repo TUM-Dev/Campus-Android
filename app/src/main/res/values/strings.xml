@@ -446,4 +446,7 @@ Signature: %5$s</string>
     <string name="no_url">Sorry ! No URL is available for this item</string>
     <string name="moodle_course_name_not_found">Course Name not Found</string>
     <string name="search_hint">Stop Name</string>
+
+    <string name="moodle_courses-error">Sorry! something went wrong! Cannot open the page for this course</string>
+
 </resources>
