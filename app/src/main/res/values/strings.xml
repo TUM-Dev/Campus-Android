@@ -131,6 +131,8 @@
     <string name="opening_hours">Opening Hours</string>
     <string name="organisations">Organizations</string>
     <string name="mvv">MVV</string>
+    <string name="mvv2">MVV2</string>
+    <string name="MVVBaseURL">MVV2</string>
     <string name="news">News</string>
     <string name="moodle">Moodle</string>
 
@@ -443,4 +445,5 @@ Signature: %5$s</string>
     <string name="moodle_profile">profile</string>
     <string name="no_url">Sorry ! No URL is available for this item</string>
     <string name="moodle_course_name_not_found">Course Name not Found</string>
+    <string name="search_hint">Stop Name</string>
 </resources>
