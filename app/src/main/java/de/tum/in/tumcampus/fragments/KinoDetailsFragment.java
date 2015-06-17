@@ -54,8 +54,8 @@ public class KinoDetailsFragment extends Fragment{
         cursor.moveToPosition(position);
 
 
-        net.loadAndSetImage(cursor.getString(9), cover);
-        description.setText(cursor.getString(8));
+        net.loadAndSetImage(cursor.getString(cursor.getColumnIndex(Const.JSON_COVER)), cover);
+        description.setText(cursor.getString(cursor.getColumnIndex(Const.JSON_DESCRIPTION)));
 
 
         // add views to the rootView

@@ -1,10 +1,13 @@
 package de.tum.in.tumcampus.adapters;
 
 
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+
+import java.util.ArrayList;
 
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.fragments.KinoDetailsFragment;
@@ -15,10 +18,16 @@ import de.tum.in.tumcampus.fragments.KinoDetailsFragment;
 public class KinoAdapter extends FragmentStatePagerAdapter{
 
     private int count; //number of pages
+    private ArrayList<String> titles = new ArrayList<>();
 
-    public KinoAdapter(FragmentManager fm, int count){
+    public KinoAdapter(FragmentManager fm, Cursor cursor){
         super(fm);
-        this.count = count;
+        count = cursor.getCount();
+
+        for (int i = 0; i < getCount(); i++){
+            cursor.moveToPosition(i);
+            titles.add(i, cursor.getString(cursor.getColumnIndex(Const.JSON_TITLE)));
+        }
     }
 
     @Override
@@ -35,4 +44,11 @@ public class KinoAdapter extends FragmentStatePagerAdapter{
     public int getCount() {
         return count;
     }
+
+    @Override
+    public CharSequence getPageTitle(int position){
+        String title = titles.get(position);
+        return title.substring(title.indexOf(':') + 1);
+    }
+
 }

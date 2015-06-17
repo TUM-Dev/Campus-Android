@@ -39,7 +39,7 @@ public class KinoActivity extends ActivityForDownloadingExternal {
 
         // set up ViewPager and adapter
         mpager = (ViewPager) findViewById(R.id.pager);
-        kinoAdapter = new KinoAdapter(getSupportFragmentManager(), cursor.getCount());
+        kinoAdapter = new KinoAdapter(getSupportFragmentManager(), cursor);
         mpager.setAdapter(kinoAdapter);
 
     }
