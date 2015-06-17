@@ -487,6 +487,17 @@
 
 
 
+        <activity
+            android:name=".activities.MVVActivity"
+            android:label="@string/mvv2"
+            android:launchMode="singleTop"
+            android:parentActivityName=".activities.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="de.tum.in.tumcampus.activities.MainActivity" />
+        </activity>
+
+
         <!-- Used to reset Alarm when device has been restarted -->
         <receiver android:name=".services.StartSyncReceiver" >
             <intent-filter>

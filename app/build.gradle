@@ -48,4 +48,5 @@ dependencies {
     compile project(":libraries:emojicon")
     compile project(":libraries:PullToRefresh")
     compile 'com.github.machinarius:preferencefragment:0.1.1'
+    compile 'org.jsoup:jsoup:1.8.2'
 }
