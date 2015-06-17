@@ -444,4 +444,9 @@ Signature: %5$s</string>
     <string name="moodle_user_info">MoodleUserTokenSharedPrefFile</string>
     <string name="moodle_token_key">MoodleTokenKey</string>
     <string name="moodle_course_id_not_found">Warning, course id not found</string>
+    <string name="moodle_login_request">Login to www.moodle.tum.de</string>
+    <string name="mooodle_username">e.g. go42tum / muster@tum.de</string>
+    <string name="button_login">Login</string>
+    <string name="login_failed">Username or Password you provided is not right!</string>
+
 </resources>

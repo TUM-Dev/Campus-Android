@@ -158,7 +158,7 @@ public class MoodleMainActivity extends ActivityForDownloadingExternal implement
 			String courseName = coursesAdapter.getGroup(groupPosition).toString();
             int courseId = coursesIds.get(courseName);
             Intent courseInfoIntent = new Intent(this, MoodleCourseInfoActivity.class);
-            
+     
 			courseInfoIntent.putExtra("course_name", courseName);
 			courseInfoIntent.putExtra("course_id", courseId);
             startActivity(courseInfoIntent);

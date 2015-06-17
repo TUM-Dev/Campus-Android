@@ -55,7 +55,6 @@ public class MoodleEventsActivity extends ActivityForDownloadingExternal impleme
         baseSetUp();
         mDialog.show();
         realManager.requestUserEvents(this);
-        //refresh();
     }
 
 
@@ -153,7 +152,9 @@ public class MoodleEventsActivity extends ActivityForDownloadingExternal impleme
         intent = getIntent();
 
         //userToken = intent.getStringExtra("user_token");
+
         realManager = RealMoodleManager.getInstance(this, this.getBaseContext());
+
         realManager.requestUserToken(this, "student", "moodle");
         //realManager.setMoodleUserToken(new MoodleToken());
         //realManager.getMoodleUserToken().setToken(userToken);
