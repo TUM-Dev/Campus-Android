@@ -7,7 +7,7 @@
         android:id="@+id/mvv_query"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/search_hint"
+        android:hint="@string/search"
         android:inputType="text"
         android:imeOptions="actionSend" />
 
