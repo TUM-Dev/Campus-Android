@@ -34,12 +34,21 @@ public class MoodleLoginActivity extends ActivityForDownloadingExternal implemen
     @Override
     public void onCreate(Bundle savedInstance){
         super.onCreate(savedInstance);
-        Class<?> previousClass = (Class<?>)getIntent().getExtras().get("class_name");
-        if (previousClass == null) {
-            Utils.log("Warn! previous class was null!");
-            previousClass = MoodleMainActivity.class;
+        baseSetup();
+        initialiseNextIntent();
+    }
+
+    public void initialiseNextIntent(){
+        try {
+            Class<?> previousClass = (Class<?>) getIntent().getExtras().get("class_name");
+            if (previousClass == null) {
+                Utils.log("Warn! previous class was null!");
+                previousClass = MoodleMainActivity.class;
+            }
+            intent = new Intent(this, previousClass);
+        }catch (Exception e) {
+            Utils.log(e, "Error! could not get the class form intent");
         }
-        intent = new Intent(this, previousClass);
     }
 
     public Intent getIntentForPreviousActivity( String className){
@@ -54,7 +63,7 @@ public class MoodleLoginActivity extends ActivityForDownloadingExternal implemen
         }
     }
 
-    public void setUp(){
+    public void baseSetup(){
         realManager = RealMoodleManager.getInstance(this, this);
         userNameField = (EditText)findViewById(R.id.user_name);
         passwordField = (EditText)findViewById(R.id.password);

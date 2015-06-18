@@ -48,7 +48,6 @@ public class MoodleMainActivity extends ActivityForDownloadingExternal implement
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         baseSetUp();
-        //TODO need login
         mDialog.show();
         realManager.requestUserToken(this, "student", "moodle");
     }
@@ -155,10 +154,10 @@ public class MoodleMainActivity extends ActivityForDownloadingExternal implement
     @Override
     public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
         try{
-			String courseName = coursesAdapter.getGroup(groupPosition).toString();
+			String courseName = (String)coursesAdapter.getGroup(groupPosition);
             int courseId = coursesIds.get(courseName);
             Intent courseInfoIntent = new Intent(this, MoodleCourseInfoActivity.class);
-     
+            
 			courseInfoIntent.putExtra("course_name", courseName);
 			courseInfoIntent.putExtra("course_id", courseId);
             startActivity(courseInfoIntent);
