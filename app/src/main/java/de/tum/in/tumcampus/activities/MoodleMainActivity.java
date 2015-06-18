@@ -48,7 +48,6 @@ public class MoodleMainActivity extends ActivityForDownloadingExternal implement
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         baseSetUp();
-        //TODO need login
         mDialog.show();
         realManager.requestUserToken(this, "student", "moodle");
     }
@@ -159,7 +158,6 @@ public class MoodleMainActivity extends ActivityForDownloadingExternal implement
             int courseId = coursesIds.get(courseName);
             Intent courseInfoIntent = new Intent(this, MoodleCourseInfoActivity.class);
             
-			//TODO @Carlo Do we need to send user token? we have singleton, so we dont need hah?
 			courseInfoIntent.putExtra("course_name", courseName);
 			courseInfoIntent.putExtra("course_id", courseId);
             startActivity(courseInfoIntent);

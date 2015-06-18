@@ -157,12 +157,30 @@
     <!-- Moodle -->
     <string name="moodle_user_token_shared_prefs_key">MoodleUserTokenSharedPrefFile</string>
     <string name="moodle_token_key">MoodleTokenKey</string>
-    
+    <string name="moodle_settings">Settings</string>
+    <string name="title_activity_moodle_main">Moodle</string>
+    <string name="title_activity_moodle_events">Events</string>
+    <string name="title_activity_moodle_course_info">Course Info</string>
+    <string name="moodle_courses">courses</string>
+    <string name="moodle_events">events</string>
+    <string name="moodle_profile">profile</string>
+    <string name="no_url">Sorry ! No URL is available for this item</string>
+    <string name="moodle_course_name_not_found">Course Name not Found</string>
+    <string name="moodle_courses_error">Sorry! something went wrong! Cannot open the page for this course</string>
+    <string name="moodle_login_request">Login to www.moodle.tum.de</string>
+    <string name="mooodle_username">e.g. go42tum / muster@tum.de</string>
+    <string name="button_login">Login</string>
+    <string name="title_moodle_login">Moodle Login</string>
+    <string name="login_failed">Username or Password you provided is not right!</string>
+
+
     <!-- MVV -->
     <string name="no_departures_found">No departures available</string>
+    <string name="mvv2">fuck you enrico mvv</string>
     <string name="exception_unknown">Unknown error</string>
     <string name="exception_timeout">Problems with internet connection, please try again later</string>
     <string name="search_station">Search station</string>
+    <string name="search_hint">Search hint?</string>
 
     <!-- Lectures -->
     <string name="no_appointments">No appointments available</string>
@@ -432,21 +450,5 @@ Signature: %5$s</string>
     <string name="new_chat_room_desc">Select a name for your chat room. The name can not be changed afterwards!\n\n</string>
     <string name="just_now">Just now</string>
     <string name="yesterday">Yesterday</string>
-
-    <!-- Moodle -->
-    <string name="moodle_settings">Settings</string>
-    <string name="title_activity_moodle_main">Moodle</string>
-    <string name="title_activity_moodle_events">Events</string>
-    <string name="title_activity_moodle_course_info">Course Info</string>
-    <string name="moodle_courses">courses</string>
-    <string name="moodle_events">events</string>
-    <string name="moodle_profile">profile</string>
-    <string name="no_url">Sorry ! No URL is available for this item</string>
-    <string name="moodle_course_name_not_found">Course Name not Found</string>
-    <string name="moodle_courses_error">Sorry! something went wrong! Cannot open the page for this course</string>
-    <string name="moodle_login_request">Login to www.moodle.tum.de</string>
-    <string name="mooodle_username">e.g. go42tum / muster@tum.de</string>
-    <string name="button_login">Login</string>
-    <string name="login_failed">Username or Password you provided is not right!</string>
 
 </resources>
