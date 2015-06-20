@@ -170,9 +170,11 @@
     <string name="moodle_login_request">Login to www.moodle.tum.de</string>
     <string name="mooodle_username">e.g. go42tum / muster@tum.de</string>
     <string name="button_login">Login</string>
-    <string name="title_moodle_login">Moodle Login</string>
+    <string name="title_activity_moodle_login">Moodle Login</string>
     <string name="login_failed">Username or Password you provided is not right!</string>
-
+    <string name="moodle_user_shared_prefs_key">MOODLE</string>
+    <string name="moodle_course_id_not_found">Could not get the page for this course!</string>
+    <string name="moodle_stay_here">You are already there fella! :)</string>
 
     <!-- MVV -->
     <string name="no_departures_found">No departures available</string>

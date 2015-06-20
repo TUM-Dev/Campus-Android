@@ -1,8 +1,10 @@
 package de.tum.in.tumcampus.activities;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -28,9 +30,11 @@ import de.tum.in.tumcampus.models.managers.RealMoodleManager;
  * and their descriptions to the user. Communicates with moodle via RealMoodleManager
  */
 public class MoodleMainActivity extends ActivityForDownloadingExternal implements ExpandableListView.OnChildClickListener, MoodleUpdateDelegate {
+
     //Moodle API Manager
     protected MoodleManager moodleManager;
     protected MoodleManager realManager;
+
     //ProgressDialog for loading
     private ProgressDialog mDialog;
 
@@ -39,6 +43,9 @@ public class MoodleMainActivity extends ActivityForDownloadingExternal implement
     Map <String, Integer> coursesIds;
     Map<String,List<String>> courseListChilds;
     ExpandableListView expListView;
+
+
+    private static boolean deletingSharedPref = true;
 
     public MoodleMainActivity() {
         super("Moodle", R.layout.activity_moodle_main);
@@ -49,7 +56,23 @@ public class MoodleMainActivity extends ActivityForDownloadingExternal implement
         super.onCreate(savedInstanceState);
         baseSetUp();
         mDialog.show();
-        realManager.requestUserToken(this, "student", "moodle");
+
+        if (deletingSharedPref){
+            //just for testing login
+            //at the start of the activity delete the cached token
+            //inorder to bring up the login activty
+
+            SharedPreferences sharedPreferences = getSharedPreferences(getResources().getString(R.string.moodle_user_shared_prefs_key), Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString(getResources().getString(R.string.moodle_token_key),null);
+            editor.apply();
+            deletingSharedPref = false;
+        }
+
+        // check if we need to bring up the login page
+        if (! checkLoginNeeded())
+            realManager.requestUserData(this);
+
     }
 
     @Override
@@ -65,22 +88,15 @@ public class MoodleMainActivity extends ActivityForDownloadingExternal implement
         switch(item.getItemId()){
             case R.id.moodle_my_courses:
                 //do nothing
+                Utils.showToast(this,R.string.moodle_stay_here);
                 return true;
             case R.id.events:
                 Intent eventIntent = new Intent(this,MoodleEventsActivity.class);
-
-
-
-                eventIntent.putExtra("user_token", realManager.getToken());
                 startActivity(eventIntent);
                 return true;
 
             case R.id.moodle_profile:
                 //TODO change this part to show user profile not course with course id=62 ! Fucker!
-                Intent courseInfoIntent = new Intent(this,MoodleCourseInfoActivity.class);
-
-                courseInfoIntent.putExtra("user_token", realManager.getToken());
-                startActivity(courseInfoIntent);
                 return true;
 
         }
@@ -96,16 +112,39 @@ public class MoodleMainActivity extends ActivityForDownloadingExternal implement
     public void refresh() {
         emptyListViewData();
         Map<String, String> courses = (Map<String, String>) realManager.getCoursesList();
-        coursesIds = (Map<String, Integer>)realManager.getCoursesId();
-        for (Map.Entry <String, String >item: courses.entrySet()){
-            List<String> temp = new ArrayList<String>();
-            temp.add(item.getValue());
-            courseListChilds.put(item.getKey(), temp);
-            courseListHeaders.add(item.getKey());
+
+
+        // userinfo is still null !! make the user Login again
+        if (realManager.getMoodleUserInfo() == null) {
+            Utils.log("UserInfo is still null dude!");
+            Utils.log("starting Login Intent and finishing main activity");
+
+            Intent intent = new Intent(this, MoodleLoginActivity.class);
+            intent.putExtra("class", this.getClass());
+            intent.putExtra("outside_activity", false);
+            startActivity(intent);
+            finish();
+            return;
         }
-        baseSetupForListView();
-        mDialog.dismiss();
-        coursesAdapter.notifyDataSetChanged();
+
+        if (courses == null) {
+            realManager.requestUserCourseList(this);
+            return;
+        }else {
+
+            //populate the view with user's courses
+            coursesIds = (Map<String, Integer>) realManager.getCoursesId();
+            for (Map.Entry<String, String> item : courses.entrySet()) {
+                List<String> temp = new ArrayList<String>();
+                temp.add(item.getValue());
+                courseListChilds.put(item.getKey(), temp);
+                courseListHeaders.add(item.getKey());
+            }
+            baseSetupForListView();
+            mDialog.dismiss();
+            coursesAdapter.notifyDataSetChanged();
+        }
+
     }
 
     /**
@@ -115,23 +154,50 @@ public class MoodleMainActivity extends ActivityForDownloadingExternal implement
         mDialog = new ProgressDialog(this);
         mDialog.setMessage(getResources().getString(R.string.loading));
         mDialog.setCancelable(true);
-        mDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
+       mDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener() {
+           @Override
+           public void onClick(DialogInterface dialog, int which) {
+               dialog.dismiss();
+           }
+       });
 
         //creating a mock object of moodle manager
         moodleManager = new MockMoodleManager(this);
         //creating realManager
         realManager = RealMoodleManager.getInstance(this, this);
-
         expListView = (ExpandableListView) findViewById(R.id.coursesExp);
-
+        expListView.setOnChildClickListener(this);
         emptyListViewData();
+    }
 
+    private boolean checkLoginNeeded(){
+        // check if the token is null
+        if (realManager.getMoodleUserToken() == null) {
 
+            // initial start of the moodle program
+            Utils.log("Token of moodlemanager is null");
+            // check if the token in shared pref is also null
+            if (realManager.loadUserToken()) {
+
+                // got the token from shared pref
+                Utils.log("Token loaded from sharedpref is not null");
+                return false;
+            }
+            else{
+
+                // token is empty user should log in again
+                Utils.log("starting login activity");
+
+                Intent loginIntent = new Intent(this, MoodleLoginActivity.class);
+                loginIntent.putExtra("class", this.getClass());
+                loginIntent.putExtra("outside_activity", false);
+                startActivity(loginIntent);
+                finish();
+                return true;
+            }
+        }else
+            // activity started from other activities in moodle
+            return false;
     }
 
     /**
@@ -151,13 +217,16 @@ public class MoodleMainActivity extends ActivityForDownloadingExternal implement
         coursesIds = new HashMap<String, Integer>();
     }
 
+
     @Override
     public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
         try{
 			String courseName = (String)coursesAdapter.getGroup(groupPosition);
             int courseId = coursesIds.get(courseName);
+
+            Utils.log(courseName + " id " + courseId);
+
             Intent courseInfoIntent = new Intent(this, MoodleCourseInfoActivity.class);
-            
 			courseInfoIntent.putExtra("course_name", courseName);
 			courseInfoIntent.putExtra("course_id", courseId);
             startActivity(courseInfoIntent);

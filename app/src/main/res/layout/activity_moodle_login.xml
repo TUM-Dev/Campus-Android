@@ -47,7 +47,7 @@
                 android:textColor="#db999da3"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="20dp"
-                android:onClick="login" />
+                />
 
             <EditText android:id="@+id/password"
                 android:layout_width="250dp"

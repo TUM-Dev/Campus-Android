@@ -50,7 +50,7 @@ public abstract class MoodleManager {
     public abstract void requestUserCourseList(Context currentContext);
     public abstract void requestUserCourseInfo(Context currentContext, int courseId);
     public abstract void requestUserEvents(Context currentContext);
-
+    public abstract boolean loadUserToken();
     public  MoodleManager(MoodleUpdateDelegate delegate){
         setDelegate(delegate);
     }

@@ -1,6 +1,7 @@
 package de.tum.in.tumcampus.models.managers;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.widget.Toast;
@@ -10,6 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import de.tum.in.tumcampus.R;
+import de.tum.in.tumcampus.activities.MoodleLoginActivity;
 import de.tum.in.tumcampus.auxiliary.NetUtils;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.MoodleCourse;
@@ -176,6 +178,7 @@ public class RealMoodleManager extends MoodleManager {
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
             if (command.isUpdating()){
+                Utils.log("calling refresh for command " + command.toString());
                 if (getDelegate()!= null)
                     getDelegate().refresh();
             }
@@ -205,7 +208,7 @@ public class RealMoodleManager extends MoodleManager {
      */
     public final class RequestUserTokenMoodleAPICommand extends MoodleAPICommand {
         public RequestUserTokenMoodleAPICommand() {
-            setShouldUpdate(false);
+            setShouldUpdate(true);
         }
         @Override
         public Object execute(String jsonString) {
@@ -215,11 +218,27 @@ public class RealMoodleManager extends MoodleManager {
             if (moodleToken.isValid()){
                 setMoodleUserToken(moodleToken);
                 Utils.log("UserToken is valid");
-                requestUserData(currentContext);
+                /* arash: I commented this, MoodlemainActivity class
+                is responsible to call requestUserData method !
+                because of the nature of the refreshing the delegate
+                class if moodlemanager wants to start login activity
+                calling requestUserdata within moodlemanager will cause
+                 confusion and bug in loginActivity's refresh method
+                either refresh method should be changed inorder to include
+                 some data about the APIcommand which is refreshing the delegate
+                 or just MoodlemainActivty must be held responsible for calling
+                 requestmoodleuser data
+                 because of the aynch nature of calling API commands
+                 I set requestUserData to refresh the delegate in order to avoid
+                 null pointerException when requesting e.g userCourseList within
+                 mainActivity. It is not obvious when userdata will be available
+                */
+                //requestUserData(currentContext);
                 saveUserToken();
             }else {
                 if (moodleToken.getErrorCode().equals("invalidtoken")){
-                    //createLoginActivity();
+                    Utils.log("invalid token!");
+                    createLoginActivity();
                 }
                 setMoodleUserToken(null);
                 //removeToken();
@@ -233,7 +252,7 @@ public class RealMoodleManager extends MoodleManager {
      */
     public final class RequestUserInfoMoodleAPICommand extends MoodleAPICommand {
         public RequestUserInfoMoodleAPICommand() {
-            setShouldUpdate(false);
+            setShouldUpdate(true);
         }
         @Override
         public Object execute(String jsonString) {
@@ -243,14 +262,16 @@ public class RealMoodleManager extends MoodleManager {
             if (moodleUser.isValid()){
                 setMoodleUserInfo(moodleUser);
                 Utils.log("UserInfo is valid");
-                requestUserCourseList(currentContext);
                 //TODO add method to cache user info
             }else {
+                Utils.log("Warning ! UserInfo is not valid!");
                 setMoodleUserInfo(null);
                 //TODO check if error is for invalid token and delete cached version of token
+                createLoginActivity();
                 if (moodleUser.getMessage().contains("token")) {
                     createLoginActivity();
                 }
+
                 Toast.makeText(currentContext, "Login session has expired", Toast.LENGTH_LONG).show();
                 removeToken();
             }
@@ -353,6 +374,10 @@ public class RealMoodleManager extends MoodleManager {
         return getMoodleUserEventsList().getSections();
     }
 
+    /**
+     *
+     * @return map of course names to course Ids
+     */
     @Override
     public Map<?, ?> getCoursesList() {
         if (getMoodleUserCourseList() == null) return null;
@@ -427,7 +452,12 @@ public class RealMoodleManager extends MoodleManager {
         this.moodleUserEventsList = moodleUserEventsList;
     }
     public String getToken(){
-        return getMoodleUserToken().getToken();
+        try {
+            return getMoodleUserToken().getToken();
+        }catch (Exception e){
+            Utils.log(e);
+            return null;
+        }
     }
 
     /**
@@ -446,6 +476,7 @@ public class RealMoodleManager extends MoodleManager {
     /**
      * this method loads the cached version of the token
      */
+    @Override
     public boolean loadUserToken() {
         SharedPreferences sharedPreferences = currentContext.getSharedPreferences(currentContext.getResources().getString(R.string.moodle_user_shared_prefs_key), Context.MODE_PRIVATE);
         String token = sharedPreferences.getString((currentContext.getResources().getString(R.string.moodle_token_key)),null);
@@ -479,11 +510,12 @@ public class RealMoodleManager extends MoodleManager {
      * This method creates a Login Activity whenever a token is expired
      */
     private void createLoginActivity() {
-    /*
+
         Intent intent = new Intent(getCurrentContext(), MoodleLoginActivity.class);
-        intent.putExtra("class_name", currentContext.getClass());
+        intent.putExtra("class", currentContext.getClass());
+        intent.putExtra("outside_activity", true);
         getCurrentContext().startActivity(intent);
-        */
+
     }
 
 

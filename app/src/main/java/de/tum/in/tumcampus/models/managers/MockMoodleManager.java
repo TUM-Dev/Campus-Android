@@ -55,6 +55,8 @@ public class MockMoodleManager extends MoodleManager{
         return null;
     }
 
+    @Override
+    public boolean loadUserToken(){return true;}
 
 
     @Override
