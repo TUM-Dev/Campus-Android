@@ -22,6 +22,7 @@ import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.generic.ActivityForDownloadingExternal;
 import de.tum.in.tumcampus.adapters.MoodleEventAdapter;
 import de.tum.in.tumcampus.auxiliary.DateUtils;
+import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.MoodleEvent;
 import de.tum.in.tumcampus.models.managers.MoodleManager;
 import de.tum.in.tumcampus.models.managers.MoodleUpdateDelegate;
@@ -36,9 +37,6 @@ public class MoodleEventsActivity extends ActivityForDownloadingExternal impleme
     MoodleManager realManager;
     ProgressDialog mDialog;
 
-    Intent intent;
-
-    private String userToken;
     private RecyclerView eventsRecyclerView;
     private RecyclerView.LayoutManager eventsLayoutManager;
     private RecyclerView.Adapter eventsAdapter;
@@ -75,14 +73,11 @@ public class MoodleEventsActivity extends ActivityForDownloadingExternal impleme
                 return true;
             case R.id.events:
                 // Do nothing
+                Utils.showToast(this,R.string.moodle_stay_here);
                 return true;
 
             case R.id.moodle_profile:
                 //TODO change this part to show user profile not course with course id=62 ! Fucker!
-                Intent courseInfoIntent = new Intent(this,MoodleCourseInfoActivity.class);
-
-                courseInfoIntent.putExtra("user_token", realManager.getToken());
-                startActivity(courseInfoIntent);
                 return true;
         }
         return false;
@@ -128,11 +123,16 @@ public class MoodleEventsActivity extends ActivityForDownloadingExternal impleme
      */
     public void refresh() {
 
-        userEvents = new ArrayList<MoodleEvent>(realManager.getUserEvents());
-        eventsAdapter = new MoodleEventAdapter(userEvents, this);
-        eventsRecyclerView.setAdapter(eventsAdapter);
-        eventsAdapter.notifyDataSetChanged();
-        mDialog.dismiss();
+        try {
+            userEvents = new ArrayList<MoodleEvent>(realManager.getUserEvents());
+            eventsAdapter = new MoodleEventAdapter(userEvents, this);
+            eventsRecyclerView.setAdapter(eventsAdapter);
+            eventsAdapter.notifyDataSetChanged();
+            mDialog.dismiss();
+        }catch (Exception e){
+            Utils.log(e,"events activity getting refresh failed");
+            Utils.showToast(this,"Sorry something went wrong!");
+        }
 
     }
 
@@ -149,16 +149,8 @@ public class MoodleEventsActivity extends ActivityForDownloadingExternal impleme
                 dialog.dismiss();
             }
         });
-        intent = getIntent();
 
-        //userToken = intent.getStringExtra("user_token");
-
-        realManager = RealMoodleManager.getInstance(this, this.getBaseContext());
-
-        realManager.requestUserToken(this, "student", "moodle");
-        //realManager.setMoodleUserToken(new MoodleToken());
-        //realManager.getMoodleUserToken().setToken(userToken);
-        //realManager.requestUserData(this);
+        realManager = RealMoodleManager.getInstance(this, this);
 
         eventsRecyclerView = (RecyclerView) findViewById(R.id.moodleEventList);
         eventsLayoutManager = new LinearLayoutManager(this);
