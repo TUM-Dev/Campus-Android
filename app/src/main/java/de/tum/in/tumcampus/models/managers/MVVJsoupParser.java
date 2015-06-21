@@ -70,6 +70,13 @@ public class MVVJsoupParser extends AsyncTask<String, Void, MVVObject> {
                 Elements stationList = doc.select(".stationColumn");
                 Elements inMinList = doc.select(".inMinColumn");
 
+                // there is just on item in each List
+                Elements headerStation = doc.select(".headerStationColumn");
+                Elements serverTime = doc.select(".serverTimeColumn");
+
+                result.setDepartureHeader(headerStation.get(0).text());
+                result.setDepartureServerTime(serverTime.get(0).text());
+
                 for (int i = 0; i<lineList.size();i++){
                     MVVDeparture dep = new MVVDeparture(lineList.get(i).text(),stationList.get(i).text(),Integer.parseInt(inMinList.get(i).text()));
                     result.getResultList().add(dep);

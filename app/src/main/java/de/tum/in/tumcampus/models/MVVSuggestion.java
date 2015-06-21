@@ -10,14 +10,39 @@ import de.tum.in.tumcampus.R;
 
 public class MVVSuggestion extends  MVVObject {
 
-    public static String baseURL="http://www.mvg-live.de";
-    public String link;
-    public String name;
+    private static String baseURL="http://www.mvg-live.de";
+    private String link;
+    private String name;
 
     public MVVSuggestion(String link, String name) {
-
+        this.isSuggestion = true;
         this.link = baseURL + link;
         this.name = name;
 
     }
+    public static String getBaseURL() {
+        return baseURL;
+    }
+
+    public static void setBaseURL(String baseURL) {
+        MVVSuggestion.baseURL = baseURL;
+    }
+
+    public String getLink() {
+        return link;
+    }
+
+    public void setLink(String link) {
+        this.link = link;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+
 }
