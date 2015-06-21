@@ -17,8 +17,27 @@ public class MVVObject implements Serializable {
     protected String errorCode = "";
     protected String message = "";
 
+    private String departureHeader;
+    private String departureServerTime;
+
     private List<MVVObject> resultList = new ArrayList<MVVObject>();
 
+
+    public String getDepartureHeader() {
+        return departureHeader;
+    }
+
+    public void setDepartureHeader(String departureHeader) {
+        this.departureHeader = departureHeader;
+    }
+
+    public String getDepartureServerTime() {
+        return departureServerTime;
+    }
+
+    public void setDepartureServerTime(String departureServerTime) {
+        this.departureServerTime = departureServerTime;
+    }
     public boolean isValid() {
         return isValid;
     }
