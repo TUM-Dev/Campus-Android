@@ -10,6 +10,8 @@ import android.widget.EditText;
 
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.generic.ActivityForDownloadingExternal;
+import de.tum.in.tumcampus.activities.generic.ProgressActivity;
+import de.tum.in.tumcampus.auxiliary.NetUtils;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.managers.MoodleManager;
 import de.tum.in.tumcampus.models.managers.MoodleUpdateDelegate;
@@ -18,7 +20,7 @@ import de.tum.in.tumcampus.models.managers.RealMoodleManager;
 /**
  * Created by carlodidomenico on 16/06/15.
  */
-public class MoodleLoginActivity extends ActivityForDownloadingExternal implements MoodleUpdateDelegate, View.OnClickListener {
+public class MoodleLoginActivity extends ProgressActivity implements MoodleUpdateDelegate, View.OnClickListener {
 
     protected MoodleManager realManager;
 
@@ -29,7 +31,7 @@ public class MoodleLoginActivity extends ActivityForDownloadingExternal implemen
     private Intent intent;
 
     public MoodleLoginActivity() {
-        super("moodle_login", R.layout.activity_moodle_login);
+        super(R.layout.activity_moodle_login);
     }
 
     @Override
@@ -37,6 +39,11 @@ public class MoodleLoginActivity extends ActivityForDownloadingExternal implemen
         super.onCreate(savedInstance);
         baseSetup();
        initialiseNextIntent();
+    }
+
+    @Override
+    public void onRefresh() {
+        showLoadingEnded();
     }
 
     public void initialiseNextIntent(){
@@ -74,14 +81,21 @@ public class MoodleLoginActivity extends ActivityForDownloadingExternal implemen
         String pass = passwordField.getText().toString();
         Utils.log("user name " + user + " pass" + pass);
         realManager.requestUserToken(this, user, pass);
+        showLoadingStart();
     }
 
 
     @Override
     public void refresh() {
+
         Utils.log("getting called by moodle manager");
-        if (realManager.getToken() == null)
-            Utils.showToast(this, R.string.login_failed);
+        if (realManager.getToken() == null) {
+            showLoadingEnded();
+            if (! NetUtils.isConnected(this))
+                showNoInternetLayout();
+            else
+                Utils.showToast(this, R.string.login_failed);
+        }
         else {
             // do nothing ! not needed for this class
             if (intent != null) {

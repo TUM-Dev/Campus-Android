@@ -15,7 +15,9 @@ import java.util.List;
 
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.generic.ActivityForDownloadingExternal;
+import de.tum.in.tumcampus.activities.generic.ProgressActivity;
 import de.tum.in.tumcampus.adapters.MoodleCourseInfoExpandableAdapter;
+import de.tum.in.tumcampus.auxiliary.NetUtils;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.MoodleCourse;
 import de.tum.in.tumcampus.models.MoodleCourseContent;
@@ -31,26 +33,40 @@ import de.tum.in.tumcampus.models.managers.RealMoodleManager;
  * is interested in, and they if they are files, they will be downloaded, otherwise a browser will be opened
  * to show the corresponding URL.
  */
-public class MoodleCourseInfoActivity extends ActivityForDownloadingExternal implements MoodleUpdateDelegate, ExpandableListView.OnChildClickListener, ExpandableListView.OnGroupClickListener {
+public class MoodleCourseInfoActivity extends ProgressActivity implements MoodleUpdateDelegate, ExpandableListView.OnChildClickListener, ExpandableListView.OnGroupClickListener {
 
 
     MoodleManager realManager;
     MoodleManager mockManager;
     private Intent intent;
-    private String userToken, courseName;
+    private String courseName;
     private int courseId;
     private MoodleCourseInfoExpandableAdapter dataAdapter;
     private List<MoodleCourseSection> sections;
     private ExpandableListView view_course_sections;
     private TextView title;
 
-    public MoodleCourseInfoActivity() {super("MoodleCourseInfo", R.layout.activity_moodle_course_info);}
+    public MoodleCourseInfoActivity() {super(R.layout.activity_moodle_course_info);}
 
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         intent = getIntent();
         baseSetup();
+        showLoadingStart();
+    }
+
+    @Override
+    public void onRestart(){
+        super.onRestart();
+        refresh();
+    }
+
+    @Override
+    public void onRefresh() {
+        realManager.requestUserCourseInfo(this, courseId);
+        showLoadingStart();
+        return;
     }
 
     @Override
@@ -97,11 +113,12 @@ public class MoodleCourseInfoActivity extends ActivityForDownloadingExternal imp
             MoodleCourseContent content = (MoodleCourseContent) dataAdapter.getChild(groupPosition, childPosition);
             if (content != null) {
                 URL fileURL = content.getFileurl();
+                String urlWithToken = completeURL(fileURL.toString());
                 if (fileURL != null){
 
-                    //TODO think about modifying the URL to have the token or userid
                     Utils.log("Got this URL " + fileURL.toString());
-                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(fileURL.toString()));
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(urlWithToken));
+                    showLoadingStart();
                     startActivity(browserIntent);
                     return true;
                 }else {
@@ -126,7 +143,7 @@ public class MoodleCourseInfoActivity extends ActivityForDownloadingExternal imp
         String newUrlString;
 
         if (urlString.contains("?")){
-            newUrlString = urlString + "token=" + realManager.getToken();
+            newUrlString = urlString + "&token=" + realManager.getToken();
         }
         else newUrlString = "?token=" + realManager.getToken();
 
@@ -159,6 +176,7 @@ public class MoodleCourseInfoActivity extends ActivityForDownloadingExternal imp
                         //TODO think about modifying the URL to have the token or userid
                         Utils.log(String.format("Got this URL %s", url.toString()));
                         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url.toString()));
+                        showLoadingStart();
                         startActivity(browserIntent);
                         return true;
                     } else {
@@ -190,7 +208,6 @@ public class MoodleCourseInfoActivity extends ActivityForDownloadingExternal imp
     private void baseSetup(){
         try {
             // getting info from intent
-            userToken = intent.getStringExtra("user_token");
             courseName = intent.getStringExtra("course_name");
             courseName = (courseName!=null) ? courseName : getString(R.string.moodle_course_name_not_found);
             courseId = intent.getIntExtra("course_id", -1);
@@ -229,13 +246,23 @@ public class MoodleCourseInfoActivity extends ActivityForDownloadingExternal imp
     }
     @Override
     public void refresh() {
-        MoodleCourse moodleCourse = realManager.getMoodleUserCourseInfo();
-        sections = moodleCourse.getSections();
-        //setting the dataAdapter
-        dataAdapter = new MoodleCourseInfoExpandableAdapter(sections, this);
-        view_course_sections.setAdapter(dataAdapter);
+        try {
+            if (!NetUtils.isConnected(this)) {
+                Utils.showToast(this, R.string.no_internet_connection);
+                showNoInternetLayout();
+                return;
+            }
+            MoodleCourse moodleCourse = realManager.getMoodleUserCourseInfo();
+            sections = moodleCourse.getSections();
+            //setting the dataAdapter
+            dataAdapter = new MoodleCourseInfoExpandableAdapter(sections, this);
+            view_course_sections.setAdapter(dataAdapter);
+            showLoadingEnded();
+        } catch (Exception e) {
+            Utils.log(e);
+            Utils.showToast(this, R.string.error_something_wrong);
+            showLoadingEnded();
+        }
 
     }
-
-
 }

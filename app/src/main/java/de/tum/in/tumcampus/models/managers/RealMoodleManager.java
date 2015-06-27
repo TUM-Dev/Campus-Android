@@ -37,6 +37,7 @@ import de.tum.in.tumcampus.models.MoodleUserCourseList;
 public class RealMoodleManager extends MoodleManager {
 
     final String SERVICE_BASE_URL = "http://school.demo.moodle.net";
+    //final String SERVICE_BASE_URL = "https://dev.moodle.tum.de";
     Context currentContext;
     private static RealMoodleManager instance;
 

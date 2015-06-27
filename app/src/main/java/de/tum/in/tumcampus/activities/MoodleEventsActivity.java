@@ -20,8 +20,10 @@ import java.util.GregorianCalendar;
 
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.generic.ActivityForDownloadingExternal;
+import de.tum.in.tumcampus.activities.generic.ProgressActivity;
 import de.tum.in.tumcampus.adapters.MoodleEventAdapter;
 import de.tum.in.tumcampus.auxiliary.DateUtils;
+import de.tum.in.tumcampus.auxiliary.NetUtils;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.MoodleEvent;
 import de.tum.in.tumcampus.models.managers.MoodleManager;
@@ -32,7 +34,7 @@ import de.tum.in.tumcampus.models.managers.RealMoodleManager;
  * Created by a2k on 6/8/2015.
  * Activity for showing events of a user in moodle
  */
-public class MoodleEventsActivity extends ActivityForDownloadingExternal implements AdapterView.OnItemClickListener, MoodleUpdateDelegate {
+public class MoodleEventsActivity extends ProgressActivity implements AdapterView.OnItemClickListener, MoodleUpdateDelegate {
 
     MoodleManager realManager;
     ProgressDialog mDialog;
@@ -43,7 +45,7 @@ public class MoodleEventsActivity extends ActivityForDownloadingExternal impleme
     ArrayList<MoodleEvent> userEvents;
 
     public MoodleEventsActivity() {
-        super("MoodleEvents", R.layout.activity_moodle_events);
+        super(R.layout.activity_moodle_events);
     }
 
     @Override
@@ -51,10 +53,26 @@ public class MoodleEventsActivity extends ActivityForDownloadingExternal impleme
         super.onCreate(savedInstanceState);
 
         baseSetUp();
-        mDialog.show();
+        showLoadingStart();
+        //mDialog.show();
         realManager.requestUserEvents(this);
     }
 
+
+    @Override
+    public void onRestart(){
+        super.onRestart();
+        refresh();
+    }
+
+    @Override
+    public void onRefresh() {
+        /* this method is called when the internet connection
+        is back
+         */
+        realManager.requestUserEvents(this);
+        showLoadingStart();
+    }
 
 
     @Override
@@ -70,6 +88,7 @@ public class MoodleEventsActivity extends ActivityForDownloadingExternal impleme
             case R.id.moodle_my_courses:
                 Intent coursesIntent = new Intent(this,MoodleMainActivity.class);
                 startActivity(coursesIntent);
+                finish();
                 return true;
             case R.id.events:
                 // Do nothing
@@ -124,14 +143,21 @@ public class MoodleEventsActivity extends ActivityForDownloadingExternal impleme
     public void refresh() {
 
         try {
+            if (!NetUtils.isConnected(this)) {
+                Utils.showToast(this, R.string.no_internet_connection);
+                showNoInternetLayout();
+                return;
+            }
             userEvents = new ArrayList<MoodleEvent>(realManager.getUserEvents());
             eventsAdapter = new MoodleEventAdapter(userEvents, this);
             eventsRecyclerView.setAdapter(eventsAdapter);
             eventsAdapter.notifyDataSetChanged();
-            mDialog.dismiss();
+            showLoadingEnded();
+            //mDialog.dismiss();
         }catch (Exception e){
             Utils.log(e,"events activity getting refresh failed");
             Utils.showToast(this,"Sorry something went wrong!");
+            showLoadingEnded();
         }
 
     }
@@ -140,6 +166,7 @@ public class MoodleEventsActivity extends ActivityForDownloadingExternal impleme
      * Base setup for the Activity. All local variables are initialized here
      */
     private void baseSetUp() {
+        /*
         mDialog = new ProgressDialog(this);
         mDialog.setMessage(getResources().getString(R.string.loading));
         mDialog.setCancelable(true);
@@ -149,7 +176,7 @@ public class MoodleEventsActivity extends ActivityForDownloadingExternal impleme
                 dialog.dismiss();
             }
         });
-
+        */
         realManager = RealMoodleManager.getInstance(this, this);
 
         eventsRecyclerView = (RecyclerView) findViewById(R.id.moodleEventList);

@@ -18,7 +18,9 @@ import java.util.Map;
 
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.generic.ActivityForDownloadingExternal;
+import de.tum.in.tumcampus.activities.generic.ProgressActivity;
 import de.tum.in.tumcampus.adapters.MoodleExapndabaleListAdapter;
+import de.tum.in.tumcampus.auxiliary.NetUtils;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.managers.MockMoodleManager;
 import de.tum.in.tumcampus.models.managers.MoodleManager;
@@ -29,7 +31,7 @@ import de.tum.in.tumcampus.models.managers.RealMoodleManager;
  * This class is the main activity of the moodle which shows the list of the courses
  * and their descriptions to the user. Communicates with moodle via RealMoodleManager
  */
-public class MoodleMainActivity extends ActivityForDownloadingExternal implements ExpandableListView.OnChildClickListener, MoodleUpdateDelegate {
+public class MoodleMainActivity extends ProgressActivity implements ExpandableListView.OnChildClickListener, MoodleUpdateDelegate {
 
     //Moodle API Manager
     protected MoodleManager moodleManager;
@@ -48,14 +50,16 @@ public class MoodleMainActivity extends ActivityForDownloadingExternal implement
     private static boolean deletingSharedPref = true;
 
     public MoodleMainActivity() {
-        super("Moodle", R.layout.activity_moodle_main);
+        super(R.layout.activity_moodle_main);
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         baseSetUp();
-        mDialog.show();
+        showLoadingStart();
+
+        //mDialog.show();
 
         if (deletingSharedPref){
             //just for testing login
@@ -76,6 +80,21 @@ public class MoodleMainActivity extends ActivityForDownloadingExternal implement
     }
 
     @Override
+    public void onRestart(){
+        super.onRestart();
+        refresh();
+    }
+
+    @Override
+    public void onRefresh() {
+        /* this method is called
+        when internet connection is back
+         */
+        realManager.requestUserData(this);
+        showLoadingStart();
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.menu_moodle, menu);
@@ -93,6 +112,7 @@ public class MoodleMainActivity extends ActivityForDownloadingExternal implement
             case R.id.events:
                 Intent eventIntent = new Intent(this,MoodleEventsActivity.class);
                 startActivity(eventIntent);
+                finish();
                 return true;
 
             case R.id.moodle_profile:
@@ -110,39 +130,53 @@ public class MoodleMainActivity extends ActivityForDownloadingExternal implement
      *
      */
     public void refresh() {
-        emptyListViewData();
-        Map<String, String> courses = (Map<String, String>) realManager.getCoursesList();
 
-
-        // userinfo is still null !! make the user Login again
-        if (realManager.getMoodleUserInfo() == null) {
-            Utils.log("UserInfo is still null dude!");
-            Utils.log("starting Login Intent and finishing main activity");
-
-            Intent intent = new Intent(this, MoodleLoginActivity.class);
-            intent.putExtra("class", this.getClass());
-            intent.putExtra("outside_activity", false);
-            startActivity(intent);
-            finish();
-            return;
-        }
-
-        if (courses == null) {
-            realManager.requestUserCourseList(this);
-            return;
-        }else {
-
-            //populate the view with user's courses
-            coursesIds = (Map<String, Integer>) realManager.getCoursesId();
-            for (Map.Entry<String, String> item : courses.entrySet()) {
-                List<String> temp = new ArrayList<String>();
-                temp.add(item.getValue());
-                courseListChilds.put(item.getKey(), temp);
-                courseListHeaders.add(item.getKey());
+        try {
+            if (!NetUtils.isConnected(this)) {
+                Utils.showToast(this, R.string.no_internet_connection);
+                showNoInternetLayout();
+                return;
             }
-            baseSetupForListView();
-            mDialog.dismiss();
-            coursesAdapter.notifyDataSetChanged();
+
+            emptyListViewData();
+            Map<String, String> courses = (Map<String, String>) realManager.getCoursesList();
+
+
+            // userinfo is still null !! make the user Login again
+            if (realManager.getMoodleUserInfo() == null) {
+                Utils.log("UserInfo is still null dude!");
+                Utils.log("starting Login Intent and finishing main activity");
+
+                Intent intent = new Intent(this, MoodleLoginActivity.class);
+                intent.putExtra("class", this.getClass());
+                intent.putExtra("outside_activity", false);
+                startActivity(intent);
+                finish();
+                return;
+            }
+
+            if (courses == null) {
+                realManager.requestUserCourseList(this);
+                return;
+            } else {
+
+                //populate the view with user's courses
+                coursesIds = (Map<String, Integer>) realManager.getCoursesId();
+                for (Map.Entry<String, String> item : courses.entrySet()) {
+                    List<String> temp = new ArrayList<String>();
+                    temp.add(item.getValue());
+                    courseListChilds.put(item.getKey(), temp);
+                    courseListHeaders.add(item.getKey());
+                }
+                baseSetupForListView();
+                showLoadingEnded();
+                //mDialog.dismiss();
+                coursesAdapter.notifyDataSetChanged();
+            }
+        }catch(Exception e){
+            Utils.log(e);
+            showLoadingEnded();
+            Utils.showToast(this,R.string.error_something_wrong);
         }
 
     }
@@ -151,6 +185,7 @@ public class MoodleMainActivity extends ActivityForDownloadingExternal implement
      * Base setup for the Activity. All local variables are initialized here
      */
     private void baseSetUp() {
+        /*
         mDialog = new ProgressDialog(this);
         mDialog.setMessage(getResources().getString(R.string.loading));
         mDialog.setCancelable(true);
@@ -160,6 +195,7 @@ public class MoodleMainActivity extends ActivityForDownloadingExternal implement
                dialog.dismiss();
            }
        });
+        */
 
         //creating realManager
         realManager = RealMoodleManager.getInstance(this, this);
@@ -227,6 +263,7 @@ public class MoodleMainActivity extends ActivityForDownloadingExternal implement
             Intent courseInfoIntent = new Intent(this, MoodleCourseInfoActivity.class);
 			courseInfoIntent.putExtra("course_name", courseName);
 			courseInfoIntent.putExtra("course_id", courseId);
+            showLoadingStart();
             startActivity(courseInfoIntent);
             return true;
         }catch (Exception e){

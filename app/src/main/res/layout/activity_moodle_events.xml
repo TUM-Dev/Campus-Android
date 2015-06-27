@@ -15,6 +15,11 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
+            <include
+                layout="@layout/layout_all_errors"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent" />
+
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/moodleEventList"
                 android:layout_height="match_parent"

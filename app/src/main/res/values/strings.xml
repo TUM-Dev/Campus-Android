@@ -168,7 +168,7 @@
     <string name="moodle_course_name_not_found">Course Name not Found</string>
     <string name="moodle_courses_error">Sorry! something went wrong! Cannot open the page for this course</string>
     <string name="moodle_login_request">Login to www.moodle.tum.de</string>
-    <string name="mooodle_username">e.g. go42tum / muster@tum.de</string>
+    <string name="mooodle_username">e.g. go42tum@mytum.de</string>
     <string name="button_login">Login</string>
     <string name="title_activity_moodle_login">Moodle Login</string>
     <string name="login_failed">Username or Password you provided is not right!</string>
