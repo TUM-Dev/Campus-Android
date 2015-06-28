@@ -5,7 +5,15 @@ public class NotificationLocation {
     private String name;
     private double lon;
     private double lat;
-    private double radius;
+    private int radius;
+
+    public NotificationLocation(int location, String name, double lon, double lat, int radius) {
+        this.location = location;
+        this.name = name;
+        this.lon = lon;
+        this.lat = lat;
+        this.radius = radius;
+    }
 
     public int getLocation() {
         return location;
@@ -43,7 +51,7 @@ public class NotificationLocation {
         return radius;
     }
 
-    public void setRadius(double radius) {
+    public void setRadius(int radius) {
         this.radius = radius;
     }
 }

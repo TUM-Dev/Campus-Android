@@ -8,6 +8,14 @@ public class NotificationType {
     private boolean silent;
     private boolean confirmation;
 
+    public NotificationType(int type, String name, String icon, boolean silent, boolean confirmation) {
+        this.type = type;
+        this.name = name;
+        this.icon = icon;
+        this.silent = silent;
+        this.confirmation = confirmation;
+    }
+
     public int getType() {
         return type;
     }

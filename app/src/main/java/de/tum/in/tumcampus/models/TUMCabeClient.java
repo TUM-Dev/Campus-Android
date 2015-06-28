@@ -89,7 +89,7 @@ public class TUMCabeClient {
         @Override
         public Throwable handleError(RetrofitError cause) {
             Throwable t = cause.getCause();
-            if(t instanceof SSLPeerUnverifiedException) {
+            if (t instanceof SSLPeerUnverifiedException) {
                 //TODO show a error message
                 //Toast.makeText(c, t.toString(), Toast.LENGTH_LONG).show();
             }
@@ -215,5 +215,26 @@ public class TUMCabeClient {
 
     public void uploadRegistrationId(int memberId, ChatRegistrationId regId, Callback<ChatRegistrationId> cb) {
         service.uploadRegistrationId(memberId, regId, cb);
+    }
+
+    public List<NotificationType> getTypes() {
+        return service.getTypes();
+    }
+
+    public List<Notification> getNotifications(int lastNotification) {
+        return service.getNotifications(lastNotification);
+    }
+
+
+    public void confirm(int notification) {
+        service.confirm(notification);
+    }
+
+    public List<NotificationLocation> getAllLocations() {
+        return service.getAllLocations();
+    }
+
+    public NotificationLocation getLocation(int locationId) {
+        return service.getLocation(locationId);
     }
 }

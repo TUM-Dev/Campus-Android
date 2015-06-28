@@ -3,10 +3,19 @@ package de.tum.in.tumcampus.models;
 public class Notification {
     private int notification;
     private int type;
-    private int location;
+    private NotificationLocation location;
     private String title;
     private String description;
     private String signature;
+
+    public Notification(int notification, int type, NotificationLocation location, String title, String description, String signature) {
+        this.notification = notification;
+        this.type = type;
+        this.location = location;
+        this.title = title;
+        this.description = description;
+        this.signature = signature;
+    }
 
     public int getNotification() {
         return notification;
@@ -24,11 +33,11 @@ public class Notification {
         this.type = type;
     }
 
-    public int getLocation() {
+    public NotificationLocation getLocation() {
         return location;
     }
 
-    public void setLocation(int location) {
+    public void setLocation(NotificationLocation location) {
         this.location = location;
     }
 
