@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -92,7 +93,7 @@ public class MvvAdapter extends BaseAdapter {
             return convertView;
         } catch (NullPointerException e) {
             Utils.log(e);
-            Utils.log(String.format("Error: Item %s is null", position));
+            Utils.log(String.format("Erro`1`1111111r: Item %s is null", position));
             return convertView;
         }
     }
@@ -102,11 +103,15 @@ public class MvvAdapter extends BaseAdapter {
             MVVSuggestion suggestion = (MVVSuggestion) getItem(position);
             String name = suggestion.getName();
 
+            DisplayMetrics metrics = this.currentContext.getResources().getDisplayMetrics();
             viewHolder.icon.setVisibility(View.GONE);
             viewHolder.number.setVisibility(View.GONE);
             viewHolder.minutes.setVisibility(View.GONE);
             viewHolder.station.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
             viewHolder.station.setText(name);
+            float fpixels = metrics.density * 80f;
+            viewHolder.station.setHeight((int) (fpixels + 0.5f));
+
         } else if (data.isDeparture()) {
             MVVDeparture departure = (MVVDeparture) getItem(position);
             String number = departure.getLine();

@@ -62,7 +62,7 @@ public class MoodleEventsActivity extends ProgressActivity implements AdapterVie
     @Override
     public void onRestart(){
         super.onRestart();
-        refresh();
+        realManager.requestUserEvents(this);
     }
 
     @Override

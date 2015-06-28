@@ -13,19 +13,11 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:orientation="vertical">
-            <EditText
-                android:id="@+id/mvv_query"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/search"
-                android:inputType="text"
-                android:imeOptions="actionSend" />
 
-            <Button
-                android:id="@+id/mvv_search"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Search"/>
+            <include
+                layout="@layout/layout_all_errors"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent" />
 
             <TextView
                 android:id="@+id/mvv_list_header"

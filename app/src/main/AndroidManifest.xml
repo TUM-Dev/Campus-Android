@@ -498,9 +498,15 @@
 
         <activity
             android:name=".activities.MVVActivity"
-            android:label="@string/mvv2"
+            android:label="@string/mvv"
             android:launchMode="singleTop"
             android:parentActivityName=".activities.MainActivity" >
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable_mvv" />
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.tum.in.tumcampus.activities.MainActivity" />

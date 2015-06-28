@@ -178,11 +178,11 @@
 
     <!-- MVV -->
     <string name="no_departures_found">No departures available</string>
-    <string name="mvv2">fuck you enrico mvv</string>
     <string name="exception_unknown">Unknown error</string>
     <string name="exception_timeout">Problems with internet connection, please try again later</string>
     <string name="search_station">Search station</string>
     <string name="search_hint">Search hint?</string>
+    <string name="mvv_recent">Recently visited stations: </string>
     <string name="mvv_suggestion_hint">Similar stations found with your query click on them to see departure times</string>
     <!-- Lectures -->
     <string name="no_appointments">No appointments available</string>

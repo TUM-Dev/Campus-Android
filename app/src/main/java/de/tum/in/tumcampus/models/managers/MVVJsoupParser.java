@@ -8,6 +8,11 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+
+import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.MVVDeparture;
 import de.tum.in.tumcampus.models.MVVObject;
 import de.tum.in.tumcampus.models.MVVSuggestion;
@@ -21,20 +26,58 @@ import de.tum.in.tumcampus.models.MVVSuggestion;
 
 public class MVVJsoupParser extends AsyncTask<String, Void, MVVObject> {
     MVVDelegate delegate;
+    private final String baseURL1 = "http://www.mvg-live.de/ims/dfiStaticAuswahl.svc?haltestelle=";
+    private final String baseURL2 = "&ubahn=checked&bus=checked&tram=checked&sbahn=checked";
 
     public MVVJsoupParser(MVVDelegate delegate) {
         this.delegate = delegate;
 
     }
+
+    private String prepareURL(String query){
+
+        // if query is already a url no need for preparation
+        if(query.indexOf("http://www.mvg-live.de") >= 0)
+            return query;
+        try {
+            query = fixDeutschUrl(query);
+            Utils.log(" d query " + query);
+
+            query = URLEncoder.encode(query, "UTF-8");
+            Utils.log("encoded query " + query);
+
+            /* url encode will put %25
+            instead of % (but we already encoded german
+            characters by using %)
+             */
+            query = query.replace("%25", "%");
+            return baseURL1 + query + baseURL2;
+        }catch (UnsupportedEncodingException e){
+            Utils.log("could not url encode : " + query);
+            return null;
+        }
+    }
+
+    private String fixDeutschUrl(String query){
+        query = query.replace(",", "");
+        query = query.replace("ä", "%E4");
+        query = query.replace("ö", "%EF");
+        query = query.replace("ü", "%FC");
+        query = query.replace("ß", "%DF");
+        return query;
+    }
+
     @Override
     protected MVVObject doInBackground(String... strings) {
         MVVObject result = new MVVObject();
         StringBuffer buffer = new StringBuffer();
 
         try {
-            Log.d("JSoup", "Connecting to [" + strings[0] + "]");
-            Document doc = Jsoup.connect(strings[0]).get();
-            Log.d("JSoup", "Connected to [" + strings[0] + "]");
+            String requestedUrl = prepareURL(strings[0]);
+            Utils.log("requesting this url: " + requestedUrl);
+            Log.d("JSoup", "Connecting to [" + requestedUrl + "]");
+            Document doc = Jsoup.connect(requestedUrl).get();
+            Log.d("JSoup", "Connected to [" + requestedUrl + "]");
 
             Elements suggestionList = doc.select("li");
             Elements checkbox= doc.getElementsByAttributeValue("type","checkbox");
