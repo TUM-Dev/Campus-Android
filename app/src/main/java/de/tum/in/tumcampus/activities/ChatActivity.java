@@ -49,7 +49,7 @@ import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.ImplicitCounter;
 import de.tum.in.tumcampus.auxiliary.NetUtils;
 import de.tum.in.tumcampus.auxiliary.Utils;
-import de.tum.in.tumcampus.models.ChatClient;
+import de.tum.in.tumcampus.models.TUMCabeClient;
 import de.tum.in.tumcampus.models.ChatMember;
 import de.tum.in.tumcampus.models.ChatMessage;
 import de.tum.in.tumcampus.models.ChatPublicKey;
@@ -375,10 +375,10 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
                 // If currently nothing has been shown load newest messages from server
                 ChatVerification verification = new ChatVerification(Utils.getPrivateKeyFromSharedPrefs(ChatActivity.this), currentChatMember);
                 if (chatHistoryAdapter == null || chatHistoryAdapter.getSentCount() == 0 || newMsg) {
-                    downloadedChatHistory = ChatClient.getInstance(ChatActivity.this).getNewMessages(currentChatRoom.getId(), verification);
+                    downloadedChatHistory = TUMCabeClient.getInstance(ChatActivity.this).getNewMessages(currentChatRoom.getId(), verification);
                 } else {
                     long id = chatHistoryAdapter.getItemId(ChatMessageManager.COL_ID);
-                    downloadedChatHistory = ChatClient.getInstance(ChatActivity.this).getMessages(currentChatRoom.getId(), id, verification);
+                    downloadedChatHistory = TUMCabeClient.getInstance(ChatActivity.this).getMessages(currentChatRoom.getId(), id, verification);
                 }
 
                 //Save it to our local cache
@@ -461,7 +461,7 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
 
         // Send request to the server to remove the user from this room
         ChatVerification verification = new ChatVerification(Utils.getPrivateKeyFromSharedPrefs(this), currentChatMember);
-        ChatClient.getInstance(ChatActivity.this).leaveChatRoom(currentChatRoom, verification, new Callback<ChatRoom>() {
+        TUMCabeClient.getInstance(ChatActivity.this).leaveChatRoom(currentChatRoom, verification, new Callback<ChatRoom>() {
             @Override
             public void success(ChatRoom room, Response arg1) {
                 Utils.logv("Success leaving chat room: " + room.getName());
@@ -590,7 +590,7 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
 
     private void showInfo(final ChatMessage message) {
         //Verify the message with RSA
-        ChatClient.getInstance(ChatActivity.this).getPublicKeysForMember(message.getMember(), new Callback<List<ChatPublicKey>>() {
+        TUMCabeClient.getInstance(ChatActivity.this).getPublicKeysForMember(message.getMember(), new Callback<List<ChatPublicKey>>() {
             @Override
             public void success(List<ChatPublicKey> publicKeys, Response arg1) {
                 ChatMessageValidator validator = new ChatMessageValidator(publicKeys);

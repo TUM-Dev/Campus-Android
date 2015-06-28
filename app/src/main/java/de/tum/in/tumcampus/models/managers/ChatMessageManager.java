@@ -17,7 +17,7 @@ import java.util.Locale;
 
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.Utils;
-import de.tum.in.tumcampus.models.ChatClient;
+import de.tum.in.tumcampus.models.TUMCabeClient;
 import de.tum.in.tumcampus.models.ChatMember;
 import de.tum.in.tumcampus.models.ChatMessage;
 import de.tum.in.tumcampus.models.ChatVerification;
@@ -253,9 +253,9 @@ public class ChatMessageManager {
     public Cursor getNewMessages(PrivateKey pk, ChatMember member, int messageId) {
         ArrayList<ChatMessage> messages;
         if(messageId==-1)
-            messages = ChatClient.getInstance(mContext).getNewMessages(mChatRoom, new ChatVerification(pk, member));
+            messages = TUMCabeClient.getInstance(mContext).getNewMessages(mChatRoom, new ChatVerification(pk, member));
         else
-            messages = ChatClient.getInstance(mContext).getMessages(mChatRoom, messageId, new ChatVerification(pk, member));
+            messages = TUMCabeClient.getInstance(mContext).getMessages(mChatRoom, messageId, new ChatVerification(pk, member));
         replaceInto(messages);
         return getUnread();
     }

@@ -33,7 +33,7 @@ import de.tum.in.tumcampus.adapters.NoResultsAdapter;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.RSASigner;
 import de.tum.in.tumcampus.auxiliary.Utils;
-import de.tum.in.tumcampus.models.ChatClient;
+import de.tum.in.tumcampus.models.TUMCabeClient;
 import de.tum.in.tumcampus.models.ChatMember;
 import de.tum.in.tumcampus.models.ChatRegistrationId;
 import de.tum.in.tumcampus.models.ChatRoom;
@@ -204,7 +204,7 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
         Utils.logv("create or join chat room " + name);
         currentChatRoom = new ChatRoom(name);
 
-        ChatClient.getInstance(this).createRoom(currentChatRoom, new ChatVerification(this.currentPrivateKey, this.currentChatMember), new Callback<ChatRoom>() {
+        TUMCabeClient.getInstance(this).createRoom(currentChatRoom, new ChatVerification(this.currentPrivateKey, this.currentChatMember), new Callback<ChatRoom>() {
             @Override
             public void success(ChatRoom newlyCreatedChatRoom, Response arg1) {
                 // The POST request is successful: go to room. API should have auto joined it
@@ -251,7 +251,7 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
         // Try to restore joined chat rooms from server
         if (!firstLoad && currentChatMember != null) {
             try {
-                List<ChatRoom> rooms = ChatClient.getInstance(this).getMemberRooms(currentChatMember.getId(), new ChatVerification(currentPrivateKey, currentChatMember));
+                List<ChatRoom> rooms = TUMCabeClient.getInstance(this).getMemberRooms(currentChatMember.getId(), new ChatVerification(currentPrivateKey, currentChatMember));
                 manager.replaceIntoRooms(rooms);
             } catch (RetrofitError e) {
                 Utils.log(e);
@@ -445,7 +445,7 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
         RSASigner signer = new RSASigner(currentPrivateKey);
         String signature = signer.sign(currentChatMember.getLrzId());
 
-        ChatClient.getInstance(ChatRoomsActivity.this).uploadRegistrationId(currentChatMember.getId(), new ChatRegistrationId(regId, signature), new Callback<ChatRegistrationId>() {
+        TUMCabeClient.getInstance(ChatRoomsActivity.this).uploadRegistrationId(currentChatMember.getId(), new ChatRegistrationId(regId, signature), new Callback<ChatRegistrationId>() {
             @Override
             public void success(ChatRegistrationId arg0, Response arg1) {
                 Utils.logv("Success uploading GCM registration id: " + arg0);

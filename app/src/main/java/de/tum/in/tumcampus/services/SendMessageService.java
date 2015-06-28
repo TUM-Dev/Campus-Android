@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.RSASigner;
 import de.tum.in.tumcampus.auxiliary.Utils;
-import de.tum.in.tumcampus.models.ChatClient;
+import de.tum.in.tumcampus.models.TUMCabeClient;
 import de.tum.in.tumcampus.models.ChatMessage;
 import de.tum.in.tumcampus.models.managers.ChatMessageManager;
 import retrofit.RetrofitError;
@@ -71,11 +71,11 @@ public class SendMessageService extends IntentService {
                     ChatMessage createdMessage;
                     if(message.getId()==0) {
                         // Send the message to the server
-                        createdMessage = ChatClient.getInstance(this).sendMessage(message.getRoom(), message);
+                        createdMessage = TUMCabeClient.getInstance(this).sendMessage(message.getRoom(), message);
                         Utils.logv("successfully sent message: " + createdMessage.getText());
                     } else {
                         // Send the message to the server
-                        createdMessage = ChatClient.getInstance(this).updateMessage(message.getRoom(), message);
+                        createdMessage = TUMCabeClient.getInstance(this).updateMessage(message.getRoom(), message);
                         Utils.logv("successfully updated message: " + createdMessage.getText());
                     }
                     createdMessage.setStatus(ChatMessage.STATUS_SENT);

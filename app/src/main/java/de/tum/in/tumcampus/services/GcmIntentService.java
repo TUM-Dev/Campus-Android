@@ -46,7 +46,7 @@ import de.tum.in.tumcampus.activities.ChatRoomsActivity;
 import de.tum.in.tumcampus.activities.MainActivity;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.Utils;
-import de.tum.in.tumcampus.models.ChatClient;
+import de.tum.in.tumcampus.models.TUMCabeClient;
 import de.tum.in.tumcampus.models.ChatMember;
 import de.tum.in.tumcampus.models.ChatRoom;
 import de.tum.in.tumcampus.models.managers.CardManager;
@@ -82,7 +82,7 @@ public class GcmIntentService extends IntentService {
              */
             if (GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE.equals(messageType)) {
                 // Post notification of received message.
-                sendNotification(extras);
+                sendChatNotification(extras);
             }
         }
         // Release the wake lock provided by the WakefulBroadcastReceiver.
@@ -90,7 +90,7 @@ public class GcmIntentService extends IntentService {
     }
 
     // Put the message into a notification and post it.
-    private void sendNotification(Bundle extras) {
+    private void sendChatNotification(Bundle extras) {
         //Get the update details
         int chatRoomId = Integer.parseInt(extras.getString("room"));
         int memberId = Integer.parseInt(extras.getString("member"));
@@ -103,7 +103,7 @@ public class GcmIntentService extends IntentService {
 
         // Get the data necessary for the ChatActivity
         ChatMember member = Utils.getSetting(this, Const.CHAT_MEMBER, ChatMember.class);
-        ChatRoom chatRoom = ChatClient.getInstance(this).getChatRoom(chatRoomId);
+        ChatRoom chatRoom = TUMCabeClient.getInstance(this).getChatRoom(chatRoomId);
 
         ChatMessageManager manager = new ChatMessageManager(this, chatRoom.getId());
         Cursor messages = manager.getNewMessages(this.getPrivateKeyFromSharedPrefs(), member, messageId);

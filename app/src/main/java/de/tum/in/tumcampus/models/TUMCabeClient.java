@@ -2,44 +2,77 @@ package de.tum.in.tumcampus.models;
 
 import android.content.Context;
 
+import com.squareup.okhttp.CertificatePinner;
+import com.squareup.okhttp.OkHttpClient;
+
+import retrofit.ErrorHandler;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.net.ssl.SSLPeerUnverifiedException;
 
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.NetUtils;
 import retrofit.Callback;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
+import retrofit.RetrofitError;
+import retrofit.client.OkClient;
 import retrofit.http.Body;
 import retrofit.http.GET;
 import retrofit.http.POST;
 import retrofit.http.PUT;
 import retrofit.http.Path;
 
-public class ChatClient {
+public class TUMCabeClient {
 
-    private static final String API_URL = Const.CHAT_URL;
+    private static final String API_HOSTNAME = Const.API_HOSTNAME;
+    private static final String API_BASEURL = "/Api";
+    private static final String API_CHAT = "/chat/";
+    private static final String API_CHAT_ROOMS = API_CHAT + "rooms/";
+    private static final String API_CHAT_MEMBERS = API_CHAT + "members/";
+    private static final String API_SESSION = "/session/";
+    private static final String API_NEWS = "/news/";
+    private static final String API_MENSA = "/mensen/";
+    private static final String API_CURRICULA = "/curricula/";
+    private static final String API_REPORT = "/report/";
+    private static final String API_STATISTICS = "/statistics/";
+    private static final String API_CINEMA = "/kino/";
+    private static final String API_NOTIFICATIONS = "/notifications/";
+    private static final String API_NOTIFICATIONS_TYPES = API_NOTIFICATIONS + "types/";
 
-    private static ChatClient instance = null;
-    private ChatService service = null;
+
+    private static TUMCabeClient instance = null;
+    private TUMCabeAPIService service = null;
 
     private static Context c = null;
 
 
-    private ChatClient() {
-        RestAdapter restAdapter = new RestAdapter.Builder()
-                .setEndpoint(API_URL)
-                //.setLogLevel(RestAdapter.LogLevel.FULL)
-               // .setLog(new AndroidLog("suqmadiq"))
-                .setRequestInterceptor(requestInterceptor)
+    private TUMCabeClient() {
+        //Pin our known fingerprints, which I retrieved on 28. June 2015
+        final CertificatePinner certificatePinner = new CertificatePinner.Builder()
+                .add(API_HOSTNAME, "sha1/eeoui1Gne7kkDN/6HlgoxHkD18s=") //Fakultaet fuer Informatik
+                .add(API_HOSTNAME, "sha1/AC508zHZltt8Aa1ZpUg5C9tMNJ8=") //Technische Universitaet Muenchen
+                .add(API_HOSTNAME, "sha1/7+NhGLCLRZ1RDbncIhu3ksHeOok=") //DFN-Verein PCA Global
+                .add(API_HOSTNAME, "sha1/8GO6fJoWdEqc21TsI81nKY58SU0=") //Deutsche Telekom Root CA 2
                 .build();
-        service = restAdapter.create(ChatService.class);
+        final OkHttpClient client = new OkHttpClient();
+        client.setCertificatePinner(certificatePinner);
+
+        RestAdapter restAdapter = new RestAdapter.Builder()
+                .setClient(new OkClient(client))
+                .setEndpoint("https://" + API_HOSTNAME + API_BASEURL)
+                .setRequestInterceptor(requestInterceptor)
+                .setErrorHandler(errorHandler)
+                .build();
+        service = restAdapter.create(TUMCabeAPIService.class);
     }
 
-    public static ChatClient getInstance(Context c) {
-        ChatClient.c = c;
+    public static TUMCabeClient getInstance(Context c) {
+        TUMCabeClient.c = c;
         if (instance == null) {
-            instance = new ChatClient();
+            instance = new TUMCabeClient();
         }
         return instance;
     }
@@ -47,58 +80,67 @@ public class ChatClient {
     final RequestInterceptor requestInterceptor = new RequestInterceptor() {
         @Override
         public void intercept(RequestFacade request) {
-            request.addHeader("X-DEVICE-ID", NetUtils.getDeviceID(ChatClient.c));
+            request.addHeader("X-DEVICE-ID", NetUtils.getDeviceID(TUMCabeClient.c));
         }
     };
 
-    private interface ChatService {
+    final ErrorHandler errorHandler = new ErrorHandler() {
+        @Override
+        public Throwable handleError(RetrofitError cause) {
+            Throwable t = cause.getCause();
+            if(t instanceof SSLPeerUnverifiedException) {
+                //TODO show a error message
+                //Toast.makeText(c, t.toString(), Toast.LENGTH_LONG).show();
+            }
+            return t;
+        };
+    };
 
-        @POST("/rooms/")
+    private interface TUMCabeAPIService {
+
+        //Group chat
+        @POST(API_CHAT_ROOMS)
         void createRoom(@Body ChatVerification verification, Callback<ChatRoom> cb);
 
-        @POST("/rooms/")
+        @POST(API_CHAT_ROOMS)
         ChatRoom createRoom(@Body ChatVerification verification);
 
-        /*@GET("/rooms/{roomName}/")
-        List<ChatRoom> getChatRoomWithName(@Path("roomName") String roomName);*/
-
-        @GET("/rooms/{room}")
+        @GET(API_CHAT_ROOMS + "{room}")
         ChatRoom getChatRoom(@Path("room") int id);
 
-       /* @POST("/rooms/{room}/join/")
-        void joinChatRoom(@Path("room") int roomId, @Body ChatVerification verification, Callback<ChatRoom> cb);*/
-
-        @POST("/rooms/{room}/leave/")
+        @POST(API_CHAT_ROOMS + "{room}/leave/")
         void leaveChatRoom(@Path("room") int roomId, @Body ChatVerification verification, Callback<ChatRoom> cb);
 
-        @PUT("/rooms/{room}/message/")
+        //Get/Update single message
+        @PUT(API_CHAT_ROOMS + "{room}/message/")
         ChatMessage sendMessage(@Path("room") int roomId, @Body ChatMessage message);
 
-        @PUT("/rooms/{room}/message/{message}/")
+        @PUT(API_CHAT_ROOMS + "{room}/message/{message}/")
         ChatMessage updateMessage(@Path("room") int roomId, @Path("message") int messageId, @Body ChatMessage message);
 
-        @POST("/rooms/{room}/messages/{page}/")
+        //Get all recent messages or older ones
+        @POST(API_CHAT_ROOMS + "{room}/messages/{page}/")
         ArrayList<ChatMessage> getMessages(@Path("room") int roomId, @Path("page") long messageId, @Body ChatVerification verification);
 
-        @POST("/rooms/{room}/messages/")
+        @POST(API_CHAT_ROOMS + "{room}/messages/")
         ArrayList<ChatMessage> getNewMessages(@Path("room") int roomId, @Body ChatVerification verification);
 
-        @POST("/members/")
+        @POST(API_CHAT_MEMBERS)
         ChatMember createMember(@Body ChatMember chatMember);
 
-        @GET("/members/{lrz_id}/")
+        @GET(API_CHAT_MEMBERS + "{lrz_id}/")
         ChatMember getMember(@Path("lrz_id") String lrzId);
 
-        @POST("/members/{memberId}/pubkeys/")
+        @POST(API_CHAT_MEMBERS + "{memberId}/pubkeys/")
         ChatPublicKey uploadPublicKey(@Path("memberId") int memberId, @Body ChatPublicKey publicKey);
 
-        @POST("/members/{memberId}/rooms/")
+        @POST(API_CHAT_MEMBERS + "{memberId}/rooms/")
         List<ChatRoom> getMemberRooms(@Path("memberId") int memberId, @Body ChatVerification verification);
 
-        @GET("/members/{memberId}/pubkeys/")
+        @GET(API_CHAT_MEMBERS + "{memberId}/pubkeys/")
         void getPublicKeysForMember(@Path("memberId") int memberId, Callback<List<ChatPublicKey>> cb);
 
-        @POST("/members/{memberId}/registration_ids/add_id")
+        @POST(API_CHAT_MEMBERS + "{memberId}/registration_ids/add_id")
         void uploadRegistrationId(@Path("memberId") int memberId, @Body ChatRegistrationId regId, Callback<ChatRegistrationId> cb);
 
     }
