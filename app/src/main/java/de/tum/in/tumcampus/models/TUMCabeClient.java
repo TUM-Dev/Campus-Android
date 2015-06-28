@@ -41,6 +41,7 @@ public class TUMCabeClient {
     private static final String API_CINEMA = "/kino/";
     private static final String API_NOTIFICATIONS = "/notifications/";
     private static final String API_NOTIFICATIONS_TYPES = API_NOTIFICATIONS + "types/";
+    private static final String API_LOCATIONS = "/locations/";
 
 
     private static TUMCabeClient instance = null;
@@ -93,7 +94,7 @@ public class TUMCabeClient {
                 //Toast.makeText(c, t.toString(), Toast.LENGTH_LONG).show();
             }
             return t;
-        };
+        }
     };
 
     private interface TUMCabeAPIService {
@@ -143,6 +144,22 @@ public class TUMCabeClient {
         @POST(API_CHAT_MEMBERS + "{memberId}/registration_ids/add_id")
         void uploadRegistrationId(@Path("memberId") int memberId, @Body ChatRegistrationId regId, Callback<ChatRegistrationId> cb);
 
+        //Nachrichten / Alarmierung
+        @GET(API_NOTIFICATIONS_TYPES)
+        List<NotificationType> getTypes();
+
+        @GET(API_NOTIFICATIONS + "{lastNotification}/")
+        List<Notification> getNotifications(@Path("lastNotification") int lastNotification);
+
+        @GET(API_NOTIFICATIONS + "confirm/{notification}/")
+        void confirm(@Path("notification") int notification);
+
+        //Locations
+        @GET(API_LOCATIONS)
+        List<NotificationLocation> getAllLocations();
+
+        @GET(API_LOCATIONS + "{locationId}/")
+        NotificationLocation getLocation(@Path("locationId") int locationId);
     }
 
     public void createRoom(ChatRoom chatRoom, ChatVerification verification, Callback<ChatRoom> cb) {
@@ -155,10 +172,6 @@ public class TUMCabeClient {
         return service.createRoom(verification);
     }
 
-    /*public List<ChatRoom> getChatRoomWithName(ChatRoom chatRoom) {
-        return service.getChatRoomWithName(chatRoom.getName());
-    }*/
-
     public ChatRoom getChatRoom(int id) {
         return service.getChatRoom(id);
     }
@@ -167,12 +180,6 @@ public class TUMCabeClient {
         return service.createMember(chatMember);
     }
 
-   /* public ChatMember getMember(String lrzId) {
-        return service.getMember(lrzId);
-    }
-     public void joinChatRoom(ChatRoom chatRoom, ChatVerification verification, Callback<ChatRoom> cb) {
-        service.joinChatRoom(chatRoom.getId(), verification, cb);
-    }*/
 
     public void leaveChatRoom(ChatRoom chatRoom, ChatVerification verification, Callback<ChatRoom> cb) {
         service.leaveChatRoom(chatRoom.getId(), verification, cb);
