@@ -457,6 +457,8 @@
                 <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
             </intent-filter>
         </receiver>
+        <!-- Smart alarm receiver -->
+        <receiver android:name="de.tum.in.tumcampus.services.SmartAlarmReceiver" />
 
         <service
             android:name="de.tum.in.tumcampus.services.DownloadService"

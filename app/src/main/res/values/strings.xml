@@ -83,6 +83,28 @@
     <string name="demo_mode">In-App-Tutorial</string>
     <string name="demo_info">Activates help mode for instruction on how to use this App.</string>
 
+    <string name="smart_alarm">Smart Alarm Clock</string>
+    <string name="smart_alarm_info">Automatically set alarm clock corresponding to your lectures.</string>
+    <string name="smart_alarm_active">Activate smart Alarm</string>
+    <string name="smart_alarm_ringtone">Ringtone</string>
+    <string name="smart_alarm_ringtone_selectortitle">Select ringtone for smart alarm:</string>
+    <string name="smart_alarm_buffer">Buffer Time</string>
+    <string name="smart_alarm_buffer_info">How long you want to arrive before beginning of your first lecture.</string>
+    <string name="smart_alarm_home">Train Station at Home</string>
+    <string name="smart_alarm_transportmode_public">Public Transport</string>
+    <string name="smart_alarm_toggle_public">Click to toggle to public transport</string>
+    <string name="smart_alarm_toggle_private">Click to toggle to private transport</string>
+    <string name="smart_alarm_morningtime">Time in the Morning</string>
+    <string name="smart_alarm_morningtime_info">Time you need before leaving home</string>
+    <string name="smart_alarm_journeyduration">Duration of your Journey</string>
+    <string name="smart_alarm_publictransport_cat">Public Transport Settings</string>
+    <string name="smart_alarm_privatetransport_cat">Private Transport Settings</string>
+    <string name="smart_alarm_publicsettings">Public Transport Settings</string>
+    <string name="smart_alarm_privatesettings">Private Transport Settings</string>
+    <string name="smart_alarm_nostation">No station set</string>
+
+    <string name="mvv_station_picker_title">Pick MVV Station</string>
+
     <string name="about_tca">About TCA</string>
     <string name="information">Information</string>
     <string name="facebook" translatable="false">Facebook</string>

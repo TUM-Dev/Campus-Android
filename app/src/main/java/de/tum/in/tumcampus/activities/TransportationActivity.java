@@ -30,6 +30,7 @@ public class TransportationActivity extends ActivityForSearchingInBackground<Cur
     private ListView listViewResults;
     private SimpleCursorAdapter adapterStations;
     private RecentsManager recentsManager;
+    private boolean returnResult, setResult;
 
     public TransportationActivity() {
         super(R.layout.activity_transportation, MVVStationSuggestionProvider.AUTHORITY, 3);
@@ -39,6 +40,9 @@ public class TransportationActivity extends ActivityForSearchingInBackground<Cur
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        returnResult = getCallingActivity() != null;
+        setResult = false;
 
         // get all stations from db
         recentsManager = new RecentsManager(this, RecentsManager.STATIONS);
@@ -51,11 +55,21 @@ public class TransportationActivity extends ActivityForSearchingInBackground<Cur
         adapterStations = new SimpleCursorAdapter(this, android.R.layout.simple_list_item_1, stationCursor,
                 stationCursor.getColumnNames(), new int[]{android.R.id.text1});
 
-        if(adapterStations.getCount()==0) {
+        if (adapterStations.getCount() == 0) {
             openSearch();
         } else {
             listViewResults.setAdapter(adapterStations);
             listViewResults.requestFocus();
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        if (returnResult && !setResult) {
+            // user cancelled station selection
+            setResult(RESULT_CANCELED);
         }
     }
 
@@ -65,7 +79,22 @@ public class TransportationActivity extends ActivityForSearchingInBackground<Cur
     @Override
     public void onItemClick(final AdapterView<?> av, View v, int position, long id) {
         Cursor departureCursor = (Cursor) av.getAdapter().getItem(position);
-        showStation(departureCursor.getString(departureCursor.getColumnIndex(Const.NAME_COLUMN)));
+        String station = departureCursor.getString(departureCursor.getColumnIndex(Const.NAME_COLUMN));
+
+        // check, if activity result is needed
+        if (!returnResult) {
+            // called by navigation drawer => no result
+            // v.animate().setDuration(5000).rotationBy(360).start();
+            showStation(station);
+        } else {
+            // called by preferences screen => return result
+            Intent result = new Intent();
+            result.putExtra("station", station);
+            setResult(RESULT_OK, result);
+
+            setResult = true;
+            finish();
+        }
     }
 
     /**

@@ -47,7 +47,12 @@ public final class Const {
 	public static final String TRANSPORT_COLUMN = "transport";
 	public static final String WARNING = "warning";
 	public static final String WARNING_MESSAGE = "warning_message";
-	
+    public static final String SMART_ALARM_ACTIVE = "smart_alarm_active";
+    public static final String SMART_ALARM_SCREEN = "smart_alarm_screen";
+    public static final String SMART_ALARM_MODE = "smart_alarm_transportmode";
+    public static final String SMART_ALARM_CAT_PUBLIC = "smart_alarm_cat_public";
+    public static final String SMART_ALARM_CAT_PRIVATE = "smart_alarm_cat_private";
+
 	public static final String CHAT_URL = "https://tumcabe.in.tum.de/Api/chat/";
 	public static final String CURRENT_CHAT_ROOM = "current_chat_room";
 	public static final String CHAT_ROOM_DISPLAY_NAME = "chat_room_display_name";

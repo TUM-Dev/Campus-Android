@@ -1,14 +1,20 @@
 package de.tum.in.tumcampus.fragments;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.PendingIntent;
+import android.app.Service;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -18,22 +24,30 @@ import android.preference.Preference;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
+import android.provider.AlarmClock;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.widget.ListAdapter;
+import android.widget.Toast;
 
 import com.github.machinarius.preferencefragment.PreferenceFragment;
+
+import java.util.Calendar;
+import java.util.Date;
 
 import de.psdev.licensesdialog.LicensesDialog;
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.MainActivity;
 import de.tum.in.tumcampus.activities.StartupActivity;
+import de.tum.in.tumcampus.activities.TransportationActivity;
 import de.tum.in.tumcampus.activities.wizard.WizNavStartActivity;
 import de.tum.in.tumcampus.auxiliary.AccessTokenManager;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.NetUtils;
+import de.tum.in.tumcampus.auxiliary.SmartAlarmUtils;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.managers.CacheManager;
 import de.tum.in.tumcampus.models.managers.CalendarManager;
@@ -42,11 +56,15 @@ import de.tum.in.tumcampus.models.managers.DatabaseManager;
 import de.tum.in.tumcampus.models.managers.NewsManager;
 import de.tum.in.tumcampus.services.BackgroundService;
 import de.tum.in.tumcampus.services.SilenceService;
+import de.tum.in.tumcampus.services.SmartAlarmReceiver;
 
 public class SettingsFragment extends PreferenceFragment implements
         SharedPreferences.OnSharedPreferenceChangeListener, Preference.OnPreferenceClickListener {
+    private static final int MVV_STATION_REQUEST = 1;
+    private static final int RINGTONE_REQUEST = 2;
 
     private FragmentActivity mContext;
+    private Preference smartAlarmPublic, smartAlarmPrivate;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -61,8 +79,40 @@ public class SettingsFragment extends PreferenceFragment implements
             silent.setEnabled(false);
         }
 
+        // Hide unneeded settings of smart alarm
+        PreferenceScreen smartAlarmScreen = (PreferenceScreen) findPreference(Const.SMART_ALARM_SCREEN);
+        smartAlarmPublic = findPreference(Const.SMART_ALARM_CAT_PUBLIC);
+        smartAlarmPrivate = findPreference(Const.SMART_ALARM_CAT_PRIVATE);
+        if (((CheckBoxPreference)findPreference(Const.SMART_ALARM_MODE)).isChecked()) {
+            smartAlarmScreen.removePreference(smartAlarmPrivate);
+        } else {
+            smartAlarmScreen.removePreference(smartAlarmPublic);
+        }
+
+        // display mvv station in summary
+        Preference mvv_station_picker = findPreference("smart_alarm_home_button");
+        String station = PreferenceManager.getDefaultSharedPreferences(mContext).getString("smart_alarm_home", "");
+        if (station == null || station.equals("")) {
+            mvv_station_picker.setSummary(getResources().getString(R.string.smart_alarm_nostation));
+        } else {
+            mvv_station_picker.setSummary(station);
+        }
+
+        // display selected ringtone
+        Preference ringtone_picker = findPreference("smart_alarm_ringtone");
+        String ringtone = PreferenceManager.getDefaultSharedPreferences(mContext).getString("smart_alarm_ringtone", "");
+        Uri ringtoneURI;
+        if (ringtone == null || ringtone.equals("")) {
+            ringtoneURI = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
+        } else {
+            ringtoneURI = Uri.parse(ringtone);
+        }
+        ringtone_picker.setSummary(RingtoneManager.getRingtone(mContext, ringtoneURI).getTitle(mContext));
+
         // Click listener for preference list entries. Used to simulate a button
         // (since it is not possible to add a button to the preferences screen)
+        findPreference("smart_alarm_home_button").setOnPreferenceClickListener(this);
+        findPreference("smart_alarm_ringtone").setOnPreferenceClickListener(this);
         findPreference("button_wizard").setOnPreferenceClickListener(this);
         findPreference("button_clear_cache").setOnPreferenceClickListener(this);
         findPreference("facebook").setOnPreferenceClickListener(this);
@@ -207,9 +257,39 @@ public class SettingsFragment extends PreferenceFragment implements
                 mContext.stopService(service);
             }
         }
+
+        if (key.equals(Const.SMART_ALARM_ACTIVE)) {
+            //noinspection ConstantConditions
+            if (((CheckBoxPreference) pref).isChecked()) {
+                // TODO: start alarm
+                AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Service.ALARM_SERVICE);
+                Intent i = new Intent(mContext, SmartAlarmReceiver.class);
+                PendingIntent p = PendingIntent.getBroadcast(mContext, SmartAlarmReceiver.PRE_ALARM_REQUEST, i, 0);
+                Calendar c = Calendar.getInstance();
+                c.set(Calendar.HOUR_OF_DAY, c.get(Calendar.HOUR_OF_DAY));
+                c.set(Calendar.MINUTE, c.get(Calendar.MINUTE) + 1);
+                alarmManager.set(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), p);
+                // alarmManager.set(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), p);
+                SmartAlarmUtils.schedulePreAlarm(mContext);
+            } else {
+                // TODO: stop alarm
+            }
+        }
+
+        if (key.equals(Const.SMART_ALARM_MODE)) {
+            PreferenceScreen smartAlarmScreen = (PreferenceScreen) findPreference(Const.SMART_ALARM_SCREEN);
+            //noinspection ConstantConditions
+            if (((CheckBoxPreference) pref).isChecked()) {
+                smartAlarmScreen.removePreference(findPreference(Const.SMART_ALARM_CAT_PRIVATE));
+                smartAlarmScreen.addPreference(smartAlarmPublic);
+            } else {
+                smartAlarmScreen.removePreference(findPreference(Const.SMART_ALARM_CAT_PUBLIC));
+                smartAlarmScreen.addPreference(smartAlarmPrivate);
+            }
+        }
     }
 
-    @SuppressWarnings("deprecation")
+    //    @SuppressWarnings("deprecation")
     void setSummary(String key) {
         Preference t = findPreference(key);
         if (t instanceof ListPreference) {
@@ -301,6 +381,21 @@ public class SettingsFragment extends PreferenceFragment implements
                 Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.url_privacy_policy)));
                 startActivity(myIntent);
                 break;
+
+            case "smart_alarm_home_button":
+                Intent mvv = new Intent(mContext, TransportationActivity.class);
+                startActivityForResult(mvv, MVV_STATION_REQUEST);
+                break;
+
+            case "smart_alarm_ringtone":
+                Intent ringtonePicker = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
+                ringtonePicker.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, getResources().getString(R.string.smart_alarm_ringtone_selectortitle));
+                ringtonePicker.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, false);
+                ringtonePicker.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT, true);
+                ringtonePicker.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_RINGTONE | RingtoneManager.TYPE_ALARM);
+                startActivityForResult(ringtonePicker, RINGTONE_REQUEST);
+                break;
+
             default:
                 return false;
         }
@@ -346,6 +441,36 @@ public class SettingsFragment extends PreferenceFragment implements
                     mContext.finish();
                 }
             });
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent res) {
+        switch (requestCode) {
+            case MVV_STATION_REQUEST:
+                if (resultCode == Activity.RESULT_OK) {
+                    SharedPreferences.Editor prefEditor = PreferenceManager.getDefaultSharedPreferences(mContext).edit();
+                    String station = res.getExtras().getString("station");
+                    prefEditor.putString("smart_alarm_home", station);
+                    prefEditor.apply();
+                    findPreference("smart_alarm_home_button").setSummary(station);
+                }
+                break;
+
+            case RINGTONE_REQUEST:
+                if (resultCode == Activity.RESULT_OK) {
+                    Uri ringtone = res.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
+                    if (ringtone != null) {
+                        SharedPreferences.Editor prefEditor = PreferenceManager.getDefaultSharedPreferences(mContext).edit();
+                        prefEditor.putString("smart_alarm_ringtone", ringtone.toString());
+                        prefEditor.apply();
+                        findPreference("smart_alarm_ringtone").setSummary(RingtoneManager.getRingtone(mContext, ringtone).getTitle(mContext));
+                    }
+                }
+                break;
+
+            default:
+                break;
         }
     }
 }
