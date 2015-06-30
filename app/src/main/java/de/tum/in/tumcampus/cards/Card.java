@@ -97,6 +97,13 @@ public abstract class Card {
         return null;
     }
 
+    public View inflateView(Context context, ViewGroup parent){
+        ImplicitCounter.CounterCard(context, this);
+        mContext = context;
+        mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        return null;
+    }
+
     /**
      * Adds a new text view to the main card layout
      * @param text Text that should be shown
