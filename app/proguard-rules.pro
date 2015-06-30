@@ -21,6 +21,15 @@
 
 -dontobfuscate
 
+-keepattributes *Annotation*
+-keepattributes Signature
+-keep class com.bea.xml.stream.**{*;}
+-keep class com.squareup.okhttp.internal.**{*;}
+-keep class okio.**{*;}
+-keep class org.simpleframework.xml.**{*;}
+-keep class retrofit.**{*;}
+-keep class de.tum.in.tumcampus.models.**{*;}
+
 #Don't warn about our various dependencies, they should work
 -dontwarn com.bea.xml.stream.**
 -dontwarn com.squareup.okhttp.internal.**
