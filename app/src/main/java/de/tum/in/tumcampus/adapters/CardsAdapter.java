@@ -1,44 +1,74 @@
 package de.tum.in.tumcampus.adapters;
 
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 
-import de.tum.in.tumcampus.auxiliary.SwipeDismissList;
+import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.cards.Card;
 import de.tum.in.tumcampus.models.managers.CardManager;
 
 /**
  * Adapter for the cards start page used in {@link de.tum.in.tumcampus.activities.MainActivity}
  */
-public class CardsAdapter extends BaseAdapter implements SwipeDismissList.SwipeDismissDiscardable {
+public class CardsAdapter extends RecyclerView.Adapter {
 
     private final Context mContext;
+
+    // Provide a reference to the views for each data item
+    // Complex data items may need more than one view per item, and
+    // you provide access to all the views for a data item in a view holder
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        // each data item is just a string in this case
+        public View mView;
+
+        public ViewHolder(View v, ViewGroup vG) {
+            super(v);
+            mView = v;
+        }
+    }
+
 
     public CardsAdapter(Context context) {
         mContext = context;
     }
 
-    @Override
-    public int getCount() {
-        return CardManager.getCardCount();
-    }
 
-    @Override
     public Object getItem(int i) {
         return CardManager.getCard(i);
     }
 
     @Override
-    public long getItemId(int i) {
-        Card card = CardManager.getCard(i);
-        return card.getTyp()+card.getId()<<4;
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+
+        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.card_item, viewGroup, false);
+        return new ViewHolder(v, viewGroup);
+        //@todo implement this in the card types
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup viewGroup) {
-        return CardManager.getCard(position).getCardView(mContext, viewGroup);
+    public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
+        Card card = CardManager.getCard(position);
+
+        //@todo
+    }
+
+    @Override
+    public int getItemViewType (int position) {
+        return CardManager.getCard(position).getTyp();
+    }
+
+    @Override
+    public long getItemId(int i) {
+        Card card = CardManager.getCard(i);
+        return card.getTyp() + card.getId() << 4;
+    }
+
+    @Override
+    public int getItemCount() {
+        return CardManager.getCardCount();
     }
 
     public Card remove(int position) {
@@ -49,10 +79,9 @@ public class CardsAdapter extends BaseAdapter implements SwipeDismissList.SwipeD
 
     public void insert(int position, Card item) {
         CardManager.insert(position, item);
-        notifyDataSetChanged();
+        this.notifyDataSetChanged();
     }
 
-    @Override
     public boolean isDismissable(int pos) {
         return CardManager.getCard(pos).isDismissable();
     }

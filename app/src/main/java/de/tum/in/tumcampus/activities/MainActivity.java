@@ -10,6 +10,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -33,7 +35,7 @@ import de.tum.in.tumcampus.services.SilenceService;
 /**
  * Main activity displaying the cards and providing navigation with navigation drawer
  */
-public class MainActivity extends BaseActivity implements AdapterView.OnItemClickListener, SwipeDismissList.OnDismissCallback, SwipeRefreshLayout.OnRefreshListener {
+public class MainActivity extends BaseActivity implements AdapterView.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
     private static final int MENU_OPEN_SETTINGS = 0;
     private static final int MENU_HIDE_ALWAYS = 1;
 
@@ -46,9 +48,8 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
     /**
      * Card list
      */
-    private ListView mCardsView;
+    private RecyclerView mCardsView;
     private CardsAdapter mAdapter;
-    private SwipeDismissList mSwipeList;
     private SwipeRefreshLayout mSwipeRefreshlayout;
 
     public MainActivity() {
@@ -60,15 +61,13 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
         super.onCreate(savedInstanceState);
 
         // Setup card list view
-        mCardsView = (ListView) findViewById(R.id.cards_view);
-        mCardsView.setOnItemClickListener(this);
-        mCardsView.setDividerHeight(0);
+        mCardsView = (RecyclerView) findViewById(R.id.cards_view);
+        mCardsView.setOnClickListener(this);
         registerForContextMenu(mCardsView);
 
-        // Setup swipe to dismiss feature
-        mSwipeList = new SwipeDismissList(mCardsView, this);
-        mSwipeList.setUndoString(getString(R.string.card_dismissed));
-        mSwipeList.setUndoMultipleString(getString(R.string.cards_dismissed));
+        final LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        mCardsView.setLayoutManager(layoutManager);
 
         // Setup pull to refresh
         mSwipeRefreshlayout = (SwipeRefreshLayout) findViewById(R.id.ptr_layout);
@@ -129,18 +128,7 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
      */
     private void initAdapter() {
         mAdapter = new CardsAdapter(this);
-        SwingBottomInAnimationAdapter animationAdapter = new SwingBottomInAnimationAdapter(mAdapter);
-        animationAdapter.setAbsListView(mCardsView);
-        mCardsView.setAdapter(animationAdapter);
-    }
-
-    /**
-     * Discard all pending discards, otherwise already discarded item will show up again
-     */
-    @Override
-    protected void onStop() {
-        super.onStop();
-        mSwipeList.discardUndo();
+        mCardsView.setAdapter(mAdapter);
     }
 
     @Override
@@ -207,29 +195,6 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
         return super.onOptionsItemSelected(item);
     }
 
-    /**
-     * Handle on card click
-     *
-     * @param adapterView Containing listView
-     * @param view        Item view
-     * @param position    Index of item
-     * @param id          Item id
-     */
-    @Override
-    public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-        Card card = CardManager.getCard(position);
-        if (card.getTyp() == CardManager.CARD_RESTORE) {
-            mSwipeList.discardUndo();
-            CardManager.restoreCards();
-            refreshCards();
-        } else {
-            Intent i = card.getIntent();
-            if (i != null) {
-                startActivity(i);
-            }
-        }
-    }
-
     public void onFabClicked(View v) {
         startActivity(new Intent(this, UserPreferencesActivity.class));
     }
@@ -240,7 +205,6 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
      * @param listView ListView
      * @param position Swiped item position
      */
-    @Override
     public SwipeDismissList.Undoable onDismiss(AbsListView listView, final int position) {
         // Delete the item from adapter
         final Card itemToDelete = mAdapter.remove(position);
@@ -325,7 +289,6 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
-                mSwipeList.discardUndo();
             }
 
             @Override
@@ -367,4 +330,18 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
             }
         }
     };
+
+    @Override
+    public void onClick(View view) {
+        Card card = CardManager.getCard(mCardsView.getChildAdapterPosition(view));
+        if (card.getTyp() == CardManager.CARD_RESTORE) {
+            CardManager.restoreCards();
+            refreshCards();
+        } else {
+            Intent i = card.getIntent();
+            if (i != null) {
+                startActivity(i);
+            }
+        }
+    }
 }

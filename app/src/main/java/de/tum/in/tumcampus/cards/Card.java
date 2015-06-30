@@ -289,7 +289,7 @@ public abstract class Card {
     /**
      * Interface which has to be implemented by a manager class to add cards to the stream
      */
-    public static interface ProvidesCard {
+    public interface ProvidesCard {
         /**
          * Gets called whenever cards need to be shown or refreshed.
          * This method should decide whether a card can be displayed and if so
@@ -297,6 +297,6 @@ public abstract class Card {
          *
          * @param context Context
          */
-        public void onRequestCard(Context context);
+        void onRequestCard(Context context);
     }
 }
