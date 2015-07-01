@@ -264,7 +264,6 @@
     <string name="card_next_lecture_summary">Affiche des informations sur la prochaine conférence</string>
     <string name="card_tuition_fee_summary">Vous rappelle quand vous devez payer les frais de scolarité</string>
     <string name="card_news_summary">Propose une sélection de nouvelles avant</string>
-    <string name="card_kino_summary">Affiche des détails sur le TU Kino</string>
     <string name="card_chat_summary">Vous avertit lorsque de nouveaux messages sont disponibles</string>
     <string name="chat">Chat</string>
     <string name="open_card_settings">Personnaliser carte</string>

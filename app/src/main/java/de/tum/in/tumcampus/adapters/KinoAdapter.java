@@ -18,7 +18,7 @@ import de.tum.in.tumcampus.fragments.KinoDetailsFragment;
 public class KinoAdapter extends FragmentStatePagerAdapter{
 
     private int count; //number of pages
-    private ArrayList<String> titles = new ArrayList<>();
+    private ArrayList<String> titles = new ArrayList<>();  // titles shown in the pagerStrip
 
     public KinoAdapter(FragmentManager fm, Cursor cursor){
         super(fm);
@@ -55,9 +55,7 @@ public class KinoAdapter extends FragmentStatePagerAdapter{
     @Override
     public CharSequence getPageTitle(int position){
         String title = titles.get(position);
-        String dateString = title.substring(0, title.indexOf(':')).trim();
-        String titleString = title.substring(title.indexOf(':') + 1).trim();
-        return titleString + "\n" + dateString;
+        return title.substring(title.indexOf(':') + 1).trim();
     }
 
 }

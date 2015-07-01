@@ -39,7 +39,6 @@ public class CardManager {
     public static final int CARD_EDUROAM = 10;
     public static final int CARD_CHAT = 11;
     public static final int CARD_SUPPORT = 12;
-    public static final int CARD_KINO = 13;
 
     private static List<Card> cards;
     private static ArrayList<Card> newCards;
@@ -123,7 +122,6 @@ public class CardManager {
         managers.add(new CafeteriaManager(context));
         managers.add(new TransportManager());
         managers.add(new NewsManager(context));
-        managers.add(new KinoManager(context));
 
         for (Card.ProvidesCard manager : managers) {
             try {

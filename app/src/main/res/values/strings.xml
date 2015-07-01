@@ -115,6 +115,15 @@
     <string name="no_link_existing">No link existing.</string>
     <string name="info_title">New information:</string>
 
+    <!-- Kino -->
+    <string name="imdb_rating">IMDB-Rating</string>
+    <string name="year">Year of release</string>
+    <string name="runtime">Runtime</string>
+    <string name="genre">Genre</string>
+    <string name="director">Director</string>
+    <string name="actors">Actors</string>
+    <string name="description">Description</string>
+
     <!-- Navigation drawer -->
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
@@ -325,7 +334,6 @@
     <string name="card_next_lecture_summary">Shows information about your next lecture</string>
     <string name="card_tuition_fee_summary">Reminds you if you have to pay your fees</string>
     <string name="card_news_summary">Advertises selected news</string>
-    <string name="card_kino_summary">Shows details about the TU Kino</string>
     <string name="card_chat_summary">Notifies you if new messages are available</string>
     <string name="chat">Chat</string>
     <string name="open_card_settings">Open card settings</string>

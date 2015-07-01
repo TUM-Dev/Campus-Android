@@ -12,14 +12,12 @@ import java.util.Date;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.NetUtils;
 import de.tum.in.tumcampus.auxiliary.Utils;
-import de.tum.in.tumcampus.cards.Card;
-import de.tum.in.tumcampus.cards.KinoCard;
 import de.tum.in.tumcampus.models.Kino;
 
 /**
- * TU Kino Manager, handles content and card creation
+ * TU Kino Manager, handles content
  */
-public class KinoManager implements Card.ProvidesCard {
+public class KinoManager{
 
     private static final int TIME_TO_SYNC = 1800; // 1/2 hour
     private final Context mContext;
@@ -107,7 +105,7 @@ public class KinoManager implements Card.ProvidesCard {
         String director = json.getString(Const.JSON_DIRECTOR);
         String actors = json.getString(Const.JSON_ACTORS);
         String rating = json.getString(Const.JSON_RATING);
-        String description = json.getString(Const.JSON_DESCRIPTION);
+        String description = json.getString(Const.JSON_DESCRIPTION).trim();
         String cover = json.getString(Const.JSON_COVER);
         String trailer = json.getString(Const.JSON_TRAILER);
         Date date = Utils.getISODateTime(json.getString(Const.JSON_DATE));
@@ -141,14 +139,4 @@ public class KinoManager implements Card.ProvidesCard {
                         Utils.getDateTimeString(k.created), k.link});
     }
 
-
-    /**
-     * Add Kino Card to the stream
-     * @param context Context
-     */
-    @Override
-    public void onRequestCard(Context context){
-        Card card = new KinoCard(context);
-        card.apply();
-    }
 }

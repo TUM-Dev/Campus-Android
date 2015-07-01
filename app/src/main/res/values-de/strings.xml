@@ -104,6 +104,15 @@
     <string name="no_link_existing">Kein Link gefunden.</string>
     <string name="info_title">Neuigkeiten:</string>
 
+    <!-- Kino -->
+    <string name="imdb_rating">IMDB-Rating</string>
+    <string name="year">Erscheinungsjahr</string>
+    <string name="runtime">Laufzeit</string>
+    <string name="genre">Genre</string>
+    <string name="director">Regisseur</string>
+    <string name="actors">Schauspieler</string>
+    <string name="description">Beschreibung</string>
+
     <!-- Navigation drawer -->
     <string name="drawer_open">Öffnen</string>
     <string name="drawer_close">Schließen</string>
@@ -266,7 +275,6 @@
     <string name="card_next_lecture_summary">Zeigt Informationen zur nächsten Vorlesung an</string>
     <string name="card_tuition_fee_summary">Erinnert dich wenn du die Studiengebühren zahlen musst</string>
     <string name="card_news_summary">Schlägt ausgewählte News vor</string>
-    <string name="card_kino_summary">Zeigt Details zum TU Kino an</string>
     <string name="card_chat_summary">Benachrichtigt dich wenn neue Nachrichten verfügbar sind</string>
     <string name="chat">Chat</string>
     <string name="open_card_settings">Karte anpassen</string>

@@ -216,30 +216,6 @@
             </PreferenceCategory>
         </PreferenceScreen>
 
-        <!-- TU Kino card -->
-        <PreferenceScreen
-            android:key="card_kino"
-            android:summary="@string/card_kino_summary"
-            android:title="@string/kino">
-
-            <PreferenceCategory android:title="@string/display">
-                <CheckBoxPreference
-                    android:defaultValue="true"
-                    android:key="card_kino_start"
-                    android:title="@string/startpage" />
-                <CheckBoxPreference
-                    android:defaultValue="false"
-                    android:key="card_kino_wear"
-                    android:title="@string/wear" />
-                <CheckBoxPreference
-                    android:defaultValue="false"
-                    android:dependency="card_kino_wear"
-                    android:key="card_kino_phone"
-                    android:summary="@string/phone_summary"
-                    android:title="@string/phone" />
-            </PreferenceCategory>
-        </PreferenceScreen>
-
         <!-- Chat card -->
         <PreferenceScreen
             android:key="card_chat"

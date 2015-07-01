@@ -61,8 +61,9 @@ public class KinoDetailsFragment extends Fragment implements View.OnClickListene
         Button date,link,imdb,year,runtime;
 
         cursor.moveToPosition(position);
-
         url = cursor.getString(cursor.getColumnIndex(Const.JSON_LINK));
+
+        // ---- header ----
 
         LinearLayout headerView = (LinearLayout) inflater.inflate(R.layout.kino_header, rootView, false);
         ImageView cover = (ImageView) headerView.findViewById(R.id.kino_cover);
@@ -100,7 +101,7 @@ public class KinoDetailsFragment extends Fragment implements View.OnClickListene
         // genre
         view = inflater.inflate(R.layout.list_header_big, rootView, false);
         text = (TextView) view.findViewById(R.id.list_header);
-        text.setText("Genre");
+        text.setText(R.string.genre);
         rootView.addView(view);
         view = inflater.inflate(R.layout.kino_content, rootView, false);
         text = (TextView) view.findViewById(R.id.line_name);
@@ -110,7 +111,7 @@ public class KinoDetailsFragment extends Fragment implements View.OnClickListene
         // director
         view = inflater.inflate(R.layout.list_header_big, rootView, false);
         text = (TextView) view.findViewById(R.id.list_header);
-        text.setText("Director");
+        text.setText(R.string.director);
         rootView.addView(view);
         view = inflater.inflate(R.layout.kino_content, rootView, false);
         text = (TextView) view.findViewById(R.id.line_name);
@@ -120,7 +121,7 @@ public class KinoDetailsFragment extends Fragment implements View.OnClickListene
         // actors
         view = inflater.inflate(R.layout.list_header_big, rootView, false);
         text = (TextView) view.findViewById(R.id.list_header);
-        text.setText("Actors");
+        text.setText(R.string.actors);
         rootView.addView(view);
         view = inflater.inflate(R.layout.kino_content, rootView, false);
         text = (TextView) view.findViewById(R.id.line_name);
@@ -130,7 +131,7 @@ public class KinoDetailsFragment extends Fragment implements View.OnClickListene
         // description
         view = inflater.inflate(R.layout.list_header_big, rootView, false);
         text = (TextView) view.findViewById(R.id.list_header);
-        text.setText("Description");
+        text.setText(R.string.description);
         rootView.addView(view);
         view = inflater.inflate(R.layout.kino_content, rootView, false);
         text = (TextView) view.findViewById(R.id.line_name);
@@ -152,19 +153,19 @@ public class KinoDetailsFragment extends Fragment implements View.OnClickListene
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.button_date:
-                Toast.makeText(context, "Date", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, R.string.date, Toast.LENGTH_SHORT).show();
                 break;
             case R.id.button_link:
                 startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
                 break;
             case R.id.button_imdb:
-                Toast.makeText(context, "IMDB-Rating", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, R.string.imdb_rating, Toast.LENGTH_SHORT).show();
                 break;
             case R.id.button_year:
-                Toast.makeText(context, "Year", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, R.string.year, Toast.LENGTH_SHORT).show();
                 break;
             case R.id.button_runtime:
-                Toast.makeText(context, "Runtime", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, R.string.runtime, Toast.LENGTH_SHORT).show();
                 break;
         }
     }
