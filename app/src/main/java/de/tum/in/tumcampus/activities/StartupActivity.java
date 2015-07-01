@@ -32,6 +32,7 @@ import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.FileUtils;
 import de.tum.in.tumcampus.auxiliary.ImplicitCounter;
 import de.tum.in.tumcampus.auxiliary.Utils;
+import de.tum.in.tumcampus.models.managers.CardManager;
 import de.tum.in.tumcampus.models.managers.DatabaseManager;
 import de.tum.in.tumcampus.services.DownloadService;
 import de.tum.in.tumcampus.services.StartSyncReceiver;
@@ -77,6 +78,8 @@ public class StartupActivity extends AppCompatActivity {
             return;
         } else if (newVersion) {
             Utils.setSetting(this, Const.BACKGROUND_MODE, true);
+            Utils.setSetting(this, CardManager.SHOW_SUPPORT, true);
+
             Intent intent;
             if (new AccessTokenManager(this).hasValidAccessToken())
                 intent = new Intent(this, WizNavChatActivity.class);
