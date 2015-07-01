@@ -99,7 +99,7 @@ public class KinoManager implements Card.ProvidesCard {
      * @throws Exception
      */
     private static Kino getFromJson(JSONObject json) throws Exception {
-        String id = json.getString(Const.JSON_NEWS);
+        String id = json.getString(Const.JSON_KINO);
         String title = json.getString(Const.JSON_TITLE);
         String year = json.getString(Const.JSON_YEAR);
         String runtime = json.getString(Const.JSON_RUNTIME);
@@ -123,7 +123,7 @@ public class KinoManager implements Card.ProvidesCard {
      * @return Cursor
      */
     public Cursor getAllFromDb(){
-        return db.rawQuery("SELECT * from kino",null);
+        return db.rawQuery("SELECT * FROM kino",null);
     }
 
     /**

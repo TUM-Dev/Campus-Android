@@ -123,6 +123,12 @@ public class DownloadService extends IntentService {
                             Utils.log(e);
                             successful = false;
                         }
+                        try {
+                            downLoadKino(force);
+                        } catch (Exception e){
+                            Utils.log(e);
+                            successful = false;
+                        }
 
                         boolean isSetup = Utils.getInternalSettingBool(this, Const.EVERYTHING_SETUP, false);
                         if (!isSetup) {

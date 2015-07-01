@@ -28,6 +28,8 @@ public class KinoAdapter extends FragmentStatePagerAdapter{
             cursor.moveToPosition(i);
             titles.add(i, cursor.getString(cursor.getColumnIndex(Const.JSON_TITLE)));
         }
+
+        this.notifyDataSetChanged();
     }
 
     @Override
@@ -46,9 +48,16 @@ public class KinoAdapter extends FragmentStatePagerAdapter{
     }
 
     @Override
+    public int getItemPosition(Object object){
+        return POSITION_NONE;
+    }
+
+    @Override
     public CharSequence getPageTitle(int position){
         String title = titles.get(position);
-        return title.substring(title.indexOf(':') + 1).trim();
+        String dateString = title.substring(0, title.indexOf(':')).trim();
+        String titleString = title.substring(title.indexOf(':') + 1).trim();
+        return titleString + "\n" + dateString;
     }
 
 }

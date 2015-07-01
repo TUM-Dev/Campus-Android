@@ -8,6 +8,7 @@ import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.generic.ActivityForDownloadingExternal;
 import de.tum.in.tumcampus.adapters.KinoAdapter;
 import de.tum.in.tumcampus.auxiliary.Const;
+import de.tum.in.tumcampus.auxiliary.NetUtils;
 import de.tum.in.tumcampus.models.managers.KinoManager;
 
 /**
@@ -27,7 +28,6 @@ public class KinoActivity extends ActivityForDownloadingExternal {
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        requestDownload(false);
     }
 
     @Override
@@ -37,10 +37,18 @@ public class KinoActivity extends ActivityForDownloadingExternal {
         km = new KinoManager(this);
         cursor = km.getAllFromDb();
 
-        // set up ViewPager and adapter
-        mpager = (ViewPager) findViewById(R.id.pager);
-        kinoAdapter = new KinoAdapter(getSupportFragmentManager(), cursor);
-        mpager.setAdapter(kinoAdapter);
+        if (cursor.getCount() > 0){
+
+            // set up ViewPager and adapter
+            mpager = (ViewPager) findViewById(R.id.pager);
+            kinoAdapter = new KinoAdapter(getSupportFragmentManager(), cursor);
+            mpager.setAdapter(kinoAdapter);
+
+        } else if(!NetUtils.isConnected(this)) {
+            showNoInternetLayout();
+        } else {
+            showErrorLayout();
+        }
 
     }
 

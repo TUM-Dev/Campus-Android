@@ -25,12 +25,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-            <android.support.v4.view.PagerTitleStrip
-                android:id="@+id/pager_title_strip"
-                style="@style/SectionHeadline"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
+                <android.support.v4.view.PagerTitleStrip
+                    android:id="@+id/pager_title_strip"
+                    style="@style/SectionHeadline"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
         </android.support.v4.view.ViewPager>
 
         </LinearLayout>
