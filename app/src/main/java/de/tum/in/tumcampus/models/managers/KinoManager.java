@@ -105,7 +105,7 @@ public class KinoManager{
         String director = json.getString(Const.JSON_DIRECTOR);
         String actors = json.getString(Const.JSON_ACTORS);
         String rating = json.getString(Const.JSON_RATING);
-        String description = json.getString(Const.JSON_DESCRIPTION).trim();
+        String description = json.getString(Const.JSON_DESCRIPTION).replaceAll("\n", "").trim();
         String cover = json.getString(Const.JSON_COVER);
         String trailer = json.getString(Const.JSON_TRAILER);
         Date date = Utils.getISODateTime(json.getString(Const.JSON_DATE));
