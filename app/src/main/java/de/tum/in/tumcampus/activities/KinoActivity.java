@@ -44,10 +44,8 @@ public class KinoActivity extends ActivityForDownloadingExternal {
             kinoAdapter = new KinoAdapter(getSupportFragmentManager(), cursor);
             mpager.setAdapter(kinoAdapter);
 
-        } else if(!NetUtils.isConnected(this)) {
-            showNoInternetLayout();
         } else {
-            showErrorLayout();
+            showNoMoviesLayout();
         }
 
     }

@@ -41,6 +41,9 @@ public class KinoManager{
         db.execSQL("CREATE TABLE IF NOT EXISTS kino (id INTEGER PRIMARY KEY, title TEXT, year VARCHAR, runtime VARCHAR," +
                 "genre VARCHAR, director TEXT, actors TEXT, rating VARCHAR, description TEXT, cover TEXT, trailer TEXT, date VARCHAR, created VARCHAR," +
                 "link TEXT)");
+
+        // remove old items
+        cleanupDb();
     }
 
 
@@ -48,7 +51,7 @@ public class KinoManager{
      * Removes all old items (older than 3 months)
      */
     void cleanupDb() {
-        db.execSQL("DELETE FROM kino WHERE date < date('now','-3 month')");
+        db.execSQL("DELETE FROM kino WHERE date < date('now')");
     }
 
 
@@ -67,9 +70,6 @@ public class KinoManager{
 
         // download from kino database
         JSONArray jsonArray = net.downloadJsonArray(KINO_URL, CacheManager.VALIDITY_ONE_DAY, force);
-
-        // remove old items
-        cleanupDb();
 
         if (jsonArray == null){
             return;

@@ -112,6 +112,7 @@
     <string name="director">Regisseur</string>
     <string name="actors">Schauspieler</string>
     <string name="description">Beschreibung</string>
+    <string name="no_movies">Zur Zeit gibt es keine Filme.</string>
 
     <!-- Navigation drawer -->
     <string name="drawer_open">Öffnen</string>

@@ -123,6 +123,7 @@
     <string name="director">Director</string>
     <string name="actors">Actors</string>
     <string name="description">Description</string>
+    <string name="no_movies">Currently there are no movies.</string>
 
     <!-- Navigation drawer -->
     <string name="drawer_open">Open</string>

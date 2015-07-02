@@ -35,6 +35,7 @@ public abstract class ProgressActivity extends BaseActivity implements SwipeRefr
     private RelativeLayout noTokenLayout;
     private RelativeLayout noInternetLayout;
     private RelativeLayout failedTokenLayout;
+    private RelativeLayout noMoviesLayout;
     private SwipeRefreshLayout swipeRefreshLayout;
     private boolean registered = false;
     private Handler mLoadingHandler = new Handler();
@@ -63,6 +64,7 @@ public abstract class ProgressActivity extends BaseActivity implements SwipeRefr
         noInternetLayout = (RelativeLayout) findViewById(R.id.no_internet_layout);
         failedTokenLayout = (RelativeLayout) findViewById(R.id.failed_layout);
         noTokenLayout = (RelativeLayout) findViewById(R.id.no_token_layout);
+        noMoviesLayout = (RelativeLayout) findViewById(R.id.no_movies_layout);
 
         // If content is refreshable setup the SwipeRefreshLayout
         if (swipeRefreshLayout != null) {
@@ -107,6 +109,15 @@ public abstract class ProgressActivity extends BaseActivity implements SwipeRefr
     protected void showErrorLayout() {
         showLoadingEnded();
         errorLayout.setVisibility(View.VISIBLE);
+        allErrorsLayout.setVisibility(View.VISIBLE);
+    }
+
+    /**
+     * Shows no movies layout
+     */
+    protected void showNoMoviesLayout() {
+        showLoadingEnded();;
+        noMoviesLayout.setVisibility(View.VISIBLE);
         allErrorsLayout.setVisibility(View.VISIBLE);
     }
 
