@@ -45,6 +45,7 @@ public class KinoActivity extends ActivityForDownloadingExternal {
             mpager.setAdapter(kinoAdapter);
 
         } else {
+            // there are no movies in the semester holidays
             showNoMoviesLayout();
         }
 

@@ -48,7 +48,7 @@ public class KinoManager{
 
 
     /**
-     * Removes all old items (older than 3 months)
+     * Removes all old items
      */
     void cleanupDb() {
         db.execSQL("DELETE FROM kino WHERE date < date('now')");
@@ -75,6 +75,7 @@ public class KinoManager{
             return;
         }
 
+        // write data to database on device
         db.beginTransaction();
         try{
             for (int i = 0; i < jsonArray.length(); i++){

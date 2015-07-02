@@ -171,9 +171,9 @@ public class KinoDetailsFragment extends Fragment implements View.OnClickListene
     }
 
     /**
-     * formats the dateString to 'german' version
+     * formats the dateString
      * @param date Date string stored in database
-     * @return german version of dateString
+     * @return formated dateString
      */
     private String formDateString(String date){
         String new_date;

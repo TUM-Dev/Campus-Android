@@ -24,6 +24,7 @@ public class KinoAdapter extends FragmentStatePagerAdapter{
         super(fm);
         count = cursor.getCount();
 
+        // get all titles
         for (int i = 0; i < getCount(); i++){
             cursor.moveToPosition(i);
             titles.add(i, cursor.getString(cursor.getColumnIndex(Const.JSON_TITLE)));
@@ -54,6 +55,7 @@ public class KinoAdapter extends FragmentStatePagerAdapter{
 
     @Override
     public CharSequence getPageTitle(int position){
+        // returns the titles for the pagerStrip
         String title = titles.get(position);
         return title.substring(title.indexOf(':') + 1).trim();
     }
