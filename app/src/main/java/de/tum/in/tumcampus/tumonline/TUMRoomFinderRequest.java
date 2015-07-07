@@ -3,6 +3,9 @@ package de.tum.in.tumcampus.tumonline;
 import android.content.Context;
 import android.os.AsyncTask;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -20,6 +23,7 @@ import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.auxiliary.XMLParser;
 import de.tum.in.tumcampus.auxiliary.calendar.Event;
 import de.tum.in.tumcampus.models.Geo;
+import de.tum.in.tumcampus.models.managers.CacheManager;
 
 /**
  * Base class for communication with TUMRoomFinder
@@ -55,10 +59,12 @@ public class TUMRoomFinderRequest {
      */
     private final Map<String, String> parameters;
     private final String SERVICE_BASE_URL = "http://vmbaumgarten3.informatik.tu-muenchen.de/";
+    private NetUtils net;
 
-    public TUMRoomFinderRequest() {
+    public TUMRoomFinderRequest(Context context) {
         parameters = new HashMap<>();
         method = "search";
+        net = new NetUtils(context);
     }
 
     public void cancelRequest(boolean mayInterruptIfRunning) {
@@ -122,47 +128,37 @@ public class TUMRoomFinderRequest {
      * @see TUMRoomFinderRequest#getRequestURL(java.lang.String)
      */
     public ArrayList<HashMap<String, String>> fetchRooms(String searchString) {
-        setParameter("s", searchString);
-        method = "search";
-
         ArrayList<HashMap<String, String>> roomsList = new ArrayList<>();
 
-        String ROOM_SERVICE_URL = SERVICE_BASE_URL + "roommaps/room/";
-        String url = getRequestURL(ROOM_SERVICE_URL);
-        Utils.log("fetching URL " + url);
+        // TODO: change url to tumcabe
+        String url = "http://portal.dev/Api/room/search/" + searchString;
+
+        JSONArray jsonArray = net.downloadJsonArray(url, CacheManager.VALIDITY_DO_NOT_CACHE, true);
+
+        if (jsonArray == null) {
+            return null;
+        }
 
         try {
-
-            XMLParser parser = new XMLParser();
-            String xml = parser.getXmlFromUrl(url); // getting XML from URL
-            Document doc = parser.getDomElement(xml); // getting DOM element
-
-            NodeList roomList = doc.getElementsByTagName("room");
-
-            for (int k = 0; k < roomList.getLength(); k++) {
-
-                Element room = (Element) roomList.item(k);
+            // TODO: remove all 'undefined' values when backend is completed
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject obj = jsonArray.getJSONObject(i);
                 HashMap<String, String> roomMap = new HashMap<>();
-                // adding each child node to HashMap key =&gt; value
-                Element building = (Element) room.getParentNode();
-                String buildingId = building.getAttribute("web_code");
-
-                Element campus = (Element) building.getParentNode();
-                roomMap.put(KEY_CAMPUS_ID, campus.getAttribute("id"));
-                roomMap.put(KEY_CAMPUS_TITLE, parser.getValue(campus, KEY_TITLE));
-                roomMap.put(KEY_BUILDING_TITLE, parser.getValue(building, KEY_TITLE));
-                roomMap.put(KEY_ROOM_TITLE, parser.getValue(room, KEY_TITLE));
-                roomMap.put(KEY_BUILDING_ID, buildingId);
-                roomMap.put(KEY_ARCHITECT_NUMBER, parser.getValue(room, KEY_ARCHITECT_NUMBER));
-                roomMap.put(KEY_ROOM_API_CODE, room.getAttribute("api_code"));
+                roomMap.put(KEY_CAMPUS_ID, "undefined");
+                roomMap.put(KEY_CAMPUS_TITLE, "undefined");
+                roomMap.put(KEY_BUILDING_TITLE, obj.getString("address"));
+                roomMap.put(KEY_ROOM_TITLE, obj.getString("room_code"));
+                roomMap.put(KEY_BUILDING_ID, obj.getString("unit_id"));
+                roomMap.put(KEY_ARCHITECT_NUMBER, obj.getString("arch_id"));
+                roomMap.put(KEY_ROOM_API_CODE, obj.getString("room_id"));
 
                 // adding HashList to ArrayList
                 roomsList.add(roomMap);
             }
-
-        } catch (Exception e) {
-            Utils.log(e, "FetchError");
+        } catch (JSONException e){
+            Utils.log(String.valueOf(e));
         }
+
         return roomsList;
     }
 
