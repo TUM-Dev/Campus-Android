@@ -83,10 +83,6 @@ public class RoomFinderActivity extends ActivityForSearching implements TUMRoomF
     }
 
     @Override
-    public void onFetchDefaultMapId(String mapId) {
-    }
-
-    @Override
     public void onFetchError(String errorReason) {
         roomFinderRequest.cancelRequest(true);
         showError(errorReason);
