@@ -119,12 +119,12 @@ public class TUMRoomFinderRequest {
         }
 
         try {
-            // TODO: remove all 'undefined' values when backend is completed
+            // TODO: needs an update
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject obj = jsonArray.getJSONObject(i);
                 HashMap<String, String> roomMap = new HashMap<>();
-                roomMap.put(KEY_CAMPUS_ID, "undefined");
-                roomMap.put(KEY_CAMPUS_TITLE, "undefined");
+                roomMap.put(KEY_CAMPUS_ID, String.valueOf(this.getCampusTitle(obj.getString("arch_id")).charAt(0)));
+                roomMap.put(KEY_CAMPUS_TITLE, this.getCampusTitle(obj.getString("arch_id")));
                 roomMap.put(KEY_BUILDING_TITLE, obj.getString("address"));
                 roomMap.put(KEY_ROOM_TITLE, obj.getString("info"));
                 roomMap.put(KEY_BUILDING_ID, obj.getString("unit_id"));
@@ -305,6 +305,28 @@ public class TUMRoomFinderRequest {
             parameters.put(name, URLEncoder.encode(value, "UTF-8"));
         } catch (UnsupportedEncodingException e) {
             Utils.log(e);
+        }
+    }
+
+    // TODO: not finished yet. Can be completely removed when info is fetched from backend
+    private String getCampusTitle(String archId) {
+        if (archId.length() == 0)
+            return "undefined";
+
+        int buildingNr = Character.getNumericValue(archId.substring(archId.indexOf('@') + 1).charAt(0));
+        switch (buildingNr) {
+            case 0 : return "Stammgelände";
+            case 1 : return "undefined"; //evtl Klinikum Rechts der Isar
+            case 2 : return "München"; // München
+            case 3 : return "undefined";
+            case 4 : return "Weihenstephan";
+            case 5 : return "Garching";
+            case 6 : return "Garching";
+            case 7 : return "undefined";
+            case 8 : return "Garching Hochbrück";
+            case 9 : return "undefined";
+
+            default: return "undefined";
         }
     }
 
