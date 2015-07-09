@@ -14,12 +14,9 @@ import android.text.format.Time;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.generic.ActivityForLoadingInBackground;
@@ -191,45 +188,8 @@ public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<Vo
 
     @Override
     protected Bitmap onLoadInBackground(Void... arg) {
-        TUMRoomFinderRequest requestHandler = new TUMRoomFinderRequest(this);
-
-        // First search for roomId and mapId
-        if (location != null && !location.isEmpty() && roomInfo == null) {
-            ArrayList<HashMap<String, String>> request = requestHandler.fetchRooms(location);
-            if (request.size() > 0) {
-                HashMap<String, String> room = request.get(0);
-
-                roomInfo = new Bundle();
-                for (Map.Entry<String, String> entry : room.entrySet()) {
-                    roomInfo.putString(entry.getKey(), entry.getValue());
-                }
-            }
-        }
-
-        if (roomInfo == null)
-            return null;
-
-        if (mapId == null || mapId.isEmpty()) {
-            mapId = requestHandler.fetchDefaultMapId(roomInfo.getString(TUMRoomFinderRequest.KEY_BUILDING_ID));
-        }
-
-        String url = null;
-        try {
-            String roomId = roomInfo.getString(TUMRoomFinderRequest.KEY_ARCHITECT_NUMBER);
-            if (mapId.equals("10")) {
-                url = "http://vmbaumgarten3.informatik.tu-muenchen.de/roommaps/building/defaultMap?id="
-                        + URLEncoder.encode(roomId.substring(roomId.indexOf('@') + 1), "UTF-8");
-            } else {
-                url = "http://vmbaumgarten3.informatik.tu-muenchen.de/roommaps/room/map?id="
-                        + URLEncoder.encode(roomId, "UTF-8") + "&mapid="
-                        + URLEncoder.encode(mapId, "UTF-8");
-            }
-        } catch (UnsupportedEncodingException e) {
-            Utils.log(e);
-        }
-
-        if (url == null)
-            return null;
+        String arch_id = roomInfo.getString(TUMRoomFinderRequest.KEY_ARCHITECT_NUMBER);
+        String url = request.fetchDefaultMap(arch_id);
 
         return net.downloadImageToBitmap(url);
     }

@@ -10,6 +10,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -30,13 +31,8 @@ import de.tum.in.tumcampus.models.managers.CacheManager;
  */
 public class TUMRoomFinderRequest {
 
-    // server address
-    // public static final String SERVICE_BASE_URL =
-    // "http://vmbaumgarten3.informatik.tu-muenchen.de/";
-
+    // Json keys
     public static final String KEY_ARCHITECT_NUMBER = "architect_number";
-
-    // XML node keys
     public static final String KEY_MAP_ID = "Id";
     public static final String KEY_TITLE = "title";
     public static final String KEY_ROOM_API_CODE = "room_api_code";
@@ -45,6 +41,10 @@ public class TUMRoomFinderRequest {
     public static final String KEY_BUILDING_TITLE = "buildingTitle";
     public static final String KEY_ROOM_TITLE = "roomTitle";
     public static final String KEY_BUILDING_ID = "buildingId";
+    public static final String KEY_UTM_ZONE = "utm_zone";
+    public static final String KEY_UTM_EASTING = "utm_easting";
+    public static final String KEY_UTM_NORTHING = "utm_northing";
+
     /**
      * asynchronous task for interactive fetch
      */
@@ -75,64 +75,43 @@ public class TUMRoomFinderRequest {
     }
 
     /**
-     * Fetches the result of the HTTPRequest (which can be seen by using
-     * getRequestURL)
+     * fetches the room coordinates
      *
-     * @param roomId Room identifier e.g. 00.09.036@5609
-     * @return position of the room
-     * @see TUMRoomFinderRequest#getRequestURL(java.lang.String)
+     * @param archId architecture id
+     * @return coordinates of the room
      */
-    public Geo fetchCoordinates(String roomId) {
-        setParameter("id", roomId);
-        method = "coordinates";
+    public Geo fetchCoordinates(String archId) {
 
-        String url = getRequestURL(SERVICE_BASE_URL + "roommaps/room/");
-        Utils.log("fetching URL " + url);
+        String url = "http://portal.dev/Api/roomfinder/room/coordinates/" + archId;
 
         try {
+            JSONObject jsonObject = net.downloadJson(url);
+            double zone = jsonObject.getDouble(KEY_UTM_ZONE);
+            double easting = jsonObject.getDouble(KEY_UTM_EASTING);
+            double northing = jsonObject.getDouble(KEY_UTM_NORTHING);
 
-            XMLParser parser = new XMLParser();
-            String xml = parser.getXmlFromUrl(url); // getting XML from URL
-            if(xml.contains("<error>")) {
-                Utils.logv("Room location not found!");
-                setParameter("id", roomId.substring(roomId.indexOf('@') + 1));
+            return UTMtoLL(northing, easting, zone);
 
-                url = getRequestURL(SERVICE_BASE_URL + "roommaps/building/");
-                Utils.log("fetching URL " + url);
-
-                parser = new XMLParser();
-                xml = parser.getXmlFromUrl(url); // getting XML from URL
-            }
-
-            Document doc = parser.getDomElement(xml); // getting DOM element
-
-            Element location = doc.getDocumentElement();
-            double zone = Double.parseDouble(parser.getValue(location, "utm_zone"));
-            double easting = Double.parseDouble(parser.getValue(location, "utm_easting"));
-            double north = Double.parseDouble(parser.getValue(location, "utm_northing"));
-
-            return UTMtoLL(north, easting, zone);
-        } catch (NumberFormatException e) {
-            Utils.log("No location found for room " + roomId);
-        } catch (Exception e) {
-            Utils.log(e, "FetchError");
+        } catch (JSONException e) {
+            Utils.log(String.valueOf(e));
+        } catch (IOException e) {
+            Utils.log(String.valueOf(e));
         }
+
+        // if something went wrong
         return null;
     }
 
     /**
-     * Fetches the result of the HTTPRequest (which can be seen by using
-     * getRequestURL)
+     * fetches all rooms that match the search string
      *
+     * @param searchString string that was entered by the user
      * @return list of HashMaps representing rooms, Map: attributes -> values
-     * @see TUMRoomFinderRequest#getRequestURL(java.lang.String)
      */
     public ArrayList<HashMap<String, String>> fetchRooms(String searchString) {
+
         ArrayList<HashMap<String, String>> roomsList = new ArrayList<>();
-
-        // TODO: change url to tumcabe
-        String url = "http://portal.dev/Api/room/search/" + searchString;
-
+        String url = "http://portal.dev/Api/roomfinder/room/search/" + searchString;
         JSONArray jsonArray = net.downloadJsonArray(url, CacheManager.VALIDITY_DO_NOT_CACHE, true);
 
         if (jsonArray == null) {
@@ -147,7 +126,7 @@ public class TUMRoomFinderRequest {
                 roomMap.put(KEY_CAMPUS_ID, "undefined");
                 roomMap.put(KEY_CAMPUS_TITLE, "undefined");
                 roomMap.put(KEY_BUILDING_TITLE, obj.getString("address"));
-                roomMap.put(KEY_ROOM_TITLE, obj.getString("room_code"));
+                roomMap.put(KEY_ROOM_TITLE, obj.getString("info"));
                 roomMap.put(KEY_BUILDING_ID, obj.getString("unit_id"));
                 roomMap.put(KEY_ARCHITECT_NUMBER, obj.getString("arch_id"));
                 roomMap.put(KEY_ROOM_API_CODE, obj.getString("room_id"));
@@ -162,69 +141,43 @@ public class TUMRoomFinderRequest {
         return roomsList;
     }
 
-    public String fetchDefaultMapId(String buildingID) {
-        setParameter("id", buildingID);
-        method = "defaultMapId";
-
-        String ROOM_SERVICE_DEFAULT_MAP_URL = SERVICE_BASE_URL + "roommaps/building/";
-        String url = getRequestURL(ROOM_SERVICE_DEFAULT_MAP_URL);
-        Utils.log("fetching Map URL " + url);
-
-        String result = null;
-
-        try {
-
-            XMLParser parser = new XMLParser();
-            String xml = parser.getXmlFromUrl(url); // getting XML from URL
-            Document doc = parser.getDomElement(xml); // getting DOM element
-
-            NodeList defaultMapIdList = doc.getElementsByTagName("mapId");
-            Element defaultMapId = (Element) defaultMapIdList.item(0);
-            result = parser.getElementValue(defaultMapId);
-            if (result.equals(""))
-                result = "10";// default room for unknown buildings
-
-        } catch (Exception e) {
-            Utils.log(e, "FetchError");
-            // return e.getMessage();
-        }
-        return result;
+    /**
+     * returns the url to get the default map
+     *
+     * @param archId architecture id
+     * @return url of default map
+     */
+    public String fetchDefaultMap(String archId) {
+        return "http://portal.dev/Api/roomfinder/room/defaultMap/" + archId;
     }
 
-    public ArrayList<HashMap<String, String>> fetchAvailableMaps(String room) {
-        setParameter("id", room);
-        method = "availableMaps";
 
-        String url = getRequestURL(SERVICE_BASE_URL + "roommaps/room/");
-        Utils.log("fetching Map URL " + url);
+
+    public ArrayList<HashMap<String, String>> fetchAvailableMaps(String archId) {
 
         ArrayList<HashMap<String, String>> mapsList = new ArrayList<>();
+        String url = "http://portal.dev/Api/roomfinder/room/availableMaps/" + archId;
+
+        JSONArray jsonArray = net.downloadJsonArray(url, CacheManager.VALIDITY_DO_NOT_CACHE, true);
+
+        if (jsonArray == null) {
+            return null;
+        }
 
         try {
-
-            XMLParser parser = new XMLParser();
-            String xml = parser.getXmlFromUrl(url); // getting XML from URL
-            Document doc = parser.getDomElement(xml); // getting DOM element
-
-            NodeList roomList = doc.getElementsByTagName("map");// building.getChildNodes();
-
-            for (int k = 0; k < roomList.getLength(); k++) {
-                Element map = (Element) roomList.item(k);
-                int scale = Integer.parseInt(parser.getValue(map, "scaling"));
-                if(scale>400000)
-                    continue;
-
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject obj = jsonArray.getJSONObject(i);
                 HashMap<String, String> mapMap = new HashMap<>();
-                mapMap.put(KEY_MAP_ID, parser.getValue(map, "id"));
-                mapMap.put(KEY_TITLE, parser.getValue(map, "description"));
+                mapMap.put(KEY_MAP_ID, obj.getString("map_id"));
+                mapMap.put(KEY_TITLE, obj.getString("description"));
 
                 // adding HashList to ArrayList
                 mapsList.add(mapMap);
             }
-        } catch (Exception e) {
-            Utils.log(e, "FetchError");
-            // return e.getMessage();
+        } catch (JSONException e) {
+            Utils.log(String.valueOf(e));
         }
+
         return mapsList;
     }
 
