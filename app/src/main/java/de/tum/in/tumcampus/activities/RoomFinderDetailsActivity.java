@@ -70,7 +70,7 @@ public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<Vo
 
         location = getIntent().getExtras().getString(EXTRA_LOCATION);
         roomInfo = getIntent().getExtras().getBundle(EXTRA_ROOM_INFO);
-        request = new TUMRoomFinderRequest();
+        request = new TUMRoomFinderRequest(getApplicationContext());
 
         startLoading();
     }
@@ -191,7 +191,7 @@ public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<Vo
 
     @Override
     protected Bitmap onLoadInBackground(Void... arg) {
-        TUMRoomFinderRequest requestHandler = new TUMRoomFinderRequest();
+        TUMRoomFinderRequest requestHandler = new TUMRoomFinderRequest(getApplicationContext());
 
         // First search for roomId and mapId
         if (location != null && !location.isEmpty() && roomInfo == null) {

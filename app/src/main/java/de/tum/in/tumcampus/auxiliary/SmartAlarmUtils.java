@@ -1,6 +1,5 @@
 package de.tum.in.tumcampus.auxiliary;
 
-import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -11,8 +10,6 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -76,6 +73,8 @@ public class SmartAlarmUtils {
                     Date d = DateUtils.parseSqlDate(l.getDtstart());
                     if (d != null && d.after(now)) {
                         Log.d("TCA", l.getTitle() + " um " + d + " im raum " + l.getLocation());
+
+
 
                         // parse LvNr from url
                         String url = l.getUrl();

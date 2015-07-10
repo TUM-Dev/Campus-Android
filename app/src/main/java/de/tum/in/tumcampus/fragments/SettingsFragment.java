@@ -79,15 +79,22 @@ public class SettingsFragment extends PreferenceFragment implements
             silent.setEnabled(false);
         }
 
-        // Hide unneeded settings of smart alarm
         PreferenceScreen smartAlarmScreen = (PreferenceScreen) findPreference(Const.SMART_ALARM_SCREEN);
         smartAlarmPublic = findPreference(Const.SMART_ALARM_CAT_PUBLIC);
         smartAlarmPrivate = findPreference(Const.SMART_ALARM_CAT_PRIVATE);
-        if (((CheckBoxPreference)findPreference(Const.SMART_ALARM_MODE)).isChecked()) {
-            smartAlarmScreen.removePreference(smartAlarmPrivate);
-        } else {
-            smartAlarmScreen.removePreference(smartAlarmPublic);
-        }
+
+        // Click listener for preference list entries. Used to simulate a button
+        // (since it is not possible to add a button to the preferences screen)
+        findPreference("smart_alarm_home_button").setOnPreferenceClickListener(this);
+        findPreference("smart_alarm_ringtone").setOnPreferenceClickListener(this);
+        findPreference("button_wizard").setOnPreferenceClickListener(this);
+        findPreference("button_clear_cache").setOnPreferenceClickListener(this);
+        findPreference("facebook").setOnPreferenceClickListener(this);
+        findPreference("github").setOnPreferenceClickListener(this);
+        findPreference("first_run").setOnPreferenceClickListener(this);
+        findPreference("licenses").setOnPreferenceClickListener(this);
+        findPreference("feedback").setOnPreferenceClickListener(this);
+        findPreference("privacy").setOnPreferenceClickListener(this);
 
         // display mvv station in summary
         Preference mvv_station_picker = findPreference("smart_alarm_home_button");
@@ -109,18 +116,12 @@ public class SettingsFragment extends PreferenceFragment implements
         }
         ringtone_picker.setSummary(RingtoneManager.getRingtone(mContext, ringtoneURI).getTitle(mContext));
 
-        // Click listener for preference list entries. Used to simulate a button
-        // (since it is not possible to add a button to the preferences screen)
-        findPreference("smart_alarm_home_button").setOnPreferenceClickListener(this);
-        findPreference("smart_alarm_ringtone").setOnPreferenceClickListener(this);
-        findPreference("button_wizard").setOnPreferenceClickListener(this);
-        findPreference("button_clear_cache").setOnPreferenceClickListener(this);
-        findPreference("facebook").setOnPreferenceClickListener(this);
-        findPreference("github").setOnPreferenceClickListener(this);
-        findPreference("first_run").setOnPreferenceClickListener(this);
-        findPreference("licenses").setOnPreferenceClickListener(this);
-        findPreference("feedback").setOnPreferenceClickListener(this);
-        findPreference("privacy").setOnPreferenceClickListener(this);
+        // Hide unneeded settings of smart alarm
+        if (((CheckBoxPreference)findPreference(Const.SMART_ALARM_MODE)).isChecked()) {
+            smartAlarmScreen.removePreference(smartAlarmPrivate);
+        } else {
+            smartAlarmScreen.removePreference(smartAlarmPublic);
+        }
 
         // Set summary for these preferences
         setSummary("card_cafeteria_default_G");

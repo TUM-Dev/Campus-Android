@@ -269,7 +269,7 @@ public class LocationManager {
      * @return Location or null on failure
      */
     public Geo roomLocationStringToGeo(String loc) {
-        TUMRoomFinderRequest requestHandler = new TUMRoomFinderRequest();
+        TUMRoomFinderRequest requestHandler = new TUMRoomFinderRequest(mContext);
         if(loc.contains("("))
            loc = loc.substring(0,loc.indexOf('(')).trim();
 

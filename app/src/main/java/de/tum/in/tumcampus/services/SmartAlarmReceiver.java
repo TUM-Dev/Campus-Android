@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import org.json.JSONObject;
+
 /**
  * Created by m.hesse on 01.06.2015.
  */
@@ -23,7 +25,6 @@ public class SmartAlarmReceiver extends BroadcastReceiver {
     }
 
     private void handlePreAlarm(Context c) {
-
     }
 
     private void handleAlarm(Context c) {

@@ -3,6 +3,7 @@ package de.tum.in.tumcampus.tumonline;
 import android.content.Context;
 import android.os.AsyncTask;
 
+import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -50,15 +51,19 @@ public class TUMRoomFinderRequest {
      * method to call
      */
     private String method = null;
+
+    private NetUtils net;
     /**
      * a list/map for the needed parameters
      */
     private final Map<String, String> parameters;
     private final String SERVICE_BASE_URL = "http://vmbaumgarten3.informatik.tu-muenchen.de/";
+    private final String SERVICE_DEV_URL = "http://portal.dev/api/roomfinder/";
 
-    public TUMRoomFinderRequest() {
+    public TUMRoomFinderRequest(Context c) {
         parameters = new HashMap<>();
         method = "search";
+        net = new NetUtils(c);
     }
 
     public void cancelRequest(boolean mayInterruptIfRunning) {
@@ -271,6 +276,18 @@ public class TUMRoomFinderRequest {
             // return e.getMessage();
         }
         return scheduleList;
+    }
+
+    public String fetchRoomStreet(String apiCode) {
+        try {
+            JSONObject res = net.downloadJson(SERVICE_DEV_URL + "room/street/" + apiCode);
+
+            if (res.has("street")) return res.getString("street");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
     /**

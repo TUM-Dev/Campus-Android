@@ -40,7 +40,7 @@ public class RoomFinderActivity extends ActivityForSearching implements TUMRoomF
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        roomFinderRequest = new TUMRoomFinderRequest();
+        roomFinderRequest = new TUMRoomFinderRequest(getApplicationContext());
 
         list = (StickyListHeadersListView) findViewById(R.id.list);
         list.setOnItemClickListener(this);
