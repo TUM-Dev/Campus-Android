@@ -1,32 +1,34 @@
 package de.tum.in.tumcampus.auxiliary;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.app.Service;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 
+import org.json.JSONException;
+
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.List;
 
 import de.tum.in.tumcampus.models.CalendarRow;
 import de.tum.in.tumcampus.models.CalendarRowSet;
+import de.tum.in.tumcampus.models.ConnectionToCampus;
+import de.tum.in.tumcampus.models.Geo;
 import de.tum.in.tumcampus.models.LectureAppointmentsRow;
 import de.tum.in.tumcampus.models.LectureAppointmentsRowSet;
 import de.tum.in.tumcampus.services.SmartAlarmReceiver;
 import de.tum.in.tumcampus.tumonline.TUMOnlineConst;
 import de.tum.in.tumcampus.tumonline.TUMOnlineRequest;
-import de.tum.in.tumcampus.tumonline.TUMOnlineRequestFetchListener;
 
 public class SmartAlarmUtils {
-    private static final long HOURINMS = 60 * 60 * 1000;
-    private static final long DAYINMS = HOURINMS * 24;
+    static final long MINUTEINMS = 60 * 1000;
+    static final long HOURINMS = 60 * MINUTEINMS;
+    private static final long DAYINMS = 24 * HOURINMS;
+    private static final int MONTH_BEFORE = 0;
+    private static final int MONTH_AFTER = 3;
 
     public static long getCalculationTime(String home, String campus, long arrivalAtCampus, int timeAtHome) {
         return 0;
@@ -36,112 +38,99 @@ public class SmartAlarmUtils {
         return 0;
     }
 
-    public static void schedulePreAlarm(final Context c) {
-        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(c);
-        String station_home = prefs.getString("smart_alarm_home", "");
-        
-        // TODO: obtain campus of next lecture
-        String station_campus = "";
-        int minutesAtHome = Integer.parseInt(prefs.getString("smart_alarm_morningtime", "60"));
+    public static void schedulePreAlarm(Context c) {
+        new AlarmSchedulerTask(c, SmartAlarmReceiver.PRE_ALARM_REQUEST).execute();
+    }
 
-        // TODO: calculate time to be on campus
-        long arrivalAtCampus = 0;
+    public static void scheduleAlarm(Context c) {
+        new AlarmSchedulerTask(c, SmartAlarmReceiver.ALARM_REQUEST).execute();
+    }
+
+    public static ConnectionToCampus calculateJourney(Context c, String fromStationStr, String toStreet, long arrivalAtCampus) {
+        MVGRequest mvgRequest = new MVGRequest(c);
+        try {
+            int fromStationId = mvgRequest.fetchStationId(fromStationStr);
+            Geo toPos = mvgRequest.fetchStreetPos(toStreet);
+            Log.d("SMARTALARM", "from: " + fromStationId + " -> " + toPos.getLatitude() + ":" + toPos.getLongitude());
+            return calculateJourney(c, fromStationId, toPos, arrivalAtCampus);
+        } catch (IOException |JSONException e) {
+            showError(c, "SmartAlarm: An error occured while fetching route to campus. Service deactivated.");
+        }
+        return null;
+    }
+
+    public static ConnectionToCampus calculateJourney(Context c, int fromStation, Geo toPosition, long arrivalAtCampus) {
+        MVGRequest mvgRequest = new MVGRequest(c);
+        try {
+            return new ConnectionToCampus(mvgRequest.fetchRouteArrivingAt(fromStation, toPosition.getLatitude(), toPosition.getLongitude(), arrivalAtCampus), arrivalAtCampus);
+        } catch (IOException |JSONException e) {
+            showError(c, "SmartAlarm: An error occured while fetching route to campus. Service deactivated.");
+        }
+        return null;
+    }
+
+    public static LectureAppointmentsRow getFirstAppointment(Context c, Date lastAlarm) {
         TUMOnlineRequest<CalendarRowSet> calendarRequest = new TUMOnlineRequest<>(TUMOnlineConst.CALENDER, c);
-        calendarRequest.fetchInteractive(c, new TUMOnlineRequestFetchListener<CalendarRowSet>() {
-            @Override
-            public void onNoInternetError() {
-                Toast.makeText(c, "No internet connection & no cached lectures. Smart Alarm deactivated.", Toast.LENGTH_LONG).show();
+        calendarRequest.setParameter("pMonateVor", String.valueOf(MONTH_BEFORE));
+        calendarRequest.setParameter("pMonateNach", String.valueOf(MONTH_AFTER));
+        CalendarRowSet appointments = calendarRequest.fetch();
+
+        if (appointments == null) {
+            return null;
+        }
+
+        // calculate next day, where we want to set the alarm
+        Calendar cal = new GregorianCalendar();
+        if (DateUtils.isSameDay(lastAlarm, new Date())) {
+            // midnight tomorrow
+            cal.set(Calendar.HOUR_OF_DAY, 0);
+            cal.set(Calendar.MINUTE, 0);
+            cal.set(Calendar.SECOND, 0);
+            cal.set(Calendar.MILLISECOND, 0);
+            cal.add(Calendar.DAY_OF_MONTH, 1);
+        }
+        Date earliestNextLecture = cal.getTime();
+
+        String lvnr = null;
+        // get first lecture after earliestNextLecture
+        for (CalendarRow l : appointments.getKalendarList()) {
+            Date d = DateUtils.parseSqlDate(l.getDtstart());
+            // appointments sorted by date -> first appointment after calculated date is the first lecture on that day
+            if (d != null && d.after(earliestNextLecture)) {
+                // parse LvNr from url
+                String url = l.getUrl();
+                lvnr = url.substring(url.indexOf("cLvNr=")+6).split("&")[0];
+                break;
             }
+        }
 
-            @Override
-            public void onFetch(CalendarRowSet response) {
-                List<CalendarRow> appointments = response.getKalendarList();
+        if (lvnr == null) showError(c, "Error fetching lectures. Smervice deactivated.");
 
-                // calculate next day, where we want to set the alarm
-                Date lastAlarm = DateUtils.parseSqlDate(prefs.getString("smart_alarm_last", ""));
-                Calendar cal = new GregorianCalendar();
-                if (DateUtils.isSameDay(lastAlarm, new Date())) {
-                    cal.set(Calendar.HOUR_OF_DAY, 0);
-                    cal.set(Calendar.MINUTE, 0);
-                    cal.set(Calendar.SECOND, 0);
-                    cal.set(Calendar.MILLISECOND, 0);
-                    cal.add(Calendar.DAY_OF_MONTH, 1);
-                }
-                final Date now = cal.getTime();
+        TUMOnlineRequest<LectureAppointmentsRowSet> apts = new TUMOnlineRequest<>(TUMOnlineConst.LECTURES_APPOINTMENTS, c);
+        apts.setParameter("pLVNr", lvnr);
+        LectureAppointmentsRowSet lectureAppointments = apts.fetch();
 
-                for (CalendarRow l : appointments) {
-                    Date d = DateUtils.parseSqlDate(l.getDtstart());
-                    if (d != null && d.after(now)) {
-                        Log.d("TCA", l.getTitle() + " um " + d + " im raum " + l.getLocation());
-
-
-
-                        // parse LvNr from url
-                        String url = l.getUrl();
-                        url = url.substring(url.indexOf("cLvNr=")+6);
-                        String lvnr = url.split("&")[0];
-                        TUMOnlineRequest<LectureAppointmentsRowSet> apts = new TUMOnlineRequest<>(TUMOnlineConst.LECTURES_APPOINTMENTS, c);
-                        apts.setParameter("pLVNr", lvnr);
-                        apts.fetchInteractive(c, new TUMOnlineRequestFetchListener<LectureAppointmentsRowSet>() {
-                            @Override
-                            public void onNoInternetError() {
-                                Toast.makeText(c, "No internet connection & no cached lectures. Smart Alarm deactivated.", Toast.LENGTH_LONG).show();
-                            }
-
-                            @Override
-                            public void onFetch(LectureAppointmentsRowSet response) {
-                                List<LectureAppointmentsRow> appointments = response.getLehrveranstaltungenTermine();
-
-                                for (LectureAppointmentsRow a : appointments) {
-                                    Date d = DateUtils.parseSqlDate(a.getBeginn_datum_zeitpunkt() + ":00");
-                                    if (d != null && d.after(now)) {
-                                        // appointments sorted by date -> first appointment after calculated date is the first lecture on that day
-                                        Log.d("TCA", "first meeting in room " + a.getOrt() + " / " + a.getRaum_nr() + " / " + a.getRaum_nr_architekt());
-                                        Log.d("TCA", "appointment: " + a.getTermin_betreff());
-                                        break;
-                                    } else if (d == null) {
-                                        Log.d("TCA", "couldn't parse " + a.getBeginn_datum_zeitpunkt());
-                                    }
-                                }
-                            }
-
-                            @Override
-                            public void onFetchCancelled() {
-                                // TODO: cancel request and stuff
-                            }
-
-                            @Override
-                            public void onFetchError(String errorReason) {
-                                Toast.makeText(c, "Error fetching lectures. Smart Alarm deactivated.", Toast.LENGTH_LONG).show();
-                            }
-                        });
-
-                        break;
-                    }
-                }
+        for (LectureAppointmentsRow a : lectureAppointments.getLehrveranstaltungenTermine()) {
+            Date d = DateUtils.parseSqlDate(a.getBeginn_datum_zeitpunkt() + ":00");
+            if (d != null && d.after(earliestNextLecture)) {
+                // appointments sorted by date -> first appointment after calculated date is the first lecture on that day
+                return a;
+            } else if (d == null) {
+                Log.d("TCA", "couldn't parse " + a.getBeginn_datum_zeitpunkt() + " to date.");
             }
+        }
 
-            @Override
-            public void onFetchCancelled() {
-                // TODO: cancel request and stuff
-            }
-
-            @Override
-            public void onFetchError(String errorReason) {
-                Toast.makeText(c, "Error fetching lectures. Smart Alarm deactivated.", Toast.LENGTH_LONG).show();
-            }
-        });
-
-        long estWakeUpTime = calculateJourneyTime(station_home, station_campus, minutesAtHome, arrivalAtCampus);
-
-        AlarmManager alarmManager = (AlarmManager) c.getSystemService(Service.ALARM_SERVICE);
-        Intent i = new Intent(c, SmartAlarmReceiver.class);
-        i.putExtra(SmartAlarmReceiver.PRE_ALARM, true);
-        PendingIntent p = PendingIntent.getBroadcast(c, SmartAlarmReceiver.PRE_ALARM_REQUEST, i, 0);
-        //alarmManager.set(AlarmManager.RTC_WAKEUP, estWakeUpTime - HOURINMS, p);
+        return null;
     }
 
-    private static long calculateJourneyTime(String station_home, String station_campus, int minutesAtHome, long arrivalAtCampus) {
-        return 0;
+    static void showError(Context c, String message) {
+        Toast.makeText(c, message, Toast.LENGTH_LONG).show();
+
+        // TODO: show notification
+
+        SharedPreferences.Editor e = PreferenceManager.getDefaultSharedPreferences(c).edit();
+        e.putBoolean("smart_alarm_active", false);
+        e.apply();
     }
+
 }

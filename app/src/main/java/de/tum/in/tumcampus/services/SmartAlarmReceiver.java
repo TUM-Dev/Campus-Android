@@ -8,12 +8,15 @@ import android.preference.PreferenceManager;
 
 import org.json.JSONObject;
 
-/**
- * Created by m.hesse on 01.06.2015.
- */
+import de.tum.in.tumcampus.auxiliary.SmartAlarmUtils;
+
 public class SmartAlarmReceiver extends BroadcastReceiver {
-    public static String PRE_ALARM = "PRE_ALARM";
-    public static int PRE_ALARM_REQUEST = 0;
+    public static final String EST_WAKEUP_TIME = "EST_WAKEUP_TIME";
+    public static final String PRE_ALARM = "PRE_ALARM";
+
+    public static final int PRE_ALARM_REQUEST = 0;
+    public static final int ALARM_REQUEST = 1;
+    public static final String ROUTE = "ROUTE";
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -25,6 +28,7 @@ public class SmartAlarmReceiver extends BroadcastReceiver {
     }
 
     private void handlePreAlarm(Context c) {
+        SmartAlarmUtils.scheduleAlarm(c);
     }
 
     private void handleAlarm(Context c) {

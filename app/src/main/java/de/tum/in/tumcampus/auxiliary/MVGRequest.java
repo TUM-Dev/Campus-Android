@@ -2,6 +2,7 @@ package de.tum.in.tumcampus.auxiliary;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.util.Log;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -13,10 +14,15 @@ import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
+import de.tum.in.tumcampus.models.Geo;
 
 public class MVGRequest {
     private static String MVG_SERVICE_URL = "https://www.mvg.de/fahrinfo/api/";
@@ -68,15 +74,64 @@ public class MVGRequest {
         return new JSONObject(EntityUtils.toString(response.getEntity()));
     }
 
-    public JSONObject fetchStationId(String station) throws IOException, JSONException {
-        return fetchURL(MVG_SERVICE_URL + MVG_STATION + "?q=" + station);
+    public Geo fetchStreetPos(String street) throws IOException, JSONException {
+        JSONObject res = fetchURL(MVG_SERVICE_URL + MVG_STATION + "?q=" + urlEnc(street));
+        if (res == null) return null;
+
+        JSONObject pos = res.getJSONArray("locations").getJSONObject(0);
+        return new Geo(pos.getDouble("latitude"), pos.getDouble("longitude"));
+    }
+
+    public int fetchStationId(String station) throws IOException, JSONException {
+        JSONObject res = fetchURL(MVG_SERVICE_URL + MVG_STATION + "?q=" + urlEnc(station));
+        if (res == null) return -1;
+        JSONArray stations = res.getJSONArray("locations");
+
+        String[] parts = station.split("[\\s,-.]");
+
+        boolean hasStation = false;
+        for (int i = 0; i < stations.length(); i++) {
+            if (stations.getJSONObject(i).getString("type").equals("station")) {
+                hasStation = true;
+
+                // verify station
+                boolean accept = true;
+                for(String p : parts) {
+                    if (!stations.getJSONObject(i).getString("name").contains(p)) {
+                        accept = false;
+                        break;
+                    }
+                }
+                if (accept) return stations.getJSONObject(i).getInt("id");
+            }
+        }
+
+        // fallback to first station in list
+        if (hasStation) {
+            for (int i = 0; i < station.length(); i++) {
+                if (stations.getJSONObject(i).getString("type").equals("station")) {
+                    return stations.getJSONObject(i).getInt("id");
+                }
+            }
+        }
+
+        return -1;
     }
 
     public JSONObject fetchRoute(int fromStation, String toLat, String toLong) throws IOException, JSONException {
-        return fetchURL(MVG_SERVICE_URL + MVG_ROUTING + "?fromStation=" + fromStation + "&toLatitude=" + toLat + "&toLongitude=" + toLong);
+        return fetchURL(MVG_SERVICE_URL + MVG_ROUTING + "?fromStation=" + fromStation + "&toLatitude=" + urlEnc(toLat) + "&toLongitude=" + urlEnc(toLong));
     }
 
-    public JSONObject fetchRoute(String fromLat, String fromLong, int toStation) throws IOException, JSONException {
-        return fetchURL(MVG_SERVICE_URL + MVG_ROUTING + "?fromLatitude=" + fromLat + "&fromLongitude=" + fromLong + "&toStation=" + toStation);
+    public JSONObject fetchRouteArrivingAt(int fromStation, String toLat, String toLong, long time) throws IOException, JSONException {
+        return fetchURL(MVG_SERVICE_URL + MVG_ROUTING + "?fromStation=" + fromStation + "&toLatitude=" + urlEnc(toLat) + "&toLongitude=" + urlEnc(toLong) + "&time=" + time + "&arrival=true");
+    }
+
+    private static String urlEnc(String val) {
+        try {
+            return URLEncoder.encode(val, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            Log.d("MVGRequest", "Character encoding UTF-8 not found.. wtf??");
+        }
+        return val;
     }
 }

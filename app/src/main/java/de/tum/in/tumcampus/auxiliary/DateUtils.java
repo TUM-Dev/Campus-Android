@@ -66,6 +66,14 @@ public class DateUtils {
         }
     }
 
+    public static String formatDateSql(Date d) {
+        if (d == null) {
+            return null;
+        }
+
+        return new SimpleDateFormat(DateUtils.formatSQL, Locale.ENGLISH).format(d);
+    }
+
     public static Date parseSqlDate(String datetime) {
         if (datetime == null) {
             return null;

@@ -280,12 +280,10 @@ public class TUMRoomFinderRequest {
 
     public String fetchRoomStreet(String apiCode) {
         try {
-            JSONObject res = net.downloadJson(SERVICE_DEV_URL + "room/street/" + apiCode);
+            JSONObject res = net.downloadJson(SERVICE_DEV_URL + "room/streetForMVG/" + apiCode);
 
-            if (res.has("street")) return res.getString("street");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+            if (res.has("street") && res.getBoolean("supported")) return res.getString("street");
+        } catch (Exception e) {}
 
         return null;
     }
