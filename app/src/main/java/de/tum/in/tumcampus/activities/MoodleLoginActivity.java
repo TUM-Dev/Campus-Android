@@ -2,14 +2,12 @@ package de.tum.in.tumcampus.activities;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
 import de.tum.in.tumcampus.R;
-import de.tum.in.tumcampus.activities.generic.ActivityForDownloadingExternal;
 import de.tum.in.tumcampus.activities.generic.ProgressActivity;
 import de.tum.in.tumcampus.auxiliary.NetUtils;
 import de.tum.in.tumcampus.auxiliary.Utils;
@@ -24,8 +22,6 @@ public class MoodleLoginActivity extends ProgressActivity implements MoodleUpdat
 
     protected MoodleManager realManager;
 
-    //ProgressDialog for loading
-    private ProgressDialog mDialog;
     private EditText userNameField, passwordField;
     private Button button;
     private Intent intent;
@@ -50,9 +46,12 @@ public class MoodleLoginActivity extends ProgressActivity implements MoodleUpdat
         try {
 
             if ((boolean) getIntent().getExtras().get("outside_activity")) {
-                Utils.log("Login started from moodle manager");
+                // when login request is called by moodleManager not an activity
+                // no need to start the previous activity. (The previous activity
+                // is still alive!)
                 intent = null;
             } else {
+                // previuos class is used to be launched when the login was successful
                 Class<?> previousClass = (Class<?>) getIntent().getExtras().get("class");
                 if (previousClass == null) {
                     Utils.log("Warn! previous class was null!");
@@ -85,11 +84,16 @@ public class MoodleLoginActivity extends ProgressActivity implements MoodleUpdat
     }
 
 
+    /**
+     It is called by Moodlemanager when the requested data
+     * is ready. In this case after requesting requestUserData() after the first login
+     * attempt
+     */
     @Override
     public void refresh() {
 
-        Utils.log("getting called by moodle manager");
         if (realManager.getToken() == null) {
+            // if still token is not valid
             showLoadingEnded();
             if (! NetUtils.isConnected(this))
                 showNoInternetLayout();
@@ -97,7 +101,6 @@ public class MoodleLoginActivity extends ProgressActivity implements MoodleUpdat
                 Utils.showToast(this, R.string.login_failed);
         }
         else {
-            // do nothing ! not needed for this class
             if (intent != null) {
                 startActivity(intent);
                 Utils.log("got the token now starting the previous activity");

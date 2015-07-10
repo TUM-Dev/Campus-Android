@@ -537,20 +537,6 @@
             android:name=".models.managers.CalendarManager$QueryLocationsService"
             android:exported="false" />
         <service android:name=".services.GcmIntentService" />
-
-        <receiver android:name=".MensaWidget"
-            android:label="@string/mensa_widget">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-                <action android:name="de.tum.in.tumcampus.services.MensaWidgetService.action.TELL_MENSA_NAME"/>
-            </intent-filter>
-
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/mensa_widget_info" />
-        </receiver>
-        <service android:name=".services.MensaWidgetService"
-            android:permission="android.permission.BIND_REMOTEVIEWS"/>
     </application>
 
 </manifest>

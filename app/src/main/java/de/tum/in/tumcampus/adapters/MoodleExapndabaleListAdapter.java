@@ -25,7 +25,7 @@ public class MoodleExapndabaleListAdapter  extends BaseExpandableListAdapter{
     private Context context;
     private List<String> listDataheaders;
 
-    /* for now just the first element of this
+    /* Just the first element of this
     * list of string is filled with course description
     the other element are empty
     */

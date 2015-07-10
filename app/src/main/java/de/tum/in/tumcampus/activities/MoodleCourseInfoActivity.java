@@ -37,7 +37,6 @@ public class MoodleCourseInfoActivity extends ProgressActivity implements Moodle
 
 
     MoodleManager realManager;
-    MoodleManager mockManager;
     private Intent intent;
     private String courseName;
     private int courseId;
@@ -62,6 +61,11 @@ public class MoodleCourseInfoActivity extends ProgressActivity implements Moodle
         refresh();
     }
 
+    /**
+     *
+     * this method is called
+     * when internet connection is back
+     */
     @Override
     public void onRefresh() {
         realManager.requestUserCourseInfo(this, courseId);
@@ -80,19 +84,17 @@ public class MoodleCourseInfoActivity extends ProgressActivity implements Moodle
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()){
             case R.id.moodle_my_courses:
-                Intent coursesIntent = new Intent(this,MoodleMainActivity.class);
-                coursesIntent.putExtra("user_token", realManager.getToken());
-                startActivity(coursesIntent);
+                // don't need to start my_courses
+                // it is already on the activity stack!
+                finish();
                 return true;
             case R.id.events:
                 Intent eventIntent = new Intent(this,MoodleEventsActivity.class);
                 eventIntent.putExtra("user_token", realManager.getToken());
                 startActivity(eventIntent);
+                finish();
                 return true;
 
-            case R.id.moodle_profile:
-                //TODO add code to start profile activity
-                return true;
         }
         return false;
     }
@@ -113,11 +115,16 @@ public class MoodleCourseInfoActivity extends ProgressActivity implements Moodle
             MoodleCourseContent content = (MoodleCourseContent) dataAdapter.getChild(groupPosition, childPosition);
             if (content != null) {
                 URL fileURL = content.getFileurl();
-                String urlWithToken = completeURL(fileURL.toString());
-                if (fileURL != null){
+                String urlString = fileURL.toString();
 
-                    Utils.log("Got this URL " + fileURL.toString());
-                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(urlWithToken));
+                // if this url was related to moodle add the token
+                if (urlString.indexOf("school.demo.moodle.net") >= 0 ||
+                        urlString.indexOf("moodle.tum.de") >= 0)
+                    urlString = completeURL(urlString);
+
+                if (urlString != null){
+                    Utils.log("Got this URL " + urlString);
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(urlString));
                     showLoadingStart();
                     startActivity(browserIntent);
                     return true;
@@ -130,6 +137,7 @@ public class MoodleCourseInfoActivity extends ProgressActivity implements Moodle
             return false;
         }catch (Exception e) {
             Utils.log(e);
+            Utils.showToast(this.getApplicationContext(), "Sorry unable to find the URL");
             return false;
         }
     }
@@ -142,10 +150,10 @@ public class MoodleCourseInfoActivity extends ProgressActivity implements Moodle
     private String completeURL(String urlString ) {
         String newUrlString;
 
-        if (urlString.contains("?")){
+        if (urlString.contains("?"))
             newUrlString = urlString + "&token=" + realManager.getToken();
-        }
-        else newUrlString = "?token=" + realManager.getToken();
+        else
+            newUrlString = "?token=" + realManager.getToken();
 
         return newUrlString;
     }
@@ -173,9 +181,9 @@ public class MoodleCourseInfoActivity extends ProgressActivity implements Moodle
                     URL url = ((MoodleCourseModule) header).getUrl();
                     if (url != null) {
 
-                        //TODO think about modifying the URL to have the token or userid
+                        String urlWithToken = completeURL(url.toString());
                         Utils.log(String.format("Got this URL %s", url.toString()));
-                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url.toString()));
+                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(urlWithToken));
                         showLoadingStart();
                         startActivity(browserIntent);
                         return true;
@@ -212,7 +220,7 @@ public class MoodleCourseInfoActivity extends ProgressActivity implements Moodle
             courseName = (courseName!=null) ? courseName : getString(R.string.moodle_course_name_not_found);
             courseId = intent.getIntExtra("course_id", -1);
             if (courseId == -1) {
-                Utils.log(String.format("Warning! course id is 0=defaultValue for course %s", courseName));
+                Utils.log(String.format("Warning! course id is -1=defaultValue for course %s", courseName));
                 Utils.showToast(this, getResources().getString(R.string.moodle_course_id_not_found));
                 return;
             }
@@ -244,6 +252,10 @@ public class MoodleCourseInfoActivity extends ProgressActivity implements Moodle
         view_course_sections.setAdapter(dataAdapter);
 
     }
+
+    /**
+     * called by moodleManager when the requested data is ready
+     */
     @Override
     public void refresh() {
         try {

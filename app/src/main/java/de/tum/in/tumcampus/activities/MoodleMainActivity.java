@@ -2,7 +2,6 @@ package de.tum.in.tumcampus.activities;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -17,12 +16,10 @@ import java.util.List;
 import java.util.Map;
 
 import de.tum.in.tumcampus.R;
-import de.tum.in.tumcampus.activities.generic.ActivityForDownloadingExternal;
 import de.tum.in.tumcampus.activities.generic.ProgressActivity;
 import de.tum.in.tumcampus.adapters.MoodleExapndabaleListAdapter;
 import de.tum.in.tumcampus.auxiliary.NetUtils;
 import de.tum.in.tumcampus.auxiliary.Utils;
-import de.tum.in.tumcampus.models.managers.MockMoodleManager;
 import de.tum.in.tumcampus.models.managers.MoodleManager;
 import de.tum.in.tumcampus.models.managers.MoodleUpdateDelegate;
 import de.tum.in.tumcampus.models.managers.RealMoodleManager;
@@ -34,7 +31,6 @@ import de.tum.in.tumcampus.models.managers.RealMoodleManager;
 public class MoodleMainActivity extends ProgressActivity implements ExpandableListView.OnChildClickListener, MoodleUpdateDelegate {
 
     //Moodle API Manager
-    protected MoodleManager moodleManager;
     protected MoodleManager realManager;
 
     //ProgressDialog for loading
@@ -46,9 +42,6 @@ public class MoodleMainActivity extends ProgressActivity implements ExpandableLi
     Map<String,List<String>> courseListChilds;
     ExpandableListView expListView;
 
-
-    private static boolean deletingSharedPref = true;
-
     public MoodleMainActivity() {
         super(R.layout.activity_moodle_main);
     }
@@ -59,24 +52,9 @@ public class MoodleMainActivity extends ProgressActivity implements ExpandableLi
         baseSetUp();
         showLoadingStart();
 
-        //mDialog.show();
-
-        if (deletingSharedPref){
-            //just for testing login
-            //at the start of the activity delete the cached token
-            //inorder to bring up the login activty
-
-            SharedPreferences sharedPreferences = getSharedPreferences(getResources().getString(R.string.moodle_user_shared_prefs_key), Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putString(getResources().getString(R.string.moodle_token_key),null);
-            editor.apply();
-            deletingSharedPref = false;
-        }
-
         // check if we need to bring up the login page
         if (! checkLoginNeeded())
             realManager.requestUserData(this);
-
     }
 
     @Override
@@ -85,11 +63,13 @@ public class MoodleMainActivity extends ProgressActivity implements ExpandableLi
         refresh();
     }
 
+    /**
+     *
+     * this method is called
+     * when internet connection is back
+     */
     @Override
     public void onRefresh() {
-        /* this method is called
-        when internet connection is back
-         */
         realManager.requestUserData(this);
         showLoadingStart();
     }
@@ -114,23 +94,17 @@ public class MoodleMainActivity extends ProgressActivity implements ExpandableLi
                 startActivity(eventIntent);
                 finish();
                 return true;
-
-            case R.id.moodle_profile:
-                //TODO change this part to show user profile not course with course id=62 ! Fucker!
-                return true;
-
         }
         return false;
     }
 
     /**
      * This method populates the data for lists which will be shown
-     * on this actiivty. For now these include: course title,course description
-     * the data is retrieved from moodleManager
-     *
+     * on this activity. It is called by Moodlemanager when the requested data
+     * is ready. In this case after requesting requestUserData() after the first login
+     * or requestUserCourseList()
      */
     public void refresh() {
-
         try {
             if (!NetUtils.isConnected(this)) {
                 Utils.showToast(this, R.string.no_internet_connection);
@@ -141,10 +115,11 @@ public class MoodleMainActivity extends ProgressActivity implements ExpandableLi
             emptyListViewData();
             Map<String, String> courses = (Map<String, String>) realManager.getCoursesList();
 
-
-            // userinfo is still null !! make the user Login again
+            /* userinfo is still null ! either the token retrieved from
+              shared pref is not valid or token has been expired
+              make the user Login again
+            */
             if (realManager.getMoodleUserInfo() == null) {
-                Utils.log("UserInfo is still null dude!");
                 Utils.log("starting Login Intent and finishing main activity");
 
                 Intent intent = new Intent(this, MoodleLoginActivity.class);
@@ -170,7 +145,6 @@ public class MoodleMainActivity extends ProgressActivity implements ExpandableLi
                 }
                 baseSetupForListView();
                 showLoadingEnded();
-                //mDialog.dismiss();
                 coursesAdapter.notifyDataSetChanged();
             }
         }catch(Exception e){
@@ -185,17 +159,6 @@ public class MoodleMainActivity extends ProgressActivity implements ExpandableLi
      * Base setup for the Activity. All local variables are initialized here
      */
     private void baseSetUp() {
-        /*
-        mDialog = new ProgressDialog(this);
-        mDialog.setMessage(getResources().getString(R.string.loading));
-        mDialog.setCancelable(true);
-       mDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener() {
-           @Override
-           public void onClick(DialogInterface dialog, int which) {
-               dialog.dismiss();
-           }
-       });
-        */
 
         //creating realManager
         realManager = RealMoodleManager.getInstance(this, this);
@@ -204,6 +167,11 @@ public class MoodleMainActivity extends ProgressActivity implements ExpandableLi
         emptyListViewData();
     }
 
+    /**
+     * check to see if the token has expired or not. In case of expired token
+     * launch the Login Activity
+     * @return
+     */
     private boolean checkLoginNeeded(){
         // check if the token is null
         if (realManager.getMoodleUserToken() == null) {
@@ -218,12 +186,9 @@ public class MoodleMainActivity extends ProgressActivity implements ExpandableLi
                 return false;
             }
             else{
-
                 // token is empty user should log in again
                 Utils.log("starting login activity");
-
                 Intent loginIntent = new Intent(this, MoodleLoginActivity.class);
-                loginIntent.putExtra("class", this.getClass());
                 loginIntent.putExtra("outside_activity", false);
                 startActivity(loginIntent);
                 finish();
@@ -251,15 +216,11 @@ public class MoodleMainActivity extends ProgressActivity implements ExpandableLi
         coursesIds = new HashMap<String, Integer>();
     }
 
-
     @Override
     public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
         try{
 			String courseName = (String)coursesAdapter.getGroup(groupPosition);
             int courseId = coursesIds.get(courseName);
-
-            Utils.log(courseName + " id " + courseId);
-
             Intent courseInfoIntent = new Intent(this, MoodleCourseInfoActivity.class);
 			courseInfoIntent.putExtra("course_name", courseName);
 			courseInfoIntent.putExtra("course_id", courseId);
