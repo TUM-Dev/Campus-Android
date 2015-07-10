@@ -24,26 +24,22 @@ import de.tum.in.tumcampus.tumonline.TUMOnlineConst;
 import de.tum.in.tumcampus.tumonline.TUMOnlineRequest;
 
 public class SmartAlarmUtils {
-    static final long MINUTEINMS = 60 * 1000;
-    static final long HOURINMS = 60 * MINUTEINMS;
-    private static final long DAYINMS = 24 * HOURINMS;
+    public static final long MINUTEINMS = 60 * 1000;
+    public static final long HOURINMS = 60 * MINUTEINMS;
     private static final int MONTH_BEFORE = 0;
     private static final int MONTH_AFTER = 3;
 
-    public static long getCalculationTime(String home, String campus, long arrivalAtCampus, int timeAtHome) {
-        return 0;
-    }
-
-    public static long getWakeUpTime(String home, String campus, long arrivalAtCampus, int timeAtHome) {
-        return 0;
-    }
-
     public static void schedulePreAlarm(Context c) {
+        // TODO: no pre alarm needed if in private transportation mode
         new AlarmSchedulerTask(c, SmartAlarmReceiver.PRE_ALARM_REQUEST).execute();
     }
 
-    public static void scheduleAlarm(Context c) {
-        new AlarmSchedulerTask(c, SmartAlarmReceiver.ALARM_REQUEST).execute();
+    public static void scheduleAlarm(Context c, ConnectionToCampus ctc) {
+        new AlarmSchedulerTask(c, ctc, SmartAlarmReceiver.ALARM_REQUEST).execute();
+    }
+
+    public static ConnectionToCampus calculateJourney(Context c, ConnectionToCampus ctc, long arrivalAtCampus) {
+        return calculateJourney(c, ctc.getFromStation(), ctc.getToPosition(), arrivalAtCampus);
     }
 
     public static ConnectionToCampus calculateJourney(Context c, String fromStationStr, String toStreet, long arrivalAtCampus) {
@@ -51,7 +47,6 @@ public class SmartAlarmUtils {
         try {
             int fromStationId = mvgRequest.fetchStationId(fromStationStr);
             Geo toPos = mvgRequest.fetchStreetPos(toStreet);
-            Log.d("SMARTALARM", "from: " + fromStationId + " -> " + toPos.getLatitude() + ":" + toPos.getLongitude());
             return calculateJourney(c, fromStationId, toPos, arrivalAtCampus);
         } catch (IOException |JSONException e) {
             showError(c, "SmartAlarm: An error occured while fetching route to campus. Service deactivated.");
@@ -127,10 +122,14 @@ public class SmartAlarmUtils {
         Toast.makeText(c, message, Toast.LENGTH_LONG).show();
 
         // TODO: show notification
+        // TODO: try to activate alarm for following day
 
         SharedPreferences.Editor e = PreferenceManager.getDefaultSharedPreferences(c).edit();
         e.putBoolean("smart_alarm_active", false);
         e.apply();
     }
 
+    public static void cancelAlarm(Context mContext) {
+        // TODO: implement
+    }
 }

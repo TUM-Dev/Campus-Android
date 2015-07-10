@@ -2,12 +2,8 @@ package de.tum.in.tumcampus.fragments;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.PendingIntent;
-import android.app.Service;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -24,19 +20,13 @@ import android.preference.Preference;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
-import android.provider.AlarmClock;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
 import android.widget.ListAdapter;
-import android.widget.Toast;
 
 import com.github.machinarius.preferencefragment.PreferenceFragment;
-
-import java.util.Calendar;
-import java.util.Date;
 
 import de.psdev.licensesdialog.LicensesDialog;
 import de.tum.in.tumcampus.R;
@@ -45,6 +35,7 @@ import de.tum.in.tumcampus.activities.StartupActivity;
 import de.tum.in.tumcampus.activities.TransportationActivity;
 import de.tum.in.tumcampus.activities.wizard.WizNavStartActivity;
 import de.tum.in.tumcampus.auxiliary.AccessTokenManager;
+import de.tum.in.tumcampus.auxiliary.AlarmSchedulerTask;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.NetUtils;
 import de.tum.in.tumcampus.auxiliary.SmartAlarmUtils;
@@ -262,18 +253,9 @@ public class SettingsFragment extends PreferenceFragment implements
         if (key.equals(Const.SMART_ALARM_ACTIVE)) {
             //noinspection ConstantConditions
             if (((CheckBoxPreference) pref).isChecked()) {
-                // TODO: start alarm
-                AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Service.ALARM_SERVICE);
-                Intent i = new Intent(mContext, SmartAlarmReceiver.class);
-                PendingIntent p = PendingIntent.getBroadcast(mContext, SmartAlarmReceiver.PRE_ALARM_REQUEST, i, 0);
-                Calendar c = Calendar.getInstance();
-                c.set(Calendar.HOUR_OF_DAY, c.get(Calendar.HOUR_OF_DAY));
-                c.set(Calendar.MINUTE, c.get(Calendar.MINUTE) + 1);
-                alarmManager.set(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), p);
-                // alarmManager.set(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), p);
                 SmartAlarmUtils.schedulePreAlarm(mContext);
             } else {
-                // TODO: stop alarm
+                SmartAlarmUtils.cancelAlarm(mContext);
             }
         }
 

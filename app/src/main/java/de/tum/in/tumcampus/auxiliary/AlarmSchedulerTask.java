@@ -17,16 +17,26 @@ import de.tum.in.tumcampus.models.LectureAppointmentsRow;
 import de.tum.in.tumcampus.services.SmartAlarmReceiver;
 import de.tum.in.tumcampus.tumonline.TUMRoomFinderRequest;
 
-class AlarmSchedulerTask extends AsyncTask {
+public class AlarmSchedulerTask extends AsyncTask {
     private static final int PRE_ALARM_DIFF = 1;
 
-    private final Context c;
+    private Context c;
+
+    private ConnectionToCampus ctc;
 
     private int requestCode;
 
     public AlarmSchedulerTask(Context c, int requestCode) {
+        this(c, null, requestCode);
+    }
+
+    public AlarmSchedulerTask(Context c, ConnectionToCampus ctc, int requestCode) {
         this.c = c;
         this.requestCode = requestCode;
+
+        if (ctc != null) {
+            this.ctc = ctc;
+        }
     }
 
     @Override
@@ -84,14 +94,18 @@ class AlarmSchedulerTask extends AsyncTask {
 
             long arrivalAtCampus = DateUtils.parseSqlDate(lecture.getBeginn_datum_zeitpunkt() + ":00").getTime()
                     - buffer * SmartAlarmUtils.MINUTEINMS;
-            ConnectionToCampus rc = SmartAlarmUtils.calculateJourney(c, station_home, street, arrivalAtCampus);
 
-            long estWakeUpTime = rc.getDeparture() - minutesAtHome * SmartAlarmUtils.MINUTEINMS;
-            schedule(estWakeUpTime, rc);
+            ConnectionToCampus toCampus;
+            if (ctc != null) toCampus = SmartAlarmUtils.calculateJourney(c, ctc, arrivalAtCampus);
+            else toCampus = SmartAlarmUtils.calculateJourney(c, station_home, street, arrivalAtCampus);
+
+            long estWakeUpTime = toCampus.getDeparture() - minutesAtHome * SmartAlarmUtils.MINUTEINMS;
+            schedule(estWakeUpTime, toCampus);
         }
 
         return null;
     }
+
 
     private void schedule(long estWakeUpTime, Serializable obj) {
         AlarmManager alarmManager = (AlarmManager) c.getSystemService(Service.ALARM_SERVICE);
@@ -100,6 +114,8 @@ class AlarmSchedulerTask extends AsyncTask {
         i.putExtra(SmartAlarmReceiver.EST_WAKEUP_TIME, estWakeUpTime);
         if (obj != null) i.putExtra(SmartAlarmReceiver.ROUTE, obj);
         PendingIntent p = PendingIntent.getBroadcast(c, requestCode, i, 0);
+
+        // TODO: commented while in development
         //alarmManager.set(AlarmManager.RTC_WAKEUP, estWakeUpTime - PRE_ALARM_DIFF * SmartAlarmUtils.HOURINMS, p);
     }
 }
