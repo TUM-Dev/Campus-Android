@@ -349,7 +349,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.tum.in.tumcampus.activities.RoomFinderActivity" />
         </activity>
-
         <activity
             android:name=".activities.TuitionFeesActivity"
             android:configChanges="orientation|screenSize"
@@ -464,7 +463,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.tum.in.tumcampus.activities.MainActivity" />
         </activity>
-
         <activity
             android:name=".activities.MoodleLoginActivity"
             android:label="@string/title_activity_moodle_login"
@@ -483,7 +481,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.tum.in.tumcampus.activities.MainActivity" />
         </activity>
-
         <activity
             android:name=".activities.MoodleCourseInfoActivity"
             android:label="@string/title_activity_moodle_course_info"
@@ -493,9 +490,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.tum.in.tumcampus.activities.MoodleMainActivity" />
         </activity>
-
-
-
         <activity
             android:name=".activities.MVVActivity"
             android:label="@string/mvv"
@@ -504,6 +498,7 @@
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
+
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable_mvv" />
@@ -511,7 +506,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.tum.in.tumcampus.activities.MainActivity" />
         </activity>
-
 
         <!-- Used to reset Alarm when device has been restarted -->
         <receiver android:name=".services.StartSyncReceiver" >
@@ -544,6 +538,19 @@
             android:exported="false" />
         <service android:name=".services.GcmIntentService" />
 
+        <receiver android:name=".MensaWidget"
+            android:label="@string/mensa_widget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="de.tum.in.tumcampus.services.MensaWidgetService.action.TELL_MENSA_NAME"/>
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/mensa_widget_info" />
+        </receiver>
+        <service android:name=".services.MensaWidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS"/>
     </application>
 
 </manifest>
