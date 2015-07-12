@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:padding="@dimen/widget_margin"
+    android:background="#c0696969">
+
+        <RelativeLayout
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:id="@+id/relativeLayout2">
+
+            <ImageView
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:id="@+id/clock_icon"
+                android:src="@android:drawable/ic_lock_idle_alarm"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:tint="@android:color/white"
+                android:contentDescription="@string/smart_alarm_widget_activate_btn" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="22dp"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:id="@+id/alarm_date"
+                android:layout_below="@+id/clock_icon"
+                android:layout_centerHorizontal="true"
+                android:gravity="center_horizontal"
+                android:textColor="@android:color/white" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="22dp"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:id="@+id/alarm_time"
+                android:layout_below="@+id/alarm_date"
+                android:layout_centerHorizontal="true"
+                android:gravity="center_horizontal"
+                android:textColor="@android:color/white" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/relativeLayout2"
+            android:layout_toEndOf="@+id/relativeLayout2"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:id="@+id/next_lecture_title"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:textColor="@android:color/white"
+                android:textSize="30sp"
+                android:layout_marginBottom="8dp"
+                android:lines="2"
+                android:ellipsize="end"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:id="@+id/transport_icon"
+                android:layout_below="@+id/next_lecture_title"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:contentDescription="@string/smart_alarm_transportation_type"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:id="@+id/transport_nr"
+                android:layout_toRightOf="@+id/transport_icon"
+                android:layout_toEndOf="@+id/transport_icon"
+                android:gravity="center_vertical"
+                android:textStyle="bold"
+                android:textSize="27sp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginStart="5dp"
+                android:textColor="@android:color/white"
+                android:layout_below="@+id/next_lecture_title" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:id="@+id/transport_destination"
+                android:gravity="center_vertical"
+                android:layout_toRightOf="@+id/transport_nr"
+                android:layout_toEndOf="@+id/transport_nr"
+                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_toLeftOf="@+id/textView2"
+                android:layout_toStartOf="@+id/textView2"
+                android:textColor="@android:color/white"
+                android:layout_below="@+id/next_lecture_title"
+                android:lines="1" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:id="@+id/textView2"
+                android:layout_below="@+id/next_lecture_title"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:gravity="center_vertical"
+                android:textColor="#ffdfdfdf"
+                android:ellipsize="marquee"
+                android:singleLine="true"
+                android:marqueeRepeatLimit="marquee_forever"/>
+        </RelativeLayout>
+
+</RelativeLayout>
