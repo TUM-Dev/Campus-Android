@@ -17,7 +17,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import de.tum.in.tumcampus.R;
-import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.SmartAlarmInfo;
 
 public class SmartAlarmService extends Service {
@@ -58,7 +57,6 @@ public class SmartAlarmService extends Service {
         ((TextView) mView.findViewById(R.id.alarm_date)).setText(sai.getFormattedWakeupDate(getApplicationContext()));
         ((TextView) mView.findViewById(R.id.next_lecture_title)).setText(sai.getLectureTitle());
 
-        Utils.log(sai.getFirstTransportType().toString());
         if (sai.getFirstTransportType() == SmartAlarmInfo.TransportType.PRIVATE) {
         } else {
             if (sai.getFirstTransportType() == SmartAlarmInfo.TransportType.FOOT) {

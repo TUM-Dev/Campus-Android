@@ -1,19 +1,24 @@
 package de.tum.in.tumcampus.auxiliary;
 
+import android.app.AlarmManager;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.ProgressDialog;
+import android.app.Service;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Looper;
 import android.preference.PreferenceManager;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
 
-import org.json.JSONException;
-
-import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.models.CalendarRow;
 import de.tum.in.tumcampus.models.CalendarRowSet;
 import de.tum.in.tumcampus.models.SmartAlarmInfo;
@@ -29,28 +34,33 @@ public class SmartAlarmUtils {
     public static final long HOURINMS = 60 * MINUTEINMS;
     private static final int MONTH_BEFORE = 0;
     private static final int MONTH_AFTER = 3;
-    private static boolean prepared = false;
 
-    public static void schedulePreAlarm(Context c) {
-        new AlarmSchedulerTask(c, SmartAlarmReceiver.PRE_ALARM_REQUEST).execute();
+    public static void schedulePreAlarm(Context c, ProgressDialog pd) {
+        new AlarmSchedulerTask(c, pd, SmartAlarmReceiver.REQUEST_PRE_ALARM).execute();
     }
 
-    public static void scheduleAlarm(Context c, SmartAlarmInfo ctc) {
-        new AlarmSchedulerTask(c, ctc, SmartAlarmReceiver.ALARM_REQUEST).execute();
+    public static void cancelAlarm(Context c) {
+        PendingIntent pi = PendingIntent.getBroadcast(c, 0, new Intent(c, SmartAlarmReceiver.class), 0);
+        ((AlarmManager) c.getSystemService(Service.ALARM_SERVICE)).cancel(pi);
+        pi.cancel();
+    }
+
+    public static void reSchedulePreAlarm(Context c, ProgressDialog pd) {
+        cancelAlarm(c);
+        schedulePreAlarm(c, pd);
     }
 
     public static SmartAlarmInfo calculateJourney(Context c, SmartAlarmInfo ctc, long arrivalAtCampus) {
         return calculateJourney(c, ctc.getFromStation(), ctc.getToPosition(), arrivalAtCampus);
     }
 
-    public static SmartAlarmInfo calculateJourney(Context c, String fromStationStr, String toStreet, long arrivalAtCampus) {
+    public static SmartAlarmInfo calculateJourney(Context c, int fromStationId, String toStreet, long arrivalAtCampus) {
         MVGRequest mvgRequest = new MVGRequest(c);
         try {
-            int fromStationId = mvgRequest.fetchStationId(fromStationStr);
             Geo toPos = mvgRequest.fetchStreetPos(toStreet);
             return calculateJourney(c, fromStationId, toPos, arrivalAtCampus);
-        } catch (IOException |JSONException e) {
-            showError(c, "SmartAlarm: An error occured while fetching route to campus. Service deactivated.");
+        } catch (Exception e) {
+            Utils.log(e);
         }
         return null;
     }
@@ -59,8 +69,8 @@ public class SmartAlarmUtils {
         MVGRequest mvgRequest = new MVGRequest(c);
         try {
             return new SmartAlarmInfo(mvgRequest.fetchRouteArrivingAt(fromStation, toPosition.getLatitude(), toPosition.getLongitude(), arrivalAtCampus), arrivalAtCampus);
-        } catch (IOException | JSONException e) {
-            showError(c, "SmartAlarm: An error occured while fetching route to campus. Service deactivated.");
+        } catch (Exception e) {
+            Utils.log(e);
         }
         return null;
     }
@@ -102,7 +112,7 @@ public class SmartAlarmUtils {
             }
         }
 
-        if (lvnr == null) showError(c, "Error fetching lectures. Smervice deactivated.");
+        if (lvnr == null) return null;
 
         TUMOnlineRequest<LectureAppointmentsRowSet> apts = new TUMOnlineRequest<>(TUMOnlineConst.LECTURES_APPOINTMENTS, c);
         apts.setParameter("pLVNr", lvnr);
@@ -131,22 +141,19 @@ public class SmartAlarmUtils {
     }
 
     static void showError(Context c, String message) {
-        if (!prepared) {
-            Looper.prepare();
-            prepared = true;
-        }
-        Toast.makeText(c, message, Toast.LENGTH_LONG).show();
-
-        // TODO: show notification
         // TODO: try to activate alarm for following day
+
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(c)
+                .setSmallIcon(R.drawable.ic_launcher)
+                .setContentTitle("Smart Alarm")
+                .setContentText(message)
+                .setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE);
+
+        ((NotificationManager) c.getSystemService(c.NOTIFICATION_SERVICE)).notify(0, mBuilder.build());
 
         SharedPreferences.Editor e = PreferenceManager.getDefaultSharedPreferences(c).edit();
         e.putBoolean("smart_alarm_active", false);
         e.apply();
-    }
-
-    public static void cancelAlarm(Context mContext) {
-        // TODO: implement
     }
 
     public static class LectureInfo {

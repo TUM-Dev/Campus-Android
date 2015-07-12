@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -12,6 +13,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
@@ -25,6 +27,7 @@ import android.support.v4.app.FragmentActivity;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.ListAdapter;
+import android.widget.Toast;
 
 import com.github.machinarius.preferencefragment.PreferenceFragment;
 
@@ -35,8 +38,8 @@ import de.tum.in.tumcampus.activities.StartupActivity;
 import de.tum.in.tumcampus.activities.TransportationActivity;
 import de.tum.in.tumcampus.activities.wizard.WizNavStartActivity;
 import de.tum.in.tumcampus.auxiliary.AccessTokenManager;
-import de.tum.in.tumcampus.auxiliary.AlarmSchedulerTask;
 import de.tum.in.tumcampus.auxiliary.Const;
+import de.tum.in.tumcampus.auxiliary.MVGRequest;
 import de.tum.in.tumcampus.auxiliary.NetUtils;
 import de.tum.in.tumcampus.auxiliary.SmartAlarmUtils;
 import de.tum.in.tumcampus.auxiliary.Utils;
@@ -47,7 +50,6 @@ import de.tum.in.tumcampus.models.managers.DatabaseManager;
 import de.tum.in.tumcampus.models.managers.NewsManager;
 import de.tum.in.tumcampus.services.BackgroundService;
 import de.tum.in.tumcampus.services.SilenceService;
-import de.tum.in.tumcampus.services.SmartAlarmReceiver;
 
 public class SettingsFragment extends PreferenceFragment implements
         SharedPreferences.OnSharedPreferenceChangeListener, Preference.OnPreferenceClickListener {
@@ -56,6 +58,8 @@ public class SettingsFragment extends PreferenceFragment implements
 
     private FragmentActivity mContext;
     private Preference smartAlarmPublic, smartAlarmPrivate;
+
+    private ProgressDialog pd;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -253,7 +257,7 @@ public class SettingsFragment extends PreferenceFragment implements
         if (key.equals(Const.SMART_ALARM_ACTIVE)) {
             //noinspection ConstantConditions
             if (((CheckBoxPreference) pref).isChecked()) {
-                SmartAlarmUtils.schedulePreAlarm(mContext);
+                SmartAlarmUtils.schedulePreAlarm(mContext, showProgressDialog());
             } else {
                 SmartAlarmUtils.cancelAlarm(mContext);
             }
@@ -271,7 +275,13 @@ public class SettingsFragment extends PreferenceFragment implements
             }
         }
 
-        // TODO: recalculate smart alarm route if needed
+        if (sharedPreferences.getBoolean(Const.SMART_ALARM_ACTIVE, false)
+                && (key.equals(Const.SMART_ALARM_MODE)
+                    || key.equals("smart_alarm_buffer")
+                    || (sharedPreferences.getBoolean(Const.SMART_ALARM_MODE, false) && (key.equals("smart_alarm_morningtime") || key.equals("smart_alarm_home")))
+                    || (!sharedPreferences.getBoolean(Const.SMART_ALARM_MODE, false) && key.equals("smart_alarm_journeytime")))) {
+            SmartAlarmUtils.reSchedulePreAlarm(mContext, showProgressDialog());
+        }
     }
 
     //    @SuppressWarnings("deprecation")
@@ -368,6 +378,7 @@ public class SettingsFragment extends PreferenceFragment implements
                 break;
 
             case "smart_alarm_home_button":
+                // TODO: replace MVV station selector with MVG station selector
                 Intent mvv = new Intent(mContext, TransportationActivity.class);
                 startActivityForResult(mvv, MVV_STATION_REQUEST);
                 break;
@@ -434,13 +445,9 @@ public class SettingsFragment extends PreferenceFragment implements
         switch (requestCode) {
             case MVV_STATION_REQUEST:
                 if (resultCode == Activity.RESULT_OK) {
-                    SharedPreferences.Editor prefEditor = PreferenceManager.getDefaultSharedPreferences(mContext).edit();
                     String station = res.getExtras().getString("station");
-                    prefEditor.putString("smart_alarm_home", station);
-                    prefEditor.apply();
-                    findPreference("smart_alarm_home_button").setSummary(station);
-
-                    // TODO: recalculate route
+                    // obtain MVG station id and save it
+                    new MVGStationValidator(station).execute();
                 }
                 break;
 
@@ -458,6 +465,63 @@ public class SettingsFragment extends PreferenceFragment implements
 
             default:
                 break;
+        }
+    }
+
+    private ProgressDialog showProgressDialog() {
+        if (pd == null || !pd.isShowing()) {
+            pd = new ProgressDialog(mContext);
+            pd.setTitle(R.string.smart_alarm_starting);
+            pd.setCancelable(false);
+            pd.show();
+        }
+
+        return pd;
+    }
+
+    private class MVGStationValidator extends AsyncTask {
+        ProgressDialog mvgPd;
+        String station;
+
+        public MVGStationValidator(String station) {
+            this.station = station;
+        }
+
+        @Override
+        protected Object doInBackground(Object[] params) {
+            int id = 0;
+            try {
+                id = new MVGRequest(mContext).fetchStationId(station);
+            } catch (Exception e) {
+                Utils.log(e);
+                return "SmartAlarm: Couldn't find train station. Service deactivated.";
+            }
+
+            // save station data
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+            SharedPreferences.Editor prefEditor = prefs.edit();
+            prefEditor.putInt("smart_alarm_home_id", id);
+            prefEditor.putString("smart_alarm_home", station);
+            prefEditor.apply();
+
+            findPreference("smart_alarm_home_button").setSummary(station);
+            return null;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            mvgPd = new ProgressDialog(mContext);
+            mvgPd.setTitle(R.string.smart_alarm_home_validating);
+            mvgPd.setCancelable(false);
+            mvgPd.show();
+        }
+
+        @Override
+        protected void onPostExecute(Object o) {
+            mvgPd.dismiss();
+            if (o != null) {
+                Toast.makeText(mContext, (String) o, Toast.LENGTH_LONG).show();
+            }
         }
     }
 }

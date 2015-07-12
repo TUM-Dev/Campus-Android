@@ -2,6 +2,7 @@ package de.tum.in.tumcampus.auxiliary;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.app.ProgressDialog;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -22,8 +23,15 @@ public class AlarmSchedulerTask extends AsyncTask {
 
     private int requestCode;
 
+    private ProgressDialog pd;
+
+    public AlarmSchedulerTask(Context c, ProgressDialog pd, int preAlarmRequest) {
+        this (c, preAlarmRequest);
+        this.pd = pd;
+    }
+
     public AlarmSchedulerTask(Context c, int requestCode) {
-        this(c, null, requestCode);
+        this(c, (SmartAlarmInfo) null, requestCode);
     }
 
     public AlarmSchedulerTask(Context c, SmartAlarmInfo sai, int requestCode) {
@@ -40,46 +48,54 @@ public class AlarmSchedulerTask extends AsyncTask {
 
         int buffer = Integer.parseInt(prefs.getString("smart_alarm_buffer", "10"));
         if (lastAlarm == null) {
-            SmartAlarmUtils.showError(c, "SmartAlarm: internal error. Service deactivated.");
-            return null;
+            return "SmartAlarm: internal error. Service deactivated.";
         }
 
         if (!publicTransport) {
-            schedulePrivateTransportationAlarm(prefs, lastAlarm, buffer);
+            return schedulePrivateTransportationAlarm(prefs, lastAlarm, buffer);
         } else {
-            schedulePublicTransportationPreAlarm(prefs, lastAlarm, buffer);
+            return schedulePublicTransportationPreAlarm(prefs, lastAlarm, buffer);
         }
-
-        return null;
     }
 
-    private void schedulePublicTransportationPreAlarm(SharedPreferences prefs, Date lastAlarm, int buffer) {
+    @Override
+    protected void onPostExecute(Object o) {
+        if (pd != null) {
+            SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(c).edit();
+            editor.putBoolean("smart_alarm_activating", false);
+            editor.apply();
+
+            pd.dismiss();
+        }
+
+        if (o != null) {
+            SmartAlarmUtils.showError(c, (String) o);
+        }
+    }
+
+    private String schedulePublicTransportationPreAlarm(SharedPreferences prefs, Date lastAlarm, int buffer) {
         SmartAlarmInfo alarmInfo;
-        String station_home = prefs.getString("smart_alarm_home", "");
+        int station_home = prefs.getInt("smart_alarm_home_id", -1);
         int minutesAtHome = Integer.parseInt(prefs.getString("smart_alarm_morningtime", "60"));
-        if (station_home.equals("")) {
-            SmartAlarmUtils.showError(c, "SmartAlarm: Home station is not set. Service deactivated.");
-            return;
+        if (station_home == -1) {
+            return "Home station is not set. Service deactivated.";
         }
 
         SmartAlarmUtils.LectureInfo lecture = SmartAlarmUtils.getFirstAppointment(c, lastAlarm);
 
         if (lecture == null) {
-            SmartAlarmUtils.showError(c, "SmartAlarm: An error occured while fetching your lectures. Service deactivated.");
-            return;
+            return "An error occurred while fetching your lectures. Service deactivated.";
         }
 
         if (lecture.getArchId() == null || lecture.getArchId().equals("")) {
-            SmartAlarmUtils.showError(c, "SmartAlarm: Location of your next lecture is unknown. Service deactivated.");
-            return;
+            return "Location of your next lecture is unknown. Service deactivated.";
         }
 
         TUMRoomFinderRequest roomFinder = new TUMRoomFinderRequest(c);
         String street = roomFinder.fetchRoomStreet(lecture.getArchId());
 
         if (street == null) {
-            SmartAlarmUtils.showError(c, "SmartAlarm: Location of your next lecture is not supported in public transport mode. Service deactivated.");
-            return;
+            return "Location of your next lecture is not supported in public transport mode. Service deactivated.";
         }
 
         long arrivalAtCampus = lecture.getStart().getTime()
@@ -89,20 +105,20 @@ public class AlarmSchedulerTask extends AsyncTask {
         else alarmInfo = SmartAlarmUtils.calculateJourney(c, station_home, street, arrivalAtCampus);
 
         if (alarmInfo == null) {
-            return;
+            return "An error occurred while fetching route to campus. Service deactivated.";
         }
 
         alarmInfo.setWakeupTime(alarmInfo.getDeparture() - minutesAtHome * SmartAlarmUtils.MINUTEINMS);
         alarmInfo.setLectureTitle(lecture);
         schedule(alarmInfo);
+        return null;
     }
 
-    private void schedulePrivateTransportationAlarm(SharedPreferences prefs, Date lastAlarm, int buffer) {
+    private String schedulePrivateTransportationAlarm(SharedPreferences prefs, Date lastAlarm, int buffer) {
         SmartAlarmInfo alarmInfo;SmartAlarmUtils.LectureInfo lecture = SmartAlarmUtils.getFirstAppointment(c, lastAlarm);
 
         if (lecture == null) {
-            SmartAlarmUtils.showError(c, "SmartAlarm: An error occured while fetching your lectures. Service deactivated.");
-            return;
+            return "An error occurred while fetching your lectures. Service deactivated.";
         }
 
         // private transportation mode
@@ -113,8 +129,9 @@ public class AlarmSchedulerTask extends AsyncTask {
         alarmInfo = new SmartAlarmInfo(estWakeUpTime, lecture);
 
         // pre alarm not needed
-        requestCode = SmartAlarmReceiver.ALARM_REQUEST;
+        requestCode = SmartAlarmReceiver.REQUEST_ALARM;
         schedule(alarmInfo);
+        return null;
     }
 
 
@@ -123,12 +140,12 @@ public class AlarmSchedulerTask extends AsyncTask {
         Intent i = new Intent(c, SmartAlarmReceiver.class);
         i.putExtra(SmartAlarmReceiver.REQUEST_CODE, requestCode);
         i.putExtra(SmartAlarmReceiver.INFO, info);
-        PendingIntent p = PendingIntent.getBroadcast(c, requestCode, i, 0);
+        PendingIntent pi = PendingIntent.getBroadcast(c, 0, i, PendingIntent.FLAG_UPDATE_CURRENT);
 
         long diff = 0;
-        if (requestCode == SmartAlarmReceiver.PRE_ALARM_REQUEST) diff = SmartAlarmReceiver.PRE_ALARM_DIFF * SmartAlarmUtils.HOURINMS;
+        if (requestCode == SmartAlarmReceiver.REQUEST_PRE_ALARM) diff = SmartAlarmReceiver.PRE_ALARM_DIFF * SmartAlarmUtils.HOURINMS;
         // TODO: commented while in development
         //alarmManager.set(AlarmManager.RTC_WAKEUP, estWakeUpTime - diff, p);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 3000, p);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 3000, pi);
     }
 }
