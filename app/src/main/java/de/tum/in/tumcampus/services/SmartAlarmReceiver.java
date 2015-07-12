@@ -12,15 +12,15 @@ import de.tum.in.tumcampus.models.SmartAlarmInfo;
 public class SmartAlarmReceiver extends BroadcastReceiver {
     public static final int PRE_ALARM_DIFF = 1;
 
-    public static final int PRE_ALARM_REQUEST = 0;
-    public static final int ALARM_REQUEST = 1;
+    public static final int REQUEST_PRE_ALARM = 0;
+    public static final int REQUEST_ALARM = 1;
 
     public static final String INFO = "INFO";
     public static final String REQUEST_CODE = "REQUEST_CODE";
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        if (intent.getIntExtra(REQUEST_CODE, PRE_ALARM_REQUEST) == PRE_ALARM_REQUEST) {
+        if (intent.getIntExtra(REQUEST_CODE, REQUEST_PRE_ALARM) == REQUEST_PRE_ALARM) {
             handlePreAlarm(context, intent);
         } else {
             handleAlarm(context, intent);
@@ -33,8 +33,10 @@ public class SmartAlarmReceiver extends BroadcastReceiver {
      * @param intent Intent containing a SmartAlarmInfo object in extra field INFO
      */
     private void handlePreAlarm(Context c, Intent intent) {
+        // TODO: show route info on widget
+
         SmartAlarmInfo sai = (SmartAlarmInfo) intent.getExtras().get(INFO);
-        new AlarmSchedulerTask(c, sai, SmartAlarmReceiver.ALARM_REQUEST).execute();
+        new AlarmSchedulerTask(c, sai, SmartAlarmReceiver.REQUEST_ALARM).execute();
     }
 
     /**
@@ -43,7 +45,7 @@ public class SmartAlarmReceiver extends BroadcastReceiver {
      * @param intent Intent containing a SmartAlarmInfo object in extra field INFO
      */
     private void handleAlarm(Context c, Intent intent) {
-        // TODO: display route info on widget
+        // TODO: update route info on widget
 
         Intent showAlert = new Intent(c, SmartAlarmService.class);
         if (intent.hasExtra(INFO)) {
