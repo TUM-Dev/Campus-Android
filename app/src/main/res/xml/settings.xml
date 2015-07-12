@@ -325,7 +325,8 @@
                     android:defaultValue="90"
                     android:key="smart_alarm_journeytime"
                     android:title="@string/smart_alarm_journeyduration"
-                    android:inputType="number" />
+                    android:inputType="number"
+                    android:numeric="integer"/>
             </PreferenceCategory>
         </PreferenceScreen>
     </PreferenceCategory>

@@ -270,6 +270,8 @@ public class SettingsFragment extends PreferenceFragment implements
                 smartAlarmScreen.addPreference(smartAlarmPrivate);
             }
         }
+
+        // TODO: recalculate smart alarm route if needed
     }
 
     //    @SuppressWarnings("deprecation")
@@ -437,6 +439,8 @@ public class SettingsFragment extends PreferenceFragment implements
                     prefEditor.putString("smart_alarm_home", station);
                     prefEditor.apply();
                     findPreference("smart_alarm_home_button").setSummary(station);
+
+                    // TODO: recalculate route
                 }
                 break;
 

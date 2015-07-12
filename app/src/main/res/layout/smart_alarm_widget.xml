@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:padding="@dimen/widget_margin"
-    android:background="#c0696969">
+    android:background="#a8000000">
 
         <RelativeLayout
-            android:layout_width="80dp"
+            android:layout_width="60dp"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:id="@+id/relativeLayout2">
+            android:id="@+id/clock_wrapper">
 
             <ImageView
                 android:layout_width="60dp"
@@ -48,8 +49,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_toRightOf="@+id/relativeLayout2"
-            android:layout_toEndOf="@+id/relativeLayout2"
+            android:layout_toRightOf="@+id/clock_wrapper"
+            android:layout_toEndOf="@+id/clock_wrapper"
             android:layout_marginLeft="10dp"
             android:layout_marginStart="10dp">
 
@@ -85,7 +86,7 @@
                 android:layout_toEndOf="@+id/transport_icon"
                 android:gravity="center_vertical"
                 android:textStyle="bold"
-                android:textSize="27sp"
+                android:textSize="30sp"
                 android:layout_marginLeft="5dp"
                 android:layout_marginStart="5dp"
                 android:textColor="@android:color/white"
@@ -101,25 +102,25 @@
                 android:layout_toEndOf="@+id/transport_nr"
                 android:layout_marginLeft="10dp"
                 android:layout_marginStart="10dp"
-                android:layout_toLeftOf="@+id/textView2"
-                android:layout_toStartOf="@+id/textView2"
+                android:layout_toLeftOf="@+id/transport_departure"
+                android:layout_toStartOf="@+id/transport_departure"
                 android:textColor="@android:color/white"
                 android:layout_below="@+id/next_lecture_title"
-                android:lines="1" />
+                android:lines="1"
+                android:ellipsize="marquee"
+                android:singleLine="true"
+                android:marqueeRepeatLimit="marquee_forever" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:id="@+id/textView2"
+                android:id="@+id/transport_departure"
                 android:layout_below="@+id/next_lecture_title"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"
                 android:gravity="center_vertical"
-                android:textColor="#ffdfdfdf"
-                android:ellipsize="marquee"
-                android:singleLine="true"
-                android:marqueeRepeatLimit="marquee_forever"/>
+                android:textColor="#ffdfdfdf" />
         </RelativeLayout>
 
 </RelativeLayout>

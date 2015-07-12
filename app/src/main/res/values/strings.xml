@@ -448,4 +448,8 @@ Signature: %5$s</string>
     <string name="new_chat_room_desc">Select a name for your chat room. The name can not be changed afterwards!\n\n</string>
     <string name="just_now">Just now</string>
     <string name="yesterday">Yesterday</string>
+    <string name="smart_alarm_widget_activate_btn">Activate / Deactivate Alarm</string>
+    <string name="smart_alarm_transportation_type">Transportation Type</string>
+    <string name="smart_alarm_dismiss_btn">Dismiss</string>
+    <string name="smart_alarm_walk_to">Walk to station</string>
 </resources>

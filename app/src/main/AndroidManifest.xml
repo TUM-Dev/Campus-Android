@@ -43,6 +43,10 @@
     <!-- For QR code scanner -->
     <uses-permission android:name="android.permission.CAMERA" />
 
+    <!-- For smart alarm -->
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+
+
     <!--
      Creates a custom permission so only this app can receive its messages.
 
@@ -460,6 +464,16 @@
         <!-- Smart alarm receiver -->
         <receiver android:name="de.tum.in.tumcampus.services.SmartAlarmReceiver" />
 
+        <!-- Smart alarm widget -->
+        <receiver android:name="de.tum.in.tumcampus.widget.SmartAlarmWidgetProvider" >
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="de.tum.in.tumcampus.widget.SmartAlarmWidgetProvider.action.UPDATE_WIDGET" />
+            </intent-filter>
+
+            <meta-data android:name="android.appwidget.provider" android:resource="@xml/smart_alarm_widget_info" />
+        </receiver>
+
         <service
             android:name="de.tum.in.tumcampus.services.DownloadService"
             android:exported="false" />
@@ -481,6 +495,9 @@
         <service
             android:name="de.tum.in.tumcampus.models.managers.CalendarManager$QueryLocationsService"
             android:exported="false" />
+
+        <service android:name=".services.SmartAlarmService"
+            android:exported="false"/>
         <service android:name=".services.GcmIntentService" />
     </application>
 </manifest>

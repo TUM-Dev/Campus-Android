@@ -3,45 +3,53 @@ package de.tum.in.tumcampus.services;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
+
+import java.io.Serializable;
 
 import de.tum.in.tumcampus.auxiliary.AlarmSchedulerTask;
-import de.tum.in.tumcampus.models.ConnectionToCampus;
+import de.tum.in.tumcampus.models.SmartAlarmInfo;
 
 public class SmartAlarmReceiver extends BroadcastReceiver {
-    public static final String EST_WAKEUP_TIME = "EST_WAKEUP_TIME";
-    public static final String PRE_ALARM = "PRE_ALARM";
+    public static final int PRE_ALARM_DIFF = 1;
 
     public static final int PRE_ALARM_REQUEST = 0;
     public static final int ALARM_REQUEST = 1;
-    public static final String ROUTE = "ROUTE";
+
+    public static final String INFO = "INFO";
+    public static final String REQUEST_CODE = "REQUEST_CODE";
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        if (intent.getBooleanExtra(PRE_ALARM, false)) {
+        if (intent.getIntExtra(REQUEST_CODE, PRE_ALARM_REQUEST) == PRE_ALARM_REQUEST) {
             handlePreAlarm(context, intent);
         } else {
-            handleAlarm(context);
+            handleAlarm(context, intent);
         }
     }
 
+    /**
+     * Recalculate public transport route in case of delays etc.
+     * @param c Context
+     * @param intent Intent containing a SmartAlarmInfo object in extra field INFO
+     */
     private void handlePreAlarm(Context c, Intent intent) {
-        ConnectionToCampus ctc;
-        if (intent.hasExtra(ROUTE)) {
-            ctc = (ConnectionToCampus) intent.getExtras().get(ROUTE);
-            new AlarmSchedulerTask(c, ctc, SmartAlarmReceiver.ALARM_REQUEST).execute();
-        } else {
-            new AlarmSchedulerTask(c, SmartAlarmReceiver.ALARM_REQUEST).execute();
-        }
+        SmartAlarmInfo sai = (SmartAlarmInfo) intent.getExtras().get(INFO);
+        new AlarmSchedulerTask(c, sai, SmartAlarmReceiver.ALARM_REQUEST).execute();
     }
 
-    private void handleAlarm(Context c) {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(c);
-        // TODO: display alarm/info window above all content
-        // TODO: display route info on screen and widget
-        // TODO: play ringtone
-        // TODO: vibrate if activated (add to prefs)
+    /**
+     * Displays alarm on screen and vibrates phone
+     * @param c Context
+     * @param intent Intent containing a SmartAlarmInfo object in extra field INFO
+     */
+    private void handleAlarm(Context c, Intent intent) {
+        // TODO: display route info on widget
+
+        Intent showAlert = new Intent(c, SmartAlarmService.class);
+        if (intent.hasExtra(INFO)) {
+            showAlert.putExtra(INFO, (Serializable) intent.getExtras().get(INFO));
+        }
+        c.startService(showAlert);
     }
 
     // TODO: add reboot handling (schedule alarm again)

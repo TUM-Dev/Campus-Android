@@ -1,12 +1,18 @@
 package de.tum.in.tumcampus.models;
 
+import android.content.Context;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.Serializable;
 
-public class ConnectionToCampus implements Serializable {
+import de.tum.in.tumcampus.R;
+import de.tum.in.tumcampus.auxiliary.DateUtils;
+import de.tum.in.tumcampus.auxiliary.SmartAlarmUtils;
+
+public class SmartAlarmInfo implements Serializable {
     private static final long serialVersionUID = -8083639170468397879L;
 
     private static final String FOOTWAY = "FOOTWAY";
@@ -24,39 +30,72 @@ public class ConnectionToCampus implements Serializable {
     public static final String JSON_PRODUCT = "product";
     public static final String JSON_TO = "to";
 
-    public enum TrainType {
-        SBAHN, UBAHN, BUS, TRAM, FOOT;
+    public enum TransportType {
+        BUS, FOOT, PRIVATE, SBAHN, TRAM, UBAHN;
 
-        public static TrainType toTrainType(String s) {
+        public static TransportType toTrainType(String s) {
             switch (s.toLowerCase()) {
+                case "b":
+                    return BUS;
+
+                case "c":
+                    return PRIVATE;
+
                 case "s":
                     return SBAHN;
-
-                case "u":
-                    return UBAHN;
 
                 case "t":
                     return TRAM;
 
-                case "b":
-                    return BUS;
+                case "u":
+                    return UBAHN;
 
                 default:
                     return FOOT;
             }
         }
+
+        public int getIcon() {
+            switch (this) {
+                case BUS:
+                    return R.drawable.bus_icon;
+
+                case SBAHN:
+                    return R.drawable.sbahn_icon;
+
+                case TRAM:
+                    return R.drawable.tram_icon;
+
+                case UBAHN:
+                    return R.drawable.ubahn_icon;
+
+                default:
+                    return -1;
+            }
+        }
     }
 
+    private long wakeUpTime;
     private long departure;
     private long arrival;
+
+    private String lectureTitle;
+
     private int fromStation;
     private Geo toPosition;
 
-    private TrainType firstTrainType;
-
+    private TransportType firstTransportType;
     private String firstTrainLabel;
     private String firstTrainDst;
-    public ConnectionToCampus(JSONObject routesObject, long desiredArrival) throws JSONException {
+
+    public SmartAlarmInfo(long wakeUpTime, SmartAlarmUtils.LectureInfo lecture) {
+        if (lecture == null) throw new IllegalArgumentException("Route mustn't be null");
+        this.wakeUpTime = wakeUpTime;
+        firstTransportType = TransportType.PRIVATE;
+        lectureTitle = lecture.getTitle();
+    }
+
+    public SmartAlarmInfo(JSONObject routesObject, long desiredArrival) throws JSONException {
         if (routesObject == null) throw new IllegalArgumentException("Route mustn't be null");
 
         JSONArray routes = routesObject.getJSONArray("connectionList");
@@ -88,11 +127,11 @@ public class ConnectionToCampus implements Serializable {
         // get info about first part of the route
         JSONObject firstConnectionPart = route.getJSONArray(JSON_CONNECTION_PART_LIST).getJSONObject(0);
         if (firstConnectionPart.get(JSON_CONNECTION_PART_TYPE).equals(FOOTWAY)) {
-            firstTrainType = TrainType.FOOT;
+            firstTransportType = TransportType.FOOT;
             firstTrainLabel = "";
         }
         else {
-            firstTrainType = TrainType.toTrainType(firstConnectionPart.getString(JSON_PRODUCT));
+            firstTransportType = TransportType.toTrainType(firstConnectionPart.getString(JSON_PRODUCT));
             firstTrainLabel = firstConnectionPart.getString(JSON_LABEL);
         }
         firstTrainDst = firstConnectionPart.getString(JSON_DESTINATION);
@@ -105,17 +144,15 @@ public class ConnectionToCampus implements Serializable {
     public long getDeparture() {
         return departure;
     }
-
     public String getFirstTrainDst() {
         return firstTrainDst;
     }
-
     public String getFirstTrainLabel() {
         return firstTrainLabel;
     }
 
-    public TrainType getFirstTrainType() {
-        return firstTrainType;
+    public TransportType getFirstTransportType() {
+        return firstTransportType;
     }
 
     public int getFromStation() {
@@ -124,5 +161,29 @@ public class ConnectionToCampus implements Serializable {
 
     public Geo getToPosition() {
         return toPosition;
+    }
+
+    public String getFormattedWakeupTime(Context c) {
+        return android.text.format.DateUtils.formatDateTime(c, wakeUpTime, android.text.format.DateUtils.FORMAT_SHOW_TIME);
+    }
+
+    public String getFormattedWakeupDate(Context c) {
+        return android.text.format.DateUtils.formatDateTime(c, wakeUpTime, android.text.format.DateUtils.FORMAT_SHOW_DATE);
+    }
+
+    public void setWakeupTime(long t) {
+        wakeUpTime = t;
+    }
+
+    public String getLectureTitle() {
+        return lectureTitle;
+    }
+
+    public void setLectureTitle(SmartAlarmUtils.LectureInfo lecture) {
+        lectureTitle = lecture.getTitle();
+    }
+
+    public String getFormattedDeparture(Context c) {
+        return android.text.format.DateUtils.formatDateTime(c, departure, android.text.format.DateUtils.FORMAT_SHOW_TIME);
     }
 }
