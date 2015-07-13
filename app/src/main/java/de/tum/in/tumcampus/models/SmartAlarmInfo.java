@@ -7,6 +7,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.auxiliary.DateUtils;
@@ -73,6 +74,7 @@ public class SmartAlarmInfo implements Serializable {
                     return -1;
             }
         }
+
     }
 
     private long wakeUpTime;
@@ -80,19 +82,24 @@ public class SmartAlarmInfo implements Serializable {
     private long arrival;
 
     private String lectureTitle;
+    private Date lectureStart;
 
     private int fromStation;
-    private Geo toPosition;
 
+    private Geo toPosition;
     private TransportType firstTransportType;
+
     private String firstTrainLabel;
     private String firstTrainDst;
+
 
     public SmartAlarmInfo(long wakeUpTime, SmartAlarmUtils.LectureInfo lecture) {
         if (lecture == null) throw new IllegalArgumentException("Route mustn't be null");
         this.wakeUpTime = wakeUpTime;
         firstTransportType = TransportType.PRIVATE;
+
         lectureTitle = lecture.getTitle();
+        lectureStart = lecture.getStart();
     }
 
     public SmartAlarmInfo(JSONObject routesObject, long desiredArrival) throws JSONException {
@@ -144,13 +151,13 @@ public class SmartAlarmInfo implements Serializable {
     public long getDeparture() {
         return departure;
     }
+
     public String getFirstTrainDst() {
         return firstTrainDst;
     }
     public String getFirstTrainLabel() {
         return firstTrainLabel;
     }
-
     public TransportType getFirstTransportType() {
         return firstTransportType;
     }
@@ -179,11 +186,20 @@ public class SmartAlarmInfo implements Serializable {
         return lectureTitle;
     }
 
-    public void setLectureTitle(SmartAlarmUtils.LectureInfo lecture) {
-        lectureTitle = lecture.getTitle();
+    public Date getLectureStart() {
+        return lectureStart;
+    }
+
+    public long getWakeUpTime() {
+        return wakeUpTime;
     }
 
     public String getFormattedDeparture(Context c) {
         return android.text.format.DateUtils.formatDateTime(c, departure, android.text.format.DateUtils.FORMAT_SHOW_TIME);
+    }
+
+    public void setLectureInfo(SmartAlarmUtils.LectureInfo lecture) {
+        lectureTitle = lecture.getTitle();
+        lectureStart = lecture.getStart();
     }
 }

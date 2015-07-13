@@ -206,6 +206,8 @@ public class SettingsFragment extends PreferenceFragment implements
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         Preference pref = findPreference(key);
+        Utils.log("PREFERENCE UPDATED: " + key + " TO " + PreferenceManager.getDefaultSharedPreferences(mContext).getAll().get(key));
+
         if (pref instanceof ListPreference) {
             ListPreference listPreference = (ListPreference) pref;
             listPreference.setSummary(listPreference.getEntry());
@@ -252,35 +254,6 @@ public class SettingsFragment extends PreferenceFragment implements
             } else {
                 mContext.stopService(service);
             }
-        }
-
-        if (key.equals(Const.SMART_ALARM_ACTIVE)) {
-            //noinspection ConstantConditions
-            if (((CheckBoxPreference) pref).isChecked()) {
-                SmartAlarmUtils.schedulePreAlarm(mContext, showProgressDialog());
-            } else {
-                SmartAlarmUtils.cancelAlarm(mContext);
-            }
-        }
-
-        if (key.equals(Const.SMART_ALARM_MODE)) {
-            PreferenceScreen smartAlarmScreen = (PreferenceScreen) findPreference(Const.SMART_ALARM_SCREEN);
-            //noinspection ConstantConditions
-            if (((CheckBoxPreference) pref).isChecked()) {
-                smartAlarmScreen.removePreference(findPreference(Const.SMART_ALARM_CAT_PRIVATE));
-                smartAlarmScreen.addPreference(smartAlarmPublic);
-            } else {
-                smartAlarmScreen.removePreference(findPreference(Const.SMART_ALARM_CAT_PUBLIC));
-                smartAlarmScreen.addPreference(smartAlarmPrivate);
-            }
-        }
-
-        if (sharedPreferences.getBoolean(Const.SMART_ALARM_ACTIVE, false)
-                && (key.equals(Const.SMART_ALARM_MODE)
-                    || key.equals("smart_alarm_buffer")
-                    || (sharedPreferences.getBoolean(Const.SMART_ALARM_MODE, false) && (key.equals("smart_alarm_morningtime") || key.equals("smart_alarm_home")))
-                    || (!sharedPreferences.getBoolean(Const.SMART_ALARM_MODE, false) && key.equals("smart_alarm_journeytime")))) {
-            SmartAlarmUtils.reSchedulePreAlarm(mContext, showProgressDialog());
         }
     }
 
@@ -394,6 +367,39 @@ public class SettingsFragment extends PreferenceFragment implements
 
             default:
                 return false;
+        }
+
+
+        // activate / deactivate smart alarm
+        if (key.equals(Const.SMART_ALARM_ACTIVE)) {
+            //noinspection ConstantConditions
+            if (PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean(Const.SMART_ALARM_ACTIVE, false)) {
+                SmartAlarmUtils.scheduleAlarm(mContext, showProgressDialog());
+            } else {
+                SmartAlarmUtils.cancelAlarm(mContext);
+                SmartAlarmUtils.updateWidget(mContext, null, false);
+            }
+        }
+
+        if (key.equals(Const.SMART_ALARM_MODE)) {
+            PreferenceScreen smartAlarmScreen = (PreferenceScreen) findPreference(Const.SMART_ALARM_SCREEN);
+            //noinspection ConstantConditions
+            if (PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean(Const.SMART_ALARM_MODE, false)) {
+                smartAlarmScreen.removePreference(findPreference(Const.SMART_ALARM_CAT_PRIVATE));
+                smartAlarmScreen.addPreference(smartAlarmPublic);
+            } else {
+                smartAlarmScreen.removePreference(findPreference(Const.SMART_ALARM_CAT_PUBLIC));
+                smartAlarmScreen.addPreference(smartAlarmPrivate);
+            }
+        }
+
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
+        if (sharedPreferences.getBoolean(Const.SMART_ALARM_ACTIVE, false)
+                && (key.equals(Const.SMART_ALARM_MODE)
+                || key.equals("smart_alarm_buffer")
+                || (sharedPreferences.getBoolean(Const.SMART_ALARM_MODE, false) && (key.equals("smart_alarm_morningtime") || key.equals("smart_alarm_home")))
+                || (!sharedPreferences.getBoolean(Const.SMART_ALARM_MODE, false) && key.equals("smart_alarm_journeytime")))) {
+            SmartAlarmUtils.reSchedulePreAlarm(mContext, showProgressDialog());
         }
 
         return true;

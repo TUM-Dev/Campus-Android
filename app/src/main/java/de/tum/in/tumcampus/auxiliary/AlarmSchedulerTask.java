@@ -15,28 +15,26 @@ import java.util.Date;
 import de.tum.in.tumcampus.models.SmartAlarmInfo;
 import de.tum.in.tumcampus.services.SmartAlarmReceiver;
 import de.tum.in.tumcampus.tumonline.TUMRoomFinderRequest;
+import de.tum.in.tumcampus.widget.SmartAlarmWidgetProvider;
 
 public class AlarmSchedulerTask extends AsyncTask {
     private Context c;
 
     private SmartAlarmInfo sai;
 
-    private int requestCode;
-
     private ProgressDialog pd;
 
-    public AlarmSchedulerTask(Context c, ProgressDialog pd, int preAlarmRequest) {
-        this (c, preAlarmRequest);
+    public AlarmSchedulerTask(Context c, ProgressDialog pd) {
+        this (c);
         this.pd = pd;
     }
 
-    public AlarmSchedulerTask(Context c, int requestCode) {
-        this(c, (SmartAlarmInfo) null, requestCode);
+    public AlarmSchedulerTask(Context c) {
+        this(c, (SmartAlarmInfo) null);
     }
 
-    public AlarmSchedulerTask(Context c, SmartAlarmInfo sai, int requestCode) {
+    public AlarmSchedulerTask(Context c, SmartAlarmInfo sai) {
         this.c = c;
-        this.requestCode = requestCode;
         this.sai = sai;
     }
 
@@ -56,6 +54,12 @@ public class AlarmSchedulerTask extends AsyncTask {
         } else {
             return schedulePublicTransportationPreAlarm(prefs, lastAlarm, buffer);
         }
+    }
+
+    @Override
+    protected void onPreExecute() {
+        // show waiting info on widget
+        SmartAlarmUtils.updateWidget(c, null, true);
     }
 
     @Override
@@ -109,43 +113,50 @@ public class AlarmSchedulerTask extends AsyncTask {
         }
 
         alarmInfo.setWakeupTime(alarmInfo.getDeparture() - minutesAtHome * SmartAlarmUtils.MINUTEINMS);
-        alarmInfo.setLectureTitle(lecture);
+        alarmInfo.setLectureInfo(lecture);
         schedule(alarmInfo);
         return null;
     }
 
     private String schedulePrivateTransportationAlarm(SharedPreferences prefs, Date lastAlarm, int buffer) {
-        SmartAlarmInfo alarmInfo;SmartAlarmUtils.LectureInfo lecture = SmartAlarmUtils.getFirstAppointment(c, lastAlarm);
+        SmartAlarmUtils.LectureInfo lecture = SmartAlarmUtils.getFirstAppointment(c, lastAlarm);
 
         if (lecture == null) {
             return "An error occurred while fetching your lectures. Service deactivated.";
         }
 
-        // private transportation mode
         long estWakeUpTime = lecture.getStart().getTime()
                 - buffer * SmartAlarmUtils.MINUTEINMS
                 - Integer.parseInt(prefs.getString("smart_alarm_journeytime", "60")) * SmartAlarmUtils.MINUTEINMS;
 
-        alarmInfo = new SmartAlarmInfo(estWakeUpTime, lecture);
-
-        // pre alarm not needed
-        requestCode = SmartAlarmReceiver.REQUEST_ALARM;
-        schedule(alarmInfo);
+        schedule(new SmartAlarmInfo(estWakeUpTime, lecture));
         return null;
     }
 
 
     private void schedule(SmartAlarmInfo info) {
+        long diff = SmartAlarmReceiver.PRE_ALARM_DIFF * SmartAlarmUtils.HOURINMS;
+        long scheduleTime = info.getWakeUpTime();
+
+        // if private transportation or pre alarm is in the past, directly schedule alarm
+        String action = SmartAlarmReceiver.ACTION_PREALARM;
+        if (info.getWakeUpTime() - diff > new Date().getTime() - 1000 || info.getFirstTransportType() == SmartAlarmInfo.TransportType.PRIVATE) {
+            action = SmartAlarmReceiver.ACTION_ALARM;
+        } else {
+            scheduleTime-= diff;
+        }
+
         AlarmManager alarmManager = (AlarmManager) c.getSystemService(Service.ALARM_SERVICE);
         Intent i = new Intent(c, SmartAlarmReceiver.class);
-        i.putExtra(SmartAlarmReceiver.REQUEST_CODE, requestCode);
+        i.setAction(action);
         i.putExtra(SmartAlarmReceiver.INFO, info);
         PendingIntent pi = PendingIntent.getBroadcast(c, 0, i, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        long diff = 0;
-        if (requestCode == SmartAlarmReceiver.REQUEST_PRE_ALARM) diff = SmartAlarmReceiver.PRE_ALARM_DIFF * SmartAlarmUtils.HOURINMS;
-        // TODO: commented while in development
-        //alarmManager.set(AlarmManager.RTC_WAKEUP, estWakeUpTime - diff, p);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 3000, pi);
+        // TODO: comment at deployment
+        scheduleTime = System.currentTimeMillis() + 3000;
+        alarmManager.set(AlarmManager.RTC_WAKEUP, scheduleTime, pi);
+
+        // update widgets
+        SmartAlarmUtils.updateWidget(c, info, false);
     }
 }

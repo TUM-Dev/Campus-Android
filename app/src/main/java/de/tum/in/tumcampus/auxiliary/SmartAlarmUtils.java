@@ -27,6 +27,7 @@ import de.tum.in.tumcampus.models.LectureAppointmentsRowSet;
 import de.tum.in.tumcampus.services.SmartAlarmReceiver;
 import de.tum.in.tumcampus.tumonline.TUMOnlineConst;
 import de.tum.in.tumcampus.tumonline.TUMOnlineRequest;
+import de.tum.in.tumcampus.widget.SmartAlarmWidgetProvider;
 
 public class SmartAlarmUtils {
     public static final long MINUTEINMS = 60 * 1000;
@@ -34,8 +35,8 @@ public class SmartAlarmUtils {
     private static final int MONTH_BEFORE = 0;
     private static final int MONTH_AFTER = 3;
 
-    public static void schedulePreAlarm(Context c, ProgressDialog pd) {
-        new AlarmSchedulerTask(c, pd, SmartAlarmReceiver.REQUEST_PRE_ALARM).execute();
+    public static void scheduleAlarm(Context c, ProgressDialog pd) {
+        new AlarmSchedulerTask(c, pd).execute();
     }
 
     public static void cancelAlarm(Context c) {
@@ -46,7 +47,7 @@ public class SmartAlarmUtils {
 
     public static void reSchedulePreAlarm(Context c, ProgressDialog pd) {
         cancelAlarm(c);
-        schedulePreAlarm(c, pd);
+        scheduleAlarm(c, pd);
     }
 
     public static SmartAlarmInfo calculateJourney(Context c, SmartAlarmInfo ctc, long arrivalAtCampus) {
@@ -177,5 +178,14 @@ public class SmartAlarmUtils {
         public String getArchId() {
             return archId;
         }
+    }
+
+    public static void updateWidget(Context c, SmartAlarmInfo info, boolean activating) {
+        Utils.log("UPDATE WIDGET, activationg = " + activating + ", info = " + (info == null ? "null" : "not null"));
+        Intent updateWidget = new Intent();
+        updateWidget.setAction(SmartAlarmWidgetProvider.ACTION_UPDATE_WIDGET);
+        updateWidget.putExtra(SmartAlarmWidgetProvider.ACTIVATING, activating);
+        updateWidget.putExtra(SmartAlarmReceiver.INFO, info);
+        c.sendBroadcast(updateWidget);
     }
 }

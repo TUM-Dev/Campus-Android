@@ -13,15 +13,17 @@
             android:layout_alignParentStart="true"
             android:id="@+id/clock_wrapper">
 
-            <ImageView
+            <ImageButton
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:id="@+id/clock_icon"
-                android:src="@android:drawable/ic_lock_idle_alarm"
+                android:background="@android:drawable/ic_lock_idle_alarm"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
-                android:tint="@android:color/white"
-                android:contentDescription="@string/smart_alarm_widget_activate_btn" />
+                android:backgroundTint="@android:color/white"
+                android:contentDescription="@string/smart_alarm_widget_activate_btn"
+                android:cropToPadding="false"
+                android:clickable="false" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -31,7 +33,10 @@
                 android:layout_below="@+id/clock_icon"
                 android:layout_centerHorizontal="true"
                 android:gravity="center_horizontal"
-                android:textColor="@android:color/white" />
+                android:textColor="@android:color/white"
+                android:layout_marginTop="-3dp"
+                android:text="@string/smart_alarm_activate"
+                android:textSize="16sp" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -41,7 +46,8 @@
                 android:layout_below="@+id/alarm_date"
                 android:layout_centerHorizontal="true"
                 android:gravity="center_horizontal"
-                android:textColor="@android:color/white" />
+                android:textColor="@android:color/white"
+                android:layout_marginTop="-3dp" />
 
         </RelativeLayout>
 
@@ -66,61 +72,65 @@
                 android:textSize="30sp"
                 android:layout_marginBottom="8dp"
                 android:lines="2"
-                android:ellipsize="end"/>
+                android:ellipsize="end"
+                android:text="@string/smart_alarm_inactive" />
 
-            <ImageView
-                android:layout_width="wrap_content"
+            <RelativeLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
                 android:layout_height="30dp"
-                android:id="@+id/transport_icon"
                 android:layout_below="@+id/next_lecture_title"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:contentDescription="@string/smart_alarm_transportation_type"/>
+                android:gravity="center_vertical">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="30dp"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:id="@+id/transport_nr"
-                android:layout_toRightOf="@+id/transport_icon"
-                android:layout_toEndOf="@+id/transport_icon"
-                android:gravity="center_vertical"
-                android:textStyle="bold"
-                android:textSize="30sp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginStart="5dp"
-                android:textColor="@android:color/white"
-                android:layout_below="@+id/next_lecture_title" />
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:id="@+id/transport_icon"
+                    android:contentDescription="@string/smart_alarm_transportation_type" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="30dp"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:id="@+id/transport_destination"
-                android:gravity="center_vertical"
-                android:layout_toRightOf="@+id/transport_nr"
-                android:layout_toEndOf="@+id/transport_nr"
-                android:layout_marginLeft="10dp"
-                android:layout_marginStart="10dp"
-                android:layout_toLeftOf="@+id/transport_departure"
-                android:layout_toStartOf="@+id/transport_departure"
-                android:textColor="@android:color/white"
-                android:layout_below="@+id/next_lecture_title"
-                android:lines="1"
-                android:ellipsize="marquee"
-                android:singleLine="true"
-                android:marqueeRepeatLimit="marquee_forever" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:id="@+id/transport_nr"
+                    android:textStyle="bold"
+                    android:textSize="30sp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginStart="5dp"
+                    android:textColor="@android:color/white"
+                    android:gravity="center_vertical"
+                    android:layout_marginTop="-10dp"
+                    android:layout_marginBottom="-10dp"
+                    android:layout_toRightOf="@+id/transport_icon" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="30dp"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:id="@+id/transport_departure"
-                android:layout_below="@+id/next_lecture_title"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true"
-                android:gravity="center_vertical"
-                android:textColor="#ffdfdfdf" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:id="@+id/transport_destination"
+                    android:gravity="center_vertical"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
+                    android:textColor="@android:color/white"
+                    android:lines="1"
+                    android:ellipsize="marquee"
+                    android:singleLine="true"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:layout_toRightOf="@+id/transport_nr"
+                    android:layout_toLeftOf="@+id/transport_departure" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:id="@+id/transport_departure"
+                    android:gravity="center_vertical"
+                    android:textColor="#ffcfcfcf"
+                    android:singleLine="true"
+                    android:lines="1"
+                    android:layout_alignParentRight="true" />
+            </RelativeLayout>
+
         </RelativeLayout>
 
 </RelativeLayout>

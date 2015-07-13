@@ -292,6 +292,10 @@
                 android:defaultValue=""
                 android:key="smart_alarm_ringtone"
                 android:title="@string/smart_alarm_ringtone"/>
+            <CheckBoxPreference
+                android:defaultValue="true"
+                android:key="smart_alarm_vibrate"
+                android:title="@string/smart_alarm_vibrate" />
             <EditTextPreference
                 android:defaultValue="10"
                 android:key="smart_alarm_buffer"

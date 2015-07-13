@@ -454,4 +454,8 @@ Signature: %5$s</string>
     <string name="smart_alarm_walk_to">Walk to station</string>
     <string name="smart_alarm_starting">Activating Smart Alarm</string>
     <string name="smart_alarm_home_validating">Validating station</string>
+    <string name="smart_alarm_vibrate">Vibrate</string>
+    <string name="smart_alarm_inactive">SmartAlarm inactive</string>
+    <string name="smart_alarm_activate">Activate</string>
+    <string name="smart_alarm_activating">Wait..</string>
 </resources>

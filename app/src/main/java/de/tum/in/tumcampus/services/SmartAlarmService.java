@@ -5,9 +5,12 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.PixelFormat;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.Vibrator;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,9 +20,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import de.tum.in.tumcampus.R;
+import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.SmartAlarmInfo;
 
 public class SmartAlarmService extends Service {
+
+    private boolean stopVibrate = false;
+
+    private Uri ringtoneURI = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -31,6 +39,8 @@ public class SmartAlarmService extends Service {
      */
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        Utils.log("SmartAlarm: show alarm dialog");
+
         // activate screen
         PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
         PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.ACQUIRE_CAUSES_WAKEUP | PowerManager.SCREEN_DIM_WAKE_LOCK, "SmartAlarm");
@@ -52,13 +62,13 @@ public class SmartAlarmService extends Service {
             }
         });
 
+        // display info in dialog
         SmartAlarmInfo sai = (SmartAlarmInfo) intent.getExtras().get(SmartAlarmReceiver.INFO);
         ((TextView) mView.findViewById(R.id.alarm_time)).setText(sai.getFormattedWakeupTime(getApplicationContext()));
         ((TextView) mView.findViewById(R.id.alarm_date)).setText(sai.getFormattedWakeupDate(getApplicationContext()));
         ((TextView) mView.findViewById(R.id.next_lecture_title)).setText(sai.getLectureTitle());
 
-        if (sai.getFirstTransportType() == SmartAlarmInfo.TransportType.PRIVATE) {
-        } else {
+        if (sai.getFirstTransportType() != SmartAlarmInfo.TransportType.PRIVATE) {
             if (sai.getFirstTransportType() == SmartAlarmInfo.TransportType.FOOT) {
                 String walkTo = getResources().getString(R.string.smart_alarm_walk_to);
                 ((TextView) mView.findViewById(R.id.transport_destination)).setText(walkTo + " " + sai.getFirstTrainDst());
@@ -82,21 +92,34 @@ public class SmartAlarmService extends Service {
                         | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON ,
                 PixelFormat.RGBA_8888);
 
-        // show alarm view
+        // finally show alarm view
         mWindowManager.addView(mView, mLayoutParams);
         mWindowManager.updateViewLayout(mView, mLayoutParams);
 
         // repeat vibrating the phone, 500ms on, 500ms off
-        ((Vibrator) getSystemService(Context.VIBRATOR_SERVICE)).vibrate(new long[]{0, 500, 500}, 0);
+        if (PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("smart_alarm_vibrate", false)) {
+            ((Vibrator) getSystemService(Context.VIBRATOR_SERVICE)).vibrate(new long[]{0, 500, 500}, 0);
+            stopVibrate = true;
+        }
+
+        // play ringtone
+        String ringtone = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("smart_alarm_ringtone", "");
+        if (!ringtone.equals("")) {
+            ringtoneURI = Uri.parse(ringtone);
+        }
+        RingtoneManager.getRingtone(getApplicationContext(), ringtoneURI).play();
 
         return START_NOT_STICKY;
     }
 
     /**
-     * Stops the vibration
+     * Stops the vibration and ringtone
      */
     @Override
     public void onDestroy() {
-        ((Vibrator) getSystemService(Context.VIBRATOR_SERVICE)).cancel();
+        if (stopVibrate) {
+            ((Vibrator) getSystemService(Context.VIBRATOR_SERVICE)).cancel();
+        }
+        RingtoneManager.getRingtone(getApplicationContext(), ringtoneURI).stop();
     }
 }
