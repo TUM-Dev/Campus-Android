@@ -126,7 +126,7 @@ public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<Vo
         Time t = new Time();
         t.setToNow();
         DayView.mLeftBoundary = Time.getJulianDay(t.toMillis(true), t.gmtoff);
-        LoadEventsRequestTimeTable req = new LoadEventsRequestTimeTable(roomInfo.getString(TUMRoomFinderRequest.KEY_ROOM_API_CODE));
+        LoadEventsRequestTimeTable req = new LoadEventsRequestTimeTable(roomInfo.getString(TUMRoomFinderRequest.KEY_ROOM_ID));
         fragment = new DayFragment(0, 1, new EventLoader(this, req));
         ft.add(android.R.id.content, fragment);
         ft.commit();
@@ -136,7 +136,7 @@ public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<Vo
         CharSequence[] list = new CharSequence[mapsList.size()];
         int curPos = 0;
         for (int i = 0; i < mapsList.size(); i++) {
-            list[i] = mapsList.get(i).get(TUMRoomFinderRequest.KEY_TITLE);
+            list[i] = mapsList.get(i).get(TUMRoomFinderRequest.KEY_DESCRIPTION);
             if (mapsList.get(i).get(TUMRoomFinderRequest.KEY_MAP_ID).equals(mapId)) {
                 curPos = i;
             }
@@ -155,7 +155,7 @@ public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<Vo
         new Thread(new Runnable() {
             @Override
             public void run() {
-                final Geo geo = request.fetchCoordinates(roomInfo.getString(TUMRoomFinderRequest.KEY_ARCHITECT_NUMBER));
+                final Geo geo = request.fetchCoordinates(roomInfo.getString(TUMRoomFinderRequest.KEY_ARCH_ID));
                 if (geo == null) {
                     Utils.showToastOnUIThread(RoomFinderDetailsActivity.this, R.string.no_map_available);
                     return;
@@ -188,11 +188,11 @@ public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<Vo
 
     @Override
     protected Bitmap onLoadInBackground(Void... arg) {
-        String arch_id = roomInfo.getString(TUMRoomFinderRequest.KEY_ARCHITECT_NUMBER);
+        String arch_id = roomInfo.getString(TUMRoomFinderRequest.KEY_ARCH_ID);
         String url = request.fetchDefaultMap(arch_id);
-
         return net.downloadImageToBitmap(url);
     }
+
 
     @Override
     protected void onLoadFinished(Bitmap result) {
@@ -213,7 +213,7 @@ public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<Vo
         new Thread(new Runnable() {
             @Override
             public void run() {
-                mapsList = request.fetchAvailableMaps(roomInfo.getString(TUMRoomFinderRequest.KEY_ARCHITECT_NUMBER));
+                mapsList = request.fetchAvailableMaps(roomInfo.getString(TUMRoomFinderRequest.KEY_ARCH_ID));
                 if (mapsList.size() > 1) {
                     mapsLoaded = true;
                     runOnUiThread(new Runnable() {
