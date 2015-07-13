@@ -164,9 +164,19 @@ public class TransportationActivity extends ActivityForSearchingInBackground<Cur
         // mQuery is not null if it was a real search
         // If there is exactly one station, open results directly
         if(stationCursor.getCount()==1 && mQuery!=null) {
-            stationCursor.moveToFirst();
-            showStation(stationCursor.getString(0));
-            return;
+            if (!returnResult) {
+                stationCursor.moveToFirst();
+                showStation(stationCursor.getString(0));
+                return;
+            } else {
+                // called by preferences screen => return result
+                Intent result = new Intent();
+                result.putExtra("station", stationCursor.getString(0));
+                setResult(RESULT_OK, result);
+
+                setResult = true;
+                finish();
+            }
         } else if(stationCursor.getCount()==0) {
             // When stationCursor is a MatrixCursor the result comes from querying a station name
             if(stationCursor instanceof MatrixCursor) {
