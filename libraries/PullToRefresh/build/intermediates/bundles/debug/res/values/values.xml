@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- From: file:/Users/carlodidomenico/TumCampusApp/libraries/PullToRefresh/src/main/res/values/attrs.xml -->
+    <eat-comment/>
+    <attr format="reference" name="ptrHeaderStyle"/>
+    <!-- From: file:/Users/carlodidomenico/TumCampusApp/libraries/PullToRefresh/src/main/res/values/colors.xml -->
+    <eat-comment/>
+    <color name="default_progress_bar_color">#FF33B5E5</color>
+    <declare-styleable name="PullToRefreshHeader"><attr format="reference|color" name="ptrHeaderBackground"/><attr format="reference|dimension" name="ptrHeaderHeight"/><attr format="reference" name="ptrHeaderTitleTextAppearance"/><attr format="reference|color" name="ptrProgressBarColor"/><attr name="ptrProgressBarStyle"><flag name="inside" value="0x0"/><flag name="outside" value="0x1"/></attr><attr format="reference|dimension" name="ptrProgressBarHeight"/><attr format="reference|string" name="ptrPullText"/><attr format="reference|string" name="ptrRefreshingText"/><attr format="reference|string" name="ptrReleaseText"/><attr format="reference" name="ptrSmoothProgressBarStyle"/></declare-styleable>
+    <declare-styleable name="PullToRefreshView"><attr format="reference|string" name="ptrViewDelegateClass"/></declare-styleable>
+    <!-- From: file:/Users/carlodidomenico/TumCampusApp/libraries/PullToRefresh/src/main/res/values/dimens.xml -->
+    <eat-comment/>
+    <dimen name="ptr_progress_bar_stroke_width">3dp</dimen>
+    <!-- From: file:/Users/carlodidomenico/TumCampusApp/libraries/PullToRefresh/src/main/res/values/ids.xml -->
+    <eat-comment/>
+    <item name="ptr_content" type="id"/>
+    <item name="ptr_progress" type="id"/>
+    <item name="ptr_text" type="id"/>
+    <!-- From: file:/Users/carlodidomenico/TumCampusApp/libraries/PullToRefresh/src/main/res/values/pull_refresh_strings.xml -->
+    <eat-comment/>
+    <string name="pull_to_refresh_pull_label">Pull to refresh…</string>
+    <string name="pull_to_refresh_refreshing_label">Loading…</string>
+    <string name="pull_to_refresh_release_label">Release to refresh…</string>
+</resources>

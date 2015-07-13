@@ -24,6 +24,8 @@
     <string name="dialog_delete_calendar">Do you want to delete  the <i>TUM_CAMPUS_APP</i>  calendar from your device?</string>
     <string name="calendar_deleted_toast">Calender deleted successfully</string>
     <string name="calendar_not_existing_toast">No local calendar existing</string>
+    <string name="semester_summer">Summer term</string>
+    <string name="semester_winter">Winter term</string>
 
     <!-- Roomfinder -->
     <string name="no_map_available">No map available</string>
@@ -453,8 +455,9 @@ Signature: %5$s</string>
     <string name="just_now">Just now</string>
     <string name="yesterday">Yesterday</string>
     <string name="add_widget">Add widget</string>
-
     <!-- Widget Mensa -->
     <string name="mensa_widget">Mensa Widget TUM</string>
+    <string name="support_us">Help us to spread the word about the Campus App! Like us on Facebook, suggest an exciting idea on Github or send a mail telling us what you think!</string>
+    <string name="support_email">tca-support.os.in@tum.de</string>
 
 </resources>

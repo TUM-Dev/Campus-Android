@@ -328,4 +328,7 @@
     <string name="status_sent">expédié</string>
     <string name="just_now">Juste maintenant</string>
     <string name="yesterday">Hier</string>
+    <string name="add_chat_member">Ajouter personne à salle de chat</string>
+    <string name="add_chat_room"> Nouveau Chat Room</string>
+    <string name="auto_join_chat">Joignez-vous à de nouvelles salles de cours</string>
 </resources>

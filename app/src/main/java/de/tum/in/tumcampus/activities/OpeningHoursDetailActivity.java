@@ -3,7 +3,7 @@ package de.tum.in.tumcampus.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
 import de.tum.in.tumcampus.R;
@@ -18,7 +18,7 @@ import de.tum.in.tumcampus.fragments.OpeningHoursDetailFragment;
  * This activity is mostly just a 'shell' activity containing nothing more than
  * a {@link OpeningHoursDetailFragment}.
  */
-public class OpeningHoursDetailActivity extends ActionBarActivity {
+public class OpeningHoursDetailActivity extends AppCompatActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
