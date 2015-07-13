@@ -69,7 +69,7 @@ public class KinoManager{
         NetUtils net = new NetUtils(mContext);
 
         // download from kino database
-        JSONArray jsonArray = net.downloadJsonArray(KINO_URL, CacheManager.VALIDITY_ONE_DAY, force);
+        JSONArray jsonArray = net.downloadJsonArray(KINO_URL + getLastId(), CacheManager.VALIDITY_ONE_DAY, force);
 
         if (jsonArray == null){
             return;
@@ -138,6 +138,18 @@ public class KinoManager{
                 new String[]{k.id, k.title, k.year, k.runtime, k.genre, k.director, k.actors, k.rating,
                         k.description, k.cover, k.trailer, Utils.getDateTimeString(k.date),
                         Utils.getDateTimeString(k.created), k.link});
+    }
+
+
+    // returns the last id in the database
+    private String getLastId() {
+        String lastId = "";
+        Cursor c = db.rawQuery("SELECT id FROM kino ORDER BY id DESC LIMIT 1", null);
+        if (c.moveToFirst()) {
+            lastId = c.getString(0);
+        }
+        c.close();
+        return lastId;
     }
 
 }
