@@ -91,6 +91,12 @@ public class SettingsFragment extends PreferenceFragment implements
         findPreference("feedback").setOnPreferenceClickListener(this);
         findPreference("privacy").setOnPreferenceClickListener(this);
 
+        // handle preference changes in on click listener (prevent duplicate change handling from widget)
+        findPreference("smart_alarm_active").setOnPreferenceClickListener(this);
+        findPreference("smart_alarm_transportmode").setOnPreferenceClickListener(this);
+        findPreference("smart_alarm_journeytime").setOnPreferenceClickListener(this);
+        findPreference("smart_alarm_morningtime").setOnPreferenceClickListener(this);
+
         // display mvv station in summary
         Preference mvv_station_picker = findPreference("smart_alarm_home_button");
         String station = PreferenceManager.getDefaultSharedPreferences(mContext).getString("smart_alarm_home", "");
@@ -103,16 +109,14 @@ public class SettingsFragment extends PreferenceFragment implements
         // display selected ringtone
         Preference ringtone_picker = findPreference("smart_alarm_ringtone");
         String ringtone = PreferenceManager.getDefaultSharedPreferences(mContext).getString("smart_alarm_ringtone", "");
-        Uri ringtoneURI;
-        if (ringtone == null || ringtone.equals("")) {
-            ringtoneURI = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
-        } else {
+        Uri ringtoneURI = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
+        if (!ringtone.equals("")) {
             ringtoneURI = Uri.parse(ringtone);
         }
         ringtone_picker.setSummary(RingtoneManager.getRingtone(mContext, ringtoneURI).getTitle(mContext));
 
         // Hide unneeded settings of smart alarm
-        if (((CheckBoxPreference)findPreference(Const.SMART_ALARM_MODE)).isChecked()) {
+        if (PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean(Const.SMART_ALARM_MODE, false)) {
             smartAlarmScreen.removePreference(smartAlarmPrivate);
         } else {
             smartAlarmScreen.removePreference(smartAlarmPublic);
@@ -365,40 +369,39 @@ public class SettingsFragment extends PreferenceFragment implements
                 startActivityForResult(ringtonePicker, RINGTONE_REQUEST);
                 break;
 
+            case Const.SMART_ALARM_ACTIVE:
+                if (PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean(Const.SMART_ALARM_ACTIVE, false)) {
+                    SmartAlarmUtils.scheduleAlarmWithProgressDialog(mContext, showProgressDialog());
+                } else {
+                    SmartAlarmUtils.cancelAlarm(mContext);
+                    SmartAlarmUtils.updateWidget(mContext, null, false);
+                }
+                break;
+
+            case Const.SMART_ALARM_MODE:
+                // show corresponding transport section
+                PreferenceScreen smartAlarmScreen = (PreferenceScreen) findPreference(Const.SMART_ALARM_SCREEN);
+                if (PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean(Const.SMART_ALARM_MODE, false)) {
+                    smartAlarmScreen.removePreference(findPreference(Const.SMART_ALARM_CAT_PRIVATE));
+                    smartAlarmScreen.addPreference(smartAlarmPublic);
+                } else {
+                    smartAlarmScreen.removePreference(findPreference(Const.SMART_ALARM_CAT_PUBLIC));
+                    smartAlarmScreen.addPreference(smartAlarmPrivate);
+                }
+                break;
+
             default:
                 return false;
         }
 
-
-        // activate / deactivate smart alarm
-        if (key.equals(Const.SMART_ALARM_ACTIVE)) {
-            //noinspection ConstantConditions
-            if (PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean(Const.SMART_ALARM_ACTIVE, false)) {
-                SmartAlarmUtils.scheduleAlarm(mContext, showProgressDialog());
-            } else {
-                SmartAlarmUtils.cancelAlarm(mContext);
-                SmartAlarmUtils.updateWidget(mContext, null, false);
-            }
-        }
-
-        if (key.equals(Const.SMART_ALARM_MODE)) {
-            PreferenceScreen smartAlarmScreen = (PreferenceScreen) findPreference(Const.SMART_ALARM_SCREEN);
-            //noinspection ConstantConditions
-            if (PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean(Const.SMART_ALARM_MODE, false)) {
-                smartAlarmScreen.removePreference(findPreference(Const.SMART_ALARM_CAT_PRIVATE));
-                smartAlarmScreen.addPreference(smartAlarmPublic);
-            } else {
-                smartAlarmScreen.removePreference(findPreference(Const.SMART_ALARM_CAT_PUBLIC));
-                smartAlarmScreen.addPreference(smartAlarmPrivate);
-            }
-        }
-
+        // update route information if alarm is active and route options have been changed
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
         if (sharedPreferences.getBoolean(Const.SMART_ALARM_ACTIVE, false)
                 && (key.equals(Const.SMART_ALARM_MODE)
                 || key.equals("smart_alarm_buffer")
-                || (sharedPreferences.getBoolean(Const.SMART_ALARM_MODE, false) && (key.equals("smart_alarm_morningtime") || key.equals("smart_alarm_home")))
+                || (sharedPreferences.getBoolean(Const.SMART_ALARM_MODE, false) && key.equals("smart_alarm_morningtime"))
                 || (!sharedPreferences.getBoolean(Const.SMART_ALARM_MODE, false) && key.equals("smart_alarm_journeytime")))) {
+            Utils.log("SmartAlarm: route option changes detected, recalculating..");
             SmartAlarmUtils.reSchedulePreAlarm(mContext, showProgressDialog());
         }
 
@@ -511,6 +514,7 @@ public class SettingsFragment extends PreferenceFragment implements
             prefEditor.apply();
 
             findPreference("smart_alarm_home_button").setSummary(station);
+
             return null;
         }
 
@@ -520,10 +524,20 @@ public class SettingsFragment extends PreferenceFragment implements
             mvgPd.setTitle(R.string.smart_alarm_home_validating);
             mvgPd.setCancelable(false);
             mvgPd.show();
+
+            SmartAlarmUtils.updateWidget(mContext, null, true);
         }
 
         @Override
         protected void onPostExecute(Object o) {
+            if (PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean(Const.SMART_ALARM_ACTIVE, false)) {
+                // station has been changed, update route
+                SmartAlarmUtils.scheduleAlarm(mContext);
+            } else {
+                // hide widget waiting message
+                SmartAlarmUtils.updateWidget(mContext, null, false);
+            }
+
             mvgPd.dismiss();
             if (o != null) {
                 Toast.makeText(mContext, (String) o, Toast.LENGTH_LONG).show();

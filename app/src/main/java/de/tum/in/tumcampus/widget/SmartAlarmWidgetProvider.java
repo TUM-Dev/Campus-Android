@@ -7,7 +7,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.preference.PreferenceManager;
-import android.widget.ImageButton;
 import android.widget.RemoteViews;
 
 import de.tum.in.tumcampus.R;

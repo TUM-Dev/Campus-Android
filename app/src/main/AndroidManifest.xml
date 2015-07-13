@@ -43,9 +43,11 @@
     <!-- For QR code scanner -->
     <uses-permission android:name="android.permission.CAMERA" />
 
-    <!-- For smart alarm -->
+    <!-- SmartAlarm: display alarm dialog on lock screen -->
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
+    <!-- SmartAlarm: activate alarm after reboot -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <!--
      Creates a custom permission so only this app can receive its messages.
@@ -461,14 +463,23 @@
                 <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
             </intent-filter>
         </receiver>
+
         <!-- Smart alarm receiver -->
-        <receiver android:name="de.tum.in.tumcampus.services.SmartAlarmReceiver" />
+        <receiver android:name="de.tum.in.tumcampus.services.SmartAlarmReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_REPLACED" />
+                <data android:scheme="package" android:path="de.tum.in.tumcampus" />
+            </intent-filter>
+        </receiver>
 
         <!-- Smart alarm widget -->
         <receiver android:name="de.tum.in.tumcampus.widget.SmartAlarmWidgetProvider" >
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-                <action android:name="de.tum.in.tumcampus.widget.SmartAlarmWidgetProvider.action.UPDATE_WIDGET" />
             </intent-filter>
 
             <meta-data android:name="android.appwidget.provider" android:resource="@xml/smart_alarm_widget_info" />
@@ -495,7 +506,6 @@
         <service
             android:name="de.tum.in.tumcampus.models.managers.CalendarManager$QueryLocationsService"
             android:exported="false" />
-
         <service android:name=".services.SmartAlarmService"
             android:exported="false"/>
         <service android:name=".services.GcmIntentService" />
