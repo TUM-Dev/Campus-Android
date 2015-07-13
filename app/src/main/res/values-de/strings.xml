@@ -365,4 +365,6 @@ Signatur: %5$s</string>
     <string name="privacy_policy">Datenschutzerklärung</string>
     <string name="just_now">Gerade eben</string>
     <string name="yesterday">Gestern</string>
+    <string name="semester_summer">Sommersemester</string>
+    <string name="semester_winter">Wintersemester</string>
 </resources>

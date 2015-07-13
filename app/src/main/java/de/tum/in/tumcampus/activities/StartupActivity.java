@@ -10,7 +10,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ImageView;
@@ -32,6 +32,7 @@ import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.FileUtils;
 import de.tum.in.tumcampus.auxiliary.ImplicitCounter;
 import de.tum.in.tumcampus.auxiliary.Utils;
+import de.tum.in.tumcampus.models.managers.CardManager;
 import de.tum.in.tumcampus.models.managers.DatabaseManager;
 import de.tum.in.tumcampus.services.DownloadService;
 import de.tum.in.tumcampus.services.StartSyncReceiver;
@@ -40,7 +41,7 @@ import de.tum.in.tumcampus.trace.ExceptionHandler;
 /**
  * Entrance point of the App.
  */
-public class StartupActivity extends ActionBarActivity {
+public class StartupActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +78,8 @@ public class StartupActivity extends ActionBarActivity {
             return;
         } else if (newVersion) {
             Utils.setSetting(this, Const.BACKGROUND_MODE, true);
+            Utils.setSetting(this, CardManager.SHOW_SUPPORT, true);
+
             Intent intent;
             if (new AccessTokenManager(this).hasValidAccessToken())
                 intent = new Intent(this, WizNavChatActivity.class);
@@ -182,7 +185,7 @@ public class StartupActivity extends ActionBarActivity {
      * @return Actionbar height
      */
     protected int getActionBarHeight() {
-        int[] attrs = {uk.co.senab.actionbarpulltorefresh.library.R.attr.actionBarSize};
+        int[] attrs = {R.attr.actionBarSize};
         TypedArray values = obtainStyledAttributes(attrs);
         try {
             return values.getDimensionPixelSize(0, 0);

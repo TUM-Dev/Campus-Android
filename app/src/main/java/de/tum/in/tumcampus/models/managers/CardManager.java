@@ -14,6 +14,7 @@ import de.tum.in.tumcampus.cards.FirstUseCard1;
 import de.tum.in.tumcampus.cards.FirstUseCard2;
 import de.tum.in.tumcampus.cards.NoInternetCard;
 import de.tum.in.tumcampus.cards.RestoreCard;
+import de.tum.in.tumcampus.cards.Support;
 
 /**
  * Card manager, manages inserting, dismissing, updating and displaying of cards
@@ -21,6 +22,7 @@ import de.tum.in.tumcampus.cards.RestoreCard;
 public class CardManager {
     public static final String SHOW_TUTORIAL_1 = "show_tutorial_1";
     public static final String SHOW_TUTORIAL_2 = "show_tutorial_2";
+    public static final String SHOW_SUPPORT = "show_support";
 
     /**
      * Card typ constants
@@ -36,6 +38,7 @@ public class CardManager {
     public static final int CARD_NEWS = 9;
     public static final int CARD_EDUROAM = 10;
     public static final int CARD_CHAT = 11;
+    public static final int CARD_SUPPORT = 12;
 
     private static List<Card> cards;
     private static ArrayList<Card> newCards;
@@ -101,6 +104,8 @@ public class CardManager {
         // Add first use tutorial
         new FirstUseCard1(context).apply();
         new FirstUseCard2(context).apply();
+
+        new Support(context).apply();
 
         new EduroamCard(context).apply();
 

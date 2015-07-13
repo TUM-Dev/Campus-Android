@@ -1,4 +1,4 @@
-# TumCampusApp
+# TumCampusApp [![Build Status](https://travis-ci.org/TCA-Team/TumCampusApp.svg?branch=master)](https://travis-ci.org/TCA-Team/TumCampusApp) [![Build Status](https://travis-ci.org/TCA-Team/TumCampusApp.svg?branch=v14)](https://travis-ci.org/TCA-Team/TumCampusApp) [![Dependency Status](https://www.versioneye.com/user/projects/5569427e63653200265a1500/badge.svg?style=flat)](https://www.versioneye.com/user/projects/5569427e63653200265a1500) [![Dependency Status](https://www.versioneye.com/user/projects/5569426a636532001a4f1500/badge.svg?style=flat)](https://www.versioneye.com/user/projects/5569426a636532001a4f1500)
 
 Die TUM Campus App wird von Studierenden des Android Praktikums, freiwilligen Helfern und Lehrstuhlmitarbeitern entwickelt. Die App eignet sich sowohl zur Verwendung auf Smartphones, wie auch Tablets.
 
@@ -22,6 +22,11 @@ Die TUM Campus App wird von Studierenden des Android Praktikums, freiwilligen He
 #### Aktive Entwickler (Sommersemester 2015):
 + Kordian Bruck
 + Philipp Fent
++ Thomas Mauerer
++ Michael Hesse
++ Arash Khatayee
++ Carlo Di Domenico
++ Enrico Gigantiello
 
 #### Weitere Entwickler:
 Florian Dreier, Jana Pejic, Marko Lalic, Sascha Moecker, Haris Iltifat, Anas Chakfeh, Thomas Krex, Marius Muntean, Christoph Richter, Thomas Bley, Vincenz Dölle, Daniel Mayr, Thomas Behrens, Florian Schulz, Vasyl Malinskyi, Andreas Bernhofer (IT-Support/TUMonline), Nils T. Kannengiesser (F13)

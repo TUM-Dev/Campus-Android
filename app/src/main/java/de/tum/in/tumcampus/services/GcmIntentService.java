@@ -91,6 +91,12 @@ public class GcmIntentService extends IntentService {
 
     // Put the message into a notification and post it.
     private void sendNotification(Bundle extras) {
+        //Catch newer gcm messages which can be different from chat messages
+        //Dismiss them for now
+        if (extras.containsKey("payload") && extras.containsKey("type")) {
+            return;
+        }
+
         //Get the update details
         int chatRoomId = Integer.parseInt(extras.getString("room"));
         int memberId = Integer.parseInt(extras.getString("member"));
@@ -139,7 +145,7 @@ public class GcmIntentService extends IntentService {
 
         if (Utils.getSettingBool(this, "card_chat_phone", true) && messageId == -1) {
 
-            PendingIntent contentIntent = sBuilder.getPendingIntent( 0, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_ONE_SHOT );
+            PendingIntent contentIntent = sBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_ONE_SHOT);
 
             // Notification sound
             Uri sound = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.message);

@@ -3,4 +3,4 @@
     android:minWidth="250dp" android:minHeight="110dp" android:updatePeriodMillis="36000000"
     android:initialLayout="@layout/mensa_widget" android:resizeMode="horizontal|vertical"
     android:widgetCategory="home_screen"
-    android:initialKeyguardLayout="@layout/mensa_widget"></appwidget-provider>
+    android:initialKeyguardLayout="@layout/mensa_widget"/>
