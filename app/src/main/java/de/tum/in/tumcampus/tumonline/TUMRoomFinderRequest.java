@@ -6,22 +6,15 @@ import android.os.AsyncTask;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
 
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.auxiliary.NetUtils;
 import de.tum.in.tumcampus.auxiliary.Utils;
-import de.tum.in.tumcampus.auxiliary.XMLParser;
 import de.tum.in.tumcampus.auxiliary.calendar.Event;
 import de.tum.in.tumcampus.models.Geo;
 import de.tum.in.tumcampus.models.managers.CacheManager;
@@ -32,38 +25,35 @@ import de.tum.in.tumcampus.models.managers.CacheManager;
 public class TUMRoomFinderRequest {
 
     // Json keys
-    public static final String KEY_ARCHITECT_NUMBER = "architect_number";
-    public static final String KEY_MAP_ID = "Id";
-    public static final String KEY_TITLE = "title";
-    public static final String KEY_ROOM_API_CODE = "room_api_code";
-    public static final String KEY_CAMPUS_ID = "campusId";
-    public static final String KEY_CAMPUS_TITLE = "campusTitle";
-    public static final String KEY_BUILDING_TITLE = "buildingTitle";
-    public static final String KEY_ROOM_TITLE = "roomTitle";
-    public static final String KEY_BUILDING_ID = "buildingId";
+    public static final String KEY_ARCH_ID = "arch_id";
+    public static final String KEY_MAP_ID = "map_id";
+    public static final String KEY_DESCRIPTION = "description";
+    public static final String KEY_ROOM_ID = "room_id";
+    public static final String KEY_CAMPUS_ID = "campus";
+    public static final String KEY_CAMPUS_TITLE = "name";
+    public static final String KEY_BUILDING_TITLE = "address";
+    public static final String KEY_ROOM_TITLE = "info";
     public static final String KEY_UTM_ZONE = "utm_zone";
     public static final String KEY_UTM_EASTING = "utm_easting";
     public static final String KEY_UTM_NORTHING = "utm_northing";
+
+    // Api urls
+    private static final String API_BASE_URL = "http://portal.dev/Api/roomfinder/";
+
+    private static final String API_URL_SEARCH = API_BASE_URL + "room/search/";
+    private static final String API_URL_DEFAULT_MAP = API_BASE_URL + "room/defaultMap/";
+    private static final String API_URL_COORDINATES = API_BASE_URL + "room/coordinates/";
+    private static final String API_URL_AVAILABLE_MAPS = API_BASE_URL + "room/availableMaps/";
+    private static final String API_URL_SCHEDULE = API_BASE_URL + "room/scheduleById/";
 
     /**
      * asynchronous task for interactive fetch
      */
     private AsyncTask<String, Void, ArrayList<HashMap<String, String>>> backgroundTask = null;
 
-    /**
-     * method to call
-     */
-    private String method = null;
-    /**
-     * a list/map for the needed parameters
-     */
-    private final Map<String, String> parameters;
-    private final String SERVICE_BASE_URL = "http://vmbaumgarten3.informatik.tu-muenchen.de/";
     private NetUtils net;
 
     public TUMRoomFinderRequest(Context context) {
-        parameters = new HashMap<>();
-        method = "search";
         net = new NetUtils(context);
     }
 
@@ -82,7 +72,7 @@ public class TUMRoomFinderRequest {
      */
     public Geo fetchCoordinates(String archId) {
 
-        String url = "http://portal.dev/Api/roomfinder/room/coordinates/" + archId;
+        String url = API_URL_COORDINATES + encodeUrl(archId);
 
         try {
             JSONObject jsonObject = net.downloadJson(url);
@@ -92,9 +82,7 @@ public class TUMRoomFinderRequest {
 
             return UTMtoLL(northing, easting, zone);
 
-        } catch (JSONException e) {
-            Utils.log(String.valueOf(e));
-        } catch (IOException e) {
+        } catch (Exception e) {
             Utils.log(String.valueOf(e));
         }
 
@@ -111,7 +99,7 @@ public class TUMRoomFinderRequest {
     public ArrayList<HashMap<String, String>> fetchRooms(String searchString) {
 
         ArrayList<HashMap<String, String>> roomsList = new ArrayList<>();
-        String url = "http://portal.dev/Api/roomfinder/room/search/" + searchString;
+        String url = API_URL_SEARCH + encodeUrl(searchString);
         JSONArray jsonArray = net.downloadJsonArray(url, CacheManager.VALIDITY_DO_NOT_CACHE, true);
 
         if (jsonArray == null) {
@@ -119,17 +107,15 @@ public class TUMRoomFinderRequest {
         }
 
         try {
-            // TODO: needs an update
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject obj = jsonArray.getJSONObject(i);
                 HashMap<String, String> roomMap = new HashMap<>();
-                roomMap.put(KEY_CAMPUS_ID, String.valueOf(this.getCampusTitle(obj.getString("arch_id")).charAt(0)));
-                roomMap.put(KEY_CAMPUS_TITLE, this.getCampusTitle(obj.getString("arch_id")));
-                roomMap.put(KEY_BUILDING_TITLE, obj.getString("address"));
-                roomMap.put(KEY_ROOM_TITLE, obj.getString("info"));
-                roomMap.put(KEY_BUILDING_ID, obj.getString("unit_id"));
-                roomMap.put(KEY_ARCHITECT_NUMBER, obj.getString("arch_id"));
-                roomMap.put(KEY_ROOM_API_CODE, obj.getString("room_id"));
+                roomMap.put(KEY_CAMPUS_ID, obj.getString(KEY_CAMPUS_ID));
+                roomMap.put(KEY_CAMPUS_TITLE, obj.getString(KEY_CAMPUS_TITLE));
+                roomMap.put(KEY_BUILDING_TITLE, obj.getString(KEY_BUILDING_TITLE));
+                roomMap.put(KEY_ROOM_TITLE, obj.getString(KEY_ROOM_TITLE));
+                roomMap.put(KEY_ARCH_ID, obj.getString(KEY_ARCH_ID));
+                roomMap.put(KEY_ROOM_ID, obj.getString(KEY_ROOM_ID));
 
                 // adding HashList to ArrayList
                 roomsList.add(roomMap);
@@ -148,15 +134,18 @@ public class TUMRoomFinderRequest {
      * @return url of default map
      */
     public String fetchDefaultMap(String archId) {
-        return "http://portal.dev/Api/roomfinder/room/defaultMap/" + archId;
+        return API_URL_DEFAULT_MAP + encodeUrl(archId);
     }
 
-
-
+    /**
+     * fetches all available maps of the room or building
+     * @param archId architecture id
+     * @return list of HashMap representing available maps
+     */
     public ArrayList<HashMap<String, String>> fetchAvailableMaps(String archId) {
 
         ArrayList<HashMap<String, String>> mapsList = new ArrayList<>();
-        String url = "http://portal.dev/Api/roomfinder/room/availableMaps/" + archId;
+        String url = API_URL_AVAILABLE_MAPS + encodeUrl(archId);
 
         JSONArray jsonArray = net.downloadJsonArray(url, CacheManager.VALIDITY_DO_NOT_CACHE, true);
 
@@ -168,8 +157,8 @@ public class TUMRoomFinderRequest {
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject obj = jsonArray.getJSONObject(i);
                 HashMap<String, String> mapMap = new HashMap<>();
-                mapMap.put(KEY_MAP_ID, obj.getString("map_id"));
-                mapMap.put(KEY_TITLE, obj.getString("description"));
+                mapMap.put(KEY_MAP_ID, obj.getString(KEY_MAP_ID));
+                mapMap.put(KEY_DESCRIPTION, obj.getString(KEY_DESCRIPTION));
 
                 // adding HashList to ArrayList
                 mapsList.add(mapMap);
@@ -182,43 +171,37 @@ public class TUMRoomFinderRequest {
     }
 
     /**
-     * fetches the room schedule for a given room e.g. 62015 = Interims HS 2
-     * @param roomApiCode rooms api code
+     * fetches the room schedule for a given room
+     * @param roomId roomId
      * @return List of Events
      */
-    public ArrayList<Event> fetchRoomSchedule(String roomApiCode, String startDate, String endDate, ArrayList<Event> scheduleList) {
-        setParameter("start_date", startDate);
-        setParameter("end_date", endDate);
-        method = roomApiCode;
+    public ArrayList<Event> fetchRoomSchedule(String roomId, String startDate, String endDate, ArrayList<Event> scheduleList) {
 
-        String ROOM_SERVICE_DEFAULT_MAP_URL = SERVICE_BASE_URL + "schedule/room/";
-        String url = getRequestURL(ROOM_SERVICE_DEFAULT_MAP_URL);
-        Utils.log("fetching Map URL " + url);
+        String url = API_URL_SCHEDULE + encodeUrl(roomId) + "/" + encodeUrl(startDate) + "/" + encodeUrl(endDate);
+
+        JSONArray jsonArray = net.downloadJsonArray(url, CacheManager.VALIDITY_DO_NOT_CACHE, true);
+
+        if (jsonArray == null){
+            return scheduleList;
+        }
 
         try {
-
-            XMLParser parser = new XMLParser();
-            String xml = parser.getXmlFromUrl(url); // getting XML from URL
-            Document doc = parser.getDomElement(xml); // getting DOM element
-
-            NodeList scheduleNodes = doc.getElementsByTagName("event");
-
-            for (int k = 0; k < scheduleNodes.getLength(); k++) {
-                Element schedule = (Element) scheduleNodes.item(k);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject obj = jsonArray.getJSONObject(i);
                 Event event = Event.newInstance();
-                event.id = Long.parseLong(parser.getValue(schedule, "eventID"));
-                event.title = parser.getValue(schedule, "title");
-                String start = parser.getValue(schedule, "begin_time");
-                String end = parser.getValue(schedule, "end_time");
+                event.id = obj.getLong("event_id");
+                event.title = obj.getString("title");
+                String start = obj.getString("start");
+                String end = obj.getString("end");
                 event.setStart(Utils.getISODateTime(start));
                 event.setEnd(Utils.getISODateTime(end));
                 event.color = Event.getDisplayColorFromColor(0xff28921f);
                 scheduleList.add(event);
             }
-        } catch (Exception e) {
-            Utils.log(e, "FetchError");
-            // return e.getMessage();
+        } catch (JSONException e) {
+            Utils.log(String.valueOf(e));
         }
+
         return scheduleList;
     }
 
@@ -280,54 +263,18 @@ public class TUMRoomFinderRequest {
     }
 
     /**
-     * This will return the URL to the TUMRoomFinderRequest with regard to the
-     * set parameters
+     * encodes an url
      *
-     * @return a String URL
+     * @param url input url
+     * @return ecoded url
      */
-    String getRequestURL(String baseURL) {
-        String url = baseURL + method + "?";
-        for (Entry<String, String> pairs : parameters.entrySet()) {
-            url += pairs.getKey() + "=" + pairs.getValue() + "&";
+    private String encodeUrl(String url) {
+        try {
+            url = URLEncoder.encode(url, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            Utils.log(String.valueOf(e));
         }
         return url;
-    }
-
-    /**
-     * Sets one parameter name to its given value and deletes all others
-     *
-     * @param name  identifier of the parameter
-     * @param value value of the parameter
-     */
-    void setParameter(String name, String value) {
-        parameters.clear();
-        try {
-            parameters.put(name, URLEncoder.encode(value, "UTF-8"));
-        } catch (UnsupportedEncodingException e) {
-            Utils.log(e);
-        }
-    }
-
-    // TODO: not finished yet. Can be completely removed when info is fetched from backend
-    private String getCampusTitle(String archId) {
-        if (archId.length() == 0)
-            return "undefined";
-
-        int buildingNr = Character.getNumericValue(archId.substring(archId.indexOf('@') + 1).charAt(0));
-        switch (buildingNr) {
-            case 0 : return "Stammgelände";
-            case 1 : return "undefined"; //evtl Klinikum Rechts der Isar
-            case 2 : return "München"; // München
-            case 3 : return "undefined";
-            case 4 : return "Weihenstephan";
-            case 5 : return "Garching";
-            case 6 : return "Garching";
-            case 7 : return "undefined";
-            case 8 : return "Garching Hochbrück";
-            case 9 : return "undefined";
-
-            default: return "undefined";
-        }
     }
 
     /**

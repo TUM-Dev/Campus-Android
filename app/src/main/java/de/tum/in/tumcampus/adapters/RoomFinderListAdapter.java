@@ -93,11 +93,14 @@ public class RoomFinderListAdapter extends BaseAdapter implements StickyListHead
     @Override
     public long getHeaderId(int i) {
         String headerText = data.get(i).get(TUMRoomFinderRequest.KEY_CAMPUS_TITLE);
+        /*
         if(headerText.equals("Garching-Hochbrück"))
             return 'X';
         if(headerText.equals("Sonstiges"))
             return 'Z';
-        return data.get(i).get(TUMRoomFinderRequest.KEY_CAMPUS_ID).charAt(0);
+            */
+        return headerText.hashCode();
+        //return data.get(i).get(TUMRoomFinderRequest.KEY_CAMPUS_ID).charAt(0);
     }
 
     static class HeaderViewHolder {
