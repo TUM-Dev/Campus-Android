@@ -8,6 +8,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.GregorianCalendar;
 
 import de.tum.in.tumcampus.R;
 
@@ -19,6 +20,7 @@ public class DateUtils {
 
     private static final String formatSQL = "yyyy-MM-dd HH:mm:ss"; // 2014-06-30 16:31:57
     private static final String formatISO = "yyyy-MM-dd'T'HH:mm:ss'Z'"; // 2014-06-30T16:31:57.878Z
+    private static final String SIMPLE_DATE_FORMAT = "EEE MMM dd HH:mm:ss zzz yyyy";
     private static final String logTag = "DateUtils";
 
     public static String getRelativeTimeISO(String timestamp, Context context) {
@@ -91,9 +93,38 @@ public class DateUtils {
         return null;
     }
 
+
+    public static Date parseSimpleDateFormat(String datetime) {
+        if(datetime == null) {
+            return null;
+        }
+        try {
+            SimpleDateFormat formatter = new SimpleDateFormat(SIMPLE_DATE_FORMAT, Locale.ENGLISH);
+            return formatter.parse(datetime);
+        } catch (ParseException e) {
+            Log.e(logTag, "Parsing SIMPLE_DATE_FORMAT date failed");
+        }
+        return null;
+    }
+
     private static Time getCurrentTime() {
         Time now = new Time();
         now.setToNow();
         return now;
     }
+
+    public static GregorianCalendar epochToDate(Long epochTime){
+        /**
+         * gets the epochTime in seconds
+         * returns the corresponding GeorgianCalendar
+         */
+        if(epochTime == null) {
+            return null;
+        }
+        GregorianCalendar c = new GregorianCalendar();
+        //  This method gets the epochTime in milliseconds
+        c.setTimeInMillis(epochTime * 1000);
+        return c;
+    }
+
 }

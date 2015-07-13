@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <menu xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tumcampus="http://schemas.android.com/apk/res-auto">
+    <item
+         android:id="@+id/moodle_my_courses"
+         android:title="@string/moodle_courses"
+         tumcampus:showAsAction="ifRoom" />
+        <item
+        android:id="@+id/events"
+        android:title="@string/moodle_events"
+        tumcampus:showAsAction="ifRoom" />
+</menu>
