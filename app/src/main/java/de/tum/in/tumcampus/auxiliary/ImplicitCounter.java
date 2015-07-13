@@ -35,8 +35,8 @@ public class ImplicitCounter extends AsyncTask<String, Integer, Void> {
 
     /**
      * Counting number of the times that the user used this activity.
-     * Only call this in the {@link android.support.v7.app.ActionBarActivity#onCreate(android.os.Bundle)}
-     * method of a direct subclass of {@link android.support.v7.app.ActionBarActivity}
+     * Only call this in the {@link android.support.v7.app.AppCompatActivity#onCreate(android.os.Bundle)}
+     * method of a direct subclass of {@link android.support.v7.app.AppCompatActivity}
      *
      * @param c Pointer to the activity that has been opened
      */

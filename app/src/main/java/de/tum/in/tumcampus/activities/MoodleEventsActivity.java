@@ -2,7 +2,6 @@ package de.tum.in.tumcampus.activities;
 
 
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.CalendarContract;
@@ -19,7 +18,6 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 import de.tum.in.tumcampus.R;
-import de.tum.in.tumcampus.activities.generic.ActivityForDownloadingExternal;
 import de.tum.in.tumcampus.activities.generic.ProgressActivity;
 import de.tum.in.tumcampus.adapters.MoodleEventAdapter;
 import de.tum.in.tumcampus.auxiliary.DateUtils;
@@ -37,7 +35,6 @@ import de.tum.in.tumcampus.models.managers.RealMoodleManager;
 public class MoodleEventsActivity extends ProgressActivity implements AdapterView.OnItemClickListener, MoodleUpdateDelegate {
 
     MoodleManager realManager;
-    ProgressDialog mDialog;
 
     private RecyclerView eventsRecyclerView;
     private RecyclerView.LayoutManager eventsLayoutManager;
@@ -54,7 +51,6 @@ public class MoodleEventsActivity extends ProgressActivity implements AdapterVie
 
         baseSetUp();
         showLoadingStart();
-        //mDialog.show();
         realManager.requestUserEvents(this);
     }
 
@@ -94,10 +90,6 @@ public class MoodleEventsActivity extends ProgressActivity implements AdapterVie
                 // Do nothing
                 Utils.showToast(this,R.string.moodle_stay_here);
                 return true;
-
-            case R.id.moodle_profile:
-                //TODO change this part to show user profile not course with course id=62 ! Fucker!
-                return true;
         }
         return false;
     }
@@ -106,8 +98,8 @@ public class MoodleEventsActivity extends ProgressActivity implements AdapterVie
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-       //TODO do something for the previous versions of android
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+        // start the calendar application if the sdk version of the device is OK
+       if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
             TextView name = (TextView) findViewById(R.id.event_title);
             TextView description_view = (TextView) findViewById(R.id.event_description);
             TextView date_view = (TextView) findViewById(R.id.event_date);

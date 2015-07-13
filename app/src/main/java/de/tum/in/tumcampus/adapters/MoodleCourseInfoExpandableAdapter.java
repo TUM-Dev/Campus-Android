@@ -53,7 +53,7 @@ public class MoodleCourseInfoExpandableAdapter extends BaseExpandableListAdapter
     final int MODULE_HEADER = 500;
     final int NOT_KNOWN = 0;
 
-    // types for drawable indicator
+    // types for drawable indicator icon
     private static final int[] EMPTY_STATE_SET = {};
     private static final int[] GROUP_EXPANDED_STATE_SET =
             {android.R.attr.state_expanded};

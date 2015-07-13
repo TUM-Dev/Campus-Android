@@ -219,22 +219,7 @@ public class RealMoodleManager extends MoodleManager {
             if (moodleToken.isValid()){
                 setMoodleUserToken(moodleToken);
                 Utils.log("UserToken is valid");
-                /* arash: I commented this, MoodlemainActivity class
-                is responsible to call requestUserData method !
-                because of the nature of the refreshing the delegate
-                class if moodlemanager wants to start login activity
-                calling requestUserdata within moodlemanager will cause
-                 confusion and bug in loginActivity's refresh method
-                either refresh method should be changed inorder to include
-                 some data about the APIcommand which is refreshing the delegate
-                 or just MoodlemainActivty must be held responsible for calling
-                 requestmoodleuser data
-                 because of the aynch nature of calling API commands
-                 I set requestUserData to refresh the delegate in order to avoid
-                 null pointerException when requesting e.g userCourseList within
-                 mainActivity. It is not obvious when userdata will be available
-                */
-                //requestUserData(currentContext);
+
                 saveUserToken();
             }else {
                 if (moodleToken.getErrorCode().equals("invalidtoken")){

@@ -1,3 +1,2 @@
 include ':app', ':libraries'
 include ':libraries:emojicon'
-include ':libraries:PullToRefresh'
