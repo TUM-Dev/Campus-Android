@@ -42,6 +42,7 @@ public class TUMRoomFinderRequest {
 
     private static final String API_URL_SEARCH = API_BASE_URL + "room/search/";
     private static final String API_URL_DEFAULT_MAP = API_BASE_URL + "room/defaultMap/";
+    private static final String API_URL_MAP = API_BASE_URL + "room/map/";
     private static final String API_URL_COORDINATES = API_BASE_URL + "room/coordinates/";
     private static final String API_URL_AVAILABLE_MAPS = API_BASE_URL + "room/availableMaps/";
     private static final String API_URL_SCHEDULE = API_BASE_URL + "room/scheduleById/";
@@ -135,6 +136,17 @@ public class TUMRoomFinderRequest {
      */
     public String fetchDefaultMap(String archId) {
         return API_URL_DEFAULT_MAP + encodeUrl(archId);
+    }
+
+    /**
+     * returns the url for any map
+     *
+     * @param archId architecture id
+     * @param mapId map id
+     * @return url of map
+     */
+    public String fetchMap(String archId, String mapId) {
+        return API_URL_MAP + encodeUrl(archId) + "/" + encodeUrl(mapId);
     }
 
     /**
