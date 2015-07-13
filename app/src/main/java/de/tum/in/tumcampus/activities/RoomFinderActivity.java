@@ -7,8 +7,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,7 +16,6 @@ import de.tum.in.tumcampus.activities.generic.ActivityForSearching;
 import de.tum.in.tumcampus.adapters.NoResultsAdapter;
 import de.tum.in.tumcampus.adapters.RoomFinderListAdapter;
 import de.tum.in.tumcampus.auxiliary.RoomFinderSuggestionProvider;
-import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.managers.RecentsManager;
 import de.tum.in.tumcampus.tumonline.TUMRoomFinderRequest;
 import de.tum.in.tumcampus.tumonline.TUMRoomFinderRequestFetchListener;
@@ -71,13 +68,7 @@ public class RoomFinderActivity extends ActivityForSearching implements TUMRoomF
 
     @Override
     public void onStartSearch(String query) {
-        String new_query = "";
-        try {
-            new_query = URLEncoder.encode(query, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            Utils.log(String.valueOf(e));
-        }
-        roomFinderRequest.fetchSearchInteractive(this, this, new_query);
+        roomFinderRequest.fetchSearchInteractive(this, this, query);
     }
 
     @Override
