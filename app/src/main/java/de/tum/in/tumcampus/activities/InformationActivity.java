@@ -9,7 +9,7 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.text.format.DateUtils;
 import android.view.View;
 import android.widget.TableLayout;
@@ -24,7 +24,7 @@ import de.tum.in.tumcampus.auxiliary.Utils;
 /**
  * Provides information about this app and all contributors
  */
-public class InformationActivity extends ActionBarActivity {
+public class InformationActivity extends AppCompatActivity {
 
     private TableRow.LayoutParams rowParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT);
     private int debugOptionsCount = 0;

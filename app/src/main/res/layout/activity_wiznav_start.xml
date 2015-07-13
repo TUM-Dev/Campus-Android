@@ -17,7 +17,7 @@
             style="@style/SectionHeadline"
             android:text="@string/startup_wizard_uppercase" />
 
-        <uk.co.senab.actionbarpulltorefresh.extras.actionbarcompat.PullToRefreshLayout
+        <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/ptr_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -60,7 +60,7 @@
                 </LinearLayout>
             </ScrollView>
 
-        </uk.co.senab.actionbarpulltorefresh.extras.actionbarcompat.PullToRefreshLayout>
+        </android.support.v4.widget.SwipeRefreshLayout>
 
         <View
             android:id="@+id/divider"

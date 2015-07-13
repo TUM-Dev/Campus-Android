@@ -29,9 +29,9 @@ import de.tum.in.tumcampus.tumonline.TUMRoomFinderRequest;
 public class AlarmSchedulerTask extends AsyncTask {
     private static final int MONTH_BEFORE = 0;
     private static final int MONTH_AFTER = 3;
-    private static final int RETRY_THRESHHOLD = 20;
-    private static final int RETRY_INTERVAL = 8;
-    private static final int RETRY_NOINTERNET_INTERVAL = 1;
+    public static final int RETRY_THRESHHOLD = 20;
+    public static final int RETRY_INTERVAL = 8;
+    public static final int RETRY_NOINTERNET_INTERVAL = 1;
 
     private Context c;
 
@@ -72,7 +72,7 @@ public class AlarmSchedulerTask extends AsyncTask {
 
         int buffer = Integer.parseInt(prefs.getString("smart_alarm_buffer", "10"));
         if (lastAlarm == null) {
-            return new InsufficientDataException(c.getString(R.string.SMART_ALARM_INTERNAL_ERROR), InsufficientDataException.NEVER);
+            return new InsufficientDataException(c.getString(R.string.smart_alarm_internal_error), InsufficientDataException.NEVER);
         }
 
         if (!publicTransport) {
@@ -115,12 +115,15 @@ public class AlarmSchedulerTask extends AsyncTask {
                     }
 
                     if (e.isLectureTooSoon()) {
+                        int hoursUntilLecture;
+                        if (e.getLectureTime() == -1) hoursUntilLecture = RETRY_INTERVAL;
+                        else hoursUntilLecture = (int) ((e.getLectureTime() - System.currentTimeMillis())/SmartAlarmUtils.HOURINMS + 1);
+
                         // lecture is too soon, show error and continue with the first one on the following day
-                        int hoursUntilLecture = (int) ((e.getLectureTime() - System.currentTimeMillis())/SmartAlarmUtils.HOURINMS + 1);
                         SmartAlarmUtils.retryWithError(c, e.getMessage(), hoursUntilLecture);
                     } else {
                         // retry in RETRY_NOINTERNET_INTERVAL hours
-                        SmartAlarmUtils.retryWithInfo(c, c.getString(R.string.SMART_ALARM_FETCH_ERROR), RETRY_NOINTERNET_INTERVAL);
+                        SmartAlarmUtils.retryWithInfo(c, c.getString(R.string.smart_alarm_fetch_error));
                     }
                     break;
 
@@ -145,7 +148,7 @@ public class AlarmSchedulerTask extends AsyncTask {
         int station_home = prefs.getInt("smart_alarm_home_id", -1);
         int minutesAtHome = Integer.parseInt(prefs.getString("smart_alarm_morningtime", "60"));
         if (station_home == -1) {
-            return new InsufficientDataException(c.getString(R.string.SMART_ALARM_NO_HOME), InsufficientDataException.NEVER);
+            return new InsufficientDataException(c.getString(R.string.smart_alarm_no_home), InsufficientDataException.NEVER);
         }
 
         SmartAlarmUtils.LectureInfo lecture = null;
@@ -157,14 +160,14 @@ public class AlarmSchedulerTask extends AsyncTask {
         }
 
         if (lecture.getArchId() == null || lecture.getArchId().equals("") && sai == null) {
-            return new InsufficientDataException(c.getString(R.string.SMART_ALARM_UNKNOWN_LOCATION), InsufficientDataException.NEVER);
+            return new InsufficientDataException(c.getString(R.string.smart_alarm_unknown_location), InsufficientDataException.NEVER);
         }
 
         TUMRoomFinderRequest roomFinder = new TUMRoomFinderRequest(c);
         String street = roomFinder.fetchRoomStreet(lecture.getArchId());
 
         if (street == null && sai == null) {
-            return new InsufficientDataException(c.getString(R.string.SMART_ALARM_UNSUPPORTED_LOCATION),
+            return new InsufficientDataException(c.getString(R.string.smart_alarm_unsupported_location),
                     lecture.getStart().getTime(), InsufficientDataException.FOLLOWINGLECTURE);
         }
 
@@ -175,7 +178,7 @@ public class AlarmSchedulerTask extends AsyncTask {
         else alarmInfo = SmartAlarmUtils.calculateJourney(c, station_home, street, arrivalAtCampus);
 
         if (alarmInfo == null && sai == null) {
-            return new InsufficientDataException(c.getString(R.string.SMART_ALARM_FETCH_ROUTE_ERRORing_smart_alarm_fetch_route_error), lecture.getStart().getTime(), InsufficientDataException.SOON);
+            return new InsufficientDataException(c.getString(R.string.smart_alarm_fetch_route_error), lecture.getStart().getTime(), InsufficientDataException.SOON);
         }
 
         alarmInfo.setWakeupTime(alarmInfo.getDeparture() - minutesAtHome * SmartAlarmUtils.MINUTEINMS);
@@ -218,12 +221,18 @@ public class AlarmSchedulerTask extends AsyncTask {
         i.putExtra(SmartAlarmReceiver.INFO, info);
         PendingIntent pi = PendingIntent.getBroadcast(c, 0, i, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        // TODO: comment at deployment
-        scheduleTime = System.currentTimeMillis() + 3000;
         alarmManager.set(AlarmManager.RTC_WAKEUP, scheduleTime, pi);
 
         // update widgets
         SmartAlarmUtils.updateWidget(c, info, false);
+
+        Utils.log("SmartAlarm: scheduled " + action + " at "
+                + android.text.format.DateUtils.formatDateTime(c, scheduleTime, android.text.format.DateUtils.FORMAT_SHOW_DATE) + " "
+                + android.text.format.DateUtils.formatDateTime(c, scheduleTime, android.text.format.DateUtils.FORMAT_SHOW_TIME));
+
+        Utils.log("Alarm goes off at "
+                + android.text.format.DateUtils.formatDateTime(c, info.getWakeUpTime(), android.text.format.DateUtils.FORMAT_SHOW_DATE) + " "
+                + android.text.format.DateUtils.formatDateTime(c, info.getWakeUpTime(), android.text.format.DateUtils.FORMAT_SHOW_TIME));
     }
 
 
@@ -233,7 +242,7 @@ public class AlarmSchedulerTask extends AsyncTask {
         calendarRequest.setParameter("pMonateNach", String.valueOf(MONTH_AFTER));
         CalendarRowSet appointments = SmartAlarmUtils.safeFetch(calendarRequest);
 
-        if (appointments == null) throw new InsufficientDataException(c.getString(R.string.SMART_ALARM_NO_CALENDAR), InsufficientDataException.SOON);
+        if (appointments == null) throw new InsufficientDataException(c.getString(R.string.smart_alarm_no_calendar), InsufficientDataException.SOON);
 
         // calculate next day, where we want to set the alarm
         Calendar cal = new GregorianCalendar();
@@ -257,7 +266,7 @@ public class AlarmSchedulerTask extends AsyncTask {
                 // parse LvNr from url
                 String url = lecture.getUrl();
                 int i = url.indexOf("cLvNr=");
-                if (i == -1) throw new InsufficientDataException(c.getString(R.string.SMART_ALARM_MISSING_LVNR), d.getTime(), InsufficientDataException.FOLLOWINGLECTURE);
+                if (i == -1) throw new InsufficientDataException(c.getString(R.string.smart_alarm_missing_lvnr), d.getTime(), InsufficientDataException.FOLLOWINGLECTURE);
                 lvnr = url.substring(url.indexOf("cLvNr=")+6).split("&")[0];
                 cr = lecture;
                 break;
@@ -265,7 +274,7 @@ public class AlarmSchedulerTask extends AsyncTask {
         }
 
         if (lvnr == null) {
-            throw new InsufficientDataException(c.getString(R.string.SMART_ALARM_NO_LECTURES), InsufficientDataException.SOON);
+            throw new InsufficientDataException(c.getString(R.string.smart_alarm_no_lectures), InsufficientDataException.SOON);
         }
 
         TUMOnlineRequest<LectureAppointmentsRowSet> apts = new TUMOnlineRequest<>(TUMOnlineConst.LECTURES_APPOINTMENTS, c);
@@ -273,7 +282,7 @@ public class AlarmSchedulerTask extends AsyncTask {
         LectureAppointmentsRowSet lectureAppointments = SmartAlarmUtils.safeFetch(apts);
 
         if (lectureAppointments == null) {
-            throw new InsufficientDataException(c.getString(R.string.SMART_ALARM_FETCH_LECTURES_ERROR),
+            throw new InsufficientDataException(c.getString(R.string.smart_alarm_fetch_lectures_error),
                     DateUtils.parseSqlDate(cr.getDtstart()).getTime(), InsufficientDataException.SOON);
         }
 
@@ -287,7 +296,7 @@ public class AlarmSchedulerTask extends AsyncTask {
             }
         }
 
-        throw new InsufficientDataException(c.getString(R.string.SMART_ALARM_NO_LECTURE_APPOINTMENT),
+        throw new InsufficientDataException(c.getString(R.string.smart_alarm_no_lecture_appointment),
                 DateUtils.parseSqlDate(cr.getDtstart()).getTime(), InsufficientDataException.FOLLOWINGLECTURE);
     }
 

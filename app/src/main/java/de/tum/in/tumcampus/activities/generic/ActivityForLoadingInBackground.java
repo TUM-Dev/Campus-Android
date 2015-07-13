@@ -1,6 +1,7 @@
 package de.tum.in.tumcampus.activities.generic;
 
 import android.os.AsyncTask;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 
 /**
@@ -26,7 +27,7 @@ public abstract class ActivityForLoadingInBackground<T1,T2> extends ProgressActi
      * Standard constructor for ActivityForLoadingInBackground.
      * The given layout must include a progress_layout and an error_layout.
      * If the Activity should support Pull-To-Refresh it can also contain a
-     * {@link uk.co.senab.actionbarpulltorefresh.extras.actionbarcompat.PullToRefreshLayout} named ptr_layout
+     * {@link SwipeRefreshLayout} named ptr_layout
      *
      * @param layoutId Resource id of the xml layout that should be used to inflate the activity
      */
@@ -61,6 +62,7 @@ public abstract class ActivityForLoadingInBackground<T1,T2> extends ProgressActi
 
             @Override
             protected void onPostExecute(T2 result) {
+                showLoadingEnded();
                 onLoadFinished(result);
                 asyncTask = null;
             }
@@ -77,7 +79,7 @@ public abstract class ActivityForLoadingInBackground<T1,T2> extends ProgressActi
     }
 
     @Override
-    public void onRefreshStarted(View view) {
+    public void onRefresh() {
         startLoading(lastArg);
     }
 

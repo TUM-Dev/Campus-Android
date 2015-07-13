@@ -376,8 +376,10 @@ public class SettingsFragment extends PreferenceFragment implements
                 break;
             case "licenses":
                 // Show licences
-                new LicensesDialog(mContext, R.raw.notices, false, true).show();
-
+                new LicensesDialog.Builder(mContext)
+                        .setNotices(R.raw.notices)
+                        .setShowFullLicenseText(false)
+                        .setIncludeOwnLicense(true).build().show();
 
                 break;
             case "feedback":

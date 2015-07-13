@@ -78,6 +78,7 @@ public class SmartAlarmUtils {
         try {
             return tor.fetch();
         } catch (Exception e) {
+            Utils.log(e.getMessage());
             Utils.log(e);
             return null;
         }
@@ -89,10 +90,14 @@ public class SmartAlarmUtils {
         i.setAction(SmartAlarmReceiver.ACTION_RETRY);
         PendingIntent pi = PendingIntent.getBroadcast(c, 0, i, PendingIntent.FLAG_UPDATE_CURRENT);
         alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + hours * HOURINMS, pi);
+
+        Utils.log("SmartAlarm: scheduled " + SmartAlarmReceiver.ACTION_RETRY + " at "
+                + android.text.format.DateUtils.formatDateTime(c, System.currentTimeMillis() + hours * HOURINMS, android.text.format.DateUtils.FORMAT_SHOW_DATE) + " "
+                + android.text.format.DateUtils.formatDateTime(c, System.currentTimeMillis() + hours * HOURINMS, android.text.format.DateUtils.FORMAT_SHOW_TIME));
     }
 
-    public static void retryWithInfo(Context c, String message, int hours) {
-        retryLater(c, hours);
+    public static void retryWithInfo(Context c, String message) {
+        retryLater(c, AlarmSchedulerTask.RETRY_NOINTERNET_INTERVAL);
         showError(c, c.getString(R.string.smart_alarm_connection_error), message, c.getString(R.string.smart_alarm_retry));
     }
 

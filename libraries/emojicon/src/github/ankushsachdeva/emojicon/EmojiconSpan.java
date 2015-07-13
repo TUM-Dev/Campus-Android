@@ -18,6 +18,7 @@ package github.ankushsachdeva.emojicon;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.text.style.DynamicDrawableSpan;
 
 /**
@@ -39,7 +40,7 @@ class EmojiconSpan extends DynamicDrawableSpan {
     public Drawable getDrawable() {
         if (mDrawable == null) {
             try {
-                mDrawable = mContext.getResources().getDrawable(mResourceId);
+                mDrawable = ContextCompat.getDrawable(mContext, mResourceId);
                 int size = mSize;
                 mDrawable.setBounds(0, 0, size, size);
             } catch (Exception e) {
