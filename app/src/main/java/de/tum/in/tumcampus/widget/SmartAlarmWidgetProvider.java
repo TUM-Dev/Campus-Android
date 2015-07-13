@@ -66,7 +66,7 @@ public class SmartAlarmWidgetProvider extends AppWidgetProvider {
 
         if (sai.getFirstTransportType() != SmartAlarmInfo.TransportType.PRIVATE) {
             if (sai.getFirstTransportType() == SmartAlarmInfo.TransportType.FOOT) {
-                String walkTo = context.getResources().getString(R.string.smart_alarm_walk_to);
+                String walkTo = context.getString(R.string.smart_alarm_walk_to);
                 rv.setTextViewText(R.id.transport_destination, walkTo + " " + sai.getFirstTrainDst());
             } else {
                 rv.setImageViewResource(R.id.transport_icon, sai.getFirstTransportType().getIcon());
@@ -90,15 +90,15 @@ public class SmartAlarmWidgetProvider extends AppWidgetProvider {
 
     private void showActivatingWidget(Context context, RemoteViews rv) {
         showInactiveWidget(context, rv);
-        rv.setTextViewText(R.id.alarm_date, context.getResources().getString(R.string.smart_alarm_activating));
+        rv.setTextViewText(R.id.alarm_date, context.getString(R.string.smart_alarm_activating));
         rv.setOnClickPendingIntent(R.id.clock_icon, null);
     }
 
     private void showInactiveWidget(Context context, RemoteViews rv) {
-        rv.setTextViewText(R.id.alarm_date, context.getResources().getString(R.string.smart_alarm_activate));
+        rv.setTextViewText(R.id.alarm_date, context.getString(R.string.smart_alarm_activate));
         rv.setFloat(R.id.alarm_date, "setTextSize", 16);
 
-        rv.setTextViewText(R.id.next_lecture_title, context.getResources().getString(R.string.smart_alarm_inactive));
+        rv.setTextViewText(R.id.next_lecture_title, context.getString(R.string.smart_alarm_inactive));
 
         rv.setTextViewText(R.id.alarm_time, "");
         rv.setTextViewText(R.id.transport_destination, "");

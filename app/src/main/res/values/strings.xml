@@ -458,4 +458,21 @@ Signature: %5$s</string>
     <string name="smart_alarm_inactive">SmartAlarm inactive</string>
     <string name="smart_alarm_activate">Activate</string>
     <string name="smart_alarm_activating">Wait..</string>
+    <string name="SMART_ALARM_INTERNAL_ERROR">Internal error.</string>
+    <string name="SMART_ALARM_FETCH_ERROR">Couldn\'t fetch lecture or route info.</string>
+    <string name="SMART_ALARM_NO_HOME">Home station is not set.</string>
+    <string name="SMART_ALARM_UNKNOWN_LOCATION">Location of the next lecture is unknown.</string>
+    <string name="SMART_ALARM_UNSUPPORTED_LOCATION">Location of the next lecture is not supported in public transport mode.</string>
+    <string name="SMART_ALARM_FETCH_ROUTE_ERRORing_smart_alarm_fetch_route_error">Couldn\'t fetch route to campus</string>
+    <string name="SMART_ALARM_NO_CALENDAR">Couldn\'t fetch calendar.</string>
+    <string name="SMART_ALARM_MISSING_LVNR">Lecture number is missing</string>
+    <string name="SMART_ALARM_NO_LECTURES">No lectures found.</string>
+    <string name="SMART_ALARM_FETCH_LECTURES_ERROR">Couldn\'t fetch lecture appointments.</string>
+    <string name="SMART_ALARM_NO_LECTURE_APPOINTMENT">No lecture appointments in future.</string>
+    <string name="smart_alarm_disabled">Smart Alarm Disabled</string>
+    <string name="smart_alarm_disabled_next_lecture">Smart Alarm disabled for next lecture</string>
+    <string name="smart_alarm_set_own_clock">Please set your own alarm clock for the next lecture/tomorrow.</string>
+    <string name="smart_alarm_connection_error">Smart Alarm connection error</string>
+    <string name="smart_alarm_retry">Automatic retry in 1 hour.</string>
+    <string name="smart_alarm_station_not_found">SmartAlarm: Couldn\'t find train station. Service deactivated.</string>
 </resources>

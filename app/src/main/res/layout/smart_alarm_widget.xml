@@ -14,8 +14,8 @@
             android:id="@+id/clock_wrapper">
 
             <ImageButton
-                android:layout_width="60dp"
-                android:layout_height="60dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:id="@+id/clock_icon"
                 android:background="@android:drawable/ic_lock_idle_alarm"
                 android:layout_alignParentTop="true"
@@ -34,7 +34,6 @@
                 android:layout_centerHorizontal="true"
                 android:gravity="center_horizontal"
                 android:textColor="@android:color/white"
-                android:layout_marginTop="-3dp"
                 android:text="@string/smart_alarm_activate"
                 android:textSize="16sp" />
 
@@ -46,8 +45,7 @@
                 android:layout_below="@+id/alarm_date"
                 android:layout_centerHorizontal="true"
                 android:gravity="center_horizontal"
-                android:textColor="@android:color/white"
-                android:layout_marginTop="-3dp" />
+                android:textColor="@android:color/white" />
 
         </RelativeLayout>
 

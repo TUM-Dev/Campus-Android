@@ -91,18 +91,18 @@ public class SmartAlarmUtils {
         alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + hours * HOURINMS, pi);
     }
 
-    static void retryWithInfo(Context c, String message, int hours) {
+    public static void retryWithInfo(Context c, String message, int hours) {
         retryLater(c, hours);
-        showError(c, "Smart Alarm connection error", message, "Automatic retry in 1 hour.");
+        showError(c, c.getString(R.string.smart_alarm_connection_error), message, c.getString(R.string.smart_alarm_retry));
     }
 
-    static void retryWithError(Context c, String message, int hours) {
+    public static void retryWithError(Context c, String message, int hours) {
         retryLater(c, hours);
-        showError(c, "Smart Alarm disabled for next lecture", message, "Please set your own alarm clock for the next lecture/tomorrow.");
+        showError(c, c.getString(R.string.smart_alarm_disabled_next_lecture), message, c.getString(R.string.smart_alarm_set_own_clock));
     }
 
-    static void disableWithError(Context c, String message) {
-        showError(c, "Smart Alarm Disabled", message, "");
+    public static void disableWithError(Context c, String message) {
+        showError(c, c.getString(R.string.smart_alarm_disabled), message, "");
 
         SharedPreferences.Editor e = PreferenceManager.getDefaultSharedPreferences(c).edit();
         e.putBoolean("smart_alarm_active", false);
@@ -111,7 +111,7 @@ public class SmartAlarmUtils {
         updateWidget(c, null, false);
     }
 
-    static void showError(Context c, String title, String message, String longMessage) {
+    public static void showError(Context c, String title, String message, String longMessage) {
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(c)
                 .setSmallIcon(android.R.drawable.ic_dialog_alert)
                 .setLargeIcon(BitmapFactory.decodeResource(c.getResources(), R.drawable.ic_launcher))
