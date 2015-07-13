@@ -188,8 +188,15 @@ public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<Vo
 
     @Override
     protected Bitmap onLoadInBackground(Void... arg) {
-        String arch_id = roomInfo.getString(TUMRoomFinderRequest.KEY_ARCH_ID);
-        String url = request.fetchDefaultMap(arch_id);
+        String archId = roomInfo.getString(TUMRoomFinderRequest.KEY_ARCH_ID);
+        String url;
+
+        if (mapId == null || mapId.isEmpty()){
+            url = request.fetchDefaultMap(archId);
+        } else {
+            url = request.fetchMap(archId, mapId);
+        }
+
         return net.downloadImageToBitmap(url);
     }
 
