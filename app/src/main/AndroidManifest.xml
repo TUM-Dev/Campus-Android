@@ -527,6 +527,18 @@
                 android:resource="@xml/mensa_widget_info" />
         </receiver>
 
+        <!-- receiver for the MVVWidget -->
+        <receiver android:name=".widgets.MVVWidget"
+            android:label="@string/mvv_widget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/mvv_widget_info" />
+        </receiver>
+
         <service
             android:name=".services.DownloadService"
             android:exported="false" />
