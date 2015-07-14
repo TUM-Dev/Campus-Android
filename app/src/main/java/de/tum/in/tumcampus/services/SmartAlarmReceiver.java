@@ -59,9 +59,7 @@ public class SmartAlarmReceiver extends BroadcastReceiver {
      * @param intent Intent containing a SmartAlarmInfo object in extra field INFO
      */
     private void handlePreAlarm(Context c, Intent intent) {
-        SmartAlarmInfo sai = (SmartAlarmInfo) intent.getExtras().get(INFO);
-
-        new AlarmSchedulerTask(c, sai).execute();
+        new AlarmSchedulerTask(c, (SmartAlarmInfo) intent.getExtras().get(INFO)).execute();
     }
 
     /**

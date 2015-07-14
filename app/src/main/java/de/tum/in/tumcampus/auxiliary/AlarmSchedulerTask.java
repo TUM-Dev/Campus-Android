@@ -38,7 +38,7 @@ public class AlarmSchedulerTask extends AsyncTask {
 
     private Context c;
 
-    private SmartAlarmInfo sai;
+    private SmartAlarmInfo prevAlarmInfo;
 
     private ProgressDialog pd;
 
@@ -66,7 +66,7 @@ public class AlarmSchedulerTask extends AsyncTask {
 
     public AlarmSchedulerTask(Context c, SmartAlarmInfo sai) {
         this.c = c;
-        this.sai = sai;
+        this.prevAlarmInfo = sai;
 
         userLaunched = false;
     }
@@ -112,6 +112,10 @@ public class AlarmSchedulerTask extends AsyncTask {
         if (pd != null) {
             pd.dismiss();
         }
+
+        SharedPreferences.Editor prefs = PreferenceManager.getDefaultSharedPreferences(c).edit();
+        prefs.putBoolean(Const.SMART_ALARM_ACTIVE, true);
+        prefs.apply();
 
         // only executed, when pre alarm calculations are performed
         if (o != null) {
@@ -173,8 +177,8 @@ public class AlarmSchedulerTask extends AsyncTask {
             return new InsufficientDataException(c.getString(R.string.smart_alarm_no_home), InsufficientDataException.NEVER);
         }
 
-        // if sai != null, we already know next lecture, location etc
-        if (sai == null) {
+        // if prevAlarmInfo != null, we already know next lecture, location etc
+        if (prevAlarmInfo == null) {
             SmartAlarmUtils.LectureInfo lecture;
             String street = null;
 
@@ -185,20 +189,20 @@ public class AlarmSchedulerTask extends AsyncTask {
                 return e;
             }
 
-            if (lecture.getArchId() == null || lecture.getArchId().equals("") && sai == null) {
+            if (lecture == null || lecture.getArchId() == null || lecture.getArchId().equals("")) {
                 return new InsufficientDataException(c.getString(R.string.smart_alarm_unknown_location), InsufficientDataException.NEVER);
             }
 
             // get the street of the lecture room
-            TUMRoomFinderRequest roomFinder = new TUMRoomFinderRequest(c);
             try {
-                street = roomFinder.fetchRoomStreet(lecture.getArchId());
+                street = new TUMRoomFinderRequest(c).fetchRoomStreet(lecture.getArchId());
             } catch (IOException | JSONException e) {
+                Utils.log(e.getMessage());
                 Utils.log(e);
                 return new InsufficientDataException(c.getString(R.string.smart_alarm_no_location), InsufficientDataException.SOON);
             }
 
-            if (street == null && sai == null) {
+            if (street == null) {
                 return new InsufficientDataException(c.getString(R.string.smart_alarm_unsupported_location),
                         lecture.getStart().getTime(), InsufficientDataException.FOLLOWINGLECTURE);
             }
@@ -220,20 +224,20 @@ public class AlarmSchedulerTask extends AsyncTask {
             alarmInfo.setLectureInfo(lecture);
             schedule(alarmInfo);
         } else {
-
+            Utils.log("Make it easey....!");
             // update route info
-            long arrivalAtCampus = sai.getLectureStart().getTime() - buffer * SmartAlarmUtils.MINUTEINMS;
+            long arrivalAtCampus = prevAlarmInfo.getLectureStart().getTime() - buffer * SmartAlarmUtils.MINUTEINMS;
             try {
-                alarmInfo = SmartAlarmUtils.calculateJourney(c, sai, arrivalAtCampus);
+                alarmInfo = SmartAlarmUtils.calculateJourney(c, prevAlarmInfo, arrivalAtCampus);
             } catch (InsufficientDataException e) {
-                return new InsufficientDataException(e.getMessage(), sai.getLectureStart().getTime(), e.getRetryWhen());
+                return new InsufficientDataException(e.getMessage(), prevAlarmInfo.getLectureStart().getTime(), e.getRetryWhen());
             }
 
             // schedule alarm
-            if (alarmInfo == null) schedule(sai);
+            if (alarmInfo == null) schedule(prevAlarmInfo);
             else {
                 alarmInfo.setWakeupTime(alarmInfo.getDeparture() - minutesAtHome * SmartAlarmUtils.MINUTEINMS);
-                alarmInfo.setLectureInfo(new SmartAlarmUtils.LectureInfo(sai.getLectureStart(), sai.getLectureTitle(), sai.getLectureRoom()));
+                alarmInfo.setLectureInfo(new SmartAlarmUtils.LectureInfo(prevAlarmInfo.getLectureStart(), prevAlarmInfo.getLectureTitle(), prevAlarmInfo.getLectureRoom()));
                 schedule(alarmInfo);
             }
         }
@@ -265,7 +269,7 @@ public class AlarmSchedulerTask extends AsyncTask {
     }
 
     /**
-     * Shedule an alarm
+     * Schedule an alarm
      * @param info All information about the alarm
      */
     private void schedule(SmartAlarmInfo info) {
@@ -279,6 +283,10 @@ public class AlarmSchedulerTask extends AsyncTask {
         } else {
             scheduleTime-= diff;
         }
+
+        // TODO: remove next two line after debug / showcase
+        scheduleTime = System.currentTimeMillis() + 10000;
+        if (prevAlarmInfo != null) action = SmartAlarmReceiver.ACTION_ALARM;
 
         AlarmManager alarmManager = (AlarmManager) c.getSystemService(Service.ALARM_SERVICE);
         Intent i = new Intent(c, SmartAlarmReceiver.class);

@@ -59,9 +59,27 @@ public class SmartAlarmUtils {
      * @param c Context
      */
     public static void cancelAlarm(Context c) {
-        // TODO: fix retries are not cancelled
-        PendingIntent pi = PendingIntent.getBroadcast(c, 0, new Intent(c, SmartAlarmReceiver.class), 0);
-        ((AlarmManager) c.getSystemService(Service.ALARM_SERVICE)).cancel(pi);
+        AlarmManager am = (AlarmManager) c.getSystemService(Service.ALARM_SERVICE);
+
+        // cancel alarms
+        Intent i = new Intent(c, SmartAlarmReceiver.class);
+        i.setAction(SmartAlarmReceiver.ACTION_ALARM);
+        PendingIntent pi = PendingIntent.getBroadcast(c, 0, i, 0);
+        am.cancel(pi);
+        pi.cancel();
+
+        // cancel prealarm
+        i = new Intent(c, SmartAlarmReceiver.class);
+        i.setAction(SmartAlarmReceiver.ACTION_PREALARM);
+        pi = PendingIntent.getBroadcast(c, 0, i, 0);
+        am.cancel(pi);
+        pi.cancel();
+
+        // cancel retries
+        i = new Intent(c, SmartAlarmReceiver.class);
+        i.setAction(SmartAlarmReceiver.ACTION_RETRY);
+        pi = PendingIntent.getBroadcast(c, 0, i, 0);
+        am.cancel(pi);
         pi.cancel();
     }
 

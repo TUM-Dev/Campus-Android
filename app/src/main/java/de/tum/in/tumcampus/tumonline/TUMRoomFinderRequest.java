@@ -281,7 +281,7 @@ public class TUMRoomFinderRequest {
     }
 
     public String fetchRoomStreet(String apiCode) throws IOException, JSONException {
-        JSONObject res = net.downloadJson(SERVICE_DEV_URL + "room/streetForMVG/" + apiCode);
+        JSONObject res = net.downloadJson(SERVICE_DEV_URL + "room/streetForMVG/" + URLEncoder.encode(apiCode, "UTF-8"));
         if (res.has("street") && res.getBoolean("supported")) return res.getString("street");
 
         return null;
