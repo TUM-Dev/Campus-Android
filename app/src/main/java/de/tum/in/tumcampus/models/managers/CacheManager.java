@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.graphics.Bitmap;
 import android.support.v4.util.LruCache;
+import android.util.Log;
 import android.widget.ImageView;
 
 import java.io.File;
@@ -16,6 +17,7 @@ import java.util.WeakHashMap;
 
 import de.tum.in.tumcampus.activities.CurriculaActivity;
 import de.tum.in.tumcampus.auxiliary.AccessTokenManager;
+import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.NetUtils;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.CalendarRowSet;
@@ -119,6 +121,18 @@ public class CacheManager {
         if (cur.moveToFirst()) {
             do {
                 String imgUrl = cur.getString(4);
+                if (!imgUrl.equals("null"))
+                    net.downloadImage(imgUrl);
+            } while (cur.moveToNext());
+        }
+        cur.close();
+
+        // Cache kino covers
+        KinoManager km = new KinoManager(mContext);
+        cur = km.getAllFromDb();
+        if (cur.moveToFirst()) {
+            do {
+                String imgUrl = cur.getString(cur.getColumnIndex(Const.JSON_COVER));
                 if (!imgUrl.equals("null"))
                     net.downloadImage(imgUrl);
             } while (cur.moveToNext());

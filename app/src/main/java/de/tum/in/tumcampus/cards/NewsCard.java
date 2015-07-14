@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import de.tum.in.tumcampus.R;
+import de.tum.in.tumcampus.activities.KinoActivity;
 import de.tum.in.tumcampus.adapters.NewsAdapter;
 import de.tum.in.tumcampus.auxiliary.NetUtils;
 import de.tum.in.tumcampus.auxiliary.Utils;
@@ -119,6 +120,11 @@ public class NewsCard extends Card {
         if (url.length() == 0) {
             Utils.showToast(mContext, R.string.no_link_existing);
             return null;
+        }
+
+        // if source is TU-Kino then start KinoActivity
+        if (getSource().equals("2")){
+            return new Intent(mContext, KinoActivity.class);
         }
 
         // Opens url in browser
