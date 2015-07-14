@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/info_wrapper"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#a8000000"
+        android:padding="@dimen/widget_margin">
+
+        <RelativeLayout
+            android:id="@+id/clock_wrapper"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true">
+
+            <ImageView
+                android:id="@+id/clock_icon"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:contentDescription="@string/smart_alarm_widget_activate_btn"
+                android:src="@android:drawable/ic_lock_idle_alarm"
+                android:tint="@android:color/white" />
+
+            <TextView
+                android:id="@+id/alarm_date"
+                android:layout_width="match_parent"
+                android:layout_height="22dp"
+                android:layout_below="@+id/clock_icon"
+                android:layout_centerHorizontal="true"
+                android:gravity="center_horizontal"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@android:color/white" />
+
+            <TextView
+                android:id="@+id/alarm_time"
+                android:layout_width="match_parent"
+                android:layout_height="22dp"
+                android:layout_below="@+id/alarm_date"
+                android:layout_centerHorizontal="true"
+                android:gravity="center_horizontal"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@android:color/white" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_toEndOf="@+id/clock_wrapper"
+            android:layout_toRightOf="@+id/clock_wrapper">
+
+            <TextView
+                android:id="@+id/next_lecture_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginBottom="8dp"
+                android:ellipsize="end"
+                android:lines="2"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="@android:color/white"
+                android:textSize="30sp" />
+
+            <RelativeLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_below="@+id/next_lecture_title"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:id="@+id/transport_icon"
+                    android:contentDescription="@string/smart_alarm_transportation_type" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:id="@+id/transport_nr"
+                    android:textStyle="bold"
+                    android:textSize="30sp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginStart="5dp"
+                    android:textColor="@android:color/white"
+                    android:gravity="center_vertical"
+                    android:layout_marginTop="-10dp"
+                    android:layout_marginBottom="-10dp"
+                    android:layout_toRightOf="@+id/transport_icon" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:id="@+id/transport_destination"
+                    android:gravity="center_vertical"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
+                    android:textColor="@android:color/white"
+                    android:lines="1"
+                    android:ellipsize="marquee"
+                    android:singleLine="true"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:layout_toRightOf="@+id/transport_nr"
+                    android:layout_toLeftOf="@+id/transport_departure" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:id="@+id/transport_departure"
+                    android:gravity="center_vertical"
+                    android:textColor="#ffcfcfcf"
+                    android:singleLine="true"
+                    android:lines="1"
+                    android:layout_alignParentRight="true" />
+            </RelativeLayout>
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/dismiss"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/info_wrapper"
+        android:background="#a8000000"
+        android:text="@string/smart_alarm_dismiss_btn"
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+</RelativeLayout>

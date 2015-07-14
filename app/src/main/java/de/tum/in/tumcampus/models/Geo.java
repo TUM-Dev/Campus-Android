@@ -3,9 +3,13 @@ package de.tum.in.tumcampus.models;
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.Root;
 
+import java.io.Serializable;
+
 @SuppressWarnings({"FieldCanBeLocal","UnusedDeclaration"})
 @Root(name = "geo")
-public class Geo {
+public class Geo implements Serializable {
+    private static final long serialVersionUID = -4298375710739753132L;
+
     @Element(required = false)
     private String latitude = "0";
 

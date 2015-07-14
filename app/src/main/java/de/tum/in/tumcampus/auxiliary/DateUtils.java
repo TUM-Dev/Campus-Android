@@ -6,6 +6,7 @@ import android.util.Log;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.GregorianCalendar;
@@ -24,7 +25,7 @@ public class DateUtils {
     private static final String logTag = "DateUtils";
 
     public static String getRelativeTimeISO(String timestamp, Context context) {
-            return DateUtils.getRelativeTime(DateUtils.parseIsoDate(timestamp), context);
+        return DateUtils.getRelativeTime(DateUtils.parseIsoDate(timestamp), context);
     }
 
     private static String getRelativeTime(Date date, Context context) {
@@ -67,8 +68,16 @@ public class DateUtils {
         }
     }
 
+    public static String formatDateSql(Date d) {
+        if (d == null) {
+            return null;
+        }
+
+        return new SimpleDateFormat(DateUtils.formatSQL, Locale.ENGLISH).format(d);
+    }
+
     public static Date parseSqlDate(String datetime) {
-        if(datetime == null) {
+        if (datetime == null) {
             return null;
         }
         try {
@@ -81,7 +90,7 @@ public class DateUtils {
     }
 
     public static Date parseIsoDate(String datetime) {
-        if(datetime == null) {
+        if (datetime == null) {
             return null;
         }
         try {
@@ -113,6 +122,24 @@ public class DateUtils {
         return now;
     }
 
+    public static boolean isSameDay(Date d1, Date d2) {
+        if (d1 == null || d2 == null) {
+            return false;
+        }
+        Calendar c1 = Calendar.getInstance();
+        c1.setTime(d1);
+        Calendar c2 = Calendar.getInstance();
+        c2.setTime(d2);
+
+        return c1.get(Calendar.ERA) == c2.get(Calendar.ERA)
+                && c1.get(Calendar.YEAR) == c2.get(Calendar.YEAR)
+                && c1.get(Calendar.DAY_OF_YEAR) == c2.get(Calendar.DAY_OF_YEAR);
+    }
+
+    public static boolean isToday(Date d) {
+        return isSameDay(d, new Date());
+    }
+
     public static GregorianCalendar epochToDate(Long epochTime){
         /**
          * gets the epochTime in seconds
@@ -126,5 +153,4 @@ public class DateUtils {
         c.setTimeInMillis(epochTime * 1000);
         return c;
     }
-
 }

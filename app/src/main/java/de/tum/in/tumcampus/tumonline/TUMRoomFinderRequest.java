@@ -7,6 +7,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -51,7 +52,6 @@ public class TUMRoomFinderRequest {
      * asynchronous task for interactive fetch
      */
     private AsyncTask<String, Void, ArrayList<HashMap<String, String>>> backgroundTask = null;
-
     private NetUtils net;
 
     public TUMRoomFinderRequest(Context context) {
@@ -215,6 +215,13 @@ public class TUMRoomFinderRequest {
         }
 
         return scheduleList;
+    }
+
+    public String fetchRoomStreet(String apiCode) throws IOException, JSONException {
+        JSONObject res = net.downloadJson(API_BASE_URL + "room/streetForMVG/" + encodeUrl(apiCode));
+        if (res.has("street") && res.getBoolean("supported")) return res.getString("street");
+
+        return null;
     }
 
     /**

@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/widget_margin_smartalarm"
+    android:background="#a8000000">
+
+        <RelativeLayout
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:id="@+id/clock_wrapper">
+
+            <ImageButton
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:id="@+id/clock_icon"
+                android:background="@android:drawable/ic_lock_idle_alarm"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:backgroundTint="@android:color/white"
+                android:contentDescription="@string/smart_alarm_widget_activate_btn"
+                android:cropToPadding="false"
+                android:clickable="false" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="22dp"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:id="@+id/alarm_date"
+                android:layout_below="@+id/clock_icon"
+                android:layout_centerHorizontal="true"
+                android:gravity="center_horizontal"
+                android:textColor="@android:color/white"
+                android:text="@string/smart_alarm_activate"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="22dp"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:id="@+id/alarm_time"
+                android:layout_below="@+id/alarm_date"
+                android:layout_centerHorizontal="true"
+                android:gravity="center_horizontal"
+                android:textColor="@android:color/white" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/clock_wrapper"
+            android:layout_toEndOf="@+id/clock_wrapper"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:id="@+id/next_lecture_title"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:textColor="@android:color/white"
+                android:textSize="30sp"
+                android:layout_marginBottom="8dp"
+                android:lines="2"
+                android:ellipsize="end"
+                android:text="@string/smart_alarm_inactive" />
+
+            <RelativeLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_below="@+id/next_lecture_title"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:id="@+id/transport_icon"
+                    android:contentDescription="@string/smart_alarm_transportation_type" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:id="@+id/transport_nr"
+                    android:textStyle="bold"
+                    android:textSize="30sp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginStart="5dp"
+                    android:textColor="@android:color/white"
+                    android:gravity="center_vertical"
+                    android:layout_marginTop="-10dp"
+                    android:layout_marginBottom="-10dp"
+                    android:layout_toRightOf="@+id/transport_icon" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:id="@+id/transport_destination"
+                    android:gravity="center_vertical"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
+                    android:textColor="@android:color/white"
+                    android:lines="1"
+                    android:ellipsize="marquee"
+                    android:singleLine="true"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:layout_toRightOf="@+id/transport_nr"
+                    android:layout_toLeftOf="@+id/transport_departure" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:id="@+id/transport_departure"
+                    android:gravity="center_vertical"
+                    android:textColor="#ffcfcfcf"
+                    android:singleLine="true"
+                    android:lines="1"
+                    android:layout_alignParentRight="true" />
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+</RelativeLayout>
