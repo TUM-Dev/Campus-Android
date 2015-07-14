@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="wrap_content"
+    android:minHeight="60dp"
+    android:id="@+id/courseChildHeader"
+    android:textSize="16sp"
+    android:textColor="#ff656865"
+    android:paddingLeft="8sp"
+    android:layout_gravity="center_vertical"
+    android:gravity="center" />

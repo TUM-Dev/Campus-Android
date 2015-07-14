@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merger version="3"><dataSet config="main"><source path="/Users/carlodidomenico/TumCampusApp/libraries/PullToRefresh/src/main/res"><file name="fade_in" path="/Users/carlodidomenico/TumCampusApp/libraries/PullToRefresh/src/main/res/anim/fade_in.xml" qualifiers="" type="anim"/><file name="fade_out" path="/Users/carlodidomenico/TumCampusApp/libraries/PullToRefresh/src/main/res/anim/fade_out.xml" qualifiers="" type="anim"/><file name="default_header" path="/Users/carlodidomenico/TumCampusApp/libraries/PullToRefresh/src/main/res/layout/default_header.xml" qualifiers="" type="layout"/><file path="/Users/carlodidomenico/TumCampusApp/libraries/PullToRefresh/src/main/res/values/attrs.xml" qualifiers=""><attr format="reference" name="ptrHeaderStyle"/><declare-styleable name="PullToRefreshHeader">
+
+        <!-- A drawable to use as the background of the Header View -->
+        <attr format="reference|color" name="ptrHeaderBackground"/>
+
+        <!-- The height of the Header View -->
+        <attr format="reference|dimension" name="ptrHeaderHeight"/>
+
+        <!-- The Text Appearance of the Header View's Title text -->
+        <attr format="reference" name="ptrHeaderTitleTextAppearance"/>
+
+        <!-- The color that the Progress Bar should be tinted with -->
+        <attr format="reference|color" name="ptrProgressBarColor"/>
+
+        <!-- The style of the Progress Bar -->
+        <attr name="ptrProgressBarStyle">
+            <flag name="inside" value="0x0"/>
+            <flag name="outside" value="0x1"/>
+        </attr>
+
+	    <!-- The height of the Progress Bar -->
+	    <attr format="reference|dimension" name="ptrProgressBarHeight"/>
+
+        <!-- Text to show to prompt the user is pull (or keep pulling) -->
+        <attr format="reference|string" name="ptrPullText"/>
+
+        <!-- Text to show to tell the user that a refresh is currently in progress -->
+        <attr format="reference|string" name="ptrRefreshingText"/>
+
+        <!-- Text to show to tell the user has scrolled enough to refresh -->
+        <attr format="reference|string" name="ptrReleaseText"/>
+
+        <!--indeterminate progressbar style-->
+        <attr format="reference" name="ptrSmoothProgressBarStyle"/>
+
+    </declare-styleable><declare-styleable name="PullToRefreshView">
+
+        <!-- The class to use as a View's View Delegate. Can be relative path from app's package name -->
+        <attr format="reference|string" name="ptrViewDelegateClass"/>
+
+    </declare-styleable></file><file path="/Users/carlodidomenico/TumCampusApp/libraries/PullToRefresh/src/main/res/values/colors.xml" qualifiers=""><color name="default_progress_bar_color">#FF33B5E5</color></file><file path="/Users/carlodidomenico/TumCampusApp/libraries/PullToRefresh/src/main/res/values/dimens.xml" qualifiers=""><dimen name="ptr_progress_bar_stroke_width">3dp</dimen></file><file path="/Users/carlodidomenico/TumCampusApp/libraries/PullToRefresh/src/main/res/values/ids.xml" qualifiers=""><item name="ptr_progress" type="id"/><item name="ptr_content" type="id"/><item name="ptr_text" type="id"/></file><file path="/Users/carlodidomenico/TumCampusApp/libraries/PullToRefresh/src/main/res/values/pull_refresh_strings.xml" qualifiers=""><string name="pull_to_refresh_refreshing_label">Loading…</string><string name="pull_to_refresh_pull_label">Pull to refresh…</string><string name="pull_to_refresh_release_label">Release to refresh…</string></file><file path="/Users/carlodidomenico/TumCampusApp/libraries/PullToRefresh/src/main/res/values-de/pull_refresh_strings.xml" qualifiers="de"><string name="pull_to_refresh_release_label">Loslassen zum Aktualisieren…</string><string name="pull_to_refresh_refreshing_label">Laden…</string><string name="pull_to_refresh_pull_label">Ziehen zum Aktualisieren…</string></file><file path="/Users/carlodidomenico/TumCampusApp/libraries/PullToRefresh/src/main/res/values-es/pull_refresh_strings.xml" qualifiers="es"><string name="pull_to_refresh_refreshing_label">Cargando…</string><string name="pull_to_refresh_pull_label">Desliza el dedo hacia abajo para actualizar.</string><string name="pull_to_refresh_release_label">Soltar para actualizar…</string></file><file path="/Users/carlodidomenico/TumCampusApp/libraries/PullToRefresh/src/main/res/values-fr/pull_refresh_strings.xml" qualifiers="fr"><string name="pull_to_refresh_refreshing_label">Chargement…</string><string name="pull_to_refresh_release_label">Relâcher pour rafraîchir…</string><string name="pull_to_refresh_pull_label">Tirez pour rafraîchir…</string></file></source><source path="/Users/carlodidomenico/TumCampusApp/libraries/PullToRefresh/build/generated/res/rs/release"/><source path="/Users/carlodidomenico/TumCampusApp/libraries/PullToRefresh/build/generated/res/generated/release"/></dataSet><dataSet config="release"><source path="/Users/carlodidomenico/TumCampusApp/libraries/PullToRefresh/src/release/res"/></dataSet><mergedItems><configuration qualifiers=""><declare-styleable name="PullToRefreshView"><attr format="reference|string" name="ptrViewDelegateClass"/></declare-styleable><declare-styleable name="PullToRefreshHeader"><attr format="reference|color" name="ptrHeaderBackground"/><attr format="reference|dimension" name="ptrHeaderHeight"/><attr format="reference" name="ptrHeaderTitleTextAppearance"/><attr format="reference|color" name="ptrProgressBarColor"/><attr name="ptrProgressBarStyle"><flag name="inside" value="0x0"/><flag name="outside" value="0x1"/></attr><attr format="reference|dimension" name="ptrProgressBarHeight"/><attr format="reference|string" name="ptrPullText"/><attr format="reference|string" name="ptrRefreshingText"/><attr format="reference|string" name="ptrReleaseText"/><attr format="reference" name="ptrSmoothProgressBarStyle"/></declare-styleable></configuration></mergedItems></merger>

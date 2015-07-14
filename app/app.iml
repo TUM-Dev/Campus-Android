@@ -88,6 +88,7 @@
     <orderEntry type="library" exported="" name="cardview-v7-21.0.0" level="project" />
     <orderEntry type="library" exported="" name="play-services-wallet-7.5.0" level="project" />
     <orderEntry type="library" exported="" name="gson-2.3.1" level="project" />
+    <orderEntry type="library" exported="" name="jsoup-1.8.2" level="project" />
     <orderEntry type="library" exported="" name="play-services-cast-7.5.0" level="project" />
     <orderEntry type="library" exported="" name="mediarouter-v7-22.0.0" level="project" />
     <orderEntry type="library" exported="" name="play-services-drive-7.5.0" level="project" />
@@ -123,6 +124,7 @@
     <orderEntry type="library" exported="" name="play-services-plus-7.5.0" level="project" />
     <orderEntry type="library" exported="" name="lib-core-3.1.0" level="project" />
     <orderEntry type="library" exported="" name="play-services-wearable-7.5.0" level="project" />
+    <orderEntry type="library" exported="" name="recyclerview-v7-21.0.3" level="project" />
     <orderEntry type="library" exported="" name="play-services-appstate-7.5.0" level="project" />
     <orderEntry type="library" exported="" name="play-services-games-7.5.0" level="project" />
     <orderEntry type="library" exported="" name="play-services-identity-7.5.0" level="project" />
