@@ -315,23 +315,24 @@ public class AlarmSchedulerTask extends AsyncTask {
 
         if (appointments == null) throw new InsufficientDataException(c.getString(R.string.smart_alarm_no_calendar), InsufficientDataException.SOON);
 
+        // whether to schedule alarm for today or not
+        boolean forToday = true;
+
         // calculate next day, where we want to set the alarm
-        Calendar cal = new GregorianCalendar();
+        Date earliestNextLecture = new GregorianCalendar().getTime();
         if (DateUtils.isSameDay(lastAlarm, new Date())) {
             // midnight tomorrow
-            cal.set(Calendar.HOUR_OF_DAY, 0);
-            cal.set(Calendar.MINUTE, 0);
-            cal.set(Calendar.SECOND, 0);
-            cal.set(Calendar.MILLISECOND, 0);
-            cal.add(Calendar.DAY_OF_MONTH, 1);
+            forToday = false;
+            earliestNextLecture = getNextMidnight();
         }
-        Date earliestNextLecture = cal.getTime();
 
         String lvnr = null;
         CalendarRow cr = null;
+        
         // get first lecture after earliestNextLecture
         for (CalendarRow lecture : appointments.getKalendarList()) {
             Date d = DateUtils.parseSqlDate(lecture.getDtstart());
+
             // appointments sorted by date -> first appointment after calculated date is the first lecture on that day
             if (d != null && d.after(earliestNextLecture)) {
                 // parse LvNr from url
@@ -341,6 +342,10 @@ public class AlarmSchedulerTask extends AsyncTask {
                 lvnr = url.substring(url.indexOf("cLvNr=")+6).split("&")[0];
                 cr = lecture;
                 break;
+            } else if (forToday && DateUtils.isSameDay(d, earliestNextLecture) && d.before(earliestNextLecture)) {
+                // there has already been a lecture today => schedule for tomorrow
+                forToday = false;
+                earliestNextLecture = getNextMidnight();
             }
         }
 
@@ -369,6 +374,16 @@ public class AlarmSchedulerTask extends AsyncTask {
 
         throw new InsufficientDataException(c.getString(R.string.smart_alarm_no_lecture_appointment),
                 DateUtils.parseSqlDate(cr.getDtstart()).getTime(), InsufficientDataException.FOLLOWINGLECTURE);
+    }
+
+    private static Date getNextMidnight() {
+        GregorianCalendar cal = new GregorianCalendar();
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        cal.add(Calendar.DAY_OF_MONTH, 1);
+        return cal.getTime();
     }
 
     public static class InsufficientDataException extends Exception {
