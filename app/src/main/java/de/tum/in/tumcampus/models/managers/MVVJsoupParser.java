@@ -10,7 +10,6 @@ import org.jsoup.select.Elements;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.MVVDeparture;
@@ -129,6 +128,7 @@ public class MVVJsoupParser extends AsyncTask<String, Void, MVVObject> {
 
 
         } catch (Throwable t) {
+           Utils.log("Jsoup Error :" + t.getMessage());
            result.setValid(false);
            result.setErrorCode("invalid_html_parsing");
            result.setMessage(t.getMessage());

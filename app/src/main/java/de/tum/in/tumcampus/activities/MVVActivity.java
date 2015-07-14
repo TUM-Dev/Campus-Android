@@ -2,34 +2,22 @@ package de.tum.in.tumcampus.activities;
 
 import android.database.Cursor;
 import android.graphics.Typeface;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v4.widget.SimpleCursorAdapter;
-import android.util.Log;
-import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-
 import de.tum.in.tumcampus.R;
-import de.tum.in.tumcampus.activities.generic.ActivityForDownloadingExternal;
 import de.tum.in.tumcampus.activities.generic.ActivityForSearching;
 import de.tum.in.tumcampus.adapters.MvvAdapter;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.MVVStationSuggestionProvider;
 import de.tum.in.tumcampus.auxiliary.NetUtils;
 import de.tum.in.tumcampus.auxiliary.Utils;
-import de.tum.in.tumcampus.models.MVVDeparture;
 import de.tum.in.tumcampus.models.MVVObject;
 import de.tum.in.tumcampus.models.MVVSuggestion;
 import de.tum.in.tumcampus.models.managers.MVVDelegate;
@@ -37,7 +25,6 @@ import de.tum.in.tumcampus.models.managers.MVVJsoupParser;
 import de.tum.in.tumcampus.models.managers.RecentsManager;
 
 /**
- * Created by enricogiga on 15/06/2015.
  * Activity for searching timetables from the queried station using mvg live
  */
 public class MVVActivity extends ActivityForSearching implements MVVDelegate, AdapterView.OnItemClickListener {
@@ -64,6 +51,7 @@ public class MVVActivity extends ActivityForSearching implements MVVDelegate, Ad
 
     @Override
     protected void onStartSearch(String query) {
+        Utils.log("MVVActivity query is: " + query);
         if (!NetUtils.isConnected(this)) {
             showNoInternetLayout();
             return;

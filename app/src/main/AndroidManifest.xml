@@ -564,6 +564,8 @@
 
         <service android:name=".services.MensaWidgetService"
             android:permission="android.permission.BIND_REMOTEVIEWS"/>
+        <service android:name=".services.MVVWidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS"/>
 
     </application>
 
