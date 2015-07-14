@@ -413,4 +413,7 @@ Signatur: %5$s</string>
     <string name="smart_alarm_vibrate">Vibrieren</string>
     <string name="smart_alarm_walk_to">Laufe zur Station</string>
     <string name="smart_alarm_widget_activate_btn">Aktiviere / Deaktiviere SmartAlarm</string>
+    <string name="smart_alarm_no_location">Konnte den Ort der nächsten Vorlesung nicht laden.</string>
+    <string name="smart_alarm_route_error">Die Route konnte nicht berechnet werden.</string>
+    <string name="smart_alarm_street_not_found">Die Straße vom Raum konnte nicht gefunden werden.</string>
 </resources>

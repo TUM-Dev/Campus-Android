@@ -3,11 +3,13 @@ package de.tum.in.tumcampus.tumonline;
 import android.content.Context;
 import android.os.AsyncTask;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -278,12 +280,9 @@ public class TUMRoomFinderRequest {
         return scheduleList;
     }
 
-    public String fetchRoomStreet(String apiCode) {
-        try {
-            JSONObject res = net.downloadJson(SERVICE_DEV_URL + "room/streetForMVG/" + apiCode);
-
-            if (res.has("street") && res.getBoolean("supported")) return res.getString("street");
-        } catch (Exception e) {}
+    public String fetchRoomStreet(String apiCode) throws IOException, JSONException {
+        JSONObject res = net.downloadJson(SERVICE_DEV_URL + "room/streetForMVG/" + apiCode);
+        if (res.has("street") && res.getBoolean("supported")) return res.getString("street");
 
         return null;
     }

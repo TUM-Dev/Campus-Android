@@ -42,6 +42,11 @@ public class SmartAlarmWidgetProvider extends AppWidgetProvider {
         updateWidget(context, intent.getBooleanExtra(ACTIVATING, false));
     }
 
+    /**
+     * Updates info shown on the widget
+     * @param context
+     * @param activating
+     */
     private void updateWidget(Context context, boolean activating) {
         Utils.log("SmartAlarm: update widget");
         RemoteViews rv = new RemoteViews(context.getPackageName(), R.layout.smart_alarm_widget);
@@ -57,6 +62,11 @@ public class SmartAlarmWidgetProvider extends AppWidgetProvider {
         AppWidgetManager.getInstance(context).updateAppWidget(new ComponentName(context, SmartAlarmWidgetProvider.class), rv);
     }
 
+    /**
+     * Show widget in active status
+     * @param context Context
+     * @param rv RemoteView of the widgets
+     */
     private void showActiveWidget(Context context, RemoteViews rv) {
         rv.setTextViewText(R.id.alarm_date, sai.getFormattedWakeupDate(context));
         rv.setFloat(R.id.alarm_date, "setTextSize", 18);
@@ -88,12 +98,22 @@ public class SmartAlarmWidgetProvider extends AppWidgetProvider {
         rv.setOnClickPendingIntent(R.id.clock_icon, pi);
     }
 
+    /**
+     * Shows widget in waiting status (during calculations)
+     * @param context Context
+     * @param rv RemoteView of the widgets
+     */
     private void showActivatingWidget(Context context, RemoteViews rv) {
         showInactiveWidget(context, rv);
         rv.setTextViewText(R.id.alarm_date, context.getString(R.string.smart_alarm_activating));
         rv.setOnClickPendingIntent(R.id.clock_icon, null);
     }
 
+    /**
+     * Shows widget in inactive status
+     * @param context Context
+     * @param rv RemoteView of the widgets
+     */
     private void showInactiveWidget(Context context, RemoteViews rv) {
         rv.setTextViewText(R.id.alarm_date, context.getString(R.string.smart_alarm_activate));
         rv.setFloat(R.id.alarm_date, "setTextSize", 16);

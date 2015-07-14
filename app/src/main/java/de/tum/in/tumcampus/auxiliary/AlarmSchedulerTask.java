@@ -11,6 +11,9 @@ import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import org.json.JSONException;
+
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -39,6 +42,10 @@ public class AlarmSchedulerTask extends AsyncTask {
 
     private ProgressDialog pd;
 
+    /**
+     * Indicates whether the calculations have been initiated by the user
+     * (clicking on widget / in preferences screen) or initiated automatically
+     */
     private boolean userLaunched;
 
     public AlarmSchedulerTask(Context c, ProgressDialog pd) {
@@ -64,6 +71,11 @@ public class AlarmSchedulerTask extends AsyncTask {
         userLaunched = false;
     }
 
+    /**
+     * Calculate route and schedule alarm
+     * @param params not used
+     * @return null if everything went fine, else an InsufficientDataException
+     */
     @Override
     protected Object doInBackground(Object[] params) {
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(c);
@@ -82,19 +94,22 @@ public class AlarmSchedulerTask extends AsyncTask {
         }
     }
 
+    /**
+     * Show waiting on widget
+     */
     @Override
     protected void onPreExecute() {
         // show waiting info on widget
         SmartAlarmUtils.updateWidget(c, null, true);
     }
 
+    /**
+     * Dismisses possible progress dialog and handles errors that occured during calculation
+     * @param o InsufficientDataException or null
+     */
     @Override
     protected void onPostExecute(Object o) {
         if (pd != null) {
-            SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(c).edit();
-            editor.putBoolean("smart_alarm_activating", false);
-            editor.apply();
-
             pd.dismiss();
         }
 
@@ -143,6 +158,13 @@ public class AlarmSchedulerTask extends AsyncTask {
         }
     }
 
+    /**
+     * Schedules an alarm in public transportation mode
+     * @param prefs Default Shared Preferences
+     * @param lastAlarm Date and time of the last alarm
+     * @param buffer Time in minutes the user wants to arrive before the lecture starts
+     * @return null if everything went fine, else an InsufficientDataException
+     */
     private InsufficientDataException schedulePublicTransportationPreAlarm(SharedPreferences prefs, Date lastAlarm, int buffer) {
         SmartAlarmInfo alarmInfo;
         int station_home = prefs.getInt("smart_alarm_home_id", -1);
@@ -151,42 +173,81 @@ public class AlarmSchedulerTask extends AsyncTask {
             return new InsufficientDataException(c.getString(R.string.smart_alarm_no_home), InsufficientDataException.NEVER);
         }
 
-        SmartAlarmUtils.LectureInfo lecture = null;
-        try {
-            lecture = getFirstAppointment(c, lastAlarm);
-        } catch (InsufficientDataException e) {
-            // if we already have calculated a route in before, rely on this (outdated) route
-            if (sai == null) return e;
+        // if sai != null, we already know next lecture, location etc
+        if (sai == null) {
+            SmartAlarmUtils.LectureInfo lecture;
+            String street = null;
+
+            // get next lecture
+            try {
+                lecture = getFirstAppointment(c, lastAlarm);
+            } catch (InsufficientDataException e) {
+                return e;
+            }
+
+            if (lecture.getArchId() == null || lecture.getArchId().equals("") && sai == null) {
+                return new InsufficientDataException(c.getString(R.string.smart_alarm_unknown_location), InsufficientDataException.NEVER);
+            }
+
+            // get the street of the lecture room
+            TUMRoomFinderRequest roomFinder = new TUMRoomFinderRequest(c);
+            try {
+                street = roomFinder.fetchRoomStreet(lecture.getArchId());
+            } catch (IOException | JSONException e) {
+                Utils.log(e);
+                return new InsufficientDataException(c.getString(R.string.smart_alarm_no_location), InsufficientDataException.SOON);
+            }
+
+            if (street == null && sai == null) {
+                return new InsufficientDataException(c.getString(R.string.smart_alarm_unsupported_location),
+                        lecture.getStart().getTime(), InsufficientDataException.FOLLOWINGLECTURE);
+            }
+
+            // calculate route
+            long arrivalAtCampus = lecture.getStart().getTime() - buffer * SmartAlarmUtils.MINUTEINMS;
+            try {
+                alarmInfo = SmartAlarmUtils.calculateJourney(c, station_home, street, arrivalAtCampus);
+            } catch (InsufficientDataException e) {
+                return new InsufficientDataException(e.getMessage(), lecture.getStart().getTime(), e.getRetryWhen());
+            }
+
+            if (alarmInfo == null) {
+                return new InsufficientDataException(c.getString(R.string.smart_alarm_fetch_route_error), lecture.getStart().getTime(), InsufficientDataException.SOON);
+            }
+
+            // schedule alarm
+            alarmInfo.setWakeupTime(alarmInfo.getDeparture() - minutesAtHome * SmartAlarmUtils.MINUTEINMS);
+            alarmInfo.setLectureInfo(lecture);
+            schedule(alarmInfo);
+        } else {
+
+            // update route info
+            long arrivalAtCampus = sai.getLectureStart().getTime() - buffer * SmartAlarmUtils.MINUTEINMS;
+            try {
+                alarmInfo = SmartAlarmUtils.calculateJourney(c, sai, arrivalAtCampus);
+            } catch (InsufficientDataException e) {
+                return new InsufficientDataException(e.getMessage(), sai.getLectureStart().getTime(), e.getRetryWhen());
+            }
+
+            // schedule alarm
+            if (alarmInfo == null) schedule(sai);
+            else {
+                alarmInfo.setWakeupTime(alarmInfo.getDeparture() - minutesAtHome * SmartAlarmUtils.MINUTEINMS);
+                alarmInfo.setLectureInfo(new SmartAlarmUtils.LectureInfo(sai.getLectureStart(), sai.getLectureTitle(), sai.getLectureRoom()));
+                schedule(alarmInfo);
+            }
         }
 
-        if (lecture.getArchId() == null || lecture.getArchId().equals("") && sai == null) {
-            return new InsufficientDataException(c.getString(R.string.smart_alarm_unknown_location), InsufficientDataException.NEVER);
-        }
-
-        TUMRoomFinderRequest roomFinder = new TUMRoomFinderRequest(c);
-        String street = roomFinder.fetchRoomStreet(lecture.getArchId());
-
-        if (street == null && sai == null) {
-            return new InsufficientDataException(c.getString(R.string.smart_alarm_unsupported_location),
-                    lecture.getStart().getTime(), InsufficientDataException.FOLLOWINGLECTURE);
-        }
-
-        long arrivalAtCampus = lecture.getStart().getTime()
-                - buffer * SmartAlarmUtils.MINUTEINMS;
-
-        if (sai != null) alarmInfo = SmartAlarmUtils.calculateJourney(c, sai, arrivalAtCampus);
-        else alarmInfo = SmartAlarmUtils.calculateJourney(c, station_home, street, arrivalAtCampus);
-
-        if (alarmInfo == null && sai == null) {
-            return new InsufficientDataException(c.getString(R.string.smart_alarm_fetch_route_error), lecture.getStart().getTime(), InsufficientDataException.SOON);
-        }
-
-        alarmInfo.setWakeupTime(alarmInfo.getDeparture() - minutesAtHome * SmartAlarmUtils.MINUTEINMS);
-        alarmInfo.setLectureInfo(lecture);
-        schedule(alarmInfo);
         return null;
     }
 
+    /**
+     * Schedules an alarm in private transportation mode
+     * @param prefs Default Shared Preferences
+     * @param lastAlarm Date and time of the last alarm
+     * @param buffer Time in minutes the user wants to arrive before the lecture starts
+     * @return null if everything went fine, else an InsufficientDataException
+     */
     private InsufficientDataException schedulePrivateTransportationAlarm(SharedPreferences prefs, Date lastAlarm, int buffer) {
         SmartAlarmUtils.LectureInfo lecture = null;
         try {
@@ -203,6 +264,10 @@ public class AlarmSchedulerTask extends AsyncTask {
         return null;
     }
 
+    /**
+     * Shedule an alarm
+     * @param info All information about the alarm
+     */
     private void schedule(SmartAlarmInfo info) {
         long diff = SmartAlarmReceiver.PRE_ALARM_DIFF * SmartAlarmUtils.HOURINMS;
         long scheduleTime = info.getWakeUpTime();
@@ -235,7 +300,13 @@ public class AlarmSchedulerTask extends AsyncTask {
                 + android.text.format.DateUtils.formatDateTime(c, info.getWakeUpTime(), android.text.format.DateUtils.FORMAT_SHOW_TIME));
     }
 
-
+    /**
+     * Retrieve the first lecture today, tomorrow respectively the next scheduled appointment
+     * @param c Context
+     * @param lastAlarm Date and time of the last alarm
+     * @return LectureInfo object containing information about the next scheduled lecture for which an alarm should be scheduled
+     * @throws InsufficientDataException
+     */
     public static SmartAlarmUtils.LectureInfo getFirstAppointment(Context c, Date lastAlarm) throws InsufficientDataException {
         TUMOnlineRequest<CalendarRowSet> calendarRequest = new TUMOnlineRequest<>(TUMOnlineConst.CALENDER, c);
         calendarRequest.setParameter("pMonateVor", String.valueOf(MONTH_BEFORE));
@@ -300,9 +371,20 @@ public class AlarmSchedulerTask extends AsyncTask {
                 DateUtils.parseSqlDate(cr.getDtstart()).getTime(), InsufficientDataException.FOLLOWINGLECTURE);
     }
 
-    private static class InsufficientDataException extends Exception {
+    public static class InsufficientDataException extends Exception {
+        /**
+         * Configuration error, disable alarm
+         */
         public static final int NEVER = -1;
+
+        /**
+         * Temporary (e.g. connection) error, retry soon
+         */
         public static final int SOON = 0;
+
+        /**
+         * Error with lecture appointment data / room data, retry on following day
+         */
         public static final int FOLLOWINGLECTURE = 1;
 
         private int retryWhen;

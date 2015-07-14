@@ -74,6 +74,13 @@ public class MVGRequest {
         return new JSONObject(EntityUtils.toString(response.getEntity()));
     }
 
+    /**
+     * Gets the coordinates of a street
+     * @param street Name of the street
+     * @return Geo object with coordinates
+     * @throws IOException Connection error
+     * @throws JSONException Parse error
+     */
     public Geo fetchStreetPos(String street) throws IOException, JSONException {
         JSONObject res = fetchURL(MVG_SERVICE_URL + MVG_STATION + "?q=" + urlEnc(street));
         if (res == null) return null;
@@ -82,6 +89,13 @@ public class MVGRequest {
         return new Geo(pos.getDouble("latitude"), pos.getDouble("longitude"));
     }
 
+    /**
+     * Gets the MVG station ID of a station
+     * @param station Name of the station
+     * @return Station ID as an integer; -1 if an error occurred
+     * @throws IOException Connection error
+     * @throws JSONException Parse error
+     */
     public int fetchStationId(String station) throws IOException, JSONException {
         JSONObject res = fetchURL(MVG_SERVICE_URL + MVG_STATION + "?q=" + urlEnc(station));
         if (res == null) return -1;
@@ -118,14 +132,38 @@ public class MVGRequest {
         return -1;
     }
 
+    /**
+     * Gets the route from a station to given coordinates
+     * @param fromStation source MVG station ID
+     * @param toLat destination Latitude
+     * @param toLong destination Longitude
+     * @return JSONObject with route data
+     * @throws IOException Connection error
+     * @throws JSONException Parse error
+     */
     public JSONObject fetchRoute(int fromStation, String toLat, String toLong) throws IOException, JSONException {
         return fetchURL(MVG_SERVICE_URL + MVG_ROUTING + "?fromStation=" + fromStation + "&toLatitude=" + urlEnc(toLat) + "&toLongitude=" + urlEnc(toLong));
     }
 
+    /**
+     * Gets the route from a station to given coordinates
+     * @param fromStation source MVG station ID
+     * @param toLat destination Latitude
+     * @param toLong destination Longitude
+     * @param time time of arrival
+     * @return JSONObject with route data
+     * @throws IOException Connection error
+     * @throws JSONException Parse error
+     */
     public JSONObject fetchRouteArrivingAt(int fromStation, String toLat, String toLong, long time) throws IOException, JSONException {
         return fetchURL(MVG_SERVICE_URL + MVG_ROUTING + "?fromStation=" + fromStation + "&toLatitude=" + urlEnc(toLat) + "&toLongitude=" + urlEnc(toLong) + "&time=" + time + "&arrival=true");
     }
 
+    /**
+     * Encode string in UTF-8
+     * @param val string
+     * @return UTF-8 encoded string
+     */
     private static String urlEnc(String val) {
         try {
             return URLEncoder.encode(val, "UTF-8");

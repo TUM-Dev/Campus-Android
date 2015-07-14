@@ -499,6 +499,10 @@ public class SettingsFragment extends PreferenceFragment implements
         return pd;
     }
 
+    /**
+     * Validates a station name and retrieves its MVG staiton ID
+     * This is needed, since the station selector returns the MVV station name, but we need the MVG station ID
+     */
     private class MVGStationValidator extends AsyncTask {
         ProgressDialog mvgPd;
         String station;
@@ -529,6 +533,9 @@ public class SettingsFragment extends PreferenceFragment implements
             return null;
         }
 
+        /**
+         * Show progress dialog, show waiting on widget
+         */
         @Override
         protected void onPreExecute() {
             mvgPd = new ProgressDialog(mContext);
@@ -539,6 +546,10 @@ public class SettingsFragment extends PreferenceFragment implements
             SmartAlarmUtils.updateWidget(mContext, null, true);
         }
 
+        /**
+         * Saves station ID and handles erros
+         * @param o null or any Object in case of an error
+         */
         @Override
         protected void onPostExecute(Object o) {
             if (o != null) {

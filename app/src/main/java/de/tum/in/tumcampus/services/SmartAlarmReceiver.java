@@ -82,6 +82,10 @@ public class SmartAlarmReceiver extends BroadcastReceiver {
         prefs.apply();
     }
 
+    /**
+     * Handles click on widget to activate / deactivate SmarAlarm
+     * @param c Context
+     */
     private void handleToggle(Context c) {
         Utils.log("TOGGLE SMART ALARM");
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(c);
@@ -91,9 +95,11 @@ public class SmartAlarmReceiver extends BroadcastReceiver {
         edit.putBoolean("smart_alarm_active", status);
         edit.apply();
 
+        // if SmartAlarm has been activated, schedule alarm
         if (status) {
-            SmartAlarmUtils.scheduleAlarm(c);
+            SmartAlarmUtils.scheduleAlarmFromUser(c);
         } else {
+            // cancel alarm
             SmartAlarmUtils.cancelAlarm(c);
             SmartAlarmUtils.updateWidget(c, null, false);
         }

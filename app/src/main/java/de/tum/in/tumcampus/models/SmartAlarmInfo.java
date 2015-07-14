@@ -83,6 +83,7 @@ public class SmartAlarmInfo implements Serializable {
 
     private String lectureTitle;
     private Date lectureStart;
+    private String lectureRoom;
 
     private int fromStation;
 
@@ -100,6 +101,7 @@ public class SmartAlarmInfo implements Serializable {
 
         lectureTitle = lecture.getTitle();
         lectureStart = lecture.getStart();
+        lectureRoom = lecture.getArchId();
     }
 
     public SmartAlarmInfo(JSONObject routesObject, long desiredArrival) throws JSONException {
@@ -194,6 +196,10 @@ public class SmartAlarmInfo implements Serializable {
         return wakeUpTime;
     }
 
+    public String getLectureRoom() {
+        return lectureRoom;
+    }
+
     public String getFormattedDeparture(Context c) {
         return android.text.format.DateUtils.formatDateTime(c, departure, android.text.format.DateUtils.FORMAT_SHOW_TIME);
     }
@@ -201,5 +207,6 @@ public class SmartAlarmInfo implements Serializable {
     public void setLectureInfo(SmartAlarmUtils.LectureInfo lecture) {
         lectureTitle = lecture.getTitle();
         lectureStart = lecture.getStart();
+        lectureRoom = lecture.getArchId();
     }
 }
