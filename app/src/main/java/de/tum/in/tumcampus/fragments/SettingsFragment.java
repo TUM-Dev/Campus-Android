@@ -504,7 +504,6 @@ public class SettingsFragment extends PreferenceFragment implements
      * This is needed, since the station selector returns the MVV station name, but we need the MVG station ID
      */
     private class MVGStationValidator extends AsyncTask {
-        ProgressDialog mvgPd;
         String station;
 
         public MVGStationValidator(String station) {
@@ -528,8 +527,6 @@ public class SettingsFragment extends PreferenceFragment implements
             prefEditor.putString("smart_alarm_home", station);
             prefEditor.apply();
 
-            findPreference("smart_alarm_home_button").setSummary(station);
-
             return null;
         }
 
@@ -538,11 +535,6 @@ public class SettingsFragment extends PreferenceFragment implements
          */
         @Override
         protected void onPreExecute() {
-            mvgPd = new ProgressDialog(mContext);
-            mvgPd.setTitle(R.string.smart_alarm_home_validating);
-            mvgPd.setCancelable(false);
-            mvgPd.show();
-
             SmartAlarmUtils.updateWidget(mContext, null, true);
         }
 
@@ -556,7 +548,9 @@ public class SettingsFragment extends PreferenceFragment implements
                 SmartAlarmUtils.disableWithError(mContext, mContext.getString(R.string.smart_alarm_station_not_found));
                 return;
             }
-            
+
+            findPreference("smart_alarm_home_button").setSummary(station);
+
             if (PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean(Const.SMART_ALARM_ACTIVE, false)) {
                 // station has been changed, update route
                 SmartAlarmUtils.scheduleAlarm(mContext);
@@ -564,8 +558,6 @@ public class SettingsFragment extends PreferenceFragment implements
                 // hide widget waiting message
                 SmartAlarmUtils.updateWidget(mContext, null, false);
             }
-
-            mvgPd.dismiss();
         }
     }
 }
