@@ -2,10 +2,10 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/TumCampusApp.iml" filepath="$PROJECT_DIR$/TumCampusApp.iml" />
+      <module fileurl="file://$PROJECT_DIR$/TCATom.iml" filepath="$PROJECT_DIR$/TCATom.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/libraries/emojicon/emojicon.iml" filepath="$PROJECT_DIR$/libraries/emojicon/emojicon.iml" />
       <module fileurl="file://$PROJECT_DIR$/libraries/libraries.iml" filepath="$PROJECT_DIR$/libraries/libraries.iml" />
     </modules>
   </component>
 </project>
+

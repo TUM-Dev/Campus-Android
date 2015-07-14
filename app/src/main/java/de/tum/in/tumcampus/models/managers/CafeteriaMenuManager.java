@@ -92,8 +92,8 @@ public class CafeteriaMenuManager {
 			return;
 		}
 
-		String url = "http://lu32kap.typo3.lrz.de/mensaapp/exportDB.php?mensa_id=all";
-		JSONObject json = NetUtils.downloadJson(context, url);
+        String url = "http://passwords.altervista.org/mensa_service/listall.php";
+        JSONObject json = NetUtils.downloadJson(context, url);
 
 		db.beginTransaction();
         removeCache();

@@ -28,8 +28,7 @@ public class CafeteriaManager implements Card.ProvidesCard {
     private static final int TIME_TO_SYNC = 604800; // 1 week
     private final Context mContext;
 
-    public static final String CAFETERIAS_URL = "https://tumcabe.in.tum.de/Api/mensen";
-
+    public static final String CAFETERIAS_URL = "http://passwords.altervista.org/mensa_service/listmensen.php";
     /**
 	 * Get Cafeteria object by JSON object
 	 * 
