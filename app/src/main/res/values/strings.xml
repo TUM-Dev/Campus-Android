@@ -115,6 +115,16 @@
     <string name="no_link_existing">No link existing.</string>
     <string name="info_title">New information:</string>
 
+    <!-- Kino -->
+    <string name="imdb_rating">IMDB-Rating</string>
+    <string name="year">Year of release</string>
+    <string name="runtime">Runtime</string>
+    <string name="genre">Genre</string>
+    <string name="director">Director</string>
+    <string name="actors">Actors</string>
+    <string name="description">Description</string>
+    <string name="no_movies">Currently there are no movies.</string>
+
     <!-- Navigation drawer -->
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
@@ -134,6 +144,7 @@
     <string name="organisations">Organizations</string>
     <string name="mvv">MVV</string>
     <string name="news">News</string>
+    <string name="kino">TU Kino</string>
 
     <!-- Activity titles -->
     <string name="lectures_information">Lecture Information</string>

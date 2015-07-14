@@ -2,7 +2,6 @@ package de.tum.in.tumcampus.adapters;
 
 import android.content.Context;
 import android.graphics.Typeface;
-import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +23,7 @@ import de.tum.in.tumcampus.activities.OrganisationActivity;
 import de.tum.in.tumcampus.activities.PersonsSearchActivity;
 import de.tum.in.tumcampus.activities.PlansActivity;
 import de.tum.in.tumcampus.activities.RoomFinderActivity;
+import de.tum.in.tumcampus.activities.KinoActivity;
 import de.tum.in.tumcampus.activities.TransportationActivity;
 import de.tum.in.tumcampus.activities.TuitionFeesActivity;
 import de.tum.in.tumcampus.auxiliary.AccessTokenManager;
@@ -187,6 +187,7 @@ public class NavigationDrawerAdapter extends BaseAdapter {
             new SideNavigationItem(R.string.tum_common, false),
             new SideNavigationItem(R.string.menues, R.drawable.ic_cutlery, false, CafeteriaActivity.class),
             new SideNavigationItem(R.string.news, R.drawable.ic_rss, false, NewsActivity.class),
+            new SideNavigationItem(R.string.kino, R.drawable.ic_kino, false, KinoActivity.class),
             new SideNavigationItem(R.string.mvv, R.drawable.ic_mvv, false, TransportationActivity.class),
             new SideNavigationItem(R.string.plans, R.drawable.ic_plans, false, PlansActivity.class),
             new SideNavigationItem(R.string.roomfinder, R.drawable.ic_place, false, RoomFinderActivity.class),
