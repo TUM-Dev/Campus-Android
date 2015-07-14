@@ -269,13 +269,13 @@ public class LocationManager {
      * @return Location or null on failure
      */
     public Geo roomLocationStringToGeo(String loc) {
-        TUMRoomFinderRequest requestHandler = new TUMRoomFinderRequest();
+        TUMRoomFinderRequest requestHandler = new TUMRoomFinderRequest(mContext);
         if(loc.contains("("))
            loc = loc.substring(0,loc.indexOf('(')).trim();
 
         ArrayList<HashMap<String, String>> request = requestHandler.fetchRooms(loc);
         if(request.size()>0) {
-            String room = request.get(0).get(TUMRoomFinderRequest.KEY_ARCHITECT_NUMBER);
+            String room = request.get(0).get(TUMRoomFinderRequest.KEY_ARCH_ID);
             return requestHandler.fetchCoordinates(room);
         }
         return null;
