@@ -14,6 +14,9 @@ import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.services.MVVWidgetService;
 
+/**
+ * AppWidgetProvider for the MVV widget
+ */
 public class MVVWidget extends AppWidgetProvider {
 
     private RemoteViews rv;
@@ -27,20 +30,17 @@ public class MVVWidget extends AppWidgetProvider {
         // There may be multiple widgets active, so update all of them
         final int N = appWidgetIds.length;
         this.appWidgetManager = appWidgetManager;
-        Utils.log("WidgetMVV onupdate");
         for (int i = 0; i < N; i++) {
             Intent intent = new Intent(context, MVVWidgetService.class);
             intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetIds[i]);
             intent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME)));
             rv = new RemoteViews(context.getPackageName(), R.layout.mvv_widget);
 
-            Utils.log("WidgetMVV create header");
             // set the header for the Widget layout
             Calendar c = Calendar.getInstance();
             String headerMVVWidget = "MVV Recent Searches " + c.get(Calendar.DAY_OF_MONTH) + "-" + c.get(Calendar.MONTH)+ "-" + c.get(Calendar.YEAR);
             rv.setTextViewText(R.id.mvv_widget_header, headerMVVWidget);
 
-            Utils.log("WidgetMVV setadapter");
             // set the adapter for the list view in the mensaWidget
             rv.setRemoteAdapter(appWidgetIds[i], R.id.mvv_widget_item, intent);
             rv.setEmptyView(R.id.empty_view, R.id.empty_view);

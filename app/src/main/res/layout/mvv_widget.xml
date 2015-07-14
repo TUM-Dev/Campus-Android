@@ -14,16 +14,6 @@
         android:padding="8dp"
         android:layout_alignParentTop="true"/>
 
-    <ImageView
-        android:id="@+id/mvv_widget_icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_mvv"
-        android:layout_toRightOf="@id/mvv_widget_header"
-        android:padding="8dp"
-        android:layout_marginTop="8dp"
-        />
-
     <ListView
         android:id="@+id/mvv_widget_item"
         android:layout_width="fill_parent"

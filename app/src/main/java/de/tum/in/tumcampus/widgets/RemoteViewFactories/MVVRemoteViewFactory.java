@@ -25,6 +25,7 @@ public class MVVRemoteViewFactory implements RemoteViewsService.RemoteViewsFacto
     private List<MVVObject> mvvList;
     private AppWidgetManager appWidgetManager;
     private Intent intent;
+    String mostRecentStationName;
 
     public MVVRemoteViewFactory(Context applicationContext, Intent intent) {
         this.applicationContext = applicationContext;
@@ -33,10 +34,10 @@ public class MVVRemoteViewFactory implements RemoteViewsService.RemoteViewsFacto
 
     @Override
     public void onCreate() {
-        Utils.log("WidgetMVV On Create called");
         recentsManager = new RecentsManager(applicationContext,RecentsManager.STATIONS);
         callRecentVisitedStation();
         appWidgetManager = AppWidgetManager.getInstance(applicationContext);
+        mostRecentStationName = null;
 
     }
 
@@ -52,19 +53,15 @@ public class MVVRemoteViewFactory implements RemoteViewsService.RemoteViewsFacto
     @Override
     public int getCount() {
         if (mvvList != null) {
-            Utils.log("WidgetMVV size is: " + mvvList.size());
             return mvvList.size();
         }
         else{
-            Utils.log("WidgetMVV size is: 0");
-
             return 0;
         }
     }
 
     @Override
     public RemoteViews getViewAt(int position) {
-        Utils.log("WidgetMVV GetViewAt Pos: "+ position);
         RemoteViews rv = new RemoteViews(applicationContext.getPackageName(), R.layout.mvv_widget_item);
         MVVDeparture currentSearch = (MVVDeparture)mvvList.get(position);
         if(currentSearch !=null) {
@@ -75,7 +72,8 @@ public class MVVRemoteViewFactory implements RemoteViewsService.RemoteViewsFacto
 
             rv.setImageViewResource(R.id.mvv_icon, icon_id);
             rv.setTextViewText(R.id.line_number, number);
-            rv.setTextViewText(R.id.station, station);
+            String stationString = (mostRecentStationName == null ? station : mostRecentStationName + " to " + station);
+            rv.setTextViewText(R.id.station, stationString);
             rv.setTextViewText(R.id.minutes, minutes);
             return rv;
 
@@ -106,36 +104,34 @@ public class MVVRemoteViewFactory implements RemoteViewsService.RemoteViewsFacto
     }
 
     public boolean callRecentVisitedStation(){
-        Utils.log("WidgetMVV callRecentVisitedStation");
         boolean isValid = true;
         try {
-            Utils.log("WidgetMVV DB recent searches");
-            Cursor stationCursor = recentsManager.getAllFromDb();
-            Utils.log("WidgetMVV cursor created");
-            String mostRecentSearches[] = stationCursor.getColumnNames();
-            Utils.log("WidgetMVV Most recent in array");
-            String mostRecentSearch = mostRecentSearches[0];
-            String test = "Garching";//stationCursor.getString(stationCursor.get;
-
-            Utils.log("WidgetMVV first search");
-            Utils.log("WidgetMVV MostRecent is :" + test);
-
-            (new MVVJsoupParser(this)).execute(new String[]{test});
-
+            String query = getFirstRecentStation();
+            if (query != null)
+                (new MVVJsoupParser(this)).execute(new String[]{query});
 
         }catch (Exception e){
             Utils.showToast(applicationContext, "Sorry, something went wrong");
             e.printStackTrace();
-            return isValid = false;
+            isValid = false;
+            return isValid;
         }
 
         return isValid;
+    }
+    private String getFirstRecentStation(){
+        Cursor stationCursor = recentsManager.getAllFromDb();
+
+        if (stationCursor != null && stationCursor.moveToFirst()) {
+            mostRecentStationName = stationCursor.getString(stationCursor.getColumnIndex("name"));
+        }
+
+        return mostRecentStationName;
     }
 
     @Override
     public void showSuggestionList(MVVObject sug) {
         try {
-            Utils.log("MVVWidget show sugestion");
             mvvList = sug.getResultList();
             final MVVSuggestion sugestion = (MVVSuggestion) mvvList.get(0);
             final MVVDelegate delegate = this;
@@ -156,12 +152,9 @@ public class MVVRemoteViewFactory implements RemoteViewsService.RemoteViewsFacto
     @Override
     public void showDepartureList(MVVObject dep) {
         try {
-            Utils.log("MVVWidget show dep");
-            RemoteViews rv = new RemoteViews(applicationContext.getPackageName(), R.layout.mvv_widget_item);
+
             mvvList = dep.getResultList();
             int widgetID = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,-1);
-            Utils.log("MVVWidget widget id is: " + widgetID);
-            Utils.log("MVVWidget mvvList size is:" + mvvList.size());
             appWidgetManager.notifyAppWidgetViewDataChanged(widgetID, R.id.mvv_widget_item);
 
         }catch (Exception e){
@@ -172,9 +165,8 @@ public class MVVRemoteViewFactory implements RemoteViewsService.RemoteViewsFacto
 
     @Override
     public void showError(MVVObject object) {
-        Utils.log("WidgetMVV error");
         Utils.log("WidgetMVV " + object.getMessage());
-        Utils.showToast(applicationContext, object.getMessage());
+        Utils.showToast(applicationContext, "Sorry something went wrong");
     }
 
 
@@ -188,7 +180,6 @@ public class MVVRemoteViewFactory implements RemoteViewsService.RemoteViewsFacto
      */
     public int getImageResource(MVVDeparture departure) {
         MVVDeparture.TransportationType type = departure.getTransportationType();
-        Utils.log("MVVWidget type of transportation is " + type);
         switch (type) {
             case UBAHN:
                 return R.drawable.mvv_ubahn;
