@@ -98,6 +98,12 @@ public class MvvAdapter extends BaseAdapter {
         }
     }
 
+    /**
+     * changes the style of the list item based on if it is a departure
+     * or just a suggestion
+     * @param viewHolder
+     * @param position
+     */
     private void changeStyle(ViewHolder viewHolder, int position) {
         if (data.isSuggestion()) {
             MVVSuggestion suggestion = (MVVSuggestion) getItem(position);

@@ -2,34 +2,22 @@ package de.tum.in.tumcampus.activities;
 
 import android.database.Cursor;
 import android.graphics.Typeface;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v4.widget.SimpleCursorAdapter;
-import android.util.Log;
-import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-
 import de.tum.in.tumcampus.R;
-import de.tum.in.tumcampus.activities.generic.ActivityForDownloadingExternal;
 import de.tum.in.tumcampus.activities.generic.ActivityForSearching;
 import de.tum.in.tumcampus.adapters.MvvAdapter;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.MVVStationSuggestionProvider;
 import de.tum.in.tumcampus.auxiliary.NetUtils;
 import de.tum.in.tumcampus.auxiliary.Utils;
-import de.tum.in.tumcampus.models.MVVDeparture;
 import de.tum.in.tumcampus.models.MVVObject;
 import de.tum.in.tumcampus.models.MVVSuggestion;
 import de.tum.in.tumcampus.models.managers.MVVDelegate;
@@ -43,9 +31,12 @@ import de.tum.in.tumcampus.models.managers.RecentsManager;
 public class MVVActivity extends ActivityForSearching implements MVVDelegate, AdapterView.OnItemClickListener {
 
     private ListView departurelist;
-    private MvvAdapter dataAdapter;
     private TextView listHeader;
     private RecentsManager recentsManager;
+
+    // used for populating suggestion or departurelist
+    private MvvAdapter dataAdapter;
+    // used for showing previuosly visited stations
     private SimpleCursorAdapter adapterStations;
 
     public MVVActivity() {
@@ -95,6 +86,7 @@ public class MVVActivity extends ActivityForSearching implements MVVDelegate, Ad
     @Override
     public void showDepartureList(MVVObject dep) {
         try {
+            // save this departure into visited departures
             recentsManager.replaceIntoDb(dep.getDepartureHeader().trim());
             String stationHeader = dep.getDepartureHeader().trim() + " " + dep.getDepartureServerTime() +" Uhr";
             listHeader.setText(stationHeader);
@@ -148,7 +140,10 @@ public class MVVActivity extends ActivityForSearching implements MVVDelegate, Ad
         }
     }
 
-
+    /**
+     * shows the recently visited stations on a list
+     * used at the start up of the app
+     */
     private void getListFromMemory(){
         listHeader.setText(R.string.mvv_recent);
         listHeader.setTypeface(null, Typeface.BOLD);
@@ -156,6 +151,8 @@ public class MVVActivity extends ActivityForSearching implements MVVDelegate, Ad
         adapterStations = new SimpleCursorAdapter(this, android.R.layout.simple_list_item_1, stationCursor,
                 stationCursor.getColumnNames(), new int[]{android.R.id.text1}, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
         if(adapterStations.getCount()==0) {
+            // if there is no previously visited stations
+            // puts the focus on the search bar
             openSearch();
         } else {
             departurelist.setAdapter(adapterStations);
