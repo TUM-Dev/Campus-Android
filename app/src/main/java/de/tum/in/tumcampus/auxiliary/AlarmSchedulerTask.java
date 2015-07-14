@@ -328,7 +328,7 @@ public class AlarmSchedulerTask extends AsyncTask {
 
         String lvnr = null;
         CalendarRow cr = null;
-        
+
         // get first lecture after earliestNextLecture
         for (CalendarRow lecture : appointments.getKalendarList()) {
             Date d = DateUtils.parseSqlDate(lecture.getDtstart());

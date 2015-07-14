@@ -106,7 +106,7 @@ public class SettingsFragment extends PreferenceFragment implements
         Preference ringtone_picker = findPreference("smart_alarm_ringtone");
         String ringtone = PreferenceManager.getDefaultSharedPreferences(mContext).getString("smart_alarm_ringtone", "");
         Uri ringtoneURI = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
-        if (!ringtone.equals("")) {
+        if (ringtone == null || ringtone.equals("")) {
             ringtoneURI = Uri.parse(ringtone);
         }
         ringtone_picker.setSummary(RingtoneManager.getRingtone(mContext, ringtoneURI).getTitle(mContext));
