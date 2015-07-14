@@ -5,6 +5,9 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.PixelFormat;
+import android.media.AudioAttributes;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.IBinder;
@@ -19,6 +22,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.io.IOException;
+
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.SmartAlarmInfo;
@@ -28,6 +33,7 @@ public class SmartAlarmService extends Service {
     private boolean stopVibrate = false;
 
     private Uri ringtoneURI = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
+    private MediaPlayer player;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -107,7 +113,18 @@ public class SmartAlarmService extends Service {
         if (!ringtone.equals("")) {
             ringtoneURI = Uri.parse(ringtone);
         }
-        RingtoneManager.getRingtone(getApplicationContext(), ringtoneURI).play();
+
+        // loop ringtone
+        try {
+            player = new MediaPlayer();
+            player.setAudioStreamType(AudioManager.STREAM_ALARM);
+            player.setDataSource(getApplicationContext(), ringtoneURI);
+            player.setLooping(true);
+            player.prepare();
+            player.start();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         return START_NOT_STICKY;
     }
@@ -120,6 +137,10 @@ public class SmartAlarmService extends Service {
         if (stopVibrate) {
             ((Vibrator) getSystemService(Context.VIBRATOR_SERVICE)).cancel();
         }
-        RingtoneManager.getRingtone(getApplicationContext(), ringtoneURI).stop();
+
+        if (player != null && player.isPlaying()) {
+            player.stop();
+            player.release();
+        }
     }
 }
