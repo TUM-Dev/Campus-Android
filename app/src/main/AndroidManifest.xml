@@ -567,6 +567,25 @@
         <service android:name=".services.MVVWidgetService"
             android:permission="android.permission.BIND_REMOTEVIEWS"/>
 
+        <service
+            android:name=".widgets.CardsWidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
+
+        <receiver android:name=".widgets.CardsWidget" >
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/cards_widget_info" />
+        </receiver>
+
+        <activity android:name=".widgets.CardsWidgetConfigureActivity" >
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
