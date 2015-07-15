@@ -1,5 +1,6 @@
 package de.tum.in.tumcampus.activities;
 
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -51,7 +52,6 @@ public class MVVActivity extends ActivityForSearching implements MVVDelegate, Ad
 
     @Override
     protected void onStartSearch(String query) {
-        Utils.log("MVVActivity query is: " + query);
         if (!NetUtils.isConnected(this)) {
             showNoInternetLayout();
             return;
@@ -84,6 +84,16 @@ public class MVVActivity extends ActivityForSearching implements MVVDelegate, Ad
     public void showDepartureList(MVVObject dep) {
         try {
             recentsManager.replaceIntoDb(dep.getDepartureHeader().trim());
+            //saving most recent station searched
+            SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.mvv_shared_pref_key), MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.remove(getString(R.string.most_recent_station));
+            editor.commit();
+
+            editor.putString(getString(R.string.most_recent_station),dep.getDepartureHeader().trim());
+            editor.commit();
+            Utils.log("MVV most recent is: " + dep.getDepartureHeader().trim());
+
             String stationHeader = dep.getDepartureHeader().trim() + " " + dep.getDepartureServerTime() +" Uhr";
             listHeader.setText(stationHeader);
             listHeader.setTypeface(null, Typeface.BOLD);

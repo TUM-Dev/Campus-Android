@@ -11,6 +11,7 @@ import android.widget.RemoteViews;
 import java.util.Calendar;
 
 import de.tum.in.tumcampus.R;
+import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.services.MVVWidgetService;
 
@@ -20,7 +21,6 @@ import de.tum.in.tumcampus.services.MVVWidgetService;
 public class MVVWidget extends AppWidgetProvider {
 
     private RemoteViews rv;
-    private static final String SYNC_CLICKED    = "automaticWidgetSyncButtonClick";
     AppWidgetManager appWidgetManager;
     int[] widgetIDs = null;
 
@@ -45,7 +45,7 @@ public class MVVWidget extends AppWidgetProvider {
             rv.setRemoteAdapter(appWidgetIds[i], R.id.mvv_widget_item, intent);
             rv.setEmptyView(R.id.empty_view, R.id.empty_view);
 
-            rv.setOnClickPendingIntent(R.id.mvv_refresh, getPendingSelfIntent(context, SYNC_CLICKED));
+            rv.setOnClickPendingIntent(R.id.mvv_refresh, getPendingSelfIntent(context, Const.SYNC_CLICKED));
 
             appWidgetManager.updateAppWidget(appWidgetIds[i], rv);
 
@@ -57,7 +57,7 @@ public class MVVWidget extends AppWidgetProvider {
     public void onReceive(Context context, Intent intent) {
         super.onReceive(context, intent);
 
-        if (SYNC_CLICKED.equals(intent.getAction())) {
+        if (Const.SYNC_CLICKED.equals(intent.getAction())) {
             if (!MVVWidgetService.loadRecentData())
                 Utils.showToast(context, "No recent searches to show");
         }

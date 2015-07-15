@@ -462,5 +462,8 @@ Signature: %5$s</string>
     <!-- Widget MVV -->
     <string name="mvv_widget">MVV Widget TUM</string>
     <string name="something_is_wrong">Sorry something went wrong</string>
+    <string name="most_recent_station">mvv_most_recent</string>
+    <string name="mvv_shared_pref_key">mvv_shared_pref_key</string>
+    <string name="no_recent_found">No recent station found</string>
 
 </resources>
