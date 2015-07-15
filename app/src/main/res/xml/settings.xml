@@ -279,6 +279,60 @@
             android:key="background_mode"
             android:summary="@string/background_info"
             android:title="@string/background_mode" />
+        <PreferenceScreen
+            android:key="smart_alarm_screen"
+            android:title="@string/smart_alarm"
+            android:summary="@string/smart_alarm_info">
+
+            <CheckBoxPreference
+                android:defaultValue="false"
+                android:key="smart_alarm_active"
+                android:title="@string/smart_alarm_active" />
+            <Preference
+                android:defaultValue=""
+                android:key="smart_alarm_ringtone"
+                android:title="@string/smart_alarm_ringtone"/>
+            <CheckBoxPreference
+                android:defaultValue="true"
+                android:key="smart_alarm_vibrate"
+                android:title="@string/smart_alarm_vibrate" />
+            <EditTextPreference
+                android:defaultValue="10"
+                android:key="smart_alarm_buffer"
+                android:title="@string/smart_alarm_buffer"
+                android:summary="@string/smart_alarm_buffer_info"
+                android:inputType="number" />
+            <CheckBoxPreference
+                android:defaultValue="true"
+                android:key="smart_alarm_transportmode"
+                android:title="@string/smart_alarm_transportmode_public"
+                android:summaryOn="@string/smart_alarm_toggle_private"
+                android:summaryOff="@string/smart_alarm_toggle_public" />
+            <PreferenceCategory
+                android:key="smart_alarm_cat_public"
+                android:title="@string/smart_alarm_publicsettings">
+                <Preference
+                    android:key="smart_alarm_home_button"
+                    android:title="@string/smart_alarm_home"/>
+                <EditTextPreference
+                    android:defaultValue="60"
+                    android:key="smart_alarm_morningtime"
+                    android:title="@string/smart_alarm_morningtime"
+                    android:summary="@string/smart_alarm_morningtime_info"
+                    android:inputType="number"
+                    android:numeric="integer" />
+            </PreferenceCategory>
+            <PreferenceCategory
+                android:key="smart_alarm_cat_private"
+                android:title="@string/smart_alarm_privatesettings">
+                <EditTextPreference
+                    android:defaultValue="90"
+                    android:key="smart_alarm_journeytime"
+                    android:title="@string/smart_alarm_journeyduration"
+                    android:inputType="number"
+                    android:numeric="integer"/>
+            </PreferenceCategory>
+        </PreferenceScreen>
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/extras">
         <Preference

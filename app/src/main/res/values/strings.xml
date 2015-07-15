@@ -85,6 +85,28 @@
     <string name="demo_mode">In-App-Tutorial</string>
     <string name="demo_info">Activates help mode for instruction on how to use this App.</string>
 
+    <string name="smart_alarm">SmartAlarm</string>
+    <string name="smart_alarm_info">Automatically set alarm clock corresponding to your lectures.</string>
+    <string name="smart_alarm_active">Activate SmartAlarm</string>
+    <string name="smart_alarm_ringtone">Ringtone</string>
+    <string name="smart_alarm_ringtone_selectortitle">Select ringtone for smart alarm:</string>
+    <string name="smart_alarm_buffer">Buffer Time</string>
+    <string name="smart_alarm_buffer_info">How long you want to arrive before beginning of your first lecture.</string>
+    <string name="smart_alarm_home">Train Station at Home</string>
+    <string name="smart_alarm_transportmode_public">Public Transport</string>
+    <string name="smart_alarm_toggle_public">Click to toggle to public transport</string>
+    <string name="smart_alarm_toggle_private">Click to toggle to private transport</string>
+    <string name="smart_alarm_morningtime">Time before departure</string>
+    <string name="smart_alarm_morningtime_info">Time you need between getting up and arriving at your home\'s train station</string>
+    <string name="smart_alarm_journeyduration">Duration of your Journey</string>
+    <string name="smart_alarm_publictransport_cat">Public Transport Settings</string>
+    <string name="smart_alarm_privatetransport_cat">Private Transport Settings</string>
+    <string name="smart_alarm_publicsettings">Public Transport Settings</string>
+    <string name="smart_alarm_privatesettings">Private Transport Settings</string>
+    <string name="smart_alarm_nostation">No station set</string>
+
+    <string name="mvv_station_picker_title">Pick MVV Station</string>
+
     <string name="about_tca">About TCA</string>
     <string name="information">Information</string>
     <string name="facebook" translatable="false">Facebook</string>
@@ -145,7 +167,7 @@
     <string name="mvv">MVV</string>
     <string name="news">News</string>
     <string name="kino">TU Kino</string>
-
+    <string name="moodle">Moodle</string>
     <!-- Activity titles -->
     <string name="lectures_information">Lecture Information</string>
     <string name="lectures_appointments">Lecture Appointments</string>
@@ -164,13 +186,37 @@
     <string name="exception_sdcard">Error accessing the SD-Card</string>
     <string name="adress">Address</string>
     <string name="name">Name</string>
+    
+    <!-- Moodle -->
+    <string name="moodle_user_token_shared_prefs_key">MoodleUserTokenSharedPrefFile</string>
+    <string name="moodle_token_key">MoodleTokenKey</string>
+    <string name="moodle_settings">Settings</string>
+    <string name="title_activity_moodle_main">Moodle</string>
+    <string name="title_activity_moodle_events">Events</string>
+    <string name="title_activity_moodle_course_info">Course Info</string>
+    <string name="moodle_courses">courses</string>
+    <string name="moodle_events">events</string>
+    <string name="moodle_profile">profile</string>
+    <string name="no_url">Sorry ! No URL is available for this item</string>
+    <string name="moodle_course_name_not_found">Course Name not Found</string>
+    <string name="moodle_courses_error">Sorry! something went wrong! Cannot open the page for this course</string>
+    <string name="moodle_login_request">Login to www.moodle.tum.de</string>
+    <string name="mooodle_username">e.g. go42tum@mytum.de</string>
+    <string name="button_login">Login</string>
+    <string name="title_activity_moodle_login">Moodle Login</string>
+    <string name="login_failed">Username or Password you provided is not right!</string>
+    <string name="moodle_user_shared_prefs_key">MOODLE</string>
+    <string name="moodle_course_id_not_found">Could not get the page for this course!</string>
+    <string name="moodle_stay_here">You are already there fella! :)</string>
 
     <!-- MVV -->
     <string name="no_departures_found">No departures available</string>
     <string name="exception_unknown">Unknown error</string>
     <string name="exception_timeout">Problems with internet connection, please try again later</string>
     <string name="search_station">Search station</string>
-
+    <string name="search_hint">Search hint?</string>
+    <string name="mvv_recent">Recently visited stations: </string>
+    <string name="mvv_suggestion_hint">Similar stations found with your query click on them to see departure times</string>
     <!-- Lectures -->
     <string name="no_appointments">No appointments available</string>
     <string name="lec_details">Details</string>
@@ -439,6 +485,39 @@ Signature: %5$s</string>
     <string name="new_chat_room_desc">Select a name for your chat room. The name can not be changed afterwards!\n\n</string>
     <string name="just_now">Just now</string>
     <string name="yesterday">Yesterday</string>
+    <string name="smart_alarm_widget_activate_btn">Activate / Deactivate SmartAlarm</string>
+    <string name="smart_alarm_transportation_type">Transportation Type</string>
+    <string name="smart_alarm_dismiss_btn">OK</string>
+    <string name="smart_alarm_walk_to">Walk to station</string>
+    <string name="smart_alarm_starting">Activating Smart Alarm</string>
+    <string name="smart_alarm_home_validating">Validating station</string>
+    <string name="smart_alarm_vibrate">Vibrate</string>
+    <string name="smart_alarm_inactive">SmartAlarm inactive</string>
+    <string name="smart_alarm_activate">Activate</string>
+    <string name="smart_alarm_activating">Wait..</string>
+    <string name="smart_alarm_internal_error">Internal error.</string>
+    <string name="smart_alarm_fetch_error">Couldn\'t fetch lecture or route info.</string>
+    <string name="smart_alarm_no_home">Home station is not set.</string>
+    <string name="smart_alarm_unknown_location">Location of the next lecture is unknown.</string>
+    <string name="smart_alarm_unsupported_location">SmartAlarm doesn\'t support the location of the next lecture public transport mode.</string>
+    <string name="smart_alarm_fetch_route_error">Couldn\'t fetch route to campus</string>
+    <string name="smart_alarm_no_calendar">Couldn\'t fetch calendar.</string>
+    <string name="smart_alarm_missing_lvnr">Lecture number is missing</string>
+    <string name="smart_alarm_no_lectures">No lectures found.</string>
+    <string name="smart_alarm_fetch_lectures_error">Couldn\'t fetch lecture appointments.</string>
+    <string name="smart_alarm_no_lecture_appointment">No lecture appointments in future.</string>
+    <string name="smart_alarm_disabled">SmartAlarm Disabled</string>
+    <string name="smart_alarm_disabled_next_lecture">SmartAlarm disabled for next lecture</string>
+    <string name="smart_alarm_set_own_clock">Please set your own alarm clock for the next lecture / tomorrow.</string>
+    <string name="smart_alarm_connection_error">SmartAlarm connection error</string>
+    <string name="smart_alarm_retry">Automatic retry in 1 hour.</string>
+    <string name="smart_alarm_station_not_found">Couldn\'t find train station.</string>
     <string name="support_us">Help us to spread the word about the Campus App! Like us on Facebook, suggest an exciting idea on Github or send a mail telling us what you think!</string>
     <string name="support_email">tca-support.os.in@tum.de</string>
+    <string name="smart_alarm_no_location">Couldn\'t fetch location of your next lecture.</string>
+    <string name="smart_alarm_street_not_found">Couldn\'t find street.</string>
+    <string name="smart_alarm_route_error">Couldn\'t calculate route.</string>
+    <string name="add_widget">Add widget</string>
+    <!-- Widget Mensa -->
+    <string name="mensa_widget">Mensa Widget TUM</string>
 </resources>

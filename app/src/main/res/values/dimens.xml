@@ -16,4 +16,6 @@
     <dimen name="padding_kino">10dp</dimen>
     <dimen name="padding_kino_right">3dp</dimen>
     <dimen name="padding_kino_end">20dp</dimen>
+    <dimen name="widget_margin">8dp</dimen>
+    <dimen name="widget_margin_smartalarm">8dp</dimen>
 </resources>

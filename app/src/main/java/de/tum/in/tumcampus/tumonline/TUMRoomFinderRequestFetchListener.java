@@ -20,8 +20,6 @@ public interface TUMRoomFinderRequestFetchListener {
 	 */
 	public void onFetch(ArrayList<HashMap<String, String>> result);
 
-	public void onFetchDefaultMapId(String result);
-
 	/**
 	 * if the fetchInteractive method will result in null or there is no
 	 * internet connection then this method will be called

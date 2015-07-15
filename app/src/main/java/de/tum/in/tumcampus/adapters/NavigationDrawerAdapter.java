@@ -16,15 +16,16 @@ import de.tum.in.tumcampus.activities.CafeteriaActivity;
 import de.tum.in.tumcampus.activities.CalendarActivity;
 import de.tum.in.tumcampus.activities.ChatRoomsActivity;
 import de.tum.in.tumcampus.activities.CurriculaActivity;
+import de.tum.in.tumcampus.activities.KinoActivity;
 import de.tum.in.tumcampus.activities.LecturesPersonalActivity;
+import de.tum.in.tumcampus.activities.MVVActivity;
+import de.tum.in.tumcampus.activities.MoodleMainActivity;
 import de.tum.in.tumcampus.activities.NewsActivity;
 import de.tum.in.tumcampus.activities.OpeningHoursListActivity;
 import de.tum.in.tumcampus.activities.OrganisationActivity;
 import de.tum.in.tumcampus.activities.PersonsSearchActivity;
 import de.tum.in.tumcampus.activities.PlansActivity;
 import de.tum.in.tumcampus.activities.RoomFinderActivity;
-import de.tum.in.tumcampus.activities.KinoActivity;
-import de.tum.in.tumcampus.activities.TransportationActivity;
 import de.tum.in.tumcampus.activities.TuitionFeesActivity;
 import de.tum.in.tumcampus.auxiliary.AccessTokenManager;
 import de.tum.in.tumcampus.auxiliary.Const;
@@ -188,12 +189,13 @@ public class NavigationDrawerAdapter extends BaseAdapter {
             new SideNavigationItem(R.string.menues, R.drawable.ic_cutlery, false, CafeteriaActivity.class),
             new SideNavigationItem(R.string.news, R.drawable.ic_rss, false, NewsActivity.class),
             new SideNavigationItem(R.string.kino, R.drawable.ic_kino, false, KinoActivity.class),
-            new SideNavigationItem(R.string.mvv, R.drawable.ic_mvv, false, TransportationActivity.class),
+            new SideNavigationItem(R.string.mvv, R.drawable.ic_mvv, false, MVVActivity.class),
             new SideNavigationItem(R.string.plans, R.drawable.ic_plans, false, PlansActivity.class),
             new SideNavigationItem(R.string.roomfinder, R.drawable.ic_place, false, RoomFinderActivity.class),
             new SideNavigationItem(R.string.opening_hours, R.drawable.ic_time, false, OpeningHoursListActivity.class),
             new SideNavigationItem(R.string.person_search, R.drawable.ic_users, true, PersonsSearchActivity.class),
             new SideNavigationItem(R.string.organisations, R.drawable.ic_organisations, true, OrganisationActivity.class),
+            new SideNavigationItem(R.string.moodle, R.drawable.ic_moodle, false, MoodleMainActivity.class),
             new SideNavigationItem(R.string.study_plans, R.drawable.ic_study_plans, false, CurriculaActivity.class)
     };
 

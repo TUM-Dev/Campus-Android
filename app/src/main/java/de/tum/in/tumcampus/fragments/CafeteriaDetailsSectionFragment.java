@@ -93,13 +93,17 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
 
                 // Show menu item
                 SpannableString text = menuToSpan(context, big ? menu : prepare(menu));
-                if (rolePrices.containsKey(typeLong)) {
+                if (rolePrices.containsKey(typeLong) || cafeteriaId==666) {
                     // If price is available
                     View view = inflater.inflate(big ? R.layout.price_line_big : R.layout.card_price_line, rootView, false);
                     textview = (TextView) view.findViewById(R.id.line_name);
                     TextView priceView = (TextView) view.findViewById(R.id.line_price);
                     textview.setText(text);
-                    priceView.setText(rolePrices.get(typeLong) + " €");
+                    if(cafeteriaId == 666){
+                        priceView.setText(typeShort + " €");
+                    }else{
+                        priceView.setText(rolePrices.get(typeLong) + " €");
+                    }
                     rootView.addView(view);
                 } else {
                     // Without price
