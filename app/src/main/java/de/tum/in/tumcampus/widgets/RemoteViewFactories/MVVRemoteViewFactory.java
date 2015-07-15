@@ -18,6 +18,10 @@ import de.tum.in.tumcampus.models.managers.MVVDelegate;
 import de.tum.in.tumcampus.models.managers.MVVJsoupParser;
 import de.tum.in.tumcampus.models.managers.RecentsManager;
 
+/**
+ * Remote View Factory that generates the data related to the most recent station searched on the
+ * TCA MVV
+ */
 public class MVVRemoteViewFactory implements RemoteViewsService.RemoteViewsFactory, MVVDelegate {
 
     private Context applicationContext;
@@ -34,6 +38,7 @@ public class MVVRemoteViewFactory implements RemoteViewsService.RemoteViewsFacto
 
     @Override
     public void onCreate() {
+        //Load from Shared preferences the last searched station
         recentsManager = new RecentsManager(applicationContext,RecentsManager.STATIONS);
         callRecentVisitedStation();
         appWidgetManager = AppWidgetManager.getInstance(applicationContext);
@@ -63,19 +68,19 @@ public class MVVRemoteViewFactory implements RemoteViewsService.RemoteViewsFacto
     public RemoteViews getViewAt(int position) {
         RemoteViews rv = new RemoteViews(applicationContext.getPackageName(), R.layout.mvv_widget_item);
         MVVDeparture currentSearch = (MVVDeparture)mvvList.get(position);
-
+        //Loading most recent searched station
         SharedPreferences sharedPreferences = applicationContext.getSharedPreferences(applicationContext.getString(R.string.mvv_shared_pref_key), Context.MODE_PRIVATE);
         String mostRecentStationName = sharedPreferences.getString(applicationContext.getString(R.string.most_recent_station), null);
-        Utils.log("WidgetMVV most recent is: " + mostRecentStationName);
 
         if(currentSearch !=null) {
             int icon_id = getImageResource(currentSearch);
-            String number = currentSearch.getLine();
-            String station = currentSearch.getDirection();
-            String minutes = String.valueOf(currentSearch.getMin() + " min");
+            String number = currentSearch.getLine(); // get station number
+            String station = currentSearch.getDirection(); // get destination station name
+            String minutes = String.valueOf(currentSearch.getMin() + " min"); // get minutes remaining before departure
 
-            rv.setImageViewResource(R.id.mvv_icon, icon_id);
-            rv.setTextViewText(R.id.line_number, number);
+            rv.setImageViewResource(R.id.mvv_icon, icon_id); // set public transportation icon
+            rv.setTextViewText(R.id.line_number, number); // set station number
+            // create string containing both origin station and destination station
             String stationString = (mostRecentStationName == null ? station : mostRecentStationName + " to " + station);
             rv.setTextViewText(R.id.station, stationString);
             rv.setTextViewText(R.id.minutes, minutes);
@@ -108,12 +113,13 @@ public class MVVRemoteViewFactory implements RemoteViewsService.RemoteViewsFacto
     }
 
     public boolean callRecentVisitedStation(){
+        // get cached most recent seearched station
         SharedPreferences sharedPreferences = applicationContext.getSharedPreferences(applicationContext.getString(R.string.mvv_shared_pref_key), Context.MODE_PRIVATE);
         String queryString = sharedPreferences.getString(applicationContext.getString(R.string.most_recent_station), null);
         boolean isValid = true;
         Utils.log("WidgetMVV queryString is: " + queryString);
         try {
-
+            // execute query asynchronously
             if (queryString != null)
                 (new MVVJsoupParser(this)).execute(new String[]{queryString});
             else {
@@ -130,22 +136,28 @@ public class MVVRemoteViewFactory implements RemoteViewsService.RemoteViewsFacto
         return isValid;
     }
 
+    /**
+     *  method showing the empty view if the listview is empty
+     */
     private void showEmptyView() {
         RemoteViews rv = new RemoteViews(applicationContext.getPackageName(),R.layout.mvv_widget);
         rv.setEmptyView(R.layout.mvv_widget, R.id.empty_view);
     }
+
+    /**
+     * method that calls the first suggestion available if the result of the query is a sugestion
+     * and not a real station
+     * @param sug
+     */
     @Override
     public void showSuggestionList(MVVObject sug) {
         try {
             mvvList = sug.getResultList();
             final MVVSuggestion sugestion = (MVVSuggestion) mvvList.get(0);
             final MVVDelegate delegate = this;
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    ( new MVVJsoupParser(delegate) ).execute(sugestion.getName());
-                }
-            }).run();
+            // execute real query from the suggestion
+            ( new MVVJsoupParser(delegate) ).execute(sugestion.getName());
+
 
             mvvList = null;
         }catch (Exception e){
@@ -154,12 +166,18 @@ public class MVVRemoteViewFactory implements RemoteViewsService.RemoteViewsFacto
         }
     }
 
+    /**
+     * Method called when the query result is ready.
+     * All the data is sent to the listview to be shown
+     * @param dep
+     */
     @Override
     public void showDepartureList(MVVObject dep) {
         try {
-
+            // set data for listview
             mvvList = dep.getResultList();
             int widgetID = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,-1);
+            // notify update
             appWidgetManager.notifyAppWidgetViewDataChanged(widgetID, R.id.mvv_widget_item);
 
         }catch (Exception e){
@@ -167,6 +185,11 @@ public class MVVRemoteViewFactory implements RemoteViewsService.RemoteViewsFacto
             Utils.showToast(applicationContext, applicationContext.getString(R.string.something_is_wrong));
         }
     }
+
+    /**
+     * Method called if the query execution failed
+     * @param object
+     */
 
     @Override
     public void showError(MVVObject object) {

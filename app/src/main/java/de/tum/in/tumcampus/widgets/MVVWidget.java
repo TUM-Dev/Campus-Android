@@ -44,7 +44,7 @@ public class MVVWidget extends AppWidgetProvider {
             // set the adapter for the list view in the mensaWidget
             rv.setRemoteAdapter(appWidgetIds[i], R.id.mvv_widget_item, intent);
             rv.setEmptyView(R.id.empty_view, R.id.empty_view);
-
+            //Set pending intent to use the refresh button
             rv.setOnClickPendingIntent(R.id.mvv_refresh, getPendingSelfIntent(context, Const.SYNC_CLICKED));
 
             appWidgetManager.updateAppWidget(appWidgetIds[i], rv);
@@ -53,11 +53,17 @@ public class MVVWidget extends AppWidgetProvider {
         super.onUpdate(context, appWidgetManager, appWidgetIds);
     }
 
+    /**
+     * Method reacting to the click on the refresh button
+     * @param context
+     * @param intent
+     */
     @Override
     public void onReceive(Context context, Intent intent) {
         super.onReceive(context, intent);
-
+        //if click on the refresh button
         if (Const.SYNC_CLICKED.equals(intent.getAction())) {
+            //Update widget
             if (!MVVWidgetService.loadRecentData())
                 Utils.showToast(context, "No recent searches to show");
         }

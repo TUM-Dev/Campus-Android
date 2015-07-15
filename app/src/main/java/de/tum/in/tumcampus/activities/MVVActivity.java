@@ -30,7 +30,7 @@ import de.tum.in.tumcampus.models.managers.RecentsManager;
  */
 public class MVVActivity extends ActivityForSearching implements MVVDelegate, AdapterView.OnItemClickListener {
 
-    private ListView departurelist;
+    private ListView departurelist; //List view containing the departures from the most recent searched station
     private MvvAdapter dataAdapter;
     private TextView listHeader;
     private RecentsManager recentsManager;
