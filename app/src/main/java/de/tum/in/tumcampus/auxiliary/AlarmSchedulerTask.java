@@ -284,10 +284,6 @@ public class AlarmSchedulerTask extends AsyncTask {
             scheduleTime-= diff;
         }
 
-        // TODO: remove next two line after debug / showcase
-        scheduleTime = System.currentTimeMillis() + 10000;
-        if (prevAlarmInfo != null) action = SmartAlarmReceiver.ACTION_ALARM;
-
         AlarmManager alarmManager = (AlarmManager) c.getSystemService(Service.ALARM_SERVICE);
         Intent i = new Intent(c, SmartAlarmReceiver.class);
         i.setAction(action);

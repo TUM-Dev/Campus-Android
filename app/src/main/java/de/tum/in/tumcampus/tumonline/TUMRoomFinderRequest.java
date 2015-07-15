@@ -39,7 +39,7 @@ public class TUMRoomFinderRequest {
     public static final String KEY_UTM_NORTHING = "utm_northing";
 
     // Api urls
-    private static final String API_BASE_URL = "http://portal.dev/Api/roomfinder/";
+    private static final String API_BASE_URL = "https://tumcabe.in.tum.de/Api/roomfinder/";
 
     private static final String API_URL_SEARCH = API_BASE_URL + "room/search/";
     private static final String API_URL_DEFAULT_MAP = API_BASE_URL + "room/defaultMap/";
