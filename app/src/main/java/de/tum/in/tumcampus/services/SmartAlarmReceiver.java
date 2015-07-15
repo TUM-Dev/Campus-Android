@@ -1,5 +1,8 @@
 package de.tum.in.tumcampus.services;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -15,6 +18,7 @@ import de.tum.in.tumcampus.models.SmartAlarmInfo;
 
 public class SmartAlarmReceiver extends BroadcastReceiver {
     public static final int PRE_ALARM_DIFF = 1;
+    public static final int NEXT_ALARM_DIFF = 1;
 
     public static final String INFO = "INFO";
 
@@ -78,6 +82,19 @@ public class SmartAlarmReceiver extends BroadcastReceiver {
         SharedPreferences.Editor prefs = PreferenceManager.getDefaultSharedPreferences(c).edit();
         prefs.putString("smart_alarm_last", DateUtils.formatDateSql(sai.getLectureStart()));
         prefs.apply();
+
+        // schedule next alarm 1 h after lecture start
+        AlarmManager alarmManager = (AlarmManager) c.getSystemService(Service.ALARM_SERVICE);
+        Intent i = new Intent(c, SmartAlarmReceiver.class);
+        i.setAction(ACTION_PREALARM);
+        PendingIntent pi = PendingIntent.getBroadcast(c, 0, i, PendingIntent.FLAG_UPDATE_CURRENT);
+        
+        long nextAlarmSchedule = sai.getLectureStart().getTime() + NEXT_ALARM_DIFF * SmartAlarmUtils.HOURINMS;
+        alarmManager.set(AlarmManager.RTC_WAKEUP, nextAlarmSchedule, pi);
+
+        Utils.log("Set next alarm at "
+                + android.text.format.DateUtils.formatDateTime(c, nextAlarmSchedule, android.text.format.DateUtils.FORMAT_SHOW_DATE) + " "
+                + android.text.format.DateUtils.formatDateTime(c, nextAlarmSchedule, android.text.format.DateUtils.FORMAT_SHOW_TIME));
     }
 
     /**
