@@ -1,0 +1,44 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:padding="@dimen/widget_margin"
+    android:background="@android:color/white"
+    >
+    <TextView
+        android:id="@+id/mvv_widget_header"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:minHeight="40dp"
+        android:textSize="20sp"
+        android:typeface="sans"
+        android:textColor="#ff656865"
+        android:padding="8dp"
+        android:layout_alignParentTop="true"/>
+
+    <ListView
+        android:id="@+id/mvv_widget_item"
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:divider="@android:color/darker_gray"
+        android:dividerHeight="1dp"
+        android:layout_below="@id/mvv_widget_header"
+        />
+
+    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/empty_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/mvv_widget_item"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:textColor="#ff656865"
+        android:text="No more item found!"
+        android:textSize="20sp" />
+    <ImageButton
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:id="@+id/mvv_refresh"
+        android:src="@drawable/ic_menu_refresh"
+        android:scaleType="fitXY"
+        android:layout_toRightOf="@id/mvv_widget_header"
+        />
+</RelativeLayout>

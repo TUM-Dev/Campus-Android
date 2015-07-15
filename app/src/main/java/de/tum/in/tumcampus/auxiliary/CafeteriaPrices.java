@@ -118,4 +118,18 @@ public class CafeteriaPrices {
                 return student_prices;
         }
     }
+
+    public static String getPrice(Context context, String menuType){
+        String type = Utils.getSetting(context, Const.ROLE, "");
+        switch (type) {
+            case "0":
+                return student_prices.get(menuType);
+            case "1":
+                return employee_prices.get(menuType);
+            case "2":
+                return guest_prices.get(menuType);
+            default:
+                return student_prices.get(menuType);
+        }
+    }
 }
