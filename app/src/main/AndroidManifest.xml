@@ -477,6 +477,7 @@
             android:name=".activities.MoodleLoginActivity"
             android:label="@string/title_activity_moodle_login"
             android:launchMode="singleTop"
+            android:noHistory="true"
             android:parentActivityName=".activities.MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
