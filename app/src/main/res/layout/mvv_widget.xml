@@ -5,14 +5,19 @@
     >
     <TextView
         android:id="@+id/mvv_widget_header"
-        android:layout_width="300dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minHeight="40dp"
         android:textSize="20sp"
+        android:lines="1"
+        android:singleLine="true"
         android:typeface="sans"
         android:textColor="#ff656865"
         android:padding="8dp"
-        android:layout_alignParentTop="true"/>
+        android:ellipsize="marquee"
+        android:layout_alignParentTop="true"
+        android:layout_toLeftOf="@+id/mvv_refresh"
+        android:layout_alignParentLeft="true" />
 
     <ListView
         android:id="@+id/mvv_widget_item"
@@ -20,8 +25,7 @@
         android:layout_height="match_parent"
         android:divider="@android:color/darker_gray"
         android:dividerHeight="1dp"
-        android:layout_below="@id/mvv_widget_header"
-        />
+        android:layout_below="@id/mvv_widget_header" />
 
     <TextView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/empty_view"
@@ -39,6 +43,5 @@
         android:id="@+id/mvv_refresh"
         android:src="@drawable/ic_menu_refresh"
         android:scaleType="fitXY"
-        android:layout_toRightOf="@id/mvv_widget_header"
-        />
+        android:layout_alignParentRight="true" />
 </RelativeLayout>
