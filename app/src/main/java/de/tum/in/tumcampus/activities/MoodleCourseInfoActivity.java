@@ -35,13 +35,17 @@ import de.tum.in.tumcampus.models.managers.RealMoodleManager;
  */
 public class MoodleCourseInfoActivity extends ProgressActivity implements MoodleUpdateDelegate, ExpandableListView.OnChildClickListener, ExpandableListView.OnGroupClickListener {
 
-
+    /* default course id to be used to see if
+     the activity started from outside or recreated
+      */
+    private final int DEFAULT_COURSE_ID = -876;
     MoodleManager realManager;
     private Intent intent;
     private String courseName;
-    private int courseId;
+    private int courseId = DEFAULT_COURSE_ID;
     private MoodleCourseInfoExpandableAdapter dataAdapter;
     private List<MoodleCourseSection> sections;
+    MoodleCourse moodleCourse;
     private ExpandableListView view_course_sections;
     private TextView title;
 
@@ -50,14 +54,32 @@ public class MoodleCourseInfoActivity extends ProgressActivity implements Moodle
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
+        Utils.log("moodle courseinfo oncreate called");
+
+        if (savedInstanceState != null) {
+            // Restore value of course from saved state
+            courseId = savedInstanceState.getInt("COURSE_ID", DEFAULT_COURSE_ID);
+            courseName = savedInstanceState.getString("COURSE_NAME");
+            moodleCourse = (MoodleCourse) savedInstanceState.getSerializable("COURSE_INFO");
+        }
+
         intent = getIntent();
         baseSetup();
         showLoadingStart();
     }
 
     @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        savedInstanceState.putInt("COURSE_ID", courseId);
+        savedInstanceState.putString("COURSE_NAME", courseName);
+        savedInstanceState.putSerializable("COURSE_INFO", moodleCourse);
+        super.onSaveInstanceState(savedInstanceState);
+    }
+
+    @Override
     public void onRestart(){
         super.onRestart();
+        Utils.log("moodle courseinfo onRestart is called");
         refresh();
     }
 
@@ -134,11 +156,12 @@ public class MoodleCourseInfoActivity extends ProgressActivity implements Moodle
                 }
             } else
                 Utils.log(String.format("No Content found for group posiiton %d and childPosition %d", groupPosition, childPosition));
-            return false;
+            return true;
         }catch (Exception e) {
             Utils.log(e);
             Utils.showToast(this.getApplicationContext(), "Sorry unable to find the URL");
-            return false;
+            showLoadingEnded();
+            return true;
         }
     }
 
@@ -215,18 +238,24 @@ public class MoodleCourseInfoActivity extends ProgressActivity implements Moodle
 
     private void baseSetup(){
         try {
-            // getting info from intent
-            courseName = intent.getStringExtra("course_name");
-            courseName = (courseName!=null) ? courseName : getString(R.string.moodle_course_name_not_found);
-            courseId = intent.getIntExtra("course_id", -1);
-            if (courseId == -1) {
-                Utils.log(String.format("Warning! course id is -1=defaultValue for course %s", courseName));
-                Utils.showToast(this, getResources().getString(R.string.moodle_course_id_not_found));
-                return;
-            }
 
+            if (courseId == DEFAULT_COURSE_ID) {
+                // the activity has started from outside not recreated
+                // getting info from intent
+                courseName = intent.getStringExtra("course_name");
+                courseName = (courseName != null) ? courseName : getString(R.string.moodle_course_name_not_found);
+                courseId = intent.getIntExtra("course_id", -1);
+                if (courseId == -1) {
+                    Utils.log(String.format("Warning! course id is -1=defaultValue for course %s", courseName));
+                    Utils.showToast(this, getResources().getString(R.string.moodle_course_id_not_found));
+                    return;
+                }
+            }
             realManager = RealMoodleManager.getInstance(this, this);
-            realManager.requestUserCourseInfo(this, courseId);
+
+            if (moodleCourse == null)
+                // download the moodleCourse if is not there
+                realManager.requestUserCourseInfo(this, courseId);
 
             //UI setup and adapter
             baseUISetup();
@@ -264,8 +293,12 @@ public class MoodleCourseInfoActivity extends ProgressActivity implements Moodle
                 showNoInternetLayout();
                 return;
             }
-            MoodleCourse moodleCourse = realManager.getMoodleUserCourseInfo();
+            if (moodleCourse == null)
+                // called if activity created for the first time
+                // when activity is recreated moodleCourse is not null
+                moodleCourse = realManager.getMoodleUserCourseInfo();
             sections = moodleCourse.getSections();
+
             //setting the dataAdapter
             dataAdapter = new MoodleCourseInfoExpandableAdapter(sections, this);
             view_course_sections.setAdapter(dataAdapter);

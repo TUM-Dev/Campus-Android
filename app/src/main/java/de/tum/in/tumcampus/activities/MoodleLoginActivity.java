@@ -1,6 +1,5 @@
 package de.tum.in.tumcampus.activities;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -105,7 +104,6 @@ public class MoodleLoginActivity extends ProgressActivity implements MoodleUpdat
                 startActivity(intent);
                 Utils.log("got the token now starting the previous activity");
             }
-            finish();
         }
     }
 }
