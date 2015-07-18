@@ -1,5 +1,6 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -13,7 +14,8 @@
         android:layout_marginTop="@dimen/card_padding_vertical"
         android:elevation="@dimen/cardview_elevation"
         card_view:cardBackgroundColor="#fff"
-        card_view:cardCornerRadius="3dp">
+        card_view:cardCornerRadius="3dp"
+        tools:ignore="UnusedAttribute">
 
         <LinearLayout
             android:id="@+id/card_view"
@@ -29,8 +31,8 @@
                 android:layout_gravity="center_vertical|center_horizontal"
                 android:layout_marginBottom="5dp"
                 android:drawableLeft="@drawable/ic_action_network_wifi"
-                android:drawableStart="@drawable/ic_action_network_wifi"
                 android:drawablePadding="7dp"
+                android:drawableStart="@drawable/ic_action_network_wifi"
                 android:text="@string/setup_eduroam"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 

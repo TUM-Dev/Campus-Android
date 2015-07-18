@@ -1,5 +1,6 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -13,7 +14,9 @@
         android:layout_marginTop="@dimen/card_padding_vertical"
         android:elevation="@dimen/cardview_elevation"
         card_view:cardBackgroundColor="#fff"
-        card_view:cardCornerRadius="3dp">
+        card_view:cardCornerRadius="3dp"
+        tools:ignore="UnusedAttribute">
+
         <LinearLayout
             android:id="@+id/card_view"
             android:layout_width="match_parent"
@@ -38,14 +41,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_above="@+id/linearLayout"
+                    android:layout_alignParentEnd="true"
                     android:layout_alignParentLeft="true"
+                    android:layout_alignParentRight="true"
                     android:layout_alignParentStart="true"
                     android:layout_alignParentTop="true"
+                    android:layout_margin="10dp"
                     android:text="@string/info_title"
-                    android:textSize="20sp"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentEnd="true"
-                    android:layout_margin="10dp" />
+                    android:textSize="20sp" />
 
                 <LinearLayout
                     android:id="@+id/linearLayout"
@@ -54,8 +57,8 @@
                     android:layout_alignLeft="@+id/news_title"
                     android:layout_alignParentBottom="true"
                     android:layout_alignStart="@+id/news_title"
-                    android:orientation="horizontal"
-                    android:layout_marginBottom="5dp">
+                    android:layout_marginBottom="5dp"
+                    android:orientation="horizontal">
 
                     <ImageView
                         android:id="@+id/news_src_icon"

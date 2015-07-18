@@ -76,59 +76,59 @@
                 android:textSize="30sp" />
 
             <RelativeLayout
-                android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="30dp"
                 android:layout_below="@+id/next_lecture_title"
-                android:gravity="center_vertical">
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
                 <ImageView
+                    android:id="@+id/transport_icon"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:id="@+id/transport_icon"
                     android:contentDescription="@string/smart_alarm_transportation_type" />
 
                 <TextView
+                    android:id="@+id/transport_nr"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:id="@+id/transport_nr"
-                    android:textStyle="bold"
-                    android:textSize="30sp"
+                    android:layout_marginBottom="-10dp"
                     android:layout_marginLeft="5dp"
                     android:layout_marginStart="5dp"
-                    android:textColor="@android:color/white"
-                    android:gravity="center_vertical"
                     android:layout_marginTop="-10dp"
-                    android:layout_marginBottom="-10dp"
-                    android:layout_toRightOf="@+id/transport_icon" />
+                    android:layout_toRightOf="@+id/transport_icon"
+                    android:gravity="center_vertical"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@android:color/white"
+                    android:textSize="30sp"
+                    android:textStyle="bold" />
 
                 <TextView
+                    android:id="@+id/transport_destination"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:id="@+id/transport_destination"
-                    android:gravity="center_vertical"
                     android:layout_marginLeft="10dp"
                     android:layout_marginStart="10dp"
-                    android:textColor="@android:color/white"
-                    android:lines="1"
-                    android:ellipsize="marquee"
-                    android:singleLine="true"
-                    android:marqueeRepeatLimit="marquee_forever"
+                    android:layout_toLeftOf="@+id/transport_departure"
                     android:layout_toRightOf="@+id/transport_nr"
-                    android:layout_toLeftOf="@+id/transport_departure" />
+                    android:ellipsize="marquee"
+                    android:gravity="center_vertical"
+                    android:lines="1"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:singleLine="true"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@android:color/white" />
 
                 <TextView
+                    android:id="@+id/transport_departure"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:id="@+id/transport_departure"
+                    android:layout_alignParentRight="true"
                     android:gravity="center_vertical"
-                    android:textColor="#ffcfcfcf"
-                    android:singleLine="true"
                     android:lines="1"
-                    android:layout_alignParentRight="true" />
+                    android:singleLine="true"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="#ffcfcfcf" />
             </RelativeLayout>
         </RelativeLayout>
 

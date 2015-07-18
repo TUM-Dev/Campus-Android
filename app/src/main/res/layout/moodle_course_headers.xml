@@ -1,25 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout android:layout_height="match_parent" xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:orientation="horizontal"
+    android:layout_height="match_parent"
     android:listSelector="@android:color/transparent"
-    >
+    android:orientation="horizontal">
 
-    <ImageView android:src="@drawable/moodle_expander_group"
+    <ImageView
         android:id="@+id/indicator_icon"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_gravity="center_vertical"
         android:nestedScrollingEnabled="false"
-        android:paddingLeft="8dp"/>
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:src="@drawable/moodle_expander_group"
+        tools:ignore="UnusedAttribute" />
 
-    <TextView android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/header"
-            android:textSize="20sp"
-            android:textColor="#ff656865"
-            android:background="#f6f47803"
-            android:paddingLeft="8dp"
-            android:layout_gravity="center_vertical"
-            android:gravity="center"/>
+    <TextView
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:background="#f6f47803"
+        android:gravity="center"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:textColor="#ff656865"
+        android:textSize="20sp" />
 </LinearLayout>

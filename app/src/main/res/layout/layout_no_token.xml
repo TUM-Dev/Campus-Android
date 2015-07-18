@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/no_token_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -24,6 +25,7 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:alpha="0.5"
-        android:src="@drawable/exclamation" />
+        android:src="@drawable/exclamation"
+        tools:ignore="UnusedAttribute" />
 
 </RelativeLayout>

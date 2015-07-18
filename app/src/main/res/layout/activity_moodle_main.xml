@@ -23,8 +23,8 @@
             <!-- expandable list to show courses and their content -->
             <ExpandableListView
                 android:id="@+id/coursesExp"
-                android:layout_height="match_parent"
-                android:layout_width="match_parent"/>
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
         </LinearLayout>
     </FrameLayout>
     <!-- The navigation drawer -->

@@ -9,6 +9,7 @@
         android:id="@+id/content_frame"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
@@ -23,19 +24,18 @@
                 android:id="@+id/mvv_list_header"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:textSize="20sp"
-                android:theme="@style/Base.Widget.AppCompat.EditText"
                 android:layout_marginTop="8dp"
-                android:padding="8dp" />
+                android:padding="8dp"
+                android:textSize="20sp"
+                android:theme="@style/Base.Widget.AppCompat.EditText" />
 
             <ListView
                 android:id="@+id/mvv_details"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="8dp"
-                android:layout_marginTop="8dp"
                 android:layout_gravity="center"
-                />
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp" />
         </LinearLayout>
     </FrameLayout>
     <!-- The navigation drawer -->

@@ -17,7 +17,8 @@
             android:baselineAligned="false"
             android:orientation="horizontal"
             android:showDividers="middle"
-            tools:context="OpeningHoursListActivity">
+            tools:context="OpeningHoursListActivity"
+            tools:ignore="UnusedAttribute">
 
             <fragment
                 android:id="@+id/item_list"

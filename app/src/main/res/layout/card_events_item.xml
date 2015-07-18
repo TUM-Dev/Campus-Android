@@ -1,5 +1,6 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -13,7 +14,8 @@
         android:layout_marginTop="@dimen/card_padding_vertical"
         android:elevation="@dimen/cardview_elevation"
         card_view:cardBackgroundColor="#fff"
-        card_view:cardCornerRadius="3dp">
+        card_view:cardCornerRadius="3dp"
+        tools:ignore="UnusedAttribute">
 
         <LinearLayout
             android:id="@+id/card_view"
@@ -33,18 +35,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:gravity="center_vertical"/>
+                android:gravity="center_vertical"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <TextView
                 android:id="@+id/event_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:textAppearance="?android:attr/textAppearanceSmall"
                 android:gravity="center_vertical"
-                android:lines="2"/>
-    </LinearLayout>
+                android:lines="2"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+        </LinearLayout>
 
     </android.support.v7.widget.CardView>
 </FrameLayout>

@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
-    android:minWidth="250dp"
-    android:minHeight="40dp"
-    android:minResizeWidth="250dp"
-    android:minResizeHeight="40dp"
-    android:updatePeriodMillis="0"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:initialKeyguardLayout="@layout/smart_alarm_widget"
     android:initialLayout="@layout/smart_alarm_widget"
+    android:minHeight="40dp"
+    android:minResizeHeight="40dp"
+    android:minResizeWidth="250dp"
+    android:minWidth="250dp"
     android:resizeMode="horizontal|vertical"
+    android:updatePeriodMillis="0"
     android:widgetCategory="home_screen"
-    android:initialKeyguardLayout="@layout/smart_alarm_widget"></appwidget-provider>
+    tools:ignore="UnusedAttribute" />

@@ -20,24 +20,23 @@
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent" />
 
-            <TextView android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:minHeight="80dp"
-            android:id="@+id/courseTitle"
-            android:textSize="30sp"
-            android:textColor="#ff383a38"
-            android:paddingLeft="8dp"
-            android:background="@android:color/white"
-            />
+            <TextView
+                android:id="@+id/courseTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"
+                android:minHeight="80dp"
+                android:paddingLeft="8dp"
+                android:textColor="#ff383a38"
+                android:textSize="30sp" />
 
             <ExpandableListView
                 android:id="@+id/moodleCourseSections"
-                android:layout_height="match_parent"
                 android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:background="@android:color/white"
                 android:groupIndicator="@android:color/transparent"
-                android:listSelector="@android:color/transparent"
-                />
+                android:listSelector="@android:color/transparent" />
         </LinearLayout>
     </FrameLayout>
     <!-- The navigation drawer -->

@@ -11,12 +11,14 @@
         android:layout_height="match_parent">
 
         <LinearLayout
-            android:orientation="vertical" android:layout_width="match_parent"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="#f6f47803"
-            android:weightSum="1"
             android:gravity="top|center"
-            android:touchscreenBlocksFocus="false">
+            android:orientation="vertical"
+            android:touchscreenBlocksFocus="false"
+            android:weightSum="1"
+            tools:ignore="UnusedAttribute">
 
             <include
                 layout="@layout/layout_all_errors"
@@ -24,63 +26,62 @@
                 android:layout_height="fill_parent" />
 
             <TextView
+                android:id="@+id/welcome"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="@string/moodle_login_request"
-                android:id="@+id/welcome"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="100dp"
                 android:layout_marginBottom="20dp"
+                android:layout_marginTop="100dp"
+                android:gravity="center"
+                android:text="@string/moodle_login_request"
+                android:textAppearance="?android:attr/textAppearanceLarge"
                 android:textColor="#f4fbfbfb"
                 android:textColorHighlight="#f4fbfbfb"
-                android:textSize="30sp"
                 android:textIsSelectable="false"
-                android:gravity="center"
+                android:textSize="30sp"
                 android:textStyle="bold" />
 
-            <EditText android:id="@+id/user_name"
+            <EditText
+                android:id="@+id/user_name"
                 android:layout_width="250dp"
                 android:layout_height="30dp"
-                android:background="@drawable/moodle_textfield_border"
-                android:editable="true"
-                android:enabled="true"
-                android:focusableInTouchMode="true"
-                android:focusable="true"
-                android:hint="@string/mooodle_username"
-                android:textSize="20sp"
-                android:paddingLeft="10dp"
-                android:textColor="#db999da3"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="20dp"
-                />
-
-            <EditText android:id="@+id/password"
-                android:layout_width="250dp"
-                android:layout_height="30dp"
-                android:editable="true"
-                android:enabled="true"
-                android:password="true"
-                android:focusableInTouchMode="true"
-                android:focusable="true"
                 android:background="@drawable/moodle_textfield_border"
-                android:hint="@string/password"
-                android:textSize="20sp"
+                android:enabled="true"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:hint="@string/mooodle_username"
                 android:paddingLeft="10dp"
                 android:textColor="#db999da3"
-                android:onClick="viewTransition"/>
+                android:textSize="20sp" />
+
+            <EditText
+                android:id="@+id/password"
+                android:layout_width="250dp"
+                android:layout_height="30dp"
+                android:background="@drawable/moodle_textfield_border"
+                android:enabled="true"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:hint="@string/password"
+                android:inputType="textPassword"
+                android:onClick="viewTransition"
+                android:paddingLeft="10dp"
+                android:textColor="#db999da3"
+                android:textSize="20sp" />
 
             <Button
+                android:id="@+id/button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/button_login"
-                android:id="@+id/button"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="10dp"
-                android:textColor="#ff383a38"
-                android:nestedScrollingEnabled="false"
                 android:background="@drawable/rounded_button"
                 android:elevation="8dp"
+                android:nestedScrollingEnabled="false"
+                android:text="@string/button_login"
+                android:textColor="#ff383a38"
                 android:translationZ="3dp" />
 
 
