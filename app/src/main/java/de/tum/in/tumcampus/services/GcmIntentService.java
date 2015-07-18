@@ -17,41 +17,19 @@
 package de.tum.in.tumcampus.services;
 
 import android.app.IntentService;
-import android.app.Notification;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.RemoteInput;
-import android.support.v4.app.TaskStackBuilder;
-import android.support.v4.content.LocalBroadcastManager;
-import android.util.Base64;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.gson.Gson;
 
-import java.security.KeyFactory;
-import java.security.NoSuchAlgorithmException;
-import java.security.PrivateKey;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.PKCS8EncodedKeySpec;
-
-import de.tum.in.tumcampus.R;
-import de.tum.in.tumcampus.activities.ChatActivity;
-import de.tum.in.tumcampus.activities.ChatRoomsActivity;
-import de.tum.in.tumcampus.activities.MainActivity;
-import de.tum.in.tumcampus.auxiliary.Const;
-import de.tum.in.tumcampus.auxiliary.Utils;
+import de.tum.in.tumcampus.models.GCMChat;
 import de.tum.in.tumcampus.models.TUMCabeClient;
-import de.tum.in.tumcampus.models.ChatMember;
-import de.tum.in.tumcampus.models.ChatRoom;
-import de.tum.in.tumcampus.models.managers.CardManager;
-import de.tum.in.tumcampus.models.managers.ChatMessageManager;
+import de.tum.in.tumcampus.notifications.AlarmNotification;
 import de.tum.in.tumcampus.notifications.ChatNotification;
+import de.tum.in.tumcampus.notifications.Notification;
 
 /**
  * This {@code IntentService} does the actual handling of the GCM message.
@@ -70,32 +48,77 @@ public class GcmIntentService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         Bundle extras = intent.getExtras();
         GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(this);
-        // The getMessageType() intent parameter must be the intent you received
-        // in your BroadcastReceiver.
+
+        // The getMessageType() intent parameter must be the intent you received in your BroadcastReceiver.
         String messageType = gcm.getMessageType(intent);
 
-        if (!extras.isEmpty()) {  // has effect of un-parcelling Bundle
-            /*
-             * Filter messages based on message type. Since it is likely that GCM will be
-             * extended in the future with new message types, just ignore any message types you're
-             * not interested in, or that you don't recognize.
-             */
-            if (GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE.equals(messageType)) {
-                // Post notification of received message.
-                sendChatNotification(extras);
+        //Check that we have some data and the intent was indeed a gcm message (gcm might be subject to change in the future)
+        if (!extras.isEmpty() && GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE.equals(messageType)) {  // has effect of un-parcelling Bundle
+            //Legacy messages need to be handled - maybe some data is missing?
+            if (!extras.containsKey("payload") || !extras.containsKey("type")) {
+
+                //Try to match it as a legacy chat notification
+                try {
+                    this.sendChatNotification(extras);
+                } catch (Exception e) {
+                    //@todo do something
+                }
+            } else {
+                //Get some important values
+                int notificaton = extras.getInt("notificaton");
+                int type = extras.getInt("type");
+
+                //Initialize our outputs
+                Notification n = null;
+                int notificationIdentification = -1;
+
+                //switch on the type as both the type and payload must be present
+                switch (type) { //https://github.com/TCA-Team/TumCampusApp/wiki/GCM-Message-format
+                    case 0: //Nothing to do, just confirm the retrieved notification
+                        TUMCabeClient.getInstance(this).confirm(notificaton);
+                        break;
+                    case 1: //Chat
+                        n = new ChatNotification(extras.getString("payload"), this);
+                        notificationIdentification = ((ChatNotification) n).room << 4 + ChatNotification.NOTIFICATION_ID;
+                        break;
+                    case 2: //Update
+                        //@todo do something
+                        notificationIdentification = 2;
+                        break;
+                    case 3: //Alert
+                        n = new AlarmNotification(extras.getString("payload"), this);
+                        notificationIdentification = 3;
+                        break;
+                }
+
+                //Post & save the notification if it was of any significance
+                if (n != null) {
+                    this.postNotification(n, notificationIdentification);
+
+                    de.tum.in.tumcampus.models.managers.NotificationManager man = new de.tum.in.tumcampus.models.managers.NotificationManager(this);
+                    //@todo save to our notificationmanager
+                }
             }
         }
+
         // Release the wake lock provided by the WakefulBroadcastReceiver.
         GcmBroadcastReceiver.completeWakefulIntent(intent);
     }
 
-    // Put the message into a notification and post it.
+    /**
+     * Put the message into a notification and post it.
+     *
+     * @param extras
+     */
     private void sendChatNotification(Bundle extras) {
-        ChatNotification chatNote = new ChatNotification(extras, this);
-        Notification note = chatNote.getChatNotification();
-        if(note != null) {
+        ChatNotification n = new ChatNotification(extras, this);
+        this.postNotification(n, n.room << 4 + ChatNotification.NOTIFICATION_ID);
+    }
+
+    private void postNotification(Notification n, int id) {
+        if (n != null) {
             NotificationManager mNotificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
-            mNotificationManager.notify(chatNote.chatRoomId << 4 + ChatNotification.NOTIFICATION_ID, note);
+            mNotificationManager.notify(id, n.getNotification());
         }
     }
 

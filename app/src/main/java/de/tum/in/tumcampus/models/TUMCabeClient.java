@@ -5,8 +5,6 @@ import android.content.Context;
 import com.squareup.okhttp.CertificatePinner;
 import com.squareup.okhttp.OkHttpClient;
 
-import retrofit.ErrorHandler;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +13,7 @@ import javax.net.ssl.SSLPeerUnverifiedException;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.NetUtils;
 import retrofit.Callback;
+import retrofit.ErrorHandler;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
@@ -47,7 +46,7 @@ public class TUMCabeClient {
     private static TUMCabeClient instance = null;
     private TUMCabeAPIService service = null;
 
-    private static Context c = null;
+    private static Context context = null;
 
 
     private TUMCabeClient() {
@@ -71,7 +70,7 @@ public class TUMCabeClient {
     }
 
     public static TUMCabeClient getInstance(Context c) {
-        TUMCabeClient.c = c;
+        TUMCabeClient.context = c;
         if (instance == null) {
             instance = new TUMCabeClient();
         }
@@ -81,7 +80,7 @@ public class TUMCabeClient {
     final RequestInterceptor requestInterceptor = new RequestInterceptor() {
         @Override
         public void intercept(RequestFacade request) {
-            request.addHeader("X-DEVICE-ID", NetUtils.getDeviceID(TUMCabeClient.c));
+            request.addHeader("X-DEVICE-ID", NetUtils.getDeviceID(TUMCabeClient.context));
         }
     };
 
@@ -91,7 +90,7 @@ public class TUMCabeClient {
             Throwable t = cause.getCause();
             if (t instanceof SSLPeerUnverifiedException) {
                 //TODO show a error message
-                //Toast.makeText(c, t.toString(), Toast.LENGTH_LONG).show();
+                //Toast.makeText(context, t.toString(), Toast.LENGTH_LONG).show();
             }
             return t;
         }

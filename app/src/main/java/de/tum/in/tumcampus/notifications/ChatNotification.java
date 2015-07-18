@@ -1,7 +1,5 @@
 package de.tum.in.tumcampus.notifications;
 
-import android.app.Notification;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -11,7 +9,6 @@ import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.RemoteInput;
 import android.support.v4.app.TaskStackBuilder;
-import android.support.v4.content.LocalBroadcastManager;
 import android.util.Base64;
 
 import com.google.gson.Gson;
@@ -30,6 +27,7 @@ import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.ChatMember;
 import de.tum.in.tumcampus.models.ChatRoom;
+import de.tum.in.tumcampus.models.GCMChat;
 import de.tum.in.tumcampus.models.TUMCabeClient;
 import de.tum.in.tumcampus.models.managers.CardManager;
 import de.tum.in.tumcampus.models.managers.ChatMessageManager;
@@ -37,45 +35,76 @@ import de.tum.in.tumcampus.models.managers.ChatMessageManager;
 public class ChatNotification extends Notification {
 
     public static final int NOTIFICATION_ID = CardManager.CARD_CHAT;
-    public final int chatRoomId;
-    private final int messageId;
-    private final ChatRoom chatRoom;
-    private String txt;
-    private final TaskStackBuilder sBuilder;
+
+    public final int room;
+    private final int message;
+    private final int member;
+
+    private ChatRoom chatRoom;
+    private String notificationText;
+    private TaskStackBuilder sBuilder;
     private final Context context;
+
 
     public ChatNotification(Bundle extras, Context context) {
         this.context = context;
+
         //Get the update details
-        chatRoomId = Integer.parseInt(extras.getString("room"));
-        int memberId = Integer.parseInt(extras.getString("member"));
+        this.room = Integer.parseInt(extras.getString("room"));
+        this.member = Integer.parseInt(extras.getString("member"));
+
+        //Message part is only present if we have a updated message
         if (extras.containsKey("message")) {
-            messageId = Integer.parseInt(extras.getString("message"));
+            this.message = Integer.parseInt(extras.getString("message"));
         } else {
-            messageId = -1;
+            this.message = -1;
         }
 
-        Utils.logv("Received GCM notification: room=" + chatRoomId + " member=" + memberId + " message=" + messageId);
+        this.prepare();
+    }
+
+    public ChatNotification(String payload, Context context) {
+        this.context = context;
+
+        //Check if a payload was passed
+        if (payload == null) {
+            throw new NullPointerException();
+        }
+
+        // parse data
+        GCMChat extras = (new Gson()).fromJson(payload, GCMChat.class);
+
+        //Get the update details
+        this.room = extras.room;
+        this.member = extras.member;
+        this.message = extras.message;
+
+        this.prepare();
+    }
+
+    private void prepare() {
+        Utils.logv("Received GCM notification: room=" + room + " member=" + member + " message=" + message);
 
         // Get the data necessary for the ChatActivity
         ChatMember member = Utils.getSetting(context, Const.CHAT_MEMBER, ChatMember.class);
-        chatRoom = TUMCabeClient.getInstance(context).getChatRoom(chatRoomId);
+        chatRoom = TUMCabeClient.getInstance(context).getChatRoom(room);
 
         ChatMessageManager manager = new ChatMessageManager(context, chatRoom.getId());
-        Cursor messages = manager.getNewMessages(getPrivateKeyFromSharedPrefs(context), member, messageId);
+        Cursor messages = manager.getNewMessages(getPrivateKeyFromSharedPrefs(context), member, message);
 
         // Notify any open chat activity that a message has been received
-        Intent intent = new Intent("chat-message-received");
-        intent.putExtras(extras);
-        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+        //@todo fix broadcast as extras might not be avaible
+        //Intent intent = new Intent("chat-message-received");
+        //intent.putExtras(extras);
+        //LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
 
-        String txt = null;
+        notificationText = null;
         if (messages.moveToFirst()) {
             do {
-                if (txt == null)
-                    txt = messages.getString(3);
+                if (notificationText == null)
+                    notificationText = messages.getString(3);
                 else
-                    txt += "\n" + messages.getString(3);
+                    notificationText += "\n" + messages.getString(3);
             } while (messages.moveToNext());
         }
 
@@ -89,13 +118,13 @@ public class ChatNotification extends Notification {
         sBuilder.addNextIntent(notificationIntent);
     }
 
-    public Notification getChatNotification() {
+    public android.app.Notification getNotification() {
         //Check if chat is currently open then don't show a notification if it is
-        if (ChatActivity.mCurrentOpenChatRoom != null && chatRoomId == ChatActivity.mCurrentOpenChatRoom.getId()) {
+        if (ChatActivity.mCurrentOpenChatRoom != null && room == ChatActivity.mCurrentOpenChatRoom.getId()) {
             return null;
         }
 
-        if (Utils.getSettingBool(context, "card_chat_phone", true) && messageId == -1) {
+        if (Utils.getSettingBool(context, "card_chat_phone", true) && message == -1) {
 
             PendingIntent contentIntent = sBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_ONE_SHOT);
 
@@ -115,12 +144,12 @@ public class ChatNotification extends Notification {
                             .addRemoteInput(remoteInput)
                             .build();
 
-            //Show a nice notification
+            //Create a nice notification
             return new NotificationCompat.Builder(context)
                     .setSmallIcon(R.drawable.tum_logo_notification)
                     .setContentTitle(chatRoom.getName().substring(4))
-                    .setStyle(new NotificationCompat.BigTextStyle().bigText(txt))
-                    .setContentText(txt)
+                    .setStyle(new NotificationCompat.BigTextStyle().bigText(notificationText))
+                    .setContentText(notificationText)
                     .setContentIntent(contentIntent)
                     .setDefaults(Notification.DEFAULT_VIBRATE)
                     .setLights(0xff0000ff, 500, 500)
