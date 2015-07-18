@@ -106,7 +106,7 @@ public class MoodleCourseSection extends MoodleObject {
         this.id = id;
     }
 
-    public List getModules() {
+    public List<MoodleCourseModule> getModules() {
         return this.modules;
     }
 

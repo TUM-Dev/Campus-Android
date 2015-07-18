@@ -72,7 +72,7 @@ public class MoodleCourseInfoExpandableAdapter extends BaseExpandableListAdapter
         if (sections == null) {
             Utils.log("The given List of values for MoodleCourseInfoAdapter is null");
             MoodleCourseSection temp = new MoodleCourseSection(null);
-            this.sections = new ArrayList<MoodleCourseSection>();
+            this.sections = new ArrayList<>();
             this.sections.add(temp);
         } else
             this.sections = sections;
@@ -92,13 +92,13 @@ public class MoodleCourseInfoExpandableAdapter extends BaseExpandableListAdapter
      * return 0 for Sections of the course and also for Modules which
      have no content
      * @param groupPosition
-     * @return
+     * @return the children count
      */
     @Override
     public int getChildrenCount(int groupPosition) {
         try {
             if (getItemViewType(groupPosition) == MODULE_HEADER) {
-                List<MoodleCourseContent> contents = (List<MoodleCourseContent>) getModule(groupPosition).getContents();
+                List<MoodleCourseContent> contents = getModule(groupPosition).getContents();
                 if (contents != null)
                     return contents.size();
                 else
@@ -212,12 +212,10 @@ public class MoodleCourseInfoExpandableAdapter extends BaseExpandableListAdapter
         try {
             switch (type) {
                 case MODULE_HEADER:
-                    if (type == MODULE_HEADER) {
-                        MoodleCourseContent content = (MoodleCourseContent) getChild(groupPosition, childPosition);
-                        if (content != null) {
-                            String name = content.getFilename();
-                            viewHolder.title.setText(name);
-                        }
+                    MoodleCourseContent content = (MoodleCourseContent) getChild(groupPosition, childPosition);
+                    if (content != null) {
+                        String name = content.getFilename();
+                        viewHolder.title.setText(name);
                     }
             }
         }catch (NullPointerException e) {
@@ -257,12 +255,12 @@ public class MoodleCourseInfoExpandableAdapter extends BaseExpandableListAdapter
      * in the activity and their type (section?module?content based on the position in th layout)
      */
     private void make_indexMapping() {
-        indexMapping = new HashMap<String, List<Integer>>();
-        List<Integer> sections_indexes = new ArrayList<Integer>();
-        List<Integer> modules_indexes = new ArrayList<Integer>();
+        indexMapping = new HashMap<>();
+        List<Integer> sections_indexes = new ArrayList<>();
+        List<Integer> modules_indexes = new ArrayList<>();
         if (sections != null) {
-            exisiting_sections = new HashMap<Integer, MoodleCourseSection>();
-            exisiting_modules = new HashMap<Integer, MoodleCourseModule>();
+            exisiting_sections = new HashMap<>();
+            exisiting_modules = new HashMap<>();
 
             int index = -1;
             for (MoodleCourseSection currentSection : sections) {
@@ -272,7 +270,7 @@ public class MoodleCourseInfoExpandableAdapter extends BaseExpandableListAdapter
 
                 if (currentSection.getModules() != null) {
 
-                    for (MoodleCourseModule currentModule : (List<MoodleCourseModule>) currentSection.getModules()) {
+                    for (MoodleCourseModule currentModule : currentSection.getModules()) {
                         index++;
                         exisiting_modules.put(index, currentModule);
                         modules_indexes.add(index);
@@ -310,9 +308,9 @@ public class MoodleCourseInfoExpandableAdapter extends BaseExpandableListAdapter
         String modName = module.getModname();
         switch(modName){
             case "assign":
-                return this.activity.getBaseContext().getResources().getDrawable(R.drawable.moodle_assign);
+                return this.activity.getBaseContext().getResources().getDrawable(R.drawable.moodle_assignment);
             case "assignment":
-                return this.activity.getBaseContext().getResources().getDrawable(R.drawable.moodle_assign);
+                return this.activity.getBaseContext().getResources().getDrawable(R.drawable.moodle_assignment);
             case "book":
                 return this.activity.getBaseContext().getResources().getDrawable(R.drawable.moodle_book);
             case "chat":

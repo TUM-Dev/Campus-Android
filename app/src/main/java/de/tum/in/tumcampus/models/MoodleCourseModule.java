@@ -118,7 +118,7 @@ public class MoodleCourseModule extends MoodleObject{
                 try{
                     //JSONArray jsonArray = jsonObject.getJSONArray("modules");
                     JSONArray jsonArray = jsonObject.getJSONArray("contents");
-                    this.contents = new ArrayList<MoodleCourseContent>();
+                    this.contents = new ArrayList<>();
                     for (int i=0; i < jsonArray.length(); i++){
                         JSONObject c = jsonArray.getJSONObject(i);
                         content = new MoodleCourseContent(c);
@@ -156,11 +156,11 @@ public class MoodleCourseModule extends MoodleObject{
         return this.id;
     }
 
-    public List getContents() {
+    public List<MoodleCourseContent> getContents() {
         return contents;
     }
 
-    public void setContents(List contents) {
+    public void setContents(List<MoodleCourseContent> contents) {
         this.contents = contents;
     }
 
