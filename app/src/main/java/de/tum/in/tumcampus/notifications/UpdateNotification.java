@@ -61,7 +61,7 @@ public class UpdateNotification extends Notification {
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(data.packageVersion + ""))
                 .setContentText(data.packageVersion + "")
                 .setContentIntent(contentIntent)
-                .setDefaults(Notification.DEFAULT_VIBRATE)
+                .setDefaults(android.app.Notification.DEFAULT_VIBRATE)
                 .setLights(0xff0000ff, 500, 500)
                 .setSound(sound)
                 .setAutoCancel(true)

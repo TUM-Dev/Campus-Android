@@ -33,7 +33,7 @@ import de.tum.in.tumcampus.models.TUMCabeClient;
 import de.tum.in.tumcampus.models.managers.CardManager;
 import de.tum.in.tumcampus.models.managers.ChatMessageManager;
 
-public abstract class Notification extends android.app.Notification {
+public abstract class Notification {
 
     protected int notification;
     protected int type;
