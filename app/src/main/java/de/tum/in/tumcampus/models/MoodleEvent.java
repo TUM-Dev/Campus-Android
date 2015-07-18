@@ -46,7 +46,7 @@ public class MoodleEvent extends MoodleObject {
 
     public MoodleEvent(JSONObject jsonObject) {
 
-        if (jsonObject != null || !jsonObject.has("error")) {
+        if (jsonObject != null && !jsonObject.has("error")) {
 
             setId(jsonObject.optInt("id"));
             setName(jsonObject.optString("name"));
