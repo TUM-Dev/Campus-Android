@@ -7,6 +7,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.widget.RemoteViews;
 
 import de.tum.in.tumcampus.R;
@@ -29,7 +30,7 @@ public class SmartAlarmWidgetProvider extends AppWidgetProvider {
     }
 
     @Override
-    public void onReceive(final Context context, final Intent intent) {
+    public void onReceive(@NonNull final Context context, @NonNull final Intent intent) {
         if (!intent.getAction().equals(ACTION_UPDATE_WIDGET)) {
             super.onReceive(context, intent);
             return;
@@ -44,8 +45,9 @@ public class SmartAlarmWidgetProvider extends AppWidgetProvider {
 
     /**
      * Updates info shown on the widget
-     * @param context
-     * @param activating
+     *
+     * @param context    the current context
+     * @param activating is the alarm activating
      */
     private void updateWidget(Context context, boolean activating) {
         Utils.log("SmartAlarm: update widget");
@@ -64,8 +66,9 @@ public class SmartAlarmWidgetProvider extends AppWidgetProvider {
 
     /**
      * Show widget in active status
+     *
      * @param context Context
-     * @param rv RemoteView of the widgets
+     * @param rv      RemoteView of the widgets
      */
     private void showActiveWidget(Context context, RemoteViews rv) {
         rv.setTextViewText(R.id.alarm_date, sai.getFormattedWakeupDate(context));
@@ -100,8 +103,9 @@ public class SmartAlarmWidgetProvider extends AppWidgetProvider {
 
     /**
      * Shows widget in waiting status (during calculations)
+     *
      * @param context Context
-     * @param rv RemoteView of the widgets
+     * @param rv      RemoteView of the widgets
      */
     private void showActivatingWidget(Context context, RemoteViews rv) {
         showInactiveWidget(context, rv);
@@ -111,8 +115,9 @@ public class SmartAlarmWidgetProvider extends AppWidgetProvider {
 
     /**
      * Shows widget in inactive status
+     *
      * @param context Context
-     * @param rv RemoteView of the widgets
+     * @param rv      RemoteView of the widgets
      */
     private void showInactiveWidget(Context context, RemoteViews rv) {
         rv.setTextViewText(R.id.alarm_date, context.getString(R.string.smart_alarm_activate));

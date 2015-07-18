@@ -44,9 +44,9 @@ public class LocationManager {
 
         // If location services are not available use default location if set
         final String defaultCampus = Utils.getSetting(mContext, Const.DEFAULT_CAMPUS, "G");
-        if(!defaultCampus.equals("X")) {
-            for(int i=0;i<campusShort.length;i++) {
-                if(campusShort[i].equals(defaultCampus)) {
+        if (!defaultCampus.equals("X")) {
+            for (int i = 0; i < campusShort.length; i++) {
+                if (campusShort[i].equals(defaultCampus)) {
                     Location location = new Location("defaultLocation");
                     location.setLatitude(campusLocations[i][0]);
                     location.setLongitude(campusLocations[i][1]);
@@ -131,11 +131,14 @@ public class LocationManager {
     /**
      * Gets the current location and if it is not available guess
      * by querying for the next lecture.
+     *
      * @return Any of the above described locations.
      */
-    private @NonNull Location getCurrentOrNextLocation() {
+    private
+    @NonNull
+    Location getCurrentOrNextLocation() {
         Location l = getCurrentLocation();
-        if(l!=null) {
+        if (l != null) {
             return l;
         }
         return getNextLocation();
@@ -270,11 +273,11 @@ public class LocationManager {
      */
     public Geo roomLocationStringToGeo(String loc) {
         TUMRoomFinderRequest requestHandler = new TUMRoomFinderRequest(mContext);
-        if(loc.contains("("))
-           loc = loc.substring(0,loc.indexOf('(')).trim();
+        if (loc.contains("("))
+            loc = loc.substring(0, loc.indexOf('(')).trim();
 
         ArrayList<HashMap<String, String>> request = requestHandler.fetchRooms(loc);
-        if(request.size()>0) {
+        if (request.size() > 0) {
             String room = request.get(0).get(TUMRoomFinderRequest.KEY_ARCH_ID);
             return requestHandler.fetchCoordinates(room);
         }

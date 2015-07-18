@@ -10,7 +10,6 @@ import java.io.Serializable;
 import java.util.Date;
 
 import de.tum.in.tumcampus.R;
-import de.tum.in.tumcampus.auxiliary.DateUtils;
 import de.tum.in.tumcampus.auxiliary.SmartAlarmUtils;
 
 public class SmartAlarmInfo implements Serializable {
@@ -138,8 +137,7 @@ public class SmartAlarmInfo implements Serializable {
         if (firstConnectionPart.get(JSON_CONNECTION_PART_TYPE).equals(FOOTWAY)) {
             firstTransportType = TransportType.FOOT;
             firstTrainLabel = "";
-        }
-        else {
+        } else {
             firstTransportType = TransportType.toTrainType(firstConnectionPart.getString(JSON_PRODUCT));
             firstTrainLabel = firstConnectionPart.getString(JSON_LABEL);
         }
@@ -157,9 +155,11 @@ public class SmartAlarmInfo implements Serializable {
     public String getFirstTrainDst() {
         return firstTrainDst;
     }
+
     public String getFirstTrainLabel() {
         return firstTrainLabel;
     }
+
     public TransportType getFirstTransportType() {
         return firstTransportType;
     }
