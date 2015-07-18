@@ -7,13 +7,13 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 /**
- * Created by carlodidomenico on 10/06/15.
+ * The moodle events list
  */
 public class MoodleEventsList extends MoodleObject{
     /**
      * The list of User's Events
      */
-    private ArrayList<MoodleEvent> userEvents = new ArrayList<MoodleEvent>();
+    private ArrayList<MoodleEvent> userEvents = new ArrayList<>();
 
     /**
      *Constructor from json object
@@ -64,11 +64,11 @@ public class MoodleEventsList extends MoodleObject{
 
 
 
-    public ArrayList getSections() {
+    public ArrayList<MoodleEvent> getSections() {
         return userEvents;
     }
 
-    public void setSections(ArrayList sections) {
+    public void setSections(ArrayList<MoodleEvent> sections) {
         this.userEvents = sections;
     }
 

@@ -24,15 +24,15 @@ import de.tum.in.tumcampus.models.MoodleUserCourseList;
 
 /**
  * Handles all calls done with the MoodleAPIs
- *
+ * <p/>
  * NOTA BENE: since the APIs aren't activated on the TUM's Moodle platform
- *            for this moment the calls will be made on the example application
- *            available in Moodle's website.
- *
- *            Orange school DEMO
- *            link:"http://school.demo.moodle.net/"
- *
- *            private static final String SERVICE_BASE_URL = "http://school.demo.moodle.net//login/token.php?";
+ * for this moment the calls will be made on the example application
+ * available in Moodle's website.
+ * <p/>
+ * Orange school DEMO
+ * link:"http://school.demo.moodle.net/"
+ * <p/>
+ * private static final String SERVICE_BASE_URL = "http://school.demo.moodle.net//login/token.php?";
  */
 public class RealMoodleManager extends MoodleManager {
 
@@ -43,15 +43,14 @@ public class RealMoodleManager extends MoodleManager {
 
     /**
      * Getting or creating singleton
-     * @param delegate
-     *        context
-     * @return
+     *
+     * @param delegate context
+     * @return the manager instace
      */
     public static RealMoodleManager getInstance(MoodleUpdateDelegate delegate, Context context) {
         if (instance == null) {
             instance = new RealMoodleManager(delegate);
-        }
-        else {
+        } else {
             instance.setDelegate(delegate);
         }
         instance.setCurrentContext(context);
@@ -66,16 +65,17 @@ public class RealMoodleManager extends MoodleManager {
 
     /**
      * This method starts the API call to Moodle's server that will get the user's access token
-     * @param currentContext
-     * @param username
-     * @param password
+     *
+     * @param currentContext the current context
+     * @param username       the moodle username
+     * @param password       the corresponding password
      */
-    public void requestUserToken(Context currentContext, String username, String password){
+    public void requestUserToken(Context currentContext, String username, String password) {
         //removeToken();
         //if (!loadUserToken()) {
-            String service = "//login/token.php?username=" + username + "&password=" + password +"&service=moodle_mobile_app";
-            GenericMoodleRequestAsyncTask userTokenTask = new GenericMoodleRequestAsyncTask(new RequestUserTokenMoodleAPICommand() , currentContext, service);
-            userTokenTask.execute();
+        String service = "//login/token.php?username=" + username + "&password=" + password + "&service=moodle_mobile_app";
+        GenericMoodleRequestAsyncTask userTokenTask = new GenericMoodleRequestAsyncTask(new RequestUserTokenMoodleAPICommand(), currentContext, service);
+        userTokenTask.execute();
         //}
         //else {
         //    requestUserData(currentContext);
@@ -84,47 +84,47 @@ public class RealMoodleManager extends MoodleManager {
 
     /**
      * This method starts the API call to Moodle's server that will get the user's info data
-     * */
+     */
     public void requestUserData(Context currentContext) {
         if (this.getMoodleUserToken() != null && this.getMoodleUserToken().isValid()) {
             Utils.log("requesting user data...");
             String service = "/webservice/rest/server.php?wstoken=" + this.getMoodleUserToken().getToken() + "&wsfunction=core_webservice_get_site_info&moodlewsrestformat=json";
-            GenericMoodleRequestAsyncTask userDataTask = new GenericMoodleRequestAsyncTask(new RequestUserInfoMoodleAPICommand() , currentContext, service);
+            GenericMoodleRequestAsyncTask userDataTask = new GenericMoodleRequestAsyncTask(new RequestUserInfoMoodleAPICommand(), currentContext, service);
             userDataTask.execute();
-        }
-        else Utils.log("error requesting user data...");
+        } else Utils.log("error requesting user data...");
     }
+
     /**
      * This method starts the API call to Moodle's server that will get the user's course list
-     * */
+     */
     public void requestUserCourseList(Context currentContext) {
         if (this.getMoodleUserToken() != null && this.getMoodleUserToken().isValid()) {
             Utils.log("requesting user course list...");
-            String service = "/webservice/rest/server.php?wstoken=" + this.getMoodleUserToken().getToken()+ "&wsfunction=core_enrol_get_users_courses&moodlewsrestformat=json&userid=" + getMoodleUserInfo().getUserid();
+            String service = "/webservice/rest/server.php?wstoken=" + this.getMoodleUserToken().getToken() + "&wsfunction=core_enrol_get_users_courses&moodlewsrestformat=json&userid=" + getMoodleUserInfo().getUserid();
 
-            GenericMoodleRequestAsyncTask userDataTask = new GenericMoodleRequestAsyncTask(new RequestUserCoursesMoodleAPICommand() , currentContext, service);
+            GenericMoodleRequestAsyncTask userDataTask = new GenericMoodleRequestAsyncTask(new RequestUserCoursesMoodleAPICommand(), currentContext, service);
             userDataTask.execute();
-        }
-        else Utils.log("error requesting user course list...");
+        } else Utils.log("error requesting user course list...");
 
     }
+
     /**
      * This method starts the API call to Moodle's server that will get the user's course info
-     * */
+     */
     public void requestUserCourseInfo(Context currentContext, int courseId) {
         if (this.getMoodleUserToken() != null && this.getMoodleUserToken().isValid()) {
             Utils.log("requesting user course info...");
-            String service = "/webservice/rest/server.php?wstoken=" + this.getMoodleUserToken().getToken()  + "&wsfunction=core_course_get_contents&moodlewsrestformat=json&courseid=" + courseId;
+            String service = "/webservice/rest/server.php?wstoken=" + this.getMoodleUserToken().getToken() + "&wsfunction=core_course_get_contents&moodlewsrestformat=json&courseid=" + courseId;
 
-            GenericMoodleRequestAsyncTask userDataTask = new GenericMoodleRequestAsyncTask(new RequestUserCourseInfoMoodleAPICommand() , currentContext, service);
+            GenericMoodleRequestAsyncTask userDataTask = new GenericMoodleRequestAsyncTask(new RequestUserCourseInfoMoodleAPICommand(), currentContext, service);
             userDataTask.execute();
-        }
-        else Utils.log("error requesting user course info...");
+        } else Utils.log("error requesting user course info...");
 
     }
+
     /**
      * This method starts the API call to Moodle's server that will get the user's course info
-     * */
+     */
     public void requestUserEvents(Context currentContext) {
         if (this.getMoodleUserToken() != null && this.getMoodleUserToken().isValid()) {
             Utils.log("requesting user's events list");
@@ -132,8 +132,7 @@ public class RealMoodleManager extends MoodleManager {
 
             GenericMoodleRequestAsyncTask userDataTask = new GenericMoodleRequestAsyncTask(new RequestUserEventsAPICommand(), currentContext, service);
             userDataTask.execute();
-        }
-        else Utils.log("error requesting user's event list...");
+        } else Utils.log("error requesting user's event list...");
 
     }
 
@@ -162,7 +161,7 @@ public class RealMoodleManager extends MoodleManager {
         @Override
         protected Object doInBackground(Params... params) {
             String completeURL = SERVICE_BASE_URL + service;
-            String resultAPIcallJSONString = null;
+            String resultAPIcallJSONString;
             try {
 
                 resultAPIcallJSONString = NetUtils.downloadStringHttp(completeURL, context);
@@ -178,9 +177,9 @@ public class RealMoodleManager extends MoodleManager {
         @Override
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
-            if (command.isUpdating()){
+            if (command.isUpdating()) {
                 Utils.log("calling refresh for command " + command.toString());
-                if (getDelegate()!= null)
+                if (getDelegate() != null)
                     getDelegate().refresh();
             }
         }
@@ -211,18 +210,19 @@ public class RealMoodleManager extends MoodleManager {
         public RequestUserTokenMoodleAPICommand() {
             setShouldUpdate(true);
         }
+
         @Override
         public Object execute(String jsonString) {
 
             MoodleToken moodleToken = new MoodleToken(jsonString);
 
-            if (moodleToken.isValid()){
+            if (moodleToken.isValid()) {
                 setMoodleUserToken(moodleToken);
                 Utils.log("UserToken is valid");
 
                 saveUserToken();
-            }else {
-                if (moodleToken.getErrorCode().equals("invalidtoken")){
+            } else {
+                if (moodleToken.getErrorCode().equals("invalidtoken")) {
                     Utils.log("invalid token!");
                     createLoginActivity();
                 }
@@ -233,6 +233,7 @@ public class RealMoodleManager extends MoodleManager {
             return moodleToken;
         }
     }
+
     /**
      * Command that handles the creation of a new MoodleUser object
      */
@@ -240,16 +241,17 @@ public class RealMoodleManager extends MoodleManager {
         public RequestUserInfoMoodleAPICommand() {
             setShouldUpdate(true);
         }
+
         @Override
         public Object execute(String jsonString) {
 
             MoodleUser moodleUser = new MoodleUser(jsonString);
 
-            if (moodleUser.isValid()){
+            if (moodleUser.isValid()) {
                 setMoodleUserInfo(moodleUser);
                 Utils.log("UserInfo is valid");
                 //TODO add method to cache user info
-            }else {
+            } else {
                 Utils.log("Warning ! UserInfo is not valid!");
                 setMoodleUserInfo(null);
                 //TODO check if error is for invalid token and delete cached version of token
@@ -266,6 +268,7 @@ public class RealMoodleManager extends MoodleManager {
 
         }
     }
+
     /**
      * Command that handles the creation of a new MoodleCoursesList object
      */
@@ -273,11 +276,12 @@ public class RealMoodleManager extends MoodleManager {
         public RequestUserCoursesMoodleAPICommand() {
             setShouldUpdate(true);
         }
+
         @Override
         public Object execute(String jsonString) {
 
             MoodleUserCourseList moodleUserCourseList = new MoodleUserCourseList(jsonString);
-            if (moodleUserCourseList.isValid()){
+            if (moodleUserCourseList.isValid()) {
                 setMoodleUserCourseList(moodleUserCourseList);
                 Utils.log("UserCoursesList is valid");
             } else {
@@ -294,6 +298,7 @@ public class RealMoodleManager extends MoodleManager {
 
         }
     }
+
     /**
      * Command that handles the creation of a new MoodleCourse object
      */
@@ -301,14 +306,15 @@ public class RealMoodleManager extends MoodleManager {
         public RequestUserCourseInfoMoodleAPICommand() {
             setShouldUpdate(true);
         }
+
         @Override
         public Object execute(String jsonString) {
 
             MoodleCourse moodleCourse = new MoodleCourse(jsonString);
-            if (moodleCourse.isValid()){
+            if (moodleCourse.isValid()) {
                 setMoodleUserCourseInfo(moodleCourse);
                 Utils.log("UserCourseInfo is valid");
-            }else {
+            } else {
                 setMoodleUserCourseInfo(null);
                 //TODO check if error is for invalid token and delete cached version of token
                 if (moodleCourse.getMessage().contains("token")) {
@@ -322,6 +328,7 @@ public class RealMoodleManager extends MoodleManager {
 
         }
     }
+
     /**
      * Command that handles the creation of a new MoodleEvents List
      */
@@ -329,15 +336,16 @@ public class RealMoodleManager extends MoodleManager {
         public RequestUserEventsAPICommand() {
             setShouldUpdate(true);
         }
+
         @Override
         public Object execute(String jsonString) {
 
             MoodleEventsList eventsList;
             eventsList = new MoodleEventsList(jsonString);
-            if (eventsList.isValid()){
+            if (eventsList.isValid()) {
                 setMoodleUserEventsList(eventsList);
                 Utils.log("MoodleUserEventsList is valid");
-            }else {
+            } else {
                 setMoodleUserEventsList(null);
                 //TODO check if error is for invalid token and delete cached version of token
                 if (eventsList.getMessage().contains("token")) {
@@ -351,9 +359,10 @@ public class RealMoodleManager extends MoodleManager {
 
         }
     }
+
     /**
      * Getters and Setters Methods
-     **/
+     */
     @Override
     public ArrayList<MoodleEvent> getUserEvents() {
 
@@ -361,32 +370,31 @@ public class RealMoodleManager extends MoodleManager {
     }
 
     /**
-     *
      * @return map of course names to course Ids
      */
     @Override
-    public Map<?, ?> getCoursesList() {
+    public Map<String, String> getCoursesList() {
         if (getMoodleUserCourseList() == null) return null;
-        Map<String,String> userCoursesMap = new HashMap<String,String>();
+        Map<String, String> userCoursesMap = new HashMap<>();
 
         for (Object courseObj : getMoodleUserCourseList().getSections()) {
             MoodleUserCourse course = (MoodleUserCourse) courseObj;
 
-            userCoursesMap.put(course.getFullname(),course.getSummary());
+            userCoursesMap.put(course.getFullname(), course.getSummary());
         }
 
         return userCoursesMap;
     }
 
     @Override
-    public Map<?,?> getCoursesId(){
+    public Map<String, Integer> getCoursesId() {
         if (getMoodleUserCourseList() == null) return null;
-        Map<String,Integer> userCoursesMap = new HashMap<String,Integer>();
+        Map<String, Integer> userCoursesMap = new HashMap<>();
 
         for (Object courseObj : getMoodleUserCourseList().getSections()) {
             MoodleUserCourse course = (MoodleUserCourse) courseObj;
 
-            userCoursesMap.put(course.getFullname(),(int)course.getId());
+            userCoursesMap.put(course.getFullname(), (int) course.getId());
         }
 
         return userCoursesMap;
@@ -431,16 +439,19 @@ public class RealMoodleManager extends MoodleManager {
     public void setMoodleUserCourseInfo(MoodleCourse moodleUserCourseInfo) {
         this.moodleUserCourseInfo = moodleUserCourseInfo;
     }
+
     public MoodleEventsList getMoodleUserEventsList() {
         return moodleUserEventsList;
     }
+
     public void setMoodleUserEventsList(MoodleEventsList moodleUserEventsList) {
         this.moodleUserEventsList = moodleUserEventsList;
     }
-    public String getToken(){
+
+    public String getToken() {
         try {
             return getMoodleUserToken().getToken();
-        }catch (Exception e){
+        } catch (Exception e) {
             Utils.log(e);
             return null;
         }
@@ -452,22 +463,23 @@ public class RealMoodleManager extends MoodleManager {
      */
     public void saveUserToken() {
         if (currentContext != null) {
-            SharedPreferences sharedPreferences = currentContext.getSharedPreferences(currentContext.getResources().getString(R.string.moodle_user_shared_prefs_key),Context.MODE_PRIVATE);
+            SharedPreferences sharedPreferences = currentContext.getSharedPreferences(currentContext.getResources().getString(R.string.moodle_user_shared_prefs_key), Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPreferences.edit();
 
-            editor.putString(currentContext.getResources().getString(R.string.moodle_token_key),getToken());
+            editor.putString(currentContext.getResources().getString(R.string.moodle_token_key), getToken());
             editor.apply();
         }
     }
+
     /**
      * this method loads the cached version of the token
      */
     @Override
     public boolean loadUserToken() {
         SharedPreferences sharedPreferences = currentContext.getSharedPreferences(currentContext.getResources().getString(R.string.moodle_user_shared_prefs_key), Context.MODE_PRIVATE);
-        String token = sharedPreferences.getString((currentContext.getResources().getString(R.string.moodle_token_key)),null);
+        String token = sharedPreferences.getString((currentContext.getResources().getString(R.string.moodle_token_key)), null);
 
-        if (token != null){
+        if (token != null) {
             MoodleToken moodleToken = new MoodleToken();
             moodleToken.setToken(token);
             setMoodleUserToken(moodleToken);
@@ -482,7 +494,6 @@ public class RealMoodleManager extends MoodleManager {
 
     /**
      * This method removes the cached version of the moodle token
-     *
      */
     public void removeToken() {
         SharedPreferences sharedPreferences = currentContext.getSharedPreferences(currentContext.getResources().getString(R.string.moodle_user_shared_prefs_key), Context.MODE_PRIVATE);
@@ -492,6 +503,7 @@ public class RealMoodleManager extends MoodleManager {
         editor.apply();
 
     }
+
     /**
      * This method creates a Login Activity whenever a token is expired
      */

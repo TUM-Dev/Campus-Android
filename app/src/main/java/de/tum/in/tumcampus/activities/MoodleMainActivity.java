@@ -1,9 +1,6 @@
 package de.tum.in.tumcampus.activities;
 
-import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -33,13 +30,10 @@ public class MoodleMainActivity extends ProgressActivity implements ExpandableLi
     //Moodle API Manager
     protected MoodleManager realManager;
 
-    //ProgressDialog for loading
-    private ProgressDialog mDialog;
-
     private MoodleExapndabaleListAdapter coursesAdapter;
     List<String> courseListHeaders;
-    Map <String, Integer> coursesIds;
-    Map<String,List<String>> courseListChilds;
+    Map<String, Integer> coursesIds;
+    Map<String, List<String>> courseListChilds;
     ExpandableListView expListView;
 
     public MoodleMainActivity() {
@@ -53,18 +47,17 @@ public class MoodleMainActivity extends ProgressActivity implements ExpandableLi
         showLoadingStart();
 
         // check if we need to bring up the login page
-        if (! checkLoginNeeded())
+        if (!checkLoginNeeded())
             realManager.requestUserData(this);
     }
 
     @Override
-    public void onRestart(){
+    public void onRestart() {
         super.onRestart();
         refresh();
     }
 
     /**
-     *
      * this method is called
      * when internet connection is back
      */
@@ -84,13 +77,13 @@ public class MoodleMainActivity extends ProgressActivity implements ExpandableLi
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.moodle_my_courses:
                 //do nothing
-                Utils.showToast(this,R.string.moodle_stay_here);
+                Utils.showToast(this, R.string.moodle_stay_here);
                 return true;
             case R.id.events:
-                Intent eventIntent = new Intent(this,MoodleEventsActivity.class);
+                Intent eventIntent = new Intent(this, MoodleEventsActivity.class);
                 startActivity(eventIntent);
                 finish();
                 return true;
@@ -113,7 +106,7 @@ public class MoodleMainActivity extends ProgressActivity implements ExpandableLi
             }
 
             emptyListViewData();
-            Map<String, String> courses = (Map<String, String>) realManager.getCoursesList();
+            Map<String, String> courses = realManager.getCoursesList();
 
             /* userinfo is still null ! either the token retrieved from
               shared pref is not valid or token has been expired
@@ -133,24 +126,23 @@ public class MoodleMainActivity extends ProgressActivity implements ExpandableLi
             if (courses == null) {
                 realManager.requestUserCourseList(this);
                 return;
-            } else {
-
-                //populate the view with user's courses
-                coursesIds = (Map<String, Integer>) realManager.getCoursesId();
-                for (Map.Entry<String, String> item : courses.entrySet()) {
-                    List<String> temp = new ArrayList<String>();
-                    temp.add(item.getValue());
-                    courseListChilds.put(item.getKey(), temp);
-                    courseListHeaders.add(item.getKey());
-                }
-                baseSetupForListView();
-                showLoadingEnded();
-                coursesAdapter.notifyDataSetChanged();
             }
-        }catch(Exception e){
+
+            //populate the view with user's courses
+            coursesIds = realManager.getCoursesId();
+            for (Map.Entry<String, String> item : courses.entrySet()) {
+                List<String> temp = new ArrayList<>();
+                temp.add(item.getValue());
+                courseListChilds.put(item.getKey(), temp);
+                courseListHeaders.add(item.getKey());
+            }
+            baseSetupForListView();
+            showLoadingEnded();
+            coursesAdapter.notifyDataSetChanged();
+        } catch (Exception e) {
             Utils.log(e);
             showLoadingEnded();
-            Utils.showToast(this,R.string.error_something_wrong);
+            Utils.showToast(this, R.string.error_something_wrong);
         }
 
     }
@@ -170,9 +162,10 @@ public class MoodleMainActivity extends ProgressActivity implements ExpandableLi
     /**
      * check to see if the token has expired or not. In case of expired token
      * launch the Login Activity
-     * @return
+     *
+     * @return if a new login is needed
      */
-    private boolean checkLoginNeeded(){
+    private boolean checkLoginNeeded() {
         // check if the token is null
         if (realManager.getMoodleUserToken() == null) {
 
@@ -184,8 +177,7 @@ public class MoodleMainActivity extends ProgressActivity implements ExpandableLi
                 // got the token from shared pref
                 Utils.log("Token loaded from sharedpref is not null");
                 return false;
-            }
-            else{
+            } else {
                 // token is empty user should log in again
                 Utils.log("starting login activity");
                 Intent loginIntent = new Intent(this, MoodleLoginActivity.class);
@@ -194,7 +186,7 @@ public class MoodleMainActivity extends ProgressActivity implements ExpandableLi
                 finish();
                 return true;
             }
-        }else
+        } else
             // activity started from other activities in moodle
             return false;
     }
@@ -211,23 +203,23 @@ public class MoodleMainActivity extends ProgressActivity implements ExpandableLi
      * Empties the ListView preparing it for fresh data
      */
     private void emptyListViewData() {
-        courseListHeaders = new ArrayList<String>();
-        courseListChilds = new HashMap<String, List<String>>();
-        coursesIds = new HashMap<String, Integer>();
+        courseListHeaders = new ArrayList<>();
+        courseListChilds = new HashMap<>();
+        coursesIds = new HashMap<>();
     }
 
     @Override
     public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-        try{
-			String courseName = (String)coursesAdapter.getGroup(groupPosition);
+        try {
+            String courseName = (String) coursesAdapter.getGroup(groupPosition);
             int courseId = coursesIds.get(courseName);
             Intent courseInfoIntent = new Intent(this, MoodleCourseInfoActivity.class);
-			courseInfoIntent.putExtra("course_name", courseName);
-			courseInfoIntent.putExtra("course_id", courseId);
+            courseInfoIntent.putExtra("course_name", courseName);
+            courseInfoIntent.putExtra("course_id", courseId);
             showLoadingStart();
             startActivity(courseInfoIntent);
             return true;
-        }catch (Exception e){
+        } catch (Exception e) {
             Utils.showToast(this, getString(R.string.moodle_courses_error));
             Utils.log(e);
             return false;

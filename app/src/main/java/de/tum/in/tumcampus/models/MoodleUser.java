@@ -49,26 +49,28 @@ public class MoodleUser extends MoodleObject {
 
     /**
      * Constructor to use if JSON is passed as a string
-     * @param jsonstring
+     *
+     * @param jsonstring the json
      */
-    public MoodleUser(String jsonstring){
+    public MoodleUser(String jsonstring) {
         this(toJSONObject(jsonstring));
 
     }
 
     /**
      * Constructor by paring the JSONObject
+     *
      * @param jsonObject the JSONObject
      */
-    public MoodleUser(JSONObject jsonObject){
+    public MoodleUser(JSONObject jsonObject) {
         this.firstname = null;
-        this.lastname=null;
-        this.fullname=null;
-        this.lang=null;
-        this.userid=null;
-        this.username=null;
-        this.userpictureurl=null;
-        if (jsonObject != null){
+        this.lastname = null;
+        this.fullname = null;
+        this.lang = null;
+        this.userid = null;
+        this.username = null;
+        this.userpictureurl = null;
+        if (jsonObject != null) {
             if (!jsonObject.has("exception")) {
                 this.firstname = jsonObject.optString("firstname");
                 this.lastname = jsonObject.optString("lastname");
@@ -76,30 +78,26 @@ public class MoodleUser extends MoodleObject {
                 this.lang = jsonObject.optString("lang");
                 this.userid = jsonObject.optInt("userid");
                 this.username = jsonObject.optString("username");
-                try{
+                try {
                     this.userpictureurl = new URL(jsonObject.optString("userpictureurl"));
+                } catch (MalformedURLException m) {
+                    this.userpictureurl = null;
+                    this.message = m.getMessage();
+                    this.exception = "MalformedURLException";
+                    this.errorCode = "malformedurl";
                 }
-                catch (MalformedURLException m){
-                    this.userpictureurl=null;
-                    this.message=m.getMessage();
-                    this.exception="MalformedURLException";
-                    this.errorCode="malformedurl";
-                }
-
-            } else{
-                this.isValid=false;
+            } else {
+                this.isValid = false;
                 this.exception = jsonObject.optString("exception");
                 this.errorCode = jsonObject.optString("errorcode");
                 this.message = jsonObject.optString("message");
             }
-
         } else {
-            this.isValid=false;
-            this.exception= "JSONException";
-            this.errorCode= "invalidjsonstring";
-            this.message = "error while parsing jsonstring in "+this.getClass().getName();
+            this.isValid = false;
+            this.exception = "JSONException";
+            this.errorCode = "invalidjsonstring";
+            this.message = "error while parsing jsonstring in " + this.getClass().getName();
         }
-
     }
 
     public MoodleUser() {
@@ -145,7 +143,6 @@ public class MoodleUser extends MoodleObject {
     public void setUserid(Number userid) {
         this.userid = userid;
     }
-
 
 
     public String getUsername() {

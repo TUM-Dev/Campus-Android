@@ -14,7 +14,6 @@ import java.net.URL;
 import java.util.List;
 
 import de.tum.in.tumcampus.R;
-import de.tum.in.tumcampus.activities.generic.ActivityForDownloadingExternal;
 import de.tum.in.tumcampus.activities.generic.ProgressActivity;
 import de.tum.in.tumcampus.adapters.MoodleCourseInfoExpandableAdapter;
 import de.tum.in.tumcampus.auxiliary.NetUtils;
@@ -38,7 +37,11 @@ public class MoodleCourseInfoActivity extends ProgressActivity implements Moodle
     /* default course id to be used to see if
      the activity started from outside or recreated
       */
-    private final int DEFAULT_COURSE_ID = -876;
+    private static final int DEFAULT_COURSE_ID = -876;
+    private static final String COURSE_ID = "COURSE_ID";
+    private static final String COURSE_NAME = "COURSE_NAME";
+    private static final String COURSE_INFO = "COURSE_INFO";
+    private static final String USER_TOKEN = "user_token";
     MoodleManager realManager;
     private Intent intent;
     private String courseName;
@@ -47,20 +50,21 @@ public class MoodleCourseInfoActivity extends ProgressActivity implements Moodle
     private List<MoodleCourseSection> sections;
     MoodleCourse moodleCourse;
     private ExpandableListView view_course_sections;
-    private TextView title;
 
-    public MoodleCourseInfoActivity() {super(R.layout.activity_moodle_course_info);}
+    public MoodleCourseInfoActivity() {
+        super(R.layout.activity_moodle_course_info);
+    }
 
     @Override
-    public void onCreate(Bundle savedInstanceState){
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Utils.log("moodle courseinfo oncreate called");
 
         if (savedInstanceState != null) {
             // Restore value of course from saved state
-            courseId = savedInstanceState.getInt("COURSE_ID", DEFAULT_COURSE_ID);
-            courseName = savedInstanceState.getString("COURSE_NAME");
-            moodleCourse = (MoodleCourse) savedInstanceState.getSerializable("COURSE_INFO");
+            courseId = savedInstanceState.getInt(COURSE_ID, DEFAULT_COURSE_ID);
+            courseName = savedInstanceState.getString(COURSE_NAME);
+            moodleCourse = (MoodleCourse) savedInstanceState.getSerializable(COURSE_INFO);
         }
 
         intent = getIntent();
@@ -70,21 +74,20 @@ public class MoodleCourseInfoActivity extends ProgressActivity implements Moodle
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
-        savedInstanceState.putInt("COURSE_ID", courseId);
-        savedInstanceState.putString("COURSE_NAME", courseName);
-        savedInstanceState.putSerializable("COURSE_INFO", moodleCourse);
+        savedInstanceState.putInt(COURSE_ID, courseId);
+        savedInstanceState.putString(COURSE_NAME, courseName);
+        savedInstanceState.putSerializable(COURSE_INFO, moodleCourse);
         super.onSaveInstanceState(savedInstanceState);
     }
 
     @Override
-    public void onRestart(){
+    public void onRestart() {
         super.onRestart();
         Utils.log("moodle courseinfo onRestart is called");
         refresh();
     }
 
     /**
-     *
      * this method is called
      * when internet connection is back
      */
@@ -92,7 +95,6 @@ public class MoodleCourseInfoActivity extends ProgressActivity implements Moodle
     public void onRefresh() {
         realManager.requestUserCourseInfo(this, courseId);
         showLoadingStart();
-        return;
     }
 
     @Override
@@ -104,15 +106,15 @@ public class MoodleCourseInfoActivity extends ProgressActivity implements Moodle
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.moodle_my_courses:
                 // don't need to start my_courses
                 // it is already on the activity stack!
                 finish();
                 return true;
             case R.id.events:
-                Intent eventIntent = new Intent(this,MoodleEventsActivity.class);
-                eventIntent.putExtra("user_token", realManager.getToken());
+                Intent eventIntent = new Intent(this, MoodleEventsActivity.class);
+                eventIntent.putExtra(USER_TOKEN, realManager.getToken());
                 startActivity(eventIntent);
                 finish();
                 return true;
@@ -124,12 +126,6 @@ public class MoodleCourseInfoActivity extends ProgressActivity implements Moodle
 
     /**
      * handles the click events on the child items in the expandable list
-     * @param parent
-     * @param v
-     * @param groupPosition
-     * @param childPosition
-     * @param id
-     * @return
      */
     @Override
     public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
@@ -140,24 +136,23 @@ public class MoodleCourseInfoActivity extends ProgressActivity implements Moodle
                 String urlString = fileURL.toString();
 
                 // if this url was related to moodle add the token
-                if (urlString.indexOf("school.demo.moodle.net") >= 0 ||
-                        urlString.indexOf("moodle.tum.de") >= 0)
+                if (urlString.contains("school.demo.moodle.net") || urlString.contains("moodle.tum.de"))
                     urlString = completeURL(urlString);
 
-                if (urlString != null){
+                if (urlString != null) {
                     Utils.log("Got this URL " + urlString);
                     Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(urlString));
                     showLoadingStart();
                     startActivity(browserIntent);
                     return true;
-                }else {
+                } else {
                     Utils.showToast(this.getApplicationContext(), R.string.no_url);
                     return true;
                 }
             } else
                 Utils.log(String.format("No Content found for group posiiton %d and childPosition %d", groupPosition, childPosition));
             return true;
-        }catch (Exception e) {
+        } catch (Exception e) {
             Utils.log(e);
             Utils.showToast(this.getApplicationContext(), "Sorry unable to find the URL");
             showLoadingEnded();
@@ -166,11 +161,12 @@ public class MoodleCourseInfoActivity extends ProgressActivity implements Moodle
     }
 
     /**
-     *  this method completes the url sent as input adding the user toking
-     * @param urlString
-     * @return newUrlString
+     * this method completes the url sent as input adding the user toking
+     *
+     * @param urlString the URL to complete
+     * @return newUrlString the completed URL
      */
-    private String completeURL(String urlString ) {
+    private String completeURL(String urlString) {
         String newUrlString;
 
         if (urlString.contains("?"))
@@ -180,15 +176,11 @@ public class MoodleCourseInfoActivity extends ProgressActivity implements Moodle
 
         return newUrlString;
     }
+
     /**
      * handles the event on clicks on the group items of the expandable list. If it is a section header,
      * does nothing. If it is a module and it has children, expand the group. if it does not have children
      * it means that it has an URL associated with it. Open this URL in a new browser activity.
-     * @param parent
-     * @param v
-     * @param groupPosition
-     * @param id
-     * @return
      */
     @Override
     public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
@@ -217,7 +209,7 @@ public class MoodleCourseInfoActivity extends ProgressActivity implements Moodle
                 }
             } else
                 // if this group view has childs just expand or hide no URL is available
-                if (parent.isGroupExpanded(groupPosition) == false) {
+                if (!parent.isGroupExpanded(groupPosition)) {
 
                     //  API Level 14+ allows you to animate the Group expansion...
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH)
@@ -230,13 +222,13 @@ public class MoodleCourseInfoActivity extends ProgressActivity implements Moodle
                     //  collapse the ListView Group/s
                     parent.collapseGroup(groupPosition);
             return true;
-        }catch(Exception e){
+        } catch (Exception e) {
             Utils.log(e);
             return false;
         }
     }
 
-    private void baseSetup(){
+    private void baseSetup() {
         try {
 
             if (courseId == DEFAULT_COURSE_ID) {
@@ -260,20 +252,20 @@ public class MoodleCourseInfoActivity extends ProgressActivity implements Moodle
             //UI setup and adapter
             baseUISetup();
 
-        }catch (Exception e){
+        } catch (Exception e) {
             Utils.log(e);
             Utils.showToast(this, getResources().getString(R.string.error_something_wrong));
             finish();
         }
     }
 
-    public void baseUISetup(){
+    public void baseUISetup() {
 
         // initializing UI elements
         view_course_sections = (ExpandableListView) findViewById(R.id.moodleCourseSections);
         view_course_sections.setOnGroupClickListener(this);
         view_course_sections.setOnChildClickListener(this);
-        title = (TextView) findViewById(R.id.courseTitle);
+        TextView title = (TextView) findViewById(R.id.courseTitle);
         title.setText(courseName);
 
         //setting the dataAdapter

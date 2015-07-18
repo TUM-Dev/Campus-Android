@@ -1,7 +1,5 @@
 package de.tum.in.tumcampus.activities;
 
-
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.CalendarContract;
@@ -37,8 +35,6 @@ public class MoodleEventsActivity extends ProgressActivity implements AdapterVie
     MoodleManager realManager;
 
     private RecyclerView eventsRecyclerView;
-    private RecyclerView.LayoutManager eventsLayoutManager;
-    private RecyclerView.Adapter eventsAdapter;
     ArrayList<MoodleEvent> userEvents;
 
     public MoodleEventsActivity() {
@@ -46,7 +42,7 @@ public class MoodleEventsActivity extends ProgressActivity implements AdapterVie
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState){
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         baseSetUp();
@@ -56,7 +52,7 @@ public class MoodleEventsActivity extends ProgressActivity implements AdapterVie
 
 
     @Override
-    public void onRestart(){
+    public void onRestart() {
         super.onRestart();
         realManager.requestUserEvents(this);
     }
@@ -80,15 +76,15 @@ public class MoodleEventsActivity extends ProgressActivity implements AdapterVie
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.moodle_my_courses:
-                Intent coursesIntent = new Intent(this,MoodleMainActivity.class);
+                Intent coursesIntent = new Intent(this, MoodleMainActivity.class);
                 startActivity(coursesIntent);
                 finish();
                 return true;
             case R.id.events:
                 // Do nothing
-                Utils.showToast(this,R.string.moodle_stay_here);
+                Utils.showToast(this, R.string.moodle_stay_here);
                 return true;
         }
         return false;
@@ -99,7 +95,7 @@ public class MoodleEventsActivity extends ProgressActivity implements AdapterVie
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
         // start the calendar application if the sdk version of the device is OK
-       if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
             TextView name = (TextView) findViewById(R.id.event_title);
             TextView description_view = (TextView) findViewById(R.id.event_description);
             TextView date_view = (TextView) findViewById(R.id.event_date);
@@ -130,7 +126,6 @@ public class MoodleEventsActivity extends ProgressActivity implements AdapterVie
      * This method populates the data for lists which will be shown
      * on this actiivty.
      * the data is retrieved from moodleManager
-     *
      */
     public void refresh() {
 
@@ -140,15 +135,15 @@ public class MoodleEventsActivity extends ProgressActivity implements AdapterVie
                 showNoInternetLayout();
                 return;
             }
-            userEvents = new ArrayList<MoodleEvent>(realManager.getUserEvents());
-            eventsAdapter = new MoodleEventAdapter(userEvents, this);
+            userEvents = new ArrayList<>(realManager.getUserEvents());
+            RecyclerView.Adapter eventsAdapter = new MoodleEventAdapter(userEvents, this);
             eventsRecyclerView.setAdapter(eventsAdapter);
             eventsAdapter.notifyDataSetChanged();
             showLoadingEnded();
             //mDialog.dismiss();
-        }catch (Exception e){
-            Utils.log(e,"events activity getting refresh failed");
-            Utils.showToast(this,"Sorry something went wrong!");
+        } catch (Exception e) {
+            Utils.log(e, "events activity getting refresh failed");
+            Utils.showToast(this, getString(R.string.error_something_wrong));
             showLoadingEnded();
         }
 
@@ -172,7 +167,7 @@ public class MoodleEventsActivity extends ProgressActivity implements AdapterVie
         realManager = RealMoodleManager.getInstance(this, this);
 
         eventsRecyclerView = (RecyclerView) findViewById(R.id.moodleEventList);
-        eventsLayoutManager = new LinearLayoutManager(this);
+        RecyclerView.LayoutManager eventsLayoutManager = new LinearLayoutManager(this);
         eventsRecyclerView.setLayoutManager(eventsLayoutManager);
 
     }

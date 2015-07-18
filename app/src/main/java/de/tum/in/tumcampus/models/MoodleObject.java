@@ -12,15 +12,13 @@ import java.io.Serializable;
  * This class is for code reuse purpose. It holds attributes common to each moodle object retrieved from calls
  * to Moodle Web Services
  */
-public class MoodleObject implements Serializable{
+public class MoodleObject implements Serializable {
 
     protected String exception;
     protected String errorCode;
     protected String message;
     protected boolean isValid = true;
     private static final long serialVersionUID = -7060210544600464481L;
-
-
 
     public String getException() {
         return exception;
@@ -57,18 +55,14 @@ public class MoodleObject implements Serializable{
     /**
      * Created by enricogiga on 05/06/2015.
      * Helper method to convert a string to jsonobject.
-     * @param jsonString json in string format
      *
+     * @param jsonString json in string format
      */
     protected static JSONObject toJSONObject(String jsonString) {
-        try{
-            JSONObject obj = new JSONObject(jsonString);
-
-            return obj;
-        }
-        catch (JSONException e){
+        try {
+            return new JSONObject(jsonString);
+        } catch (JSONException e) {
             Log.d("exception", e.getMessage());
-
             return null;
         }
 

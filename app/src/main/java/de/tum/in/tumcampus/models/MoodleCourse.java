@@ -23,7 +23,7 @@ public class MoodleCourse extends  MoodleObject{
      * List of sections of which a course is composed
      * section is a name given by me, the actual json array has no name
      */
-    private List sections;
+    private List<MoodleCourseSection> sections;
 
 
     /**
@@ -47,32 +47,25 @@ public class MoodleCourse extends  MoodleObject{
             } else {
                 //good
                 JSONArray jsonArray = new JSONArray(jsonstring);
-                this.sections=new ArrayList<MoodleCourseSection>();
+                this.sections=new ArrayList<>();
 
 
-                if (jsonArray != null){
-                    MoodleCourseSection section;
-                    try{
-                        for (int i=0; i < jsonArray.length(); i++){
-                            JSONObject c = jsonArray.getJSONObject(i);
-                            section = new MoodleCourseSection(c);
-                            sections.add(section);
-                        }
-
-                    } catch (JSONException e){
-                        this.sections = null;
-                        this.message="invalid json parsing in MoodleCourse model";
-                        this.exception="JSONException";
-                        this.errorCode="invalidjson";
-                        this.isValid=false;
+                MoodleCourseSection section;
+                try{
+                    for (int i=0; i < jsonArray.length(); i++){
+                        JSONObject c = jsonArray.getJSONObject(i);
+                        section = new MoodleCourseSection(c);
+                        sections.add(section);
                     }
 
-                } else {
-                    this.exception = "EmptyJSONArrayException";
-                    this.message = "invalid json object passed to MoodleCourseSection model";
-                    this.errorCode = "emptyjsonobject";
+                } catch (JSONException e){
+                    this.sections = null;
+                    this.message="invalid json parsing in MoodleCourse model";
+                    this.exception="JSONException";
+                    this.errorCode="invalidjson";
                     this.isValid=false;
                 }
+
             }
 
         }
@@ -89,19 +82,19 @@ public class MoodleCourse extends  MoodleObject{
 
 
 
-    public List getSections() {
+    public List<MoodleCourseSection> getSections() {
         return sections;
     }
 
-    public void setSections(List sections) {
+    public void setSections(List<MoodleCourseSection> sections) {
         this.sections = sections;
     }
 
     public List<String> getSectionNames(){
-        List<String> sectionNames = new ArrayList<String>();
+        List<String> sectionNames = new ArrayList<>();
         if (sections != null) {
-            for (Object s : sections)
-                sectionNames.add(((MoodleCourseSection) s).getName());
+            for (MoodleCourseSection s : sections)
+                sectionNames.add((s).getName());
             return sectionNames;
         }
         else

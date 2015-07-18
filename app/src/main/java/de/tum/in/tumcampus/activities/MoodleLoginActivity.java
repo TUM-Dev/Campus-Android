@@ -15,14 +15,13 @@ import de.tum.in.tumcampus.models.managers.MoodleUpdateDelegate;
 import de.tum.in.tumcampus.models.managers.RealMoodleManager;
 
 /**
- * Created by carlodidomenico on 16/06/15.
+ * Activity to log into moodle
  */
 public class MoodleLoginActivity extends ProgressActivity implements MoodleUpdateDelegate, View.OnClickListener {
 
     protected MoodleManager realManager;
 
     private EditText userNameField, passwordField;
-    private Button button;
     private Intent intent;
 
     public MoodleLoginActivity() {
@@ -68,7 +67,7 @@ public class MoodleLoginActivity extends ProgressActivity implements MoodleUpdat
     public void baseSetup(){
         userNameField = (EditText)findViewById(R.id.user_name);
         passwordField = (EditText)findViewById(R.id.password);
-        button = (Button)findViewById(R.id.button);
+        Button button = (Button) findViewById(R.id.button);
         button.setOnClickListener(this);
     }
 
