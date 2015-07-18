@@ -7,7 +7,9 @@ import de.tum.in.tumcampus.models.MVVObject;
  * Delegate to set the callback methods after parsing MVGLive contents
  */
 public interface MVVDelegate {
-    public void showSuggestionList(MVVObject object);
-    public void showDepartureList(MVVObject object);
-    public void showError(MVVObject object);
+    void showSuggestionList(MVVObject object);
+
+    void showDepartureList(MVVObject object);
+
+    void showError(MVVObject object);
 }

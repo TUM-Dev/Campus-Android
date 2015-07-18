@@ -1,14 +1,14 @@
 package de.tum.in.tumcampus.models;
 
 /**
- * Created by enricogiga on 16/06/2015.
+ * The MVV departures
  */
 public class MVVDeparture extends  MVVObject {
     private String line;
     private String direction;
     private Integer min;
 
-    public static enum TransportationType {UBAHN, SBAHN, BUS_TRAM};
+    public enum TransportationType {UBAHN, SBAHN, BUS_TRAM}
 
     public MVVDeparture(String line, String direction, Integer min) {
         this.isDeparture = true;
@@ -21,9 +21,9 @@ public class MVVDeparture extends  MVVObject {
        if (line == null)
            return null;
 
-        if(line.indexOf("U") >= 0)
+        if(line.contains("U"))
             return TransportationType.UBAHN;
-        else if (line.indexOf("S") >= 0)
+        else if (line.contains("S"))
             return TransportationType.SBAHN;
         else
             return TransportationType.BUS_TRAM;

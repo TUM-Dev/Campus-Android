@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by enricogiga on 16/06/2015.
+ * MVV information
  */
 public class MVVObject implements Serializable {
 
@@ -20,7 +20,7 @@ public class MVVObject implements Serializable {
     private String departureHeader;
     private String departureServerTime;
 
-    private List<MVVObject> resultList = new ArrayList<MVVObject>();
+    private List<MVVObject> resultList = new ArrayList<>();
 
 
     public String getDepartureHeader() {
