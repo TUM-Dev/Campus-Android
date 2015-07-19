@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.RemoteInput;
 import android.support.v4.app.TaskStackBuilder;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Base64;
 
 import com.google.gson.Gson;
@@ -36,9 +37,7 @@ public class ChatNotification extends Notification {
 
     public static final int NOTIFICATION_ID = CardManager.CARD_CHAT;
 
-    public final int room;
-    private final int message;
-    private final int member;
+    private final GCMChat extras;
 
     private ChatRoom chatRoom;
     private String notificationText;
@@ -49,15 +48,18 @@ public class ChatNotification extends Notification {
     public ChatNotification(Bundle extras, Context context) {
         this.context = context;
 
+        //Initialize the object keeping important infos about the update
+        this.extras = new GCMChat();
+
         //Get the update details
-        this.room = Integer.parseInt(extras.getString("room"));
-        this.member = Integer.parseInt(extras.getString("member"));
+        this.extras.room = Integer.parseInt(extras.getString("room"));
+        this.extras.member = Integer.parseInt(extras.getString("member"));
 
         //Message part is only present if we have a updated message
         if (extras.containsKey("message")) {
-            this.message = Integer.parseInt(extras.getString("message"));
+            this.extras.message = Integer.parseInt(extras.getString("message"));
         } else {
-            this.message = -1;
+            this.extras.message = -1;
         }
 
         this.prepare();
@@ -72,31 +74,26 @@ public class ChatNotification extends Notification {
         }
 
         // parse data
-        GCMChat extras = (new Gson()).fromJson(payload, GCMChat.class);
-
-        //Get the update details
-        this.room = extras.room;
-        this.member = extras.member;
-        this.message = extras.message;
+        this.extras = (new Gson()).fromJson(payload, GCMChat.class);
 
         this.prepare();
     }
 
     private void prepare() {
-        Utils.logv("Received GCM notification: room=" + room + " member=" + member + " message=" + message);
+        Utils.logv("Received GCM notification: room=" + this.extras.room + " member=" + this.extras.member + " message=" + this.extras.message);
 
         // Get the data necessary for the ChatActivity
         ChatMember member = Utils.getSetting(context, Const.CHAT_MEMBER, ChatMember.class);
-        chatRoom = TUMCabeClient.getInstance(context).getChatRoom(room);
+        chatRoom = TUMCabeClient.getInstance(context).getChatRoom(this.extras.room);
 
         ChatMessageManager manager = new ChatMessageManager(context, chatRoom.getId());
-        Cursor messages = manager.getNewMessages(getPrivateKeyFromSharedPrefs(context), member, message);
+        Cursor messages = manager.getNewMessages(getPrivateKeyFromSharedPrefs(context), member, this.extras.message);
 
         // Notify any open chat activity that a message has been received
         //@todo fix broadcast as extras might not be avaible
-        //Intent intent = new Intent("chat-message-received");
-        //intent.putExtras(extras);
-        //LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+        Intent intent = new Intent("chat-message-received");
+        intent.putExtra("GCMChat", this.extras);
+        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
 
         notificationText = null;
         if (messages.moveToFirst()) {
@@ -120,11 +117,11 @@ public class ChatNotification extends Notification {
 
     public android.app.Notification getNotification() {
         //Check if chat is currently open then don't show a notification if it is
-        if (ChatActivity.mCurrentOpenChatRoom != null && room == ChatActivity.mCurrentOpenChatRoom.getId()) {
+        if (ChatActivity.mCurrentOpenChatRoom != null && this.extras.room == ChatActivity.mCurrentOpenChatRoom.getId()) {
             return null;
         }
 
-        if (Utils.getSettingBool(context, "card_chat_phone", true) && message == -1) {
+        if (Utils.getSettingBool(context, "card_chat_phone", true) && this.extras.message == -1) {
 
             PendingIntent contentIntent = sBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_ONE_SHOT);
 
@@ -160,6 +157,11 @@ public class ChatNotification extends Notification {
 
         }
         return null;
+    }
+
+    @Override
+    public int getNotificationIdentification() {
+        return this.extras.room << 4 + ChatNotification.NOTIFICATION_ID;
     }
 
     /**

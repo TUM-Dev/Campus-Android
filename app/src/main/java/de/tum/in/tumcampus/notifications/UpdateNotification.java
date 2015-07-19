@@ -68,4 +68,9 @@ public class UpdateNotification extends Notification {
                 .extend(new NotificationCompat.WearableExtender().addAction(action))
                 .build();
     }
+
+    @Override
+    public int getNotificationIdentification() {
+        return 2;
+    }
 }

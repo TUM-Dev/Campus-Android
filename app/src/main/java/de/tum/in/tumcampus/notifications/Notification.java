@@ -39,6 +39,7 @@ public abstract class Notification {
     protected int type;
 
     public abstract android.app.Notification getNotification();
+    public abstract int getNotificationIdentification();
 
 
 }

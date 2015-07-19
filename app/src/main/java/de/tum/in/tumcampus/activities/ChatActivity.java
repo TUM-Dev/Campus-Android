@@ -49,6 +49,7 @@ import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.ImplicitCounter;
 import de.tum.in.tumcampus.auxiliary.NetUtils;
 import de.tum.in.tumcampus.auxiliary.Utils;
+import de.tum.in.tumcampus.models.GCMChat;
 import de.tum.in.tumcampus.models.TUMCabeClient;
 import de.tum.in.tumcampus.models.ChatMember;
 import de.tum.in.tumcampus.models.ChatMessage;
@@ -416,21 +417,15 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
     private final BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Bundle extras = intent.getExtras();
-            String chatRoomString = extras.getString("room");
-            String memberString = extras.getString("member");
-            int messageId = -1;
-            if (extras.containsKey("message"))
-                messageId = Integer.parseInt(extras.getString("message"));
-
-            Utils.log("Broadcast receiver got room=" + chatRoomString + " member=" + memberString);
+            GCMChat extras = (GCMChat) intent.getSerializableExtra("GCMChat");
+            Utils.log("Broadcast receiver got room=" + extras.room + " member=" + extras.member);
 
             //If same room just refresh
-            if (chatRoomString.equals("" + currentChatRoom.getId()) && chatHistoryAdapter != null) {
-                if (memberString.equals("" + currentChatMember.getId())) {
+            if (extras.room == currentChatRoom.getId() && chatHistoryAdapter != null) {
+                if (extras.member == currentChatMember.getId()) {
                     // Remove this message from the adapter
                     chatHistoryAdapter.setUnsentMessages(chatManager.getAllUnsent());
-                } else if (messageId == -1) {
+                } else if (extras.message == -1) {
                     //Check first, if sounds are enabled
                     AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
                     if (am.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {

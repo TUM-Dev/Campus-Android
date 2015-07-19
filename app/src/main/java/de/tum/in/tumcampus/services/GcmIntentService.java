@@ -70,7 +70,6 @@ public class GcmIntentService extends IntentService {
 
                 //Initialize our outputs
                 Notification n = null;
-                int notificationIdentification = -1;
 
                 //switch on the type as both the type and payload must be present
                 switch (type) { //https://github.com/TCA-Team/TumCampusApp/wiki/GCM-Message-format
@@ -79,21 +78,18 @@ public class GcmIntentService extends IntentService {
                         break;
                     case 1: //Chat
                         n = new ChatNotification(extras.getString("payload"), this);
-                        notificationIdentification = ((ChatNotification) n).room << 4 + ChatNotification.NOTIFICATION_ID;
                         break;
                     case 2: //Update
                         //@todo do something
-                        notificationIdentification = 2;
                         break;
                     case 3: //Alert
                         n = new AlarmNotification(extras.getString("payload"), this);
-                        notificationIdentification = 3;
                         break;
                 }
 
                 //Post & save the notification if it was of any significance
                 if (n != null) {
-                    this.postNotification(n, notificationIdentification);
+                    this.postNotification(n);
 
                     de.tum.in.tumcampus.models.managers.NotificationManager man = new de.tum.in.tumcampus.models.managers.NotificationManager(this);
                     //@todo save to our notificationmanager
@@ -111,14 +107,13 @@ public class GcmIntentService extends IntentService {
      * @param extras
      */
     private void sendChatNotification(Bundle extras) {
-        ChatNotification n = new ChatNotification(extras, this);
-        this.postNotification(n, n.room << 4 + ChatNotification.NOTIFICATION_ID);
+        this.postNotification(new ChatNotification(extras, this));
     }
 
-    private void postNotification(Notification n, int id) {
+    private void postNotification(Notification n) {
         if (n != null) {
             NotificationManager mNotificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
-            mNotificationManager.notify(id, n.getNotification());
+            mNotificationManager.notify(n.getNotificationIdentification(), n.getNotification());
         }
     }
 
