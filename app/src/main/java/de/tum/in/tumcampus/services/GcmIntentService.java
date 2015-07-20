@@ -110,14 +110,14 @@ public class GcmIntentService extends IntentService {
     /**
      * Put the message into a notification and post it.
      *
-     * @param extras
+     * @param extras a bundle with the chat options
      */
     private void sendChatNotification(Bundle extras) {
         this.postNotification(new Chat(extras, this, -1));
     }
 
     /**
-     * @param n
+     * @param n the Notification to post
      */
     private void postNotification(GenericNotification n) {
         if (n != null) {
