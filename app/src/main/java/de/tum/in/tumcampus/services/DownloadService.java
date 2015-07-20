@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 
 import java.io.IOException;
 import java.util.List;
@@ -48,6 +47,17 @@ public class DownloadService extends IntentService {
      */
     public DownloadService() {
         super(DOWNLOAD_SERVICE);
+    }
+
+    /**
+     * Gets the time when BackgroundService was called last time
+     *
+     * @param c Context
+     * @return time when BackgroundService was executed last time
+     */
+    public static long lastUpdate(Context c) {
+        SharedPreferences prefs = c.getSharedPreferences(Const.INTERNAL_PREFS, 0);
+        return prefs.getLong(LAST_UPDATE, 0);
     }
 
     @Override
@@ -106,7 +116,7 @@ public class DownloadService extends IntentService {
 
         // Check if device has a internet connection
         if (NetUtils.isConnected(this) && (launch || !NetUtils.isConnectedMobileData(this))) {
-            Log.i(getClass().getSimpleName(), "Handle action <" + action + ">");
+            Utils.logv("Handle action <" + action + ">");
             try {
                 switch (action) {
                     case Const.DOWNLOAD_ALL_FROM_EXTERNAL:
@@ -234,16 +244,5 @@ public class DownloadService extends IntentService {
                         row[2], row[3], row[4], row[5], row[6], row[7], row[8]));
             }
         }
-    }
-
-    /**
-     * Gets the time when BackgroundService was called last time
-     *
-     * @param c Context
-     * @return time when BackgroundService was executed last time
-     */
-    public static long lastUpdate(Context c) {
-        SharedPreferences prefs = c.getSharedPreferences(Const.INTERNAL_PREFS, 0);
-        return prefs.getLong(LAST_UPDATE, 0);
     }
 }

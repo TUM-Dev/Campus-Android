@@ -3,7 +3,6 @@ package de.tum.in.tumcampus.auxiliary;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.google.gson.Gson;
 
@@ -73,7 +72,7 @@ public class ImplicitCounter extends AsyncTask<String, Integer, Void> {
 
         //Check if context passed
         if (c == null) {
-            Log.e("Stats submit", "No context passed!");
+            Utils.log("Stats submit: No context passed!");
             return;
         }
         this.c = c;
@@ -97,7 +96,7 @@ public class ImplicitCounter extends AsyncTask<String, Integer, Void> {
 
     protected Void doInBackground(String... data) {
         if (data == null) {
-            Log.e(tag, "No Json data passed, skipping...");
+            Utils.log("No Json data passed, skipping...");
             return null;
         }
 
