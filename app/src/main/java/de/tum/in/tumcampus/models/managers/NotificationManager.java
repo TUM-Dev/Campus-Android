@@ -62,7 +62,7 @@ public class NotificationManager {
         GCMNotification n;
         if (c.getCount() == 0) {
             //update cache
-            List<GCMNotification> notes = TUMCabeClient.getInstance(context).getNotifications(notificationId);
+            List<GCMNotification> notes = TUMCabeClient.getInstance(context).getNotification(notificationId);
             this.replaceNotificationsInto(notes);
             for (GCMNotification note : notes) {
                 if (note.getNotification() == notificationId) {

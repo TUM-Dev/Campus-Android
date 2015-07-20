@@ -143,7 +143,7 @@ public class TUMCabeClient {
         void uploadRegistrationId(@Path("memberId") int memberId, @Body ChatRegistrationId regId, Callback<ChatRegistrationId> cb);
 
         @GET(API_NOTIFICATIONS + "{lastNotification}/")
-        List<GCMNotification> getNotifications(@Path("lastNotification") int lastNotification);
+        GCMNotification getNotification(@Path("lastNotification") int lastNotification);
 
         @GET(API_NOTIFICATIONS + "confirm/{notification}/")
         void confirm(@Path("notification") int notification);
@@ -211,8 +211,8 @@ public class TUMCabeClient {
         service.uploadRegistrationId(memberId, regId, cb);
     }
 
-    public List<GCMNotification> getNotifications(int lastNotification) {
-        return service.getNotifications(lastNotification);
+    public GCMNotification getNotification(int notifcation) {
+        return service.getNotification(notifcation);
     }
 
 

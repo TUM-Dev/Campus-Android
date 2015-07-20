@@ -13,10 +13,13 @@ import com.google.gson.Gson;
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.ChatActivity;
 import de.tum.in.tumcampus.models.GCMAlert;
+import de.tum.in.tumcampus.models.GCMNotification;
+import de.tum.in.tumcampus.models.TUMCabeClient;
 
 public class Alarm extends GenericNotification {
 
     public final GCMAlert alert;
+    private GCMNotification info;
 
     private TaskStackBuilder sBuilder;
 
@@ -27,6 +30,9 @@ public class Alarm extends GenericNotification {
         if (payload == null) {
             throw new NullPointerException();
         }
+
+        //Get data from server
+        this.info = TUMCabeClient.getInstance(this.context).getNotification(this.notification);
 
         // parse data
         this.alert = (new Gson()).fromJson(payload, GCMAlert.class);

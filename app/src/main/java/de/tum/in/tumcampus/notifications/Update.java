@@ -12,11 +12,14 @@ import com.google.gson.Gson;
 
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.ChatActivity;
+import de.tum.in.tumcampus.models.GCMNotification;
 import de.tum.in.tumcampus.models.GCMUpdate;
+import de.tum.in.tumcampus.models.TUMCabeClient;
 
 public class Update extends GenericNotification {
 
     public final GCMUpdate data;
+    private GCMNotification info;
 
     private TaskStackBuilder sBuilder;
 
@@ -30,6 +33,9 @@ public class Update extends GenericNotification {
 
         // parse data
         this.data = (new Gson()).fromJson(payload, GCMUpdate.class);
+
+        //Get data from server
+        this.info = TUMCabeClient.getInstance(this.context).getNotification(this.notification);
     }
 
 

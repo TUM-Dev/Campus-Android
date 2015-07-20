@@ -111,6 +111,10 @@ public class GcmIntentService extends IntentService {
         this.postNotification(new Chat(extras, this, -1));
     }
 
+    /**
+     *
+     * @param n
+     */
     private void postNotification(GenericNotification n) {
         if (n != null) {
             NotificationManager mNotificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);

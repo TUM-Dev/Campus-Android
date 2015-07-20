@@ -40,7 +40,6 @@ public abstract class GenericNotification {
     protected final int icon = R.drawable.tum_logo_notification;
     protected final boolean confirmation;
 
-
     protected final Context context;
 
     public GenericNotification(Context context, int type, int notification, boolean confirmation) {
