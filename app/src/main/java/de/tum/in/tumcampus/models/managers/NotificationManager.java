@@ -13,7 +13,7 @@ import de.tum.in.tumcampus.models.TUMCabeClient;
 
 public class NotificationManager {
 
-    private static final String TABLE_NOTIFICATIONS = "notification_alarm";
+    private static final String TABLE_NOTIFICATIONS = "notification";
     private static final String[] TABLE_NOTIFICATIONS_COLUMNS = new String[]{
             "notification", "type", "location", "name", "lon", "lat", "rad", "title",
             "desc", "signature"};
