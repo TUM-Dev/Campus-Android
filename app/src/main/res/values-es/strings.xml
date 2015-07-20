@@ -265,6 +265,7 @@
     <string name="bug_reports"> Informes Bug Anonymous</string>
     <string name="cafeteria">Cafetería</string>
     <string name="campus_klinikum_großhadern">Klinikum Großhadern</string>
+    <string name="update_notification_description">Una nueva versión del Campus App Tum se ha lanzado en %s. Pulse para descargar ahora.</string>
     <!-- END Translated, please do not change identifiers -->
 
 

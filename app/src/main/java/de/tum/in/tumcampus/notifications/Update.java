@@ -3,23 +3,22 @@ package de.tum.in.tumcampus.notifications;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.RemoteInput;
 import android.support.v4.app.TaskStackBuilder;
 
 import com.google.gson.Gson;
 
+import de.tum.in.tumcampus.BuildConfig;
 import de.tum.in.tumcampus.R;
-import de.tum.in.tumcampus.activities.ChatActivity;
-import de.tum.in.tumcampus.models.GCMNotification;
+import de.tum.in.tumcampus.activities.MainActivity;
 import de.tum.in.tumcampus.models.GCMUpdate;
-import de.tum.in.tumcampus.models.TUMCabeClient;
 
 public class Update extends GenericNotification {
 
     public final GCMUpdate data;
-    private GCMNotification info;
 
     private TaskStackBuilder sBuilder;
 
@@ -34,44 +33,35 @@ public class Update extends GenericNotification {
         // parse data
         this.data = (new Gson()).fromJson(payload, GCMUpdate.class);
 
-        //Get data from server
-        this.info = TUMCabeClient.getInstance(this.context).getNotification(this.notification);
+        if (BuildConfig.VERSION_CODE < data.packageVersion) {
+            //TODO self deactivate
+        }
     }
 
 
     @Override
     public Notification getNotification() {
-        //@todo
-        PendingIntent contentIntent = sBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_ONE_SHOT);
+        if (data.sdkVersion > Build.VERSION.SDK_INT || BuildConfig.VERSION_CODE >= data.packageVersion) {
+            return null;
+        }
 
         // GCMNotification sound
         Uri sound = Uri.parse("android.resource://" + context.getPackageName() + "/" + R.raw.message);
+        Intent alarm = new Intent(this.context, MainActivity.class);
+        PendingIntent pending = PendingIntent.getActivity(this.context, 0, alarm, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        String replyLabel = context.getResources().getString(R.string.reply_label);
-
-        RemoteInput remoteInput = new RemoteInput.Builder(ChatActivity.EXTRA_VOICE_REPLY)
-                .setLabel(replyLabel)
-                .build();
-
-        // Create the reply action and add the remote input
-        NotificationCompat.Action action =
-                new NotificationCompat.Action.Builder(R.drawable.ic_reply,
-                        context.getString(R.string.reply_label), contentIntent)
-                        .addRemoteInput(remoteInput)
-                        .build();
-
+        final String description = String.format(context.getString(R.string.update_notification_description), data.releaseDate);
 
         return new NotificationCompat.Builder(context)
-                .setSmallIcon(R.drawable.tum_logo_notification)
-                .setContentTitle("TCA Alarm")
-                .setStyle(new NotificationCompat.BigTextStyle().bigText(data.packageVersion + ""))
-                .setContentText(data.packageVersion + "")
-                .setContentIntent(contentIntent)
-                .setDefaults(android.app.Notification.DEFAULT_VIBRATE)
+                .setSmallIcon(this.icon)
+                .setContentTitle(context.getString(R.string.update))
+                .setStyle(new NotificationCompat.BigTextStyle().bigText(description))
+                .setContentText(description)
+                .setContentIntent(pending)
+                .setDefaults(Notification.DEFAULT_VIBRATE)
                 .setLights(0xff0000ff, 500, 500)
                 .setSound(sound)
                 .setAutoCancel(true)
-                .extend(new NotificationCompat.WearableExtender().addAction(action))
                 .build();
     }
 

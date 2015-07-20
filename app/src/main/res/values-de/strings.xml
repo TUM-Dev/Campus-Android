@@ -367,4 +367,5 @@ Signatur: %5$s</string>
     <string name="yesterday">Gestern</string>
     <string name="semester_summer">Sommersemester</string>
     <string name="semester_winter">Wintersemester</string>
+    <string name="update_notification_description">Eine neue Version der Tum Campus App wurde am %s released. Hier tippen zum herunterladen.</string>
 </resources>

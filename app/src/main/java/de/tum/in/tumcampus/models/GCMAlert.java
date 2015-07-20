@@ -8,10 +8,6 @@ import java.io.Serializable;
 @SuppressWarnings("UnusedDeclaration")
 public class GCMAlert implements Serializable {
 
-    public String title;
-    public String text;
-    public String signature;
-    public boolean sound;
-    public boolean fake;
+    public boolean silent;
 
 }
