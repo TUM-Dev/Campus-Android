@@ -17,6 +17,7 @@
 package de.tum.in.tumcampus.services;
 
 import android.app.IntentService;
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
@@ -112,13 +113,14 @@ public class GcmIntentService extends IntentService {
     }
 
     /**
-     *
      * @param n
      */
     private void postNotification(GenericNotification n) {
         if (n != null) {
             NotificationManager mNotificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
-            mNotificationManager.notify(n.getNotificationIdentification(), n.getNotification());
+            Notification note = n.getNotification();
+            if (note != null)
+                mNotificationManager.notify(n.getNotificationIdentification(), n.getNotification());
         }
     }
 
