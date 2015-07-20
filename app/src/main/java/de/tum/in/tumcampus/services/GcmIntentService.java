@@ -25,6 +25,7 @@ import android.os.Bundle;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
+import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.TUMCabeClient;
 import de.tum.in.tumcampus.notifications.Alarm;
 import de.tum.in.tumcampus.notifications.Chat;
@@ -65,10 +66,12 @@ public class GcmIntentService extends IntentService {
             } else {
                 //Get some important values
                 int notification = extras.getInt("notificaton");
-                int type = extras.getInt("type");
+                int type = Integer.parseInt(extras.getString("type"));
 
                 //Initialize our outputs
                 GenericNotification n = null;
+
+                Utils.logv("Notification recieved: " + extras.toString());
 
                 //switch on the type as both the type and payload must be present
                 switch (type) { //https://github.com/TCA-Team/TumCampusApp/wiki/GCM-Message-format

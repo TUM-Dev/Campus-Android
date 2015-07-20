@@ -43,10 +43,25 @@ public class TUMCabeClient {
 
 
     private static TUMCabeClient instance = null;
-    private TUMCabeAPIService service = null;
-
     private static Context context = null;
-
+    final RequestInterceptor requestInterceptor = new RequestInterceptor() {
+        @Override
+        public void intercept(RequestFacade request) {
+            request.addHeader("X-DEVICE-ID", NetUtils.getDeviceID(TUMCabeClient.context));
+        }
+    };
+    final ErrorHandler errorHandler = new ErrorHandler() {
+        @Override
+        public Throwable handleError(RetrofitError cause) {
+            Throwable t = cause.getCause();
+            if (t instanceof SSLPeerUnverifiedException) {
+                //TODO show a error message
+                //Toast.makeText(context, t.toString(), Toast.LENGTH_LONG).show();
+            }
+            return t;
+        }
+    };
+    private TUMCabeAPIService service = null;
 
     private TUMCabeClient() {
         //Pin our known fingerprints, which I retrieved on 28. June 2015
@@ -76,24 +91,75 @@ public class TUMCabeClient {
         return instance;
     }
 
-    final RequestInterceptor requestInterceptor = new RequestInterceptor() {
-        @Override
-        public void intercept(RequestFacade request) {
-            request.addHeader("X-DEVICE-ID", NetUtils.getDeviceID(TUMCabeClient.context));
-        }
-    };
+    public void createRoom(ChatRoom chatRoom, ChatVerification verification, Callback<ChatRoom> cb) {
+        verification.setData(chatRoom);
+        service.createRoom(verification, cb);
+    }
 
-    final ErrorHandler errorHandler = new ErrorHandler() {
-        @Override
-        public Throwable handleError(RetrofitError cause) {
-            Throwable t = cause.getCause();
-            if (t instanceof SSLPeerUnverifiedException) {
-                //TODO show a error message
-                //Toast.makeText(context, t.toString(), Toast.LENGTH_LONG).show();
-            }
-            return t;
-        }
-    };
+    public ChatRoom createRoom(ChatRoom chatRoom, ChatVerification verification) {
+        verification.setData(chatRoom);
+        return service.createRoom(verification);
+    }
+
+    public ChatRoom getChatRoom(int id) {
+        return service.getChatRoom(id);
+    }
+
+    public ChatMember createMember(ChatMember chatMember) {
+        return service.createMember(chatMember);
+    }
+
+    public void leaveChatRoom(ChatRoom chatRoom, ChatVerification verification, Callback<ChatRoom> cb) {
+        service.leaveChatRoom(chatRoom.getId(), verification, cb);
+    }
+
+    public ChatMessage sendMessage(int roomId, ChatMessage chatMessageCreate) {
+        return service.sendMessage(roomId, chatMessageCreate);
+    }
+
+    public ChatMessage updateMessage(int roomId, ChatMessage message) {
+        return service.updateMessage(roomId, message.getId(), message);
+    }
+
+    public ArrayList<ChatMessage> getMessages(int roomId, long messageId, @Body ChatVerification verification) {
+        return service.getMessages(roomId, messageId, verification);
+    }
+
+    public ArrayList<ChatMessage> getNewMessages(int roomId, @Body ChatVerification verification) {
+        return service.getNewMessages(roomId, verification);
+    }
+
+    public ChatPublicKey uploadPublicKey(int memberId, ChatPublicKey publicKey) {
+        return service.uploadPublicKey(memberId, publicKey);
+    }
+
+    public List<ChatRoom> getMemberRooms(int memberId, ChatVerification verification) {
+        return service.getMemberRooms(memberId, verification);
+    }
+
+    public void getPublicKeysForMember(ChatMember member, Callback<List<ChatPublicKey>> cb) {
+        service.getPublicKeysForMember(member.getId(), cb);
+    }
+
+    public void uploadRegistrationId(int memberId, ChatRegistrationId regId, Callback<ChatRegistrationId> cb) {
+        service.uploadRegistrationId(memberId, regId, cb);
+    }
+
+    public GCMNotification getNotification(int notification) {
+        return service.getNotification(notification);
+    }
+
+    public void confirm(int notification) {
+        service.confirm(notification);
+    }
+
+    public List<GCMNotificationLocation> getAllLocations() {
+        return service.getAllLocations();
+    }
+
+    public GCMNotificationLocation getLocation(int locationId) {
+        return service.getLocation(locationId);
+    }
 
     private interface TUMCabeAPIService {
 
@@ -145,7 +211,7 @@ public class TUMCabeClient {
         @GET(API_NOTIFICATIONS + "{lastNotification}/")
         GCMNotification getNotification(@Path("lastNotification") int lastNotification);
 
-        @GET(API_NOTIFICATIONS + "confirm/{notification}/")
+        @PUT(API_NOTIFICATIONS + "confirm/{notification}/")
         void confirm(@Path("notification") int notification);
 
         //Locations
@@ -154,77 +220,5 @@ public class TUMCabeClient {
 
         @GET(API_LOCATIONS + "{locationId}/")
         GCMNotificationLocation getLocation(@Path("locationId") int locationId);
-    }
-
-    public void createRoom(ChatRoom chatRoom, ChatVerification verification, Callback<ChatRoom> cb) {
-        verification.setData(chatRoom);
-        service.createRoom(verification, cb);
-    }
-
-    public ChatRoom createRoom(ChatRoom chatRoom, ChatVerification verification) {
-        verification.setData(chatRoom);
-        return service.createRoom(verification);
-    }
-
-    public ChatRoom getChatRoom(int id) {
-        return service.getChatRoom(id);
-    }
-
-    public ChatMember createMember(ChatMember chatMember) {
-        return service.createMember(chatMember);
-    }
-
-
-    public void leaveChatRoom(ChatRoom chatRoom, ChatVerification verification, Callback<ChatRoom> cb) {
-        service.leaveChatRoom(chatRoom.getId(), verification, cb);
-    }
-
-    public ChatMessage sendMessage(int roomId, ChatMessage chatMessageCreate) {
-        return service.sendMessage(roomId, chatMessageCreate);
-    }
-
-    public ChatMessage updateMessage(int roomId, ChatMessage message) {
-        return service.updateMessage(roomId, message.getId(), message);
-    }
-
-    public ArrayList<ChatMessage> getMessages(int roomId, long messageId, @Body ChatVerification verification) {
-        return service.getMessages(roomId, messageId, verification);
-    }
-
-    public ArrayList<ChatMessage> getNewMessages(int roomId, @Body ChatVerification verification) {
-        return service.getNewMessages(roomId, verification);
-    }
-
-    public ChatPublicKey uploadPublicKey(int memberId, ChatPublicKey publicKey) {
-        return service.uploadPublicKey(memberId, publicKey);
-    }
-
-    public List<ChatRoom> getMemberRooms(int memberId, ChatVerification verification) {
-        return service.getMemberRooms(memberId, verification);
-    }
-
-    public void getPublicKeysForMember(ChatMember member, Callback<List<ChatPublicKey>> cb) {
-        service.getPublicKeysForMember(member.getId(), cb);
-    }
-
-    public void uploadRegistrationId(int memberId, ChatRegistrationId regId, Callback<ChatRegistrationId> cb) {
-        service.uploadRegistrationId(memberId, regId, cb);
-    }
-
-    public GCMNotification getNotification(int notifcation) {
-        return service.getNotification(notifcation);
-    }
-
-
-    public void confirm(int notification) {
-        service.confirm(notification);
-    }
-
-    public List<GCMNotificationLocation> getAllLocations() {
-        return service.getAllLocations();
-    }
-
-    public GCMNotificationLocation getLocation(int locationId) {
-        return service.getLocation(locationId);
     }
 }
