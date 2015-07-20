@@ -79,6 +79,25 @@ public class Chat extends GenericNotification {
         this.prepare();
     }
 
+    /**
+     * Loads the private key from preferences
+     *
+     * @return The private key object
+     */
+    private static PrivateKey getPrivateKeyFromSharedPrefs(Context context) {
+        String privateKeyString = Utils.getInternalSettingString(context, Const.PRIVATE_KEY, "");
+        byte[] privateKeyBytes = Base64.decode(privateKeyString, Base64.DEFAULT);
+        KeyFactory keyFactory;
+        try {
+            keyFactory = KeyFactory.getInstance("RSA");
+            PKCS8EncodedKeySpec privateKeySpec = new PKCS8EncodedKeySpec(privateKeyBytes);
+            return keyFactory.generatePrivate(privateKeySpec);
+        } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+            Utils.log(e);
+        }
+        return null;
+    }
+
     private void prepare() {
         Utils.logv("Received GCM notification: room=" + this.extras.room + " member=" + this.extras.member + " message=" + this.extras.message);
 
@@ -90,7 +109,6 @@ public class Chat extends GenericNotification {
         Cursor messages = manager.getNewMessages(getPrivateKeyFromSharedPrefs(context), member, this.extras.message);
 
         // Notify any open chat activity that a message has been received
-        //@todo fix broadcast as extras might not be avaible
         Intent intent = new Intent("chat-message-received");
         intent.putExtra("GCMChat", this.extras);
         LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
@@ -162,24 +180,5 @@ public class Chat extends GenericNotification {
     @Override
     public int getNotificationIdentification() {
         return this.extras.room << 4 + Chat.NOTIFICATION_ID;
-    }
-
-    /**
-     * Loads the private key from preferences
-     *
-     * @return The private key object
-     */
-    private static PrivateKey getPrivateKeyFromSharedPrefs(Context context) {
-        String privateKeyString = Utils.getInternalSettingString(context, Const.PRIVATE_KEY, "");
-        byte[] privateKeyBytes = Base64.decode(privateKeyString, Base64.DEFAULT);
-        KeyFactory keyFactory;
-        try {
-            keyFactory = KeyFactory.getInstance("RSA");
-            PKCS8EncodedKeySpec privateKeySpec = new PKCS8EncodedKeySpec(privateKeyBytes);
-            return keyFactory.generatePrivate(privateKeySpec);
-        } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-            Utils.log(e);
-        }
-        return null;
     }
 }

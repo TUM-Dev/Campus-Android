@@ -9,7 +9,6 @@ import java.util.List;
 
 import de.tum.in.tumcampus.models.GCMNotification;
 import de.tum.in.tumcampus.models.GCMNotificationLocation;
-import de.tum.in.tumcampus.models.TUMCabeClient;
 
 public class NotificationManager {
 
@@ -17,13 +16,7 @@ public class NotificationManager {
     private static final String[] TABLE_NOTIFICATIONS_COLUMNS = new String[]{
             "notification", "type", "location", "name", "lon", "lat", "rad", "title",
             "desc", "signature"};
-
-    private enum alarmColumns {
-        id, type, location, locationName, lon, lat, rad, title, desc, signature
-    }
-
     private final SQLiteDatabase db;
-
     private final Context context;
 
     public NotificationManager(Context context) {
@@ -61,16 +54,7 @@ public class NotificationManager {
         c.moveToFirst();
         GCMNotification n;
         if (c.getCount() == 0) {
-            //update cache
-            List<GCMNotification> notes = TUMCabeClient.getInstance(context).getNotification(notificationId);
-            this.replaceNotificationsInto(notes);
-            for (GCMNotification note : notes) {
-                if (note.getNotification() == notificationId) {
-                    n = note;
-                    break;
-                }
-            }
-            n = null;
+
         } else {
             n = new GCMNotification(c.getInt(alarmColumns.id.ordinal()),
                     c.getInt(alarmColumns.type.ordinal()),
@@ -85,6 +69,10 @@ public class NotificationManager {
                     c.getString(alarmColumns.signature.ordinal()));
         }
         c.close();
-        return n;
+        return null;
+    }
+
+    private enum alarmColumns {
+        id, type, location, locationName, lon, lat, rad, title, desc, signature
     }
 }
