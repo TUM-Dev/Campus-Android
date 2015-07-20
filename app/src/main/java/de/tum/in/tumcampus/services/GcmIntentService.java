@@ -23,13 +23,11 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
-import com.google.gson.Gson;
 
-import de.tum.in.tumcampus.models.GCMChat;
 import de.tum.in.tumcampus.models.TUMCabeClient;
-import de.tum.in.tumcampus.notifications.AlarmNotification;
-import de.tum.in.tumcampus.notifications.ChatNotification;
-import de.tum.in.tumcampus.notifications.Notification;
+import de.tum.in.tumcampus.notifications.Alarm;
+import de.tum.in.tumcampus.notifications.Chat;
+import de.tum.in.tumcampus.notifications.GenericNotification;
 
 /**
  * This {@code IntentService} does the actual handling of the GCM message.
@@ -69,7 +67,7 @@ public class GcmIntentService extends IntentService {
                 int type = extras.getInt("type");
 
                 //Initialize our outputs
-                Notification n = null;
+                GenericNotification n = null;
 
                 //switch on the type as both the type and payload must be present
                 switch (type) { //https://github.com/TCA-Team/TumCampusApp/wiki/GCM-Message-format
@@ -77,13 +75,13 @@ public class GcmIntentService extends IntentService {
                         TUMCabeClient.getInstance(this).confirm(notificaton);
                         break;
                     case 1: //Chat
-                        n = new ChatNotification(extras.getString("payload"), this);
+                        n = new Chat(extras.getString("payload"), this);
                         break;
                     case 2: //Update
                         //@todo do something
                         break;
                     case 3: //Alert
-                        n = new AlarmNotification(extras.getString("payload"), this);
+                        n = new Alarm(extras.getString("payload"), this);
                         break;
                 }
 
@@ -107,10 +105,10 @@ public class GcmIntentService extends IntentService {
      * @param extras
      */
     private void sendChatNotification(Bundle extras) {
-        this.postNotification(new ChatNotification(extras, this));
+        this.postNotification(new Chat(extras, this));
     }
 
-    private void postNotification(Notification n) {
+    private void postNotification(GenericNotification n) {
         if (n != null) {
             NotificationManager mNotificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
             mNotificationManager.notify(n.getNotificationIdentification(), n.getNotification());

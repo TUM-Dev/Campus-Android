@@ -7,19 +7,11 @@ import android.database.sqlite.SQLiteDatabase;
 
 import java.util.List;
 
-import de.tum.in.tumcampus.models.Notification;
-import de.tum.in.tumcampus.models.NotificationLocation;
-import de.tum.in.tumcampus.models.NotificationType;
+import de.tum.in.tumcampus.models.GCMNotification;
+import de.tum.in.tumcampus.models.GCMNotificationLocation;
 import de.tum.in.tumcampus.models.TUMCabeClient;
 
 public class NotificationManager {
-    private static final String TABLE_TYPES = "notification_types";
-    private static final String[] TABLE_TYPES_COLUMNS
-            = new String[]{"type", "name", "icon", "silent", "confirmation"};
-
-    private enum typesColumns {
-        id, name, icon, silent, confirmation
-    }
 
     private static final String TABLE_NOTIFICATIONS = "notification_alarm";
     private static final String[] TABLE_NOTIFICATIONS_COLUMNS = new String[]{
@@ -37,33 +29,13 @@ public class NotificationManager {
     public NotificationManager(Context context) {
         this.context = context;
         db = DatabaseManager.getDb(context);
-
-        db.execSQL("CREATE TABLE IF NOT EXISTS " + TABLE_TYPES +
-                "(type INTEGER, name VARCHAR, icon VARCHAR, silent INTEGER, confirmation INTEGER, " +
-                "PRIMARY KEY type)");
         db.execSQL("CREATE TABLE IF NOT EXISTS " + TABLE_NOTIFICATIONS +
                 "(notification INTEGER, type INTEGER, location INTEGER, name VARCHAR, lon REAL, " +
                 "lat REAL, radius INTEGER, title VARCHAR, desc VARCHAR, signature VARCHAR, " +
                 "PRIMARY KEY notification)");
     }
 
-    public void replaceInto(NotificationType type) {
-        ContentValues cvs = new ContentValues();
-        cvs.put(TABLE_TYPES_COLUMNS[typesColumns.id.ordinal()], type.getType());
-        cvs.put(TABLE_TYPES_COLUMNS[typesColumns.name.ordinal()], type.getName());
-        cvs.put(TABLE_TYPES_COLUMNS[typesColumns.icon.ordinal()], type.getIcon());
-        cvs.put(TABLE_TYPES_COLUMNS[typesColumns.silent.ordinal()], type.isSilent());
-        cvs.put(TABLE_TYPES_COLUMNS[typesColumns.confirmation.ordinal()], type.isConfirmation());
-        db.insertWithOnConflict(TABLE_TYPES, null, cvs, SQLiteDatabase.CONFLICT_REPLACE);
-    }
-
-    public void replaceTypesInto(List<NotificationType> types) {
-        for (NotificationType type : types) {
-            this.replaceInto(type);
-        }
-    }
-
-    public void replaceInto(Notification note) {
+    public void replaceInto(GCMNotification note) {
         ContentValues cvs = new ContentValues();
         cvs.put("notification", note.getNotification());
         cvs.put("type", note.getType());
@@ -77,32 +49,32 @@ public class NotificationManager {
         db.insertWithOnConflict(TABLE_NOTIFICATIONS, null, cvs, SQLiteDatabase.CONFLICT_REPLACE);
     }
 
-    public void replaceNotificationsInto(List<Notification> notes) {
-        for (Notification note : notes) {
+    public void replaceNotificationsInto(List<GCMNotification> notes) {
+        for (GCMNotification note : notes) {
             this.replaceInto(note);
         }
     }
 
-    public Notification getNotification(int notificationId) {
+    public GCMNotification getNotification(int notificationId) {
         Cursor c = db.query(TABLE_NOTIFICATIONS, TABLE_NOTIFICATIONS_COLUMNS, "notification = ?",
                 new String[]{Integer.toString(notificationId)}, null, null, null);
         c.moveToFirst();
-        Notification n;
-        if(c.getCount() == 0){
+        GCMNotification n;
+        if (c.getCount() == 0) {
             //update cache
-            List<Notification> notes = TUMCabeClient.getInstance(context).getNotifications(notificationId);
+            List<GCMNotification> notes = TUMCabeClient.getInstance(context).getNotifications(notificationId);
             this.replaceNotificationsInto(notes);
-            for(Notification note : notes) {
-                if(note.getNotification() == notificationId) {
+            for (GCMNotification note : notes) {
+                if (note.getNotification() == notificationId) {
                     n = note;
                     break;
                 }
             }
             n = null;
         } else {
-            n = new Notification(c.getInt(alarmColumns.id.ordinal()),
+            n = new GCMNotification(c.getInt(alarmColumns.id.ordinal()),
                     c.getInt(alarmColumns.type.ordinal()),
-                    new NotificationLocation(
+                    new GCMNotificationLocation(
                             c.getInt(alarmColumns.location.ordinal()),
                             c.getString(alarmColumns.locationName.ordinal()),
                             c.getDouble(alarmColumns.lon.ordinal()),
@@ -114,18 +86,5 @@ public class NotificationManager {
         }
         c.close();
         return n;
-    }
-
-    public NotificationType getType(int type) {
-        Cursor c = db.query(TABLE_TYPES, TABLE_TYPES_COLUMNS,
-                "id = ?", new String[]{Integer.toString(type)}, null, null, null);
-        c.moveToFirst();
-        NotificationType t = new NotificationType(c.getInt(typesColumns.id.ordinal()),
-                c.getString(typesColumns.name.ordinal()),
-                c.getString(typesColumns.icon.ordinal()),
-                c.getInt(typesColumns.silent.ordinal()) == 1,
-                c.getInt(typesColumns.confirmation.ordinal()) == 1);
-        c.close();
-        return t;
     }
 }

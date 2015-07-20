@@ -1,13 +1,13 @@
 package de.tum.in.tumcampus.models;
 
-public class NotificationLocation {
+public class GCMNotificationLocation {
     private int location;
     private String name;
     private double lon;
     private double lat;
     private int radius;
 
-    public NotificationLocation(int location, String name, double lon, double lat, int radius) {
+    public GCMNotificationLocation(int location, String name, double lon, double lat, int radius) {
         this.location = location;
         this.name = name;
         this.lon = lon;

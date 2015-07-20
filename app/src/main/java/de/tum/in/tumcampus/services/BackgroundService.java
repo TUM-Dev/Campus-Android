@@ -82,7 +82,7 @@ public class BackgroundService extends IntentService {
 				editor.putInt(Const.Grade_Count, newSize);
 				editor.commit();
 				int icon = R.drawable.ic_notification;
-				// Generating Notification
+				// Generating GCMNotification
 				NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
 						this)
 						.setSmallIcon(icon)

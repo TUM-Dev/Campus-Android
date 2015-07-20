@@ -67,7 +67,7 @@ public class ScanResultsAvailableReceiver extends BroadcastReceiver {
         PendingIntent setupIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         PendingIntent hideIntent = PendingIntent.getService(context, 0, hide, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        // Create Notification using NotificationCompat.Builder
+        // Create GCMNotification using NotificationCompat.Builder
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
                 .setSmallIcon(R.drawable.ic_notification_wifi)
                 .setTicker(context.getString(R.string.setup_eduroam))
@@ -78,11 +78,11 @@ public class ScanResultsAvailableReceiver extends BroadcastReceiver {
                 .setContentIntent(setupIntent)
                 .setAutoCancel(true);
 
-        // Create Notification Manager
+        // Create GCMNotification Manager
         NotificationManager notificationmanager = (NotificationManager) context
                 .getSystemService(Context.NOTIFICATION_SERVICE);
 
-        // Build Notification with Notification Manager
+        // Build GCMNotification with GCMNotification Manager
         notificationmanager.notify(123, builder.build());
 
         Utils.setInternalSetting(context, SHOULD_SHOW, false);

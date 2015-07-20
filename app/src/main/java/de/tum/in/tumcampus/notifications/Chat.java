@@ -1,5 +1,6 @@
 package de.tum.in.tumcampus.notifications;
 
+import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -33,7 +34,10 @@ import de.tum.in.tumcampus.models.TUMCabeClient;
 import de.tum.in.tumcampus.models.managers.CardManager;
 import de.tum.in.tumcampus.models.managers.ChatMessageManager;
 
-public class ChatNotification extends Notification {
+public class Chat extends GenericNotification {
+
+    protected final  String name = "Chat GCMNotification";
+    protected final int type = 1;
 
     public static final int NOTIFICATION_ID = CardManager.CARD_CHAT;
 
@@ -45,7 +49,7 @@ public class ChatNotification extends Notification {
     private final Context context;
 
 
-    public ChatNotification(Bundle extras, Context context) {
+    public Chat(Bundle extras, Context context) {
         this.context = context;
 
         //Initialize the object keeping important infos about the update
@@ -65,7 +69,7 @@ public class ChatNotification extends Notification {
         this.prepare();
     }
 
-    public ChatNotification(String payload, Context context) {
+    public Chat(String payload, Context context) {
         this.context = context;
 
         //Check if a payload was passed
@@ -115,7 +119,7 @@ public class ChatNotification extends Notification {
         sBuilder.addNextIntent(notificationIntent);
     }
 
-    public android.app.Notification getNotification() {
+    public Notification getNotification() {
         //Check if chat is currently open then don't show a notification if it is
         if (ChatActivity.mCurrentOpenChatRoom != null && this.extras.room == ChatActivity.mCurrentOpenChatRoom.getId()) {
             return null;
@@ -125,7 +129,7 @@ public class ChatNotification extends Notification {
 
             PendingIntent contentIntent = sBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_ONE_SHOT);
 
-            // Notification sound
+            // GCMNotification sound
             Uri sound = Uri.parse("android.resource://" + context.getPackageName() + "/" + R.raw.message);
 
             String replyLabel = context.getResources().getString(R.string.reply_label);
@@ -143,7 +147,7 @@ public class ChatNotification extends Notification {
 
             //Create a nice notification
             return new NotificationCompat.Builder(context)
-                    .setSmallIcon(R.drawable.tum_logo_notification)
+                    .setSmallIcon(this.icon)
                     .setContentTitle(chatRoom.getName().substring(4))
                     .setStyle(new NotificationCompat.BigTextStyle().bigText(notificationText))
                     .setContentText(notificationText)
@@ -161,7 +165,7 @@ public class ChatNotification extends Notification {
 
     @Override
     public int getNotificationIdentification() {
-        return this.extras.room << 4 + ChatNotification.NOTIFICATION_ID;
+        return this.extras.room << 4 + Chat.NOTIFICATION_ID;
     }
 
     /**

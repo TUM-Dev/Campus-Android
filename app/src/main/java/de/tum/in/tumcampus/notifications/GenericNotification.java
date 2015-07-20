@@ -33,12 +33,15 @@ import de.tum.in.tumcampus.models.TUMCabeClient;
 import de.tum.in.tumcampus.models.managers.CardManager;
 import de.tum.in.tumcampus.models.managers.ChatMessageManager;
 
-public abstract class Notification {
+public abstract class GenericNotification {
 
-    protected int notification;
-    protected int type;
+    protected final String name = "";
+    protected final int type = -1;
+    protected final int icon = R.drawable.tum_logo_notification;
+    protected final boolean confirmation = false;
 
     public abstract android.app.Notification getNotification();
+
     public abstract int getNotificationIdentification();
 
 

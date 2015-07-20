@@ -39,7 +39,6 @@ public class TUMCabeClient {
     private static final String API_STATISTICS = "/statistics/";
     private static final String API_CINEMA = "/kino/";
     private static final String API_NOTIFICATIONS = "/notifications/";
-    private static final String API_NOTIFICATIONS_TYPES = API_NOTIFICATIONS + "types/";
     private static final String API_LOCATIONS = "/locations/";
 
 
@@ -143,22 +142,18 @@ public class TUMCabeClient {
         @POST(API_CHAT_MEMBERS + "{memberId}/registration_ids/add_id")
         void uploadRegistrationId(@Path("memberId") int memberId, @Body ChatRegistrationId regId, Callback<ChatRegistrationId> cb);
 
-        //Nachrichten / Alarmierung
-        @GET(API_NOTIFICATIONS_TYPES)
-        List<NotificationType> getTypes();
-
         @GET(API_NOTIFICATIONS + "{lastNotification}/")
-        List<Notification> getNotifications(@Path("lastNotification") int lastNotification);
+        List<GCMNotification> getNotifications(@Path("lastNotification") int lastNotification);
 
         @GET(API_NOTIFICATIONS + "confirm/{notification}/")
         void confirm(@Path("notification") int notification);
 
         //Locations
         @GET(API_LOCATIONS)
-        List<NotificationLocation> getAllLocations();
+        List<GCMNotificationLocation> getAllLocations();
 
         @GET(API_LOCATIONS + "{locationId}/")
-        NotificationLocation getLocation(@Path("locationId") int locationId);
+        GCMNotificationLocation getLocation(@Path("locationId") int locationId);
     }
 
     public void createRoom(ChatRoom chatRoom, ChatVerification verification, Callback<ChatRoom> cb) {
@@ -216,11 +211,7 @@ public class TUMCabeClient {
         service.uploadRegistrationId(memberId, regId, cb);
     }
 
-    public List<NotificationType> getTypes() {
-        return service.getTypes();
-    }
-
-    public List<Notification> getNotifications(int lastNotification) {
+    public List<GCMNotification> getNotifications(int lastNotification) {
         return service.getNotifications(lastNotification);
     }
 
@@ -229,11 +220,11 @@ public class TUMCabeClient {
         service.confirm(notification);
     }
 
-    public List<NotificationLocation> getAllLocations() {
+    public List<GCMNotificationLocation> getAllLocations() {
         return service.getAllLocations();
     }
 
-    public NotificationLocation getLocation(int locationId) {
+    public GCMNotificationLocation getLocation(int locationId) {
         return service.getLocation(locationId);
     }
 }

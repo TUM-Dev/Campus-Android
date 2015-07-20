@@ -1,14 +1,14 @@
 package de.tum.in.tumcampus.models;
 
-public class Notification {
+public class GCMNotification {
     private int notification;
     private int type;
-    private NotificationLocation location;
+    private GCMNotificationLocation location;
     private String title;
     private String description;
     private String signature;
 
-    public Notification(int notification, int type, NotificationLocation location, String title, String description, String signature) {
+    public GCMNotification(int notification, int type, GCMNotificationLocation location, String title, String description, String signature) {
         this.notification = notification;
         this.type = type;
         this.location = location;
@@ -33,11 +33,11 @@ public class Notification {
         this.type = type;
     }
 
-    public NotificationLocation getLocation() {
+    public GCMNotificationLocation getLocation() {
         return location;
     }
 
-    public void setLocation(NotificationLocation location) {
+    public void setLocation(GCMNotificationLocation location) {
         this.location = location;
     }
 
