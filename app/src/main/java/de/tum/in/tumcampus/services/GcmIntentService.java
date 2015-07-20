@@ -30,6 +30,7 @@ import de.tum.in.tumcampus.models.TUMCabeClient;
 import de.tum.in.tumcampus.notifications.Alarm;
 import de.tum.in.tumcampus.notifications.Chat;
 import de.tum.in.tumcampus.notifications.GenericNotification;
+import de.tum.in.tumcampus.notifications.Update;
 
 /**
  * This {@code IntentService} does the actual handling of the GCM message.
@@ -65,7 +66,7 @@ public class GcmIntentService extends IntentService {
                 }
             } else {
                 //Get some important values
-                int notification = extras.getInt("notificaton");
+                int notification = Integer.parseInt(extras.getString("notification"));
                 int type = Integer.parseInt(extras.getString("type"));
 
                 //Initialize our outputs
@@ -82,7 +83,7 @@ public class GcmIntentService extends IntentService {
                         n = new Chat(extras.getString("payload"), this, notification);
                         break;
                     case 2: //Update
-                        n = new Alarm(extras.getString("payload"), this, notification);
+                        n = new Update(extras.getString("payload"), this, notification);
                         break;
                     case 3: //Alert
                         n = new Alarm(extras.getString("payload"), this, notification);

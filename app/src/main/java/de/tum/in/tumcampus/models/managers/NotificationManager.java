@@ -15,7 +15,7 @@ public class NotificationManager {
     private static final String TABLE_NOTIFICATIONS = "notification";
     private static final String[] TABLE_NOTIFICATIONS_COLUMNS = new String[]{
             "notification", "type", "location", "name", "lon", "lat", "rad", "title",
-            "desc", "signature"};
+            "description", "signature"};
     private final SQLiteDatabase db;
     private final Context context;
 
@@ -23,9 +23,8 @@ public class NotificationManager {
         this.context = context;
         db = DatabaseManager.getDb(context);
         db.execSQL("CREATE TABLE IF NOT EXISTS " + TABLE_NOTIFICATIONS +
-                "(notification INTEGER, type INTEGER, location INTEGER, name VARCHAR, lon REAL, " +
-                "lat REAL, radius INTEGER, title VARCHAR, desc VARCHAR, signature VARCHAR, " +
-                "PRIMARY KEY notification)");
+                " (notification INTEGER UNIQUE, typ INTEGER, location INTEGER, name TEXT, lon REAL, " +
+                "lat REAL, radius INTEGER, title TEXT, description TEXT, signature TEXT)");
     }
 
     public void replaceInto(GCMNotification note) {
@@ -37,7 +36,7 @@ public class NotificationManager {
         cvs.put("lon", note.getLocation().getLon());
         cvs.put("lat", note.getLocation().getLat());
         cvs.put("title", note.getTitle());
-        cvs.put("desc", note.getDescription());
+        cvs.put("description", note.getDescription());
         cvs.put("signature", note.getSignature());
         db.insertWithOnConflict(TABLE_NOTIFICATIONS, null, cvs, SQLiteDatabase.CONFLICT_REPLACE);
     }

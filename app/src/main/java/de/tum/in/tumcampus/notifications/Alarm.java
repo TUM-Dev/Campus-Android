@@ -38,7 +38,7 @@ public class Alarm extends GenericNotification {
 
     @Override
     public Notification getNotification() {
-        if (alert.silent) {
+        if (alert.silent || info == null) {
             //Do nothing
             return null;
         }

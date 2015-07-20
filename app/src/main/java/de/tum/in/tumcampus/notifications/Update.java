@@ -7,20 +7,20 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.TaskStackBuilder;
 
 import com.google.gson.Gson;
 
 import de.tum.in.tumcampus.BuildConfig;
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.MainActivity;
+import de.tum.in.tumcampus.models.GCMNotification;
 import de.tum.in.tumcampus.models.GCMUpdate;
+import de.tum.in.tumcampus.models.TUMCabeClient;
 
 public class Update extends GenericNotification {
 
     public final GCMUpdate data;
-
-    private TaskStackBuilder sBuilder;
+    private GCMNotification info;
 
     public Update(String payload, Context context, int notfication) {
         super(context, 2, notfication, true);
@@ -32,6 +32,9 @@ public class Update extends GenericNotification {
 
         // parse data
         this.data = (new Gson()).fromJson(payload, GCMUpdate.class);
+
+        //Get data from server
+        this.info = TUMCabeClient.getInstance(this.context).getNotification(this.notification);
 
         if (BuildConfig.VERSION_CODE < data.packageVersion) {
             //TODO self deactivate
@@ -50,11 +53,23 @@ public class Update extends GenericNotification {
         Intent alarm = new Intent(this.context, MainActivity.class);
         PendingIntent pending = PendingIntent.getActivity(this.context, 0, alarm, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        final String description = String.format(context.getString(R.string.update_notification_description), data.releaseDate);
+        final String description;
+        if (info.getDescription() == null || "".equals(info.getDescription())) {
+            description = String.format(context.getString(R.string.update_notification_description), data.releaseDate);
+        } else {
+            description = info.getDescription();
+        }
+
+        final String title;
+        if (info.getTitle() == null || "".equals(info.getTitle())) {
+            title = context.getString(R.string.update);
+        } else {
+            title = info.getTitle();
+        }
 
         return new NotificationCompat.Builder(context)
                 .setSmallIcon(this.icon)
-                .setContentTitle(context.getString(R.string.update))
+                .setContentTitle(title)
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(description))
                 .setContentText(description)
                 .setContentIntent(pending)

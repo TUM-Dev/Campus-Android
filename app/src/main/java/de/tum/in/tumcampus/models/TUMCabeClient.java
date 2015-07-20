@@ -208,11 +208,11 @@ public class TUMCabeClient {
         @POST(API_CHAT_MEMBERS + "{memberId}/registration_ids/add_id")
         void uploadRegistrationId(@Path("memberId") int memberId, @Body ChatRegistrationId regId, Callback<ChatRegistrationId> cb);
 
-        @GET(API_NOTIFICATIONS + "{lastNotification}/")
-        GCMNotification getNotification(@Path("lastNotification") int lastNotification);
+        @GET(API_NOTIFICATIONS + "{notification}/")
+        GCMNotification getNotification(@Path("notification") int notification);
 
-        @PUT(API_NOTIFICATIONS + "confirm/{notification}/")
-        void confirm(@Path("notification") int notification);
+        @GET(API_NOTIFICATIONS + "confirm/{notification}/")
+        String confirm(@Path("notification") int notification);
 
         //Locations
         @GET(API_LOCATIONS)
