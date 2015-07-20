@@ -29,7 +29,7 @@ import de.tum.in.tumcampus.models.TUMCabeClient;
 
 public class Alarm extends GenericNotification {
 
-    private static final String pubKey = "AAAAB3NzaC1yc2EAAAADAQABAAACAQCrgH8QxtVqGs8rdAMcz298iqrPDq4xDehG0qJVvZuL/7RupNi2CQCr9K39WpJtoDszWpC8Rn9/PmiX/xa1aAjvHkXvSxYL2s+WEteUbbJkfI3e71kyALLzaiPcwif22/Bww8rxhVokidL+c5eCgjneod6iT3TEEKPmXX+EDKTeTJq5TI2FY/Bipquo6xvyiQHFNxSkFVFxzto5+lOzmtMGIgm47RQ+/ZEsVp9ZajrNrX+Xg100WoBxSE6QEkZLsY12swsC5OcHu+tlUj51zqt1J9huZq3HT+Qv37PvGbEye9vZEUo1VTOo3YgwaQaAUQsgFKXarm/iEp8qEy2g6B0jZ0+802m4vcuORJqg8cAxW9oFH0sIqRO6DIGNTi5+LV5/S31ntOl9xGqr3M5pKNgUrcLySzVuGF17IqKcW3U24kjjZ4aALIMaK8cJZfvUBwdxDjpm7MiP2Y+tO7QN4F52aBockTxhmYTxpN4qOKByLXsBCTLUP6BTE16KgPIxMrsESigtzD5JLKTJAm7VXmg/OmSF52G6nqxrH4/7KHEfEt/QhTWAZV8Dbv24MWeu36tZx9gCh2i3UOSMzmt4eJW6WilTg7+mfD3hcWZSEVuT1NvWiCPo8kP6Qt7z2X8m4dLdWore/SgqfKN98rv7oDrQFGq4uOXQcdN6/FvGOWIYdw==";
+    private static final String pubKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvSukueIrdowjJB/IHR6+tsCbYLF9kmC/2Sa8/kI9Ttq0aUyC0hDt2SBzuDDmp/RwnUap5/0xT/h3z+WgKOjrzWig4lmb7G2+RuuVn8466AErfp3YQVFiovNLGMqwfJzPZ9aV3sZBXCTeEbDkd/CLRp3kBYkAtL8NfIlbNaII9CWKdhS907JyEWRZO2DLiYLm37vK/hwg58eXHwL9jNYY3gFqGUlfWXwGC2a0yTOk9rgJejhUbU9GLWSL3OwiHVXlpPsvTC1Ry0H4kQQeisjCgpkPjOQAnAFRN9zZLtBZlIsssYvL3ohY/C1HfGzDwGTaELjhtzY9qHdFW/4GDZh8swIDAQAB";
     public final GCMAlert alert;
     private GCMNotification info;
 
@@ -59,6 +59,9 @@ public class Alarm extends GenericNotification {
     private static boolean isValidSignature(String title, String description, String signature) {
         String text = title + description;
         PublicKey key = getCabePublicKey();
+        if (key == null) {
+            return false;
+        }
 
         Signature sig;
         try {
@@ -90,7 +93,7 @@ public class Alarm extends GenericNotification {
         }
         try {
             return sig.verify(Base64.decode(signature, Base64.DEFAULT));
-        } catch (SignatureException e) {
+        } catch (SignatureException | IllegalArgumentException e) {
             Utils.log(e);
             return false;
         }
@@ -103,7 +106,7 @@ public class Alarm extends GenericNotification {
      */
     private static PublicKey getCabePublicKey() {
         // Base64 string -> Bytes
-        byte[] keyBytes = Base64.decode(pubKey, Base64.DEFAULT);
+        byte[] keyBytes = Base64.decode(pubKey, Base64.NO_WRAP);
         KeyFactory keyFactory;
         try {
             keyFactory = KeyFactory.getInstance("RSA");
