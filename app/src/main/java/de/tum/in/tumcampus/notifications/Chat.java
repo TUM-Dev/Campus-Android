@@ -36,9 +36,6 @@ import de.tum.in.tumcampus.models.managers.ChatMessageManager;
 
 public class Chat extends GenericNotification {
 
-    protected final  String name = "Chat GCMNotification";
-    protected final int type = 1;
-
     public static final int NOTIFICATION_ID = CardManager.CARD_CHAT;
 
     private final GCMChat extras;
@@ -46,11 +43,10 @@ public class Chat extends GenericNotification {
     private ChatRoom chatRoom;
     private String notificationText;
     private TaskStackBuilder sBuilder;
-    private final Context context;
 
 
-    public Chat(Bundle extras, Context context) {
-        this.context = context;
+    public Chat(Bundle extras, Context context, int notfication) {
+        super(context, 1, notfication, true);
 
         //Initialize the object keeping important infos about the update
         this.extras = new GCMChat();
@@ -69,8 +65,8 @@ public class Chat extends GenericNotification {
         this.prepare();
     }
 
-    public Chat(String payload, Context context) {
-        this.context = context;
+    public Chat(String payload, Context context, int notfication) {
+        super(context, 1, notfication, true);
 
         //Check if a payload was passed
         if (payload == null) {

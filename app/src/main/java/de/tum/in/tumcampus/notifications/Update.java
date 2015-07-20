@@ -16,17 +16,12 @@ import de.tum.in.tumcampus.models.GCMUpdate;
 
 public class Update extends GenericNotification {
 
-    protected final  String name = "TCA update available";
-    protected final int type = 2;
-    protected final boolean confirmation = true;
-
     public final GCMUpdate data;
 
     private TaskStackBuilder sBuilder;
-    private final Context context;
 
-    public Update(String payload, Context context) {
-        this.context = context;
+    public Update(String payload, Context context, int notfication) {
+        super(context, 2, notfication, true);
 
         //Check if a payload was passed
         if (payload == null) {

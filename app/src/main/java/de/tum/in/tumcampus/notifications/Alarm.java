@@ -16,17 +16,12 @@ import de.tum.in.tumcampus.models.GCMAlert;
 
 public class Alarm extends GenericNotification {
 
-    protected final  String name = "TUM Alarm";
-    protected final int type = 3;
-    protected final boolean confirmation = true;
-
     public final GCMAlert alert;
 
     private TaskStackBuilder sBuilder;
-    private final Context context;
 
-    public Alarm(String payload, Context context) {
-        this.context = context;
+    public Alarm(String payload, Context context, int notfication) {
+        super(context, 3, notfication, true);
 
         //Check if a payload was passed
         if (payload == null) {
@@ -61,7 +56,7 @@ public class Alarm extends GenericNotification {
 
 
         return new NotificationCompat.Builder(context)
-                .setSmallIcon(R.drawable.tum_logo_notification)
+                .setSmallIcon(this.icon)
                 .setContentTitle("TCA Alarm")
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(alert.title))
                 .setContentText(alert.title)

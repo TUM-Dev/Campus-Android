@@ -63,7 +63,7 @@ public class GcmIntentService extends IntentService {
                 }
             } else {
                 //Get some important values
-                int notificaton = extras.getInt("notificaton");
+                int notification = extras.getInt("notificaton");
                 int type = extras.getInt("type");
 
                 //Initialize our outputs
@@ -72,22 +72,25 @@ public class GcmIntentService extends IntentService {
                 //switch on the type as both the type and payload must be present
                 switch (type) { //https://github.com/TCA-Team/TumCampusApp/wiki/GCM-Message-format
                     case 0: //Nothing to do, just confirm the retrieved notification
-                        TUMCabeClient.getInstance(this).confirm(notificaton);
+                        TUMCabeClient.getInstance(this).confirm(notification);
                         break;
                     case 1: //Chat
-                        n = new Chat(extras.getString("payload"), this);
+                        n = new Chat(extras.getString("payload"), this, notification);
                         break;
                     case 2: //Update
-                        //@todo do something
+                        n = new Alarm(extras.getString("payload"), this, notification);
                         break;
                     case 3: //Alert
-                        n = new Alarm(extras.getString("payload"), this);
+                        n = new Alarm(extras.getString("payload"), this, notification);
                         break;
                 }
 
                 //Post & save the notification if it was of any significance
                 if (n != null) {
                     this.postNotification(n);
+
+                    //Send confirmation if type requires it
+                    n.sendConfirmation();
 
                     de.tum.in.tumcampus.models.managers.NotificationManager man = new de.tum.in.tumcampus.models.managers.NotificationManager(this);
                     //@todo save to our notificationmanager
@@ -105,7 +108,7 @@ public class GcmIntentService extends IntentService {
      * @param extras
      */
     private void sendChatNotification(Bundle extras) {
-        this.postNotification(new Chat(extras, this));
+        this.postNotification(new Chat(extras, this, -1));
     }
 
     private void postNotification(GenericNotification n) {
