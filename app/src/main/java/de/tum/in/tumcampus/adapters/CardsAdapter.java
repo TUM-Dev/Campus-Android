@@ -50,8 +50,9 @@ public class CardsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 return NoInternetCard.inflateViewHolder(viewGroup);
             case CardManager.CARD_MVV:
                 return MVVCard.inflateViewHolder(viewGroup);
-            case CardManager.CARD_NEWS:
-                return NewsCard.inflateViewHolder(viewGroup);
+            case CardManager.CARD_NEWS: //Fallthrough
+            case CardManager.CARD_NEWS_FILM:
+                return NewsCard.inflateViewHolder(viewGroup, viewType);
             case CardManager.CARD_EDUROAM:
                 return EduroamCard.inflateViewHolder(viewGroup);
             case CardManager.CARD_CHAT:

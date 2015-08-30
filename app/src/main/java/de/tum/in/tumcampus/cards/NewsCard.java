@@ -9,11 +9,10 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import de.tum.in.tumcampus.R;
+import de.tum.in.tumcampus.adapters.NewsAdapter;
 import de.tum.in.tumcampus.auxiliary.NetUtils;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.managers.CardManager;
@@ -27,21 +26,20 @@ public class NewsCard extends Card {
     private Cursor mCursor;
     private int mPosition;
     private NetUtils net;
+    private boolean isFilm = false;
 
     public NewsCard(Context context) {
         super(context, "card_news", false, false);
         net = new NetUtils(context);
     }
 
-    public static RecyclerView.ViewHolder inflateViewHolder(ViewGroup parent){
-        //TODO
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_news_item, parent, false);
-        return new RecyclerView.ViewHolder(view) {};
+    public static RecyclerView.ViewHolder inflateViewHolder(ViewGroup parent, int type) {
+        return NewsAdapter.newNewsView(parent, type == CardManager.CARD_NEWS_FILM);
     }
 
     @Override
     public int getTyp() {
-        return CardManager.CARD_NEWS;
+        return isFilm ? CardManager.CARD_NEWS_FILM : CardManager.CARD_NEWS;
     }
 
     @Override
@@ -61,19 +59,10 @@ public class NewsCard extends Card {
         return mCursor.getString(1);
     }
 
-    //@Override
-    public View getCardView(Context context, ViewGroup parent) {
-        //super.getCardView(context, parent);
-
-        mCursor.moveToPosition(mPosition);
-        //View card = NewsAdapter.newNewsView(mInflater, mCursor, parent);
-        //NewsAdapter.bindNewsView(net, card, mCursor);
-        return null;
-    }
-
     @Override
     public void updateViewHolder(RecyclerView.ViewHolder viewHolder) {
-
+        super.updateViewHolder(viewHolder);
+        NewsAdapter.bindNewsView(net, viewHolder, mCursor);
     }
 
     /**
@@ -84,6 +73,8 @@ public class NewsCard extends Card {
     public void setNews(Cursor c, int pos) {
         mCursor = c;
         mPosition = pos;
+        mCursor.moveToPosition(mPosition);
+        this.isFilm = mCursor.getInt(1) == 2;
     }
 
     @Override
