@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.net.Uri;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -21,36 +23,32 @@ public class Support extends Card {
         super(context);
     }
 
-    @Override
-    public int getTyp() {
-        return CardManager.CARD_SUPPORT;
+    public static RecyclerView.ViewHolder inflateViewHolder(ViewGroup parent) {
+        final View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_support, parent, false);
+        //Add links to imageviews
+        view.findViewById(R.id.facebook).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW);
+                browserIntent.setData(Uri.parse(view.getContext().getString(R.string.facebook_link)));
+                view.getContext().startActivity(browserIntent);
+            }
+
+        });
+        view.findViewById(R.id.github).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW);
+                browserIntent.setData(Uri.parse(view.getContext().getString(R.string.github_link)));
+                view.getContext().startActivity(browserIntent);
+            }
+        });
+        return new RecyclerView.ViewHolder(view){};
     }
 
     @Override
-    public View getCardView(final Context context, ViewGroup parent) {
-        super.getCardView(context, parent);
-        mCard = mInflater.inflate(R.layout.card_support, parent, false);
-
-        //Add links to imageviews
-        mCard.findViewById(R.id.facebook).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW);
-                browserIntent.setData(Uri.parse(context.getString(R.string.facebook_link)));
-                context.startActivity(browserIntent);
-            }
-
-        });
-        mCard.findViewById(R.id.github).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW);
-                browserIntent.setData(Uri.parse(context.getString(R.string.github_link)));
-                context.startActivity(browserIntent);
-            }
-        });
-
-        return mCard;
+    public int getTyp() {
+        return CardManager.CARD_SUPPORT;
     }
 
     @Override

@@ -8,11 +8,12 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import de.tum.in.tumcampus.R;
-import de.tum.in.tumcampus.adapters.NewsAdapter;
 import de.tum.in.tumcampus.auxiliary.NetUtils;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.managers.CardManager;
@@ -30,6 +31,12 @@ public class NewsCard extends Card {
     public NewsCard(Context context) {
         super(context, "card_news", false, false);
         net = new NetUtils(context);
+    }
+
+    public static RecyclerView.ViewHolder inflateViewHolder(ViewGroup parent){
+        //TODO
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_news_item, parent, false);
+        return new RecyclerView.ViewHolder(view) {};
     }
 
     @Override
@@ -54,14 +61,19 @@ public class NewsCard extends Card {
         return mCursor.getString(1);
     }
 
-    @Override
+    //@Override
     public View getCardView(Context context, ViewGroup parent) {
-        super.getCardView(context, parent);
+        //super.getCardView(context, parent);
 
         mCursor.moveToPosition(mPosition);
-        View card = NewsAdapter.newNewsView(mInflater, mCursor, parent);
-        NewsAdapter.bindNewsView(net, card, mCursor);
-        return card;
+        //View card = NewsAdapter.newNewsView(mInflater, mCursor, parent);
+        //NewsAdapter.bindNewsView(net, card, mCursor);
+        return null;
+    }
+
+    @Override
+    public void updateViewHolder(RecyclerView.ViewHolder viewHolder) {
+
     }
 
     /**

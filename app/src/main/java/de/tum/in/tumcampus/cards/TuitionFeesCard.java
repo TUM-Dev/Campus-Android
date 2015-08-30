@@ -8,6 +8,8 @@ import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v4.app.NotificationCompat;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -35,6 +37,11 @@ public class TuitionFeesCard extends Card {
         super(context, "card_tuition_fee");
     }
 
+    public static RecyclerView.ViewHolder inflateViewHolder(ViewGroup parent){
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_item, parent, false);
+        return new RecyclerView.ViewHolder(view) {};
+    }
+
     @Override
     public int getTyp() {
         return CardManager.CARD_TUITION_FEE;
@@ -46,9 +53,9 @@ public class TuitionFeesCard extends Card {
     }
 
     @Override
-    public View getCardView(Context context, ViewGroup parent) {
-        super.getCardView(context, parent);
-        mCard = mInflater.inflate(R.layout.card_item, parent, false);
+    public void updateViewHolder(RecyclerView.ViewHolder viewHolder) {
+        super.updateViewHolder(viewHolder);
+        mCard = viewHolder.itemView;
         mLinearLayout = (LinearLayout) mCard.findViewById(R.id.card_view);
         mTitleView = (TextView) mCard.findViewById(R.id.card_title);
         mTitleView.setText(getTitle());
@@ -59,10 +66,8 @@ public class TuitionFeesCard extends Card {
             Date d = Utils.getDate(mTuition.getFrist());
             String date = SimpleDateFormat.getDateInstance().format(d);
             addTextView(String.format(mContext.getString(R.string.reregister_todo), date));
-            addTextView(context.getString(R.string.amount_dots)+" "+mTuition.getSoll() + "€");
+            addTextView(viewHolder.itemView.getContext().getString(R.string.amount_dots)+" "+mTuition.getSoll() + "€");
         }
-
-        return mCard;
     }
 
     @Override

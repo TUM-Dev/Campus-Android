@@ -1,62 +1,76 @@
 package de.tum.in.tumcampus.adapters;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
-import de.tum.in.tumcampus.R;
+import de.tum.in.tumcampus.cards.CafeteriaMenuCard;
 import de.tum.in.tumcampus.cards.Card;
+import de.tum.in.tumcampus.cards.ChatMessagesCard;
+import de.tum.in.tumcampus.cards.EduroamCard;
+import de.tum.in.tumcampus.cards.FirstUseCard1;
+import de.tum.in.tumcampus.cards.FirstUseCard2;
+import de.tum.in.tumcampus.cards.MVVCard;
+import de.tum.in.tumcampus.cards.NewsCard;
+import de.tum.in.tumcampus.cards.NextLectureCard;
+import de.tum.in.tumcampus.cards.NoInternetCard;
+import de.tum.in.tumcampus.cards.RestoreCard;
+import de.tum.in.tumcampus.cards.Support;
+import de.tum.in.tumcampus.cards.TuitionFeesCard;
 import de.tum.in.tumcampus.models.managers.CardManager;
 
 /**
  * Adapter for the cards start page used in {@link de.tum.in.tumcampus.activities.MainActivity}
  */
-public class CardsAdapter extends RecyclerView.Adapter {
+public class CardsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private final Context mContext;
 
-    // Provide a reference to the views for each data item
-    // Complex data items may need more than one view per item, and
-    // you provide access to all the views for a data item in a view holder
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        // each data item is just a string in this case
-        public View mView;
-
-        public ViewHolder(View v, ViewGroup vG) {
-            super(v);
-            mView = v;
-        }
+    public CardsAdapter() {
     }
 
-
-    public CardsAdapter(Context context) {
-        mContext = context;
-    }
-
-
-    public Object getItem(int i) {
+    public Card getItem(int i) {
         return CardManager.getCard(i);
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-
-        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.card_item, viewGroup, false);
-        return new ViewHolder(v, viewGroup);
-        //@todo implement this in the card types
+        switch (viewType) {
+            case CardManager.CARD_CAFETERIA:
+                return CafeteriaMenuCard.inflateViewHolder(viewGroup);
+            case CardManager.CARD_TUITION_FEE:
+                return TuitionFeesCard.inflateViewHolder(viewGroup);
+            case CardManager.CARD_NEXT_LECTURE:
+                return NextLectureCard.inflateViewHolder(viewGroup);
+            case CardManager.CARD_RESTORE:
+                return RestoreCard.inflateViewHolder(viewGroup);
+            case CardManager.CARD_FIRST_USE_1:
+                return FirstUseCard1.inflateViewHolder(viewGroup);
+            case CardManager.CARD_FIRST_USE_2:
+                return FirstUseCard2.inflateViewHolder(viewGroup);
+            case CardManager.CARD_NO_INTERNET:
+                return NoInternetCard.inflateViewHolder(viewGroup);
+            case CardManager.CARD_MVV:
+                return MVVCard.inflateViewHolder(viewGroup);
+            case CardManager.CARD_NEWS:
+                return NewsCard.inflateViewHolder(viewGroup);
+            case CardManager.CARD_EDUROAM:
+                return EduroamCard.inflateViewHolder(viewGroup);
+            case CardManager.CARD_CHAT:
+                return ChatMessagesCard.inflateViewHolder(viewGroup);
+            case CardManager.CARD_SUPPORT:
+                return Support.inflateViewHolder(viewGroup);
+            default:
+                throw new UnsupportedOperationException();
+        }
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
         Card card = CardManager.getCard(position);
-
-        //@todo
+        card.updateViewHolder(viewHolder);
     }
 
     @Override
-    public int getItemViewType (int position) {
+    public int getItemViewType(int position) {
         return CardManager.getCard(position).getTyp();
     }
 

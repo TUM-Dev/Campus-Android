@@ -18,9 +18,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.ListView;
-
-import com.nhaarman.listviewanimations.appearance.simple.SwingBottomInAnimationAdapter;
 
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.generic.BaseActivity;
@@ -51,6 +48,21 @@ public class MainActivity extends BaseActivity implements AdapterView.OnClickLis
     private RecyclerView mCardsView;
     private CardsAdapter mAdapter;
     private SwipeRefreshLayout mSwipeRefreshlayout;
+    BroadcastReceiver connectivityChangeReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (NetUtils.isConnected(context)) {
+                refreshCards();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        unregisterReceiver(connectivityChangeReceiver);
+                        registered = false;
+                    }
+                });
+            }
+        }
+    };
 
     public MainActivity() {
         super(R.layout.activity_main);
@@ -127,7 +139,7 @@ public class MainActivity extends BaseActivity implements AdapterView.OnClickLis
      * Setup cards adapter
      */
     private void initAdapter() {
-        mAdapter = new CardsAdapter(this);
+        mAdapter = new CardsAdapter();
         mCardsView.setAdapter(mAdapter);
     }
 
@@ -232,7 +244,7 @@ public class MainActivity extends BaseActivity implements AdapterView.OnClickLis
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
-        Card card = (Card) mAdapter.getItem(info.position);
+        Card card = mAdapter.getItem(info.position);
         String key = card.getSettings();
         if (key == null) {
             return;
@@ -251,7 +263,7 @@ public class MainActivity extends BaseActivity implements AdapterView.OnClickLis
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        Card card = (Card) mAdapter.getItem(info.position);
+        Card card = mAdapter.getItem(info.position);
         switch (item.getItemId()) {
             case MENU_OPEN_SETTINGS:
                 // Open card's preference screen
@@ -315,33 +327,17 @@ public class MainActivity extends BaseActivity implements AdapterView.OnClickLis
         }.execute();
     }
 
-    BroadcastReceiver connectivityChangeReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (NetUtils.isConnected(context)) {
-                refreshCards();
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        unregisterReceiver(connectivityChangeReceiver);
-                        registered = false;
-                    }
-                });
-            }
-        }
-    };
-
     @Override
     public void onClick(View view) {
-        Card card = CardManager.getCard(mCardsView.getChildAdapterPosition(view));
-        if (card.getTyp() == CardManager.CARD_RESTORE) {
-            CardManager.restoreCards();
-            refreshCards();
-        } else {
-            Intent i = card.getIntent();
-            if (i != null) {
-                startActivity(i);
-            }
-        }
+        //Card card = CardManager.getCard(mCardsView.getChildAdapterPosition(view));
+        //if (card.getTyp() == CardManager.CARD_RESTORE) {
+        CardManager.restoreCards();
+        refreshCards();
+        // } else {
+        //     Intent i = card.getIntent();
+        //     if (i != null) {
+        //         startActivity(i);
+        //     }
+        // }
     }
 }

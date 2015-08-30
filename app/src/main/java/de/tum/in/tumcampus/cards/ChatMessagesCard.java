@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -37,6 +39,11 @@ public class ChatMessagesCard extends Card {
         super(context, "card_chat");
     }
 
+    public static RecyclerView.ViewHolder inflateViewHolder(ViewGroup parent){
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_item, parent, false);
+        return new RecyclerView.ViewHolder(view) {};
+    }
+
     @Override
     public int getTyp() {
         return CARD_CHAT;
@@ -48,19 +55,17 @@ public class ChatMessagesCard extends Card {
     }
 
     @Override
-    public View getCardView(Context context, ViewGroup parent) {
-        super.getCardView(context, parent);
-
-        mCard = mInflater.inflate(R.layout.card_item, parent, false);
+    public void updateViewHolder(RecyclerView.ViewHolder viewHolder) {
+        mCard = viewHolder.itemView;
         mLinearLayout = (LinearLayout) mCard.findViewById(R.id.card_view);
         mTitleView = (TextView) mCard.findViewById(R.id.card_title);
         mTitleView.setText(getTitle());
 
         // Show cafeteria menu
         for(ChatMessage message : mUnread) {
+            //TODO remove old textviews
             addTextView(message.getMember().getDisplayName()+": "+message.getText());
         }
-        return mCard;
     }
 
     /**
