@@ -60,6 +60,7 @@ public class TuitionFeesCard extends Card {
         mTitleView = (TextView) mCard.findViewById(R.id.card_title);
         mTitleView.setText(getTitle());
 
+        super.removeAllAdditionalTextViews();
         if (mTuition.getSoll().equals("0")) {
             addTextView(String.format(mContext.getString(R.string.reregister_success), mTuition.getSemesterBez()));
         } else {

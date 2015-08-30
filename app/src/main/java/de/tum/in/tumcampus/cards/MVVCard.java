@@ -61,6 +61,13 @@ public class MVVCard extends Card {
         mTitleView.setText(getTitle());
         mCard.findViewById(R.id.place_holder).setVisibility(View.VISIBLE);
 
+        //Remove old DepartureViews
+        for(int i = 0; i < mLinearLayout.getChildCount(); i++) {
+            if(mLinearLayout.getChildAt(i) instanceof DepartureView) {
+                mLinearLayout.removeViewAt(i);
+            }
+        }
+
         for (int i = 0; i < mDepartures.size() && i < 5; i++) {
             TransportManager.Departure curr = mDepartures.get(i);
 
@@ -68,7 +75,6 @@ public class MVVCard extends Card {
             view.setSymbol(curr.symbol);
             view.setLine(curr.line);
             view.setTime(curr.time);
-            //TODO: remove old departureview
             mLinearLayout.addView(view);
         }
     }

@@ -73,6 +73,7 @@ public class CafeteriaMenuCard extends Card {
         mDateView.setVisibility(View.VISIBLE);
         mDateView.setText(SimpleDateFormat.getDateInstance().format(mDate));
 
+        //TODO remove old textviews
         // Show cafeteria menu
         showMenu(mLinearLayout, mCafeteriaId, mDateStr, false);
     }

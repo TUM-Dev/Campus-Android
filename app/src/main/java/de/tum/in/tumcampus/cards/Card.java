@@ -14,6 +14,9 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.auxiliary.ImplicitCounter;
 import de.tum.in.tumcampus.models.managers.CardManager;
@@ -31,6 +34,7 @@ public abstract class Card {
     View mCard;
     LinearLayout mLinearLayout;
     TextView mTitleView;
+    private List<TextView> additionalTextViews = new ArrayList<>();
     private String mSettings;
     // Settings for showing this card on start page or as notification
     // Default values set for restore card, no internet card, etc.
@@ -108,8 +112,18 @@ public abstract class Card {
         int padding = (int) mContext.getResources().getDimension(R.dimen.card_text_padding);
         textview.setPadding(padding, 0, padding, 0);
 
+        additionalTextViews.add(textview);
         mLinearLayout.addView(textview);
         return textview;
+    }
+
+    /**
+     * Removes all text views from the main card layout, that have been added with addTextView(text)
+     */
+    protected void removeAllAdditionalTextViews() {
+        for (View textView : additionalTextViews) {
+            mLinearLayout.removeView(textView);
+        }
     }
 
     /**

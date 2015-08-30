@@ -61,9 +61,9 @@ public class ChatMessagesCard extends Card {
         mTitleView = (TextView) mCard.findViewById(R.id.card_title);
         mTitleView.setText(getTitle());
 
+        super.removeAllAdditionalTextViews();
         // Show cafeteria menu
         for(ChatMessage message : mUnread) {
-            //TODO remove old textviews
             addTextView(message.getMember().getDisplayName()+": "+message.getText());
         }
     }
