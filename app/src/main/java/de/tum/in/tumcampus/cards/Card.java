@@ -9,7 +9,11 @@ import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -18,6 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.tum.in.tumcampus.R;
+import de.tum.in.tumcampus.activities.UserPreferencesActivity;
+import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.ImplicitCounter;
 import de.tum.in.tumcampus.models.managers.CardManager;
 
@@ -314,11 +320,12 @@ public abstract class Card {
         void onRequestCard(Context context);
     }
 
-    public static class CardViewHolder extends RecyclerView.ViewHolder {
+    public static class CardViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener, PopupMenu.OnMenuItemClickListener {
         private Card current;
 
         public CardViewHolder(View itemView) {
             super(itemView);
+            itemView.setOnLongClickListener(this);
         }
 
         public Card getCurrentCard() {
@@ -327,6 +334,41 @@ public abstract class Card {
 
         public void setCurrentCard(Card current) {
             this.current = current;
+        }
+
+        @Override
+        public boolean onLongClick(View v) {
+            String key = current.getSettings();
+            if (key == null) {
+                return false;
+            }
+            PopupMenu menu = new PopupMenu(v.getContext(), v, Gravity.CENTER_HORIZONTAL);
+            MenuInflater inf = menu.getMenuInflater();
+            inf.inflate(R.menu.card_popup_menu, menu.getMenu());
+
+            menu.show();
+            return true;
+        }
+
+        @Override
+        public boolean onMenuItemClick(MenuItem item) {
+            switch (item.getItemId()) {
+                case R.id.open_card_setting:
+                    // Open card's preference screen
+                    String key = current.getSettings();
+                    if (key == null)
+                        return true;
+                    Intent intent = new Intent(itemView.getContext(), UserPreferencesActivity.class);
+                    intent.putExtra(Const.PREFERENCE_SCREEN, key);
+                    itemView.getContext().startActivity(intent);
+                    return true;
+                case R.id.always_hide_card:
+                    current.hideAlways();
+                    current.discardCard();
+                    return true;
+                default:
+                    return false;
+            }
         }
     }
 }

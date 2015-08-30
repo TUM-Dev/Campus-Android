@@ -14,19 +14,14 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AbsListView;
-import android.widget.AdapterView;
 
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.generic.BaseActivity;
 import de.tum.in.tumcampus.adapters.CardsAdapter;
-import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.NetUtils;
-import de.tum.in.tumcampus.auxiliary.SwipeDismissList;
 import de.tum.in.tumcampus.cards.Card;
 import de.tum.in.tumcampus.models.managers.CardManager;
 import de.tum.in.tumcampus.services.SilenceService;
@@ -35,9 +30,6 @@ import de.tum.in.tumcampus.services.SilenceService;
  * Main activity displaying the cards and providing navigation with navigation drawer
  */
 public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener {
-    private static final int MENU_OPEN_SETTINGS = 0;
-    private static final int MENU_HIDE_ALWAYS = 1;
-
     /**
      * Navigation Drawer
      */
@@ -214,86 +206,10 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
         return super.onOptionsItemSelected(item);
     }
 
-    public void onFabClicked(View v) {
-        startActivity(new Intent(this, UserPreferencesActivity.class));
-    }
-
-    /**
-     * Handle swipe to dismiss events
-     *
-     * @param listView ListView
-     * @param position Swiped item position
-     */
-    public SwipeDismissList.Undoable onDismiss(AbsListView listView, final int position) {
-        // Delete the item from adapter
-        final Card itemToDelete = mAdapter.remove(position);
-        return new SwipeDismissList.Undoable() {
-            @Override
-            public void undo() {
-                // Return the item at its previous position again
-                mAdapter.insert(position, itemToDelete);
-            }
-
-            @Override
-            public void discard() {
-                itemToDelete.discardCard();
-            }
-        };
-    }
-
-    /**
-     * Handle long click events on a card
-     *
-     * @param menu     Context menu
-     * @param v        Item view
-     * @param menuInfo info
-     */
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
-        Card card = mAdapter.getItem(info.position);
-        String key = card.getSettings();
-        if (key == null) {
-            return;
-        }
-        menu.setHeaderTitle(R.string.options);
-        menu.add(Menu.NONE, MENU_OPEN_SETTINGS, Menu.NONE, R.string.open_card_settings);
-        menu.add(Menu.NONE, MENU_HIDE_ALWAYS, Menu.NONE, R.string.always_hide_card);
-    }
-
-    /**
-     * Handle context menu item events
-     *
-     * @param item Menu item
-     * @return True if handled
-     */
-    @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        Card card = mAdapter.getItem(info.position);
-        switch (item.getItemId()) {
-            case MENU_OPEN_SETTINGS:
-                // Open card's preference screen
-                String key = card.getSettings();
-                if (key == null)
-                    return true;
-                Intent intent = new Intent(this, UserPreferencesActivity.class);
-                intent.putExtra(Const.PREFERENCE_SCREEN, key);
-                startActivity(intent);
-                return true;
-            case MENU_HIDE_ALWAYS:
-                card.hideAlways();
-                refreshCards();
-                return true;
-            default:
-                return super.onContextItemSelected(item);
-        }
-    }
-
     /**
      * Show progress indicator and start updating cards in background
      */
-    private void refreshCards() {
+    public void refreshCards() {
         mSwipeRefreshlayout.setRefreshing(true);
         onRefresh();
     }
@@ -342,6 +258,9 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
         refreshCards();
     }
 
+    /**
+     * A touch helper class, Handles swipe to dismiss events
+     */
     private class MainActivityTouchHelperCallback extends ItemTouchHelper.SimpleCallback {
 
         public MainActivityTouchHelperCallback() {
