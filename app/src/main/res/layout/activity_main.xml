@@ -6,7 +6,7 @@
     tools:context=".StartActivity">
 
     <!-- The main content view -->
-    <FrameLayout
+    <RelativeLayout
         android:id="@+id/content_frame"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -28,7 +28,14 @@
 
         </android.support.v4.widget.SwipeRefreshLayout>
 
-    </FrameLayout>
+        <android.support.design.widget.CoordinatorLayout
+            android:id="@+id/snackbarPosition"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"></android.support.design.widget.CoordinatorLayout>
+    </RelativeLayout>
+
     <!-- The navigation drawer -->
     <ListView
         android:id="@+id/left_drawer"

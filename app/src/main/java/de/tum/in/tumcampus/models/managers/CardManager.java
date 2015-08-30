@@ -162,10 +162,12 @@ public class CardManager {
      * Removes card from the list
      *
      * @param card The card to delete
-     * @return If the card was previously in the list
+     * @return the last index of the card
      */
-    public static boolean remove(Card card) {
-        return cards.remove(card);
+    public static int remove(Card card) {
+        int index = cards.indexOf(card);
+        cards.remove(card);
+        return index;
     }
 
     /**

@@ -8,6 +8,7 @@ import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -88,39 +89,8 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
         mCardsView.setLayoutManager(layoutManager);
         mCardsView.setHasFixedSize(true);
 
-        ItemTouchHelper touchHelper = new ItemTouchHelper(
-                new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
-
-                    @Override
-                    public int getSwipeDirs(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
-                        Card.CardViewHolder cardViewHolder = (Card.CardViewHolder) viewHolder;
-                        if (!cardViewHolder.getCurrentCard().isDismissable()) {
-                            return 0;
-                        }
-                        return super.getSwipeDirs(recyclerView, viewHolder);
-                    }
-
-                    @Override
-                    public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-                        //Moving is not allowed as per flags
-                        return false;
-                    }
-
-                    @Override
-                    public boolean isLongPressDragEnabled() {
-                        return false;
-                    }
-
-                    @Override
-                    public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-                        Card.CardViewHolder cardViewHolder = (Card.CardViewHolder) viewHolder;
-                        Card card = cardViewHolder.getCurrentCard();
-                        card.discardCard();
-                        mAdapter.remove(card);
-                    }
-                });
-
-        touchHelper.attachToRecyclerView(mCardsView);
+        //Swipe gestures
+        new ItemTouchHelper(new MainActivityTouchHelperCallback()).attachToRecyclerView(mCardsView);
 
         // Start silence Service (if already started it will just invoke a check)
         Intent service = new Intent(this, SilenceService.class);
@@ -364,8 +334,57 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
         }.execute();
     }
 
-    public void onClick(View view) {
+    /**
+     * Executed when the RestoreCard is pressed
+     */
+    public void restoreCards(View view) {
         CardManager.restoreCards();
         refreshCards();
+    }
+
+    private class MainActivityTouchHelperCallback extends ItemTouchHelper.SimpleCallback {
+
+        public MainActivityTouchHelperCallback() {
+            super(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
+        }
+
+        @Override
+        public int getSwipeDirs(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+            Card.CardViewHolder cardViewHolder = (Card.CardViewHolder) viewHolder;
+            if (!cardViewHolder.getCurrentCard().isDismissable()) {
+                return 0;
+            }
+            return super.getSwipeDirs(recyclerView, viewHolder);
+        }
+
+        @Override
+        public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+            //Moving is not allowed as per flags
+            return false;
+        }
+
+        @Override
+        public boolean isLongPressDragEnabled() {
+            return false;
+        }
+
+        @Override
+        public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+            Card.CardViewHolder cardViewHolder = (Card.CardViewHolder) viewHolder;
+            final Card card = cardViewHolder.getCurrentCard();
+            final int lastPos = mAdapter.remove(card);
+
+            final View coordinatorLayoutView = findViewById(R.id.snackbarPosition);
+
+            Snackbar
+                    .make(coordinatorLayoutView, R.string.card_dismissed, Snackbar.LENGTH_LONG)
+                    .setAction(R.string.undo, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            mAdapter.insert(lastPos, card);
+                        }
+                    })
+                    .show();
+        }
     }
 }
