@@ -320,11 +320,12 @@ public abstract class Card {
         void onRequestCard(Context context);
     }
 
-    public static class CardViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener, PopupMenu.OnMenuItemClickListener {
+    public static class CardViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener, PopupMenu.OnMenuItemClickListener {
         private Card current;
 
         public CardViewHolder(View itemView) {
             super(itemView);
+            itemView.setOnClickListener(this);
             itemView.setOnLongClickListener(this);
         }
 
@@ -334,6 +335,14 @@ public abstract class Card {
 
         public void setCurrentCard(Card current) {
             this.current = current;
+        }
+
+        @Override
+        public void onClick(View v) {
+            Intent i = current.getIntent();
+            if (i != null) {
+                itemView.getContext().startActivity(i);
+            }
         }
 
         @Override
