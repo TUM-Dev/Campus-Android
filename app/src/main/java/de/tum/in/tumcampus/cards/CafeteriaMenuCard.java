@@ -44,10 +44,9 @@ public class CafeteriaMenuCard extends Card {
         super(context, "card_cafeteria");
     }
 
-    public static RecyclerView.ViewHolder inflateViewHolder(ViewGroup parent) {
+    public static Card.CardViewHolder inflateViewHolder(ViewGroup parent) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_item, parent, false);
-        return new RecyclerView.ViewHolder(view) {
-        };
+        return new Card.CardViewHolder(view);
     }
 
     @Override

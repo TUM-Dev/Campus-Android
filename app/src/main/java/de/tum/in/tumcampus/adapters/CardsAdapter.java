@@ -21,18 +21,14 @@ import de.tum.in.tumcampus.models.managers.CardManager;
 /**
  * Adapter for the cards start page used in {@link de.tum.in.tumcampus.activities.MainActivity}
  */
-public class CardsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-
-
-    public CardsAdapter() {
-    }
+public class CardsAdapter extends RecyclerView.Adapter<Card.CardViewHolder> {
 
     public Card getItem(int i) {
         return CardManager.getCard(i);
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+    public Card.CardViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         switch (viewType) {
             case CardManager.CARD_CAFETERIA:
                 return CafeteriaMenuCard.inflateViewHolder(viewGroup);
@@ -65,8 +61,9 @@ public class CardsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
+    public void onBindViewHolder(Card.CardViewHolder viewHolder, int position) {
         Card card = CardManager.getCard(position);
+        viewHolder.setCurrentCard(card);
         card.updateViewHolder(viewHolder);
     }
 
@@ -86,6 +83,11 @@ public class CardsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         return CardManager.getCardCount();
     }
 
+    public void remove(Card card) {
+        CardManager.remove(card);
+        notifyDataSetChanged();
+    }
+
     public Card remove(int position) {
         final Card c = CardManager.remove(position);
         notifyDataSetChanged();
@@ -95,9 +97,5 @@ public class CardsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     public void insert(int position, Card item) {
         CardManager.insert(position, item);
         this.notifyDataSetChanged();
-    }
-
-    public boolean isDismissable(int pos) {
-        return CardManager.getCard(pos).isDismissable();
     }
 }

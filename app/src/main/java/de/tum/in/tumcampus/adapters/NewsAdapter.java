@@ -17,6 +17,7 @@ import java.util.Date;
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.auxiliary.NetUtils;
 import de.tum.in.tumcampus.auxiliary.Utils;
+import de.tum.in.tumcampus.cards.Card;
 
 public class NewsAdapter extends CursorAdapter {
     private final NetUtils net;
@@ -98,7 +99,7 @@ public class NewsAdapter extends CursorAdapter {
         bindNewsView(net, (RecyclerView.ViewHolder)view.getTag(), cursor);
     }
 
-    public static class NewsViewHolder extends RecyclerView.ViewHolder {
+    public static class NewsViewHolder extends Card.CardViewHolder {
         ImageView img;
         TextView title;
         TextView src_date;

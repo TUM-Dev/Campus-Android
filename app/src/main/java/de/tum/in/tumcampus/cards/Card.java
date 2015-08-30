@@ -313,4 +313,20 @@ public abstract class Card {
          */
         void onRequestCard(Context context);
     }
+
+    public static class CardViewHolder extends RecyclerView.ViewHolder {
+        private Card current;
+
+        public CardViewHolder(View itemView) {
+            super(itemView);
+        }
+
+        public Card getCurrentCard() {
+            return current;
+        }
+
+        public void setCurrentCard(Card current) {
+            this.current = current;
+        }
+    }
 }

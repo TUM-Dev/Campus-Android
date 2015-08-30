@@ -33,7 +33,7 @@ public class NewsCard extends Card {
         net = new NetUtils(context);
     }
 
-    public static RecyclerView.ViewHolder inflateViewHolder(ViewGroup parent, int type) {
+    public static Card.CardViewHolder inflateViewHolder(ViewGroup parent, int type) {
         return NewsAdapter.newNewsView(parent, type == CardManager.CARD_NEWS_FILM);
     }
 
@@ -67,7 +67,8 @@ public class NewsCard extends Card {
 
     /**
      * Sets the information needed to show news
-     * @param c Cursor
+     *
+     * @param c   Cursor
      * @param pos Position inside the cursor
      */
     public void setNews(Cursor c, int pos) {
@@ -81,26 +82,26 @@ public class NewsCard extends Card {
     protected void discard(SharedPreferences.Editor editor) {
         NewsManager newsManager = new NewsManager(mContext);
         mCursor.moveToPosition(mPosition);
-        newsManager.setDismissed(mCursor.getString(0), mCursor.getInt(9)|1);
+        newsManager.setDismissed(mCursor.getString(0), mCursor.getInt(9) | 1);
     }
 
     @Override
     protected void discardNotification(SharedPreferences.Editor editor) {
         NewsManager newsManager = new NewsManager(mContext);
         mCursor.moveToPosition(mPosition);
-        newsManager.setDismissed(mCursor.getString(0), mCursor.getInt(9)|2);
+        newsManager.setDismissed(mCursor.getString(0), mCursor.getInt(9) | 2);
     }
 
     @Override
     boolean shouldShow(SharedPreferences prefs) {
         mCursor.moveToPosition(mPosition);
-        return (mCursor.getInt(9)&1) == 0;
+        return (mCursor.getInt(9) & 1) == 0;
     }
 
     @Override
     boolean shouldShowNotification(SharedPreferences prefs) {
         mCursor.moveToPosition(mPosition);
-        return (mCursor.getInt(9)&2) == 0;
+        return (mCursor.getInt(9) & 2) == 0;
     }
 
     @Override

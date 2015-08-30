@@ -159,6 +159,16 @@ public class CardManager {
     }
 
     /**
+     * Removes card from the list
+     *
+     * @param card The card to delete
+     * @return If the card was previously in the list
+     */
+    public static boolean remove(Card card) {
+        return cards.remove(card);
+    }
+
+    /**
      * Resets dismiss settings for all cards
      */
     public static void restoreCards() {

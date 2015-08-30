@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,9 +20,9 @@ public class FirstUseCard2 extends Card {
         super(context);
     }
 
-    public static RecyclerView.ViewHolder inflateViewHolder(ViewGroup parent){
+    public static Card.CardViewHolder inflateViewHolder(ViewGroup parent) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_first_use2, parent, false);
-        return new RecyclerView.ViewHolder(view) {};
+        return new Card.CardViewHolder(view);
     }
 
     @Override

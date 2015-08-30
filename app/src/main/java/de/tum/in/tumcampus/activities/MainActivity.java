@@ -12,6 +12,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -32,7 +33,7 @@ import de.tum.in.tumcampus.services.SilenceService;
 /**
  * Main activity displaying the cards and providing navigation with navigation drawer
  */
-public class MainActivity extends BaseActivity implements AdapterView.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
+public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener {
     private static final int MENU_OPEN_SETTINGS = 0;
     private static final int MENU_HIDE_ALWAYS = 1;
 
@@ -72,20 +73,54 @@ public class MainActivity extends BaseActivity implements AdapterView.OnClickLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Setup card list view
-        mCardsView = (RecyclerView) findViewById(R.id.cards_view);
-        mCardsView.setOnClickListener(this);
-        registerForContextMenu(mCardsView);
-
-        final LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        mCardsView.setLayoutManager(layoutManager);
-
         // Setup pull to refresh
         mSwipeRefreshlayout = (SwipeRefreshLayout) findViewById(R.id.ptr_layout);
         mSwipeRefreshlayout.setOnRefreshListener(this);
         //TODO: set colors
         //mSwipeRefreshlayout.setColorSchemeResources(R.color.);
+
+        // Setup card RecyclerView
+        mCardsView = (RecyclerView) findViewById(R.id.cards_view);
+        registerForContextMenu(mCardsView); //TODO
+
+        final LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        mCardsView.setLayoutManager(layoutManager);
+        mCardsView.setHasFixedSize(true);
+
+        ItemTouchHelper touchHelper = new ItemTouchHelper(
+                new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+
+                    @Override
+                    public int getSwipeDirs(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+                        Card.CardViewHolder cardViewHolder = (Card.CardViewHolder) viewHolder;
+                        if (!cardViewHolder.getCurrentCard().isDismissable()) {
+                            return 0;
+                        }
+                        return super.getSwipeDirs(recyclerView, viewHolder);
+                    }
+
+                    @Override
+                    public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                        //Moving is not allowed as per flags
+                        return false;
+                    }
+
+                    @Override
+                    public boolean isLongPressDragEnabled() {
+                        return false;
+                    }
+
+                    @Override
+                    public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                        Card.CardViewHolder cardViewHolder = (Card.CardViewHolder) viewHolder;
+                        Card card = cardViewHolder.getCurrentCard();
+                        card.discardCard();
+                        mAdapter.remove(card);
+                    }
+                });
+
+        touchHelper.attachToRecyclerView(mCardsView);
 
         // Start silence Service (if already started it will just invoke a check)
         Intent service = new Intent(this, SilenceService.class);
@@ -114,8 +149,10 @@ public class MainActivity extends BaseActivity implements AdapterView.OnClickLis
         // Set the drawer toggle as the DrawerListener
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setHomeButtonEnabled(true);
+        }
     }
 
     @Override
@@ -327,17 +364,8 @@ public class MainActivity extends BaseActivity implements AdapterView.OnClickLis
         }.execute();
     }
 
-    @Override
     public void onClick(View view) {
-        //Card card = CardManager.getCard(mCardsView.getChildAdapterPosition(view));
-        //if (card.getTyp() == CardManager.CARD_RESTORE) {
         CardManager.restoreCards();
         refreshCards();
-        // } else {
-        //     Intent i = card.getIntent();
-        //     if (i != null) {
-        //         startActivity(i);
-        //     }
-        // }
     }
 }

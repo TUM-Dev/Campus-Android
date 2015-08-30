@@ -49,9 +49,9 @@ public class NextLectureCard extends Card {
         super(context, "card_next_lecture");
     }
 
-    public static RecyclerView.ViewHolder inflateViewHolder(ViewGroup parent){
+    public static Card.CardViewHolder inflateViewHolder(ViewGroup parent) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_next_lecture_item, parent, false);
-        return new RecyclerView.ViewHolder(view) {};
+        return new Card.CardViewHolder(view);
     }
 
     @Override
