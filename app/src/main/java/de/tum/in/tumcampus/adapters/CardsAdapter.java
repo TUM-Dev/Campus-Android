@@ -85,18 +85,18 @@ public class CardsAdapter extends RecyclerView.Adapter<Card.CardViewHolder> {
 
     public int remove(Card card) {
         int index = CardManager.remove(card);
-        notifyDataSetChanged();
+        notifyItemRemoved(index);
         return index;
     }
 
     public Card remove(int position) {
         final Card c = CardManager.remove(position);
-        notifyDataSetChanged();
+        notifyItemRemoved(position);
         return c;
     }
 
     public void insert(int position, Card item) {
         CardManager.insert(position, item);
-        this.notifyDataSetChanged();
+        notifyItemInserted(position);
     }
 }
