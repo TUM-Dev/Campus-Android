@@ -27,6 +27,7 @@
 -dontwarn okio.**
 -dontwarn org.simpleframework.xml.stream.**
 -dontwarn retrofit.**
+-dontwarn com.google.android.gms.**
 
 -keep class * extends java.util.ListResourceBundle {
     protected Object[][] getContents();

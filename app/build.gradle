@@ -3,14 +3,13 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 23
     buildToolsVersion '23.0.0'
-    useLibrary 'org.apache.http.legacy' //TODO: replace legacy http connections with HttpURLConnection
 
     defaultConfig {
         applicationId "de.tum.in.tumcampus"
         minSdkVersion 10
         targetSdkVersion 23
         versionCode 55
-        versionName "1.3.0"
+        versionName "1.3.0HttpURLConnectionTest"
     }
     buildTypes {
         release {
@@ -52,4 +51,5 @@ dependencies {
     compile 'com.squareup.okhttp:okhttp:2.5.0'
     compile project(":libraries:emojicon")
     compile 'com.github.machinarius:preferencefragment:0.1.2'
+    compile 'commons-io:commons-io:2.4'
 }

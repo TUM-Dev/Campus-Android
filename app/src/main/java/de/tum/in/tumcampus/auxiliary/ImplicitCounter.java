@@ -3,17 +3,17 @@ package de.tum.in.tumcampus.auxiliary;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.util.Pair;
 
 import com.google.gson.Gson;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPut;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.protocol.HTTP;
-
+import java.io.BufferedWriter;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -26,8 +26,7 @@ import de.tum.in.tumcampus.cards.NewsCard;
  */
 public class ImplicitCounter extends AsyncTask<String, Integer, Void> {
     private static final String settings = "usage_counter";
-    private static final String URL = "https://tumcabe.in.tum.de/Api/statistics/";
-    private static final String tag = "ImplicitCounter";
+    private static final String TUMCABE_URL = "https://tumcabe.in.tum.de/Api/statistics/";
     private static Date lastSync = null;
 
     private Context c = null;
@@ -101,23 +100,32 @@ public class ImplicitCounter extends AsyncTask<String, Integer, Void> {
         }
 
         // Transmit stack trace with PUT request
-        HttpPut request = new HttpPut(URL);
-        request.addHeader("X-DEVICE-ID", NetUtils.getDeviceID(this.c)); // Add our device identifier
-
-        List<NameValuePair> nvps = new ArrayList<>();
-
-        //Add our payload which should be json encoded
-        nvps.add(new BasicNameValuePair("data", data[0]));
-
-        //Send the request
+        HttpURLConnection request = null;
         try {
-            request.setEntity(new UrlEncodedFormEntity(nvps, HTTP.UTF_8));
+            request = (HttpURLConnection) (new URL(TUMCABE_URL)).openConnection();
+            request.setRequestMethod("PUT");
+            request.setDoOutput(true);
+            request.addRequestProperty("X-DEVICE-ID", NetUtils.getDeviceID(this.c)); // Add our device identifier
 
+            List<Pair<String, String>> nvps = Collections.singletonList(
+                    //Add our payload which should be json encoded
+                    new Pair<>("data", data[0])
+            );
+
+            //Send the request
+            OutputStream outputStream = request.getOutputStream();
+            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
+            writer.write(NetUtils.buildParamString(nvps));
+            writer.flush();
+            writer.close();
+            outputStream.close();
             // We don't care about the response, so we just hope it went well and on with it.
-            NetUtils.execute(request);
-
         } catch (IOException e) {
-            e.printStackTrace();
+            Utils.log(e);
+        } finally {
+            if (request != null) {
+                request.disconnect();
+            }
         }
 
         //Return nothing :)

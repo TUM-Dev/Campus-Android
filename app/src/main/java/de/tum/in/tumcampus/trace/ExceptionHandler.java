@@ -4,20 +4,21 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.preference.PreferenceManager;
 import android.util.Log;
-
-import org.apache.http.NameValuePair;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPut;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.protocol.HTTP;
+import android.util.Pair;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.lang.Thread.UncaughtExceptionHandler;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import de.tum.in.tumcampus.auxiliary.Const;
@@ -26,21 +27,12 @@ import de.tum.in.tumcampus.auxiliary.NetUtils;
 
 public class ExceptionHandler {
 
+    public static boolean sVerbose = false;
     // Stores loaded stack traces in memory. Each element is contains a full stacktrace
     private static ArrayList<String[]> sStackTraces = null;
-
     private static ActivityAsyncTask<Processor, Object, Object, Object> sTask;
-    public static boolean sVerbose = false;
     private static int sMinDelay = 0;
     private static boolean sSetupCalled = false;
-
-    public static interface Processor {
-        boolean beginSubmit();
-
-        void submitDone();
-
-        void handlerInstalled();
-    }
 
     /**
      * Setup the handler for unhandled exceptions, and submit stack
@@ -351,34 +343,40 @@ public class ExceptionHandler {
                     Log.d(G.tag, "Transmitting stack trace: " + stacktrace);
                 }
                 // Transmit stack trace with PUT request
-                HttpPut request = new HttpPut(G.URL);
-                request.addHeader("X-DEVICE-ID", G.deviceId); // Add our device identifier
+                HttpURLConnection request = (HttpURLConnection) (new URL(G.URL)).openConnection();
+                request.setRequestMethod("PUT");
+                request.setDoOutput(true);
+                request.addRequestProperty("X-DEVICE-ID", G.deviceId);// Add our device identifier
 
-                List<NameValuePair> nvps = new ArrayList<>();
+                List<Pair<String, String>> nvps = Arrays.asList(
+                        //Add some Device infos
+                        (new Pair<>("packageName", G.appPackage)),
+                        (new Pair<>("packageVersion", G.appVersion)),
+                        (new Pair<>("packageVersionCode", "" + G.appVersionCode)),
+                        (new Pair<>("phoneModel", G.phoneModel)),
+                        (new Pair<>("androidVersion", G.androidVersion)),
 
-                //Add some Device infos
-                nvps.add(new BasicNameValuePair("packageName", G.appPackage));
-                nvps.add(new BasicNameValuePair("packageVersion", G.appVersion));
-                nvps.add(new BasicNameValuePair("packageVersionCode", "" + G.appVersionCode));
-                nvps.add(new BasicNameValuePair("phoneModel", G.phoneModel));
-                nvps.add(new BasicNameValuePair("androidVersion", G.androidVersion));
+                        (new Pair<>("networkWifi", Util.isWifiOn())),
+                        (new Pair<>("networkMobile", Util.isMobileNetworkOn())),
+                        (new Pair<>("gps", Util.isGPSOn())),
 
-                nvps.add(new BasicNameValuePair("networkWifi", Util.isWifiOn()));
-                nvps.add(new BasicNameValuePair("networkMobile", Util.isMobileNetworkOn()));
-                nvps.add(new BasicNameValuePair("gps", Util.isGPSOn()));
+                        (new Pair<>("screenWidth", screenProperties[0])),
+                        (new Pair<>("screenHeight", screenProperties[1])),
+                        (new Pair<>("screenOrientation", screenProperties[2])),
+                        (new Pair<>("screenDpi", screenProperties[3] + ":" + screenProperties[4])),
 
-                nvps.add(new BasicNameValuePair("screenWidth", screenProperties[0]));
-                nvps.add(new BasicNameValuePair("screenHeight", screenProperties[1]));
-                nvps.add(new BasicNameValuePair("screenOrientation", screenProperties[2]));
-                nvps.add(new BasicNameValuePair("screenDpi", screenProperties[3] + ":" + screenProperties[4]));
-
-                //Add the stacktrace
-                nvps.add(new BasicNameValuePair("stacktrace", stacktrace));
-                nvps.add(new BasicNameValuePair("log", list.get(i)[1]));
-                request.setEntity(new UrlEncodedFormEntity(nvps, HTTP.UTF_8));
-
+                        //Add the stacktrace
+                        (new Pair<>("stacktrace", stacktrace)),
+                        (new Pair<>("log", list.get(i)[1]))
+                );
+                OutputStream outputStream = request.getOutputStream();
+                BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
+                writer.write(NetUtils.buildParamString(nvps));
+                writer.flush();
+                writer.close();
+                outputStream.close();
+                request.disconnect();
                 // We don't care about the response, so we just hope it went well and on with it.
-                NetUtils.execute(request);
             }
         } catch (Exception e) {
             Log.e(G.tag, "Error submitting trace", e);
@@ -396,5 +394,13 @@ public class ExceptionHandler {
             // Register our default exceptions handler
             Thread.setDefaultUncaughtExceptionHandler(new DefaultExceptionHandler(currentHandler));
         }
+    }
+
+    public interface Processor {
+        boolean beginSubmit();
+
+        void submitDone();
+
+        void handlerInstalled();
     }
 }
