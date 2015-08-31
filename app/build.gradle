@@ -48,8 +48,8 @@ dependencies {
     compile('de.psdev.licensesdialog:licensesdialog:1.8.0') {
         exclude module: 'support-v4'
     }
-    compile 'com.squareup.okhttp:okhttp-urlconnection:2.4.0'
-    compile 'com.squareup.okhttp:okhttp:2.4.0'
+    compile 'com.squareup.okhttp:okhttp-urlconnection:2.5.0'
+    compile 'com.squareup.okhttp:okhttp:2.5.0'
     compile project(":libraries:emojicon")
     compile 'com.github.machinarius:preferencefragment:0.1.2'
 }
