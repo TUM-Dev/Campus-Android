@@ -12,7 +12,7 @@
     <TextView
         android:id="@+id/tvTermineLectureName"
         style="@style/SectionHeadline"
-        android:text="tvTermineLectureName" />
+        android:text="" />
 
     <ListView
         android:id="@+id/lvTerminList"

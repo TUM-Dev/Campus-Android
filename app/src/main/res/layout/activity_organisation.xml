@@ -24,7 +24,7 @@
             <TextView
                 android:id="@+id/tvCaption"
                 style="@style/SectionHeadline"
-                android:text="headline" />
+                android:text="" />
 
             <ListView
                 android:id="@+id/lstOrganisations"

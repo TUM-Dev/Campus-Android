@@ -426,4 +426,5 @@ Signature: %5$s</string>
     <string name="yesterday">Yesterday</string>
     <string name="support_us">Help us to spread the word about the Campus App! Like us on Facebook, suggest an exciting idea on Github or send a mail telling us what you think!</string>
     <string name="support_email" translatable="false">tca-support.os.in@tum.de</string>
+    <string name="support_us_title">Support us!</string>
 </resources>

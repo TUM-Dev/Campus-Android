@@ -26,7 +26,7 @@
                 style="@style/SectionHeadline"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="semester" />
+                android:text="" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -39,14 +39,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/amount_dots"
-                    android:textSize="16dp" />
+                    android:textSize="16sp" />
 
                 <TextView
                     android:id="@+id/soll"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="16dp"
-                    android:text="soll"
+                    android:text=""
                     android:textSize="@dimen/large_text_size" />
 
                 <TextView
@@ -54,14 +54,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/deadline_dots"
-                    android:textSize="16dp" />
+                    android:textSize="16sp" />
 
                 <TextView
                     android:id="@+id/frist"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="16dp"
-                    android:text="frist"
+                    android:text=""
                     android:textSize="@dimen/large_text_size" />
 
                 <TextView
@@ -70,7 +70,7 @@
                     android:linksClickable="true"
                     android:padding="16dp"
                     android:text="@string/tuition_fee_more"
-                    android:textSize="16dp" />
+                    android:textSize="16sp" />
             </LinearLayout>
         </LinearLayout>
 

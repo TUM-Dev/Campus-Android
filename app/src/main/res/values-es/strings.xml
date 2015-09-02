@@ -349,5 +349,6 @@
     <string name="tuition_fee_more">La información sobre las contribuciones y las exenciones, créditos, asistencia para la formación y becas, vaya a: <a href="https://www.tum.de/en/studies/fees-and-financial-aid/">Ayuda Financiera Estudiantil</a></string>
     <string name="public_key_mail">Correo de activación de clave pública enviada a %s@mytum.de.\n\n<b>Por favor, active ahora!</b></string>
     <string name="pin_lock_desc">Para configurar la conexión inalámbrica se requiere un bloqueo de PIN.\nSi usted no tiene ya utilizar el bloqueo de PIN usted puede configurarlo aquí.\n<a href="https://www.tum.de/index.php?id=1821&amp;tx_ttnews%5Btt_news%5D=31688">Más información</a></string>
+    <string name="support_us_title">¡Apoyanos!</string>
     <!-- END Translated, please do not change identifiers -->
 </resources>
