@@ -18,6 +18,7 @@ import android.support.v4.app.RemoteInput;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
+import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -79,7 +80,8 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
     // Key for the string that's delivered in the action's intent
     public static final String EXTRA_VOICE_REPLY = "extra_voice_reply";
     private static final int maxEditTimespan = 120000;
-
+    public static ChatRoom mCurrentOpenChatRoom = null;
+    private final Handler mUpdateHandler = new Handler();
     /**
      * UI elements
      */
@@ -89,15 +91,107 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
     private ImageButton btnSend;
     private ProgressBar bar;
     private ImageButton btnEmotion;
-
     private ChatRoom currentChatRoom;
     private ChatMember currentChatMember;
-
     private boolean loadingMore = false;
     private EmojiconsPopup popup;
     private boolean iconShow = false;
     private ChatMessageManager chatManager;
-    public static ChatRoom mCurrentOpenChatRoom = null;
+    private final BroadcastReceiver receiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Bundle extras = intent.getExtras();
+            String chatRoomString = extras.getString("room");
+            String memberString = extras.getString("member");
+            int messageId = -1;
+            if (extras.containsKey("message"))
+                messageId = Integer.parseInt(extras.getString("message"));
+
+            Utils.log("Broadcast receiver got room=" + chatRoomString + " member=" + memberString);
+
+            //If same room just refresh
+            if (chatRoomString.equals("" + currentChatRoom.getId()) && chatHistoryAdapter != null) {
+                if (memberString.equals("" + currentChatMember.getId())) {
+                    // Remove this message from the adapter
+                    chatHistoryAdapter.setUnsentMessages(chatManager.getAllUnsent());
+                } else if (messageId == -1) {
+                    //Check first, if sounds are enabled
+                    AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+                    if (am.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
+
+                        //Play a nice notification sound
+                        MediaPlayer mediaPlayer = MediaPlayer.create(ChatActivity.this, R.raw.message);
+                        mediaPlayer.start();
+                    } else if (am.getRingerMode() == AudioManager.RINGER_MODE_VIBRATE) { //Possibly only vibration is enabled
+                        Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+                        v.vibrate(500);
+                    }
+                }
+
+                //Update the history
+                chatHistoryAdapter.changeCursor(chatManager.getAll());
+            }
+        }
+    };
+    private ActionMode mActionMode = null;
+    private final ActionMode.Callback mActionModeCallback = new ActionMode.Callback() {
+
+        // Called when the action mode is created; startActionMode() was called
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            // Inflate a menu resource providing context menu items
+            MenuInflater inflater = mode.getMenuInflater();
+            inflater.inflate(R.menu.chat_context_menu, menu);
+            return true;
+        }
+
+        // Called each time the action mode is shown. Always called after onCreateActionMode, but
+        // may be called multiple times if the mode is invalidated.
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            return false; // Return false if nothing is done
+        }
+
+        // Called when the user selects a contextual menu item
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            ChatMessage msg = chatHistoryAdapter.mCheckedItem;
+            switch (item.getItemId()) {
+                case R.id.action_edit:
+                    // If item is not sent at the moment, stop sending
+                    if (msg.getStatus() == ChatMessage.STATUS_SENDING) {
+                        chatManager.removeFromUnsent(msg);
+                        chatHistoryAdapter.removeUnsent(msg);
+                    } else { // set editing item
+                        chatHistoryAdapter.mEditedItem = msg;
+                    }
+                    // Show soft keyboard
+                    InputMethodManager imm = (InputMethodManager) ChatActivity.this.getSystemService(Service.INPUT_METHOD_SERVICE);
+                    imm.showSoftInput(etMessage, 0);
+
+                    // Set text and set cursor to end of the text
+                    etMessage.setText(msg.getText());
+                    int position = msg.getText().length();
+                    etMessage.setSelection(position);
+                    mode.finish();
+                    return true;
+                case R.id.action_info:
+                    showInfo(msg);
+                    mode.finish();
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
+        // Called when the user exits the action mode
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+            mActionMode = null;
+            chatHistoryAdapter.mCheckedItem = null;
+            chatHistoryAdapter.notifyDataSetChanged();
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,6 +199,8 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
         ImplicitCounter.Counter(this);
         this.setContentView(R.layout.activity_chat);
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.main_toolbar);
+        setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
@@ -122,8 +218,6 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
         }, 10000);
 
     }
-
-    private final Handler mUpdateHandler = new Handler();
 
     @Override
     protected void onResume() {
@@ -313,7 +407,6 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
         popup.setOnSoftKeyboardOpenCloseListener(this);
     }
 
-
     @Override
     public void onEmojiconClicked(Emojicon emojicon) {
         //Find the start position of the selection
@@ -413,43 +506,6 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
         }).start();
     }
 
-    private final BroadcastReceiver receiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            Bundle extras = intent.getExtras();
-            String chatRoomString = extras.getString("room");
-            String memberString = extras.getString("member");
-            int messageId = -1;
-            if (extras.containsKey("message"))
-                messageId = Integer.parseInt(extras.getString("message"));
-
-            Utils.log("Broadcast receiver got room=" + chatRoomString + " member=" + memberString);
-
-            //If same room just refresh
-            if (chatRoomString.equals("" + currentChatRoom.getId()) && chatHistoryAdapter != null) {
-                if (memberString.equals("" + currentChatMember.getId())) {
-                    // Remove this message from the adapter
-                    chatHistoryAdapter.setUnsentMessages(chatManager.getAllUnsent());
-                } else if (messageId == -1) {
-                    //Check first, if sounds are enabled
-                    AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-                    if (am.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
-
-                        //Play a nice notification sound
-                        MediaPlayer mediaPlayer = MediaPlayer.create(ChatActivity.this, R.raw.message);
-                        mediaPlayer.start();
-                    } else if (am.getRingerMode() == AudioManager.RINGER_MODE_VIBRATE) { //Possibly only vibration is enabled
-                        Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-                        v.vibrate(500);
-                    }
-                }
-
-                //Update the history
-                chatHistoryAdapter.changeCursor(chatManager.getAll());
-            }
-        }
-    };
-
     /**
      * When user confirms the leave dialog send the request to the server
      *
@@ -490,8 +546,6 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
         return null;
     }
 
-    private ActionMode mActionMode = null;
-
     /**
      * Validates chat message if long clicked on an item
      *
@@ -528,65 +582,6 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
         }
         return true;
     }
-
-    private final ActionMode.Callback mActionModeCallback = new ActionMode.Callback() {
-
-        // Called when the action mode is created; startActionMode() was called
-        @Override
-        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-            // Inflate a menu resource providing context menu items
-            MenuInflater inflater = mode.getMenuInflater();
-            inflater.inflate(R.menu.chat_context_menu, menu);
-            return true;
-        }
-
-        // Called each time the action mode is shown. Always called after onCreateActionMode, but
-        // may be called multiple times if the mode is invalidated.
-        @Override
-        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-            return false; // Return false if nothing is done
-        }
-
-        // Called when the user selects a contextual menu item
-        @Override
-        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-            ChatMessage msg = chatHistoryAdapter.mCheckedItem;
-            switch (item.getItemId()) {
-                case R.id.action_edit:
-                    // If item is not sent at the moment, stop sending
-                    if (msg.getStatus() == ChatMessage.STATUS_SENDING) {
-                        chatManager.removeFromUnsent(msg);
-                        chatHistoryAdapter.removeUnsent(msg);
-                    } else { // set editing item
-                        chatHistoryAdapter.mEditedItem = msg;
-                    }
-                    // Show soft keyboard
-                    InputMethodManager imm = (InputMethodManager) ChatActivity.this.getSystemService(Service.INPUT_METHOD_SERVICE);
-                    imm.showSoftInput(etMessage, 0);
-
-                    // Set text and set cursor to end of the text
-                    etMessage.setText(msg.getText());
-                    int position = msg.getText().length();
-                    etMessage.setSelection(position);
-                    mode.finish();
-                    return true;
-                case R.id.action_info:
-                    showInfo(msg);
-                    mode.finish();
-                    return true;
-                default:
-                    return false;
-            }
-        }
-
-        // Called when the user exits the action mode
-        @Override
-        public void onDestroyActionMode(ActionMode mode) {
-            mActionMode = null;
-            chatHistoryAdapter.mCheckedItem = null;
-            chatHistoryAdapter.notifyDataSetChanged();
-        }
-    };
 
     private void showInfo(final ChatMessage message) {
         //Verify the message with RSA

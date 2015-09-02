@@ -10,6 +10,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.Toolbar;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -50,6 +51,21 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
     private CardsAdapter mAdapter;
     private SwipeDismissList mSwipeList;
     private SwipeRefreshLayout mSwipeRefreshlayout;
+    BroadcastReceiver connectivityChangeReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (NetUtils.isConnected(context)) {
+                refreshCards();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        unregisterReceiver(connectivityChangeReceiver);
+                        registered = false;
+                    }
+                });
+            }
+        }
+    };
 
     public MainActivity() {
         super(R.layout.activity_main);
@@ -102,7 +118,8 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
 
         // Set the drawer toggle as the DrawerListener
         mDrawerLayout.setDrawerListener(mDrawerToggle);
-
+        Toolbar toolbar = (Toolbar) findViewById(R.id.main_toolbar);
+        setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
     }
@@ -351,20 +368,4 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
             }
         }.execute();
     }
-
-    BroadcastReceiver connectivityChangeReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (NetUtils.isConnected(context)) {
-                refreshCards();
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        unregisterReceiver(connectivityChangeReceiver);
-                        registered = false;
-                    }
-                });
-            }
-        }
-    };
 }
