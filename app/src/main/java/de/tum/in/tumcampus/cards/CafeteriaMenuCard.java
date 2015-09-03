@@ -62,6 +62,8 @@ public class CafeteriaMenuCard extends Card {
     @Override
     public void updateViewHolder(RecyclerView.ViewHolder viewHolder) {
         super.updateViewHolder(viewHolder);
+        CardViewHolder cardsViewHolder = (CardViewHolder) viewHolder;
+        List<View> addedViews = cardsViewHolder.getAddedViews();
         mCard = viewHolder.itemView;
         mLinearLayout = (LinearLayout) mCard.findViewById(R.id.card_view);
         mTitleView = (TextView) mCard.findViewById(R.id.card_title);
@@ -72,9 +74,13 @@ public class CafeteriaMenuCard extends Card {
         mDateView.setVisibility(View.VISIBLE);
         mDateView.setText(SimpleDateFormat.getDateInstance().format(mDate));
 
-        //TODO remove old textviews
+        //Remove additional views
+        for (View view : addedViews) {
+            mLinearLayout.removeView(view);
+        }
+
         // Show cafeteria menu
-        showMenu(mLinearLayout, mCafeteriaId, mDateStr, false);
+        cardsViewHolder.setAddedViews(showMenu(mLinearLayout, mCafeteriaId, mDateStr, false));
     }
 
     /**

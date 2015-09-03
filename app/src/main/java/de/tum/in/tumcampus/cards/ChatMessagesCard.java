@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.ChatActivity;
@@ -57,14 +58,21 @@ public class ChatMessagesCard extends Card {
     @Override
     public void updateViewHolder(RecyclerView.ViewHolder viewHolder) {
         mCard = viewHolder.itemView;
+        CardViewHolder cardsViewHolder = (CardViewHolder) viewHolder;
+        List<View> addedViews = cardsViewHolder.getAddedViews();
+
         mLinearLayout = (LinearLayout) mCard.findViewById(R.id.card_view);
         mTitleView = (TextView) mCard.findViewById(R.id.card_title);
         mTitleView.setText(getTitle());
 
-        super.removeAllAdditionalTextViews();
+        //Remove additional views
+        for (View view : addedViews) {
+            mLinearLayout.removeView(view);
+        }
+
         // Show cafeteria menu
         for(ChatMessage message : mUnread) {
-            addTextView(message.getMember().getDisplayName()+": "+message.getText());
+            addedViews.add(addTextView(message.getMember().getDisplayName() + ": " + message.getText()));
         }
     }
 

@@ -40,7 +40,6 @@ public abstract class Card {
     View mCard;
     LinearLayout mLinearLayout;
     TextView mTitleView;
-    private List<TextView> additionalTextViews = new ArrayList<>();
     private String mSettings;
     // Settings for showing this card on start page or as notification
     // Default values set for restore card, no internet card, etc.
@@ -118,18 +117,8 @@ public abstract class Card {
         int padding = (int) mContext.getResources().getDimension(R.dimen.card_text_padding);
         textview.setPadding(padding, 0, padding, 0);
 
-        additionalTextViews.add(textview);
         mLinearLayout.addView(textview);
         return textview;
-    }
-
-    /**
-     * Removes all text views from the main card layout, that have been added with addTextView(text)
-     */
-    protected void removeAllAdditionalTextViews() {
-        for (View textView : additionalTextViews) {
-            mLinearLayout.removeView(textView);
-        }
     }
 
     /**
@@ -322,6 +311,7 @@ public abstract class Card {
 
     public static class CardViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener, PopupMenu.OnMenuItemClickListener {
         private Card current;
+        private List<View> addedViews = new ArrayList<>();
 
         public CardViewHolder(View itemView) {
             super(itemView);
@@ -335,6 +325,14 @@ public abstract class Card {
 
         public void setCurrentCard(Card current) {
             this.current = current;
+        }
+
+        public List<View> getAddedViews() {
+            return addedViews;
+        }
+
+        public void setAddedViews(List<View> addedViews) {
+            this.addedViews = addedViews;
         }
 
         @Override
