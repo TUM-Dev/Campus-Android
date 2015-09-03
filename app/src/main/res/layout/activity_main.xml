@@ -6,8 +6,8 @@
     tools:context=".StartActivity">
 
     <!-- The main content view -->
-    <RelativeLayout
-        android:id="@+id/content_frame"
+    <android.support.design.widget.CoordinatorLayout
+        android:id="@+id/snackbarPosition"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -21,20 +21,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="#EEEEEE"
-                android:descendantFocusability="blocksDescendants"
-                android:dividerHeight="0dip"
-                android:listSelector="@android:color/transparent"
                 android:scrollbars="none" />
 
         </android.support.v4.widget.SwipeRefreshLayout>
 
-        <android.support.design.widget.CoordinatorLayout
-            android:id="@+id/snackbarPosition"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"></android.support.design.widget.CoordinatorLayout>
-    </RelativeLayout>
+    </android.support.design.widget.CoordinatorLayout>
 
     <!-- The navigation drawer -->
     <ListView

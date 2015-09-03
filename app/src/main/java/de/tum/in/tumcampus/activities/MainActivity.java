@@ -74,7 +74,7 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
 
         // Setup card RecyclerView
         mCardsView = (RecyclerView) findViewById(R.id.cards_view);
-        registerForContextMenu(mCardsView); //TODO
+        registerForContextMenu(mCardsView);
 
         final LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -237,8 +237,9 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
                 super.onPostExecute(result);
                 if (mAdapter == null)
                     initAdapter();
-                else
-                    mAdapter.notifyDataSetChanged();
+                else {
+                    mAdapter.notifyItemRangeChanged(0, mAdapter.getItemCount());
+                }
 
                 mSwipeRefreshlayout.setRefreshing(false);
                 if (!registered && !NetUtils.isConnected(MainActivity.this)) {
@@ -256,6 +257,7 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
     public void restoreCards(View view) {
         CardManager.restoreCards();
         refreshCards();
+        mCardsView.scrollToPosition(0);
     }
 
     /**
@@ -292,17 +294,27 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
             Card.CardViewHolder cardViewHolder = (Card.CardViewHolder) viewHolder;
             final Card card = cardViewHolder.getCurrentCard();
             final int lastPos = mAdapter.remove(card);
-
             final View coordinatorLayoutView = findViewById(R.id.snackbarPosition);
 
-            Snackbar
-                    .make(coordinatorLayoutView, R.string.card_dismissed, Snackbar.LENGTH_LONG)
+            Snackbar.make(coordinatorLayoutView, R.string.card_dismissed, Snackbar.LENGTH_LONG)
                     .setAction(R.string.undo, new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             mAdapter.insert(lastPos, card);
+                            mCardsView.scrollToPosition(lastPos);
                         }
-                    })
+
+                    }).setCallback(new Snackbar.Callback() {
+                @Override
+                public void onDismissed(Snackbar snackbar, int event) {
+                    super.onDismissed(snackbar, event);
+                    if (event != Snackbar.Callback.DISMISS_EVENT_ACTION) {
+                        //DISMISS_EVENT_ACTION means, the snackbar was dismissed via the undo button
+                        //and therefore, we didn't really dismiss the card
+                        card.discardCard();
+                    }
+                }
+            })
                     .show();
         }
     }
