@@ -6,10 +6,11 @@
     tools:context=".StartActivity">
 
     <!-- The main content view -->
-    <android.support.design.widget.CoordinatorLayout
+    <LinearLayout
         android:id="@+id/snackbarPosition"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <!-- The toolbar aka SupportActionBar -->
         <include layout="@layout/toolbar" />
@@ -28,7 +29,7 @@
 
         </android.support.v4.widget.SwipeRefreshLayout>
 
-    </android.support.design.widget.CoordinatorLayout>
+    </LinearLayout>
 
     <!-- The navigation drawer -->
     <include layout="@layout/navigation_drawer" />
