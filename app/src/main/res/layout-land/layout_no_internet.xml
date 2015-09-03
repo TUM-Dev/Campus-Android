@@ -8,7 +8,7 @@
     android:onClick="onClick">
 
     <ImageView
-        android:id="@+id/imageView1"
+        android:id="@+id/no_internet_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
@@ -22,8 +22,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_toRightOf="@+id/imageView1"
-        android:layout_toEndOf="@+id/imageView1"
+        android:layout_toRightOf="@+id/no_internet_image"
+        android:layout_toEndOf="@+id/no_internet_image"
         android:gravity="center"
         android:text="@string/no_internet_connection"
         android:textAppearance="?android:attr/textAppearanceSmall"
@@ -34,7 +34,7 @@
         style="@style/FlatButton"
         android:onClick="onEnableWifi"
         android:text="@string/enable_wifi"
-        android:layout_below="@+id/imageView1"
+        android:layout_below="@+id/no_internet_image"
         android:layout_alignRight="@+id/textView"
         android:layout_alignEnd="@+id/textView" />
 
