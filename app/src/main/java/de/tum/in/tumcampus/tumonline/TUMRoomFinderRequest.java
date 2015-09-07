@@ -42,23 +42,24 @@ public class TUMRoomFinderRequest {
     public static final String KEY_ROOM_TITLE = "roomTitle";
     public static final String KEY_BUILDING_ID = "buildingId";
     /**
-     * asynchronous task for interactive fetch
-     */
-    private AsyncTask<String, Void, ArrayList<HashMap<String, String>>> backgroundTask = null;
-
-    /**
-     * method to call
-     */
-    private String method = null;
-    /**
      * a list/map for the needed parameters
      */
     private final Map<String, String> parameters;
     private final String SERVICE_BASE_URL = "http://vmbaumgarten3.informatik.tu-muenchen.de/";
+    /**
+     * asynchronous task for interactive fetch
+     */
+    private AsyncTask<String, Void, ArrayList<HashMap<String, String>>> backgroundTask = null;
+    /**
+     * method to call
+     */
+    private String method = null;
+    private NetUtils mNetUtils;
 
-    public TUMRoomFinderRequest() {
+    public TUMRoomFinderRequest(Context context) {
         parameters = new HashMap<>();
         method = "search";
+        mNetUtils = new NetUtils(context);
     }
 
     public void cancelRequest(boolean mayInterruptIfRunning) {
@@ -86,7 +87,7 @@ public class TUMRoomFinderRequest {
         try {
 
             XMLParser parser = new XMLParser();
-            String xml = parser.getXmlFromUrl(url); // getting XML from URL
+            String xml = mNetUtils.downloadStringHttp(url); // getting XML from URL
             if(xml.contains("<error>")) {
                 Utils.logv("Room location not found!");
                 setParameter("id", roomId.substring(roomId.indexOf('@') + 1));
@@ -95,7 +96,7 @@ public class TUMRoomFinderRequest {
                 Utils.log("fetching URL " + url);
 
                 parser = new XMLParser();
-                xml = parser.getXmlFromUrl(url); // getting XML from URL
+                xml = mNetUtils.downloadStringHttp(url); // getting XML from URL
             }
 
             Document doc = parser.getDomElement(xml); // getting DOM element
@@ -134,7 +135,7 @@ public class TUMRoomFinderRequest {
         try {
 
             XMLParser parser = new XMLParser();
-            String xml = parser.getXmlFromUrl(url); // getting XML from URL
+            String xml = mNetUtils.downloadStringHttp(url); // getting XML from URL
             Document doc = parser.getDomElement(xml); // getting DOM element
 
             NodeList roomList = doc.getElementsByTagName("room");
@@ -179,7 +180,7 @@ public class TUMRoomFinderRequest {
         try {
 
             XMLParser parser = new XMLParser();
-            String xml = parser.getXmlFromUrl(url); // getting XML from URL
+            String xml = mNetUtils.downloadStringHttp(url); // getting XML from URL
             Document doc = parser.getDomElement(xml); // getting DOM element
 
             NodeList defaultMapIdList = doc.getElementsByTagName("mapId");
@@ -207,7 +208,7 @@ public class TUMRoomFinderRequest {
         try {
 
             XMLParser parser = new XMLParser();
-            String xml = parser.getXmlFromUrl(url); // getting XML from URL
+            String xml = mNetUtils.downloadStringHttp(url); // getting XML from URL
             Document doc = parser.getDomElement(xml); // getting DOM element
 
             NodeList roomList = doc.getElementsByTagName("map");// building.getChildNodes();
@@ -249,7 +250,7 @@ public class TUMRoomFinderRequest {
         try {
 
             XMLParser parser = new XMLParser();
-            String xml = parser.getXmlFromUrl(url); // getting XML from URL
+            String xml = mNetUtils.downloadStringHttp(url); // getting XML from URL
             Document doc = parser.getDomElement(xml); // getting DOM element
 
             NodeList scheduleNodes = doc.getElementsByTagName("event");

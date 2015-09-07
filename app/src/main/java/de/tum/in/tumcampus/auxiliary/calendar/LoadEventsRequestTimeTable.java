@@ -68,7 +68,7 @@ public class LoadEventsRequestTimeTable implements EventLoader.LoadRequestClone 
         String start = Utils.getDateTimeString(new Date(date.toMillis(false)));
         date.setJulianDay(startDay+days-1);
         String end = Utils.getDateTimeString(new Date(date.toMillis(false)));
-        TUMRoomFinderRequest request = new TUMRoomFinderRequest();
+        TUMRoomFinderRequest request = new TUMRoomFinderRequest(context);
         request.fetchRoomSchedule(mRoomApi, start, end, events);
     }
 }

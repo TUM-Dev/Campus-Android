@@ -70,7 +70,7 @@ public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<Vo
 
         location = getIntent().getExtras().getString(EXTRA_LOCATION);
         roomInfo = getIntent().getExtras().getBundle(EXTRA_ROOM_INFO);
-        request = new TUMRoomFinderRequest();
+        request = new TUMRoomFinderRequest(this);
 
         startLoading();
     }
@@ -191,7 +191,7 @@ public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<Vo
 
     @Override
     protected Bitmap onLoadInBackground(Void... arg) {
-        TUMRoomFinderRequest requestHandler = new TUMRoomFinderRequest();
+        TUMRoomFinderRequest requestHandler = new TUMRoomFinderRequest(this);
 
         // First search for roomId and mapId
         if (location != null && !location.isEmpty() && roomInfo == null) {
@@ -216,6 +216,9 @@ public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<Vo
         String url = null;
         try {
             String roomId = roomInfo.getString(TUMRoomFinderRequest.KEY_ARCHITECT_NUMBER);
+            if (roomId == null) {
+                return null;
+            }
             if (mapId.equals("10")) {
                 url = "http://vmbaumgarten3.informatik.tu-muenchen.de/roommaps/building/defaultMap?id="
                         + URLEncoder.encode(roomId.substring(roomId.indexOf('@') + 1), "UTF-8");
@@ -247,8 +250,10 @@ public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<Vo
         infoLoaded = true;
         supportInvalidateOptionsMenu();
         mImage.setImageBitmap(result);
-        getSupportActionBar().setTitle(roomInfo.getString(TUMRoomFinderRequest.KEY_ROOM_TITLE));
-        getSupportActionBar().setSubtitle(roomInfo.getString(TUMRoomFinderRequest.KEY_BUILDING_TITLE));
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(roomInfo.getString(TUMRoomFinderRequest.KEY_ROOM_TITLE));
+            getSupportActionBar().setSubtitle(roomInfo.getString(TUMRoomFinderRequest.KEY_BUILDING_TITLE));
+        }
         showLoadingEnded();
         new Thread(new Runnable() {
             @Override
