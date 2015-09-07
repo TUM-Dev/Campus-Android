@@ -50,7 +50,6 @@ dependencies {
     }
     compile 'com.squareup.okhttp:okhttp-urlconnection:2.5.0'
     compile 'com.squareup.okhttp:okhttp:2.5.0'
-    compile project(":libraries:emojicon")
     compile 'com.github.machinarius:preferencefragment:0.1.2'
     compile 'commons-io:commons-io:2.4'
 }

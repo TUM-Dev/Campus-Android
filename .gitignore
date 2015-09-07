@@ -3,6 +3,5 @@
 /.idea/
 .DS_Store
 /build
-/libraries/emojicon/build
 app/app-release.apk
 *.iml

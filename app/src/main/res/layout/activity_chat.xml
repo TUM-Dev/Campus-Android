@@ -27,32 +27,15 @@
             android:layout_alignParentBottom="true"
             android:background="#FFFFFF">
 
-            <ImageButton
-                android:id="@+id/btnEmoji"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_alignBottom="@+id/etMessage"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:layout_gravity="center_vertical"
-                android:background="?attr/selectableItemBackground"
-                android:paddingEnd="5dp"
-                android:paddingLeft="8dp"
-                android:paddingRight="5dp"
-                android:paddingStart="8dp"
-                android:src="@drawable/ic_emoticon" />
-
-            <github.ankushsachdeva.emojicon.EmojiconEditText
+            <EditText
                 android:id="@+id/etMessage"
-                android:layout_width="wrap_content"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_marginBottom="3dp"
                 android:layout_marginTop="3dp"
-                android:layout_toEndOf="@+id/btnEmoji"
+                android:layout_marginLeft="10dp"
                 android:layout_toLeftOf="@+id/btnSend"
-                android:layout_toRightOf="@+id/btnEmoji"
                 android:layout_toStartOf="@+id/btnSend"
                 android:hint="@string/send" />
 
