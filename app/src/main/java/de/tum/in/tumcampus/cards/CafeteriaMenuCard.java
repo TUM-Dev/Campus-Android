@@ -8,6 +8,8 @@ import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v4.app.NotificationCompat;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -42,6 +44,11 @@ public class CafeteriaMenuCard extends Card {
         super(context, "card_cafeteria");
     }
 
+    public static Card.CardViewHolder inflateViewHolder(ViewGroup parent) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_item, parent, false);
+        return new Card.CardViewHolder(view);
+    }
+
     @Override
     public int getTyp() {
         return CARD_CAFETERIA;
@@ -53,10 +60,11 @@ public class CafeteriaMenuCard extends Card {
     }
 
     @Override
-    public View getCardView(Context context, ViewGroup parent) {
-        super.getCardView(context, parent);
-
-        mCard = mInflater.inflate(R.layout.card_item, parent, false);
+    public void updateViewHolder(RecyclerView.ViewHolder viewHolder) {
+        super.updateViewHolder(viewHolder);
+        CardViewHolder cardsViewHolder = (CardViewHolder) viewHolder;
+        List<View> addedViews = cardsViewHolder.getAddedViews();
+        mCard = viewHolder.itemView;
         mLinearLayout = (LinearLayout) mCard.findViewById(R.id.card_view);
         mTitleView = (TextView) mCard.findViewById(R.id.card_title);
         mTitleView.setText(getTitle());
@@ -66,18 +74,23 @@ public class CafeteriaMenuCard extends Card {
         mDateView.setVisibility(View.VISIBLE);
         mDateView.setText(SimpleDateFormat.getDateInstance().format(mDate));
 
+        //Remove additional views
+        for (View view : addedViews) {
+            mLinearLayout.removeView(view);
+        }
+
         // Show cafeteria menu
-        showMenu(mLinearLayout, mCafeteriaId, mDateStr, false);
-        return mCard;
+        cardsViewHolder.setAddedViews(showMenu(mLinearLayout, mCafeteriaId, mDateStr, false));
     }
 
     /**
      * Sets the information needed to build the card
-     * @param id Cafeteria id
-     * @param name Cafeteria name
+     *
+     * @param id      Cafeteria id
+     * @param name    Cafeteria name
      * @param dateStr Date of the menu in yyyy-mm-dd format
-     * @param date Date of the menu
-     * @param menus List of cafeteria menus
+     * @param date    Date of the menu
+     * @param menus   List of cafeteria menus
      */
     public void setCardMenus(int id, String name, String dateStr, Date date, List<CafeteriaMenu> menus) {
         mCafeteriaId = id;
@@ -119,21 +132,21 @@ public class CafeteriaMenuCard extends Card {
 
             NotificationCompat.Builder pageNotification =
                     new NotificationCompat.Builder(mContext)
-                            .setContentTitle(menu.typeLong.replaceAll("[0-9]","").trim());
+                            .setContentTitle(menu.typeLong.replaceAll("[0-9]", "").trim());
 
             String content = menu.name;
             if (rolePrices.containsKey(menu.typeLong))
-                content +=  "\n"+rolePrices.get(menu.typeLong) + " €";
+                content += "\n" + rolePrices.get(menu.typeLong) + " €";
 
             content = content.replaceAll("\\([^\\)]+\\)", "").trim();
             pageNotification.setContentText(content);
-            if(menu.typeShort.equals("tg")) {
-                if(!allContent.isEmpty())
+            if (menu.typeShort.equals("tg")) {
+                if (!allContent.isEmpty())
                     allContent += "\n";
                 allContent += content;
             }
-            if(firstContent.isEmpty()) {
-                firstContent =  menu.name.replaceAll("\\([^\\)]+\\)", "").trim()+"...";
+            if (firstContent.isEmpty()) {
+                firstContent = menu.name.replaceAll("\\([^\\)]+\\)", "").trim() + "...";
             } else {
                 morePageNotification.addPage(pageNotification.build());
             }

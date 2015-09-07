@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -23,15 +25,19 @@ public class EduroamCard extends Card {
         super(context, "card_eduroam", false, true);
     }
 
+    public static Card.CardViewHolder inflateViewHolder(ViewGroup parent) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_eduroam, parent, false);
+        return new Card.CardViewHolder(view);
+    }
+
     @Override
     public int getTyp() {
         return CardManager.CARD_EDUROAM;
     }
 
     @Override
-    public View getCardView(Context context, ViewGroup parent) {
-        super.getCardView(context, parent);
-        return mInflater.inflate(R.layout.card_eduroam, parent, false);
+    public void updateViewHolder(RecyclerView.ViewHolder viewHolder) {
+
     }
 
     @Override

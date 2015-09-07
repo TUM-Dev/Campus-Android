@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -13,6 +15,7 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.ChatActivity;
@@ -37,6 +40,11 @@ public class ChatMessagesCard extends Card {
         super(context, "card_chat");
     }
 
+    public static Card.CardViewHolder inflateViewHolder(ViewGroup parent){
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_item, parent, false);
+        return new Card.CardViewHolder(view);
+    }
+
     @Override
     public int getTyp() {
         return CARD_CHAT;
@@ -48,19 +56,24 @@ public class ChatMessagesCard extends Card {
     }
 
     @Override
-    public View getCardView(Context context, ViewGroup parent) {
-        super.getCardView(context, parent);
+    public void updateViewHolder(RecyclerView.ViewHolder viewHolder) {
+        mCard = viewHolder.itemView;
+        CardViewHolder cardsViewHolder = (CardViewHolder) viewHolder;
+        List<View> addedViews = cardsViewHolder.getAddedViews();
 
-        mCard = mInflater.inflate(R.layout.card_item, parent, false);
         mLinearLayout = (LinearLayout) mCard.findViewById(R.id.card_view);
         mTitleView = (TextView) mCard.findViewById(R.id.card_title);
         mTitleView.setText(getTitle());
 
+        //Remove additional views
+        for (View view : addedViews) {
+            mLinearLayout.removeView(view);
+        }
+
         // Show cafeteria menu
         for(ChatMessage message : mUnread) {
-            addTextView(message.getMember().getDisplayName()+": "+message.getText());
+            addedViews.add(addTextView(message.getMember().getDisplayName() + ": " + message.getText()));
         }
-        return mCard;
     }
 
     /**

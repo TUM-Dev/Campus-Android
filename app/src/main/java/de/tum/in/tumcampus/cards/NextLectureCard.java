@@ -9,7 +9,9 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v4.app.NotificationCompat;
+import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -31,6 +33,12 @@ import de.tum.in.tumcampus.models.managers.CardManager;
 public class NextLectureCard extends Card {
 
     private static final String NEXT_LECTURE_DATE = "next_date";
+    private final static int[] ids = {
+            R.id.lecture_1,
+            R.id.lecture_2,
+            R.id.lecture_3,
+            R.id.lecture_4
+    };
     private TextView mLocation;
     private ArrayList<CalendarItem> lectures = new ArrayList<>();
     private TextView mTimeView;
@@ -39,6 +47,11 @@ public class NextLectureCard extends Card {
 
     public NextLectureCard(Context context) {
         super(context, "card_next_lecture");
+    }
+
+    public static Card.CardViewHolder inflateViewHolder(ViewGroup parent) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_next_lecture_item, parent, false);
+        return new Card.CardViewHolder(view);
     }
 
     @Override
@@ -51,18 +64,10 @@ public class NextLectureCard extends Card {
         return lectures.get(mSelected).title;
     }
 
-    private final static int[] ids = {
-            R.id.lecture_1,
-            R.id.lecture_2,
-            R.id.lecture_3,
-            R.id.lecture_4
-    };
-
     @Override
-    public View getCardView(Context context, ViewGroup parent) {
-        super.getCardView(context, parent);
-
-        mCard = mInflater.inflate(R.layout.card_next_lecture_item, parent, false);
+    public void updateViewHolder(RecyclerView.ViewHolder viewHolder) {
+        super.updateViewHolder(viewHolder);
+        mCard = viewHolder.itemView;
         mLinearLayout = (LinearLayout) mCard.findViewById(R.id.card_view);
         mTitleView = (TextView) mCard.findViewById(R.id.card_title);
         mTimeView = (TextView) mCard.findViewById(R.id.card_time);
@@ -88,8 +93,6 @@ public class NextLectureCard extends Card {
             View text = mCard.findViewById(ids[i]);
             text.setVisibility(View.GONE);
         }
-
-        return mCard;
     }
 
     void showItem(int sel) {

@@ -2,8 +2,10 @@ package de.tum.in.tumcampus.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 
+import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.ImplicitCounter;
 import de.tum.in.tumcampus.fragments.SettingsFragment;
@@ -11,14 +13,16 @@ import de.tum.in.tumcampus.fragments.SettingsFragment;
 /**
  * Provides the preferences, encapsulated into an own activity.
  */
-@SuppressWarnings("deprecation")
-public class UserPreferencesActivity extends ActionBarActivity {
+public class UserPreferencesActivity extends AppCompatActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_user_preferences);
         ImplicitCounter.Counter(this);
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.main_toolbar);
+        setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
@@ -33,6 +37,6 @@ public class UserPreferencesActivity extends ActionBarActivity {
             f.setArguments(args);
         }
 
-        getSupportFragmentManager().beginTransaction().replace(android.R.id.content, f).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.settings_frame, f).commit();
     }
 }

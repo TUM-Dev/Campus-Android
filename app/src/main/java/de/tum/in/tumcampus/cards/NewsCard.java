@@ -8,7 +8,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
-import android.view.View;
+import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
 import de.tum.in.tumcampus.R;
@@ -26,15 +26,20 @@ public class NewsCard extends Card {
     private Cursor mCursor;
     private int mPosition;
     private NetUtils net;
+    private boolean isFilm = false;
 
     public NewsCard(Context context) {
         super(context, "card_news", false, false);
         net = new NetUtils(context);
     }
 
+    public static Card.CardViewHolder inflateViewHolder(ViewGroup parent, int type) {
+        return NewsAdapter.newNewsView(parent, type == CardManager.CARD_NEWS_FILM);
+    }
+
     @Override
     public int getTyp() {
-        return CardManager.CARD_NEWS;
+        return isFilm ? CardManager.CARD_NEWS_FILM : CardManager.CARD_NEWS;
     }
 
     @Override
@@ -55,49 +60,48 @@ public class NewsCard extends Card {
     }
 
     @Override
-    public View getCardView(Context context, ViewGroup parent) {
-        super.getCardView(context, parent);
-
-        mCursor.moveToPosition(mPosition);
-        View card = NewsAdapter.newNewsView(mInflater, mCursor, parent);
-        NewsAdapter.bindNewsView(net, card, mCursor);
-        return card;
+    public void updateViewHolder(RecyclerView.ViewHolder viewHolder) {
+        super.updateViewHolder(viewHolder);
+        NewsAdapter.bindNewsView(net, viewHolder, mCursor);
     }
 
     /**
      * Sets the information needed to show news
-     * @param c Cursor
+     *
+     * @param c   Cursor
      * @param pos Position inside the cursor
      */
     public void setNews(Cursor c, int pos) {
         mCursor = c;
         mPosition = pos;
+        mCursor.moveToPosition(mPosition);
+        this.isFilm = mCursor.getInt(1) == 2;
     }
 
     @Override
     protected void discard(SharedPreferences.Editor editor) {
         NewsManager newsManager = new NewsManager(mContext);
         mCursor.moveToPosition(mPosition);
-        newsManager.setDismissed(mCursor.getString(0), mCursor.getInt(9)|1);
+        newsManager.setDismissed(mCursor.getString(0), mCursor.getInt(9) | 1);
     }
 
     @Override
     protected void discardNotification(SharedPreferences.Editor editor) {
         NewsManager newsManager = new NewsManager(mContext);
         mCursor.moveToPosition(mPosition);
-        newsManager.setDismissed(mCursor.getString(0), mCursor.getInt(9)|2);
+        newsManager.setDismissed(mCursor.getString(0), mCursor.getInt(9) | 2);
     }
 
     @Override
     boolean shouldShow(SharedPreferences prefs) {
         mCursor.moveToPosition(mPosition);
-        return (mCursor.getInt(9)&1) == 0;
+        return (mCursor.getInt(9) & 1) == 0;
     }
 
     @Override
     boolean shouldShowNotification(SharedPreferences prefs) {
         mCursor.moveToPosition(mPosition);
-        return (mCursor.getInt(9)&2) == 0;
+        return (mCursor.getInt(9) & 2) == 0;
     }
 
     @Override

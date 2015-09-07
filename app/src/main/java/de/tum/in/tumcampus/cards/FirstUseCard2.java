@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -19,16 +20,14 @@ public class FirstUseCard2 extends Card {
         super(context);
     }
 
-    @Override
-    public int getTyp() {
-        return CardManager.CARD_FIRST_USE_2;
+    public static Card.CardViewHolder inflateViewHolder(ViewGroup parent) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_first_use2, parent, false);
+        return new Card.CardViewHolder(view);
     }
 
     @Override
-    public View getCardView(Context context, ViewGroup parent) {
-        super.getCardView(context, parent);
-
-        return mInflater.inflate(R.layout.card_first_use2, parent, false);
+    public int getTyp() {
+        return CardManager.CARD_FIRST_USE_2;
     }
 
     @Override
