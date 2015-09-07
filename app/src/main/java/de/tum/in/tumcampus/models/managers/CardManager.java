@@ -36,14 +36,14 @@ public class CardManager {
     public static final int CARD_NO_INTERNET = 7;
     public static final int CARD_MVV = 8;
     public static final int CARD_NEWS = 9;
-    public static final int CARD_EDUROAM = 10;
-    public static final int CARD_CHAT = 11;
-    public static final int CARD_SUPPORT = 12;
-
+    public static final int CARD_NEWS_FILM = 10;
+    public static final int CARD_EDUROAM = 11;
+    public static final int CARD_CHAT = 12;
+    public static final int CARD_SUPPORT = 13;
+    public static boolean shouldRefresh = false;
     private static List<Card> cards;
     private static ArrayList<Card> newCards;
     private static Context mContext;
-    public static boolean shouldRefresh = false;
 
     /**
      * Adds the specified card to the card manager
@@ -156,6 +156,18 @@ public class CardManager {
      */
     public static Card remove(int position) {
         return cards.remove(position);
+    }
+
+    /**
+     * Removes card from the list
+     *
+     * @param card The card to delete
+     * @return the last index of the card
+     */
+    public static int remove(Card card) {
+        int index = cards.indexOf(card);
+        cards.remove(card);
+        return index;
     }
 
     /**

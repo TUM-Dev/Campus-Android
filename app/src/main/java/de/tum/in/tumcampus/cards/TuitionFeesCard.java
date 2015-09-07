@@ -8,6 +8,8 @@ import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v4.app.NotificationCompat;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -15,6 +17,7 @@ import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.TuitionFeesActivity;
@@ -35,6 +38,11 @@ public class TuitionFeesCard extends Card {
         super(context, "card_tuition_fee");
     }
 
+    public static Card.CardViewHolder inflateViewHolder(ViewGroup parent) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_item, parent, false);
+        return new Card.CardViewHolder(view);
+    }
+
     @Override
     public int getTyp() {
         return CardManager.CARD_TUITION_FEE;
@@ -46,23 +54,29 @@ public class TuitionFeesCard extends Card {
     }
 
     @Override
-    public View getCardView(Context context, ViewGroup parent) {
-        super.getCardView(context, parent);
-        mCard = mInflater.inflate(R.layout.card_item, parent, false);
+    public void updateViewHolder(RecyclerView.ViewHolder viewHolder) {
+        super.updateViewHolder(viewHolder);
+        CardViewHolder cardsViewHolder = (CardViewHolder) viewHolder;
+        List<View> addedViews = cardsViewHolder.getAddedViews();
+
+        mCard = viewHolder.itemView;
         mLinearLayout = (LinearLayout) mCard.findViewById(R.id.card_view);
         mTitleView = (TextView) mCard.findViewById(R.id.card_title);
         mTitleView.setText(getTitle());
 
+        //Remove additional views
+        for (View view : addedViews) {
+            mLinearLayout.removeView(view);
+        }
+
         if (mTuition.getSoll().equals("0")) {
-            addTextView(String.format(mContext.getString(R.string.reregister_success), mTuition.getSemesterBez()));
+            addedViews.add(addTextView(String.format(mContext.getString(R.string.reregister_success), mTuition.getSemesterBez())));
         } else {
             Date d = Utils.getDate(mTuition.getFrist());
             String date = SimpleDateFormat.getDateInstance().format(d);
-            addTextView(String.format(mContext.getString(R.string.reregister_todo), date));
-            addTextView(context.getString(R.string.amount_dots)+" "+mTuition.getSoll() + "€");
+            addedViews.add(addTextView(String.format(mContext.getString(R.string.reregister_todo), date)));
+            addedViews.add(addTextView(viewHolder.itemView.getContext().getString(R.string.amount_dots) + " " + mTuition.getSoll() + "€"));
         }
-
-        return mCard;
     }
 
     @Override

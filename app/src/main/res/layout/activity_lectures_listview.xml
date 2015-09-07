@@ -16,7 +16,7 @@
             android:id="@+id/tvLectureName"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="tvLectureName"
+            android:text=""
             android:textColor="@color/text_light_blue"
             android:textSize="18sp"
             android:textStyle="bold"
@@ -27,13 +27,13 @@
             android:id="@+id/tvTypeSWSSemester"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="tvTypeSWSSemester" />
+            android:text="" />
 
         <TextView
             android:id="@+id/tvDozent"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="tvDozent"
+            android:text=""
             android:ellipsize="end"
             android:singleLine="true" />
     </LinearLayout>

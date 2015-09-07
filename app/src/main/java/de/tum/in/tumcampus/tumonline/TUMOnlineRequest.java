@@ -4,8 +4,6 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.util.EntityUtils;
 import org.simpleframework.xml.core.Persister;
 
 import java.io.UnsupportedEncodingException;
@@ -40,41 +38,32 @@ public class TUMOnlineRequest<T> {
      * String possibly contained in response from server
      */
     private static final String TOKEN_NOT_CONFIRMED = "Token ist nicht bestätigt oder ungültig!";
-
-    // force to fetch data and fill cache
-    private boolean fillCache = false;
-
-    // set to null, if not needed
-    private String accessToken = null;
-
-    /**
-     * asynchronous task for interactive fetch
-     */
-    private AsyncTask<Void, Void, T> backgroundTask = null;
-
     /**
      * NetUtils instance for fetching
      */
     private final NetUtils net;
-
-    /**
-     * method to call
-     */
-    private TUMOnlineConst<T> method = null;
-
-    /**
-     * a list/map for the needed parameters
-     */
-    private Map<String, String> parameters;
-
     private final CacheManager cacheManager;
     private final TumManager tumManager;
-
     /**
      * Context
      */
     private final Context mContext;
-
+    // force to fetch data and fill cache
+    private boolean fillCache = false;
+    // set to null, if not needed
+    private String accessToken = null;
+    /**
+     * asynchronous task for interactive fetch
+     */
+    private AsyncTask<Void, Void, T> backgroundTask = null;
+    /**
+     * method to call
+     */
+    private TUMOnlineConst<T> method = null;
+    /**
+     * a list/map for the needed parameters
+     */
+    private Map<String, String> parameters;
     private String lastError = "";
 
     private TUMOnlineRequest(Context context) {
@@ -138,13 +127,8 @@ public class TUMOnlineRequest<T> {
                     return null;
                 }
 
-                HttpEntity responseEntity = net.getHttpEntity(url);
-                if (responseEntity != null) {
-                    addToCache = true;
-
-                    // do something with the response
-                    result = EntityUtils.toString(responseEntity);
-                }
+                result = net.downloadStringHttp(url);
+                addToCache = true;
             } else {
                 Utils.logv("loaded from cache " + url);
             }
@@ -307,5 +291,9 @@ public class TUMOnlineRequest<T> {
 
     public void setForce(boolean force) {
         fillCache = force;
+    }
+
+    public String getLastError(){
+        return this.lastError;
     }
 }

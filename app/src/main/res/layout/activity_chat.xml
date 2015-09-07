@@ -1,69 +1,60 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/chat_layout"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <ListView
-        android:id="@+id/lvMessageHistory"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/relativeLayout"
-        android:dividerHeight="0px"
-        android:scrollbars="none"
-        android:stackFromBottom="true"
-        android:transcriptMode="normal" />
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <!-- The toolbar aka SupportActionBar -->
+    <include layout="@layout/toolbar" />
 
     <RelativeLayout
-        android:id="@+id/relativeLayout"
+        android:id="@+id/chat_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="#FFFFFF">
+        android:layout_height="match_parent">
 
-        <ImageButton
-            android:id="@+id/btnEmoji"
-            android:layout_width="wrap_content"
+        <ListView
+            android:id="@+id/lvMessageHistory"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_alignBottom="@+id/etMessage"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_gravity="center_vertical"
-            android:background="?attr/selectableItemBackground"
-            android:paddingEnd="5dp"
-            android:paddingLeft="8dp"
-            android:paddingRight="5dp"
-            android:paddingStart="8dp"
-            android:src="@drawable/ic_emoticon" />
+            android:layout_above="@+id/relativeLayout"
+            android:dividerHeight="0px"
+            android:scrollbars="none"
+            android:stackFromBottom="true"
+            android:transcriptMode="normal" />
 
-        <github.ankushsachdeva.emojicon.EmojiconEditText
-            android:id="@+id/etMessage"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:id="@+id/relativeLayout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_marginBottom="3dp"
-            android:layout_marginTop="3dp"
-            android:layout_toEndOf="@+id/btnEmoji"
-            android:layout_toLeftOf="@+id/btnSend"
-            android:layout_toRightOf="@+id/btnEmoji"
-            android:layout_toStartOf="@+id/btnSend"
-            android:hint="@string/send" />
+            android:layout_alignParentBottom="true"
+            android:background="#FFFFFF">
 
-        <ImageButton
-            android:id="@+id/btnSend"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignBottom="@+id/etMessage"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-            android:layout_gravity="center_vertical"
-            android:background="?attr/selectableItemBackground"
-            android:contentDescription="@string/send"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
-            android:src="@drawable/ic_action_send_now" />
+            <EditText
+                android:id="@+id/etMessage"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_marginBottom="3dp"
+                android:layout_marginTop="3dp"
+                android:layout_marginLeft="10dp"
+                android:layout_toLeftOf="@+id/btnSend"
+                android:layout_toStartOf="@+id/btnSend"
+                android:hint="@string/send" />
+
+            <ImageButton
+                android:id="@+id/btnSend"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignBottom="@+id/etMessage"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:layout_gravity="center_vertical"
+                android:background="?attr/selectableItemBackground"
+                android:contentDescription="@string/send"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:src="@drawable/ic_action_send_now" />
+
+        </RelativeLayout>
 
     </RelativeLayout>
-
-</RelativeLayout>
+</LinearLayout>

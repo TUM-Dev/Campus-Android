@@ -2,7 +2,6 @@ package de.tum.in.tumcampus.auxiliary;
 
 import android.content.Context;
 import android.text.format.Time;
-import android.util.Log;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -73,7 +72,7 @@ public class DateUtils {
             SimpleDateFormat formatter = new SimpleDateFormat(DateUtils.formatSQL, Locale.ENGLISH); // 2014-06-30 16:31:57
             return formatter.parse(datetime);
         } catch (ParseException e) {
-            Log.e(logTag, "Parsing SQL date failed");
+            Utils.log("Parsing SQL date failed");
         }
         return null;
     }
@@ -86,7 +85,7 @@ public class DateUtils {
             SimpleDateFormat formatter = new SimpleDateFormat(formatISO, Locale.ENGLISH);
             return formatter.parse(datetime);
         } catch (ParseException e) {
-            Log.e(logTag, "Parsing SQL date failed");
+            Utils.log("Parsing SQL date failed");
         }
         return null;
     }

@@ -6,10 +6,14 @@
     android:layout_height="match_parent"
     tools:context=".StartActivity">
     <!-- The main content view -->
-    <FrameLayout
+    <LinearLayout
         android:id="@+id/content_frame"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <!-- The toolbar aka SupportActionBar -->
+        <include layout="@layout/toolbar" />
 
         <LinearLayout
             android:layout_width="fill_parent"
@@ -36,15 +40,7 @@
 
         </LinearLayout>
 
-    </FrameLayout>
+    </LinearLayout>
     <!-- The navigation drawer -->
-    <ListView
-        android:id="@+id/left_drawer"
-        android:layout_width="280dp"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:background="#fff"
-        android:choiceMode="singleChoice"
-        android:divider="@android:color/transparent"
-        android:dividerHeight="0dp" />
+    <include layout="@layout/navigation_drawer" />
 </android.support.v4.widget.DrawerLayout>

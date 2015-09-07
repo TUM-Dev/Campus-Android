@@ -264,7 +264,6 @@
     <string name="card_tuition_fee_summary">Vous rappelle quand vous devez payer les frais de scolarité</string>
     <string name="card_news_summary">Propose une sélection de nouvelles avant</string>
     <string name="card_chat_summary">Vous avertit lorsque de nouveaux messages sont disponibles</string>
-    <string name="chat">Chat</string>
     <string name="open_card_settings">Personnaliser carte</string>
     <string name="always_hide_card">Toujours masquer carte</string>
     <string name="options">Options de</string>
@@ -276,7 +275,6 @@
     <string name="closed">Fermé</string>
 
     <!-- Eduroam card -->
-    <string name="eduroam">Eduroam</string>
     <string name="setup">Installer</string>
     <string name="setup_eduroam">Mise en place d\'eduroam</string>
     <string name="password">Mot de passe</string>
@@ -287,12 +285,10 @@
     <string name="pin_lock">Verrouillage de la carte</string>
     <string name="pin_lock_desc">Pour configurer l\'accès sans fil un verrouillage PIN est nécessaire.
          Si vous avez utilisé aucune serrure de code PIN, vous pouvez en créer un ici.
-    <a href="http://www.tum.de/index.php?id=1821&amp;tx_ttnews%5Btt_news%5D=31688">Plus d\'infos</a></string>
+    <a href="https://www.tum.de/index.php?id=1821&amp;tx_ttnews%5Btt_news%5D=31688">Plus d\'infos</a></string>
     <string name="enable_pin_lock">Activer code PIN de verrouillage</string>
     <string name="data_backup">Sauvegarde des données</string>
-    <string name="data_backup_desc">Pour des raisons de sécurité, la sauvegarde des données doit être désactivée pour permettre aux informations d\'identification de LRZ ne sont pas stockés en clair sur les serveurs de Google.
-         Ces \'Reset &amp; Backup sous\' > \'Sauvegarder mes données\' pour désactiver.
-    <a href="https://www.tum.de/nc/en/print/studies/studinews/issue-052013/show/article/31130//neste/1/">Plus d\'infos</a></string>
+    <string name="data_backup_desc">Pour des raisons de sécurité, la sauvegarde des données doit être désactivée pour permettre aux informations d\'identification de LRZ ne sont pas stockés en clair sur les serveurs de Google.\nCes \'Reset &amp; Backup sous\' > \'Sauvegarder mes données\' pour désactiver.\n</string>
     <string name="disable_data_backup">Désactiver la sauvegarde des données</string>
     <string name="eduroam_success">Eduroam est établie avec succès</string>
     <string name="pin_lock_rem"><b>Configuration a échoué!</b>\nAvez-vous mis en place un verrouillage PIN?</string>
@@ -332,4 +328,35 @@
     <string name="add_chat_room"> Nouveau Chat Room</string>
     <string name="auto_join_chat">Joignez-vous à de nouvelles salles de cours</string>
     <string name="update_notification_description">Une nouvelle version de l\'App Tum Campus a été libéré sous %s. Appuyez sur pour télécharger maintenant.</string>
+    <string name="default_campus">Par défaut campus</string>
+    <string name="edit">Modifier</string>
+    <string name="failure_uploading_public_key">Clé publique insuffisance ajout</string>
+    <string name="invalid_chat_room">Invalid salle de chat</string>
+    <string name="join_chat_room">Joignez-vous à un salon de clavardage</string>
+    <string name="joined">Ma</string>
+    <string name="key_not_activated">Vous avez pas activé votre clé!</string>
+    <string name="message_details">Info message</string>
+    <string name="mode_silent_mode">État pendant les cours</string>
+    <string name="new_chat_room">Nouvelle salle de chat</string>
+    <string name="new_chat_room_desc">Sélectionnez un nom pour votre salle de chat. Le nom ne peut pas être modifié par la suite!\n\n</string>
+    <string name="no_default_campus">Pas de campus par défaut</string>
+    <string name="no_private_key">Pas de clé privée trouvé! Réinitialiser les données de l\'application pour résoudre ce!</string>
+    <string name="no_rights_to_access_id">L\'identité ne pouvait être consulté. S\'il vous plaît vérifier les droits de votre jeton de TUMOnline!</string>
+    <string name="no_rights_to_access_lectures">Conférences ne pouvaient pas être accessibles. S\'il vous plaît vérifier les droits de votre jeton de TUMOnline!</string>
+    <string name="not_joined">Autre</string>
+    <string name="not_valid">Pas valide</string>
+    <string name="privacy_policy">Politique de confidentialité</string>
+    <string name="reply_label">Répondre</string>
+    <string name="semester_summer">Été terme</string>
+    <string name="semester_winter">Hiver terme</string>
+    <string name="set_auto_join_chat">Si vous vous abonnez pour une nouvelle conférence de l\'application va automatiquement vous ajouter à la salle de chat de la conférence.</string>
+    <string name="silent">Silencieux</string>
+    <string name="status_sending">Envoi</string>
+    <string name="status_sending_failed">Échec de l\'envoi</string>
+    <string name="support_us">Aidez-nous à passer le mot sur le Campus App! Aimez-nous sur Facebook, suggérer une idée excitante sur Github ou envoyer un mail nous dire ce que vous pensez!</string>
+    <string name="update">Mise à jour</string>
+    <string name="message_detail_text">&lt;b>Envoyeur&lt;/b>&lt;br> Nom: %1$s&lt;br> E-Mail: %2$s@mytum.de&lt;br>&lt;br> &lt;b>Message&lt;/b>&lt;br> Temps: %3$s&lt;br> Statut: %4$s&lt;br> Signature: %5$s</string>
+    <string name="tuition_fee_more">Information sur les contributions et les exonérations, prêts, aide à la formation et des bourses, aller à: <a href="https://www.tum.de/en/studies/fees-and-financial-aid/">Aide financière aux étudiants</a></string>
+    <string name="public_key_mail">Mail d\'activation envoyé à clé publique %s@mytum.de.\n\n<b>S\'il vous plaît activer maintenant!</b></string>
+    <string name="support_us_title">Soutenez-nous!</string>
 </resources>

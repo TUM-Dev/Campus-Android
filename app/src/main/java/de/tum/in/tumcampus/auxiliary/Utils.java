@@ -31,6 +31,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import de.tum.in.tumcampus.BuildConfig;
+
 /**
  * Class for common helper functions used by a lot of classes
  */
@@ -225,6 +227,9 @@ public class Utils {
      * @param message Information or Debug message
      */
     public static void log(String message) {
+        if (!BuildConfig.DEBUG) {
+            return;
+        }
         String s = Thread.currentThread().getStackTrace()[3].getClassName().replaceAll("[a-zA-Z0-9.]+\\.", "");
         Log.d(s, message);
     }
@@ -236,6 +241,9 @@ public class Utils {
      * @param message Information or Debug message
      */
     public static void logv(String message) {
+        if (!BuildConfig.DEBUG) {
+            return;
+        }
         String s = Thread.currentThread().getStackTrace()[3].getClassName().replaceAll("[a-zA-Z0-9.]+\\.", "");
         Log.v(s, message);
     }

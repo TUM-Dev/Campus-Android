@@ -7,10 +7,10 @@
     android:onClick="onClick">
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/no_internet_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/imageView1"
+        android:layout_below="@+id/no_internet_image"
         android:layout_centerHorizontal="true"
         android:gravity="center"
         android:text="@string/no_internet_connection"
@@ -18,7 +18,7 @@
         android:textSize="12sp" />
 
     <ImageView
-        android:id="@+id/imageView1"
+        android:id="@+id/no_internet_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
@@ -29,7 +29,7 @@
     <Button
         android:id="@+id/button_enable_wifi"
         style="@style/FlatButton"
-        android:layout_below="@+id/textView"
+        android:layout_below="@+id/no_internet_text"
         android:layout_centerHorizontal="true"
         android:onClick="onEnableWifi"
         android:text="@string/enable_wifi" />
@@ -40,10 +40,10 @@
         android:layout_height="wrap_content"
         android:visibility="invisible"
         android:layout_below="@+id/button_enable_wifi"
-        android:layout_alignRight="@+id/imageView1"
-        android:layout_alignEnd="@+id/imageView1"
-        android:layout_alignLeft="@+id/imageView1"
-        android:layout_alignStart="@+id/imageView1"
+        android:layout_alignRight="@+id/no_internet_image"
+        android:layout_alignEnd="@+id/no_internet_image"
+        android:layout_alignLeft="@+id/no_internet_image"
+        android:layout_alignStart="@+id/no_internet_image"
         android:layout_marginTop="5dp" />
 
 </RelativeLayout>

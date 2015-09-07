@@ -1,6 +1,7 @@
 package de.tum.in.tumcampus.cards;
 
 import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -16,15 +17,14 @@ public class RestoreCard extends Card {
         super(context);
     }
 
-    @Override
-    public int getTyp() {
-        return CardManager.CARD_RESTORE;
+    public static Card.CardViewHolder inflateViewHolder(ViewGroup parent) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_restore, parent, false);
+        return new Card.CardViewHolder(view);
     }
 
     @Override
-    public View getCardView(Context context, ViewGroup parent) {
-        super.getCardView(context, parent);
-        return mInflater.inflate(R.layout.card_restore, parent, false);
+    public int getTyp() {
+        return CardManager.CARD_RESTORE;
     }
 
     @Override

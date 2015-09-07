@@ -26,6 +26,37 @@ import de.tum.in.tumcampus.tumonline.TUMRoomFinderRequest;
  * the users current location, campus, next public transfer station and best cafeteria
  */
 public class LocationManager {
+    private static final double[][] campusLocations = {
+            {48.2648424, 11.6709511}, // Garching Forschungszentrum
+            {48.249432, 11.633905}, // Garching Hochbrück
+            {48.397990, 11.722727}, // Weihenstephan
+            {48.149436, 11.567635}, // Stammgelände
+            {48.110847, 11.4703001}, // Klinikum Großhadern
+            {48.137539, 11.601119}, // Klinikum rechts der Isar
+            {48.155916, 11.583095}, // Leopoldstraße
+            {48.150244, 11.580665} // Geschwister Schollplatz/Adalbertstraße
+    };
+    private static final String[] campusShort = {
+            "G", // Garching Forschungszentrum
+            "H", // Garching Hochbrück
+            "W", // Weihenstephan
+            "C", // Stammgelände
+            "K", // Klinikum Großhadern
+            "I", // Klinikum rechts der Isar
+            "L", // Leopoldstraße
+            "S" // Geschwister Schollplatz/Adalbertstraße
+    };
+    private static final String[] defaultCampusStation = {
+            "Garching-Forschungszentrum",
+            "Garching-Hochbrück",
+            "Weihenstephan",
+            "Theresienstraße",
+            "Klinikum Großhadern",
+            "Max-Weber-Platz",
+            "Giselastraße",
+            "Universität"
+    };
+    private static final String[] defaultCampusCafeteria = {"422", null, "423", "421", "414", null, "411", null};
     private final Context mContext;
 
     public LocationManager(Context c) {
@@ -269,50 +300,15 @@ public class LocationManager {
      * @return Location or null on failure
      */
     public Geo roomLocationStringToGeo(String loc) {
-        TUMRoomFinderRequest requestHandler = new TUMRoomFinderRequest();
-        if(loc.contains("("))
-           loc = loc.substring(0,loc.indexOf('(')).trim();
+        TUMRoomFinderRequest requestHandler = new TUMRoomFinderRequest(mContext);
+        if (loc.contains("("))
+            loc = loc.substring(0, loc.indexOf('(')).trim();
 
         ArrayList<HashMap<String, String>> request = requestHandler.fetchRooms(loc);
-        if(request.size()>0) {
+        if (request.size() > 0) {
             String room = request.get(0).get(TUMRoomFinderRequest.KEY_ARCHITECT_NUMBER);
             return requestHandler.fetchCoordinates(room);
         }
         return null;
     }
-
-    private static final double[][] campusLocations = {
-            {48.2648424, 11.6709511}, // Garching Forschungszentrum
-            {48.249432, 11.633905}, // Garching Hochbrück
-            {48.397990, 11.722727}, // Weihenstephan
-            {48.149436, 11.567635}, // Stammgelände
-            {48.110847, 11.4703001}, // Klinikum Großhadern
-            {48.137539, 11.601119}, // Klinikum rechts der Isar
-            {48.155916, 11.583095}, // Leopoldstraße
-            {48.150244, 11.580665} // Geschwister Schollplatz/Adalbertstraße
-    };
-
-    private static final String[] campusShort = {
-            "G", // Garching Forschungszentrum
-            "H", // Garching Hochbrück
-            "W", // Weihenstephan
-            "C", // Stammgelände
-            "K", // Klinikum Großhadern
-            "I", // Klinikum rechts der Isar
-            "L", // Leopoldstraße
-            "S" // Geschwister Schollplatz/Adalbertstraße
-    };
-
-    private static final String[] defaultCampusStation = {
-            "Garching-Forschungszentrum",
-            "Garching-Hochbrück",
-            "Weihenstephan",
-            "Theresienstraße",
-            "Klinikum Großhadern",
-            "Max-Weber-Platz",
-            "Giselastraße",
-            "Universität"
-    };
-
-    private static final String[] defaultCampusCafeteria = {"422", null, "423", "421", "414", null, "411", null};
 }

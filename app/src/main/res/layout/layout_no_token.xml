@@ -7,10 +7,9 @@
     android:onClick="onClick" >
 
     <TextView
-        android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/imageView1"
+        android:layout_below="@+id/no_token_image"
         android:layout_centerHorizontal="true"
         android:gravity="center"
         android:text="@string/error_no_token_setup"
@@ -18,7 +17,7 @@
         android:textSize="12sp" />
 
     <ImageView
-        android:id="@+id/imageView1"
+        android:id="@+id/no_token_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"

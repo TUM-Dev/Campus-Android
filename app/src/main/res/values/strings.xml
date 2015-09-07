@@ -305,7 +305,7 @@
         \n\nDatenschutzerklärung: https://tumcabe.in.tum.de/landing/privacy/
         \n\nChatbedingungen: https://tumcabe.in.tum.de/landing/chatterms/
         \n\nLizenz:
-        \nGNU GPL v3 - http://www.gnu.org/licenses/gpl.html oder
+        \nGNU GPL v3 - https://www.gnu.org/licenses/gpl.html oder
         \nNew BSD License - http://www.opensource.org/licenses/bsd-license.php
         \n\n\nDer Quellcode kann hier bezogen werden:
         \nhttps://github.com/TCA-Team/
@@ -325,19 +325,19 @@
     <string name="card_tuition_fee_summary">Reminds you if you have to pay your fees</string>
     <string name="card_news_summary">Advertises selected news</string>
     <string name="card_chat_summary">Notifies you if new messages are available</string>
-    <string name="chat">Chat</string>
+    <string name="chat" translatable="false">Chat</string>
     <string name="open_card_settings">Open card settings</string>
     <string name="always_hide_card">Always hide card</string>
     <string name="options">Options</string>
     <string name="phone_summary">To receive notifications on your phone you have to enable Wearable</string>
-    <string name="display">Anzeige</string>
+    <string name="display">Display</string>
 
     <string name="opens">Opens</string>
     <string name="closes">Closes</string>
     <string name="closed">Closed</string>
 
     <!-- Eduroam card -->
-    <string name="eduroam">Eduroam</string>
+    <string name="eduroam" translatable="false">Eduroam</string>
     <string name="setup">Setup</string>
     <string name="setup_eduroam">Setup eduroam</string>
     <string name="password">Password</string>
@@ -346,14 +346,10 @@
     <string name="eduroam_setup_question_desc">Click to start setting up eduroam</string>
     <string name="card_eduroam_summary">Allows you to easily set up eduroam wifi connection</string>
     <string name="pin_lock">PIN-Lock</string>
-    <string name="pin_lock_desc">To set up the wireless access a PIN lock is required.
-        If you don\'t already use PIN lock you can set it up here.
-    <a href="http://www.tum.de/index.php?id=1821&amp;tx_ttnews%5Btt_news%5D=31688">More Info</a></string>
+    <string name="pin_lock_desc">To set up the wireless access a PIN lock is required.\nIf you don\'t already use PIN lock you can set it up here.\n<a href="https://www.tum.de/index.php?id=1821&amp;tx_ttnews%5Btt_news%5D=31688">More Info</a></string>
     <string name="enable_pin_lock">Enable PIN-Lock</string>
     <string name="data_backup">Data-Backup</string>
-    <string name="data_backup_desc">For safety reasons, the data backup must be disabled to avoid that the LRZ credentials are stored unencrypted on the Google servers.
-         Under \'Backup &amp; restore\' > \'Back up my data\' to disable.
-    <a href="https://www.tum.de/nc/en/print/studies/studinews/issue-052013/show/article/31130//neste/1/">More Info</a></string>
+    <string name="data_backup_desc">For safety reasons, the data backup must be disabled to avoid that the LRZ credentials are stored unencrypted on the Google servers.\nUnder \'Backup &amp; restore\' > \'Back up my data\' to disable.\n<a href="https://www.tum.de/nc/en/print/studies/studinews/issue-052013/show/article/31130//neste/1/">More Info</a></string>
     <string name="disable_data_backup">Disable Data-Backup</string>
     <string name="eduroam_success">Eduroam successfully configured</string>
     <string name="pin_lock_rem"><b>Configuration failed!</b>\nDid you setup a PIN-Lock?</string>
@@ -372,7 +368,7 @@
     <string name="only_latest_article_summary">Shows only the latest article. Otherwise all articles of the selected sources are shown.</string>
     <string name="lecture_chat">Lecture chat</string>
     <string name="set_lecture_chat">Activate or deactivate <i>Lecture chat</i>. If activated, you will be able to join lecture chat rooms, where you and your colleges can discuss.</string>
-    <string name="open_chat_terms">chat terms</string>
+    <string name="open_chat_terms">Chat terms</string>
     <string name="accept_chat_terms">Accept chat terms</string>
     <string name="have_to_accept_terms">Terms must be accepted to use group chat!</string>
     <string name="activate_key">Please activate your public key first</string>
@@ -384,7 +380,7 @@
     <string name="room_timetable">Room timetable</string>
     <string name="newspread" translatable="false" translateable="false">Newspread</string>
     <string name="newspread_summary">Select which newspread you want to be shown. This are the slides on the info monitors in your faculty buildings.</string>
-    <string name="tuition_fee_more">Information on contributions and exemptions, loans, training assistance and scholarships, go to: <a href="http://www.tum.de/studium/studienfinanzierung/">Student Financial Aid</a></string>
+    <string name="tuition_fee_more">Information on contributions and exemptions, loans, training assistance and scholarships, go to: <a href="https://www.tum.de/en/studies/fees-and-financial-aid/">Student Financial Aid</a></string>
     <string name="no_rights_to_access_id">Identity could not be accessed. Please check the rights of your TUMOnline token!</string>
     <string name="vibration">Vibration</string>
     <string name="silent">Silent</string>
@@ -429,4 +425,7 @@ Signature: %5$s</string>
     <string name="just_now">Just now</string>
     <string name="yesterday">Yesterday</string>
     <string name="update_notification_description">A new version of the Tum Campus App has been released on %s. Tap to download now.</string>
+    <string name="support_us">Help us to spread the word about the Campus App! Like us on Facebook, suggest an exciting idea on Github or send a mail telling us what you think!</string>
+    <string name="support_email" translatable="false">tca-support.os.in@tum.de</string>
+    <string name="support_us_title">Support us!</string>
 </resources>

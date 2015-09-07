@@ -32,7 +32,7 @@
             android:textSize="12sp"
             android:textStyle="bold" />
 
-        <github.ankushsachdeva.emojicon.EmojiconTextView
+        <TextView
             android:id="@+id/tvMessage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

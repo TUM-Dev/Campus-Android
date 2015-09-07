@@ -4,7 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
-import android.util.Log;
+
 import de.tum.in.tumcampus.auxiliary.Utils;
 
 /**
@@ -62,7 +62,7 @@ public class SyncManager {
 			c.close();
 		} catch (SQLiteException e) {
 			if (e.getMessage().contains("no such table")) {
-				Log.w("SQULite", "Error selecting table syncs because it doesn't exist!");
+				Utils.log("Error selecting table syncs because it doesn't exist!");
 				return true;
 			}
 		}

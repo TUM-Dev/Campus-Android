@@ -8,7 +8,9 @@ import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v4.app.NotificationCompat;
+import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -35,6 +37,11 @@ public class MVVCard extends Card {
         super(context, "card_mvv");
     }
 
+    public static Card.CardViewHolder inflateViewHolder(ViewGroup parent) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_item, parent, false);
+        return new Card.CardViewHolder(view);
+    }
+
     @Override
     public int getTyp() {
         return CARD_MVV;
@@ -46,13 +53,20 @@ public class MVVCard extends Card {
     }
 
     @Override
-    public View getCardView(Context context, ViewGroup parent) {
-        super.getCardView(context, parent);
-        mCard = mInflater.inflate(R.layout.card_item, parent, false);
+    public void updateViewHolder(RecyclerView.ViewHolder viewHolder) {
+        super.updateViewHolder(viewHolder);
+        mCard = viewHolder.itemView;
         mLinearLayout = (LinearLayout) mCard.findViewById(R.id.card_view);
         mTitleView = (TextView) mCard.findViewById(R.id.card_title);
         mTitleView.setText(getTitle());
         mCard.findViewById(R.id.place_holder).setVisibility(View.VISIBLE);
+
+        //Remove old DepartureViews
+        for(int i = 0; i < mLinearLayout.getChildCount(); i++) {
+            if(mLinearLayout.getChildAt(i) instanceof DepartureView) {
+                mLinearLayout.removeViewAt(i);
+            }
+        }
 
         for (int i = 0; i < mDepartures.size() && i < 5; i++) {
             TransportManager.Departure curr = mDepartures.get(i);
@@ -61,10 +75,8 @@ public class MVVCard extends Card {
             view.setSymbol(curr.symbol);
             view.setLine(curr.line);
             view.setTime(curr.time);
-
             mLinearLayout.addView(view);
         }
-        return mCard;
     }
 
     @Override

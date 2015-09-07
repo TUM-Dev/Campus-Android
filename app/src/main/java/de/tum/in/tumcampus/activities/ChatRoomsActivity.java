@@ -7,8 +7,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.ActionBar;
+import android.support.design.widget.TabLayout;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -57,7 +56,7 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     private static final String SENDER_ID = "944892355389";
 
-    private StickyListHeadersListView lvMyLecturesList;
+    private StickyListHeadersListView lvMyChatRoomList;
 
     private ChatRoom currentChatRoom;
     private ChatMember currentChatMember;
@@ -70,7 +69,7 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
 
 
     public ChatRoomsActivity() {
-        super(R.layout.activity_lectures);
+        super(R.layout.activity_chat_rooms);
     }
 
     @Override
@@ -78,39 +77,38 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
         super.onCreate(savedInstanceState);
 
         // bind UI elements
-        lvMyLecturesList = (StickyListHeadersListView) findViewById(R.id.lvMyLecturesList);
-        lvMyLecturesList.setOnItemClickListener(this);
+        lvMyChatRoomList = (StickyListHeadersListView) findViewById(R.id.lvMyChatRoomList);
+        lvMyChatRoomList.setOnItemClickListener(this);
 
         manager = new ChatRoomManager(this);
 
         //Load the lectures list
         requestHandler = new TUMOnlineRequest<>(TUMOnlineConst.LECTURES_PERSONAL, this, true);
 
-        final ActionBar actionBar = getSupportActionBar();
-
-        // Specify that tabs should be displayed in the action bar.
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.chat_rooms_tabs);
         // Create a tab listener that is called when the user changes tabs.
-        ActionBar.TabListener tabListener = new ActionBar.TabListener() {
-            public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
+        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
                 // show the given tab
                 mCurrentMode = 1 - tab.getPosition();
                 firstLoad = true;
                 startLoading();
             }
 
-            public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
                 // hide the given tab
             }
 
-            public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
                 // probably ignore this event
             }
-        };
+        });
 
-        actionBar.addTab(actionBar.newTab().setText(R.string.joined).setTabListener(tabListener));
-        actionBar.addTab(actionBar.newTab().setText(R.string.not_joined).setTabListener(tabListener));
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.joined));
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.not_joined));
     }
 
     @Override
@@ -265,11 +263,11 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
     protected void onLoadFinished(Cursor result) {
         showLoadingEnded();
         if (result.getCount() == 0) {
-            lvMyLecturesList.setAdapter(new NoResultsAdapter(this));
+            lvMyChatRoomList.setAdapter(new NoResultsAdapter(this));
         } else {
             // set ListView to data via the LecturesListAdapter
             adapter = new ChatRoomListAdapter(this, result, mCurrentMode);
-            lvMyLecturesList.setAdapter(adapter);
+            lvMyChatRoomList.setAdapter(adapter);
         }
     }
 
@@ -278,7 +276,7 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
      */
     @Override
     public void onItemClick(AdapterView<?> a, View v, int position, long id) {
-        Cursor item = (Cursor) lvMyLecturesList.getItemAtPosition(position);
+        Cursor item = (Cursor) lvMyChatRoomList.getItemAtPosition(position);
 
         if (firstLoad || //No clicking until everything is loaded
                 !checkPlayServicesAndRegister())

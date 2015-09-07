@@ -7,13 +7,14 @@ import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Display;
 import android.view.Surface;
 import android.view.WindowManager;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+
+import de.tum.in.tumcampus.auxiliary.Utils;
 
 
 public class Util {
@@ -97,7 +98,7 @@ public class Util {
         int height = display.getHeight();
 
         int orientation;
-        Log.i(G.tag, android.os.Build.VERSION.RELEASE);
+        Utils.logv(android.os.Build.VERSION.RELEASE);
 
         //if (android.os.Build.VERSION.RELEASE.startsWith("1.5"))
         orientation = display.getOrientation();
@@ -138,7 +139,7 @@ public class Util {
             return pm.getPackageInfo(c.getPackageName(), 0);
 
         } catch (PackageManager.NameNotFoundException e) {
-            Log.e(G.tag, "Error collecting trace information", e);
+            Utils.log(e, "Error collecting trace information");
         }
         return null;
     }
