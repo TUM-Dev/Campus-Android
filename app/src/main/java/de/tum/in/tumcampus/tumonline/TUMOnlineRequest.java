@@ -292,4 +292,8 @@ public class TUMOnlineRequest<T> {
     public void setForce(boolean force) {
         fillCache = force;
     }
+
+    public String getLastError(){
+        return this.lastError;
+    }
 }
