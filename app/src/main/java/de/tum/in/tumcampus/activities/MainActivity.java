@@ -242,7 +242,7 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
                 if (mAdapter == null)
                     initAdapter();
                 else {
-                    mAdapter.notifyItemRangeChanged(0, mAdapter.getItemCount());
+                    mAdapter.notifyDataSetChanged();
                 }
 
                 mSwipeRefreshlayout.setRefreshing(false);
