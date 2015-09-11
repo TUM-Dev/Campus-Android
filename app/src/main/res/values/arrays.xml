@@ -88,6 +88,14 @@
         <item>0</item>
         <item>1</item>
     </string-array>
+    <string-array name="background_entries">
+        <item>@string/always</item>
+        <item>@string/wifi_only</item>
+    </string-array>
+    <string-array name="background_mode_values" tools:ignore="MissingTranslation">
+        <item>0</item>
+        <item>1</item>
+    </string-array>
     <string-array name="default_campus_entries">
         <item>@string/no_default_campus</item>
         <item>@string/campus_garching</item>

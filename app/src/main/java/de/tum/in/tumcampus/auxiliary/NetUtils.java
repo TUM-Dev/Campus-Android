@@ -92,6 +92,20 @@ public class NetUtils {
     }
 
     /**
+     * Check if a network connection is available or can be available soon
+     * and if the available connection is a wifi internet connection
+     *
+     * @return true if available
+     */
+    public static boolean isConnectedWifi(Context con) {
+        ConnectivityManager cm = (ConnectivityManager) con
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+
+        return netInfo != null && netInfo.isConnectedOrConnecting() && netInfo.getType() == ConnectivityManager.TYPE_WIFI;
+    }
+
+    /**
      * Gets an unique id that identifies this device
      *
      * @return Unique device id
