@@ -77,7 +77,7 @@
     <string name="background_info">Aktualisiert die Inhalte der App einmal täglich, um dich auf dem neusten Stand zu halten, sogar wenn die App nicht geöffnet ist.</string>
     <string name="mode_background_mode">Aktivierung des Hintergrund Modus</string>
     <string name="always">Immer</string>
-    <string name="wifi_only">Nur mit WLAN-Verbindung</string>
+    <string name="wifi_only">Nur bei WLAN-Verbindung</string>
     <string name="demo_mode">In-App-Tutorial</string>
     <string name="demo_info">Hilfemodus aktivieren, um Informationen zur Bedienung der App zu erhalten.</string>
 
