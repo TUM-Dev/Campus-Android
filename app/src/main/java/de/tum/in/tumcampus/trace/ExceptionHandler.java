@@ -356,8 +356,8 @@ public class ExceptionHandler {
                         (new Pair<>("phoneModel", G.phoneModel)),
                         (new Pair<>("androidVersion", G.androidVersion)),
 
-                        (new Pair<>("networkWifi", Util.isWifiOn())),
-                        (new Pair<>("networkMobile", Util.isMobileNetworkOn())),
+                        (new Pair<>("networkWifi", NetUtils.isConnectedWifi(G.context) ? "true" : "false")),
+                        (new Pair<>("networkMobile", NetUtils.isConnectedMobileData(G.context) ? "true" : "false")),
                         (new Pair<>("gps", Util.isGPSOn())),
 
                         (new Pair<>("screenWidth", screenProperties[0])),
