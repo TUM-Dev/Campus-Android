@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import de.tum.in.tumcampus.auxiliary.Const;
+import de.tum.in.tumcampus.auxiliary.NetUtils;
 import de.tum.in.tumcampus.auxiliary.Utils;
 
 /**
@@ -21,13 +22,15 @@ public class StartSyncReceiver extends BroadcastReceiver {
         // check intent if called from StartupActivity
         final boolean launch = intent.getBooleanExtra(Const.APP_LAUNCHES, false);
 
+        // Look up background service settings
+        final boolean backgroundServicePermitted = isBackgroundServicePermitted(context);
+
         // Set Alarm for next update, if background service is enabled
-        final boolean backgroundServiceEnabled = Utils.getSettingBool(context, Const.BACKGROUND_MODE, false);
-        if(backgroundServiceEnabled)
+        if(backgroundServicePermitted)
             setAlarm(context);
 
         // Start BackgroundService
-        if (launch || backgroundServiceEnabled) {
+        if (launch || backgroundServicePermitted) {
             Utils.logv("Start background service...");
             Intent i = new Intent(context, BackgroundService.class);
             i.putExtra(Const.APP_LAUNCHES,launch);
@@ -35,6 +38,18 @@ public class StartSyncReceiver extends BroadcastReceiver {
         }
 
         context.startService(new Intent(context, SendMessageService.class));
+    }
+
+    private boolean isBackgroundServicePermitted(Context context) {
+        return isBackgroundServiceEnabled(context) && (isBackgroundServiceAlwaysEnabled(context) || NetUtils.isConnectedWifi(context));
+    }
+
+    private boolean isBackgroundServiceEnabled(Context context) {
+        return Utils.getSettingBool(context, Const.BACKGROUND_MODE, false);
+    }
+
+    private boolean isBackgroundServiceAlwaysEnabled(Context context) {
+        return Utils.getSetting(context, "background_mode_set_to", "0").equals("0");
     }
 
     private void setAlarm(Context context) {
