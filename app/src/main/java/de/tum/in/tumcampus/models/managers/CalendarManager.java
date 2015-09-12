@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Locale;
 
 import de.tum.in.tumcampus.R;
-import de.tum.in.tumcampus.auxiliary.CalendarHelper;
+import de.tum.in.tumcampus.auxiliary.calendar.CalendarHelper;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.cards.Card;
@@ -172,6 +172,7 @@ public class CalendarManager implements Card.ProvidesCard {
         while (cursor2.moveToNext()) {
             id = cursor2.getString(0);
         }
+        cursor2.close();
 
         CalendarManager calendarManager = new CalendarManager(c);
         Date dtstart, dtend;
@@ -180,7 +181,7 @@ public class CalendarManager implements Card.ProvidesCard {
         Cursor cursor = calendarManager.getAllFromDb();
         while (cursor.moveToNext()) {
             // Get each table row
-            final String status = cursor.getString(1);
+            //final String status = cursor.getString(1);
             final String title = cursor.getString(3);
             final String description = cursor.getString(4);
             final String strStart = cursor.getString(5);

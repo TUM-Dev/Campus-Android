@@ -9,8 +9,8 @@ import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.text.format.Time;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -25,10 +25,7 @@ import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.generic.ActivityForLoadingInBackground;
 import de.tum.in.tumcampus.auxiliary.NetUtils;
 import de.tum.in.tumcampus.auxiliary.Utils;
-import de.tum.in.tumcampus.auxiliary.calendar.DayView;
-import de.tum.in.tumcampus.auxiliary.calendar.EventLoader;
-import de.tum.in.tumcampus.auxiliary.calendar.LoadEventsRequestTimeTable;
-import de.tum.in.tumcampus.fragments.DayFragment;
+import de.tum.in.tumcampus.fragments.WeekViewFragment;
 import de.tum.in.tumcampus.models.Geo;
 import de.tum.in.tumcampus.tumonline.TUMRoomFinderRequest;
 import it.sephiroth.android.library.imagezoom.ImageViewTouch;
@@ -53,7 +50,7 @@ public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<Vo
     private String mapId = "";
     private ArrayList<HashMap<String, String>> mapsList;
     private boolean infoLoaded = false;
-    private DayFragment fragment;
+    private Fragment fragment;
 
     public RoomFinderDetailsActivity() {
         super(R.layout.activity_roomfinderdetails);
@@ -126,11 +123,20 @@ public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<Vo
             fragment = null;
             return;
         }
-        Time t = new Time();
-        t.setToNow();
-        DayView.mLeftBoundary = Time.getJulianDay(t.toMillis(true), t.gmtoff);
-        LoadEventsRequestTimeTable req = new LoadEventsRequestTimeTable(roomInfo.getString(TUMRoomFinderRequest.KEY_ROOM_API_CODE));
-        fragment = new DayFragment(0, 1, new EventLoader(this, req));
+        //TODO loadevents:
+        /*
+        public void loadEvents(Context context, ArrayList<IntegratedCalendarEvent> events, int startDay, int days) {
+        events.clear();
+
+        Time date = new Time();
+        date.setJulianDay(startDay);
+        String start = Utils.getDateTimeString(new Date(date.toMillis(false)));
+        date.setJulianDay(startDay+days-1);
+        String end = Utils.getDateTimeString(new Date(date.toMillis(false)));
+        TUMRoomFinderRequest request = new TUMRoomFinderRequest(context);
+        request.fetchRoomSchedule(mRoomApi, start, end, events);
+         */
+        fragment = new WeekViewFragment();
         ft.add(android.R.id.content, fragment);
         ft.commit();
     }

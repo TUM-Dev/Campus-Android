@@ -26,7 +26,12 @@ public class IntegratedCalendarEvent extends WeekViewEvent {
 
         this.location = getEventLocationFromCursor(cEvents);
         this.setColor(getEventColorFromCursor(cEvents));
+    }
 
+    public IntegratedCalendarEvent(long id, String title, Calendar startTime, Calendar endTime, String location, int color) {
+        super(id, title, startTime, endTime);
+        this.location = location;
+        this.setColor(color);
     }
 
     private static String getEventTitleFromCursor(Cursor cEvents) {
