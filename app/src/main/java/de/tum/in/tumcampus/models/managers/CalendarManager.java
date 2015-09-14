@@ -172,6 +172,7 @@ public class CalendarManager implements Card.ProvidesCard {
         while (cursor2.moveToNext()) {
             id = cursor2.getString(0);
         }
+        cursor2.close();
 
         CalendarManager calendarManager = new CalendarManager(c);
         Date dtstart, dtend;
