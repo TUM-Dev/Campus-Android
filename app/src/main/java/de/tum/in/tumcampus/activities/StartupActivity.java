@@ -179,6 +179,13 @@ public class StartupActivity extends AppCompatActivity {
                 ActivityCompat.requestPermissions(StartupActivity.this, PERMISSIONS_LOCATION,
                         REQUEST_LOCATION);
             }
+        } else {
+            //We already got the permissions, to proceed normally
+            //Only proceed to start the App, if initialization is finished
+            if (initializationFinished.compareAndSet(false, true)) {
+                return;
+            }
+            startApp();
         }
     }
 
