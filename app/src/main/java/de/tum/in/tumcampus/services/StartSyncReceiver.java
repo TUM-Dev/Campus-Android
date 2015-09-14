@@ -40,19 +40,19 @@ public class StartSyncReceiver extends BroadcastReceiver {
         context.startService(new Intent(context, SendMessageService.class));
     }
 
-    private boolean isBackgroundServicePermitted(Context context) {
+    private static boolean isBackgroundServicePermitted(Context context) {
         return isBackgroundServiceEnabled(context) && (isBackgroundServiceAlwaysEnabled(context) || NetUtils.isConnectedWifi(context));
     }
 
-    private boolean isBackgroundServiceEnabled(Context context) {
+    private static boolean isBackgroundServiceEnabled(Context context) {
         return Utils.getSettingBool(context, Const.BACKGROUND_MODE, false);
     }
 
-    private boolean isBackgroundServiceAlwaysEnabled(Context context) {
+    private static boolean isBackgroundServiceAlwaysEnabled(Context context) {
         return Utils.getSetting(context, "background_mode_set_to", "0").equals("0");
     }
 
-    private void setAlarm(Context context) {
+    private static void setAlarm(Context context) {
         // Intent to call on alarm
         Intent intent = new Intent(context, StartSyncReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);

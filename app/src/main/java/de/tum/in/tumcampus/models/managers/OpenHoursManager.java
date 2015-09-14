@@ -166,7 +166,7 @@ public class OpenHoursManager {
 
     }
 
-    private Calendar strToCal(Date date, String time) {
+    private static Calendar strToCal(Date date, String time) {
         Calendar opens = Calendar.getInstance();
         opens.setTime(date);
         if (time.contains(".")) {

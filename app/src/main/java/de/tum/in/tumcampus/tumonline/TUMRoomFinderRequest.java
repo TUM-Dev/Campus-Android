@@ -45,7 +45,7 @@ public class TUMRoomFinderRequest {
      * a list/map for the needed parameters
      */
     private final Map<String, String> parameters;
-    private final String SERVICE_BASE_URL = "http://vmbaumgarten3.informatik.tu-muenchen.de/";
+    private static final String SERVICE_BASE_URL = "http://vmbaumgarten3.informatik.tu-muenchen.de/";
     /**
      * asynchronous task for interactive fetch
      */
@@ -363,7 +363,7 @@ public class TUMRoomFinderRequest {
     /**
      * Converts UTM based coordinates to latitude and longitude based format
      */
-    private Geo UTMtoLL(double north, double east, double zone) {
+    private static Geo UTMtoLL(double north, double east, double zone) {
         double d = 0.99960000000000004;
         double d1 = 6378137;
         double d2 = 0.0066943799999999998;

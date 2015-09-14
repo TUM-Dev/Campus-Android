@@ -20,7 +20,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -473,7 +472,7 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
     /**
      * Gets the text from speech input and returns null if no input was provided
      */
-    private CharSequence getMessageText(Intent intent) {
+    private static CharSequence getMessageText(Intent intent) {
         Bundle remoteInput = RemoteInput.getResultsFromIntent(intent);
         if (remoteInput != null) {
             return remoteInput.getCharSequence(EXTRA_VOICE_REPLY);

@@ -339,7 +339,7 @@ public class PersonsDetailsActivity extends ActivityForAccessingTumOnline<Employ
         }
     }
 
-    private void addContact(ArrayList<ContentProviderOperation> ops, int rawContactID, Contact contact, boolean work) {
+    private static void addContact(ArrayList<ContentProviderOperation> ops, int rawContactID, Contact contact, boolean work) {
         if(contact!=null) {
             // Add work telefon number
             if(contact.getTelefon()!=null) {
