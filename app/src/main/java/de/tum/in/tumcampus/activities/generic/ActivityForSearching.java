@@ -21,7 +21,7 @@ import de.tum.in.tumcampus.auxiliary.Utils;
 /**
  * Generic class for searching. Provides basic functions for a {@link SearchView}
  * and typical processes related to search.
- * 
+ *
  */
 public abstract class ActivityForSearching extends ProgressActivity {
     /** SearchView handle */
@@ -68,7 +68,9 @@ public abstract class ActivityForSearching extends ProgressActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getSupportActionBar().setIcon(R.drawable.tum_logo);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setIcon(R.drawable.tum_logo);
+        }
     }
 
     @Override
