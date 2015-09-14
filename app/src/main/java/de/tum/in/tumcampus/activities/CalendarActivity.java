@@ -278,9 +278,9 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
                     ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
 
                 // Display an AlertDialog with an explanation and a button to trigger the request.
-                new android.support.v7.app.AlertDialog.Builder(this)
-                        .setMessage("Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.")
-                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                new AlertDialog.Builder(this)
+                        .setMessage(getString(R.string.permission_calendar_explanation))
+                        .setPositiveButton(R.string.ok, new OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int id) {
                                 ActivityCompat
