@@ -3,12 +3,12 @@ package de.tum.in.tumcampus.activities;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.widget.RelativeLayout;
 
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.generic.ActivityForDownloadingExternal;
 import de.tum.in.tumcampus.adapters.KinoAdapter;
 import de.tum.in.tumcampus.auxiliary.Const;
-import de.tum.in.tumcampus.auxiliary.NetUtils;
 import de.tum.in.tumcampus.models.managers.KinoManager;
 
 /**
@@ -46,7 +46,7 @@ public class KinoActivity extends ActivityForDownloadingExternal {
 
         } else {
             // there are no movies in the semester holidays
-            showNoMoviesLayout();
+            showCustomErrorLayout((RelativeLayout) findViewById(R.id.no_movies_layout));
         }
 
     }
