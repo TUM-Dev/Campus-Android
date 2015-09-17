@@ -15,7 +15,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.support.v7.widget.Toolbar;
-import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -71,8 +70,10 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
         // Setup pull to refresh
         mSwipeRefreshlayout = (SwipeRefreshLayout) findViewById(R.id.ptr_layout);
         mSwipeRefreshlayout.setOnRefreshListener(this);
-        //TODO: set colors
-        //mSwipeRefreshlayout.setColorSchemeResources(R.color.);
+        mSwipeRefreshlayout.setColorSchemeResources(
+                R.color.color_primary,
+                R.color.tum_A100,
+                R.color.tum_A200);
 
         // Setup card RecyclerView
         mCardsView = (RecyclerView) findViewById(R.id.cards_view);
@@ -96,6 +97,7 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
             /**
              * Called when a drawer has settled in a completely closed state.
              */
+            @Override
             public void onDrawerClosed(View view) {
                 super.onDrawerClosed(view);
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
@@ -104,6 +106,7 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
             /**
              * Called when a drawer has settled in a completely open state.
              */
+            @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
@@ -239,9 +242,9 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
             @Override
             protected void onPostExecute(Void result) {
                 super.onPostExecute(result);
-                if (mAdapter == null)
+                if (mAdapter == null) {
                     initAdapter();
-                else {
+                } else {
                     mAdapter.notifyDataSetChanged();
                 }
 

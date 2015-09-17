@@ -67,10 +67,10 @@ public abstract class ProgressActivity extends BaseActivity implements SwipeRefr
         // If content is refreshable setup the SwipeRefreshLayout
         if (swipeRefreshLayout != null) {
             swipeRefreshLayout.setOnRefreshListener(this);
-            //TODO refresh layout and end refreshing
-            //ActionBarPullToRefresh.from(this).allChildrenArePullable()
-            //.useViewDelegate(StickyListHeadersListView.class, new StickyListViewDelegate())
-            //        .listener(this).setup(refreshLayout);
+            swipeRefreshLayout.setColorSchemeResources(
+                    R.color.color_primary,
+                    R.color.tum_A100,
+                    R.color.tum_A200);
         }
 
         if (progressLayout == null) {
@@ -216,16 +216,18 @@ public abstract class ProgressActivity extends BaseActivity implements SwipeRefr
      * Enables {@link SwipeRefreshLayout}
      */
     protected void enableRefresh() {
-        if (swipeRefreshLayout != null)
+        if (swipeRefreshLayout != null) {
             swipeRefreshLayout.setEnabled(true);
+        }
     }
 
     /**
      * Disables {@link SwipeRefreshLayout}
      */
     protected void disableRefresh() {
-        if (swipeRefreshLayout != null)
+        if (swipeRefreshLayout != null) {
             swipeRefreshLayout.setEnabled(false);
+        }
     }
 
     /**
