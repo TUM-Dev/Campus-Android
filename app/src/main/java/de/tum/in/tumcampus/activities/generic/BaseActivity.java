@@ -25,6 +25,9 @@ public abstract class BaseActivity extends AppCompatActivity {
      */
     private final int mLayoutId;
 
+    protected DrawerLayout mDrawerLayout;
+    protected NavigationView mDrawerList;
+
     /**
      * Standard constructor for BaseActivity.
      * The given layout might include a DrawerLayout.
@@ -42,16 +45,16 @@ public abstract class BaseActivity extends AppCompatActivity {
         setContentView(mLayoutId);
 
         // Get handles to navigation drawer
-        DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        NavigationView navigationView = (NavigationView) findViewById(R.id.left_drawer);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerList = (NavigationView) findViewById(R.id.left_drawer);
 
         // Setup the navigation drawer if present in the layout
-        if (navigationView != null) {
-            DrawerMenuHelper helper = new DrawerMenuHelper(this, drawerLayout);
-            helper.populateMenu(navigationView.getMenu());
+        if (mDrawerList != null) {
+            DrawerMenuHelper helper = new DrawerMenuHelper(this, mDrawerLayout);
+            helper.populateMenu(mDrawerList.getMenu());
 
             // Set the NavigationDrawer's click listener
-            navigationView.setNavigationItemSelectedListener(helper);
+            mDrawerList.setNavigationItemSelectedListener(helper);
         }
 
         String parent = NavUtils.getParentActivityName(this);
