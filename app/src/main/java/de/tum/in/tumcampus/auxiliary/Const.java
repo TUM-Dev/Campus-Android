@@ -83,6 +83,7 @@ public final class Const {
 	public static final String JSON_COVER = "cover";
 	public static final String JSON_TRAILER = "trailer";
 	public static final String JSON_KINO = "kino";
+
     public static final String EVERYTHING_SETUP = "everything_setup";
     public static final String SYNC_CALENDAR_IMPORT = "calendar_import";
     public static final String GROUP_CHAT_ENABLED = "group_chat_enabled";
