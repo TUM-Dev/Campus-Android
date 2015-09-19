@@ -340,6 +340,7 @@
     <string name="closed">Closed</string>
 
     <!-- Kino -->
+    <string name="kino">TU Kino</string>
     <string name="imdb_rating">IMDB-Rating</string>
     <string name="year">Year of release</string>
     <string name="runtime">Runtime</string>
