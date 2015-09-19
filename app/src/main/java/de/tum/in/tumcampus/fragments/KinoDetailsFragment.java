@@ -53,51 +53,21 @@ public class KinoDetailsFragment extends Fragment implements View.OnClickListene
      * @param position position in database
      */
     private void showDetails(LinearLayout rootView, int position){
-
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-        View view;
-        TextView text;
-        Button date,link,imdb,year,runtime;
-
         cursor.moveToPosition(position);
         url = cursor.getString(cursor.getColumnIndex(Const.JSON_LINK));
 
-        // ---- header ----
+        createKinoHeader(rootView);
+        createKinoFooter(rootView);
 
-        LinearLayout headerView = (LinearLayout) inflater.inflate(R.layout.kino_header, rootView, false);
-        ImageView cover = (ImageView) headerView.findViewById(R.id.kino_cover);
+        cursor.close();
 
-        // initialize all buttons
-        date = (Button) headerView.findViewById(R.id.button_date);
-        link = (Button) headerView.findViewById(R.id.button_link);
-        imdb = (Button) headerView.findViewById(R.id.button_imdb);
-        year = (Button) headerView.findViewById(R.id.button_year);
-        runtime = (Button) headerView.findViewById(R.id.button_runtime);
+    }
 
-        // set text for all buttons
-        date.setText(this.formDateString(cursor.getString(cursor.getColumnIndex(Const.JSON_DATE))));
-        link.setText("www");
-        imdb.setText(cursor.getString(cursor.getColumnIndex(Const.JSON_RATING)));
-        year.setText(cursor.getString(cursor.getColumnIndex(Const.JSON_YEAR)));
-        runtime.setText(cursor.getString(cursor.getColumnIndex(Const.JSON_RUNTIME)));
+    private void createKinoFooter(LinearLayout rootView) {
+        View view;
+        TextView text;
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        // set onClickListener
-        date.setOnClickListener(this);
-        link.setOnClickListener(this);
-        imdb.setOnClickListener(this);
-        year.setOnClickListener(this);
-        runtime.setOnClickListener(this);
-
-        // cover
-        String cover_url = cursor.getString(cursor.getColumnIndex(Const.JSON_COVER));
-        net.loadAndSetImage(cover_url, cover);
-
-        // add header to view
-        rootView.addView(headerView);
-
-
-        // ---- footer ----
         // genre
         view = inflater.inflate(R.layout.list_header_big, rootView, false);
         text = (TextView) view.findViewById(R.id.list_header);
@@ -142,11 +112,45 @@ public class KinoDetailsFragment extends Fragment implements View.OnClickListene
         int padding_end = (int) context.getResources().getDimension(R.dimen.padding_kino_end);
         text.setPadding(padding,padding,padding_right,padding_end);
         rootView.addView(view);
+    }
 
+    private void createKinoHeader(LinearLayout rootView) {
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LinearLayout headerView = (LinearLayout) inflater.inflate(R.layout.kino_header, rootView, false);
 
-        // close cursor
-        cursor.close();
+        Button date;
+        Button link;
+        Button imdb;
+        Button year;
+        Button runtime;
+        ImageView cover = (ImageView) headerView.findViewById(R.id.kino_cover);
 
+        // initialize all buttons
+        date = (Button) headerView.findViewById(R.id.button_date);
+        link = (Button) headerView.findViewById(R.id.button_link);
+        imdb = (Button) headerView.findViewById(R.id.button_imdb);
+        year = (Button) headerView.findViewById(R.id.button_year);
+        runtime = (Button) headerView.findViewById(R.id.button_runtime);
+
+        // set text for all buttons
+        date.setText(this.formDateString(cursor.getString(cursor.getColumnIndex(Const.JSON_DATE))));
+        link.setText("www");
+        imdb.setText(cursor.getString(cursor.getColumnIndex(Const.JSON_RATING)));
+        year.setText(cursor.getString(cursor.getColumnIndex(Const.JSON_YEAR)));
+        runtime.setText(cursor.getString(cursor.getColumnIndex(Const.JSON_RUNTIME)));
+
+        // set onClickListener
+        date.setOnClickListener(this);
+        link.setOnClickListener(this);
+        imdb.setOnClickListener(this);
+        year.setOnClickListener(this);
+        runtime.setOnClickListener(this);
+
+        // cover
+        String cover_url = cursor.getString(cursor.getColumnIndex(Const.JSON_COVER));
+        net.loadAndSetImage(cover_url, cover);
+
+        rootView.addView(headerView);
     }
 
     @Override
