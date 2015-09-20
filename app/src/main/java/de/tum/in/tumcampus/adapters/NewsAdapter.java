@@ -6,7 +6,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -18,13 +17,15 @@ import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.auxiliary.NetUtils;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.cards.Card;
+import de.tum.in.tumcampus.cards.NewsCard;
 
-public class NewsAdapter extends CursorAdapter {
+public class NewsAdapter extends RecyclerView.Adapter<NewsCard.CardViewHolder> {
     private final NetUtils net;
+    private final Cursor c;
 
     public NewsAdapter(Context context, Cursor c) {
-        super(context, c, false);
         net = new NetUtils(context);
+        this.c = c;
     }
 
     public static NewsViewHolder newNewsView(ViewGroup parent, boolean isFilm) {
@@ -78,25 +79,25 @@ public class NewsAdapter extends CursorAdapter {
     }
 
     @Override
-    public int getViewTypeCount() {
-        return 2;
+    public NewsCard.CardViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        return NewsCard.inflateViewHolder(parent, viewType);
+    }
+
+    @Override
+    public void onBindViewHolder(NewsCard.CardViewHolder holder, int position) {
+        c.moveToPosition(position);
+        bindNewsView(net, holder, c);
     }
 
     @Override
     public int getItemViewType(int position) {
-        Cursor c = (Cursor) getItem(position);
+        c.moveToPosition(position);
         return c.getString(1).equals("2") ? 0 : 1;
     }
 
     @Override
-    public View newView(Context context, Cursor cursor, ViewGroup viewGroup) {
-        NewsViewHolder holder = newNewsView(viewGroup, cursor.getInt(1) == 2);
-        return holder.itemView;
-    }
-
-    @Override
-    public void bindView(View view, Context context, Cursor cursor) {
-        bindNewsView(net, (RecyclerView.ViewHolder)view.getTag(), cursor);
+    public int getItemCount() {
+        return c.getCount();
     }
 
     public static class NewsViewHolder extends Card.CardViewHolder {
