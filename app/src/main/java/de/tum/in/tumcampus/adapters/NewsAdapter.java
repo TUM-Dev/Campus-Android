@@ -22,8 +22,10 @@ import de.tum.in.tumcampus.cards.NewsCard;
 public class NewsAdapter extends RecyclerView.Adapter<NewsCard.CardViewHolder> {
     private final NetUtils net;
     private final Cursor c;
+    private final Context mContext;
 
     public NewsAdapter(Context context, Cursor c) {
+        this.mContext = context;
         net = new NetUtils(context);
         this.c = c;
     }
@@ -85,6 +87,11 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsCard.CardViewHolder> {
 
     @Override
     public void onBindViewHolder(NewsCard.CardViewHolder holder, int position) {
+        NewsViewHolder nHolder = (NewsViewHolder) holder;
+        NewsCard card = new NewsCard(mContext);
+        card.setNews(c, position);
+        nHolder.setCurrentCard(card);
+
         c.moveToPosition(position);
         bindNewsView(net, holder, c);
     }
