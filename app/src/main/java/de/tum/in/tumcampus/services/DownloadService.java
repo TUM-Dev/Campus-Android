@@ -21,6 +21,7 @@ import de.tum.in.tumcampus.models.managers.CacheManager;
 import de.tum.in.tumcampus.models.managers.CafeteriaManager;
 import de.tum.in.tumcampus.models.managers.CafeteriaMenuManager;
 import de.tum.in.tumcampus.models.managers.CardManager;
+import de.tum.in.tumcampus.models.managers.KinoManager;
 import de.tum.in.tumcampus.models.managers.NewsManager;
 import de.tum.in.tumcampus.models.managers.OpenHoursManager;
 import de.tum.in.tumcampus.models.managers.SyncManager;
@@ -132,6 +133,12 @@ public class DownloadService extends IntentService {
                             Utils.log(e);
                             successful = false;
                         }
+                        try {
+                            downLoadKino(force);
+                        } catch (Exception e){
+                            Utils.log(e);
+                            successful = false;
+                        }
 
                         boolean isSetup = Utils.getInternalSettingBool(this, Const.EVERYTHING_SETUP, false);
                         if (!isSetup) {
@@ -146,6 +153,9 @@ public class DownloadService extends IntentService {
                         break;
                     case Const.CAFETERIAS:
                         downloadCafeterias(force);
+                        break;
+                    case Const.KINO:
+                        downLoadKino(force);
                         break;
                 }
             } catch (TimeoutException e) {
@@ -224,6 +234,11 @@ public class DownloadService extends IntentService {
         CafeteriaMenuManager cmm = new CafeteriaMenuManager(this);
         cm.downloadFromExternal(force);
         cmm.downloadFromExternal(this, force);
+    }
+
+    private void downLoadKino(boolean force) throws Exception {
+        KinoManager km = new KinoManager(this);
+        km.downloadFromExternal(force);
     }
 
     private void downloadNews(boolean force) throws Exception {

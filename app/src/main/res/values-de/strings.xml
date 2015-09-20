@@ -107,6 +107,16 @@
     <string name="no_link_existing">Kein Link gefunden.</string>
     <string name="info_title">Neuigkeiten:</string>
 
+    <!-- Kino -->
+    <string name="imdb_rating">IMDB-Rating</string>
+    <string name="year">Erscheinungsjahr</string>
+    <string name="runtime">Laufzeit</string>
+    <string name="genre">Genre</string>
+    <string name="director">Regisseur</string>
+    <string name="actors">Schauspieler</string>
+    <string name="description">Beschreibung</string>
+    <string name="no_movies">Zur Zeit gibt es keine Filme.</string>
+
     <!-- Navigation drawer -->
     <string name="drawer_open">Öffnen</string>
     <string name="drawer_close">Schließen</string>

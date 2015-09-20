@@ -111,6 +111,18 @@ public abstract class ProgressActivity extends BaseActivity implements SwipeRefr
     }
 
     /**
+     * Shows custom error layout.
+     * Hides any progress indicator.
+     *
+     * @param customErrorLayout Error layout
+     */
+    protected void showCustomErrorLayout(RelativeLayout customErrorLayout) {
+        showLoadingEnded();
+        customErrorLayout.setVisibility(View.VISIBLE);
+        allErrorsLayout.setVisibility(View.VISIBLE);
+    }
+
+    /**
      * Shows failed layout
      *
      * @param error Error Text to be toasted

@@ -339,6 +339,17 @@
     <string name="closes">Closes</string>
     <string name="closed">Closed</string>
 
+    <!-- Kino -->
+    <string name="kino">TU Kino</string>
+    <string name="imdb_rating">IMDB-Rating</string>
+    <string name="year">Year of release</string>
+    <string name="runtime">Runtime</string>
+    <string name="genre">Genre</string>
+    <string name="director">Director</string>
+    <string name="actors">Actors</string>
+    <string name="description">Description</string>
+    <string name="no_movies">Currently there are no movies.</string>
+
     <!-- Eduroam card -->
     <string name="eduroam" translatable="false">Eduroam</string>
     <string name="setup">Setup</string>
