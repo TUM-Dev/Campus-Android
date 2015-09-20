@@ -50,7 +50,7 @@ public class NewsActivity extends ActivityForDownloadingExternal {
 
             /** Restore previous state (including selected item index and scroll position) */
             if (state != -1) {
-                lv.scrollTo(state, 0);
+                lv.scrollToPosition(state);
             } else {
                 lv.scrollToPosition(nm.getTodayIndex());
             }
@@ -69,7 +69,8 @@ public class NewsActivity extends ActivityForDownloadingExternal {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        state = lv.getScrollX();
+        LinearLayoutManager layoutManager = (LinearLayoutManager) lv.getLayoutManager();
+        state = layoutManager.findFirstVisibleItemPosition();
     }
 
     @Override
@@ -97,7 +98,8 @@ public class NewsActivity extends ActivityForDownloadingExternal {
                 boolean checked = !item.isChecked();
                 Utils.setSetting(this, "news_source_" + cur.getString(0), checked);
                 item.setChecked(checked);
-                state = lv.getScrollX();
+                LinearLayoutManager layoutManager = (LinearLayoutManager) lv.getLayoutManager();
+                state = layoutManager.findFirstVisibleItemPosition();
                 requestDownload(false);
                 return true;
             }
