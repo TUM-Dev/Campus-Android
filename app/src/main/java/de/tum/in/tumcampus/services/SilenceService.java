@@ -16,7 +16,8 @@ public class SilenceService extends IntentService {
 	/**
 	 * Interval in milliseconds to check for current lectures
 	 */
-	private static final int CHECK_INTERVAL = 60000 * 15; // 15 Minutes
+	private static final int CHECK_INTERVAL = 60000 * 15, // 15 Minutes
+				CHECK_DELAY = 10000; // 10 Seconds after Calendar changed
 	private static final String SILENCE_SERVICE = "SilenceService";
 
 	/**
@@ -43,6 +44,7 @@ public class SilenceService extends IntentService {
 		// loop until silence mode gets disabled in settings
 		while (true) {
 			try {
+				int wait_duration = CHECK_INTERVAL;
 				if (Utils.getSettingBool(this, Const.SILENCE_SERVICE, false)) {
 					Utils.log("SilenceService enabled, checking for lectures ...");
 
@@ -70,17 +72,33 @@ public class SilenceService extends IntentService {
                             Utils.log("set ringer mode: silent");
                             am.setRingerMode(AudioManager.RINGER_MODE_SILENT);
                         }
+                        			// refresh when event has ended
+                        			wait_duration = (int) Math.min(wait_duration,
+                        				(new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.ENGLISH).parse(cursor.getString(3))).getTime()
+                        				- System.currentTimeMillis() 
+                        				+ CHECK_DELAY
+                        				);
 					} else if (Utils.getInternalSettingBool(this, Const.SILENCE_ON, false)) {
 						// default: no silence
 						Utils.log("set ringer mode: normal");
 						am.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
 						Utils.setInternalSetting(this, Const.SILENCE_ON, false);
+						
+						
+						Cursor cursor2 = calendarManager.getNextCalendarItem();
+						// refresh when next event has started
+						wait_duration = (int) Math.min(wait_duration,
+                        				(new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.ENGLISH).parse(cursor2.getString(1))).getTime()
+                        				- System.currentTimeMillis() 
+                        				+ CHECK_DELAY
+                        				);
+                        			cursor2.close();
 					}
 					cursor.close();
 				}
 				// wait until next check
 				synchronized (this) {
-					wait(CHECK_INTERVAL);
+					wait(wait_duration);
 				}
 			} catch (Exception e) {
 				Utils.log(e, "");
