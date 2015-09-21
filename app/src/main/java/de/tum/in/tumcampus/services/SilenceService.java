@@ -46,8 +46,8 @@ public class SilenceService extends IntentService {
 	protected void onHandleIntent(Intent intent) {
 		// loop until silence mode gets disabled in settings
 		while (true) {
-			int wait_duration = CHECK_INTERVAL;
 			try {
+				int wait_duration = CHECK_INTERVAL;
 				if (Utils.getSettingBool(this, Const.SILENCE_SERVICE, false)) {
 					Utils.log("SilenceService enabled, checking for lectures ...");
 
@@ -105,11 +105,6 @@ public class SilenceService extends IntentService {
 				}
 			} catch (Exception e) {
 				Utils.log(e, "");
-				
-				// Parse-errors etc should not create massive CPU-usage (just in case)
-				synchronized (this) {
-					wait(wait_duration);
-				}
 			}
 		}
 	}
