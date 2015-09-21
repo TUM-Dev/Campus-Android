@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.media.AudioManager;
 
+import java.text.SimpleDateFormat;
+
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.managers.CalendarManager;
@@ -102,6 +104,11 @@ public class SilenceService extends IntentService {
 				}
 			} catch (Exception e) {
 				Utils.log(e, "");
+				
+				// Parse-errors etc should not create massive CPU-usage (just in case)
+				synchronized (this) {
+					wait(wait_duration);
+				}
 			}
 		}
 	}
