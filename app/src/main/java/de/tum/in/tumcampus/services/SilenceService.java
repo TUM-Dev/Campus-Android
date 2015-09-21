@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.media.AudioManager;
 
 import java.text.SimpleDateFormat;
+import java.util.Locale;
 
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.Utils;
