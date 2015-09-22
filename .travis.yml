@@ -7,6 +7,10 @@ language: android
 jdk: oraclejdk7
 sudo: false
 
+env:
+  global:
+    - ADB_INSTALL_TIMEOUT=8 # minutes (2 minutes by default)
+
 android:
   components:
     - tools
