@@ -81,7 +81,7 @@ public class CalendarManager implements Card.ProvidesCard {
      * @return Database cursor (name, location, _id)
      */
     public Cursor getCurrentFromDb() {
-        return db.rawQuery("SELECT title, location, nr FROM calendar WHERE datetime('now', 'localtime') BETWEEN dtstart AND dtend AND status!=\"CANCEL\"", null);
+        return db.rawQuery("SELECT title, location, nr, dtend FROM calendar WHERE datetime('now', 'localtime') BETWEEN dtstart AND dtend AND status!=\"CANCEL\"", null);
     }
 
     /**
