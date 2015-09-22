@@ -32,6 +32,8 @@ public class SilenceService extends IntentService {
     private static final int CHECK_INTERVAL = 60000 * 15, // 15 Minutes
             CHECK_DELAY = 10000; // 10 Seconds after Calendar changed
     private static final String SILENCE_SERVICE = "SilenceService";
+    
+    private static int oldState = AudioManager.RINGER_MODE_NORMAL;
 
     /**
      * default init (run intent in new thread)
@@ -83,6 +85,10 @@ public class SilenceService extends IntentService {
                 Utils.log("Current lectures: " + String.valueOf(cursor.getCount()));
 
                 if (cursor.getCount() != 0) {
+                    // remember old state if just activated ; in doubt dont change
+                    if(!Utils.getInternalSettingBool(SilenceService.this, Const.SILENCE_ON, true))
+                        oldState = am.getRingerMode();
+                    
                     // if current lecture(s) found, silence the mobile
                     Utils.setInternalSetting(SilenceService.this, Const.SILENCE_ON, true);
 
@@ -98,9 +104,9 @@ public class SilenceService extends IntentService {
                     // refresh when event has ended
                     wait_duration = getWaitDuration(cursor.getString(3));
                 } else if (Utils.getInternalSettingBool(SilenceService.this, Const.SILENCE_ON, false)) {
-                    // default: no silence
-                    Utils.log("set ringer mode: normal");
-                    am.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+                    // default: old state
+                    Utils.log("set ringer mode to old state");
+                    am.setRingerMode(oldState);
                     Utils.setInternalSetting(SilenceService.this, Const.SILENCE_ON, false);
 
 
