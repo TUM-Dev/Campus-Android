@@ -12,6 +12,7 @@ import java.util.Locale;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.Utils;
@@ -21,6 +22,9 @@ import de.tum.in.tumcampus.models.managers.CalendarManager;
  * Service used to silence the mobile during lectures
  */
 public class SilenceService extends IntentService {
+
+    static final ScheduledExecutorService tpe = Executors.newSingleThreadScheduledExecutor();
+    static final AtomicBoolean isRunning = new AtomicBoolean(false);
 
     /**
      * Interval in milliseconds to check for current lectures
@@ -50,7 +54,10 @@ public class SilenceService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        final ScheduledExecutorService tpe = Executors.newSingleThreadScheduledExecutor();
+        if (!isRunning.compareAndSet(false, true)) {
+            return;
+        }
+
         tpe.schedule(new Runnable() {
             @Override
             public void run() {
@@ -58,6 +65,7 @@ public class SilenceService extends IntentService {
 
                 //Abort, if the settings changed
                 if (!Utils.getSettingBool(SilenceService.this, Const.SILENCE_SERVICE, false)) {
+                    isRunning.set(false);
                     return;
                 }
                 Utils.log("SilenceService enabled, checking for lectures ...");
@@ -67,6 +75,7 @@ public class SilenceService extends IntentService {
                 CalendarManager calendarManager = new CalendarManager(SilenceService.this);
                 if (!calendarManager.hasLectures()) {
                     Utils.logv("No lectures available");
+                    tpe.schedule(this, wait_duration, TimeUnit.MILLISECONDS);
                     return;
                 }
 
