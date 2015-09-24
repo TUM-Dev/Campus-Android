@@ -216,10 +216,8 @@
     <string name="next_lecture">Siguiente lección</string>
     <string name="restore_all_cards">Restaurar tarjetas</string>
     <string name="card_dismissed">Carta oculta</string>
-    <string name="cards_dismissed">%s cartas ocultas</string>
     <string name="reregister_success">Son matriculado para los %s!</string>
     <string name="reregister_todo">Usted puede matricularse hasta el %s</string>
-    <string name="undoall">Anular todo</string>
     <string name="undo">Anular</string>
 
     <!-- first use tutorial -->
@@ -311,7 +309,6 @@
     <string name="news_sources">Fuentes de noticias</string>
     <string name="newspread_summary">Seleccione qué newspread desea mostrar. Estos son los toboganes en los monitores de información en sus edificios de la facultad.</string>
     <string name="no_default_campus">No campus por defecto</string>
-    <string name="no_private_key">No clave privada encontrado! Restablecer datos de la aplicación para resolver esto!</string>
     <string name="no_rights_to_access_id">No se tiene acceso Identidad. Por favor, consulte los derechos de su token TUMOnline!</string>
     <string name="no_rights_to_access_lectures">No se podía acceder Conferencias. Por favor, consulte los derechos de su token TUMOnline!</string>
     <string name="not_ask_again">No volver a preguntar</string>
@@ -322,7 +319,6 @@
     <string name="open_card_settings">Configuración de la tarjeta Abiertas</string>
     <string name="open_chat_terms">Términos de chat</string>
     <string name="opens">Abre</string>
-    <string name="options">Opciones</string>
     <string name="password">Contraseña</string>
     <string name="password_gets_not_saved">TUM Campus App no guarda la contraseña, pero Android WifiManager hace.</string>
     <string name="phone_summary">Para recibir notificaciones en el teléfono tiene que habilitar Wearable</string>
@@ -343,12 +339,12 @@
     <string name="status_sending_failed">No Enviando</string>
     <string name="support_us">Ayúdanos a difundir la palabra sobre el Campus App! Al igual que nosotros en Facebook, sugerir una idea emocionante en Github o enviar un correo decirnos lo que piensas!</string>
     <string name="switch_map">Seleccionar mapa</string>
-    <string name="update">Aactualización</string>
     <string name="view_mode">Cambiar el modo de vista</string>
     <string name="message_detail_text">&lt;b>Emisor&lt;/b>&lt;br> Nombre: %1$s&lt;br> E-Mail: %2$s@mytum.de&lt;br>&lt;br> &lt;b>Mensaje&lt;/b>&lt;br> Hora: %3$s&lt;br> Estado: %4$s&lt;br> Firma: %5$s</string>
     <string name="tuition_fee_more">La información sobre las contribuciones y las exenciones, créditos, asistencia para la formación y becas, vaya a: <a href="https://www.tum.de/en/studies/fees-and-financial-aid/">Ayuda Financiera Estudiantil</a></string>
     <string name="public_key_mail">Correo de activación de clave pública enviada a %s@mytum.de.\n\n<b>Por favor, active ahora!</b></string>
     <string name="pin_lock_desc">Para configurar la conexión inalámbrica se requiere un bloqueo de PIN.\nSi usted no tiene ya utilizar el bloqueo de PIN usted puede configurarlo aquí.\n<a href="https://www.tum.de/index.php?id=1821&amp;tx_ttnews%5Btt_news%5D=31688">Más información</a></string>
     <string name="support_us_title">¡Apoyanos!</string>
+    <string name="ok">OK</string>
     <!-- END Translated, please do not change identifiers -->
 </resources>

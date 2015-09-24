@@ -102,8 +102,8 @@ public class EduroamManager {
             try {
                 // Get class instance for enterprise field class and than find setValue Method
                 Method wcefSetValue = null;
-                Class[] wcClasses = WifiConfiguration.class.getClasses();
-                for (Class wcClass : wcClasses) {
+                Class<?>[] wcClasses = WifiConfiguration.class.getClasses();
+                for (Class<?> wcClass : wcClasses) {
                     if (wcClass.getName().equals(INT_ENTERPRISE_FIELD_NAME)) {
                         for (Method m : wcClass.getMethods()) {
                             if (m.getName().trim().equals("setValue")) {

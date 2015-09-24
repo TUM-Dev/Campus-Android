@@ -1,10 +1,10 @@
 package de.tum.in.tumcampus.auxiliary;
 
 import android.content.Context;
-import android.text.format.Time;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -18,7 +18,6 @@ public class DateUtils {
 
     private static final String formatSQL = "yyyy-MM-dd HH:mm:ss"; // 2014-06-30 16:31:57
     private static final String formatISO = "yyyy-MM-dd'T'HH:mm:ss'Z'"; // 2014-06-30T16:31:57.878Z
-    private static final String logTag = "DateUtils";
 
     public static String getRelativeTimeISO(String timestamp, Context context) {
             return DateUtils.getRelativeTime(DateUtils.parseIsoDate(timestamp), context);
@@ -43,7 +42,7 @@ public class DateUtils {
         }
 
         long timeInMillis = time.getTime();
-        long now = DateUtils.getCurrentTime().toMillis(false);
+        long now = Calendar.getInstance().getTimeInMillis();
 
         //Catch future dates: current clock might be running behind
         if (timeInMillis > now || timeInMillis <= 0) {
@@ -88,11 +87,5 @@ public class DateUtils {
             Utils.log("Parsing SQL date failed");
         }
         return null;
-    }
-
-    private static Time getCurrentTime() {
-        Time now = new Time();
-        now.setToNow();
-        return now;
     }
 }

@@ -1,5 +1,6 @@
 package de.tum.in.tumcampus.activities;
 
+import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.ContentUris;
@@ -7,12 +8,17 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.database.Cursor;
+import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.CalendarContract;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.text.format.DateUtils;
 import android.util.TypedValue;
 import android.view.Menu;
@@ -45,6 +51,11 @@ import de.tum.in.tumcampus.tumonline.TUMOnlineConst;
  * Activity showing the user's calendar. Calendar items (events) are fetched from TUMOnline and displayed as blocks on a timeline.
  */
 public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowSet> implements OnClickListener, WeekView.MonthChangeListener {
+
+    private static final int REQUEST_SYNC = 0;
+    private static final int REQUEST_DELETE = 1;
+    private static String[] PERMISSIONS_CALENDAR = {Manifest.permission.READ_CALENDAR,
+            Manifest.permission.WRITE_CALENDAR};
 
     /**
      * The space between the first and the last date
@@ -89,8 +100,9 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
 
         // Get time to show e.g. a lectures starting time or 0 for now
         Intent i = getIntent();
-        if (i != null && i.hasExtra(EVENT_TIME))
+        if (i != null && i.hasExtra(EVENT_TIME)) {
             mEventTime = i.getLongExtra(EVENT_TIME, 0);
+        }
 
         //mViewPager = (ViewPager) findViewById(R.id.pager);
         calendarManager = new CalendarManager(this);
@@ -204,6 +216,11 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
      * Asynchronous task for exporting the calendar to a local Google calendar
      */
     void exportCalendarToGoogle() {
+        //Check Calendar permission for Android 6.0
+        if (!isPermissionGranted(REQUEST_SYNC)) {
+            return;
+        }
+
         AsyncTask<Void, Void, Boolean> backgroundTask;
 
         backgroundTask = new AsyncTask<Void, Void, Boolean>() {
@@ -233,6 +250,57 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
         backgroundTask.execute();
     }
 
+    /**
+     * Check Calendar permission for Android 6.0
+     *
+     * @param id the request id
+     * @return If the calendar permission was granted
+     */
+    private boolean isPermissionGranted(int id) {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CALENDAR) == PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED) {
+            return true;
+        } else {
+            // Provide an additional rationale to the user if the permission was not granted
+            // and the user would benefit from additional context for the use of the permission.
+            // For example, if the request has been denied previously.
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_COARSE_LOCATION) ||
+                    ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
+
+                // Display an AlertDialog with an explanation and a button to trigger the request.
+                new AlertDialog.Builder(this)
+                        .setMessage(getString(R.string.permission_calendar_explanation))
+                        .setPositiveButton(R.string.ok, new OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int id) {
+                                ActivityCompat
+                                        .requestPermissions(CalendarActivity.this, PERMISSIONS_CALENDAR, id);
+                            }
+                        }).show();
+            } else {
+                ActivityCompat.requestPermissions(CalendarActivity.this, PERMISSIONS_CALENDAR, id);
+            }
+        }
+
+        return false;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        //Check if we got all Calendar permissions
+        for(int result : grantResults) {
+            if(result != PackageManager.PERMISSION_GRANTED) {
+                return;
+            }
+        }
+        //Rerun the interrupted action
+        if(requestCode == REQUEST_SYNC) {
+            exportCalendarToGoogle();
+        } else if (requestCode == REQUEST_DELETE) {
+            deleteCalendarFromGoogle();
+        }
+    }
+
     @Override
     public void onClick(DialogInterface dialog, int which) {
         if (which == DialogInterface.BUTTON_POSITIVE) {
@@ -259,6 +327,10 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
      * Async task for deleting the calendar from local Google calendar
      */
     void deleteCalendarFromGoogle() {
+        //Check Calendar permission for Android 6.0
+        if (!isPermissionGranted(REQUEST_DELETE)) {
+            return;
+        }
         AlertDialog.Builder builder = new AlertDialog.Builder(CalendarActivity.this);
         builder.setMessage(getString(R.string.dialog_delete_calendar)).setPositiveButton(getString(R.string.yes), new OnClickListener() {
 

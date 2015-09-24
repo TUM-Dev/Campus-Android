@@ -54,7 +54,7 @@ public class ScanResultsAvailableReceiver extends BroadcastReceiver {
      * Shows notification if it is not already visible
      * @param context Context
      */
-    void showNotification(Context context) {
+    static void showNotification(Context context) {
         // If previous notification is still visible
 
         if(!Utils.getInternalSettingBool(context, SHOULD_SHOW, true))

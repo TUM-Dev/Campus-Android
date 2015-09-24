@@ -71,7 +71,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.main_toolbar);
         setSupportActionBar(toolbar);
-        if(parent!=null && parent.equals(MainActivity.class.getName())) {
+        if (getSupportActionBar() != null && parent!=null && parent.equals(MainActivity.class.getName())) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setHomeButtonEnabled(true);
         }

@@ -20,7 +20,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -194,8 +193,10 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.main_toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setHomeButtonEnabled(true);
+        }
 
         this.getIntentData();
         this.bindUIElements();
@@ -246,7 +247,9 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
             //If currently in a room which does not match the one from the notification --> Switch
             if (room.getId() != currentChatRoom.getId()) {
                 currentChatRoom = room;
-                getSupportActionBar().setSubtitle(currentChatRoom.getName().substring(4));
+                if (getSupportActionBar() != null) {
+                    getSupportActionBar().setSubtitle(currentChatRoom.getName().substring(4));
+                }
                 chatHistoryAdapter = null;
                 chatManager = new ChatMessageManager(this, currentChatRoom.getId());
                 getNextHistoryFromServer(true);
@@ -348,7 +351,9 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
         Bundle extras = getIntent().getExtras();
         currentChatRoom = new Gson().fromJson(extras.getString(Const.CURRENT_CHAT_ROOM), ChatRoom.class);
         currentChatMember = Utils.getSetting(this, Const.CHAT_MEMBER, ChatMember.class);
-        getSupportActionBar().setTitle(currentChatRoom.getName().substring(4));
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(currentChatRoom.getName().substring(4));
+        }
         chatManager = new ChatMessageManager(this, currentChatRoom.getId());
 
         CharSequence message = getMessageText(getIntent());
@@ -473,7 +478,7 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
     /**
      * Gets the text from speech input and returns null if no input was provided
      */
-    private CharSequence getMessageText(Intent intent) {
+    private static CharSequence getMessageText(Intent intent) {
         Bundle remoteInput = RemoteInput.getResultsFromIntent(intent);
         if (remoteInput != null) {
             return remoteInput.getCharSequence(EXTRA_VOICE_REPLY);
@@ -496,7 +501,7 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
             return false;
         }
         //Calculate the proper position of the item without the header from pull to refresh
-        int positionActual = position-lvMessageHistory.getHeaderViewsCount();
+        int positionActual = position - lvMessageHistory.getHeaderViewsCount();
 
         //Get the correct message
         ChatMessage message = (ChatMessage) chatHistoryAdapter.getItem(positionActual);

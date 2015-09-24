@@ -1,15 +1,21 @@
 package de.tum.in.tumcampus.activities;
 
+import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -22,6 +28,7 @@ import com.nineoldandroids.animation.ObjectAnimator;
 import com.nineoldandroids.view.ViewHelper;
 
 import java.io.File;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.wizard.WizNavChatActivity;
@@ -42,6 +49,11 @@ import de.tum.in.tumcampus.trace.ExceptionHandler;
  * Entrance point of the App.
  */
 public class StartupActivity extends AppCompatActivity {
+
+    AtomicBoolean initializationFinished = new AtomicBoolean(false);
+    private static final int REQUEST_LOCATION = 0;
+    private static String[] PERMISSIONS_LOCATION = {Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.ACCESS_FINE_LOCATION};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +84,7 @@ public class StartupActivity extends AppCompatActivity {
         // Check the flag if user wants the wizard to open at startup
         boolean hideWizardOnStartup = Utils.getSettingBool(this, Const.HIDE_WIZARD_ON_STARTUP, false);
         String lrzId = Utils.getSetting(this, Const.LRZ_ID, ""); // If new version and LRZ ID is empty, start the full wizard
-        if (!hideWizardOnStartup || (newVersion && lrzId.length() == 0)) {
+        if (!hideWizardOnStartup || (newVersion && lrzId.isEmpty())) {
             startActivity(new Intent(this, WizNavStartActivity.class));
             finish();
             return;
@@ -81,10 +93,11 @@ public class StartupActivity extends AppCompatActivity {
             Utils.setSetting(this, CardManager.SHOW_SUPPORT, true);
 
             Intent intent;
-            if (new AccessTokenManager(this).hasValidAccessToken())
+            if (new AccessTokenManager(this).hasValidAccessToken()) {
                 intent = new Intent(this, WizNavChatActivity.class);
-            else
+            } else {
                 intent = new Intent(this, WizNavExtrasActivity.class);
+            }
             intent.putExtra(Const.TOKEN_IS_SETUP, true);
 
             startActivity(intent);
@@ -106,6 +119,9 @@ public class StartupActivity extends AppCompatActivity {
         Intent i = new Intent(this, StartSyncReceiver.class);
         i.putExtra(Const.APP_LAUNCHES, true);
         sendBroadcast(i);
+
+        //Request Permissions for Android 6.0
+        requestLocationPermission();
     }
 
     @Override
@@ -122,15 +138,76 @@ public class StartupActivity extends AppCompatActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals(DownloadService.BROADCAST_NAME)) {
+
+                //Only proceed to start the App, if initialization is finished
+                if (initializationFinished.compareAndSet(false, true)) {
+                    return;
+                }
                 startApp();
             }
         }
     };
 
     /**
+     * Request the Location Permission
+     */
+    private void requestLocationPermission() {
+        //Check, if we already have permission
+        if ((ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED)
+                || (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED)) {
+
+            // Provide an additional rationale to the user if the permission was not granted
+            // and the user would benefit from additional context for the use of the permission.
+            // For example, if the request has been denied previously.
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_COARSE_LOCATION) ||
+                    ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
+
+                // Display an AlertDialog with an explanation and a button to trigger the request.
+                new AlertDialog.Builder(this)
+                        .setMessage(getString(R.string.permission_location_explanation))
+                        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int id) {
+                                ActivityCompat
+                                        .requestPermissions(StartupActivity.this, PERMISSIONS_LOCATION,
+                                                REQUEST_LOCATION);
+                            }
+                        }).show();
+            } else {
+                ActivityCompat.requestPermissions(StartupActivity.this, PERMISSIONS_LOCATION,
+                        REQUEST_LOCATION);
+            }
+        } else {
+            //We already got the permissions, to proceed normally
+            //Only proceed to start the App, if initialization is finished
+            if (initializationFinished.compareAndSet(false, true)) {
+                return;
+            }
+            startApp();
+        }
+    }
+
+    /**
+     * Callback when the user allowed or denied Permissions
+     * We do not care, if we got the permission or not, since the LocationManager needs to handle
+     * missing permissions anyway
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        //Only proceed to start the App, if initialization is finished
+        if (initializationFinished.compareAndSet(false, true)) {
+            return;
+        }
+        startApp();
+    }
+
+    /**
      * Animates the TUM logo into place (left upper corner) and animates background up.
      * Afterwards {@link MainActivity} gets started
      */
+
     private void startApp() {
         // Get views to be moved
         final View background = findViewById(R.id.startup_background);
