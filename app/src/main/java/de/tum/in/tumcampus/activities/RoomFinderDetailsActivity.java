@@ -123,20 +123,8 @@ public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<Vo
             fragment = null;
             return;
         }
-        //TODO loadevents:
-        /*
-        public void loadEvents(Context context, ArrayList<IntegratedCalendarEvent> events, int startDay, int days) {
-        events.clear();
-
-        Time date = new Time();
-        date.setJulianDay(startDay);
-        String start = Utils.getDateTimeString(new Date(date.toMillis(false)));
-        date.setJulianDay(startDay+days-1);
-        String end = Utils.getDateTimeString(new Date(date.toMillis(false)));
-        TUMRoomFinderRequest request = new TUMRoomFinderRequest(context);
-        request.fetchRoomSchedule(mRoomApi, start, end, events);
-         */
-        fragment = new WeekViewFragment();
+        String roomApiCode = roomInfo.getString(TUMRoomFinderRequest.KEY_ROOM_API_CODE);
+        fragment = WeekViewFragment.newInstance(roomApiCode);
         ft.add(android.R.id.content, fragment);
         ft.commit();
     }
@@ -153,6 +141,7 @@ public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<Vo
         new AlertDialog.Builder(this).setSingleChoiceItems(list, curPos, this).show();
     }
 
+    @Override
     public void onClick(DialogInterface dialog, int whichButton) {
         dialog.dismiss();
         int selectedPosition = ((AlertDialog) dialog).getListView().getCheckedItemPosition();
@@ -177,7 +166,7 @@ public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<Vo
                         List<ResolveInfo> pkgAppsList = getApplicationContext().getPackageManager().queryIntentActivities(intent, PackageManager.GET_RESOLVED_FILTER);
 
                         // If some app can handle this intent start it
-                        if (pkgAppsList.size() > 0) {
+                        if (!pkgAppsList.isEmpty()) {
                             startActivity(intent);
                             return;
                         }
@@ -202,7 +191,7 @@ public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<Vo
         // First search for roomId and mapId
         if (location != null && !location.isEmpty() && roomInfo == null) {
             ArrayList<HashMap<String, String>> request = requestHandler.fetchRooms(location);
-            if (request.size() > 0) {
+            if (!request.isEmpty()) {
                 HashMap<String, String> room = request.get(0);
 
                 roomInfo = new Bundle();
@@ -212,8 +201,9 @@ public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<Vo
             }
         }
 
-        if (roomInfo == null)
+        if (roomInfo == null) {
             return null;
+        }
 
         if (mapId == null || mapId.isEmpty()) {
             mapId = requestHandler.fetchDefaultMapId(roomInfo.getString(TUMRoomFinderRequest.KEY_BUILDING_ID));
@@ -237,8 +227,9 @@ public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<Vo
             Utils.log(e);
         }
 
-        if (url == null)
+        if (url == null) {
             return null;
+        }
 
         return net.downloadImageToBitmap(url);
     }

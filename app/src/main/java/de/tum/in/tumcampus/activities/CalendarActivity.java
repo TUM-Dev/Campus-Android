@@ -17,7 +17,6 @@ import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.text.format.DateUtils;
 import android.util.TypedValue;
@@ -28,7 +27,6 @@ import com.alamkanak.weekview.DateTimeInterpreter;
 import com.alamkanak.weekview.WeekView;
 import com.alamkanak.weekview.WeekViewEvent;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -77,7 +75,6 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
      */
     private boolean isFetched;
     private boolean mWeekMode = false;
-    private long mEventTime = 0;
     private MenuItem menuItemSwitchView;
     private WeekView mWeekView;
 
@@ -99,10 +96,10 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
         mWeekView.goToHour(8);
 
         // Get time to show e.g. a lectures starting time or 0 for now
-        Intent i = getIntent();
-        if (i != null && i.hasExtra(EVENT_TIME)) {
-            mEventTime = i.getLongExtra(EVENT_TIME, 0);
-        }
+        //Intent i = getIntent();
+        //if (i != null && i.hasExtra(EVENT_TIME)) {
+        //    mEventTime = i.getLongExtra(EVENT_TIME, 0);
+        //}
 
         //mViewPager = (ViewPager) findViewById(R.id.pager);
         calendarManager = new CalendarManager(this);
@@ -159,7 +156,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         // the Calendar export is not supported for API < 14
-        if (android.os.Build.VERSION.SDK_INT < 14) {
+        if (Build.VERSION.SDK_INT < 14) {
             menuItemExportGoogle.setVisible(false);
             menuItemDeleteCalendar.setVisible(false);
         } else {
@@ -365,8 +362,9 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
             calendar.set(Calendar.DAY_OF_MONTH, curDay);
             Cursor cEvents = calendarManager.getFromDbForDate(new Date(calendar.getTimeInMillis()));
 
-            while (cEvents.moveToNext())
+            while (cEvents.moveToNext()) {
                 events.add(new IntegratedCalendarEvent(cEvents));
+            }
         }
 
         return events;
@@ -390,10 +388,10 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
                 }
                 SimpleDateFormat weekdayNameFormat = new SimpleDateFormat(weekDayFormat, Locale.getDefault());
                 String weekday = weekdayNameFormat.format(date.getTime());
-                String dateString = android.text.format.DateUtils.formatDateTime(getApplicationContext(),
+                String dateString = DateUtils.formatDateTime(getApplicationContext(),
                         date.getTimeInMillis(), DateUtils.FORMAT_NUMERIC_DATE);
 
-                return weekday.toUpperCase() + " " + dateString;
+                return weekday.toUpperCase() + ' ' + dateString;
             }
 
             @Override
@@ -401,8 +399,8 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
                 Calendar cal = Calendar.getInstance();
                 cal.set(Calendar.HOUR_OF_DAY, hour);
                 cal.set(Calendar.MINUTE, 0);
-                return android.text.format.DateUtils.formatDateTime(getApplicationContext(),
-                        cal.getTimeInMillis(), android.text.format.DateUtils.FORMAT_SHOW_TIME);
+                return DateUtils.formatDateTime(getApplicationContext(),
+                        cal.getTimeInMillis(), DateUtils.FORMAT_SHOW_TIME);
             }
         });
     }
