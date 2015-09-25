@@ -184,12 +184,14 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
                     // Lets change some dimensions to best fit the view.
                     mWeekView.setTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 12, getResources().getDisplayMetrics()));
                     mWeekView.setEventTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 10, getResources().getDisplayMetrics()));
+                    mWeekView.setXScrollingSpeed(1);
                 } else {
                     menuItemSwitchView.setIcon(R.drawable.ic_action_week_view);
                     mWeekView.setNumberOfVisibleDays(1);
                     // Lets change some dimensions to best fit the view.
                     mWeekView.setTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 16, getResources().getDisplayMetrics()));
                     mWeekView.setEventTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 12, getResources().getDisplayMetrics()));
+                    mWeekView.setXScrollingSpeed(0.4f);
                 }
                 mWeekView.goToHour(8);
                 return true;

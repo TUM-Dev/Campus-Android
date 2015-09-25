@@ -14,4 +14,4 @@
     app:noOfVisibleDays="1"
     app:textSize="14sp"
     app:todayBackgroundColor="#1848adff"
-    app:xScrollingSpeed="0.35" />
+    app:xScrollingSpeed="0.4" />
