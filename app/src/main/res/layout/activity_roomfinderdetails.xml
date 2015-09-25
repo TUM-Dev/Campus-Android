@@ -11,8 +11,8 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" />
 
-    <it.sephiroth.android.library.imagezoom.ImageViewTouch
-        android:id="@+id/activity_roomfinder_details"
+    <FrameLayout
+        android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

@@ -25,11 +25,10 @@ import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.generic.ActivityForLoadingInBackground;
 import de.tum.in.tumcampus.auxiliary.NetUtils;
 import de.tum.in.tumcampus.auxiliary.Utils;
+import de.tum.in.tumcampus.fragments.ImageViewTouchFragment;
 import de.tum.in.tumcampus.fragments.WeekViewFragment;
 import de.tum.in.tumcampus.models.Geo;
 import de.tum.in.tumcampus.tumonline.TUMRoomFinderRequest;
-import it.sephiroth.android.library.imagezoom.ImageViewTouch;
-import it.sephiroth.android.library.imagezoom.ImageViewTouchBase;
 
 /**
  * Displays the map regarding the searched room.
@@ -39,7 +38,7 @@ public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<Vo
     public static final String EXTRA_ROOM_INFO = "roomInfo";
     public static final String EXTRA_LOCATION = "location";
 
-    private ImageViewTouch mImage;
+    private ImageViewTouchFragment mImage;
 
     private boolean mapsLoaded = false;
     private TUMRoomFinderRequest request;
@@ -61,9 +60,9 @@ public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<Vo
         super.onCreate(savedInstanceState);
 
         net = new NetUtils(this);
-        mImage = (ImageViewTouch) findViewById(R.id.activity_roomfinder_details);
-        mImage.setDisplayType(ImageViewTouchBase.DisplayType.FIT_TO_SCREEN);
-        mImage.setDoubleTapEnabled(false);
+
+        mImage = ImageViewTouchFragment.newInstance();
+        getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, mImage).commit();
 
         location = getIntent().getExtras().getString(EXTRA_LOCATION);
         roomInfo = getIntent().getExtras().getBundle(EXTRA_ROOM_INFO);
@@ -118,14 +117,14 @@ public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<Vo
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         // Remove if fragment is already present
         if (fragment != null) {
-            ft.remove(fragment);
+            ft.replace(R.id.fragment_container, mImage);
             ft.commit();
             fragment = null;
             return;
         }
         String roomApiCode = roomInfo.getString(TUMRoomFinderRequest.KEY_ROOM_API_CODE);
         fragment = WeekViewFragment.newInstance(roomApiCode);
-        ft.add(android.R.id.content, fragment);
+        ft.replace(R.id.fragment_container, fragment);
         ft.commit();
     }
 
@@ -246,7 +245,11 @@ public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<Vo
         }
         infoLoaded = true;
         supportInvalidateOptionsMenu();
-        mImage.setImageBitmap(result);
+
+        //Update the fragment
+        mImage = ImageViewTouchFragment.newInstance(result);
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, mImage).commit();
+
         if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle(roomInfo.getString(TUMRoomFinderRequest.KEY_ROOM_TITLE));
             getSupportActionBar().setSubtitle(roomInfo.getString(TUMRoomFinderRequest.KEY_BUILDING_TITLE));

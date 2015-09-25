@@ -14,6 +14,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
+import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.auxiliary.calendar.IntegratedCalendarEvent;
 import de.tum.in.tumcampus.tumonline.TUMRoomFinderRequest;
 
@@ -37,10 +38,10 @@ public class WeekViewFragment extends Fragment implements WeekView.MonthChangeLi
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         roomApiCode = getArguments().getString(TUMRoomFinderRequest.KEY_ROOM_API_CODE);
 
-        mWeekView = new WeekView(getContext());
+        View view = inflater.inflate(R.layout.fragment_day_view, container, false);
+        mWeekView = (WeekView) view.findViewById(R.id.weekView);
         mWeekView.setMonthChangeListener(this);
-        mWeekView.setNumberOfVisibleDays(1);
-        mWeekView.setXScrollingSpeed(0.35f);
+        mWeekView.goToHour(8);
         return mWeekView;
     }
 
