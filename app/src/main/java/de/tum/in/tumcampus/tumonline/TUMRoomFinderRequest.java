@@ -261,7 +261,7 @@ public class TUMRoomFinderRequest {
                         startTime,
                         endTime,
                         "location",
-                        getDisplayColorFromColor(0xff28921f)
+                        IntegratedCalendarEvent.getDisplayColorFromColor(0xff28921f)
                 ));
             }
         } catch (Exception e) {
@@ -381,19 +381,5 @@ public class TUMRoomFinderRequest {
         double d18 = ((d9 - ((1 + 2 * d6 + d7) * Math.pow(d9, 3)) / 6) + (((((5 - 2 * d7) + 28 * d6) - 3 * d7 * d7) + 8 * d3 + 24 * d6 * d6) * Math.pow(d9, 5)) / 120) / Math.cos(d14);
         d18 = d11 + d18 * 180 / Math.PI;
         return new Geo(d17, d18);
-    }
-
-    private static final float SATURATION_ADJUST = 1.3f;
-    private static final float INTENSITY_ADJUST = 0.8f;
-    public static int getDisplayColorFromColor(int color) {
-        if (!(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)) {
-            return color;
-        }
-
-        float[] hsv = new float[3];
-        Color.colorToHSV(color, hsv);
-        hsv[1] = Math.min(hsv[1] * SATURATION_ADJUST, 1.0f);
-        hsv[2] = hsv[2] * INTENSITY_ADJUST;
-        return Color.HSVToColor(hsv);
     }
 }

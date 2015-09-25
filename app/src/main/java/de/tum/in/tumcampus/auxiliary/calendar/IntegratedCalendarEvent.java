@@ -89,7 +89,7 @@ public class IntegratedCalendarEvent extends WeekViewEvent {
     private static final float SATURATION_ADJUST = 1.3f;
     private static final float INTENSITY_ADJUST = 0.8f;
 
-    private static int getDisplayColorFromColor(int color) {
+    public static int getDisplayColorFromColor(int color) {
         if (!(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)) {
             return color;
         }
