@@ -16,7 +16,7 @@ import de.tum.in.tumcampus.auxiliary.Utils;
  */
 public class IntegratedCalendarEvent extends WeekViewEvent {
 
-    String location;
+    private String location;
 
     public IntegratedCalendarEvent(Cursor cEvents) {
         super(getEventIdFromCursor(cEvents),
@@ -36,7 +36,9 @@ public class IntegratedCalendarEvent extends WeekViewEvent {
 
     private static String getEventTitleFromCursor(Cursor cEvents) {
         String eventTitle = cEvents.getString(3);
-        if (eventTitle == null) eventTitle = "";
+        if (eventTitle == null) {
+            eventTitle = "";
+        }
         eventTitle = eventTitle.replaceAll("[A-Z, 0-9(LV\\.Nr)=]+$", "");
         eventTitle = eventTitle.replaceAll("\\([A-Z]+[0-9]+\\)", "");
         eventTitle = eventTitle.replaceAll("\\[[A-Z]+[0-9]+\\]", "");
@@ -45,7 +47,9 @@ public class IntegratedCalendarEvent extends WeekViewEvent {
 
     private static int getEventColorFromCursor(Cursor cEvents) {
         String eventTitle = cEvents.getString(3);
-        if (eventTitle == null) eventTitle = "";
+        if (eventTitle == null) {
+            eventTitle = "";
+        }
         if (eventTitle.endsWith("VO") || eventTitle.endsWith("VU")) {
             return getDisplayColorFromColor(0xff28921f);
         } else if (eventTitle.endsWith("UE")) {
@@ -57,7 +61,9 @@ public class IntegratedCalendarEvent extends WeekViewEvent {
 
     private static String getEventLocationFromCursor(Cursor cEvents) {
         String eventLocation = cEvents.getString(7);
-        if (eventLocation == null) eventLocation = "";
+        if (eventLocation == null) {
+            eventLocation = "";
+        }
         eventLocation = eventLocation.replaceAll("\\([A-Z0-9\\.]+\\)", "");
         return eventLocation.trim();
     }
@@ -91,7 +97,11 @@ public class IntegratedCalendarEvent extends WeekViewEvent {
         float[] hsv = new float[3];
         Color.colorToHSV(color, hsv);
         hsv[1] = Math.min(hsv[1] * SATURATION_ADJUST, 1.0f);
-        hsv[2] = hsv[2] * INTENSITY_ADJUST;
+        hsv[2] *= INTENSITY_ADJUST;
         return Color.HSVToColor(hsv);
+    }
+
+    public String getLocation() {
+        return location;
     }
 }

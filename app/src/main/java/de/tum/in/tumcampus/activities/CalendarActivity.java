@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.RectF;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -48,7 +49,7 @@ import de.tum.in.tumcampus.tumonline.TUMOnlineConst;
 /**
  * Activity showing the user's calendar. Calendar items (events) are fetched from TUMOnline and displayed as blocks on a timeline.
  */
-public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowSet> implements OnClickListener, WeekView.MonthChangeListener {
+public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowSet> implements OnClickListener, WeekView.MonthChangeListener, WeekView.EventClickListener {
 
     private static final int REQUEST_SYNC = 0;
     private static final int REQUEST_DELETE = 1;
@@ -94,6 +95,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
         mWeekView.setMonthChangeListener(this);
         setupDateTimeInterpreter(mWeekMode);
         mWeekView.goToHour(8);
+        mWeekView.setOnEventClickListener(this);
 
         // Get time to show e.g. a lectures starting time or 0 for now
         //Intent i = getIntent();
@@ -405,5 +407,13 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
                         cal.getTimeInMillis(), DateUtils.FORMAT_SHOW_TIME);
             }
         });
+    }
+
+    @Override
+    public void onEventClick(WeekViewEvent weekViewEvent, RectF rectF) {
+        IntegratedCalendarEvent event = (IntegratedCalendarEvent) weekViewEvent;
+        Intent i = new Intent(this, RoomFinderDetailsActivity.class);
+        i.putExtra(RoomFinderDetailsActivity.EXTRA_LOCATION, event.getLocation());
+        this.startActivity(i);
     }
 }
