@@ -1,3 +1,4 @@
+sudo: false # migrate to container-based infrastructure
 branches:
   only:
     - master
