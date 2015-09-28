@@ -9,11 +9,18 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.widget.TextView;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.MainActivity;
+import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.DrawerMenuHelper;
 import de.tum.in.tumcampus.auxiliary.ImplicitCounter;
+import de.tum.in.tumcampus.auxiliary.Utils;
+import de.tum.in.tumcampus.models.Employee;
+import de.tum.in.tumcampus.tumonline.TUMOnlineConst;
+import de.tum.in.tumcampus.tumonline.TUMOnlineRequest;
 
 /**
  * Takes care of the navigation drawer which might be attached to the activity and also handles up navigation
@@ -49,7 +56,21 @@ public abstract class BaseActivity extends AppCompatActivity {
         mDrawerList = (NavigationView) findViewById(R.id.left_drawer);
 
         // Setup the navigation drawer if present in the layout
-        if (mDrawerList != null) {
+        if (mDrawerList != null && mDrawerLayout != null) {
+            // Set personalization in the navdrawer
+            TextView nameText = (TextView) findViewById(R.id.name);
+            TextView emailText = (TextView) findViewById(R.id.email);
+            nameText.setText(Utils.getSetting(this, Const.CHAT_ROOM_DISPLAY_NAME,
+                    getString(R.string.token_not_enabled)));
+            String email = Utils.getSetting(this, Const.LRZ_ID, "");
+            if (!email.isEmpty()) {
+                email += "@mytum.de";
+            }
+            emailText.setText(email);
+
+            // Set picture as set in TUMOnline
+            fetchProfilePicture();
+
             DrawerMenuHelper helper = new DrawerMenuHelper(this, mDrawerLayout);
             helper.populateMenu(mDrawerList.getMenu());
 
@@ -87,5 +108,31 @@ public abstract class BaseActivity extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void fetchProfilePicture() {
+        String id = Utils.getSetting(this, Const.TUMO_PIDENT_NR, "");
+        if (id.isEmpty()) {
+            return;
+        }
+
+        final TUMOnlineRequest<Employee> request = new TUMOnlineRequest<>(TUMOnlineConst.PERSON_DETAILS, this, true);
+        request.setParameter("pIdentNr", id);
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                final Employee result = request.fetch();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        CircleImageView picture = (CircleImageView) findViewById(R.id.profile_image);
+                        if (result != null && result.getImage() != null) {
+                            picture.setImageBitmap(result.getImage());
+                        }
+                    }
+                });
+            }
+        }).start();
     }
 }

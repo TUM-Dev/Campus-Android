@@ -52,6 +52,7 @@ public final class Const {
 	public static final String CURRENT_CHAT_ROOM = "current_chat_room";
 	public static final String CHAT_ROOM_DISPLAY_NAME = "chat_room_display_name";
 	public static final String PRIVATE_KEY = "chat_member_private_key";
+	public static final String TUMO_PIDENT_NR = "pIdentNr";
 	public static final String GCM_REG_ID = "gcm_registration_id";
 	public static final String GCM_REG_ID_SENT_TO_SERVER = "gcm_registration_id_sent_to_server";
     public static final String GCM_REG_ID_LAST_TRANSMISSION = "gcm_registration_id_last_transmission";

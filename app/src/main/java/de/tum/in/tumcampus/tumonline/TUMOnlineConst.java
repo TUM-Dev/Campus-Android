@@ -27,7 +27,7 @@ public class TUMOnlineConst<T> {
     public static final TUMOnlineConst<LecturesSearchRowSet> LECTURES_SEARCH = new TUMOnlineConst<>("veranstaltungenSuche", CacheManager.VALIDITY_DO_NOT_CACHE, LecturesSearchRowSet.class);
     public static final TUMOnlineConst<OrgItemList> ORG_TREE = new TUMOnlineConst<>("orgBaum", CacheManager.VALIDITY_ONE_MONTH, OrgItemList.class);
     public static final TUMOnlineConst<OrgDetailItemList> ORG_DETAILS = new TUMOnlineConst<>("orgDetails", CacheManager.VALIDITY_ONE_MONTH, OrgDetailItemList.class);
-    public static final TUMOnlineConst<Employee> PERSON_DETAILS = new TUMOnlineConst<>("personenDetails", CacheManager.VALIDITY_DO_NOT_CACHE, Employee.class);
+    public static final TUMOnlineConst<Employee> PERSON_DETAILS = new TUMOnlineConst<>("personenDetails", CacheManager.VALIDITY_FIFE_DAYS, Employee.class);
     public static final TUMOnlineConst<PersonList> PERSON_SEARCH = new TUMOnlineConst<>("personenSuche", CacheManager.VALIDITY_DO_NOT_CACHE, PersonList.class);
     public static final TUMOnlineConst<ExamList> EXAMS = new TUMOnlineConst<>("noten", CacheManager.VALIDITY_TEN_DAYS, ExamList.class);
     public static final TUMOnlineConst<TokenConfirmation> TOKEN_CONFIRMED = new TUMOnlineConst<>("isTokenConfirmed", CacheManager.VALIDITY_DO_NOT_CACHE, TokenConfirmation.class);
