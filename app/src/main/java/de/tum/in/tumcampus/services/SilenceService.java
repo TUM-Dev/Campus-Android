@@ -3,7 +3,6 @@ package de.tum.in.tumcampus.services;
 import android.app.AlarmManager;
 import android.app.IntentService;
 import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -21,13 +20,6 @@ import de.tum.in.tumcampus.models.managers.CalendarManager;
  * Service used to silence the mobile during lectures
  */
 public class SilenceService extends IntentService {
-
-    public static class SilenceServiceBroadcastReceiver extends BroadcastReceiver {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            context.startService(new Intent(context, SilenceService.class));
-        }
-    }
 
     /**
      * Interval in milliseconds to check for current lectures
