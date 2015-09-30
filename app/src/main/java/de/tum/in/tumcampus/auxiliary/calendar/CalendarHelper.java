@@ -1,4 +1,4 @@
-package de.tum.in.tumcampus.auxiliary;
+package de.tum.in.tumcampus.auxiliary.calendar;
 
 import android.annotation.TargetApi;
 import android.content.ContentValues;
