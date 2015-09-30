@@ -43,6 +43,9 @@
     <!-- For QR code scanner -->
     <uses-permission android:name="android.permission.CAMERA" />
 
+    <!-- To start the SilenceService when the device boots -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
     <!--
      Creates a custom permission so only this app can receive its messages.
 
@@ -95,6 +98,13 @@
                 <action android:name="android.net.wifi.STATE_CHANGED"/>
                 <action android:name="android.net.wifi.WIFI_STATE_CHANGED"/>-->
                 <action android:name="android.net.wifi.SCAN_RESULTS" />
+            </intent-filter>
+        </receiver>
+
+        <!-- Start the SilenceService on boot completed -->
+        <receiver android:name=".services.SilenceService$SilenceServiceBroadcastReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
 
