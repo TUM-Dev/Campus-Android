@@ -7,7 +7,6 @@
     <string name="app_name">TUM Campus App</string>
     <string name="search">Suchen</string>
     <string name="tum_logo">TUM Logo</string>
-    <string name="update">Update</string>
     <string name="loading">Lade …</string>
     <string name="settings">Einstellungen</string>
     <string name="yes">Ja</string>
@@ -106,6 +105,16 @@
     <!-- News -->
     <string name="no_link_existing">Kein Link gefunden.</string>
     <string name="info_title">Neuigkeiten:</string>
+
+    <!-- Kino -->
+    <string name="imdb_rating">IMDB-Rating</string>
+    <string name="year">Erscheinungsjahr</string>
+    <string name="runtime">Laufzeit</string>
+    <string name="genre">Genre</string>
+    <string name="director">Regisseur</string>
+    <string name="actors">Schauspieler</string>
+    <string name="description">Beschreibung</string>
+    <string name="no_movies">Zur Zeit gibt es keine Filme.</string>
 
     <!-- Navigation drawer -->
     <string name="drawer_open">Öffnen</string>
@@ -222,10 +231,8 @@
     <string name="next_lecture">Nächste Vorlesung</string>
     <string name="restore_all_cards">Karten wiederherstellen</string>
     <string name="card_dismissed">Karte ausgeblendet</string>
-    <string name="cards_dismissed">%s Karten ausgeblendet</string>
     <string name="reregister_success">Du bist für das %s rückgemeldet!</string>
     <string name="reregister_todo">Du kannst dich bis zum %s rückmelden!</string>
-    <string name="undoall">Alle Rückgängig</string>
     <string name="undo">Rückgängig</string>
 
     <!-- first use tutorial -->
@@ -271,7 +278,6 @@
     <string name="card_chat_summary">Benachrichtigt dich wenn neue Nachrichten verfügbar sind</string>
     <string name="open_card_settings">Karte anpassen</string>
     <string name="always_hide_card">Karte immer ausblenden</string>
-    <string name="options">Optionen</string>
     <string name="phone_summary">Um Benachrichtigungen auf dem Telefon zu erhalten muss Wearable aktiviert sein</string>
     <string name="display">Anzeige</string>
 
@@ -350,7 +356,6 @@ Signatur: %5$s</string>
     <string name="no_default_campus">Kein Standard Campus</string>
     <string name="public_key_mail">Public Key Aktivierungs-E-Mail wurde an %s@mytum.de gesendet!\n\n<b>Bitte aktiviere ihn jetzt!</b></string>
     <string name="failure_uploading_public_key">Fehler beim Hochladen des Public Key</string>
-    <string name="no_private_key">Kein private key gefunden! Setze die App zurück um den Fehler zu beheben!</string>
     <string name="key_not_activated">Du hast deinen Key noch nicht aktiviert!</string>
     <string name="no_rights_to_access_lectures">Vorlesungen konnten nicht abgerufen werden. Bitte überprüfe die Rechte deines TUMOnline Tokens!</string>
     <string name="edit">Bearbeiten</string>

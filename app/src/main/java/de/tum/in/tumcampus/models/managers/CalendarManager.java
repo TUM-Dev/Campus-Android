@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Locale;
 
 import de.tum.in.tumcampus.R;
-import de.tum.in.tumcampus.auxiliary.CalendarHelper;
+import de.tum.in.tumcampus.auxiliary.calendar.CalendarHelper;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.cards.Card;
@@ -81,7 +81,7 @@ public class CalendarManager implements Card.ProvidesCard {
      * @return Database cursor (name, location, _id)
      */
     public Cursor getCurrentFromDb() {
-        return db.rawQuery("SELECT title, location, nr FROM calendar WHERE datetime('now', 'localtime') BETWEEN dtstart AND dtend AND status!=\"CANCEL\"", null);
+        return db.rawQuery("SELECT title, location, nr, dtend FROM calendar WHERE datetime('now', 'localtime') BETWEEN dtstart AND dtend AND status!=\"CANCEL\"", null);
     }
 
     /**
@@ -181,7 +181,7 @@ public class CalendarManager implements Card.ProvidesCard {
         Cursor cursor = calendarManager.getAllFromDb();
         while (cursor.moveToNext()) {
             // Get each table row
-            final String status = cursor.getString(1);
+            //final String status = cursor.getString(1);
             final String title = cursor.getString(3);
             final String description = cursor.getString(4);
             final String strStart = cursor.getString(5);

@@ -35,7 +35,6 @@ public class TransportationActivity extends ActivityForSearchingInBackground<Cur
         super(R.layout.activity_transportation, MVVStationSuggestionProvider.AUTHORITY, 3);
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,7 +48,7 @@ public class TransportationActivity extends ActivityForSearchingInBackground<Cur
         // Initialize stations adapter
         Cursor stationCursor = recentsManager.getAllFromDb();
         adapterStations = new SimpleCursorAdapter(this, android.R.layout.simple_list_item_1, stationCursor,
-                stationCursor.getColumnNames(), new int[]{android.R.id.text1});
+                stationCursor.getColumnNames(), new int[]{android.R.id.text1}, 0);
 
         if(adapterStations.getCount()==0) {
             openSearch();

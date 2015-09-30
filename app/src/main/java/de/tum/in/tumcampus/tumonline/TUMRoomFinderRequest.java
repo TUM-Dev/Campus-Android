@@ -1,7 +1,9 @@
 package de.tum.in.tumcampus.tumonline;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.AsyncTask;
+import android.os.Build;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -10,6 +12,7 @@ import org.w3c.dom.NodeList;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -18,7 +21,7 @@ import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.auxiliary.NetUtils;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.auxiliary.XMLParser;
-import de.tum.in.tumcampus.auxiliary.calendar.Event;
+import de.tum.in.tumcampus.auxiliary.calendar.IntegratedCalendarEvent;
 import de.tum.in.tumcampus.models.Geo;
 
 /**
@@ -229,7 +232,7 @@ public class TUMRoomFinderRequest {
      * @param roomApiCode rooms api code
      * @return List of Events
      */
-    public ArrayList<Event> fetchRoomSchedule(String roomApiCode, String startDate, String endDate, ArrayList<Event> scheduleList) {
+    public ArrayList<IntegratedCalendarEvent> fetchRoomSchedule(String roomApiCode, String startDate, String endDate, ArrayList<IntegratedCalendarEvent> scheduleList) {
         setParameter("start_date", startDate);
         setParameter("end_date", endDate);
         method = roomApiCode;
@@ -246,15 +249,20 @@ public class TUMRoomFinderRequest {
 
             for (int k = 0; k < scheduleNodes.getLength(); k++) {
                 Element schedule = (Element) scheduleNodes.item(k);
-                Event event = Event.newInstance();
-                event.id = Long.parseLong(XMLParser.getValue(schedule, "eventID"));
-                event.title = XMLParser.getValue(schedule, "title");
                 String start = XMLParser.getValue(schedule, "begin_time");
                 String end = XMLParser.getValue(schedule, "end_time");
-                event.setStart(Utils.getISODateTime(start));
-                event.setEnd(Utils.getISODateTime(end));
-                event.color = Event.getDisplayColorFromColor(0xff28921f);
-                scheduleList.add(event);
+                Calendar startTime = Calendar.getInstance();
+                startTime.setTime(Utils.getISODateTime(start));
+                Calendar endTime = Calendar.getInstance();
+                endTime.setTime(Utils.getISODateTime(end));
+                scheduleList.add(new IntegratedCalendarEvent(
+                        Long.parseLong(XMLParser.getValue(schedule, "eventID")),
+                        XMLParser.getValue(schedule, "title"),
+                        startTime,
+                        endTime,
+                        "location",
+                        IntegratedCalendarEvent.getDisplayColorFromColor(0xff28921f)
+                ));
             }
         } catch (Exception e) {
             Utils.log(e, "FetchError");

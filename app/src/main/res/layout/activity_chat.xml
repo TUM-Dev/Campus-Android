@@ -37,6 +37,7 @@
                 android:layout_marginLeft="10dp"
                 android:layout_toLeftOf="@+id/btnSend"
                 android:layout_toStartOf="@+id/btnSend"
+                android:inputType="textShortMessage"
                 android:hint="@string/send" />
 
             <ImageButton
