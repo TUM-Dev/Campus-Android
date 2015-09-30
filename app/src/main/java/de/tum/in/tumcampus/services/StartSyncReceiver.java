@@ -38,6 +38,9 @@ public class StartSyncReceiver extends BroadcastReceiver {
         }
 
         context.startService(new Intent(context, SendMessageService.class));
+
+        // Also start the SilenceService. It checks if it is enabled, so we don't need to
+        context.startService(new Intent(context, SilenceService.class));
     }
 
     private static boolean isBackgroundServicePermitted(Context context) {
