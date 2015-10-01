@@ -2,34 +2,38 @@ package de.tum.in.tumcampus.activities.generic;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.NavUtils;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
+import android.widget.TextView;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.MainActivity;
-import de.tum.in.tumcampus.adapters.NavigationDrawerAdapter;
+import de.tum.in.tumcampus.auxiliary.Const;
+import de.tum.in.tumcampus.auxiliary.DrawerMenuHelper;
 import de.tum.in.tumcampus.auxiliary.ImplicitCounter;
+import de.tum.in.tumcampus.auxiliary.Utils;
+import de.tum.in.tumcampus.models.Employee;
+import de.tum.in.tumcampus.tumonline.TUMOnlineConst;
+import de.tum.in.tumcampus.tumonline.TUMOnlineRequest;
 
 /**
  * Takes care of the navigation drawer which might be attached to the activity and also handles up navigation
  */
 public abstract class BaseActivity extends AppCompatActivity {
 
-    protected final Handler mDrawerHandler = new Handler();
     /**
      * Default layouts for user interaction
      */
     private final int mLayoutId;
+
     protected DrawerLayout mDrawerLayout;
-    protected ListView mDrawerList;
+    protected NavigationView mDrawerList;
 
     /**
      * Standard constructor for BaseActivity.
@@ -49,50 +53,41 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         // Get handles to navigation drawer
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerList = (ListView) findViewById(R.id.left_drawer);
+        mDrawerList = (NavigationView) findViewById(R.id.left_drawer);
 
         // Setup the navigation drawer if present in the layout
-        if(mDrawerList!=null) {
+        if (mDrawerList != null && mDrawerLayout != null) {
+            // Set personalization in the navdrawer
+            TextView nameText = (TextView) findViewById(R.id.name);
+            TextView emailText = (TextView) findViewById(R.id.email);
+            nameText.setText(Utils.getSetting(this, Const.CHAT_ROOM_DISPLAY_NAME,
+                    getString(R.string.token_not_enabled)));
+            String email = Utils.getSetting(this, Const.LRZ_ID, "");
+            if (!email.isEmpty()) {
+                email += "@mytum.de";
+            }
+            emailText.setText(email);
 
-            // Set the adapter for the list view
-            mDrawerList.setAdapter(new NavigationDrawerAdapter(this));
+            // Set picture as set in TUMOnline
+            fetchProfilePicture();
 
-            // Set the list's click listener
-            mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                    NavigationDrawerAdapter.SideNavigationItem item = (NavigationDrawerAdapter.SideNavigationItem) adapterView.getAdapter().getItem(position);
-                    scheduleLaunchAndCloseDrawer(item);
-                }
-            });
+            DrawerMenuHelper helper = new DrawerMenuHelper(this, mDrawerLayout);
+            helper.populateMenu(mDrawerList.getMenu());
+
+            // Set the NavigationDrawer's click listener
+            mDrawerList.setNavigationItemSelectedListener(helper);
         }
 
         String parent = NavUtils.getParentActivityName(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.main_toolbar);
         setSupportActionBar(toolbar);
-        if (getSupportActionBar() != null && parent!=null && parent.equals(MainActivity.class.getName())) {
+        if (getSupportActionBar() != null && parent != null && parent.equals(MainActivity.class.getName())) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setHomeButtonEnabled(true);
         }
     }
 
-    private void scheduleLaunchAndCloseDrawer(final NavigationDrawerAdapter.SideNavigationItem sideNavigationItem) {
-        // Clears any previously posted runnables, for double clicks
-        mDrawerHandler.removeCallbacksAndMessages(null);
-
-        mDrawerHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (sideNavigationItem.getActivity() == null)
-                    return;
-                startActivity(new Intent(BaseActivity.this, sideNavigationItem.getActivity()));
-            }
-        }, 250);
-        // The millisecond delay is arbitrary and was arrived at through trial and error
-
-        mDrawerLayout.closeDrawer(mDrawerList);
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -113,5 +108,31 @@ public abstract class BaseActivity extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void fetchProfilePicture() {
+        String id = Utils.getSetting(this, Const.TUMO_PIDENT_NR, "");
+        if (id.isEmpty()) {
+            return;
+        }
+
+        final TUMOnlineRequest<Employee> request = new TUMOnlineRequest<>(TUMOnlineConst.PERSON_DETAILS, this, true);
+        request.setParameter("pIdentNr", id);
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                final Employee result = request.fetch();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        CircleImageView picture = (CircleImageView) findViewById(R.id.profile_image);
+                        if (result != null && result.getImage() != null) {
+                            picture.setImageBitmap(result.getImage());
+                        }
+                    }
+                });
+            }
+        }).start();
     }
 }
