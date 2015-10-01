@@ -44,6 +44,8 @@ public final class Const {
     public static final String URL_COLUMN = "url";
 	public static final String SILENCE_ON = "silence_on";
 	public static final String SILENCE_SERVICE = "silent_mode";
+	public static final String SILENCE_OLD_STATE = "silence_old_state";
+	public static final String SILENT_MODE_SET_TO = "silent_mode_set_to";
 	public static final String TITLE_EXTRA = "title";
 	public static final String TRANSPORT_COLUMN = "transport";
 	public static final String WARNING = "warning";

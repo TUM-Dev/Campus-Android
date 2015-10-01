@@ -1,6 +1,8 @@
 package de.tum.in.tumcampus.services;
 
+import android.app.AlarmManager;
 import android.app.IntentService;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -9,10 +11,6 @@ import android.media.AudioManager;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.Utils;
@@ -23,17 +21,12 @@ import de.tum.in.tumcampus.models.managers.CalendarManager;
  */
 public class SilenceService extends IntentService {
 
-    static final ScheduledExecutorService tpe = Executors.newSingleThreadScheduledExecutor();
-    static final AtomicBoolean isRunning = new AtomicBoolean(false);
-
     /**
      * Interval in milliseconds to check for current lectures
      */
-    private static final int CHECK_INTERVAL = 60000 * 15, // 15 Minutes
-            CHECK_DELAY = 10000; // 10 Seconds after Calendar changed
+    private static final int CHECK_INTERVAL = 60000 * 15; // 15 Minutes
+    private static final int CHECK_DELAY = 10000; // 10 Seconds after Calendar changed
     private static final String SILENCE_SERVICE = "SilenceService";
-    
-    private static int oldState = AudioManager.RINGER_MODE_NORMAL;
 
     /**
      * default init (run intent in new thread)
@@ -56,70 +49,69 @@ public class SilenceService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        if (!isRunning.compareAndSet(false, true)) {
+        AlarmManager alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
+        Intent newIntent = new Intent(this, SilenceService.class);
+        PendingIntent pendingIntent = PendingIntent.getService(this, 0, newIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        long startTime = System.currentTimeMillis();
+        long wait_duration = CHECK_INTERVAL;
+
+        //Abort, if the settings changed
+        if (!Utils.getSettingBool(this, Const.SILENCE_SERVICE, false)) {
+            // Don't schedule a new run, since the service is disabled
+            return;
+        }
+        Utils.log("SilenceService enabled, checking for lectures ...");
+
+        AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+
+        CalendarManager calendarManager = new CalendarManager(this);
+        if (!calendarManager.hasLectures()) {
+            Utils.logv("No lectures available");
+            alarmManager.set(AlarmManager.RTC, startTime + wait_duration, pendingIntent);
             return;
         }
 
-        tpe.schedule(new Runnable() {
-            @Override
-            public void run() {
-                long wait_duration = CHECK_INTERVAL;
+        Cursor cursor = calendarManager.getCurrentFromDb();
+        Utils.log("Current lectures: " + String.valueOf(cursor.getCount()));
 
-                //Abort, if the settings changed
-                if (!Utils.getSettingBool(SilenceService.this, Const.SILENCE_SERVICE, false)) {
-                    isRunning.set(false);
-                    return;
-                }
-                Utils.log("SilenceService enabled, checking for lectures ...");
-
-                AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-
-                CalendarManager calendarManager = new CalendarManager(SilenceService.this);
-                if (!calendarManager.hasLectures()) {
-                    Utils.logv("No lectures available");
-                    tpe.schedule(this, wait_duration, TimeUnit.MILLISECONDS);
-                    return;
-                }
-
-                Cursor cursor = calendarManager.getCurrentFromDb();
-                Utils.log("Current lectures: " + String.valueOf(cursor.getCount()));
-
-                if (cursor.getCount() != 0) {
-                    // remember old state if just activated ; in doubt dont change
-                    if(!Utils.getInternalSettingBool(SilenceService.this, Const.SILENCE_ON, true))
-                        oldState = am.getRingerMode();
-                    
-                    // if current lecture(s) found, silence the mobile
-                    Utils.setInternalSetting(SilenceService.this, Const.SILENCE_ON, true);
-
-                    // Set into silent mode
-                    String mode = Utils.getSetting(SilenceService.this, "silent_mode_set_to", "0");
-                    if (mode.equals("0")) {
-                        Utils.log("set ringer mode: vibration");
-                        am.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
-                    } else {
-                        Utils.log("set ringer mode: silent");
-                        am.setRingerMode(AudioManager.RINGER_MODE_SILENT);
-                    }
-                    // refresh when event has ended
-                    wait_duration = getWaitDuration(cursor.getString(3));
-                } else if (Utils.getInternalSettingBool(SilenceService.this, Const.SILENCE_ON, false)) {
-                    // default: old state
-                    Utils.log("set ringer mode to old state");
-                    am.setRingerMode(oldState);
-                    Utils.setInternalSetting(SilenceService.this, Const.SILENCE_ON, false);
-
-
-                    Cursor cursor2 = calendarManager.getNextCalendarItem();
-                    // refresh when next event has started
-                    wait_duration = getWaitDuration(cursor2.getString(1));
-                    cursor2.close();
-                }
-                cursor.close();
-
-                tpe.schedule(this, wait_duration, TimeUnit.MILLISECONDS);
+        if (cursor.getCount() != 0) {
+            // remember old state if just activated ; in doubt dont change
+            if (!Utils.getInternalSettingBool(this, Const.SILENCE_ON, true)) {
+                Utils.setSetting(this, Const.SILENCE_OLD_STATE, am.getRingerMode());
             }
-        }, 0, TimeUnit.MILLISECONDS);
+
+            // if current lecture(s) found, silence the mobile
+            Utils.setInternalSetting(this, Const.SILENCE_ON, true);
+
+            // Set into silent mode
+            String mode = Utils.getSetting(this, "silent_mode_set_to", "0");
+            if (mode.equals("0")) {
+                Utils.log("set ringer mode: vibration");
+                am.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
+            } else {
+                Utils.log("set ringer mode: silent");
+                am.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+            }
+            // refresh when event has ended
+            wait_duration = getWaitDuration(cursor.getString(3));
+        } else if (Utils.getInternalSettingBool(this, Const.SILENCE_ON, false)) {
+            // default: old state
+            Utils.log("set ringer mode to old state");
+            am.setRingerMode(Integer.parseInt(
+                    Utils.getSetting(this, Const.SILENCE_OLD_STATE,
+                            Integer.toString(AudioManager.RINGER_MODE_NORMAL))));
+            Utils.setInternalSetting(this, Const.SILENCE_ON, false);
+
+
+            Cursor cursor2 = calendarManager.getNextCalendarItem();
+            // refresh when next event has started
+            wait_duration = getWaitDuration(cursor2.getString(1));
+            cursor2.close();
+        }
+        cursor.close();
+
+        alarmManager.set(AlarmManager.RTC, startTime + wait_duration, pendingIntent);
     }
 
     private static long getWaitDuration(String timeToEventString) {
