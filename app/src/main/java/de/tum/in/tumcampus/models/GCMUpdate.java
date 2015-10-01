@@ -8,6 +8,7 @@ import java.io.Serializable;
 @SuppressWarnings("UnusedDeclaration")
 public class GCMUpdate implements Serializable {
 
+    private static final long serialVersionUID = -4597228673980239217L;
     public int packageVersion;
     public int sdkVersion;
     public String releaseDate;

@@ -8,6 +8,7 @@ import java.io.Serializable;
 @SuppressWarnings("UnusedDeclaration")
 public class GCMAlert implements Serializable {
 
+    private static final long serialVersionUID = 3906290674499996501L;
     public boolean silent;
 
 }

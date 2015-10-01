@@ -8,6 +8,7 @@ import java.io.Serializable;
  */
 @SuppressWarnings("UnusedDeclaration")
 public class GCMChat implements Serializable {
+    private static final long serialVersionUID = -3920974316634829667L;
     public int room;
     public int member;
     public int message;
