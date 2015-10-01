@@ -13,7 +13,7 @@ import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.generic.ActivityForLoadingInBackground;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.Utils;
-import de.tum.in.tumcampus.models.ChatClient;
+import de.tum.in.tumcampus.models.TUMCabeClient;
 import de.tum.in.tumcampus.models.ChatMember;
 import de.tum.in.tumcampus.models.ChatRoom;
 import de.tum.in.tumcampus.models.ChatVerification;
@@ -107,7 +107,7 @@ public class WizNavActivatePublicKeyActivity extends ActivityForLoadingInBackgro
 
         // Try to restore already joined chat rooms from server
         try {
-            List<ChatRoom> rooms = ChatClient.getInstance(this).getMemberRooms(member.getId(), new ChatVerification(privateKey, member));
+            List<ChatRoom> rooms = TUMCabeClient.getInstance(this).getMemberRooms(member.getId(), new ChatVerification(privateKey, member));
             manager.replaceIntoRooms(rooms);
             return true;
         } catch (RetrofitError e) {

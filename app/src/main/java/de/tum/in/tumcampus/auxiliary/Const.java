@@ -51,7 +51,7 @@ public final class Const {
 	public static final String WARNING = "warning";
 	public static final String WARNING_MESSAGE = "warning_message";
 	
-	public static final String CHAT_URL = "https://tumcabe.in.tum.de/Api/chat/";
+	public static final String API_HOSTNAME = "tumcabe.in.tum.de";
 	public static final String CURRENT_CHAT_ROOM = "current_chat_room";
 	public static final String CHAT_ROOM_DISPLAY_NAME = "chat_room_display_name";
 	public static final String PRIVATE_KEY = "chat_member_private_key";

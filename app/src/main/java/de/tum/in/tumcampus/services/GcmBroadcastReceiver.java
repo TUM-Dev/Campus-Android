@@ -39,11 +39,13 @@ public class GcmBroadcastReceiver extends WakefulBroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         // If we don't have set up our chat don't work with any GCM Notifications
-        if(Utils.getPrivateKeyFromSharedPrefs(context)==null)
+        if (Utils.getPrivateKeyFromSharedPrefs(context) == null) {
             return;
+        }
 
         // Explicitly specify that GcmIntentService will handle the intent.
         ComponentName comp = new ComponentName(context.getPackageName(), GcmIntentService.class.getName());
+
         // Start the service, keeping the device awake while it is launching.
         startWakefulService(context, (intent.setComponent(comp)));
         setResultCode(Activity.RESULT_OK);

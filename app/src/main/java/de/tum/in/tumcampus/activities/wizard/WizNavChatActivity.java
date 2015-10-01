@@ -22,7 +22,7 @@ import de.tum.in.tumcampus.auxiliary.AccessTokenManager;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.NetUtils;
 import de.tum.in.tumcampus.auxiliary.Utils;
-import de.tum.in.tumcampus.models.ChatClient;
+import de.tum.in.tumcampus.models.TUMCabeClient;
 import de.tum.in.tumcampus.models.ChatMember;
 import de.tum.in.tumcampus.models.ChatPublicKey;
 import de.tum.in.tumcampus.models.LecturesSearchRow;
@@ -175,7 +175,7 @@ public class WizNavChatActivity extends ActivityForLoadingInBackground<Void, Cha
             ChatMember member;
             try {
                 // After the user has entered their display name, send a request to the server to create the new member
-                member = ChatClient.getInstance(this).createMember(currentChatMember);
+                member = TUMCabeClient.getInstance(this).createMember(currentChatMember);
             } catch (RetrofitError e) {
                 Utils.log(e);
                 Utils.showToastOnUIThread(this, R.string.error_setup_chat_member);
@@ -231,7 +231,7 @@ public class WizNavChatActivity extends ActivityForLoadingInBackground<Void, Cha
 
                 // Upload public key to the server
                 try {
-                    ChatClient.getInstance(this).uploadPublicKey(member.getId(), new ChatPublicKey(publicKeyString));
+                    TUMCabeClient.getInstance(this).uploadPublicKey(member.getId(), new ChatPublicKey(publicKeyString));
 
                     // Save private key in shared preferences
                     Utils.setInternalSetting(this, Const.PRIVATE_KEY, privateKeyString);

@@ -263,6 +263,7 @@
     <string name="bug_reports">Informes Bug Anonymous</string>
     <string name="cafeteria">Cafetería</string>
     <string name="campus_klinikum_großhadern">Klinikum Großhadern</string>
+    <string name="update_notification_description">Una nueva versión del Campus App Tum se ha lanzado en %s. Pulse para descargar ahora.</string>
     <string name="card_cafeteria_summary">Muestra el menú de la cafetería</string>
     <string name="card_chat_summary">Le notifica si los nuevos mensajes están disponibles</string>
     <string name="card_eduroam_summary">Le permite configurar fácilmente la conexión wifi eduroam</string>

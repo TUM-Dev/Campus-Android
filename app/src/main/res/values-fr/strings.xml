@@ -324,6 +324,7 @@
     <string name="add_chat_member">Ajouter personne à salle de chat</string>
     <string name="add_chat_room"> Nouveau Chat Room</string>
     <string name="auto_join_chat">Joignez-vous à de nouvelles salles de cours</string>
+    <string name="update_notification_description">Une nouvelle version de l\'App Tum Campus a été libéré sous %s. Appuyez sur pour télécharger maintenant.</string>
     <string name="default_campus">Par défaut campus</string>
     <string name="edit">Modifier</string>
     <string name="failure_uploading_public_key">Clé publique insuffisance ajout</string>

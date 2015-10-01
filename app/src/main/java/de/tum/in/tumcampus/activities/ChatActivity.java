@@ -49,7 +49,8 @@ import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.ImplicitCounter;
 import de.tum.in.tumcampus.auxiliary.NetUtils;
 import de.tum.in.tumcampus.auxiliary.Utils;
-import de.tum.in.tumcampus.models.ChatClient;
+import de.tum.in.tumcampus.models.GCMChat;
+import de.tum.in.tumcampus.models.TUMCabeClient;
 import de.tum.in.tumcampus.models.ChatMember;
 import de.tum.in.tumcampus.models.ChatMessage;
 import de.tum.in.tumcampus.models.ChatPublicKey;
@@ -92,21 +93,15 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
     private final BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Bundle extras = intent.getExtras();
-            String chatRoomString = extras.getString("room");
-            String memberString = extras.getString("member");
-            int messageId = -1;
-            if (extras.containsKey("message"))
-                messageId = Integer.parseInt(extras.getString("message"));
-
-            Utils.log("Broadcast receiver got room=" + chatRoomString + " member=" + memberString);
+            GCMChat extras = (GCMChat) intent.getSerializableExtra("GCMChat");
+            Utils.log("Broadcast receiver got room=" + extras.room + " member=" + extras.member);
 
             //If same room just refresh
-            if (chatRoomString.equals("" + currentChatRoom.getId()) && chatHistoryAdapter != null) {
-                if (memberString.equals("" + currentChatMember.getId())) {
+            if (extras.room == currentChatRoom.getId() && chatHistoryAdapter != null) {
+                if (extras.member == currentChatMember.getId()) {
                     // Remove this message from the adapter
                     chatHistoryAdapter.setUnsentMessages(chatManager.getAllUnsent());
-                } else if (messageId == -1) {
+                } else if (extras.message == -1) {
                     //Check first, if sounds are enabled
                     AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
                     if (am.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
@@ -125,6 +120,7 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
             }
         }
     };
+
     private ActionMode mActionMode = null;
     private final ActionMode.Callback mActionModeCallback = new ActionMode.Callback() {
 
@@ -408,10 +404,10 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
                 // If currently nothing has been shown load newest messages from server
                 ChatVerification verification = new ChatVerification(Utils.getPrivateKeyFromSharedPrefs(ChatActivity.this), currentChatMember);
                 if (chatHistoryAdapter == null || chatHistoryAdapter.getSentCount() == 0 || newMsg) {
-                    downloadedChatHistory = ChatClient.getInstance(ChatActivity.this).getNewMessages(currentChatRoom.getId(), verification);
+                    downloadedChatHistory = TUMCabeClient.getInstance(ChatActivity.this).getNewMessages(currentChatRoom.getId(), verification);
                 } else {
                     long id = chatHistoryAdapter.getItemId(ChatMessageManager.COL_ID);
-                    downloadedChatHistory = ChatClient.getInstance(ChatActivity.this).getMessages(currentChatRoom.getId(), id, verification);
+                    downloadedChatHistory = TUMCabeClient.getInstance(ChatActivity.this).getMessages(currentChatRoom.getId(), id, verification);
                 }
 
                 //Save it to our local cache
@@ -457,7 +453,7 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
 
         // Send request to the server to remove the user from this room
         ChatVerification verification = new ChatVerification(Utils.getPrivateKeyFromSharedPrefs(this), currentChatMember);
-        ChatClient.getInstance(ChatActivity.this).leaveChatRoom(currentChatRoom, verification, new Callback<ChatRoom>() {
+        TUMCabeClient.getInstance(ChatActivity.this).leaveChatRoom(currentChatRoom, verification, new Callback<ChatRoom>() {
             @Override
             public void success(ChatRoom room, Response arg1) {
                 Utils.logv("Success leaving chat room: " + room.getName());
@@ -525,7 +521,7 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
 
     private void showInfo(final ChatMessage message) {
         //Verify the message with RSA
-        ChatClient.getInstance(ChatActivity.this).getPublicKeysForMember(message.getMember(), new Callback<List<ChatPublicKey>>() {
+        TUMCabeClient.getInstance(ChatActivity.this).getPublicKeysForMember(message.getMember(), new Callback<List<ChatPublicKey>>() {
             @Override
             public void success(List<ChatPublicKey> publicKeys, Response arg1) {
                 ChatMessageValidator validator = new ChatMessageValidator(publicKeys);
