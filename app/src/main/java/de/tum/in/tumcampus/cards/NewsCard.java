@@ -12,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
 import de.tum.in.tumcampus.R;
+import de.tum.in.tumcampus.activities.KinoActivity;
 import de.tum.in.tumcampus.adapters.NewsAdapter;
 import de.tum.in.tumcampus.auxiliary.NetUtils;
 import de.tum.in.tumcampus.auxiliary.Utils;
@@ -118,14 +119,19 @@ public class NewsCard extends Card {
 
     @Override
     public Intent getIntent() {
-        mCursor.moveToPosition(mPosition);
-        String url = mCursor.getString(3);
-        if (url.length() == 0) {
-            Utils.showToast(mContext, R.string.no_link_existing);
-            return null;
-        }
+        if (isFilm) {
+            return new Intent(mContext, KinoActivity.class);
+        } else {
+            // Show regular news in browser
+            mCursor.moveToPosition(mPosition);
+            String url = mCursor.getString(3);
+            if (url.length() == 0) {
+                Utils.showToast(mContext, R.string.no_link_existing);
+                return null;
+            }
 
-        // Opens url in browser
-        return new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+            // Opens url in browser
+            return new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+        }
     }
 }

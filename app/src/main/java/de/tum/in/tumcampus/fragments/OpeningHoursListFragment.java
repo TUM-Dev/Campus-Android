@@ -1,7 +1,7 @@
 package de.tum.in.tumcampus.fragments;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
+import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
@@ -36,7 +36,7 @@ public class OpeningHoursListFragment extends ListFragment {
          * @param pos Index of the item
          * @param name Name of the item
          */
-		public void onItemSelected(int pos, String name);
+		void onItemSelected(int pos, String name);
 	}
 
 	/**
@@ -74,7 +74,7 @@ public class OpeningHoursListFragment extends ListFragment {
 	}
 
 	@Override
-	public void onAttach(Activity activity) {
+	public void onAttach(Context activity) {
 		super.onAttach(activity);
 
 		// Activities containing this fragment must implement its callbacks.

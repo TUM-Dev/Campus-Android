@@ -10,7 +10,6 @@ import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import de.tum.in.tumcampus.R;
@@ -53,7 +52,6 @@ public class LectureAppointmentsListAdapter extends BaseAdapter {
 		return position;
 	}
 
-	@SuppressWarnings("deprecation")
     @Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		ViewHolder holder;
@@ -87,13 +85,16 @@ public class LectureAppointmentsListAdapter extends BaseAdapter {
 			// this is the template for the date in the xml file
 			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 			try {
-				Date start = formatter.parse(lvItem.getBeginn_datum_zeitpunkt());
-				Date ende = formatter.parse(lvItem.getEnde_datum_zeitpunkt());
+
+				Calendar start = Calendar.getInstance();
+				Calendar ende = Calendar.getInstance();
+				start.setTime(formatter.parse(lvItem.getBeginn_datum_zeitpunkt()));
+				ende.setTime(formatter.parse(lvItem.getEnde_datum_zeitpunkt()));
 
 				// make two calendar instances
 				Calendar cnow = Calendar.getInstance();
 				Calendar cstart = Calendar.getInstance();
-				cstart.setTime(start);
+				cstart.setTime(start.getTime());
 
 				// date formats for the day output
 				SimpleDateFormat endHoursOutput = new SimpleDateFormat("HH:mm");
@@ -102,7 +103,8 @@ public class LectureAppointmentsListAdapter extends BaseAdapter {
 
 				// output if same day: we only show the date once
                 String output;
-				if (start.getMonth() == ende.getMonth() && start.getDate() == ende.getDate()) {
+				if (start.get(Calendar.MONTH) == ende.get(Calendar.MONTH) &&
+						start.get(Calendar.DATE) == ende.get(Calendar.DATE)) {
 					output = StartDateOutput.format(start) + " - " + endHoursOutput.format(ende);
 				} else {
 					// show it normally

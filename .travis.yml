@@ -1,3 +1,4 @@
+sudo: false # migrate to container-based infrastructure
 branches:
   only:
     - master
@@ -14,7 +15,7 @@ android:
     - extra-google-google_play_services
     - extra-google-m2repository
     - android-23
-    - build-tools-23.0.0
+    - build-tools-23.0.1
   licenses:
         - '.+'
 

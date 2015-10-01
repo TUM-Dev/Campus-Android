@@ -36,7 +36,7 @@ import de.tum.in.tumcampus.BuildConfig;
 /**
  * Class for common helper functions used by a lot of classes
  */
-public class Utils {
+public final class Utils {
 
     /**
      * Builds a HTML document out of a css file and the body content.
@@ -86,10 +86,14 @@ public class Utils {
      */
     public static int dbGetTableCount(SQLiteDatabase db, String table) {
         Cursor c = db.rawQuery("SELECT count(*) FROM " + table, null);
-        if (c.moveToNext()) {
-            return c.getInt(0);
+        try {
+            if (c.moveToNext()) {
+                return c.getInt(0);
+            }
+            return 0;
+        } finally {
+            c.close();
         }
-        return 0;
     }
 
     /**

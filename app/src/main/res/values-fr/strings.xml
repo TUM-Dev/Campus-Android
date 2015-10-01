@@ -217,10 +217,8 @@
     <string name="next_lecture">Prochain cours magistral</string>
     <string name="restore_all_cards">Reconstituer les cartes</string>
     <string name="card_dismissed">Carte cachée</string>
-    <string name="cards_dismissed">%s cartes cachées</string>
     <string name="reregister_success">Tu as une réinscription pour %s!</string>
     <string name="reregister_todo">Tu as jusqu\'au %s confirmation!</string>
-    <string name="undoall">Tous Annuler</string>
     <string name="undo">Annuler</string>
 
     <!-- first use tutorial -->
@@ -266,7 +264,6 @@
     <string name="card_chat_summary">Vous avertit lorsque de nouveaux messages sont disponibles</string>
     <string name="open_card_settings">Personnaliser carte</string>
     <string name="always_hide_card">Toujours masquer carte</string>
-    <string name="options">Options de</string>
     <string name="phone_summary">Doit recevoir des notifications sur votre téléphone portable soit activé</string>
     <string name="display">Affichage</string>
 
@@ -340,7 +337,6 @@
     <string name="new_chat_room">Nouvelle salle de chat</string>
     <string name="new_chat_room_desc">Sélectionnez un nom pour votre salle de chat. Le nom ne peut pas être modifié par la suite!\n\n</string>
     <string name="no_default_campus">Pas de campus par défaut</string>
-    <string name="no_private_key">Pas de clé privée trouvé! Réinitialiser les données de l\'application pour résoudre ce!</string>
     <string name="no_rights_to_access_id">L\'identité ne pouvait être consulté. S\'il vous plaît vérifier les droits de votre jeton de TUMOnline!</string>
     <string name="no_rights_to_access_lectures">Conférences ne pouvaient pas être accessibles. S\'il vous plaît vérifier les droits de votre jeton de TUMOnline!</string>
     <string name="not_joined">Autre</string>
@@ -354,9 +350,9 @@
     <string name="status_sending">Envoi</string>
     <string name="status_sending_failed">Échec de l\'envoi</string>
     <string name="support_us">Aidez-nous à passer le mot sur le Campus App! Aimez-nous sur Facebook, suggérer une idée excitante sur Github ou envoyer un mail nous dire ce que vous pensez!</string>
-    <string name="update">Mise à jour</string>
     <string name="message_detail_text">&lt;b>Envoyeur&lt;/b>&lt;br> Nom: %1$s&lt;br> E-Mail: %2$s@mytum.de&lt;br>&lt;br> &lt;b>Message&lt;/b>&lt;br> Temps: %3$s&lt;br> Statut: %4$s&lt;br> Signature: %5$s</string>
     <string name="tuition_fee_more">Information sur les contributions et les exonérations, prêts, aide à la formation et des bourses, aller à: <a href="https://www.tum.de/en/studies/fees-and-financial-aid/">Aide financière aux étudiants</a></string>
     <string name="public_key_mail">Mail d\'activation envoyé à clé publique %s@mytum.de.\n\n<b>S\'il vous plaît activer maintenant!</b></string>
     <string name="support_us_title">Soutenez-nous!</string>
+    <string name="ok">OK</string>
 </resources>

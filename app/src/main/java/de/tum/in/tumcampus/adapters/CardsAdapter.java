@@ -23,7 +23,7 @@ import de.tum.in.tumcampus.models.managers.CardManager;
  */
 public class CardsAdapter extends RecyclerView.Adapter<Card.CardViewHolder> {
 
-    public Card getItem(int i) {
+    public static Card getItem(int i) {
         return CardManager.getCard(i);
     }
 

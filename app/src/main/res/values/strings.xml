@@ -5,10 +5,8 @@
 
     <!-- Generic -->
     <string name="app_name">TUM Campus App</string>
-    <string name="campus_app" translatable="false">Campus App</string>
     <string name="search">Search</string>
     <string name="tum_logo">TUM Logo</string>
-    <string name="update">Update</string>
     <string name="loading">Loading …</string>
     <string name="settings">Settings</string>
     <string name="yes">Yes</string>
@@ -82,6 +80,9 @@
     <string name="silence_phone_info">The device will be automatically put into silent mode during a lecture.</string>
     <string name="background_mode">Background Mode (Recommended)</string>
     <string name="background_info">Content will be fetched once per day to keep you up-to-date even if you don\'t open the app.</string>
+    <string name="mode_background_mode">Background Mode activation</string>
+    <string name="always">Always</string>
+    <string name="wifi_only">WiFi only</string>
     <string name="demo_mode">In-App-Tutorial</string>
     <string name="demo_info">Activates help mode for instruction on how to use this App.</string>
 
@@ -231,10 +232,8 @@
     <string name="next_lecture">Next lecture</string>
     <string name="restore_all_cards">Restore cards</string>
     <string name="card_dismissed">Card hidden</string>
-    <string name="cards_dismissed">%s cards hidden</string>
     <string name="reregister_success">You are reregistered for %s!</string>
     <string name="reregister_todo">You have to reregister until %s!</string>
-    <string name="undoall">Undo All</string>
     <string name="undo">Undo</string>
 
     <!-- first use tutorial -->
@@ -328,13 +327,23 @@
     <string name="chat" translatable="false">Chat</string>
     <string name="open_card_settings">Open card settings</string>
     <string name="always_hide_card">Always hide card</string>
-    <string name="options">Options</string>
     <string name="phone_summary">To receive notifications on your phone you have to enable Wearable</string>
     <string name="display">Display</string>
 
     <string name="opens">Opens</string>
     <string name="closes">Closes</string>
     <string name="closed">Closed</string>
+
+    <!-- Kino -->
+    <string name="kino">TU Kino</string>
+    <string name="imdb_rating">IMDB-Rating</string>
+    <string name="year">Year of release</string>
+    <string name="runtime">Runtime</string>
+    <string name="genre">Genre</string>
+    <string name="director">Director</string>
+    <string name="actors">Actors</string>
+    <string name="description">Description</string>
+    <string name="no_movies">Currently there are no movies.</string>
 
     <!-- Eduroam card -->
     <string name="eduroam" translatable="false">Eduroam</string>
@@ -410,7 +419,6 @@ Signature: %5$s</string>
     <string name="reply_label">Reply</string>
     <string name="public_key_mail">Public key activation mail sent to %s@mytum.de.\n\n<b>Please activate it now!</b></string>
     <string name="failure_uploading_public_key">Failure uploading public key</string>
-    <string name="no_private_key">No private key found! Reset the app\'s data to solve this!</string>
     <string name="key_not_activated">You have not activated your key!</string>
     <string name="no_rights_to_access_lectures">Lectures could not be accessed. Please check the rights of your TUMOnline token!</string>
     <string name="edit">Edit</string>
@@ -428,4 +436,7 @@ Signature: %5$s</string>
     <string name="support_us">Help us to spread the word about the Campus App! Like us on Facebook, suggest an exciting idea on Github or send a mail telling us what you think!</string>
     <string name="support_email" translatable="false">tca-support.os.in@tum.de</string>
     <string name="support_us_title">Support us!</string>
+    <string name="permission_location_explanation">This App needs permission to access your calendar to be able to sync it with your TUM calendar.</string>
+    <string name="permission_calendar_explanation">This App needs permission to access your location to display useful information, e.g. the menues of cafeterias around you or timetables of your nearest MVV station. \n If you do not grant this permission you will still be able to configure your location in the settings.</string>
+    <string name="ok">OK</string>
 </resources>

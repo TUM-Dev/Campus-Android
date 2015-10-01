@@ -2,7 +2,6 @@ package de.tum.in.tumcampus.activities.generic;
 
 import android.os.AsyncTask;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.view.View;
 
 /**
  * Generic class which handles can handle a long running background task
@@ -15,6 +14,7 @@ public abstract class ActivityForLoadingInBackground<T1,T2> extends ProgressActi
      * @param arg Parameters given to {@link #startLoading(Object[])}
      * @return Result of the loading task
      */
+    @SuppressWarnings("unchecked")
     protected abstract T2 onLoadInBackground(T1... arg);
 
     /**
@@ -43,7 +43,9 @@ public abstract class ActivityForLoadingInBackground<T1,T2> extends ProgressActi
      * The work that should be done in background must be specified in the {@link #onLoadInBackground(Object[])} method.
      * @param arg Arguments passed to {@link #onLoadInBackground(Object[])}
      */
-    protected void startLoading(final T1... arg) {
+    @SafeVarargs
+    @SuppressWarnings("varargs")
+    protected final void startLoading(final T1... arg) {
         if(asyncTask!=null)
             asyncTask.cancel(true);
 
@@ -55,8 +57,9 @@ public abstract class ActivityForLoadingInBackground<T1,T2> extends ProgressActi
                 showLoadingStart();
             }
 
+            @SafeVarargs
             @Override
-            protected T2 doInBackground(T1... arg) {
+            protected final T2 doInBackground(T1... arg) {
                 return onLoadInBackground(arg);
             }
 

@@ -1,32 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="text_light_blue">#0065BD</color>
+
+    <color name="tum_50">#E6F0F8</color>
+    <color name="tum_100">#B3D1EB</color>
+    <color name="tum_200">#80B2DE</color>
+    <color name="tum_300">#5598D3</color>
+    <color name="tum_400">#2A7FC8</color>
+    <color name="tum_500">#0065BD</color>
+    <color name="tum_600">#0058A5</color>
+    <color name="tum_700">#004C8E</color>
+    <color name="tum_800">#003F76</color>
+    <color name="tum_900">#00335F</color>
+    <color name="tum_A100">#B3D1EB</color>
+    <color name="tum_A200">#80B2DE</color>
+    <color name="tum_A400">#2A7FC8</color>
+    <color name="tum_A700">#004C8E</color>
+
+    <color name="text_light_blue">@color/tum_400</color>
     <color name="text_light_gray">#C0C0C0</color>
     <color name="text_dark_gray">#a5a5a5</color>
     <color name="sections_blue">#303f9f</color>
     <color name="sections_green">#7cbc49</color>
     <color name="sections_gray">#a5a5a5</color>
 
-
-    <color name="color_primary" >#4285f4</color>
-    <color name="color_primary_dark">#303f9f</color>
+    <color name="color_primary" >@color/tum_500</color>
+    <color name="color_primary_dark">@color/tum_800</color>
 
     <color name="card_pressed">#fff8f8f8</color>
-    <color name="card_activated">#500099CC</color>
+    <color name="card_activated">@color/tum_100</color>
 
-    <color name="holo_red_light">#ff4444</color>
-
-    <!-- Used by calendar -->
-    <color name="time_entry_background">#DDff4444</color>
-
-    <!-- Used by SwipeUndo -->
-    <color name="btn_pressed">#ff33b5e5</color>
-    <color name="btn_focused">#ff0099cc</color>
-    <color name="btn_normal">#00000000</color>
-    <color name="popup_bg_color">#EE666666</color>
-    <color name="separator_color">#BBBBBB</color>
-    <color name="popup_text_color">#FFFFFF</color>
-
-    <color name="borderless_button_normal">#3f5ca9</color>
-    <color name="borderless_button_pressed">#374f91</color>
+    <color name="borderless_button_normal">@color/tum_300</color>
+    <color name="borderless_button_pressed">@color/tum_400</color>
 </resources>

@@ -34,6 +34,7 @@ public final class Const {
 	public static final String LRZ_ID = "lrz_id";
 	public static final String NAME_COLUMN = "name";
 	public static final String NEWS = "news";
+	public static final String KINO = "kino";
 	public static final String ORG_ID = "orgId";
 	public static final String ORG_NAME = "orgName";
 	public static final String ORG_PARENT_ID = "orgParentId";
@@ -43,6 +44,8 @@ public final class Const {
     public static final String URL_COLUMN = "url";
 	public static final String SILENCE_ON = "silence_on";
 	public static final String SILENCE_SERVICE = "silent_mode";
+	public static final String SILENCE_OLD_STATE = "silence_old_state";
+	public static final String SILENT_MODE_SET_TO = "silent_mode_set_to";
 	public static final String TITLE_EXTRA = "title";
 	public static final String TRANSPORT_COLUMN = "transport";
 	public static final String WARNING = "warning";
@@ -52,6 +55,7 @@ public final class Const {
 	public static final String CURRENT_CHAT_ROOM = "current_chat_room";
 	public static final String CHAT_ROOM_DISPLAY_NAME = "chat_room_display_name";
 	public static final String PRIVATE_KEY = "chat_member_private_key";
+	public static final String TUMO_PIDENT_NR = "pIdentNr";
 	public static final String GCM_REG_ID = "gcm_registration_id";
 	public static final String GCM_REG_ID_SENT_TO_SERVER = "gcm_registration_id_sent_to_server";
     public static final String GCM_REG_ID_LAST_TRANSMISSION = "gcm_registration_id_last_transmission";
@@ -72,6 +76,17 @@ public final class Const {
     public static final String JSON_SRC = "src";
     public static final String JSON_ICON = "icon";
     public static final String JSON_SOURCE = "source";
+	public static final String JSON_YEAR = "year";
+	public static final String JSON_RUNTIME = "runtime";
+	public static final String JSON_GENRE = "genre";
+	public static final String JSON_DIRECTOR = "director";
+	public static final String JSON_ACTORS = "actors";
+	public static final String JSON_RATING = "rating";
+	public static final String JSON_DESCRIPTION = "description";
+	public static final String JSON_COVER = "cover";
+	public static final String JSON_TRAILER = "trailer";
+	public static final String JSON_KINO = "kino";
+
     public static final String EVERYTHING_SETUP = "everything_setup";
     public static final String SYNC_CALENDAR_IMPORT = "calendar_import";
     public static final String GROUP_CHAT_ENABLED = "group_chat_enabled";
@@ -80,4 +95,5 @@ public final class Const {
     public static final String DEFAULT_CAMPUS = "card_default_campus";
     public static final String AUTO_JOIN_NEW_ROOMS = "auto_join_new_rooms";
     public static final String CHAT_MEMBER = "chat_member";
+	public static final String POSITION = "position";
 }

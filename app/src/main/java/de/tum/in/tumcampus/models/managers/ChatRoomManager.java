@@ -90,6 +90,7 @@ public class ChatRoomManager implements Card.ProvidesCard {
                     new String[]{lecture.getTitel(), lecture.getSemester_id(),
                             lecture.getSemester_name(), lecture.getStp_lv_nr(), lecture.getVortragende_mitwirkende()});
         }
+        cur.close();
     }
 
     /**
@@ -140,6 +141,7 @@ public class ChatRoomManager implements Card.ProvidesCard {
                 db.execSQL("REPLACE INTO chat_room (room,name,semester_id,semester,joined,_id,contributor,members) " +
                         "VALUES (?,?,?,'',1,0,'',?)", new String[]{"" + room.getId(), roomName, semester, "" + room.getMembers()});
             }
+            cur.close();
         }
         db.setTransactionSuccessful();
         db.endTransaction();

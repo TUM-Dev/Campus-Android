@@ -10,8 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
-import android.widget.SimpleCursorAdapter.ViewBinder;
+import android.support.v4.widget.SimpleCursorAdapter;
+import android.support.v4.widget.SimpleCursorAdapter.ViewBinder;
 import android.widget.TextView;
 
 import java.util.regex.Pattern;
@@ -68,10 +68,9 @@ public class OpeningHoursDetailFragment extends Fragment implements ViewBinder {
 		String[] categories = {"library","info","cafeteria_gar","cafeteria_grh","cafeteria","cafeteria_pas","cafeteria_wst"};
 		Cursor c = lm.getAllHoursFromDb(categories[mItemId]);
 
-		@SuppressWarnings("deprecation")
 		SimpleCursorAdapter adapter = new SimpleCursorAdapter(getActivity(),
 				R.layout.two_line_list_item, c, c.getColumnNames(),
-				new int[] { android.R.id.text1, android.R.id.text2, R.id.text3 }) {
+				new int[] { android.R.id.text1, android.R.id.text2, R.id.text3 }, 0) {
 
 			@Override
 			public boolean isEnabled(int position) {

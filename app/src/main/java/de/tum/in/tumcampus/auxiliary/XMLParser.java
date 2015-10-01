@@ -24,7 +24,7 @@ public class XMLParser {
      *
      * @param xml string
      */
-    public Document getDomElement(String xml) {
+    public static Document getDomElement(String xml) {
         Document doc;
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         try {
@@ -33,13 +33,7 @@ public class XMLParser {
             InputSource is = new InputSource(new StringReader(xml));
             doc = db.parse(is);
 
-        } catch (ParserConfigurationException e) {
-            Utils.log(e);
-            return null;
-        } catch (SAXException e) {
-            Utils.log(e);
-            return null;
-        } catch (IOException e) {
+        } catch (ParserConfigurationException | SAXException | IOException e) {
             Utils.log(e);
             return null;
         }
@@ -52,7 +46,7 @@ public class XMLParser {
      *
      * @param elem element
      */
-    public final String getElementValue(Node elem) {
+    public static String getElementValue(Node elem) {
         Node child;
         if (elem != null) {
             if (elem.hasChildNodes()) {
@@ -73,7 +67,7 @@ public class XMLParser {
      * @param item node
      * @param str  string
      */
-    public String getValue(Element item, String str) {
+    public static String getValue(Element item, String str) {
         NodeList n = item.getElementsByTagName(str);
         String value = getElementValue(n.item(0));
 

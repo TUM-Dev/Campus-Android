@@ -72,7 +72,7 @@ public class ChatMessageValidator {
         // Try validating the message using any of the known public keys
         // If any of them succeed, the message is valid
         for (PublicKey key : publicKeys) {
-            if (this.verifySignature(text, signature, key)) {
+            if (verifySignature(text, signature, key)) {
                 return true;
             }
         }
@@ -89,7 +89,7 @@ public class ChatMessageValidator {
      * @param key       a {@link PublicKey} instance to use to verify the signature
      * @return Returns true if signature is valid
      */
-    private boolean verifySignature(String text, String signature,
+    private static boolean verifySignature(String text, String signature,
                                     PublicKey key) {
 
         Signature sig;
@@ -136,7 +136,7 @@ public class ChatMessageValidator {
         publicKeys = new ArrayList<>();
 
         for (ChatPublicKey chatPublicKey : chatPublicKeys) {
-            PublicKey key = this.convertToPublicKey(chatPublicKey);
+            PublicKey key = convertToPublicKey(chatPublicKey);
             if (key != null) {
                 publicKeys.add(key);
             }
@@ -150,9 +150,9 @@ public class ChatMessageValidator {
      * @param chatPublicKey A model representing a TCA public key
      * @return {@link PublicKey} which corresponds to the given TCA public key
      */
-    private PublicKey convertToPublicKey(ChatPublicKey chatPublicKey) {
+    private static PublicKey convertToPublicKey(ChatPublicKey chatPublicKey) {
         // Base64 string -> Bytes
-        byte[] keyBytes = this.decodeByteRepresentation(chatPublicKey.getKey());
+        byte[] keyBytes = decodeByteRepresentation(chatPublicKey.getKey());
         if (keyBytes == null) {
             return null;
         }
@@ -181,7 +181,7 @@ public class ChatMessageValidator {
      * @param text The text to be decoded as a String
      * @return An array of bytes representing the given text
      */
-    private byte[] decodeByteRepresentation(String text) {
+    private static byte[] decodeByteRepresentation(String text) {
         if (text == null) {
             return null;
         }

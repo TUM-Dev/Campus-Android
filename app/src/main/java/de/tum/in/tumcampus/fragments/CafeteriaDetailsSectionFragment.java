@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.text.SpannableString;
 import android.text.style.ImageSpan;
 import android.view.LayoutInflater;
@@ -55,7 +56,7 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
             OpenHoursManager lm = new OpenHoursManager(context);
             textview = new TextView(context);
             textview.setText(lm.getHoursByIdAsString(context, cafeteriaId, Utils.getDate(dateStr)));
-            textview.setTextColor(context.getResources().getColor(R.color.sections_green));
+            textview.setTextColor(ContextCompat.getColor(context, R.color.sections_green));
             rootView.addView(textview);
             addedViews.add(textview);
         }

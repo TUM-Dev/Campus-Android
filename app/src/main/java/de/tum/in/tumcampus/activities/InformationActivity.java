@@ -116,6 +116,7 @@ public class InformationActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {
+                    @SuppressWarnings("deprecation")
                     android.text.ClipboardManager clipboard = (android.text.ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
                     clipboard.setText(value);
                 } else {

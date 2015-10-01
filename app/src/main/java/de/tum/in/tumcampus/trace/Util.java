@@ -4,8 +4,6 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.Surface;
@@ -15,7 +13,6 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
 import de.tum.in.tumcampus.auxiliary.Utils;
-
 
 public class Util {
 
@@ -40,37 +37,6 @@ public class Util {
         return "";
     }
 
-
-    private static String CheckNetworkConnection(String typeOfConnection) {
-        String connected = "false";
-
-        PackageManager packageManager = G.context.getPackageManager();
-        if (packageManager.checkPermission("android.permission.ACCESS_NETWORK_STATE", G.appPackage) == PackageManager.PERMISSION_GRANTED) {
-            ConnectivityManager cm = (ConnectivityManager) G.context.getSystemService(Context.CONNECTIVITY_SERVICE);
-            NetworkInfo[] netInfo = cm.getAllNetworkInfo();
-            for (NetworkInfo ni : netInfo) {
-                if (ni.getTypeName().equalsIgnoreCase(typeOfConnection))
-                    if (ni.isConnected())
-                        connected = "true";
-            }
-
-        } else {
-            connected = "not available [permissions]";
-        }
-
-        return connected;
-    }
-
-    public static String isWifiOn() {
-
-        return CheckNetworkConnection("WIFI");
-    }
-
-    public static String isMobileNetworkOn() {
-
-        return CheckNetworkConnection("MOBILE");
-    }
-
     public static String isGPSOn() {
         String gps_status = "true";
 
@@ -93,17 +59,14 @@ public class Util {
 
         DisplayMetrics dm = new DisplayMetrics();
         Display display = ((WindowManager) G.context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+        display.getMetrics(dm);
 
-        int width = display.getWidth();
-        int height = display.getHeight();
+        int width = dm.widthPixels;
+        int height = dm.heightPixels;
 
-        int orientation;
         Utils.logv(android.os.Build.VERSION.RELEASE);
 
-        //if (android.os.Build.VERSION.RELEASE.startsWith("1.5"))
-        orientation = display.getOrientation();
-        //else
-        //	orientation = display.getRotation();
+        int orientation = display.getRotation();
 
         screen[0] = Integer.toString(width);
         screen[1] = Integer.toString(height);
@@ -124,15 +87,13 @@ public class Util {
                 break;
         }
         screen[2] = rotation;
-
-        display.getMetrics(dm);
         screen[3] = Float.toString(dm.xdpi);
         screen[4] = Float.toString(dm.ydpi);
 
         return screen;
     }
 
-    public static PackageInfo getPackageInfo(Context c){
+    public static PackageInfo getPackageInfo(Context c) {
         // Get information about the Package
         PackageManager pm = c.getPackageManager();
         try {
