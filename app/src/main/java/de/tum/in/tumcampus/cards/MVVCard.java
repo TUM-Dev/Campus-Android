@@ -58,12 +58,12 @@ public class MVVCard extends Card {
         mCard = viewHolder.itemView;
         mLinearLayout = (LinearLayout) mCard.findViewById(R.id.card_view);
         mTitleView = (TextView) mCard.findViewById(R.id.card_title);
-        mTitleView.setText(getTitle());
+        mTitleView.setText(mStationName);
         mCard.findViewById(R.id.place_holder).setVisibility(View.VISIBLE);
 
         //Remove old DepartureViews
-        for(int i = 0; i < mLinearLayout.getChildCount(); i++) {
-            if(mLinearLayout.getChildAt(i) instanceof DepartureView) {
+        for (int i = 0; i < mLinearLayout.getChildCount(); i++) {
+            if (mLinearLayout.getChildAt(i) instanceof DepartureView) {
                 mLinearLayout.removeViewAt(i);
             }
         }
@@ -73,8 +73,8 @@ public class MVVCard extends Card {
 
             DepartureView view = new DepartureView(mContext);
             view.setSymbol(curr.symbol);
-            view.setLine(curr.line);
-            view.setTime(curr.time);
+            view.setLine(curr.servingLine);
+            view.setTime(curr.countDown);
             mLinearLayout.addView(view);
         }
     }
@@ -104,14 +104,14 @@ public class MVVCard extends Card {
         String firstContent = "", firstTime = "";
         for (TransportManager.Departure d : mDepartures) {
             if (firstTime.isEmpty()) {
-                firstTime = d.time + "min";
-                firstContent = d.symbol + " " + d.line;
+                firstTime = d.countDown + "min";
+                firstContent = d.servingLine;
             }
 
             NotificationCompat.Builder pageNotification =
                     new NotificationCompat.Builder(mContext)
-                            .setContentTitle(d.time + "min")
-                            .setContentText(d.symbol + " " + d.line);
+                            .setContentTitle(d.countDown + "min")
+                            .setContentText(d.servingLine);
             morePageNotification.addPage(pageNotification.build());
         }
 
