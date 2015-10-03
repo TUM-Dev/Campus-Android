@@ -10,7 +10,6 @@ import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.auxiliary.Utils;
 
 
-@SuppressWarnings("UnusedDeclaration")
 public class ChatMessage {
 
     public static final int STATUS_SENDING = 1;

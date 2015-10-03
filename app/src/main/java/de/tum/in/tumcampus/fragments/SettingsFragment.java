@@ -213,7 +213,6 @@ public class SettingsFragment extends PreferenceFragment implements
         }
     }
 
-    @SuppressWarnings("deprecation")
     void setSummary(String key) {
         Preference t = findPreference(key);
         if (t instanceof ListPreference) {

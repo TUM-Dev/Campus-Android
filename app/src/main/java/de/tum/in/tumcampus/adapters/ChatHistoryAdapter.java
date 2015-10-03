@@ -157,7 +157,6 @@ public class ChatHistoryAdapter extends CursorAdapter {
         }
 
         if (chatMessage.getMember().getLrzId().equals("bot")) {
-            //noinspection deprecation
             holder.tvUser.setText("");
             holder.tvTimestamp.setText("");
         }

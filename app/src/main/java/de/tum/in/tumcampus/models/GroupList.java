@@ -12,7 +12,6 @@ import java.util.List;
  * request.
  */
 
-@SuppressWarnings("UnusedDeclaration")
 @Root(name = "gruppen")
 public class GroupList implements Serializable {
 

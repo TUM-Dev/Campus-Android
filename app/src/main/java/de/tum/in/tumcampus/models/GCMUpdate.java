@@ -5,7 +5,6 @@ import java.io.Serializable;
 /**
  * Used for parsing the GCM json payload for the 'update' type
  */
-@SuppressWarnings("UnusedDeclaration")
 public class GCMUpdate implements Serializable {
 
     private static final long serialVersionUID = -4597228673980239217L;

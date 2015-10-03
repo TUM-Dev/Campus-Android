@@ -3,7 +3,6 @@ package de.tum.in.tumcampus.models;
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.Root;
 
-@SuppressWarnings("UnusedDeclaration")
 @Root(name = "row")
 public class Identity {
     @Element
