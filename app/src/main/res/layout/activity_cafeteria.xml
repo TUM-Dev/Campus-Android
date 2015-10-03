@@ -22,7 +22,8 @@
                 android:layout_height="?attr/actionBarSize"
                 android:background="@color/color_primary"
                 android:elevation="12dp"
-                android:theme="@style/ThemeOverlay.AppCompat.Dark">
+                android:theme="@style/ThemeOverlay.AppCompat.Dark"
+                tools:ignore="UnusedAttribute">
 
                 <Spinner
                     android:id="@+id/spinnerToolbar"

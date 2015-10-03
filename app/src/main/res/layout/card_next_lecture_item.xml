@@ -14,7 +14,8 @@
         android:layout_marginTop="@dimen/card_padding_vertical"
         android:elevation="@dimen/cardview_elevation"
         card_view:cardBackgroundColor="#fff"
-        card_view:cardCornerRadius="3dp">
+        card_view:cardCornerRadius="3dp"
+        tools:ignore="UnusedAttribute">
 
         <LinearLayout
             android:id="@+id/card_view"
