@@ -196,11 +196,11 @@ public class TransportManager implements Card.ProvidesCard {
             // Possible values for points: Object, Array or null
             JSONArray pointsArray = stopfinder.optJSONArray("points");
             if (pointsArray != null) {
-                //TODO: sorting
+                //TODO: sorting by quality
                 for (int i = 0; i < pointsArray.length(); i++) {
                     JSONObject point = pointsArray.getJSONObject(i);
                     String station = point.getString("name");
-                    String id = point.getString("stateless");
+                    String id = point.getJSONObject("ref").getString("id");
                     mc.addRow(new String[]{station, id});
                 }
             } else {
