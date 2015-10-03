@@ -94,6 +94,9 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
         @Override
         public void onReceive(Context context, Intent intent) {
             GCMChat extras = (GCMChat) intent.getSerializableExtra("GCMChat");
+            if(extras == null) {
+                return;
+            }
             Utils.log("Broadcast receiver got room=" + extras.room + " member=" + extras.member);
 
             //If same room just refresh
