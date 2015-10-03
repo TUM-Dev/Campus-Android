@@ -9,6 +9,7 @@ import android.location.Location;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
+import android.util.Pair;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -58,6 +59,16 @@ public class LocationManager {
             "Max-Weber-Platz",
             "Giselastraße",
             "Universität"
+    };
+    private static final String[] defaultCampusStationID = {
+            "1000460",
+            "1000480",
+            "1002911",
+            "6012",
+            "1001540",
+            "1000580",
+            "1000080",
+            "1000070"
     };
     private static final String[] defaultCampusCafeteria = {"422", null, "423", "421", "414", null, "411", null};
     private final Context mContext;
@@ -221,16 +232,25 @@ public class LocationManager {
     /**
      * Returns the name of the station that is nearby and/or set by the user
      *
-     * @return Name of the station or null if the user is not near any campus
+     * @return Name of the station and stationID or null if the user is not near any campus
      */
-    public String getStation() {
+    public Pair<String, String> getStation() {
         int campus = getCurrentCampus();
-        if (campus == -1)
+        if (campus == -1) {
             return null;
+        }
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-        final String defaultVal = defaultCampusStation[campus];
-        return prefs.getString("card_stations_default_" + campusShort[campus], defaultVal);
+        final String stationDefaultVal = defaultCampusStation[campus];
+        final String station = prefs.getString("card_stations_default_" + campusShort[campus], stationDefaultVal);
+        int realCampus = campus;
+        for (int i = 0; i < defaultCampusStation.length; i++) {
+            if (station.equals(defaultCampusStation[i])) {
+                realCampus = i;
+                break;
+            }
+        }
+        return new Pair<>(station, defaultCampusStationID[realCampus]);
     }
 
     /**

@@ -60,7 +60,8 @@ public class TransportationActivity extends ActivityForSearchingInBackground<Cur
     @Override
     public void onItemClick(final AdapterView<?> av, View v, int position, long id) {
         Cursor departureCursor = (Cursor) av.getAdapter().getItem(position);
-        showStation(departureCursor.getString(departureCursor.getColumnIndex(Const.NAME_COLUMN)));
+        showStation(departureCursor.getString(departureCursor.getColumnIndex(Const.NAME_COLUMN)),
+                departureCursor.getString(departureCursor.getColumnIndex(Const.ID_COLUMN)));
     }
 
     /**
@@ -68,9 +69,10 @@ public class TransportationActivity extends ActivityForSearchingInBackground<Cur
      *
      * @param station Station
      */
-    void showStation(String station) {
+    void showStation(String station, String stationID) {
         Intent intent = new Intent(this, TransportationDetailsActivity.class);
         intent.putExtra(TransportationDetailsActivity.EXTRA_STATION, station);
+        intent.putExtra(TransportationDetailsActivity.EXTRA_STATION_ID, stationID);
         startActivity(intent);
     }
 
@@ -123,7 +125,7 @@ public class TransportationActivity extends ActivityForSearchingInBackground<Cur
         // If there is exactly one station, open results directly
         if (stationCursor.getCount() == 1 && mQuery != null) {
             stationCursor.moveToFirst();
-            showStation(stationCursor.getString(0));
+            showStation(stationCursor.getString(0), stationCursor.getString(1));
             return;
         } else if (stationCursor.getCount() == 0) {
             // When stationCursor is a MatrixCursor the result comes from querying a station name

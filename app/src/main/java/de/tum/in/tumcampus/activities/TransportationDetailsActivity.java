@@ -20,6 +20,7 @@ import de.tum.in.tumcampus.models.managers.TransportManager;
  */
 public class TransportationDetailsActivity extends ActivityForLoadingInBackground<String, List<TransportManager.Departure>> {
     public static final String EXTRA_STATION = "station";
+    public static final String EXTRA_STATION_ID = "stationID";
 
     private LinearLayout mViewResults;
     private RecentsManager recentsManager;
@@ -43,8 +44,9 @@ public class TransportationDetailsActivity extends ActivityForLoadingInBackgroun
         }
         String location = intent.getStringExtra(EXTRA_STATION);
         setTitle(location);
+        String locationID = intent.getStringExtra(EXTRA_STATION_ID);
 
-        startLoading(location);
+        startLoading(location, locationID);
     }
 
     /**
@@ -56,6 +58,7 @@ public class TransportationDetailsActivity extends ActivityForLoadingInBackgroun
     @Override
     protected List<TransportManager.Departure> onLoadInBackground(String... arg) {
         final String location = arg[0];
+        final String locationID = arg[1];
 
         // save clicked station into db
         recentsManager.replaceIntoDb(location);
@@ -67,7 +70,7 @@ public class TransportationDetailsActivity extends ActivityForLoadingInBackgroun
         }
 
         // get departures from website
-        List<TransportManager.Departure> departureCursor = TransportManager.getDeparturesFromExternal(this, location);
+        List<TransportManager.Departure> departureCursor = TransportManager.getDeparturesFromExternal(this, locationID);
         if (departureCursor == null) {
             showError(R.string.no_departures_found);
         }

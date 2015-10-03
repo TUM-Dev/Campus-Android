@@ -3,6 +3,7 @@ package de.tum.in.tumcampus.models.managers;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.MatrixCursor;
+import android.util.Pair;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -17,6 +18,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
+import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.NetUtils;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.cards.Card;
@@ -107,14 +109,14 @@ public class TransportManager implements Card.ProvidesCard {
      * Get all departures for a station.
      * Cursor includes target station name, departure in remaining minutes.
      *
-     * @param station Station name
+     * @param stationID Station ID, station name might or might not work
      * @return List of departures
      */
-    public static List<Departure> getDeparturesFromExternal(Context context, String station) {
+    public static List<Departure> getDeparturesFromExternal(Context context, String stationID) {
         try {
             String language = LANGUAGE + Locale.getDefault().getLanguage();
             // ISO-8859-1 is needed for mvv
-            String departureQuery = DEPARTURE_QUERY_STATION + URLEncoder.encode(station, "ISO-8859-1");
+            String departureQuery = DEPARTURE_QUERY_STATION + URLEncoder.encode(stationID, "ISO-8859-1");
 
             String query = DEPARTURE_QUERY_CONST + language + '&' + departureQuery;
             Utils.logv(query);
@@ -190,7 +192,7 @@ public class TransportManager implements Card.ProvidesCard {
                 return null;
             }
 
-            MatrixCursor mc = new MatrixCursor(new String[]{"name", "_id"});
+            MatrixCursor mc = new MatrixCursor(new String[]{Const.NAME_COLUMN, Const.ID_COLUMN});
             JSONObject stopfinder = jsonObj.getJSONObject("stopFinder");
 
             // Possible values for points: Object, Array or null
@@ -234,12 +236,13 @@ public class TransportManager implements Card.ProvidesCard {
         }
 
         // Get station for current campus
-        final String station = new LocationManager(context).getStation();
+        LocationManager locMan = new LocationManager(context);
+        final Pair<String, String> station = locMan.getStation();
         if (station == null) {
             return;
         }
 
-        List<Departure> cur = getDeparturesFromExternal(context, station);
+        List<Departure> cur = getDeparturesFromExternal(context, station.second);
         if (cur == null) {
             return;
         }

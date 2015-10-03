@@ -10,6 +10,7 @@ import android.graphics.BitmapFactory;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,7 +31,7 @@ import static de.tum.in.tumcampus.models.managers.CardManager.CARD_MVV;
  */
 public class MVVCard extends Card {
     private static final String MVV_TIME = "mvv_time";
-    private String mStationName;
+    private Pair<String, String> mStationNameIDPair;
     private List<TransportManager.Departure> mDepartures;
 
     public MVVCard(Context context) {
@@ -49,7 +50,7 @@ public class MVVCard extends Card {
 
     @Override
     public String getTitle() {
-        return mStationName;
+        return mStationNameIDPair.first;
     }
 
     @Override
@@ -58,7 +59,7 @@ public class MVVCard extends Card {
         mCard = viewHolder.itemView;
         mLinearLayout = (LinearLayout) mCard.findViewById(R.id.card_view);
         mTitleView = (TextView) mCard.findViewById(R.id.card_title);
-        mTitleView.setText(mStationName);
+        mTitleView.setText(mStationNameIDPair.first);
         mCard.findViewById(R.id.place_holder).setVisibility(View.VISIBLE);
 
         //Remove old DepartureViews
@@ -82,7 +83,8 @@ public class MVVCard extends Card {
     @Override
     public Intent getIntent() {
         Intent i = new Intent(mContext, TransportationDetailsActivity.class);
-        i.putExtra(TransportationDetailsActivity.EXTRA_STATION, mStationName);
+        i.putExtra(TransportationDetailsActivity.EXTRA_STATION, mStationNameIDPair.first);
+        i.putExtra(TransportationDetailsActivity.EXTRA_STATION_ID, mStationNameIDPair.second);
         return i;
     }
 
@@ -122,8 +124,8 @@ public class MVVCard extends Card {
         return morePageNotification.extend(notificationBuilder).build();
     }
 
-    public void setStation(String station) {
-        this.mStationName = station;
+    public void setStation(Pair<String, String> stationNameIDPair) {
+        this.mStationNameIDPair = stationNameIDPair;
     }
 
     public void setDepartures(List<TransportManager.Departure> departures) {
