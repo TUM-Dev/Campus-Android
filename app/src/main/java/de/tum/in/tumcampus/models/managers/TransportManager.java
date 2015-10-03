@@ -202,7 +202,7 @@ public class TransportManager implements Card.ProvidesCard {
                 for (int i = 0; i < pointsArray.length(); i++) {
                     JSONObject point = pointsArray.getJSONObject(i);
                     String station = point.getString("name");
-                    String id = point.getJSONObject("ref").getString("id");
+                    String id = point.getString("object");
                     mc.addRow(new String[]{station, id});
                 }
             } else {
@@ -237,17 +237,17 @@ public class TransportManager implements Card.ProvidesCard {
 
         // Get station for current campus
         LocationManager locMan = new LocationManager(context);
-        final Pair<String, String> station = locMan.getStation();
+        String station = locMan.getStation();
         if (station == null) {
             return;
         }
 
-        List<Departure> cur = getDeparturesFromExternal(context, station.second);
+        List<Departure> cur = getDeparturesFromExternal(context, station);
         if (cur == null) {
             return;
         }
         MVVCard card = new MVVCard(context);
-        card.setStation(station);
+        card.setStation(new Pair<>(station, station));
         card.setDepartures(cur);
         card.apply();
 
