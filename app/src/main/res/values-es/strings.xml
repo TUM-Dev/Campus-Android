@@ -348,5 +348,18 @@
     <string name="pin_lock_desc">Para configurar la conexión inalámbrica se requiere un bloqueo de PIN.\nSi usted no tiene ya utilizar el bloqueo de PIN usted puede configurarlo aquí.\n<a href="https://www.tum.de/index.php?id=1821&amp;tx_ttnews%5Btt_news%5D=31688">Más información</a></string>
     <string name="support_us_title">¡Apoyanos!</string>
     <string name="ok">OK</string>
+    <string name="actors">Actores</string>
+    <string name="always">Siempre</string>
+    <string name="description">Descripción</string>
+    <string name="director">Directora</string>
+    <string name="genre">Género</string>
+    <string name="imdb_rating">Puntuación IMDb</string>
+    <string name="mode_background_mode">La activación del modo de fondo</string>
+    <string name="no_movies">Actualmente no hay películas.</string>
+    <string name="permission_calendar_explanation">Esta aplicación necesita permiso para acceder a su ubicación para mostrar información útil, por ejemplo, los menús de las cafeterías alrededor de usted o los horarios de su estación de MVV más cercano. \n Si no otorga este permiso usted todavía será capaz de configurar su ubicación en la configuración.</string>
+    <string name="permission_location_explanation">Esta aplicación necesita permiso para acceder a su calendario para poder sincronizarlo con el calendario de la TUM.</string>
+    <string name="runtime">Duración</string>
+    <string name="wifi_only">Sólo WiFi</string>
+    <string name="year">Año de publicación </string>
     <!-- END Translated, please do not change identifiers -->
 </resources>
