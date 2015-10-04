@@ -19,7 +19,37 @@ android {
         }
     }
     lintOptions {
-        abortOnError false
+        checkAllWarnings true
+        disable "DefaultLocale",
+                "InlinedApi",
+                "NewApi",
+                "SimpleDateFormat",
+                "PrivateResource",
+                "PluralsCandidate",
+                "TrulyRandom",
+                "NestedWeights",
+                "Overdraw",
+                "TypographyQuotes",
+                "IconExpectedSize",
+                "IconLocation",
+                "IconDensities",
+                "ContentDescription",
+                "RelativeOverlap",
+                "InconsistentLayout",
+                "InvalidPackage",
+                "UselessParent",
+                "UnusedResources",    // unused resources get purged by shrinkResources
+                "LogConditional",     // disabeled by default
+                "UnusedIds",          // disabeled by default
+                "SelectableText",     // disabeled by default
+                "RtlCompat",          // we don't support any RTL languages
+                "RtlSymmetry",
+                "RtlHardcoded",
+                "RtlEnabled"
+        htmlReport false
+        warningsAsErrors true
+        abortOnError true
+
     }
 }
 
