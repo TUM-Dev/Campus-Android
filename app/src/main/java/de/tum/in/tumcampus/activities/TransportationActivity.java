@@ -10,15 +10,11 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
-import java.io.IOException;
-import java.util.concurrent.TimeoutException;
-
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.generic.ActivityForSearchingInBackground;
 import de.tum.in.tumcampus.adapters.NoResultsAdapter;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.MVVStationSuggestionProvider;
-import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.managers.RecentsManager;
 import de.tum.in.tumcampus.models.managers.TransportManager;
 
@@ -50,7 +46,7 @@ public class TransportationActivity extends ActivityForSearchingInBackground<Cur
         adapterStations = new SimpleCursorAdapter(this, android.R.layout.simple_list_item_1, stationCursor,
                 stationCursor.getColumnNames(), new int[]{android.R.id.text1}, 0);
 
-        if(adapterStations.getCount()==0) {
+        if (adapterStations.getCount() == 0) {
             openSearch();
         } else {
             listViewResults.setAdapter(adapterStations);
@@ -60,25 +56,29 @@ public class TransportationActivity extends ActivityForSearchingInBackground<Cur
 
     /**
      * Click on station in list
-     * */
+     */
     @Override
     public void onItemClick(final AdapterView<?> av, View v, int position, long id) {
         Cursor departureCursor = (Cursor) av.getAdapter().getItem(position);
-        showStation(departureCursor.getString(departureCursor.getColumnIndex(Const.NAME_COLUMN)));
+        showStation(departureCursor.getString(departureCursor.getColumnIndex(Const.NAME_COLUMN)),
+                departureCursor.getString(departureCursor.getColumnIndex(Const.ID_COLUMN)));
     }
 
     /**
      * Opens {@link TransportationDetailsActivity} with departure times for the specified station
+     *
      * @param station Station
      */
-    void showStation(String station) {
+    void showStation(String station, String stationID) {
         Intent intent = new Intent(this, TransportationDetailsActivity.class);
         intent.putExtra(TransportationDetailsActivity.EXTRA_STATION, station);
+        intent.putExtra(TransportationDetailsActivity.EXTRA_STATION_ID, stationID);
         startActivity(intent);
     }
 
     /**
      * Shows all recently used stations
+     *
      * @return Cursor holding the recents information (name, _id)
      */
     @Override
@@ -94,21 +94,9 @@ public class TransportationActivity extends ActivityForSearchingInBackground<Cur
      */
     @Override
     public Cursor onSearchInBackground(String query) {
-        // TODO: Workaround, because MVV does not find a station with the full name as a text input
-        String inputTextToCheck = query;
-        if (inputTextToCheck.length() > 2) {
-            inputTextToCheck = inputTextToCheck.substring(0, inputTextToCheck.length() - 1);
-        }
-        final String inputText = inputTextToCheck;
-
         // Get Information
-        Cursor stationCursor = null;
-        try {
-            stationCursor = TransportManager.getStationsFromExternal(this, inputText);
-        } catch (TimeoutException | IOException e) {
-            showNoInternetLayout();
-        } catch (Exception e) {
-            Utils.log(e);
+        Cursor stationCursor = TransportManager.getStationsFromExternal(this, query);
+        if(stationCursor == null) {
             showError(R.string.exception_unknown);
         }
 
@@ -122,24 +110,26 @@ public class TransportationActivity extends ActivityForSearchingInBackground<Cur
 
     /**
      * Shows the stations
+     *
      * @param stationCursor Cursor with stations (name, _id)
      */
     @Override
     protected void onSearchFinished(Cursor stationCursor) {
-        if(stationCursor==null)
+        if (stationCursor == null) {
             return;
+        }
 
         showLoadingEnded();
 
         // mQuery is not null if it was a real search
         // If there is exactly one station, open results directly
-        if(stationCursor.getCount()==1 && mQuery!=null) {
+        if (stationCursor.getCount() == 1 && mQuery != null) {
             stationCursor.moveToFirst();
-            showStation(stationCursor.getString(0));
+            showStation(stationCursor.getString(0), stationCursor.getString(1));
             return;
-        } else if(stationCursor.getCount()==0) {
+        } else if (stationCursor.getCount() == 0) {
             // When stationCursor is a MatrixCursor the result comes from querying a station name
-            if(stationCursor instanceof MatrixCursor) {
+            if (stationCursor instanceof MatrixCursor) {
                 // So show no results found
                 listViewResults.setAdapter(new NoResultsAdapter(this));
                 listViewResults.requestFocus();

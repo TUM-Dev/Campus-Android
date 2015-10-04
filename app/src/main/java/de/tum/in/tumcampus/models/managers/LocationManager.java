@@ -9,6 +9,7 @@ import android.location.Location;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
+import android.util.Pair;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -59,6 +60,7 @@ public class LocationManager {
             "Giselastraße",
             "Universität"
     };
+
     private static final String[] defaultCampusCafeteria = {"422", null, "423", "421", "414", null, "411", null};
     private final Context mContext;
 
@@ -225,8 +227,9 @@ public class LocationManager {
      */
     public String getStation() {
         int campus = getCurrentCampus();
-        if (campus == -1)
+        if (campus == -1) {
             return null;
+        }
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
         final String defaultVal = defaultCampusStation[campus];

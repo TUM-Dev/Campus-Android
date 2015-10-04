@@ -4,9 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.LinearLayout;
 
-import java.io.IOException;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.generic.ActivityForLoadingInBackground;
@@ -17,11 +15,12 @@ import de.tum.in.tumcampus.models.managers.TransportManager;
 
 /**
  * Activity to show transport departures for a specified station
- *
+ * <p/>
  * NEEDS: EXTRA_STATION set in incoming bundle (station name)
  */
-public class TransportationDetailsActivity extends ActivityForLoadingInBackground<String,List<TransportManager.Departure>> {
+public class TransportationDetailsActivity extends ActivityForLoadingInBackground<String, List<TransportManager.Departure>> {
     public static final String EXTRA_STATION = "station";
+    public static final String EXTRA_STATION_ID = "stationID";
 
     private LinearLayout mViewResults;
     private RecentsManager recentsManager;
@@ -39,24 +38,27 @@ public class TransportationDetailsActivity extends ActivityForLoadingInBackgroun
         mViewResults = (LinearLayout) this.findViewById(R.id.activity_transport_result);
 
         Intent intent = getIntent();
-        if(intent==null) {
+        if (intent == null) {
             finish();
             return;
         }
         String location = intent.getStringExtra(EXTRA_STATION);
         setTitle(location);
+        String locationID = intent.getStringExtra(EXTRA_STATION_ID);
 
-        startLoading(location);
+        startLoading(location, locationID);
     }
 
     /**
      * Load departure times
+     *
      * @param arg Station name
      * @return List of departures
      */
     @Override
     protected List<TransportManager.Departure> onLoadInBackground(String... arg) {
         final String location = arg[0];
+        final String locationID = arg[1];
 
         // save clicked station into db
         recentsManager.replaceIntoDb(location);
@@ -68,13 +70,9 @@ public class TransportationDetailsActivity extends ActivityForLoadingInBackgroun
         }
 
         // get departures from website
-        List<TransportManager.Departure> departureCursor = null;
-        try {
-            departureCursor = TransportManager.getDeparturesFromExternal(this, location);
-        } catch (NoSuchElementException e) {
+        List<TransportManager.Departure> departureCursor = TransportManager.getDeparturesFromExternal(this, locationID);
+        if (departureCursor == null) {
             showError(R.string.no_departures_found);
-        } catch (IOException e) {
-            showNoInternetLayout();
         }
 
         return departureCursor;
@@ -82,19 +80,21 @@ public class TransportationDetailsActivity extends ActivityForLoadingInBackgroun
 
     /**
      * Adds a new {@link DepartureView} for each departure entry
+     *
      * @param result List of departures
      */
     @Override
     protected void onLoadFinished(List<TransportManager.Departure> result) {
         showLoadingEnded();
-        if(result==null)
+        if (result == null) {
             return;
+        }
         mViewResults.removeAllViews();
-        for(TransportManager.Departure d : result) {
+        for (TransportManager.Departure d : result) {
             DepartureView view = new DepartureView(this, true);
             view.setSymbol(d.symbol);
-            view.setLine(d.line);
-            view.setTime(d.time);
+            view.setLine(d.servingLine);
+            view.setTime(d.countDown);
             mViewResults.addView(view);
         }
     }
