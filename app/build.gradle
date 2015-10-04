@@ -37,7 +37,6 @@ android {
                 "RelativeOverlap",
                 "InconsistentLayout",
                 "InvalidPackage",
-                "UselessParent",
                 "UnusedResources",    // unused resources get purged by shrinkResources
                 "LogConditional",     // disabeled by default
                 "UnusedIds",          // disabeled by default
