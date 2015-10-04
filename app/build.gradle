@@ -34,8 +34,7 @@ android {
                 "IconLocation",
                 "IconDensities",
                 "ContentDescription",
-                "RelativeOverlap",
-                "InvalidPackage",
+                "InvalidPackage",     // caused by dependencies, should also give a compile error
                 "UnusedResources",    // unused resources get purged by shrinkResources
                 "LogConditional",     // disabeled by default
                 "UnusedIds",          // disabeled by default
