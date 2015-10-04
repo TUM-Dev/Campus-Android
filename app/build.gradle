@@ -35,7 +35,6 @@ android {
                 "IconDensities",
                 "ContentDescription",
                 "RelativeOverlap",
-                "InconsistentLayout",
                 "InvalidPackage",
                 "UnusedResources",    // unused resources get purged by shrinkResources
                 "LogConditional",     // disabeled by default
