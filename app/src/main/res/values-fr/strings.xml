@@ -15,33 +15,33 @@
     <string name="app_short_description">TUM plate-forme d\'information - par les étudiants pour les étudiants</string>
 
     <!-- Calendar -->
-    <string name="dialog_show_calendar">Succès à l\'exportation.\nCalendrier locale <i>TUM_CAMPUS_APP</i> dans le <i>Google Calendrier App</i>?</string>
+    <string name="dialog_show_calendar">Succès à l\'exportation.\nCalendrier local <i>TUM_CAMPUS_APP</i> dans le <i>Google Calendrier App</i>?</string>
     <string name="export_to_google">Exporter vers Google</string>
     <string name="delete_from_google">Supprimer de Google</string>
-    <string name="dialog_delete_calendar">Veux-tu supprimer le calendrier locale <i>TUM_CAMPUS_APP</i> de votre appareil?</string>
-    <string name="calendar_deleted_toast">Le calendrier a supprimé avec succès</string>
-    <string name="calendar_not_existing_toast">Il n\'y a pas un calendrier local</string>
+    <string name="dialog_delete_calendar">Veux-tu supprimer le calendrier local <i>TUM_CAMPUS_APP</i> de ton appareil?</string>
+    <string name="calendar_deleted_toast">Le calendrier a été supprimé avec succès</string>
+    <string name="calendar_not_existing_toast">Il n\'y a pas de calendrier local</string>
 
     <!-- Roomfinder -->
     <string name="no_map_available">Aucune carte disponible</string>
     <string name="search_rooms">Chercher des salles</string>
 
     <!-- Auxiliary -->
-    <string name="error_fetching_tumonline">Erreur d\'accès TUMOnline.\nContrôle que le TUMOnline-Access-Token a accepté et les droits correspondants sont activés.\n\n<b> Cliquez ici pour répéter.</b></string>
-    <string name="error_no_token_setup">TUMOnline-Access-Token n\'a pas trouvé.\nGénére un TUMOnline-Access-Token dans les\n<i>Paramètres</i>, pour utiliser les services de TUMOnline.\n\n<b>Clique ici pour voir les <i>Paramètres</i>.</b></string>
+    <string name="error_fetching_tumonline">Erreur d\'accès TUMOnline.\nVérifies que le TUMOnline-Access-Token est accepté et que les droits correspondants sont activés.\n\n<b> Clique ici pour répéter.</b></string>
+    <string name="error_no_token_setup">TUMOnline-Access-Token n\'a pas été trouvé.\nGénéres un TUMOnline-Access-Token dans les\n<i>Paramètres</i>, pour utiliser les services de TUMOnline.\n\n<b>Clique ici pour voir les <i>Paramètres</i>.</b></string>
     <string name="error_something_wrong">Pardon, quelque chose s\'est mal passé.</string>
-    <string name="click_to_try_again"><b>Cliquez ici pour répéter.</b></string>
-    <string name="dialog_new_token">Ton TUMOnline-Access-Token est déjà réglé.\n\nClique <i>Oui</i> pour faire un nouveau Token.\nPuis le vieux Token est inutilisable.</string>
-    <string name="error_lrz_wrong">Ton LRZ indicatif est invalide</string>
+    <string name="click_to_try_again"><b>Cliques ici pour répéter.</b></string>
+    <string name="dialog_new_token">Ton TUMOnline-Access-Token est déjà réglé.\n\nClique <i>Oui</i> pour faire un nouveau Token.\nL\'ancien Token deviendra inutilisable.</string>
+    <string name="error_lrz_wrong">Ton indicatif LRZ est invalide</string>
     <string name="access_token_wasnt_generated">TUMOnline-Access-Token ne peut être créé</string>
-    <string name="dialog_access_token_invalid">TUMOnline-Access-Token n\'est pas activée</string>
+    <string name="dialog_access_token_invalid">TUMOnline-Access-Token n\'est pas activé</string>
     <string name="dialog_no_rights_function">Aucuns droits pour cette fonction</string>
     <string name="empty_result">La demande apporte un résultat erroné</string>
 
     <!-- Exam/Grades -->
     <string name="average_grade">Moyenne de la note</string>
-    <string name="show_column_chart">Montre comme un diagramme à barres</string>
-    <string name="show_pie_chart">Montre comme un diagramme en camembert</string>
+    <string name="show_column_chart">Montrer comme un diagramme à barres</string>
+    <string name="show_pie_chart">Montrer comme un diagramme en camembert</string>
     <string name="result_extra">Résultat:&#160;</string>
     <string name="semester">Semestre</string>
     <string name="examiner">Examinateur</string>
@@ -53,8 +53,8 @@
     <string name="lrz_id">LRZ indicatif</string>
 
     <string name="role">Rôle</string>
-    <string name="role_summary">Ton rôle à la TUM. Ètudiant, employé ou invité.</string>
-    <string name="student">Ètudiant</string>
+    <string name="role_summary">Ton rôle à la TUM. Étudiant, employé ou invité.</string>
+    <string name="student">Étudiant</string>
     <string name="employee">Employé</string>
     <string name="guest">Invité</string>
     <string name="cards_settings">Cartes</string>
@@ -65,15 +65,15 @@
     <string name="open_wizard">Ouvre startup-wizard</string>
     <string name="open_wizard_detail">Le startup-wizard t\'aide à configurer les paramètres de base pour l\'accès à les services de TUMOnline et de définir le schéma de couleur de l\'application.</string>
     <string name="clear_cache">Supprimer les fichiers</string>
-    <string name="clear_cache_detail">Supprime tous les fichier qui sont télécharger avec l\'appli TUM CAMPUS et sont entasser sur la carte SD.</string>
-    <string name="delete_chache_sure">Pour supprimer toutes les données?</string>
-    <string name="success_clear_cache">Fichiers supprimées avec succès</string>
+    <string name="clear_cache_detail">Supprime tous les fichier qui sont télécharger avec l\'appli TUM CAMPUS et sont enregistré sur la carte SD.</string>
+    <string name="delete_chache_sure">Es-tu certain de vouloir supprimer toutes les données?</string>
+    <string name="success_clear_cache">Fichiers supprimés avec succès</string>
 
     <string name="services">Services</string>
     <string name="silence_phone">Silent Service</string>
-    <string name="silence_phone_info">Pendant des cours magistral, l\'appareil est réglée automatiquemen en mode silencieux.</string>
+    <string name="silence_phone_info">Pendant les cours magistraux, l\'appareil est réglée automatiquement en mode silencieux.</string>
     <string name="background_mode">Le mode d\'arrière-plan (recommandé)</string>
-    <string name="background_info">Les capacités vont actualiser une fois par jour pour t\'informer sur les nouvelles actuelles. Même l\'appli n\'est pas ouverte.</string>
+    <string name="background_info">Les capacités vont actualiser une fois par jour pour t\'informer sur les nouvelles actuelles. Même si l\'appli n\'est pas ouverte.</string>
     <string name="demo_mode">In-App Tutorial</string>
     <string name="demo_info">Activer le mode d\'aide pour obtenir des informations sur le fonctionnement de l\'application.</string>
 
@@ -84,19 +84,19 @@
     <string name="licences_summary">Des notes juridiques licences</string>
 
     <!-- Startup Wizard -->
-    <string name="token_not_enabled">TUMOnline-Access-Token n\'est pas activée</string>
+    <string name="token_not_enabled">TUMOnline-Access-Token n\'est pas activé</string>
     <string name="startup_wizard_uppercase">Assistant de démarrage</string>
-    <string name="welcome_msg"><b>Bienvenue sur le TUM Campus App</b>\n\nPour permettre l\'accès aux services à TUMOnline, ta <b>LRZ indicatif</b> est nécessaire.\n\nCe indicatif a le format suivant:\n<i>xx00xxx</i>\n(2 lettres, 2 chiffres, 3 lettres)</string>
+    <string name="welcome_msg"><b>Bienvenue sur le TUM Campus App</b>\n\nPour permettre l\'accès aux services à TUMOnline, ton <b>indicatif LRZ</b> est nécessaire.\n\nCet indicatif a le format suivant:\n<i>xx00xxx</i>\n(2 lettres, 2 chiffres, 3 lettres)</string>
     <string name="button_skip">Sauter</string>
-    <string name="button_next">Plus</string>
-    <string name="need_to_enable"><b>Le TUMOnline-Access-Token a été créé avec succès</b>\n\nMaintenant, tu peux activer le Token dans TUMOnline sûr <i>Dienste/Token-administration</i>. Fais attention, tu dois activer aussi les droit pour l\'accès à des services seuls sûr <i>droits actifs</i></string>
-    <string name="step_1">Etape 1</string>
-    <string name="step_2">Etape 2</string>
-    <string name="step_3">Etape 3</string>
-    <string name="step_4">Etape 4</string>
-    <string name="step_5">Etape 5</string>
+    <string name="button_next">Suivant</string>
+    <string name="need_to_enable"><b>Le TUMOnline-Access-Token a été créé avec succès</b>\n\nMaintenant, tu peux activer le Token dans TUMOnline dans <i>Dienste/Token-administration</i>. Fais attention, tu dois activer aussi les droits pour l\'accès aux services individuellement sûr <i>droits actifs</i></string>
+    <string name="step_1">Étape 1</string>
+    <string name="step_2">Étape 2</string>
+    <string name="step_3">Étape 3</string>
+    <string name="step_4">Étape 4</string>
+    <string name="step_5">Étape 5</string>
     <string name="set_silent_mode">Après une activation, l\'appareil va se met en <i>mode silencieux</i> lors d\'une conférence actuellement détenu.</string>
-    <string name="set_background_mode">Active ou désactiver l\' <i>arrière-plan mode</i>. Après une activation, toutes les capacités vont télécharger une fois par jour et en l\'arrière-plan pour.</string>
+    <string name="set_background_mode">Activer ou désactiver le <i> mode d\'arrière-plan</i>. Après une activation, toutes les capacités seront téléchargées une fois par jour en arrière-plan.</string>
     <string name="goto_tumcampus">Lancer TUM campus App</string>
 
     <!-- News -->
@@ -108,14 +108,14 @@
     <string name="drawer_close">Fermer</string>
     <string name="my_tum">Mon TUM</string>
     <string name="schedule">Calendrier</string>
-    <string name="my_lectures">Mes cours magistral</string>
+    <string name="my_lectures">Mes cours magistraux</string>
     <string name="my_grades">Mes notes</string>
     <string name="chat_rooms">forum de discussion </string>
     <string name="tuition_fees">feed-back </string>
     <string name="tum_common">TUM général</string>
     <string name="menues">cafétérias</string>
     <string name="study_plans">programmes des études</string>
-    <string name="person_search">Chercher de personnes</string>
+    <string name="person_search">Chercher des personnes</string>
     <string name="plans">Plans</string>
     <string name="roomfinder">Chercher des salles</string>
     <string name="opening_hours">Horaires d\'ouverture</string>
@@ -124,7 +124,7 @@
     <string name="news">Nouvelles</string>
 
     <!-- Activity titles -->
-    <string name="lectures_information">Informations sur les cours magistral</string>
+    <string name="lectures_information">Informations sur les cours magistraux</string>
     <string name="lectures_appointments">horaire des cours</string>
     <string name="person_information">des informations sur les personnes</string>
     <string name="organisation_details">Détails d\'organisation</string>
@@ -145,7 +145,7 @@
     <!-- MVV -->
     <string name="no_departures_found">Aucun horaire de départ disponibles</string>
     <string name="exception_unknown">Erreur inconnue</string>
-    <string name="exception_timeout">Problèmes avec la connexion Internet, s\'il te plaît essayer encore une fois plus tard.</string>
+    <string name="exception_timeout">Problèmes avec la connexion Internet, s\'il te plaîs essaye à nouveau plus tard.</string>
     <string name="search_station">Chercher des stations</string>
 
     <!-- Lectures -->
@@ -210,11 +210,11 @@
     <!-- Chat rooms -->
     <string name="my_chat_rooms">Mes forums de discussions</string>
     <string name="send">Envoyer</string>
-    <string name="leave_chat_room">Quitté le forum de discussion</string>
-    <string name="leave_chat_room_body">Es-tu sûr que tu veux quitter le forum de discussion?</string>
+    <string name="leave_chat_room">Quitter le forum de discussion</string>
+    <string name="leave_chat_room_body">Es-tu sûr de vouloir quitter le forum de discussion?</string>
 
     <!-- Cards -->
-    <string name="last_updated">Le contenu était actualisé avant %s.</string>
+    <string name="last_updated">Le contenu était déjà actualisé %s.</string>
     <string name="next_lecture">Prochain cours magistral</string>
     <string name="restore_all_cards">Reconstituer les cartes</string>
     <string name="card_dismissed">Carte cachée</string>
@@ -223,8 +223,8 @@
     <string name="undo">Annuler</string>
 
     <!-- first use tutorial -->
-    <string name="swipe_instruction">lessive vers la gauche ou la droite pour cacher une carte.</string>
-    <string name="card_settings_instruction">Quand tu veux cacher une carte permanente ou tu veux être avertir de nouvelles cartes ouvrir Paramètres &#x2192; cartes</string>
+    <string name="swipe_instruction">Balayes vers la gauche ou la droite pour cacher une carte.</string>
+    <string name="card_settings_instruction">Quand tu veux cacher une carte permanente ou être averti de nouvelles cartes ouvrir Paramètres &#x2192; cartes</string>
 
     <!-- Cafeteria -->
     <string name="cafeteria_ingredients">(f) 	plat végétarien
@@ -257,9 +257,9 @@
     <string name="default_station">Station de défaut/arrêt d\'arrêt norme</string>
     <string name="campus_klinikum_großhadern">Hôpital Großhadern</string>
     <string name="cafeteria">Cafétéria</string>
-    <string name="card_cafeteria_summary">Affiche le menu Mensa</string>
-    <string name="card_mvv_summary">Affiche les heures de départ des transports publics à</string>
-    <string name="card_next_lecture_summary">Affiche des informations sur la prochaine conférence</string>
+    <string name="card_cafeteria_summary">Afficher le menu Mensa</string>
+    <string name="card_mvv_summary">Afficher les heures de départ des transports publics à</string>
+    <string name="card_next_lecture_summary">Afficher des informations sur la prochaine conférence</string>
     <string name="card_tuition_fee_summary">Vous rappelle quand vous devez payer les frais de scolarité</string>
     <string name="card_news_summary">Propose une sélection de nouvelles avant</string>
     <string name="card_chat_summary">Vous avertit lorsque de nouveaux messages sont disponibles</string>
@@ -282,7 +282,7 @@
     <string name="card_eduroam_summary">Vous aide à configurer eduroam</string>
     <string name="pin_lock">Verrouillage de la carte</string>
     <string name="pin_lock_desc">Pour configurer l\'accès sans fil un verrouillage PIN est nécessaire.
-         Si vous avez utilisé aucune serrure de code PIN, vous pouvez en créer un ici.
+         Si vous n\'avez utilisé aucune serrure de code PIN, vous pouvez en créer un ici.
     <a href="https://www.tum.de/index.php?id=1821&amp;tx_ttnews%5Btt_news%5D=31688">Plus d\'infos</a></string>
     <string name="enable_pin_lock">Activer code PIN de verrouillage</string>
     <string name="data_backup">Sauvegarde des données</string>
@@ -296,11 +296,11 @@
 
     <string name="enable_wifi">Activer Wifi</string>
     <string name="loading_first_time">Le premier démarrage peut prendre quelques minutes</string>
-    <string name="password_gets_not_saved">TUM App Campus n\'enregistre pas le mot de passe, mais Android WifiManager fait.</string>
+    <string name="password_gets_not_saved">TUM App Campus n\'enregistre pas le mot de passe, celui-ci est enregistré gràce à Android WifiManager.</string>
     <string name="website">Site Web</string>
     <string name="switch_map">Changer carte</string>
     <string name="navigate">Itinéraire jusqu\'à</string>
-    <string name="categories_to_show">Catégories de montrer</string>
+    <string name="categories_to_show">Catégories à montrer</string>
     <string name="news_sources">Les sources d\'information</string>
     <string name="only_latest_article">Seulement le dernier article</string>
     <string name="only_latest_article_summary">Montre que le dernier article. Sinon, tous les articles des sources sélectionnées sont affichées.</string>
@@ -316,14 +316,14 @@
     <string name="set_bug_reports">Soutenir l\'équipe de TCA en envoyant des rapports de bogues anonymes à notre serveur qui comprennent: trace de la pile, fichier journal, la version Android, version de l\'application et de la résolution de l\'écran</string>
     <string name="error_setup_chat_member">Quelque chose ne va pas avec l\'enregistrement de ta conversation!</string>
     <string name="room_timetable">calendrier de chambre</string>
-    <string name="newspread_summary">Sélectionnez les newspread tu souhaites afficher. Ce sont les lames sur les informations moniteurs dans tes bâtiments de la faculté.</string>
+    <string name="newspread_summary">Sélectionnez les newspread que tu souhaites afficher. Ce sont les lames sur les informations moniteurs dans tes bâtiments de la faculté.</string>
     <string name="valid">Valide</string>
-    <string name="vibration">Vibration</string>
+    <string name="vibration">Vibreur</string>
     <string name="status_sent">expédié</string>
     <string name="just_now">Juste maintenant</string>
     <string name="yesterday">Hier</string>
-    <string name="add_chat_member">Ajouter personne à salle de chat</string>
-    <string name="add_chat_room"> Nouveau Chat Room</string>
+    <string name="add_chat_member">Ajouter quelqu'un à salle de chat</string>
+    <string name="add_chat_room"> Nouvelle salle de Chat</string>
     <string name="auto_join_chat">Joignez-vous à de nouvelles salles de cours</string>
     <string name="update_notification_description">Une nouvelle version de l\'App Tum Campus a été libéré sous %s. Appuyez sur pour télécharger maintenant.</string>
     <string name="default_campus">Par défaut campus</string>
@@ -332,7 +332,7 @@
     <string name="invalid_chat_room">Invalid salle de chat</string>
     <string name="join_chat_room">Joignez-vous à un salon de clavardage</string>
     <string name="joined">Ma</string>
-    <string name="key_not_activated">Vous avez pas activé votre clé!</string>
+    <string name="key_not_activated">Vous n\'avez pas activé votre clé!</string>
     <string name="message_details">Info message</string>
     <string name="mode_silent_mode">État pendant les cours</string>
     <string name="new_chat_room">Nouvelle salle de chat</string>
