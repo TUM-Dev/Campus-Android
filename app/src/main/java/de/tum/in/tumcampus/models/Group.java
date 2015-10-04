@@ -11,7 +11,6 @@ import java.io.Serializable;
  * for a corresponding request.
  */
 
-@SuppressWarnings("UnusedDeclaration")
 @Root(name = "gruppe", strict = false)
 public class Group implements Serializable {
 

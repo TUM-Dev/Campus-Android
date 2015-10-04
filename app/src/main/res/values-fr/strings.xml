@@ -356,4 +356,17 @@
     <string name="public_key_mail">Mail d\'activation envoyé à clé publique %s@mytum.de.\n\n<b>S\'il vous plaît activer maintenant!</b></string>
     <string name="support_us_title">Soutenez-nous!</string>
     <string name="ok">OK</string>
+    <string name="actors">Acteurs</string>
+    <string name="always">Toujours</string>
+    <string name="description">Description</string>
+    <string name="director">Directeur</string>
+    <string name="genre">Genre</string>
+    <string name="imdb_rating">IMDb note</string>
+    <string name="mode_background_mode">Fond activation de mode</string>
+    <string name="no_movies">Actuellement, il n\'y a pas de films.</string>
+    <string name="permission_calendar_explanation">Cette application a besoin de la permission pour accéder à votre emplacement pour afficher des informations utiles, par exemple, les menus des cantines autour de vous ou les horaires de votre station de MVV plus proche. \n Si vous ne accordez pas cette autorisation, vous serez toujours en mesure de configurer votre emplacement dans les paramètres.</string>
+    <string name="permission_location_explanation">Cette application a besoin de la permission pour accéder à votre calendrier pour être en mesure de le synchroniser avec votre calendrier de TUM.</string>
+    <string name="runtime">Durée</string>
+    <string name="wifi_only">WiFi seulement</string>
+    <string name="year">Année de publication</string>
 </resources>

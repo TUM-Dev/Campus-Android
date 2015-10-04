@@ -27,3 +27,6 @@ install:
 
 script:
   - ./gradlew build
+
+after_failure:
+  - cat "$TRAVIS_BUILD_DIR/app/build/outputs/lint-results.xml"

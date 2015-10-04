@@ -14,7 +14,6 @@ import de.tum.in.tumcampus.R;
  * @see <a href="http://simple.sourceforge.net/download/stream/doc/tutorial/tutorial.php">SimpleXML tutorial</a>
  */
 
-@SuppressWarnings("UnusedDeclaration")
 @Root(name = "row")
 public class LecturesSearchRow implements Comparable<LecturesSearchRow> {
 
