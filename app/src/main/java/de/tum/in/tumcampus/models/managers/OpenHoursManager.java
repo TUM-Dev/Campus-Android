@@ -8,6 +8,7 @@ import android.text.format.DateUtils;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -162,7 +163,7 @@ public class OpenHoursManager {
         String relStr = DateUtils.getRelativeTimeSpanString(relativeTo.getTimeInMillis(), now.getTimeInMillis(), DateUtils.MINUTE_IN_MILLIS).toString();
 
         //Return an assembly
-        return context.getString(relation) + " " + relStr.substring(0, 1).toLowerCase() + relStr.substring(1);
+        return context.getString(relation) + " " + relStr.substring(0, 1).toLowerCase(Locale.getDefault()) + relStr.substring(1);
 
     }
 

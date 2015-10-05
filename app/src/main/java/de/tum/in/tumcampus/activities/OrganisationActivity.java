@@ -1,6 +1,5 @@
 package de.tum.in.tumcampus.activities;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -12,6 +11,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.generic.ActivityForAccessingTumOnline;
@@ -24,7 +24,6 @@ import de.tum.in.tumcampus.tumonline.TUMOnlineConst;
 /**
  * Activity that shows the first level of organisations at TUM.
  */
-@SuppressLint("DefaultLocale")
 public class OrganisationActivity extends ActivityForAccessingTumOnline<OrgItemList> implements OnClickListener {
     /**
      * To show at start the highest Organisation level (The highest
@@ -165,7 +164,7 @@ public class OrganisationActivity extends ActivityForAccessingTumOnline<OrgItemL
 		}
 
 		// set caption (organisation "folder" name)
-		tvCaption.setText(orgName.toUpperCase());
+		tvCaption.setText(orgName.toUpperCase(Locale.getDefault()));
 
 		List<OrgItem> organisationList = new ArrayList<>();
 

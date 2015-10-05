@@ -40,12 +40,12 @@
         android:id="@+id/progressWifi"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="invisible"
-        android:layout_below="@+id/button_enable_wifi"
-        android:layout_alignRight="@+id/no_internet_image"
         android:layout_alignEnd="@+id/no_internet_image"
         android:layout_alignLeft="@+id/no_internet_image"
+        android:layout_alignRight="@+id/no_internet_image"
         android:layout_alignStart="@+id/no_internet_image"
-        android:layout_marginTop="5dp" />
+        android:layout_below="@+id/button_enable_wifi"
+        android:layout_marginTop="5dp"
+        android:visibility="invisible" />
 
 </RelativeLayout>

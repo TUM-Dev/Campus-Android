@@ -24,6 +24,7 @@ import java.util.List;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.FileUtils;
 import de.tum.in.tumcampus.auxiliary.NetUtils;
+import de.tum.in.tumcampus.auxiliary.Utils;
 
 public class ExceptionHandler {
 
@@ -247,7 +248,7 @@ public class ExceptionHandler {
             return sStackTraces;
         }
 
-        Log.d(G.tag, "Looking for exceptions in: " + G.filesPath);
+        Utils.logv("Looking for exceptions in: " + G.filesPath);
 
         // Find list of .stacktrace files
         File dir = new File(G.filesPath + "/");
@@ -263,7 +264,7 @@ public class ExceptionHandler {
                 return name.endsWith(".stacktrace");
             }
         });
-        Log.d(G.tag, "Found " + list.length + " stacktrace(s)");
+        Utils.logv("Found " + list.length + " stacktrace(s)");
 
         //Try to read all of them
         try {

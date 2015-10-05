@@ -275,11 +275,11 @@
     <string name="cards_settings">Tarjetas</string>
     <string name="categories_to_show">Categorías para mostrar</string>
     <string name="certificate">Certificado</string>
-    <string name="certificate_desc">Hay que instalar un CA-Root-certificado para permitir la conexión segura con el servidor. Simplemente haga clic en \'Instalar certificado\' y confirme con \'OK\'.</string>
+    <string name="certificate_desc">Hay que instalar un CA-Root-certificado para permitir la conexión segura con el servidor. Simplemente haga clic en ‘Instalar certificado’ y confirme con ‘OK’.</string>
     <string name="closed">Cerrado</string>
     <string name="closes">cierra</string>
     <string name="data_backup">Copias de seguridad</string>
-    <string name="data_backup_desc">Por razones de seguridad, la copia de seguridad de datos debe ser desactivado para evitar que las credenciales LRZ se almacenan sin cifrar en los servidores de Google.\nBajo \'Copia de seguridad &amp; restaurar\' > \'Haga copias de seguridad de mis datos\' para desactivar.\n<a href="https://www.tum.de/nc/en/print/studies/studinews/issue-052013/show/article/31130//neste/1/">Más información</a> </string>
+    <string name="data_backup_desc">Por razones de seguridad, la copia de seguridad de datos debe ser desactivado para evitar que las credenciales LRZ se almacenan sin cifrar en los servidores de Google.\nBajo ‘Copia de seguridad &amp; restaurar’ > ‘Haga copias de seguridad de mis datos’ para desactivar.\n<a href="https://www.tum.de/nc/en/print/studies/studinews/issue-052013/show/article/31130//neste/1/">Más información</a> </string>
     <string name="default_cafeteria">Por defecto Cafetería</string>
     <string name="default_campus">Campus defecto</string>
     <string name="default_station">Station par défaut</string>

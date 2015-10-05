@@ -55,8 +55,6 @@ public class DefaultExceptionHandler implements UncaughtExceptionHandler {
             Log.e(G.tag, "Error saving exception stacktrace", e);
         }
 
-        Log.d(G.tag, result.toString());
-
         //call original handler
         defaultExceptionHandler.uncaughtException(t, e);
     }

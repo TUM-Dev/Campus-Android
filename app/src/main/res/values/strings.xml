@@ -80,7 +80,7 @@
     <string name="silence_phone">Silent Service</string>
     <string name="silence_phone_info">The device will be automatically put into silent mode during a lecture.</string>
     <string name="background_mode">Background Mode (Recommended)</string>
-    <string name="background_info">Content will be fetched once per day to keep you up-to-date even if you don\'t open the app.</string>
+    <string name="background_info">Content will be fetched once per day to keep you up-to-date even if you don’t open the app.</string>
     <string name="mode_background_mode">Background Mode activation</string>
     <string name="always">Always</string>
     <string name="wifi_only">WiFi only</string>
@@ -296,11 +296,11 @@
         separat auch in der App zustimmen müssen. Mit der Installation der App
         akzeptieren Sie zudem die Erfassung diverser, technischer Daten.
 
-        \n\nWeitere Hinweise finden Sie unten unter "Datenschutzerklärung".
+        \n\nWeitere Hinweise finden Sie unten unter ‘Datenschutzerklärung’.
         \n\nSupport:
         \nhttps://www.facebook.com/TUMCampus
         \n\nFür besondere Anliegen erreichen Sie uns auch via E-Mail unter
-        \n"tca-support.os.in AT tum.de"
+        \n‘tca-support.os.in AT tum.de’
         \n\nBitte gehen Sie von mehreren Wochen Bearbeitungszeit aus. Die E-Mails werden nur sporadisch abgerufen.
         \n\nDatenschutzerklärung: https://tumcabe.in.tum.de/landing/privacy/
         \n\nChatbedingungen: https://tumcabe.in.tum.de/landing/chatterms/
@@ -310,7 +310,7 @@
         \n\n\nDer Quellcode kann hier bezogen werden:
         \nhttps://github.com/TCA-Team/
         \n\nWir suchen weiterhin Unterstuetzung! Bitte melden Sie sich unter:
-        \n"tca-support.os.in AT tum.de"
+        \n‘tca-support.os.in AT tum.de’
     </string>
 
     <!-- END Translated, please do not change identifiers -->
@@ -351,21 +351,21 @@
     <string name="setup">Setup</string>
     <string name="setup_eduroam">Setup eduroam</string>
     <string name="password">Password</string>
-    <string name="not_ask_again">Don\'t ask again</string>
+    <string name="not_ask_again">Don’t ask again</string>
     <string name="eduroam_setup_question">Do you want to connect to eduroam now?</string>
     <string name="eduroam_setup_question_desc">Click to start setting up eduroam</string>
     <string name="card_eduroam_summary">Allows you to easily set up eduroam wifi connection</string>
     <string name="pin_lock">PIN-Lock</string>
-    <string name="pin_lock_desc">To set up the wireless access a PIN lock is required.\nIf you don\'t already use PIN lock you can set it up here.\n<a href="https://www.tum.de/index.php?id=1821&amp;tx_ttnews%5Btt_news%5D=31688">More Info</a></string>
+    <string name="pin_lock_desc">To set up the wireless access a PIN lock is required.\nIf you don’t already use PIN lock you can set it up here.\n<a href="https://www.tum.de/index.php?id=1821&amp;tx_ttnews%5Btt_news%5D=31688">More Info</a></string>
     <string name="enable_pin_lock">Enable PIN-Lock</string>
     <string name="data_backup">Data-Backup</string>
-    <string name="data_backup_desc">For safety reasons, the data backup must be disabled to avoid that the LRZ credentials are stored unencrypted on the Google servers.\nUnder \'Backup &amp; restore\' > \'Back up my data\' to disable.\n<a href="https://www.tum.de/nc/en/print/studies/studinews/issue-052013/show/article/31130//neste/1/">More Info</a></string>
+    <string name="data_backup_desc">For safety reasons, the data backup must be disabled to avoid that the LRZ credentials are stored unencrypted on the Google servers.\nUnder ‘Backup &amp; restore’ > ‘Back up my data’ to disable.\n<a href="https://www.tum.de/nc/en/print/studies/studinews/issue-052013/show/article/31130//neste/1/">More Info</a></string>
     <string name="disable_data_backup">Disable Data-Backup</string>
     <string name="eduroam_success">Eduroam successfully configured</string>
     <string name="pin_lock_rem"><b>Configuration failed!</b>\nDid you setup a PIN-Lock?</string>
     <string name="install_certificate">Install certificate</string>
     <string name="certificate">Certificate</string>
-    <string name="certificate_desc">You have to install a CA-Root-certificate to enable secure connection with server. Just click \'Install certificate\' and confirm with \'OK\'.</string>
+    <string name="certificate_desc">You have to install a CA-Root-certificate to enable secure connection with server. Just click ‘Install certificate’ and confirm with ‘OK’.</string>
     <string name="enable_wifi">Enable Wifi</string>
     <string name="loading_first_time">The first start may take a few minutes</string>
     <string name="password_gets_not_saved">TUM Campus App does not save the password, but Android WifiManager does.</string>
@@ -424,7 +424,7 @@ Signature: %5$s</string>
     <string name="no_rights_to_access_lectures">Lectures could not be accessed. Please check the rights of your TUMOnline token!</string>
     <string name="edit">Edit</string>
     <string name="auto_join_chat">Join new lecture rooms</string>
-    <string name="set_auto_join_chat">If you subscribe for a new lecture the app will automatically add you to the lecture\'s chat room.</string>
+    <string name="set_auto_join_chat">If you subscribe for a new lecture the app will automatically add you to the lecture’s chat room.</string>
     <string name="add_chat_member">Add person to chat room</string>
     <string name="add_chat_room">New chat room</string>
     <string name="join_chat_room">Join chat room</string>
