@@ -32,7 +32,6 @@ android {
                 "ContentDescription",
                 "InvalidPackage",     // caused by dependencies, should also give a compile error
                 "UnusedResources",    // unused resources get purged by shrinkResources
-                "LogConditional",     // disabeled by default
                 "UnusedIds",          // disabeled by default
                 "SelectableText",     // disabeled by default
                 "IconExpectedSize",   // Vector assets can be used with the gradle plugin 1.4 (not released yet)
