@@ -1,12 +1,13 @@
 package de.tum.in.tumcampus.activities;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
+
+import java.util.Locale;
 
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.generic.ActivityForAccessingTumOnline;
@@ -27,7 +28,6 @@ import de.tum.in.tumcampus.tumonline.TUMOnlineConst;
  * 
  * NEEDS: stp_sp_nr set in incoming bundle (lecture id)
  */
-@SuppressLint("DefaultLocale")
 public class LecturesDetailsActivity extends ActivityForAccessingTumOnline<LectureDetailsRowSet> implements OnClickListener {
 
 	/** UI elements */
@@ -99,7 +99,7 @@ public class LecturesDetailsActivity extends ActivityForAccessingTumOnline<Lectu
 	public void onFetch(LectureDetailsRowSet xmllv) {
         // we got exactly one row, that's fine
         currentItem = xmllv.getLehrveranstaltungenDetails().get(0);
-        tvLDetailsName.setText(currentItem.getStp_sp_titel().toUpperCase());
+        tvLDetailsName.setText(currentItem.getStp_sp_titel().toUpperCase(Locale.getDefault()));
 
         String strLectureLanguage = currentItem.getSemester_name();
         if (currentItem.getHaupt_unterrichtssprache() != null) {

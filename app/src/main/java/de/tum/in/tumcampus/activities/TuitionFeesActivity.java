@@ -5,6 +5,7 @@ import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.generic.ActivityForAccessingTumOnline;
@@ -46,7 +47,7 @@ public class TuitionFeesActivity extends ActivityForAccessingTumOnline<TuitionLi
         amountTextView.setText(tuitionList.getTuitions().get(0).getSoll() + "€");
         Date date = Utils.getDate(tuitionList.getTuitions().get(0).getFrist());
         deadlineTextView.setText(SimpleDateFormat.getDateInstance().format(date));
-        semesterTextView.setText(tuitionList.getTuitions().get(0).getSemesterBez().toUpperCase());
+        semesterTextView.setText(tuitionList.getTuitions().get(0).getSemesterBez().toUpperCase(Locale.getDefault()));
 
         showLoadingEnded();
     }

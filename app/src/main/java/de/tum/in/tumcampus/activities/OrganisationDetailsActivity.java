@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
+import java.util.Locale;
+
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.generic.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampus.auxiliary.Const;
@@ -59,7 +61,7 @@ public class OrganisationDetailsActivity extends ActivityForAccessingTumOnline<O
         if (tvCaption.getText().toString().compareTo(orgName) != 0) {
 
             // set the new organisation name in the heading
-            tvCaption.setText(orgName.toUpperCase());
+            tvCaption.setText(orgName.toUpperCase(Locale.getDefault()));
 
             // Initialise the request handler and append the orgUnitID to the URL
             requestHandler.setParameter("pOrgNr", orgId);

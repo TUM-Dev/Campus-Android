@@ -395,7 +395,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
                 String dateString = DateUtils.formatDateTime(getApplicationContext(),
                         date.getTimeInMillis(), DateUtils.FORMAT_NUMERIC_DATE | DateUtils.FORMAT_NO_YEAR);
 
-                return weekday.toUpperCase() + ' ' + dateString;
+                return weekday.toUpperCase(Locale.getDefault()) + ' ' + dateString;
             }
 
             @Override

@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.util.Locale;
+
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.generic.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampus.adapters.LectureAppointmentsListAdapter;
@@ -38,7 +40,7 @@ public class LecturesAppointmentsActivity extends ActivityForAccessingTumOnline<
 
 		Bundle bundle = this.getIntent().getExtras();
 		// set Lecture Name (depends on bundle data)
-		tvTermineLectureName.setText(bundle.getString(Const.TITLE_EXTRA).toUpperCase());
+		tvTermineLectureName.setText(bundle.getString(Const.TITLE_EXTRA).toUpperCase(Locale.getDefault()));
 		requestHandler.setParameter("pLVNr", bundle.getString("stp_sp_nr"));
 
 		super.requestFetch();

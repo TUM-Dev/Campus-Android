@@ -20,8 +20,7 @@ android {
     }
     lintOptions {
         checkAllWarnings true
-        disable "DefaultLocale",
-                "InlinedApi",
+        disable "InlinedApi",
                 "NewApi",
                 "SimpleDateFormat",
                 "PrivateResource",
