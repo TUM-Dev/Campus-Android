@@ -36,11 +36,7 @@ android {
                 "SelectableText",     // disabeled by default
                 "IconExpectedSize",   // Vector assets can be used with the gradle plugin 1.4 (not released yet)
                 "IconLocation",
-                "IconDensities",
-                "RtlCompat",          // we don't support any RTL languages
-                "RtlSymmetry",
-                "RtlHardcoded",
-                "RtlEnabled"
+                "IconDensities"
         htmlReport false
         warningsAsErrors true
         abortOnError true
