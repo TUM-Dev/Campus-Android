@@ -21,7 +21,6 @@ android {
     lintOptions {
         checkAllWarnings true
         disable "InlinedApi",
-                "NewApi",
                 "PrivateResource",
                 "TrulyRandom",
                 "Overdraw",
