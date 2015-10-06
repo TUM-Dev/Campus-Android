@@ -28,6 +28,7 @@ import com.alamkanak.weekview.DateTimeInterpreter;
 import com.alamkanak.weekview.WeekView;
 import com.alamkanak.weekview.WeekViewEvent;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -403,8 +404,8 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
                 Calendar cal = Calendar.getInstance();
                 cal.set(Calendar.HOUR_OF_DAY, hour);
                 cal.set(Calendar.MINUTE, 0);
-                return DateUtils.formatDateTime(getApplicationContext(),
-                        cal.getTimeInMillis(), DateUtils.FORMAT_SHOW_TIME);
+                DateFormat hourFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
+                return hourFormat.format(cal.getTime());
             }
         });
     }

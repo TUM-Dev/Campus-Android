@@ -22,6 +22,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Locale;
 
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.CalendarActivity;
@@ -126,7 +127,7 @@ public class NextLectureCard extends Card {
             mLocation.setVisibility(View.GONE);
         }
 
-        DateFormat week = new SimpleDateFormat("EEEE, ");
+        DateFormat week = new SimpleDateFormat("EEEE, ", Locale.getDefault());
         DateFormat df = SimpleDateFormat.getTimeInstance(DateFormat.SHORT);
         mEvent.setText(week.format(item.start) + df.format(item.start) + " - " + df.format(item.end));
         mEvent.setOnClickListener(new View.OnClickListener() {

@@ -22,7 +22,6 @@ android {
         checkAllWarnings true
         disable "InlinedApi",
                 "NewApi",
-                "SimpleDateFormat",
                 "PrivateResource",
                 "PluralsCandidate",
                 "TrulyRandom",

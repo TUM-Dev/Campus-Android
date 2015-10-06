@@ -8,9 +8,12 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.models.LectureAppointmentsRow;
@@ -83,7 +86,7 @@ public class LectureAppointmentsListAdapter extends BaseAdapter {
 			// zeitdarstellung setzen
 			// parse dates
 			// this is the template for the date in the xml file
-			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.US);
 			try {
 
 				Calendar start = Calendar.getInstance();
@@ -97,18 +100,18 @@ public class LectureAppointmentsListAdapter extends BaseAdapter {
 				cstart.setTime(start.getTime());
 
 				// date formats for the day output
-				SimpleDateFormat endHoursOutput = new SimpleDateFormat("HH:mm");
-				SimpleDateFormat StartDateOutput = new SimpleDateFormat("EEE dd.MM.yyyy HH:mm");
-                SimpleDateFormat EndDateOutput = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+				DateFormat endHoursOutput = SimpleDateFormat.getTimeInstance();
+				DateFormat StartDateOutput = SimpleDateFormat.getDateTimeInstance();
+				DateFormat EndDateOutput = SimpleDateFormat.getDateTimeInstance();
 
 				// output if same day: we only show the date once
                 String output;
 				if (start.get(Calendar.MONTH) == ende.get(Calendar.MONTH) &&
 						start.get(Calendar.DATE) == ende.get(Calendar.DATE)) {
-					output = StartDateOutput.format(start) + " - " + endHoursOutput.format(ende);
+					output = StartDateOutput.format(start.getTime()) + " - " + endHoursOutput.format(ende.getTime());
 				} else {
 					// show it normally
-					output = StartDateOutput.format(start) + " - " + EndDateOutput.format(ende);
+					output = StartDateOutput.format(start.getTime()) + " - " + EndDateOutput.format(ende.getTime());
 				}
 
 				// grey it, if in past
@@ -118,7 +121,7 @@ public class LectureAppointmentsListAdapter extends BaseAdapter {
 
 				holder.tvTerminZeit.setText(Html.fromHtml(output));
 
-			} catch (Exception ex) {
+			} catch (ParseException e) {
 				holder.tvTerminZeit.setText(lvItem.getBeginn_datum_zeitpunkt()
 						+ " - " + lvItem.getEnde_datum_zeitpunkt());
 			}
