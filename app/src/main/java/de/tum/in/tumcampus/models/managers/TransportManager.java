@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -158,10 +159,10 @@ public class TransportManager implements Card.ProvidesCard {
     }
 
     public static class Departure {
-        public String servingLine;
-        public String direction;
-        public String symbol;
-        public int countDown;
+        final public String servingLine;
+        final public String direction;
+        final public String symbol;
+        final public int countDown;
 
         public Departure(String servingLine, String direction, String symbol, int countDown) {
             this.servingLine = servingLine;
@@ -192,18 +193,16 @@ public class TransportManager implements Card.ProvidesCard {
                 return null;
             }
 
+            List<StationResult> results = new ArrayList<>();
             MatrixCursor mc = new MatrixCursor(new String[]{Const.NAME_COLUMN, Const.ID_COLUMN});
             JSONObject stopfinder = jsonObj.getJSONObject("stopFinder");
 
             // Possible values for points: Object, Array or null
             JSONArray pointsArray = stopfinder.optJSONArray("points");
             if (pointsArray != null) {
-                //TODO: sorting by quality
                 for (int i = 0; i < pointsArray.length(); i++) {
                     JSONObject point = pointsArray.getJSONObject(i);
-                    String station = point.getString("name");
-                    String id = point.getString("object");
-                    mc.addRow(new String[]{station, id});
+                    addStationResult(results, point);
                 }
             } else {
                 JSONObject points = stopfinder.optJSONObject("points");
@@ -211,9 +210,19 @@ public class TransportManager implements Card.ProvidesCard {
                     return null;
                 }
                 JSONObject point = points.getJSONObject("point");
-                String station = point.getString("name");
-                String id = point.getString("stateless");
-                mc.addRow(new String[]{station, id});
+                addStationResult(results, point);
+            }
+
+            //Sort by quality
+            Collections.sort(results, new Comparator<StationResult>() {
+                @Override
+                public int compare(StationResult lhs, StationResult rhs) {
+                    return rhs.quality - lhs.quality;
+                }
+            });
+
+            for (StationResult result : results) {
+                mc.addRow(new String[]{result.station, result.id});
             }
             return mc;
         } catch (UnsupportedEncodingException e) {
@@ -222,6 +231,26 @@ public class TransportManager implements Card.ProvidesCard {
             Utils.log(e, "invalid JSON from mvv " + STATION_SEARCH);
         }
         return null;
+    }
+
+    private static void addStationResult(Collection<StationResult> results, JSONObject point) throws JSONException {
+        results.add(new StationResult(
+                point.getString("name"),
+                point.getJSONObject("ref").getString("id"),
+                point.getInt("quality")
+        ));
+    }
+
+    public static class StationResult {
+        final String station;
+        final String id;
+        final int quality;
+
+        public StationResult(String station, String id, int quality) {
+            this.station = station;
+            this.id = id;
+            this.quality = quality;
+        }
     }
 
     /**
