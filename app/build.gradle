@@ -23,7 +23,6 @@ android {
         disable "InlinedApi",
                 "NewApi",
                 "PrivateResource",
-                "PluralsCandidate",
                 "TrulyRandom",
                 "NestedWeights",
                 "Overdraw",

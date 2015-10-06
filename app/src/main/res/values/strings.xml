@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- START Translated, please do not change identifiers -->
 
@@ -314,7 +314,7 @@
     </string>
 
     <!-- END Translated, please do not change identifiers -->
-    <string name="min_search_len">Query must be at least %d chars long</string>
+    <string name="min_search_len" tools:ignore="PluralsCandidate">Query must be at least %d chars long</string>
     <string name="default_cafeteria">Default Cafeteria</string>
     <string name="default_station">Default Station</string>
     <string name="campus_klinikum_großhadern">Klinikum Großhadern</string>
