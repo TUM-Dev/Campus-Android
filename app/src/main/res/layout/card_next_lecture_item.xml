@@ -33,7 +33,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
                     android:layout_toLeftOf="@+id/linearLayout"
-                    android:layout_toStartOf="@+id/linearLayout"
+                    android:layout_toStartOf="@id/linearLayout"
                     android:orientation="vertical">
 
                     <TextView
@@ -79,7 +79,7 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/linearLayout"
+                    android:id="@id/linearLayout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
@@ -89,7 +89,6 @@
                     android:orientation="horizontal">
 
                     <LinearLayout
-                        android:id="@+id/linearLayout2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">

@@ -21,7 +21,6 @@
             style="@style/SectionHeadline" />
 
         <ScrollView
-            android:id="@+id/scroll"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_alignBottom="@+id/divider"

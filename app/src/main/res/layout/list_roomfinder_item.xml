@@ -7,14 +7,12 @@
     android:padding="@dimen/padding_default">
 
     <LinearLayout
-        android:id="@+id/thumbnail"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="center"
         android:layout_marginRight="@dimen/padding_default">
 
         <ImageView
-            android:id="@+id/list_image"
             android:layout_width="@dimen/icon_small"
             android:layout_height="@dimen/icon_small"
             android:layout_gravity="center"

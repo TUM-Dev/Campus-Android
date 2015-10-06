@@ -1,5 +1,6 @@
 package de.tum.in.tumcampus.models.managers;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiConfiguration.GroupCipher;
@@ -64,6 +65,7 @@ public class EduroamManager {
      * @param networkPass User's lrz password
      * @return Returns true if configuration was successful, false otherwise
      */
+    @TargetApi(18)
     public boolean configureEduroam(String lrzId, String networkPass) {
         // Configure Wifi
         WifiConfiguration conf = new WifiConfiguration();

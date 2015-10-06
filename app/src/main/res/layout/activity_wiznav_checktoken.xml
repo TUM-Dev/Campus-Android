@@ -25,15 +25,14 @@
             android:id="@+id/ptr_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_alignBottom="@+id/divider"
-            android:layout_below="@+id/pager_title_strip">
+            android:layout_alignBottom="@id/divider"
+            android:layout_below="@id/pager_title_strip">
 
             <ScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
                 <LinearLayout
-                    android:id="@+id/tableLayout1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
@@ -103,7 +102,6 @@
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/prev_button"
                 style="@style/ButtonBarButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"

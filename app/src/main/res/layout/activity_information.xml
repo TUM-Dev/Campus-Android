@@ -25,7 +25,6 @@
             android:textSize="@dimen/large_text_size" />
 
         <TextView
-            android:id="@+id/txt_information"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:autoLink="all"

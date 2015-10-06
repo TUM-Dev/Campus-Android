@@ -24,8 +24,8 @@
             android:id="@+id/ptr_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@+id/divider"
-            android:layout_below="@+id/pager_title_strip">
+            android:layout_above="@id/divider"
+            android:layout_below="@id/pager_title_strip">
 
             <ScrollView
                 android:layout_width="match_parent"
@@ -47,7 +47,6 @@
                         android:textColor="@color/text_light_gray" />
 
                     <TextView
-                        android:id="@+id/textViewWel"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:padding="@dimen/padding_default"
@@ -69,11 +68,10 @@
             android:id="@+id/divider"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_above="@+id/buttonBar"
+            android:layout_above="@id/buttonBar"
             android:background="?android:attr/listDivider" />
 
         <LinearLayout
-            android:id="@+id/buttonBar"
             style="@style/ButtonBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -81,7 +79,6 @@
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/prev_button"
                 style="@style/ButtonBarButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"

@@ -77,11 +77,12 @@ public class DepartureView extends LinearLayout {
      *
      * @param symbol Symbol e.g. U6, S1, T14
      */
+    @SuppressWarnings("deprecation")
     public void setSymbol(String symbol) {
         MVVSymbolView d = new MVVSymbolView(symbol);
         mSymbolView.setTextColor(d.getTextColor());
         mSymbolView.setText(symbol);
-        mSymbolView.setBackground(d);
+        mSymbolView.setBackgroundDrawable(d);
     }
 
     /**

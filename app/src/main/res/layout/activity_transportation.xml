@@ -7,7 +7,6 @@
     tools:context=".StartActivity">
     <!-- The main content view -->
     <LinearLayout
-        android:id="@+id/content_frame"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -16,7 +15,6 @@
         <include layout="@layout/toolbar" />
 
         <LinearLayout
-            android:id="@+id/activity_transport_main_layout"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:focusableInTouchMode="true"
