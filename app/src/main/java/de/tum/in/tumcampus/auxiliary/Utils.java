@@ -26,10 +26,12 @@ import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import de.tum.in.tumcampus.BuildConfig;
 
@@ -104,9 +106,9 @@ public final class Utils {
      */
     public static Date getDate(String str) {
         try {
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
             return dateFormat.parse(str);
-        } catch (Exception e) {
+        } catch (ParseException e) {
             log(e, str);
         }
         return new Date();
@@ -119,7 +121,7 @@ public final class Utils {
      * @return String (yyyy-mm-dd)
      */
     public static String getDateString(Date d) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
         return dateFormat.format(d);
     }
 
@@ -130,7 +132,7 @@ public final class Utils {
      * @return String (yyyy-mm-dd hh:mm:ss)
      */
     public static String getDateTimeString(Date d) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
         return dateFormat.format(d);
     }
 
@@ -142,9 +144,9 @@ public final class Utils {
      */
     public static Date getISODateTime(String str) {
         try {
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
             return dateFormat.parse(str);
-        } catch (Exception e) {
+        } catch (ParseException e) {
             log(e, str);
         }
         return new Date();
