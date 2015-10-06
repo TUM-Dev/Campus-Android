@@ -31,7 +31,7 @@
     <Button
         android:id="@+id/button_enable_wifi"
         style="@style/FlatButton"
-        android:layout_below="@+id/no_internet_text"
+        android:layout_below="@id/no_internet_text"
         android:layout_centerHorizontal="true"
         android:onClick="onEnableWifi"
         android:text="@string/enable_wifi" />
@@ -40,11 +40,11 @@
         android:id="@+id/progressWifi"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/no_internet_image"
-        android:layout_alignLeft="@+id/no_internet_image"
-        android:layout_alignRight="@+id/no_internet_image"
-        android:layout_alignStart="@+id/no_internet_image"
-        android:layout_below="@+id/button_enable_wifi"
+        android:layout_alignEnd="@id/no_internet_image"
+        android:layout_alignLeft="@id/no_internet_image"
+        android:layout_alignRight="@id/no_internet_image"
+        android:layout_alignStart="@id/no_internet_image"
+        android:layout_below="@id/button_enable_wifi"
         android:layout_marginTop="5dp"
         android:visibility="invisible" />
 

@@ -6,7 +6,6 @@
     <include layout="@layout/toolbar" />
 
     <RelativeLayout
-        android:id="@+id/chat_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -21,7 +20,7 @@
             android:transcriptMode="normal" />
 
         <RelativeLayout
-            android:id="@+id/relativeLayout"
+            android:id="@id/relativeLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
