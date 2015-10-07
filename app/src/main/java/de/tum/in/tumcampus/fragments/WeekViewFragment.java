@@ -28,7 +28,7 @@ public class WeekViewFragment extends Fragment implements WeekView.MonthChangeLi
     public static WeekViewFragment newInstance(String roomApiCode) {
         WeekViewFragment fragment = new WeekViewFragment();
         Bundle args = new Bundle();
-        args.putString(TUMRoomFinderRequest.KEY_ROOM_API_CODE, roomApiCode);
+        args.putString(TUMRoomFinderRequest.KEY_ROOM_ID, roomApiCode);
         fragment.setArguments(args);
 
         return fragment;
@@ -36,7 +36,7 @@ public class WeekViewFragment extends Fragment implements WeekView.MonthChangeLi
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        roomApiCode = getArguments().getString(TUMRoomFinderRequest.KEY_ROOM_API_CODE);
+        roomApiCode = getArguments().getString(TUMRoomFinderRequest.KEY_ROOM_ID);
 
         View view = inflater.inflate(R.layout.fragment_day_view, container, false);
         mWeekView = (WeekView) view.findViewById(R.id.weekView);

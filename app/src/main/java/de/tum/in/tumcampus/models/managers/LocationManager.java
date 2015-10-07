@@ -9,7 +9,6 @@ import android.location.Location;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
-import android.util.Pair;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -325,7 +324,7 @@ public class LocationManager {
 
         ArrayList<HashMap<String, String>> request = requestHandler.fetchRooms(loc);
         if (request.size() > 0) {
-            String room = request.get(0).get(TUMRoomFinderRequest.KEY_ARCHITECT_NUMBER);
+            String room = request.get(0).get(TUMRoomFinderRequest.KEY_ARCH_ID);
             return requestHandler.fetchCoordinates(room);
         }
         return null;

@@ -10,6 +10,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.generic.ActivityForSearching;
@@ -83,10 +84,6 @@ public class RoomFinderActivity extends ActivityForSearching implements TUMRoomF
     }
 
     @Override
-    public void onFetchDefaultMapId(String mapId) {
-    }
-
-    @Override
     public void onFetchError(String errorReason) {
         roomFinderRequest.cancelRequest(true);
         showError(errorReason);
@@ -95,7 +92,7 @@ public class RoomFinderActivity extends ActivityForSearching implements TUMRoomF
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         @SuppressWarnings("unchecked")
-        HashMap<String, String> room = (HashMap<String, String>) list.getAdapter().getItem(position);
+        TreeMap<String, String> room = new TreeMap<>((HashMap<String, String>) list.getAdapter().getItem(position));
 
         // Add to recents
         String val = "";
