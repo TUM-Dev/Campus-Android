@@ -68,10 +68,11 @@
             android:id="@+id/divider"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_above="@id/buttonBar"
+            android:layout_above="@+id/buttonBar"
             android:background="?android:attr/listDivider" />
 
         <LinearLayout
+            android:id="@id/buttonBar"
             style="@style/ButtonBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
