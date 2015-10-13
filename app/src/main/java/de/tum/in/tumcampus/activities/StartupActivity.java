@@ -63,7 +63,7 @@ public class StartupActivity extends AppCompatActivity {
         setContentView(R.layout.activity_startup);
 
         //Our own Custom exception handler
-        ExceptionHandler.setup(this);
+        ExceptionHandler.setup(getApplicationContext());
 
         //Upload stats
         ImplicitCounter.Counter(this);
