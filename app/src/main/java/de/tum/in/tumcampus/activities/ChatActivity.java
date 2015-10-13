@@ -550,4 +550,10 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
             }
         });
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mUpdateHandler.removeCallbacksAndMessages(null);
+    }
 }

@@ -1,7 +1,6 @@
 package de.tum.in.tumcampus.adapters;
 
 import android.app.Activity;
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,7 +29,7 @@ public class RoomFinderListAdapter extends BaseAdapter implements StickyListHead
 
 	public RoomFinderListAdapter(Activity activity, ArrayList<HashMap<String, String>> d) {
 		data = d;
-		inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		inflater = LayoutInflater.from(activity.getApplicationContext());
 	}
 
 	@Override
