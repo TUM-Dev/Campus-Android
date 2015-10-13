@@ -2,6 +2,7 @@ package de.tum.in.tumcampus.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.LinearLayout;
 
 import java.util.List;
@@ -96,6 +97,18 @@ public class TransportationDetailsActivity extends ActivityForLoadingInBackgroun
             view.setLine(d.servingLine);
             view.setTime(d.countDown);
             mViewResults.addView(view);
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        for (int i = 0; i < mViewResults.getChildCount(); i++) {
+            View view = mViewResults.getChildAt(i);
+            if (!(view instanceof DepartureView)) {
+                continue;
+            }
+            ((DepartureView) view).removeAllCallbacksAndMessages();
         }
     }
 }

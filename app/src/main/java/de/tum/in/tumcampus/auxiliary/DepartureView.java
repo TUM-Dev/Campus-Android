@@ -27,6 +27,7 @@ public class DepartureView extends LinearLayout {
     private final TextSwitcher mTimeSwitcher;
     private int mCountDown;
     private final Handler mHandler;
+    private final ValueAnimator mValueAnimator;
 
     /**
      * Standard constructor for DepartureView
@@ -70,6 +71,22 @@ public class DepartureView extends LinearLayout {
         mTimeSwitcher.setOutAnimation(out);
 
         mHandler = new Handler();
+
+        // Set up the ValueAnimator for animateOut()
+        mValueAnimator = ValueAnimator.ofInt(getHeight(), 0).setDuration(500);
+        mValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                int value = (Integer) animation.getAnimatedValue();
+                if (getLayoutParams() != null) {
+                    getLayoutParams().height = value;
+                    requestLayout();
+                    if (value == 0) {
+                        setVisibility(View.GONE);
+                    }
+                }
+            }
+        });
     }
 
     /**
@@ -125,21 +142,15 @@ public class DepartureView extends LinearLayout {
     }
 
     private void animateOut() {
-        ValueAnimator va = ValueAnimator.ofInt(getHeight(), 0);
-        va.setDuration(500);
-        va.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                int value = (Integer) animation.getAnimatedValue();
-                if (getLayoutParams() != null) {
-                    getLayoutParams().height = value;
-                    requestLayout();
-                    if (value == 0) {
-                        setVisibility(View.GONE);
-                    }
-                }
-            }
-        });
-        va.start();
+        mValueAnimator.start();
+    }
+
+    /**
+     * Call this, when the DepartureView isn't needed anymore.
+     */
+    public void removeAllCallbacksAndMessages(){
+        mHandler.removeCallbacksAndMessages(null);
+        mValueAnimator.cancel();
+        mValueAnimator.removeAllUpdateListeners();
     }
 }
