@@ -84,7 +84,7 @@ public class TUMCabeClient {
     }
 
     public static TUMCabeClient getInstance(Context c) {
-        TUMCabeClient.context = c;
+        TUMCabeClient.context = c.getApplicationContext();
         if (instance == null) {
             instance = new TUMCabeClient();
         }

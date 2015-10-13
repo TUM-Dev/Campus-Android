@@ -92,7 +92,7 @@ public class CardManager {
      * 6. Add an instance of the manager class to the managers list below
      */
     public static synchronized void update(Context context) {
-        mContext = context;
+        mContext = context.getApplicationContext();
 
         // Use temporary array to avoid that the main thread is
         // trying to access an empty array
