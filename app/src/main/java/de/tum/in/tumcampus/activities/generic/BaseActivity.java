@@ -9,6 +9,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -34,6 +35,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     protected DrawerLayout mDrawerLayout;
     protected NavigationView mDrawerList;
+    protected View headerView;
 
     /**
      * Standard constructor for BaseActivity.
@@ -58,8 +60,9 @@ public abstract class BaseActivity extends AppCompatActivity {
         // Setup the navigation drawer if present in the layout
         if (mDrawerList != null && mDrawerLayout != null) {
             // Set personalization in the navdrawer
-            TextView nameText = (TextView) findViewById(R.id.name);
-            TextView emailText = (TextView) findViewById(R.id.email);
+            headerView = mDrawerList.inflateHeaderView(R.layout.drawer_header);
+            TextView nameText = (TextView) headerView.findViewById(R.id.name);
+            TextView emailText = (TextView) headerView.findViewById(R.id.email);
             nameText.setText(Utils.getSetting(this, Const.CHAT_ROOM_DISPLAY_NAME,
                     getString(R.string.token_not_enabled)));
             String email = Utils.getSetting(this, Const.LRZ_ID, "");
@@ -126,7 +129,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        CircleImageView picture = (CircleImageView) findViewById(R.id.profile_image);
+                        CircleImageView picture = (CircleImageView) headerView.findViewById(R.id.profile_image);
                         if (result != null && result.getImage() != null) {
                             picture.setImageBitmap(result.getImage());
                         }
