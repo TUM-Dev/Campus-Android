@@ -1,5 +1,6 @@
 package de.tum.in.tumcampus.activities;
 
+import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -10,6 +11,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -43,7 +45,7 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
      */
     private RecyclerView mCardsView;
     private CardsAdapter mAdapter;
-    private SwipeRefreshLayout mSwipeRefreshlayout;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
     BroadcastReceiver connectivityChangeReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -69,9 +71,9 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
         super.onCreate(savedInstanceState);
 
         // Setup pull to refresh
-        mSwipeRefreshlayout = (SwipeRefreshLayout) findViewById(R.id.ptr_layout);
-        mSwipeRefreshlayout.setOnRefreshListener(this);
-        mSwipeRefreshlayout.setColorSchemeResources(
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.ptr_layout);
+        mSwipeRefreshLayout.setOnRefreshListener(this);
+        mSwipeRefreshLayout.setColorSchemeResources(
                 R.color.color_primary,
                 R.color.tum_A100,
                 R.color.tum_A200);
@@ -116,7 +118,7 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
 
         // Set the drawer toggle as the DrawerListener
         mDrawerLayout.setDrawerListener(mDrawerToggle);
-        
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.main_toolbar);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
@@ -140,6 +142,7 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
         } else {
             initAdapter();
         }
+        showToolbar();
     }
 
     /**
@@ -218,7 +221,7 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
      * Show progress indicator and start updating cards in background
      */
     public void refreshCards() {
-        mSwipeRefreshlayout.setRefreshing(true);
+        mSwipeRefreshLayout.setRefreshing(true);
         onRefresh();
     }
 
@@ -249,7 +252,7 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
                     mAdapter.notifyDataSetChanged();
                 }
 
-                mSwipeRefreshlayout.setRefreshing(false);
+                mSwipeRefreshLayout.setRefreshing(false);
                 if (!registered && !NetUtils.isConnected(MainActivity.this)) {
                     registerReceiver(connectivityChangeReceiver,
                             new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
@@ -265,7 +268,19 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
     public void restoreCards(View view) {
         CardManager.restoreCards();
         refreshCards();
-        mCardsView.scrollToPosition(0);
+        showToolbar();
+    }
+
+    /**
+     * Smoothly scrolls the RecyclerView to the top and dispatches nestedScrollingEvents to show
+     * the Toolbar
+     */
+    @SuppressLint("NewApi") // Verified in a API 10 emulator that this works, even though AndroidLint reports otherwise
+    private void showToolbar() {
+        mCardsView.startNestedScroll(ViewCompat.SCROLL_AXIS_VERTICAL);
+        mCardsView.dispatchNestedFling(0, Integer.MIN_VALUE, true);
+        mCardsView.stopNestedScroll();
+        mCardsView.getLayoutManager().smoothScrollToPosition(mCardsView, null, 0);
     }
 
     /**
@@ -302,14 +317,14 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
             Card.CardViewHolder cardViewHolder = (Card.CardViewHolder) viewHolder;
             final Card card = cardViewHolder.getCurrentCard();
             final int lastPos = mAdapter.remove(card);
-            final View coordinatorLayoutView = findViewById(R.id.snackbarPosition);
+            final View coordinatorLayoutView = findViewById(R.id.coordinator);
 
             Snackbar.make(coordinatorLayoutView, R.string.card_dismissed, Snackbar.LENGTH_LONG)
                     .setAction(R.string.undo, new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             mAdapter.insert(lastPos, card);
-                            mCardsView.scrollToPosition(lastPos);
+                            mCardsView.getLayoutManager().smoothScrollToPosition(mCardsView, null, lastPos);
                         }
 
                     }).setCallback(new Snackbar.Callback() {
