@@ -75,7 +75,6 @@ public class ChatRoomManager implements Card.ProvidesCard {
      * Saves the given lecture into database
      */
     public void replaceInto(LecturesSearchRow lecture) {
-        Utils.logv("replace " + lecture.getTitel());
 
         Cursor cur = db.rawQuery("SELECT _id FROM chat_room WHERE name=? AND semester_id=?",
                 new String[]{lecture.getTitel(), lecture.getSemester_id()});

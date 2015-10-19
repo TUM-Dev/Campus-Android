@@ -119,7 +119,6 @@ public class OpenHoursManager {
         //Find the first part
         String[] time = new String[2];
         if (m.find()) {
-            Utils.log("matches: " + m.groupCount() + " " + m.group(0) + " " + m.group(3) + " " + m.group(4));
             //We are currently in Mo-Do/Fr, when this weekday is in that range we have our result or we check if the current range is valid for fridays also
             if (dayOfWeek <= Calendar.THURSDAY || m.group(2).equalsIgnoreCase("fr")) {
                 time[0] = m.group(3);
@@ -189,7 +188,6 @@ public class OpenHoursManager {
      * @throws Exception
      */
     public void replaceIntoDb(Location l) throws Exception {
-        Utils.log(l.toString());
 
         if (l.id <= 0) {
             throw new Exception("Invalid id.");

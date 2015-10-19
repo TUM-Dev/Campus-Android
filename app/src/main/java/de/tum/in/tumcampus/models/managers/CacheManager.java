@@ -231,7 +231,6 @@ public class CacheManager {
     public void addToCache(String url, String data, int validity, int typ) {
         if (validity == VALIDITY_DO_NOT_CACHE)
             return;
-        Utils.logv("replace " + url + " " + data);
         db.execSQL("REPLACE INTO cache (url, data, validity, max_age, typ) " +
                         "VALUES (?, ?, datetime('now','+" + (validity / 2) + " seconds'), " +
                         "datetime('now','+" + validity + " seconds'), ?)",

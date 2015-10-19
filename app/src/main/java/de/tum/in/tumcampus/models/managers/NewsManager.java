@@ -197,8 +197,6 @@ public class NewsManager implements Card.ProvidesCard {
      * @param n News object
      */
     void replaceIntoDb(News n) {
-        Utils.logv(n.toString());
-
         db.execSQL("REPLACE INTO news (id, src, title, link, image, date, " +
                         "created, dismissed) VALUES (?, ?, ?, ?, ?, ?, ?, 0)",
                 new String[]{n.id, n.src, n.title, n.link, n.image,
@@ -212,8 +210,6 @@ public class NewsManager implements Card.ProvidesCard {
      * @throws Exception
      */
     void replaceIntoSourcesDb(JSONObject n) throws Exception {
-        Utils.logv(n.toString());
-
         db.execSQL("REPLACE INTO news_sources (id, icon, title) VALUES (?, ?, ?)",
                 new String[]{n.getString(Const.JSON_SOURCE), n.has(Const.JSON_ICON) ? n.getString(Const.JSON_ICON) : "",
                         n.getString(Const.JSON_TITLE)});

@@ -257,8 +257,6 @@ public class TUMOnlineRequest<T> {
             return false;
         }
 
-        Utils.logv("AccessToken = " + accessToken);
-
         // ok, access token seems valid (at first)
         setParameter(Const.P_TOKEN, accessToken);
         return true;
