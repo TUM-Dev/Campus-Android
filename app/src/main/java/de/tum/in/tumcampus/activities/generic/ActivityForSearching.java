@@ -68,9 +68,6 @@ public abstract class ActivityForSearching extends ProgressActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setIcon(R.drawable.tum_logo);
-        }
     }
 
     @Override
