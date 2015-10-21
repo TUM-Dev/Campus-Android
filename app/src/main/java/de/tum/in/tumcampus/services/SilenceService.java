@@ -94,6 +94,7 @@ public class SilenceService extends IntentService {
                 am.setRingerMode(AudioManager.RINGER_MODE_SILENT);
             }
             // refresh when event has ended
+            cursor.moveToFirst();
             wait_duration = getWaitDuration(cursor.getString(3));
         } else if (Utils.getInternalSettingBool(this, Const.SILENCE_ON, false)) {
             // default: old state
