@@ -66,6 +66,7 @@ public class MVVCard extends Card {
         for (int i = 0; i < mLinearLayout.getChildCount(); i++) {
             if (mLinearLayout.getChildAt(i) instanceof DepartureView) {
                 mLinearLayout.removeViewAt(i);
+                i--; // Check the same location again, since the childCount changed
             }
         }
 
