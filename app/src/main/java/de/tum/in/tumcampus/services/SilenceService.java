@@ -106,8 +106,10 @@ public class SilenceService extends IntentService {
 
 
             Cursor cursor2 = calendarManager.getNextCalendarItem();
-            // refresh when next event has started
-            wait_duration = getWaitDuration(cursor2.getString(1));
+            if (cursor.getCount() != 0) { //Check if we have a "next" item in the database and update the refresh interval until then. Otherwise use default interval.
+                // refresh when next event has started
+                wait_duration = getWaitDuration(cursor2.getString(1));
+            }
             cursor2.close();
         }
         cursor.close();
