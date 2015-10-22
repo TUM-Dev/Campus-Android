@@ -33,6 +33,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -77,6 +78,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
      */
     private boolean isFetched;
     private boolean mWeekMode = false;
+    private Calendar mShowDate;
     private MenuItem menuItemSwitchView;
     private WeekView mWeekView;
 
@@ -94,17 +96,23 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
         // The week view has infinite scrolling horizontally. We have to provide the events of a
         // month every time the month changes on the week view.
         mWeekView.setMonthChangeListener(this);
-        setupDateTimeInterpreter(mWeekMode);
-        mWeekView.goToHour(8);
         mWeekView.setOnEventClickListener(this);
 
-        // Get time to show e.g. a lectures starting time or 0 for now
-        //Intent i = getIntent();
-        //if (i != null && i.hasExtra(EVENT_TIME)) {
-        //    mEventTime = i.getLongExtra(EVENT_TIME, 0);
-        //}
 
-        //mViewPager = (ViewPager) findViewById(R.id.pager);
+        // Get time to show e.g. a lectures starting time or 0 for now
+        Intent i = getIntent();
+        mShowDate = GregorianCalendar.getInstance();
+        if (i != null && i.hasExtra(EVENT_TIME)) {
+            long time = i.getLongExtra(EVENT_TIME, 0);
+            mShowDate.setTime(new Date(time));
+        } else {
+            mShowDate.setTime(new Date());
+        }
+
+        //Get setting from sharedprefs and refresh the view with everything
+        this.mWeekMode = Utils.getInternalSettingBool(this, Const.CALENDAR_WEEK_MODE, false);
+        this.refreshWeekView();
+
         calendarManager = new CalendarManager(this);
 
         // Set the time space between now and after this date and before this
@@ -153,6 +161,10 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.menu_sync_calendar, menu);
         menuItemSwitchView = menu.findItem(R.id.action_switch_view_mode);
+
+        //Refresh the icon according to us having day or weekview
+        this.refreshWeekView();
+
         return true;
     }
 
@@ -181,23 +193,8 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
         switch (item.getItemId()) {
             case R.id.action_switch_view_mode:
                 mWeekMode = !mWeekMode;
-                setupDateTimeInterpreter(mWeekMode);
-                if (mWeekMode) {
-                    menuItemSwitchView.setIcon(R.drawable.ic_action_day_view);
-                    mWeekView.setNumberOfVisibleDays(7);
-                    // Lets change some dimensions to best fit the view.
-                    mWeekView.setTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 12, getResources().getDisplayMetrics()));
-                    mWeekView.setEventTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 10, getResources().getDisplayMetrics()));
-                    mWeekView.setXScrollingSpeed(1);
-                } else {
-                    menuItemSwitchView.setIcon(R.drawable.ic_action_week_view);
-                    mWeekView.setNumberOfVisibleDays(1);
-                    // Lets change some dimensions to best fit the view.
-                    mWeekView.setTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 16, getResources().getDisplayMetrics()));
-                    mWeekView.setEventTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 12, getResources().getDisplayMetrics()));
-                    mWeekView.setXScrollingSpeed(0.4f);
-                }
-                mWeekView.goToHour(8);
+                Utils.setInternalSetting(this, Const.CALENDAR_WEEK_MODE, mWeekMode);
+                this.refreshWeekView();
                 return true;
             case R.id.action_export_calendar:
                 exportCalendarToGoogle();
@@ -216,9 +213,41 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
     }
 
     /**
+     * Load up the week view with correct settings
+     */
+    private void refreshWeekView() {
+        setupDateTimeInterpreter(mWeekMode);
+        int icon;
+        if (mWeekMode) {
+            icon = R.drawable.ic_action_day_view;
+            mWeekView.setNumberOfVisibleDays(7);
+            // Lets change some dimensions to best fit the view.
+            mWeekView.setTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 12, getResources().getDisplayMetrics()));
+            mWeekView.setEventTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 10, getResources().getDisplayMetrics()));
+            mWeekView.setXScrollingSpeed(1);
+        } else {
+            icon = R.drawable.ic_action_week_view;
+            mWeekView.setNumberOfVisibleDays(1);
+            // Lets change some dimensions to best fit the view.
+            mWeekView.setTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 16, getResources().getDisplayMetrics()));
+            mWeekView.setEventTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 12, getResources().getDisplayMetrics()));
+            mWeekView.setXScrollingSpeed(0.4f);
+        }
+
+        //Go to current date or the one givin in the intent
+        mWeekView.goToDate((Calendar) this.mShowDate.clone()); //Pass a deep copy, as this method changes the hour to 0
+        mWeekView.goToHour(this.mShowDate.get(Calendar.HOUR_OF_DAY));
+
+        //When called from constructor this member is not yet initialized
+        if (menuItemSwitchView != null) {
+            menuItemSwitchView.setIcon(icon);
+        }
+    }
+
+    /**
      * Asynchronous task for exporting the calendar to a local Google calendar
      */
-    void exportCalendarToGoogle() {
+    private void exportCalendarToGoogle() {
         //Check Calendar permission for Android 6.0
         if (!isPermissionGranted(REQUEST_SYNC)) {
             return;
@@ -291,13 +320,13 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         //Check if we got all Calendar permissions
-        for(int result : grantResults) {
-            if(result != PackageManager.PERMISSION_GRANTED) {
+        for (int result : grantResults) {
+            if (result != PackageManager.PERMISSION_GRANTED) {
                 return;
             }
         }
         //Rerun the interrupted action
-        if(requestCode == REQUEST_SYNC) {
+        if (requestCode == REQUEST_SYNC) {
             exportCalendarToGoogle();
         } else if (requestCode == REQUEST_DELETE) {
             deleteCalendarFromGoogle();
@@ -315,7 +344,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
      * Starts the Google calendar Activity to display the exported calendar.
      */
     @TargetApi(14)
-    void displayCalendarOnGoogleCalendar() {
+    private void displayCalendarOnGoogleCalendar() {
         // displaying Calendar
         Calendar beginTime = Calendar.getInstance();
         long startMillis = beginTime.getTimeInMillis();
@@ -329,7 +358,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
     /**
      * Async task for deleting the calendar from local Google calendar
      */
-    void deleteCalendarFromGoogle() {
+    private void deleteCalendarFromGoogle() {
         //Check Calendar permission for Android 6.0
         if (!isPermissionGranted(REQUEST_DELETE)) {
             return;

@@ -11,8 +11,9 @@ public final class Const {
 	public static final String BACKGROUND_MODE = "background_mode";
 	public static final String CAFETERIA_ID = "cafeteriasId";
 	public static final String CAFETERIAS = "cafeterias";
+	public static final String CALENDAR_WEEK_MODE = "calender_week_mode";
 	public static final String COMPLETED = "completed";
-	public final static String DATABASE_NAME = "database.db";
+	public static final  String DATABASE_NAME = "database.db";
 	public static final String DATE = "date";
 	public static final String DE = "de";
 	public static final String DOWNLOAD_ALL_FROM_EXTERNAL = "download_all_from_external";
