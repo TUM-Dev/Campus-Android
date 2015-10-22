@@ -158,13 +158,14 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
+        menuItemExportGoogle = menu.findItem(R.id.action_export_calendar);
+        menuItemDeleteCalendar = menu.findItem(R.id.action_delete_calendar);
+
         // the Calendar export is not supported for API < 14
         if (Build.VERSION.SDK_INT < 14) {
             menuItemExportGoogle.setVisible(false);
             menuItemDeleteCalendar.setVisible(false);
         } else {
-            menuItemExportGoogle = menu.findItem(R.id.action_export_calendar);
-            menuItemDeleteCalendar = menu.findItem(R.id.action_delete_calendar);
             menuItemExportGoogle.setEnabled(isFetched);
             menuItemDeleteCalendar.setEnabled(isFetched);
 
