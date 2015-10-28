@@ -40,7 +40,7 @@
 
     <!-- Exam/Grades -->
     <string name="average_grade">Moyenne</string>
-    <string name="show_column_chart">Sous forme d'histogramme</string>
+    <string name="show_column_chart">Sous forme d\'histogramme</string>
     <string name="show_pie_chart">Sous forme de diagramme circulaire</string>
     <string name="result_extra">Résultat:&#160;</string>
     <string name="semester">Semestre</string>
@@ -63,7 +63,7 @@
 
     <string name="extras">Extras</string>
     <string name="open_wizard">Ouvre startup-wizard</string>
-    <string name="open_wizard_detail">Le startup-wizard t’aide à configurer l'application pour accéder aux services de TUMOnline et à gérer ses paramètres.</string>
+    <string name="open_wizard_detail">Le startup-wizard t’aide à configurer l\'application pour accéder aux services de TUMOnline et à gérer ses paramètres.</string>
     <string name="clear_cache">Supprimer les fichiers</string>
     <string name="clear_cache_detail">Supprime tous les fichier qui sont téléchargés avec l’appli TUM CAMPUS et sont enregistrés sur la carte SD.</string>
     <string name="delete_chache_sure">Es-tu certain de vouloir supprimer toutes les données?</string>
@@ -73,7 +73,7 @@
     <string name="silence_phone">Silent Service</string>
     <string name="silence_phone_info">Pendant les cours magistraux, l’appareil est réglé automatiquement en mode silencieux.</string>
     <string name="background_mode">Le mode d’arrière-plan (recommandé)</string>
-    <string name="background_info">Actualisation automatique, même si l'appli n'est pas utilisée, une fois par jour pour t’informer des dernières nouvelles.</string>
+    <string name="background_info">Actualisation automatique, même si l\'appli n\'est pas utilisée, une fois par jour pour t’informer des dernières nouvelles.</string>
     <string name="demo_mode">In-App Tutorial</string>
     <string name="demo_info">Activer le mode d’aide pour obtenir des informations sur le fonctionnement de l’application.</string>
 
@@ -96,7 +96,7 @@
     <string name="step_4">Étape 4</string>
     <string name="step_5">Étape 5</string>
     <string name="set_silent_mode">Après une activation, l’appareil se mettra en <i>mode silencieux</i> automatiquement lors d’un cours magistral.</string>
-    <string name="set_background_mode">Activer ou désactiver le <i>mode d’arrière-plan</i>. Après l'activation de ce mode, toutes les données seront mises à jour quotidiennement en arrière-plan.</string>
+    <string name="set_background_mode">Activer ou désactiver le <i>mode d’arrière-plan</i>. Après l\'activation de ce mode, toutes les données seront mises à jour quotidiennement en arrière-plan.</string>
     <string name="goto_tumcampus">Lancer TUM Campus App</string>
 
     <!-- News -->
