@@ -113,7 +113,7 @@ public class NextLectureCard extends Card {
                 System.currentTimeMillis(), DateUtils.MINUTE_IN_MILLIS, DateUtils.FORMAT_ABBREV_RELATIVE));
 
         //Add location with link to room finder
-        if (item.location != null) {
+        if (item.location != null && !item.location.equals("")) {
             mLocation.setText(item.location);
             mLocation.setOnClickListener(new View.OnClickListener() {
                 @Override
