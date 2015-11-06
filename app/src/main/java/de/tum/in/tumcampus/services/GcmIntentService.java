@@ -123,8 +123,9 @@ public class GcmIntentService extends IntentService {
         if (n != null) {
             NotificationManager mNotificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
             Notification note = n.getNotification();
-            if (note != null)
+            if (note != null) {
                 mNotificationManager.notify(n.getNotificationIdentification(), n.getNotification());
+            }
         }
     }
 

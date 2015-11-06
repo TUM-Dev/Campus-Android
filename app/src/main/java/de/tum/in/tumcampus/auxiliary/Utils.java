@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.preference.PreferenceManager;
+import android.text.Html;
 import android.util.Base64;
 import android.util.Log;
 import android.widget.Toast;
@@ -533,7 +534,7 @@ public final class Utils {
 
 
     /**
-     * Loads the private key from preferences
+     * Loads the private key for chats from preferences
      *
      * @return The private key object
      */
@@ -552,5 +553,14 @@ public final class Utils {
             Utils.log(e);
         }
         return null;
+    }
+
+    /**
+     * Removes all html tags from a string
+     * @param html text which contains html tags
+     * @return cleaned text without any tags
+     */
+    public static String stripHtml(String html) {
+        return Html.fromHtml(html).toString();
     }
 }

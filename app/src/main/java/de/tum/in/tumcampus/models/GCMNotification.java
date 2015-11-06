@@ -1,12 +1,16 @@
 package de.tum.in.tumcampus.models;
 
-public class GCMNotification {
+import java.io.Serializable;
+
+public class GCMNotification implements Serializable {
+    private static final long serialVersionUID = 8643117662605459731L;
     private int notification;
     private int type;
     private GCMNotificationLocation location;
     private String title;
     private String description;
     private String signature;
+    private String created;
 
     public GCMNotification(int notification, int type, GCMNotificationLocation location, String title, String description, String signature) {
         this.notification = notification;
@@ -63,5 +67,13 @@ public class GCMNotification {
 
     public void setSignature(String signature) {
         this.signature = signature;
+    }
+
+    public void setCreated(String created) {
+        this.created = created;
+    }
+
+    public String getCreated() {
+        return this.created;
     }
 }

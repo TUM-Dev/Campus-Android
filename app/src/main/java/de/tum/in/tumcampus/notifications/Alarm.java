@@ -21,6 +21,7 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.X509EncodedKeySpec;
 
 import de.tum.in.tumcampus.R;
+import de.tum.in.tumcampus.activities.AlarmActivity;
 import de.tum.in.tumcampus.activities.MainActivity;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.GCMAlert;
@@ -38,7 +39,7 @@ public class Alarm extends GenericNotification {
     private GCMNotification info;
 
     public Alarm(String payload, Context context, int notification) {
-        super(context, 3, notification, true);
+        super(context, 3, notification, true); //Let the base class know which id this notification has
 
         //Check if a payload was passed
         if (payload == null) {
@@ -144,14 +145,17 @@ public class Alarm extends GenericNotification {
 
         // GCMNotification sound
         Uri sound = Uri.parse("android.resource://" + context.getPackageName() + "/" + R.raw.message);
-        Intent alarm = new Intent(this.context, MainActivity.class);
+        Intent alarm = new Intent(this.context, AlarmActivity.class);
+        alarm.putExtra("info", this.info);
+        alarm.putExtra("alert", this.alert);
         PendingIntent pending = PendingIntent.getActivity(this.context, 0, alarm, PendingIntent.FLAG_UPDATE_CURRENT);
+        String strippedDescription = Utils.stripHtml(info.getDescription()); // Strip any html tags from the description
 
         return new NotificationCompat.Builder(context)
                 .setSmallIcon(this.icon)
                 .setContentTitle(info.getTitle())
-                .setStyle(new NotificationCompat.BigTextStyle().bigText(info.getDescription()))
-                .setContentText(info.getDescription())
+                .setStyle(new NotificationCompat.BigTextStyle().bigText(strippedDescription))
+                .setContentText(strippedDescription)
                 .setContentIntent(pending)
                 .setDefaults(Notification.DEFAULT_VIBRATE)
                 .setLights(0xff0000ff, 500, 500)
