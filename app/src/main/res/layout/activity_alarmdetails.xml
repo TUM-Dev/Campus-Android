@@ -26,7 +26,7 @@
                 android:text="Large Text"
                 android:id="@+id/alarm_title"
                 android:textStyle="bold"
-                android:textSize="24dp" />
+                android:textSize="24sp" />
 
             <LinearLayout
                 android:orientation="horizontal"
@@ -36,14 +36,13 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Veröffentlich am: "
-                    android:id="@+id/alarm_date_desc"
+                    android:text="@string/alarm_date_published_on"
                     android:textStyle="italic" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Large Text"
+                    android:text=""
                     android:id="@+id/alarm_date"
                     android:layout_marginLeft="@dimen/card_text_padding"
                     android:textStyle="italic" />
