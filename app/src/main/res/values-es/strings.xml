@@ -361,5 +361,6 @@
     <string name="runtime">Duración</string>
     <string name="wifi_only">Sólo WiFi</string>
     <string name="year">Año de publicación </string>
+    <string name="alarm_date_published_on">Publicado el:</string>
     <!-- END Translated, please do not change identifiers -->
 </resources>
