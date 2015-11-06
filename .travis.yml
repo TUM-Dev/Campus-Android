@@ -1,32 +1,30 @@
-sudo: false # migrate to container-based infrastructure
+sudo: false
 branches:
   only:
-    - master
-    - v14
-
+  - master
+  - v14
 language: android
 jdk: oraclejdk7
 android:
   components:
-    - tools
-    - platform-tools
-    - extra-android-support
-    - extra-android-m2repository
-    - extra-google-google_play_services
-    - extra-google-m2repository
-    - android-23
-    - build-tools-23.0.2
+  - tools
+  - platform-tools
+  - extra-android-support
+  - extra-android-m2repository
+  - extra-google-google_play_services
+  - extra-google-m2repository
+  - android-23
+  - build-tools-23.0.2
   licenses:
-        - '.+'
-
+  - ".+"
 before_install:
- - chmod +x gradlew
-
+- chmod +x gradlew
 install:
-  - ./gradlew dependencies
-
+- "./gradlew dependencies"
 script:
-  - ./gradlew build
-
+- "./gradlew build"
 after_failure:
-  - cat "$TRAVIS_BUILD_DIR/app/build/outputs/lint-results.xml"
+- cat "$TRAVIS_BUILD_DIR/app/build/outputs/lint-results.xml"
+notifications:
+  slack:
+    secure: c7J5L/t2sikz/osUHooZuI3kbi9ZOFh/JauLsoEuTVf28faaMDrD6HkfmElhCLxTgQaCDXBeFaOK9E6QNBuy9s5+VuBjKDnSyGOG0dI+fFvZkmha+LuxwpjoOjiSXyGdvVW+zxzQfCmyJMSTip15zBJi7z0Q3l/iRM6JKq5A1Tg=
