@@ -25,6 +25,8 @@ import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.FileUtils;
 import de.tum.in.tumcampus.auxiliary.NetUtils;
 import de.tum.in.tumcampus.auxiliary.Utils;
+import de.tum.in.tumcampus.models.BugReport;
+import de.tum.in.tumcampus.models.TUMCabeClient;
 
 public class ExceptionHandler {
 
@@ -89,7 +91,6 @@ public class ExceptionHandler {
             Log.d(G.tag, "appVersion: " + G.appVersion);
             Log.d(G.tag, "appPackage: " + G.appPackage);
             Log.d(G.tag, "filesPath: " + G.filesPath);
-            Log.d(G.tag, "URL: " + G.URL);
         }
 
         // First, search for and load stack traces
@@ -336,47 +337,18 @@ public class ExceptionHandler {
 
         //Otherwise do some hard work and submit all of them after eachother
         try {
-            String[] screenProperties = Util.ScreenProperties();
+
 
             for (int i = 0; i < list.size(); i++) {
                 String stacktrace = list.get(i)[0];
                 if (ExceptionHandler.sVerbose) {
                     Log.d(G.tag, "Transmitting stack trace: " + stacktrace);
                 }
+
                 // Transmit stack trace with PUT request
-                HttpURLConnection request = (HttpURLConnection) (new URL(G.URL)).openConnection();
-                request.setRequestMethod("PUT");
-                request.setDoOutput(true);
-                request.addRequestProperty("X-DEVICE-ID", G.deviceId);// Add our device identifier
-
-                List<Pair<String, String>> nvps = Arrays.asList(
-                        //Add some Device infos
-                        (new Pair<>("packageName", G.appPackage)),
-                        (new Pair<>("packageVersion", G.appVersion)),
-                        (new Pair<>("packageVersionCode", "" + G.appVersionCode)),
-                        (new Pair<>("phoneModel", G.phoneModel)),
-                        (new Pair<>("androidVersion", G.androidVersion)),
-
-                        (new Pair<>("networkWifi", NetUtils.isConnectedWifi(G.context) ? "true" : "false")),
-                        (new Pair<>("networkMobile", NetUtils.isConnectedMobileData(G.context) ? "true" : "false")),
-                        (new Pair<>("gps", Util.isGPSOn())),
-
-                        (new Pair<>("screenWidth", screenProperties[0])),
-                        (new Pair<>("screenHeight", screenProperties[1])),
-                        (new Pair<>("screenOrientation", screenProperties[2])),
-                        (new Pair<>("screenDpi", screenProperties[3] + ":" + screenProperties[4])),
-
-                        //Add the stacktrace
-                        (new Pair<>("stacktrace", stacktrace)),
-                        (new Pair<>("log", list.get(i)[1]))
-                );
-                OutputStream outputStream = request.getOutputStream();
-                BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
-                writer.write(NetUtils.buildParamString(nvps));
-                writer.flush();
-                writer.close();
-                outputStream.close();
-                request.disconnect();
+                TUMCabeClient client = TUMCabeClient.getInstance(G.context);
+                BugReport r = new BugReport(G.context, stacktrace, list.get(i)[1]);
+                client.putBugReport(r);
                 // We don't care about the response, so we just hope it went well and on with it.
             }
         } catch (Exception e) {

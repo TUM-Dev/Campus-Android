@@ -56,7 +56,7 @@ public class StartupActivity extends AppCompatActivity {
             Manifest.permission.ACCESS_FINE_LOCATION};
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
 
         //Show a loading screen during boot

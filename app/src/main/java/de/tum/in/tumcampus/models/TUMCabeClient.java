@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.squareup.okhttp.CertificatePinner;
 import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Response;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -161,6 +162,10 @@ public class TUMCabeClient {
         return service.getLocation(locationId);
     }
 
+    public List<String> putBugReport(BugReport r) {
+        return service.putBugReport(r);
+    }
+
     private interface TUMCabeAPIService {
 
         //Group chat
@@ -220,5 +225,9 @@ public class TUMCabeClient {
 
         @GET(API_LOCATIONS + "{locationId}/")
         GCMNotificationLocation getLocation(@Path("locationId") int locationId);
+
+        //Bug Reports
+        @PUT(API_REPORT)
+        List<String> putBugReport(@Body BugReport r);
     }
 }
