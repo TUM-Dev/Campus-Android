@@ -441,5 +441,5 @@ Signature: %5$s</string>
     <string name="permission_calendar_explanation">This App needs permission to access your location to display useful information, e.g. the menues of cafeterias around you or timetables of your nearest MVV station. \n If you do not grant this permission you will still be able to configure your location in the settings.</string>
     <string name="ok">OK</string>
     <string name="alarm_date_published_on">Published on:</string>
-    <string name="chat_not_setup">Chat is not setup properly, please re-run the wizzard via the settings!</string>
+    <string name="chat_not_setup" translatable="false">Chat is not setup properly, please re-run the wizzard via the settings!</string>
 </resources>
