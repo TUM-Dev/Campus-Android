@@ -199,6 +199,11 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
      * Works asynchronously.
      */
     private void createOrJoinChatRoom(String name) {
+        if(this.currentChatMember == null) {
+            Utils.showToast(this, getString(R.string.chat_not_setup));
+            return;
+        }
+
         Utils.logv("create or join chat room " + name);
         currentChatRoom = new ChatRoom(name);
 
