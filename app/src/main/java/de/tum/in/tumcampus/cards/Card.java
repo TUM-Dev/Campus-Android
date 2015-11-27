@@ -221,7 +221,7 @@ public abstract class Card {
             notificationBuilder.setGroup("GROUP_" + getTyp());
             notificationBuilder.setGroupSummary(false);
         } else {
-            notificationBuilder.setSmallIcon(R.drawable.tum_logo_notification);
+            notificationBuilder.setSmallIcon(R.drawable.tum_logo);
         }
 
         // Let the card set detailed information
