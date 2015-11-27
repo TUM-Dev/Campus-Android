@@ -31,8 +31,6 @@ android {
                 "InvalidPackage",     // caused by dependencies, should also give a compile error
                 "UnusedResources",    // unused resources get purged by shrinkResources
                 "SelectableText",     // disabled by default
-                "IconExpectedSize",   // Vector assets can be used with the gradle plugin 1.4 (not released yet)
-                "IconLocation",
                 "IconDensities"
         htmlReport false
         warningsAsErrors true
