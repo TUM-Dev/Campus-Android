@@ -55,6 +55,7 @@ Hinweise finden Sie unten unter "Datenschutzerklärung".
 
 #### Datenschutz/Chatbedingungen:
 Datenschutzerklärung: https://tumcabe.in.tum.de/landing/privacy/
+
 Chatbedingungen: https://tumcabe.in.tum.de/landing/chatterms/
 
 #### Support:
