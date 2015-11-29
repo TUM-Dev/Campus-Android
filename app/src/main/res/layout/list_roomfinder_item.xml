@@ -30,6 +30,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@android:string/untitled"
+            android:textColor="@color/color_primary_dark"
             android:textSize="@dimen/large_text_size"
             android:textStyle="bold" />
 
