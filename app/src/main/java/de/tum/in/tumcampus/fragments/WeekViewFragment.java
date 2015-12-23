@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.alamkanak.weekview.MonthLoader;
 import com.alamkanak.weekview.WeekView;
 import com.alamkanak.weekview.WeekViewEvent;
 
@@ -18,7 +19,7 @@ import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.auxiliary.calendar.IntegratedCalendarEvent;
 import de.tum.in.tumcampus.tumonline.TUMRoomFinderRequest;
 
-public class WeekViewFragment extends Fragment implements WeekView.MonthChangeListener {
+public class WeekViewFragment extends Fragment implements MonthLoader.MonthChangeListener {
 
     private HashMap<Integer, List<WeekViewEvent>> loadedEvents = new HashMap<>();
 
