@@ -14,12 +14,9 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.generic.ActivityForLoadingInBackground;
@@ -122,7 +119,7 @@ public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<Vo
             fragment = null;
             return;
         }
-        String roomApiCode = roomInfo.getString(TUMRoomFinderRequest.KEY_ROOM_API_CODE);
+        String roomApiCode = roomInfo.getString(TUMRoomFinderRequest.KEY_ROOM_ID);
         fragment = WeekViewFragment.newInstance(roomApiCode);
         ft.replace(R.id.fragment_container, fragment);
         ft.commit();
@@ -132,7 +129,7 @@ public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<Vo
         CharSequence[] list = new CharSequence[mapsList.size()];
         int curPos = 0;
         for (int i = 0; i < mapsList.size(); i++) {
-            list[i] = mapsList.get(i).get(TUMRoomFinderRequest.KEY_TITLE);
+            list[i] = mapsList.get(i).get(TUMRoomFinderRequest.KEY_DESCRIPTION);
             if (mapsList.get(i).get(TUMRoomFinderRequest.KEY_MAP_ID).equals(mapId)) {
                 curPos = i;
             }
@@ -152,7 +149,7 @@ public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<Vo
         new Thread(new Runnable() {
             @Override
             public void run() {
-                final Geo geo = request.fetchCoordinates(roomInfo.getString(TUMRoomFinderRequest.KEY_ARCHITECT_NUMBER));
+                final Geo geo = request.fetchCoordinates(roomInfo.getString(TUMRoomFinderRequest.KEY_ARCH_ID));
                 if (geo == null) {
                     Utils.showToastOnUIThread(RoomFinderDetailsActivity.this, R.string.no_map_available);
                     return;
@@ -185,53 +182,18 @@ public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<Vo
 
     @Override
     protected Bitmap onLoadInBackground(Void... arg) {
-        TUMRoomFinderRequest requestHandler = new TUMRoomFinderRequest(this);
+        String archId = roomInfo.getString(TUMRoomFinderRequest.KEY_ARCH_ID);
+        String url;
 
-        // First search for roomId and mapId
-        if (location != null && !location.isEmpty() && roomInfo == null) {
-            ArrayList<HashMap<String, String>> request = requestHandler.fetchRooms(location);
-            if (!request.isEmpty()) {
-                HashMap<String, String> room = request.get(0);
-
-                roomInfo = new Bundle();
-                for (Map.Entry<String, String> entry : room.entrySet()) {
-                    roomInfo.putString(entry.getKey(), entry.getValue());
-                }
-            }
-        }
-
-        if (roomInfo == null) {
-            return null;
-        }
-
-        if (mapId == null || mapId.isEmpty()) {
-            mapId = requestHandler.fetchDefaultMapId(roomInfo.getString(TUMRoomFinderRequest.KEY_BUILDING_ID));
-        }
-
-        String url = null;
-        try {
-            String roomId = roomInfo.getString(TUMRoomFinderRequest.KEY_ARCHITECT_NUMBER);
-            if (roomId == null) {
-                return null;
-            }
-            if (mapId.equals("10")) {
-                url = "http://vmbaumgarten3.informatik.tu-muenchen.de/roommaps/building/defaultMap?id="
-                        + URLEncoder.encode(roomId.substring(roomId.indexOf('@') + 1), "UTF-8");
-            } else {
-                url = "http://vmbaumgarten3.informatik.tu-muenchen.de/roommaps/room/map?id="
-                        + URLEncoder.encode(roomId, "UTF-8") + "&mapid="
-                        + URLEncoder.encode(mapId, "UTF-8");
-            }
-        } catch (UnsupportedEncodingException e) {
-            Utils.log(e);
-        }
-
-        if (url == null) {
-            return null;
+        if (mapId == null || mapId.isEmpty()){
+            url = request.fetchDefaultMap(archId);
+        } else {
+            url = request.fetchMap(archId, mapId);
         }
 
         return net.downloadImageToBitmap(url);
     }
+
 
     @Override
     protected void onLoadFinished(Bitmap result) {
@@ -258,7 +220,7 @@ public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<Vo
         new Thread(new Runnable() {
             @Override
             public void run() {
-                mapsList = request.fetchAvailableMaps(roomInfo.getString(TUMRoomFinderRequest.KEY_ARCHITECT_NUMBER));
+                mapsList = request.fetchAvailableMaps(roomInfo.getString(TUMRoomFinderRequest.KEY_ARCH_ID));
                 if (mapsList.size() > 1) {
                     mapsLoaded = true;
                     runOnUiThread(new Runnable() {
