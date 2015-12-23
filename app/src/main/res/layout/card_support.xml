@@ -45,7 +45,7 @@
 
                 <ImageView
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="80dp"
                     android:id="@+id/facebook"
                     android:src="@drawable/facebook"
                     android:layout_weight="1"
@@ -53,7 +53,7 @@
 
                 <ImageView
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="80dp"
                     android:id="@+id/github"
                     android:src="@drawable/github"
                     android:layout_weight="1"

@@ -6,7 +6,7 @@
     <dimen name="large_text_size">18sp</dimen>
     <dimen name="section_text_size">15sp</dimen>
     <dimen name="time_line_thickness">1px</dimen>
-    <dimen name="icon_small">56dp</dimen>
+    <dimen name="icon_small">48dp</dimen>
     <dimen name="card_text_padding">10dp</dimen>
     <dimen name="next_lecture_select_width">30dp</dimen>
     <dimen name="card_padding_vertical">0dp</dimen>

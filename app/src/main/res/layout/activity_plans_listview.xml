@@ -12,7 +12,7 @@
         android:layout_centerVertical="true"
         android:layout_margin="8dp"
         android:gravity="center_vertical"
-        android:src="@drawable/ic_launcher" />
+        android:src="@mipmap/ic_launcher" />
 
     <LinearLayout
         android:layout_width="match_parent"
