@@ -6,10 +6,10 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import de.tum.in.tumcampus.R;
-import it.sephiroth.android.library.imagezoom.ImageViewTouch;
-import it.sephiroth.android.library.imagezoom.ImageViewTouchBase;
+import uk.co.senab.photoview.PhotoViewAttacher;
 
 public class ImageViewTouchFragment extends Fragment {
 
@@ -27,14 +27,13 @@ public class ImageViewTouchFragment extends Fragment {
         return fragment;
     }
 
-    ImageViewTouch mImage;
+    ImageView mImage;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_image_view_touch, container, false);
-        mImage = (ImageViewTouch) view.findViewById(R.id.image_view_touch_fragment);
-        mImage.setDisplayType(ImageViewTouchBase.DisplayType.FIT_TO_SCREEN);
-        mImage.setDoubleTapEnabled(false);
+        mImage = (ImageView) view.findViewById(R.id.image_view_touch_fragment);
+        new PhotoViewAttacher(mImage);
 
         if (getArguments() != null) {
             Bitmap bitmap = getArguments().getParcelable(BITMAP_ARG);

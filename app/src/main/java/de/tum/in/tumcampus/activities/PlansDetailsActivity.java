@@ -2,11 +2,11 @@ package de.tum.in.tumcampus.activities;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.ImageView;
 
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.auxiliary.ImplicitCounter;
-import it.sephiroth.android.library.imagezoom.ImageViewTouch;
-import it.sephiroth.android.library.imagezoom.ImageViewTouchBase;
+import uk.co.senab.photoview.PhotoViewAttacher;
 
 /**
  * Activity to show plan details.
@@ -25,9 +25,11 @@ public class PlansDetailsActivity extends AppCompatActivity {
         int title = getIntent().getExtras().getInt(PLAN_TITLE_ID);
         int img = getIntent().getExtras().getInt(PLAN_IMG_ID);
 
-		ImageViewTouch imageViewTouch = (ImageViewTouch) findViewById(R.id.activity_plans_plan);
+		ImageView imageViewTouch = (ImageView) findViewById(R.id.activity_plans_plan);
         imageViewTouch.setImageResource(img);
-        imageViewTouch.setDisplayType(ImageViewTouchBase.DisplayType.FIT_TO_SCREEN);
+
+        //Attach touch handler to imageView
+        new PhotoViewAttacher(imageViewTouch);
 
 	    setTitle(getString(title));
 	}
