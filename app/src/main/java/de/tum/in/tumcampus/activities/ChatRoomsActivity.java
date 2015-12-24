@@ -16,6 +16,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.gson.Gson;
@@ -40,6 +41,7 @@ import de.tum.in.tumcampus.models.ChatVerification;
 import de.tum.in.tumcampus.models.LecturesSearchRow;
 import de.tum.in.tumcampus.models.LecturesSearchRowSet;
 import de.tum.in.tumcampus.models.managers.ChatRoomManager;
+import de.tum.in.tumcampus.services.GcmIdentificationService;
 import de.tum.in.tumcampus.tumonline.TUMOnlineConst;
 import de.tum.in.tumcampus.tumonline.TUMOnlineRequest;
 import retrofit.Callback;
@@ -53,8 +55,6 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
  */
 public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Cursor> implements OnItemClickListener {
     private static final String PROPERTY_APP_VERSION = "appVersion";
-    private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
-    private static final String SENDER_ID = "944892355389";
 
     private StickyListHeadersListView lvMyChatRoomList;
 
@@ -312,184 +312,15 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
      */
     private boolean checkPlayServicesAndRegister() {
         // Check device for Play Services APK. If check succeeds, proceed with GCM registration.
-        if (this.checkPlayServices()) {
+        if (GcmIdentificationService.checkPlayServices(this)) {
+            GcmIdentificationService idService = new GcmIdentificationService();
 
             //Check if already registered
-            String regId = this.getRegistrationId(getApplicationContext());
-
-            //If we failed, we need to re register
-            if (regId.isEmpty()) {
-                this.registerInBackground();
-            } else {
-                // If the regId is not empty, we still need to check whether it was successfully sent to the TCA server, because this can fail due to user not confirming their private key
-                if (!Utils.getInternalSettingBool(this, Const.GCM_REG_ID_SENT_TO_SERVER, false)) {
-                    this.sendRegistrationIdToBackend(regId);
-                }
-
-                //Update the reg id in steady intervals
-                this.checkRegisterIdUpdate(regId);
-            }
+            idService.checkSetup();
             return true;
         } else {
             Utils.log("No valid Google Play Services APK found.");
             return false;
-        }
-    }
-
-    /**
-     * Check the device to make sure it has the Google Play Services APK. If
-     * it doesn't, display a dialog that allows users to download the APK from
-     * the Google Play Store or enable it in the device's system settings.
-     */
-    private boolean checkPlayServices() {
-
-            final int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
-            if (resultCode != ConnectionResult.SUCCESS) {
-                if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
-                    this.runOnUiThread(new Runnable() {
-                        public void run() {
-                            GooglePlayServicesUtil.getErrorDialog(resultCode, ChatRoomsActivity.this, PLAY_SERVICES_RESOLUTION_REQUEST).show();
-                        }
-                    });
-                } else {
-                    Utils.log("This device is not supported by Google Play services.");
-                    finish();
-                }
-                return false;
-            }
-            return true;
-
-    }
-
-    /**
-     * Gets the current registration ID for application on GCM service.
-     * <p/>
-     * If result is empty, the app needs to register.
-     *
-     * @return registration ID, or empty string if there is no existing
-     * registration ID.
-     */
-    private String getRegistrationId(Context context) {
-        //Get the locally stored id
-        String registrationId = Utils.getInternalSettingString(this, Const.GCM_REG_ID, "");
-
-        //return if no available to trigger getting a new id
-        if (registrationId.isEmpty()) {
-            Utils.log("Registration not found.");
-            return "";
-        }
-
-        // Check if app was updated; if so, it must clear the registration ID since the existing regID is not guaranteed to work with the new app version.
-        int registeredVersion = Utils.getInternalSettingInt(this, PROPERTY_APP_VERSION, Integer.MIN_VALUE);
-        int currentVersion = Utils.getAppVersion(context);
-
-        //return if no available to trigger getting a new id
-        if (registeredVersion != currentVersion) {
-            Utils.log("App version changed.");
-            return "";
-        }
-        return registrationId;
-    }
-
-    /**
-     * Registers the application with GCM servers asynchronously.
-     * <p/>
-     * Stores the registration ID and app versionCode in the application's
-     * shared preferences.
-     */
-    private void registerInBackground() {
-        new AsyncTask<Void, Void, String>() {
-            @Override
-            protected String doInBackground(Void... params) {
-                try {
-                    //Get the services and register a new id
-                    GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(ChatRoomsActivity.this);
-                    String regId = gcm.register(SENDER_ID);
-
-                    //Reset the lock in case we are updating and maybe failed
-                    Utils.setInternalSetting(ChatRoomsActivity.this, Const.GCM_REG_ID_SENT_TO_SERVER, false);
-                    Utils.setInternalSetting(ChatRoomsActivity.this, Const.GCM_REG_ID_LAST_TRANSMISSION, (new Date()).getTime());
-
-                    // Let the server know of our new registration id
-                    ChatRoomsActivity.this.sendRegistrationIdToBackend(regId);
-
-                    // Persist the regID - no need to register again.
-                    ChatRoomsActivity.this.storeRegistrationId(regId);
-
-                    return "GCM registration successful";
-                } catch (IOException ex) {
-
-                    //Return the error message
-                    return "Error :" + ex.getMessage();
-                }
-            }
-
-            @Override
-            protected void onPostExecute(String msg) {
-                Utils.log(msg);
-            }
-        }.execute();
-    }
-
-    /**
-     * Sends the registration ID to your server over HTTP, so it can use GCM/HTTP
-     * or CCS to send messages to your app. Not needed for this demo since the
-     * device sends upstream messages to a server that echoes back the message
-     * using the 'from' address in the message.
-     */
-    private void sendRegistrationIdToBackend(String regId) {
-        //Check if all parameters are present
-        if (regId == null || currentPrivateKey == null || currentChatMember == null || currentChatMember.getLrzId() == null) {
-            Utils.logv("Parameter missing for sending reg id");
-            return;
-        }
-
-        // Generate signature
-        RSASigner signer = new RSASigner(currentPrivateKey);
-        String signature = signer.sign(currentChatMember.getLrzId());
-
-        TUMCabeClient.getInstance(ChatRoomsActivity.this).uploadRegistrationId(currentChatMember.getId(), new ChatRegistrationId(regId, signature), new Callback<ChatRegistrationId>() {
-            @Override
-            public void success(ChatRegistrationId arg0, Response arg1) {
-                Utils.logv("Success uploading GCM registration id: " + arg0);
-
-                // Store in shared preferences the information that the GCM registration id was sent to the TCA server successfully
-                Utils.setInternalSetting(ChatRoomsActivity.this, Const.GCM_REG_ID_SENT_TO_SERVER, true);
-            }
-
-            @Override
-            public void failure(RetrofitError e) {
-                Utils.log(e, "Failure uploading GCM registration id");
-            }
-        });
-    }
-
-    /**
-     * Stores the registration ID and app versionCode in the application's
-     * {@code SharedPreferences}.
-     *
-     * @param regId registration ID
-     */
-    private void storeRegistrationId(String regId) {
-        int appVersion = Utils.getAppVersion(this);
-
-        Utils.setInternalSetting(this, Const.GCM_REG_ID, regId);
-        Utils.setInternalSetting(this, PROPERTY_APP_VERSION, appVersion);
-
-        Utils.logv("Saving regId on app version " + appVersion);
-    }
-
-    /**
-     * Helper function to check if we need to update the regid
-     *
-     * @param regId registration ID
-     */
-    private void checkRegisterIdUpdate(String regId) {
-        //Regularly (once a day) update the server with the reg id
-        long lastTransmission = Utils.getInternalSettingLong(this, Const.GCM_REG_ID_LAST_TRANSMISSION, 0);
-        Date now = new Date();
-        if (now.getTime() - 24 * 3600000 > lastTransmission) {
-            this.sendRegistrationIdToBackend(regId);
         }
     }
 }

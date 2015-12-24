@@ -98,6 +98,10 @@ public class RoomFinderListAdapter extends BaseAdapter implements StickyListHead
         if(headerText.equals("Sonstiges"))
             return 'Z';
             */
+
+        if(headerText == null){
+            return 'Z';
+        }
         return headerText.hashCode();
         //return data.get(i).get(TUMRoomFinderRequest.KEY_CAMPUS_ID).charAt(0);
     }

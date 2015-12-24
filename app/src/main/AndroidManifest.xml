@@ -502,5 +502,10 @@
             android:name="de.tum.in.tumcampus.models.managers.CalendarManager$QueryLocationsService"
             android:exported="false" />
         <service android:name=".services.GcmIntentService" />
+        <service android:name=".services.GcmIdentificationService" android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.android.gms.iid.InstanceID"/>
+            </intent-filter>
+        </service>
     </application>
 </manifest>
