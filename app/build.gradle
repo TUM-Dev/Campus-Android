@@ -20,9 +20,7 @@ android {
     }
     lintOptions {
         checkAllWarnings true
-        disable "PrivateResource",
-                "ManifestResource",
-                "UnsafeProtectedBroadcastReceiver",
+        disable "UnsafeProtectedBroadcastReceiver",
                 "GoogleAppIndexingWarning",
                 "TrulyRandom",
                 "Overdraw",

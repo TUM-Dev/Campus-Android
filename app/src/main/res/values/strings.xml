@@ -13,7 +13,7 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="no_internet_connection">No internet connection available</string>
-    <string name="app_short_description">TUM information platform - from students for students</string>
+    <string name="app_short_description" translatable="false">TUM information platform - from students for students</string>
 
     <!-- Calendar -->
     <string name="dialog_show_calendar">Export successful.\nShow local calendar <i>TUM_CAMPUS_APP</i> on <i>Google Calendar App</i>?</string>
