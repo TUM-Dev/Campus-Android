@@ -83,7 +83,7 @@ public class ChatMessagesCard extends Card {
      */
     public void setChatRoom(String roomName, int roomId, String roomIdString) {
         mRoomName = roomName;
-        mRoomName = mRoomName.replaceAll("[A-Z, 0-9(LV\\.Nr\\.)=]+$", "");
+        mRoomName = mRoomName.replaceAll("[A-Z, 0-9(LV\\.Nr)=]+$", "");
         mRoomName = mRoomName.replaceAll("\\([A-Z]+[0-9]+\\)", "");
         mRoomName = mRoomName.replaceAll("\\[[A-Z]+[0-9]+\\]", "");
         mRoomName = mRoomName.trim();
