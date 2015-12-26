@@ -129,7 +129,7 @@ public class NextLectureCard extends Card {
 
         DateFormat week = new SimpleDateFormat("EEEE, ", Locale.getDefault());
         DateFormat df = SimpleDateFormat.getTimeInstance(DateFormat.SHORT);
-        mEvent.setText(week.format(item.start) + df.format(item.start) + " - " + df.format(item.end));
+        mEvent.setText(String.format("%s%s - %s", week.format(item.start), df.format(item.start), df.format(item.end)));
         mEvent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -24,7 +24,6 @@ android {
                 "ManifestResource",
                 "UnsafeProtectedBroadcastReceiver",
                 "GoogleAppIndexingWarning",
-                "SetTextI18n",
                 "TrulyRandom",
                 "Overdraw",
                 "ContentDescription",

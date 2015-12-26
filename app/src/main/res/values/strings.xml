@@ -442,4 +442,5 @@ Signature: %5$s</string>
     <string name="ok">OK</string>
     <string name="alarm_date_published_on">Published on:</string>
     <string name="chat_not_setup" translatable="false">Chat is not setup properly, please re-run the wizzard via the settings!</string>
+    <string name="www" translatable="false">www</string>
 </resources>
