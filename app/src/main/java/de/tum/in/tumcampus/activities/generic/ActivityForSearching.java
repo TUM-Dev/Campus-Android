@@ -13,7 +13,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.auxiliary.Utils;
@@ -21,33 +20,26 @@ import de.tum.in.tumcampus.auxiliary.Utils;
 /**
  * Generic class for searching. Provides basic functions for a {@link SearchView}
  * and typical processes related to search.
- *
  */
 public abstract class ActivityForSearching extends ProgressActivity {
-    /** SearchView handle */
-    private SearchView mSearchView;
-    private MenuItem mSearchItem;
-
-    /** @see ActivityForSearching#openSearch() */
-    private boolean mOpenSearch;
-
-    /** Search authority and minimum query length */
+    /**
+     * Search authority and minimum query length
+     */
     private final String mAuthority;
     private final int mMinLength;
-
-    /** Last search query */
+    /**
+     * Last search query
+     */
     protected String mQuery = null;
-
     /**
-     * Gets called if search has been canceled
+     * SearchView handle
      */
-    protected abstract void onStartSearch();
-
+    private SearchView mSearchView;
+    private MenuItem mSearchItem;
     /**
-     * Gets called if a search query has been entered
-     * @param query Query to search for
+     * @see ActivityForSearching#openSearch()
      */
-    protected abstract void onStartSearch(String query);
+    private boolean mOpenSearch;
 
     /**
      * Initializes an activity for searching.
@@ -56,14 +48,26 @@ public abstract class ActivityForSearching extends ProgressActivity {
      * called ptr_layout is required if the activity should support PullToRefresh method
      *
      * @param layoutId Resource id of the xml layout that should be used to inflate the activity
-     * @param auth Authority for search suggestions declared in manifest file
-     * @param minLen Minimum text length that has to be entered by the user before a search quest can be submitted
+     * @param auth     Authority for search suggestions declared in manifest file
+     * @param minLen   Minimum text length that has to be entered by the user before a search quest can be submitted
      */
     public ActivityForSearching(int layoutId, String auth, int minLen) {
-		super(layoutId);
+        super(layoutId);
         mAuthority = auth;
         mMinLength = minLen;
-	}
+    }
+
+    /**
+     * Gets called if search has been canceled
+     */
+    protected abstract void onStartSearch();
+
+    /**
+     * Gets called if a search query has been entered
+     *
+     * @param query Query to search for
+     */
+    protected abstract void onStartSearch(String query);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,10 +75,10 @@ public abstract class ActivityForSearching extends ProgressActivity {
     }
 
     @Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		super.onCreateOptionsMenu(menu);
-		// Inflate the menu; this adds a SearchView to the ActionBar
-		getMenuInflater().inflate(R.menu.menu_search, menu);
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        // Inflate the menu; this adds a SearchView to the ActionBar
+        getMenuInflater().inflate(R.menu.menu_search, menu);
 
         // Get SearchView
         mSearchItem = menu.findItem(R.id.action_search);
@@ -86,7 +90,7 @@ public abstract class ActivityForSearching extends ProgressActivity {
         mSearchView.setSearchableInfo(info);
 
         // If activity gets called via Intent with a search query set SearchView accordingly
-        if(mQuery!=null) {
+        if (mQuery != null) {
             mSearchView.setQuery(mQuery, false);
             mOpenSearch = true;
         }
@@ -135,13 +139,13 @@ public abstract class ActivityForSearching extends ProgressActivity {
                 return true;
             }
         });
-		return true;
-	}
+        return true;
+    }
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        if(mOpenSearch) {
-            MenuItemCompat.setShowAsAction(mSearchItem, MenuItemCompat.SHOW_AS_ACTION_ALWAYS|MenuItemCompat.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
+        if (mOpenSearch) {
+            MenuItemCompat.setShowAsAction(mSearchItem, MenuItemCompat.SHOW_AS_ACTION_ALWAYS | MenuItemCompat.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
             MenuItemCompat.expandActionView(mSearchItem);
             return true;
         }
@@ -151,7 +155,7 @@ public abstract class ActivityForSearching extends ProgressActivity {
     @Override
     public void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        if(intent==null)
+        if (intent == null)
             return;
         setIntent(intent);
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
@@ -162,11 +166,12 @@ public abstract class ActivityForSearching extends ProgressActivity {
     /**
      * Tests if search query is valid and internet connection is available.
      * Then starts a new search.
+     *
      * @param query Query to search for
      */
-	private void requestSearch(String query) {
+    private void requestSearch(String query) {
         mQuery = query;
-        if(query.length()<mMinLength) {
+        if (query.length() < mMinLength) {
             final String text = String.format(getString(R.string.min_search_len), mMinLength);
             Utils.showToast(this, text);
             return;
@@ -183,7 +188,7 @@ public abstract class ActivityForSearching extends ProgressActivity {
 
         // Tell activity to start searching
         onStartSearch(query);
-	}
+    }
 
     /**
      * Expands the Search-ActionView on activity startup, so that the user can immediately start typing.
