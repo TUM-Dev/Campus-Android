@@ -28,6 +28,9 @@ public class ScanResultsAvailableReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        if (!intent.getAction().equals(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION)) {
+            return;
+        }
         // Test if user has eduroam configured already
         EduroamManager man = new EduroamManager(context);
         boolean show = Utils.getSettingBool(context, "card_eduroam_phone", true);

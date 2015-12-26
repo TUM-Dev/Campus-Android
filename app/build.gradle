@@ -20,8 +20,7 @@ android {
     }
     lintOptions {
         checkAllWarnings true
-        disable "UnsafeProtectedBroadcastReceiver",
-                "GoogleAppIndexingWarning",
+        disable "GoogleAppIndexingWarning",
                 "TrulyRandom",
                 "Overdraw",
                 "ContentDescription",
