@@ -22,6 +22,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.WakefulBroadcastReceiver;
 
+import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.Utils;
 
 
@@ -39,7 +40,7 @@ public class GcmBroadcastReceiver extends WakefulBroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         // If we don't have set up our chat don't work with any GCM Notifications
-        if (Utils.getPrivateKeyFromSharedPrefs(context) == null) {
+        if (Utils.getSettingBool(context, Const.GROUP_CHAT_ENABLED, false)) {
             return;
         }
 

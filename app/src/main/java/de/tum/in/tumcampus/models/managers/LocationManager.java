@@ -11,6 +11,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 
 import java.util.ArrayList;
@@ -239,7 +240,7 @@ public class LocationManager {
      * Checks that Google Play services are available
      */
     private boolean servicesConnected() {
-        int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(mContext);
+        int resultCode = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(mContext);
         if (ConnectionResult.SUCCESS == resultCode) {
             return true;
         } else {

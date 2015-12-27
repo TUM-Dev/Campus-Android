@@ -106,7 +106,7 @@ public class Chat extends GenericNotification {
         chatRoom = TUMCabeClient.getInstance(context).getChatRoom(this.extras.room);
 
         ChatMessageManager manager = new ChatMessageManager(context, chatRoom.getId());
-        Cursor messages = manager.getNewMessages(getPrivateKeyFromSharedPrefs(context), member, this.extras.message);
+        Cursor messages = manager.getNewMessages(member, this.extras.message);
 
         // Notify any open chat activity that a message has been received
         Intent intent = new Intent("chat-message-received");

@@ -166,6 +166,9 @@ public class TUMCabeClient {
     public List<String> putBugReport(BugReport r) {
         return service.putBugReport(r);
     }
+    public List<String> putStatistics(Statistics s) {
+        return service.putStatistics(s);
+    }
 
     private interface TUMCabeAPIService {
 
@@ -230,5 +233,9 @@ public class TUMCabeClient {
         //Bug Reports
         @PUT(API_REPORT)
         List<String> putBugReport(@Body BugReport r);
+
+        //Statistics
+        @PUT(API_STATISTICS)
+        List<String> putStatistics(@Body Statistics r);
     }
 }

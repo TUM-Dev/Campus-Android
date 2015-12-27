@@ -12,6 +12,7 @@ import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.cards.Card;
 import de.tum.in.tumcampus.cards.ChatMessagesCard;
+import de.tum.in.tumcampus.exception.NoPublicKey;
 import de.tum.in.tumcampus.models.TUMCabeClient;
 import de.tum.in.tumcampus.models.ChatMember;
 import de.tum.in.tumcampus.models.ChatRoom;
@@ -172,10 +173,12 @@ public class ChatRoomManager implements Card.ProvidesCard {
                 // Join chat room
                 try {
                     ChatRoom currentChatRoom = new ChatRoom(roomId);
-                    currentChatRoom = TUMCabeClient.getInstance(context).createRoom(currentChatRoom, new ChatVerification(Utils.getPrivateKeyFromSharedPrefs(context), currentChatMember));
+                    currentChatRoom = TUMCabeClient.getInstance(context).createRoom(currentChatRoom, new ChatVerification(context, currentChatMember));
                     manager.join(currentChatRoom);
                 } catch (RetrofitError e) {
                     Utils.log(e, "Room already exists");
+                }  catch (NoPublicKey noPublicKey) {
+                    return;
                 }
             }
         }

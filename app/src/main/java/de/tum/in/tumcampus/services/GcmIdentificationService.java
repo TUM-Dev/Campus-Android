@@ -55,7 +55,7 @@ public class GcmIdentificationService extends InstanceIDListenerService {
         InstanceID iid = InstanceID.getInstance(this);
 
         try {
-            String token = iid.getToken(this.senderId, GoogleCloudMessaging.INSTANCE_ID_SCOPE);
+            String token = iid.getToken(GcmIdentificationService.senderId, GoogleCloudMessaging.INSTANCE_ID_SCOPE);
             Utils.setInternalSetting(this, Const.GCM_TOKEN_ID, token);
         } catch (IOException e) {
             Utils.log(e, "Failed to refresh token");
@@ -153,7 +153,7 @@ public class GcmIdentificationService extends InstanceIDListenerService {
     private void sendRegistrationIdToBackend(String regId) {
         //@todo
         //Check if all parameters are present
-        if (regId == null || currentPrivateKey == null || currentChatMember == null || currentChatMember.getLrzId() == null) {
+        /*if (regId == null || currentPrivateKey == null || currentChatMember == null || currentChatMember.getLrzId() == null) {
             Utils.logv("Parameter missing for sending reg id");
             return;
         }
@@ -175,7 +175,7 @@ public class GcmIdentificationService extends InstanceIDListenerService {
             public void failure(RetrofitError e) {
                 Utils.log(e, "Failure uploading GCM registration id");
             }
-        });
+        });*/
     }
 
     /**

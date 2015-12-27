@@ -16,6 +16,7 @@ import java.util.Locale;
 
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.Utils;
+import de.tum.in.tumcampus.exception.NoPublicKey;
 import de.tum.in.tumcampus.models.TUMCabeClient;
 import de.tum.in.tumcampus.models.ChatMember;
 import de.tum.in.tumcampus.models.ChatMessage;
@@ -129,14 +130,14 @@ public class ChatMessageManager {
     public ArrayList<ChatMessage> getAllUnsent() {
         Cursor cur = db.rawQuery("SELECT member, text, room, _id FROM unsent_chat_message WHERE msg_id=0 ORDER BY _id", null);
         ArrayList<ChatMessage> list = new ArrayList<>(cur.getCount());
-        if(cur.moveToFirst()) {
+        if (cur.moveToFirst()) {
             do {
                 ChatMember member = new Gson().fromJson(cur.getString(0), ChatMember.class);
                 ChatMessage msg = new ChatMessage(cur.getString(1), member);
                 msg.setRoom(cur.getInt(2));
                 msg.internalID = cur.getInt(3);
                 list.add(msg);
-            } while(cur.moveToNext());
+            } while (cur.moveToNext());
         }
         cur.close();
         return list;
@@ -149,12 +150,12 @@ public class ChatMessageManager {
         //TODO handle message with already set id
         Utils.logv("replace into unsent " + m.getText() + " " + m.getId() + " " + m.getPrevious() + " " + m.getStatus());
         db.execSQL("REPLACE INTO unsent_chat_message (text,room,member,msg_id) VALUES (?,?,?, ?)",
-                new String[]{"" + m.getText(), "" + mChatRoom, new Gson().toJson(m.getMember()), ""+m.getId()});
+                new String[]{"" + m.getText(), "" + mChatRoom, new Gson().toJson(m.getMember()), "" + m.getId()});
     }
 
     /**
      * Removes the message from unsent database
-     * */
+     */
     public void removeFromUnsent(ChatMessage message) {
         db.execSQL("DELETE FROM unsent_chat_message WHERE _id=?", new String[]{"" + message.internalID});
     }
@@ -169,7 +170,7 @@ public class ChatMessageManager {
                 "ORDER BY c1._id DESC " +
                 "LIMIT 1) AS until " +
                 "WHERE c._id>until._id AND c.room=? " +
-                "ORDER BY c._id", new String[]{""+mChatRoom, ""+mChatRoom});
+                "ORDER BY c._id", new String[]{"" + mChatRoom, "" + mChatRoom});
     }
 
     /**
@@ -185,12 +186,12 @@ public class ChatMessageManager {
                 "ORDER BY c._id DESC " +
                 "LIMIT 5", new String[]{"" + mChatRoom, "" + mChatRoom});
         ArrayList<ChatMessage> list = new ArrayList<>(cur.getCount());
-        if(cur.moveToFirst()) {
+        if (cur.moveToFirst()) {
             do {
                 ChatMember member = new Gson().fromJson(cur.getString(0), ChatMember.class);
                 ChatMessage msg = new ChatMessage(cur.getString(1), member);
                 list.add(msg);
-            } while(cur.moveToNext());
+            } while (cur.moveToNext());
         }
         cur.close();
         return list;
@@ -209,10 +210,10 @@ public class ChatMessageManager {
 
         db.beginTransaction();
         // Query read status from the previous message and use this read status as well if it is "0"
-        boolean read = memberId==m.getMember().getId();
-        Cursor cur = db.rawQuery("SELECT read FROM chat_message WHERE _id=?", new String[] {""+m.getId()});
-        if(cur.moveToFirst()) {
-            if(cur.getInt(0)==1)
+        boolean read = memberId == m.getMember().getId();
+        Cursor cur = db.rawQuery("SELECT read FROM chat_message WHERE _id=?", new String[]{"" + m.getId()});
+        if (cur.moveToFirst()) {
+            if (cur.getInt(0) == 1)
                 read = true;
         }
         cur.close();
@@ -249,12 +250,13 @@ public class ChatMessageManager {
         db.endTransaction();
     }
 
-    public Cursor getNewMessages(PrivateKey pk, ChatMember member, int messageId) {
+    public Cursor getNewMessages(ChatMember member, int messageId) throws NoPublicKey {
         ArrayList<ChatMessage> messages;
-        if(messageId==-1)
-            messages = TUMCabeClient.getInstance(mContext).getNewMessages(mChatRoom, new ChatVerification(pk, member));
-        else
-            messages = TUMCabeClient.getInstance(mContext).getMessages(mChatRoom, messageId, new ChatVerification(pk, member));
+        if (messageId == -1) {
+            messages = TUMCabeClient.getInstance(mContext).getNewMessages(mChatRoom, new ChatVerification(mContext, member));
+        } else {
+            messages = TUMCabeClient.getInstance(mContext).getMessages(mChatRoom, messageId, new ChatVerification(mContext, member));
+        }
         replaceInto(messages);
         return getUnread();
     }

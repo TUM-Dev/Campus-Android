@@ -59,7 +59,7 @@ public class DrawerMenuHelper implements NavigationView.OnNavigationItemSelected
 
     public void populateMenu(Menu navigationMenu) {
         boolean hasTUMOAccess = new AccessTokenManager(mContext).hasValidAccessToken();
-        boolean chatEnabled = Utils.getSettingBool(mContext, Const.GROUP_CHAT_ENABLED, true);
+        boolean chatEnabled = Utils.getSettingBool(mContext, Const.GROUP_CHAT_ENABLED, false);
 
         if (hasTUMOAccess) {
             SubMenu myTumMenu = navigationMenu.addSubMenu(R.string.my_tum);

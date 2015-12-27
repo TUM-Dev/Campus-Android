@@ -9,6 +9,7 @@ import java.util.Date;
 
 import de.tum.in.tumcampus.auxiliary.AuthenticationManager;
 import de.tum.in.tumcampus.auxiliary.RSASigner;
+import de.tum.in.tumcampus.exception.NoPublicKey;
 
 public class ChatVerification {
 
@@ -18,7 +19,7 @@ public class ChatVerification {
     private int member;
     private Object data;
 
-    public ChatVerification(Context c, ChatMember member) {
+    public ChatVerification(Context c, ChatMember member) throws NoPublicKey {
         //Create some data
         this.date = (new Date()).toString();
         this.rand = new BigInteger(130, new SecureRandom()).toString(32);

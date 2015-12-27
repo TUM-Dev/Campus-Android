@@ -13,6 +13,7 @@ import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.UUID;
 
 import de.tum.in.tumcampus.R;
+import de.tum.in.tumcampus.exception.NoPublicKey;
 import de.tum.in.tumcampus.models.ChatMember;
 import de.tum.in.tumcampus.models.ChatPublicKey;
 import de.tum.in.tumcampus.models.TUMCabeClient;
@@ -53,8 +54,12 @@ public class AuthenticationManager {
      *
      * @return
      */
-    private String getPrivateKeyString() {
-        return Utils.getInternalSettingString(mContext, Const.PRIVATE_KEY, "");
+    private String getPrivateKeyString() throws NoPublicKey {
+        String key = Utils.getInternalSettingString(mContext, Const.PRIVATE_KEY, "");
+        if(key.isEmpty()){
+            throw new NoPublicKey();
+        }
+        return key;
     }
 
     /**
@@ -62,7 +67,7 @@ public class AuthenticationManager {
      *
      * @return The private key object
      */
-    private PrivateKey getPrivateKey() {
+    private PrivateKey getPrivateKey() throws NoPublicKey {
         byte[] privateKeyBytes = Base64.decode(this.getPrivateKeyString(), Base64.DEFAULT);
         try {
             return KeyFactory.getInstance("RSA").generatePrivate(new PKCS8EncodedKeySpec(privateKeyBytes));
@@ -72,7 +77,7 @@ public class AuthenticationManager {
         return null;
     }
 
-    public String sign(String data) {
+    public String sign(String data) throws NoPublicKey {
         RSASigner signer = new RSASigner(this.getPrivateKey());
         return signer.sign(data);
     }
@@ -83,13 +88,13 @@ public class AuthenticationManager {
      * @return true if a private key is present
      */
     public boolean generatePrivateKey(ChatMember member) {
-        // Retrieve private key
-        String privateKeyString = this.getPrivateKeyString();
+        // Try to retrieve private key
+        try {
+            String privateKeyString = this.getPrivateKeyString();
 
-        // If we already have one don't create a new one
-        if (!privateKeyString.isEmpty()) {
+            // If we already have one don't create a new one
             return true;
-        }
+        } catch (NoPublicKey noPublicKey) {}
 
         // If the key is not in shared preferences, generate key-pair
         try {
@@ -98,8 +103,7 @@ public class AuthenticationManager {
             KeyPair keyPair = keyGen.generateKeyPair();
 
             String publicKeyString = Base64.encodeToString(keyPair.getPublic().getEncoded(), Base64.DEFAULT);
-            privateKeyString = Base64.encodeToString(keyPair.getPrivate().getEncoded(), Base64.DEFAULT);
-
+            String privateKeyString = Base64.encodeToString(keyPair.getPrivate().getEncoded(), Base64.DEFAULT);
 
             try {
                 // Upload public key to the server

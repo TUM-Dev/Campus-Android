@@ -33,6 +33,7 @@ import de.tum.in.tumcampus.adapters.NoResultsAdapter;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.RSASigner;
 import de.tum.in.tumcampus.auxiliary.Utils;
+import de.tum.in.tumcampus.exception.NoPublicKey;
 import de.tum.in.tumcampus.models.TUMCabeClient;
 import de.tum.in.tumcampus.models.ChatMember;
 import de.tum.in.tumcampus.models.ChatRegistrationId;
@@ -203,36 +204,40 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
         Utils.logv("create or join chat room " + name);
         currentChatRoom = new ChatRoom(name);
 
-        TUMCabeClient.getInstance(this).createRoom(currentChatRoom, new ChatVerification(this, this.currentChatMember), new Callback<ChatRoom>() {
-            @Override
-            public void success(ChatRoom newlyCreatedChatRoom, Response arg1) {
-                // The POST request is successful: go to room. API should have auto joined it
-                Utils.logv("Success creating&joining chat room: " + newlyCreatedChatRoom.toString());
-                currentChatRoom = newlyCreatedChatRoom;
-                manager.join(currentChatRoom);
+        try {
+            TUMCabeClient.getInstance(this).createRoom(currentChatRoom, new ChatVerification(this, this.currentChatMember), new Callback<ChatRoom>() {
+                @Override
+                public void success(ChatRoom newlyCreatedChatRoom, Response arg1) {
+                    // The POST request is successful: go to room. API should have auto joined it
+                    Utils.logv("Success creating&joining chat room: " + newlyCreatedChatRoom.toString());
+                    currentChatRoom = newlyCreatedChatRoom;
+                    manager.join(currentChatRoom);
 
-                // When we show joined chat rooms open chat room directly
-                if (mCurrentMode == 1) {
-                    moveToChatActivity();
-                } else { //Otherwise show a nice information, that we added the room
-                    final Cursor newCursor = manager.getAllByStatus(mCurrentMode);
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            adapter.changeCursor(newCursor);
-                            Utils.showToast(ChatRoomsActivity.this, R.string.joined_chat_room);
-                        }
-                    });
+                    // When we show joined chat rooms open chat room directly
+                    if (mCurrentMode == 1) {
+                        moveToChatActivity();
+                    } else { //Otherwise show a nice information, that we added the room
+                        final Cursor newCursor = manager.getAllByStatus(mCurrentMode);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                adapter.changeCursor(newCursor);
+                                Utils.showToast(ChatRoomsActivity.this, R.string.joined_chat_room);
+                            }
+                        });
+                    }
                 }
-            }
 
-            @Override
-            public void failure(RetrofitError arg0) {
-                //Something went wrong while joining
-                Utils.logv("Failure creating/joining chat room - trying to GET it from the server: " + arg0.toString());
-                Utils.showToastOnUIThread(ChatRoomsActivity.this, R.string.activate_key);
-            }
-        });
+                @Override
+                public void failure(RetrofitError arg0) {
+                    //Something went wrong while joining
+                    Utils.logv("Failure creating/joining chat room - trying to GET it from the server: " + arg0.toString());
+                    Utils.showToastOnUIThread(ChatRoomsActivity.this, R.string.activate_key);
+                }
+            });
+        } catch (NoPublicKey noPublicKey) {
+            this.finish();
+        }
     }
 
     @Override
@@ -254,6 +259,8 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
                 manager.replaceIntoRooms(rooms);
             } catch (RetrofitError e) {
                 Utils.log(e);
+            } catch (NoPublicKey e) {
+                this.finish();
             }
         }
         firstLoad = false;
