@@ -1,11 +1,9 @@
 package de.tum.in.tumcampus.activities;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.view.Menu;
@@ -15,15 +13,8 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.gson.Gson;
 
-import java.io.IOException;
-import java.security.PrivateKey;
-import java.util.Date;
 import java.util.List;
 
 import de.tum.in.tumcampus.R;
@@ -31,12 +22,10 @@ import de.tum.in.tumcampus.activities.generic.ActivityForLoadingInBackground;
 import de.tum.in.tumcampus.adapters.ChatRoomListAdapter;
 import de.tum.in.tumcampus.adapters.NoResultsAdapter;
 import de.tum.in.tumcampus.auxiliary.Const;
-import de.tum.in.tumcampus.auxiliary.RSASigner;
 import de.tum.in.tumcampus.auxiliary.Utils;
-import de.tum.in.tumcampus.exception.NoPublicKey;
+import de.tum.in.tumcampus.exceptions.NoPublicKey;
 import de.tum.in.tumcampus.models.TUMCabeClient;
 import de.tum.in.tumcampus.models.ChatMember;
-import de.tum.in.tumcampus.models.ChatRegistrationId;
 import de.tum.in.tumcampus.models.ChatRoom;
 import de.tum.in.tumcampus.models.ChatVerification;
 import de.tum.in.tumcampus.models.LecturesSearchRow;

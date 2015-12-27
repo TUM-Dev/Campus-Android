@@ -49,7 +49,7 @@ import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.ImplicitCounter;
 import de.tum.in.tumcampus.auxiliary.NetUtils;
 import de.tum.in.tumcampus.auxiliary.Utils;
-import de.tum.in.tumcampus.exception.NoPublicKey;
+import de.tum.in.tumcampus.exceptions.NoPublicKey;
 import de.tum.in.tumcampus.models.GCMChat;
 import de.tum.in.tumcampus.models.TUMCabeClient;
 import de.tum.in.tumcampus.models.ChatMember;

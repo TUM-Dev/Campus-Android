@@ -166,8 +166,18 @@ public class TUMCabeClient {
     public List<String> putBugReport(BugReport r) {
         return service.putBugReport(r);
     }
-    public List<String> putStatistics(Statistics s) {
-        return service.putStatistics(s);
+    public void putStatistics(Statistics s) {
+        service.putStatistics(s, new Callback<String>(){
+            @Override
+            public void success(String s, retrofit.client.Response response) {
+                //We don't care about any responses
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                //Or if this fails
+            }
+        });
     }
 
     private interface TUMCabeAPIService {
@@ -236,6 +246,6 @@ public class TUMCabeClient {
 
         //Statistics
         @PUT(API_STATISTICS)
-        List<String> putStatistics(@Body Statistics r);
+        void putStatistics(@Body Statistics r, Callback<String> cb);
     }
 }

@@ -3,13 +3,11 @@ package de.tum.in.tumcampus.models;
 import android.content.Context;
 
 import java.math.BigInteger;
-import java.security.PrivateKey;
 import java.security.SecureRandom;
 import java.util.Date;
 
 import de.tum.in.tumcampus.auxiliary.AuthenticationManager;
-import de.tum.in.tumcampus.auxiliary.RSASigner;
-import de.tum.in.tumcampus.exception.NoPublicKey;
+import de.tum.in.tumcampus.exceptions.NoPublicKey;
 
 public class ChatVerification {
 

@@ -6,14 +6,13 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
-import java.security.PrivateKey;
 import java.util.List;
 
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.generic.ActivityForLoadingInBackground;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.Utils;
-import de.tum.in.tumcampus.exception.NoPublicKey;
+import de.tum.in.tumcampus.exceptions.NoPublicKey;
 import de.tum.in.tumcampus.models.TUMCabeClient;
 import de.tum.in.tumcampus.models.ChatMember;
 import de.tum.in.tumcampus.models.ChatRoom;

@@ -6,7 +6,6 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.google.gson.Gson;
 
-import java.security.PrivateKey;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -16,7 +15,7 @@ import java.util.Locale;
 
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.Utils;
-import de.tum.in.tumcampus.exception.NoPublicKey;
+import de.tum.in.tumcampus.exceptions.NoPublicKey;
 import de.tum.in.tumcampus.models.TUMCabeClient;
 import de.tum.in.tumcampus.models.ChatMember;
 import de.tum.in.tumcampus.models.ChatMessage;

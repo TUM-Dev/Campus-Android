@@ -4,19 +4,12 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Base64;
 
-import java.security.KeyFactory;
-import java.security.NoSuchAlgorithmException;
-import java.security.PrivateKey;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.ArrayList;
 
 import de.tum.in.tumcampus.auxiliary.AuthenticationManager;
-import de.tum.in.tumcampus.auxiliary.Const;
-import de.tum.in.tumcampus.auxiliary.RSASigner;
 import de.tum.in.tumcampus.auxiliary.Utils;
+import de.tum.in.tumcampus.exceptions.NoPublicKey;
 import de.tum.in.tumcampus.models.TUMCabeClient;
 import de.tum.in.tumcampus.models.ChatMessage;
 import de.tum.in.tumcampus.models.managers.ChatMessageManager;
@@ -97,6 +90,8 @@ public class SendMessageService extends IntentService {
             } catch (RetrofitError e) {
                 Utils.log(e);
                 numberOfAttempts++;
+            } catch (NoPublicKey noPublicKey) {
+                return; //Nothing can be done, just exit
             }
 
             //Sleep for five seconds, maybe the server is currently really busy

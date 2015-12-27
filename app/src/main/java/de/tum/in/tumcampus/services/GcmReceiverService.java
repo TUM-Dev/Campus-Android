@@ -23,6 +23,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.google.android.gms.gcm.GcmListenerService;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import de.tum.in.tumcampus.auxiliary.Utils;
@@ -39,28 +40,25 @@ import de.tum.in.tumcampus.notifications.Update;
  * service is finished, it calls {@code completeWakefulIntent()} to release the
  * wake lock.
  */
-public class GcmIntentService extends IntentService {
+public class GcmReceiverService extends GcmListenerService {
 
-    public GcmIntentService() {
-        super("GcmIntentService");
-    }
-
+    /**
+     * Called when message is received.
+     *
+     * @param from SenderID of the sender.
+     * @param extras Data bundle containing message data as key/value pairs.
+     */
+    // [START receive_message]
     @Override
-    protected void onHandleIntent(Intent intent) {
-        Bundle extras = intent.getExtras();
-        GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(this);
-
-        // The getMessageType() intent parameter must be the intent you received in your BroadcastReceiver.
-        String messageType = gcm.getMessageType(intent);
-
+    public void onMessageReceived(String from, Bundle extras) {
         //Check that we have some data and the intent was indeed a gcm message (gcm might be subject to change in the future)
-        if (!extras.isEmpty() && GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE.equals(messageType)) {  // has effect of un-parcelling Bundle
+        if (!extras.isEmpty()) {  // has effect of un-parcelling Bundle
             //Legacy messages need to be handled - maybe some data is missing?
             if (!extras.containsKey("payload") || !extras.containsKey("type")) {
 
                 //Try to match it as a legacy chat notification
                 try {
-                    this.sendChatNotification(extras);
+                    this.postNotification(new Chat(extras, this, -1));
                 } catch (Exception e) {
                     //@todo do something
                 }
@@ -102,18 +100,6 @@ public class GcmIntentService extends IntentService {
                 }
             }
         }
-
-        // Release the wake lock provided by the WakefulBroadcastReceiver.
-        GcmBroadcastReceiver.completeWakefulIntent(intent);
-    }
-
-    /**
-     * Put the message into a notification and post it.
-     *
-     * @param extras a bundle with the chat options
-     */
-    private void sendChatNotification(Bundle extras) {
-        this.postNotification(new Chat(extras, this, -1));
     }
 
     /**

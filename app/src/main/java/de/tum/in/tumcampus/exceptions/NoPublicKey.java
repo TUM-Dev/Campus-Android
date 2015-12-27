@@ -1,4 +1,4 @@
-package de.tum.in.tumcampus.exception;
+package de.tum.in.tumcampus.exceptions;
 
 /**
  * No Public key could be found or has not been yet generated
