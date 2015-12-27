@@ -15,6 +15,7 @@ import android.widget.TextView;
 import de.hdodenhof.circleimageview.CircleImageView;
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.MainActivity;
+import de.tum.in.tumcampus.activities.UserPreferencesActivity;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.DrawerMenuHelper;
 import de.tum.in.tumcampus.auxiliary.ImplicitCounter;
@@ -85,7 +86,11 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.main_toolbar);
         setSupportActionBar(toolbar);
-        if (getSupportActionBar() != null && parent != null && parent.equals(MainActivity.class.getName())) {
+        if (getSupportActionBar() != null && (
+                (parent != null && parent.equals(MainActivity.class.getName()))
+                        || this instanceof MainActivity
+                        || this instanceof UserPreferencesActivity
+        )) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setHomeButtonEnabled(true);
         }

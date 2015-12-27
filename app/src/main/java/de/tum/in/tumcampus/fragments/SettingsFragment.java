@@ -23,6 +23,7 @@ import android.preference.PreferenceScreen;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.ListAdapter;
@@ -33,6 +34,7 @@ import de.psdev.licensesdialog.LicensesDialog;
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.MainActivity;
 import de.tum.in.tumcampus.activities.StartupActivity;
+import de.tum.in.tumcampus.activities.UserPreferencesActivity;
 import de.tum.in.tumcampus.activities.wizard.WizNavStartActivity;
 import de.tum.in.tumcampus.auxiliary.AccessTokenManager;
 import de.tum.in.tumcampus.auxiliary.Const;
@@ -88,8 +90,7 @@ public class SettingsFragment extends PreferenceFragment implements
         setSummary("background_mode_set_to");
 
         // Register the change listener to react immediately on changes
-        PreferenceManager.getDefaultSharedPreferences(mContext)
-                .registerOnSharedPreferenceChangeListener(this);
+        PreferenceManager.getDefaultSharedPreferences(mContext).registerOnSharedPreferenceChangeListener(this);
 
         // Populate news sources
         populateNewsSources();
@@ -180,8 +181,9 @@ public class SettingsFragment extends PreferenceFragment implements
             SharedPreferences.Editor e = sharedPreferences.edit();
             boolean value = false;
             for (int i = 7; i < 14; i++) {
-                if (sharedPreferences.getBoolean("card_news_source_" + i, false))
+                if (sharedPreferences.getBoolean("card_news_source_" + i, false)) {
                     value = true;
+                }
                 e.putBoolean("card_news_source_" + i, false);
             }
             String new_source = sharedPreferences.getString(key, "7");
@@ -343,7 +345,7 @@ public class SettingsFragment extends PreferenceFragment implements
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public void initializeActionBar(PreferenceScreen preferenceScreen) {
         final Dialog dialog = preferenceScreen.getDialog();
-
+        
         //Check if dialog is open and if we are on a supported android version
         if (dialog != null && android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             //Setup a dialog back button pressed listener
