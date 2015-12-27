@@ -305,7 +305,7 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
     private boolean checkPlayServicesAndRegister() {
         // Check device for Play Services APK. If check succeeds, proceed with GCM registration.
         if (GcmIdentificationService.checkPlayServices(this)) {
-            GcmIdentificationService idService = new GcmIdentificationService();
+            GcmIdentificationService idService = new GcmIdentificationService(this);
 
             //Check if already registered
             idService.checkSetup();

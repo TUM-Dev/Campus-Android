@@ -30,6 +30,11 @@ public class GcmIdentificationService extends InstanceIDListenerService {
 
     private static final String senderId = "944892355389";
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
+    private Context mContext;
+
+    public GcmIdentificationService(Context c) {
+        mContext = c;
+    }
 
     /**
      * Registers this phone with InstanceID and returns a valid token to be transmitted to the server
@@ -37,18 +42,18 @@ public class GcmIdentificationService extends InstanceIDListenerService {
      * @return String token that can be used to transmit messages to this client
      */
     public String register() throws IOException {
-        String iid = InstanceID.getInstance(this).getId();
-        String token = InstanceID.getInstance(this).getToken(senderId, GoogleCloudMessaging.INSTANCE_ID_SCOPE);
-        Utils.setInternalSetting(this, Const.GCM_INSTANCE_ID, iid);
-        Utils.setInternalSetting(this, Const.GCM_TOKEN_ID, token);
+        String iid = InstanceID.getInstance(mContext).getId();
+        String token = InstanceID.getInstance(mContext).getToken(senderId, GoogleCloudMessaging.INSTANCE_ID_SCOPE);
+        Utils.setInternalSetting(mContext, Const.GCM_INSTANCE_ID, iid);
+        Utils.setInternalSetting(mContext, Const.GCM_TOKEN_ID, token);
 
         return token;
     }
 
     public void unregister() throws IOException {
-        InstanceID.getInstance(this).deleteInstanceID();
-        Utils.setInternalSetting(this, Const.GCM_INSTANCE_ID, "");
-        Utils.setInternalSetting(this, Const.GCM_TOKEN_ID, "");
+        InstanceID.getInstance(mContext).deleteInstanceID();
+        Utils.setInternalSetting(mContext, Const.GCM_INSTANCE_ID, "");
+        Utils.setInternalSetting(mContext, Const.GCM_TOKEN_ID, "");
     }
 
     public void onTokenRefresh() {
@@ -64,11 +69,11 @@ public class GcmIdentificationService extends InstanceIDListenerService {
 
     }
 
-    public String getCurrentToken(){
-        return Utils.getInternalSettingString(this, Const.GCM_TOKEN_ID, "");
+    public String getCurrentToken() {
+        return Utils.getInternalSettingString(this.mContext, Const.GCM_TOKEN_ID, "");
     }
 
-    public void checkSetup(){
+    public void checkSetup() {
         String regId = this.getCurrentToken();
 
         //If we failed, we need to re register
@@ -76,7 +81,7 @@ public class GcmIdentificationService extends InstanceIDListenerService {
             this.registerInBackground();
         } else {
             // If the regId is not empty, we still need to check whether it was successfully sent to the TCA server, because this can fail due to user not confirming their private key
-            if (!Utils.getInternalSettingBool(this, Const.GCM_REG_ID_SENT_TO_SERVER, false)) {
+            if (!Utils.getInternalSettingBool(mContext, Const.GCM_REG_ID_SENT_TO_SERVER, false)) {
                 this.sendRegistrationIdToBackend(regId);
             }
 
@@ -123,8 +128,8 @@ public class GcmIdentificationService extends InstanceIDListenerService {
                     String regId = GcmIdentificationService.this.register();
 
                     //Reset the lock in case we are updating and maybe failed
-                    Utils.setInternalSetting(GcmIdentificationService.this, Const.GCM_REG_ID_SENT_TO_SERVER, false);
-                    Utils.setInternalSetting(GcmIdentificationService.this, Const.GCM_REG_ID_LAST_TRANSMISSION, (new Date()).getTime());
+                    Utils.setInternalSetting(mContext, Const.GCM_REG_ID_SENT_TO_SERVER, false);
+                    Utils.setInternalSetting(mContext, Const.GCM_REG_ID_LAST_TRANSMISSION, (new Date()).getTime());
 
                     // Let the server know of our new registration id
                     GcmIdentificationService.this.sendRegistrationIdToBackend(regId);
@@ -185,7 +190,7 @@ public class GcmIdentificationService extends InstanceIDListenerService {
      */
     private void checkRegisterIdUpdate(String regId) {
         //Regularly (once a day) update the server with the reg id
-        long lastTransmission = Utils.getInternalSettingLong(this, Const.GCM_REG_ID_LAST_TRANSMISSION, 0);
+        long lastTransmission = Utils.getInternalSettingLong(mContext, Const.GCM_REG_ID_LAST_TRANSMISSION, 0);
         Date now = new Date();
         if (now.getTime() - 24 * 3600000 > lastTransmission) {
             this.sendRegistrationIdToBackend(regId);
