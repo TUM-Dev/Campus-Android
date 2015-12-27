@@ -144,8 +144,6 @@ public class GcmIdentificationService extends InstanceIDListenerService {
         }.execute();
     }
 
-
-
     /**
      * Sends the registration ID to your server over HTTP, so it can use GCM/HTTP
      * or CCS to send messages to your app. Not needed for this demo since the

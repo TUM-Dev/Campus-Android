@@ -60,7 +60,6 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
 
     private ChatRoom currentChatRoom;
     private ChatMember currentChatMember;
-    private PrivateKey currentPrivateKey;
     private TUMOnlineRequest<LecturesSearchRowSet> requestHandler;
     private ChatRoomManager manager;
     private int mCurrentMode = 1;
@@ -129,9 +128,6 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
 
                 // Remember this locally
                 currentChatMember = Utils.getSetting(this, Const.CHAT_MEMBER, ChatMember.class);
-
-                // Load the private key from the shared prefs
-                currentPrivateKey = Utils.getPrivateKeyFromSharedPrefs(this);
 
                 // Proceed with registering
                 checkPlayServicesAndRegister();
@@ -207,7 +203,7 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
         Utils.logv("create or join chat room " + name);
         currentChatRoom = new ChatRoom(name);
 
-        TUMCabeClient.getInstance(this).createRoom(currentChatRoom, new ChatVerification(this.currentPrivateKey, this.currentChatMember), new Callback<ChatRoom>() {
+        TUMCabeClient.getInstance(this).createRoom(currentChatRoom, new ChatVerification(this, this.currentChatMember), new Callback<ChatRoom>() {
             @Override
             public void success(ChatRoom newlyCreatedChatRoom, Response arg1) {
                 // The POST request is successful: go to room. API should have auto joined it
@@ -254,7 +250,7 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
         // Try to restore joined chat rooms from server
         if (!firstLoad && currentChatMember != null) {
             try {
-                List<ChatRoom> rooms = TUMCabeClient.getInstance(this).getMemberRooms(currentChatMember.getId(), new ChatVerification(currentPrivateKey, currentChatMember));
+                List<ChatRoom> rooms = TUMCabeClient.getInstance(this).getMemberRooms(currentChatMember.getId(), new ChatVerification(this, currentChatMember));
                 manager.replaceIntoRooms(rooms);
             } catch (RetrofitError e) {
                 Utils.log(e);

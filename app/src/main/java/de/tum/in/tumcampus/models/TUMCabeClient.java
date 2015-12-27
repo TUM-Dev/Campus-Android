@@ -11,6 +11,7 @@ import java.util.List;
 
 import javax.net.ssl.SSLPeerUnverifiedException;
 
+import de.tum.in.tumcampus.auxiliary.AuthenticationManager;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.NetUtils;
 import retrofit.Callback;
@@ -48,7 +49,7 @@ public class TUMCabeClient {
     final RequestInterceptor requestInterceptor = new RequestInterceptor() {
         @Override
         public void intercept(RequestFacade request) {
-            request.addHeader("X-DEVICE-ID", NetUtils.getDeviceID(TUMCabeClient.context));
+            request.addHeader("X-DEVICE-ID", AuthenticationManager.getDeviceID(TUMCabeClient.context));
         }
     };
     final ErrorHandler errorHandler = new ErrorHandler() {

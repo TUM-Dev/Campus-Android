@@ -1,10 +1,13 @@
 package de.tum.in.tumcampus.models;
 
+import android.content.Context;
+
 import java.math.BigInteger;
 import java.security.PrivateKey;
 import java.security.SecureRandom;
 import java.util.Date;
 
+import de.tum.in.tumcampus.auxiliary.AuthenticationManager;
 import de.tum.in.tumcampus.auxiliary.RSASigner;
 
 public class ChatVerification {
@@ -15,15 +18,15 @@ public class ChatVerification {
     private int member;
     private Object data;
 
-    public ChatVerification(PrivateKey pk, ChatMember member) {
+    public ChatVerification(Context c, ChatMember member) {
         //Create some data
         this.date = (new Date()).toString();
         this.rand = new BigInteger(130, new SecureRandom()).toString(32);
         this.member = member.getId();
 
         //Sign this data for verification
-        RSASigner signer = new RSASigner(pk);
-        this.signature = signer.sign(date + rand + member.getLrzId());
+        AuthenticationManager am = new AuthenticationManager(c);
+        this.signature = am.sign(date + rand + member.getLrzId());
     }
 
     public String getSignature() {

@@ -81,25 +81,6 @@ public final class Utils {
     }
 
     /**
-     * Returns the number of datasets in a table
-     *
-     * @param db    Database connection
-     * @param table Table name
-     * @return number of datasets in a table
-     */
-    public static int dbGetTableCount(SQLiteDatabase db, String table) {
-        Cursor c = db.rawQuery("SELECT count(*) FROM " + table, null);
-        try {
-            if (c.moveToNext()) {
-                return c.getInt(0);
-            }
-            return 0;
-        } finally {
-            c.close();
-        }
-    }
-
-    /**
      * Converts a date-string to Date
      *
      * @param str String with ISO-Date (yyyy-mm-dd)
@@ -530,29 +511,6 @@ public final class Utils {
                 Utils.showToast(activity, s);
             }
         });
-    }
-
-
-    /**
-     * Loads the private key for chats from preferences
-     *
-     * @return The private key object
-     */
-    public static PrivateKey getPrivateKeyFromSharedPrefs(Context context) {
-        String privateKeyString = Utils.getInternalSettingString(context, Const.PRIVATE_KEY, "");
-        if (privateKeyString.isEmpty())
-            return null;
-
-        byte[] privateKeyBytes = Base64.decode(privateKeyString, Base64.DEFAULT);
-        KeyFactory keyFactory;
-        try {
-            keyFactory = KeyFactory.getInstance("RSA");
-            PKCS8EncodedKeySpec privateKeySpec = new PKCS8EncodedKeySpec(privateKeyBytes);
-            return keyFactory.generatePrivate(privateKeySpec);
-        } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-            Utils.log(e);
-        }
-        return null;
     }
 
     /**

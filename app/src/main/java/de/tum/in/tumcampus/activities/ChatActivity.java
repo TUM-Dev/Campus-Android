@@ -405,7 +405,7 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
                 ArrayList<ChatMessage> downloadedChatHistory;
 
                 // If currently nothing has been shown load newest messages from server
-                ChatVerification verification = new ChatVerification(Utils.getPrivateKeyFromSharedPrefs(ChatActivity.this), currentChatMember);
+                ChatVerification verification = new ChatVerification(ChatActivity.this, currentChatMember);
                 if (chatHistoryAdapter == null || chatHistoryAdapter.getSentCount() == 0 || newMsg) {
                     downloadedChatHistory = TUMCabeClient.getInstance(ChatActivity.this).getNewMessages(currentChatRoom.getId(), verification);
                 } else {
@@ -455,7 +455,7 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
     public void onClick(DialogInterface dialog, int which) {
 
         // Send request to the server to remove the user from this room
-        ChatVerification verification = new ChatVerification(Utils.getPrivateKeyFromSharedPrefs(this), currentChatMember);
+        ChatVerification verification = new ChatVerification(this, currentChatMember);
         TUMCabeClient.getInstance(ChatActivity.this).leaveChatRoom(currentChatRoom, verification, new Callback<ChatRoom>() {
             @Override
             public void success(ChatRoom room, Response arg1) {
