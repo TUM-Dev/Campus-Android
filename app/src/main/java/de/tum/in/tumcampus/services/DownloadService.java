@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 
 import java.io.IOException;
 import java.util.List;
@@ -22,6 +21,7 @@ import de.tum.in.tumcampus.models.managers.CacheManager;
 import de.tum.in.tumcampus.models.managers.CafeteriaManager;
 import de.tum.in.tumcampus.models.managers.CafeteriaMenuManager;
 import de.tum.in.tumcampus.models.managers.CardManager;
+import de.tum.in.tumcampus.models.managers.KinoManager;
 import de.tum.in.tumcampus.models.managers.NewsManager;
 import de.tum.in.tumcampus.models.managers.OpenHoursManager;
 import de.tum.in.tumcampus.models.managers.SyncManager;
@@ -48,6 +48,17 @@ public class DownloadService extends IntentService {
      */
     public DownloadService() {
         super(DOWNLOAD_SERVICE);
+    }
+
+    /**
+     * Gets the time when BackgroundService was called last time
+     *
+     * @param c Context
+     * @return time when BackgroundService was executed last time
+     */
+    public static long lastUpdate(Context c) {
+        SharedPreferences prefs = c.getSharedPreferences(Const.INTERNAL_PREFS, 0);
+        return prefs.getLong(LAST_UPDATE, 0);
     }
 
     @Override
@@ -106,7 +117,7 @@ public class DownloadService extends IntentService {
 
         // Check if device has a internet connection
         if (NetUtils.isConnected(this) && (launch || !NetUtils.isConnectedMobileData(this))) {
-            Log.i(getClass().getSimpleName(), "Handle action <" + action + ">");
+            Utils.logv("Handle action <" + action + ">");
             try {
                 switch (action) {
                     case Const.DOWNLOAD_ALL_FROM_EXTERNAL:
@@ -119,6 +130,12 @@ public class DownloadService extends IntentService {
                         try {
                             downloadCafeterias(force);
                         } catch (Exception e) {
+                            Utils.log(e);
+                            successful = false;
+                        }
+                        try {
+                            downLoadKino(force);
+                        } catch (Exception e){
                             Utils.log(e);
                             successful = false;
                         }
@@ -136,6 +153,9 @@ public class DownloadService extends IntentService {
                         break;
                     case Const.CAFETERIAS:
                         downloadCafeterias(force);
+                        break;
+                    case Const.KINO:
+                        downLoadKino(force);
                         break;
                 }
             } catch (TimeoutException e) {
@@ -216,6 +236,11 @@ public class DownloadService extends IntentService {
         cmm.downloadFromExternal(this, force);
     }
 
+    private void downLoadKino(boolean force) throws Exception {
+        KinoManager km = new KinoManager(this);
+        km.downloadFromExternal(force);
+    }
+
     private void downloadNews(boolean force) throws Exception {
         NewsManager nm = new NewsManager(this);
         nm.downloadFromExternal(force);
@@ -234,16 +259,5 @@ public class DownloadService extends IntentService {
                         row[2], row[3], row[4], row[5], row[6], row[7], row[8]));
             }
         }
-    }
-
-    /**
-     * Gets the time when BackgroundService was called last time
-     *
-     * @param c Context
-     * @return time when BackgroundService was executed last time
-     */
-    public static long lastUpdate(Context c) {
-        SharedPreferences prefs = c.getSharedPreferences(Const.INTERNAL_PREFS, 0);
-        return prefs.getLong(LAST_UPDATE, 0);
     }
 }

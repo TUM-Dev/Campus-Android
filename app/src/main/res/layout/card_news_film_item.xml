@@ -1,5 +1,6 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -13,7 +14,8 @@
         android:layout_marginTop="@dimen/card_padding_vertical"
         android:elevation="@dimen/cardview_elevation"
         card_view:cardBackgroundColor="#fff"
-        card_view:cardCornerRadius="3dp">
+        card_view:cardCornerRadius="3dp"
+        tools:ignore="UnusedAttribute">
         <LinearLayout
             android:id="@+id/card_view"
             android:layout_width="match_parent"
@@ -48,7 +50,7 @@
                     android:layout_margin="10dp" />
 
                 <LinearLayout
-                    android:id="@+id/linearLayout"
+                    android:id="@id/linearLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignLeft="@+id/news_title"

@@ -6,7 +6,7 @@ import org.simpleframework.xml.Root;
 /**
  * Model for the organisation details
  */
-@SuppressWarnings({"FieldCanBeLocal","UnusedDeclaration"})
+@SuppressWarnings({"FieldCanBeLocal"})
 @Root(name = "row")
 public class OrgDetailsItem {
     /**

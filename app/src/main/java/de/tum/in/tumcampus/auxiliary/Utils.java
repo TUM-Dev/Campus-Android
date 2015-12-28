@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.preference.PreferenceManager;
+import android.text.Html;
 import android.util.Base64;
 import android.util.Log;
 import android.widget.Toast;
@@ -26,15 +27,19 @@ import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+
+import de.tum.in.tumcampus.BuildConfig;
 
 /**
  * Class for common helper functions used by a lot of classes
  */
-public class Utils {
+public final class Utils {
 
     /**
      * Builds a HTML document out of a css file and the body content.
@@ -84,10 +89,14 @@ public class Utils {
      */
     public static int dbGetTableCount(SQLiteDatabase db, String table) {
         Cursor c = db.rawQuery("SELECT count(*) FROM " + table, null);
-        if (c.moveToNext()) {
-            return c.getInt(0);
+        try {
+            if (c.moveToNext()) {
+                return c.getInt(0);
+            }
+            return 0;
+        } finally {
+            c.close();
         }
-        return 0;
     }
 
     /**
@@ -98,9 +107,9 @@ public class Utils {
      */
     public static Date getDate(String str) {
         try {
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
             return dateFormat.parse(str);
-        } catch (Exception e) {
+        } catch (ParseException e) {
             log(e, str);
         }
         return new Date();
@@ -113,7 +122,7 @@ public class Utils {
      * @return String (yyyy-mm-dd)
      */
     public static String getDateString(Date d) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
         return dateFormat.format(d);
     }
 
@@ -124,7 +133,7 @@ public class Utils {
      * @return String (yyyy-mm-dd hh:mm:ss)
      */
     public static String getDateTimeString(Date d) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
         return dateFormat.format(d);
     }
 
@@ -136,9 +145,9 @@ public class Utils {
      */
     public static Date getISODateTime(String str) {
         try {
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
             return dateFormat.parse(str);
-        } catch (Exception e) {
+        } catch (ParseException e) {
             log(e, str);
         }
         return new Date();
@@ -225,6 +234,9 @@ public class Utils {
      * @param message Information or Debug message
      */
     public static void log(String message) {
+        if (!BuildConfig.DEBUG) {
+            return;
+        }
         String s = Thread.currentThread().getStackTrace()[3].getClassName().replaceAll("[a-zA-Z0-9.]+\\.", "");
         Log.d(s, message);
     }
@@ -236,6 +248,9 @@ public class Utils {
      * @param message Information or Debug message
      */
     public static void logv(String message) {
+        if (!BuildConfig.DEBUG) {
+            return;
+        }
         String s = Thread.currentThread().getStackTrace()[3].getClassName().replaceAll("[a-zA-Z0-9.]+\\.", "");
         Log.v(s, message);
     }
@@ -519,7 +534,7 @@ public class Utils {
 
 
     /**
-     * Loads the private key from preferences
+     * Loads the private key for chats from preferences
      *
      * @return The private key object
      */
@@ -538,5 +553,14 @@ public class Utils {
             Utils.log(e);
         }
         return null;
+    }
+
+    /**
+     * Removes all html tags from a string
+     * @param html text which contains html tags
+     * @return cleaned text without any tags
+     */
+    public static String stripHtml(String html) {
+        return Html.fromHtml(html).toString();
     }
 }

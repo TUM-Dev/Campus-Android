@@ -2,7 +2,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <it.sephiroth.android.library.imagezoom.ImageViewTouch
+    <ImageView
         android:id="@+id/activity_plans_plan"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

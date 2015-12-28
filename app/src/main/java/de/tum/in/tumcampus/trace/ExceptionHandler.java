@@ -5,12 +5,6 @@ import android.content.pm.PackageInfo;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPut;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.protocol.HTTP;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -18,29 +12,22 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.ArrayList;
-import java.util.List;
 
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.FileUtils;
 import de.tum.in.tumcampus.auxiliary.NetUtils;
+import de.tum.in.tumcampus.auxiliary.Utils;
+import de.tum.in.tumcampus.models.BugReport;
+import de.tum.in.tumcampus.models.TUMCabeClient;
 
 public class ExceptionHandler {
 
+    public static boolean sVerbose = false;
     // Stores loaded stack traces in memory. Each element is contains a full stacktrace
     private static ArrayList<String[]> sStackTraces = null;
-
     private static ActivityAsyncTask<Processor, Object, Object, Object> sTask;
-    public static boolean sVerbose = false;
     private static int sMinDelay = 0;
     private static boolean sSetupCalled = false;
-
-    public static interface Processor {
-        boolean beginSubmit();
-
-        void submitDone();
-
-        void handlerInstalled();
-    }
 
     /**
      * Setup the handler for unhandled exceptions, and submit stack
@@ -96,7 +83,6 @@ public class ExceptionHandler {
             Log.d(G.tag, "appVersion: " + G.appVersion);
             Log.d(G.tag, "appPackage: " + G.appPackage);
             Log.d(G.tag, "filesPath: " + G.filesPath);
-            Log.d(G.tag, "URL: " + G.URL);
         }
 
         // First, search for and load stack traces
@@ -255,7 +241,7 @@ public class ExceptionHandler {
             return sStackTraces;
         }
 
-        Log.d(G.tag, "Looking for exceptions in: " + G.filesPath);
+        Utils.logv("Looking for exceptions in: " + G.filesPath);
 
         // Find list of .stacktrace files
         File dir = new File(G.filesPath + "/");
@@ -271,7 +257,7 @@ public class ExceptionHandler {
                 return name.endsWith(".stacktrace");
             }
         });
-        Log.d(G.tag, "Found " + list.length + " stacktrace(s)");
+        Utils.logv("Found " + list.length + " stacktrace(s)");
 
         //Try to read all of them
         try {
@@ -343,42 +329,19 @@ public class ExceptionHandler {
 
         //Otherwise do some hard work and submit all of them after eachother
         try {
-            String[] screenProperties = Util.ScreenProperties();
+
 
             for (int i = 0; i < list.size(); i++) {
                 String stacktrace = list.get(i)[0];
                 if (ExceptionHandler.sVerbose) {
                     Log.d(G.tag, "Transmitting stack trace: " + stacktrace);
                 }
+
                 // Transmit stack trace with PUT request
-                HttpPut request = new HttpPut(G.URL);
-                request.addHeader("X-DEVICE-ID", G.deviceId); // Add our device identifier
-
-                List<NameValuePair> nvps = new ArrayList<>();
-
-                //Add some Device infos
-                nvps.add(new BasicNameValuePair("packageName", G.appPackage));
-                nvps.add(new BasicNameValuePair("packageVersion", G.appVersion));
-                nvps.add(new BasicNameValuePair("packageVersionCode", "" + G.appVersionCode));
-                nvps.add(new BasicNameValuePair("phoneModel", G.phoneModel));
-                nvps.add(new BasicNameValuePair("androidVersion", G.androidVersion));
-
-                nvps.add(new BasicNameValuePair("networkWifi", Util.isWifiOn()));
-                nvps.add(new BasicNameValuePair("networkMobile", Util.isMobileNetworkOn()));
-                nvps.add(new BasicNameValuePair("gps", Util.isGPSOn()));
-
-                nvps.add(new BasicNameValuePair("screenWidth", screenProperties[0]));
-                nvps.add(new BasicNameValuePair("screenHeight", screenProperties[1]));
-                nvps.add(new BasicNameValuePair("screenOrientation", screenProperties[2]));
-                nvps.add(new BasicNameValuePair("screenDpi", screenProperties[3] + ":" + screenProperties[4]));
-
-                //Add the stacktrace
-                nvps.add(new BasicNameValuePair("stacktrace", stacktrace));
-                nvps.add(new BasicNameValuePair("log", list.get(i)[1]));
-                request.setEntity(new UrlEncodedFormEntity(nvps, HTTP.UTF_8));
-
+                TUMCabeClient client = TUMCabeClient.getInstance(G.context);
+                BugReport r = new BugReport(G.context, stacktrace, list.get(i)[1]);
+                client.putBugReport(r);
                 // We don't care about the response, so we just hope it went well and on with it.
-                NetUtils.execute(request);
             }
         } catch (Exception e) {
             Log.e(G.tag, "Error submitting trace", e);
@@ -396,5 +359,13 @@ public class ExceptionHandler {
             // Register our default exceptions handler
             Thread.setDefaultUncaughtExceptionHandler(new DefaultExceptionHandler(currentHandler));
         }
+    }
+
+    public interface Processor {
+        boolean beginSubmit();
+
+        void submitDone();
+
+        void handlerInstalled();
     }
 }

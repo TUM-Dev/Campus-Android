@@ -7,7 +7,6 @@ import java.util.Date;
 
 import de.tum.in.tumcampus.auxiliary.RSASigner;
 
-@SuppressWarnings("UnusedDeclaration")
 public class ChatVerification {
 
     private String signature;

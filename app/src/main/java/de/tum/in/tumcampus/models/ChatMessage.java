@@ -10,7 +10,6 @@ import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.auxiliary.Utils;
 
 
-@SuppressWarnings("UnusedDeclaration")
 public class ChatMessage {
 
     public static final int STATUS_SENDING = 1;
@@ -129,7 +128,7 @@ public class ChatMessage {
 		this.signature = signature;
 	}
 	
-	private boolean isToday(Date date) {
+	private static boolean isToday(Date date) {
 		Calendar passedDate = Calendar.getInstance();
 		passedDate.setTime(date); // your date
 		
@@ -138,7 +137,7 @@ public class ChatMessage {
         return today.get(Calendar.YEAR) == passedDate.get(Calendar.YEAR) && today.get(Calendar.DAY_OF_YEAR) == passedDate.get(Calendar.DAY_OF_YEAR);
     }
 	
-	private boolean isYesterday(Date date) {
+	private static boolean isYesterday(Date date) {
 		Calendar passedDate = Calendar.getInstance();
 		passedDate.setTime(date);
 		

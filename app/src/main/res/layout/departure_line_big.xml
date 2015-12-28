@@ -27,15 +27,15 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentTop="true"
         android:layout_margin="4dp"
-        android:layout_toEndOf="@+id/line_symbol_ll"
+        android:layout_toEndOf="@id/line_symbol_ll"
         android:layout_toLeftOf="@+id/line_switcher"
-        android:layout_toRightOf="@+id/line_symbol_ll"
-        android:layout_toStartOf="@+id/line_switcher"
+        android:layout_toRightOf="@id/line_symbol_ll"
+        android:layout_toStartOf="@id/line_switcher"
         android:gravity="center_vertical"
         android:textSize="16sp" />
 
     <TextSwitcher
-        android:id="@+id/line_switcher"
+        android:id="@id/line_switcher"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"

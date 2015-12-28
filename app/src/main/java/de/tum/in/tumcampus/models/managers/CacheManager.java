@@ -16,6 +16,7 @@ import java.util.WeakHashMap;
 
 import de.tum.in.tumcampus.activities.CurriculaActivity;
 import de.tum.in.tumcampus.auxiliary.AccessTokenManager;
+import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.NetUtils;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.CalendarRowSet;
@@ -125,6 +126,18 @@ public class CacheManager {
         }
         cur.close();
 
+        // Cache kino covers
+        KinoManager km = new KinoManager(mContext);
+        cur = km.getAllFromDb();
+        if (cur.moveToFirst()) {
+            do {
+                String imgUrl = cur.getString(cur.getColumnIndex(Const.JSON_COVER));
+                if (!imgUrl.equals("null"))
+                    net.downloadImage(imgUrl);
+            } while (cur.moveToNext());
+        }
+        cur.close();
+
         // acquire access token
         if (!new AccessTokenManager(mContext).hasValidAccessToken()) {
             return;
@@ -218,7 +231,6 @@ public class CacheManager {
     public void addToCache(String url, String data, int validity, int typ) {
         if (validity == VALIDITY_DO_NOT_CACHE)
             return;
-        Utils.logv("replace " + url + " " + data);
         db.execSQL("REPLACE INTO cache (url, data, validity, max_age, typ) " +
                         "VALUES (?, ?, datetime('now','+" + (validity / 2) + " seconds'), " +
                         "datetime('now','+" + validity + " seconds'), ?)",

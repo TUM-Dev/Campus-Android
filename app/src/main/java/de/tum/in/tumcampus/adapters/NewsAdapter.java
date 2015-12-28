@@ -2,10 +2,10 @@ package de.tum.in.tumcampus.adapters;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -16,57 +16,39 @@ import java.util.Date;
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.auxiliary.NetUtils;
 import de.tum.in.tumcampus.auxiliary.Utils;
+import de.tum.in.tumcampus.cards.Card;
+import de.tum.in.tumcampus.cards.NewsCard;
 
-public class NewsAdapter extends CursorAdapter {
-    private final LayoutInflater mInflater;
+public class NewsAdapter extends RecyclerView.Adapter<NewsCard.CardViewHolder> {
     private final NetUtils net;
+    private final Cursor c;
+    private final Context mContext;
 
     public NewsAdapter(Context context, Cursor c) {
-        super(context, c, false);
-        mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        this.mContext = context;
         net = new NetUtils(context);
+        this.c = c;
     }
 
-    @Override
-    public int getViewTypeCount() {
-        return 2;
-    }
-
-    @Override
-    public int getItemViewType(int position) {
-        Cursor c = (Cursor) getItem(position);
-        return c.getString(1).equals("2") ? 0 : 1;
-    }
-
-    @Override
-    public View newView(Context context, Cursor cursor, ViewGroup viewGroup) {
-        return newNewsView(mInflater, cursor, viewGroup);
-    }
-
-    @Override
-    public void bindView(View view, Context context, Cursor cursor) {
-        bindNewsView(net, view, cursor);
-    }
-
-    public static View newNewsView(LayoutInflater inflater, Cursor cursor, ViewGroup parent) {
+    public static NewsViewHolder newNewsView(ViewGroup parent, boolean isFilm) {
         View card;
-        if (cursor.getInt(1) == 2) {
-            card = inflater.inflate(R.layout.card_news_film_item, parent, false);
+        if (isFilm) {
+            card = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_news_film_item, parent, false);
         } else {
-            card = inflater.inflate(R.layout.card_news_item, parent, false);
+            card = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_news_item, parent, false);
         }
-        ViewHolder holder = new ViewHolder();
+        NewsViewHolder holder = new NewsViewHolder(card);
         holder.title = (TextView) card.findViewById(R.id.news_title);
         holder.img = (ImageView) card.findViewById(R.id.news_img);
         holder.src_date = (TextView) card.findViewById(R.id.news_src_date);
         holder.src_icon = (ImageView) card.findViewById(R.id.news_src_icon);
         holder.src_title = (TextView) card.findViewById(R.id.news_src_title);
         card.setTag(holder);
-        return card;
+        return holder;
     }
 
-    public static void bindNewsView(NetUtils net, View view, Cursor cursor) {
-        ViewHolder holder = (ViewHolder) view.getTag();
+    public static void bindNewsView(NetUtils net, RecyclerView.ViewHolder newsViewHolder, Cursor cursor) {
+        NewsViewHolder holder = (NewsViewHolder) newsViewHolder;
 
         // Set image
         String imgUrl = cursor.getString(4);
@@ -98,11 +80,42 @@ public class NewsAdapter extends CursorAdapter {
         }
     }
 
-    public static class ViewHolder {
+    @Override
+    public NewsCard.CardViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        return NewsCard.inflateViewHolder(parent, viewType);
+    }
+
+    @Override
+    public void onBindViewHolder(NewsCard.CardViewHolder holder, int position) {
+        NewsViewHolder nHolder = (NewsViewHolder) holder;
+        NewsCard card = new NewsCard(mContext);
+        card.setNews(c, position);
+        nHolder.setCurrentCard(card);
+
+        c.moveToPosition(position);
+        bindNewsView(net, holder, c);
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        c.moveToPosition(position);
+        return c.getString(1).equals("2") ? 0 : 1;
+    }
+
+    @Override
+    public int getItemCount() {
+        return c.getCount();
+    }
+
+    public static class NewsViewHolder extends Card.CardViewHolder {
         ImageView img;
         TextView title;
         TextView src_date;
         TextView src_title;
         ImageView src_icon;
+
+        public NewsViewHolder(View itemView) {
+            super(itemView);
+        }
     }
 }

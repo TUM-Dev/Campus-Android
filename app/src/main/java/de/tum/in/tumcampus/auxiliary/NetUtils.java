@@ -7,20 +7,10 @@ import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
+import android.util.Pair;
 import android.widget.ImageView;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpRequestBase;
-import org.apache.http.conn.ClientConnectionManager;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
-import org.apache.http.params.CoreProtocolPNames;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
-import org.apache.http.params.HttpProtocolParams;
-import org.apache.http.util.EntityUtils;
+import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -28,6 +18,12 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.util.List;
 import java.util.UUID;
 
 import de.tum.in.tumcampus.models.managers.CacheManager;
@@ -35,53 +31,114 @@ import de.tum.in.tumcampus.trace.G;
 
 public class NetUtils {
     private static final int HTTP_TIMEOUT = 25000;
-
+    private static final String PREF_UNIQUE_ID = "PREF_UNIQUE_ID";
     /* Device id */
     private static String uniqueID = null;
-    private static final String PREF_UNIQUE_ID = "PREF_UNIQUE_ID";
-
-    private Context mContext;
-    private CacheManager cacheManager;
-    private DefaultHttpClient client;
+    private final Context mContext;
+    private final CacheManager cacheManager;
 
     public NetUtils(Context context) {
-        //Get the client used for all requests
-        client = NetUtils.getClient();
-
         //Manager caches all requests
         mContext = context;
         cacheManager = new CacheManager(mContext);
     }
 
-    private static DefaultHttpClient getClient() {
-        //Get a basic client
-        DefaultHttpClient client = new DefaultHttpClient();
-        ClientConnectionManager mgr = client.getConnectionManager();
-        HttpParams params = client.getParams();
-
-        //Don't allow to continue requests
-        HttpProtocolParams.setUseExpectContinue(params, false);
-
+    private static void setHttpConnectionParams(HttpURLConnection connection) {
         //Set our max wait time for each request
-        HttpConnectionParams.setSoTimeout(params, HTTP_TIMEOUT);
-        HttpConnectionParams.setConnectionTimeout(params, HTTP_TIMEOUT);
+        connection.setConnectTimeout(HTTP_TIMEOUT);
+        connection.setReadTimeout(HTTP_TIMEOUT);
 
         //Clearly identify all requests from this app
-        String version = "";
+        String userAgent = "TCA Client";
         if (G.appVersion != null && !G.appVersion.equals("unknown")) {
-            version = " " + G.appVersion;
+            userAgent += " " + G.appVersion;
             if (G.appVersionCode != -1) {
-                version += "/" + G.appVersionCode;
+                userAgent += "/" + G.appVersionCode;
             }
         }
-        params.setParameter(CoreProtocolPNames.USER_AGENT, "TCA Client" + version);
 
-        //Actually initiate our client with parameters we setup
-        return new DefaultHttpClient(new ThreadSafeClientConnManager(params, mgr.getSchemeRegistry()), params);
+        connection.setRequestProperty("User-Agent", userAgent);
     }
 
-    public static HttpResponse execute(HttpRequestBase request) throws IOException {
-        return NetUtils.getClient().execute(request);
+    public static JSONObject downloadJson(Context context, String url) throws IOException, JSONException {
+        return new NetUtils(context).downloadJson(url);
+    }
+
+    /**
+     * Check if a network connection is available or can be available soon
+     *
+     * @return true if available
+     */
+    public static boolean isConnected(Context con) {
+        ConnectivityManager cm = (ConnectivityManager) con
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+
+        return netInfo != null && netInfo.isConnectedOrConnecting();
+    }
+
+    /**
+     * Check if a network connection is available or can be available soon
+     * and if the available connection is a mobile internet connection
+     *
+     * @return true if available
+     */
+    public static boolean isConnectedMobileData(Context con) {
+        ConnectivityManager cm = (ConnectivityManager) con
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+
+        return netInfo != null && netInfo.isConnectedOrConnecting() && netInfo.getType() == ConnectivityManager.TYPE_MOBILE;
+    }
+
+    /**
+     * Check if a network connection is available or can be available soon
+     * and if the available connection is a wifi internet connection
+     *
+     * @return true if available
+     */
+    public static boolean isConnectedWifi(Context con) {
+        ConnectivityManager cm = (ConnectivityManager) con
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+
+        return netInfo != null && netInfo.isConnectedOrConnecting() && netInfo.getType() == ConnectivityManager.TYPE_WIFI;
+    }
+
+    /**
+     * Gets an unique id that identifies this device
+     *
+     * @return Unique device id
+     */
+    public static synchronized String getDeviceID(Context context) {
+        if (uniqueID == null) {
+            uniqueID = Utils.getInternalSettingString(context, PREF_UNIQUE_ID, null);
+            if (uniqueID == null) {
+                uniqueID = UUID.randomUUID().toString();
+                Utils.setInternalSetting(context, PREF_UNIQUE_ID, uniqueID);
+            }
+        }
+        return uniqueID;
+    }
+
+    public static String buildParamString(List<Pair<String, String>> pairs) {
+        StringBuilder result = new StringBuilder();
+        boolean first = true;
+        for (Pair<String, String> pair : pairs) {
+            if (first) {
+                first = false;
+            } else {
+                result.append("&");
+            }
+            try {
+                result.append(URLEncoder.encode(pair.first, "UTF-8"));
+                result.append("=");
+                result.append(URLEncoder.encode(pair.second, "UTF-8"));
+            } catch (UnsupportedEncodingException e) {
+                return "";
+            }
+        }
+        return result.toString();
     }
 
     /**
@@ -89,10 +146,10 @@ public class NetUtils {
      * Adds an X-DEVICE-ID to header
      *
      * @param url Download URL location
-     * @return Gets an HttpEntity
+     * @return Gets an InputStream
      * @throws IOException
      */
-    public HttpEntity getHttpEntity(String url) throws IOException {
+    public InputStream getHttpStream(String url) throws IOException {
         // if we are not online, fetch makes no sense
         boolean isOnline = isConnected(mContext);
         if (!isOnline || url == null) {
@@ -100,20 +157,20 @@ public class NetUtils {
         }
 
         Utils.logv("Download URL: " + url);
-        HttpGet request = new HttpGet(url);
-        request.addHeader("X-DEVICE-ID", NetUtils.getDeviceID(mContext));
+        HttpURLConnection connection = (HttpURLConnection) (new URL(url)).openConnection();
+        setHttpConnectionParams(connection);
+        connection.addRequestProperty("X-DEVICE-ID", NetUtils.getDeviceID(mContext));
 
         //Add some useful statical data
-        request.addHeader("X-ANDROID-VERSION", android.os.Build.VERSION.RELEASE);
+        connection.addRequestProperty("X-ANDROID-VERSION", android.os.Build.VERSION.RELEASE);
         try {
-            request.addHeader("X-APP-VERSION", mContext.getPackageManager().getPackageInfo(mContext.getPackageName(), 0).versionName);
+            connection.addRequestProperty("X-APP-VERSION", mContext.getPackageManager().getPackageInfo(mContext.getPackageName(), 0).versionName);
         } catch (PackageManager.NameNotFoundException e) {
             //Don't log any errors, as we don't really care!
         }
 
         //Execute the request
-        HttpResponse response = client.execute(request);
-        return response.getEntity();
+        return connection.getInputStream();
     }
 
     /**
@@ -124,12 +181,15 @@ public class NetUtils {
      * @throws IOException
      */
     public String downloadStringHttp(String url) throws IOException {
-        HttpEntity responseEntity = getHttpEntity(url);
-
-        if (responseEntity != null) {
-            return EntityUtils.toString(responseEntity);
+        InputStream iStream = null;
+        try {
+            iStream = getHttpStream(url);
+            return IOUtils.toString(iStream);
+        } finally {
+            if (iStream != null) {
+                iStream.close();
+            }
         }
-        return null;
     }
 
     public static String downloadStringHttp(String url, Context context) throws Exception {
@@ -146,18 +206,14 @@ public class NetUtils {
                 }
             }
 
-            HttpEntity entity = getHttpEntity(url);
-            if (entity != null) {
-                content = EntityUtils.toString(entity);
-
-                cacheManager.addToCache(url, content, validity, CacheManager.CACHE_TYP_DATA);
-                return content;
-            }
-            return null;
-        } catch (Exception e) {
+            content = downloadStringHttp(url);
+            cacheManager.addToCache(url, content, validity, CacheManager.CACHE_TYP_DATA);
+            return content;
+        } catch (IOException e) {
             Utils.log(e);
             return null;
         }
+
     }
 
     /**
@@ -176,17 +232,23 @@ public class NetUtils {
         }
 
         File file = new File(target);
-        HttpEntity entity = getHttpEntity(url);
-        if (entity == null) {
-            return;
+        InputStream iStream = null;
+        FileOutputStream out = null;
+        try {
+            out = new FileOutputStream(file);
+            iStream = getHttpStream(url);
+            byte[] buffer = IOUtils.toByteArray(iStream);
+            out.write(buffer, 0, buffer.length);
+            out.flush();
+
+        } finally {
+            if (iStream != null) {
+                iStream.close();
+            }
+            if (out != null) {
+                out.close();
+            }
         }
-
-        byte[] buffer = EntityUtils.toByteArray(entity);
-
-        FileOutputStream out = new FileOutputStream(file);
-        out.write(buffer, 0, buffer.length);
-        out.flush();
-        out.close();
     }
 
     /**
@@ -290,10 +352,6 @@ public class NetUtils {
         return null;
     }
 
-    public static JSONObject downloadJson(Context context, String url) throws IOException, JSONException {
-        return new NetUtils(context).downloadJson(url);
-    }
-
     /**
      * Download a JSON stream from a URL or load it from cache
      *
@@ -312,49 +370,5 @@ public class NetUtils {
             Utils.log(e);
             return null;
         }
-    }
-
-
-    /**
-     * Check if a network connection is available or can be available soon
-     *
-     * @return true if available
-     */
-    public static boolean isConnected(Context con) {
-        ConnectivityManager cm = (ConnectivityManager) con
-                .getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo netInfo = cm.getActiveNetworkInfo();
-
-        return netInfo != null && netInfo.isConnectedOrConnecting();
-    }
-
-    /**
-     * Check if a network connection is available or can be available soon
-     * and if the available connection is a mobile internet connection
-     *
-     * @return true if available
-     */
-    public static boolean isConnectedMobileData(Context con) {
-        ConnectivityManager cm = (ConnectivityManager) con
-                .getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo netInfo = cm.getActiveNetworkInfo();
-
-        return netInfo != null && netInfo.isConnectedOrConnecting() && netInfo.getType() == ConnectivityManager.TYPE_MOBILE;
-    }
-
-    /**
-     * Gets an unique id that identifies this device
-     *
-     * @return Unique device id
-     */
-    public static synchronized String getDeviceID(Context context) {
-        if (uniqueID == null) {
-            uniqueID = Utils.getInternalSettingString(context, PREF_UNIQUE_ID, null);
-            if (uniqueID == null) {
-                uniqueID = UUID.randomUUID().toString();
-                Utils.setInternalSetting(context, PREF_UNIQUE_ID, uniqueID);
-            }
-        }
-        return uniqueID;
     }
 }

@@ -29,10 +29,10 @@
         android:layout_alignParentTop="true"
         android:layout_centerVertical="true"
         android:layout_margin="4dp"
-        android:layout_toEndOf="@+id/line_symbol_ll"
-        android:layout_toLeftOf="@+id/line_switcher"
-        android:layout_toRightOf="@+id/line_symbol_ll"
-        android:layout_toStartOf="@+id/line_switcher" />
+        android:layout_toEndOf="@id/line_symbol_ll"
+        android:layout_toLeftOf="@id/line_switcher"
+        android:layout_toRightOf="@id/line_symbol_ll"
+        android:layout_toStartOf="@id/line_switcher" />
 
     <TextSwitcher
         android:id="@+id/line_switcher"

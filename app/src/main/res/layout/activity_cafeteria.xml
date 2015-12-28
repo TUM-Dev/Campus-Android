@@ -5,12 +5,33 @@
     android:layout_height="match_parent"
     tools:context=".StartActivity">
     <!-- The main content view -->
-    <FrameLayout
-        android:id="@+id/content_frame"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        <!-- The toolbar aka SupportActionBar -->
+        <android.support.design.widget.AppBarLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/main_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@color/color_primary"
+                android:elevation="12dp"
+                android:theme="@style/ThemeOverlay.AppCompat.Dark"
+                tools:ignore="UnusedAttribute">
+
+                <Spinner
+                    android:id="@+id/spinnerToolbar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </android.support.v7.widget.Toolbar>
+        </android.support.design.widget.AppBarLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal">
@@ -34,15 +55,7 @@
 
         </LinearLayout>
 
-    </FrameLayout>
+    </LinearLayout>
     <!-- The navigation drawer -->
-    <ListView
-        android:id="@+id/left_drawer"
-        android:layout_width="280dp"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:background="#fff"
-        android:choiceMode="singleChoice"
-        android:divider="@android:color/transparent"
-        android:dividerHeight="0dp" />
+    <include layout="@layout/navigation_drawer" />
 </android.support.v4.widget.DrawerLayout>

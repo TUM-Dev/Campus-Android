@@ -5,7 +5,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignBottom="@+id/divider">
+        android:layout_alignBottom="@id/divider">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -38,7 +38,6 @@
                 android:layout_marginLeft="4dp"
                 android:layout_marginRight="4dp"
                 android:layout_marginTop="4dp"
-                android:fontFamily="sans-serif"
                 android:hint="@string/password"
                 android:inputType="textPassword" />
 
@@ -142,7 +141,6 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/prev_button"
             style="@style/ButtonBarButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

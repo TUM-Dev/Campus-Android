@@ -279,6 +279,13 @@
             android:key="background_mode"
             android:summary="@string/background_info"
             android:title="@string/background_mode" />
+        <ListPreference
+            android:defaultValue="0"
+            android:dependency="background_mode"
+            android:entries="@array/background_entries"
+            android:entryValues="@array/background_mode_values"
+            android:key="background_mode_set_to"
+            android:title="@string/mode_background_mode" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/extras">
         <Preference

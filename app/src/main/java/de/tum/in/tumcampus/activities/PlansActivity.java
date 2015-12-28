@@ -36,7 +36,7 @@ public class PlansActivity extends BaseActivity implements OnItemClickListener {
         listMenuEntrySet.add(new PlanListEntry(R.drawable.plan_mvv_night_icon,
                 R.string.mvv_nightlines, R.string.empty_string, R.drawable.mvv_night));
         listMenuEntrySet.add(new PlanListEntry(R.drawable.plan_tram_icon,
-                R.string.mvv_tram, R.string.empty_string, R.drawable.tram));
+                R.string.mvv_tram, R.string.empty_string, R.drawable.mvg_tram));
         listMenuEntrySet.add(new PlanListEntry(R.drawable.mvv_entire_net_icon,
                 R.string.mvv_entire_net, R.string.empty_string, R.drawable.mvv_entire_net));
 		listMenuEntrySet.add(new PlanListEntry(

@@ -8,11 +8,11 @@ import android.text.format.DateUtils;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import de.tum.in.tumcampus.R;
-import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.Location;
 
 /**
@@ -118,7 +118,6 @@ public class OpenHoursManager {
         //Find the first part
         String[] time = new String[2];
         if (m.find()) {
-            Utils.log("matches: " + m.groupCount() + " " + m.group(0) + " " + m.group(3) + " " + m.group(4));
             //We are currently in Mo-Do/Fr, when this weekday is in that range we have our result or we check if the current range is valid for fridays also
             if (dayOfWeek <= Calendar.THURSDAY || m.group(2).equalsIgnoreCase("fr")) {
                 time[0] = m.group(3);
@@ -162,11 +161,11 @@ public class OpenHoursManager {
         String relStr = DateUtils.getRelativeTimeSpanString(relativeTo.getTimeInMillis(), now.getTimeInMillis(), DateUtils.MINUTE_IN_MILLIS).toString();
 
         //Return an assembly
-        return context.getString(relation) + " " + relStr.substring(0, 1).toLowerCase() + relStr.substring(1);
+        return context.getString(relation) + " " + relStr.substring(0, 1).toLowerCase(Locale.getDefault()) + relStr.substring(1);
 
     }
 
-    private Calendar strToCal(Date date, String time) {
+    private static Calendar strToCal(Date date, String time) {
         Calendar opens = Calendar.getInstance();
         opens.setTime(date);
         if (time.contains(".")) {
@@ -188,7 +187,6 @@ public class OpenHoursManager {
      * @throws Exception
      */
     public void replaceIntoDb(Location l) throws Exception {
-        Utils.log(l.toString());
 
         if (l.id <= 0) {
             throw new Exception("Invalid id.");

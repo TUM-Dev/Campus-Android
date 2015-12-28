@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:baselineAligned="false"
@@ -7,18 +8,18 @@
     android:padding="@dimen/padding_default">
 
     <LinearLayout
-        android:id="@+id/thumbnail"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="center"
         android:layout_marginRight="@dimen/padding_default">
 
         <ImageView
-            android:id="@+id/list_image"
             android:layout_width="@dimen/icon_small"
             android:layout_height="@dimen/icon_small"
             android:layout_gravity="center"
-            android:src="@drawable/ic_place" />
+            android:alpha="0.6"
+            android:src="@drawable/ic_place"
+            tools:ignore="UnusedAttribute" />
     </LinearLayout>
 
     <LinearLayout
@@ -32,6 +33,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@android:string/untitled"
+            android:textColor="@color/color_primary_dark"
             android:textSize="@dimen/large_text_size"
             android:textStyle="bold" />
 

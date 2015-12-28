@@ -9,7 +9,7 @@
         android:id="@+id/name"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="name"
+        android:text=""
         android:textColor="#0065BD"
         android:textSize="@dimen/large_text_size"
         android:textStyle="bold" />
@@ -18,7 +18,7 @@
         android:id="@+id/tv1"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="tv1"
+        android:text=""
         android:textSize="@dimen/mid_text_size" />
 
 </LinearLayout>

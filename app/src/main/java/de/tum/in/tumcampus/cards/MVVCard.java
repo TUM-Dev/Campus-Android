@@ -8,7 +8,10 @@ import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v4.app.NotificationCompat;
+import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
+import android.util.Pair;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -29,11 +32,16 @@ import static de.tum.in.tumcampus.models.managers.CardManager.CARD_MVV;
  */
 public class MVVCard extends Card {
     private static final String MVV_TIME = "mvv_time";
-    private String mStationName;
+    private Pair<String, String> mStationNameIDPair;
     private List<TransportManager.Departure> mDepartures;
 
     public MVVCard(Context context) {
         super(context, "card_mvv");
+    }
+
+    public static Card.CardViewHolder inflateViewHolder(ViewGroup parent) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_item, parent, false);
+        return new Card.CardViewHolder(view);
     }
 
     @Override
@@ -43,35 +51,42 @@ public class MVVCard extends Card {
 
     @Override
     public String getTitle() {
-        return mStationName;
+        return mStationNameIDPair.first;
     }
 
     @Override
-    public View getCardView(Context context, ViewGroup parent) {
-        super.getCardView(context, parent);
-        mCard = mInflater.inflate(R.layout.card_item, parent, false);
+    public void updateViewHolder(RecyclerView.ViewHolder viewHolder) {
+        super.updateViewHolder(viewHolder);
+        mCard = viewHolder.itemView;
         mLinearLayout = (LinearLayout) mCard.findViewById(R.id.card_view);
         mTitleView = (TextView) mCard.findViewById(R.id.card_title);
-        mTitleView.setText(getTitle());
+        mTitleView.setText(mStationNameIDPair.first);
         mCard.findViewById(R.id.place_holder).setVisibility(View.VISIBLE);
+
+        //Remove old DepartureViews
+        for (int i = 0; i < mLinearLayout.getChildCount(); i++) {
+            if (mLinearLayout.getChildAt(i) instanceof DepartureView) {
+                mLinearLayout.removeViewAt(i);
+                i--; // Check the same location again, since the childCount changed
+            }
+        }
 
         for (int i = 0; i < mDepartures.size() && i < 5; i++) {
             TransportManager.Departure curr = mDepartures.get(i);
 
             DepartureView view = new DepartureView(mContext);
             view.setSymbol(curr.symbol);
-            view.setLine(curr.line);
-            view.setTime(curr.time);
-
+            view.setLine(curr.servingLine);
+            view.setTime(curr.countDown);
             mLinearLayout.addView(view);
         }
-        return mCard;
     }
 
     @Override
     public Intent getIntent() {
         Intent i = new Intent(mContext, TransportationDetailsActivity.class);
-        i.putExtra(TransportationDetailsActivity.EXTRA_STATION, mStationName);
+        i.putExtra(TransportationDetailsActivity.EXTRA_STATION, mStationNameIDPair.first);
+        i.putExtra(TransportationDetailsActivity.EXTRA_STATION_ID, mStationNameIDPair.second);
         return i;
     }
 
@@ -93,14 +108,14 @@ public class MVVCard extends Card {
         String firstContent = "", firstTime = "";
         for (TransportManager.Departure d : mDepartures) {
             if (firstTime.isEmpty()) {
-                firstTime = d.time + "min";
-                firstContent = d.symbol + " " + d.line;
+                firstTime = d.countDown + "min";
+                firstContent = d.servingLine;
             }
 
             NotificationCompat.Builder pageNotification =
                     new NotificationCompat.Builder(mContext)
-                            .setContentTitle(d.time + "min")
-                            .setContentText(d.symbol + " " + d.line);
+                            .setContentTitle(d.countDown + "min")
+                            .setContentText(d.servingLine);
             morePageNotification.addPage(pageNotification.build());
         }
 
@@ -111,8 +126,8 @@ public class MVVCard extends Card {
         return morePageNotification.extend(notificationBuilder).build();
     }
 
-    public void setStation(String station) {
-        this.mStationName = station;
+    public void setStation(Pair<String, String> stationNameIDPair) {
+        this.mStationNameIDPair = stationNameIDPair;
     }
 
     public void setDepartures(List<TransportManager.Departure> departures) {

@@ -11,7 +11,6 @@ import java.util.List;
  * Note: This model is based on the TUMOnline web service response format for a
  * corresponding request.
  */
-@SuppressWarnings("UnusedDeclaration")
 @Root(name = "rowset")
 public class ExamList {
 

@@ -1,10 +1,5 @@
 package de.tum.in.tumcampus.auxiliary;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.protocol.HTTP;
-import org.apache.http.util.EntityUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -29,7 +24,7 @@ public class XMLParser {
      *
      * @param xml string
      */
-    public Document getDomElement(String xml) {
+    public static Document getDomElement(String xml) {
         Document doc;
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         try {
@@ -38,13 +33,7 @@ public class XMLParser {
             InputSource is = new InputSource(new StringReader(xml));
             doc = db.parse(is);
 
-        } catch (ParserConfigurationException e) {
-            Utils.log(e);
-            return null;
-        } catch (SAXException e) {
-            Utils.log(e);
-            return null;
-        } catch (IOException e) {
+        } catch (ParserConfigurationException | SAXException | IOException e) {
             Utils.log(e);
             return null;
         }
@@ -57,7 +46,7 @@ public class XMLParser {
      *
      * @param elem element
      */
-    public final String getElementValue(Node elem) {
+    public static String getElementValue(Node elem) {
         Node child;
         if (elem != null) {
             if (elem.hasChildNodes()) {
@@ -78,7 +67,7 @@ public class XMLParser {
      * @param item node
      * @param str  string
      */
-    public String getValue(Element item, String str) {
+    public static String getValue(Element item, String str) {
         NodeList n = item.getElementsByTagName(str);
         String value = getElementValue(n.item(0));
 
@@ -100,33 +89,6 @@ public class XMLParser {
         value = value.replace("Prop?deutikum", "Propädeutikum");
         value = value.replace("geb?ude", "gebäude");
         return value;
-    }
-
-    /**
-     * Getting XML from URL making HTTP request
-     *
-     * @param url string
-     */
-    public String getXmlFromUrl(String url) {
-        String xml = null;
-
-        try {
-            //Normal http request
-            HttpGet httpGet = new HttpGet(url);
-            HttpResponse httpResponse = NetUtils.execute(httpGet);
-
-            //Get the Response
-            HttpEntity httpEntity = httpResponse.getEntity();
-            if (httpEntity != null) {
-                // do something with the response
-                xml = EntityUtils.toString(httpEntity, HTTP.UTF_8);
-            }
-        } catch (IOException e) {
-            Utils.log(e);
-        }
-
-        // return XML
-        return xml;
     }
 
 }

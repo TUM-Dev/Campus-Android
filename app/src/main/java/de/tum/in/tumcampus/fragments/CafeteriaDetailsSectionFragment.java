@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.text.SpannableString;
 import android.text.style.ImageSpan;
 import android.view.LayoutInflater;
@@ -12,7 +13,9 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.auxiliary.CafeteriaPrices;
@@ -26,18 +29,6 @@ import de.tum.in.tumcampus.models.managers.OpenHoursManager;
  */
 public class CafeteriaDetailsSectionFragment extends Fragment {
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_cafeteriadetails_section, container, false);
-        LinearLayout root = (LinearLayout) rootView.findViewById(R.id.layout);
-
-        int cafeteriaId = getArguments().getInt(Const.CAFETERIA_ID);
-        String date = getArguments().getString(Const.DATE);
-
-        showMenu(root, cafeteriaId, date, true);
-        return rootView;
-    }
-
     /**
      * Inflates the cafeteria menu layout.
      * This is put into an extra static method to be able to
@@ -48,11 +39,12 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
      * @param dateStr     Date in yyyy-mm-dd format
      * @param big         True to show big lines
      */
-    public static void showMenu(LinearLayout rootView, int cafeteriaId, String dateStr, boolean big) {
+    public static List<View> showMenu(LinearLayout rootView, int cafeteriaId, String dateStr, boolean big) {
         // initialize a few often used things
         final Context context = rootView.getContext();
         final HashMap<String, String> rolePrices = CafeteriaPrices.getRolePrices(context);
         final int padding = (int) context.getResources().getDimension(R.dimen.card_text_padding);
+        List<View> addedViews = new ArrayList<>();
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         // Get menu items
@@ -64,8 +56,9 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
             OpenHoursManager lm = new OpenHoursManager(context);
             textview = new TextView(context);
             textview.setText(lm.getHoursByIdAsString(context, cafeteriaId, Utils.getDate(dateStr)));
-            textview.setTextColor(context.getResources().getColor(R.color.sections_green));
+            textview.setTextColor(ContextCompat.getColor(context, R.color.sections_green));
             rootView.addView(textview);
+            addedViews.add(textview);
         }
 
         // Show cafeteria menu
@@ -89,6 +82,7 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
                     textview = (TextView) view.findViewById(R.id.list_header);
                     textview.setText(typeLong.replaceAll("[0-9]", "").trim());
                     rootView.addView(view);
+                    addedViews.add(view);
                 }
 
                 // Show menu item
@@ -99,18 +93,21 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
                     textview = (TextView) view.findViewById(R.id.line_name);
                     TextView priceView = (TextView) view.findViewById(R.id.line_price);
                     textview.setText(text);
-                    priceView.setText(rolePrices.get(typeLong) + " €");
+                    priceView.setText(String.format("%s €", rolePrices.get(typeLong)));
                     rootView.addView(view);
+                    addedViews.add(view);
                 } else {
                     // Without price
                     textview = new TextView(context);
                     textview.setText(text);
                     textview.setPadding(padding, padding, padding, padding);
                     rootView.addView(textview);
+                    addedViews.add(textview);
                 }
             } while (cursorCafeteriaMenu.moveToNext());
         }
         cursorCafeteriaMenu.close();
+        return addedViews;
     }
 
     /**
@@ -159,5 +156,17 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
             menu = menu.replaceFirst("\\(([A-Za-z0-9]+),", "($1)(");
         } while (menu.length() > len);
         return menu.replaceAll("\\(([1-9]|10|11)\\)", "");
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.fragment_cafeteriadetails_section, container, false);
+        LinearLayout root = (LinearLayout) rootView.findViewById(R.id.layout);
+
+        int cafeteriaId = getArguments().getInt(Const.CAFETERIA_ID);
+        String date = getArguments().getString(Const.DATE);
+
+        showMenu(root, cafeteriaId, date, true);
+        return rootView;
     }
 }

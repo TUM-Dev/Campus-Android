@@ -3,10 +3,9 @@ package de.tum.in.tumcampus.activities.generic;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
-import android.view.View;
 
 import de.tum.in.tumcampus.auxiliary.Const;
+import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.tumonline.TUMOnlineConst;
 import de.tum.in.tumcampus.tumonline.TUMOnlineRequest;
 import de.tum.in.tumcampus.tumonline.TUMOnlineRequestFetchListener;
@@ -69,7 +68,7 @@ public abstract class ActivityForSearchingTumOnline<T> extends ActivityForSearch
     void requestFetch(boolean force) {
         String accessToken = PreferenceManager.getDefaultSharedPreferences(this).getString(Const.ACCESS_TOKEN, null);
         if (accessToken != null) {
-            Log.i(getClass().getSimpleName(), "TUMOnline token is <" + accessToken + ">");
+            Utils.logv("TUMOnline token is <" + accessToken + ">");
             showLoadingStart();
             requestHandler.setForce(force);
             requestHandler.fetchInteractive(this, this);

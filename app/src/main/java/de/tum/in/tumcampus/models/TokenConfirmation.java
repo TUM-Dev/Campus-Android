@@ -3,7 +3,6 @@ package de.tum.in.tumcampus.models;
 import org.simpleframework.xml.Root;
 import org.simpleframework.xml.Text;
 
-@SuppressWarnings("UnusedDeclaration")
 @Root(name = "confirmed")
 public class TokenConfirmation {
     @Text

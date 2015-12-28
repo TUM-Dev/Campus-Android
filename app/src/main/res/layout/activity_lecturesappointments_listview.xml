@@ -9,7 +9,7 @@
         android:id="@+id/tvTerminZeit"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="tvTerminZeit"
+        android:text=""
         android:textColor="@color/text_light_blue"
         android:textSize="18sp"
         android:textStyle="bold" />
@@ -18,12 +18,12 @@
         android:id="@+id/tvTerminOrt"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="tvTerminOrt" />
+        android:text="" />
 
     <TextView
         android:id="@+id/tvTerminBetreff"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="tvTerminBetreff" />
+        android:text="" />
 
 </LinearLayout>

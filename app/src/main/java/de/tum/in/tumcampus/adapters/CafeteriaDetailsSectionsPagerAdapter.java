@@ -7,9 +7,11 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Locale;
 
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.Utils;
@@ -69,8 +71,8 @@ public class CafeteriaDetailsSectionsPagerAdapter extends FragmentStatePagerAdap
     public CharSequence getPageTitle(int position) {
         Date date = Utils.getDate(dates.get(position));
 
-        SimpleDateFormat formatDate = new SimpleDateFormat("EEEE, dd.MM.yyy");
-        return formatDate.format(date).toUpperCase();
+        DateFormat formatDate = SimpleDateFormat.getDateInstance(SimpleDateFormat.FULL);
+        return formatDate.format(date).toUpperCase(Locale.getDefault());
     }
 
     @Override

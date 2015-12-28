@@ -11,7 +11,6 @@ import java.util.List;
  * based on the TUMOnline web service response format for a corresponding
  * request.
  */
-@SuppressWarnings("UnusedDeclaration")
 @Root(name = "telefon_nebenstellen")
 public class TelSubstationList implements Serializable {
 

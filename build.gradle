@@ -5,13 +5,14 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.2.3'
+        classpath 'com.android.tools.build:gradle:1.5.0'
     }
 }
 
 allprojects {
     tasks.withType(JavaCompile) {
-            options.compilerArgs << "-Xlint:all"
+        options.compilerArgs << "-Xlint:all"
+        options.compilerArgs << "-Werror"
     }
     repositories {
         jcenter()

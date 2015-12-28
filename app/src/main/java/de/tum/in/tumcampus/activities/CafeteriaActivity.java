@@ -4,13 +4,14 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import java.util.List;
@@ -31,7 +32,7 @@ import static de.tum.in.tumcampus.fragments.CafeteriaDetailsSectionFragment.menu
  *
  * OPTIONAL: Const.CAFETERIA_ID set in incoming bundle (cafeteria to show)
  */
-public class CafeteriaActivity extends ActivityForDownloadingExternal implements ActionBar.OnNavigationListener {
+public class CafeteriaActivity extends ActivityForDownloadingExternal implements AdapterView.OnItemSelectedListener {
 
     private ViewPager mViewPager;
     private int mCafeteriaId = -1;
@@ -103,7 +104,7 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
         }
 
         // Adapter for drop-down navigation
-        ArrayAdapter adapterCafeterias = new ArrayAdapter<Cafeteria>(this, R.layout.simple_spinner_item_actionbar, android.R.id.text1, mCafeterias ) {
+        ArrayAdapter<Cafeteria> adapterCafeterias = new ArrayAdapter<Cafeteria>(this, R.layout.simple_spinner_item_actionbar, android.R.id.text1, mCafeterias ) {
             final LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(LAYOUT_INFLATER_SERVICE);
 
             @Override
@@ -126,22 +127,23 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
                 return v;
             }
         };
-        getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-        getSupportActionBar().setListNavigationCallbacks(adapterCafeterias, this);
 
+        Spinner spinner = (Spinner) findViewById(R.id.spinnerToolbar);
+        spinner.setAdapter(adapterCafeterias);
+        spinner.setOnItemSelectedListener(this);
         // Select item
         if(selIndex>-1)
-            getSupportActionBar().setSelectedNavigationItem(selIndex);
+            spinner.setSelection(selIndex);
     }
 
     /**
      * Switch cafeteria if a new cafeteria has been selected
+     * @param parent the parent view
      * @param pos index of the new selection
      * @param id id of the selected item
-     * @return True if selection has been handled
      */
     @Override
-    public boolean onNavigationItemSelected(int pos, long id) {
+    public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
         mCafeteriaId = mCafeterias.get(pos).id;
 
         // Create the adapter that will return a fragment for each of the primary sections of the app.
@@ -154,6 +156,10 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
             mSectionsPagerAdapter.setCafeteriaId(this, mCafeteriaId);
             mViewPager.setAdapter(mSectionsPagerAdapter);
         }
-        return true;
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+        //Don't change anything
     }
 }

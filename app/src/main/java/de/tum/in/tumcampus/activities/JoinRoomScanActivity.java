@@ -1,8 +1,8 @@
 package de.tum.in.tumcampus.activities;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
@@ -13,7 +13,7 @@ import java.util.List;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
-public class JoinRoomScanActivity extends AppCompatActivity implements ZXingScannerView.ResultHandler {
+public class JoinRoomScanActivity extends Activity implements ZXingScannerView.ResultHandler {
     private ZXingScannerView mScannerView;
 
     @Override

@@ -3,7 +3,6 @@ package de.tum.in.tumcampus.models.managers;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 import com.google.gson.Gson;
 
@@ -17,7 +16,7 @@ import java.util.Locale;
 
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.Utils;
-import de.tum.in.tumcampus.models.ChatClient;
+import de.tum.in.tumcampus.models.TUMCabeClient;
 import de.tum.in.tumcampus.models.ChatMember;
 import de.tum.in.tumcampus.models.ChatMessage;
 import de.tum.in.tumcampus.models.ChatVerification;
@@ -68,6 +67,43 @@ public class ChatMessageManager {
     }
 
     /**
+     * Gets all unsent chat messages
+     */
+    public static ArrayList<ChatMessage> getAllUnsentUpdated(Context context) {
+        SQLiteDatabase db = DatabaseManager.getDb(context);
+        init(db);
+        Cursor cur = db.rawQuery("SELECT member, text, room, msg_id, _id FROM unsent_chat_message ORDER BY _id", null);
+        ArrayList<ChatMessage> list = new ArrayList<>(cur.getCount());
+        if (cur.moveToFirst()) {
+            do {
+                ChatMember member = new Gson().fromJson(cur.getString(0), ChatMember.class);
+                ChatMessage msg = new ChatMessage(cur.getString(1), member);
+                msg.setRoom(cur.getInt(2));
+                msg.setId(cur.getInt(3));
+                msg.internalID = cur.getInt(4);
+                list.add(msg);
+            } while (cur.moveToNext());
+        }
+        cur.close();
+        return list;
+    }
+
+    public static ChatMessage toObject(Cursor cursor) {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ENGLISH);
+        int id = cursor.getInt(COL_ID);
+        String text = cursor.getString(COL_TEXT);
+        String time = formatter.format(Utils.getISODateTime(cursor.getString(COL_TIMESTAMP)));
+        int previous = cursor.getInt(COL_PREVIOUS);
+        ChatMember member = new Gson().fromJson(cursor.getString(COL_MEMBER), ChatMember.class);
+        ChatMessage msg = new ChatMessage(id, text, member, time, previous);
+        msg.setSignature(cursor.getString(COL_SIGNATURE));
+        msg.setRoom(cursor.getInt(COL_ROOM));
+        msg.setRead(cursor.getInt(COL_READ) == 1);
+        msg.setStatus(cursor.getInt(COL_SENDING));
+        return msg;
+    }
+
+    /**
      * Gets all messages for the room
      *
      * @return List of chat messages
@@ -80,33 +116,11 @@ public class ChatMessageManager {
                 "ORDER BY c1._id DESC " +
                 "LIMIT 1) AS until " +
                 "WHERE c._id>=until._id AND c.room=? " +
-                "ORDER BY c._id", new String[]{""+mChatRoom, ""+mChatRoom});
+                "ORDER BY c._id", new String[]{"" + mChatRoom, "" + mChatRoom});
     }
 
     public void markAsRead() {
         db.execSQL("UPDATE chat_message SET read=1 WHERE read=0 AND room=?", new String[]{"" + mChatRoom});
-    }
-
-    /**
-     * Gets all unsent chat messages
-     */
-    public static ArrayList<ChatMessage> getAllUnsentUpdated(Context context) {
-        SQLiteDatabase db = DatabaseManager.getDb(context);
-        init(db);
-        Cursor cur = db.rawQuery("SELECT member, text, room, msg_id, _id FROM unsent_chat_message ORDER BY _id", null);
-        ArrayList<ChatMessage> list = new ArrayList<>(cur.getCount());
-        if(cur.moveToFirst()) {
-            do {
-                ChatMember member = new Gson().fromJson(cur.getString(0), ChatMember.class);
-                ChatMessage msg = new ChatMessage(cur.getString(1), member);
-                msg.setRoom(cur.getInt(2));
-                msg.setId(cur.getInt(3));
-                msg.internalID = cur.getInt(4);
-                list.add(msg);
-            } while(cur.moveToNext());
-        }
-        cur.close();
-        return list;
     }
 
     /**
@@ -133,7 +147,7 @@ public class ChatMessageManager {
      */
     public void addToUnsent(ChatMessage m) {
         //TODO handle message with already set id
-        Log.e("TCA Chat", "replace into unsent " + m.getText() + " " + m.getId() + " " + m.getPrevious() + " " + m.getStatus());
+        Utils.logv("replace into unsent " + m.getText() + " " + m.getId() + " " + m.getPrevious() + " " + m.getStatus());
         db.execSQL("REPLACE INTO unsent_chat_message (text,room,member,msg_id) VALUES (?,?,?, ?)",
                 new String[]{"" + m.getText(), "" + mChatRoom, new Gson().toJson(m.getMember()), ""+m.getId()});
     }
@@ -187,11 +201,11 @@ public class ChatMessageManager {
      */
     public void replaceInto(ChatMessage m, int memberId) {
         if (m == null || m.getText() == null) {
-            Log.e("TCA Chat", "Message empty");
+            Utils.log("Message empty");
             return;
         }
 
-        Log.e("TCA Chat", "replace " + m.getText() + " " + m.getId() + " "+ m.getPrevious()+ " "+ m.getStatus());
+        Utils.logv("replace " + m.getText() + " " + m.getId() + " " + m.getPrevious() + " " + m.getStatus());
 
         db.beginTransaction();
         // Query read status from the previous message and use this read status as well if it is "0"
@@ -219,7 +233,7 @@ public class ChatMessageManager {
         }
         db.execSQL("REPLACE INTO chat_message (_id,previous,room,text,timestamp,signature,member,read,sending) VALUES (?,?,?,?,?,?,?,?,?)",
                 new String[]{"" + m.getId(), "" + m.getPrevious(), "" + mChatRoom, m.getText(), Utils.getDateTimeString(date),
-                        m.getSignature(), (new Gson().toJson(m.getMember())), m.getRead() ? "1" : "0", ""+m.getStatus()});
+                        m.getSignature(), (new Gson().toJson(m.getMember())), m.getRead() ? "1" : "0", "" + m.getStatus()});
     }
 
     /**
@@ -235,27 +249,12 @@ public class ChatMessageManager {
         db.endTransaction();
     }
 
-    public static ChatMessage toObject(Cursor cursor) {
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ENGLISH);
-        int id = cursor.getInt(COL_ID);
-        String text = cursor.getString(COL_TEXT);
-        String time = formatter.format(Utils.getISODateTime(cursor.getString(COL_TIMESTAMP)));
-        int previous = cursor.getInt(COL_PREVIOUS);
-        ChatMember member = new Gson().fromJson(cursor.getString(COL_MEMBER), ChatMember.class);
-        ChatMessage msg = new ChatMessage(id, text, member, time, previous);
-        msg.setSignature(cursor.getString(COL_SIGNATURE));
-        msg.setRoom(cursor.getInt(COL_ROOM));
-        msg.setRead(cursor.getInt(COL_READ) == 1);
-        msg.setStatus(cursor.getInt(COL_SENDING));
-        return msg;
-    }
-
     public Cursor getNewMessages(PrivateKey pk, ChatMember member, int messageId) {
         ArrayList<ChatMessage> messages;
         if(messageId==-1)
-            messages = ChatClient.getInstance(mContext).getNewMessages(mChatRoom, new ChatVerification(pk, member));
+            messages = TUMCabeClient.getInstance(mContext).getNewMessages(mChatRoom, new ChatVerification(pk, member));
         else
-            messages = ChatClient.getInstance(mContext).getMessages(mChatRoom, messageId, new ChatVerification(pk, member));
+            messages = TUMCabeClient.getInstance(mContext).getMessages(mChatRoom, messageId, new ChatVerification(pk, member));
         replaceInto(messages);
         return getUnread();
     }

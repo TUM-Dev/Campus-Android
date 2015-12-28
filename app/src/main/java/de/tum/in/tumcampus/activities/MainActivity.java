@@ -1,5 +1,6 @@
 package de.tum.in.tumcampus.activities;
 
+import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -8,24 +9,22 @@ import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.view.ContextMenu;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AbsListView;
-import android.widget.AdapterView;
-import android.widget.ListView;
-
-import com.nhaarman.listviewanimations.appearance.simple.SwingBottomInAnimationAdapter;
 
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.generic.BaseActivity;
 import de.tum.in.tumcampus.adapters.CardsAdapter;
-import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.NetUtils;
-import de.tum.in.tumcampus.auxiliary.SwipeDismissList;
 import de.tum.in.tumcampus.cards.Card;
 import de.tum.in.tumcampus.models.managers.CardManager;
 import de.tum.in.tumcampus.services.SilenceService;
@@ -33,10 +32,7 @@ import de.tum.in.tumcampus.services.SilenceService;
 /**
  * Main activity displaying the cards and providing navigation with navigation drawer
  */
-public class MainActivity extends BaseActivity implements AdapterView.OnItemClickListener, SwipeDismissList.OnDismissCallback, SwipeRefreshLayout.OnRefreshListener {
-    private static final int MENU_OPEN_SETTINGS = 0;
-    private static final int MENU_HIDE_ALWAYS = 1;
-
+public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener {
     /**
      * Navigation Drawer
      */
@@ -46,10 +42,24 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
     /**
      * Card list
      */
-    private ListView mCardsView;
+    private RecyclerView mCardsView;
     private CardsAdapter mAdapter;
-    private SwipeDismissList mSwipeList;
-    private SwipeRefreshLayout mSwipeRefreshlayout;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
+    BroadcastReceiver connectivityChangeReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (NetUtils.isConnected(context)) {
+                refreshCards();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        unregisterReceiver(connectivityChangeReceiver);
+                        registered = false;
+                    }
+                });
+            }
+        }
+    };
 
     public MainActivity() {
         super(R.layout.activity_main);
@@ -59,22 +69,25 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Setup card list view
-        mCardsView = (ListView) findViewById(R.id.cards_view);
-        mCardsView.setOnItemClickListener(this);
-        mCardsView.setDividerHeight(0);
+        // Setup pull to refresh
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.ptr_layout);
+        mSwipeRefreshLayout.setOnRefreshListener(this);
+        mSwipeRefreshLayout.setColorSchemeResources(
+                R.color.color_primary,
+                R.color.tum_A100,
+                R.color.tum_A200);
+
+        // Setup card RecyclerView
+        mCardsView = (RecyclerView) findViewById(R.id.cards_view);
         registerForContextMenu(mCardsView);
 
-        // Setup swipe to dismiss feature
-        mSwipeList = new SwipeDismissList(mCardsView, this);
-        mSwipeList.setUndoString(getString(R.string.card_dismissed));
-        mSwipeList.setUndoMultipleString(getString(R.string.cards_dismissed));
+        final LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        mCardsView.setLayoutManager(layoutManager);
+        mCardsView.setHasFixedSize(true);
 
-        // Setup pull to refresh
-        mSwipeRefreshlayout = (SwipeRefreshLayout) findViewById(R.id.ptr_layout);
-        mSwipeRefreshlayout.setOnRefreshListener(this);
-        //TODO: set colors
-        //mSwipeRefreshlayout.setColorSchemeResources(R.color.);
+        //Swipe gestures
+        new ItemTouchHelper(new MainActivityTouchHelperCallback()).attachToRecyclerView(mCardsView);
 
         // Start silence Service (if already started it will just invoke a check)
         Intent service = new Intent(this, SilenceService.class);
@@ -86,25 +99,24 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
             /**
              * Called when a drawer has settled in a completely closed state.
              */
+            @Override
             public void onDrawerClosed(View view) {
                 super.onDrawerClosed(view);
-                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+                ActivityCompat.invalidateOptionsMenu(MainActivity.this); // creates call to onPrepareOptionsMenu()
             }
 
             /**
              * Called when a drawer has settled in a completely open state.
              */
+            @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
-                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+                ActivityCompat.invalidateOptionsMenu(MainActivity.this); // creates call to onPrepareOptionsMenu()
             }
         };
 
         // Set the drawer toggle as the DrawerListener
         mDrawerLayout.setDrawerListener(mDrawerToggle);
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
     }
 
     @Override
@@ -122,25 +134,15 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
         } else {
             initAdapter();
         }
+        showToolbar();
     }
 
     /**
      * Setup cards adapter
      */
     private void initAdapter() {
-        mAdapter = new CardsAdapter(this);
-        SwingBottomInAnimationAdapter animationAdapter = new SwingBottomInAnimationAdapter(mAdapter);
-        animationAdapter.setAbsListView(mCardsView);
-        mCardsView.setAdapter(animationAdapter);
-    }
-
-    /**
-     * Discard all pending discards, otherwise already discarded item will show up again
-     */
-    @Override
-    protected void onStop() {
-        super.onStop();
-        mSwipeList.discardUndo();
+        mAdapter = new CardsAdapter();
+        mCardsView.setAdapter(mAdapter);
     }
 
     @Override
@@ -208,110 +210,10 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
     }
 
     /**
-     * Handle on card click
-     *
-     * @param adapterView Containing listView
-     * @param view        Item view
-     * @param position    Index of item
-     * @param id          Item id
-     */
-    @Override
-    public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-        Card card = CardManager.getCard(position);
-        if (card.getTyp() == CardManager.CARD_RESTORE) {
-            mSwipeList.discardUndo();
-            CardManager.restoreCards();
-            refreshCards();
-        } else {
-            Intent i = card.getIntent();
-            if (i != null) {
-                startActivity(i);
-            }
-        }
-    }
-
-    public void onFabClicked(View v) {
-        startActivity(new Intent(this, UserPreferencesActivity.class));
-    }
-
-    /**
-     * Handle swipe to dismiss events
-     *
-     * @param listView ListView
-     * @param position Swiped item position
-     */
-    @Override
-    public SwipeDismissList.Undoable onDismiss(AbsListView listView, final int position) {
-        // Delete the item from adapter
-        final Card itemToDelete = mAdapter.remove(position);
-        return new SwipeDismissList.Undoable() {
-            @Override
-            public void undo() {
-                // Return the item at its previous position again
-                mAdapter.insert(position, itemToDelete);
-            }
-
-            @Override
-            public void discard() {
-                itemToDelete.discardCard();
-            }
-        };
-    }
-
-    /**
-     * Handle long click events on a card
-     *
-     * @param menu     Context menu
-     * @param v        Item view
-     * @param menuInfo info
-     */
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
-        Card card = (Card) mAdapter.getItem(info.position);
-        String key = card.getSettings();
-        if (key == null) {
-            return;
-        }
-        menu.setHeaderTitle(R.string.options);
-        menu.add(Menu.NONE, MENU_OPEN_SETTINGS, Menu.NONE, R.string.open_card_settings);
-        menu.add(Menu.NONE, MENU_HIDE_ALWAYS, Menu.NONE, R.string.always_hide_card);
-    }
-
-    /**
-     * Handle context menu item events
-     *
-     * @param item Menu item
-     * @return True if handled
-     */
-    @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        Card card = (Card) mAdapter.getItem(info.position);
-        switch (item.getItemId()) {
-            case MENU_OPEN_SETTINGS:
-                // Open card's preference screen
-                String key = card.getSettings();
-                if (key == null)
-                    return true;
-                Intent intent = new Intent(this, UserPreferencesActivity.class);
-                intent.putExtra(Const.PREFERENCE_SCREEN, key);
-                startActivity(intent);
-                return true;
-            case MENU_HIDE_ALWAYS:
-                card.hideAlways();
-                refreshCards();
-                return true;
-            default:
-                return super.onContextItemSelected(item);
-        }
-    }
-
-    /**
      * Show progress indicator and start updating cards in background
      */
-    private void refreshCards() {
-        mSwipeRefreshlayout.setRefreshing(true);
+    public void refreshCards() {
+        mSwipeRefreshLayout.setRefreshing(true);
         onRefresh();
     }
 
@@ -325,7 +227,6 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
-                mSwipeList.discardUndo();
             }
 
             @Override
@@ -337,12 +238,13 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
             @Override
             protected void onPostExecute(Void result) {
                 super.onPostExecute(result);
-                if (mAdapter == null)
+                if (mAdapter == null) {
                     initAdapter();
-                else
+                } else {
                     mAdapter.notifyDataSetChanged();
+                }
 
-                mSwipeRefreshlayout.setRefreshing(false);
+                mSwipeRefreshLayout.setRefreshing(false);
                 if (!registered && !NetUtils.isConnected(MainActivity.this)) {
                     registerReceiver(connectivityChangeReceiver,
                             new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
@@ -352,19 +254,83 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
         }.execute();
     }
 
-    BroadcastReceiver connectivityChangeReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (NetUtils.isConnected(context)) {
-                refreshCards();
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        unregisterReceiver(connectivityChangeReceiver);
-                        registered = false;
-                    }
-                });
-            }
+    /**
+     * Executed when the RestoreCard is pressed
+     */
+    public void restoreCards(View view) {
+        CardManager.restoreCards();
+        refreshCards();
+        showToolbar();
+    }
+
+    /**
+     * Smoothly scrolls the RecyclerView to the top and dispatches nestedScrollingEvents to show
+     * the Toolbar
+     */
+    @SuppressLint("NewApi") // Verified in a API 10 emulator that this works, even though AndroidLint reports otherwise
+    private void showToolbar() {
+        mCardsView.startNestedScroll(ViewCompat.SCROLL_AXIS_VERTICAL);
+        mCardsView.dispatchNestedFling(0, Integer.MIN_VALUE, true);
+        mCardsView.stopNestedScroll();
+        mCardsView.getLayoutManager().smoothScrollToPosition(mCardsView, null, 0);
+    }
+
+    /**
+     * A touch helper class, Handles swipe to dismiss events
+     */
+    private class MainActivityTouchHelperCallback extends ItemTouchHelper.SimpleCallback {
+
+        public MainActivityTouchHelperCallback() {
+            super(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
         }
-    };
+
+        @Override
+        public int getSwipeDirs(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+            Card.CardViewHolder cardViewHolder = (Card.CardViewHolder) viewHolder;
+            if (!cardViewHolder.getCurrentCard().isDismissable()) {
+                return 0;
+            }
+            return super.getSwipeDirs(recyclerView, viewHolder);
+        }
+
+        @Override
+        public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+            //Moving is not allowed as per flags
+            return false;
+        }
+
+        @Override
+        public boolean isLongPressDragEnabled() {
+            return false;
+        }
+
+        @Override
+        public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+            Card.CardViewHolder cardViewHolder = (Card.CardViewHolder) viewHolder;
+            final Card card = cardViewHolder.getCurrentCard();
+            final int lastPos = mAdapter.remove(card);
+            final View coordinatorLayoutView = findViewById(R.id.coordinator);
+
+            Snackbar.make(coordinatorLayoutView, R.string.card_dismissed, Snackbar.LENGTH_LONG)
+                    .setAction(R.string.undo, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            mAdapter.insert(lastPos, card);
+                            mCardsView.getLayoutManager().smoothScrollToPosition(mCardsView, null, lastPos);
+                        }
+
+                    }).setCallback(new Snackbar.Callback() {
+                @Override
+                public void onDismissed(Snackbar snackbar, int event) {
+                    super.onDismissed(snackbar, event);
+                    if (event != Snackbar.Callback.DISMISS_EVENT_ACTION) {
+                        //DISMISS_EVENT_ACTION means, the snackbar was dismissed via the undo button
+                        //and therefore, we didn't really dismiss the card
+                        card.discardCard();
+                    }
+                }
+            })
+                    .show();
+        }
+    }
 }

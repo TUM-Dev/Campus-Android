@@ -1,5 +1,6 @@
 package de.tum.in.tumcampus.services;
 
+import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -7,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import de.tum.in.tumcampus.auxiliary.Const;
+import de.tum.in.tumcampus.auxiliary.NetUtils;
 import de.tum.in.tumcampus.auxiliary.Utils;
 
 /**
@@ -17,17 +19,20 @@ public class StartSyncReceiver extends BroadcastReceiver {
     private static final long START_INTERVAL = AlarmManager.INTERVAL_HOUR * 3;
 
     @Override
+    @SuppressLint("UnsafeProtectedBroadcastReceiver")
     public void onReceive(Context context, Intent intent) {
         // check intent if called from StartupActivity
         final boolean launch = intent.getBooleanExtra(Const.APP_LAUNCHES, false);
 
+        // Look up background service settings
+        final boolean backgroundServicePermitted = isBackgroundServicePermitted(context);
+
         // Set Alarm for next update, if background service is enabled
-        final boolean backgroundServiceEnabled = Utils.getSettingBool(context, Const.BACKGROUND_MODE, false);
-        if(backgroundServiceEnabled)
+        if(backgroundServicePermitted)
             setAlarm(context);
 
         // Start BackgroundService
-        if (launch || backgroundServiceEnabled) {
+        if (launch || backgroundServicePermitted) {
             Utils.logv("Start background service...");
             Intent i = new Intent(context, BackgroundService.class);
             i.putExtra(Const.APP_LAUNCHES,launch);
@@ -35,9 +40,24 @@ public class StartSyncReceiver extends BroadcastReceiver {
         }
 
         context.startService(new Intent(context, SendMessageService.class));
+
+        // Also start the SilenceService. It checks if it is enabled, so we don't need to
+        context.startService(new Intent(context, SilenceService.class));
     }
 
-    private void setAlarm(Context context) {
+    private static boolean isBackgroundServicePermitted(Context context) {
+        return isBackgroundServiceEnabled(context) && (isBackgroundServiceAlwaysEnabled(context) || NetUtils.isConnectedWifi(context));
+    }
+
+    private static boolean isBackgroundServiceEnabled(Context context) {
+        return Utils.getSettingBool(context, Const.BACKGROUND_MODE, false);
+    }
+
+    private static boolean isBackgroundServiceAlwaysEnabled(Context context) {
+        return Utils.getSetting(context, "background_mode_set_to", "0").equals("0");
+    }
+
+    private static void setAlarm(Context context) {
         // Intent to call on alarm
         Intent intent = new Intent(context, StartSyncReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);

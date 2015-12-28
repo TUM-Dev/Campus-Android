@@ -12,7 +12,7 @@ import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.cards.Card;
 import de.tum.in.tumcampus.cards.ChatMessagesCard;
-import de.tum.in.tumcampus.models.ChatClient;
+import de.tum.in.tumcampus.models.TUMCabeClient;
 import de.tum.in.tumcampus.models.ChatMember;
 import de.tum.in.tumcampus.models.ChatRoom;
 import de.tum.in.tumcampus.models.ChatVerification;
@@ -75,7 +75,6 @@ public class ChatRoomManager implements Card.ProvidesCard {
      * Saves the given lecture into database
      */
     public void replaceInto(LecturesSearchRow lecture) {
-        Utils.logv("replace " + lecture.getTitel());
 
         Cursor cur = db.rawQuery("SELECT _id FROM chat_room WHERE name=? AND semester_id=?",
                 new String[]{lecture.getTitel(), lecture.getSemester_id()});
@@ -90,6 +89,7 @@ public class ChatRoomManager implements Card.ProvidesCard {
                     new String[]{lecture.getTitel(), lecture.getSemester_id(),
                             lecture.getSemester_name(), lecture.getStp_lv_nr(), lecture.getVortragende_mitwirkende()});
         }
+        cur.close();
     }
 
     /**
@@ -140,6 +140,7 @@ public class ChatRoomManager implements Card.ProvidesCard {
                 db.execSQL("REPLACE INTO chat_room (room,name,semester_id,semester,joined,_id,contributor,members) " +
                         "VALUES (?,?,?,'',1,0,'',?)", new String[]{"" + room.getId(), roomName, semester, "" + room.getMembers()});
             }
+            cur.close();
         }
         db.setTransactionSuccessful();
         db.endTransaction();
@@ -171,7 +172,7 @@ public class ChatRoomManager implements Card.ProvidesCard {
                 // Join chat room
                 try {
                     ChatRoom currentChatRoom = new ChatRoom(roomId);
-                    currentChatRoom = ChatClient.getInstance(context).createRoom(currentChatRoom, new ChatVerification(Utils.getPrivateKeyFromSharedPrefs(context), currentChatMember));
+                    currentChatRoom = TUMCabeClient.getInstance(context).createRoom(currentChatRoom, new ChatVerification(Utils.getPrivateKeyFromSharedPrefs(context), currentChatMember));
                     manager.join(currentChatRoom);
                 } catch (RetrofitError e) {
                     Utils.log(e, "Room already exists");

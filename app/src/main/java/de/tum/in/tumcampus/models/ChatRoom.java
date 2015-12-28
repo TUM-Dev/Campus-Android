@@ -1,6 +1,5 @@
 package de.tum.in.tumcampus.models;
 
-@SuppressWarnings("UnusedDeclaration")
 public class ChatRoom {
 
 	private String name;

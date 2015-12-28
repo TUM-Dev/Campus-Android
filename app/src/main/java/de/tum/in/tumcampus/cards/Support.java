@@ -1,14 +1,15 @@
 package de.tum.in.tumcampus.cards;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.preference.PreferenceManager;
+import android.net.Uri;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import de.tum.in.tumcampus.R;
-import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.managers.CardManager;
 
@@ -21,16 +22,33 @@ public class Support extends Card {
         super(context);
     }
 
-    @Override
-    public int getTyp() {
-        return CardManager.CARD_SUPPORT;
+
+    public static Card.CardViewHolder inflateViewHolder(ViewGroup parent) {
+        final View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_support, parent, false);
+        //Add links to imageviews
+        view.findViewById(R.id.facebook).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW);
+                browserIntent.setData(Uri.parse(view.getContext().getString(R.string.facebook_link)));
+                view.getContext().startActivity(browserIntent);
+            }
+
+        });
+        view.findViewById(R.id.github).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW);
+                browserIntent.setData(Uri.parse(view.getContext().getString(R.string.github_link)));
+                view.getContext().startActivity(browserIntent);
+            }
+        });
+        return new Card.CardViewHolder(view);
     }
 
     @Override
-    public View getCardView(Context context, ViewGroup parent) {
-        super.getCardView(context, parent);
-
-        return mInflater.inflate(R.layout.card_support, parent, false);
+    public int getTyp() {
+        return CardManager.CARD_SUPPORT;
     }
 
     @Override

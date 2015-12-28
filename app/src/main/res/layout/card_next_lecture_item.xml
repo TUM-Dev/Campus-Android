@@ -14,7 +14,8 @@
         android:layout_marginTop="@dimen/card_padding_vertical"
         android:elevation="@dimen/cardview_elevation"
         card_view:cardBackgroundColor="#fff"
-        card_view:cardCornerRadius="3dp">
+        card_view:cardCornerRadius="3dp"
+        tools:ignore="UnusedAttribute">
 
         <LinearLayout
             android:id="@+id/card_view"
@@ -25,13 +26,14 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                tools:ignore="UselessParent">
 
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
                     android:layout_toLeftOf="@+id/linearLayout"
-                    android:layout_toStartOf="@+id/linearLayout"
+                    android:layout_toStartOf="@id/linearLayout"
                     android:orientation="vertical">
 
                     <TextView
@@ -77,7 +79,7 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/linearLayout"
+                    android:id="@id/linearLayout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
@@ -87,7 +89,6 @@
                     android:orientation="horizontal">
 
                     <LinearLayout
-                        android:id="@+id/linearLayout2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">

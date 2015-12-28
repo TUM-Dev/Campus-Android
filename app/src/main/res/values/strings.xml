@@ -1,11 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- START Translated, please do not change identifiers -->
 
     <!-- Generic -->
     <string name="app_name">TUM Campus App</string>
-    <string name="campus_app" translatable="false">Campus App</string>
     <string name="search">Search</string>
     <string name="tum_logo">TUM Logo</string>
     <string name="update">Update</string>
@@ -14,7 +13,7 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="no_internet_connection">No internet connection available</string>
-    <string name="app_short_description">TUM information platform - from students for students</string>
+    <string name="app_short_description" translatable="false">TUM information platform - from students for students</string>
 
     <!-- Calendar -->
     <string name="dialog_show_calendar">Export successful.\nShow local calendar <i>TUM_CAMPUS_APP</i> on <i>Google Calendar App</i>?</string>
@@ -81,7 +80,10 @@
     <string name="silence_phone">Silent Service</string>
     <string name="silence_phone_info">The device will be automatically put into silent mode during a lecture.</string>
     <string name="background_mode">Background Mode (Recommended)</string>
-    <string name="background_info">Content will be fetched once per day to keep you up-to-date even if you don\'t open the app.</string>
+    <string name="background_info">Content will be fetched once per day to keep you up-to-date even if you don’t open the app.</string>
+    <string name="mode_background_mode">Background Mode activation</string>
+    <string name="always">Always</string>
+    <string name="wifi_only">WiFi only</string>
     <string name="demo_mode">In-App-Tutorial</string>
     <string name="demo_info">Activates help mode for instruction on how to use this App.</string>
 
@@ -257,10 +259,8 @@
     <string name="next_lecture">Next lecture</string>
     <string name="restore_all_cards">Restore cards</string>
     <string name="card_dismissed">Card hidden</string>
-    <string name="cards_dismissed">%s cards hidden</string>
     <string name="reregister_success">You are reregistered for %s!</string>
     <string name="reregister_todo">You have to reregister until %s!</string>
-    <string name="undoall">Undo All</string>
     <string name="undo">Undo</string>
 
     <!-- first use tutorial -->
@@ -322,25 +322,25 @@
         separat auch in der App zustimmen müssen. Mit der Installation der App
         akzeptieren Sie zudem die Erfassung diverser, technischer Daten.
 
-        \n\nWeitere Hinweise finden Sie unten unter "Datenschutzerklärung".
+        \n\nWeitere Hinweise finden Sie unten unter ‘Datenschutzerklärung’.
         \n\nSupport:
         \nhttps://www.facebook.com/TUMCampus
         \n\nFür besondere Anliegen erreichen Sie uns auch via E-Mail unter
-        \n"tca-support.os.in AT tum.de"
+        \n‘tca-support.os.in AT tum.de’
         \n\nBitte gehen Sie von mehreren Wochen Bearbeitungszeit aus. Die E-Mails werden nur sporadisch abgerufen.
         \n\nDatenschutzerklärung: https://tumcabe.in.tum.de/landing/privacy/
         \n\nChatbedingungen: https://tumcabe.in.tum.de/landing/chatterms/
         \n\nLizenz:
-        \nGNU GPL v3 - http://www.gnu.org/licenses/gpl.html oder
+        \nGNU GPL v3 - https://www.gnu.org/licenses/gpl.html oder
         \nNew BSD License - http://www.opensource.org/licenses/bsd-license.php
         \n\n\nDer Quellcode kann hier bezogen werden:
         \nhttps://github.com/TCA-Team/
         \n\nWir suchen weiterhin Unterstuetzung! Bitte melden Sie sich unter:
-        \n"tca-support.os.in AT tum.de"
+        \n‘tca-support.os.in AT tum.de’
     </string>
 
     <!-- END Translated, please do not change identifiers -->
-    <string name="min_search_len">Query must be at least %d chars long</string>
+    <string name="min_search_len" tools:ignore="PluralsCandidate">Query must be at least %d chars long</string>
     <string name="default_cafeteria">Default Cafeteria</string>
     <string name="default_station">Default Station</string>
     <string name="campus_klinikum_großhadern">Klinikum Großhadern</string>
@@ -351,41 +351,47 @@
     <string name="card_tuition_fee_summary">Reminds you if you have to pay your fees</string>
     <string name="card_news_summary">Advertises selected news</string>
     <string name="card_chat_summary">Notifies you if new messages are available</string>
-    <string name="chat">Chat</string>
+    <string name="chat" translatable="false">Chat</string>
     <string name="open_card_settings">Open card settings</string>
     <string name="always_hide_card">Always hide card</string>
-    <string name="options">Options</string>
     <string name="phone_summary">To receive notifications on your phone you have to enable Wearable</string>
-    <string name="display">Anzeige</string>
+    <string name="display">Display</string>
 
     <string name="opens">Opens</string>
     <string name="closes">Closes</string>
     <string name="closed">Closed</string>
 
+    <!-- Kino -->
+    <string name="kino" translatable="false">TU Kino</string>
+    <string name="imdb_rating">IMDb-Rating</string>
+    <string name="year">Year of release</string>
+    <string name="runtime">Runtime</string>
+    <string name="genre">Genre</string>
+    <string name="director">Director</string>
+    <string name="actors">Actors</string>
+    <string name="description">Description</string>
+    <string name="no_movies">Currently there are no movies.</string>
+
     <!-- Eduroam card -->
-    <string name="eduroam">Eduroam</string>
+    <string name="eduroam" translatable="false">Eduroam</string>
     <string name="setup">Setup</string>
     <string name="setup_eduroam">Setup eduroam</string>
     <string name="password">Password</string>
-    <string name="not_ask_again">Don\'t ask again</string>
+    <string name="not_ask_again">Don’t ask again</string>
     <string name="eduroam_setup_question">Do you want to connect to eduroam now?</string>
     <string name="eduroam_setup_question_desc">Click to start setting up eduroam</string>
     <string name="card_eduroam_summary">Allows you to easily set up eduroam wifi connection</string>
     <string name="pin_lock">PIN-Lock</string>
-    <string name="pin_lock_desc">To set up the wireless access a PIN lock is required.
-        If you don\'t already use PIN lock you can set it up here.
-    <a href="http://www.tum.de/index.php?id=1821&amp;tx_ttnews%5Btt_news%5D=31688">More Info</a></string>
+    <string name="pin_lock_desc">To set up the wireless access a PIN lock is required.\nIf you don’t already use PIN lock you can set it up here.\n<a href="https://www.tum.de/index.php?id=1821&amp;tx_ttnews%5Btt_news%5D=31688">More Info</a></string>
     <string name="enable_pin_lock">Enable PIN-Lock</string>
     <string name="data_backup">Data-Backup</string>
-    <string name="data_backup_desc">For safety reasons, the data backup must be disabled to avoid that the LRZ credentials are stored unencrypted on the Google servers.
-         Under \'Backup &amp; restore\' > \'Back up my data\' to disable.
-    <a href="https://www.tum.de/nc/en/print/studies/studinews/issue-052013/show/article/31130//neste/1/">More Info</a></string>
+    <string name="data_backup_desc">For safety reasons, the data backup must be disabled to avoid that the LRZ credentials are stored unencrypted on the Google servers.\nUnder ‘Backup &amp; restore’ > ‘Back up my data’ to disable.\n<a href="https://www.tum.de/nc/en/print/studies/studinews/issue-052013/show/article/31130//neste/1/">More Info</a></string>
     <string name="disable_data_backup">Disable Data-Backup</string>
     <string name="eduroam_success">Eduroam successfully configured</string>
     <string name="pin_lock_rem"><b>Configuration failed!</b>\nDid you setup a PIN-Lock?</string>
     <string name="install_certificate">Install certificate</string>
     <string name="certificate">Certificate</string>
-    <string name="certificate_desc">You have to install a CA-Root-certificate to enable secure connection with server. Just click \'Install certificate\' and confirm with \'OK\'.</string>
+    <string name="certificate_desc">You have to install a CA-Root-certificate to enable secure connection with server. Just click ‘Install certificate’ and confirm with ‘OK’.</string>
     <string name="enable_wifi">Enable Wifi</string>
     <string name="loading_first_time">The first start may take a few minutes</string>
     <string name="password_gets_not_saved">TUM Campus App does not save the password, but Android WifiManager does.</string>
@@ -398,7 +404,7 @@
     <string name="only_latest_article_summary">Shows only the latest article. Otherwise all articles of the selected sources are shown.</string>
     <string name="lecture_chat">Lecture chat</string>
     <string name="set_lecture_chat">Activate or deactivate <i>Lecture chat</i>. If activated, you will be able to join lecture chat rooms, where you and your colleges can discuss.</string>
-    <string name="open_chat_terms">chat terms</string>
+    <string name="open_chat_terms">Chat terms</string>
     <string name="accept_chat_terms">Accept chat terms</string>
     <string name="have_to_accept_terms">Terms must be accepted to use group chat!</string>
     <string name="activate_key">Please activate your public key first</string>
@@ -408,9 +414,9 @@
     <string name="set_bug_reports">Support the TCA Team by sending anonymous bug reports to our server which include: stack trace, logfile, android version, app version and screen resolution</string>
     <string name="error_setup_chat_member">Something is wrong with your chat registration!</string>
     <string name="room_timetable">Room timetable</string>
-    <string name="newspread" translateable="false" translatable="false">Newspread</string>
+    <string name="newspread" translatable="false" translateable="false">Newspread</string>
     <string name="newspread_summary">Select which newspread you want to be shown. This are the slides on the info monitors in your faculty buildings.</string>
-    <string name="tuition_fee_more">Information on contributions and exemptions, loans, training assistance and scholarships, go to: <a href="http://www.tum.de/studium/studienfinanzierung/">Student Financial Aid</a></string>
+    <string name="tuition_fee_more">Information on contributions and exemptions, loans, training assistance and scholarships, go to: <a href="https://www.tum.de/en/studies/fees-and-financial-aid/">Student Financial Aid</a></string>
     <string name="no_rights_to_access_id">Identity could not be accessed. Please check the rights of your TUMOnline token!</string>
     <string name="vibration">Vibration</string>
     <string name="silent">Silent</string>
@@ -440,12 +446,11 @@ Signature: %5$s</string>
     <string name="reply_label">Reply</string>
     <string name="public_key_mail">Public key activation mail sent to %s@mytum.de.\n\n<b>Please activate it now!</b></string>
     <string name="failure_uploading_public_key">Failure uploading public key</string>
-    <string name="no_private_key">No private key found! Reset the app\'s data to solve this!</string>
     <string name="key_not_activated">You have not activated your key!</string>
     <string name="no_rights_to_access_lectures">Lectures could not be accessed. Please check the rights of your TUMOnline token!</string>
     <string name="edit">Edit</string>
     <string name="auto_join_chat">Join new lecture rooms</string>
-    <string name="set_auto_join_chat">If you subscribe for a new lecture the app will automatically add you to the lecture\'s chat room.</string>
+    <string name="set_auto_join_chat">If you subscribe for a new lecture the app will automatically add you to the lecture’s chat room.</string>
     <string name="add_chat_member">Add person to chat room</string>
     <string name="add_chat_room">New chat room</string>
     <string name="join_chat_room">Join chat room</string>
@@ -454,11 +459,10 @@ Signature: %5$s</string>
     <string name="new_chat_room_desc">Select a name for your chat room. The name can not be changed afterwards!\n\n</string>
     <string name="just_now">Just now</string>
     <string name="yesterday">Yesterday</string>
+
     <string name="add_widget">Add widget</string>
     <!-- Widget Mensa -->
     <string name="mensa_widget">Mensa Widget TUM</string>
-    <string name="support_us">Help us to spread the word about the Campus App! Like us on Facebook, suggest an exciting idea on Github or send a mail telling us what you think!</string>
-    <string name="support_email">tca-support.os.in@tum.de</string>
     <!-- Widget MVV -->
     <string name="mvv_widget">MVV Widget TUM</string>
     <string name="something_is_wrong">Sorry something went wrong</string>
@@ -468,4 +472,15 @@ Signature: %5$s</string>
 
     <string name="appwidget_text">EXAMPLE</string>
     <string name="widget_configure_description">Configure the cards to show</string>
+
+    <string name="update_notification_description">A new version of the Tum Campus App has been released on %s. Tap to download now.</string>
+    <string name="support_us">Help us to spread the word about the Campus App! Like us on Facebook, suggest an exciting idea on Github or send a mail telling us what you think!</string>
+    <string name="support_email" translatable="false">tca-support.os.in@tum.de</string>
+    <string name="support_us_title">Support us!</string>
+    <string name="permission_location_explanation">This App needs permission to access your calendar to be able to sync it with your TUM calendar.</string>
+    <string name="permission_calendar_explanation">This App needs permission to access your location to display useful information, e.g. the menues of cafeterias around you or timetables of your nearest MVV station. \n If you do not grant this permission you will still be able to configure your location in the settings.</string>
+    <string name="ok">OK</string>
+    <string name="alarm_date_published_on">Published on:</string>
+    <string name="chat_not_setup" translatable="false">Chat is not setup properly, please re-run the wizzard via the settings!</string>
+    <string name="www" translatable="false">www</string>
 </resources>

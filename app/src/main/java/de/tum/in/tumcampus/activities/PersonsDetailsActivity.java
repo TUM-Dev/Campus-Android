@@ -1,7 +1,11 @@
 package de.tum.in.tumcampus.activities;
 
+import android.Manifest;
+import android.app.AlertDialog;
 import android.content.ContentProviderOperation;
+import android.content.DialogInterface;
 import android.content.OperationApplicationException;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -17,6 +21,9 @@ import android.provider.ContactsContract.CommonDataKinds.StructuredName;
 import android.provider.ContactsContract.CommonDataKinds.Website;
 import android.provider.ContactsContract.Data;
 import android.provider.ContactsContract.RawContacts;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.text.Html;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -47,10 +54,12 @@ public class PersonsDetailsActivity extends ActivityForAccessingTumOnline<Employ
 
     private Employee mEmployee;
     private MenuItem mContact;
+    private static String[] PERMISSIONS_CONTACTS = {Manifest.permission.WRITE_CONTACTS};
+
 
     public PersonsDetailsActivity() {
-		super(TUMOnlineConst.PERSON_DETAILS, R.layout.activity_personsdetails);
-	}
+        super(TUMOnlineConst.PERSON_DETAILS, R.layout.activity_personsdetails);
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -78,7 +87,7 @@ public class PersonsDetailsActivity extends ActivityForAccessingTumOnline<Employ
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.menu_add_contact, menu);
         mContact = menu.findItem(R.id.action_add_contact);
-        if(mEmployee==null) {
+        if (mEmployee == null) {
             mContact.setVisible(false);
         }
         return true;
@@ -88,7 +97,7 @@ public class PersonsDetailsActivity extends ActivityForAccessingTumOnline<Employ
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_add_contact:
-                if(mEmployee!=null)
+                if (mEmployee != null)
                     addContact(mEmployee);
                 return true;
             default:
@@ -105,55 +114,55 @@ public class PersonsDetailsActivity extends ActivityForAccessingTumOnline<Employ
     }
 
     /**
-	 * Displays all relevant information about the given employee in the user
-	 * interface (UI).
-	 * 
-	 * @param employee The employee whose information should be displayed.
-	 */
-	private void displayResults(Employee employee) {
-		// add the employee's counterfeit
-		ImageView imageView = (ImageView) this.findViewById(R.id.ivImage);
+     * Displays all relevant information about the given employee in the user
+     * interface (UI).
+     *
+     * @param employee The employee whose information should be displayed.
+     */
+    private void displayResults(Employee employee) {
+        // add the employee's counterfeit
+        ImageView imageView = (ImageView) this.findViewById(R.id.ivImage);
 
-		Bitmap image = employee.getImage();
-		if (image == null) {
-			image = BitmapFactory.decodeResource(getResources(),
-					R.drawable.photo_not_available);
-		}
-		imageView.setImageBitmap(image);
+        Bitmap image = employee.getImage();
+        if (image == null) {
+            image = BitmapFactory.decodeResource(getResources(),
+                    R.drawable.photo_not_available);
+        }
+        imageView.setImageBitmap(image);
 
-		// use a custom string buffer that helps us with line feeds and
-		// formatting
-		HTMLStringBuffer contentText = new HTMLStringBuffer();
+        // use a custom string buffer that helps us with line feeds and
+        // formatting
+        HTMLStringBuffer contentText = new HTMLStringBuffer();
 
-		TextView tvDetails1 = (TextView) findViewById(R.id.tvDetails1);
+        TextView tvDetails1 = (TextView) findViewById(R.id.tvDetails1);
 
-		// get the right gender
-		if (employee.getGender() != null
-				&& employee.getGender().equals(Person.MALE)) {
-			contentText.append(getString(R.string.mr) + " ");
-		} else if (employee.getGender() != null
-				&& employee.getGender().equals(Person.FEMALE)) {
-			contentText.append(getString(R.string.mrs) + " ");
-		}
+        // get the right gender
+        if (employee.getGender() != null
+                && employee.getGender().equals(Person.MALE)) {
+            contentText.append(getString(R.string.mr) + " ");
+        } else if (employee.getGender() != null
+                && employee.getGender().equals(Person.FEMALE)) {
+            contentText.append(getString(R.string.mrs) + " ");
+        }
 
-		// add title if available
-		if (employee.getTitle() != null) {
-			contentText.append(employee.getTitle() + " ");
-		}
+        // add title if available
+        if (employee.getTitle() != null) {
+            contentText.append(employee.getTitle() + " ");
+        }
 
-		// add name
-		contentText.append(employee.getName() + " " + employee.getSurname());
-		tvDetails1.setText(contentText.toString());
+        // add name
+        contentText.append(employee.getName() + " " + employee.getSurname());
+        tvDetails1.setText(contentText.toString());
 
-		// start new information section
+        // start new information section
 
-		contentText.clear();
+        contentText.clear();
 
-		TextView tvDetails2 = (TextView) findViewById(R.id.tvDetails2);
+        TextView tvDetails2 = (TextView) findViewById(R.id.tvDetails2);
 
-		// add all groups the employee belongs to
-		List<Group> groups = employee.getGroups();
-		if (groups != null) {
+        // add all groups the employee belongs to
+        List<Group> groups = employee.getGroups();
+        if (groups != null) {
             for (Group group : groups) {
                 if (group != null) {
                     contentText.appendField(getString(R.string.function),
@@ -164,64 +173,68 @@ public class PersonsDetailsActivity extends ActivityForAccessingTumOnline<Employ
                             + ")" + "<br />");
                 }
             }
-		}
-		tvDetails2.setText(Html.fromHtml(contentText.toString()),
-				TextView.BufferType.SPANNABLE);
+        }
+        tvDetails2.setText(Html.fromHtml(contentText.toString()),
+                TextView.BufferType.SPANNABLE);
 
-		// start new section
+        // start new section
 
-		contentText.clear();
+        contentText.clear();
 
-		TextView tvDetails3 = (TextView) findViewById(R.id.tvDetails3);
+        TextView tvDetails3 = (TextView) findViewById(R.id.tvDetails3);
 
-		// add contact information, if available
+        // add contact information, if available
 
-		contentText.appendField(getString(R.string.email), employee.getEmail());
-		contentText.appendField(getString(R.string.homepage), employee
-				.getBusinessContact().getHomepage());
+        contentText.appendField(getString(R.string.email), employee.getEmail());
+        contentText.appendField(getString(R.string.homepage), employee
+                .getBusinessContact().getHomepage());
 
-		List<TelSubstation> substations = employee.getTelSubstations();
-		if (substations != null) {
-			for (int i = 0; i < substations.size(); i++) {
-				if (substations.get(i) != null) {
-					contentText.appendField(getString(R.string.phone) + " "
-							+ (i + 1), substations.get(i).getNumber());
-				}
+        List<TelSubstation> substations = employee.getTelSubstations();
+        if (substations != null) {
+            for (int i = 0; i < substations.size(); i++) {
+                if (substations.get(i) != null) {
+                    contentText.appendField(getString(R.string.phone) + " "
+                            + (i + 1), substations.get(i).getNumber());
+                }
 
-			}
-		}
-		contentText.appendField(getString(R.string.mobile_phone), employee
-				.getBusinessContact().getMobilephone());
-		contentText.appendField(getString(R.string.add_info), employee
-				.getBusinessContact().getAdditionalInfo());
-		tvDetails3.setText(Html.fromHtml(contentText.toString()),
-				TextView.BufferType.SPANNABLE);
+            }
+        }
+        contentText.appendField(getString(R.string.mobile_phone), employee
+                .getBusinessContact().getMobilephone());
+        contentText.appendField(getString(R.string.add_info), employee
+                .getBusinessContact().getAdditionalInfo());
+        tvDetails3.setText(Html.fromHtml(contentText.toString()),
+                TextView.BufferType.SPANNABLE);
 
-		// start new section
-		contentText.clear();
+        // start new section
+        contentText.clear();
 
-		TextView tvDetails4 = (TextView) findViewById(R.id.tvDetails4);
+        TextView tvDetails4 = (TextView) findViewById(R.id.tvDetails4);
 
-		contentText.appendField(getString(R.string.office_hours),
-				employee.getConsultationHours());
+        contentText.appendField(getString(R.string.office_hours),
+                employee.getConsultationHours());
 
-		// add all rooms
-		List<Room> rooms = employee.getRooms();
-		if (rooms != null && rooms.size() > 0) {
-			contentText.appendField(getString(R.string.room), rooms.get(0)
-					.getLocation() + " (" + rooms.get(0).getNumber() + ")");
-		}
+        // add all rooms
+        List<Room> rooms = employee.getRooms();
+        if (rooms != null && rooms.size() > 0) {
+            contentText.appendField(getString(R.string.room), rooms.get(0)
+                    .getLocation() + " (" + rooms.get(0).getNumber() + ")");
+        }
 
-		tvDetails4.setText(Html.fromHtml(contentText.toString()),
-				TextView.BufferType.SPANNABLE);
+        tvDetails4.setText(Html.fromHtml(contentText.toString()),
+                TextView.BufferType.SPANNABLE);
 
-	}
+    }
 
     /**
      * Adds the given employee to the users contact list
+     *
      * @param employee Object to insert into contacts
      */
     private void addContact(Employee employee) {
+        if (!isPermissionGranted(0)) {
+            return;
+        }
         ArrayList<ContentProviderOperation> ops =
                 new ArrayList<>();
 
@@ -288,19 +301,19 @@ public class PersonsDetailsActivity extends ActivityForAccessingTumOnline<Employ
         // Add office hours
         String notes = "";
         if (employee.getConsultationHours() != null) {
-            notes = getString(R.string.office_hours)+": "+employee.getConsultationHours();
+            notes = getString(R.string.office_hours) + ": " + employee.getConsultationHours();
         }
 
         // add all rooms
         List<Room> rooms = employee.getRooms();
         if (rooms != null && rooms.size() > 0) {
-            if(!notes.isEmpty())
-                notes+="\n";
-            notes += getString(R.string.room)+": "+rooms.get(0).getLocation() + " (" + rooms.get(0).getNumber() + ")";
+            if (!notes.isEmpty())
+                notes += "\n";
+            notes += getString(R.string.room) + ": " + rooms.get(0).getLocation() + " (" + rooms.get(0).getNumber() + ")";
         }
 
         // Finally add notes
-        if(!notes.isEmpty()) {
+        if (!notes.isEmpty()) {
             ops.add(ContentProviderOperation.newInsert(Data.CONTENT_URI)
                     .withValueBackReference(Data.RAW_CONTACT_ID, rawContactID)
                     .withValue(Data.MIMETYPE, Note.CONTENT_ITEM_TYPE)
@@ -310,7 +323,7 @@ public class PersonsDetailsActivity extends ActivityForAccessingTumOnline<Employ
 
         // Add image
         Bitmap bitmap = employee.getImage();
-        if(bitmap!=null){    // If an image is selected successfully
+        if (bitmap != null) {    // If an image is selected successfully
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
             bitmap.compress(Bitmap.CompressFormat.PNG, 75, stream);
 
@@ -325,58 +338,104 @@ public class PersonsDetailsActivity extends ActivityForAccessingTumOnline<Employ
 
             try {
                 stream.flush();
-            }catch (IOException e) {
+            } catch (IOException e) {
                 Utils.log(e);
             }
         }
 
         // Executing all the insert operations as a single database transaction
-        try{
+        try {
             getContentResolver().applyBatch(ContactsContract.AUTHORITY, ops);
             Utils.showToast(this, R.string.contact_added);
-        }catch (RemoteException | OperationApplicationException e) {
+        } catch (RemoteException | OperationApplicationException e) {
             Utils.log(e);
         }
     }
 
-    private void addContact(ArrayList<ContentProviderOperation> ops, int rawContactID, Contact contact, boolean work) {
-        if(contact!=null) {
+    private static void addContact(ArrayList<ContentProviderOperation> ops, int rawContactID, Contact contact, boolean work) {
+        if (contact != null) {
             // Add work telefon number
-            if(contact.getTelefon()!=null) {
+            if (contact.getTelefon() != null) {
                 ops.add(ContentProviderOperation.newInsert(Data.CONTENT_URI)
                         .withValueBackReference(Data.RAW_CONTACT_ID, rawContactID)
                         .withValue(Data.MIMETYPE, Phone.CONTENT_ITEM_TYPE)
                         .withValue(Phone.NUMBER, contact.getTelefon())
-                        .withValue(Phone.TYPE, work?Phone.TYPE_WORK:Phone.TYPE_HOME)
+                        .withValue(Phone.TYPE, work ? Phone.TYPE_WORK : Phone.TYPE_HOME)
                         .build());
             }
             // Add work mobile number
-            if(contact.getMobilephone()!=null) {
+            if (contact.getMobilephone() != null) {
                 ops.add(ContentProviderOperation.newInsert(Data.CONTENT_URI)
                         .withValueBackReference(Data.RAW_CONTACT_ID, rawContactID)
                         .withValue(Data.MIMETYPE, Phone.CONTENT_ITEM_TYPE)
                         .withValue(Phone.NUMBER, contact.getMobilephone())
-                        .withValue(Phone.TYPE, work?Phone.TYPE_WORK_MOBILE:Phone.TYPE_MOBILE)
+                        .withValue(Phone.TYPE, work ? Phone.TYPE_WORK_MOBILE : Phone.TYPE_MOBILE)
                         .build());
             }
             // Add work fax number
-            if(contact.getFax()!=null) {
+            if (contact.getFax() != null) {
                 ops.add(ContentProviderOperation.newInsert(Data.CONTENT_URI)
                         .withValueBackReference(Data.RAW_CONTACT_ID, rawContactID)
                         .withValue(Data.MIMETYPE, Phone.CONTENT_ITEM_TYPE)
                         .withValue(Phone.NUMBER, contact.getFax())
-                        .withValue(Phone.TYPE, work?Phone.TYPE_FAX_WORK:Phone.TYPE_FAX_HOME)
+                        .withValue(Phone.TYPE, work ? Phone.TYPE_FAX_WORK : Phone.TYPE_FAX_HOME)
                         .build());
             }
             // Add website
-            if(contact.getHomepage()!=null) {
+            if (contact.getHomepage() != null) {
                 ops.add(ContentProviderOperation.newInsert(Data.CONTENT_URI)
                         .withValueBackReference(Data.RAW_CONTACT_ID, rawContactID)
                         .withValue(Data.MIMETYPE, Website.CONTENT_ITEM_TYPE)
                         .withValue(Website.URL, contact.getHomepage())
-                        .withValue(Website.TYPE, work?Website.TYPE_WORK:Website.TYPE_HOME)
+                        .withValue(Website.TYPE, work ? Website.TYPE_WORK : Website.TYPE_HOME)
                         .build());
             }
         }
+    }
+
+    /**
+     * Check Calendar permission for Android 6.0
+     *
+     * @param id the request id
+     * @return If the contacts permission was granted
+     */
+    private boolean isPermissionGranted(int id) {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
+            return true;
+        } else {
+            // Provide an additional rationale to the user if the permission was not granted
+            // and the user would benefit from additional context for the use of the permission.
+            // For example, if the request has been denied previously.
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_CONTACTS)) {
+
+                // Display an AlertDialog with an explanation and a button to trigger the request.
+                new AlertDialog.Builder(this)
+                        //.setMessage(getString(R.string.permission_calendar_explanation))
+                        .setMessage("Lorem Ipsum")
+                        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int id) {
+                                ActivityCompat
+                                        .requestPermissions(PersonsDetailsActivity.this, PERMISSIONS_CONTACTS, id);
+                            }
+                        }).show();
+            } else {
+                ActivityCompat.requestPermissions(PersonsDetailsActivity.this, PERMISSIONS_CONTACTS, id);
+            }
+        }
+
+        return false;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        //Check if we got all Calendar permissions
+        for (int result : grantResults) {
+            if (result != PackageManager.PERMISSION_GRANTED) {
+                return;
+            }
+        }
+        //Rerun the interrupted action
+        addContact(mEmployee);
     }
 }

@@ -2,10 +2,13 @@ package de.tum.in.tumcampus.activities.wizard;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.widget.TextView;
+
+import java.util.List;
 
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.generic.ActivityForLoadingInBackground;
@@ -13,6 +16,8 @@ import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.NetUtils;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.IdentitySet;
+import de.tum.in.tumcampus.models.Person;
+import de.tum.in.tumcampus.models.PersonList;
 import de.tum.in.tumcampus.models.TokenConfirmation;
 import de.tum.in.tumcampus.tumonline.TUMOnlineConst;
 import de.tum.in.tumcampus.tumonline.TUMOnlineRequest;
@@ -88,6 +93,12 @@ public class WizNavCheckTokenActivity extends ActivityForLoadingInBackground<Voi
 
             // Save the name to preferences
             Utils.setSetting(this, Const.CHAT_ROOM_DISPLAY_NAME, id.toString());
+
+            // Save the TUMOnline id to preferences
+            String pID = getUserPIdentNr(id.toString());
+            if(pID != null) {
+                Utils.setSetting(this, Const.TUMO_PIDENT_NR, pID);
+            }
             return null;
         } else {
             if (!NetUtils.isConnected(this)) {
@@ -132,5 +143,32 @@ public class WizNavCheckTokenActivity extends ActivityForLoadingInBackground<Voi
         finish();
         startActivity(new Intent(this, WizNavChatActivity.class));
         overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+    }
+
+    /**
+     * Get the user's pident nr to identify him a little bit more. This allows information equal to
+     * the PersonDetailsActivity
+     * @param name The users full name
+     * @return the users pID, or null
+     */
+    @Nullable
+    private String getUserPIdentNr(String name) {
+        TUMOnlineRequest<PersonList> request = new TUMOnlineRequest<>(TUMOnlineConst.PERSON_SEARCH, this, true);
+        request.setParameter("pSuche", name);
+
+        PersonList result = request.fetch();
+
+        if (result != null && result.getPersons() != null) {
+            List<Person> persons = result.getPersons();
+
+            // Since we can't search by LRZ-Id, we can only search by name, which isn't necessarily
+            // unique. We'll probably end up with ubiquitous "Anna Meier"s etc. Only if we are
+            // completely certain, display the image rather than displaying a random image
+            if (persons.size() == 1) {
+                return persons.get(0).getId();
+            }
+        }
+
+        return null;
     }
 }

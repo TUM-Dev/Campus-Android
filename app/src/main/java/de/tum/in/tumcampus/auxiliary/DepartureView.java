@@ -22,17 +22,17 @@ import de.tum.in.tumcampus.R;
  */
 public class DepartureView extends LinearLayout {
 
-    private static final long UPDATE_INTERVAL = 10000;
     private final TextView mSymbolView;
     private final TextView mLineView;
     private final TextSwitcher mTimeSwitcher;
-    private long mDeparture;
+    private int mCountDown;
     private final Handler mHandler;
-    private long mLastDiffMin;
+    private final ValueAnimator mValueAnimator;
 
     /**
      * Standard constructor for DepartureView
      * Uses a thin departure line
+     *
      * @param context Context
      */
     public DepartureView(Context context) {
@@ -41,8 +41,9 @@ public class DepartureView extends LinearLayout {
 
     /**
      * Constructor for DepartureView
+     *
      * @param context Context
-     * @param big Whether the departure should use a thin or a big line
+     * @param big     Whether the departure should use a thin or a big line
      */
     public DepartureView(Context context, boolean big) {
         super(context);
@@ -51,29 +52,46 @@ public class DepartureView extends LinearLayout {
         setGravity(Gravity.CENTER_VERTICAL);
 
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        if(big)
+        if (big) {
             inflater.inflate(R.layout.departure_line_big, this, true);
-        else
+        } else {
             inflater.inflate(R.layout.departure_line_small, this, true);
+        }
 
         mSymbolView = (TextView) findViewById(R.id.line_symbol);
         mLineView = (TextView) findViewById(R.id.line_name);
-        mTimeSwitcher = (TextSwitcher)findViewById(R.id.line_switcher);
+        mTimeSwitcher = (TextSwitcher) findViewById(R.id.line_switcher);
 
         // Declare the in and out animations and initialize them
-        Animation in = AnimationUtils.loadAnimation(getContext(),android.R.anim.slide_in_left);
+        Animation in = AnimationUtils.loadAnimation(getContext(), android.R.anim.slide_in_left);
         Animation out = AnimationUtils.loadAnimation(getContext(), android.R.anim.slide_out_right);
 
         // set the animation type of textSwitcher
         mTimeSwitcher.setInAnimation(in);
         mTimeSwitcher.setOutAnimation(out);
 
-        mLastDiffMin = -1;
         mHandler = new Handler();
+
+        // Set up the ValueAnimator for animateOut()
+        mValueAnimator = ValueAnimator.ofInt(getHeight(), 0).setDuration(500);
+        mValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                int value = (Integer) animation.getAnimatedValue();
+                if (getLayoutParams() != null) {
+                    getLayoutParams().height = value;
+                    requestLayout();
+                    if (value == 0) {
+                        setVisibility(View.GONE);
+                    }
+                }
+            }
+        });
     }
 
     /**
      * Sets the line symbol name
+     *
      * @param symbol Symbol e.g. U6, S1, T14
      */
     @SuppressWarnings("deprecation")
@@ -86,59 +104,53 @@ public class DepartureView extends LinearLayout {
 
     /**
      * Sets the line name
+     *
      * @param line Line name e.g. Klinikum Großhadern
      */
-    public void setLine(String line) {
+    public void setLine(CharSequence line) {
         mLineView.setText(line);
     }
 
     /**
      * Sets the departure time
-     * @param departure Time in the future where this line will leave in milliseconds
+     *
+     * @param countDown Minutes, until this line leaves
      */
-    public void setTime(long departure) {
-        mDeparture = departure;
+    public void setTime(int countDown) {
+        mCountDown = countDown;
         updateDepartureTime();
     }
 
     private void updateDepartureTime() {
-        long diff = mDeparture-System.currentTimeMillis();
-        int diffMin = (int)Math.floor(diff/60000.0);
-        String text = diffMin+" min";
-        if(mLastDiffMin==-1 && diffMin>=0) {
+        String text = mCountDown + " min";
+        if (mCountDown >= 0) {
             mTimeSwitcher.setCurrentText(text);
-        } else if(diffMin<=-1) {
+        } else {
             animateOut();
             return;
-        } else if(mLastDiffMin!=diffMin) {
-            mTimeSwitcher.setText(text);
         }
-        mLastDiffMin = diffMin;
-        if(mHandler != null && diffMin>-1){
+        // Keep countDown approximately in sync.
+        if (mHandler != null) {
             mHandler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
+                    mCountDown--;
                     updateDepartureTime();
                 }
-            }, UPDATE_INTERVAL);
+            }, 60000);
         }
     }
 
     private void animateOut() {
-        ValueAnimator va = ValueAnimator.ofInt(getHeight(),0);
-        va.setDuration(500);
-        va.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            public void onAnimationUpdate(ValueAnimator animation) {
-                int value = (Integer) animation.getAnimatedValue();
-                if(getLayoutParams()!=null) {
-                    getLayoutParams().height = value;
-                    requestLayout();
-                    if (value == 0) {
-                        setVisibility(View.GONE);
-                    }
-                }
-            }
-        });
-        va.start();
+        mValueAnimator.start();
+    }
+
+    /**
+     * Call this, when the DepartureView isn't needed anymore.
+     */
+    public void removeAllCallbacksAndMessages(){
+        mHandler.removeCallbacksAndMessages(null);
+        mValueAnimator.cancel();
+        mValueAnimator.removeAllUpdateListeners();
     }
 }
