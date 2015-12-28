@@ -59,6 +59,7 @@ public final class Const {
 	public static final String PRIVATE_KEY_ACTIVE = "chat_member_private_key_active";
 	public static final String PRIVATE_KEY = "chat_member_private_key";
 	public static final String PUBLIC_KEY = "chat_member_public_key";
+	public static final String PUBLIC_KEY_UPLOADED = "chat_member_public_key_uploaded";
 
 	public static final String TUMO_PIDENT_NR = "pIdentNr";
 	public static final String GCM_REG_ID = "gcm_registration_id";

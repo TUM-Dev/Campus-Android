@@ -23,7 +23,7 @@ import de.tum.in.tumcampus.adapters.ChatRoomListAdapter;
 import de.tum.in.tumcampus.adapters.NoResultsAdapter;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.Utils;
-import de.tum.in.tumcampus.exceptions.NoPublicKey;
+import de.tum.in.tumcampus.exceptions.NoPrivateKey;
 import de.tum.in.tumcampus.models.TUMCabeClient;
 import de.tum.in.tumcampus.models.ChatMember;
 import de.tum.in.tumcampus.models.ChatRoom;
@@ -118,9 +118,6 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
 
                 // Remember this locally
                 currentChatMember = Utils.getSetting(this, Const.CHAT_MEMBER, ChatMember.class);
-
-                // Proceed with registering
-                checkPlayServicesAndRegister();
             }
         } catch (RetrofitError e) {
             Utils.log(e);
@@ -224,7 +221,7 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
                     Utils.showToastOnUIThread(ChatRoomsActivity.this, R.string.activate_key);
                 }
             });
-        } catch (NoPublicKey noPublicKey) {
+        } catch (NoPrivateKey noPrivateKey) {
             this.finish();
         }
     }
@@ -248,7 +245,7 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
                 manager.replaceIntoRooms(rooms);
             } catch (RetrofitError e) {
                 Utils.log(e);
-            } catch (NoPublicKey e) {
+            } catch (NoPrivateKey e) {
                 this.finish();
             }
         }
@@ -275,8 +272,7 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
     public void onItemClick(AdapterView<?> a, View v, int position, long id) {
         Cursor item = (Cursor) lvMyChatRoomList.getItemAtPosition(position);
 
-        if (firstLoad || //No clicking until everything is loaded
-                !checkPlayServicesAndRegister())
+        if (firstLoad)
             return;
 
         // set bundle for LectureDetails and show it
@@ -297,22 +293,5 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
         Intent intent = new Intent(this, ChatActivity.class);
         intent.putExtra(Const.CURRENT_CHAT_ROOM, new Gson().toJson(currentChatRoom));
         startActivity(intent);
-    }
-
-    /**
-     * Checks if play services are available and registers for GCM
-     */
-    private boolean checkPlayServicesAndRegister() {
-        // Check device for Play Services APK. If check succeeds, proceed with GCM registration.
-        if (GcmIdentificationService.checkPlayServices(this)) {
-            GcmIdentificationService idService = new GcmIdentificationService(this);
-
-            //Check if already registered
-            idService.checkSetup();
-            return true;
-        } else {
-            Utils.log("No valid Google Play Services APK found.");
-            return false;
-        }
     }
 }

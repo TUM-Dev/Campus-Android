@@ -13,12 +13,14 @@ import com.google.android.gms.iid.InstanceIDListenerService;
 import java.io.IOException;
 import java.util.Date;
 
-import de.tum.in.tumcampus.activities.ChatRoomsActivity;
+import de.tum.in.tumcampus.auxiliary.AuthenticationManager;
 import de.tum.in.tumcampus.auxiliary.Const;
-import de.tum.in.tumcampus.auxiliary.RSASigner;
 import de.tum.in.tumcampus.auxiliary.Utils;
+import de.tum.in.tumcampus.exceptions.NoPrivateKey;
 import de.tum.in.tumcampus.models.ChatRegistrationId;
+import de.tum.in.tumcampus.models.DeviceUploadGcmToken;
 import de.tum.in.tumcampus.models.TUMCabeClient;
+import de.tum.in.tumcampus.models.TUMCabeStatus;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -74,19 +76,19 @@ public class GcmIdentificationService extends InstanceIDListenerService {
     }
 
     public void checkSetup() {
-        String regId = this.getCurrentToken();
+        String token = this.getCurrentToken();
 
         //If we failed, we need to re register
-        if (regId.isEmpty()) {
+        if (token.isEmpty()) {
             this.registerInBackground();
         } else {
             // If the regId is not empty, we still need to check whether it was successfully sent to the TCA server, because this can fail due to user not confirming their private key
             if (!Utils.getInternalSettingBool(mContext, Const.GCM_REG_ID_SENT_TO_SERVER, false)) {
-                this.sendRegistrationIdToBackend(regId);
+                this.sendTokenToBackend(token);
             }
 
             //Update the reg id in steady intervals
-            this.checkRegisterIdUpdate(regId);
+            this.checkRegisterIdUpdate(token);
         }
     }
 
@@ -125,14 +127,14 @@ public class GcmIdentificationService extends InstanceIDListenerService {
             protected String doInBackground(Void... params) {
                 try {
                     //Register a new id
-                    String regId = GcmIdentificationService.this.register();
+                    String token = GcmIdentificationService.this.register();
 
                     //Reset the lock in case we are updating and maybe failed
                     Utils.setInternalSetting(mContext, Const.GCM_REG_ID_SENT_TO_SERVER, false);
                     Utils.setInternalSetting(mContext, Const.GCM_REG_ID_LAST_TRANSMISSION, (new Date()).getTime());
 
                     // Let the server know of our new registration id
-                    GcmIdentificationService.this.sendRegistrationIdToBackend(regId);
+                    GcmIdentificationService.this.sendTokenToBackend(token);
 
                     return "GCM registration successful";
                 } catch (IOException ex) {
@@ -155,32 +157,37 @@ public class GcmIdentificationService extends InstanceIDListenerService {
      * device sends upstream messages to a server that echoes back the message
      * using the 'from' address in the message.
      */
-    private void sendRegistrationIdToBackend(String regId) {
+    private void sendTokenToBackend(String token) {
         //@todo
         //Check if all parameters are present
-        /*if (regId == null || currentPrivateKey == null || currentChatMember == null || currentChatMember.getLrzId() == null) {
+        if (token == null || token.isEmpty()) {
             Utils.logv("Parameter missing for sending reg id");
             return;
         }
 
-        // Generate signature
-        RSASigner signer = new RSASigner(currentPrivateKey);
-        String signature = signer.sign(currentChatMember.getLrzId());
+        //Try to create the message
+        DeviceUploadGcmToken dgcm = null;
+        try {
+            dgcm = new DeviceUploadGcmToken(mContext, token);
+        } catch (NoPrivateKey noPrivateKey) {
+            return;
+        }
 
-        TUMCabeClient.getInstance(GcmIdentificationService.this).uploadRegistrationId(currentChatMember.getId(), new ChatRegistrationId(regId, signature), new Callback<ChatRegistrationId>() {
+        TUMCabeClient.getInstance(mContext).deviceUploadGcmToken(dgcm, new Callback<TUMCabeStatus>() {
             @Override
-            public void success(ChatRegistrationId arg0, Response arg1) {
-                Utils.logv("Success uploading GCM registration id: " + arg0);
+            public void success(TUMCabeStatus status, Response arg1) {
+                Utils.logv("Success uploading GCM registration id: " + status.getStatus());
 
                 // Store in shared preferences the information that the GCM registration id was sent to the TCA server successfully
-                Utils.setInternalSetting(GcmIdentificationService.this, Const.GCM_REG_ID_SENT_TO_SERVER, true);
+                Utils.setInternalSetting(mContext, Const.GCM_REG_ID_SENT_TO_SERVER, true);
             }
 
             @Override
             public void failure(RetrofitError e) {
                 Utils.log(e, "Failure uploading GCM registration id");
+                Utils.setInternalSetting(mContext, Const.GCM_REG_ID_SENT_TO_SERVER, false);
             }
-        });*/
+        });
     }
 
     /**
@@ -193,7 +200,7 @@ public class GcmIdentificationService extends InstanceIDListenerService {
         long lastTransmission = Utils.getInternalSettingLong(mContext, Const.GCM_REG_ID_LAST_TRANSMISSION, 0);
         Date now = new Date();
         if (now.getTime() - 24 * 3600000 > lastTransmission) {
-            this.sendRegistrationIdToBackend(regId);
+            this.sendTokenToBackend(regId);
         }
     }
 

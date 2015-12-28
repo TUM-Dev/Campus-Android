@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 import de.tum.in.tumcampus.auxiliary.AuthenticationManager;
 import de.tum.in.tumcampus.auxiliary.Utils;
-import de.tum.in.tumcampus.exceptions.NoPublicKey;
+import de.tum.in.tumcampus.exceptions.NoPrivateKey;
 import de.tum.in.tumcampus.models.TUMCabeClient;
 import de.tum.in.tumcampus.models.ChatMessage;
 import de.tum.in.tumcampus.models.managers.ChatMessageManager;
@@ -90,7 +90,7 @@ public class SendMessageService extends IntentService {
             } catch (RetrofitError e) {
                 Utils.log(e);
                 numberOfAttempts++;
-            } catch (NoPublicKey noPublicKey) {
+            } catch (NoPrivateKey noPrivateKey) {
                 return; //Nothing can be done, just exit
             }
 

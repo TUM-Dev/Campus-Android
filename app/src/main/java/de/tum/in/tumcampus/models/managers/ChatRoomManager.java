@@ -12,7 +12,7 @@ import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.cards.Card;
 import de.tum.in.tumcampus.cards.ChatMessagesCard;
-import de.tum.in.tumcampus.exceptions.NoPublicKey;
+import de.tum.in.tumcampus.exceptions.NoPrivateKey;
 import de.tum.in.tumcampus.models.TUMCabeClient;
 import de.tum.in.tumcampus.models.ChatMember;
 import de.tum.in.tumcampus.models.ChatRoom;
@@ -177,7 +177,7 @@ public class ChatRoomManager implements Card.ProvidesCard {
                     manager.join(currentChatRoom);
                 } catch (RetrofitError e) {
                     Utils.log(e, "Room already exists");
-                }  catch (NoPublicKey noPublicKey) {
+                }  catch (NoPrivateKey noPrivateKey) {
                     return;
                 }
             }

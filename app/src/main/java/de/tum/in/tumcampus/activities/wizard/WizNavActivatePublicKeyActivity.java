@@ -12,7 +12,7 @@ import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.generic.ActivityForLoadingInBackground;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.Utils;
-import de.tum.in.tumcampus.exceptions.NoPublicKey;
+import de.tum.in.tumcampus.exceptions.NoPrivateKey;
 import de.tum.in.tumcampus.models.TUMCabeClient;
 import de.tum.in.tumcampus.models.ChatMember;
 import de.tum.in.tumcampus.models.ChatRoom;
@@ -111,7 +111,7 @@ public class WizNavActivatePublicKeyActivity extends ActivityForLoadingInBackgro
             return true;
         } catch (RetrofitError e) {
             Utils.log(e);
-        } catch (NoPublicKey e){
+        } catch (NoPrivateKey e){
             Utils.log(e);
         }
         return false;

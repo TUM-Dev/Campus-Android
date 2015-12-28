@@ -49,7 +49,7 @@ import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.ImplicitCounter;
 import de.tum.in.tumcampus.auxiliary.NetUtils;
 import de.tum.in.tumcampus.auxiliary.Utils;
-import de.tum.in.tumcampus.exceptions.NoPublicKey;
+import de.tum.in.tumcampus.exceptions.NoPrivateKey;
 import de.tum.in.tumcampus.models.GCMChat;
 import de.tum.in.tumcampus.models.TUMCabeClient;
 import de.tum.in.tumcampus.models.ChatMember;
@@ -409,7 +409,7 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
                 ChatVerification verification = null;
                 try {
                     verification = new ChatVerification(ChatActivity.this, currentChatMember);
-                } catch (NoPublicKey noPublicKey) {
+                } catch (NoPrivateKey noPrivateKey) {
                     return; //In this case we simply cannot do anything
                 }
                 if (chatHistoryAdapter == null || chatHistoryAdapter.getSentCount() == 0 || newMsg) {
@@ -464,7 +464,7 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
         ChatVerification verification = null;
         try {
             verification = new ChatVerification(this, currentChatMember);
-        } catch (NoPublicKey noPublicKey) {
+        } catch (NoPrivateKey noPrivateKey) {
             return;
         }
 

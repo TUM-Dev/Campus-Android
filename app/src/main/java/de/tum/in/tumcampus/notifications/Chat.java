@@ -27,7 +27,7 @@ import de.tum.in.tumcampus.activities.ChatRoomsActivity;
 import de.tum.in.tumcampus.activities.MainActivity;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.Utils;
-import de.tum.in.tumcampus.exceptions.NoPublicKey;
+import de.tum.in.tumcampus.exceptions.NoPrivateKey;
 import de.tum.in.tumcampus.models.ChatMember;
 import de.tum.in.tumcampus.models.ChatRoom;
 import de.tum.in.tumcampus.models.GCMChat;
@@ -110,8 +110,8 @@ public class Chat extends GenericNotification {
         Cursor messages = null;
         try {
             messages = manager.getNewMessages(member, this.extras.message);
-        } catch (NoPublicKey noPublicKey) {
-            noPublicKey.printStackTrace();
+        } catch (NoPrivateKey noPrivateKey) {
+            noPrivateKey.printStackTrace();
         }
 
         // Notify any open chat activity that a message has been received

@@ -42,6 +42,7 @@ public class TUMCabeClient {
     private static final String API_CINEMA = "/kino/";
     private static final String API_NOTIFICATIONS = "/notifications/";
     private static final String API_LOCATIONS = "/locations/";
+    private static final String API_DEVICE = "/device/";
 
 
     private static TUMCabeClient instance = null;
@@ -166,8 +167,9 @@ public class TUMCabeClient {
     public List<String> putBugReport(BugReport r) {
         return service.putBugReport(r);
     }
+
     public void putStatistics(Statistics s) {
-        service.putStatistics(s, new Callback<String>(){
+        service.putStatistics(s, new Callback<String>() {
             @Override
             public void success(String s, retrofit.client.Response response) {
                 //We don't care about any responses
@@ -178,6 +180,14 @@ public class TUMCabeClient {
                 //Or if this fails
             }
         });
+    }
+
+    public void deviceRegister(DeviceRegister verification, Callback<TUMCabeStatus> cb) {
+        service.deviceRegister(verification, cb);
+    }
+
+    public void deviceUploadGcmToken(DeviceUploadGcmToken verification, Callback<TUMCabeStatus> cb) {
+        service.deviceUploadGcmToken(verification, cb);
     }
 
     private interface TUMCabeAPIService {
@@ -247,5 +257,12 @@ public class TUMCabeClient {
         //Statistics
         @PUT(API_STATISTICS)
         void putStatistics(@Body Statistics r, Callback<String> cb);
+
+        //Device
+        @POST(API_DEVICE + "register/")
+        void deviceRegister(@Body DeviceRegister verification, Callback<TUMCabeStatus> cb);
+
+        @POST(API_DEVICE + "addGcmToken/")
+        void deviceUploadGcmToken(@Body DeviceUploadGcmToken verification, Callback<TUMCabeStatus> cb);
     }
 }

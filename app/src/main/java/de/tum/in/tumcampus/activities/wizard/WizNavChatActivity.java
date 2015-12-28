@@ -133,7 +133,7 @@ public class WizNavChatActivity extends ActivityForLoadingInBackground<Void, Cha
     private void startNextActivity() {
         finish();
         Intent intent;
-        if (Utils.getInternalSettingBool(this, Const.PRIVATE_KEY_ACTIVE, false)) {
+        if (!Utils.getInternalSettingBool(this, Const.PRIVATE_KEY_ACTIVE, false)) {
             intent = new Intent(this, WizNavActivatePublicKeyActivity.class);
         } else {
             intent = new Intent(this, WizNavExtrasActivity.class);
