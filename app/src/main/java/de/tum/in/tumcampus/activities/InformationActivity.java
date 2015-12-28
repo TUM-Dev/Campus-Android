@@ -9,7 +9,6 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v7.app.AppCompatActivity;
 import android.text.format.DateUtils;
 import android.view.View;
 import android.widget.TableLayout;
@@ -17,6 +16,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import de.tum.in.tumcampus.R;
+import de.tum.in.tumcampus.activities.generic.BaseActivity;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.ImplicitCounter;
 import de.tum.in.tumcampus.auxiliary.Utils;
@@ -24,17 +24,23 @@ import de.tum.in.tumcampus.auxiliary.Utils;
 /**
  * Provides information about this app and all contributors
  */
-public class InformationActivity extends AppCompatActivity {
+public class InformationActivity extends BaseActivity {
 
     private TableRow.LayoutParams rowParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT);
     private int debugOptionsCount = 0;
 
+    public InformationActivity() {
+        super(R.layout.activity_information);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ImplicitCounter.Counter(this);
-        setContentView(R.layout.activity_information);
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+
+        ImplicitCounter.Counter(this);
         this.displayVersionName();
     }
 

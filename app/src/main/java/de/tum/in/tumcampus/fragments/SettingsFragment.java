@@ -10,31 +10,28 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.CheckBoxPreference;
-import android.preference.ListPreference;
-import android.preference.Preference;
-import android.preference.PreferenceCategory;
-import android.preference.PreferenceManager;
-import android.preference.PreferenceScreen;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.Toolbar;
+import android.support.v7.preference.CheckBoxPreference;
+import android.support.v7.preference.ListPreference;
+import android.support.v7.preference.Preference;
+import android.support.v7.preference.PreferenceCategory;
+import android.support.v7.preference.PreferenceFragmentCompat;
+import android.support.v7.preference.PreferenceManager;
+import android.support.v7.preference.PreferenceScreen;
 import android.util.DisplayMetrics;
 import android.view.View;
-import android.widget.ListAdapter;
-
-import com.github.machinarius.preferencefragment.PreferenceFragment;
 
 import de.psdev.licensesdialog.LicensesDialog;
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.MainActivity;
 import de.tum.in.tumcampus.activities.StartupActivity;
-import de.tum.in.tumcampus.activities.UserPreferencesActivity;
 import de.tum.in.tumcampus.activities.wizard.WizNavStartActivity;
 import de.tum.in.tumcampus.auxiliary.AccessTokenManager;
 import de.tum.in.tumcampus.auxiliary.Const;
@@ -48,16 +45,22 @@ import de.tum.in.tumcampus.models.managers.NewsManager;
 import de.tum.in.tumcampus.services.BackgroundService;
 import de.tum.in.tumcampus.services.SilenceService;
 
-public class SettingsFragment extends PreferenceFragment implements
+public class SettingsFragment extends PreferenceFragmentCompat implements
         SharedPreferences.OnSharedPreferenceChangeListener, Preference.OnPreferenceClickListener {
 
+    public static final String FRAGMENT_TAG = "my_preference_fragment";
     private FragmentActivity mContext;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        addPreferencesFromResource(R.xml.settings);
+    public void onCreatePreferences(Bundle bundle, String rootKey) {
+        // Open a card's preference screen if selected from it's context menu
+        if (bundle != null && bundle.containsKey(Const.PREFERENCE_SCREEN)) {
+            rootKey = bundle.getString(Const.PREFERENCE_SCREEN);
+        }
 
+        Utils.log("Opening settings: " + rootKey);
+        //Load the correct preference category
+        setPreferencesFromResource(R.xml.settings, rootKey);
         mContext = getActivity();
 
         // Disables silence service if the app is used without TUMOnline access
@@ -66,66 +69,45 @@ public class SettingsFragment extends PreferenceFragment implements
             silent.setEnabled(false);
         }
 
-        // Click listener for preference list entries. Used to simulate a button
-        // (since it is not possible to add a button to the preferences screen)
-        findPreference("button_wizard").setOnPreferenceClickListener(this);
-        findPreference("button_clear_cache").setOnPreferenceClickListener(this);
-        findPreference("facebook").setOnPreferenceClickListener(this);
-        findPreference("github").setOnPreferenceClickListener(this);
-        findPreference("first_run").setOnPreferenceClickListener(this);
-        findPreference("licenses").setOnPreferenceClickListener(this);
-        findPreference("feedback").setOnPreferenceClickListener(this);
-        findPreference("privacy").setOnPreferenceClickListener(this);
+        //Only do these things if we are in the root of the preferences
+        if(rootKey == null) {
+            // Click listener for preference list entries. Used to simulate a button
+            // (since it is not possible to add a button to the preferences screen)
+            findPreference("button_wizard").setOnPreferenceClickListener(this);
+            findPreference("button_clear_cache").setOnPreferenceClickListener(this);
+            findPreference("facebook").setOnPreferenceClickListener(this);
+            findPreference("github").setOnPreferenceClickListener(this);
+            findPreference("first_run").setOnPreferenceClickListener(this);
+            findPreference("licenses").setOnPreferenceClickListener(this);
+            findPreference("feedback").setOnPreferenceClickListener(this);
+            findPreference("privacy").setOnPreferenceClickListener(this);
 
-        // Set summary for these preferences
-        setSummary("card_cafeteria_default_G");
-        setSummary("card_cafeteria_default_K");
-        setSummary("card_cafeteria_default_W");
-        setSummary("card_role");
-        setSummary("card_stations_default_G");
-        setSummary("card_stations_default_C");
-        setSummary("card_stations_default_K");
-        setSummary("card_default_campus");
-        setSummary("silent_mode_set_to");
-        setSummary("background_mode_set_to");
+            // Set summary for these preferences
+            setSummary("card_cafeteria_default_G");
+            setSummary("card_cafeteria_default_K");
+            setSummary("card_cafeteria_default_W");
+            setSummary("card_role");
+            setSummary("card_stations_default_G");
+            setSummary("card_stations_default_C");
+            setSummary("card_stations_default_K");
+            setSummary("card_default_campus");
+            setSummary("silent_mode_set_to");
+            setSummary("background_mode_set_to");
+
+            // Populate news sources
+            populateNewsSources();
+        }
 
         // Register the change listener to react immediately on changes
         PreferenceManager.getDefaultSharedPreferences(mContext).registerOnSharedPreferenceChangeListener(this);
-
-        // Populate news sources
-        populateNewsSources();
-
-        // Open a card's preference screen if selected from it's context menu
-        Bundle bundle = getArguments();
-        if (bundle != null && bundle.containsKey(Const.PREFERENCE_SCREEN)) {
-            final String key = bundle.getString(Const.PREFERENCE_SCREEN);
-
-            PreferenceScreen screen = (PreferenceScreen) findPreference("cards_pref_container");
-            final PreferenceScreen cardPreferenceScreen = (PreferenceScreen) findPreference(key);
-            cardPreferenceScreen.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                @Override
-                public boolean onPreferenceClick(Preference preference) {
-                    initializeActionBar(cardPreferenceScreen);
-                    return true;
-                }
-            });
-
-            final ListAdapter listAdapter = screen.getRootAdapter();
-            final int itemsCount = listAdapter.getCount();
-            for (int i = 0; i < itemsCount; ++i) {
-                if (listAdapter.getItem(i).equals(cardPreferenceScreen)) {
-                    screen.onItemClick(null, null, i, 0);
-                    break;
-                }
-            }
-        }
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        DisplayMetrics metrics = getResources().getDisplayMetrics();
-        getListView().setPadding((int) (16 * metrics.density), 0, (int) (16 * metrics.density), 0);
+
+        // Set the default white background in the view so as to avoid transparency
+        view.setBackgroundColor(Color.WHITE);
     }
 
     private void populateNewsSources() {
@@ -170,6 +152,7 @@ public class SettingsFragment extends PreferenceFragment implements
             listPreference.setSummary(listPreference.getEntry());
         }
 
+        //Refresh the cards after a change has been made to them
         if (key.startsWith("card_")) {
             CardManager.shouldRefresh = true;
         }
@@ -237,8 +220,6 @@ public class SettingsFragment extends PreferenceFragment implements
             case "button_wizard":
                 mContext.finish();
                 startActivity(new Intent(mContext, WizNavStartActivity.class));
-
-
                 break;
             case "button_clear_cache":
                 // This button invokes the clear cache method
@@ -337,24 +318,5 @@ public class SettingsFragment extends PreferenceFragment implements
 
         mContext.finish();
         startActivity(new Intent(mContext, StartupActivity.class));
-    }
-
-    /**
-     * Sets up the action bar for an {@link PreferenceScreen}
-     */
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    public void initializeActionBar(PreferenceScreen preferenceScreen) {
-        final Dialog dialog = preferenceScreen.getDialog();
-        
-        //Check if dialog is open and if we are on a supported android version
-        if (dialog != null && android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            //Setup a dialog back button pressed listener
-            dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                @Override
-                public void onCancel(DialogInterface dialog) {
-                    mContext.finish();
-                }
-            });
-        }
     }
 }
