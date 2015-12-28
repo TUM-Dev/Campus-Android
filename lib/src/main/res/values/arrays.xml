@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="roles">
+        <item>@string/student</item>
+        <item>@string/employee</item>
+        <item>@string/guest</item>
+    </string-array>
+    <string-array name="roles_values" translatable="false">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
+    <!-- Default cafeteria and mvv selection -->
+    <!-- Campus Garching -->
+    <string-array name="cafeterias_G" translatable="false">
+        <item>Mensa Garching</item>
+        <item>StuCafé Boltzmannstraße</item>
+        <item>StuCafé Mensa Garching</item>
+    </string-array>
+    <string-array name="cafeterias_G_val" translatable="false">
+        <item>422</item>
+        <item>527</item>
+        <item>524</item>
+    </string-array>
+    <string-array name="stations_G" translatable="false">
+        <item>Garching-Forschungszentrum</item>
+        <item>Garching, Techn. Universität</item>
+    </string-array>
+
+    <!-- Campus Stammgelände -->
+    <string-array name="stations_C" translatable="false">
+        <item>Theresienstraße</item>
+        <item>Technische Universität</item>
+        <item>Pinakotheken</item>
+    </string-array>
+
+    <!-- Campus Klinikum Großhadern -->
+    <string-array name="cafeterias_K" translatable="false">
+        <item>Mensa Martinsried</item>
+        <item>Mensaria Großhadern</item>
+    </string-array>
+    <string-array name="cafeterias_K_val" translatable="false">
+        <item>412</item>
+        <item>414</item>
+    </string-array>
+    <string-array name="stations_K" translatable="false">
+        <item>Klinikum Großhadern</item>
+        <item>Waldhüterstraße</item>
+        <item>Martinsried, Großhader. Str.</item>
+    </string-array>
+
+    <!-- Campus Weihenstephan -->
+    <string-array name="cafeterias_W" translatable="false">
+        <item>Mensa Weihenstephan</item>
+        <item>StuCafé Akademie</item>
+        <item>StuCafé Mensa-WST</item>
+    </string-array>
+    <string-array name="cafeterias_W_val" translatable="false">
+        <item>423</item>
+        <item>526</item>
+        <item>525</item>
+    </string-array>
+
+    <string-array name="newspread_entries" translatable="false">
+        <item>FMI Magistrale</item>
+        <item>CH Magistrale</item>
+        <item>SG Zentrale Bildschirme</item>
+        <item>WI Fakult\u00e4tsgeb\u00e4ude</item>
+        <item>PH Magistrale</item>
+        <item>TUM Lab Deutsches Museum</item>
+        <item>Weihenstephan</item>
+    </string-array>
+    <string-array name="newspread_values" translatable="false">
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+        <item>11</item>
+        <item>12</item>
+        <item>13</item>
+    </string-array>
+    <string-array name="silent_entries">
+        <item>@string/vibration</item>
+        <item>@string/silent</item>
+    </string-array>
+    <string-array name="silent_mode_values" translatable="false">
+        <item>0</item>
+        <item>1</item>
+    </string-array>
+    <string-array name="background_entries">
+        <item>@string/always</item>
+        <item>@string/wifi_only</item>
+    </string-array>
+    <string-array name="background_mode_values" translatable="false">
+        <item>0</item>
+        <item>1</item>
+    </string-array>
+    <string-array name="default_campus_entries">
+        <item>@string/no_default_campus</item>
+        <item>@string/campus_garching</item>
+        <item>@string/campus_garching_hochbrueck</item>
+        <item>@string/campus_weihenstephan</item>
+        <item>@string/campus_main</item>
+        <item>@string/campus_klinikum_großhadern</item>
+        <item>@string/campus_klinikum</item>
+        <item>@string/campus_leopoldstrasse</item>
+        <item>@string/campus_geschwister_scholl</item>
+    </string-array>
+    <string-array name="default_campus_values" translatable="false">
+        <item>X</item>
+        <item>G</item>
+        <item>H</item>
+        <item>W</item>
+        <item>C</item>
+        <item>K</item>
+        <item>I</item>
+        <item>L</item>
+        <item>S</item>
+    </string-array>
+</resources>
+

@@ -1,0 +1,446 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- START Translated, please do not change identifiers -->
+
+    <!-- Generic -->
+    <string name="app_name">TUM Campus App</string>
+    <string name="search">Search</string>
+    <string name="tum_logo">TUM Logo</string>
+    <string name="update">Update</string>
+    <string name="loading">Loading …</string>
+    <string name="settings">Settings</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="no_internet_connection">No internet connection available</string>
+    <string name="app_short_description" translatable="false">TUM information platform - from students for students</string>
+
+    <!-- Calendar -->
+    <string name="dialog_show_calendar">Export successful.\nShow local calendar <i>TUM_CAMPUS_APP</i> on <i>Google Calendar App</i>?</string>
+    <string name="export_to_google">Export to Google</string>
+    <string name="calendarTimeZone" translatable="false">Germany/Munich</string>
+    <string name="delete_from_google">Delete from Google</string>
+    <string name="dialog_delete_calendar">Do you want to delete  the <i>TUM_CAMPUS_APP</i>  calendar from your device?</string>
+    <string name="calendar_deleted_toast">Calender deleted successfully</string>
+    <string name="calendar_not_existing_toast">No local calendar existing</string>
+    <string name="semester_summer">Summer term</string>
+    <string name="semester_winter">Winter term</string>
+
+    <!-- Roomfinder -->
+    <string name="no_map_available">No map available</string>
+    <string name="search_rooms">Search rooms</string>
+
+    <!-- Auxiliary -->
+    <string name="empty_string" translatable="false" />
+    <string name="error_fetching_tumonline">Error accessing TUMOnline.\nPlease make sure your TUMOnline-Access-Token has
+		been\nactivated and the corresponding rights are set.\n\n<b>Click here to retry.</b></string>
+    <string name="error_no_token_setup">No TUMOnline-Access-Token was set.\nPlease set your TUMOnline-Access-Token in the\n <i>Settings</i> screen to access TUMOnline features.\n\n<b>Click here for the <i>Settings</i> screen.</b></string>
+    <string name="error_something_wrong">Sorry, something went wrong.</string>
+    <string name="click_to_try_again"><b>Click here to retry.</b></string>
+    <string name="dialog_new_token">Your TUMOnline-Access-Token is already set.\n\nClick <i>Yes</i> to generate a new one. \nAs a result, the old Token becomes useless.</string>
+    <string name="error_lrz_wrong">Your LRZ Identification is invalid</string>
+    <string name="access_token_wasnt_generated">TUMOnline-Access-Token could not be generated</string>
+    <string name="dialog_access_token_invalid">TUMOnline-Access-Token not enabled</string>
+    <string name="dialog_no_rights_function">No rights to access this function</string>
+    <string name="empty_result">The operation delivered a faulty result</string>
+
+    <!-- Exam/Grades -->
+    <string name="average_grade">Average grade</string>
+    <string name="show_column_chart">Show Column Chart</string>
+    <string name="show_pie_chart">Show Pie Chart</string>
+    <string name="result_extra">Result:&#160;</string>
+    <string name="semester">Semester</string>
+    <string name="examiner">Examiner</string>
+    <string name="mode">Mode</string>
+    <string name="all_programs">All programs</string>
+    <string name="date">Date</string>
+    <string name="credits" translatable="false">ECTS</string>
+
+    <!-- Preferences -->
+    <string name="lrz_id">LRZ Identification</string>
+
+    <string name="role">Role</string>
+    <string name="role_summary">Your role at TUM. Either student, employee or guest.</string>
+    <string name="student">Student</string>
+    <string name="employee">Employee</string>
+    <string name="guest">Guest</string>
+    <string name="cards_settings">Cards</string>
+    <string name="startpage">Startpage</string>
+    <string name="wear">Wearable</string>
+
+    <string name="extras">Extras</string>
+    <string name="open_wizard">Open Startup-Wizard</string>
+    <string name="open_wizard_detail">The Startup-Wizard helps you in order to set the basic preferences for accessing TUMOnline services and the layout of this App.</string>
+    <string name="clear_cache">Clear Cache</string>
+    <string name="clear_cache_detail">Deletes all data which was downloaded by the TUM Campus App and stored on the SD-Card</string>
+    <string name="delete_chache_sure">Are you sure you want to delete all data?</string>
+    <string name="success_clear_cache">Successfully cleared cache</string>
+
+    <string name="services">Services</string>
+    <string name="silence_phone">Silent Service</string>
+    <string name="silence_phone_info">The device will be automatically put into silent mode during a lecture.</string>
+    <string name="background_mode">Background Mode (Recommended)</string>
+    <string name="background_info">Content will be fetched once per day to keep you up-to-date even if you don’t open the app.</string>
+    <string name="mode_background_mode">Background Mode activation</string>
+    <string name="always">Always</string>
+    <string name="wifi_only">WiFi only</string>
+    <string name="demo_mode">In-App-Tutorial</string>
+    <string name="demo_info">Activates help mode for instruction on how to use this App.</string>
+
+    <string name="about_tca">About TCA</string>
+    <string name="information">Information</string>
+    <string name="facebook" translatable="false">Facebook</string>
+    <string name="facebook_link" translatable="false">https://m.facebook.com/TUMCampus</string>
+    <string name="facebook_link_app" translatable="false">fb://page/162327853831856</string>
+    <string name="github">Contribute on Github</string>
+    <string name="github_link" translatable="false">https://github.com/TCA-Team/TumCampusApp</string>
+    <string name="licences">Open Source-Licences</string>
+    <string name="licences_summary">Legal notes to licences</string>
+
+    <!-- Startup Wizard -->
+    <string name="token_not_enabled">TUMOnline-Access-Token is not enabled</string>
+    <string name="startup_wizard_uppercase">STARTUP-WIZARD</string>
+    <string name="welcome_msg"><b>Welcome to TUM Campus App!</b>\n\nIn order to setup the TUMOnline access, you need to provide your <b>LRZ Identification</b>.\n\nThis Id has the following format:\n<i>xx00xxx</i>\n(2 letters, 2 digits, 3 letters)</string>
+    <string name="button_skip">Skip</string>
+    <string name="button_next">Next</string>
+    <string name="need_to_enable"><b>The TUMOnline-Access-Token was successfully generated</b>\n\nYou can now enable the Token in TUMOnline via <i>Services/Token-Management</i>. Make sure the rights you want to gain the App are set as well under <i>Active Rights</i>.</string>
+    <string name="step_1">Step 1</string>
+    <string name="step_2">Step 2</string>
+    <string name="step_3">Step 3</string>
+    <string name="step_4">Step 4</string>
+    <string name="step_5">Step 5</string>
+    <string name="set_silent_mode">Activate or deactivate <i>Silent Service</i>. If activated, the device will go into silent mode if a lecture appointment has been recognized.</string>
+    <string name="set_background_mode">Activate or deactivate <i>Background Mode</i>. If activated, content will be fetched once per day to keep your TUM Campus App up to date.</string>
+    <string name="goto_tumcampus">Go to TUM Campus App</string>
+
+    <!-- News -->
+    <string name="no_link_existing">No link existing.</string>
+    <string name="info_title">New information:</string>
+
+    <!-- Navigation drawer -->
+    <string name="drawer_open">Open</string>
+    <string name="drawer_close">Close</string>
+    <string name="my_tum">My TUM</string>
+    <string name="schedule">Calendar</string>
+    <string name="my_lectures">My Lectures</string>
+    <string name="my_grades">My Grades</string>
+    <string name="chat_rooms">Chat rooms</string>
+    <string name="tuition_fees">Tuition Fees</string>
+    <string name="tum_common">General TUM</string>
+    <string name="menues">Cafeterias</string>
+    <string name="study_plans">Study Plans</string>
+    <string name="person_search">Person Search</string>
+    <string name="plans">Plans</string>
+    <string name="roomfinder">Roomfinder</string>
+    <string name="opening_hours">Opening Hours</string>
+    <string name="organisations">Organizations</string>
+    <string name="mvv">MVV</string>
+    <string name="news">News</string>
+
+    <!-- Activity titles -->
+    <string name="lectures_information">Lecture Information</string>
+    <string name="lectures_appointments">Lecture Appointments</string>
+    <string name="person_information">Person Information</string>
+    <string name="organisation_details">Organization Details</string>
+
+    <!-- Organisations -->
+    <string name="tum">Technical university of Munich</string>
+    <string name="invalid_organisation">Invalid organization!</string>
+    <string name="contact_person">Contact Person</string>
+    <string name="secretary">Secretary</string>
+    <string name="bib">Library</string>
+    <string name="extra">Extra</string>
+    <string name="extra_name">Extra Name</string>
+    <string name="identifier">Identifier</string>
+    <string name="exception_sdcard">Error accessing the SD-Card</string>
+    <string name="adress">Address</string>
+    <string name="name">Name</string>
+
+    <!-- MVV -->
+    <string name="no_departures_found">No departures available</string>
+    <string name="exception_unknown">Unknown error</string>
+    <string name="exception_timeout">Problems with internet connection, please try again later</string>
+    <string name="search_station">Search station</string>
+
+    <!-- Lectures -->
+    <string name="no_appointments">No appointments available</string>
+    <string name="lec_details">Details</string>
+    <string name="lecture_begin">Lecture begin</string>
+    <string name="lec_contributors">Lecture contributors</string>
+    <string name="lec_content">Lecture content</string>
+    <string name="lec_method">Method</string>
+    <string name="lec_target">Targets</string>
+    <string name="examination_aids">Examination aids</string>
+
+    <!-- Tuition fees -->
+    <string name="amount_dots">Outstanding balance</string>
+    <string name="deadline_dots">Deadline</string>
+
+    <!-- Persons -->
+    <string name="no_search_result">No search result</string>
+    <string name="no_person_set">No person set!</string>
+    <string name="email">Email</string>
+    <string name="phone">Phone</string>
+    <string name="fax">Fax</string>
+    <string name="homepage">Homepage</string>
+    <string name="mr">Mr.</string>
+    <string name="mrs">Mrs.</string>
+    <string name="function">Function</string>
+    <string name="group">Group</string>
+    <string name="mobile_phone">Mobile phone</string>
+    <string name="add_info">Additional infos</string>
+    <string name="office_hours">Office hours</string>
+    <string name="room">Room</string>
+    <string name="add_contact">Add to contacts</string>
+    <string name="contact_added">Contact is successfully added!</string>
+
+    <!-- Curricula -->
+    <string name="something_wrong">An unknown error occurred</string>
+
+    <!-- Opening hours -->
+    <string name="libraries">Libraries</string>
+    <string name="mensa_garching">Cafeteria Garching</string>
+    <string name="mensa_grosshadern">Cafeteria Großhadern</string>
+    <string name="mensa_city">Cafeteria Main Campus</string>
+    <string name="mensa_pasing">Cafeteria Pasing</string>
+    <string name="mensa_weihenstephan">Cafeteria Weihenstephan</string>
+
+    <!-- Plans -->
+    <string name="campus_garching" translatable="false">Campus Garching</string>
+    <string name="campus_klinikum">Campus Klinikum</string>
+    <string name="campus_olympiapark">Campus Olympiapark</string>
+    <string name="campus_olympiapark_gyms">Campus Olympiapark hall plan</string>
+    <string name="campus_main">Main Campus</string>
+    <string name="campus_weihenstephan">Campus Weihenstephan</string>
+    <string name="mvv_fast_train_net">MVV Train-Network</string>
+    <string name="mvv_tram">MVV Tram-Network</string>
+    <string name="mvv_entire_net">MVV Overall-Network</string>
+    <string name="mvv_nightlines">MVV Nightlines</string>
+    <string name="campus_garching_adress">Walther-Meißner-Straße 3, 85748 Garching</string>
+    <string name="campus_klinikum_adress">Ismaninger Straße 22, 81675 Munich</string>
+    <string name="campus_olympiapark_adress">Connollystraße 32, 80809 Munich</string>
+    <string name="campus_main_adress">Arcisstraße 21, 80333 Munich</string>
+    <string name="campus_weihenstephan_adress">Liesel-Beckmann-Straße 6, 85354 Freising</string>
+
+    <!-- Chat rooms -->
+    <string name="my_chat_rooms">My Chat Rooms</string>
+    <string name="send">Send</string>
+    <string name="leave_chat_room">Leave chat room</string>
+    <string name="leave_chat_room_body">Are you sure you want to leave this chat room?</string>
+
+    <!-- Cards -->
+    <string name="last_updated">The Content was last updated %s.</string>
+    <string name="next_lecture">Next lecture</string>
+    <string name="restore_all_cards">Restore cards</string>
+    <string name="card_dismissed">Card hidden</string>
+    <string name="reregister_success">You are reregistered for %s!</string>
+    <string name="reregister_todo">You have to reregister until %s!</string>
+    <string name="undo">Undo</string>
+
+    <!-- first use tutorial -->
+    <string name="swipe_instruction">Swipe left or right to hide a card.</string>
+    <string name="card_settings_instruction">If you want to hide a card permanently or you want to be notified if a new card is available open card-settings by long pressing on a card</string>
+
+    <!-- Cafeteria -->
+    <string name="cafeteria_ingredients">(f) meatless dish
+        \n(v) vegan dish
+        \n(S) dish with pork
+        \n(R) dish with beef
+        \n(GQB) Certified Quality - Bavaria
+        \n(99) dish with alcohol
+        \n\n1 with dyestuff
+        \n2 with preservative
+        \n3 with antioxidant
+        \n4 with flavor enhancers
+        \n5 sulphured
+        \n6 blackened (olive)
+        \n8 with phosphate
+        \n9 with sweeteners
+        \n10 contains a source of phenylalanine
+        \n11 with sugar and sweeteners</string>
+    <string name="action_ingredients">Ingredients</string>
+
+    <!-- Information -->
+    <string name="version">Version</string>
+    <string name="send_email">Send e-mail feedback</string>
+    <string name="show_feedback">Send feedback</string>
+    <string name="feedbackSubj">Feedback for TUM Campus App</string>
+    <string name="app_info_text" translatable="false">
+        Die inoffizielle TUM Campus App (kein Support/Haftung durch die TU München) wird von Studierenden des Android Praktikums, freiwilligen
+        Helfern und Lehrstuhlmitarbeitern entwickelt. Die App eignet sich sowohl zur Verwendung auf Smartphones, wie auch Tablets und bietet folgende
+        \n\n
+        Funktionen (exemplarisch):
+        \nPersönliche Vorlesungstermine, Nachrichten der TUM und anderer Quellen, Veranstaltungshinweise, Mensa Speiseplan, MVV Abfahrtszeiten, Umgebungspläne und viele weiteren Informationen. Die App ist sowohl für Studierende, wie auch Mitarbeiter gedacht.
+        \n\nProjektmanagement:
+        \nTUM - Fakultät für Informatik / F13
+        \nProf. Dr. Uwe Baumgarten
+        \nNils T. Kannengiesser
+        \n\nDerzeitige Entwickler (2014):
+        \nKordian Bruck
+        \nFlorian Dreier
+        \n\nWeitere Entwickler und involvierte Personen:
+        \nSepideh Mesbah, Shabnam Najafian, Sascha Moecker, Haris Iltifat, Anas
+        Chakfeh, Thomas Krex, Marius Muntean, Christoph Richter, Thomas Bley,
+        Vincenz Dölle, Daniel Mayr, Thomas Behrens, Florian Schulz, Vasyl
+        Malinskyi, Andreas Bernhofer (IT-Support/TUMonline), Paul Nieleck
+        (Administrator), Nils T. Kannengiesser (F13)
+        \n\nWichtiger Hinweis:
+        \nDies ist keine offizielle App der Technischen Universität München. Es
+        erfolgt daher auch kein offizieller Support oder eine Haftung. Die App
+        wird von und für Studierende entwickelt. Die Benutzung erfolgt auf
+        eigene Gefahr und eine Haftung ist ausgeschlossen. Aus
+        Sicherheitsgründen wird der Zugriff auf private Daten in TUMonline über
+        Tokens realisiert, die jeweils in TUMonline durch den Nutzer freigegeben
+        und mit den jeweiligen Rechten versehen werden müssen. Für die Nutzung
+        der neuen Chat-Funktionen gelten nachfolgende Bedingungen, denen Sie
+        separat auch in der App zustimmen müssen. Mit der Installation der App
+        akzeptieren Sie zudem die Erfassung diverser, technischer Daten.
+
+        \n\nWeitere Hinweise finden Sie unten unter ‘Datenschutzerklärung’.
+        \n\nSupport:
+        \nhttps://www.facebook.com/TUMCampus
+        \n\nFür besondere Anliegen erreichen Sie uns auch via E-Mail unter
+        \n‘tca-support.os.in AT tum.de’
+        \n\nBitte gehen Sie von mehreren Wochen Bearbeitungszeit aus. Die E-Mails werden nur sporadisch abgerufen.
+        \n\nDatenschutzerklärung: https://tumcabe.in.tum.de/landing/privacy/
+        \n\nChatbedingungen: https://tumcabe.in.tum.de/landing/chatterms/
+        \n\nLizenz:
+        \nGNU GPL v3 - https://www.gnu.org/licenses/gpl.html oder
+        \nNew BSD License - http://www.opensource.org/licenses/bsd-license.php
+        \n\n\nDer Quellcode kann hier bezogen werden:
+        \nhttps://github.com/TCA-Team/
+        \n\nWir suchen weiterhin Unterstuetzung! Bitte melden Sie sich unter:
+        \n‘tca-support.os.in AT tum.de’
+    </string>
+
+    <!-- END Translated, please do not change identifiers -->
+    <string name="min_search_len" tools:ignore="PluralsCandidate">Query must be at least %d chars long</string>
+    <string name="default_cafeteria">Default Cafeteria</string>
+    <string name="default_station">Default Station</string>
+    <string name="campus_klinikum_großhadern">Klinikum Großhadern</string>
+    <string name="cafeteria">Cafeteria</string>
+    <string name="card_cafeteria_summary">Displays the cafeteria menu</string>
+    <string name="card_mvv_summary">Shows you the departure times of public transport</string>
+    <string name="card_next_lecture_summary">Shows information about your next lecture</string>
+    <string name="card_tuition_fee_summary">Reminds you if you have to pay your fees</string>
+    <string name="card_news_summary">Advertises selected news</string>
+    <string name="card_chat_summary">Notifies you if new messages are available</string>
+    <string name="chat" translatable="false">Chat</string>
+    <string name="open_card_settings">Open card settings</string>
+    <string name="always_hide_card">Always hide card</string>
+    <string name="phone_summary">To receive notifications on your phone you have to enable Wearable</string>
+    <string name="display">Display</string>
+
+    <string name="opens">Opens</string>
+    <string name="closes">Closes</string>
+    <string name="closed">Closed</string>
+
+    <!-- Kino -->
+    <string name="kino" translatable="false">TU Kino</string>
+    <string name="imdb_rating">IMDb-Rating</string>
+    <string name="year">Year of release</string>
+    <string name="runtime">Runtime</string>
+    <string name="genre">Genre</string>
+    <string name="director">Director</string>
+    <string name="actors">Actors</string>
+    <string name="description">Description</string>
+    <string name="no_movies">Currently there are no movies.</string>
+
+    <!-- Eduroam card -->
+    <string name="eduroam" translatable="false">Eduroam</string>
+    <string name="setup">Setup</string>
+    <string name="setup_eduroam">Setup eduroam</string>
+    <string name="password">Password</string>
+    <string name="not_ask_again">Don’t ask again</string>
+    <string name="eduroam_setup_question">Do you want to connect to eduroam now?</string>
+    <string name="eduroam_setup_question_desc">Click to start setting up eduroam</string>
+    <string name="card_eduroam_summary">Allows you to easily set up eduroam wifi connection</string>
+    <string name="pin_lock">PIN-Lock</string>
+    <string name="pin_lock_desc">To set up the wireless access a PIN lock is required.\nIf you don’t already use PIN lock you can set it up here.\n<a href="https://www.tum.de/index.php?id=1821&amp;tx_ttnews%5Btt_news%5D=31688">More Info</a></string>
+    <string name="enable_pin_lock">Enable PIN-Lock</string>
+    <string name="data_backup">Data-Backup</string>
+    <string name="data_backup_desc">For safety reasons, the data backup must be disabled to avoid that the LRZ credentials are stored unencrypted on the Google servers.\nUnder ‘Backup &amp; restore’ > ‘Back up my data’ to disable.\n<a href="https://www.tum.de/nc/en/print/studies/studinews/issue-052013/show/article/31130//neste/1/">More Info</a></string>
+    <string name="disable_data_backup">Disable Data-Backup</string>
+    <string name="eduroam_success">Eduroam successfully configured</string>
+    <string name="pin_lock_rem"><b>Configuration failed!</b>\nDid you setup a PIN-Lock?</string>
+    <string name="install_certificate">Install certificate</string>
+    <string name="certificate">Certificate</string>
+    <string name="certificate_desc">You have to install a CA-Root-certificate to enable secure connection with server. Just click ‘Install certificate’ and confirm with ‘OK’.</string>
+    <string name="enable_wifi">Enable Wifi</string>
+    <string name="loading_first_time">The first start may take a few minutes</string>
+    <string name="password_gets_not_saved">TUM Campus App does not save the password, but Android WifiManager does.</string>
+    <string name="website">Website</string>
+    <string name="switch_map">Switch map</string>
+    <string name="navigate">Directions to</string>
+    <string name="categories_to_show">Categories to show</string>
+    <string name="news_sources">News sources</string>
+    <string name="only_latest_article">Only latest article</string>
+    <string name="only_latest_article_summary">Shows only the latest article. Otherwise all articles of the selected sources are shown.</string>
+    <string name="lecture_chat">Lecture chat</string>
+    <string name="set_lecture_chat">Activate or deactivate <i>Lecture chat</i>. If activated, you will be able to join lecture chat rooms, where you and your colleges can discuss.</string>
+    <string name="open_chat_terms">Chat terms</string>
+    <string name="accept_chat_terms">Accept chat terms</string>
+    <string name="have_to_accept_terms">Terms must be accepted to use group chat!</string>
+    <string name="activate_key">Please activate your public key first</string>
+    <string name="joined_chat_room">You joined the chat room!</string>
+    <string name="view_mode">Change view mode</string>
+    <string name="bug_reports">Anonymous Bug Reports</string>
+    <string name="set_bug_reports">Support the TCA Team by sending anonymous bug reports to our server which include: stack trace, logfile, android version, app version and screen resolution</string>
+    <string name="error_setup_chat_member">Something is wrong with your chat registration!</string>
+    <string name="room_timetable">Room timetable</string>
+    <string name="newspread" translatable="false" translateable="false">Newspread</string>
+    <string name="newspread_summary">Select which newspread you want to be shown. This are the slides on the info monitors in your faculty buildings.</string>
+    <string name="tuition_fee_more">Information on contributions and exemptions, loans, training assistance and scholarships, go to: <a href="https://www.tum.de/en/studies/fees-and-financial-aid/">Student Financial Aid</a></string>
+    <string name="no_rights_to_access_id">Identity could not be accessed. Please check the rights of your TUMOnline token!</string>
+    <string name="vibration">Vibration</string>
+    <string name="silent">Silent</string>
+    <string name="mode_silent_mode">State during lectures</string>
+    <string name="url_privacy_policy" translatable="false">https://tumcabe.in.tum.de/landing/privacy/</string>
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="message_details">Message info</string>
+    <string name="message_detail_text">&lt;b>Sender&lt;/b>&lt;br>
+Name: %1$s&lt;br>
+E-Mail: %2$s@mytum.de&lt;br>&lt;br>
+&lt;b>Message&lt;/b>&lt;br>
+Time: %3$s&lt;br>
+Status: %4$s&lt;br>
+Signature: %5$s</string>
+    <string name="valid">Valid</string>
+    <string name="not_valid">Not valid</string>
+    <string name="status_sent">Sent</string>
+    <string name="status_sending">Sending</string>
+    <string name="status_sending_failed">Sending failed</string>
+    <string name="joined">My</string>
+    <string name="not_joined">Other</string>
+    <string name="default_campus">Default campus</string>
+    <string name="campus_garching_hochbrueck" translatable="false">Campus Garching Hochbrück</string>
+    <string name="campus_leopoldstrasse" translatable="false">Campus Leopoldstraße</string>
+    <string name="campus_geschwister_scholl" translatable="false">Campus Geschwister Scholl-Platz</string>
+    <string name="no_default_campus">No default campus</string>
+    <string name="reply_label">Reply</string>
+    <string name="public_key_mail">Public key activation mail sent to %s@mytum.de.\n\n<b>Please activate it now!</b></string>
+    <string name="failure_uploading_public_key">Failure uploading public key</string>
+    <string name="key_not_activated">You have not activated your key!</string>
+    <string name="no_rights_to_access_lectures">Lectures could not be accessed. Please check the rights of your TUMOnline token!</string>
+    <string name="edit">Edit</string>
+    <string name="auto_join_chat">Join new lecture rooms</string>
+    <string name="set_auto_join_chat">If you subscribe for a new lecture the app will automatically add you to the lecture’s chat room.</string>
+    <string name="add_chat_member">Add person to chat room</string>
+    <string name="add_chat_room">New chat room</string>
+    <string name="join_chat_room">Join chat room</string>
+    <string name="invalid_chat_room">Invalid chat room</string>
+    <string name="new_chat_room">New chat room</string>
+    <string name="new_chat_room_desc">Select a name for your chat room. The name can not be changed afterwards!\n\n</string>
+    <string name="just_now">Just now</string>
+    <string name="yesterday">Yesterday</string>
+    <string name="update_notification_description">A new version of the Tum Campus App has been released on %s. Tap to download now.</string>
+    <string name="support_us">Help us to spread the word about the Campus App! Like us on Facebook, suggest an exciting idea on Github or send a mail telling us what you think!</string>
+    <string name="support_email" translatable="false">tca-support.os.in@tum.de</string>
+    <string name="support_us_title">Support us!</string>
+    <string name="permission_location_explanation">This App needs permission to access your calendar to be able to sync it with your TUM calendar.</string>
+    <string name="permission_calendar_explanation">This App needs permission to access your location to display useful information, e.g. the menues of cafeterias around you or timetables of your nearest MVV station. \n If you do not grant this permission you will still be able to configure your location in the settings.</string>
+    <string name="ok">OK</string>
+    <string name="alarm_date_published_on">Published on:</string>
+    <string name="chat_not_setup" translatable="false">Chat is not setup properly, please re-run the wizzard via the settings!</string>
+    <string name="www" translatable="false">www</string>
+</resources>

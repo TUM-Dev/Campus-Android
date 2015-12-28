@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="@dimen/padding_default"
+    android:baselineAligned="false">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight=".80">
+
+        <TextView
+            android:id="@+id/tvLectureName"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textColor="@color/text_light_blue"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:ellipsize="end"
+            android:singleLine="true" />
+
+        <TextView
+            android:id="@+id/tvTypeSWSSemester"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="" />
+
+        <TextView
+            android:id="@+id/tvDozent"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:ellipsize="end"
+            android:singleLine="true" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_height="wrap_content"
+        android:layout_weight=".20"
+        android:layout_width="0dp"
+        android:id="@+id/llAdditionalInfo"
+        android:visibility="gone"
+        >
+        <TextView
+            android:layout_height="wrap_content"
+            android:id="@+id/tvLastmsg"
+            android:gravity="right"
+            android:layout_gravity="right"
+            android:visibility="visible"
+            android:layout_width="wrap_content"
+            android:singleLine="true"/>
+
+        <TextView
+            android:layout_height="wrap_content"
+            android:id="@+id/tvMembers"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:background="#cc000000"
+            android:textColor="@android:color/white"
+            android:layout_gravity="right"
+            android:paddingTop="@dimen/padding_chat"
+            android:paddingBottom="@dimen/padding_chat"
+            android:paddingLeft="@dimen/padding_default"
+            android:paddingRight="@dimen/padding_default"
+            android:layout_width="wrap_content" />
+    </LinearLayout>
+
+</LinearLayout>

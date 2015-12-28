@@ -1,0 +1,52 @@
+<notices>
+    <notice>
+        <name>Nine Old Androids</name>
+        <url>http://nineoldandroids.com/</url>
+        <copyright>Copyright 2012 Jake Wharton</copyright>
+        <license>Apache Software License 2.0</license>
+    </notice>
+    <notice>
+        <name>StickyListHeaders</name>
+        <url>https://github.com/emilsjolander/StickyListHeaders</url>
+        <copyright>Copyright 2014 Emil Sjölander</copyright>
+        <license>Apache Software License 2.0</license>
+    </notice>
+    <notice>
+        <name>Retrofit</name>
+        <url>https://github.com/square/retrofit</url>
+        <copyright>Copyright 2013 Square, Inc.</copyright>
+        <license>Apache Software License 2.0</license>
+    </notice>
+    <notice>
+        <name>google-gson</name>
+        <url>https://code.google.com/p/google-gson/</url>
+        <copyright>Copyright 2008-2011 Google Inc.</copyright>
+        <license>Apache Software License 2.0</license>
+    </notice>
+    <notice>
+        <name>Simple</name>
+        <url>http://simple.sourceforge.net/</url>
+        <license>Apache Software License 2.0</license>
+    </notice>
+    <notice>
+        <name>Font Awesome</name>
+        <url>http://fortawesome.github.io/Font-Awesome/</url>
+       <!-- <license>Creative Commons BY 3.0 DE</license> not supported by LicencesDialog-->
+    </notice>
+    <notice>
+        <name>ActionBar-PullToRefresh</name>
+        <url>https://github.com/chrisbanes/ActionBar-PullToRefresh/</url>
+        <license>Apache Software License 2.0</license>
+    </notice>
+    <notice>
+        <name>ImageViewTouch for Android</name>
+        <url>https://github.com/sephiroth74/ImageViewZoom</url>
+        <copyright>Alessandro Crugnola</copyright>
+        <license>MIT License</license>
+    </notice>
+    <notice>
+        <name>OkHttp</name>
+        <url>https://github.com/square/okhttp</url>
+        <license>Apache Software License 2.0</license>
+    </notice>
+</notices>
