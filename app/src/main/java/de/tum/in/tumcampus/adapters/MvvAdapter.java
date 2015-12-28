@@ -1,9 +1,8 @@
 package de.tum.in.tumcampus.adapters;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,14 +12,11 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.List;
-
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.MVVDeparture;
 import de.tum.in.tumcampus.models.MVVObject;
 import de.tum.in.tumcampus.models.MVVSuggestion;
-import de.tum.in.tumcampus.models.MoodleCourseModule;
 
 /**
  * Created by enricogiga on 17/06/2015.
@@ -116,7 +112,7 @@ public class MvvAdapter extends BaseAdapter {
             MVVDeparture departure = (MVVDeparture) getItem(position);
             String number = departure.getLine();
             String station = departure.getDirection();
-            String minutes = String.valueOf(departure.getMin() +" min");
+            String minutes = String.valueOf(departure.getMin() + " min");
 
             viewHolder.icon.setVisibility(View.VISIBLE);
             viewHolder.icon.setImageDrawable(getImageResource(departure));
@@ -140,11 +136,11 @@ public class MvvAdapter extends BaseAdapter {
         Utils.log("type of transportation is " + type);
         switch (type) {
             case UBAHN:
-                return currentContext.getResources().getDrawable(R.drawable.mvv_ubahn);
+                return ContextCompat.getDrawable(currentContext, R.drawable.mvv_ubahn);
             case SBAHN:
-                return currentContext.getResources().getDrawable(R.drawable.mvv_sbahn);
+                return ContextCompat.getDrawable(currentContext, R.drawable.mvv_sbahn);
             case BUS_TRAM:
-                return currentContext.getResources().getDrawable(R.drawable.mvv_bustram);
+                return ContextCompat.getDrawable(currentContext, R.drawable.mvv_bustram);
         }
         return null;
     }

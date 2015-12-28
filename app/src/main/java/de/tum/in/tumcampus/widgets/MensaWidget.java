@@ -15,7 +15,6 @@ import de.tum.in.tumcampus.services.MensaWidgetService;
 /**
  * Implementation of Mensa Widget functionality.
  * The Update intervals is set to 10 hours in mensa_widget_info.xml
- *
  */
 public class MensaWidget extends AppWidgetProvider {
 
@@ -42,7 +41,7 @@ public class MensaWidget extends AppWidgetProvider {
             rv.setTextViewText(R.id.mensa_widget_header, mensaName);
 
             // set the adapter for the list view in the mensaWidget
-            rv.setRemoteAdapter(appWidgetIds[i], R.id.food_item, intent);
+            rv.setRemoteAdapter(R.id.food_item, intent); //appWidgetIds[i],
             rv.setEmptyView(R.id.empty_view, R.id.empty_view);
             appWidgetManager.updateAppWidget(appWidgetIds[i], rv);
 

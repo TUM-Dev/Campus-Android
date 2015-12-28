@@ -17,94 +17,92 @@ import de.tum.in.tumcampus.auxiliary.Utils;
  * Uses the core_course_get_contents function in the Moodle web service
  * this course is retrieved by sending the course id retrieved from the MoodleUserCourse
  */
-public class MoodleCourse extends  MoodleObject{
+public class MoodleCourse extends MoodleObject {
 
+    private static final long serialVersionUID = -4214943572924807689L;
     /**
      * List of sections of which a course is composed
      * section is a name given by me, the actual json array has no name
      */
-    private List sections;
+    private List<MoodleCourseSection> sections;
 
 
     /**
-     *Constructor from json string since unfortunately
+     * Constructor from json string since unfortunately
      * if an error occurs a JSONObject is retrieved describing the error
      * else a JSONArray with the right contents is retrieved
      *
      * @param jsonstring JSON in string format
      */
-    public MoodleCourse(String jsonstring)  {
-        try{
+    public MoodleCourse(String jsonstring) {
+        try {
             Object json = new JSONTokener(jsonstring).nextValue();
-            if (json instanceof  JSONObject){
+            if (json instanceof JSONObject) {
                 //error
                 JSONObject jsonObject = new JSONObject(jsonstring);
                 this.sections = null;
                 this.exception = jsonObject.optString("exception");
                 this.errorCode = jsonObject.optString("errorcode");
                 this.message = jsonObject.optString("message");
-                this.isValid=false;
+                this.isValid = false;
             } else {
                 //good
                 JSONArray jsonArray = new JSONArray(jsonstring);
-                this.sections=new ArrayList<MoodleCourseSection>();
+                this.sections = new ArrayList<>();
 
 
-                if (jsonArray != null){
+                if (jsonArray != null) {
                     MoodleCourseSection section;
-                    try{
-                        for (int i=0; i < jsonArray.length(); i++){
+                    try {
+                        for (int i = 0; i < jsonArray.length(); i++) {
                             JSONObject c = jsonArray.getJSONObject(i);
                             section = new MoodleCourseSection(c);
                             sections.add(section);
                         }
 
-                    } catch (JSONException e){
+                    } catch (JSONException e) {
                         this.sections = null;
-                        this.message="invalid json parsing in MoodleCourse model";
-                        this.exception="JSONException";
-                        this.errorCode="invalidjson";
-                        this.isValid=false;
+                        this.message = "invalid json parsing in MoodleCourse model";
+                        this.exception = "JSONException";
+                        this.errorCode = "invalidjson";
+                        this.isValid = false;
                     }
 
                 } else {
                     this.exception = "EmptyJSONArrayException";
                     this.message = "invalid json object passed to MoodleCourseSection model";
                     this.errorCode = "emptyjsonobject";
-                    this.isValid=false;
+                    this.isValid = false;
                 }
             }
 
-        }
-        catch (JSONException e){
+        } catch (JSONException e) {
             this.sections = null;
 
-            this.message="invalid json parsing in MoodleCourse model";
-            this.exception="JSONException";
-            this.errorCode="invalidjson";
-            this.isValid=false;
+            this.message = "invalid json parsing in MoodleCourse model";
+            this.exception = "JSONException";
+            this.errorCode = "invalidjson";
+            this.isValid = false;
         }
 
     }
 
 
-
-    public List getSections() {
+    public List<MoodleCourseSection> getSections() {
         return sections;
     }
 
-    public void setSections(List sections) {
+    public void setSections(List<MoodleCourseSection> sections) {
         this.sections = sections;
     }
 
-    public List<String> getSectionNames(){
+    public List<String> getSectionNames() {
         List<String> sectionNames = new ArrayList<String>();
         if (sections != null) {
             for (Object s : sections)
                 sectionNames.add(((MoodleCourseSection) s).getName());
             return sectionNames;
-        }
-        else
+        } else
             Utils.log("sections is null !");
         return null;
     }

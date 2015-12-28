@@ -38,11 +38,11 @@ public class MVVWidget extends AppWidgetProvider {
 
             // set the header for the Widget layout
             Calendar c = Calendar.getInstance();
-            String headerMVVWidget = "MVV Recent Searches " + c.get(Calendar.DAY_OF_MONTH) + "-" + c.get(Calendar.MONTH)+ "-" + c.get(Calendar.YEAR);
+            String headerMVVWidget = "MVV Recent Searches " + c.get(Calendar.DAY_OF_MONTH) + "-" + c.get(Calendar.MONTH) + "-" + c.get(Calendar.YEAR);
             rv.setTextViewText(R.id.mvv_widget_header, headerMVVWidget);
 
             // set the adapter for the list view in the mensaWidget
-            rv.setRemoteAdapter(appWidgetIds[i], R.id.mvv_widget_item, intent);
+            rv.setRemoteAdapter(R.id.mvv_widget_item, intent);//appWidgetIds[i],
             rv.setEmptyView(R.id.empty_view, R.id.empty_view);
             //Set pending intent to use the refresh button
             rv.setOnClickPendingIntent(R.id.mvv_refresh, getPendingSelfIntent(context, Const.SYNC_CLICKED));
@@ -55,6 +55,7 @@ public class MVVWidget extends AppWidgetProvider {
 
     /**
      * Method reacting to the click on the refresh button
+     *
      * @param context
      * @param intent
      */

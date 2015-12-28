@@ -3,6 +3,7 @@ package de.tum.in.tumcampus.auxiliary;
 import android.content.Context;
 import android.util.Log;
 
+import java.sql.Time;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -20,9 +21,10 @@ public class DateUtils {
 
     private static final String formatSQL = "yyyy-MM-dd HH:mm:ss"; // 2014-06-30 16:31:57
     private static final String formatISO = "yyyy-MM-dd'T'HH:mm:ss'Z'"; // 2014-06-30T16:31:57.878Z
+    private static final String SIMPLE_DATE_FORMAT = "EEE MMM dd HH:mm:ss zzz yyyy";
 
     public static String getRelativeTimeISO(String timestamp, Context context) {
-            return DateUtils.getRelativeTime(DateUtils.parseIsoDate(timestamp), context);
+        return DateUtils.getRelativeTime(DateUtils.parseIsoDate(timestamp), context);
     }
 
     private static String getRelativeTime(Date date, Context context) {
@@ -89,5 +91,33 @@ public class DateUtils {
             Utils.log("Parsing SQL date failed");
         }
         return null;
+    }
+
+    public static Date parseSimpleDateFormat(String datetime) {
+        if(datetime == null) {
+            return null;
+        }
+        try {
+            SimpleDateFormat formatter = new SimpleDateFormat(SIMPLE_DATE_FORMAT, Locale.ENGLISH);
+            return formatter.parse(datetime);
+        } catch (ParseException e) {
+            Utils.log("Parsing SIMPLE_DATE_FORMAT date failed");
+        }
+        return null;
+    }
+
+
+    public static GregorianCalendar epochToDate(Long epochTime){
+        /**
+         * gets the epochTime in seconds
+         * returns the corresponding GeorgianCalendar
+         */
+        if(epochTime == null) {
+            return null;
+        }
+        GregorianCalendar c = new GregorianCalendar();
+        //  This method gets the epochTime in milliseconds
+        c.setTimeInMillis(epochTime * 1000);
+        return c;
     }
 }

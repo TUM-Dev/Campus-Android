@@ -17,7 +17,8 @@ import java.util.List;
  * TODO: manage and cache the images in modicon (we might just download all of them locally, they can't be to much)
  * used in the array of modules of a course
  */
-public class MoodleCourseModule extends MoodleObject{
+public class MoodleCourseModule extends MoodleObject {
+    private static final long serialVersionUID = -2585217942607037539L;
     /**
      * Module's id
      */
@@ -37,10 +38,10 @@ public class MoodleCourseModule extends MoodleObject{
      * have to append a token.
      * These the types I could notice
      * Forum, Choice, Quiz, Chat, Glossary, Label, Book, Resource, Folder,
-     *  Assign, Survey, Wiki, Feedback, Data, Workshop, Math
-     *
-     *  NB: Label is just text, might be used as section header
-     *      Resource, Book, Folder might hold an array of contents
+     * Assign, Survey, Wiki, Feedback, Data, Workshop, Math
+     * <p/>
+     * NB: Label is just text, might be used as section header
+     * Resource, Book, Folder might hold an array of contents
      **/
     private String modname;
     /**
@@ -66,12 +67,12 @@ public class MoodleCourseModule extends MoodleObject{
      * might always want to check if null before accessing it
      * by now i noticed Resource, Book, Folder always have it
      */
-    private List <MoodleCourseContent> contents = new ArrayList<MoodleCourseContent>();
-
+    private List<MoodleCourseContent> contents = new ArrayList<>();
 
 
     /**
      * Constructor to use if JSON is passed as a string
+     *
      * @param jsonString JSON in string format
      */
     public MoodleCourseModule(String jsonString) {
@@ -80,20 +81,21 @@ public class MoodleCourseModule extends MoodleObject{
 
     /**
      * Constructor by parsing the JSONObject
+     *
      * @param jsonObject the JSONObject
      */
-    public MoodleCourseModule(JSONObject jsonObject){
-        this.id=null;
-        this.instance=null;
-        this.modicon=null;
-        this.modname=null;
-        this.modplural=null;
-        this.name=null;
-        this.url=null;
-        this.visible=null;
-        this.contents=null;
+    public MoodleCourseModule(JSONObject jsonObject) {
+        this.id = null;
+        this.instance = null;
+        this.modicon = null;
+        this.modname = null;
+        this.modplural = null;
+        this.name = null;
+        this.url = null;
+        this.visible = null;
+        this.contents = null;
 
-        if (jsonObject != null){
+        if (jsonObject != null) {
             if (!jsonObject.has("exception")) {
                 this.instance = jsonObject.optInt("instance");
                 this.id = jsonObject.optInt("id");
@@ -102,43 +104,42 @@ public class MoodleCourseModule extends MoodleObject{
                 this.name = jsonObject.optString("name");
                 this.modplural = jsonObject.optString("modplural");
                 this.visible = jsonObject.optDouble("visible");
-                try{
+                try {
                     this.url = new URL(jsonObject.optString("url"));
-                }
-                catch (MalformedURLException m){
-                    this.url=null;
-                    this.message=m.getMessage();
-                    this.exception="MalformedURLException";
-                    this.errorCode="malformedurl";
+                } catch (MalformedURLException m) {
+                    this.url = null;
+                    this.message = m.getMessage();
+                    this.exception = "MalformedURLException";
+                    this.errorCode = "malformedurl";
 
                 }
 
 
                 MoodleCourseContent content;
-                try{
+                try {
                     //JSONArray jsonArray = jsonObject.getJSONArray("modules");
                     JSONArray jsonArray = jsonObject.getJSONArray("contents");
                     this.contents = new ArrayList<MoodleCourseContent>();
-                    for (int i=0; i < jsonArray.length(); i++){
+                    for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject c = jsonArray.getJSONObject(i);
                         content = new MoodleCourseContent(c);
                         contents.add(content);
                     }
 
-                } catch (JSONException e){
+                } catch (JSONException e) {
                     this.contents = null;
 
-                    this.message="invalid json parsing in MoodleCourseModule model";
-                    this.exception="JSONException";
-                    this.errorCode="invalidjson";
-                    this.isValid=false;
+                    this.message = "invalid json parsing in MoodleCourseModule model";
+                    this.exception = "JSONException";
+                    this.errorCode = "invalidjson";
+                    this.isValid = false;
                 }
 
-            } else{
+            } else {
                 this.exception = jsonObject.optString("exception");
                 this.errorCode = jsonObject.optString("errorcode");
                 this.message = jsonObject.optString("message");
-                this.isValid=false;
+                this.isValid = false;
 
             }
 
@@ -146,69 +147,82 @@ public class MoodleCourseModule extends MoodleObject{
             this.exception = "EmptyJSONObjectException";
             this.message = "invalid json object passed to MoodleUserCourse model";
             this.errorCode = "emptyjsonobject";
-            this.isValid=false;
+            this.isValid = false;
 
         }
 
     }
 
-    public Number getId(){
+    public Number getId() {
         return this.id;
     }
 
-    public List getContents() {
+    public List<MoodleCourseContent> getContents() {
         return contents;
     }
 
-    public void setContents(List contents) {
+    public void setContents(List<MoodleCourseContent> contents) {
         this.contents = contents;
     }
 
-    public void setId(Number id){
+    public void setId(Number id) {
 
         this.id = id;
     }
 
-    public Number getInstance(){
+    public Number getInstance() {
         return this.instance;
     }
-    public void setInstance(Number instance){
+
+    public void setInstance(Number instance) {
         this.instance = instance;
     }
-    public String getModicon(){
+
+    public String getModicon() {
         return this.modicon;
     }
-    public void setModicon(String modicon){
+
+    public void setModicon(String modicon) {
         this.modicon = modicon;
     }
-    public String getModname(){
+
+    public String getModname() {
         return this.modname;
     }
-    public void setModname(String modname){
+
+    public void setModname(String modname) {
         this.modname = modname;
     }
-    public String getModplural(){
+
+    public String getModplural() {
         return this.modplural;
     }
-    public void setModplural(String modplural){
+
+    public void setModplural(String modplural) {
         this.modplural = modplural;
     }
-    public String getName(){
+
+    public String getName() {
         return this.name;
     }
-    public void setName(String name){
+
+    public void setName(String name) {
         this.name = name;
     }
-    public URL getUrl(){
+
+    public URL getUrl() {
         return this.url;
     }
-    public void setUrl(URL url){
+
+    public void setUrl(URL url) {
         this.url = url;
     }
-    public Number getVisible(){
+
+    public Number getVisible() {
         return this.visible;
     }
-    public void setVisible(Number visible){
+
+    public void setVisible(Number visible) {
         this.visible = visible;
     }
 }

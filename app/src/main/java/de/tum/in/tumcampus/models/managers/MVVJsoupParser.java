@@ -22,7 +22,6 @@ import de.tum.in.tumcampus.models.MVVSuggestion;
  */
 
 
-
 public class MVVJsoupParser extends AsyncTask<String, Void, MVVObject> {
     MVVDelegate delegate;
     private final String baseURL1 = "http://www.mvg-live.de/ims/dfiStaticAuswahl.svc?haltestelle=";
@@ -33,10 +32,10 @@ public class MVVJsoupParser extends AsyncTask<String, Void, MVVObject> {
 
     }
 
-    private String prepareURL(String query){
+    private String prepareURL(String query) {
 
         // if query is already a url no need for preparation
-        if(query.indexOf("http://www.mvg-live.de") >= 0)
+        if (query.indexOf("http://www.mvg-live.de") >= 0)
             return query;
         try {
             query = fixDeutschUrl(query);
@@ -51,13 +50,13 @@ public class MVVJsoupParser extends AsyncTask<String, Void, MVVObject> {
              */
             query = query.replace("%25", "%");
             return baseURL1 + query + baseURL2;
-        }catch (UnsupportedEncodingException e){
+        } catch (UnsupportedEncodingException e) {
             Utils.log("could not url encode : " + query);
             return null;
         }
     }
 
-    private String fixDeutschUrl(String query){
+    private String fixDeutschUrl(String query) {
         query = query.replace(",", "");
         query = query.replace("ä", "%E4");
         query = query.replace("ö", "%EF");
@@ -79,11 +78,11 @@ public class MVVJsoupParser extends AsyncTask<String, Void, MVVObject> {
             Log.d("JSoup", "Connected to [" + requestedUrl + "]");
 
             Elements suggestionList = doc.select("li");
-            Elements checkbox= doc.getElementsByAttributeValue("type","checkbox");
+            Elements checkbox = doc.getElementsByAttributeValue("type", "checkbox");
             Elements station = doc.select(".headerStationColumn");
 
             //in this case there is no station and no suggestion ->it's an error
-            if (checkbox.size()>0){
+            if (checkbox.size() > 0) {
 
                 result.setValid(false);
                 result.setMessage("No stop found with that or similar name");
@@ -91,12 +90,12 @@ public class MVVJsoupParser extends AsyncTask<String, Void, MVVObject> {
             }
 
             //in this case there are suggestions for the query
-            if (suggestionList.size()>0){
+            if (suggestionList.size() > 0) {
 
                 result.setSuggestion(true);
-                int i=0;
-                for (Element suggestion : suggestionList){
-                    MVVSuggestion sugg= new MVVSuggestion(suggestion.select("a").attr("href"),suggestion.select("a").text());
+                int i = 0;
+                for (Element suggestion : suggestionList) {
+                    MVVSuggestion sugg = new MVVSuggestion(suggestion.select("a").attr("href"), suggestion.select("a").text());
                     result.getResultList().add(sugg);
                     i++;
                 }
@@ -105,7 +104,7 @@ public class MVVJsoupParser extends AsyncTask<String, Void, MVVObject> {
 
 
             //in this case the station has been found
-            if (station.size()>0){
+            if (station.size() > 0) {
 
                 result.setDeparture(true);
                 Elements lineList = doc.select(".lineColumn");
@@ -119,8 +118,8 @@ public class MVVJsoupParser extends AsyncTask<String, Void, MVVObject> {
                 result.setDepartureHeader(headerStation.get(0).text());
                 result.setDepartureServerTime(serverTime.get(0).text());
 
-                for (int i = 0; i<lineList.size();i++){
-                    MVVDeparture dep = new MVVDeparture(lineList.get(i).text(),stationList.get(i).text(),Integer.parseInt(inMinList.get(i).text()));
+                for (int i = 0; i < lineList.size(); i++) {
+                    MVVDeparture dep = new MVVDeparture(lineList.get(i).text(), stationList.get(i).text(), Integer.parseInt(inMinList.get(i).text()));
                     result.getResultList().add(dep);
                 }
 
@@ -128,11 +127,11 @@ public class MVVJsoupParser extends AsyncTask<String, Void, MVVObject> {
 
 
         } catch (Throwable t) {
-           Utils.log("Jsoup Error :" + t.getMessage());
-           result.setValid(false);
-           result.setErrorCode("invalid_html_parsing");
-           result.setMessage(t.getMessage());
-           result.setException("InvalidHTMLParsingException");
+            Utils.log("Jsoup Error :" + t.getMessage());
+            result.setValid(false);
+            result.setErrorCode("invalid_html_parsing");
+            result.setMessage(t.getMessage());
+            result.setException("InvalidHTMLParsingException");
         }
 
         return result;
@@ -143,11 +142,11 @@ public class MVVJsoupParser extends AsyncTask<String, Void, MVVObject> {
     protected void onPostExecute(MVVObject s) {
         super.onPostExecute(s);
 
-        if (!s.isValid()){
+        if (!s.isValid()) {
             delegate.showError(s);
-        }else if (s.isDeparture()){
+        } else if (s.isDeparture()) {
             delegate.showDepartureList(s);
-        }else if (s.isSuggestion()){
+        } else if (s.isSuggestion()) {
             delegate.showSuggestionList(s);
         }
 

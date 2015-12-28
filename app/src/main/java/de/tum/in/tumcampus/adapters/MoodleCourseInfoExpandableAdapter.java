@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,11 +33,11 @@ import de.tum.in.tumcampus.models.MoodleObject;
  * in this adapter section and modules are considered as group items, and contents as childs
  * Therefore, sections has no child, but each module can have several childs
  */
-public class MoodleCourseInfoExpandableAdapter extends BaseExpandableListAdapter{
+public class MoodleCourseInfoExpandableAdapter extends BaseExpandableListAdapter {
 
     private List<MoodleCourseSection> sections;
 
-   // a mapping from keys=("sections","modules") to positions in group indexes
+    // a mapping from keys=("sections","modules") to positions in group indexes
     private Map<String, List<Integer>> indexMapping;
 
     // all group positions for existing sections
@@ -90,7 +91,8 @@ public class MoodleCourseInfoExpandableAdapter extends BaseExpandableListAdapter
 
     /**
      * return 0 for Sections of the course and also for Modules which
-     have no content
+     * have no content
+     *
      * @param groupPosition
      * @return
      */
@@ -98,14 +100,14 @@ public class MoodleCourseInfoExpandableAdapter extends BaseExpandableListAdapter
     public int getChildrenCount(int groupPosition) {
         try {
             if (getItemViewType(groupPosition) == MODULE_HEADER) {
-                List<MoodleCourseContent> contents = (List<MoodleCourseContent>) getModule(groupPosition).getContents();
+                List<MoodleCourseContent> contents = getModule(groupPosition).getContents();
                 if (contents != null)
                     return contents.size();
                 else
                     return 0;
             } else
                 return 0;
-        }catch(Exception e){
+        } catch (Exception e) {
             Utils.log(e);
             return 0;
         }
@@ -127,14 +129,14 @@ public class MoodleCourseInfoExpandableAdapter extends BaseExpandableListAdapter
     public Object getChild(int groupPosition, int childPosition) {
         try {
             if (getItemViewType(groupPosition) == MODULE_HEADER) {
-                List<MoodleCourseContent> contents = (List<MoodleCourseContent>) getModule(groupPosition).getContents();
+                List<MoodleCourseContent> contents = getModule(groupPosition).getContents();
                 if (contents != null)
                     return contents.get(childPosition);
                 else
                     return null;
             }
             return null;
-        }catch (Exception e){
+        } catch (Exception e) {
             Utils.log(e);
             return null;
         }
@@ -166,8 +168,8 @@ public class MoodleCourseInfoExpandableAdapter extends BaseExpandableListAdapter
             viewHolder.title = (TextView) convertView.findViewById(R.id.header);
             viewHolder.image = (ImageView) convertView.findViewById(R.id.indicator_icon);
             convertView.setTag(viewHolder);
-        }else
-            viewHolder = (ViewHolder)convertView.getTag();
+        } else
+            viewHolder = (ViewHolder) convertView.getTag();
 
         try {
             switch (type) {
@@ -206,8 +208,8 @@ public class MoodleCourseInfoExpandableAdapter extends BaseExpandableListAdapter
             convertView = inflater.inflate(R.layout.moodle_course_content, null);
             viewHolder.title = (TextView) convertView.findViewById(R.id.courseChildHeader);
             convertView.setTag(viewHolder);
-        }else
-            viewHolder = (ViewHolder)convertView.getTag();
+        } else
+            viewHolder = (ViewHolder) convertView.getTag();
 
         try {
             switch (type) {
@@ -220,7 +222,7 @@ public class MoodleCourseInfoExpandableAdapter extends BaseExpandableListAdapter
                         }
                     }
             }
-        }catch (NullPointerException e) {
+        } catch (NullPointerException e) {
             Utils.log(e);
             Utils.log(String.format("Error: Item %s is null", groupPosition));
             return convertView;
@@ -236,6 +238,7 @@ public class MoodleCourseInfoExpandableAdapter extends BaseExpandableListAdapter
 
     /**
      * gets back the type of the item in group positions of the list
+     *
      * @param position the position of the grouo item
      * @return (int) type of this group: module or section
      */
@@ -272,7 +275,7 @@ public class MoodleCourseInfoExpandableAdapter extends BaseExpandableListAdapter
 
                 if (currentSection.getModules() != null) {
 
-                    for (MoodleCourseModule currentModule : (List<MoodleCourseModule>) currentSection.getModules()) {
+                    for (MoodleCourseModule currentModule : currentSection.getModules()) {
                         index++;
                         exisiting_modules.put(index, currentModule);
                         modules_indexes.add(index);
@@ -303,56 +306,57 @@ public class MoodleCourseInfoExpandableAdapter extends BaseExpandableListAdapter
      * gets the drawable for related module in moodle
      * because of efficiency used this method, retrieving resources by string name
      * is not efficient.
+     *
      * @param module of type MoodleCourseModule
      * @return Drawable, the icon related to this module
      */
-    public Drawable getImageResource(MoodleCourseModule module){
+    public Drawable getImageResource(MoodleCourseModule module) {
         String modName = module.getModname();
-        switch(modName){
+        switch (modName) {
             case "assign":
-                return this.activity.getBaseContext().getResources().getDrawable(R.drawable.moodle_assign);
+                return ContextCompat.getDrawable(this.activity.getBaseContext(), R.drawable.moodle_assign);
             case "assignment":
-                return this.activity.getBaseContext().getResources().getDrawable(R.drawable.moodle_assign);
+                return ContextCompat.getDrawable(this.activity.getBaseContext(), R.drawable.moodle_assign);
             case "book":
-                return this.activity.getBaseContext().getResources().getDrawable(R.drawable.moodle_book);
+                return ContextCompat.getDrawable(this.activity.getBaseContext(), R.drawable.moodle_book);
             case "chat":
-                return this.activity.getBaseContext().getResources().getDrawable(R.drawable.moodle_chat);
+                return ContextCompat.getDrawable(this.activity.getBaseContext(), R.drawable.moodle_chat);
             case "choice":
-                return this.activity.getBaseContext().getResources().getDrawable(R.drawable.moodle_choice);
+                return ContextCompat.getDrawable(this.activity.getBaseContext(), R.drawable.moodle_choice);
             case "data":
-                return this.activity.getBaseContext().getResources().getDrawable(R.drawable.moodle_data);
+                return ContextCompat.getDrawable(this.activity.getBaseContext(), R.drawable.moodle_data);
             case "feedback":
-                return this.activity.getBaseContext().getResources().getDrawable(R.drawable.moodle_feedback);
+                return ContextCompat.getDrawable(this.activity.getBaseContext(), R.drawable.moodle_feedback);
             case "folder":
-                return this.activity.getBaseContext().getResources().getDrawable(R.drawable.moodle_folder);
+                return ContextCompat.getDrawable(this.activity.getBaseContext(), R.drawable.moodle_folder);
             case "forum":
-                return this.activity.getBaseContext().getResources().getDrawable(R.drawable.moodle_forum);
+                return ContextCompat.getDrawable(this.activity.getBaseContext(), R.drawable.moodle_forum);
             case "glossary":
-                return this.activity.getBaseContext().getResources().getDrawable(R.drawable.moodle_glossary);
+                return ContextCompat.getDrawable(this.activity.getBaseContext(), R.drawable.moodle_glossary);
             case "imscp":
-                return this.activity.getBaseContext().getResources().getDrawable(R.drawable.moodle_imscp);
+                return ContextCompat.getDrawable(this.activity.getBaseContext(), R.drawable.moodle_imscp);
             case "label":
-                return this.activity.getBaseContext().getResources().getDrawable(R.drawable.moodle_label);
+                return ContextCompat.getDrawable(this.activity.getBaseContext(), R.drawable.moodle_label);
             case "lesson":
-                return this.activity.getBaseContext().getResources().getDrawable(R.drawable.moodle_lesson);
+                return ContextCompat.getDrawable(this.activity.getBaseContext(), R.drawable.moodle_lesson);
             case "lti":
-                return this.activity.getBaseContext().getResources().getDrawable(R.drawable.moodle_lti);
+                return ContextCompat.getDrawable(this.activity.getBaseContext(), R.drawable.moodle_lti);
             case "page":
-                return this.activity.getBaseContext().getResources().getDrawable(R.drawable.moodle_page);
+                return ContextCompat.getDrawable(this.activity.getBaseContext(), R.drawable.moodle_page);
             case "quiz":
-                return this.activity.getBaseContext().getResources().getDrawable(R.drawable.moodle_quiz);
+                return ContextCompat.getDrawable(this.activity.getBaseContext(), R.drawable.moodle_quiz);
             case "resource":
-                return this.activity.getBaseContext().getResources().getDrawable(R.drawable.moodle_resource);
+                return ContextCompat.getDrawable(this.activity.getBaseContext(), R.drawable.moodle_resource);
             case "scorm":
-                return this.activity.getBaseContext().getResources().getDrawable(R.drawable.moodle_scorm);
+                return ContextCompat.getDrawable(this.activity.getBaseContext(), R.drawable.moodle_scorm);
             case "survey":
-                return this.activity.getBaseContext().getResources().getDrawable(R.drawable.moodle_survey);
+                return ContextCompat.getDrawable(this.activity.getBaseContext(), R.drawable.moodle_survey);
             case "url":
-                return this.activity.getBaseContext().getResources().getDrawable(R.drawable.moodle_url);
+                return ContextCompat.getDrawable(this.activity.getBaseContext(), R.drawable.moodle_url);
             case "wiki":
-                return this.activity.getBaseContext().getResources().getDrawable(R.drawable.moodle_wiki);
+                return ContextCompat.getDrawable(this.activity.getBaseContext(), R.drawable.moodle_wiki);
             case "workshop":
-                return this.activity.getBaseContext().getResources().getDrawable(R.drawable.moodle_workshop);
+                return ContextCompat.getDrawable(this.activity.getBaseContext(), R.drawable.moodle_workshop);
             default:
                 return null;
         }
@@ -361,13 +365,14 @@ public class MoodleCourseInfoExpandableAdapter extends BaseExpandableListAdapter
     /**
      * calculates the image height for the imageView of an item
      * in the list. Based on the item type. Group, Group with children, child
+     *
      * @param itemType
      * @return height in pixels based on the display density of the device
      */
-    public int getImageHeight(int itemType){
+    public int getImageHeight(int itemType) {
         DisplayMetrics metrics = this.activity.getApplicationContext().getResources().getDisplayMetrics();
         float dp, fpixels;
-        switch(itemType){
+        switch (itemType) {
             case SECTION_HEADER:
                 dp = 30f;
                 fpixels = metrics.density * dp;
@@ -381,16 +386,16 @@ public class MoodleCourseInfoExpandableAdapter extends BaseExpandableListAdapter
         }
     }
 
-    private void changeStyle(ViewHolder holder, MoodleObject object, int groupPosition, boolean isExpanded){
+    private void changeStyle(ViewHolder holder, MoodleObject object, int groupPosition, boolean isExpanded) {
 
-        if (object instanceof MoodleCourseSection){
+        if (object instanceof MoodleCourseSection) {
             MoodleCourseSection section = (MoodleCourseSection) object;
             String mod_name = section.getName();
             holder.image.setVisibility(View.GONE);
             holder.title.setHeight(getImageHeight(SECTION_HEADER));
             holder.title.setText(mod_name);
-            holder.title.setBackgroundColor(Color.argb(246,244,120,3));
-        }else{
+            holder.title.setBackgroundColor(Color.argb(246, 244, 120, 3));
+        } else {
 
             // the object is a course Module
             MoodleCourseModule module = (MoodleCourseModule) object;
@@ -402,21 +407,21 @@ public class MoodleCourseInfoExpandableAdapter extends BaseExpandableListAdapter
             /* if this course module has no child set the icon
             from getImageResource, otherwise set the group indicator icon
             */
-            if( getChildrenCount( groupPosition ) == 0 ) {
+            if (getChildrenCount(groupPosition) == 0) {
                 Drawable drawable = getImageResource(module);
                 if (drawable == null)
                     holder.image.setVisibility(View.GONE);
                 else {
                     holder.image.setImageDrawable(drawable);
-                    holder.image.setVisibility( View.VISIBLE );
+                    holder.image.setVisibility(View.VISIBLE);
                 }
-            }else {
-                holder.image.setVisibility( View.VISIBLE );
-                Drawable drawable = activity.getBaseContext().getResources().getDrawable(R.drawable.moodle_expander_group);
+            } else {
+                holder.image.setVisibility(View.VISIBLE);
+                Drawable drawable = ContextCompat.getDrawable(activity.getBaseContext(), R.drawable.moodle_expander_group);
                 holder.image.setImageDrawable(drawable);
 
                 // setting the state of the group indicator
-                int stateSetIndex = ( isExpanded ? 1 : 0) ;
+                int stateSetIndex = (isExpanded ? 1 : 0);
                 drawable.setState(GROUP_STATE_SETS[stateSetIndex]);
             }
         }

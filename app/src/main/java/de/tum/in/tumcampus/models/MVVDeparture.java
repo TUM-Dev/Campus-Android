@@ -4,6 +4,8 @@ package de.tum.in.tumcampus.models;
  * Created by enricogiga on 16/06/2015.
  */
 public class MVVDeparture extends  MVVObject {
+
+    private static final long serialVersionUID = 4605590640826856584L;
     private String line;
     private String direction;
     private Integer min;

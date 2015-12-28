@@ -15,6 +15,7 @@ import java.net.URL;
  * used in the array of contents in a module
  */
 public class MoodleCourseContent extends MoodleObject{
+    private static final long serialVersionUID = -2856312116893377906L;
     /**
      * content's type
      * if it's file it's a resource to download if it's content than

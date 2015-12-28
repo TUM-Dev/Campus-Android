@@ -38,7 +38,7 @@ public class MoodleEventsActivity extends ProgressActivity implements AdapterVie
 
     private RecyclerView eventsRecyclerView;
     private RecyclerView.LayoutManager eventsLayoutManager;
-    private RecyclerView.Adapter eventsAdapter;
+    private MoodleEventAdapter eventsAdapter;
     ArrayList<MoodleEvent> userEvents;
 
     public MoodleEventsActivity() {

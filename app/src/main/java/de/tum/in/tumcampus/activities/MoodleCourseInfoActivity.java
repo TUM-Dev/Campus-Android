@@ -14,7 +14,6 @@ import java.net.URL;
 import java.util.List;
 
 import de.tum.in.tumcampus.R;
-import de.tum.in.tumcampus.activities.generic.ActivityForDownloadingExternal;
 import de.tum.in.tumcampus.activities.generic.ProgressActivity;
 import de.tum.in.tumcampus.adapters.MoodleCourseInfoExpandableAdapter;
 import de.tum.in.tumcampus.auxiliary.NetUtils;
@@ -45,10 +44,12 @@ public class MoodleCourseInfoActivity extends ProgressActivity implements Moodle
     private ExpandableListView view_course_sections;
     private TextView title;
 
-    public MoodleCourseInfoActivity() {super(R.layout.activity_moodle_course_info);}
+    public MoodleCourseInfoActivity() {
+        super(R.layout.activity_moodle_course_info);
+    }
 
     @Override
-    public void onCreate(Bundle savedInstanceState){
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         intent = getIntent();
         baseSetup();
@@ -56,13 +57,12 @@ public class MoodleCourseInfoActivity extends ProgressActivity implements Moodle
     }
 
     @Override
-    public void onRestart(){
+    public void onRestart() {
         super.onRestart();
         refresh();
     }
 
     /**
-     *
      * this method is called
      * when internet connection is back
      */
@@ -82,14 +82,14 @@ public class MoodleCourseInfoActivity extends ProgressActivity implements Moodle
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.moodle_my_courses:
                 // don't need to start my_courses
                 // it is already on the activity stack!
                 finish();
                 return true;
             case R.id.events:
-                Intent eventIntent = new Intent(this,MoodleEventsActivity.class);
+                Intent eventIntent = new Intent(this, MoodleEventsActivity.class);
                 eventIntent.putExtra("user_token", realManager.getToken());
                 startActivity(eventIntent);
                 finish();
@@ -102,6 +102,7 @@ public class MoodleCourseInfoActivity extends ProgressActivity implements Moodle
 
     /**
      * handles the click events on the child items in the expandable list
+     *
      * @param parent
      * @param v
      * @param groupPosition
@@ -122,20 +123,20 @@ public class MoodleCourseInfoActivity extends ProgressActivity implements Moodle
                         urlString.indexOf("moodle.tum.de") >= 0)
                     urlString = completeURL(urlString);
 
-                if (urlString != null){
+                if (urlString != null) {
                     Utils.log("Got this URL " + urlString);
                     Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(urlString));
                     showLoadingStart();
                     startActivity(browserIntent);
                     return true;
-                }else {
+                } else {
                     Utils.showToast(this.getApplicationContext(), R.string.no_url);
                     return true;
                 }
             } else
                 Utils.log(String.format("No Content found for group posiiton %d and childPosition %d", groupPosition, childPosition));
             return false;
-        }catch (Exception e) {
+        } catch (Exception e) {
             Utils.log(e);
             Utils.showToast(this.getApplicationContext(), "Sorry unable to find the URL");
             return false;
@@ -143,11 +144,12 @@ public class MoodleCourseInfoActivity extends ProgressActivity implements Moodle
     }
 
     /**
-     *  this method completes the url sent as input adding the user toking
+     * this method completes the url sent as input adding the user toking
+     *
      * @param urlString
      * @return newUrlString
      */
-    private String completeURL(String urlString ) {
+    private String completeURL(String urlString) {
         String newUrlString;
 
         if (urlString.contains("?"))
@@ -157,10 +159,12 @@ public class MoodleCourseInfoActivity extends ProgressActivity implements Moodle
 
         return newUrlString;
     }
+
     /**
      * handles the event on clicks on the group items of the expandable list. If it is a section header,
      * does nothing. If it is a module and it has children, expand the group. if it does not have children
      * it means that it has an URL associated with it. Open this URL in a new browser activity.
+     *
      * @param parent
      * @param v
      * @param groupPosition
@@ -207,17 +211,17 @@ public class MoodleCourseInfoActivity extends ProgressActivity implements Moodle
                     //  collapse the ListView Group/s
                     parent.collapseGroup(groupPosition);
             return true;
-        }catch(Exception e){
+        } catch (Exception e) {
             Utils.log(e);
             return false;
         }
     }
 
-    private void baseSetup(){
+    private void baseSetup() {
         try {
             // getting info from intent
             courseName = intent.getStringExtra("course_name");
-            courseName = (courseName!=null) ? courseName : getString(R.string.moodle_course_name_not_found);
+            courseName = (courseName != null) ? courseName : getString(R.string.moodle_course_name_not_found);
             courseId = intent.getIntExtra("course_id", -1);
             if (courseId == -1) {
                 Utils.log(String.format("Warning! course id is -1=defaultValue for course %s", courseName));
@@ -231,14 +235,14 @@ public class MoodleCourseInfoActivity extends ProgressActivity implements Moodle
             //UI setup and adapter
             baseUISetup();
 
-        }catch (Exception e){
+        } catch (Exception e) {
             Utils.log(e);
             Utils.showToast(this, getResources().getString(R.string.error_something_wrong));
             finish();
         }
     }
 
-    public void baseUISetup(){
+    public void baseUISetup() {
 
         // initializing UI elements
         view_course_sections = (ExpandableListView) findViewById(R.id.moodleCourseSections);

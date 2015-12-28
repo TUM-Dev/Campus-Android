@@ -9,25 +9,26 @@ import java.util.ArrayList;
 /**
  * Created by carlodidomenico on 10/06/15.
  */
-public class MoodleEventsList extends MoodleObject{
+public class MoodleEventsList extends MoodleObject {
+    private static final long serialVersionUID = 3678092674443310261L;
     /**
      * The list of User's Events
      */
-    private ArrayList<MoodleEvent> userEvents = new ArrayList<MoodleEvent>();
+    private ArrayList<MoodleEvent> userEvents = new ArrayList<>();
 
     /**
-     *Constructor from json object
+     * Constructor from json object
      *
      * @param jsonObject JSON in string format
      */
-    public MoodleEventsList(JSONObject jsonObject)  {
-        try{
-            if (jsonObject != null && !jsonObject.has("error")){
+    public MoodleEventsList(JSONObject jsonObject) {
+        try {
+            if (jsonObject != null && !jsonObject.has("error")) {
                 //good
                 JSONArray jsonArray = jsonObject.optJSONArray("events");
-                if (jsonArray != null){
+                if (jsonArray != null) {
                     MoodleEvent userEvent;
-                    for (int i=0; i < jsonArray.length(); i++){
+                    for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject event = jsonArray.getJSONObject(i);
                         userEvent = new MoodleEvent(event);
 
@@ -40,35 +41,34 @@ public class MoodleEventsList extends MoodleObject{
                     this.exception = "EmptyJSONArrayException";
                     this.message = "invalid json object passed to MoodleEventsList model";
                     this.errorCode = "emptyjsonobject";
-                    this.isValid=false;
+                    this.isValid = false;
 
                 }
 
             }
 
-        }
-        catch (JSONException e){
+        } catch (JSONException e) {
 
             this.userEvents = null;
 
-            this.message="invalid json parsing in MoodleEvent model";
-            this.exception="JSONException";
-            this.errorCode="invalidjson";
-            this.isValid=false;
+            this.message = "invalid json parsing in MoodleEvent model";
+            this.exception = "JSONException";
+            this.errorCode = "invalidjson";
+            this.isValid = false;
         }
 
     }
+
     public MoodleEventsList(String jsonstring) {
         this(toJSONObject(jsonstring));
     }
 
 
-
-    public ArrayList getSections() {
+    public ArrayList<MoodleEvent> getSections() {
         return userEvents;
     }
 
-    public void setSections(ArrayList sections) {
+    public void setSections(ArrayList<MoodleEvent> sections) {
         this.userEvents = sections;
     }
 

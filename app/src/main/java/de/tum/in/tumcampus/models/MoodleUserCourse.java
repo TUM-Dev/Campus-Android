@@ -13,6 +13,7 @@ import org.json.JSONObject;
  */
 public class MoodleUserCourse extends  MoodleObject{
 
+    private static final long serialVersionUID = 8621912799668900915L;
     /**
      * Number of course partecipants
      */

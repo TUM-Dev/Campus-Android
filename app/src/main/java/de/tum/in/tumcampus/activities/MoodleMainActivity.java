@@ -113,7 +113,7 @@ public class MoodleMainActivity extends ProgressActivity implements ExpandableLi
             }
 
             emptyListViewData();
-            Map<String, String> courses = (Map<String, String>) realManager.getCoursesList();
+            Map<String, String> courses = realManager.getCoursesList();
 
             /* userinfo is still null ! either the token retrieved from
               shared pref is not valid or token has been expired
@@ -136,7 +136,7 @@ public class MoodleMainActivity extends ProgressActivity implements ExpandableLi
             } else {
 
                 //populate the view with user's courses
-                coursesIds = (Map<String, Integer>) realManager.getCoursesId();
+                coursesIds = realManager.getCoursesId();
                 for (Map.Entry<String, String> item : courses.entrySet()) {
                     List<String> temp = new ArrayList<String>();
                     temp.add(item.getValue());
