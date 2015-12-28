@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
@@ -106,7 +107,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
         super.onViewCreated(view, savedInstanceState);
 
         // Set the default white background in the view so as to avoid transparency
-        view.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.background_material_light));
+        view.setBackgroundColor(Color.WHITE);
     }
 
     private void populateNewsSources() {
