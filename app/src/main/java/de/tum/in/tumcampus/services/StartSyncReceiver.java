@@ -1,5 +1,6 @@
 package de.tum.in.tumcampus.services;
 
+import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -18,6 +19,7 @@ public class StartSyncReceiver extends BroadcastReceiver {
     private static final long START_INTERVAL = AlarmManager.INTERVAL_HOUR * 3;
 
     @Override
+    @SuppressLint("UnsafeProtectedBroadcastReceiver")
     public void onReceive(Context context, Intent intent) {
         // check intent if called from StartupActivity
         final boolean launch = intent.getBooleanExtra(Const.APP_LAUNCHES, false);

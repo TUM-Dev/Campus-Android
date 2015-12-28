@@ -22,7 +22,6 @@ import java.security.spec.X509EncodedKeySpec;
 
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.AlarmActivity;
-import de.tum.in.tumcampus.activities.MainActivity;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.GCMAlert;
 import de.tum.in.tumcampus.models.GCMNotification;

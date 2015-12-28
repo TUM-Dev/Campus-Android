@@ -129,7 +129,7 @@ public class NextLectureCard extends Card {
 
         DateFormat week = new SimpleDateFormat("EEEE, ", Locale.getDefault());
         DateFormat df = SimpleDateFormat.getTimeInstance(DateFormat.SHORT);
-        mEvent.setText(week.format(item.start) + df.format(item.start) + " - " + df.format(item.end));
+        mEvent.setText(String.format("%s%s - %s", week.format(item.start), df.format(item.start), df.format(item.end)));
         mEvent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -178,7 +178,7 @@ public class NextLectureCard extends Card {
 
             // Extract course title
             item.title = cur.getString(0);
-            item.title = item.title.replaceAll("[A-Z, 0-9(LV\\.Nr\\.)=]+$", "");
+            item.title = item.title.replaceAll("[A-Z, 0-9(LV\\.Nr)=]+$", "");
             item.title = item.title.replaceAll("\\([A-Z]+[0-9]+\\)", "");
             item.title = item.title.replaceAll("\\[[A-Z]+[0-9]+\\]", "");
             item.title = item.title.trim();

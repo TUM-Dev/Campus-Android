@@ -134,7 +134,7 @@ public class KinoDetailsFragment extends Fragment implements View.OnClickListene
 
         // set text for all buttons
         date.setText(this.formDateString(cursor.getString(cursor.getColumnIndex(Const.JSON_DATE))));
-        link.setText("www");
+        link.setText(R.string.www);
         imdb.setText(cursor.getString(cursor.getColumnIndex(Const.JSON_RATING)));
         year.setText(cursor.getString(cursor.getColumnIndex(Const.JSON_YEAR)));
         runtime.setText(cursor.getString(cursor.getColumnIndex(Const.JSON_RUNTIME)));
