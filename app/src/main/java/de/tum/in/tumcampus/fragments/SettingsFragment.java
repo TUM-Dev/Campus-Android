@@ -47,13 +47,19 @@ import de.tum.in.tumcampus.services.SilenceService;
 public class SettingsFragment extends PreferenceFragmentCompat implements
         SharedPreferences.OnSharedPreferenceChangeListener, Preference.OnPreferenceClickListener {
 
+    public static final String FRAGMENT_TAG = "my_preference_fragment";
     private FragmentActivity mContext;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        addPreferencesFromResource(R.xml.settings);
+    public void onCreatePreferences(Bundle bundle, String rootKey) {
+        // Open a card's preference screen if selected from it's context menu
+        if (bundle != null && bundle.containsKey(Const.PREFERENCE_SCREEN)) {
+            rootKey = bundle.getString(Const.PREFERENCE_SCREEN);
+        }
 
+        Utils.log("Opening settings: " + rootKey);
+        //Load the correct preference category
+        setPreferencesFromResource(R.xml.settings, rootKey);
         mContext = getActivity();
 
         // Disables silence service if the app is used without TUMOnline access
@@ -62,55 +68,45 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
             silent.setEnabled(false);
         }
 
-        // Click listener for preference list entries. Used to simulate a button
-        // (since it is not possible to add a button to the preferences screen)
-        findPreference("button_wizard").setOnPreferenceClickListener(this);
-        findPreference("button_clear_cache").setOnPreferenceClickListener(this);
-        findPreference("facebook").setOnPreferenceClickListener(this);
-        findPreference("github").setOnPreferenceClickListener(this);
-        findPreference("first_run").setOnPreferenceClickListener(this);
-        findPreference("licenses").setOnPreferenceClickListener(this);
-        findPreference("feedback").setOnPreferenceClickListener(this);
-        findPreference("privacy").setOnPreferenceClickListener(this);
+        //Only do these things if we are in the root of the preferences
+        if(rootKey == null) {
+            // Click listener for preference list entries. Used to simulate a button
+            // (since it is not possible to add a button to the preferences screen)
+            findPreference("button_wizard").setOnPreferenceClickListener(this);
+            findPreference("button_clear_cache").setOnPreferenceClickListener(this);
+            findPreference("facebook").setOnPreferenceClickListener(this);
+            findPreference("github").setOnPreferenceClickListener(this);
+            findPreference("first_run").setOnPreferenceClickListener(this);
+            findPreference("licenses").setOnPreferenceClickListener(this);
+            findPreference("feedback").setOnPreferenceClickListener(this);
+            findPreference("privacy").setOnPreferenceClickListener(this);
 
-        // Set summary for these preferences
-        setSummary("card_cafeteria_default_G");
-        setSummary("card_cafeteria_default_K");
-        setSummary("card_cafeteria_default_W");
-        setSummary("card_role");
-        setSummary("card_stations_default_G");
-        setSummary("card_stations_default_C");
-        setSummary("card_stations_default_K");
-        setSummary("card_default_campus");
-        setSummary("silent_mode_set_to");
-        setSummary("background_mode_set_to");
+            // Set summary for these preferences
+            setSummary("card_cafeteria_default_G");
+            setSummary("card_cafeteria_default_K");
+            setSummary("card_cafeteria_default_W");
+            setSummary("card_role");
+            setSummary("card_stations_default_G");
+            setSummary("card_stations_default_C");
+            setSummary("card_stations_default_K");
+            setSummary("card_default_campus");
+            setSummary("silent_mode_set_to");
+            setSummary("background_mode_set_to");
+
+            // Populate news sources
+            populateNewsSources();
+        }
 
         // Register the change listener to react immediately on changes
         PreferenceManager.getDefaultSharedPreferences(mContext).registerOnSharedPreferenceChangeListener(this);
-
-        // Populate news sources
-        populateNewsSources();
-
-        // Open a card's preference screen if selected from it's context menu
-        Bundle bundle = getArguments();
-        if (bundle != null && bundle.containsKey(Const.PREFERENCE_SCREEN)) {
-            final String key = bundle.getString(Const.PREFERENCE_SCREEN);
-
-            PreferenceScreen screen = (PreferenceScreen) findPreference("cards_pref_container");
-            final PreferenceScreen cardPreferenceScreen = (PreferenceScreen) findPreference(key);
-        }
     }
 
     @Override
-    public void onCreatePreferences(Bundle bundle, String s) {
-
-    }
-
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        DisplayMetrics metrics = getResources().getDisplayMetrics();
-        getListView().setPadding((int) (16 * metrics.density), 0, (int) (16 * metrics.density), 0);
+
+        // Set the default white background in the view so as to avoid transparency
+        view.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.background_material_light));
     }
 
     private void populateNewsSources() {
@@ -155,6 +151,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
             listPreference.setSummary(listPreference.getEntry());
         }
 
+        //Refresh the cards after a change has been made to them
         if (key.startsWith("card_")) {
             CardManager.shouldRefresh = true;
         }
