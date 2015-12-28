@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="28dp"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:id="@+id/line_symbol_ll"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_margin="3dp">
+
+        <TextView
+            android:id="@+id/line_symbol"
+            android:layout_width="36dp"
+            android:layout_height="18dp"
+            android:gravity="center"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/line_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentTop="true"
+        android:layout_centerVertical="true"
+        android:layout_margin="4dp"
+        android:layout_toEndOf="@id/line_symbol_ll"
+        android:layout_toLeftOf="@id/line_switcher"
+        android:layout_toRightOf="@id/line_symbol_ll"
+        android:layout_toStartOf="@id/line_switcher" />
+
+    <TextSwitcher
+        android:id="@+id/line_switcher"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:minWidth="50dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="right|center_vertical"
+            android:textColor="@color/sections_green" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="right|center_vertical"
+            android:textColor="@color/sections_green" />
+    </TextSwitcher>
+</RelativeLayout>
