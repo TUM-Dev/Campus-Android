@@ -14,27 +14,23 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.CheckBoxPreference;
-import android.preference.ListPreference;
-import android.preference.Preference;
-import android.preference.PreferenceCategory;
-import android.preference.PreferenceManager;
-import android.preference.PreferenceScreen;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.Toolbar;
+import android.support.v7.preference.CheckBoxPreference;
+import android.support.v7.preference.ListPreference;
+import android.support.v7.preference.Preference;
+import android.support.v7.preference.PreferenceCategory;
+import android.support.v7.preference.PreferenceFragmentCompat;
+import android.support.v7.preference.PreferenceManager;
+import android.support.v7.preference.PreferenceScreen;
 import android.util.DisplayMetrics;
 import android.view.View;
-import android.widget.ListAdapter;
-
-import com.github.machinarius.preferencefragment.PreferenceFragment;
 
 import de.psdev.licensesdialog.LicensesDialog;
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.MainActivity;
 import de.tum.in.tumcampus.activities.StartupActivity;
-import de.tum.in.tumcampus.activities.UserPreferencesActivity;
 import de.tum.in.tumcampus.activities.wizard.WizNavStartActivity;
 import de.tum.in.tumcampus.auxiliary.AccessTokenManager;
 import de.tum.in.tumcampus.auxiliary.Const;
@@ -48,7 +44,7 @@ import de.tum.in.tumcampus.models.managers.NewsManager;
 import de.tum.in.tumcampus.services.BackgroundService;
 import de.tum.in.tumcampus.services.SilenceService;
 
-public class SettingsFragment extends PreferenceFragment implements
+public class SettingsFragment extends PreferenceFragmentCompat implements
         SharedPreferences.OnSharedPreferenceChangeListener, Preference.OnPreferenceClickListener {
 
     private FragmentActivity mContext;
@@ -102,23 +98,12 @@ public class SettingsFragment extends PreferenceFragment implements
 
             PreferenceScreen screen = (PreferenceScreen) findPreference("cards_pref_container");
             final PreferenceScreen cardPreferenceScreen = (PreferenceScreen) findPreference(key);
-            cardPreferenceScreen.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                @Override
-                public boolean onPreferenceClick(Preference preference) {
-                    initializeActionBar(cardPreferenceScreen);
-                    return true;
-                }
-            });
-
-            final ListAdapter listAdapter = screen.getRootAdapter();
-            final int itemsCount = listAdapter.getCount();
-            for (int i = 0; i < itemsCount; ++i) {
-                if (listAdapter.getItem(i).equals(cardPreferenceScreen)) {
-                    screen.onItemClick(null, null, i, 0);
-                    break;
-                }
-            }
         }
+    }
+
+    @Override
+    public void onCreatePreferences(Bundle bundle, String s) {
+
     }
 
     @Override
@@ -237,8 +222,6 @@ public class SettingsFragment extends PreferenceFragment implements
             case "button_wizard":
                 mContext.finish();
                 startActivity(new Intent(mContext, WizNavStartActivity.class));
-
-
                 break;
             case "button_clear_cache":
                 // This button invokes the clear cache method
@@ -337,24 +320,5 @@ public class SettingsFragment extends PreferenceFragment implements
 
         mContext.finish();
         startActivity(new Intent(mContext, StartupActivity.class));
-    }
-
-    /**
-     * Sets up the action bar for an {@link PreferenceScreen}
-     */
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    public void initializeActionBar(PreferenceScreen preferenceScreen) {
-        final Dialog dialog = preferenceScreen.getDialog();
-        
-        //Check if dialog is open and if we are on a supported android version
-        if (dialog != null && android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            //Setup a dialog back button pressed listener
-            dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                @Override
-                public void onCancel(DialogInterface dialog) {
-                    mContext.finish();
-                }
-            });
-        }
     }
 }
