@@ -34,6 +34,10 @@ public class GcmIdentificationService extends InstanceIDListenerService {
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     private Context mContext;
 
+    public GcmIdentificationService() {
+        this.mContext = null;
+    }
+
     public GcmIdentificationService(Context c) {
         mContext = c;
     }
@@ -58,6 +62,9 @@ public class GcmIdentificationService extends InstanceIDListenerService {
         Utils.setInternalSetting(mContext, Const.GCM_TOKEN_ID, "");
     }
 
+    /**
+     * Actual service routine which can use this as a context
+     */
     public void onTokenRefresh() {
         InstanceID iid = InstanceID.getInstance(this);
 
