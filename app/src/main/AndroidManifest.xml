@@ -495,7 +495,7 @@
         <service
             android:name="de.tum.in.tumcampus.models.managers.CalendarManager$QueryLocationsService"
             android:exported="false" />
-        <service android:name=".services.GcmReceiverService">
+        <service android:name=".services.GcmReceiverService" android:exported="false">
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
             </intent-filter>
