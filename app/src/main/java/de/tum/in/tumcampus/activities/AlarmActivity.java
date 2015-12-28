@@ -1,24 +1,16 @@
 package de.tum.in.tumcampus.activities;
 
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.view.ViewPager;
-import android.text.Html;
 import android.webkit.WebView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import de.tum.in.tumcampus.R;
-import de.tum.in.tumcampus.activities.generic.ActivityForDownloadingExternal;
 import de.tum.in.tumcampus.activities.generic.BaseActivity;
-import de.tum.in.tumcampus.adapters.KinoAdapter;
-import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.Utils;
 import de.tum.in.tumcampus.models.GCMAlert;
 import de.tum.in.tumcampus.models.GCMNotification;
-import de.tum.in.tumcampus.models.managers.KinoManager;
 
 /**
  * Activity to show any alarms

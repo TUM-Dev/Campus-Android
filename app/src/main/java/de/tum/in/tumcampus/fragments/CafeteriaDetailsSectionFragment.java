@@ -93,7 +93,7 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
                     textview = (TextView) view.findViewById(R.id.line_name);
                     TextView priceView = (TextView) view.findViewById(R.id.line_price);
                     textview.setText(text);
-                    priceView.setText(rolePrices.get(typeLong) + " €");
+                    priceView.setText(String.format("%s €", rolePrices.get(typeLong)));
                     rootView.addView(view);
                     addedViews.add(view);
                 } else {

@@ -12,7 +12,6 @@
     <string name="yes">Sí</string>
     <string name="no">No</string>
     <string name="no_internet_connection">No hay conexión al Internet</string>
-    <string name="app_short_description">TUM plataforma de información - por estudiantes para estudiantes</string>
 
     <!-- Calendar -->
     <string name="dialog_show_calendar">Exportación exitosa.\n Calendario local <i>TUM_CAMPUS_APP</i>mostrar en el espectáculo de la <i>Google Calendar aplicación</i>?</string>

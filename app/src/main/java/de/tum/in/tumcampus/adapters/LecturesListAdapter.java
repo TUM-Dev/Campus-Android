@@ -24,26 +24,17 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 
 public class LecturesListAdapter extends BaseAdapter implements StickyListHeadersAdapter {
 
+    // The list of lectures
+    private static List<LecturesSearchRow> lecturesList;
     private final ArrayList<String> filters;
+    private final LayoutInflater mInflater;
+    private Context context;
 
-    // the layout of the list
-	static class ViewHolder {
-		TextView tvDozent;
-		TextView tvLectureName;
-		TextView tvTypeSWSSemester;
-	}
-
-	private Context context;
-	// The list of lectures
-	private static List<LecturesSearchRow> lecturesList;
-
-	private final LayoutInflater mInflater;
-
-	// constructor
-	public LecturesListAdapter(Context context, List<LecturesSearchRow> results) {
-		lecturesList = results;
-		this.context = context;
-		mInflater = LayoutInflater.from(context);
+    // constructor
+    public LecturesListAdapter(Context context, List<LecturesSearchRow> results) {
+        lecturesList = results;
+        this.context = context;
+        mInflater = LayoutInflater.from(context);
 
         filters = new ArrayList<>();
         for (LecturesSearchRow result : results) {
@@ -52,57 +43,55 @@ public class LecturesListAdapter extends BaseAdapter implements StickyListHeader
                 filters.add(item);
             }
         }
-	}
+    }
 
-	@Override
-	public int getCount() {
-		return lecturesList.size();
-	}
+    @Override
+    public int getCount() {
+        return lecturesList.size();
+    }
 
-	@Override
-	public Object getItem(int position) {
-		return lecturesList.get(position);
-	}
+    @Override
+    public Object getItem(int position) {
+        return lecturesList.get(position);
+    }
 
-	@Override
-	public long getItemId(int position) {
-		return position;
-	}
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
 
-	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
-		ViewHolder holder;
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        ViewHolder holder;
 
-		if (convertView == null) {
-			convertView = mInflater.inflate(R.layout.activity_lectures_listview, parent, false);
-			holder = new ViewHolder();
+        if (convertView == null) {
+            convertView = mInflater.inflate(R.layout.activity_lectures_listview, parent, false);
+            holder = new ViewHolder();
 
-			// set UI elements
-			holder.tvLectureName = (TextView) convertView
-					.findViewById(R.id.tvLectureName);
-			holder.tvTypeSWSSemester = (TextView) convertView
-					.findViewById(R.id.tvTypeSWSSemester);
-			holder.tvDozent = (TextView) convertView
-					.findViewById(R.id.tvDozent);
+            // set UI elements
+            holder.tvLectureName = (TextView) convertView
+                    .findViewById(R.id.tvLectureName);
+            holder.tvTypeSWSSemester = (TextView) convertView
+                    .findViewById(R.id.tvTypeSWSSemester);
+            holder.tvDozent = (TextView) convertView
+                    .findViewById(R.id.tvDozent);
 
-			convertView.setTag(holder);
-		} else {
-			holder = (ViewHolder) convertView.getTag();
-		}
+            convertView.setTag(holder);
+        } else {
+            holder = (ViewHolder) convertView.getTag();
+        }
 
-		LecturesSearchRow lvItem = lecturesList.get(position);
+        LecturesSearchRow lvItem = lecturesList.get(position);
 
-		// if we have something to display - set for each lecture element
-		if (lvItem != null) {
-			holder.tvLectureName.setText(lvItem.getTitel());
-			holder.tvTypeSWSSemester.setText(lvItem.getStp_lv_art_name()
-					+ " - " + lvItem.getSemester_id() + " - "
-					+ lvItem.getDauer_info() + " SWS");
-			holder.tvDozent.setText(lvItem.getVortragende_mitwirkende());
-		}
+        // if we have something to display - set for each lecture element
+        if (lvItem != null) {
+            holder.tvLectureName.setText(lvItem.getTitel());
+            holder.tvTypeSWSSemester.setText(String.format("%s - %s - %s SWS", lvItem.getStp_lv_art_name(), lvItem.getSemester_id(), lvItem.getDauer_info()));
+            holder.tvDozent.setText(lvItem.getVortragende_mitwirkende());
+        }
 
-		return convertView;
-	}
+        return convertView;
+    }
 
     // Generate header view
     @Override
@@ -118,16 +107,23 @@ public class LecturesListAdapter extends BaseAdapter implements StickyListHeader
         }
         //set header text as first char in name
         String headerText = lecturesList.get(pos).getSemester_name();
-		headerText = headerText.replaceAll("Sommersemester", this.context.getString(R.string.semester_summer));
-		headerText = headerText.replaceAll("Wintersemester", this.context.getString(R.string.semester_winter));
+        headerText = headerText.replaceAll("Sommersemester", this.context.getString(R.string.semester_summer));
+        headerText = headerText.replaceAll("Wintersemester", this.context.getString(R.string.semester_winter));
 
-		holder.text.setText(headerText);
+        holder.text.setText(headerText);
         return convertView;
     }
 
     @Override
     public long getHeaderId(int i) {
         return filters.indexOf(lecturesList.get(i).getSemester_id());
+    }
+
+    // the layout of the list
+    static class ViewHolder {
+        TextView tvDozent;
+        TextView tvLectureName;
+        TextView tvTypeSWSSemester;
     }
 
     static class HeaderViewHolder {

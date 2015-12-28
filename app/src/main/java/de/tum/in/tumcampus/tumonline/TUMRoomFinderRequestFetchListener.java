@@ -10,7 +10,7 @@ import java.util.HashMap;
 
 public interface TUMRoomFinderRequestFetchListener {
 
-	public void onNoInternetError();
+	void onNoInternetError();
 
 	/**
 	 * fetchInteractive will call this method if the fetch of the
@@ -18,7 +18,7 @@ public interface TUMRoomFinderRequestFetchListener {
 	 * 
 	 * @param result this will be the raw return of the fetch
 	 */
-	public void onFetch(ArrayList<HashMap<String, String>> result);
+	void onFetch(ArrayList<HashMap<String, String>> result);
 
 	/**
 	 * if the fetchInteractive method will result in null or there is no
@@ -26,6 +26,6 @@ public interface TUMRoomFinderRequestFetchListener {
 	 * 
 	 * @param errorReason the reason why the request failed (localized)
 	 */
-	public void onFetchError(String errorReason);
+	void onFetchError(String errorReason);
 
 }

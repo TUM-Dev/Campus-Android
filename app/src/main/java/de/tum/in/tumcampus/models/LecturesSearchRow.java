@@ -5,8 +5,6 @@ import android.support.annotation.NonNull;
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.Root;
 
-import de.tum.in.tumcampus.R;
-
 /**
  * This class is dealing with the deserialization of the output of TUMOnline to
  * the method "sucheLehrveranstaltungen".
