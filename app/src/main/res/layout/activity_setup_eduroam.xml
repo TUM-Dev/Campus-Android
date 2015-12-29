@@ -155,7 +155,6 @@
             android:background="?android:attr/listDivider" />
 
         <Button
-            android:id="@+id/next_button"
             style="@style/ButtonBarButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
