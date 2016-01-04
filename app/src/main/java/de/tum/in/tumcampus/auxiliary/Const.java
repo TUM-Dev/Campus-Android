@@ -55,11 +55,18 @@ public final class Const {
 	public static final String API_HOSTNAME = "tumcabe.in.tum.de";
 	public static final String CURRENT_CHAT_ROOM = "current_chat_room";
 	public static final String CHAT_ROOM_DISPLAY_NAME = "chat_room_display_name";
+
+	public static final String PRIVATE_KEY_ACTIVE = "chat_member_private_key_active";
 	public static final String PRIVATE_KEY = "chat_member_private_key";
+	public static final String PUBLIC_KEY = "chat_member_public_key";
+	public static final String PUBLIC_KEY_UPLOADED = "chat_member_public_key_uploaded";
+
 	public static final String TUMO_PIDENT_NR = "pIdentNr";
 	public static final String GCM_REG_ID = "gcm_registration_id";
 	public static final String GCM_REG_ID_SENT_TO_SERVER = "gcm_registration_id_sent_to_server";
-    public static final String GCM_REG_ID_LAST_TRANSMISSION = "gcm_registration_id_last_transmission";
+	public static final String GCM_REG_ID_LAST_TRANSMISSION = "gcm_registration_id_last_transmission";
+	public static final String GCM_INSTANCE_ID = "gcm_instance_id";
+	public static final String GCM_TOKEN_ID = "gcm_token_id";
 	public static final String CHAT_TERMS_SHOWN = "chat_terms_shown";
     public static final String APP_LAUNCHES = "app_launches";
     public static final String INTERNAL_PREFS = "internal_prefs";
@@ -97,4 +104,6 @@ public final class Const {
     public static final String AUTO_JOIN_NEW_ROOMS = "auto_join_new_rooms";
     public static final String CHAT_MEMBER = "chat_member";
 	public static final String POSITION = "position";
+
+	public static final String PREF_UNIQUE_ID = "PREF_UNIQUE_ID";
 }

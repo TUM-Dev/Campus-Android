@@ -49,6 +49,7 @@ import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.ImplicitCounter;
 import de.tum.in.tumcampus.auxiliary.NetUtils;
 import de.tum.in.tumcampus.auxiliary.Utils;
+import de.tum.in.tumcampus.exceptions.NoPrivateKey;
 import de.tum.in.tumcampus.models.GCMChat;
 import de.tum.in.tumcampus.models.TUMCabeClient;
 import de.tum.in.tumcampus.models.ChatMember;
@@ -405,7 +406,12 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
                 ArrayList<ChatMessage> downloadedChatHistory;
 
                 // If currently nothing has been shown load newest messages from server
-                ChatVerification verification = new ChatVerification(Utils.getPrivateKeyFromSharedPrefs(ChatActivity.this), currentChatMember);
+                ChatVerification verification = null;
+                try {
+                    verification = new ChatVerification(ChatActivity.this, currentChatMember);
+                } catch (NoPrivateKey noPrivateKey) {
+                    return; //In this case we simply cannot do anything
+                }
                 if (chatHistoryAdapter == null || chatHistoryAdapter.getSentCount() == 0 || newMsg) {
                     downloadedChatHistory = TUMCabeClient.getInstance(ChatActivity.this).getNewMessages(currentChatRoom.getId(), verification);
                 } else {
@@ -455,7 +461,13 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
     public void onClick(DialogInterface dialog, int which) {
 
         // Send request to the server to remove the user from this room
-        ChatVerification verification = new ChatVerification(Utils.getPrivateKeyFromSharedPrefs(this), currentChatMember);
+        ChatVerification verification = null;
+        try {
+            verification = new ChatVerification(this, currentChatMember);
+        } catch (NoPrivateKey noPrivateKey) {
+            return;
+        }
+
         TUMCabeClient.getInstance(ChatActivity.this).leaveChatRoom(currentChatRoom, verification, new Callback<ChatRoom>() {
             @Override
             public void success(ChatRoom room, Response arg1) {

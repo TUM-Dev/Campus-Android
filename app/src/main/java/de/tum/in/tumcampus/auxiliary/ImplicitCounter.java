@@ -20,11 +20,13 @@ import java.util.Map;
 
 import de.tum.in.tumcampus.cards.Card;
 import de.tum.in.tumcampus.cards.NewsCard;
+import de.tum.in.tumcampus.models.Statistics;
+import de.tum.in.tumcampus.models.TUMCabeClient;
 
 /**
  * Counts the usage of a specific activity
  */
-public class ImplicitCounter extends AsyncTask<String, Integer, Void> {
+public class ImplicitCounter {
     private static final String settings = "usage_counter";
     private static final String TUMCABE_URL = "https://tumcabe.in.tum.de/Api/statistics/";
     private static Date lastSync = null;
@@ -83,7 +85,7 @@ public class ImplicitCounter extends AsyncTask<String, Integer, Void> {
         Map<String, ?> allEntries = sp.getAll();
 
         // Submit this to webservice via parent async class
-        this.execute(new Gson().toJson(allEntries));
+        TUMCabeClient.getInstance(this.c).putStatistics(new Statistics(new Gson().toJson(allEntries)));
 
         // Delete / Reset
         SharedPreferences.Editor e = sp.edit();
@@ -91,45 +93,6 @@ public class ImplicitCounter extends AsyncTask<String, Integer, Void> {
             e.remove(entry.getKey());
         }
         e.apply();
-    }
-
-    protected Void doInBackground(String... data) {
-        if (data == null) {
-            Utils.log("No Json data passed, skipping...");
-            return null;
-        }
-
-        // Transmit stack trace with PUT request
-        HttpURLConnection request = null;
-        try {
-            request = (HttpURLConnection) (new URL(TUMCABE_URL)).openConnection();
-            request.setRequestMethod("PUT");
-            request.setDoOutput(true);
-            request.addRequestProperty("X-DEVICE-ID", NetUtils.getDeviceID(this.c)); // Add our device identifier
-
-            List<Pair<String, String>> nvps = Collections.singletonList(
-                    //Add our payload which should be json encoded
-                    new Pair<>("data", data[0])
-            );
-
-            //Send the request
-            OutputStream outputStream = request.getOutputStream();
-            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
-            writer.write(NetUtils.buildParamString(nvps));
-            writer.flush();
-            writer.close();
-            outputStream.close();
-            // We don't care about the response, so we just hope it went well and on with it.
-        } catch (IOException e) {
-            Utils.log(e);
-        } finally {
-            if (request != null) {
-                request.disconnect();
-            }
-        }
-
-        //Return nothing :)
-        return null;
     }
 
 }

@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.ArrayList;
 
+import de.tum.in.tumcampus.auxiliary.AuthenticationManager;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.FileUtils;
 import de.tum.in.tumcampus.auxiliary.NetUtils;
@@ -68,7 +69,7 @@ public class ExceptionHandler {
         G.androidVersion = android.os.Build.VERSION.RELEASE;
 
         //Get the device ID
-        G.deviceId = NetUtils.getDeviceID(context);
+        G.deviceId = AuthenticationManager.getDeviceID(context);
 
         // Get information about the Package
         PackageInfo pi = Util.getPackageInfo(context);

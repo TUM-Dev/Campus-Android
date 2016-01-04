@@ -4,18 +4,12 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Base64;
 
-import java.security.KeyFactory;
-import java.security.NoSuchAlgorithmException;
-import java.security.PrivateKey;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.ArrayList;
 
-import de.tum.in.tumcampus.auxiliary.Const;
-import de.tum.in.tumcampus.auxiliary.RSASigner;
+import de.tum.in.tumcampus.auxiliary.AuthenticationManager;
 import de.tum.in.tumcampus.auxiliary.Utils;
+import de.tum.in.tumcampus.exceptions.NoPrivateKey;
 import de.tum.in.tumcampus.models.TUMCabeClient;
 import de.tum.in.tumcampus.models.ChatMessage;
 import de.tum.in.tumcampus.models.managers.ChatMessageManager;
@@ -52,34 +46,32 @@ public class SendMessageService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         // Get all unsent messages from database
         ArrayList<ChatMessage> unsentMsg = ChatMessageManager.getAllUnsentUpdated(this);
-        if (unsentMsg.size() == 0)
+        if (unsentMsg.size() == 0) {
             return;
-
-        // Initialize signer
-        RSASigner signer = new RSASigner(getPrivateKeyFromSharedPrefs());
+        }
 
         int numberOfAttempts = 0;
+        AuthenticationManager am = new AuthenticationManager(this);
 
         //Try to send the message 5 times
         while (numberOfAttempts < 5) {
             try {
                 for (ChatMessage message : unsentMsg) {
-                    // Generate signature
-                    String signature = signer.sign(message.getText());
-                    message.setSignature(signature);
+                    // Generate signature and store it in the message
+                    message.setSignature(am.sign(message.getText()));
 
+                    // Send the message to the server
                     ChatMessage createdMessage;
-                    if(message.getId()==0) {
-                        // Send the message to the server
+                    if (message.getId() == 0) { //If the id is zero then its an new entry otherwise try to update it
                         createdMessage = TUMCabeClient.getInstance(this).sendMessage(message.getRoom(), message);
                         Utils.logv("successfully sent message: " + createdMessage.getText());
                     } else {
-                        // Send the message to the server
                         createdMessage = TUMCabeClient.getInstance(this).updateMessage(message.getRoom(), message);
                         Utils.logv("successfully updated message: " + createdMessage.getText());
                     }
-                    createdMessage.setStatus(ChatMessage.STATUS_SENT);
 
+                    //Update the status on the ui
+                    createdMessage.setStatus(ChatMessage.STATUS_SENT);
                     ChatMessageManager messageManager = new ChatMessageManager(this, message.getRoom());
                     messageManager.replaceInto(createdMessage, message.getMember().getId());
                     messageManager.removeFromUnsent(message);
@@ -98,6 +90,8 @@ public class SendMessageService extends IntentService {
             } catch (RetrofitError e) {
                 Utils.log(e);
                 numberOfAttempts++;
+            } catch (NoPrivateKey noPrivateKey) {
+                return; //Nothing can be done, just exit
             }
 
             //Sleep for five seconds, maybe the server is currently really busy
@@ -107,24 +101,5 @@ public class SendMessageService extends IntentService {
                 e.printStackTrace();
             }
         }
-    }
-
-    /**
-     * Loads the private key from preferences
-     *
-     * @return The private key object
-     */
-    private PrivateKey getPrivateKeyFromSharedPrefs() {
-        String privateKeyString = Utils.getInternalSettingString(this, Const.PRIVATE_KEY, "");
-        byte[] privateKeyBytes = Base64.decode(privateKeyString, Base64.DEFAULT);
-        KeyFactory keyFactory;
-        try {
-            keyFactory = KeyFactory.getInstance("RSA");
-            PKCS8EncodedKeySpec privateKeySpec = new PKCS8EncodedKeySpec(privateKeyBytes);
-            return keyFactory.generatePrivate(privateKeySpec);
-        } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-            Utils.log(e);
-        }
-        return null;
     }
 }

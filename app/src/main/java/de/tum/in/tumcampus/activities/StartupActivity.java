@@ -35,6 +35,7 @@ import de.tum.in.tumcampus.activities.wizard.WizNavChatActivity;
 import de.tum.in.tumcampus.activities.wizard.WizNavExtrasActivity;
 import de.tum.in.tumcampus.activities.wizard.WizNavStartActivity;
 import de.tum.in.tumcampus.auxiliary.AccessTokenManager;
+import de.tum.in.tumcampus.auxiliary.AuthenticationManager;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.FileUtils;
 import de.tum.in.tumcampus.auxiliary.ImplicitCounter;
@@ -65,6 +66,10 @@ public class StartupActivity extends AppCompatActivity {
         //Our own Custom exception handler
         ExceptionHandler.setup(getApplicationContext());
 
+        //Check that we have a private key setup in order to authenticate this device
+        AuthenticationManager am = new AuthenticationManager(this);
+        am.generatePrivateKey();
+
         //Upload stats
         ImplicitCounter.Counter(this);
         (new ImplicitCounter()).submitCounter(this);
@@ -84,6 +89,7 @@ public class StartupActivity extends AppCompatActivity {
         // Check the flag if user wants the wizard to open at startup
         boolean hideWizardOnStartup = Utils.getSettingBool(this, Const.HIDE_WIZARD_ON_STARTUP, false);
         String lrzId = Utils.getSetting(this, Const.LRZ_ID, ""); // If new version and LRZ ID is empty, start the full wizard
+
         if (!hideWizardOnStartup || (newVersion && lrzId.isEmpty())) {
             startActivity(new Intent(this, WizNavStartActivity.class));
             finish();

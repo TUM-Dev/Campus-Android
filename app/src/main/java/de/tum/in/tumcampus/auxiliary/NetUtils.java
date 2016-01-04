@@ -31,9 +31,6 @@ import de.tum.in.tumcampus.trace.G;
 
 public class NetUtils {
     private static final int HTTP_TIMEOUT = 25000;
-    private static final String PREF_UNIQUE_ID = "PREF_UNIQUE_ID";
-    /* Device id */
-    private static String uniqueID = null;
     private final Context mContext;
     private final CacheManager cacheManager;
 
@@ -105,22 +102,6 @@ public class NetUtils {
         return netInfo != null && netInfo.isConnectedOrConnecting() && netInfo.getType() == ConnectivityManager.TYPE_WIFI;
     }
 
-    /**
-     * Gets an unique id that identifies this device
-     *
-     * @return Unique device id
-     */
-    public static synchronized String getDeviceID(Context context) {
-        if (uniqueID == null) {
-            uniqueID = Utils.getInternalSettingString(context, PREF_UNIQUE_ID, null);
-            if (uniqueID == null) {
-                uniqueID = UUID.randomUUID().toString();
-                Utils.setInternalSetting(context, PREF_UNIQUE_ID, uniqueID);
-            }
-        }
-        return uniqueID;
-    }
-
     public static String buildParamString(List<Pair<String, String>> pairs) {
         StringBuilder result = new StringBuilder();
         boolean first = true;
@@ -159,7 +140,7 @@ public class NetUtils {
         Utils.logv("Download URL: " + url);
         HttpURLConnection connection = (HttpURLConnection) (new URL(url)).openConnection();
         setHttpConnectionParams(connection);
-        connection.addRequestProperty("X-DEVICE-ID", NetUtils.getDeviceID(mContext));
+        connection.addRequestProperty("X-DEVICE-ID", AuthenticationManager.getDeviceID(mContext));
 
         //Add some useful statical data
         connection.addRequestProperty("X-ANDROID-VERSION", android.os.Build.VERSION.RELEASE);

@@ -10,6 +10,7 @@ import java.util.List;
 
 import javax.net.ssl.SSLPeerUnverifiedException;
 
+import de.tum.in.tumcampus.auxiliary.AuthenticationManager;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.NetUtils;
 import retrofit.Callback;
@@ -40,6 +41,7 @@ public class TUMCabeClient {
     private static final String API_CINEMA = "/kino/";
     private static final String API_NOTIFICATIONS = "/notifications/";
     private static final String API_LOCATIONS = "/locations/";
+    private static final String API_DEVICE = "/device/";
 
 
     private static TUMCabeClient instance = null;
@@ -47,7 +49,7 @@ public class TUMCabeClient {
     final RequestInterceptor requestInterceptor = new RequestInterceptor() {
         @Override
         public void intercept(RequestFacade request) {
-            request.addHeader("X-DEVICE-ID", NetUtils.getDeviceID(TUMCabeClient.context));
+            request.addHeader("X-DEVICE-ID", AuthenticationManager.getDeviceID(TUMCabeClient.context));
         }
     };
     final ErrorHandler errorHandler = new ErrorHandler() {
@@ -165,6 +167,28 @@ public class TUMCabeClient {
         return service.putBugReport(r);
     }
 
+    public void putStatistics(Statistics s) {
+        service.putStatistics(s, new Callback<String>() {
+            @Override
+            public void success(String s, retrofit.client.Response response) {
+                //We don't care about any responses
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                //Or if this fails
+            }
+        });
+    }
+
+    public void deviceRegister(DeviceRegister verification, Callback<TUMCabeStatus> cb) {
+        service.deviceRegister(verification, cb);
+    }
+
+    public void deviceUploadGcmToken(DeviceUploadGcmToken verification, Callback<TUMCabeStatus> cb) {
+        service.deviceUploadGcmToken(verification, cb);
+    }
+
     private interface TUMCabeAPIService {
 
         //Group chat
@@ -228,5 +252,16 @@ public class TUMCabeClient {
         //Bug Reports
         @PUT(API_REPORT)
         List<String> putBugReport(@Body BugReport r);
+
+        //Statistics
+        @PUT(API_STATISTICS)
+        void putStatistics(@Body Statistics r, Callback<String> cb);
+
+        //Device
+        @POST(API_DEVICE + "register/")
+        void deviceRegister(@Body DeviceRegister verification, Callback<TUMCabeStatus> cb);
+
+        @POST(API_DEVICE + "addGcmToken/")
+        void deviceUploadGcmToken(@Body DeviceUploadGcmToken verification, Callback<TUMCabeStatus> cb);
     }
 }

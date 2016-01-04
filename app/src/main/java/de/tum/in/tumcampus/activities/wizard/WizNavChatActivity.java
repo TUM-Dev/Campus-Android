@@ -19,6 +19,7 @@ import java.util.List;
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.generic.ActivityForLoadingInBackground;
 import de.tum.in.tumcampus.auxiliary.AccessTokenManager;
+import de.tum.in.tumcampus.auxiliary.AuthenticationManager;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.NetUtils;
 import de.tum.in.tumcampus.auxiliary.Utils;
@@ -39,7 +40,6 @@ public class WizNavChatActivity extends ActivityForLoadingInBackground<Void, Cha
 
     private boolean tokenSetup = false;
     private CheckBox groupChatMode, autoJoin, acceptedTerms;
-    private boolean mPublicKeyMustBeActivated = false;
 
     public WizNavChatActivity() {
         super(R.layout.activity_wiznav_chat);
@@ -133,7 +133,7 @@ public class WizNavChatActivity extends ActivityForLoadingInBackground<Void, Cha
     private void startNextActivity() {
         finish();
         Intent intent;
-        if (mPublicKeyMustBeActivated) {
+        if (!Utils.getInternalSettingBool(this, Const.PRIVATE_KEY_ACTIVE, false)) {
             intent = new Intent(this, WizNavActivatePublicKeyActivity.class);
         } else {
             intent = new Intent(this, WizNavExtrasActivity.class);
@@ -189,8 +189,11 @@ public class WizNavChatActivity extends ActivityForLoadingInBackground<Void, Cha
             }
 
             // Generate the private key and upload the public key to the server
-            if (generatePrivateKey(member)) {
+            AuthenticationManager am = new AuthenticationManager(this);
+            if (am.generatePrivateKey(member)) {
                 return member;
+            } else {
+                Utils.showToastOnUIThread(this, getString(R.string.failure_uploading_public_key));
             }
         }
         return null;
@@ -207,50 +210,5 @@ public class WizNavChatActivity extends ActivityForLoadingInBackground<Void, Cha
         } else {
             showLoadingEnded();
         }
-    }
-
-    /**
-     * Gets private key from preferences or generates one.
-     *
-     * @return Private key instance
-     */
-    private boolean generatePrivateKey(ChatMember member) {
-        // Retrieve private key
-        String privateKeyString = Utils.getInternalSettingString(this, Const.PRIVATE_KEY, "");
-
-        if (privateKeyString.isEmpty()) {
-            // If the key is not in shared preferences, generate key-pair
-            KeyPairGenerator keyGen;
-            try {
-                keyGen = KeyPairGenerator.getInstance("RSA");
-                keyGen.initialize(1024);
-                KeyPair keyPair = keyGen.generateKeyPair();
-
-                String publicKeyString = Base64.encodeToString(keyPair.getPublic().getEncoded(), Base64.DEFAULT);
-                privateKeyString = Base64.encodeToString(keyPair.getPrivate().getEncoded(), Base64.DEFAULT);
-
-                // Upload public key to the server
-                try {
-                    TUMCabeClient.getInstance(this).uploadPublicKey(member.getId(), new ChatPublicKey(publicKeyString));
-
-                    // Save private key in shared preferences
-                    Utils.setInternalSetting(this, Const.PRIVATE_KEY, privateKeyString);
-
-                    Utils.logv("Success uploading public key: " + publicKeyString);
-
-                    mPublicKeyMustBeActivated = true;
-                    return true;
-                } catch (RetrofitError e) {
-                    Utils.showToastOnUIThread(this, getString(R.string.failure_uploading_public_key));
-                    Utils.log(e, "Failure uploading public key");
-                }
-            } catch (NoSuchAlgorithmException e) {
-                Utils.log(e);
-            }
-        } else {
-            return true;
-        }
-        mPublicKeyMustBeActivated = false;
-        return false;
     }
 }

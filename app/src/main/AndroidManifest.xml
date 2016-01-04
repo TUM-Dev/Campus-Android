@@ -73,23 +73,16 @@
 
         <uses-library android:name="android.test.runner" />
 
-        <!--
-          WakefulBroadcastReceiver that will receive intents from GCM
-          services and hand them to the custom IntentService.
-
-          The com.google.android.c2dm.permission.SEND permission is necessary
-          so only GCM services can send data messages for the app.
-        -->
+        <!-- GCM provides us a useful broadcast receiver -->
         <receiver
-            android:name=".services.GcmBroadcastReceiver"
-            android:permission="com.google.android.c2dm.permission.SEND">
+            android:name="com.google.android.gms.gcm.GcmReceiver"
+            android:exported="true"
+            android:permission="com.google.android.c2dm.permission.SEND" >
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-                <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
-
-                <category android:name="de.tum.in.tumcampus" />
             </intent-filter>
         </receiver>
+
         <receiver android:name="de.tum.in.tumcampus.services.ScanResultsAvailableReceiver">
             <intent-filter>
                 <!--
@@ -501,6 +494,15 @@
         <service
             android:name="de.tum.in.tumcampus.models.managers.CalendarManager$QueryLocationsService"
             android:exported="false" />
-        <service android:name=".services.GcmIntentService" />
+        <service android:name=".services.GcmReceiverService" android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+            </intent-filter>
+        </service>
+        <service android:name=".services.GcmIdentificationService" android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.android.gms.iid.InstanceID"/>
+            </intent-filter>
+        </service>
     </application>
 </manifest>

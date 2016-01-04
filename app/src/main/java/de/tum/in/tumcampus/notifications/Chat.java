@@ -27,6 +27,7 @@ import de.tum.in.tumcampus.activities.ChatRoomsActivity;
 import de.tum.in.tumcampus.activities.MainActivity;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.Utils;
+import de.tum.in.tumcampus.exceptions.NoPrivateKey;
 import de.tum.in.tumcampus.models.ChatMember;
 import de.tum.in.tumcampus.models.ChatRoom;
 import de.tum.in.tumcampus.models.GCMChat;
@@ -106,7 +107,12 @@ public class Chat extends GenericNotification {
         chatRoom = TUMCabeClient.getInstance(context).getChatRoom(this.extras.room);
 
         ChatMessageManager manager = new ChatMessageManager(context, chatRoom.getId());
-        Cursor messages = manager.getNewMessages(getPrivateKeyFromSharedPrefs(context), member, this.extras.message);
+        Cursor messages = null;
+        try {
+            messages = manager.getNewMessages(member, this.extras.message);
+        } catch (NoPrivateKey noPrivateKey) {
+            noPrivateKey.printStackTrace();
+        }
 
         // Notify any open chat activity that a message has been received
         Intent intent = new Intent("chat-message-received");
@@ -114,7 +120,7 @@ public class Chat extends GenericNotification {
         LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
 
         notificationText = null;
-        if (messages.moveToFirst()) {
+        if (messages != null && messages.moveToFirst()) {
             do {
                 if (notificationText == null)
                     notificationText = messages.getString(3);

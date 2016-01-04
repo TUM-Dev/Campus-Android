@@ -6,13 +6,13 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
-import java.security.PrivateKey;
 import java.util.List;
 
 import de.tum.in.tumcampus.R;
 import de.tum.in.tumcampus.activities.generic.ActivityForLoadingInBackground;
 import de.tum.in.tumcampus.auxiliary.Const;
 import de.tum.in.tumcampus.auxiliary.Utils;
+import de.tum.in.tumcampus.exceptions.NoPrivateKey;
 import de.tum.in.tumcampus.models.TUMCabeClient;
 import de.tum.in.tumcampus.models.ChatMember;
 import de.tum.in.tumcampus.models.ChatRoom;
@@ -101,19 +101,20 @@ public class WizNavActivatePublicKeyActivity extends ActivityForLoadingInBackgro
 
         // Get member and private key from settings
         ChatMember member = Utils.getSetting(this, Const.CHAT_MEMBER, ChatMember.class);
-        PrivateKey privateKey = Utils.getPrivateKeyFromSharedPrefs(this);
-        if (privateKey == null || member == null)
+        if (member == null)
             return false;
 
         // Try to restore already joined chat rooms from server
         try {
-            List<ChatRoom> rooms = TUMCabeClient.getInstance(this).getMemberRooms(member.getId(), new ChatVerification(privateKey, member));
+            List<ChatRoom> rooms = TUMCabeClient.getInstance(this).getMemberRooms(member.getId(), new ChatVerification(this, member));
             manager.replaceIntoRooms(rooms);
             return true;
         } catch (RetrofitError e) {
             Utils.log(e);
-            return false;
+        } catch (NoPrivateKey e){
+            Utils.log(e);
         }
+        return false;
     }
 
     @Override
