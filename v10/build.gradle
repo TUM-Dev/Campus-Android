@@ -13,10 +13,17 @@ android {
         versionName "1.3.3-dev"
     }
     buildTypes {
+        debug {
+            debuggable true
+            minifyEnabled false
+        }
         release {
+            debuggable false
             minifyEnabled true
             shrinkResources true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            FileCollection proGuardFileCollection = files { file('../proguard').listFiles() }
+            proguardFiles(proGuardFileCollection)
+            proguardFile getDefaultProguardFile('proguard-android.txt')
         }
     }
     lintOptions {
