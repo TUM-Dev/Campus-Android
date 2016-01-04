@@ -49,7 +49,7 @@ dependencies {
     compile 'com.squareup.retrofit:retrofit:1.9.0'
     compile 'com.commit451:PhotoView:1.2.4'
     compile 'com.nhaarman.listviewanimations:lib-core:3.1.0@aar'
-    compile 'me.dm7.barcodescanner:zxing:1.8.3'
+    compile 'me.dm7.barcodescanner:zxing:1.8.4'
     compile('org.simpleframework:simple-xml:2.7.1') {
         exclude group: 'stax', module: 'stax-api'
         exclude group: 'xpp3', module: 'xpp3'
@@ -57,8 +57,8 @@ dependencies {
     compile('de.psdev.licensesdialog:licensesdialog:1.8.0') {
         exclude module: 'support-v4'
     }
-    compile 'com.squareup.okhttp:okhttp-urlconnection:2.7.0'
-    compile 'com.squareup.okhttp:okhttp:2.7.0'
+    compile 'com.squareup.okhttp:okhttp-urlconnection:2.7.1'
+    compile 'com.squareup.okhttp:okhttp:2.7.1'
     compile 'commons-io:commons-io:2.4'
     compile 'com.github.alamkanak:android-week-view:1.2.4'
     compile 'de.hdodenhof:circleimageview:2.0.0'
