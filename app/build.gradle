@@ -8,6 +8,21 @@ android {
         minSdkVersion 10
         targetSdkVersion 23
     }
+    lintOptions {
+        checkAllWarnings true
+        disable "GoogleAppIndexingWarning",
+                "TrulyRandom",
+                "Overdraw",
+                "ContentDescription",
+                "InvalidPackage",     // caused by dependencies, should also give a compile error
+                "UnusedResources",    // unused resources get purged by shrinkResources
+                "SelectableText",     // disabled by default
+                "IconDensities"
+        htmlReport false
+        warningsAsErrors true
+        abortOnError true
+
+    }
 }
 
 dependencies {
@@ -35,6 +50,6 @@ dependencies {
     compile 'com.squareup.okhttp:okhttp-urlconnection:2.7.1'
     compile 'com.squareup.okhttp:okhttp:2.7.1'
     compile 'commons-io:commons-io:2.4'
-    compile 'com.github.alamkanak:android-week-view:1.2.4'
+    compile 'com.github.alamkanak:android-week-view:1.2.6'
     compile 'de.hdodenhof:circleimageview:2.0.0'
 }
