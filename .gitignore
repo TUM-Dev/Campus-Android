@@ -3,5 +3,5 @@
 /.idea/
 .DS_Store
 /build
-app/app-release.apk
 *.iml
+*.apk
