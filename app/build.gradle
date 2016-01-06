@@ -1,28 +1,14 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion '23.0.2'
-
-    defaultConfig {
-        minSdkVersion 10
-        targetSdkVersion 23
-        multiDexEnabled true
-    }
     lintOptions {
-        checkAllWarnings true
         disable "GoogleAppIndexingWarning",
                 "TrulyRandom",
                 "Overdraw",
                 "ContentDescription",
-                "InvalidPackage",     // caused by dependencies, should also give a compile error
                 "UnusedResources",    // unused resources get purged by shrinkResources
                 "SelectableText",     // disabled by default
                 "IconDensities"
-        htmlReport false
-        warningsAsErrors true
-        abortOnError true
-
     }
 }
 

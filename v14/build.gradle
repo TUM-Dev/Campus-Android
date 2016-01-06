@@ -1,45 +1,9 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.2"
-
     defaultConfig {
         applicationId "de.tum.in.tumcampus"
         minSdkVersion 14
-        targetSdkVersion 23
-        versionCode 60
-        versionName "1.3.3-dev"
-        multiDexEnabled true
-    }
-    buildTypes {
-        debug {
-            debuggable true
-            minifyEnabled false
-        }
-        release {
-            debuggable false
-            minifyEnabled true
-            shrinkResources true
-            FileCollection proGuardFileCollection = files { file('../proguard').listFiles() }
-            proguardFiles(proGuardFileCollection)
-            proguardFile getDefaultProguardFile('proguard-android.txt')
-        }
-    }
-    lintOptions {
-        checkAllWarnings true
-        disable "GoogleAppIndexingWarning",
-                "TrulyRandom",
-                "Overdraw",
-                "ContentDescription",
-                "InvalidPackage",     // caused by dependencies, should also give a compile error
-                "UnusedResources",    // unused resources get purged by shrinkResources
-                "SelectableText",     // disabled by default
-                "IconDensities"
-        htmlReport false
-        warningsAsErrors true
-        abortOnError true
-
     }
 }
 
