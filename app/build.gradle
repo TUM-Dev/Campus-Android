@@ -35,8 +35,8 @@ dependencies {
     compile('de.psdev.licensesdialog:licensesdialog:1.8.0') {
         exclude module: 'support-v4'
     }
-    compile 'com.squareup.okhttp:okhttp-urlconnection:2.7.1'
-    compile 'com.squareup.okhttp:okhttp:2.7.1'
+    compile 'com.squareup.okhttp:okhttp-urlconnection:2.7.2'
+    compile 'com.squareup.okhttp:okhttp:2.7.2'
     compile 'commons-io:commons-io:2.4'
     compile 'com.github.alamkanak:android-week-view:1.2.6'
     compile 'de.hdodenhof:circleimageview:2.0.0'
