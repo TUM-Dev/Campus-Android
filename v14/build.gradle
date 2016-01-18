@@ -5,6 +5,11 @@ android {
         applicationId "de.tum.in.tumcampus"
         minSdkVersion 14
     }
+    buildTypes {
+        all {
+            shrinkResources true
+        }
+    }
 }
 
 dependencies {

@@ -6,6 +6,11 @@ android {
         minSdkVersion 10
         maxSdkVersion 13
     }
+    buildTypes {
+        all {
+            shrinkResources true
+        }
+    }
 }
 
 dependencies {
