@@ -36,6 +36,8 @@ public final class Const {
 	public static final String NAME_COLUMN = "name";
 	public static final String NEWS = "news";
 	public static final String KINO = "kino";
+	public static final String STUDY_ROOM_GROUP_ID = "study_room_group_id";
+	public static final String STUDY_ROOMS = "study_rooms";
 	public static final String ORG_ID = "orgId";
 	public static final String ORG_NAME = "orgName";
 	public static final String ORG_PARENT_ID = "orgParentId";

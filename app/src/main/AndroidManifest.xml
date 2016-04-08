@@ -348,6 +348,15 @@
                 android:value="de.tum.in.tumcampusapp.activities.RoomFinderActivity" />
         </activity>
         <activity
+            android:name="de.tum.in.tumcampusapp.activities.StudyRoomsActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/study_rooms"
+            android:parentActivityName=".activities.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="de.tum.in.tumcampusapp.activities.MainActivity"/>
+        </activity>
+        <activity
             android:name="de.tum.in.tumcampusapp.activities.TuitionFeesActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/tuition_fees"

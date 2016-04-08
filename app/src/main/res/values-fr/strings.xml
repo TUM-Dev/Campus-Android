@@ -369,4 +369,7 @@
     <string name="wifi_only">WiFi seulement</string>
     <string name="year">Année de publication</string>
     <string name="alarm_date_published_on">Publié le:</string>
+    <string name="free">Libre</string>
+    <string name="occupied">Occupée jusqu\'á</string>
+    <string name="study_rooms">Salles d\'études</string>
 </resources>

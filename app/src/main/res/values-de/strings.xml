@@ -380,4 +380,7 @@ Signatur: %5$s</string>
     <string name="permission_location_explanation">Diese App braucht die Erlaubnis auf deinen Kalender zuzugreifen, um sie diesen mit deinem TUM-Kalender abzugleichen.</string>
     <string name="ok">OK</string>
     <string name="alarm_date_published_on">Veröffentlicht am:</string>
+    <string name="free">Frei</string>
+    <string name="occupied">Belegt bis</string>
+    <string name="study_rooms">Lernräume</string>
 </resources>
