@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.models.StudyRoom;
@@ -80,7 +81,7 @@ public class StudyRoomGroupManager {
                         " (?, ?, ?)",
                 new String[]{String.valueOf(studyRoomGroup.id), studyRoomGroup.name,
                         studyRoomGroup.details});
-        SimpleDateFormat dateFormatter = new SimpleDateFormat(DATEFORMAT);
+        SimpleDateFormat dateFormatter = new SimpleDateFormat(DATEFORMAT, Locale.US);
         for (StudyRoom studyRoom : studyRoomGroup.rooms) {
             db.execSQL("REPLACE INTO study_rooms(id, code, name, location, occupied_till, " +
                             "group_id) VALUES " +
@@ -128,7 +129,8 @@ public class StudyRoomGroupManager {
                                 allRooms.getJSONObject(i).getString("raum_code"),
                                 allRooms.getJSONObject(i).getString("raum_name"),
                                 allRooms.getJSONObject(i).getString("gebaeude_name"),
-                                new SimpleDateFormat(DATEFORMAT).parse(allRooms.getJSONObject(i)
+                                new SimpleDateFormat(DATEFORMAT, Locale.US).parse(allRooms
+                                        .getJSONObject(i)
                                         .getString("belegung_bis"))
                         );
                     } catch (ParseException e) {
@@ -214,7 +216,7 @@ public class StudyRoomGroupManager {
         StudyRoom studyRoom = null;
         try {
             studyRoom = new StudyRoom(cursor.getInt(0), cursor.getString(1), cursor.getString
-                    (2), cursor.getString(3), new SimpleDateFormat(DATEFORMAT).parse(cursor
+                    (2), cursor.getString(3), new SimpleDateFormat(DATEFORMAT, Locale.US).parse(cursor
                     .getString(4)));
         } catch (ParseException e) {
             e.printStackTrace();

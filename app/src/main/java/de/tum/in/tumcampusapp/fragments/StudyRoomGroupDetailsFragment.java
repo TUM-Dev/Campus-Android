@@ -1,5 +1,6 @@
 package de.tum.in.tumcampusapp.fragments;
 
+import android.annotation.SuppressLint;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
@@ -88,6 +89,7 @@ public class StudyRoomGroupDetailsFragment extends Fragment implements SimpleCur
         };
     }
 
+    @SuppressLint("SimpleDateFormat")
     @Override
     public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
         StudyRoom studyRoom = StudyRoomGroupManager.getStudyRoomFromCursor(cursor);
@@ -111,7 +113,6 @@ public class StudyRoomGroupDetailsFragment extends Fragment implements SimpleCur
             tv.setText(Html.fromHtml(stringBuilder.toString()));
         } else if (view.getId() == R.id.text3) {
             TextView tv = (TextView) view;
-            tv.getCompoundDrawables()[0].setAlpha(128);
             tv.setText(studyRoom.code);
         }
         return true;
