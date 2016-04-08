@@ -47,7 +47,8 @@ public class StudyRoomGroupManager {
 
     private static void createStudyRoomTable(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE IF NOT EXISTS study_rooms " +
-                "(id INTEGER PRIMARY KEY, code VARCHAR, name VARCHAR, occupied_till VARCHAR, " +
+                "(id INTEGER PRIMARY KEY, code VARCHAR, name VARCHAR, location VARCHAR, " +
+                "occupied_till VARCHAR, " +
                 "group_id INTEGER)");
     }
 
@@ -81,9 +82,11 @@ public class StudyRoomGroupManager {
                         studyRoomGroup.details});
         SimpleDateFormat dateFormatter = new SimpleDateFormat(DATEFORMAT);
         for (StudyRoom studyRoom : studyRoomGroup.rooms) {
-            db.execSQL("REPLACE INTO study_rooms(id, code, name, occupied_till, group_id) VALUES " +
-                            "(?, ?, ?, ?, ?)",
+            db.execSQL("REPLACE INTO study_rooms(id, code, name, location, occupied_till, " +
+                            "group_id) VALUES " +
+                            "(?, ?, ?, ?, ?, ?)",
                     new String[]{String.valueOf(studyRoom.id), studyRoom.code, studyRoom.name,
+                            studyRoom.location,
                             dateFormatter.format(studyRoom.occupiedTill), String.valueOf
                             (studyRoomGroup.id)});
         }
@@ -124,6 +127,7 @@ public class StudyRoomGroupManager {
                                 roomNumber,
                                 allRooms.getJSONObject(i).getString("raum_code"),
                                 allRooms.getJSONObject(i).getString("raum_name"),
+                                allRooms.getJSONObject(i).getString("gebaeude_name"),
                                 new SimpleDateFormat(DATEFORMAT).parse(allRooms.getJSONObject(i)
                                         .getString("belegung_bis"))
                         );
@@ -134,6 +138,7 @@ public class StudyRoomGroupManager {
                                 roomNumber,
                                 allRooms.getJSONObject(i).getString("raum_code"),
                                 allRooms.getJSONObject(i).getString("raum_name"),
+                                allRooms.getJSONObject(i).getString("gebaeude_name"),
                                 new Date()
                         );
                     }
@@ -180,7 +185,7 @@ public class StudyRoomGroupManager {
      * Retrieves all study rooms of a given group from db, ordered by occupation status.
      */
     public Cursor getStudyRoomsFromDb(int studyRoomGroupId) {
-        return db.rawQuery("SELECT id as _id, code, name, occupied_till, group_id FROM " +
+        return db.rawQuery("SELECT id as _id, code, name, location, occupied_till, group_id FROM " +
                 "study_rooms WHERE group_id = ? ORDER BY occupied_till ASC", new String[]{String
                 .valueOf(studyRoomGroupId)});
     }
@@ -209,7 +214,8 @@ public class StudyRoomGroupManager {
         StudyRoom studyRoom = null;
         try {
             studyRoom = new StudyRoom(cursor.getInt(0), cursor.getString(1), cursor.getString
-                    (2), new SimpleDateFormat(DATEFORMAT).parse(cursor.getString(3)));
+                    (2), cursor.getString(3), new SimpleDateFormat(DATEFORMAT).parse(cursor
+                    .getString(4)));
         } catch (ParseException e) {
             e.printStackTrace();
         }
