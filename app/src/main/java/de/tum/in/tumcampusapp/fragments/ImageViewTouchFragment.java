@@ -1,6 +1,6 @@
 package de.tum.in.tumcampusapp.fragments;
 
-import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -8,21 +8,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import java.io.File;
+
 import de.tum.in.tumcampusapp.R;
 import uk.co.senab.photoview.PhotoViewAttacher;
 
 public class ImageViewTouchFragment extends Fragment {
 
-    private static final String BITMAP_ARG = "bitmap";
+    private static final String URI_ARG = "uri";
 
     public static ImageViewTouchFragment newInstance() {
         return new ImageViewTouchFragment();
     }
 
-    public static ImageViewTouchFragment newInstance(Bitmap bitmap) {
+    public static ImageViewTouchFragment newInstance(File image) {
         ImageViewTouchFragment fragment = new ImageViewTouchFragment();
         Bundle args = new Bundle();
-        args.putParcelable(BITMAP_ARG, bitmap);
+        args.putParcelable(URI_ARG, Uri.fromFile(image));
         fragment.setArguments(args);
         return fragment;
     }
@@ -36,8 +38,8 @@ public class ImageViewTouchFragment extends Fragment {
         new PhotoViewAttacher(mImage);
 
         if (getArguments() != null) {
-            Bitmap bitmap = getArguments().getParcelable(BITMAP_ARG);
-            mImage.setImageBitmap(bitmap);
+            Uri image = getArguments().getParcelable(URI_ARG);
+            mImage.setImageURI(image);
         }
 
         return view;

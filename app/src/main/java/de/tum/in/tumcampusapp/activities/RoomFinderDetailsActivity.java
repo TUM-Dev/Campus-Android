@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -14,6 +13,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -30,7 +30,7 @@ import de.tum.in.tumcampusapp.tumonline.TUMRoomFinderRequest;
 /**
  * Displays the map regarding the searched room.
  */
-public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<Void, Bitmap> implements DialogInterface.OnClickListener {
+public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<Void, File> implements DialogInterface.OnClickListener {
 
     public static final String EXTRA_ROOM_INFO = "roomInfo";
     public static final String EXTRA_LOCATION = "location";
@@ -181,7 +181,7 @@ public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<Vo
     }
 
     @Override
-    protected Bitmap onLoadInBackground(Void... arg) {
+    protected File onLoadInBackground(Void... arg) {
         String archId = roomInfo.getString(TUMRoomFinderRequest.KEY_ARCH_ID);
         String url;
 
@@ -191,12 +191,12 @@ public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<Vo
             url = request.fetchMap(archId, mapId);
         }
 
-        return net.downloadImageToBitmap(url);
+        return net.downloadImage(url);
     }
 
 
     @Override
-    protected void onLoadFinished(Bitmap result) {
+    protected void onLoadFinished(File result) {
         if (result == null) {
             if (!NetUtils.isConnected(this)) {
                 showNoInternetLayout();
