@@ -10,6 +10,10 @@ import android.os.AsyncTask;
 import android.util.Pair;
 import android.widget.ImageView;
 
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.Response;
+
 import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -20,11 +24,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import de.tum.in.tumcampusapp.models.managers.CacheManager;
 import de.tum.in.tumcampusapp.trace.G;
@@ -33,18 +36,19 @@ public class NetUtils {
     private static final int HTTP_TIMEOUT = 25000;
     private final Context mContext;
     private final CacheManager cacheManager;
+    private final OkHttpClient client = new OkHttpClient();
 
     public NetUtils(Context context) {
         //Manager caches all requests
         mContext = context;
         cacheManager = new CacheManager(mContext);
+
+        //Set our max wait time for each request
+        client.setConnectTimeout(HTTP_TIMEOUT, TimeUnit.MILLISECONDS);
+        client.setReadTimeout(HTTP_TIMEOUT, TimeUnit.MILLISECONDS);
     }
 
-    private static void setHttpConnectionParams(HttpURLConnection connection) {
-        //Set our max wait time for each request
-        connection.setConnectTimeout(HTTP_TIMEOUT);
-        connection.setReadTimeout(HTTP_TIMEOUT);
-
+    private void setHttpConnectionParams(Request.Builder builder) {
         //Clearly identify all requests from this app
         String userAgent = "TCA Client";
         if (G.appVersion != null && !G.appVersion.equals("unknown")) {
@@ -54,7 +58,14 @@ public class NetUtils {
             }
         }
 
-        connection.setRequestProperty("User-Agent", userAgent);
+        builder.header("User-Agent", userAgent);
+        builder.addHeader("X-DEVICE-ID", AuthenticationManager.getDeviceID(mContext));
+        builder.addHeader("X-ANDROID-VERSION", android.os.Build.VERSION.RELEASE);
+        try {
+            builder.addHeader("X-APP-VERSION", mContext.getPackageManager().getPackageInfo(mContext.getPackageName(), 0).versionName);
+        } catch (PackageManager.NameNotFoundException e) {
+            //Don't log any errors, as we don't really care!
+        }
     }
 
     public static JSONObject downloadJson(Context context, String url) throws IOException, JSONException {
@@ -138,20 +149,14 @@ public class NetUtils {
         }
 
         Utils.logv("Download URL: " + url);
-        HttpURLConnection connection = (HttpURLConnection) (new URL(url)).openConnection();
-        setHttpConnectionParams(connection);
-        connection.addRequestProperty("X-DEVICE-ID", AuthenticationManager.getDeviceID(mContext));
 
-        //Add some useful statical data
-        connection.addRequestProperty("X-ANDROID-VERSION", android.os.Build.VERSION.RELEASE);
-        try {
-            connection.addRequestProperty("X-APP-VERSION", mContext.getPackageManager().getPackageInfo(mContext.getPackageName(), 0).versionName);
-        } catch (PackageManager.NameNotFoundException e) {
-            //Don't log any errors, as we don't really care!
-        }
+        Request.Builder builder = new Request.Builder().url(url);
+        setHttpConnectionParams(builder);
 
         //Execute the request
-        return connection.getInputStream();
+        Request req = builder.build();
+        Response res = client.newCall(req).execute();
+        return res.body().byteStream();
     }
 
     /**
