@@ -1,5 +1,6 @@
 package de.tum.in.tumcampusapp.activities;
 
+import android.app.SearchManager;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -41,13 +42,18 @@ public class RoomFinderActivity extends ActivityForSearching implements TUMRoomF
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        roomFinderRequest = new TUMRoomFinderRequest(this);
 
+        roomFinderRequest = new TUMRoomFinderRequest(this);
         list = (StickyListHeadersListView) findViewById(R.id.list);
         list.setOnItemClickListener(this);
-
         recentsManager = new RecentsManager(this, RecentsManager.ROOMS);
         adapter = new RoomFinderListAdapter(this, getRecents());
+
+        Intent intent = getIntent();
+        if (intent != null && intent.hasExtra(SearchManager.QUERY)) {
+            requestSearch(intent.getStringExtra(SearchManager.QUERY));
+            return;
+        }
 
         if (adapter.getCount() == 0) {
             openSearch();
@@ -94,6 +100,14 @@ public class RoomFinderActivity extends ActivityForSearching implements TUMRoomF
         @SuppressWarnings("unchecked")
         TreeMap<String, String> room = new TreeMap<>((HashMap<String, String>) list.getAdapter().getItem(position));
 
+        openRoomDetails(room);
+    }
+
+    /**
+     * Opens a {@link RoomFinderDetailsActivity} that displays details (e.g. location on a map) for
+     * a given room. Also adds this room to the recent queries.
+     */
+    private void openRoomDetails(Map<String, String> room) {
         // Add to recents
         String val = "";
         Bundle b = new Bundle();

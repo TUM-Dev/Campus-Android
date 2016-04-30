@@ -24,6 +24,7 @@ import de.tum.in.tumcampusapp.models.managers.CardManager;
 import de.tum.in.tumcampusapp.models.managers.KinoManager;
 import de.tum.in.tumcampusapp.models.managers.NewsManager;
 import de.tum.in.tumcampusapp.models.managers.OpenHoursManager;
+import de.tum.in.tumcampusapp.models.managers.StudyRoomGroupManager;
 import de.tum.in.tumcampusapp.models.managers.SyncManager;
 import de.tum.in.tumcampusapp.trace.G;
 import de.tum.in.tumcampusapp.trace.Util;
@@ -157,6 +158,9 @@ public class DownloadService extends IntentService {
                     case Const.KINO:
                         downLoadKino(force);
                         break;
+                    case Const.STUDY_ROOMS:
+                        downloadStudyRooms();
+                        break;
                 }
             } catch (TimeoutException e) {
                 Utils.log(e);
@@ -245,6 +249,12 @@ public class DownloadService extends IntentService {
         NewsManager nm = new NewsManager(this);
         nm.downloadFromExternal(force);
     }
+
+    private void downloadStudyRooms() throws Exception {
+        StudyRoomGroupManager sm = new StudyRoomGroupManager(this);
+        sm.downloadFromExternal();
+    }
+
 
     /**
      * Import default location and opening hours from assets

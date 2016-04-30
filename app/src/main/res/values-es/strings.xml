@@ -361,5 +361,8 @@
     <string name="wifi_only">Sólo WiFi</string>
     <string name="year">Año de publicación </string>
     <string name="alarm_date_published_on">Publicado el:</string>
+    <string name="free">Libre</string>
+    <string name="occupied">Ocupada hasta</string>
+    <string name="study_rooms">Salas de estudios</string>
     <!-- END Translated, please do not change identifiers -->
 </resources>

@@ -348,4 +348,24 @@ public class NetUtils {
             return null;
         }
     }
+
+    /**
+     * Download a JSON stream from a URL or load it from cache
+     *
+     * @param url   Valid URL
+     * @param force Load data anyway and fill cache, even if valid cached version exists
+     * @return JSONObject
+     */
+    public JSONObject downloadJsonObject(String url, int validity, boolean force) {
+        try {
+            String result = downloadStringAndCache(url, validity, force);
+            if (result == null)
+                return null;
+
+            return new JSONObject(result);
+        } catch (Exception e) {
+            Utils.log(e);
+            return null;
+        }
+    }
 }
