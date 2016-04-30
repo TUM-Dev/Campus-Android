@@ -116,7 +116,7 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
         };
 
         // Set the drawer toggle as the DrawerListener
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
+        mDrawerLayout.addDrawerListener(mDrawerToggle);
     }
 
     @Override

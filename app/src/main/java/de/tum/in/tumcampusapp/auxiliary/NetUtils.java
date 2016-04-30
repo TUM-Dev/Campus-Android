@@ -23,6 +23,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.nio.charset.Charset;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.models.managers.CacheManager;
@@ -164,7 +165,7 @@ public class NetUtils {
         InputStream iStream = null;
         try {
             iStream = getHttpStream(url);
-            return IOUtils.toString(iStream);
+            return IOUtils.toString(iStream, Charset.defaultCharset());
         } finally {
             if (iStream != null) {
                 iStream.close();
