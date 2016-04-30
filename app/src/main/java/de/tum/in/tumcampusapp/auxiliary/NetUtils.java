@@ -13,8 +13,8 @@ import android.widget.ImageView;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
+import com.squareup.okhttp.ResponseBody;
 
-import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -22,10 +22,8 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.nio.charset.Charset;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -133,15 +131,7 @@ public class NetUtils {
         return result.toString();
     }
 
-    /**
-     * Gets a http entity from the given URL.
-     * Adds an X-DEVICE-ID to header
-     *
-     * @param url Download URL location
-     * @return Gets an InputStream
-     * @throws IOException
-     */
-    public InputStream getHttpStream(String url) throws IOException {
+    private ResponseBody getOkHttpResponse(String url) throws IOException {
         // if we are not online, fetch makes no sense
         boolean isOnline = isConnected(mContext);
         if (!isOnline || url == null) {
@@ -156,7 +146,7 @@ public class NetUtils {
         //Execute the request
         Request req = builder.build();
         Response res = client.newCall(req).execute();
-        return res.body().byteStream();
+        return res.body();
     }
 
     /**
@@ -167,15 +157,7 @@ public class NetUtils {
      * @throws IOException
      */
     public String downloadStringHttp(String url) throws IOException {
-        InputStream iStream = null;
-        try {
-            iStream = getHttpStream(url);
-            return IOUtils.toString(iStream, Charset.defaultCharset());
-        } finally {
-            if (iStream != null) {
-                iStream.close();
-            }
-        }
+        return getOkHttpResponse(url).string();
     }
 
     public String downloadStringAndCache(String url, int validity, boolean force) {
@@ -214,19 +196,14 @@ public class NetUtils {
         }
 
         File file = new File(target);
-        InputStream iStream = null;
         FileOutputStream out = null;
         try {
             out = new FileOutputStream(file);
-            iStream = getHttpStream(url);
-            byte[] buffer = IOUtils.toByteArray(iStream);
+            byte[] buffer = getOkHttpResponse(url).bytes();
             out.write(buffer, 0, buffer.length);
             out.flush();
 
         } finally {
-            if (iStream != null) {
-                iStream.close();
-            }
             if (out != null) {
                 out.close();
             }

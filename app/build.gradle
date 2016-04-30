@@ -35,7 +35,6 @@ dependencies {
     compile 'de.psdev.licensesdialog:licensesdialog:1.8.1'
     compile 'com.squareup.okhttp:okhttp-urlconnection:2.7.5'
     compile 'com.squareup.okhttp:okhttp:2.7.5'
-    compile 'commons-io:commons-io:2.5'
     compile 'com.github.alamkanak:android-week-view:1.2.6'
     compile 'de.hdodenhof:circleimageview:2.0.0'
 }
