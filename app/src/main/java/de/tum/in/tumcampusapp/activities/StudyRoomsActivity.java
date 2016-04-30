@@ -17,9 +17,8 @@ import java.util.Comparator;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.activities.generic.ActivityForDownloadingExternal;
+import de.tum.in.tumcampusapp.activities.generic.ActivityForLoadingInBackground;
 import de.tum.in.tumcampusapp.adapters.StudyRoomsPagerAdapter;
-import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.models.StudyRoom;
 import de.tum.in.tumcampusapp.models.StudyRoomGroup;
@@ -28,7 +27,7 @@ import de.tum.in.tumcampusapp.models.managers.StudyRoomGroupManager;
 /**
  * Shows information about reservable study rooms.
  */
-public class StudyRoomsActivity extends ActivityForDownloadingExternal implements AdapterView
+public class StudyRoomsActivity extends ActivityForLoadingInBackground<Void, Void> implements AdapterView
         .OnItemSelectedListener {
 
     private List<StudyRoomGroup> mStudyRoomGroupList;
@@ -37,15 +36,13 @@ public class StudyRoomsActivity extends ActivityForDownloadingExternal implement
     private StudyRoomsPagerAdapter mSectionsPagerAdapter;
 
     public StudyRoomsActivity() {
-        super(Const.STUDY_ROOMS, R.layout.activity_study_rooms);
+        super(R.layout.activity_study_rooms);
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mViewPager = (ViewPager) findViewById(R.id.pager);
-
-        requestDownload(false);
     }
 
     @Override
@@ -54,20 +51,7 @@ public class StudyRoomsActivity extends ActivityForDownloadingExternal implement
      */
     protected void onStart() {
         super.onStart();
-
-        StudyRoomGroupManager studyRoomGroupManager = new StudyRoomGroupManager(this);
-        mStudyRoomGroupList = studyRoomGroupManager.getStudyRoomGroupsFromCursor
-                (studyRoomGroupManager.getAllFromDb());
-        for (StudyRoomGroup group : mStudyRoomGroupList) {
-            sortStudyRoomsByOccupation(group.rooms);
-        }
-
-        if (hasGotStudyRoomGroups()) {
-            Spinner spinner = getStudyRoomGroupsSpinner();
-            selectCurrentSpinnerItem(spinner);
-        } else
-            showCorrectErrorLayout();
-
+        startLoading();
     }
 
     private void selectCurrentSpinnerItem(Spinner spinner) {
@@ -176,5 +160,32 @@ public class StudyRoomsActivity extends ActivityForDownloadingExternal implement
         findStudyRoomIntent.putExtra(SearchManager.QUERY, roomCode);
         findStudyRoomIntent.setClass(this, RoomFinderActivity.class);
         startActivity(findStudyRoomIntent);
+    }
+
+    @Override
+    protected Void onLoadInBackground(Void... arg) {
+        StudyRoomGroupManager sm = new StudyRoomGroupManager(this);
+        try {
+            sm.downloadFromExternal();
+        } catch (Exception e) {
+            // No error handling here
+        }
+        return null;
+    }
+
+    @Override
+    protected void onLoadFinished(Void result) {
+        StudyRoomGroupManager studyRoomGroupManager = new StudyRoomGroupManager(this);
+        mStudyRoomGroupList = studyRoomGroupManager.getStudyRoomGroupsFromCursor
+                (studyRoomGroupManager.getAllFromDb());
+        for (StudyRoomGroup group : mStudyRoomGroupList) {
+            sortStudyRoomsByOccupation(group.rooms);
+        }
+
+        if (hasGotStudyRoomGroups()) {
+            Spinner spinner = getStudyRoomGroupsSpinner();
+            selectCurrentSpinnerItem(spinner);
+        } else
+            showCorrectErrorLayout();
     }
 }
