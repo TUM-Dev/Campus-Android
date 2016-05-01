@@ -22,7 +22,7 @@ before_install:
 install:
 - "./gradlew dependencies"
 script:
-- "./gradlew build"
+- "./gradlew check"
 after_failure:
 - cat "$TRAVIS_BUILD_DIR/app/build/outputs/lint-results.xml"
 notifications:
