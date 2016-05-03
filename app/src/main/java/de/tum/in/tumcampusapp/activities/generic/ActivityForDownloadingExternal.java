@@ -64,13 +64,8 @@ public abstract class ActivityForDownloadingExternal extends ProgressActivity {
                     // receives data from a new download
                     onStart();
                 }
-                if (action.equals(Const.WARNING)) {
-                    String message = intent.getStringExtra(Const.WARNING_MESSAGE);
-                    Utils.showToast(ActivityForDownloadingExternal.this, message);
-                    showLoadingEnded();
-                }
                 if (action.equals(Const.ERROR)) {
-                    String message = intent.getStringExtra(Const.ERROR_MESSAGE);
+                    String message = intent.getStringExtra(Const.MESSAGE);
                     showError(message);
                 }
             }

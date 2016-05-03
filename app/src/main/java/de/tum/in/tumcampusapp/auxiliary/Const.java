@@ -18,7 +18,7 @@ public final class Const {
 	public static final String DE = "de";
 	public static final String DOWNLOAD_ALL_FROM_EXTERNAL = "download_all_from_external";
 	public static final String ERROR = "error";
-	public static final String ERROR_MESSAGE = "error_message";
+	public static final String MESSAGE = "message";
 	public static final String FORCE_DOWNLOAD = "force_download";
 	public static final String[] GRADES = { "1,0", "1,3", "1,4", "1,7", "2,0",
 			"2,3", "2,4", "2,7", "3,0", "3,3", "3,4", "3,7", "4,0", "4,3",
@@ -51,9 +51,7 @@ public final class Const {
 	public static final String SILENT_MODE_SET_TO = "silent_mode_set_to";
 	public static final String TITLE_EXTRA = "title";
 	public static final String TRANSPORT_COLUMN = "transport";
-	public static final String WARNING = "warning";
-	public static final String WARNING_MESSAGE = "warning_message";
-	
+
 	public static final String API_HOSTNAME = "tumcabe.in.tum.de";
 	public static final String CURRENT_CHAT_ROOM = "current_chat_room";
 	public static final String CHAT_ROOM_DISPLAY_NAME = "chat_room_display_name";
