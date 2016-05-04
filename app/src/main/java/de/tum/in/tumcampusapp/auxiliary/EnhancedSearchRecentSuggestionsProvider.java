@@ -9,7 +9,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.text.TextUtils;
 
-import de.tum.in.tumcampusapp.models.managers.DatabaseManager;
+import de.tum.in.tumcampusapp.models.managers.AbstractManager;
 
 /**
  * Slightly modified version of SearchRecentSuggestionsProvider taken from AOSP source code
@@ -190,7 +190,7 @@ public abstract class EnhancedSearchRecentSuggestionsProvider extends ContentPro
         if (mAuthority == null || mMode == 0) {
             throw new IllegalArgumentException("Provider not configured");
         }
-        db = DatabaseManager.getDb(getContext());
+        db = AbstractManager.getDb(getContext());
         final String create_table = "CREATE TABLE IF NOT EXISTS suggestions"+mId+" (" +
                 "_id INTEGER PRIMARY KEY" +
                 ",display1 TEXT UNIQUE ON CONFLICT REPLACE"+

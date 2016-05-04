@@ -2,7 +2,6 @@ package de.tum.in.tumcampusapp.models.managers;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -17,25 +16,18 @@ import de.tum.in.tumcampusapp.models.Kino;
 /**
  * TU Kino Manager, handles content
  */
-public class KinoManager{
+public class KinoManager extends AbstractManager {
 
     private static final int TIME_TO_SYNC = 1800; // 1/2 hour
-    private final Context mContext;
-
     private static final String KINO_URL = "https://tumcabe.in.tum.de/Api/kino/";
 
     /**
-     * Database connection
-     */
-    private SQLiteDatabase db;
-
-    /**
      * Constructor open/create database
+     *
      * @param context Context
      */
-    public KinoManager(Context context){
-        db = DatabaseManager.getDb(context);
-        mContext = context;
+    public KinoManager(Context context) {
+        super(context);
 
         // create table if needed
         db.execSQL("CREATE TABLE IF NOT EXISTS kino (id INTEGER PRIMARY KEY, title TEXT, year VARCHAR, runtime VARCHAR," +
@@ -57,6 +49,7 @@ public class KinoManager{
 
     /**
      * download kino from external interface (JSON)
+     *
      * @param force True to force download over normal sync period, else false
      * @throws Exception
      */
@@ -71,14 +64,14 @@ public class KinoManager{
         // download from kino database
         JSONArray jsonArray = net.downloadJsonArray(KINO_URL + getLastId(), CacheManager.VALIDITY_ONE_DAY, force);
 
-        if (jsonArray == null){
+        if (jsonArray == null) {
             return;
         }
 
         // write data to database on device
         db.beginTransaction();
-        try{
-            for (int i = 0; i < jsonArray.length(); i++){
+        try {
+            for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject obj = jsonArray.getJSONObject(i);
                 replaceIntoDb(getFromJson(obj));
             }
@@ -93,6 +86,7 @@ public class KinoManager{
 
     /**
      * Convert JSON object to Kino
+     *
      * @param json JsonObject from external
      * @return Kino
      * @throws Exception
@@ -119,16 +113,17 @@ public class KinoManager{
 
     /**
      * get everything from the database
+     *
      * @return Cursor
      */
-    public Cursor getAllFromDb(){
-        return db.rawQuery("SELECT * FROM kino",null);
+    public Cursor getAllFromDb() {
+        return db.rawQuery("SELECT * FROM kino", null);
     }
 
     /**
      * replace or insert an event in the database
      *
-      * @param k Kino obj
+     * @param k Kino obj
      */
     void replaceIntoDb(Kino k) {
         Utils.logv(k.toString());

@@ -2,7 +2,6 @@ package de.tum.in.tumcampusapp.models.managers;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.graphics.Bitmap;
 import android.support.v4.util.LruCache;
@@ -30,7 +29,7 @@ import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequest;
 /**
  * TUMOnline cache manager, allows caching of TUMOnline requests
  */
-public class CacheManager {
+public class CacheManager extends AbstractManager {
     public static final int CACHE_TYP_DATA = 0;
     public static final int CACHE_TYP_IMAGE = 1;
 
@@ -58,11 +57,6 @@ public class CacheManager {
         };
     }
 
-    /**
-     * Database connection
-     */
-    private final SQLiteDatabase db;
-    private final Context mContext;
 
     /**
      * Constructor, open/create database, create table if necessary
@@ -70,8 +64,7 @@ public class CacheManager {
      * @param context Context
      */
     public CacheManager(Context context) {
-        mContext = context;
-        db = DatabaseManager.getDb(context);
+        super(context);
 
         // create table if needed
         db.execSQL("CREATE TABLE IF NOT EXISTS cache (url VARCHAR UNIQUE, data BLOB, " +

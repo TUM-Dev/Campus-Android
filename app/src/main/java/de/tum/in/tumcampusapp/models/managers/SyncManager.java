@@ -10,12 +10,7 @@ import de.tum.in.tumcampusapp.auxiliary.Utils;
 /**
  * Sync Manager, tracks last successful syncs
  */
-public class SyncManager {
-
-    /**
-     * Database connection
-     */
-    private final SQLiteDatabase db;
+public class SyncManager extends AbstractManager {
 
     /**
      * Constructor, open/create database, create table if necessary
@@ -23,9 +18,8 @@ public class SyncManager {
      * @param context Context
      */
     public SyncManager(Context context) {
-        db = DatabaseManager.getDb(context);
-
-        // create table if needed
+		super(context);
+		// create table if needed
         db.execSQL("CREATE TABLE IF NOT EXISTS syncs (id VARCHAR PRIMARY KEY, lastSync VARCHAR)");
     }
 

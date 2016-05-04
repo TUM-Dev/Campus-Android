@@ -2,7 +2,6 @@ package de.tum.in.tumcampusapp.models.managers;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -19,7 +18,7 @@ import de.tum.in.tumcampusapp.models.News;
 /**
  * News Manager, handles database stuff, external imports
  */
-public class NewsManager implements Card.ProvidesCard {
+public class NewsManager extends AbstractManager implements Card.ProvidesCard {
 
     private static final int TIME_TO_SYNC = 1800; // 1/2 hour
     private final Context mContext;
@@ -28,17 +27,12 @@ public class NewsManager implements Card.ProvidesCard {
     private static final String NEWS_SOURCES_URL = NEWS_URL + "sources";
 
     /**
-     * Database connection
-     */
-    private final SQLiteDatabase db;
-
-    /**
      * Constructor, open/create database, create table if necessary
      *
      * @param context Context
      */
     public NewsManager(Context context) {
-        db = DatabaseManager.getDb(context);
+        super(context);
         mContext = context;
 
         // create news sources table

@@ -2,7 +2,6 @@ package de.tum.in.tumcampusapp.models.managers;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.text.format.DateUtils;
 
 import java.util.Calendar;
@@ -18,12 +17,7 @@ import de.tum.in.tumcampusapp.models.Location;
 /**
  * Location manager, handles database stuff
  */
-public class OpenHoursManager {
-
-    /**
-     * Database connection
-     */
-    private final SQLiteDatabase db;
+public class OpenHoursManager extends AbstractManager {
 
     /**
      * Constructor, open/create database, create table if necessary
@@ -31,7 +25,7 @@ public class OpenHoursManager {
      * @param context Context
      */
     public OpenHoursManager(Context context) {
-        db = DatabaseManager.getDb(context);
+        super(context);
 
         // create table if needed
         db.execSQL("CREATE TABLE IF NOT EXISTS locations (id INTEGER PRIMARY KEY, category VARCHAR, "

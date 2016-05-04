@@ -7,7 +7,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.CalendarContract;
@@ -20,9 +19,9 @@ import java.util.List;
 import java.util.Locale;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.auxiliary.calendar.CalendarHelper;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
+import de.tum.in.tumcampusapp.auxiliary.calendar.CalendarHelper;
 import de.tum.in.tumcampusapp.cards.Card;
 import de.tum.in.tumcampusapp.cards.NextLectureCard;
 import de.tum.in.tumcampusapp.models.CalendarRow;
@@ -32,17 +31,13 @@ import de.tum.in.tumcampusapp.models.Geo;
 /**
  * Calendar Manager, handles database stuff, external imports
  */
-public class CalendarManager implements Card.ProvidesCard {
+public class CalendarManager extends AbstractManager implements Card.ProvidesCard {
     private static final String[] projection = new String[]{"_id", "name"};
 
     private static final int TIME_TO_SYNC_CALENDAR = 604800; // 1 week
 
-    private final Context mContext;
-    private final SQLiteDatabase db;
-
     public CalendarManager(Context context) {
-        mContext = context;
-        db = DatabaseManager.getDb(context);
+        super(context);
 
         // create table if needed
         db.execSQL("CREATE TABLE IF NOT EXISTS room_locations ("
@@ -116,7 +111,7 @@ public class CalendarManager implements Card.ProvidesCard {
                 }
             }
         }
-        SyncManager.replaceIntoDb(DatabaseManager.getDb(mContext), Const.SYNC_CALENDAR_IMPORT);
+        SyncManager.replaceIntoDb(db, Const.SYNC_CALENDAR_IMPORT);
     }
 
     /**
@@ -284,7 +279,6 @@ public class CalendarManager implements Card.ProvidesCard {
         }
 
         public static void loadGeo(Context c) {
-            SQLiteDatabase db = DatabaseManager.getDb(c);
             LocationManager locationManager = new LocationManager(c);
 
             Cursor cur = db.rawQuery("SELECT c.location " +

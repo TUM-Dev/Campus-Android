@@ -34,10 +34,10 @@ import de.tum.in.tumcampusapp.auxiliary.AccessTokenManager;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
+import de.tum.in.tumcampusapp.models.managers.AbstractManager;
 import de.tum.in.tumcampusapp.models.managers.CacheManager;
 import de.tum.in.tumcampusapp.models.managers.CalendarManager;
 import de.tum.in.tumcampusapp.models.managers.CardManager;
-import de.tum.in.tumcampusapp.models.managers.DatabaseManager;
 import de.tum.in.tumcampusapp.models.managers.NewsManager;
 import de.tum.in.tumcampusapp.services.BackgroundService;
 import de.tum.in.tumcampusapp.services.SilenceService;
@@ -297,7 +297,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
      * Clears all downloaded data from SD card and database
      */
     private void clearCache() {
-        DatabaseManager.resetDb(mContext);
+        AbstractManager.resetDb(mContext);
 
         CacheManager manager = new CacheManager(mContext);
         manager.clearCache();

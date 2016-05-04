@@ -23,19 +23,14 @@ import de.tum.in.tumcampusapp.models.StudyRoomGroup;
 /**
  * Handles content for the study room feature, fetches external data.
  */
-public class StudyRoomGroupManager {
-    private final Context mContext;
+public class StudyRoomGroupManager extends AbstractManager {
 
     public static final String STUDYROOM_URL = "https://www.devapp.it.tum.de/iris/ris_api" +
             ".php?format=json";
     public static final String DATEFORMAT = "yyyy-MM-dd HH:mm:ss";
 
-    private final SQLiteDatabase db;
-
     public StudyRoomGroupManager(Context context) {
-        mContext = context;
-        db = DatabaseManager.getDb(context);
-
+        super(context);
         createStudyRoomGroupTable(db);
         createStudyRoomTable(db);
     }

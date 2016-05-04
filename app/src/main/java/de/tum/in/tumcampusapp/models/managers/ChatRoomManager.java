@@ -2,7 +2,6 @@ package de.tum.in.tumcampusapp.models.managers;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -13,17 +12,17 @@ import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.cards.Card;
 import de.tum.in.tumcampusapp.cards.ChatMessagesCard;
 import de.tum.in.tumcampusapp.exceptions.NoPrivateKey;
-import de.tum.in.tumcampusapp.models.TUMCabeClient;
 import de.tum.in.tumcampusapp.models.ChatMember;
 import de.tum.in.tumcampusapp.models.ChatRoom;
 import de.tum.in.tumcampusapp.models.ChatVerification;
 import de.tum.in.tumcampusapp.models.LecturesSearchRow;
+import de.tum.in.tumcampusapp.models.TUMCabeClient;
 import retrofit.RetrofitError;
 
 /**
  * TUMOnline cache manager, allows caching of TUMOnline requests
  */
-public class ChatRoomManager implements Card.ProvidesCard {
+public class ChatRoomManager extends AbstractManager implements Card.ProvidesCard {
 
     public static final int COL_ROOM = 0;
     public static final int COL_NAME = 1;
@@ -35,17 +34,12 @@ public class ChatRoomManager implements Card.ProvidesCard {
     public static final int COL_MEMBERS = 7;
 
     /**
-     * Database connection
-     */
-    private final SQLiteDatabase db;
-
-    /**
      * Constructor, open/create database, create table if necessary
      *
      * @param context Context
      */
     public ChatRoomManager(Context context) {
-        db = DatabaseManager.getDb(context);
+        super(context);
 
         // create table if needed
         db.execSQL("CREATE TABLE IF NOT EXISTS chat_room (room INTEGER, name VARCHAR, " +

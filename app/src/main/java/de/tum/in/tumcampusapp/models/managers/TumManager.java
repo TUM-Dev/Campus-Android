@@ -2,7 +2,6 @@ package de.tum.in.tumcampusapp.models.managers;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 
 import org.simpleframework.xml.core.Persister;
@@ -16,18 +15,15 @@ import de.tum.in.tumcampusapp.models.Error;
 /**
  * TUMOnline lock manager: prevent too many requests send to TUMO
  */
-public class TumManager {
+public class TumManager extends AbstractManager {
 
     private static final int colUrl = 0;
     private static final int colError = 1;
     private static final int colTimestamp = 2;
     private static final int colLockedFor = 3;
     private static final int colActive = 4;
-
     private static final int maxAge = CacheManager.VALIDITY_ONE_DAY / 4; //Maximum length of a lock
     private static final int defaultLock = 60; //Base value for the first error: 60 seconds
-
-    private final SQLiteDatabase db;
 
     public static class reqStatus {
         private String url;
@@ -43,8 +39,7 @@ public class TumManager {
      * @param context Context
      */
     public TumManager(Context context) {
-        db = DatabaseManager.getDb(context);
-
+        super(context);
         // create table if needed
         db.execSQL("CREATE TABLE IF NOT EXISTS tumLocks (url VARCHAR UNIQUE, error VARCHAR, timestamp VARCHAR, lockedFor INT, active INT)");
 

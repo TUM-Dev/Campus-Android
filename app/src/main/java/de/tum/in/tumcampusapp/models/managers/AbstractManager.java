@@ -8,28 +8,34 @@ import java.io.File;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 
 /**
- * Database singleton
+ * Created by philipp on 04.05.16.
  */
-public abstract class DatabaseManager {
+public abstract class AbstractManager {
+    protected static Context mContext;
+    protected static SQLiteDatabase db;
 
-	/** Database connection */
-	private static SQLiteDatabase db;
+    protected AbstractManager(Context context) {
+        if (mContext == null) {
+            mContext = context.getApplicationContext();
+            db = getDb(context);
+        }
+    }
 
-	/**
-	 * Constructor, open/create database, create table if necessary
-	 *
-	 * @param c Context
-	 * @return SQLiteDatabase Db
-	 */
-	public static SQLiteDatabase getDb(Context c) {
-		if (db == null) {
-			File f = c.getDatabasePath(Const.DATABASE_NAME);
+    /**
+     * Constructor, open/create database, create table if necessary
+     *
+     * @param c Context
+     * @return SQLiteDatabase Db
+     */
+    public static SQLiteDatabase getDb(Context c) {
+        if (db == null) {
+            File f = c.getDatabasePath(Const.DATABASE_NAME);
             f.getParentFile().mkdirs();
-			db = SQLiteDatabase.openDatabase(c.getDatabasePath(Const.DATABASE_NAME).toString(),
+            db = SQLiteDatabase.openDatabase(f.toString(),
                     null, SQLiteDatabase.CREATE_IF_NECESSARY);
-		}
-		return db;
-	}
+        }
+        return db;
+    }
 
     public static void resetDb(Context c) {
         getDb(c);

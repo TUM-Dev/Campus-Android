@@ -7,9 +7,8 @@ import android.content.ContentUris;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
-import android.database.Cursor;
 import android.content.pm.PackageManager;
-import android.database.sqlite.SQLiteDatabase;
+import android.database.Cursor;
 import android.graphics.RectF;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -44,8 +43,8 @@ import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.auxiliary.calendar.IntegratedCalendarEvent;
 import de.tum.in.tumcampusapp.models.CalendarRowSet;
+import de.tum.in.tumcampusapp.models.managers.AbstractManager;
 import de.tum.in.tumcampusapp.models.managers.CalendarManager;
-import de.tum.in.tumcampusapp.models.managers.DatabaseManager;
 import de.tum.in.tumcampusapp.models.managers.SyncManager;
 import de.tum.in.tumcampusapp.tumonline.TUMOnlineConst;
 
@@ -122,8 +121,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
         // Dates after the current date
         requestHandler.setParameter("pMonateNach", String.valueOf(MONTH_AFTER));
 
-        SQLiteDatabase db = DatabaseManager.getDb(this);
-        if (SyncManager.needSync(db, Const.SYNC_CALENDAR_IMPORT, TIME_TO_SYNC_CALENDAR)) {
+        if (SyncManager.needSync(AbstractManager.getDb(this), Const.SYNC_CALENDAR_IMPORT, TIME_TO_SYNC_CALENDAR)) {
             requestFetch();
         } else {
             isFetched = true;

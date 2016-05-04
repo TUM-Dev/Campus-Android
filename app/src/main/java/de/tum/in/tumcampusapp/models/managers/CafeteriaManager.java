@@ -2,7 +2,6 @@ package de.tum.in.tumcampusapp.models.managers;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.text.format.DateUtils;
 
 import org.json.JSONArray;
@@ -24,108 +23,103 @@ import de.tum.in.tumcampusapp.models.CafeteriaMenu;
 /**
  * Cafeteria Manager, handles database stuff, external imports
  */
-public class CafeteriaManager implements Card.ProvidesCard {
+public class CafeteriaManager extends AbstractManager implements Card.ProvidesCard {
     private static final int TIME_TO_SYNC = 604800; // 1 week
-    private final Context mContext;
 
     public static final String CAFETERIAS_URL = "https://tumcabe.in.tum.de/Api/mensen";
 
     /**
-	 * Get Cafeteria object by JSON object
-	 * 
-	 * Example JSON: e.g.
-	 * {"mensa":"4", "id":"411","name":"Mensa Leopoldstra\u00dfe","anschrift"
-	 * :"Leopoldstra\u00dfe 13a, M\u00fcnchen", "latitude":0.0000, "longitude":0.0000}
-	 *
-	 * @param json See example
-	 * @return Cafeteria object
-	 * @throws JSONException
-	 */
-	private static Cafeteria getFromJson(JSONObject json) throws JSONException {
+     * Get Cafeteria object by JSON object
+     * <p>
+     * Example JSON: e.g.
+     * {"mensa":"4", "id":"411","name":"Mensa Leopoldstra\u00dfe","anschrift"
+     * :"Leopoldstra\u00dfe 13a, M\u00fcnchen", "latitude":0.0000, "longitude":0.0000}
+     *
+     * @param json See example
+     * @return Cafeteria object
+     * @throws JSONException
+     */
+    private static Cafeteria getFromJson(JSONObject json) throws JSONException {
         return new Cafeteria(json.getInt(Const.JSON_ID),
-				json.getString(Const.JSON_NAME),
-				json.getString(Const.JSON_ADDRESS),
+                json.getString(Const.JSON_NAME),
+                json.getString(Const.JSON_ADDRESS),
                 json.getDouble(Const.JSON_LATITUDE),
                 json.getDouble(Const.JSON_LONGITUDE));
-	}
+    }
 
-	/** Database connection */
-	private final SQLiteDatabase db;
-
-	/**
-	 * Constructor, open/create database, create table if necessary
-	 *
-	 * @param context Context
-	 */
-	public CafeteriaManager(Context context) {
-        mContext = context;
-		db = DatabaseManager.getDb(context);
+    /**
+     * Constructor, open/create database, create table if necessary
+     *
+     * @param context Context
+     */
+    public CafeteriaManager(Context context) {
+        super(context);
 
         // create table if needed
-		db.execSQL("CREATE TABLE IF NOT EXISTS cafeterias (id INTEGER PRIMARY KEY, name VARCHAR, address VARCHAR, latitude REAL, longitude REAL)");
-	}
+        db.execSQL("CREATE TABLE IF NOT EXISTS cafeterias (id INTEGER PRIMARY KEY, name VARCHAR, address VARCHAR, latitude REAL, longitude REAL)");
+    }
 
-	/**
-	 * Download cafeterias from external interface (JSON)
-	 *
-	 * @param force True to force download over normal sync period, else false
-	 * @throws Exception
-	 */
-	public void downloadFromExternal(boolean force) throws Exception {
+    /**
+     * Download cafeterias from external interface (JSON)
+     *
+     * @param force True to force download over normal sync period, else false
+     * @throws Exception
+     */
+    public void downloadFromExternal(boolean force) throws Exception {
         // Update table schemata if table exists
-		if (!force && !SyncManager.needSync(db, this, TIME_TO_SYNC)) {
-			return;
-		}
+        if (!force && !SyncManager.needSync(db, this, TIME_TO_SYNC)) {
+            return;
+        }
 
-		JSONArray jsonArray = new NetUtils(mContext).downloadJsonArray(CAFETERIAS_URL, CacheManager.VALIDITY_ONE_MONTH, false);
-		removeCache();
+        JSONArray jsonArray = new NetUtils(mContext).downloadJsonArray(CAFETERIAS_URL, CacheManager.VALIDITY_ONE_MONTH, false);
+        removeCache();
 
-		// write cafeterias into database, transaction = speedup
-		db.beginTransaction();
-		try {
-			for (int i = 0; i < jsonArray.length(); i++) {
-				replaceIntoDb(getFromJson(jsonArray.getJSONObject(i)));
-			}
-			SyncManager.replaceIntoDb(db, this);
-			db.setTransactionSuccessful();
-		} finally {
-			db.endTransaction();
-		}
-	}
+        // write cafeterias into database, transaction = speedup
+        db.beginTransaction();
+        try {
+            for (int i = 0; i < jsonArray.length(); i++) {
+                replaceIntoDb(getFromJson(jsonArray.getJSONObject(i)));
+            }
+            SyncManager.replaceIntoDb(db, this);
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
+    }
 
-	/**
-	 * Returns all cafeterias
-	 *
-	 * @return Database cursor (id, name, address, latitude, longitude)
-	 */
-	public Cursor getAllFromDb() {
+    /**
+     * Returns all cafeterias
+     *
+     * @return Database cursor (id, name, address, latitude, longitude)
+     */
+    public Cursor getAllFromDb() {
         return db.query("cafeterias", null, null, null, null, null, null);
-	}
+    }
 
-	/**
-	 * Removes all cache items
-	 */
-	public void removeCache() {
-		db.execSQL("DELETE FROM cafeterias");
-	}
+    /**
+     * Removes all cache items
+     */
+    public void removeCache() {
+        db.execSQL("DELETE FROM cafeterias");
+    }
 
-	/**
-	 * Replace or Insert a cafeteria in the database
-	 *
-	 * @param c Cafeteria object
-	 * @throws Exception
-	 */
+    /**
+     * Replace or Insert a cafeteria in the database
+     *
+     * @param c Cafeteria object
+     * @throws Exception
+     */
     void replaceIntoDb(Cafeteria c) throws Exception {
-		if (c.id <= 0) {
-			throw new Exception("Invalid id.");
-		}
-		if (c.name.length() == 0) {
-			throw new Exception("Invalid name.");
-		}
+        if (c.id <= 0) {
+            throw new Exception("Invalid id.");
+        }
+        if (c.name.length() == 0) {
+            throw new Exception("Invalid name.");
+        }
 
-		db.execSQL("REPLACE INTO cafeterias (id, name, address, latitude, longitude) VALUES (?, ?, ?, ?, ?)",
-				new String[] { String.valueOf(c.id), c.name, c.address, Double.toString(c.latitude), Double.toString(c.longitude) });
-	}
+        db.execSQL("REPLACE INTO cafeterias (id, name, address, latitude, longitude) VALUES (?, ?, ?, ?, ?)",
+                new String[]{String.valueOf(c.id), c.name, c.address, Double.toString(c.latitude), Double.toString(c.longitude)});
+    }
 
     /**
      * Shows card for the best matching cafeteria.
@@ -145,7 +139,7 @@ public class CafeteriaManager implements Card.ProvidesCard {
 
         // Choose which mensa should be shown
         int cafeteriaId = locationManager.getCafeteria();
-        if(cafeteriaId==-1)
+        if (cafeteriaId == -1)
             return;
 
         if (cursor.moveToFirst()) {
@@ -170,7 +164,7 @@ public class CafeteriaManager implements Card.ProvidesCard {
 
         // If it is 3pm or later mensa has already closed so display the menu for the following day
         Calendar now = Calendar.getInstance();
-        if(DateUtils.isToday(date.getTime()) && now.get(Calendar.HOUR_OF_DAY)>=15) {
+        if (DateUtils.isToday(date.getTime()) && now.get(Calendar.HOUR_OF_DAY) >= 15) {
             cursorCafeteriaDates.moveToNext(); // Get following day
             dateStr = cursorCafeteriaDates.getString(idCol);
             date = Utils.getDate(dateStr);
@@ -178,7 +172,7 @@ public class CafeteriaManager implements Card.ProvidesCard {
         cursorCafeteriaDates.close();
 
         List<CafeteriaMenu> menus = cmm.getTypeNameFromDbCardList(cafeteriaId, dateStr, date);
-        if(menus.size()>0) {
+        if (menus.size() > 0) {
             card.setCardMenus(cafeteriaId, cafeteriaName, dateStr, date, menus);
             card.apply();
         }

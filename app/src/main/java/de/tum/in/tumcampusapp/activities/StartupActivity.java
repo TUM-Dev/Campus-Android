@@ -40,8 +40,8 @@ import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.FileUtils;
 import de.tum.in.tumcampusapp.auxiliary.ImplicitCounter;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
+import de.tum.in.tumcampusapp.models.managers.AbstractManager;
 import de.tum.in.tumcampusapp.models.managers.CardManager;
-import de.tum.in.tumcampusapp.models.managers.DatabaseManager;
 import de.tum.in.tumcampusapp.services.DownloadService;
 import de.tum.in.tumcampusapp.services.StartSyncReceiver;
 import de.tum.in.tumcampusapp.trace.ExceptionHandler;
@@ -282,7 +282,7 @@ public class StartupActivity extends AppCompatActivity {
      */
     private void setupNewVersion() {
         // drop database
-        DatabaseManager.resetDb(this);
+        AbstractManager.resetDb(this);
 
         // delete tumcampus directory
         File f = new File(Environment.getExternalStorageDirectory().getPath() + "/tumcampus");

@@ -16,15 +16,15 @@ import java.util.Locale;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.exceptions.NoPrivateKey;
-import de.tum.in.tumcampusapp.models.TUMCabeClient;
 import de.tum.in.tumcampusapp.models.ChatMember;
 import de.tum.in.tumcampusapp.models.ChatMessage;
 import de.tum.in.tumcampusapp.models.ChatVerification;
+import de.tum.in.tumcampusapp.models.TUMCabeClient;
 
 /**
  * TUMOnline cache manager, allows caching of TUMOnline requests
  */
-public class ChatMessageManager {
+public class ChatMessageManager extends AbstractManager {
 
 
     public static final int COL_ID = 0;
@@ -37,12 +37,7 @@ public class ChatMessageManager {
     public static final int COL_READ = 7;
     public static final int COL_SENDING = 8;
 
-    /**
-     * Database connection
-     */
-    private final SQLiteDatabase db;
     private final int mChatRoom;
-    private final Context mContext;
 
     /**
      * Constructor, open/create database, create table if necessary
@@ -50,8 +45,7 @@ public class ChatMessageManager {
      * @param context Context
      */
     public ChatMessageManager(Context context, int room) {
-        db = DatabaseManager.getDb(context);
-        mContext = context;
+        super(context);
         mChatRoom = room;
         init(db);
     }
@@ -70,7 +64,7 @@ public class ChatMessageManager {
      * Gets all unsent chat messages
      */
     public static ArrayList<ChatMessage> getAllUnsentUpdated(Context context) {
-        SQLiteDatabase db = DatabaseManager.getDb(context);
+        SQLiteDatabase db = AbstractManager.getDb(context);
         init(db);
         Cursor cur = db.rawQuery("SELECT member, text, room, msg_id, _id FROM unsent_chat_message ORDER BY _id", null);
         ArrayList<ChatMessage> list = new ArrayList<>(cur.getCount());

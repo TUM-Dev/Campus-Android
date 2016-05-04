@@ -2,14 +2,13 @@ package de.tum.in.tumcampusapp.models.managers;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 
 /**
  * Transport Manager, handles database stuff, internet connections
  */
-public class RecentsManager {
+public class RecentsManager extends AbstractManager {
     public static final int STATIONS = 1;
     public static final int ROOMS = 2;
     public static final int PERSONS = 3;
@@ -20,17 +19,12 @@ public class RecentsManager {
     private final int typ;
 
     /**
-     * Database connection
-     */
-    private final SQLiteDatabase db;
-
-    /**
      * Constructor, open/create database, create table if necessary
      *
      * @param context Context
      */
     public RecentsManager(Context context, int typ) {
-        db = DatabaseManager.getDb(context);
+        super(context);
         this.typ = typ;
 
         // create table if needed

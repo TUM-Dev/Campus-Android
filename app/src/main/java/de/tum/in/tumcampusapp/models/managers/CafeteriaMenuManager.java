@@ -2,7 +2,6 @@ package de.tum.in.tumcampusapp.models.managers;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -18,7 +17,7 @@ import de.tum.in.tumcampusapp.models.CafeteriaMenu;
 /**
  * Cafeteria Menu Manager, handles database stuff, external imports
  */
-public class CafeteriaMenuManager {
+public class CafeteriaMenuManager extends AbstractManager {
 
 	private static final int TIME_TO_SYNC = 86400; // 1 day
 
@@ -62,17 +61,12 @@ public class CafeteriaMenuManager {
 	}
 
 	/**
-	 * Database connection
-	 */
-	private final SQLiteDatabase db;
-
-	/**
 	 * Constructor, open/create database, create table if necessary
 	 *
 	 * @param context Context
 	 */
 	public CafeteriaMenuManager(Context context) {
-		db = DatabaseManager.getDb(context);
+		super(context);
 
 		// create table if needed
 		db.execSQL("CREATE TABLE IF NOT EXISTS cafeterias_menus ("

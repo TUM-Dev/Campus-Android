@@ -10,18 +10,15 @@ import java.util.List;
 import de.tum.in.tumcampusapp.models.GCMNotification;
 import de.tum.in.tumcampusapp.models.GCMNotificationLocation;
 
-public class NotificationManager {
+public class NotificationManager extends AbstractManager {
 
     private static final String TABLE_NOTIFICATIONS = "notification";
     private static final String[] TABLE_NOTIFICATIONS_COLUMNS = new String[]{
             "notification", "type", "location", "name", "lon", "lat", "rad", "title",
             "description", "signature"};
-    private final SQLiteDatabase db;
-    private final Context context;
 
     public NotificationManager(Context context) {
-        this.context = context;
-        db = DatabaseManager.getDb(context);
+        super(context);
         db.execSQL("CREATE TABLE IF NOT EXISTS " + TABLE_NOTIFICATIONS +
                 " (notification INTEGER UNIQUE, typ INTEGER, location INTEGER, name TEXT, lon REAL, " +
                 "lat REAL, radius INTEGER, title TEXT, description TEXT, signature TEXT)");
