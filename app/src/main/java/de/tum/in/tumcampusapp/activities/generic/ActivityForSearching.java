@@ -92,7 +92,6 @@ public abstract class ActivityForSearching extends ProgressActivity {
         // If activity gets called via Intent with a search query set SearchView accordingly
         if (mQuery != null) {
             mSearchView.setQuery(mQuery, false);
-            mOpenSearch = true;
         }
 
         // Ensures that SearchView is updated if suggestion has been clicked
@@ -169,7 +168,7 @@ public abstract class ActivityForSearching extends ProgressActivity {
      *
      * @param query Query to search for
      */
-    private void requestSearch(String query) {
+    protected void requestSearch(String query) {
         mQuery = query;
         if (query.length() < mMinLength) {
             final String text = String.format(getString(R.string.min_search_len), mMinLength);

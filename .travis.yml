@@ -14,7 +14,7 @@ android:
   - extra-google-google_play_services
   - extra-google-m2repository
   - android-23
-  - build-tools-23.0.2
+  - build-tools-23.0.3
   licenses:
   - ".+"
 before_install:
@@ -22,7 +22,7 @@ before_install:
 install:
 - "./gradlew dependencies"
 script:
-- "./gradlew build"
+- "./gradlew check"
 after_failure:
 - cat "$TRAVIS_BUILD_DIR/app/build/outputs/lint-results.xml"
 notifications:

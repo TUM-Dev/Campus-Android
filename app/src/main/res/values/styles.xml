@@ -1,7 +1,7 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <style name="SectionHeadline">
-        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:autoLink">none</item>
         <item name="android:background">@color/color_primary_dark</item>
@@ -31,10 +31,9 @@
         <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
     </style>
 
-    <style name="AppThemeStartup" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">@color/color_primary</item>
-        <item name="colorPrimaryDark">@color/color_primary</item>
-        <item name="colorAccent">@color/color_primary</item>
+    <style name="AppThemeStartup" parent="Theme.AppCompat.NoActionBar">
+        <item name="colorPrimaryDark">@color/color_primary_dark</item>
+        <item name="android:windowBackground">@color/color_primary</item>
     </style>
 
     <style name="AppThemeFullscreen" parent="Theme.AppCompat.Light.NoActionBar">

@@ -133,6 +133,7 @@
     <string name="person_search">Person Search</string>
     <string name="plans">Plans</string>
     <string name="roomfinder">Roomfinder</string>
+    <string name="study_rooms">Study Rooms</string>
     <string name="opening_hours">Opening Hours</string>
     <string name="organisations">Organizations</string>
     <string name="mvv">MVV</string>
@@ -205,6 +206,10 @@
     <string name="mensa_city">Cafeteria Main Campus</string>
     <string name="mensa_pasing">Cafeteria Pasing</string>
     <string name="mensa_weihenstephan">Cafeteria Weihenstephan</string>
+
+    <!-- Study Rooms -->
+    <string name="occupied">Occupied till</string>
+    <string name="free">Free</string>
 
     <!-- Plans -->
     <string name="campus_garching" translatable="false">Campus Garching</string>

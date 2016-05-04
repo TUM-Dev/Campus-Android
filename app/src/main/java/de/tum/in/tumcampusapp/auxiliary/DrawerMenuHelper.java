@@ -25,6 +25,7 @@ import de.tum.in.tumcampusapp.activities.QuizActivity;
 import de.tum.in.tumcampusapp.activities.RoomFinderActivity;
 import de.tum.in.tumcampusapp.activities.Survey;
 import de.tum.in.tumcampusapp.activities.Survey2;
+import de.tum.in.tumcampusapp.activities.StudyRoomsActivity;
 import de.tum.in.tumcampusapp.activities.TransportationActivity;
 import de.tum.in.tumcampusapp.activities.TuitionFeesActivity;
 
@@ -95,6 +96,8 @@ public class DrawerMenuHelper implements NavigationView.OnNavigationItemSelected
             new SideNavigationItem(R.string.mvv, R.drawable.ic_mvv, TransportationActivity.class, false, false),
             new SideNavigationItem(R.string.plans, R.drawable.ic_plans, PlansActivity.class, false, false),
             new SideNavigationItem(R.string.roomfinder, R.drawable.ic_place, RoomFinderActivity.class, false, false),
+            new SideNavigationItem(R.string.study_rooms, R.drawable.ic_group_work,
+                    StudyRoomsActivity.class, false, false),
             new SideNavigationItem(R.string.opening_hours, R.drawable.ic_time, OpeningHoursListActivity.class, false, false),
             new SideNavigationItem(R.string.quiz_title, R.drawable.surveyicon, Survey2.class, true, false),
             new SideNavigationItem(R.string.person_search, R.drawable.ic_users, PersonsSearchActivity.class, true, false),

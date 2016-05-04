@@ -10,7 +10,11 @@ import android.os.AsyncTask;
 import android.util.Pair;
 import android.widget.ImageView;
 
-import org.apache.commons.io.IOUtils;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.Response;
+import com.squareup.okhttp.ResponseBody;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -18,12 +22,10 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.net.URLEncoder;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import de.tum.in.tumcampusapp.models.managers.CacheManager;
 import de.tum.in.tumcampusapp.trace.G;
@@ -32,18 +34,19 @@ public class NetUtils {
     private static final int HTTP_TIMEOUT = 25000;
     private final Context mContext;
     private final CacheManager cacheManager;
+    private final OkHttpClient client = new OkHttpClient();
 
     public NetUtils(Context context) {
         //Manager caches all requests
         mContext = context;
         cacheManager = new CacheManager(mContext);
+
+        //Set our max wait time for each request
+        client.setConnectTimeout(HTTP_TIMEOUT, TimeUnit.MILLISECONDS);
+        client.setReadTimeout(HTTP_TIMEOUT, TimeUnit.MILLISECONDS);
     }
 
-    private static void setHttpConnectionParams(HttpURLConnection connection) {
-        //Set our max wait time for each request
-        connection.setConnectTimeout(HTTP_TIMEOUT);
-        connection.setReadTimeout(HTTP_TIMEOUT);
-
+    private void setHttpConnectionParams(Request.Builder builder) {
         //Clearly identify all requests from this app
         String userAgent = "TCA Client";
         if (G.appVersion != null && !G.appVersion.equals("unknown")) {
@@ -53,7 +56,14 @@ public class NetUtils {
             }
         }
 
-        connection.setRequestProperty("User-Agent", userAgent);
+        builder.header("User-Agent", userAgent);
+        builder.addHeader("X-DEVICE-ID", AuthenticationManager.getDeviceID(mContext));
+        builder.addHeader("X-ANDROID-VERSION", android.os.Build.VERSION.RELEASE);
+        try {
+            builder.addHeader("X-APP-VERSION", mContext.getPackageManager().getPackageInfo(mContext.getPackageName(), 0).versionName);
+        } catch (PackageManager.NameNotFoundException e) {
+            //Don't log any errors, as we don't really care!
+        }
     }
 
     public static JSONObject downloadJson(Context context, String url) throws IOException, JSONException {
@@ -121,15 +131,7 @@ public class NetUtils {
         return result.toString();
     }
 
-    /**
-     * Gets a http entity from the given URL.
-     * Adds an X-DEVICE-ID to header
-     *
-     * @param url Download URL location
-     * @return Gets an InputStream
-     * @throws IOException
-     */
-    public InputStream getHttpStream(String url) throws IOException {
+    private ResponseBody getOkHttpResponse(String url) throws IOException {
         // if we are not online, fetch makes no sense
         boolean isOnline = isConnected(mContext);
         if (!isOnline || url == null) {
@@ -137,20 +139,14 @@ public class NetUtils {
         }
 
         Utils.logv("Download URL: " + url);
-        HttpURLConnection connection = (HttpURLConnection) (new URL(url)).openConnection();
-        setHttpConnectionParams(connection);
-        connection.addRequestProperty("X-DEVICE-ID", AuthenticationManager.getDeviceID(mContext));
 
-        //Add some useful statical data
-        connection.addRequestProperty("X-ANDROID-VERSION", android.os.Build.VERSION.RELEASE);
-        try {
-            connection.addRequestProperty("X-APP-VERSION", mContext.getPackageManager().getPackageInfo(mContext.getPackageName(), 0).versionName);
-        } catch (PackageManager.NameNotFoundException e) {
-            //Don't log any errors, as we don't really care!
-        }
+        Request.Builder builder = new Request.Builder().url(url);
+        setHttpConnectionParams(builder);
 
         //Execute the request
-        return connection.getInputStream();
+        Request req = builder.build();
+        Response res = client.newCall(req).execute();
+        return res.body();
     }
 
     /**
@@ -161,15 +157,7 @@ public class NetUtils {
      * @throws IOException
      */
     public String downloadStringHttp(String url) throws IOException {
-        InputStream iStream = null;
-        try {
-            iStream = getHttpStream(url);
-            return IOUtils.toString(iStream);
-        } finally {
-            if (iStream != null) {
-                iStream.close();
-            }
-        }
+        return getOkHttpResponse(url).string();
     }
 
     public String downloadStringAndCache(String url, int validity, boolean force) {
@@ -208,19 +196,14 @@ public class NetUtils {
         }
 
         File file = new File(target);
-        InputStream iStream = null;
         FileOutputStream out = null;
         try {
             out = new FileOutputStream(file);
-            iStream = getHttpStream(url);
-            byte[] buffer = IOUtils.toByteArray(iStream);
+            byte[] buffer = getOkHttpResponse(url).bytes();
             out.write(buffer, 0, buffer.length);
             out.flush();
 
         } finally {
-            if (iStream != null) {
-                iStream.close();
-            }
             if (out != null) {
                 out.close();
             }
@@ -342,6 +325,26 @@ public class NetUtils {
                 return null;
 
             return new JSONArray(result);
+        } catch (Exception e) {
+            Utils.log(e);
+            return null;
+        }
+    }
+
+    /**
+     * Download a JSON stream from a URL or load it from cache
+     *
+     * @param url   Valid URL
+     * @param force Load data anyway and fill cache, even if valid cached version exists
+     * @return JSONObject
+     */
+    public JSONObject downloadJsonObject(String url, int validity, boolean force) {
+        try {
+            String result = downloadStringAndCache(url, validity, force);
+            if (result == null)
+                return null;
+
+            return new JSONObject(result);
         } catch (Exception e) {
             Utils.log(e);
             return null;

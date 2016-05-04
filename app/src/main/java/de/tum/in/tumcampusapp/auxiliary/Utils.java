@@ -513,4 +513,16 @@ public final class Utils {
     public static String stripHtml(String html) {
         return Html.fromHtml(html).toString();
     }
+
+    public static boolean isBackgroundServicePermitted(Context context) {
+        return isBackgroundServiceEnabled(context) && (isBackgroundServiceAlwaysEnabled(context) || NetUtils.isConnectedWifi(context));
+    }
+
+    private static boolean isBackgroundServiceEnabled(Context context) {
+        return Utils.getSettingBool(context, Const.BACKGROUND_MODE, false);
+    }
+
+    private static boolean isBackgroundServiceAlwaysEnabled(Context context) {
+        return Utils.getSetting(context, "background_mode_set_to", "0").equals("0");
+    }
 }

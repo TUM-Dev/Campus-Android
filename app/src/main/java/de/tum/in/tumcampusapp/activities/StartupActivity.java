@@ -259,7 +259,7 @@ public class StartupActivity extends AppCompatActivity {
             public void onAnimationRepeat(Animator animation) {
             }
         });
-        set.setDuration(600).start();
+        set.start();
     }
 
     /**
