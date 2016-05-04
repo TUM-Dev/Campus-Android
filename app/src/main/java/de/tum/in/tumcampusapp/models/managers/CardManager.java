@@ -15,6 +15,7 @@ import de.tum.in.tumcampusapp.cards.FirstUseCard2;
 import de.tum.in.tumcampusapp.cards.NoInternetCard;
 import de.tum.in.tumcampusapp.cards.RestoreCard;
 import de.tum.in.tumcampusapp.cards.Support;
+import de.tum.in.tumcampusapp.cards.Test;
 
 /**
  * Card manager, manages inserting, dismissing, updating and displaying of cards
@@ -23,13 +24,14 @@ public class CardManager {
     public static final String SHOW_TUTORIAL_1 = "show_tutorial_1";
     public static final String SHOW_TUTORIAL_2 = "show_tutorial_2";
     public static final String SHOW_SUPPORT = "show_support";
+    public static final String SHOW_TEST = "show_test";
 
     /**
      * Card typ constants
      */
     public static final int CARD_CAFETERIA = 1;
     public static final int CARD_TUITION_FEE = 2;
-    public static final int CARD_NEXT_LECTURE = 3;
+    public static final int CARD_NEXT_LECTURE =3;
     public static final int CARD_RESTORE = 4;
     public static final int CARD_FIRST_USE_1 = 5;
     public static final int CARD_FIRST_USE_2 = 6;
@@ -40,6 +42,7 @@ public class CardManager {
     public static final int CARD_EDUROAM = 11;
     public static final int CARD_CHAT = 12;
     public static final int CARD_SUPPORT = 13;
+    public static final int CARD_TEST = 14;
     public static boolean shouldRefresh = false;
     private static List<Card> cards;
     private static ArrayList<Card> newCards;
@@ -104,10 +107,12 @@ public class CardManager {
         // Add first use tutorial
         new FirstUseCard1(context).apply();
         new FirstUseCard2(context).apply();
-
+        new Test(context).apply();
         new Support(context).apply();
 
         new EduroamCard(context).apply();
+
+
 
         List<Card.ProvidesCard> managers = new ArrayList<>();
 

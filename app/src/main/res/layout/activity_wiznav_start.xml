@@ -59,6 +59,14 @@
                         android:inputType="text"
                         android:padding="@dimen/padding_default" />
 
+                    <Spinner
+                        android:id="@+id/majorSpinner"
+                        android:padding="8dp"
+                        android:layout_marginTop="20dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                    </Spinner>
+
                 </LinearLayout>
             </ScrollView>
 

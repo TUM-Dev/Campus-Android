@@ -9,8 +9,12 @@ import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
+import android.widget.Toast;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.ActivityForLoadingInBackground;
@@ -24,8 +28,10 @@ import de.tum.in.tumcampusapp.auxiliary.Utils;
 public class WizNavStartActivity extends ActivityForLoadingInBackground<Void,Boolean> implements OnClickListener {
 	private final AccessTokenManager accessTokenManager = new AccessTokenManager(this);
 	private EditText editText;
+    private Spinner userMajorSpinner;
 	private String lrzId;
 	private SharedPreferences sharedPrefs;
+    String userMajor="";
 
     public WizNavStartActivity() {
         super(R.layout.activity_wiznav_start);
@@ -41,13 +47,53 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<Void,Boo
 		LinearLayout layout = (LinearLayout) findViewById(R.id.wizard_start_layout);
 		layout.requestFocus();
 
+        userMajorSpinner=(Spinner)  findViewById(R.id.majorSpinner);
 		editText = (EditText) findViewById(R.id.lrd_id);
-
+        setUpSpinner();
 		lrzId = sharedPrefs.getString(Const.LRZ_ID, "");
 		if (lrzId != null) {
 			editText.setText(lrzId);
 		}
 	}
+
+    public void setUpSpinner()
+    {
+        String select = "Please Select Your Major";
+        String math = getResources().getString(R.string.faculty_mathematics);
+        String physics = getResources().getString(R.string.faculty_physics);
+        String chemistry = getResources().getString(R.string.faculty_chemistry);
+        String tum_manag = getResources().getString(R.string.faculty_tum_school_of_management);
+        String cge = getResources().getString(R.string.faculty_civil_geo_and_environmental_engineering);
+        String architecture = getResources().getString(R.string.faculty_architecture);
+        String mechanical = getResources().getString(R.string.faculty_mechanical_Engineering);
+        String electrical = getResources().getString(R.string.faculty_electrical_and_computer_engineering);
+        String informatics = getResources().getString(R.string.faculty_informatics);
+        String tum_life_sc = getResources().getString(R.string.faculty_tum_school_of_life_sciences_weihenstephan);
+        String medicine = getResources().getString(R.string.faculty_tum_school_of_medicine);
+        String sport = getResources().getString(R.string.faculty_sport_and_health_sciences);
+        String edu = getResources().getString(R.string.faculty_tum_school_of_education);
+        String political_social = getResources().getString(R.string.faculty_political_and_social_sciences);
+        String[] majors = {select,math, physics, chemistry, tum_manag, cge, architecture, mechanical, electrical, informatics, tum_life_sc, medicine, sport, edu, political_social};
+
+       ArrayAdapter<String> adapter = new ArrayAdapter<String>(getBaseContext(),
+                android.R.layout.simple_list_item_1, majors);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        userMajorSpinner.setAdapter(adapter);
+
+        userMajorSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                String selectedItem = (String) adapterView.getItemAtPosition(i);
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+    }
 
     /**
      * Handle click on skip button
@@ -70,6 +116,14 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<Void,Boo
      */
     @SuppressWarnings("UnusedParameters")
     public void onClickNext(View next) {
+
+        if(userMajorSpinner.getSelectedItemPosition()==0)
+        {
+            Toast.makeText(getApplicationContext(),"Please select your major",Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        userMajor=userMajorSpinner.getSelectedItem().toString();
         lrzId = editText.getText().toString();
         Editor editor = sharedPrefs.edit();
         editor.putString(Const.LRZ_ID, lrzId);
@@ -102,6 +156,7 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<Void,Boo
     public void onClick(DialogInterface dialog, int which) {
         if (which == DialogInterface.BUTTON_POSITIVE) {
             startLoading();
+
         } else if (which == DialogInterface.BUTTON_NEGATIVE) {
             onLoadFinished(true);
         }

@@ -25,6 +25,7 @@
     <string name="calendar_not_existing_toast">No local calendar existing</string>
     <string name="semester_summer">Summer term</string>
     <string name="semester_winter">Winter term</string>
+    <string name="quiz_title">Quiz</string>
 
     <!-- Roomfinder -->
     <string name="no_map_available">No map available</string>
@@ -443,4 +444,22 @@ Signature: %5$s</string>
     <string name="alarm_date_published_on">Published on:</string>
     <string name="chat_not_setup" translatable="false">Chat is not setup properly, please re-run the wizzard via the settings!</string>
     <string name="www" translatable="false">www</string>
+    <string name="title_activity_survey2">Survey</string>
+    <string name="quiz">Research Survey</string>
+    <string name="research_quiz">Research Quiz</string>
+    <string name="faculty_mathematics">Mathematics</string>
+    <string name="faculty_physics">Physics</string>
+    <string name="faculty_chemistry">Chemistry</string>
+    <string name="faculty_tum_school_of_management">TUM School of Management</string>
+    <string name="faculty_civil_geo_and_environmental_engineering">Civil, Geo and Environmental Engineering</string>
+    <string name="faculty_architecture">Architecture</string>
+    <string name="faculty_mechanical_Engineering">Mechanical Engineering</string>
+    <string name="faculty_electrical_and_computer_engineering">Electrical and Computer Engineering</string>
+    <string name="faculty_informatics">Informatics</string>
+    <string name="faculty_tum_school_of_life_sciences_weihenstephan">TUM School of Life Sciences Weihenstephan</string>
+    <string name="faculty_tum_school_of_medicine">TUM School of Medicine</string>
+    <string name="faculty_sport_and_health_sciences">Sport and Health Sciences</string>
+    <string name="faculty_tum_school_of_education">TUM School of Education</string>
+    <string name="faculty_political_and_social_sciences">Political and Social Sciences</string>
+    <string name="quiz_target_faculty">Please choose your target audience:</string>
 </resources>
