@@ -24,7 +24,7 @@ install:
 script:
 - "./gradlew check"
 after_failure:
-- cat "$TRAVIS_BUILD_DIR/app/build/outputs/lint-results.xml"
+- cat "$TRAVIS_BUILD_DIR/app/build/outputs/lint*.xml"
 notifications:
   slack:
     secure: c7J5L/t2sikz/osUHooZuI3kbi9ZOFh/JauLsoEuTVf28faaMDrD6HkfmElhCLxTgQaCDXBeFaOK9E6QNBuy9s5+VuBjKDnSyGOG0dI+fFvZkmha+LuxwpjoOjiSXyGdvVW+zxzQfCmyJMSTip15zBJi7z0Q3l/iRM6JKq5A1Tg=
