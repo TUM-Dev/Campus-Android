@@ -16,9 +16,9 @@ import de.tum.in.tumcampusapp.models.managers.CardManager;
 /**
  * Created by Moh on 4/26/2016.
  */
-public class Test extends Card
+public class SurveyCard extends Card
 {
-    public Test(Context context) {
+    public SurveyCard(Context context) {
         super(context);
     }
 
