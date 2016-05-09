@@ -15,7 +15,7 @@ import de.tum.in.tumcampusapp.cards.FirstUseCard2;
 import de.tum.in.tumcampusapp.cards.NoInternetCard;
 import de.tum.in.tumcampusapp.cards.RestoreCard;
 import de.tum.in.tumcampusapp.cards.Support;
-import de.tum.in.tumcampusapp.cards.Test;
+import de.tum.in.tumcampusapp.cards.SurveyCard;
 
 /**
  * Card manager, manages inserting, dismissing, updating and displaying of cards
@@ -42,7 +42,7 @@ public class CardManager {
     public static final int CARD_EDUROAM = 11;
     public static final int CARD_CHAT = 12;
     public static final int CARD_SUPPORT = 13;
-    public static final int CARD_TEST = 14;
+    public static final int CARD_SURVEY = 14;
     public static boolean shouldRefresh = false;
     private static List<Card> cards;
     private static ArrayList<Card> newCards;
@@ -107,7 +107,7 @@ public class CardManager {
         // Add first use tutorial
         new FirstUseCard1(context).apply();
         new FirstUseCard2(context).apply();
-        new Test(context).apply();
+        new SurveyCard(context).apply();
         new Support(context).apply();
 
         new EduroamCard(context).apply();
@@ -121,6 +121,7 @@ public class CardManager {
             managers.add(new CalendarManager(context));
             managers.add(new TuitionFeeManager());
             managers.add(new ChatRoomManager(context));
+            managers.add(new SurveyManager(context));
         }
 
         // Those don't need TUMOnline access
@@ -165,6 +166,7 @@ public class CardManager {
 
     /**
      * Removes card from the list
+     *
      *
      * @param card The card to delete
      * @return the last index of the card

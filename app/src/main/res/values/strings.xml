@@ -467,4 +467,5 @@ Signature: %5$s</string>
     <string name="faculty_tum_school_of_education">TUM School of Education</string>
     <string name="faculty_political_and_social_sciences">Political and Social Sciences</string>
     <string name="quiz_target_faculty">Please choose your target audience:</string>
+    <string name="title_activity_answer_survey">AnswerSurvey</string>
 </resources>

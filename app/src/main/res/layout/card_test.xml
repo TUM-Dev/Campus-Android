@@ -40,7 +40,7 @@
 
                 <Button
                     android:layout_width="0dp"
-                    android:layout_height="22dp"
+                    android:layout_height="27dp"
                     android:textSize="12sp"
                     android:id="@+id/yesAnswerCard"
                     android:layout_weight="1"
@@ -55,7 +55,7 @@
 
                 <Button
                     android:layout_width="0dp"
-                    android:layout_height="22dp"
+                    android:layout_height="27dp"
                     android:textSize="12sp"
                     android:id="@+id/noAnswerCard"
                     android:layout_weight="1"
@@ -67,15 +67,23 @@
 
                 <Button
                 android:layout_width="0dp"
-                android:layout_height="22dp"
+                android:layout_height="27dp"
                 android:textSize="12sp"
                 android:id="@+id/ignoreAnswerCard"
                 android:layout_weight="1"
-                android:text="Flag"
+                android:text="Skip"
                 android:background="@color/color_primary"
                 android:textColor="#FFFFFF"
                 android:layout_margin="15dp"
                 android:adjustViewBounds="true" />
+
+                <ImageButton
+                    android:src="@drawable/flag"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/imageButton"
+                    android:layout_weight="1" />
+
             </LinearLayout>
 
         </LinearLayout>
