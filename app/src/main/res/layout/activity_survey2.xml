@@ -7,6 +7,7 @@
     tools:context=".StartActivity">
 
     <LinearLayout
+
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -38,84 +39,115 @@
                         android:id="@+id/scrollView1"
                         android:layout_width="fill_parent"
                         android:layout_height="fill_parent" >
-                    <LinearLayout
-                        android:id="@+id/tabAskQuestion"
-                        android:layout_width="fill_parent"
-                        android:layout_height="fill_parent"
-                        android:orientation="vertical"
-                        android:weightSum="1">
-
-                        <Button
-                            android:id="@+id/button_faculties"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="Select Targets"
-                            android:background="@color/color_primary"
-                            android:textColor="#FFFFFF"
-                            android:layout_marginTop="10dp"/>
-
                         <LinearLayout
-                            android:orientation="horizontal"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:weightSum="5"
-                            android:layout_marginTop="10dp">
+                            android:id="@+id/tabAskQuestion"
+                            android:layout_width="fill_parent"
+                            android:layout_height="fill_parent"
+                            android:orientation="vertical"
+                            android:weightSum="1">
 
-
-                            <TextView
-                                android:layout_width="0dp"
+                            <Button
+                                android:id="@+id/button_faculties"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="4"
-                                android:text="Select the number of questions"
-                                android:textColor="@color/color_primary"
-                                android:layout_marginTop="10dp"
-                                android:textStyle="bold"
-                                android:visibility="gone"
-                                android:textSize="14dp"
-                                android:id="@+id/selectTv" />
-
-                            <Spinner
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:id="@+id/spinner"
-                                android:layout_weight="1"
-                                android:visibility="gone"
+                                android:text="Select Targets"
+                                android:background="@color/color_primary"
+                                android:textColor="#FFFFFF"
                                 android:layout_marginTop="10dp"/>
-                        </LinearLayout>
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical">
-
-                        </LinearLayout>
 
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical">
-
-                            <EditText
-                                android:id="@+id/question1Et"
+                            <LinearLayout
+                                android:orientation="horizontal"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="10dp"
-                                android:visibility="gone"
-                                android:hint="Please enter your first question"/>
-                            <EditText
-                                android:id="@+id/question2Et"
+                                android:weightSum="5"
+                                android:layout_marginTop="10dp">
+
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="4"
+                                    android:text="Select the number of questions"
+                                    android:textColor="@color/color_primary"
+                                    android:layout_marginTop="10dp"
+                                    android:textStyle="bold"
+                                    android:visibility="gone"
+                                    android:textSize="14dp"
+                                    android:id="@+id/selectTv" />
+
+                                <Spinner
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:id="@+id/spinner"
+                                    android:layout_weight="1"
+                                    android:visibility="gone"
+                                    android:layout_marginTop="10dp"/>
+                            </LinearLayout>
+                            <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="10dp"
-                                android:visibility="gone"
-                                android:hint="Please enter your second question"/>
-                            <EditText
-                                android:id="@+id/question3Et"
+                                android:orientation="vertical">
+
+                            </LinearLayout>
+
+
+                            <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="10dp"
-                                android:visibility="gone"
-                                android:hint="Please enter your third question"/>
+                                android:orientation="vertical">
+
+                                <LinearLayout
+                                    android:id="@+id/q1L"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_margin="8dp"
+                                    android:visibility="gone"
+                                    android:orientation="vertical">
+                                    <EditText
+                                        android:id="@+id/question1Et"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="15dp"
+                                        android:hint="Please enter your first question"/>
+
+                                </LinearLayout>
+                                <LinearLayout
+                                    android:id="@+id/q2L"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_margin="8dp"
+                                    android:visibility="gone"
+                                    android:orientation="vertical">
+
+                                    <EditText
+                                        android:id="@+id/question2Et"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="15dp"
+                                        android:hint="Please enter your second question"/>
+
+
+                                </LinearLayout>
+                                <LinearLayout
+                                    android:id="@+id/q3L"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_margin="8dp"
+                                    android:visibility="gone"
+                                    android:orientation="vertical">
+                                    <EditText
+                                        android:id="@+id/question3Et"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="15dp"
+                                        android:hint="Please enter your third question"/>
+
+
+                                </LinearLayout>
+
+                            </LinearLayout>
+
                             <Button
                                 android:id="@+id/submitSurveyButton"
                                 android:layout_width="wrap_content"
@@ -123,896 +155,35 @@
                                 android:background="@color/color_primary"
                                 android:text="Submit Question"
                                 android:paddingRight="7dp"
+                                android:layout_marginTop="15dp"
                                 android:paddingLeft="7dp"
                                 android:textColor="#FFFFFF"
                                 android:visibility="gone"
                                 android:layout_gravity="center"/>
-                        </LinearLayout>
 
-                    </LinearLayout>
-                </ScrollView>
+                        </LinearLayout>
+                    </ScrollView>
                     <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
                         android:id="@+id/tabSeeResponses"
                         android:layout_width="fill_parent"
                         android:layout_height="fill_parent" >
 
                         <LinearLayout
-                            android:id="@+id/lll"
-                            android:layout_width="fill_parent"
+                            android:id="@+id/mainRes"
+                            android:layout_marginTop="15dp"
+                            android:layout_width="match_parent"
                             android:layout_height="fill_parent"
                             android:orientation="vertical">
 
-                                <LinearLayout
-                                    android:layout_marginTop="15dp"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:weightSum="5"
-                                    android:orientation="horizontal">
-                                    <TextView
-                                        android:id="@+id/question1TV"
-                                        android:layout_width="0dp"
-                                        android:layout_height="wrap_content"
-                                        android:layout_weight="4.5"
-                                        android:layout_marginLeft="15dp"
-                                        android:textColor="@color/color_primary_dark"
-                                        android:text="hweiwhierhiwehirwehirwhrwihwhwrhwrewrhwe"
-                                        android:visibility="gone"/>
 
-                                    <Button
-                                        android:id="@+id/deleteQ1"
-                                        android:layout_width="0dp"
-                                        android:layout_height="20dp"
-                                        android:layout_weight="0.3"
-                                        android:background="@drawable/minusicon"
-                                        android:onClick="onClick"
-                                        android:visibility="gone"/>
-
-                                </LinearLayout>
-
-
-
-                                <RelativeLayout
-                                    android:layout_width="wrap_content"
-                                    android:layout_margin="15dp"
-                                    android:layout_height="wrap_content">
-
-                                    <ProgressBar
-                                        android:id="@+id/q1Progress"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="50dp"
-                                        android:minHeight="50dp"
-                                        style="?android:attr/progressBarStyleHorizontal"
-                                        android:progressDrawable="@drawable/progressbar"
-                                        android:progress="70"
-                                        android:max="100"
-                                        android:visibility="gone"
-                                        />
-
-                                    <TextView
-                                        android:id="@+id/q1Yes"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:textColor="#FFFFFF"
-                                        android:text="14"
-                                        android:textSize="15sp"
-                                        android:layout_centerInParent="true"
-                                        android:paddingLeft="20dp"
-                                        android:layout_alignLeft="@id/q1Progress"
-                                        android:background="@android:color/transparent"
-                                        android:visibility="gone"/>
-
-                                    <TextView
-                                        android:id="@+id/q1No"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_centerInParent="true"
-                                        android:textColor="@color/color_primary_dark"
-                                        android:textSize="15sp"
-                                        android:text="6"
-                                        android:paddingRight="20dp"
-                                        android:layout_alignRight="@id/q1Progress"
-                                        android:background="@android:color/transparent"
-                                        android:visibility="gone"/>
-                                </RelativeLayout>
-
-                                <LinearLayout
-                                    android:layout_marginTop="15dp"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:weightSum="5"
-                                    android:orientation="horizontal">
-                                    <LinearLayout
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:weightSum="5"
-                                        android:orientation="horizontal">
-                                        <TextView
-                                            android:id="@+id/question2TV"
-                                            android:layout_width="0dp"
-                                            android:layout_height="wrap_content"
-                                            android:layout_weight="4.5"
-                                            android:layout_marginLeft="15dp"
-                                            android:textColor="@color/color_primary_dark"
-                                            android:text="hweiwhierhiwehirwehirwhrwihwhwrhwrewrhwe momad ayad mohamad ayad moaaa adhewdwedwed"
-                                            android:visibility="gone"/>
-
-                                        <Button
-                                            android:id="@+id/deleteQ2"
-                                            android:layout_width="0dp"
-                                            android:layout_height="20dp"
-                                            android:layout_weight="0.3"
-                                            android:background="@drawable/minusicon"
-                                            android:onClick="onClick"
-                                            android:visibility="gone"/>
-
-                                    </LinearLayout>
-                                </LinearLayout>
-
-                                <RelativeLayout
-                                    android:layout_width="wrap_content"
-                                    android:layout_margin="15dp"
-                                    android:layout_height="wrap_content">
-
-                                    <ProgressBar
-                                        android:id="@+id/q2Progress"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="50dp"
-                                        android:minHeight="50dp"
-                                        style="?android:attr/progressBarStyleHorizontal"
-                                        android:progressDrawable="@drawable/progressbar"
-                                        android:progress="70"
-                                        android:max="100"
-                                        android:visibility="gone"
-                                        />
-
-                                    <TextView
-                                        android:id="@+id/q2Yes"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:textColor="#FFFFFF"
-                                        android:text="14"
-                                        android:textSize="15sp"
-                                        android:layout_centerInParent="true"
-                                        android:paddingLeft="20dp"
-                                        android:layout_alignLeft="@id/q2Progress"
-                                        android:background="@android:color/transparent"
-                                        android:visibility="gone"/>
-
-                                    <TextView
-                                        android:id="@+id/q2No"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_centerInParent="true"
-                                        android:textColor="@color/color_primary_dark"
-                                        android:textSize="15sp"
-                                        android:text="6"
-                                        android:paddingRight="20dp"
-                                        android:layout_alignRight="@id/q2Progress"
-                                        android:background="@android:color/transparent"
-                                        android:visibility="gone"/>
-                                </RelativeLayout>
-
-                                <LinearLayout
-                                    android:layout_marginTop="15dp"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:weightSum="5"
-                                    android:orientation="horizontal">
-                                    <TextView
-                                        android:id="@+id/question3TV"
-                                        android:layout_width="0dp"
-                                        android:layout_height="wrap_content"
-                                        android:layout_weight="4.5"
-                                        android:layout_marginLeft="15dp"
-                                        android:textColor="@color/color_primary_dark"
-                                        android:text="hweiwhierhiwehirwehirwhrwihwhwrhwrewrhwe"
-                                        android:visibility="gone"/>
-
-                                    <Button
-                                        android:id="@+id/deleteQ3"
-                                        android:layout_width="0dp"
-                                        android:layout_height="20dp"
-                                        android:layout_weight="0.3"
-                                        android:background="@drawable/minusicon"
-                                        android:onClick="onClick"
-                                        android:visibility="gone"/>
-
-                                </LinearLayout>
-
-                                <RelativeLayout
-                                    android:layout_width="wrap_content"
-                                    android:layout_margin="15dp"
-                                    android:layout_height="wrap_content">
-
-                                    <ProgressBar
-                                        android:id="@+id/q3Progress"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="50dp"
-                                        android:minHeight="50dp"
-                                        style="?android:attr/progressBarStyleHorizontal"
-                                        android:progressDrawable="@drawable/progressbar"
-                                        android:progress="70"
-                                        android:max="100"
-                                        android:visibility="gone"
-                                        />
-
-                                    <TextView
-                                        android:id="@+id/q3Yes"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:textColor="#FFFFFF"
-                                        android:text="14"
-                                        android:textSize="15sp"
-                                        android:layout_centerInParent="true"
-                                        android:paddingLeft="20dp"
-                                        android:layout_alignLeft="@id/q3Progress"
-                                        android:background="@android:color/transparent"
-                                        android:visibility="gone"/>
-
-                                    <TextView
-                                        android:id="@+id/q3No"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_centerInParent="true"
-                                        android:textSize="15sp"
-                                        android:text="6"
-                                        android:paddingRight="20dp"
-                                        android:textColor="@color/color_primary_dark"
-                                        android:layout_alignRight="@id/q3Progress"
-                                        android:background="@android:color/transparent"
-                                        android:visibility="gone"/>
-                                </RelativeLayout>
-
-
-                                <LinearLayout
-                                    android:layout_marginTop="15dp"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:weightSum="5"
-                                    android:orientation="horizontal">
-                                    <TextView
-                                        android:id="@+id/question4TV"
-                                        android:layout_width="0dp"
-                                        android:layout_height="wrap_content"
-                                        android:layout_weight="4.5"
-                                        android:layout_marginLeft="15dp"
-                                        android:textColor="@color/color_primary_dark"
-                                        android:text="hweiwhierhiwehirwehirwhrwihwhwrhwrewrhwe"
-                                        android:visibility="gone"/>
-
-                                    <Button
-                                        android:id="@+id/deleteQ4"
-                                        android:layout_width="0dp"
-                                        android:layout_height="20dp"
-                                        android:layout_weight="0.3"
-                                        android:background="@drawable/minusicon"
-                                        android:onClick="onClick"
-                                        android:visibility="gone"/>
-
-                                </LinearLayout>
-
-                                <RelativeLayout
-                                    android:layout_width="wrap_content"
-                                    android:layout_margin="15dp"
-                                    android:layout_height="wrap_content">
-
-                                    <ProgressBar
-                                        android:id="@+id/q4Progress"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="50dp"
-                                        android:minHeight="50dp"
-                                        style="?android:attr/progressBarStyleHorizontal"
-                                        android:progressDrawable="@drawable/progressbar"
-                                        android:progress="70"
-                                        android:max="100"
-                                        android:visibility="gone"
-                                        />
-
-                                    <TextView
-                                        android:id="@+id/q4Yes"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:textColor="#FFFFFF"
-                                        android:text="14"
-                                        android:textSize="15sp"
-                                        android:layout_centerInParent="true"
-                                        android:paddingLeft="20dp"
-                                        android:layout_alignLeft="@id/q4Progress"
-                                        android:background="@android:color/transparent"
-                                        android:visibility="gone"/>
-
-                                    <TextView
-                                        android:id="@+id/q4No"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_centerInParent="true"
-                                        android:textColor="@color/color_primary_dark"
-                                        android:textSize="15sp"
-                                        android:text="6"
-                                        android:paddingRight="20dp"
-                                        android:layout_alignRight="@id/q4Progress"
-                                        android:background="@android:color/transparent"
-                                        android:visibility="gone"/>
-                                </RelativeLayout>
-
-
-                                <LinearLayout
-                                    android:layout_marginTop="15dp"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:weightSum="5"
-                                    android:orientation="horizontal">
-                                    <TextView
-                                        android:id="@+id/question5TV"
-                                        android:layout_width="0dp"
-                                        android:layout_height="wrap_content"
-                                        android:layout_weight="4.5"
-                                        android:layout_marginLeft="15dp"
-                                        android:textColor="@color/color_primary_dark"
-                                        android:text="hweiwhierhiwehirwehirwhrwihwhwrhwrewrhwe"
-                                        android:visibility="gone"/>
-
-                                    <Button
-                                        android:id="@+id/deleteQ5"
-                                        android:layout_width="0dp"
-                                        android:layout_height="20dp"
-                                        android:layout_weight="0.3"
-                                        android:background="@drawable/minusicon"
-                                        android:onClick="onClick"
-                                        android:visibility="gone"/>
-
-                                </LinearLayout>
-
-                                <RelativeLayout
-                                    android:layout_width="wrap_content"
-                                    android:layout_margin="15dp"
-                                    android:layout_height="wrap_content">
-
-                                    <ProgressBar
-                                        android:id="@+id/q5Progress"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="50dp"
-                                        android:minHeight="50dp"
-                                        style="?android:attr/progressBarStyleHorizontal"
-                                        android:progressDrawable="@drawable/progressbar"
-                                        android:progress="70"
-                                        android:max="100"
-                                        android:visibility="gone"
-                                        />
-
-                                    <TextView
-                                        android:id="@+id/q5Yes"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:textColor="#FFFFFF"
-                                        android:text="14"
-                                        android:textSize="15sp"
-                                        android:layout_centerInParent="true"
-                                        android:paddingLeft="20dp"
-                                        android:layout_alignLeft="@id/q5Progress"
-                                        android:background="@android:color/transparent"
-                                        android:visibility="gone"/>
-
-                                    <TextView
-                                        android:id="@+id/q5No"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_centerInParent="true"
-                                        android:textColor="@color/color_primary_dark"
-                                        android:textSize="15sp"
-                                        android:text="6"
-                                        android:paddingRight="20dp"
-                                        android:layout_alignRight="@id/q5Progress"
-                                        android:background="@android:color/transparent"
-                                        android:visibility="gone"/>
-                                </RelativeLayout>
-
-                                <LinearLayout
-                                    android:layout_marginTop="15dp"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:weightSum="5"
-                                    android:orientation="horizontal">
-                                    <TextView
-                                        android:id="@+id/question6TV"
-                                        android:layout_width="0dp"
-                                        android:layout_height="wrap_content"
-                                        android:layout_weight="4.5"
-                                        android:layout_marginLeft="15dp"
-                                        android:textColor="@color/color_primary_dark"
-                                        android:text="hweiwhierhiwehirwehirwhrwihwhwrhwrewrhwe"
-                                        android:visibility="gone"/>
-
-                                    <Button
-                                        android:id="@+id/deleteQ6"
-                                        android:layout_width="0dp"
-                                        android:layout_height="20dp"
-                                        android:layout_weight="0.3"
-                                        android:background="@drawable/minusicon"
-                                        android:onClick="onClick"
-                                        android:visibility="gone"/>
-
-                                </LinearLayout>
-
-                                <RelativeLayout
-                                    android:layout_width="wrap_content"
-                                    android:layout_margin="15dp"
-                                    android:layout_height="wrap_content">
-
-                                    <ProgressBar
-                                        android:id="@+id/q6Progress"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="50dp"
-                                        android:minHeight="50dp"
-                                        style="?android:attr/progressBarStyleHorizontal"
-                                        android:progressDrawable="@drawable/progressbar"
-                                        android:progress="70"
-                                        android:max="100"
-                                        android:visibility="gone"
-                                        />
-
-                                    <TextView
-                                        android:id="@+id/q6Yes"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:textColor="#FFFFFF"
-                                        android:text="14"
-                                        android:textSize="15sp"
-                                        android:layout_centerInParent="true"
-                                        android:paddingLeft="20dp"
-                                        android:layout_alignLeft="@id/q6Progress"
-                                        android:background="@android:color/transparent"
-                                        android:visibility="gone"/>
-
-                                    <TextView
-                                        android:id="@+id/q6No"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_centerInParent="true"
-                                        android:textColor="@color/color_primary_dark"
-                                        android:textSize="15sp"
-                                        android:text="6"
-                                        android:paddingRight="20dp"
-                                        android:layout_alignRight="@id/q6Progress"
-                                        android:background="@android:color/transparent"
-                                        android:visibility="gone"/>
-                                </RelativeLayout>
-
-
-                                <LinearLayout
-                                    android:layout_marginTop="15dp"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:weightSum="5"
-                                    android:orientation="horizontal">
-                                    <TextView
-                                        android:id="@+id/question7TV"
-                                        android:layout_width="0dp"
-                                        android:layout_height="wrap_content"
-                                        android:layout_weight="4.5"
-                                        android:layout_marginLeft="15dp"
-                                        android:textColor="@color/color_primary_dark"
-                                        android:text="hweiwhierhiwehirwehirwhrwihwhwrhwrewrhwe"
-                                        android:visibility="gone"/>
-
-                                    <Button
-                                        android:id="@+id/deleteQ7"
-                                        android:layout_width="0dp"
-                                        android:layout_height="20dp"
-                                        android:layout_weight="0.3"
-                                        android:background="@drawable/minusicon"
-                                        android:onClick="onClick"
-                                        android:visibility="gone"/>
-
-                                </LinearLayout>
-
-                                <RelativeLayout
-                                    android:layout_width="wrap_content"
-                                    android:layout_margin="15dp"
-                                    android:layout_height="wrap_content">
-
-                                    <ProgressBar
-                                        android:id="@+id/q7Progress"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="50dp"
-                                        android:minHeight="50dp"
-                                        style="?android:attr/progressBarStyleHorizontal"
-                                        android:progressDrawable="@drawable/progressbar"
-                                        android:progress="70"
-                                        android:max="100"
-                                        android:visibility="gone"
-                                        />
-
-                                    <TextView
-                                        android:id="@+id/q7Yes"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:textColor="#FFFFFF"
-                                        android:text="14"
-                                        android:textSize="15sp"
-                                        android:layout_centerInParent="true"
-                                        android:paddingLeft="20dp"
-                                        android:layout_alignLeft="@id/q7Progress"
-                                        android:background="@android:color/transparent"
-                                        android:visibility="gone"/>
-
-                                    <TextView
-                                        android:id="@+id/q7No"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_centerInParent="true"
-                                        android:textColor="@color/color_primary_dark"
-                                        android:textSize="15sp"
-                                        android:text="6"
-                                        android:paddingRight="20dp"
-                                        android:layout_alignRight="@id/q7Progress"
-                                        android:background="@android:color/transparent"
-                                        android:visibility="gone"/>
-                                </RelativeLayout>
-
-
-                                <LinearLayout
-                                    android:layout_marginTop="15dp"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:weightSum="5"
-                                    android:orientation="horizontal">
-                                    <TextView
-                                        android:id="@+id/question8TV"
-                                        android:layout_width="0dp"
-                                        android:layout_height="wrap_content"
-                                        android:layout_weight="4.5"
-                                        android:layout_marginLeft="15dp"
-                                        android:textColor="@color/color_primary_dark"
-                                        android:text="hweiwhierhiwehirwehirwhrwihwhwrhwrewrhwe"
-                                        android:visibility="gone"/>
-
-                                    <Button
-                                        android:id="@+id/deleteQ8"
-                                        android:layout_width="0dp"
-                                        android:layout_height="20dp"
-                                        android:layout_weight="0.3"
-                                        android:background="@drawable/minusicon"
-                                        android:onClick="onClick"
-                                        android:visibility="gone"/>
-
-                                </LinearLayout>
-
-                                <RelativeLayout
-                                    android:layout_width="wrap_content"
-                                    android:layout_margin="15dp"
-                                    android:layout_height="wrap_content">
-
-                                    <ProgressBar
-                                        android:id="@+id/q8Progress"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="50dp"
-                                        android:minHeight="50dp"
-                                        style="?android:attr/progressBarStyleHorizontal"
-                                        android:progressDrawable="@drawable/progressbar"
-                                        android:progress="70"
-                                        android:max="100"
-                                        android:visibility="gone"
-                                        />
-
-                                    <TextView
-                                        android:id="@+id/q8Yes"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:textColor="#FFFFFF"
-                                        android:text="14"
-                                        android:textSize="15sp"
-                                        android:layout_centerInParent="true"
-                                        android:paddingLeft="20dp"
-                                        android:layout_alignLeft="@id/q8Progress"
-                                        android:background="@android:color/transparent"
-                                        android:visibility="gone"/>
-
-                                    <TextView
-                                        android:id="@+id/q8No"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_centerInParent="true"
-                                        android:textColor="@color/color_primary_dark"
-                                        android:textSize="15sp"
-                                        android:text="6"
-                                        android:paddingRight="20dp"
-                                        android:layout_alignRight="@id/q8Progress"
-                                        android:background="@android:color/transparent"
-                                        android:visibility="gone"/>
-                                </RelativeLayout>
-
-
-                                <LinearLayout
-                                    android:layout_marginTop="15dp"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:weightSum="5"
-                                    android:orientation="horizontal">
-                                    <TextView
-                                        android:id="@+id/question9TV"
-                                        android:layout_width="0dp"
-                                        android:layout_height="wrap_content"
-                                        android:layout_weight="4.5"
-                                        android:layout_marginLeft="15dp"
-                                        android:textColor="@color/color_primary_dark"
-                                        android:text="hweiwhierhiwehirwehirwhrwihwhwrhwrewrhwe"
-                                        android:visibility="gone"/>
-
-                                    <Button
-                                        android:id="@+id/deleteQ9"
-                                        android:layout_width="0dp"
-                                        android:layout_height="20dp"
-                                        android:layout_weight="0.3"
-                                        android:background="@drawable/minusicon"
-                                        android:onClick="onClick"
-                                        android:visibility="gone"/>
-
-                                </LinearLayout>
-
-                                <RelativeLayout
-                                    android:layout_width="wrap_content"
-                                    android:layout_margin="15dp"
-                                    android:layout_height="wrap_content">
-
-                                    <ProgressBar
-                                        android:id="@+id/q9Progress"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="50dp"
-                                        android:minHeight="50dp"
-                                        style="?android:attr/progressBarStyleHorizontal"
-                                        android:progressDrawable="@drawable/progressbar"
-                                        android:progress="70"
-                                        android:max="100"
-                                        android:visibility="gone"
-                                        />
-
-                                    <TextView
-                                        android:id="@+id/q9Yes"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:textColor="#FFFFFF"
-                                        android:text="14"
-                                        android:textSize="15sp"
-                                        android:layout_centerInParent="true"
-                                        android:paddingLeft="20dp"
-                                        android:layout_alignLeft="@id/q9Progress"
-                                        android:background="@android:color/transparent"
-                                        android:visibility="gone"/>
-
-                                    <TextView
-                                        android:id="@+id/q9No"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_centerInParent="true"
-                                        android:textColor="@color/color_primary_dark"
-                                        android:textSize="15sp"
-                                        android:text="6"
-                                        android:paddingRight="20dp"
-                                        android:layout_alignRight="@id/q9Progress"
-                                        android:background="@android:color/transparent"
-                                        android:visibility="gone"/>
-                                </RelativeLayout>
-
-
-                                <LinearLayout
-                                    android:layout_marginTop="15dp"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:weightSum="5"
-                                    android:orientation="horizontal">
-                                    <TextView
-                                        android:id="@+id/question10TV"
-                                        android:layout_width="0dp"
-                                        android:layout_height="wrap_content"
-                                        android:layout_weight="4.5"
-                                        android:layout_marginLeft="15dp"
-                                        android:textColor="@color/color_primary_dark"
-                                            android:text="hweiwhierhiwehirwehirwhrwihwhwrhwrewrhwe"
-                                        android:visibility="gone"/>
-
-                                    <Button
-                                        android:id="@+id/deleteQ10"
-                                        android:layout_width="0dp"
-                                        android:layout_height="20dp"
-                                        android:layout_weight="0.3"
-                                        android:background="@drawable/minusicon"
-                                        android:onClick="onClick"
-                                        android:visibility="gone"/>
-
-                                </LinearLayout>
-                                <RelativeLayout
-                                    android:layout_width="wrap_content"
-                                    android:layout_margin="15dp"
-                                    android:layout_height="wrap_content">
-
-                                    <ProgressBar
-                                        android:id="@+id/q10Progress"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="50dp"
-                                        android:minHeight="50dp"
-                                        style="?android:attr/progressBarStyleHorizontal"
-                                        android:progressDrawable="@drawable/progressbar"
-                                        android:progress="70"
-                                        android:max="100"
-                                        android:visibility="gone"
-                                        />
-
-                                    <TextView
-                                        android:id="@+id/q10Yes"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:textColor="#FFFFFF"
-                                        android:text="14"
-                                        android:textSize="15sp"
-                                        android:layout_centerInParent="true"
-                                        android:paddingLeft="20dp"
-                                        android:layout_alignLeft="@id/q10Progress"
-                                        android:background="@android:color/transparent"
-                                        android:visibility="gone"/>
-
-                                    <TextView
-                                        android:id="@+id/q10No"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_centerInParent="true"
-                                        android:textColor="@color/color_primary_dark"
-                                        android:textSize="15sp"
-                                        android:text="6"
-                                        android:paddingRight="20dp"
-                                        android:layout_alignRight="@id/q10Progress"
-                                        android:background="@android:color/transparent"
-                                        android:visibility="gone"/>
-                                </RelativeLayout>
-
-
-                                <LinearLayout
-                                    android:layout_marginTop="15dp"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:weightSum="5"
-                                    android:orientation="horizontal">
-                                    <TextView
-                                        android:id="@+id/question11TV"
-                                        android:layout_width="0dp"
-                                        android:layout_height="wrap_content"
-                                        android:layout_weight="4.5"
-                                        android:layout_marginLeft="15dp"
-                                        android:textColor="@color/color_primary_dark"
-                                        android:text="hweiwhierhiwehirwehirwhrwihwhwrhwrewrhwe"
-                                        android:visibility="gone"/>
-
-                                    <Button
-                                        android:id="@+id/deleteQ11"
-                                        android:layout_width="0dp"
-                                        android:layout_height="20dp"
-                                        android:layout_weight="0.3"
-                                        android:background="@drawable/minusicon"
-                                        android:onClick="onClick"
-                                        android:visibility="gone"/>
-
-                                </LinearLayout>
-
-                                <RelativeLayout
-                                    android:layout_width="wrap_content"
-                                    android:layout_margin="15dp"
-                                    android:layout_height="wrap_content">
-
-                                    <ProgressBar
-                                        android:id="@+id/q11Progress"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="50dp"
-                                        android:minHeight="50dp"
-                                        style="?android:attr/progressBarStyleHorizontal"
-                                        android:progressDrawable="@drawable/progressbar"
-                                        android:progress="70"
-                                        android:max="100"
-                                        android:visibility="gone"
-                                        />
-
-                                    <TextView
-                                        android:id="@+id/q11Yes"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:textColor="#FFFFFF"
-                                        android:text="14"
-                                        android:textSize="15sp"
-                                        android:layout_centerInParent="true"
-                                        android:paddingLeft="20dp"
-                                        android:layout_alignLeft="@id/q11Progress"
-                                        android:background="@android:color/transparent"
-                                        android:visibility="gone"/>
-
-                                    <TextView
-                                        android:id="@+id/q11No"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_centerInParent="true"
-                                        android:textColor="@color/color_primary_dark"
-                                        android:textSize="15sp"
-                                        android:text="6"
-                                        android:paddingRight="20dp"
-                                        android:layout_alignRight="@id/q11Progress"
-                                        android:background="@android:color/transparent"
-                                        android:visibility="gone"/>
-                                </RelativeLayout>
-
-
-                                <LinearLayout
-                                    android:layout_marginTop="15dp"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:weightSum="5"
-                                    android:orientation="horizontal">
-                                    <TextView
-                                        android:id="@+id/question12TV"
-                                        android:layout_width="0dp"
-                                        android:layout_height="wrap_content"
-                                        android:layout_weight="4.5"
-                                        android:layout_marginLeft="15dp"
-                                        android:textColor="@color/color_primary_dark"
-                                        android:text="hweiwhierhiwehirwehirwhrwihwhwrhwrewrhwe"
-                                        android:visibility="gone"/>
-
-                                    <Button
-                                        android:id="@+id/deleteQ12"
-                                        android:layout_width="0dp"
-                                        android:layout_height="20dp"
-                                        android:layout_weight="0.3"
-                                        android:background="@drawable/minusicon"
-                                        android:onClick="onClick"
-                                        android:visibility="gone"/>
-
-                                </LinearLayout>
-
-                                <RelativeLayout
-                                    android:layout_width="wrap_content"
-                                    android:layout_margin="15dp"
-                                    android:layout_height="wrap_content">
-
-                                    <ProgressBar
-                                        android:id="@+id/q12Progress"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="50dp"
-                                        android:minHeight="50dp"
-                                        style="?android:attr/progressBarStyleHorizontal"
-                                        android:progressDrawable="@drawable/progressbar"
-                                        android:progress="70"
-                                        android:max="100"
-                                        android:visibility="gone"
-                                        />
-
-                                    <TextView
-                                        android:id="@+id/q12Yes"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:textColor="#FFFFFF"
-                                        android:text="14"
-                                        android:textSize="15sp"
-                                        android:layout_centerInParent="true"
-                                        android:paddingLeft="20dp"
-                                        android:layout_alignLeft="@id/q12Progress"
-                                        android:background="@android:color/transparent"
-                                        android:visibility="gone"/>
-
-                                    <TextView
-                                        android:id="@+id/q12No"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_centerInParent="true"
-                                        android:textColor="@color/color_primary_dark"
-                                        android:textSize="15sp"
-                                        android:text="6"
-                                        android:paddingRight="20dp"
-                                        android:layout_alignRight="@id/q12Progress"
-                                        android:background="@android:color/transparent"
-                                        android:visibility="gone"/>
-                                </RelativeLayout>
                         </LinearLayout>
+
+
+
                     </ScrollView>
-                 </FrameLayout>
+                </FrameLayout>
             </LinearLayout>
         </TabHost>
     </LinearLayout>
-    <include layout="@layout/navigation_drawer" />
+    include layout="@layout/navigation_drawer" />
 </android.support.v4.widget.DrawerLayout>

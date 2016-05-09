@@ -52,7 +52,7 @@ public class AccessTokenManager {
     }
 
     /**
-     * Test if a valid access token already exists
+     * SurveyCard if a valid access token already exists
      *
      * @return True, if access token is set
      */

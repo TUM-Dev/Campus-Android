@@ -5,6 +5,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
+import android.support.design.widget.Snackbar;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -43,22 +46,18 @@ import de.tum.in.tumcampusapp.models.ChatMember;
 import de.tum.in.tumcampusapp.models.managers.DatabaseManager;
 
 
-public class Survey2 extends BaseActivity implements View.OnClickListener {
+public class Survey2 extends BaseActivity {
 
     int numberOfquestions;
     EditText question1Et,question2Et,question3Et;
-    Spinner aSpinner1;
+    Spinner aSpinner1,questioType1,questioType2,questioType3;
     TextView selectTv,tv111;
     TabHost tabHost;
     Button submitSurveyButton , facultiesButton;
     ArrayList<String> questions=new ArrayList<>();
     ArrayList<String> selectedFaculties = new ArrayList<>();
     boolean[]checked=new boolean[14];
-    ProgressBar[] progressBars=new ProgressBar[12];
-    TextView [] yesAnswers=new TextView[12];
-    TextView [] noAnswers=new TextView[12];
-    TextView [] userQuestions=new TextView[12];
-    Button [] deleteQuestion=new Button[12];
+    LinearLayout q1L,q2L,q3L,mainResponseLayout;
     String question1="",question2="",question3="",chosenFaculties="",newDate="",lrzId,dayBeforeWeek="",dayBeforeMonth="";
     private SQLiteDatabase db;
     Toolbar main;
@@ -66,6 +65,7 @@ public class Survey2 extends BaseActivity implements View.OnClickListener {
     String[] numQues=new String[3];
 
     public Survey2(){super(R.layout.activity_survey2);}
+
 
 
     @Override
@@ -86,81 +86,130 @@ public class Survey2 extends BaseActivity implements View.OnClickListener {
         setUpResponseTab();
         userAllowed();
 
+
     }
 
-
+    //set up the respone tab layout dynamically depending on number of questions
     public void setUpResponseTab()
     {
-        dayBeforeMonth=getDateBefore1Month();
-        Cursor c = db.rawQuery("SELECT * FROM survey1 WHERE date >= '"+dayBeforeMonth+"'", null);
-        numberOfquestions=c.getCount();
-        for(int i=0;i<numberOfquestions;i++)
-        {
-            c.moveToNext();
-            userQuestions[i].setVisibility(View.VISIBLE);
-            userQuestions[i].setText(c.getString(3));
-            deleteQuestion[i].setVisibility(View.VISIBLE);
-            deleteQuestion[i].setTag(c.getInt(0));
-            yesAnswers[i].setVisibility(View.VISIBLE);
-            yesAnswers[i].setText(c.getString(5)+"");
-            noAnswers[i].setVisibility(View.VISIBLE);
-            noAnswers[i].setText(c.getString(6)+"");
-            progressBars[i].setVisibility(View.VISIBLE);
-            progressBars[i].setProgress((c.getInt(5)));
+        //get response and question from database->set i<Number of question
+        for (int i = 0; i < 10; i++) {
 
+            //linear layout for every question
+            LinearLayout ques = new LinearLayout(this);
+            LinearLayout.LayoutParams quesParams = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            ques.setOrientation(LinearLayout.VERTICAL);
+            ques.setWeightSum(5);
+            mainResponseLayout.addView(ques, quesParams);
+
+
+            LinearLayout l = new LinearLayout(this);
+            LinearLayout.LayoutParams lParams = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            l.setOrientation(LinearLayout.HORIZONTAL);
+            l.setWeightSum(5);
+            ques.addView(l, lParams);
+
+            LinearLayout l1 = new LinearLayout(this);
+            l1.setOrientation(LinearLayout.VERTICAL);
+            l1.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 4.5f));
+            l.addView(l1);
+
+            LinearLayout l2 = new LinearLayout(this);
+            l2.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 0.3f));
+            l2.setOrientation(LinearLayout.VERTICAL);
+            l.addView(l2);
+            //adding quesion tv
+            TextView questionTv = new TextView(this);
+            LinearLayout.LayoutParams tvparams = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            tvparams.setMargins(50, 0, 0, 0);
+            questionTv.setLayoutParams(tvparams);
+            //setText(question)
+            questionTv.setText("asdasds");
+            l1.addView(questionTv);
+            //adding button delete
+            float inPixels = getResources().getDimension(R.dimen.dimen_buttonHeight_in_dp);
+            Button deleteButton = new Button(this);
+            deleteButton.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, (int) inPixels));
+            deleteButton.setBackgroundResource((R.drawable.minusicon));
+            deleteButton.setOnClickListener(clicks);
+            deleteButton.setTag(i);
+            l2.addView(deleteButton);
+
+            //adding progress bar with answers
+            RelativeLayout r = new RelativeLayout(this);
+            LinearLayout.LayoutParams Params = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            Params.setMargins(50, 50, 50, 50);
+            ques.addView(r, Params);
+
+            float inPixels2 = getResources().getDimension(R.dimen.dimen_progressHeight_in_dp);
+            ProgressBar progress = new ProgressBar(this, null, android.R.attr.progressBarStyleHorizontal);
+
+            progress.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, (int) inPixels2));
+            progress.setMinimumHeight((int) inPixels2);
+            progress.setProgressDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.progressbar, null));
+            //totalAnswer=yes +no
+            //setMax(totalAnswers)
+            //int x=(int)(yes/(no+totalAnswers))
+            //setProgress()
+            //fill progress
+            progress.setProgress(70);
+            progress.setMax(100);
+            progress.setId(R.id.p1);
+            r.addView(progress);
+
+            TextView yesAnswers = new TextView(this);
+            RelativeLayout.LayoutParams params =
+                    new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+            params.addRule(RelativeLayout.ALIGN_LEFT, progress.getId());
+            params.addRule(RelativeLayout.CENTER_IN_PARENT);
+            yesAnswers.setPadding(15, 0, 0, 0);
+            //set number of yes answers
+            yesAnswers.setText("15");
+            r.addView(yesAnswers, params);
+
+            TextView noAnswers = new TextView(this);
+            RelativeLayout.LayoutParams params1 =
+                    new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+            params1.addRule(RelativeLayout.ALIGN_RIGHT, progress.getId());
+            params1.addRule(RelativeLayout.CENTER_IN_PARENT);
+            //set number of no answers
+            noAnswers.setText("15");
+            noAnswers.setPadding(0, 0, 20, 0);
+            r.addView(noAnswers, params1);
         }
+
     }
+    //delete button click
+    View.OnClickListener clicks = new View.OnClickListener() {
 
-    @Override
-    public void onClick(final View v)
-    {
-            for(int i=0;i<numberOfquestions;i++)
-            {
-                if (v.getId() == getResources().getIdentifier("deleteQ" +(i+ 1), "id", getPackageName()))
-                {
-                    final int y=i;
-                    AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
-                    builder1.setMessage("Are you sure you delete this question");
-                    builder1.setCancelable(true);
+        @Override
+        public void onClick(final View v) {
+            // TODO Auto-generated method stub
+            for (int i = 0; i < 10; i++) {
+                //remove view and delete from database.
+                if ((int)v.getTag() == i) {
+                    ViewGroup parentView = (ViewGroup) v.getParent().getParent().getParent();
+                    parentView.removeAllViews();
+                    /*Intent in = getIntent();
+                    in.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                    in.putExtra("responses", 1);
+                    startActivity(in);*/
+                    Snackbar snackbar = Snackbar
+                            .make(findViewById(R.id.drawer_layout), "Question has been deleted " , Snackbar.LENGTH_LONG);
 
-                    builder1.setPositiveButton(
-                            "Yes",
-                            new DialogInterface.OnClickListener()
-                            {
-                                public void onClick(DialogInterface dialog, int id)
-                                {
-                                    ViewGroup parentView = (ViewGroup) v.getParent();
-                                    parentView.removeAllViews();
-                                    parentView.setVisibility(View.GONE);
-                                    parentView=(ViewGroup)yesAnswers[y].getParent();
-                                    parentView.removeAllViews();
-                                    parentView.setVisibility(View.GONE);
-                                    db.execSQL(("Delete  FROM survey1 WHERE id = '"+v.getTag()+"'"));
-                                    Intent i=getIntent();
-                                    i.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                                    i.putExtra("responses",1);
-                                    startActivity(i);
-
-
-                                }
-                            });
-
-                    builder1.setNegativeButton(
-                            "No",
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id)
-                                {
-                                    dialog.cancel();
-                                }
-                            });
-
-                    AlertDialog alert11 = builder1.create();
-                    alert11.show();
+                    snackbar.show();
 
                 }
             }
         }
 
+    };
+
+    //get day before 1week
     public String getDateBefore1Week()
     {
         Calendar calendar = Calendar.getInstance();
@@ -171,6 +220,7 @@ public class Survey2 extends BaseActivity implements View.OnClickListener {
         return strDate;
     }
 
+    //get day before 1month
     public String getDateBefore1Month()
     {
         Calendar calendar = Calendar.getInstance();
@@ -181,82 +231,23 @@ public class Survey2 extends BaseActivity implements View.OnClickListener {
         return strDate;
     }
 
+    //get all views by IDs
     public void findViewsById()
     {
+        q1L=(LinearLayout)findViewById(R.id.q1L);
+        mainResponseLayout=(LinearLayout)findViewById(R.id.mainRes);
+        q2L=(LinearLayout)findViewById(R.id.q2L);
+        q3L=(LinearLayout)findViewById(R.id.q3L);
         question1Et = (EditText) findViewById(R.id.question1Et);
         question2Et = (EditText) findViewById(R.id.question2Et);
         question3Et = (EditText) findViewById(R.id.question3Et);
         aSpinner1 = (Spinner) findViewById(R.id.spinner);
         submitSurveyButton=(Button)findViewById(R.id.submitSurveyButton);
         selectTv=(TextView)findViewById(R.id.selectTv);
-        progressBars[0]=(ProgressBar)findViewById(R.id.q1Progress);
-        progressBars[1]=(ProgressBar)findViewById(R.id.q2Progress);
-        progressBars[2]=(ProgressBar)findViewById(R.id.q3Progress);
-        progressBars[3]=(ProgressBar)findViewById(R.id.q4Progress);
-        progressBars[4]=(ProgressBar)findViewById(R.id.q5Progress);
-        progressBars[5]=(ProgressBar)findViewById(R.id.q6Progress);
-        progressBars[6]=(ProgressBar)findViewById(R.id.q7Progress);
-        progressBars[7]=(ProgressBar)findViewById(R.id.q8Progress);
-        progressBars[8]=(ProgressBar)findViewById(R.id.q9Progress);
-        progressBars[9]=(ProgressBar)findViewById(R.id.q10Progress);
-        progressBars[10]=(ProgressBar)findViewById(R.id.q11Progress);
-        progressBars[11]=(ProgressBar)findViewById(R.id.q12Progress);
-
-        userQuestions[0]=(TextView)findViewById(R.id.question1TV);
-        userQuestions[1]=(TextView)findViewById(R.id.question2TV);
-        userQuestions[2]=(TextView)findViewById(R.id.question3TV);
-        userQuestions[3]=(TextView)findViewById(R.id.question4TV);
-        userQuestions[4]=(TextView)findViewById(R.id.question5TV);
-        userQuestions[5]=(TextView)findViewById(R.id.question6TV);
-        userQuestions[6]=(TextView)findViewById(R.id.question7TV);
-        userQuestions[7]=(TextView)findViewById(R.id.question8TV);
-        userQuestions[8]=(TextView)findViewById(R.id.question9TV);
-        userQuestions[9]=(TextView)findViewById(R.id.question10TV);
-        userQuestions[10]=(TextView)findViewById(R.id.question11TV);
-        userQuestions[11]=(TextView)findViewById(R.id.question12TV);
-
-        yesAnswers[0]=(TextView)findViewById(R.id.q1Yes);
-        yesAnswers[1]=(TextView)findViewById(R.id.q2Yes);
-        yesAnswers[2]=(TextView)findViewById(R.id.q3Yes);
-        yesAnswers[3]=(TextView)findViewById(R.id.q4Yes);
-        yesAnswers[4]=(TextView)findViewById(R.id.q5Yes);
-        yesAnswers[5]=(TextView)findViewById(R.id.q6Yes);
-        yesAnswers[6]=(TextView)findViewById(R.id.q7Yes);
-        yesAnswers[7]=(TextView)findViewById(R.id.q8Yes);
-        yesAnswers[8]=(TextView)findViewById(R.id.q9Yes);
-        yesAnswers[9]=(TextView)findViewById(R.id.q10Yes);
-        yesAnswers[10]=(TextView)findViewById(R.id.q11Yes);
-        yesAnswers[11]=(TextView)findViewById(R.id.q12Yes);
-
-        noAnswers[0]=(TextView)findViewById(R.id.q1No);
-        noAnswers[1]=(TextView)findViewById(R.id.q2No);
-        noAnswers[2]=(TextView)findViewById(R.id.q3No);
-        noAnswers[3]=(TextView)findViewById(R.id.q4No);
-        noAnswers[4]=(TextView)findViewById(R.id.q5No);
-        noAnswers[5]=(TextView)findViewById(R.id.q6No);
-        noAnswers[6]=(TextView)findViewById(R.id.q7No);
-        noAnswers[7]=(TextView)findViewById(R.id.q8No);
-        noAnswers[8]=(TextView)findViewById(R.id.q9No);
-        noAnswers[9]=(TextView)findViewById(R.id.q10No);
-        noAnswers[10]=(TextView)findViewById(R.id.q11No);
-        noAnswers[11]=(TextView)findViewById(R.id.q12No);
-
-        deleteQuestion[0]=(Button)findViewById(R.id.deleteQ1);
-        deleteQuestion[1]=(Button)findViewById(R.id.deleteQ2);
-        deleteQuestion[2]=(Button)findViewById(R.id.deleteQ3);
-        deleteQuestion[3]=(Button)findViewById(R.id.deleteQ4);
-        deleteQuestion[4]=(Button)findViewById(R.id.deleteQ5);
-        deleteQuestion[5]=(Button)findViewById(R.id.deleteQ6);
-        deleteQuestion[6]=(Button)findViewById(R.id.deleteQ7);
-        deleteQuestion[7]=(Button)findViewById(R.id.deleteQ8);
-        deleteQuestion[8]=(Button)findViewById(R.id.deleteQ9);
-        deleteQuestion[9]=(Button)findViewById(R.id.deleteQ10);
-        deleteQuestion[10]=(Button)findViewById(R.id.deleteQ11);
-        deleteQuestion[11]=(Button)findViewById(R.id.deleteQ12);
-
 
     }
 
+    //Departments spinner.
     public void setUpSelectTargets()
     {
         String math = getResources().getString(R.string.faculty_mathematics);
@@ -283,133 +274,140 @@ public class Survey2 extends BaseActivity implements View.OnClickListener {
         facultiesButton = (Button) findViewById(R.id.button_faculties);
         facultiesButton.setOnClickListener(new View.OnClickListener() {
 
-                @Override
-                public void onClick(View view) {
+            @Override
+            public void onClick(View view) {
 
-                    final AlertDialog dialog;
+                final AlertDialog dialog;
 
-                    builder.setMultiChoiceItems(faculties, checked, new DialogInterface.OnMultiChoiceClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i, boolean b) {
-
-                            if (b && !selectedFaculties.contains(faculties[i]))
-                            {
-                                selectedFaculties.add(faculties[i]);
-                                checked[i]=true;
-                            }
-
-                            else
-                            {
-                                selectedFaculties.remove(faculties[i]);
-                                checked[i]=false;
-                            }
+                builder.setMultiChoiceItems(faculties, checked, new DialogInterface.OnMultiChoiceClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i, boolean b) {
+                        //reserve the checked faculties when closing spinner
+                        if (b && !selectedFaculties.contains(faculties[i]))
+                        {
+                            selectedFaculties.add(faculties[i]);
+                            checked[i]=true;
                         }
-                    }).
-                            setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i)
+
+                        else
+                        {
+                            selectedFaculties.remove(faculties[i]);
+                            checked[i]=false;
+                        }
+                    }
+                }).
+                        //if ok show question EditText
+                                setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i)
+                            {
+                                if(selectedFaculties.size()>0)
                                 {
-                                   if(selectedFaculties.size()>0)
-                                   {
-                                        submitSurveyButton.setVisibility(View.VISIBLE);
-                                        question1Et.setVisibility(View.VISIBLE);
-                                        selectTv.setVisibility(View.VISIBLE);
-                                        aSpinner1.setVisibility(View.VISIBLE);
-                                        aSpinner1.setSelection(0);
+                                    submitSurveyButton.setVisibility(View.VISIBLE);
+                                    selectTv.setVisibility(View.VISIBLE);
+                                    aSpinner1.setVisibility(View.VISIBLE);
+                                    q1L.setVisibility(View.VISIBLE);
+                                    aSpinner1.setSelection(0);
 
-                                   }
-                                    else
-                                   {
-                                       submitSurveyButton.setVisibility(View.GONE);
-                                       question1Et.setVisibility(View.GONE);
-                                       question2Et.setVisibility(View.GONE);
-                                       question3Et.setVisibility(View.GONE);
-                                       selectTv.setVisibility(View.GONE);
-                                       aSpinner1.setVisibility(View.GONE);
-                                       Toast.makeText(getApplicationContext(),"At least select 1 Faculty",Toast.LENGTH_SHORT).show();
-                                   }
+
                                 }
-                            }).
-                            setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i)
+                                //show nothing , force him to choose Faculty
+                                else
                                 {
-                                    selectedFaculties.clear();
-                                    for(int y=0;y<checked.length;y++)
-                                    {
-                                        checked[y]=false;
-                                    }
+                                    submitSurveyButton.setVisibility(View.GONE);
+                                    q1L.setVisibility(View.GONE);
+                                    q2L.setVisibility(View.GONE);
+                                    q3L.setVisibility(View.GONE);
+                                    selectTv.setVisibility(View.GONE);
+                                    aSpinner1.setVisibility(View.GONE);
+
+
+                                    Toast.makeText(getApplicationContext(),"At least select 1 Faculty",Toast.LENGTH_SHORT).show();
                                 }
-                            });
+                            }
+                        }).
+                        setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i)
+                            {
+                                selectedFaculties.clear();
+                                for(int y=0;y<checked.length;y++)
+                                {
+                                    checked[y]=false;
+                                }
+                            }
+                        });
 
-                    dialog = builder.create();
-                    dialog.show();
+                dialog = builder.create();
+                dialog.show();
 
-                }
-            });
-        }
+            }
+        });
+    }
 
+    //get survey data (number of questions,departments,questions)
     public boolean getSurveyrData()
     {
 
-       if(aSpinner1.getSelectedItemPosition()==0)
-       {
-           if(hasQuestion(question1Et))
-           {
-               //still userID
-               question1 = question1Et.getText().toString();
-               questions.add(question1);
-               newDate=getDateTime();
-               chosenFaculties=getSelectedFaculties(selectedFaculties);
-               Toast.makeText(getApplicationContext(),"Survey has been submitted!",Toast.LENGTH_SHORT).show();
-               return true;
-           }
-           else
-               Toast.makeText(getApplicationContext(),"Please complete question form",Toast.LENGTH_SHORT).show();
-       }
+        if(aSpinner1.getSelectedItemPosition()==0)
+        {
+            if(hasQuestion(question1Et))
+            {
+                //still userID
+                question1 = question1Et.getText().toString();
+                questions.add(question1);
+                newDate=getDateTime();
+                chosenFaculties=getSelectedFaculties(selectedFaculties);
+                Toast.makeText(getApplicationContext(),"Survey has been submitted!",Toast.LENGTH_SHORT).show();
+                return true;
+            }
+            else
+                Toast.makeText(getApplicationContext(),"Please complete question form",Toast.LENGTH_SHORT).show();
+        }
 
-       else if(aSpinner1.getSelectedItemPosition()==1)
-       {
-           if(hasQuestion(question1Et)&&hasQuestion(question2Et))
-           {
-               //still userID
-               question1 = question1Et.getText().toString();
-               question2=question2Et.getText().toString();
-               questions.add(question1);
-               questions.add(question2);
-               newDate=getDateTime();
-               chosenFaculties=getSelectedFaculties(selectedFaculties);
-               Toast.makeText(getApplicationContext(),"Survey has been submitted!",Toast.LENGTH_SHORT).show();
-               return true;
-           }
-           else
-               Toast.makeText(getApplicationContext(),"Please complete question form",Toast.LENGTH_SHORT).show();
-       }
+        else if(aSpinner1.getSelectedItemPosition()==1)
+        {
+            if(hasQuestion(question1Et)&&hasQuestion(question2Et))
+            {
+                //still userID
+                question1 = question1Et.getText().toString();
+                question2=question2Et.getText().toString();
+                questions.add(question1);
+                questions.add(question2);
+                newDate=getDateTime();
+                chosenFaculties=getSelectedFaculties(selectedFaculties);
+                Toast.makeText(getApplicationContext(),"Survey has been submitted!",Toast.LENGTH_SHORT).show();
+                return true;
+            }
+            else
+                Toast.makeText(getApplicationContext(),"Please complete question form",Toast.LENGTH_SHORT).show();
+        }
 
-       else
-       {
-           if(hasQuestion(question1Et)&&hasQuestion(question2Et)&&hasQuestion(question3Et))
-           {
-               //still userID
-               question1 = question1Et.getText().toString();
-               question2=question2Et.getText().toString();
-               question3=question3Et.getText().toString();
-               questions.add(question1);
-               questions.add(question2);
-               questions.add(question3);
-               newDate=getDateTime();
-               chosenFaculties=getSelectedFaculties(selectedFaculties);
-               Toast.makeText(getApplicationContext(),"Survey has been submitted!",Toast.LENGTH_SHORT).show();
-               return true;
-           }
-           else
-               Toast.makeText(getApplicationContext(),"Please complete question form",Toast.LENGTH_SHORT).show();
+        else
+        {
+            if(hasQuestion(question1Et)&&hasQuestion(question2Et)&&hasQuestion(question3Et))
+            {
+                //still userID
+                question1 = question1Et.getText().toString();
+                question2=question2Et.getText().toString();
+                question3=question3Et.getText().toString();
+                questions.add(question1);
+                questions.add(question2);
+                questions.add(question3);
+                newDate=getDateTime();
+                chosenFaculties=getSelectedFaculties(selectedFaculties);
+                Toast.makeText(getApplicationContext(),"Survey has been submitted!",Toast.LENGTH_SHORT).show();
+                return true;
+            }
+            else
+                Toast.makeText(getApplicationContext(),"Please complete question form",Toast.LENGTH_SHORT).show();
 
-       }
+        }
 
         return false;
     }
 
+    //clear data
     public void clearData()
     {
         question1Et.setText("");
@@ -425,14 +423,15 @@ public class Survey2 extends BaseActivity implements View.OnClickListener {
         for(int i=0;i<checked.length;i++)
             checked[i]=false;
         submitSurveyButton.setVisibility(View.GONE);
-        question1Et.setVisibility(View.GONE);
-        question2Et.setVisibility(View.GONE);
-        question3Et.setVisibility(View.GONE);
+        q1L.setVisibility(View.GONE);
+        q2L.setVisibility(View.GONE);
+        q3L.setVisibility(View.GONE);
         selectTv.setVisibility(View.GONE);
         aSpinner1.setVisibility(View.GONE);
         aSpinner1.setSelection(0);
     }
 
+    //get selected faculties from spinner
     public String getSelectedFaculties(ArrayList<String> arrayList)
     {
         String facs="";
@@ -447,6 +446,7 @@ public class Survey2 extends BaseActivity implements View.OnClickListener {
         return facs;
     }
 
+    //submit survey listener
     public void buttonsListener()
     {
         submitSurveyButton.setOnClickListener(new View.OnClickListener(){
@@ -454,8 +454,10 @@ public class Survey2 extends BaseActivity implements View.OnClickListener {
             @Override
             public void onClick(View view)
             {
+                //get survey data
                 if(getSurveyrData())
                 {
+                    //insert into database.
                     Date date = Calendar.getInstance().getTime();
                     ContentValues cv = new ContentValues(8);
                     for (int i = 0; i < Integer.parseInt(aSpinner1.getSelectedItem().toString()); i++)
@@ -496,6 +498,7 @@ public class Survey2 extends BaseActivity implements View.OnClickListener {
         });
     }
 
+
     private String getDateTime()
     {
        /* Date cDate = new Date();
@@ -508,6 +511,7 @@ public class Survey2 extends BaseActivity implements View.OnClickListener {
         return strDate;
     }
 
+    //setup tab host (survey,Responses)
     public void setUpTabHost()
     {
         tabHost = (TabHost) findViewById(R.id.tabHost);
@@ -526,6 +530,7 @@ public class Survey2 extends BaseActivity implements View.OnClickListener {
         tabHost.addTab(tabSpec);
     }
 
+    //check if edittext is empty
     public boolean hasQuestion(EditText et)
     {
         if(!et.getText().toString().isEmpty())
@@ -533,6 +538,7 @@ public class Survey2 extends BaseActivity implements View.OnClickListener {
         return false;
     }
 
+    //check if user is allowed to submit survey depending on the last survey date and number of question he submitted before
     public void userAllowed()
     {
 
@@ -567,14 +573,15 @@ public class Survey2 extends BaseActivity implements View.OnClickListener {
 
         else
         {
-                String strDate=getNextPossibleDate();
-                selectTv.setVisibility(View.VISIBLE);
-                selectTv.setText("Next possible survey date is "+strDate);
-                facultiesButton.setVisibility(View.GONE);
+            String strDate=getNextPossibleDate();
+            selectTv.setVisibility(View.VISIBLE);
+            selectTv.setText("Next possible survey date is "+strDate);
+            facultiesButton.setVisibility(View.GONE);
 
         }
     }
 
+    //spinner for number of questions selection
     public void setUpSpinner()
     {
 
@@ -595,21 +602,23 @@ public class Survey2 extends BaseActivity implements View.OnClickListener {
                 // If One
                 if (selectedItem.equals("1"))
                 {
-                    question2Et.setVisibility(View.GONE);
+                    q1L.setVisibility(View.VISIBLE);
+                    q2L.setVisibility(View.GONE);
+                    q3L.setVisibility(View.GONE);
                     question2Et.setText("");
-                    question3Et.setVisibility(View.GONE);
                     question3Et.setText("");
                 }
                 else if (selectedItem.equals("2"))
                 {
-                    question2Et.setVisibility(View.VISIBLE);
-                    question3Et.setVisibility(View.GONE);
+                    q2L.setVisibility(View.VISIBLE);
+                    q3L.setVisibility(View.GONE);
                     question3Et.setText("");
                 }
                 else if (selectedItem.equals("3"))
                 {
-                    question2Et.setVisibility(View.VISIBLE);
-                    question3Et.setVisibility(View.VISIBLE);
+                    q2L.setVisibility(View.VISIBLE);
+                    q3L.setVisibility(View.VISIBLE);
+
                 }
             }
 
@@ -631,6 +640,7 @@ public class Survey2 extends BaseActivity implements View.OnClickListener {
         super.onDestroy();
     }
 
+    //show the user the next possible survey date.
     public String getNextPossibleDate()
     {
         String nextPossibleDate="";
@@ -671,5 +681,6 @@ public class Survey2 extends BaseActivity implements View.OnClickListener {
 
         return nextPossibleDate;
     }
+
 
 }

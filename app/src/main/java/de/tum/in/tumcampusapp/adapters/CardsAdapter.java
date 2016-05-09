@@ -15,7 +15,7 @@ import de.tum.in.tumcampusapp.cards.NextLectureCard;
 import de.tum.in.tumcampusapp.cards.NoInternetCard;
 import de.tum.in.tumcampusapp.cards.RestoreCard;
 import de.tum.in.tumcampusapp.cards.Support;
-import de.tum.in.tumcampusapp.cards.Test;
+import de.tum.in.tumcampusapp.cards.SurveyCard;
 import de.tum.in.tumcampusapp.cards.TuitionFeesCard;
 import de.tum.in.tumcampusapp.models.managers.CardManager;
 
@@ -56,8 +56,8 @@ public class CardsAdapter extends RecyclerView.Adapter<Card.CardViewHolder> {
                 return ChatMessagesCard.inflateViewHolder(viewGroup);
             case CardManager.CARD_SUPPORT:
                 return Support.inflateViewHolder(viewGroup);
-            case CardManager.CARD_TEST:
-                return Test.inflateViewHolder(viewGroup);
+            case CardManager.CARD_SURVEY:
+                return SurveyCard.inflateViewHolder(viewGroup);
             default:
                 throw new UnsupportedOperationException();
         }
