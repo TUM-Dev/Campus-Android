@@ -107,7 +107,6 @@ public class CardManager {
         // Add first use tutorial
         new FirstUseCard1(context).apply();
         new FirstUseCard2(context).apply();
-        new SurveyCard(context).apply();
         new Support(context).apply();
 
         new EduroamCard(context).apply();
