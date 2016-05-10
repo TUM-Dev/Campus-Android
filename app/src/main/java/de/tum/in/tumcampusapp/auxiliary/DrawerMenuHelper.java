@@ -25,6 +25,7 @@ import de.tum.in.tumcampusapp.activities.QuizActivity;
 import de.tum.in.tumcampusapp.activities.RoomFinderActivity;
 import de.tum.in.tumcampusapp.activities.StudyRoomsActivity;
 import de.tum.in.tumcampusapp.activities.Survey;
+
 import de.tum.in.tumcampusapp.activities.Survey2;
 import de.tum.in.tumcampusapp.activities.TransportationActivity;
 import de.tum.in.tumcampusapp.activities.TuitionFeesActivity;
