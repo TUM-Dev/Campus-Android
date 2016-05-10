@@ -478,22 +478,6 @@ public class Survey2 extends BaseActivity {
                     i.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                     startActivity(i);
                 }
-
-                  /*
-                    **sqlite**
-                    insert question,date,counter(to manage user number of questions)
-                    constraint(3questions/week)
-
-                   **phpmyadmin**
-                    add to question to database
-                    table(QID auto increment,userID ,date(Date),question(String),faculties(String),Yes(int),no(int),flags(int)
-                                        $sql = "INSERT INTO Survey (userID,date,question,faculties,0,0,0)
-                    VALUES ()";
-                    phpscript(clean database->check questions expiry
-                    constraints(clean after 28days,delete questions after 5flags)
-                */
-                //db.execSQL("INSERT INTO survey (id, date, userID,question,faculties,yes,no,flags) VALUES ("+1+','+1+','+newDate+','+question1+','+chosenFaculties+','+5+','+5+','+0+')');
-
             }
         });
     }
