@@ -1,13 +1,9 @@
 package de.tum.in.tumcampusapp.cards;
 
-import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,27 +11,20 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.ListIterator;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.managers.CardManager;
 import de.tum.in.tumcampusapp.models.managers.SurveyManager;
 
-/**
- * Created by Moh on 4/26/2016.
- */
 public class SurveyCard extends Card
 
 {
-    private ArrayList<Question> questions = new ArrayList<>();
-    private SurveyManager manager = new SurveyManager(mContext);
+    private final ArrayList<Question> questions = new ArrayList<>();
+    private final SurveyManager manager = new SurveyManager(mContext);
     private TextView mQuestion;
-    private SQLiteDatabase db;
     private Button bYes;
     private Button bNo;
     private Button bSkip;
@@ -73,13 +62,13 @@ public class SurveyCard extends Card
         bSkip= (Button) mCard.findViewById(R.id.ignoreAnswerCard);
         bFlagged = (ImageButton) mCard.findViewById(R.id.flagButton);
 
-        showQuestion(0);
+        showFirstQuestion();
 
     }
 
-    public void showQuestion(int i) {
-        mTitleView.setText("Research Quiz");
-        final Question ques = questions.get(i);
+    private void showFirstQuestion() {
+        mTitleView.setText(R.string.research_quiz);
+        final Question ques = questions.get(0);
         mQuestion.setText(ques.question);
 
 
@@ -89,14 +78,14 @@ public class SurveyCard extends Card
             public void onClick(View view) {
                 if( questions.size() >=2){
                     Question updatedElement = questions.remove(0);
-                    manager.updateQuestion(ques,"yes");
+                    manager.updateQuestion(updatedElement,"yes");
                     // show next question
-                    showQuestion(0);
+                    showFirstQuestion();
                 }else{
                     // no questions available
                     Question updateElement = questions.remove(0);
-                    manager.updateQuestion(ques,"yes");
-                    mQuestion.setText("No Questions are available!");
+                    manager.updateQuestion(updateElement,"yes");
+                    mQuestion.setText(R.string.no_questions_available);
                     bYes.setVisibility(View.GONE);
                     bNo.setVisibility(View.GONE);
                     bSkip.setVisibility(View.GONE);
@@ -109,12 +98,12 @@ public class SurveyCard extends Card
             public void onClick(View view) {
                 if( questions.size() >=2){
                     Question updatedElement = questions.remove(0);
-                    manager.updateQuestion(ques,"no");
-                    showQuestion(0);
+                    manager.updateQuestion(updatedElement,"no");
+                    showFirstQuestion();
                 }else{
                     Question updateElement = questions.remove(0);
-                    manager.updateQuestion(ques,"no");
-                    mQuestion.setText("No Questions are available!");
+                    manager.updateQuestion(updateElement,"no");
+                    mQuestion.setText(R.string.no_questions_available);
                     bYes.setVisibility(View.GONE);
                     bNo.setVisibility(View.GONE);
                     bSkip.setVisibility(View.GONE);
@@ -126,11 +115,11 @@ public class SurveyCard extends Card
             @Override
             public void onClick(View view) {
                 if( questions.size() >=2){
-                    Question updatedElement = questions.remove(0);
-                    showQuestion(0);
+                    questions.remove(0);
+                    showFirstQuestion();
                 }else{
-                    Question updateElement = questions.remove(0);
-                    mQuestion.setText("No Questions are available!");
+                    questions.remove(0);
+                    mQuestion.setText(R.string.no_questions_available);
                     bYes.setVisibility(View.GONE);
                     bNo.setVisibility(View.GONE);
                     bSkip.setVisibility(View.GONE);
@@ -144,12 +133,12 @@ public class SurveyCard extends Card
                 if( questions.size() >=2){
                     Question updatedElement = questions.remove(0);
                     // missing: update the database
-                    manager.updateQuestion(ques,"flagged");
-                    showQuestion(0);
+                    manager.updateQuestion(updatedElement,"flagged");
+                    showFirstQuestion();
                 }else{
                     Question updateElement = questions.remove(0);
-                    manager.updateQuestion(ques,"flagged");
-                    mQuestion.setText("No Questions are available!");
+                    manager.updateQuestion(updateElement,"flagged");
+                    mQuestion.setText(R.string.no_questions_available);
                     bYes.setVisibility(View.GONE);
                     bNo.setVisibility(View.GONE);
                     bSkip.setVisibility(View.GONE);
@@ -179,18 +168,9 @@ public class SurveyCard extends Card
     public class Question {
         int questionID;
         String question;
-        int yes;
-        int no;
-        int flagged;
-        int answered;
-        int synced;
 
         public int getQuestionID(){
             return questionID;
-        }
-
-        public String getQuestion(){
-            return question;
         }
     }
 }

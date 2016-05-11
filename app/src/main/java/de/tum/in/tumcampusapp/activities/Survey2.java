@@ -1,5 +1,6 @@
 package de.tum.in.tumcampusapp.activities;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -44,6 +45,7 @@ import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.ChatMember;
 import de.tum.in.tumcampusapp.models.managers.DatabaseManager;
+import de.tum.in.tumcampusapp.models.managers.SurveyManager;
 
 
 public class Survey2 extends BaseActivity {
@@ -59,10 +61,11 @@ public class Survey2 extends BaseActivity {
     boolean[]checked=new boolean[14];
     LinearLayout q1L,q2L,q3L,mainResponseLayout;
     String question1="",question2="",question3="",chosenFaculties="",newDate="",lrzId,dayBeforeWeek="",dayBeforeMonth="";
-    private SQLiteDatabase db;
+    //private SQLiteDatabase db;
     Toolbar main;
     private final String table_name="survey";
     String[] numQues=new String[3];
+    private SurveyManager surveyManager;
 
     public Survey2(){super(R.layout.activity_survey2);}
 
@@ -80,9 +83,11 @@ public class Survey2 extends BaseActivity {
         setUpSpinner();
         setUpSelectTargets();
         buttonsListener();
-        db = DatabaseManager.getDb(getApplicationContext());
-        db.execSQL("CREATE TABLE IF NOT EXISTS survey1 (id INTEGER PRIMARY KEY AUTOINCREMENT, date VARCHAR,userID VARCHAR, question TEXT, faculties TEXT, "
-                + "yes INTEGER,  no INTEGER, flags INTEGER)");
+        surveyManager = new SurveyManager(this);
+        //db = DatabaseManager.getDb(getApplicationContext());
+        //db.execSQL("CREATE TABLE IF NOT EXISTS survey1 (id INTEGER PRIMARY KEY AUTOINCREMENT, date VARCHAR,userID VARCHAR, question TEXT, faculties TEXT, "
+          //      + "yes INTEGER,  no INTEGER, flags INTEGER)");
+
         setUpResponseTab();
         userAllowed();
 
@@ -90,6 +95,7 @@ public class Survey2 extends BaseActivity {
     }
 
     //set up the respone tab layout dynamically depending on number of questions
+    @SuppressLint("SetTextI18n")
     public void setUpResponseTab()
     {
         //get response and question from database->set i<Number of question
@@ -462,14 +468,15 @@ public class Survey2 extends BaseActivity {
                     ContentValues cv = new ContentValues(8);
                     for (int i = 0; i < Integer.parseInt(aSpinner1.getSelectedItem().toString()); i++)
                     {
-                        cv.put("date", newDate);
-                        cv.put("userID", lrzId);
-                        cv.put("question", questions.get(i));
-                        cv.put("faculties", chosenFaculties);
-                        cv.put("yes", 0);
-                        cv.put("no", 0);
-                        cv.put("flags", 0);
-                        db.insert("survey1", null, cv);
+                        //cv.put("date", newDate);
+                        //cv.put("userID", lrzId);
+                        //cv.put("question", questions.get(i));
+                        //cv.put("faculties", chosenFaculties);
+                        //cv.put("yes", 0);
+                        //cv.put("no", 0);
+                        //cv.put("flags", 0);
+                        //db.insert("survey1", null, cv);
+                        surveyManager.insertOwnQuestions(newDate,lrzId,questions.get(i),chosenFaculties);
 
                     }
                     clearData();
@@ -517,9 +524,7 @@ public class Survey2 extends BaseActivity {
     //check if edittext is empty
     public boolean hasQuestion(EditText et)
     {
-        if(!et.getText().toString().isEmpty())
-            return true;
-        return false;
+        return et.getText().toString().isEmpty();
     }
 
     //check if user is allowed to submit survey depending on the last survey date and number of question he submitted before
@@ -527,7 +532,8 @@ public class Survey2 extends BaseActivity {
     {
 
         String weekAgo=getDateBefore1Week();
-        Cursor c = db.rawQuery("SELECT COUNT(*) FROM survey1 WHERE date >= '"+weekAgo+"'", null);
+        //Cursor c = db.rawQuery("SELECT COUNT(*) FROM survey1 WHERE date >= '"+weekAgo+"'", null);
+        Cursor c = surveyManager.numberOfQuestionsFrom(weekAgo);
         if(c.getCount()>0)
             c.moveToFirst();
 
@@ -630,7 +636,8 @@ public class Survey2 extends BaseActivity {
         String nextPossibleDate="";
         ArrayList<String> dates=new ArrayList<String>();
         String weekAgo=getDateBefore1Week();
-        Cursor c = db.rawQuery("SELECT date FROM survey1 WHERE date >= '"+weekAgo+"'", null);
+        //Cursor c = db.rawQuery("SELECT date FROM survey1 WHERE date >= '"+weekAgo+"'", null);
+        Cursor c = surveyManager.lastDateFromLastWeek(weekAgo);
         while(c.moveToNext())
         {
             dates.add(c.getString(0));
