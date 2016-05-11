@@ -9,7 +9,7 @@ import android.util.Log;
 
 import de.tum.in.tumcampusapp.cards.Card;
 import de.tum.in.tumcampusapp.cards.SurveyCard;
-import de.tum.in.tumcampusapp.models.ChatRoom;
+
 
 
 /**
@@ -19,14 +19,16 @@ public class SurveyManager implements Card.ProvidesCard{
     private static int TIME_TO_SYNC = 1800;
     private final Context mContext;
 
-    private SQLiteDatabase db;
+    private final SQLiteDatabase db;
 
     public SurveyManager(Context context){
         db = DatabaseManager.getDb(context);
         this.mContext = context;
         db.execSQL("CREATE TABLE IF NOT EXISTS surveyQuestions (id INTEGER PRIMARY KEY, question VARCHAR, yes BOOLEAN, no BOOLEAN, flagged BOOLEAN, answered BOOLEAN, synced BOOLEAN)");
         db.execSQL("CREATE TABLE IF NOT EXISTS faculties (faculty INTEGER, name VARCHAR)");
-        generateTestData(); // Untill the API is done
+        db.execSQL("CREATE TABLE IF NOT EXISTS survey1 (id INTEGER PRIMARY KEY AUTOINCREMENT, date VARCHAR,userID VARCHAR, question TEXT, faculties TEXT, "
+                + "yes INTEGER,  no INTEGER, flags INTEGER)");
+        //generateTestData(); // Untill the API is done
         //dropTestData(); // untill the API is done
     }
 
@@ -81,5 +83,27 @@ public class SurveyManager implements Card.ProvidesCard{
         db.update("surveyQuestions",cv,"id = ?",new String[] {question.getQuestionID()+""});
         //db.execSQL("UPDATE surveyQuestions SET ?=1, answered=1 WHERE id=?",
           //      new String[]{updateField,"" + question.getQuestionID()});
+    }
+
+    public void insertOwnQuestions(String date, String userID, String question, String faculties){
+        ContentValues cv = new ContentValues(8);
+        cv.put("date", date);
+        cv.put("userID", userID);
+        cv.put("question", question);
+        cv.put("faculties", faculties);
+        cv.put("yes", 0);
+        cv.put("no", 0);
+        cv.put("flags", 0);
+        db.insert("survey1", null, cv);
+    }
+
+    // Helpfunction used for testing in Survey Acitvity untill the API is implemented
+    public Cursor numberOfQuestionsFrom(String weekago){
+        return db.rawQuery("SELECT COUNT(*) FROM survey1 WHERE date >= '"+weekago+"'", null);
+    }
+
+    // Helpfunction used for testing in Survey Acitvity untill the API is implemented
+    public Cursor lastDateFromLastWeek(String weekAgo){
+        return db.rawQuery("SELECT date FROM survey1 WHERE date >= '"+weekAgo+"'", null);
     }
 }
