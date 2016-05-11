@@ -10,6 +10,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.CalendarContract;
+import android.util.Log;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
