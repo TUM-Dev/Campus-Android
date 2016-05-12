@@ -498,8 +498,7 @@ public class Survey2 extends BaseActivity {
 
         Calendar c = Calendar.getInstance();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String strDate = sdf.format(c.getTime());
-        return strDate;
+        return sdf.format(c.getTime());
     }
 
     //setup tab host (survey,Responses)
