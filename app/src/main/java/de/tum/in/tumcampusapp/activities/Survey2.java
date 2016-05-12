@@ -44,7 +44,7 @@ import de.tum.in.tumcampusapp.activities.generic.BaseActivity;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.ChatMember;
-import de.tum.in.tumcampusapp.models.managers.DatabaseManager;
+import de.tum.in.tumcampusapp.models.managers.AbstractManager;
 import de.tum.in.tumcampusapp.models.managers.SurveyManager;
 
 
@@ -524,7 +524,7 @@ public class Survey2 extends BaseActivity {
     //check if edittext is empty
     public boolean hasQuestion(EditText et)
     {
-        return et.getText().toString().isEmpty();
+        return !et.getText().toString().isEmpty();
     }
 
     //check if user is allowed to submit survey depending on the last survey date and number of question he submitted before

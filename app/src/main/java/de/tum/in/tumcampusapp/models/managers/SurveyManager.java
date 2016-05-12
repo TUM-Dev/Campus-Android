@@ -22,7 +22,7 @@ public class SurveyManager implements Card.ProvidesCard{
     private final SQLiteDatabase db;
 
     public SurveyManager(Context context){
-        db = DatabaseManager.getDb(context);
+        db = AbstractManager.getDb(context);
         this.mContext = context;
         db.execSQL("CREATE TABLE IF NOT EXISTS surveyQuestions (id INTEGER PRIMARY KEY, question VARCHAR, yes BOOLEAN, no BOOLEAN, flagged BOOLEAN, answered BOOLEAN, synced BOOLEAN)");
         db.execSQL("CREATE TABLE IF NOT EXISTS faculties (faculty INTEGER, name VARCHAR)");
