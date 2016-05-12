@@ -222,8 +222,8 @@ public class Survey2 extends BaseActivity {
         calendar.add(Calendar.DAY_OF_YEAR, -7);
         Date newDate = calendar.getTime();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String strDate = sdf.format(calendar.getTime());
-        return strDate;
+        return sdf.format(calendar.getTime());
+
     }
 
     //get day before 1month
@@ -233,8 +233,8 @@ public class Survey2 extends BaseActivity {
         calendar.add(Calendar.DAY_OF_YEAR, -30);
         Date newDate = calendar.getTime();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String strDate = sdf.format(calendar.getTime());
-        return strDate;
+        return sdf.format(calendar.getTime());
+
     }
 
     //get all views by IDs
