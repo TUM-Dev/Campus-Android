@@ -17,7 +17,7 @@
 
         <TabHost
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_height="0dp"
             android:id="@+id/tabHost"
             android:layout_weight="1">
 
@@ -42,7 +42,7 @@
                         <LinearLayout
                             android:id="@+id/tabAskQuestion"
                             android:layout_width="fill_parent"
-                            android:layout_height="fill_parent"
+                            android:layout_height="wrap_content"
                             android:orientation="vertical"
                             android:weightSum="1">
 
@@ -50,7 +50,7 @@
                                 android:id="@+id/button_faculties"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="Select Targets"
+                                android:text="@string/select_target_faculties_survey"
                                 android:background="@color/color_primary"
                                 android:textColor="#FFFFFF"
                                 android:layout_marginTop="10dp"/>
@@ -68,12 +68,12 @@
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
                                     android:layout_weight="4"
-                                    android:text="Select the number of questions"
+                                    android:text="@string/select_number_of_questions_survey"
                                     android:textColor="@color/color_primary"
                                     android:layout_marginTop="10dp"
                                     android:textStyle="bold"
                                     android:visibility="gone"
-                                    android:textSize="14dp"
+                                    android:textSize="14sp"
                                     android:id="@+id/selectTv" />
 
                                 <Spinner
@@ -89,15 +89,8 @@
                                 android:layout_height="wrap_content"
                                 android:orientation="vertical">
 
-                            </LinearLayout>
-
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="vertical">
-
                                 <LinearLayout
+                                    tools:ignore="more_than_10_levels"
                                     android:id="@+id/q1L"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
@@ -109,7 +102,7 @@
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
                                         android:layout_marginTop="15dp"
-                                        android:hint="Please enter your first question"/>
+                                        android:hint="@string/enter_first_question_survey"/>
 
                                 </LinearLayout>
                                 <LinearLayout
@@ -125,7 +118,7 @@
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
                                         android:layout_marginTop="15dp"
-                                        android:hint="Please enter your second question"/>
+                                        android:hint="@string/enter_second_question_survey"/>
 
 
                                 </LinearLayout>
@@ -141,7 +134,7 @@
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
                                         android:layout_marginTop="15dp"
-                                        android:hint="Please enter your third question"/>
+                                        android:hint="@string/enter_third_question_survey"/>
 
 
                                 </LinearLayout>
@@ -153,7 +146,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:background="@color/color_primary"
-                                android:text="Submit Question"
+                                android:text="@string/submit_question_survey"
                                 android:paddingRight="7dp"
                                 android:layout_marginTop="15dp"
                                 android:paddingLeft="7dp"
@@ -172,7 +165,7 @@
                             android:id="@+id/mainRes"
                             android:layout_marginTop="15dp"
                             android:layout_width="match_parent"
-                            android:layout_height="fill_parent"
+                            android:layout_height="wrap_content"
                             android:orientation="vertical">
 
 
@@ -185,5 +178,5 @@
             </LinearLayout>
         </TabHost>
     </LinearLayout>
-    include layout="@layout/navigation_drawer" />
+    <include layout="@layout/navigation_drawer" />
 </android.support.v4.widget.DrawerLayout>

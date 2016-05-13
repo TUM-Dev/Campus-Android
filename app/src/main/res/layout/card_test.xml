@@ -49,7 +49,7 @@
                     android:textSize="12sp"
                     android:id="@+id/yesAnswerCard"
                     android:layout_weight="1"
-                    android:text="yes"
+                    android:text="@string/survey_yes"
                     android:background="@color/color_primary"
                     android:textColor="#FFFFFF"
                     android:layout_marginTop="15dp"
@@ -64,7 +64,7 @@
                     android:textSize="12sp"
                     android:id="@+id/noAnswerCard"
                     android:layout_weight="1"
-                    android:text="NO"
+                    android:text="@string/survey_no"
                     android:background="@color/color_primary"
                     android:textColor="#FFFFFF"
                     android:layout_margin="15dp"
@@ -76,13 +76,14 @@
                 android:textSize="12sp"
                 android:id="@+id/ignoreAnswerCard"
                 android:layout_weight="1"
-                android:text="Skip"
+                android:text="@string/survey_skip"
                 android:background="@color/color_primary"
                 android:textColor="#FFFFFF"
                 android:layout_margin="15dp"
                 android:adjustViewBounds="true"/>
 
                 <ImageButton
+                    android:contentDescription="@string/flag_inappropriate"
                     android:src="@drawable/flag"
                     android:layout_width="0dp"
                     android:layout_height="27dp"
