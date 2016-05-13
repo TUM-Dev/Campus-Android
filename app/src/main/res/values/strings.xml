@@ -469,4 +469,6 @@ Signature: %5$s</string>
     <string name="quiz_target_faculty">Please choose your target audience:</string>
     <string name="title_activity_answer_survey">AnswerSurvey</string>
     <string name="no_questions_available">No Questions are available!</string>
+    <string name="one_question_left">Only 1 question left</string>
+    <string name="next_possible_survey_date">Next possible survey date is</string>
 </resources>

@@ -21,12 +21,10 @@ import de.tum.in.tumcampusapp.activities.OpeningHoursListActivity;
 import de.tum.in.tumcampusapp.activities.OrganisationActivity;
 import de.tum.in.tumcampusapp.activities.PersonsSearchActivity;
 import de.tum.in.tumcampusapp.activities.PlansActivity;
-import de.tum.in.tumcampusapp.activities.QuizActivity;
 import de.tum.in.tumcampusapp.activities.RoomFinderActivity;
-import de.tum.in.tumcampusapp.activities.Survey2;
+import de.tum.in.tumcampusapp.activities.SurveyActivity;
 import de.tum.in.tumcampusapp.activities.StudyRoomsActivity;
 
-import de.tum.in.tumcampusapp.activities.Survey2;
 import de.tum.in.tumcampusapp.activities.TransportationActivity;
 import de.tum.in.tumcampusapp.activities.TuitionFeesActivity;
 
@@ -100,7 +98,7 @@ public class DrawerMenuHelper implements NavigationView.OnNavigationItemSelected
             new SideNavigationItem(R.string.study_rooms, R.drawable.ic_group_work,
                     StudyRoomsActivity.class, false, false),
             new SideNavigationItem(R.string.opening_hours, R.drawable.ic_time, OpeningHoursListActivity.class, false, false),
-            new SideNavigationItem(R.string.quiz_title, R.drawable.ic_group_work, Survey2.class, true, false),
+            new SideNavigationItem(R.string.quiz_title, R.drawable.ic_group_work, SurveyActivity.class, true, false),
             new SideNavigationItem(R.string.person_search, R.drawable.ic_users, PersonsSearchActivity.class, true, false),
             new SideNavigationItem(R.string.organisations, R.drawable.ic_organisations, OrganisationActivity.class, true, false),
             new SideNavigationItem(R.string.study_plans, R.drawable.ic_study_plans, CurriculaActivity.class, false, false)

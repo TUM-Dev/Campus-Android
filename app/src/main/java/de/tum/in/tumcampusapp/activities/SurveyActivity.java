@@ -38,6 +38,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.BaseActivity;
@@ -48,7 +49,7 @@ import de.tum.in.tumcampusapp.models.managers.AbstractManager;
 import de.tum.in.tumcampusapp.models.managers.SurveyManager;
 
 
-public class Survey2 extends BaseActivity {
+public class SurveyActivity extends BaseActivity {
 
     int numberOfquestions;
     EditText question1Et,question2Et,question3Et;
@@ -67,7 +68,7 @@ public class Survey2 extends BaseActivity {
     String[] numQues=new String[3];
     private SurveyManager surveyManager;
 
-    public Survey2(){super(R.layout.activity_survey2);}
+    public SurveyActivity(){super(R.layout.activity_survey2);}
 
 
 
@@ -221,7 +222,7 @@ public class Survey2 extends BaseActivity {
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.DAY_OF_YEAR, -7);
         Date newDate = calendar.getTime();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.GERMANY);
         return sdf.format(calendar.getTime());
 
     }
@@ -232,7 +233,7 @@ public class Survey2 extends BaseActivity {
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.DAY_OF_YEAR, -30);
         Date newDate = calendar.getTime();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",Locale.GERMANY);
         return sdf.format(calendar.getTime());
 
     }
@@ -497,7 +498,7 @@ public class Survey2 extends BaseActivity {
         return fDate;*/
 
         Calendar c = Calendar.getInstance();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",Locale.GERMANY);
         return sdf.format(c.getTime());
     }
 
@@ -527,6 +528,7 @@ public class Survey2 extends BaseActivity {
     }
 
     //check if user is allowed to submit survey depending on the last survey date and number of question he submitted before
+    @SuppressLint("SetTextI18n")
     public void userAllowed()
     {
 
@@ -557,14 +559,14 @@ public class Survey2 extends BaseActivity {
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, numQues);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             aSpinner1.setAdapter(adapter);
-            selectTv.setText("Only 1 question left");
+            selectTv.setText(R.string.one_question_left);
         }
 
         else
         {
             String strDate=getNextPossibleDate();
             selectTv.setVisibility(View.VISIBLE);
-            selectTv.setText("Next possible survey date is "+strDate);
+            selectTv.setText(R.string.next_possible_survey_date + strDate);
             facultiesButton.setVisibility(View.GONE);
 
         }
@@ -654,14 +656,14 @@ public class Survey2 extends BaseActivity {
         }
 
         String dtStart = nextPossibleDate;
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",Locale.GERMANY);
         try {
             Date date = format.parse(dtStart);
             Calendar a = Calendar.getInstance();
             a.setTime(date);
             a.add(Calendar.DAY_OF_MONTH, +7);
 
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",Locale.GERMANY);
             nextPossibleDate = sdf.format(a.getTime());
         }
         catch (ParseException e) {

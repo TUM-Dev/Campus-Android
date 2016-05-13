@@ -214,13 +214,13 @@
                 android:value="de.tum.in.tumcampusapp.activities.OpeningHoursListActivity" />
         </activity>
         <activity
-            android:name=".activities.Survey2"
+            android:name=".activities.SurveyActivity"
             android:configChanges="orientation|screenSize"
             android:label="Survey"
             android:parentActivityName=".activities.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.tum.in.tumcampusapp.activities.Survey2" />
+                android:value=".activities.SurveyActivity" />
         </activity>
 
         <activity
