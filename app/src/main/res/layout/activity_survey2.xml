@@ -90,7 +90,6 @@
                                 android:orientation="vertical">
 
                                 <LinearLayout
-                                    tools:ignore="more_than_10_levels"
                                     android:id="@+id/q1L"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"

@@ -25,7 +25,7 @@
     <string name="calendar_not_existing_toast">No local calendar existing</string>
     <string name="semester_summer">Summer term</string>
     <string name="semester_winter">Winter term</string>
-    <string name="quiz_title">Quiz</string>
+    <string name="quiz_title" translatable="false">Quiz</string>
 
     <!-- Roomfinder -->
     <string name="no_map_available">No map available</string>
@@ -449,29 +449,27 @@ Signature: %5$s</string>
     <string name="alarm_date_published_on">Published on:</string>
     <string name="chat_not_setup" translatable="false">Chat is not setup properly, please re-run the wizzard via the settings!</string>
     <string name="www" translatable="false">www</string>
-    <string name="title_activity_survey2">Survey</string>
-    <string name="quiz">Research Survey</string>
-    <string name="research_quiz">Research Quiz</string>
-    <string name="faculty_mathematics">Mathematics</string>
-    <string name="faculty_physics">Physics</string>
-    <string name="faculty_chemistry">Chemistry</string>
-    <string name="faculty_tum_school_of_management">TUM School of Management</string>
-    <string name="faculty_civil_geo_and_environmental_engineering">Civil, Geo and Environmental Engineering</string>
-    <string name="faculty_architecture">Architecture</string>
-    <string name="faculty_mechanical_Engineering">Mechanical Engineering</string>
-    <string name="faculty_electrical_and_computer_engineering">Electrical and Computer Engineering</string>
-    <string name="faculty_informatics">Informatics</string>
-    <string name="faculty_tum_school_of_life_sciences_weihenstephan">TUM School of Life Sciences Weihenstephan</string>
-    <string name="faculty_tum_school_of_medicine">TUM School of Medicine</string>
-    <string name="faculty_sport_and_health_sciences">Sport and Health Sciences</string>
-    <string name="faculty_tum_school_of_education">TUM School of Education</string>
-    <string name="faculty_political_and_social_sciences">Political and Social Sciences</string>
+    <string name="quiz" translatable="false">Research Survey</string>
+    <string name="research_quiz" translatable="false">Research Quiz</string>
+    <string name="faculty_mathematics" translatable="false">Mathematics</string>
+    <string name="faculty_physics" translatable="false">Physics</string>
+    <string name="faculty_chemistry" translatable="false">Chemistry</string>
+    <string name="faculty_tum_school_of_management" translatable="false">TUM School of Management</string>
+    <string name="faculty_civil_geo_and_environmental_engineering" translatable="false">Civil, Geo and Environmental Engineering</string>
+    <string name="faculty_architecture" translatable="false">Architecture</string>
+    <string name="faculty_mechanical_Engineering" translatable="false">Mechanical Engineering</string>
+    <string name="faculty_electrical_and_computer_engineering" translatable="false">Electrical and Computer Engineering</string>
+    <string name="faculty_informatics" translatable="false">Informatics</string>
+    <string name="faculty_tum_school_of_life_sciences_weihenstephan" translatable="false">TUM School of Life Sciences Weihenstephan</string>
+    <string name="faculty_tum_school_of_medicine" translatable="false">TUM School of Medicine</string>
+    <string name="faculty_sport_and_health_sciences" translatable="false">Sport and Health Sciences</string>
+    <string name="faculty_tum_school_of_education" translatable="false">TUM School of Education</string>
+    <string name="faculty_political_and_social_sciences" translatable="false">Political and Social Sciences</string>
     <string name="quiz_target_faculty">Please choose your target audience:</string>
-    <string name="title_activity_answer_survey">AnswerSurvey</string>
     <string name="no_questions_available">No Questions are available!</string>
     <string name="one_question_left">Only 1 question left</string>
-    <string name="next_possible_survey_date">Next possible survey date is</string>
-    <string name="flag_inappropriate">flag for inappropriate questions</string>
+    <string name="next_possible_survey_date">Next possible survey date is </string>
+    <string name="flag_inappropriate" translatable="false">flag for inappropriate questions</string>
     <string name="survey_yes">yes</string>
     <string name="select_target_faculties_survey">Select Target Faculties</string>
     <string name="survey_no">No</string>

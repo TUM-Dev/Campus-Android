@@ -383,4 +383,14 @@ Signatur: %5$s</string>
     <string name="free">Frei</string>
     <string name="occupied">Belegt bis</string>
     <string name="study_rooms">Lernräume</string>
+    <string name="next_possible_survey_date">Das Datum für die nächste Eingabe ist </string>
+    <string name="no_questions_available">Keine Fragen verfügbar</string>
+    <string name="one_question_left">Nur eine Frage übrig</string>
+    <string name="quiz_target_faculty">Bitte wähle die Zielfakultäten aus:</string>
+    <string name="select_number_of_questions_survey">Wähle die Anzahl der Fragen</string>
+    <string name="select_target_faculties_survey">Wähle die Zielfakultäten aus: </string>
+    <string name="submit_question_survey">Frage einreichen</string>
+    <string name="survey_no">Nein</string>
+    <string name="survey_yes">Ja</string>
+    <string name="survey_skip">Überspringen</string>
 </resources>
