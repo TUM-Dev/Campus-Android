@@ -393,4 +393,7 @@ Signatur: %5$s</string>
     <string name="survey_no">Nein</string>
     <string name="survey_yes">Ja</string>
     <string name="survey_skip">Überspringen</string>
+    <string name="enter_first_question_survey">Bitte gebe deine erste Frage ein</string>
+    <string name="enter_second_question_survey">Bitte gebe deine zweite Frage ein</string>
+    <string name="enter_third_question_survey">Bitte gebe deine dritte Frage ein</string>
 </resources>

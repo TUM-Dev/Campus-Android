@@ -51,20 +51,18 @@ import de.tum.in.tumcampusapp.models.managers.SurveyManager;
 
 public class SurveyActivity extends BaseActivity {
 
-    int numberOfquestions;
     EditText question1Et,question2Et,question3Et;
-    Spinner aSpinner1,questioType1,questioType2,questioType3;
-    TextView selectTv,tv111;
+    Spinner aSpinner1;
+    TextView selectTv;
     TabHost tabHost;
     Button submitSurveyButton , facultiesButton;
     ArrayList<String> questions=new ArrayList<>();
     ArrayList<String> selectedFaculties = new ArrayList<>();
     boolean[]checked=new boolean[14];
     LinearLayout mainResponseLayout;
-    String question1="",question2="",question3="",chosenFaculties="",newDate="",lrzId,dayBeforeWeek="",dayBeforeMonth="";
+    String question1="",question2="",question3="",chosenFaculties="",newDate="",lrzId;
     //private SQLiteDatabase db;
     Toolbar main;
-    private final String table_name="survey";
     String[] numQues=new String[3];
     private SurveyManager surveyManager;
 
@@ -228,15 +226,6 @@ public class SurveyActivity extends BaseActivity {
     }
 
     //get day before 1month
-    public String getDateBefore1Month()
-    {
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.DAY_OF_YEAR, -30);
-        Date newDate = calendar.getTime();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",Locale.GERMANY);
-        return sdf.format(calendar.getTime());
-
-    }
 
     //get all views by IDs
     public void findViewsById()
@@ -672,5 +661,14 @@ public class SurveyActivity extends BaseActivity {
         return nextPossibleDate;
     }
 
+    /*public String getDateBefore1Month()
+    {
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DAY_OF_YEAR, -30);
+        Date newDate = calendar.getTime();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",Locale.GERMANY);
+        return sdf.format(calendar.getTime());
+
+    }*/
 
 }
