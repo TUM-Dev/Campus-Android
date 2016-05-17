@@ -60,7 +60,7 @@ public class SurveyActivity extends BaseActivity {
     ArrayList<String> questions=new ArrayList<>();
     ArrayList<String> selectedFaculties = new ArrayList<>();
     boolean[]checked=new boolean[14];
-    LinearLayout q1L,q2L,q3L,mainResponseLayout;
+    LinearLayout mainResponseLayout;
     String question1="",question2="",question3="",chosenFaculties="",newDate="",lrzId,dayBeforeWeek="",dayBeforeMonth="";
     //private SQLiteDatabase db;
     Toolbar main;
@@ -241,10 +241,7 @@ public class SurveyActivity extends BaseActivity {
     //get all views by IDs
     public void findViewsById()
     {
-        q1L=(LinearLayout)findViewById(R.id.q1L);
         mainResponseLayout=(LinearLayout)findViewById(R.id.mainRes);
-        q2L=(LinearLayout)findViewById(R.id.q2L);
-        q3L=(LinearLayout)findViewById(R.id.q3L);
         question1Et = (EditText) findViewById(R.id.question1Et);
         question2Et = (EditText) findViewById(R.id.question2Et);
         question3Et = (EditText) findViewById(R.id.question3Et);
@@ -313,7 +310,7 @@ public class SurveyActivity extends BaseActivity {
                                     submitSurveyButton.setVisibility(View.VISIBLE);
                                     selectTv.setVisibility(View.VISIBLE);
                                     aSpinner1.setVisibility(View.VISIBLE);
-                                    q1L.setVisibility(View.VISIBLE);
+                                    question1Et.setVisibility(View.VISIBLE);
                                     aSpinner1.setSelection(0);
 
 
@@ -322,9 +319,9 @@ public class SurveyActivity extends BaseActivity {
                                 else
                                 {
                                     submitSurveyButton.setVisibility(View.GONE);
-                                    q1L.setVisibility(View.GONE);
-                                    q2L.setVisibility(View.GONE);
-                                    q3L.setVisibility(View.GONE);
+                                    question1Et.setVisibility(View.GONE);
+                                    question2Et.setVisibility(View.GONE);
+                                    question3Et.setVisibility(View.GONE);
                                     selectTv.setVisibility(View.GONE);
                                     aSpinner1.setVisibility(View.GONE);
 
@@ -430,9 +427,9 @@ public class SurveyActivity extends BaseActivity {
         for(int i=0;i<checked.length;i++)
             checked[i]=false;
         submitSurveyButton.setVisibility(View.GONE);
-        q1L.setVisibility(View.GONE);
-        q2L.setVisibility(View.GONE);
-        q3L.setVisibility(View.GONE);
+        question1Et.setVisibility(View.GONE);
+        question2Et.setVisibility(View.GONE);
+        question3Et.setVisibility(View.GONE);
         selectTv.setVisibility(View.GONE);
         aSpinner1.setVisibility(View.GONE);
         aSpinner1.setSelection(0);
@@ -553,20 +550,21 @@ public class SurveyActivity extends BaseActivity {
             aSpinner1.setAdapter(adapter);
         }
 
+
         else if(x==2)
         {
             numQues= new String[]{"1"};
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, numQues);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             aSpinner1.setAdapter(adapter);
-            selectTv.setText(R.string.one_question_left);
+            selectTv.setText(getResources().getString(R.string.one_question_left));
         }
 
         else
         {
             String strDate=getNextPossibleDate();
             selectTv.setVisibility(View.VISIBLE);
-            selectTv.setText(R.string.next_possible_survey_date + strDate);
+            selectTv.setText(getResources().getString(R.string.next_possible_survey_date)+" " + strDate);
             facultiesButton.setVisibility(View.GONE);
 
         }
@@ -593,22 +591,22 @@ public class SurveyActivity extends BaseActivity {
                 // If One
                 if (selectedItem.equals("1"))
                 {
-                    q1L.setVisibility(View.VISIBLE);
-                    q2L.setVisibility(View.GONE);
-                    q3L.setVisibility(View.GONE);
+                    question1Et.setVisibility(View.VISIBLE);
+                    question2Et.setVisibility(View.GONE);
+                    question3Et.setVisibility(View.GONE);
                     question2Et.setText("");
                     question3Et.setText("");
                 }
                 else if (selectedItem.equals("2"))
                 {
-                    q2L.setVisibility(View.VISIBLE);
-                    q3L.setVisibility(View.GONE);
+                    question2Et.setVisibility(View.VISIBLE);
+                    question3Et.setVisibility(View.GONE);
                     question3Et.setText("");
                 }
                 else if (selectedItem.equals("3"))
                 {
-                    q2L.setVisibility(View.VISIBLE);
-                    q3L.setVisibility(View.VISIBLE);
+                    question2Et.setVisibility(View.VISIBLE);
+                    question3Et.setVisibility(View.VISIBLE);
 
                 }
             }

@@ -36,7 +36,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
                     <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-                        android:id="@+id/scrollView1"
                         android:layout_width="fill_parent"
                         android:layout_height="fill_parent" >
                         <LinearLayout
@@ -89,54 +88,34 @@
                                 android:layout_height="wrap_content"
                                 android:orientation="vertical">
 
-                                <LinearLayout
-                                    android:id="@+id/q1L"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_margin="8dp"
-                                    android:visibility="gone"
-                                    android:orientation="vertical">
+
                                     <EditText
                                         android:id="@+id/question1Et"
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
                                         android:layout_marginTop="15dp"
+                                        android:visibility="gone"
                                         android:hint="@string/enter_first_question_survey"/>
 
-                                </LinearLayout>
-                                <LinearLayout
-                                    android:id="@+id/q2L"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_margin="8dp"
-                                    android:visibility="gone"
-                                    android:orientation="vertical">
 
                                     <EditText
                                         android:id="@+id/question2Et"
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
                                         android:layout_marginTop="15dp"
+                                        android:visibility="gone"
                                         android:hint="@string/enter_second_question_survey"/>
 
-
-                                </LinearLayout>
-                                <LinearLayout
-                                    android:id="@+id/q3L"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_margin="8dp"
-                                    android:visibility="gone"
-                                    android:orientation="vertical">
                                     <EditText
                                         android:id="@+id/question3Et"
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
                                         android:layout_marginTop="15dp"
+                                        android:visibility="gone"
                                         android:hint="@string/enter_third_question_survey"/>
 
 
-                                </LinearLayout>
+
 
                             </LinearLayout>
 
