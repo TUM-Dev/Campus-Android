@@ -9,9 +9,6 @@ import android.util.Log;
 
 import de.tum.in.tumcampusapp.cards.Card;
 import de.tum.in.tumcampusapp.cards.SurveyCard;
-
-
-
 /**
  * Created by aser on 5/5/16.
  */
