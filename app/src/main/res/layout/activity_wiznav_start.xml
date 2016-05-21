@@ -52,20 +52,19 @@
                         android:padding="@dimen/padding_default"
                         android:text="@string/welcome_msg" />
 
+                    <Spinner
+                        android:id="@+id/majorSpinner"
+                        android:padding="@dimen/padding_default"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                    </Spinner>
+
                     <EditText
                         android:id="@+id/lrd_id"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="text"
                         android:padding="@dimen/padding_default" />
-
-                    <Spinner
-                        android:id="@+id/majorSpinner"
-                        android:padding="8dp"
-                        android:layout_marginTop="20dp"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-                    </Spinner>
 
                 </LinearLayout>
             </ScrollView>

@@ -84,7 +84,7 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<Void,Boo
 
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                String selectedItem = (String) adapterView.getItemAtPosition(i);
+                userMajor = (String) adapterView.getItemAtPosition(i);
 
             }
 
@@ -123,6 +123,7 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<Void,Boo
             return;
         }
 
+        //insert user major to db. Will be used in survey activity for sending questions to other users.
         userMajor=userMajorSpinner.getSelectedItem().toString();
         lrzId = editText.getText().toString();
         Editor editor = sharedPrefs.edit();

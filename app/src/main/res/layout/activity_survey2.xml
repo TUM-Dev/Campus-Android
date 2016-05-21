@@ -125,10 +125,9 @@
                                 android:layout_height="wrap_content"
                                 android:background="@color/color_primary"
                                 android:text="@string/submit_question_survey"
-                                android:paddingRight="7dp"
                                 android:layout_marginTop="15dp"
-                                android:paddingLeft="7dp"
                                 android:textColor="#FFFFFF"
+                                android:padding="@dimen/padding_default"
                                 android:visibility="gone"
                                 android:layout_gravity="center"/>
 
