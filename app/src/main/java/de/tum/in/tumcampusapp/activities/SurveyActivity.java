@@ -62,7 +62,7 @@ public class SurveyActivity extends BaseActivity {
     LinearLayout mainResponseLayout;
     String question1="",question2="",question3="",chosenFaculties="",newDate="",lrzId;
     //private SQLiteDatabase db;
-    Toolbar main;
+
     String[] numQues=new String[3];
     private SurveyManager surveyManager;
 
