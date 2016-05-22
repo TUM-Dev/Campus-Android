@@ -5,16 +5,14 @@ import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Color;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -22,36 +20,25 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import org.w3c.dom.Text;
-
-
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Locale;
-
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.BaseActivity;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
-import de.tum.in.tumcampusapp.models.ChatMember;
-import de.tum.in.tumcampusapp.models.managers.AbstractManager;
 import de.tum.in.tumcampusapp.models.managers.SurveyManager;
 
 
 public class SurveyActivity extends BaseActivity {
 
-    EditText question1Et,question2Et,question3Et;
     Spinner aSpinner1;
     TextView selectTv;
     TabHost tabHost;
@@ -59,8 +46,8 @@ public class SurveyActivity extends BaseActivity {
     ArrayList<String> questions=new ArrayList<>();
     ArrayList<String> selectedFaculties = new ArrayList<>();
     boolean[]checked=new boolean[14];
-    LinearLayout mainResponseLayout;
-    String question1="",question2="",question3="",chosenFaculties="",newDate="",lrzId;
+    LinearLayout mainResponseLayout,questionsLayout;
+    String chosenFaculties="",newDate="",lrzId;
     //private SQLiteDatabase db;
 
     String[] numQues=new String[3];
@@ -204,7 +191,7 @@ public class SurveyActivity extends BaseActivity {
                     in.putExtra("responses", 1);
                     startActivity(in);*/
                     Snackbar snackbar = Snackbar
-                            .make(findViewById(R.id.drawer_layout), "Question has been deleted " , Snackbar.LENGTH_LONG);
+                            .make(findViewById(R.id.drawer_layout), getResources().getString(R.string.question_deleted) , Snackbar.LENGTH_LONG);
 
                     snackbar.show();
 
@@ -231,12 +218,10 @@ public class SurveyActivity extends BaseActivity {
     public void findViewsById()
     {
         mainResponseLayout=(LinearLayout)findViewById(R.id.mainRes);
-        question1Et = (EditText) findViewById(R.id.question1Et);
-        question2Et = (EditText) findViewById(R.id.question2Et);
-        question3Et = (EditText) findViewById(R.id.question3Et);
         aSpinner1 = (Spinner) findViewById(R.id.spinner);
         submitSurveyButton=(Button)findViewById(R.id.submitSurveyButton);
         selectTv=(TextView)findViewById(R.id.selectTv);
+        questionsLayout=(LinearLayout)findViewById(R.id.questionsEts);
 
     }
 
@@ -262,7 +247,7 @@ public class SurveyActivity extends BaseActivity {
 
         final String[] faculties = {math, physics, chemistry, tum_manag, cge, architecture, mechanical, electrical, informatics, tum_life_sc, medicine, sport, edu, political_social};
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Select target Students");
+        builder.setTitle(getResources().getString(R.string.quiz_target_faculty));
 
         facultiesButton = (Button) findViewById(R.id.button_faculties);
         facultiesButton.setOnClickListener(new View.OnClickListener() {
@@ -299,7 +284,6 @@ public class SurveyActivity extends BaseActivity {
                                     submitSurveyButton.setVisibility(View.VISIBLE);
                                     selectTv.setVisibility(View.VISIBLE);
                                     aSpinner1.setVisibility(View.VISIBLE);
-                                    question1Et.setVisibility(View.VISIBLE);
                                     aSpinner1.setSelection(0);
 
 
@@ -308,14 +292,11 @@ public class SurveyActivity extends BaseActivity {
                                 else
                                 {
                                     submitSurveyButton.setVisibility(View.GONE);
-                                    question1Et.setVisibility(View.GONE);
-                                    question2Et.setVisibility(View.GONE);
-                                    question3Et.setVisibility(View.GONE);
                                     selectTv.setVisibility(View.GONE);
                                     aSpinner1.setVisibility(View.GONE);
 
 
-                                    Toast.makeText(getApplicationContext(),"At least select 1 Faculty",Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getApplicationContext(),getResources().getString(R.string.select_one_faculty),Toast.LENGTH_SHORT).show();
                                 }
                             }
                         }).
@@ -341,61 +322,32 @@ public class SurveyActivity extends BaseActivity {
     //get survey data (number of questions,departments,questions)
     public boolean getSurveyrData()
     {
-
-        if(aSpinner1.getSelectedItemPosition()==0)
-        {
-            if(hasQuestion(question1Et))
+        int numberOfQuestion=aSpinner1.getSelectedItemPosition()+1;
+        boolean done=true;
+        for(int i=0;i<numberOfQuestion;i++)
+        {   EditText v=(EditText)questionsLayout.findViewWithTag("question"+(i+1));
+            if(hasQuestion(v))
             {
-                //still userID
-                question1 = question1Et.getText().toString();
-                questions.add(question1);
-                newDate=getDateTime();
-                chosenFaculties=getSelectedFaculties(selectedFaculties);
-                Toast.makeText(getApplicationContext(),"Survey has been submitted!",Toast.LENGTH_SHORT).show();
-                return true;
+                questions.add(v.getText().toString());
             }
+
             else
-                Toast.makeText(getApplicationContext(),"Please complete question form",Toast.LENGTH_SHORT).show();
+            {
+                done=false;
+                questions.clear();
+                break;
+            }
         }
 
-        else if(aSpinner1.getSelectedItemPosition()==1)
+        if(done)
         {
-            if(hasQuestion(question1Et)&&hasQuestion(question2Et))
-            {
-                //still userID
-                question1 = question1Et.getText().toString();
-                question2=question2Et.getText().toString();
-                questions.add(question1);
-                questions.add(question2);
-                newDate=getDateTime();
-                chosenFaculties=getSelectedFaculties(selectedFaculties);
-                Toast.makeText(getApplicationContext(),"Survey has been submitted!",Toast.LENGTH_SHORT).show();
-                return true;
-            }
-            else
-                Toast.makeText(getApplicationContext(),"Please complete question form",Toast.LENGTH_SHORT).show();
+            newDate=getDateTime();
+            chosenFaculties=getSelectedFaculties(selectedFaculties);
+            Toast.makeText(getApplicationContext(),getResources().getString(R.string.survey_submitted),Toast.LENGTH_SHORT).show();
+            return true;
         }
-
         else
-        {
-            if(hasQuestion(question1Et)&&hasQuestion(question2Et)&&hasQuestion(question3Et))
-            {
-                //still userID
-                question1 = question1Et.getText().toString();
-                question2=question2Et.getText().toString();
-                question3=question3Et.getText().toString();
-                questions.add(question1);
-                questions.add(question2);
-                questions.add(question3);
-                newDate=getDateTime();
-                chosenFaculties=getSelectedFaculties(selectedFaculties);
-                Toast.makeText(getApplicationContext(),"Survey has been submitted!",Toast.LENGTH_SHORT).show();
-                return true;
-            }
-            else
-                Toast.makeText(getApplicationContext(),"Please complete question form",Toast.LENGTH_SHORT).show();
-
-        }
+            Toast.makeText(getApplicationContext(),getResources().getString(R.string.complete_question_form),Toast.LENGTH_SHORT).show();
 
         return false;
     }
@@ -403,25 +355,17 @@ public class SurveyActivity extends BaseActivity {
     //clear data
     public void clearData()
     {
-        question1Et.setText("");
-        question2Et.setText("");
-        question3Et.setText("");
         selectedFaculties.clear();
         chosenFaculties="";
-        question1="";
-        question2="";
-        question3="";
         questions.clear();
         newDate="";
         for(int i=0;i<checked.length;i++)
             checked[i]=false;
         submitSurveyButton.setVisibility(View.GONE);
-        question1Et.setVisibility(View.GONE);
-        question2Et.setVisibility(View.GONE);
-        question3Et.setVisibility(View.GONE);
         selectTv.setVisibility(View.GONE);
         aSpinner1.setVisibility(View.GONE);
         aSpinner1.setSelection(0);
+        questionsLayout.removeAllViews();
     }
 
     //get selected faculties from spinner
@@ -447,13 +391,14 @@ public class SurveyActivity extends BaseActivity {
             @Override
             public void onClick(View view)
             {
-                //get survey data
+
                 if(getSurveyrData())
                 {
+
                     //insert into database.
                     Date date = Calendar.getInstance().getTime();
                     ContentValues cv = new ContentValues(8);
-                    for (int i = 0; i < Integer.parseInt(aSpinner1.getSelectedItem().toString()); i++)
+                    for (int i = 0; i < aSpinner1.getSelectedItemPosition()+1; i++)
                     {
                         //cv.put("date", newDate);
                         //cv.put("userID", lrzId);
@@ -495,15 +440,15 @@ public class SurveyActivity extends BaseActivity {
         tabHost.setup();
 
         // First Tab
-        TabHost.TabSpec tabSpec = tabHost.newTabSpec("survey");
+        TabHost.TabSpec tabSpec = tabHost.newTabSpec(getResources().getString(R.string.tab_survey));
         tabSpec.setContent(R.id.tabAskQuestion);
-        tabSpec.setIndicator("Survey");
+        tabSpec.setIndicator(getResources().getString(R.string.tab_survey));
         tabHost.addTab(tabSpec);
 
         // Second Tab
-        tabSpec = tabHost.newTabSpec("Responses");
+        tabSpec = tabHost.newTabSpec(getResources().getString(R.string.tab_responses));
         tabSpec.setContent(R.id.tabSeeResponses);
-        tabSpec.setIndicator("Responses");
+        tabSpec.setIndicator(getResources().getString(R.string.tab_responses));
         tabHost.addTab(tabSpec);
     }
 
@@ -526,27 +471,17 @@ public class SurveyActivity extends BaseActivity {
 
         int x=c.getInt(0);
 
-        if(x==0)
+        if(x<3)
         {
-
-        }
-
-        else if(x==1)
-        {
-            numQues= new String[]{"1", "2"};
+            numQues=new String[3-x];
+            for(int i=0;i<numQues.length;i++) {
+                numQues[i]= String.valueOf(i+1);
+            }
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, numQues);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             aSpinner1.setAdapter(adapter);
-        }
-
-
-        else if(x==2)
-        {
-            numQues= new String[]{"1"};
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, numQues);
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            aSpinner1.setAdapter(adapter);
-            selectTv.setText(getResources().getString(R.string.one_question_left));
+            if(x==2)
+                selectTv.setText(getResources().getString(R.string.one_question_left));
         }
 
         else
@@ -575,30 +510,24 @@ public class SurveyActivity extends BaseActivity {
 
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                String selectedItem = (String) adapterView.getItemAtPosition(i);
+                int numberOfQuestions = adapterView.getSelectedItemPosition();
+                questionsLayout.removeAllViews();
 
-                // If One
-                if (selectedItem.equals("1"))
+                for(int y=0; y<=numberOfQuestions; y++)
                 {
-                    question1Et.setVisibility(View.VISIBLE);
-                    question2Et.setVisibility(View.GONE);
-                    question3Et.setVisibility(View.GONE);
-                    question2Et.setText("");
-                    question3Et.setText("");
+                    EditText questionEt = new EditText(getApplicationContext());
+                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                    questionEt.setTextColor(ContextCompat.getColor(getApplicationContext(),R.color.color_primary));
+                    questionEt.setInputType(EditorInfo.TYPE_CLASS_TEXT);
+                    params.setMargins(0, 30, 0, 0);
+                    questionEt.setFocusable(true);
+                    questionEt.setLayoutParams(params);
+                    questionEt.setHint(getResources().getString(R.string.enter_question_survey)+" "+(y+1));
+                    questionEt.setTag("question"+(y+1));
+                    questionsLayout.addView(questionEt);
                 }
-                else if (selectedItem.equals("2"))
-                {
-                    question2Et.setVisibility(View.VISIBLE);
-                    question3Et.setVisibility(View.GONE);
-                    question3Et.setText("");
-                }
-                else if (selectedItem.equals("3"))
-                {
-                    question2Et.setVisibility(View.VISIBLE);
-                    question3Et.setVisibility(View.VISIBLE);
-
-                }
-            }
+             }
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {

@@ -477,8 +477,16 @@ Signature: %5$s</string>
     <string name="enter_first_question_survey">Please enter your first question</string>
     <string name="enter_second_question_survey">Please enter your second question</string>
     <string name="enter_third_question_survey">Please enter your third question</string>
+    <string name="enter_question_survey">Please enter question</string>
     <string name="submit_question_survey">Submit Question</string>
     <string name="quiz_target_faculty">Please choose your target audience:</string>
+    <string name="tab_survey">Survey</string>
+    <string name="tab_responses">Responses</string>
+    <string name="survey_submitted">Survey has been submitted</string>
+    <string name="complete_question_form">Please complete question form</string>
+    <string name="select_one_faculty">At least select one faculty</string>
+    <string name="question_deleted">Question has been deleted</string>
+
 </resources>
 
 

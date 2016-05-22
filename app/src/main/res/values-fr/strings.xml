@@ -385,4 +385,11 @@
     <string name="survey_no">Non</string>
     <string name="survey_yes">Qui</string>
     <string name="survey_skip">Sauter</string>
+    <string name="enter_question_survey">Entrez question s\'il vous plait</string>
+    <string name="select_one_faculty">Wahle bitte mindestens eine Fakultat aus</string>
+    <string name="question_deleted">Die Frage wurde geloscht</string>
+    <string name="complete_question_form">Bitte fulle das Formular aus</string>
+    <string name="survey_submitted">Die Umfrage wurde eingereicht</string>
+    <string name="tab_responses">Antworten</string>
+    <string name="tab_survey">Umfrage</string>
 </resources>

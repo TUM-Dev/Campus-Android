@@ -89,35 +89,6 @@
                                 android:layout_height="wrap_content"
                                 android:orientation="vertical">
 
-
-                                    <EditText
-                                        android:id="@+id/question1Et"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:layout_marginTop="15dp"
-                                        android:visibility="gone"
-                                        android:hint="@string/enter_first_question_survey"/>
-
-
-                                    <EditText
-                                        android:id="@+id/question2Et"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:layout_marginTop="15dp"
-                                        android:visibility="gone"
-                                        android:hint="@string/enter_second_question_survey"/>
-
-                                    <EditText
-                                        android:id="@+id/question3Et"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:layout_marginTop="15dp"
-                                        android:visibility="gone"
-                                        android:hint="@string/enter_third_question_survey"/>
-
-
-
-
                             </LinearLayout>
 
                             <Button

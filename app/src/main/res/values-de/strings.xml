@@ -396,4 +396,11 @@ Signatur: %5$s</string>
     <string name="enter_first_question_survey">Bitte gebe deine erste Frage ein</string>
     <string name="enter_second_question_survey">Bitte gebe deine zweite Frage ein</string>
     <string name="enter_third_question_survey">Bitte gebe deine dritte Frage ein</string>
+    <string name="enter_question_survey">Stelle bitte frage Nummer</string>
+    <string name="complete_question_form">Bitte fulle das Formular aus</string>
+    <string name="question_deleted">Die Frage wurde geloscht</string>
+    <string name="select_one_faculty">Wahle bitte mindestens eine Fakultat aus</string>
+    <string name="survey_submitted">Die Umfrage wurde eingereicht</string>
+    <string name="tab_responses">Antworten</string>
+    <string name="tab_survey">Umfrage</string>
 </resources>

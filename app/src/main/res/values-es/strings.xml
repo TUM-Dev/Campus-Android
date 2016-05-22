@@ -377,5 +377,12 @@
     <string name="enter_first_question_survey">Por favor introduzca su primera pregunta</string>
     <string name="enter_second_question_survey">Por favor introduzca su segundo pregunta</string>
     <string name="enter_third_question_survey">Por favor introduzca su tercero pregunta</string>
+    <string name="enter_question_survey">Por favor introduzca pregunta</string>
+    <string name="select_one_faculty">Wahle bitte mindestens eine Fakultat aus</string>
+    <string name="question_deleted">Die Frage wurde geloscht</string>
+    <string name="complete_question_form">Bitte fulle das Formular aus</string>
+    <string name="survey_submitted">Die Umfrage wurde eingereicht</string>
+    <string name="tab_responses">Antworten</string>
+    <string name="tab_survey">Umfrage</string>
     <!-- END Translated, please do not change identifiers -->
 </resources>
