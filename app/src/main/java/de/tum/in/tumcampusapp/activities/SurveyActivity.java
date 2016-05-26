@@ -53,7 +53,7 @@ public class SurveyActivity extends BaseActivity {
     String[] numQues=new String[3];
     private SurveyManager surveyManager;
 
-    public SurveyActivity(){super(R.layout.activity_survey2);}
+    public SurveyActivity(){super(R.layout.activity_survey);}
 
 
 
