@@ -18,19 +18,13 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
-public class MainActivityTest {
+public class MainActivityTest extends BaseActivityTest {
 
     @Rule
     public ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule<>(MainActivity.class);
 
     @Test
-    public void toolbarTest() {
-        onView(withId(R.id.main_toolbar))
-                .check(matches(isDisplayed()));
-    }
-
-    @Test
-    public void mainComponentIsDisplayed() throws Exception {
+    public void mainComponentDisplayedTest() {
         onView(withId(R.id.cards_view))
                 .check(matches(isDisplayed()));
 

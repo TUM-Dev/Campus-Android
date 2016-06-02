@@ -15,7 +15,6 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
@@ -23,21 +22,13 @@ import static org.hamcrest.Matchers.allOf;
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
-public class RoomFinderActivityTest {
-
-    private static final String testRoom = "00.08.053";
+public class RoomFinderActivityTest extends BaseActivityTest {
 
     @Rule
     public ActivityTestRule<RoomFinderActivity> mActivityRule = new ActivityTestRule<>(RoomFinderActivity.class);
 
     @Test
-    public void toolbarTest() {
-        onView(withId(R.id.main_toolbar))
-                .check(matches(isCompletelyDisplayed()));
-    }
-
-    @Test
-    public void mainComponentIsDisplayed() {
+    public void mainComponentDisplayedTest() {
         onView(withId(R.id.list))
                 .check(matches(isDisplayed()));
     }
@@ -53,7 +44,7 @@ public class RoomFinderActivityTest {
         // android.widget.SearchView. R.id.search_src_text is the id created by appcompat
         // search widget.
         onView(withId(R.id.search_src_text))
-                .perform(typeText(testRoom + "\n"), closeSoftKeyboard());
+                .perform(typeText("00.08.053\n"), closeSoftKeyboard());
 
         Thread.sleep(500);
 
