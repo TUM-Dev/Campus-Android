@@ -1,7 +1,6 @@
 package de.tum.in.tumcampusapp.auxiliary;
 
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
@@ -44,26 +43,6 @@ public class NetUtils {
         //Set our max wait time for each request
         client.setConnectTimeout(HTTP_TIMEOUT, TimeUnit.MILLISECONDS);
         client.setReadTimeout(HTTP_TIMEOUT, TimeUnit.MILLISECONDS);
-    }
-
-    private void setHttpConnectionParams(Request.Builder builder) {
-        //Clearly identify all requests from this app
-        String userAgent = "TCA Client";
-        if (G.appVersion != null && !G.appVersion.equals("unknown")) {
-            userAgent += " " + G.appVersion;
-            if (G.appVersionCode != -1) {
-                userAgent += "/" + G.appVersionCode;
-            }
-        }
-
-        builder.header("User-Agent", userAgent);
-        builder.addHeader("X-DEVICE-ID", AuthenticationManager.getDeviceID(mContext));
-        builder.addHeader("X-ANDROID-VERSION", android.os.Build.VERSION.RELEASE);
-        try {
-            builder.addHeader("X-APP-VERSION", mContext.getPackageManager().getPackageInfo(mContext.getPackageName(), 0).versionName);
-        } catch (PackageManager.NameNotFoundException e) {
-            //Don't log any errors, as we don't really care!
-        }
     }
 
     public static JSONObject downloadJson(Context context, String url) throws IOException, JSONException {
@@ -129,6 +108,26 @@ public class NetUtils {
             }
         }
         return result.toString();
+    }
+
+    private void setHttpConnectionParams(Request.Builder builder) {
+        //Clearly identify all requests from this app
+        String userAgent = "TCA Client";
+        if (G.appVersion != null && !G.appVersion.equals("unknown")) {
+            userAgent += " " + G.appVersion;
+            if (G.appVersionCode != -1) {
+                userAgent += "/" + G.appVersionCode;
+            }
+        }
+
+        try {
+            builder.header("User-Agent", userAgent);
+            builder.addHeader("X-DEVICE-ID", AuthenticationManager.getDeviceID(mContext));
+            builder.addHeader("X-ANDROID-VERSION", android.os.Build.VERSION.RELEASE);
+            builder.addHeader("X-APP-VERSION", mContext.getPackageManager().getPackageInfo(mContext.getPackageName(), 0).versionName);
+        } catch (Exception e) {
+            //Don't log any errors, as we don't really care!
+        }
     }
 
     private ResponseBody getOkHttpResponse(String url) throws IOException {
