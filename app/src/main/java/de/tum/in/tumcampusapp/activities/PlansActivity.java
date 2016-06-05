@@ -61,7 +61,7 @@ public class PlansActivity extends BaseActivity implements OnItemClickListener {
 
             new AlertDialog.Builder(this)
                     .setTitle("MVV plans")
-                    .setMessage("Please press ok to download mvv plans otherwise you can't use this feature")
+                    .setMessage(getResources().getString(R.string.mvv_download))
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
 

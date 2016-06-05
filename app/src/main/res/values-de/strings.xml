@@ -383,4 +383,5 @@ Signatur: %5$s</string>
     <string name="free">Frei</string>
     <string name="occupied">Belegt bis</string>
     <string name="study_rooms">Lernräume</string>
+    <string name="mvv_download">Bitte auf ok klicken um die MVV-Plans herunterzuladen, sonst kannst Du dieses Feature nicht benutzen</string>
 </resources>
