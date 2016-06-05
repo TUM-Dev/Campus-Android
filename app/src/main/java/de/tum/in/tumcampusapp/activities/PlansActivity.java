@@ -47,12 +47,12 @@ public class PlansActivity extends BaseActivity implements OnItemClickListener {
 
         if (!sharedPref.contains("mvvplans_downloaded")) {
             editor.putInt("mvvplans_downloaded",0);
-            editor.commit();
+            editor.apply();
         }
 
         if (!sharedPref.contains("mvvplans_downloaded")) {
             editor.putInt("mvvplans_downloaded",0);
-            editor.commit();
+            editor.apply();
         }
 
         if(sharedPref.getInt("mvvplans_downloaded",0) == 0){
@@ -85,7 +85,7 @@ public class PlansActivity extends BaseActivity implements OnItemClickListener {
                             SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
                             SharedPreferences.Editor editor = sharedPref.edit();
                             editor.putInt("mvvplans_downloaded",1);
-                            editor.commit();
+                            editor.apply();
                         }
                     })
                     .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
