@@ -10,6 +10,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AlertDialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
@@ -24,6 +25,9 @@ import android.widget.Spinner;
 import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.zxing.common.StringUtils;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -32,9 +36,16 @@ import java.util.Date;
 import java.util.Locale;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.BaseActivity;
+import de.tum.in.tumcampusapp.auxiliary.AuthenticationManager;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
+import de.tum.in.tumcampusapp.models.ChatRoom;
+import de.tum.in.tumcampusapp.models.Question;
+import de.tum.in.tumcampusapp.models.TUMCabeClient;
 import de.tum.in.tumcampusapp.models.managers.SurveyManager;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 
 public class SurveyActivity extends BaseActivity {
@@ -392,6 +403,27 @@ public class SurveyActivity extends BaseActivity {
             public void onClick(View view)
             {
 
+                Question ques = new Question("testquestionandroid", "1,2");
+                Log.e("Test_deviceID",AuthenticationManager.getDeviceID(getApplicationContext()));
+                try {
+                    TUMCabeClient.getInstance(getApplicationContext()).createQuestion(ques,new Callback<Question>(){
+
+                        @Override
+                        public void success(Question question, Response response) {
+                            Log.e("Test_resp","Succeeded: "+response.getBody().toString());
+                        }
+
+                        @Override
+                        public void failure(RetrofitError error) {
+                            Log.e("Test_resp","Failure");
+                        }
+                    });
+
+                    //TUMCabeClient.getInstance(this).createQuestion("testquestion",new int[]{1,2});
+                }catch (Exception e){
+                    Log.e("Test_exception",e.toString());
+                }
+
                 if(getSurveyrData())
                 {
 
@@ -408,6 +440,9 @@ public class SurveyActivity extends BaseActivity {
                         //cv.put("no", 0);
                         //cv.put("flags", 0);
                         //db.insert("survey1", null, cv);
+
+
+
                         surveyManager.insertOwnQuestions(newDate,lrzId,questions.get(i),chosenFaculties);
 
                     }
