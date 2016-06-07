@@ -1,7 +1,6 @@
 package de.tum.in.tumcampusapp.models;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.squareup.okhttp.CertificatePinner;
 import com.squareup.okhttp.OkHttpClient;
@@ -43,6 +42,8 @@ public class TUMCabeClient {
     private static final String API_LOCATIONS = "/locations/";
     private static final String API_DEVICE = "/device/";
     private static final String API_QUESTION = "/question/";
+    private static final String API_FACULTIES = "/faculty/";
+
 
 
     private static TUMCabeClient instance = null;
@@ -92,6 +93,10 @@ public class TUMCabeClient {
             instance = new TUMCabeClient();
         }
         return instance;
+    }
+
+    public ArrayList<Faculty> getFaculties(){
+        return service.getFaculties();
     }
 
     public void createQuestion(Question question,Callback<Question> cb){
@@ -195,6 +200,9 @@ public class TUMCabeClient {
     }
 
     private interface TUMCabeAPIService {
+
+        @GET(API_FACULTIES)
+        ArrayList<Faculty> getFaculties();
 
         //Questions
         @POST(API_QUESTION)

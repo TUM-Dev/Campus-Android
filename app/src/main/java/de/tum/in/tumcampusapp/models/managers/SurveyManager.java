@@ -2,25 +2,33 @@ package de.tum.in.tumcampusapp.models.managers;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.Date;
+
+import de.tum.in.tumcampusapp.auxiliary.Const;
+import de.tum.in.tumcampusapp.auxiliary.NetUtils;
+import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.cards.Card;
 import de.tum.in.tumcampusapp.cards.SurveyCard;
+import de.tum.in.tumcampusapp.models.CalendarRowSet;
+import de.tum.in.tumcampusapp.models.Faculty;
+import de.tum.in.tumcampusapp.models.Kino;
+
 /**
  * Created by aser on 5/5/16.
  */
-public class SurveyManager implements Card.ProvidesCard{
-    private static int TIME_TO_SYNC = 1800;
-    private final Context mContext;
+public class SurveyManager extends AbstractManager implements Card.ProvidesCard{
 
-    private final SQLiteDatabase db;
+    private static int TIME_TO_SYNC = 1; // weiss nicht wie oft
+    private static final String FACULTY_URL = "https://tumcabe.in.tum.de/Api/faculty";
 
     public SurveyManager(Context context){
-        db = AbstractManager.getDb(context);
-        this.mContext = context;
+        super(context);
+
         db.execSQL("CREATE TABLE IF NOT EXISTS surveyQuestions (id INTEGER PRIMARY KEY, question VARCHAR, yes BOOLEAN, no BOOLEAN, flagged BOOLEAN, answered BOOLEAN, synced BOOLEAN)");
         db.execSQL("CREATE TABLE IF NOT EXISTS faculties (faculty INTEGER, name VARCHAR)");
         db.execSQL("CREATE TABLE IF NOT EXISTS survey1 (id INTEGER PRIMARY KEY AUTOINCREMENT, date VARCHAR,userID VARCHAR, question TEXT, faculties TEXT, "
@@ -62,7 +70,7 @@ public class SurveyManager implements Card.ProvidesCard{
 
         }
     }
-
+    
     // For Testing Purposes untill the API is done
     public void dropTestData(){
         db.delete("surveyQuestions",null,null);
@@ -102,5 +110,9 @@ public class SurveyManager implements Card.ProvidesCard{
     // Helpfunction used for testing in Survey Acitvity untill the API is implemented
     public Cursor lastDateFromLastWeek(String weekAgo){
         return db.rawQuery("SELECT date FROM survey1 WHERE date >= '"+weekAgo+"'", null);
+    }
+
+    public Cursor getFacultyID(String facultyName){
+        return db.rawQuery("SELECT faculty FROM faculties WHERE name=?", new String[]{facultyName});
     }
 }

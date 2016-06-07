@@ -1,15 +1,20 @@
 package de.tum.in.tumcampusapp.activities;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AlertDialog;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +38,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.BaseActivity;
@@ -40,8 +46,10 @@ import de.tum.in.tumcampusapp.auxiliary.AuthenticationManager;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.ChatRoom;
+import de.tum.in.tumcampusapp.models.Faculty;
 import de.tum.in.tumcampusapp.models.Question;
 import de.tum.in.tumcampusapp.models.TUMCabeClient;
+import de.tum.in.tumcampusapp.models.managers.CalendarManager;
 import de.tum.in.tumcampusapp.models.managers.SurveyManager;
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -403,35 +411,44 @@ public class SurveyActivity extends BaseActivity {
             public void onClick(View view)
             {
 
-                Question ques = new Question("testquestionandroid", "1,2");
-                Log.e("Test_deviceID",AuthenticationManager.getDeviceID(getApplicationContext()));
-                try {
-                    TUMCabeClient.getInstance(getApplicationContext()).createQuestion(ques,new Callback<Question>(){
 
-                        @Override
-                        public void success(Question question, Response response) {
-                            Log.e("Test_resp","Succeeded: "+response.getBody().toString());
-                        }
+                //Log.e("JOINED",questions.toString());
 
-                        @Override
-                        public void failure(RetrofitError error) {
-                            Log.e("Test_resp","Failure");
-                        }
-                    });
-
-                    //TUMCabeClient.getInstance(this).createQuestion("testquestion",new int[]{1,2});
-                }catch (Exception e){
-                    Log.e("Test_exception",e.toString());
-                }
 
                 if(getSurveyrData())
                 {
-
                     //insert into database.
                     Date date = Calendar.getInstance().getTime();
                     ContentValues cv = new ContentValues(8);
                     for (int i = 0; i < aSpinner1.getSelectedItemPosition()+1; i++)
                     {
+
+                        Log.i("selectedFaculties",selectedFaculties.toString());
+                        String facIDs = "1,2,3"; // only for testing
+                        Log.i("selectedFacultiesResul",facIDs);
+                        Question ques = new Question(questions.get(i),facIDs);
+                        Log.e("Test_deviceID",AuthenticationManager.getDeviceID(getApplicationContext()));
+                        try {
+                            TUMCabeClient.getInstance(getApplicationContext()).createQuestion(ques,new Callback<Question>(){
+
+                                @Override
+                                public void success(Question question, Response response) {
+                                    Log.e("Test_resp","Succeeded: "+response.getBody().toString());
+                                }
+
+                                @Override
+                                public void failure(RetrofitError error) {
+                                    Log.e("Test_resp","Failure");
+                                }
+                            });
+
+                            //TUMCabeClient.getInstance(this).createQuestion("testquestion",new int[]{1,2});
+                        }catch (Exception e){
+                            Log.e("Test_exception",e.toString());
+                        }
+
+
+
                         //cv.put("date", newDate);
                         //cv.put("userID", lrzId);
                         //cv.put("question", questions.get(i));
@@ -492,6 +509,39 @@ public class SurveyActivity extends BaseActivity {
     {
         return !et.getText().toString().isEmpty();
     }
+
+
+    // Not done yet: supposed to fetch the Faculty data from the API, compare with the selectedFaculties from the user and return a string with the selectedFacultyNUMBERS
+    // Current problem: can't return the value in onPostExecute, need to save in db then intent & broadcastreceiver upon saving the data
+    /*public String downloadFaculties(ArrayList<String> selectedFaculties){
+        new AsyncTask<ArrayList<String>, Void, String>(){
+
+            @Override
+            protected String doInBackground(ArrayList<String>... arrayLists) {
+                ArrayList<String> selectedFaculties = arrayLists[0];
+                final ArrayList<String> results = new ArrayList<String>();
+                ArrayList<Faculty> facultiesFromServer = TUMCabeClient.getInstance(getApplicationContext()).getFaculties();
+                for (int j = 0; j < arrayLists.length; j++) {
+                    for (int i = 0; i < facultiesFromServer.size(); i++) {
+                        if (selectedFaculties.get(j).equals(facultiesFromServer.get(i).getName())){
+                            results.add(facultiesFromServer.get(i).getId());
+                            Log.i("FacutyID",facultiesFromServer.get(i).getId());
+                        }
+                    }
+                }
+                return TextUtils.join(",",results);
+            }
+
+            @Override
+            protected void onPostExecute(String result) {
+                return ;
+            }
+
+
+        }.execute(selectedFaculties);
+
+        return "";
+    }*/
 
     //check if user is allowed to submit survey depending on the last survey date and number of question he submitted before
     @SuppressLint("SetTextI18n")
