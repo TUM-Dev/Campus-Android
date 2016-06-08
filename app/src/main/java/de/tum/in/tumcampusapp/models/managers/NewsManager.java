@@ -2,6 +2,7 @@ package de.tum.in.tumcampusapp.models.managers;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -57,6 +58,7 @@ public class NewsManager extends AbstractManager implements Card.ProvidesCard {
      * @throws Exception
      */
     public void downloadFromExternal(boolean force) throws Exception {
+        Log.i("NewsManager","IchLebe");
 
         if (!force && !SyncManager.needSync(db, this, TIME_TO_SYNC)) {
             return;

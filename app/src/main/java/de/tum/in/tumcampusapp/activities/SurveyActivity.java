@@ -414,6 +414,9 @@ public class SurveyActivity extends BaseActivity {
 
                 //Log.e("JOINED",questions.toString());
 
+                // hopfuly the data is downloaded via Download service already
+                // We can then call getFacultyID for all selected Faculties and concat. them togther and give them as a par. in the new question?
+
 
                 if(getSurveyrData())
                 {

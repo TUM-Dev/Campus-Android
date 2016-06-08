@@ -3,6 +3,7 @@ package de.tum.in.tumcampusapp.models.managers;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -17,13 +18,14 @@ import de.tum.in.tumcampusapp.cards.SurveyCard;
 import de.tum.in.tumcampusapp.models.CalendarRowSet;
 import de.tum.in.tumcampusapp.models.Faculty;
 import de.tum.in.tumcampusapp.models.Kino;
+import de.tum.in.tumcampusapp.models.News;
 
 /**
  * Created by aser on 5/5/16.
  */
 public class SurveyManager extends AbstractManager implements Card.ProvidesCard{
 
-    private static int TIME_TO_SYNC = 1; // weiss nicht wie oft
+    private static int TIME_TO_SYNC = 1800; // weiss nicht wie oft
     private static final String FACULTY_URL = "https://tumcabe.in.tum.de/Api/faculty";
 
     public SurveyManager(Context context){
@@ -70,7 +72,7 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard{
 
         }
     }
-    
+
     // For Testing Purposes untill the API is done
     public void dropTestData(){
         db.delete("surveyQuestions",null,null);
@@ -115,4 +117,43 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard{
     public Cursor getFacultyID(String facultyName){
         return db.rawQuery("SELECT faculty FROM faculties WHERE name=?", new String[]{facultyName});
     }
+
+    public void downloadFromExternal(boolean force) throws Exception {
+        Log.i("Test","DownloadFromExternalSurveyManager");
+
+        if (!force && !SyncManager.needSync(db, this, TIME_TO_SYNC)) {
+            return;
+        }
+
+        NetUtils net = new NetUtils(mContext);
+        // Load all faculties
+        JSONArray jsonArray = net.downloadJsonArray(FACULTY_URL, CacheManager.VALIDITY_ONE_DAY, force);
+        if(jsonArray==null) {
+            return;
+        }
+
+        db.beginTransaction();
+        try {
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject obj = jsonArray.getJSONObject(i);
+                replaceIntoDb(getFromJson(obj));
+            }
+            SyncManager.replaceIntoDb(db, this);
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
+    }
+
+    void replaceIntoDb(Faculty f) {
+        db.execSQL("REPLACE INTO faculties (faculty, name) VALUES (?, ?)",
+                new String[]{f.getId(), f.getName()});
+    }
+
+    private static Faculty getFromJson(JSONObject json) throws Exception {
+        String id = json.getString(Const.JSON_FACULTY);
+        String name = json.getString(Const.JSON_FACULTY_NAME);
+        return new Faculty(id, name);
+    }
+
 }
