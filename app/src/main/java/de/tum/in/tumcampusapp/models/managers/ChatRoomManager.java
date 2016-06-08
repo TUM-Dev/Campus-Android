@@ -151,7 +151,6 @@ public class ChatRoomManager extends AbstractManager implements Card.ProvidesCar
                 new String[]{"" + currentChatRoom.getId(), currentChatRoom.getName().substring(4), currentChatRoom.getName().substring(0, 3)});
     }
 
-
     @Override
     public void onRequestCard(Context context) {
         ChatRoomManager manager = new ChatRoomManager(context);

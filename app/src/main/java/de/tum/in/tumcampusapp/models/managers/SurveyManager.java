@@ -49,6 +49,10 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard{
         }
     }
 
+    public Cursor getAllFaculties() {
+        return db.rawQuery("SELECT * FROM faculties", null);
+    }
+
 
 
     // Get the relevant Questions for the Survey Card (not answered)
@@ -69,7 +73,6 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard{
             cv.put("answered", 0);
             cv.put("synced", 0);
             db.insert("surveyQuestions", null, cv);
-
         }
     }
 

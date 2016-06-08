@@ -36,6 +36,7 @@ import com.google.zxing.common.StringUtils;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -67,6 +68,8 @@ public class SurveyActivity extends BaseActivity {
     boolean[]checked=new boolean[14];
     LinearLayout mainResponseLayout,questionsLayout;
     String chosenFaculties="",newDate="",lrzId;
+    ArrayList<String> fetchedFaculties = new ArrayList<>();
+
     //private SQLiteDatabase db;
 
     String[] numQues=new String[3];
@@ -79,7 +82,7 @@ public class SurveyActivity extends BaseActivity {
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
-
+        surveyManager = new SurveyManager(this);
         super.onCreate(savedInstanceState);
         lrzId = Utils.getSetting(this, Const.LRZ_ID, "");
 
@@ -88,11 +91,6 @@ public class SurveyActivity extends BaseActivity {
         setUpSpinner();
         setUpSelectTargets();
         buttonsListener();
-        surveyManager = new SurveyManager(this);
-        //db = DatabaseManager.getDb(getApplicationContext());
-        //db.execSQL("CREATE TABLE IF NOT EXISTS survey1 (id INTEGER PRIMARY KEY AUTOINCREMENT, date VARCHAR,userID VARCHAR, question TEXT, faculties TEXT, "
-          //      + "yes INTEGER,  no INTEGER, flags INTEGER)");
-
         setUpResponseTab();
         userAllowed();
 
@@ -247,24 +245,17 @@ public class SurveyActivity extends BaseActivity {
     //Departments spinner.
     public void setUpSelectTargets()
     {
-        String math = getResources().getString(R.string.faculty_mathematics);
-        String physics = getResources().getString(R.string.faculty_physics);
-        String chemistry = getResources().getString(R.string.faculty_chemistry);
-        String tum_manag = getResources().getString(R.string.faculty_tum_school_of_management);
-        String cge = getResources().getString(R.string.faculty_civil_geo_and_environmental_engineering);
-        final String architecture = getResources().getString(R.string.faculty_architecture);
-        String mechanical = getResources().getString(R.string.faculty_mechanical_Engineering);
-        String electrical = getResources().getString(R.string.faculty_electrical_and_computer_engineering);
-        String informatics = getResources().getString(R.string.faculty_informatics);
-        String tum_life_sc = getResources().getString(R.string.faculty_tum_school_of_life_sciences_weihenstephan);
-        String medicine = getResources().getString(R.string.faculty_tum_school_of_medicine);
-        String sport = getResources().getString(R.string.faculty_sport_and_health_sciences);
-        String edu = getResources().getString(R.string.faculty_tum_school_of_education);
-        String political_social = getResources().getString(R.string.faculty_political_and_social_sciences);
 
+        // fetch faulties from DB
+        Cursor cursor = surveyManager.getAllFaculties();
+            if(cursor.moveToFirst()){
+                do{
+                    fetchedFaculties.add(cursor.getString(cursor.getColumnIndex("name")));
+                }while (cursor.moveToNext());
 
+        }
 
-        final String[] faculties = {math, physics, chemistry, tum_manag, cge, architecture, mechanical, electrical, informatics, tum_life_sc, medicine, sport, edu, political_social};
+        final String[] faculties = fetchedFaculties.toArray( new String[fetchedFaculties.size()]);
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(getResources().getString(R.string.quiz_target_faculty));
 
@@ -410,14 +401,6 @@ public class SurveyActivity extends BaseActivity {
             @Override
             public void onClick(View view)
             {
-
-
-                //Log.e("JOINED",questions.toString());
-
-                // hopfuly the data is downloaded via Download service already
-                // We can then call getFacultyID for all selected Faculties and concat. them togther and give them as a par. in the new question?
-
-
                 if(getSurveyrData())
                 {
                     //insert into database.
@@ -426,14 +409,23 @@ public class SurveyActivity extends BaseActivity {
                     for (int i = 0; i < aSpinner1.getSelectedItemPosition()+1; i++)
                     {
 
-                        Log.i("selectedFaculties",selectedFaculties.toString());
-                        String facIDs = "1,2,3"; // only for testing
-                        Log.i("selectedFacultiesResul",facIDs);
-                        Question ques = new Question(questions.get(i),facIDs);
-                        Log.e("Test_deviceID",AuthenticationManager.getDeviceID(getApplicationContext()));
+                        //
+                        final ArrayList<String> selectedFacIds = new ArrayList<String>();
+                        for (int j = 0; j < selectedFaculties.size(); j++) {
+                            for (int x = 0; x < fetchedFaculties.size(); x++) {
+                                if (selectedFaculties.get(j).equals(fetchedFaculties.get(x))){
+                                    Cursor cursor = surveyManager.getFacultyID(selectedFaculties.get(j));
+                                    if(cursor.moveToFirst()){
+                                        selectedFacIds.add(cursor.getString(cursor.getColumnIndex("faculty")));
+                                    }
+                                }
+                            }
+                        }
+
+
+                        Question ques = new Question(questions.get(i),TextUtils.join(",",selectedFacIds));
                         try {
                             TUMCabeClient.getInstance(getApplicationContext()).createQuestion(ques,new Callback<Question>(){
-
                                 @Override
                                 public void success(Question question, Response response) {
                                     Log.e("Test_resp","Succeeded: "+response.getBody().toString());
@@ -449,21 +441,6 @@ public class SurveyActivity extends BaseActivity {
                         }catch (Exception e){
                             Log.e("Test_exception",e.toString());
                         }
-
-
-
-                        //cv.put("date", newDate);
-                        //cv.put("userID", lrzId);
-                        //cv.put("question", questions.get(i));
-                        //cv.put("faculties", chosenFaculties);
-                        //cv.put("yes", 0);
-                        //cv.put("no", 0);
-                        //cv.put("flags", 0);
-                        //db.insert("survey1", null, cv);
-
-
-
-                        surveyManager.insertOwnQuestions(newDate,lrzId,questions.get(i),chosenFaculties);
 
                     }
                     clearData();
@@ -512,39 +489,6 @@ public class SurveyActivity extends BaseActivity {
     {
         return !et.getText().toString().isEmpty();
     }
-
-
-    // Not done yet: supposed to fetch the Faculty data from the API, compare with the selectedFaculties from the user and return a string with the selectedFacultyNUMBERS
-    // Current problem: can't return the value in onPostExecute, need to save in db then intent & broadcastreceiver upon saving the data
-    /*public String downloadFaculties(ArrayList<String> selectedFaculties){
-        new AsyncTask<ArrayList<String>, Void, String>(){
-
-            @Override
-            protected String doInBackground(ArrayList<String>... arrayLists) {
-                ArrayList<String> selectedFaculties = arrayLists[0];
-                final ArrayList<String> results = new ArrayList<String>();
-                ArrayList<Faculty> facultiesFromServer = TUMCabeClient.getInstance(getApplicationContext()).getFaculties();
-                for (int j = 0; j < arrayLists.length; j++) {
-                    for (int i = 0; i < facultiesFromServer.size(); i++) {
-                        if (selectedFaculties.get(j).equals(facultiesFromServer.get(i).getName())){
-                            results.add(facultiesFromServer.get(i).getId());
-                            Log.i("FacutyID",facultiesFromServer.get(i).getId());
-                        }
-                    }
-                }
-                return TextUtils.join(",",results);
-            }
-
-            @Override
-            protected void onPostExecute(String result) {
-                return ;
-            }
-
-
-        }.execute(selectedFaculties);
-
-        return "";
-    }*/
 
     //check if user is allowed to submit survey depending on the last survey date and number of question he submitted before
     @SuppressLint("SetTextI18n")
