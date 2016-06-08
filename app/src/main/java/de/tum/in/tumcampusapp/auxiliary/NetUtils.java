@@ -188,7 +188,7 @@ public class NetUtils {
      * @param target Target filename in local file system
      * @throws Exception
      */
-    private void downloadToFile(String url, String target) throws Exception {
+    public void downloadToFile(String url, String target) throws Exception {
         File f = new File(target);
         if (f.exists()) {
             return;
