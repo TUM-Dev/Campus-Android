@@ -1,13 +1,11 @@
 package de.tum.in.tumcampusapp.activities;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Handler;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
@@ -72,13 +70,10 @@ public class PlansActivity extends BaseActivity implements OnItemClickListener {
                                 }
 
                             }.start();
+                            
+                            downloadFiles.start();
 
-                            new DownloadFile().execute();
-
-                            SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
-                            SharedPreferences.Editor editor = sharedPref.edit();
-                            editor.putInt("mvvplans_downloaded", 1);
-                            editor.apply();
+                            Utils.setInternalSetting(getApplicationContext(), "mvvplans_downloaded", 1);
                         }
                     })
                     .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
@@ -145,21 +140,21 @@ public class PlansActivity extends BaseActivity implements OnItemClickListener {
         }
     }
 
-    private class DownloadFile extends AsyncTask<Void, Void, Void> {
-        @Override
-        protected Void doInBackground(Void... v) {
+
+    private Thread downloadFiles = new Thread() {
+        public void run() {
+            Utils.log("Starting download.");
             NetUtils netUtils = new NetUtils(getApplicationContext());
 
             for (String[] file : PlansActivity.filesToDownload) {
+                Utils.log("Downloading to: " + getApplicationContext().getFilesDir().getPath() + "/" + file[1]);
                 try {
-                    netUtils.downloadToFile(file[0], getApplicationContext().getFilesDir().getPath() + file[1]);
+                    netUtils.downloadToFile(file[0], getApplicationContext().getFilesDir().getPath() + "/" + file[1]);
                     Utils.log(getApplicationContext().getFilesDir() + file[1]);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
-
-            return null;
         }
-    }
+    };
 }

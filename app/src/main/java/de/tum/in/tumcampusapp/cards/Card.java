@@ -228,12 +228,10 @@ public abstract class Card {
         Notification notification = fillNotification(notificationBuilder);
 
         if (notification != null) {
-            NotificationManagerCompat notificationManager =
-                    NotificationManagerCompat.from(mContext);
+            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(mContext);
             notificationManager.notify(getTyp(), notification);
 
-            // Showing a notification is handled as it would already
-            // be dismissed, so that it will not notify again.
+            // Showing a notification is handled as it would already be dismissed, so that it will not notify again.
             discardNotification();
         }
     }
