@@ -4,8 +4,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.CountDownTimer;
-import android.os.Handler;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
@@ -29,12 +27,6 @@ import de.tum.in.tumcampusapp.auxiliary.Utils;
  */
 public class PlansActivity extends BaseActivity implements OnItemClickListener {
 
-    private PlanListAdapter mListAdapter;
-
-    public PlansActivity() {
-        super(R.layout.activity_plans);
-    }
-
     private static String[][] filesToDownload = {
             {"http://www.mvv-muenchen.de/fileadmin/media/Dateien/plaene/pdf/Netz_2016_Version_MVG.PDF", "Schnellbahnnetz.pdf"},
             {"http://www.mvv-muenchen.de/fileadmin/media/Dateien/plaene/pdf/Nachtnetz_2016.pdf", "Nachtliniennetz.pdf"},
@@ -42,6 +34,34 @@ public class PlansActivity extends BaseActivity implements OnItemClickListener {
             {"http://www.mvv-muenchen.de/fileadmin/media/Dateien/3_Tickets_Preise/dokumente/TARIFPLAN_2016-Innenraum.pdf", "Tarifplan.pdf"},
     };
     ProgressBar progressBar;
+    private PlanListAdapter mListAdapter;
+    private Thread downloadFiles = new Thread() {
+        public void run() {
+            Utils.log("Starting download.");
+            NetUtils netUtils = new NetUtils(getApplicationContext());
+
+            for (String[] file : PlansActivity.filesToDownload) {
+                try {
+                    netUtils.downloadToFile(file[0], getApplicationContext().getFilesDir().getPath() + "/" + file[1]);
+                    Utils.log(getApplicationContext().getFilesDir() + file[1]);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            //Finished, notify the UI
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    progressBar.setVisibility(View.GONE);
+                }
+            });
+        }
+    };
+
+    public PlansActivity() {
+        super(R.layout.activity_plans);
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -49,7 +69,7 @@ public class PlansActivity extends BaseActivity implements OnItemClickListener {
 
         progressBar = (ProgressBar) findViewById(R.id.progressBar2);
 
-        if (true || Utils.getInternalSettingInt(this, "mvvplans_downloaded", 0) == 0) {
+        if (Utils.getInternalSettingInt(this, "mvvplans_downloaded", 0) == 0) {
             final Intent back_intent = new Intent(this, MainActivity.class);
 
             new AlertDialog.Builder(this)
@@ -95,7 +115,7 @@ public class PlansActivity extends BaseActivity implements OnItemClickListener {
 
         if (pos <= 3) {
             File pdfFile = new File(getFilesDir(), PlansActivity.filesToDownload[pos][1]);
-            ;
+
             final Uri path = FileProvider.getUriForFile(getApplicationContext(), "de.tum.in.tumcampusapp.fileprovider", pdfFile);
 
             Intent x = new Intent();
@@ -110,29 +130,4 @@ public class PlansActivity extends BaseActivity implements OnItemClickListener {
             startActivity(intent);
         }
     }
-
-
-    private Thread downloadFiles = new Thread() {
-        public void run() {
-            Utils.log("Starting download.");
-            NetUtils netUtils = new NetUtils(getApplicationContext());
-
-            for (String[] file : PlansActivity.filesToDownload) {
-                try {
-                    netUtils.downloadToFile(file[0], getApplicationContext().getFilesDir().getPath() + "/" + file[1]);
-                    Utils.log(getApplicationContext().getFilesDir() + file[1]);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-
-            //Finished, notify the UI
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    progressBar.setVisibility(View.GONE);
-                }
-            });
-        }
-    };
 }
