@@ -101,8 +101,19 @@ public class SurveyActivity extends BaseActivity {
     @SuppressLint("SetTextI18n")
     public void setUpResponseTab()
     {
-        //get response and question from database->set i<Number of question
-        for (int i = 0; i < 10; i++) {
+        int bars=surveyManager.numberOfOwnQuestions();
+
+        Cursor c=surveyManager.getMyQuestions();
+
+         //get response and question from database->set i<Number of question
+        for (int i = 0; i <bars; i++) {
+
+            c.moveToNext();
+            String questionText=c.getString(c.getColumnIndex("question"));
+            int yes=0;
+            int no=0;
+            int total=yes+no;
+            int id=c.getInt(c.getColumnIndex("question_id"));
 
             //linear layout for every question
             LinearLayout ques = new LinearLayout(this);
@@ -136,15 +147,16 @@ public class SurveyActivity extends BaseActivity {
             tvparams.setMargins(50, 0, 0, 0);
             questionTv.setLayoutParams(tvparams);
             //setText(question)
-            questionTv.setText("asdasds");
+            questionTv.setText(questionText);
             l1.addView(questionTv);
+
             //adding button delete
             float inPixels = getResources().getDimension(R.dimen.dimen_buttonHeight_in_dp);
             Button deleteButton = new Button(this);
             deleteButton.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, (int) inPixels));
             deleteButton.setBackgroundResource((R.drawable.minusicon));
             deleteButton.setOnClickListener(clicks);
-            deleteButton.setTag(i);
+            deleteButton.setTag(id);
             l2.addView(deleteButton);
 
             //adding progress bar with answers
@@ -160,13 +172,8 @@ public class SurveyActivity extends BaseActivity {
             progress.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, (int) inPixels2));
             progress.setMinimumHeight((int) inPixels2);
             progress.setProgressDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.progressbar, null));
-            //totalAnswer=yes +no
-            //setMax(totalAnswers)
-            //int x=(int)(yes/(no+totalAnswers))
-            //setProgress()
-            //fill progress
-            progress.setProgress(70);
-            progress.setMax(100);
+            progress.setMax(total);
+            progress.setProgress(yes);
             progress.setId(R.id.p1);
             r.addView(progress);
 
@@ -177,7 +184,7 @@ public class SurveyActivity extends BaseActivity {
             params.addRule(RelativeLayout.CENTER_IN_PARENT);
             yesAnswers.setPadding(15, 0, 0, 0);
             //set number of yes answers
-            yesAnswers.setText("15");
+            yesAnswers.setText(yes+"");
             r.addView(yesAnswers, params);
 
             TextView noAnswers = new TextView(this);
@@ -186,7 +193,7 @@ public class SurveyActivity extends BaseActivity {
             params1.addRule(RelativeLayout.ALIGN_RIGHT, progress.getId());
             params1.addRule(RelativeLayout.CENTER_IN_PARENT);
             //set number of no answers
-            noAnswers.setText("15");
+            noAnswers.setText(no+"");
             noAnswers.setPadding(0, 0, 20, 0);
             r.addView(noAnswers, params1);
         }
@@ -497,22 +504,19 @@ public class SurveyActivity extends BaseActivity {
 
         String weekAgo=getDateBefore1Week();
         //Cursor c = db.rawQuery("SELECT COUNT(*) FROM survey1 WHERE date >= '"+weekAgo+"'", null);
-        Cursor c = surveyManager.numberOfQuestionsFrom(weekAgo);
-        if(c.getCount()>0)
-            c.moveToFirst();
+        int currentNumOfQuestions= surveyManager.numberOfQuestionsFrom(weekAgo);
 
-        int x=c.getInt(0);
 
-        if(x<3)
+        if(currentNumOfQuestions<3)
         {
-            numQues=new String[3-x];
+            numQues=new String[3-currentNumOfQuestions];
             for(int i=0;i<numQues.length;i++) {
                 numQues[i]= String.valueOf(i+1);
             }
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, numQues);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             aSpinner1.setAdapter(adapter);
-            if(x==2)
+            if(currentNumOfQuestions==2)
                 selectTv.setText(getResources().getString(R.string.one_question_left));
         }
 

@@ -37,6 +37,11 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard{
         db.execSQL("CREATE TABLE IF NOT EXISTS faculties (faculty INTEGER, name VARCHAR)");
         db.execSQL("CREATE TABLE IF NOT EXISTS survey1 (id INTEGER PRIMARY KEY AUTOINCREMENT, date VARCHAR,userID VARCHAR, question TEXT, faculties TEXT, "
                 + "yes INTEGER,  no INTEGER, flags INTEGER)");
+
+
+        //own questions for responses
+        db.execSQL("CREATE TABLE IF NOT EXISTS myQuestions (id INTEGER PRIMARY KEY, question VARCHAR, yes BOOLEAN, no BOOLEAN, flagged BOOLEAN, answered BOOLEAN, synced BOOLEAN)");
+
         //generateTestData(); // Untill the API is done
         //dropTestData(); // untill the API is done
     }
@@ -110,8 +115,23 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard{
     }
 
     // Helpfunction used for testing in Survey Acitvity untill the API is implemented
-    public Cursor numberOfQuestionsFrom(String weekago){
-        return db.rawQuery("SELECT COUNT(*) FROM survey1 WHERE date >= '"+weekago+"'", null);
+    public int numberOfQuestionsFrom(String weekago){
+        Cursor c = db.rawQuery("SELECT COUNT(*) FROM survey1 WHERE date >= '"+weekago+"'", null);
+        if(c.getCount()>0)
+            c.moveToFirst();
+        return c.getInt(0);
+    }
+
+    public Cursor getMyQuestions(){
+        return db.rawQuery("SELECT * FROM myQuestions", null);
+
+    }
+
+    public int numberOfOwnQuestions(){
+        Cursor c = db.rawQuery("SELECT COUNT(*) FROM myQuestions", null);
+        if(c.getCount()>0)
+            c.moveToFirst();
+        return c.getInt(0);
     }
 
     // Helpfunction used for testing in Survey Acitvity untill the API is implemented
