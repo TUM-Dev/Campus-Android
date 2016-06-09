@@ -10,8 +10,8 @@ import java.util.ArrayList;
 import de.tum.in.tumcampusapp.auxiliary.AuthenticationManager;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.exceptions.NoPrivateKey;
-import de.tum.in.tumcampusapp.models.TUMCabeClient;
 import de.tum.in.tumcampusapp.models.ChatMessage;
+import de.tum.in.tumcampusapp.models.TUMCabeClient;
 import de.tum.in.tumcampusapp.models.managers.ChatMessageManager;
 import retrofit.RetrofitError;
 
@@ -30,16 +30,6 @@ public class SendMessageService extends IntentService {
      */
     public SendMessageService() {
         super(SEND_MESSAGE_SERVICE);
-    }
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
     }
 
     @Override

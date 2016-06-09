@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SearchRecentSuggestionsProvider;
 import android.database.Cursor;
-import android.os.Bundle;
 import android.provider.SearchRecentSuggestions;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -68,11 +67,6 @@ public abstract class ActivityForSearching extends ProgressActivity {
      * @param query Query to search for
      */
     protected abstract void onStartSearch(String query);
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
