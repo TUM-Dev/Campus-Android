@@ -48,13 +48,18 @@ public class PlansActivity extends BaseActivity implements OnItemClickListener {
 
         final ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBar2);
 
-        if (true || Utils.getInternalSettingInt(this, "mvvplans_downloaded", 0) == 0) {
-
+        if (Utils.getInternalSettingInt(this, "mvvplans_downloaded", 0) == 0) {
             final Intent back_intent = new Intent(this, MainActivity.class);
 
             new AlertDialog.Builder(this)
                     .setTitle("MVV plans")
                     .setMessage(getResources().getString(R.string.mvv_download))
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            startActivity(back_intent);
+                        }
+                    })
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
 
@@ -70,18 +75,13 @@ public class PlansActivity extends BaseActivity implements OnItemClickListener {
                                 }
 
                             }.start();
-                            
+
                             downloadFiles.start();
 
                             Utils.setInternalSetting(getApplicationContext(), "mvvplans_downloaded", 1);
                         }
                     })
-                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            startActivity(back_intent);
-                        }
-                    })
-                    .setIcon(android.R.drawable.ic_dialog_alert)
+
                     .show();
         }
 
@@ -109,22 +109,8 @@ public class PlansActivity extends BaseActivity implements OnItemClickListener {
         PlanListEntry entry = (PlanListEntry) mListAdapter.getItem(pos);
 
         if (pos <= 3) {
-            File pdfFile;
-            switch (pos) {
-                case 0:
-                    pdfFile = new File(getFilesDir(), "Schnellbahnnetz.pdf");
-                    break;
-                case 1:
-                    pdfFile = new File(getFilesDir(), "Nachtliniennetz.pdf");
-                    break;
-                case 2:
-                    pdfFile = new File(getFilesDir(), "Tramnetz.pdf");
-                    break;
-                default:
-                    pdfFile = new File(getFilesDir(), "Tarifplan.pdf");
-                    break;
-            }
-
+            File pdfFile = new File(getFilesDir(), PlansActivity.filesToDownload[pos][1]);
+            ;
             final Uri path = FileProvider.getUriForFile(getApplicationContext(), "de.tum.in.tumcampusapp.fileprovider", pdfFile);
 
             Intent x = new Intent();
@@ -147,7 +133,6 @@ public class PlansActivity extends BaseActivity implements OnItemClickListener {
             NetUtils netUtils = new NetUtils(getApplicationContext());
 
             for (String[] file : PlansActivity.filesToDownload) {
-                Utils.log("Downloading to: " + getApplicationContext().getFilesDir().getPath() + "/" + file[1]);
                 try {
                     netUtils.downloadToFile(file[0], getApplicationContext().getFilesDir().getPath() + "/" + file[1]);
                     Utils.log(getApplicationContext().getFilesDir() + file[1]);
