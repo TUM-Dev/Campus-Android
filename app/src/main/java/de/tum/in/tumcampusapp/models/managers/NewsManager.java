@@ -58,7 +58,6 @@ public class NewsManager extends AbstractManager implements Card.ProvidesCard {
      * @throws Exception
      */
     public void downloadFromExternal(boolean force) throws Exception {
-        Log.i("NewsManager","IchLebe");
 
         if (!force && !SyncManager.needSync(db, this, TIME_TO_SYNC)) {
             return;

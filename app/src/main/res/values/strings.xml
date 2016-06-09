@@ -451,18 +451,18 @@ Signature: %5$s</string>
     <string name="www" translatable="false">www</string>
     <string name="quiz" translatable="false">Research Survey</string>
     <string name="research_quiz" translatable="false">Research Quiz</string>
-    <string name="faculty_mathematics" translatable="false">Mathematics</string>
-    <string name="faculty_physics" translatable="false">Physics</string>
-    <string name="faculty_chemistry" translatable="false">Chemistry</string>
-    <string name="faculty_tum_school_of_management" translatable="false">TUM School of Management</string>
-    <string name="faculty_civil_geo_and_environmental_engineering" translatable="false">Civil, Geo and Environmental Engineering</string>
-    <string name="faculty_architecture" translatable="false">Architecture</string>
-    <string name="faculty_mechanical_Engineering" translatable="false">Mechanical Engineering</string>
-    <string name="faculty_electrical_and_computer_engineering" translatable="false">Electrical and Computer Engineering</string>
-    <string name="faculty_informatics" translatable="false">Informatics</string>
-    <string name="faculty_tum_school_of_life_sciences_weihenstephan" translatable="false">TUM School of Life Sciences Weihenstephan</string>
-    <string name="faculty_tum_school_of_medicine" translatable="false">TUM School of Medicine</string>
-    <string name="faculty_sport_and_health_sciences" translatable="false">Sport and Health Sciences</string>
+    <string name="faculty_mathematics" translatable="false">Mathematik</string>
+    <string name="faculty_physics" translatable="false">Physik</string>
+    <string name="faculty_chemistry" translatable="false">Chemie</string>
+    <string name="faculty_tum_school_of_management" translatable="false">Wirtschaftswissenschaften</string>
+    <string name="faculty_civil_geo_and_environmental_engineering" translatable="false">Ingenieurfakultät Bau Geo Umwelt</string>
+    <string name="faculty_architecture" translatable="false">Architektur</string>
+    <string name="faculty_mechanical_Engineering" translatable="false">Maschinenwesen</string>
+    <string name="faculty_electrical_and_computer_engineering" translatable="false">Elektrotechnik und Informationstechnik</string>
+    <string name="faculty_informatics" translatable="false">Informatik</string>
+    <string name="faculty_tum_school_of_life_sciences_weihenstephan" translatable="false">Wissenschaftszentrum Weihenstephan für Ernährung, Landnutzung und Umwelt</string>
+    <string name="faculty_tum_school_of_medicine" translatable="false">Medizin</string>
+    <string name="faculty_sport_and_health_sciences" translatable="false">Sport- und Gesundheitswissenschaften</string>
     <string name="faculty_tum_school_of_education" translatable="false">TUM School of Education</string>
     <string name="faculty_political_and_social_sciences" translatable="false">Political and Social Sciences</string>
     <string name="no_questions_available">No Questions are available!</string>
@@ -486,6 +486,7 @@ Signature: %5$s</string>
     <string name="complete_question_form">Please complete question form</string>
     <string name="select_one_faculty">At least select one faculty</string>
     <string name="question_deleted">Question has been deleted</string>
+    <string name="choose_own_faculty" translatable="false">Please choose your faculty:</string>
 
 </resources>
 

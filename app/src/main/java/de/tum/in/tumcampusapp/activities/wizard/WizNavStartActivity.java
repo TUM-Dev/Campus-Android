@@ -6,8 +6,11 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.database.Cursor;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -16,11 +19,16 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.ActivityForLoadingInBackground;
 import de.tum.in.tumcampusapp.auxiliary.AccessTokenManager;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
+import de.tum.in.tumcampusapp.models.managers.SurveyManager;
+import de.tum.in.tumcampusapp.models.managers.SyncManager;
 
 /**
  * Displays the first page of the startup wizard, where the user can enter his lrz-id.
@@ -58,41 +66,56 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<Void,Boo
 
     public void setUpSpinner()
     {
-        String select = "Please Select Your Major";
-        String math = getResources().getString(R.string.faculty_mathematics);
-        String physics = getResources().getString(R.string.faculty_physics);
-        String chemistry = getResources().getString(R.string.faculty_chemistry);
-        String tum_manag = getResources().getString(R.string.faculty_tum_school_of_management);
-        String cge = getResources().getString(R.string.faculty_civil_geo_and_environmental_engineering);
-        String architecture = getResources().getString(R.string.faculty_architecture);
-        String mechanical = getResources().getString(R.string.faculty_mechanical_Engineering);
-        String electrical = getResources().getString(R.string.faculty_electrical_and_computer_engineering);
-        String informatics = getResources().getString(R.string.faculty_informatics);
-        String tum_life_sc = getResources().getString(R.string.faculty_tum_school_of_life_sciences_weihenstephan);
-        String medicine = getResources().getString(R.string.faculty_tum_school_of_medicine);
-        String sport = getResources().getString(R.string.faculty_sport_and_health_sciences);
-        String edu = getResources().getString(R.string.faculty_tum_school_of_education);
-        String political_social = getResources().getString(R.string.faculty_political_and_social_sciences);
-        String[] majors = {select,math, physics, chemistry, tum_manag, cge, architecture, mechanical, electrical, informatics, tum_life_sc, medicine, sport, edu, political_social};
-
-       ArrayAdapter<String> adapter = new ArrayAdapter<String>(getBaseContext(),
-                android.R.layout.simple_list_item_1, majors);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        userMajorSpinner.setAdapter(adapter);
-
-        userMajorSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
+        // fetch facultyData from API
+        new AsyncTask<Void, Void, String[]>() {
             @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                userMajor = (String) adapterView.getItemAtPosition(i);
+            protected String[] doInBackground(Void... voids) {
+                ArrayList<String> fetchedFaculties = new ArrayList<>();
+                SyncManager syncManager = new SyncManager(getApplicationContext()); // Has to initialized here cuz otherwise the 'downloadFromExternal' in SurveyManager will throw a failure as it comprises an operation from SyncManager.
+                SurveyManager sm = new SurveyManager(getApplicationContext());
+                try {
+                    sm.downloadFromExternal(true);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                Cursor cursor = sm.getAllFaculties();
+                if(cursor.moveToFirst()){
+                    do{
+                        fetchedFaculties.add(cursor.getString(cursor.getColumnIndex("name")));
+                    }while (cursor.moveToNext());
 
+                }
+                fetchedFaculties.add(0,getResources().getString(R.string.choose_own_faculty));
+                final String[] majors = fetchedFaculties.toArray( new String[fetchedFaculties.size()]);
+
+                return majors;
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
+            protected void onPostExecute(String[] majors) {
 
+                ArrayAdapter<String> adapter = new ArrayAdapter<String>(getBaseContext(),
+                        android.R.layout.simple_list_item_1, majors);
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                userMajorSpinner.setAdapter(adapter);
+
+                userMajorSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+                    @Override
+                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                        userMajor = (String) adapterView.getItemAtPosition(i);
+                        Utils.setInternalSetting(getApplicationContext(), "user_major", userMajor);
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> adapterView) {
+
+                    }
+                });
+                return ;
             }
-        });
+
+        }.execute();
     }
 
     /**

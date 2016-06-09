@@ -248,7 +248,7 @@ public class SurveyActivity extends BaseActivity {
 
         // fetch faulties from DB
         Cursor cursor = surveyManager.getAllFaculties();
-            if(cursor.moveToFirst()){
+            if(fetchedFaculties.isEmpty() && cursor.moveToFirst()){
                 do{
                     fetchedFaculties.add(cursor.getString(cursor.getColumnIndex("name")));
                 }while (cursor.moveToNext());

@@ -19,6 +19,7 @@ import de.tum.in.tumcampusapp.models.CalendarRowSet;
 import de.tum.in.tumcampusapp.models.Faculty;
 import de.tum.in.tumcampusapp.models.Kino;
 import de.tum.in.tumcampusapp.models.News;
+import de.tum.in.tumcampusapp.models.Question;
 
 /**
  * Created by aser on 5/5/16.
@@ -27,6 +28,7 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard{
 
     private static int TIME_TO_SYNC = 1800; // weiss nicht wie oft
     private static final String FACULTY_URL = "https://tumcabe.in.tum.de/Api/faculty";
+    private static final String OPEN_QUESTIONS_URL = "https://tumcabe.in.tum.de/Api/question/";
 
     public SurveyManager(Context context){
         super(context);
@@ -44,7 +46,7 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard{
         Cursor rows = getNextQuestions();
         if(rows.moveToFirst()){
             SurveyCard card = new SurveyCard(context);
-            card.seQuestions(rows);
+            card.seQuestions(rows); // Questions from local DB (that were downloaded using the API) should be given here.
             card.apply();
         }
     }
@@ -122,7 +124,6 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard{
     }
 
     public void downloadFromExternal(boolean force) throws Exception {
-        Log.i("Test","DownloadFromExternalSurveyManager");
 
         if (!force && !SyncManager.needSync(db, this, TIME_TO_SYNC)) {
             return;
@@ -158,5 +159,47 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard{
         String name = json.getString(Const.JSON_FACULTY_NAME);
         return new Faculty(id, name);
     }
+
+
+    public void downloadOpenQuestionsFromExternal(boolean force) throws Exception {
+
+        if (!force && !SyncManager.needSync(db, this, TIME_TO_SYNC)) {
+            return;
+        }
+
+        NetUtils net = new NetUtils(mContext);
+        // Load all faculties
+        JSONArray jsonArray = net.downloadJsonArray(OPEN_QUESTIONS_URL, CacheManager.VALIDITY_ONE_DAY, force);
+        if(jsonArray==null) {
+            return;
+        }
+
+        db.beginTransaction();
+        try {
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject obj = jsonArray.getJSONObject(i);
+                replaceIntoOpenQuestionsDb(getQuesFromJson(obj));
+            }
+            SyncManager.replaceIntoDb(db, this);
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
+    }
+
+    // Has to be changed
+    void replaceIntoOpenQuestionsDb(Question q) {
+        // Here we still have to check if the question is relevant for the user (depending on own faculty in sharedPref and respectively save it in the database) afterwards we can give it to the card!
+        db.execSQL("REPLACE INTO faculties (faculty, name) VALUES (?, ?)",
+                new String[]{q.getQuestion(), q.getQuestion()});
+    }
+
+    private static Question getQuesFromJson(JSONObject json) throws Exception {
+        String question = json.getString(Const.JSON_QUESTION_ID);
+        String text = json.getString(Const.JSON_FACULTY_NAME);
+        // Here we still have to fetch the faculties a
+        return new Question(" ", " ");
+    }
+
 
 }
