@@ -68,8 +68,10 @@ public class SurveyCard extends Card
 
     private void showFirstQuestion() {
         mTitleView.setText(R.string.research_quiz);
-        final Question ques = questions.get(0);
-        mQuestion.setText(ques.question);
+        if(!questions.isEmpty()){
+            final Question ques = questions.get(0);
+            mQuestion.setText(ques.question);
+        }
 
 
         // Listens on the yes button in the card
@@ -115,10 +117,12 @@ public class SurveyCard extends Card
             @Override
             public void onClick(View view) {
                 if( questions.size() >=2){
-                    questions.remove(0);
+                    Question updatedElement = questions.remove(0);
+                    manager.updateQuestion(updatedElement,"answered");
                     showFirstQuestion();
                 }else{
-                    questions.remove(0);
+                    Question updatedElement = questions.remove(0);
+                    manager.updateQuestion(updatedElement,"answered");
                     mQuestion.setText(R.string.no_questions_available);
                     bYes.setVisibility(View.GONE);
                     bNo.setVisibility(View.GONE);
@@ -151,7 +155,7 @@ public class SurveyCard extends Card
 
     @Override
     public boolean shouldShow(SharedPreferences p) {
-        return manager.getNextQuestions().getCount() >= 1;
+        return manager.getUnansweredQuestions().getCount() >= 1;
     }
 
     public void seQuestions(Cursor cur) {

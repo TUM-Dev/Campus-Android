@@ -246,6 +246,7 @@ public class DownloadService extends IntentService {
     private boolean downloadFaculties(boolean force) {
         try {
             SurveyManager sm = new SurveyManager(this);
+            sm.downLoadOpenQuestions();
             sm.downloadFromExternal(force);
             return true;
         } catch (Exception e) {

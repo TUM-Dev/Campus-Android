@@ -103,8 +103,12 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<Void,Boo
 
                     @Override
                     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                        SurveyManager sm = new SurveyManager(getApplicationContext());
+                        Cursor c = sm.getFacultyID((String) adapterView.getItemAtPosition(i));
+                        if(c.moveToFirst()){
+                            Utils.setInternalSetting(getApplicationContext(), "user_major", c.getString(c.getColumnIndex("faculty")));
+                        }
                         userMajor = (String) adapterView.getItemAtPosition(i);
-                        Utils.setInternalSetting(getApplicationContext(), "user_major", userMajor);
                     }
 
                     @Override

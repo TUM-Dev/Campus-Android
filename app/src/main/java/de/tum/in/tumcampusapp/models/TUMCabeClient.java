@@ -12,6 +12,7 @@ import javax.net.ssl.SSLPeerUnverifiedException;
 
 import de.tum.in.tumcampusapp.auxiliary.AuthenticationManager;
 import de.tum.in.tumcampusapp.auxiliary.Const;
+import de.tum.in.tumcampusapp.cards.SurveyCard;
 import retrofit.Callback;
 import retrofit.ErrorHandler;
 import retrofit.RequestInterceptor;
@@ -43,6 +44,7 @@ public class TUMCabeClient {
     private static final String API_DEVICE = "/device/";
     private static final String API_QUESTION = "/question/";
     private static final String API_FACULTIES = "/faculty/";
+    private static final String API_ANSWER_QUESTION = "question/answer";
 
 
 
@@ -95,9 +97,9 @@ public class TUMCabeClient {
         return instance;
     }
 
-    public ArrayList<Faculty> getFaculties(){
-        return service.getFaculties();
-    }
+    // public void submitAnswer(SurveyCard.Question)
+
+    public ArrayList<Question> getOpenQuestions(){ return service.getOpenQuestions();}
 
     public void createQuestion(Question question,Callback<Question> cb){
         service.createQuestion(question,cb);
@@ -201,12 +203,12 @@ public class TUMCabeClient {
 
     private interface TUMCabeAPIService {
 
-        @GET(API_FACULTIES)
-        ArrayList<Faculty> getFaculties();
-
         //Questions
         @POST(API_QUESTION)
         void createQuestion(@Body Question question,Callback<Question> cb);
+
+        @GET(API_QUESTION)
+        ArrayList<Question> getOpenQuestions();
 
         //Group chat
         @POST(API_CHAT_ROOMS)

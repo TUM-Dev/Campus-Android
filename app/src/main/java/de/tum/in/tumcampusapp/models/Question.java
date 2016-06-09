@@ -3,6 +3,7 @@ package de.tum.in.tumcampusapp.models;
 
 public class Question {
 
+    private String question;
     private int id;
     private String text;
     private Boolean yes;
@@ -11,29 +12,44 @@ public class Question {
     private Boolean flagged;
     private Boolean answered;
     private Boolean synced;
+    private String[] facultyArr;
 
-    public Question(int id, String question, Boolean yes, Boolean no, String faculties, Boolean flagged, Boolean answered, Boolean synced) {
-        this.id = id;
-        this.text = question;
+    public Question(String question, String text, Boolean yes, Boolean no, String faculties, Boolean flagged, Boolean answered, Boolean synced) {
+        this.question = question;
+        this.text = text;
         this.yes = yes;
         this.no = no;
         this.faculty = faculties;
-
         this.flagged = flagged;
         this.answered = answered;
         this.synced = synced;
     }
 
-    public Question(String question, String faculties){
-        this.text=question;
+    public Question(String text, String faculties){
+        this.text=text;
         this.faculty=faculties;
+    }
+
+    // For OpenQuestions
+    public Question(String question, String text, String[] faculties){
+        this.question = question;
+        this.text = text;
+        this.facultyArr = faculties;
+    }
+
+    public String[] getFacultiesOfOpenQuestions() {
+        return facultyArr;
+    }
+
+    public void setFacultiesOfOpenQuestions(String[] facultiesOfOpenQuestions) {
+        this.facultyArr = facultiesOfOpenQuestions;
     }
 
     public int getId() {return id;}
 
     public void setId(int id) {this.id = id;}
 
-    public String getQuestion() {return text;}
+    public String getQuestion() {return question;}
 
     public void setQuestion(String question) {this.text = question;}
 
@@ -44,6 +60,10 @@ public class Question {
     public Boolean getNo() {return no;}
 
     public void setNo(Boolean no) {this.no = no;}
+
+    public String getText() {return text;}
+
+    public void setText(String text) {this.text = text;}
 
     public String getFaculties() {return faculty;}
 
@@ -60,4 +80,8 @@ public class Question {
     public Boolean getSynced() {return synced;}
 
     public void setSynced(Boolean synced) {this.synced = synced;}
+
+    public String getFaculty() {return faculty;}
+
+    public void setFaculty(String faculty) {this.faculty = faculty;}
 }

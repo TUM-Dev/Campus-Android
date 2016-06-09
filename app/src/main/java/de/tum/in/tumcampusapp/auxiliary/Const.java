@@ -99,6 +99,7 @@ public final class Const {
 	public static final String JSON_FACULTY_NAME = "name";
 	public static final String JSON_QUESTION_ID = "question";
 	public static final String JSON_QUESTION_TEXT = "text";
+	public static final String JSON_QUESTION_FACULTY = "faculty";
 
     public static final String EVERYTHING_SETUP = "everything_setup";
     public static final String SYNC_CALENDAR_IMPORT = "calendar_import";
