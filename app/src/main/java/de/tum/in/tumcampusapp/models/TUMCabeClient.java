@@ -97,7 +97,9 @@ public class TUMCabeClient {
         return instance;
     }
 
-    //public void submitAnswer(SurveyCard.Question)
+    public void submitAnswer(Question question, Callback<Question> cb){
+        service.answerQuestion(question,cb);
+    }
 
     public ArrayList<Question> getOpenQuestions(){ return service.getOpenQuestions();}
 
@@ -202,6 +204,9 @@ public class TUMCabeClient {
     }
 
     private interface TUMCabeAPIService {
+
+        @POST(API_ANSWER_QUESTION)
+        void answerQuestion(@Body Question question, Callback<Question> cb);
 
         //Questions
         @POST(API_QUESTION)

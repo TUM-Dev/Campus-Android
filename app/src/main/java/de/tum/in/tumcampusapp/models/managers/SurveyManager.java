@@ -118,6 +118,7 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard{
 
     // Not done yet
     /*public void syncOpenQuestionsTable(){
+        Log.d("syncOpenQuestion","ichLebe");
         Cursor cursor = db.rawQuery("SELECT question, answered FROM openQuestions WHERE synced=? AND answered=?",new String[]{"0","1"});
         if(cursor.moveToFirst()){
             do{
@@ -138,8 +139,6 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard{
                 }
             }while (cursor.moveToNext());
         }
-
-
     }*/
 
     public void insertOwnQuestions(String date, String userID, String question, String faculties){
@@ -155,11 +154,8 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard{
     }
 
     // Helpfunction used for testing in Survey Acitvity untill the API is implemented
-    public int numberOfQuestionsFrom(String weekago){
-        Cursor c = db.rawQuery("SELECT COUNT(*) FROM survey1 WHERE date >= '"+weekago+"'", null);
-        if(c.getCount()>0)
-            c.moveToFirst();
-        return c.getInt(0);
+    public Cursor numberOfQuestionsFrom(String weekago){
+        return db.rawQuery("SELECT COUNT(*) FROM survey1 WHERE date >= '"+weekago+"'", null);
     }
 
     public Cursor getMyQuestions(){
@@ -167,12 +163,6 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard{
 
     }
 
-    public int numberOfOwnQuestions(){
-        Cursor c = db.rawQuery("SELECT COUNT(*) FROM myQuestions", null);
-        if(c.getCount()>0)
-            c.moveToFirst();
-        return c.getInt(0);
-    }
 
     // Helpfunction used for testing in Survey Acitvity untill the API is implemented
     public Cursor lastDateFromLastWeek(String weekAgo){

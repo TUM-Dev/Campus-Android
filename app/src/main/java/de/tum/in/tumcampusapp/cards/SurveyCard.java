@@ -70,89 +70,89 @@ public class SurveyCard extends Card
 
     private void showFirstQuestion() {
         mTitleView.setText(R.string.research_quiz);
-        if(!questions.isEmpty()){
+        if(!questions.isEmpty()) {
             final Question ques = questions.get(0);
             mQuestion.setText(ques.getText());
+
+
+
+            // Listens on the yes button in the card
+            bYes.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (questions.size() >= 2) {
+                        Question updatedElement = questions.remove(0);
+                        manager.updateQuestion(updatedElement, "yes");
+                        // show next question
+                        showFirstQuestion();
+                    } else {
+                        // no questions available
+                        Question updateElement = questions.remove(0);
+                        manager.updateQuestion(updateElement, "yes");
+                        mQuestion.setText(R.string.no_questions_available);
+                        bYes.setVisibility(View.GONE);
+                        bNo.setVisibility(View.GONE);
+                        bSkip.setVisibility(View.GONE);
+                        bFlagged.setVisibility(View.GONE);
+                    }
+                }
+            });
+            bNo.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (questions.size() >= 2) {
+                        Question updatedElement = questions.remove(0);
+                        manager.updateQuestion(updatedElement, "no");
+                        showFirstQuestion();
+                    } else {
+                        Question updateElement = questions.remove(0);
+                        manager.updateQuestion(updateElement, "no");
+                        mQuestion.setText(R.string.no_questions_available);
+                        bYes.setVisibility(View.GONE);
+                        bNo.setVisibility(View.GONE);
+                        bSkip.setVisibility(View.GONE);
+                        bFlagged.setVisibility(View.GONE);
+                    }
+                }
+            });
+            bSkip.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (questions.size() >= 2) {
+                        Question updatedElement = questions.remove(0);
+                        manager.updateQuestion(updatedElement, "answered");
+                        showFirstQuestion();
+                    } else {
+                        Question updatedElement = questions.remove(0);
+                        manager.updateQuestion(updatedElement, "answered");
+                        mQuestion.setText(R.string.no_questions_available);
+                        bYes.setVisibility(View.GONE);
+                        bNo.setVisibility(View.GONE);
+                        bSkip.setVisibility(View.GONE);
+                        bFlagged.setVisibility(View.GONE);
+                    }
+                }
+            });
+            bFlagged.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (questions.size() >= 2) {
+                        Question updatedElement = questions.remove(0);
+                        // missing: update the database
+                        manager.updateQuestion(updatedElement, "flagged");
+                        showFirstQuestion();
+                    } else {
+                        Question updateElement = questions.remove(0);
+                        manager.updateQuestion(updateElement, "flagged");
+                        mQuestion.setText(R.string.no_questions_available);
+                        bYes.setVisibility(View.GONE);
+                        bNo.setVisibility(View.GONE);
+                        bSkip.setVisibility(View.GONE);
+                        bFlagged.setVisibility(View.GONE);
+                    }
+                }
+            });
         }
-
-
-        // Listens on the yes button in the card
-        bYes.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if( questions.size() >=2){
-                    Question updatedElement = questions.remove(0);
-                    manager.updateQuestion(updatedElement,"yes");
-                    // show next question
-                    showFirstQuestion();
-                }else{
-                    // no questions available
-                    Question updateElement = questions.remove(0);
-                    manager.updateQuestion(updateElement,"yes");
-                    mQuestion.setText(R.string.no_questions_available);
-                    bYes.setVisibility(View.GONE);
-                    bNo.setVisibility(View.GONE);
-                    bSkip.setVisibility(View.GONE);
-                    bFlagged.setVisibility(View.GONE);
-                }
-            }
-        });
-        bNo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if( questions.size() >=2){
-                    Question updatedElement = questions.remove(0);
-                    manager.updateQuestion(updatedElement,"no");
-                    showFirstQuestion();
-                }else{
-                    Question updateElement = questions.remove(0);
-                    manager.updateQuestion(updateElement,"no");
-                    mQuestion.setText(R.string.no_questions_available);
-                    bYes.setVisibility(View.GONE);
-                    bNo.setVisibility(View.GONE);
-                    bSkip.setVisibility(View.GONE);
-                    bFlagged.setVisibility(View.GONE);
-                }
-            }
-        });
-        bSkip.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if( questions.size() >=2){
-                    Question updatedElement = questions.remove(0);
-                    manager.updateQuestion(updatedElement,"answered");
-                    showFirstQuestion();
-                }else{
-                    Question updatedElement = questions.remove(0);
-                    manager.updateQuestion(updatedElement,"answered");
-                    mQuestion.setText(R.string.no_questions_available);
-                    bYes.setVisibility(View.GONE);
-                    bNo.setVisibility(View.GONE);
-                    bSkip.setVisibility(View.GONE);
-                    bFlagged.setVisibility(View.GONE);
-                }
-            }
-        });
-        bFlagged.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if( questions.size() >=2){
-                    Question updatedElement = questions.remove(0);
-                    // missing: update the database
-                    manager.updateQuestion(updatedElement,"flagged");
-                    showFirstQuestion();
-                }else{
-                    Question updateElement = questions.remove(0);
-                    manager.updateQuestion(updateElement,"flagged");
-                    mQuestion.setText(R.string.no_questions_available);
-                    bYes.setVisibility(View.GONE);
-                    bNo.setVisibility(View.GONE);
-                    bSkip.setVisibility(View.GONE);
-                    bFlagged.setVisibility(View.GONE);
-                }
-            }
-        });
-
     }
 
     @Override

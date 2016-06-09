@@ -1,6 +1,10 @@
 package de.tum.in.tumcampusapp.models;
 
 
+import android.text.TextUtils;
+
+import java.util.ArrayList;
+
 public class Question {
 
     private String question;
@@ -25,12 +29,18 @@ public class Question {
         this.synced = synced;
     }
 
+    // Const. for submiting Answeres for openQuestions
     public Question(String question, String text){
         this.question=question;
         this.text=text;
     }
 
-    // For OpenQuestions
+    public Question(String text, ArrayList<String> faculties){
+        this.text = text;
+        this.faculty = TextUtils.join(",",faculties);
+    }
+
+    // For fetching OpenQuestions
     public Question(String question, String text, String[] faculties){
         this.question = question;
         this.text = text;
