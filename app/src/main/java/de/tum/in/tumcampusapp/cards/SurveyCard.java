@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
+import de.tum.in.tumcampusapp.models.Question;
 import de.tum.in.tumcampusapp.models.managers.CardManager;
 import de.tum.in.tumcampusapp.models.managers.SurveyManager;
 
@@ -70,7 +72,7 @@ public class SurveyCard extends Card
         mTitleView.setText(R.string.research_quiz);
         if(!questions.isEmpty()){
             final Question ques = questions.get(0);
-            mQuestion.setText(ques.question);
+            mQuestion.setText(ques.getText());
         }
 
 
@@ -160,21 +162,9 @@ public class SurveyCard extends Card
 
     public void seQuestions(Cursor cur) {
         do {
-            Question item = new Question();
-            item.questionID = cur.getInt(0);
-            item.question = cur.getString(1);
+            Question item = new Question(cur.getString(0),cur.getString(1));
             questions.add(item);
         } while (cur.moveToNext());
         cur.close();
-    }
-
-
-    public class Question {
-        int questionID;
-        String question;
-
-        public int getQuestionID(){
-            return questionID;
-        }
     }
 }

@@ -25,9 +25,9 @@ public class Question {
         this.synced = synced;
     }
 
-    public Question(String text, String faculties){
+    public Question(String question, String text){
+        this.question=question;
         this.text=text;
-        this.faculty=faculties;
     }
 
     // For OpenQuestions

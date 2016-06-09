@@ -97,7 +97,7 @@ public class TUMCabeClient {
         return instance;
     }
 
-    // public void submitAnswer(SurveyCard.Question)
+    //public void submitAnswer(SurveyCard.Question)
 
     public ArrayList<Question> getOpenQuestions(){ return service.getOpenQuestions();}
 

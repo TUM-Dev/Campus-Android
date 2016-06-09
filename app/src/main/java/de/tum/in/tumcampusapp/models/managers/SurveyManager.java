@@ -71,6 +71,7 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard{
     }
 
     public Cursor getUnansweredQuestions(){
+        Log.d("getUnansweredQuestions","ichLebe");
         return db.rawQuery("SELECT question, text FROM openQuestions WHERE answered=?",new String[]{"0"});
     }
 
@@ -100,23 +101,23 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard{
      * @param question
      * @param updateField: yes || no || flag
      */
-    public void updateQuestion(SurveyCard.Question question,String updateField) {
+    public void updateQuestion(Question question,String updateField) {
         ContentValues cv = new ContentValues();
         cv.put(updateField, "1");
         if (!updateField.equals("answered")){
             cv.put("answered", "1");
         }
-        db.update("openQuestions",cv,"question = ?",new String[]{question.getQuestionID()+""});
-        Log.d("Question "+question.getQuestionID()+"",updateField+" is set");
+        db.update("openQuestions",cv,"question = ?",new String[]{question.getQuestion()+""});
+        Log.d("Question "+question.getQuestion()+"",updateField+" is set");
 
-        if (NetUtils.isConnected(mContext)){
+        /*if (NetUtils.isConnected(mContext)){
             syncOpenQuestionsTable();
-        }
+        }*/
 
     }
 
     // Not done yet
-    public void syncOpenQuestionsTable(){
+    /*public void syncOpenQuestionsTable(){
         Cursor cursor = db.rawQuery("SELECT question, answered FROM openQuestions WHERE synced=? AND answered=?",new String[]{"0","1"});
         if(cursor.moveToFirst()){
             do{
@@ -126,6 +127,7 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard{
                 String flagged = cursor.getString(cursor.getColumnIndex("flagged"));
 
                 if(!"0".equals(yes) && "0".equals(no) && "0".equals(flagged)){
+
 
                 }else if("0".equals(yes) && !"0".equals(no) && "0".equals(flagged)){
 
@@ -138,7 +140,7 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard{
         }
 
 
-    }
+    }*/
 
     public void insertOwnQuestions(String date, String userID, String question, String faculties){
         ContentValues cv = new ContentValues(8);
