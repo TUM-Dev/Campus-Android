@@ -25,6 +25,9 @@ import de.tum.in.tumcampusapp.models.Kino;
 import de.tum.in.tumcampusapp.models.News;
 import de.tum.in.tumcampusapp.models.Question;
 import de.tum.in.tumcampusapp.models.TUMCabeClient;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  * Created by aser on 5/5/16.
@@ -110,16 +113,16 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard{
         db.update("openQuestions",cv,"question = ?",new String[]{question.getQuestion()+""});
         Log.d("Question "+question.getQuestion()+"",updateField+" is set");
 
-        /*if (NetUtils.isConnected(mContext)){
+        if (NetUtils.isConnected(mContext)){
+            Log.d("DeviceIsConnected","true");
             syncOpenQuestionsTable();
-        }*/
+        }
 
     }
 
     // Not done yet
-    /*public void syncOpenQuestionsTable(){
-        Log.d("syncOpenQuestion","ichLebe");
-        Cursor cursor = db.rawQuery("SELECT question, answered FROM openQuestions WHERE synced=? AND answered=?",new String[]{"0","1"});
+    public void syncOpenQuestionsTable(){
+        Cursor cursor = db.rawQuery("SELECT question, yes, no, flagged FROM openQuestions WHERE synced=0 AND answered=1",null);
         if(cursor.moveToFirst()){
             do{
                 String question = cursor.getString(cursor.getColumnIndex("question"));
@@ -127,19 +130,53 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard{
                 String no = cursor.getString(cursor.getColumnIndex("no"));
                 String flagged = cursor.getString(cursor.getColumnIndex("flagged"));
 
+                Question answeredQuestion;
                 if(!"0".equals(yes) && "0".equals(no) && "0".equals(flagged)){
+                    answeredQuestion = new Question(question,yes);
+                    TUMCabeClient.getInstance(mContext).submitAnswer(answeredQuestion, new Callback<Question>() {
+                        @Override
+                        public void success(Question question, Response response) {
+                            Log.e("Test_resp_submitQues","Succeeded: "+response.getBody().toString());
+                        }
 
-
+                        @Override
+                        public void failure(RetrofitError error) {
+                            Log.e("Test_resp_submitQues","Failure");
+                        }
+                    });
                 }else if("0".equals(yes) && !"0".equals(no) && "0".equals(flagged)){
+                    answeredQuestion = new Question(question,no);
+                    TUMCabeClient.getInstance(mContext).submitAnswer(answeredQuestion, new Callback<Question>() {
+                        @Override
+                        public void success(Question question, Response response) {
+                            Log.e("Test_resp_submitQues","Succeeded: "+response.getBody().toString());
+                        }
 
-                }else if("0".equals(yes) && "0".equals(no) && !"0".equals(flagged)){
+                        @Override
+                        public void failure(RetrofitError error) {
+                            Log.e("Test_resp_submitQues","Failure" + error.toString());
+                        }
+                    });
+                }else if("0".equals(yes) && "0".equals(no) && !"0".equals(flagged)){ // until flagged is available in the API
+                    /*answeredQuestion = new Question(question,flagged);
+                    TUMCabeClient.getInstance(mContext).submitAnswer(answeredQuestion, new Callback<Question>() {
+                        @Override
+                        public void success(Question question, Response response) {
+                            Log.e("Test_resp_submitQues","Succeeded: "+response.getBody().toString());
+                        }
 
-                }else {
-
+                        @Override
+                        public void failure(RetrofitError error) {
+                            Log.e("Test_resp_submitQues","Failure");
+                        }
+                    });*/
                 }
+                ContentValues cv = new ContentValues();
+                cv.put("synced", "1");
+                db.update("openQuestions",cv,"question = ?",new String[]{cursor.getString(cursor.getColumnIndex("question"))+""});
             }while (cursor.moveToNext());
         }
-    }*/
+    }
 
     public void insertOwnQuestions(String date, String userID, String question, String faculties){
         ContentValues cv = new ContentValues(8);

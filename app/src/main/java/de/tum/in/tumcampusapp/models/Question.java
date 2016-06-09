@@ -14,25 +14,30 @@ public class Question {
     private Boolean no;
     private String faculty;
     private Boolean flagged;
-    private Boolean answered;
+    private String answer;
     private Boolean synced;
     private String[] facultyArr;
 
-    public Question(String question, String text, Boolean yes, Boolean no, String faculties, Boolean flagged, Boolean answered, Boolean synced) {
+    public Question(String question, String text, Boolean yes, Boolean no, String faculties, Boolean flagged, Boolean synced) {
         this.question = question;
         this.text = text;
         this.yes = yes;
         this.no = no;
         this.faculty = faculties;
         this.flagged = flagged;
-        this.answered = answered;
+        this.synced = synced;
+    }
+
+    public Question (String question, String text, boolean synced){
+        this.question = question;
+        this.text = text;
         this.synced = synced;
     }
 
     // Const. for submiting Answeres for openQuestions
-    public Question(String question, String text){
+    public Question(String question, String answer){
         this.question=question;
-        this.text=text;
+        this.answer=answer;
     }
 
     public Question(String text, ArrayList<String> faculties){
@@ -83,9 +88,9 @@ public class Question {
 
     public void setFlagged(Boolean flagged) {this.flagged = flagged;}
 
-    public Boolean getAnswered() {return answered;}
+    public String getAnswered() {return answer;}
 
-    public void setAnswered(Boolean answered) {this.answered = answered;}
+    public void setAnswered(String answered) {this.answer = answered;}
 
     public Boolean getSynced() {return synced;}
 
