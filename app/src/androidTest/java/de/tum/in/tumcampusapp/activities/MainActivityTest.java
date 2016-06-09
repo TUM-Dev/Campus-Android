@@ -1,4 +1,4 @@
-package de.tum.in.tumcampusapp;
+package de.tum.in.tumcampusapp.activities;
 
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -8,12 +8,11 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import de.tum.in.tumcampusapp.activities.MainActivity;
+import de.tum.in.tumcampusapp.R;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 @RunWith(AndroidJUnit4.class)
@@ -25,8 +24,7 @@ public class MainActivityTest extends BaseActivityTest {
 
     @Test
     public void mainComponentDisplayedTest() {
-        onView(withId(R.id.cards_view))
-                .check(matches(isDisplayed()));
+        idIsDisplayed(R.id.cards_view);
 
         onView(withText(R.string.swipe_instruction))
                 .check(matches(isDisplayed()));

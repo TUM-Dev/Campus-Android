@@ -1,4 +1,4 @@
-package de.tum.in.tumcampusapp;
+package de.tum.in.tumcampusapp.activities;
 
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -8,7 +8,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import de.tum.in.tumcampusapp.activities.RoomFinderActivity;
+import de.tum.in.tumcampusapp.R;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -29,8 +29,7 @@ public class RoomFinderActivityTest extends BaseActivityTest {
 
     @Test
     public void mainComponentDisplayedTest() {
-        onView(withId(R.id.list))
-                .check(matches(isDisplayed()));
+        idIsDisplayed(R.id.list);
     }
 
     @Test
