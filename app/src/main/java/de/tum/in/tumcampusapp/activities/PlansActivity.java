@@ -41,14 +41,15 @@ public class PlansActivity extends BaseActivity implements OnItemClickListener {
             {"http://www.mvv-muenchen.de/fileadmin/media/Dateien/plaene/pdf/Tramnetz_2016.pdf", "Tramnetz.pdf"},
             {"http://www.mvv-muenchen.de/fileadmin/media/Dateien/3_Tickets_Preise/dokumente/TARIFPLAN_2016-Innenraum.pdf", "Tarifplan.pdf"},
     };
+    ProgressBar progressBar;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        final ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBar2);
+        progressBar = (ProgressBar) findViewById(R.id.progressBar2);
 
-        if (Utils.getInternalSettingInt(this, "mvvplans_downloaded", 0) == 0) {
+        if (true || Utils.getInternalSettingInt(this, "mvvplans_downloaded", 0) == 0) {
             final Intent back_intent = new Intent(this, MainActivity.class);
 
             new AlertDialog.Builder(this)
@@ -62,27 +63,11 @@ public class PlansActivity extends BaseActivity implements OnItemClickListener {
                     })
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-
-                            new CountDownTimer(3000, 100) {
-                                @Override
-                                public void onTick(long millisUntilFinished) {
-                                    progressBar.setVisibility(View.VISIBLE);
-                                }
-
-                                @Override
-                                public void onFinish() {
-                                    progressBar.setVisibility(View.GONE);
-                                }
-
-                            }.start();
-
+                            progressBar.setVisibility(View.VISIBLE);
                             downloadFiles.start();
-
                             Utils.setInternalSetting(getApplicationContext(), "mvvplans_downloaded", 1);
                         }
-                    })
-
-                    .show();
+                    }).show();
         }
 
 
@@ -140,6 +125,14 @@ public class PlansActivity extends BaseActivity implements OnItemClickListener {
                     e.printStackTrace();
                 }
             }
+
+            //Finished, notify the UI
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    progressBar.setVisibility(View.GONE);
+                }
+            });
         }
     };
 }
