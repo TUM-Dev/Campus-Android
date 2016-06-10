@@ -36,8 +36,9 @@ public class Question {
     }
 
     // For OwnQuestions
-    public Question (String question, Answer[] results){
+    public Question (String question, String text, Answer[] results){
         this.question = question;
+        this.text = text;
         this.results = results;
     }
 
@@ -47,12 +48,13 @@ public class Question {
         this.answer=answer;
     }
 
+    // Const. for fetching faculties
     public Question(String text, ArrayList<String> faculties){
         this.text = text;
         this.faculty = TextUtils.join(",",faculties);
     }
 
-    // For fetching OpenQuestions
+    // Const. For fetching OpenQuestions
     public Question(String question, String text, String[] faculties){
         this.question = question;
         this.text = text;

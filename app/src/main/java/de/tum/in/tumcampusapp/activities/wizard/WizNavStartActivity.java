@@ -10,12 +10,14 @@ import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -105,6 +107,10 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<Void,Boo
                         Cursor c = sm.getFacultyID((String) adapterView.getItemAtPosition(i));
                         if(c.moveToFirst()){
                             Utils.setInternalSetting(getApplicationContext(), "user_major", c.getString(c.getColumnIndex("faculty")));
+                        }
+                        TextView selectedItem = (TextView) adapterView.getChildAt(0);
+                        if (selectedItem != null) {
+                            selectedItem.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.color_primary));
                         }
                         userMajor = (String) adapterView.getItemAtPosition(i);
                     }

@@ -20,6 +20,7 @@ import de.tum.in.tumcampusapp.cards.SurveyCard;
 import de.tum.in.tumcampusapp.models.Faculty;
 import de.tum.in.tumcampusapp.models.Question;
 import de.tum.in.tumcampusapp.models.TUMCabeClient;
+import de.tum.in.tumcampusapp.trace.Util;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -64,10 +65,17 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
     }
 
     public Cursor getUnansweredQuestions() {
-        //return db.rawQuery("SELECT question, text FROM openQuestions WHERE answered=?",new String[]{"0"}); Irgendwie wenn man die App nochmal startet kommen die nochmal
         Cursor c = db.rawQuery("SELECT question, text FROM openQuestions WHERE answered=0", null);
         return c;
     }
+
+
+    // "CREATE TABLE IF NOT EXISTS ownQuestions (question INTEGER PRIMARY KEY, text VARCHAR, yes INTEGER, no INTEGER, deleted BOOLEAN, synced BOOLEAN)"
+    public Cursor getMyOwnQuestions() {
+        Cursor c = db.rawQuery("SELECT question FROM ownQuestions", null);
+        return c;
+    }
+
 
     /**
      * updates the field of a given question
@@ -228,45 +236,17 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
     public void downLoadOwnQuestions() {
         ArrayList<Question> ownQuestions = new ArrayList<Question>();
         try {
-            Utils.log("downloadOwnQuestion: drin in Try block");
             ownQuestions = TUMCabeClient.getInstance(mContext).getOwnQuestions();
-            Utils.log("downloadOwnQuestion: drin in Try block, nachm API-Aufruf");
-            Utils.log("downloadOwnQuestion: Size: "+ownQuestions.size());
         } catch (Exception e) {
             e.printStackTrace();
             Utils.log(e.toString());
         }
+
         for (int i = 0; i < ownQuestions.size(); i++) {
-            Question.Answer[] responses = ownQuestions.get(i).getResults();
-            if (ownQuestions.get(i).getResults().length != 0){
-                Utils.log("downloadOwnQuestion: Quest: "+ i +ownQuestions.get(i).getQuestion()+ " " + ownQuestions.get(i).getText() + " " + responses[0].getAnswer() + " " + responses[0].getVotes());
-            } else {
-                Utils.log("downloadOwnQuestion: Quest: "+ i +ownQuestions.get(i).getQuestion()+ " " + ownQuestions.get(i).getText() + " " + ownQuestions.get(i).getResults().toString());
-            }
             replaceIntoDbOwnQuestions(ownQuestions.get(i));
-        }
-
-        //db.execSQL("CREATE TABLE IF NOT EXISTS ownQuestions (question INTEGER PRIMARY KEY, text VARCHAR, yes INTEGER, no INTEGER, deleted BOOLEAN, synced BOOLEAN)");
-        Cursor c = db.rawQuery("SELECT * FROM ownQuestions",null);
-
-        if (!c.moveToFirst()) {
-            Utils.log("ownQuestions count: "+c.getCount());
-            do{
-                String question = c.getString(c.getColumnIndex("question"));
-                String text = c.getString(c.getColumnIndex("text"));
-                String yes = c.getString(c.getColumnIndex("yes"));
-                String no = c.getString(c.getColumnIndex("no"));
-                String deleted = c.getString(c.getColumnIndex("deleted"));
-                String synced = c.getString(c.getColumnIndex("synced"));
-                Utils.log("ownQuestions Entries: ["+question+", "+text+", "+yes+", "+no+", "+deleted+", "+synced+"]");
-            }while (c.moveToNext());
-        }else {
-            Utils.log("ownQuestions count: 0");
         }
     }
 
-
-    //db.execSQL("CREATE TABLE IF NOT EXISTS ownQuestions (question INTEGER PRIMARY KEY, text VARCHAR, yes INTEGER, no INTEGER, deleted BOOLEAN, synced BOOLEAN)");
     void replaceIntoDbOwnQuestions(Question q) {
         Cursor c = db.rawQuery("SELECT question FROM ownQuestions WHERE question = ?", new String[]{q.getQuestion()});
 
@@ -275,46 +255,57 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
             ContentValues cv = new ContentValues();
             Question.Answer[] answers = q.getResults();
 
-            Utils.log("answers length for "+q.getQuestion()+": " + answers.length);
+            Utils.log("answers length for " + q.getQuestion() + ": " + answers.length);
 
             // In case of no votes
             if (answers.length == 0) {
+                Utils.log("answerlength = 0");
                 cv.put("yes", 0);
                 cv.put("no", 0);
                 // In case of one vote -> get whether it is yes or no
-            }else if (answers.length == 1) {
-                if(answers[0].getAnswer().equals("yes")){
-                    cv.put("yes",answers[0].getVotes());
-                    cv.put("no",0);
-                }else {
-                    cv.put("yes",0);
-                    cv.put("no",answers[0].getVotes());
+            } else if (answers.length == 1) {
+                if (answers[0].getAnswer().equals("yes")) {
+                    cv.put("yes", answers[0].getVotes());
+                    cv.put("no", 0);
+                    Utils.log("Question: " + q.getQuestion() + " is set to yes");
+                } else {
+                    cv.put("yes", 0);
+                    cv.put("no", answers[0].getVotes());
+                    Utils.log("Question: " + q.getQuestion() + " is set to no");
                 }
                 // In case there are two votes
-            }else {
-                if(answers[0].getAnswer().equals("yes")){
-                    cv.put("yes",answers[0].getVotes());
-                }else {
-                    cv.put("no",answers[0].getVotes());
+            } else {
+                if (answers[0].getAnswer().equals("yes")) {
+                    cv.put("yes", answers[0].getVotes());
+                    Utils.log("Question: " + q.getQuestion() + " is set to yes");
+                } else {
+                    cv.put("no", answers[0].getVotes());
+                    Utils.log("Question: " + q.getQuestion() + " is set to no");
                 }
 
-                if(answers[1].getAnswer().equals("yes")){
-                    cv.put("yes",answers[1].getVotes());
-                }else {
-                    cv.put("no",answers[1].getVotes());
+                if (answers[1].getAnswer().equals("yes")) {
+                    cv.put("yes", answers[1].getVotes());
+                    Utils.log("Question: " + q.getQuestion() + " is set to yes");
+                } else {
+                    cv.put("no", answers[1].getVotes());
+                    Utils.log("Question: " + q.getQuestion() + " is set to no");
                 }
             }
 
             cv.put("question", q.getQuestion());
             cv.put("text", q.getText());
+            Utils.log("QuestionText von " + q.getQuestion() + " is: " + q.getText());
             cv.put("deleted", 0);
             cv.put("synced", 0);
             try {
+                Utils.log("Vor der TA");
                 db.beginTransaction();
                 db.insert("ownQuestions", null, cv);
                 db.setTransactionSuccessful();
+                Utils.log("Nach der TA");
             } catch (Exception e) {
                 e.printStackTrace();
+                Utils.log("InsertOwnQuestionError: " + e.toString());
             } finally {
                 db.endTransaction();
             }
