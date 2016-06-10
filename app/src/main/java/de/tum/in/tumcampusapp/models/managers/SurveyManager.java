@@ -20,7 +20,6 @@ import de.tum.in.tumcampusapp.cards.SurveyCard;
 import de.tum.in.tumcampusapp.models.Faculty;
 import de.tum.in.tumcampusapp.models.Question;
 import de.tum.in.tumcampusapp.models.TUMCabeClient;
-import de.tum.in.tumcampusapp.trace.Util;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -254,72 +253,76 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
     void replaceIntoDbOwnQuestions(Question q) {
         Cursor c = db.rawQuery("SELECT question FROM ownQuestions WHERE question = ?", new String[]{q.getQuestion()});
 
-        // if question doesn't exist
+        // if question doesn't exist -> insert into DB
         if (!c.moveToFirst()) {
-            ContentValues cv = new ContentValues();
-            Question.Answer[] answers = q.getResults();
-
-            Utils.log("answers length for " + q.getQuestion() + ": " + answers.length);
-
-            // In case of no votes
-            if (answers.length == 0) {
-                Utils.log("answerlength = 0");
-                cv.put("yes", 0);
-                cv.put("no", 0);
-                // In case of one vote -> get whether it is yes or no
-            } else if (answers.length == 1) {
-                if (answers[0].getAnswer().equals("yes")) {
-                    cv.put("yes", answers[0].getVotes());
-                    cv.put("no", 0);
-                    Utils.log("Question: " + q.getQuestion() + " is set to yes");
-                } else {
-                    cv.put("yes", 0);
-                    cv.put("no", answers[0].getVotes());
-                    Utils.log("Question: " + q.getQuestion() + " is set to no");
-                }
-                // In case there are two votes
-            } else {
-                if (answers[0].getAnswer().equals("yes")) {
-                    cv.put("yes", answers[0].getVotes());
-                    Utils.log("Question: " + q.getQuestion() + " is set to yes");
-                } else {
-                    cv.put("no", answers[0].getVotes());
-                    Utils.log("Question: " + q.getQuestion() + " is set to no");
-                }
-
-                if (answers[1].getAnswer().equals("yes")) {
-                    cv.put("yes", answers[1].getVotes());
-                    Utils.log("Question: " + q.getQuestion() + " is set to yes");
-                } else {
-                    cv.put("no", answers[1].getVotes());
-                    Utils.log("Question: " + q.getQuestion() + " is set to no");
-                }
-            }
-
-            cv.put("question", q.getQuestion());
-            cv.put("text", q.getText());
-            Utils.log("QuestionText von " + q.getQuestion() + " is: " + q.getText());
-            cv.put("deleted", 0);
-            cv.put("synced", 0);
+            ContentValues cv = setOwnQuestionFields(q,true);//new ContentValues();
             try {
-                Utils.log("Vor der TA");
                 db.beginTransaction();
                 db.insert("ownQuestions", null, cv);
                 db.setTransactionSuccessful();
-                Utils.log("Nach der TA");
             } catch (Exception e) {
                 e.printStackTrace();
-                Utils.log("InsertOwnQuestionError: " + e.toString());
             } finally {
                 db.endTransaction();
             }
+            // otherwise upate question fields in the db
         } else {
-            //ContentValues cv = new ContentValues();
-            //cv.put("yes","Bob"); //These Fields should be your String values of actual column names
-            //cv.put("no","19");
-            //cv.put("Field2","Male");
-            //db.update("ownQuestions",)
+            ContentValues cv = setOwnQuestionFields(q,false);
+            try {
+                db.beginTransaction();
+                db.update("ownQuestions",cv,"question="+q.getQuestion(),null);
+                db.setTransactionSuccessful();
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                db.endTransaction();
+            }
         }
+    }
+
+    public ContentValues setOwnQuestionFields(Question q, boolean setDeletedSynced){
+        Question.Answer[] answers = q.getResults();
+        ContentValues cv = new ContentValues();
+
+        cv.put("question", q.getQuestion());
+        cv.put("text", q.getText());
+
+        // In case of no votes
+        if (answers.length == 0) {
+            Utils.log("answerlength = 0");
+            cv.put("yes", 0);
+            cv.put("no", 0);
+            // In case of one vote -> get whether it is yes or no
+        } else if (answers.length == 1) {
+            if (answers[0].getAnswer().equals("yes")) {
+                cv.put("yes", answers[0].getVotes());
+                cv.put("no", 0);
+            } else {
+                cv.put("yes", 0);
+                cv.put("no", answers[0].getVotes());
+            }
+            // In case there are two votes
+        } else {
+            if (answers[0].getAnswer().equals("yes")) {
+                cv.put("yes", answers[0].getVotes());
+            } else {
+                cv.put("no", answers[0].getVotes());
+            }
+
+            if (answers[1].getAnswer().equals("yes")) {
+                cv.put("yes", answers[1].getVotes());
+            } else {
+                cv.put("no", answers[1].getVotes());
+            }
+        }
+
+        if (setDeletedSynced){
+            cv.put("deleted", 0);
+            cv.put("synced", 0);
+        }
+
+        return cv;
+
     }
 
     // Inserts new openQuestion if it doesnt't exist
