@@ -14,5 +14,6 @@ android {
 }
 
 dependencies {
-    compile project(":app")
+    releaseCompile project(path: ':app', configuration: 'release')
+    debugCompile project(path: ':app', configuration: 'debug')
 }

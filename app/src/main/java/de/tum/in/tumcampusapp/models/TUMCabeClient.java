@@ -66,7 +66,9 @@ public class TUMCabeClient {
                 //TODO show a error message
                 //Toast.makeText(context, t.toString(), Toast.LENGTH_LONG).show();
             }
-            return t;
+
+            //Return the same cause, so it can be handled by other activities
+            return cause;
         }
     };
     private TUMCabeAPIService service = null;

@@ -228,12 +228,13 @@ public abstract class Card {
         Notification notification = fillNotification(notificationBuilder);
 
         if (notification != null) {
-            NotificationManagerCompat notificationManager =
-                    NotificationManagerCompat.from(mContext);
-            notificationManager.notify(getTyp(), notification);
-
-            // Showing a notification is handled as it would already
-            // be dismissed, so that it will not notify again.
+            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(mContext);
+            try {
+                notificationManager.notify(getTyp(), notification);
+            }catch (IllegalArgumentException e){
+                //Dismiss exception, as we want this to happen (Only work on wear)
+            }
+            // Showing a notification is handled as it would already be dismissed, so that it will not notify again.
             discardNotification();
         }
     }
