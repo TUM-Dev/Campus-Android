@@ -143,8 +143,7 @@ public class StudyRoomsActivity extends ActivityForLoadingInBackground<Void, Voi
 
     private void setupViewPagerAdapter(int mSelectedStudyRoomGroupId) {
         mSectionsPagerAdapter = new StudyRoomsPagerAdapter(getSupportFragmentManager());
-        mSectionsPagerAdapter.setStudyRoomGroupId(this, mSelectedStudyRoomGroupId);
-        mViewPager.setAdapter(mSectionsPagerAdapter);
+        changeViewPagerAdapter(mSelectedStudyRoomGroupId);
     }
 
     @Override
@@ -185,7 +184,9 @@ public class StudyRoomsActivity extends ActivityForLoadingInBackground<Void, Voi
         if (hasGotStudyRoomGroups()) {
             Spinner spinner = getStudyRoomGroupsSpinner();
             selectCurrentSpinnerItem(spinner);
-        } else
+        } else {
             showCorrectErrorLayout();
+        }
+        showLoadingEnded();
     }
 }
