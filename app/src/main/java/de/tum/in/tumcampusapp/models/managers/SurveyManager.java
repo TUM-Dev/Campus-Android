@@ -72,8 +72,12 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
 
     // "CREATE TABLE IF NOT EXISTS ownQuestions (question INTEGER PRIMARY KEY, text VARCHAR, yes INTEGER, no INTEGER, deleted BOOLEAN, synced BOOLEAN)"
     public Cursor getMyOwnQuestions() {
-        Cursor c = db.rawQuery("SELECT question FROM ownQuestions where deleted = 0", null);
+        Cursor c = db.rawQuery("SELECT * FROM ownQuestions where deleted = 0", null);
         return c;
+    }
+
+    public void deleteMyOwnQuestion(int id) {
+        db.execSQL("UPDATE ownQuestions SET deleted=1 WHERE question=" + id);
     }
 
 
@@ -309,6 +313,12 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
             } finally {
                 db.endTransaction();
             }
+        } else {
+            //ContentValues cv = new ContentValues();
+            //cv.put("yes","Bob"); //These Fields should be your String values of actual column names
+            //cv.put("no","19");
+            //cv.put("Field2","Male");
+            //db.update("ownQuestions",)
         }
     }
 

@@ -5,6 +5,7 @@ import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Typeface;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.res.ResourcesCompat;
@@ -13,6 +14,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.ScaleAnimation;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -57,7 +61,7 @@ public class SurveyActivity extends BaseActivity {
     LinearLayout mainResponseLayout, questionsLayout;
     String chosenFaculties = "", newDate = "", lrzId;
     ArrayList<String> fetchedFaculties = new ArrayList<>();
-
+    ViewGroup parentView;
     //private SQLiteDatabase db;
 
     String[] numQues = new String[3];
@@ -82,15 +86,23 @@ public class SurveyActivity extends BaseActivity {
         setUpResponseTab();
         userAllowed();
 
-
     }
 
     //set up the respone tab layout dynamically depending on number of questions
     @SuppressLint("SetTextI18n")
-    public void setUpResponseTab() {
+    public void setUpResponseTab()
+    {
+        Cursor c=surveyManager.getMyOwnQuestions();
+        int numberofquestion=c.getCount();
         //get response and question from database->set i<Number of question
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < numberofquestion; i++) {
 
+            c.moveToNext();
+            String questionText=c.getString(c.getColumnIndex("text"));
+            int yes=c.getInt(c.getColumnIndex("yes"));
+            int no=c.getInt(c.getColumnIndex("no"));
+            int total=yes+no;
+            int id=c.getInt(c.getColumnIndex("question"));
             //linear layout for every question
             LinearLayout ques = new LinearLayout(this);
             LinearLayout.LayoutParams quesParams = new LinearLayout.LayoutParams(
@@ -122,16 +134,18 @@ public class SurveyActivity extends BaseActivity {
                     LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             tvparams.setMargins(50, 0, 0, 0);
             questionTv.setLayoutParams(tvparams);
+            questionTv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.color_primary_dark));
+            questionTv.setTypeface(null, Typeface.BOLD);
             //setText(question)
-            questionTv.setText("asdasds");
+            questionTv.setText(questionText);
             l1.addView(questionTv);
             //adding button delete
             float inPixels = getResources().getDimension(R.dimen.dimen_buttonHeight_in_dp);
             Button deleteButton = new Button(this);
-            deleteButton.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, (int) inPixels));
+            deleteButton.setLayoutParams(new LinearLayout.LayoutParams((int)inPixels, (int) inPixels));
             deleteButton.setBackgroundResource((R.drawable.minusicon));
             deleteButton.setOnClickListener(clicks);
-            deleteButton.setTag(i);
+            deleteButton.setTag(id);
             l2.addView(deleteButton);
 
             //adding progress bar with answers
@@ -147,13 +161,8 @@ public class SurveyActivity extends BaseActivity {
             progress.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, (int) inPixels2));
             progress.setMinimumHeight((int) inPixels2);
             progress.setProgressDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.progressbar, null));
-            //totalAnswer=yes +no
-            //setMax(totalAnswers)
-            //int x=(int)(yes/(no+totalAnswers))
-            //setProgress()
-            //fill progress
-            progress.setProgress(70);
-            progress.setMax(100);
+            progress.setProgress(yes);
+            progress.setMax(total);
             progress.setId(R.id.p1);
             r.addView(progress);
 
@@ -164,7 +173,7 @@ public class SurveyActivity extends BaseActivity {
             params.addRule(RelativeLayout.CENTER_IN_PARENT);
             yesAnswers.setPadding(15, 0, 0, 0);
             //set number of yes answers
-            yesAnswers.setText("15");
+            yesAnswers.setText(yes+"");
             r.addView(yesAnswers, params);
 
             TextView noAnswers = new TextView(this);
@@ -173,11 +182,36 @@ public class SurveyActivity extends BaseActivity {
             params1.addRule(RelativeLayout.ALIGN_RIGHT, progress.getId());
             params1.addRule(RelativeLayout.CENTER_IN_PARENT);
             //set number of no answers
-            noAnswers.setText("15");
+            noAnswers.setText(no+"");
             noAnswers.setPadding(0, 0, 20, 0);
             r.addView(noAnswers, params1);
         }
 
+    }
+
+    public void zoomOutanimation(View v)
+    {
+        ScaleAnimation zoomOut=new ScaleAnimation(1f, 0f, 1, 0f, Animation.RELATIVE_TO_SELF, (float)0.5,Animation.RELATIVE_TO_SELF, (float)0.5);
+        zoomOut.setDuration(500);
+        zoomOut.setFillAfter(true);
+        parentView = (ViewGroup) v.getParent().getParent().getParent();
+        parentView.startAnimation(zoomOut);
+        zoomOut.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                parentView.removeAllViews();
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
     }
 
     //delete button click
@@ -186,22 +220,14 @@ public class SurveyActivity extends BaseActivity {
         @Override
         public void onClick(final View v) {
             // TODO Auto-generated method stub
-            for (int i = 0; i < 10; i++) {
-                //remove view and delete from database.
-                if ((int) v.getTag() == i) {
-                    ViewGroup parentView = (ViewGroup) v.getParent().getParent().getParent();
-                    parentView.removeAllViews();
-                    /*Intent in = getIntent();
-                    in.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                    in.putExtra("responses", 1);
-                    startActivity(in);*/
-                    Snackbar snackbar = Snackbar
-                            .make(findViewById(R.id.drawer_layout), getResources().getString(R.string.question_deleted), Snackbar.LENGTH_LONG);
-
-                    snackbar.show();
-
-                }
-            }
+            //remove view and delete from database.
+            v.setEnabled(false);
+            int tag=(int) v.getTag();
+            surveyManager.deleteMyOwnQuestion(tag);
+            zoomOutanimation(v);
+            Snackbar snackbar = Snackbar
+                    .make(findViewById(R.id.drawer_layout), getResources().getString(R.string.question_deleted), Snackbar.LENGTH_LONG);
+            snackbar.show();
         }
 
     };
