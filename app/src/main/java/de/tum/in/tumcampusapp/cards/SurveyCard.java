@@ -14,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
@@ -74,7 +75,6 @@ public class SurveyCard extends Card
             final Question ques = questions.get(0);
             mQuestion.setText(ques.getText());
 
-
             // Listens on the yes button in the card
             bYes.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -112,7 +112,7 @@ public class SurveyCard extends Card
     }
 
     private void showNextQuestions() {
-        if (questions.size() >= 2) {
+        if (questions.size() >= 1) {
             showFirstQuestion();
         } else {
             mQuestion.setText(R.string.no_questions_available);
@@ -125,7 +125,6 @@ public class SurveyCard extends Card
 
     @Override
     public boolean shouldShow(SharedPreferences p) {
-         Utils.log("CountUnansweredQuesti: "+manager.getUnansweredQuestions().getCount() +" "); //somehow the card is shown again when I start the app again. Have to check whether 'answered' is set correclty upon answering
         return manager.getUnansweredQuestions().getCount() >= 1;
     }
 

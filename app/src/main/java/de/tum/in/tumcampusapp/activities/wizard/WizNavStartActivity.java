@@ -10,7 +10,6 @@ import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -20,7 +19,6 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.ActivityForLoadingInBackground;
@@ -71,10 +69,10 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<Void,Boo
             @Override
             protected String[] doInBackground(Void... voids) {
                 ArrayList<String> fetchedFaculties = new ArrayList<>();
-                SyncManager syncManager = new SyncManager(getApplicationContext()); // Has to initialized here cuz otherwise the 'downloadFromExternal' in SurveyManager will throw a failure as it comprises an operation from SyncManager.
+                SyncManager syncManager = new SyncManager(getApplicationContext()); // Has to initialized here cuz otherwise the 'downloadFacultiesFromExternal' in SurveyManager will throw a failure as it comprises an operation from SyncManager.
                 SurveyManager sm = new SurveyManager(getApplicationContext());
                 try {
-                    sm.downloadFromExternal(true);
+                    sm.downloadFacultiesFromExternal(true);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

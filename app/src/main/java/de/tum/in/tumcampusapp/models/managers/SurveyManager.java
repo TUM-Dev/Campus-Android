@@ -25,13 +25,12 @@ import de.tum.in.tumcampusapp.models.Kino;
 import de.tum.in.tumcampusapp.models.News;
 import de.tum.in.tumcampusapp.models.Question;
 import de.tum.in.tumcampusapp.models.TUMCabeClient;
+import de.tum.in.tumcampusapp.trace.Util;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-/**
- * Created by aser on 5/5/16.
- */
+
 public class SurveyManager extends AbstractManager implements Card.ProvidesCard {
 
     private static int TIME_TO_SYNC = 1800; // weiss nicht wie oft
@@ -52,7 +51,9 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
     @Override
     public void onRequestCard(Context context) {
         Cursor rows = getUnansweredQuestions();//getNextQuestions();
+        Utils.log("onRequestSurveyCa");
         if (rows.moveToFirst()) {
+            Utils.log("onRequestSurveyCa3");
             SurveyCard card = new SurveyCard(context);
             card.seQuestions(rows); // Questions from local DB (that were downloaded using the API) should be given here.
             card.apply();
@@ -71,8 +72,11 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
     }
 
     public Cursor getUnansweredQuestions() {
+        Utils.log("onRequestSurveyCa1");
         //return db.rawQuery("SELECT question, text FROM openQuestions WHERE answered=?",new String[]{"0"}); Irgendwie wenn man die App nochmal startet kommen die nochmal
-        return db.rawQuery("SELECT question, text FROM openQuestions WHERE answered=0", null);
+        Cursor c = db.rawQuery("SELECT question, text FROM openQuestions WHERE answered=0", null);
+        Utils.log("onRequestSurveyCa1" + c.toString());
+        return c;
     }
 
     /**
@@ -105,7 +109,6 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
 
         //Tigger sync if we are connected currently
         if (NetUtils.isConnected(mContext)) {
-            Utils.log("true");
             syncOpenQuestionsTable();
         }
 
@@ -189,7 +192,7 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
         return db.rawQuery("SELECT faculty FROM faculties WHERE name=?", new String[]{facultyName});
     }
 
-    public void downloadFromExternal(boolean force) throws Exception {
+    public void downloadFacultiesFromExternal(boolean force) throws Exception {
         if (!force && !SyncManager.needSync(db, this, TIME_TO_SYNC)) {
             return;
         }
@@ -232,8 +235,32 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
         }
     }
 
+    // Inserts new openQuestion if it doesnt't exist
     void replaceIntoOpenQuestions(Question q) {
-        db.execSQL("REPLACE INTO openQuestions (question, text) VALUES (?, ?)", new Object[]{q.getQuestion(), q.getText()});
+
+        Cursor c = db.rawQuery("SELECT question FROM openQuestions WHERE question = ?",new String[]{q.getQuestion()});
+
+        // if question doesn't exist
+        if(!c.moveToFirst()) {
+
+            ContentValues cv = new ContentValues();
+            cv.put("question", q.getQuestion());
+            cv.put("text", q.getText());
+            cv.put("yes", 0);
+            cv.put("no", 0);
+            cv.put("flagged", 0);
+            cv.put("answered", 0);
+            cv.put("synced", 0);
+            try {
+                db.beginTransaction();
+                db.insert("openQuestions",null,cv);
+                db.setTransactionSuccessful();
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                db.endTransaction();
+            }
+        }
     }
 
     void replaceIntoDb(Faculty f) {

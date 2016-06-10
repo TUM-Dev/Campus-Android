@@ -179,7 +179,7 @@ public class CardManager {
     /**
      * Resets dismiss settings for all cards
      */
-    public static void restoreCards() {
+    public static void restoreCards(){
         SharedPreferences prefs = mContext.getSharedPreferences(Card.DISCARD_SETTINGS_START, 0);
         prefs.edit().clear().apply();
         AbstractManager.getDb(mContext).execSQL("UPDATE news SET dismissed=0");
