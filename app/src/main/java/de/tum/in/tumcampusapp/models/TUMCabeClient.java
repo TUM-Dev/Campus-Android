@@ -45,6 +45,8 @@ public class TUMCabeClient {
     private static final String API_QUESTION = "/question/";
     private static final String API_FACULTIES = "/faculty/";
     private static final String API_ANSWER_QUESTION = "/question/answer";
+    private static final String API_OWN_QUESTIONS = "/question/my";
+
 
 
 
@@ -96,6 +98,9 @@ public class TUMCabeClient {
         }
         return instance;
     }
+
+    public ArrayList<Question> getOwnQuestions(){ return service.getOwnQuestions();}
+
 
     public void submitAnswer(Question question, Callback<Question> cb){
         service.answerQuestion(question,cb);
@@ -204,6 +209,9 @@ public class TUMCabeClient {
     }
 
     private interface TUMCabeAPIService {
+
+        @POST(API_OWN_QUESTIONS)
+        ArrayList<Question> getOwnQuestions();
 
         @POST(API_ANSWER_QUESTION)
         void answerQuestion(@Body Question question, Callback<Question> cb);

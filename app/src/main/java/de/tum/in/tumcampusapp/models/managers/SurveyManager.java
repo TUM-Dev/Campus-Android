@@ -46,7 +46,7 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard{
         db.execSQL("CREATE TABLE IF NOT EXISTS survey1 (id INTEGER PRIMARY KEY AUTOINCREMENT, date VARCHAR,userID VARCHAR, question TEXT, faculties TEXT, "
                 + "yes INTEGER,  no INTEGER, flags INTEGER)");
         db.execSQL("CREATE TABLE IF NOT EXISTS openQuestions (question INTEGER PRIMARY KEY, text VARCHAR, yes BOOLEAN, no BOOLEAN, flagged BOOLEAN, answered BOOLEAN, synced BOOLEAN)");
-
+        db.execSQL("CREATE TABLE IF NOT EXISTS ownQuestions (question INTEGER PRIMARY KEY, text VARCHAR, yes INTEGER, no INTEGER, deleted BOOLEAN, synced BOOLEAN)");
         //generateTestData(); // Untill the API is done
         //dropTestData(); // untill the API is done
     }
@@ -75,7 +75,8 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard{
 
     public Cursor getUnansweredQuestions(){
         Log.d("getUnansweredQuestions","ichLebe");
-        return db.rawQuery("SELECT question, text FROM openQuestions WHERE answered=?",new String[]{"0"});
+        //return db.rawQuery("SELECT question, text FROM openQuestions WHERE answered=?",new String[]{"0"}); Irgendwie wenn man die App nochmal startet kommen die nochmal
+        return db.rawQuery("SELECT question, text FROM openQuestions WHERE answered=0",null);
     }
 
     // For testing purposes untill the API is done
@@ -123,41 +124,44 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard{
     // Not done yet
     public void syncOpenQuestionsTable(){
         Cursor cursor = db.rawQuery("SELECT question, yes, no, flagged FROM openQuestions WHERE synced=0 AND answered=1",null);
-        if(cursor.moveToFirst()){
-            do{
-                String question = cursor.getString(cursor.getColumnIndex("question"));
-                String yes = cursor.getString(cursor.getColumnIndex("yes"));
-                String no = cursor.getString(cursor.getColumnIndex("no"));
-                String flagged = cursor.getString(cursor.getColumnIndex("flagged"));
+        try {
+            if(cursor.moveToFirst()){
+                do{
+                    String question = cursor.getString(cursor.getColumnIndex("question"));
+                    String yes = cursor.getString(cursor.getColumnIndex("yes"));
+                    String no = cursor.getString(cursor.getColumnIndex("no"));
+                    String flagged = cursor.getString(cursor.getColumnIndex("flagged"));
 
-                Question answeredQuestion;
-                if(!"0".equals(yes) && "0".equals(no) && "0".equals(flagged)){
-                    answeredQuestion = new Question(question,yes);
-                    TUMCabeClient.getInstance(mContext).submitAnswer(answeredQuestion, new Callback<Question>() {
-                        @Override
-                        public void success(Question question, Response response) {
-                            Log.e("Test_resp_submitQues","Succeeded: "+response.getBody().toString());
-                        }
 
-                        @Override
-                        public void failure(RetrofitError error) {
-                            Log.e("Test_resp_submitQues","Failure");
-                        }
-                    });
-                }else if("0".equals(yes) && !"0".equals(no) && "0".equals(flagged)){
-                    answeredQuestion = new Question(question,no);
-                    TUMCabeClient.getInstance(mContext).submitAnswer(answeredQuestion, new Callback<Question>() {
-                        @Override
-                        public void success(Question question, Response response) {
-                            Log.e("Test_resp_submitQues","Succeeded: "+response.getBody().toString());
-                        }
 
-                        @Override
-                        public void failure(RetrofitError error) {
-                            Log.e("Test_resp_submitQues","Failure" + error.toString());
-                        }
-                    });
-                }else if("0".equals(yes) && "0".equals(no) && !"0".equals(flagged)){ // until flagged is available in the API
+                    Question answeredQuestion;
+                    if(!"0".equals(yes) && "0".equals(no) && "0".equals(flagged)){
+                        answeredQuestion = new Question(question,yes);
+                        TUMCabeClient.getInstance(mContext).submitAnswer(answeredQuestion, new Callback<Question>() {
+                            @Override
+                            public void success(Question question, Response response) {
+                                Log.e("Test_resp_submitQues","Succeeded: "+response.getBody().toString());
+                            }
+
+                            @Override
+                            public void failure(RetrofitError error) {
+                                Log.e("Test_resp_submitQues","Failure");
+                            }
+                        });
+                    }else if("0".equals(yes) && !"0".equals(no) && "0".equals(flagged)){
+                        answeredQuestion = new Question(question,no);
+                        TUMCabeClient.getInstance(mContext).submitAnswer(answeredQuestion, new Callback<Question>() {
+                            @Override
+                            public void success(Question question, Response response) {
+                                Log.e("Test_resp_submitQues","Succeeded: "+response.getBody().toString());
+                            }
+
+                            @Override
+                            public void failure(RetrofitError error) {
+                                Log.e("Test_resp_submitQues","Failure" + error.toString());
+                            }
+                        });
+                    }else if("0".equals(yes) && "0".equals(no) && !"0".equals(flagged)){ // until flagged is available in the API
                     /*answeredQuestion = new Question(question,flagged);
                     TUMCabeClient.getInstance(mContext).submitAnswer(answeredQuestion, new Callback<Question>() {
                         @Override
@@ -170,11 +174,14 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard{
                             Log.e("Test_resp_submitQues","Failure");
                         }
                     });*/
-                }
-                ContentValues cv = new ContentValues();
-                cv.put("synced", "1");
-                db.update("openQuestions",cv,"question = ?",new String[]{cursor.getString(cursor.getColumnIndex("question"))+""});
-            }while (cursor.moveToNext());
+                    }
+                    ContentValues cv = new ContentValues();
+                    cv.put("synced", "1");
+                    db.update("openQuestions",cv,"question = ?",new String[]{cursor.getString(cursor.getColumnIndex("question"))+""});
+                }while (cursor.moveToNext());
+            }
+        }catch (Exception e){
+            Log.d("SyncException",e.toString());
         }
     }
 

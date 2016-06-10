@@ -157,6 +157,7 @@ public class SurveyCard extends Card
 
     @Override
     public boolean shouldShow(SharedPreferences p) {
+        // Log.d("CountUnansweredQuesti",manager.getUnansweredQuestions().getCount() +" "); somehow the card is shown again when I start the app again. Have to check whether 'answered' is set correclty upon answering
         return manager.getUnansweredQuestions().getCount() >= 1;
     }
 

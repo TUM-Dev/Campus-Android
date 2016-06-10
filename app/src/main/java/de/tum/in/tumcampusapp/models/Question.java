@@ -17,6 +17,7 @@ public class Question {
     private String answer;
     private Boolean synced;
     private String[] facultyArr;
+    private Answer[] results;
 
     public Question(String question, String text, Boolean yes, Boolean no, String faculties, Boolean flagged, Boolean synced) {
         this.question = question;
@@ -32,6 +33,12 @@ public class Question {
         this.question = question;
         this.text = text;
         this.synced = synced;
+    }
+
+    // For OwnQuestions
+    public Question (String question, Answer[] results){
+        this.question = question;
+        this.results = results;
     }
 
     // Const. for submiting Answeres for openQuestions
@@ -99,4 +106,28 @@ public class Question {
     public String getFaculty() {return faculty;}
 
     public void setFaculty(String faculty) {this.faculty = faculty;}
+
+
+    public String getAnswer() { return answer;}
+
+    public void setAnswer(String answer) {this.answer = answer;}
+
+    public String[] getFacultyArr() {return facultyArr;}
+
+    public void setFacultyArr(String[] facultyArr) {this.facultyArr = facultyArr;}
+
+    public Answer[] getResults() {return results;}
+
+    public void setResults(Answer[] results) {this.results = results;}
+
+
+    private class Answer {
+        String answer;
+        String votes;
+
+        public Answer(String answer, String votes){
+            this.answer = answer;
+            this.votes = votes;
+        }
+    }
 }
