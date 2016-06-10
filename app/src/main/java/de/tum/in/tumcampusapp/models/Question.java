@@ -121,13 +121,30 @@ public class Question {
     public void setResults(Answer[] results) {this.results = results;}
 
 
-    private class Answer {
-        String answer;
-        String votes;
+    public class Answer {
+        private String answer;
+        private int votes;
 
-        public Answer(String answer, String votes){
+        public Answer(String answer, int votes){
             this.answer = answer;
             this.votes = votes;
         }
+
+        public int getVotes() {
+            return votes;
+        }
+
+        public void setVotes(int votes) {
+            this.votes = votes;
+        }
+
+        public String getAnswer() {
+            return answer;
+        }
+
+        public void setAnswer(String answer) {
+            this.answer = answer;
+        }
+
     }
 }

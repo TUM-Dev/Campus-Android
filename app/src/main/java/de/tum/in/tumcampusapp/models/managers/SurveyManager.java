@@ -3,7 +3,6 @@ package de.tum.in.tumcampusapp.models.managers;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.text.TextUtils;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -11,7 +10,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.auxiliary.Const;
@@ -19,13 +17,9 @@ import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.cards.Card;
 import de.tum.in.tumcampusapp.cards.SurveyCard;
-import de.tum.in.tumcampusapp.models.CalendarRowSet;
 import de.tum.in.tumcampusapp.models.Faculty;
-import de.tum.in.tumcampusapp.models.Kino;
-import de.tum.in.tumcampusapp.models.News;
 import de.tum.in.tumcampusapp.models.Question;
 import de.tum.in.tumcampusapp.models.TUMCabeClient;
-import de.tum.in.tumcampusapp.trace.Util;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -51,9 +45,7 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
     @Override
     public void onRequestCard(Context context) {
         Cursor rows = getUnansweredQuestions();//getNextQuestions();
-        Utils.log("onRequestSurveyCa");
         if (rows.moveToFirst()) {
-            Utils.log("onRequestSurveyCa3");
             SurveyCard card = new SurveyCard(context);
             card.seQuestions(rows); // Questions from local DB (that were downloaded using the API) should be given here.
             card.apply();
@@ -72,10 +64,8 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
     }
 
     public Cursor getUnansweredQuestions() {
-        Utils.log("onRequestSurveyCa1");
         //return db.rawQuery("SELECT question, text FROM openQuestions WHERE answered=?",new String[]{"0"}); Irgendwie wenn man die App nochmal startet kommen die nochmal
         Cursor c = db.rawQuery("SELECT question, text FROM openQuestions WHERE answered=0", null);
-        Utils.log("onRequestSurveyCa1" + c.toString());
         return c;
     }
 
@@ -230,18 +220,114 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
         for (int i = 0; i < openQuestions.size(); i++) {
             List<String> openQuestionFaculties = Arrays.asList(openQuestions.get(i).getFacultiesOfOpenQuestions());
             if (openQuestionFaculties.contains(Utils.getInternalSettingString(mContext, "user_major", ""))) {
-                replaceIntoOpenQuestions(openQuestions.get(i));
+                replaceIntoDBOpenQuestions(openQuestions.get(i));
+            }
+        }
+    }
+
+    public void downLoadOwnQuestions() {
+        ArrayList<Question> ownQuestions = new ArrayList<Question>();
+        try {
+            Utils.log("downloadOwnQuestion: drin in Try block");
+            ownQuestions = TUMCabeClient.getInstance(mContext).getOwnQuestions();
+            Utils.log("downloadOwnQuestion: drin in Try block, nachm API-Aufruf");
+            Utils.log("downloadOwnQuestion: Size: "+ownQuestions.size());
+        } catch (Exception e) {
+            e.printStackTrace();
+            Utils.log(e.toString());
+        }
+        for (int i = 0; i < ownQuestions.size(); i++) {
+            Question.Answer[] responses = ownQuestions.get(i).getResults();
+            if (ownQuestions.get(i).getResults().length != 0){
+                Utils.log("downloadOwnQuestion: Quest: "+ i +ownQuestions.get(i).getQuestion()+ " " + ownQuestions.get(i).getText() + " " + responses[0].getAnswer() + " " + responses[0].getVotes());
+            } else {
+                Utils.log("downloadOwnQuestion: Quest: "+ i +ownQuestions.get(i).getQuestion()+ " " + ownQuestions.get(i).getText() + " " + ownQuestions.get(i).getResults().toString());
+            }
+            replaceIntoDbOwnQuestions(ownQuestions.get(i));
+        }
+
+        //db.execSQL("CREATE TABLE IF NOT EXISTS ownQuestions (question INTEGER PRIMARY KEY, text VARCHAR, yes INTEGER, no INTEGER, deleted BOOLEAN, synced BOOLEAN)");
+        Cursor c = db.rawQuery("SELECT * FROM ownQuestions",null);
+
+        if (!c.moveToFirst()) {
+            Utils.log("ownQuestions count: "+c.getCount());
+            do{
+                String question = c.getString(c.getColumnIndex("question"));
+                String text = c.getString(c.getColumnIndex("text"));
+                String yes = c.getString(c.getColumnIndex("yes"));
+                String no = c.getString(c.getColumnIndex("no"));
+                String deleted = c.getString(c.getColumnIndex("deleted"));
+                String synced = c.getString(c.getColumnIndex("synced"));
+                Utils.log("ownQuestions Entries: ["+question+", "+text+", "+yes+", "+no+", "+deleted+", "+synced+"]");
+            }while (c.moveToNext());
+        }else {
+            Utils.log("ownQuestions count: 0");
+        }
+    }
+
+
+    //db.execSQL("CREATE TABLE IF NOT EXISTS ownQuestions (question INTEGER PRIMARY KEY, text VARCHAR, yes INTEGER, no INTEGER, deleted BOOLEAN, synced BOOLEAN)");
+    void replaceIntoDbOwnQuestions(Question q) {
+        Cursor c = db.rawQuery("SELECT question FROM ownQuestions WHERE question = ?", new String[]{q.getQuestion()});
+
+        // if question doesn't exist
+        if (!c.moveToFirst()) {
+            ContentValues cv = new ContentValues();
+            Question.Answer[] answers = q.getResults();
+
+            Utils.log("answers length for "+q.getQuestion()+": " + answers.length);
+
+            // In case of no votes
+            if (answers.length == 0) {
+                cv.put("yes", 0);
+                cv.put("no", 0);
+                // In case of one vote -> get whether it is yes or no
+            }else if (answers.length == 1) {
+                if(answers[0].getAnswer().equals("yes")){
+                    cv.put("yes",answers[0].getVotes());
+                    cv.put("no",0);
+                }else {
+                    cv.put("yes",0);
+                    cv.put("no",answers[0].getVotes());
+                }
+                // In case there are two votes
+            }else {
+                if(answers[0].getAnswer().equals("yes")){
+                    cv.put("yes",answers[0].getVotes());
+                }else {
+                    cv.put("no",answers[0].getVotes());
+                }
+
+                if(answers[1].getAnswer().equals("yes")){
+                    cv.put("yes",answers[1].getVotes());
+                }else {
+                    cv.put("no",answers[1].getVotes());
+                }
+            }
+
+            cv.put("question", q.getQuestion());
+            cv.put("text", q.getText());
+            cv.put("deleted", 0);
+            cv.put("synced", 0);
+            try {
+                db.beginTransaction();
+                db.insert("ownQuestions", null, cv);
+                db.setTransactionSuccessful();
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                db.endTransaction();
             }
         }
     }
 
     // Inserts new openQuestion if it doesnt't exist
-    void replaceIntoOpenQuestions(Question q) {
+    void replaceIntoDBOpenQuestions(Question q) {
 
-        Cursor c = db.rawQuery("SELECT question FROM openQuestions WHERE question = ?",new String[]{q.getQuestion()});
+        Cursor c = db.rawQuery("SELECT question FROM openQuestions WHERE question = ?", new String[]{q.getQuestion()});
 
         // if question doesn't exist
-        if(!c.moveToFirst()) {
+        if (!c.moveToFirst()) {
 
             ContentValues cv = new ContentValues();
             cv.put("question", q.getQuestion());
@@ -253,7 +339,7 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
             cv.put("synced", 0);
             try {
                 db.beginTransaction();
-                db.insert("openQuestions",null,cv);
+                db.insert("openQuestions", null, cv);
                 db.setTransactionSuccessful();
             } catch (Exception e) {
                 e.printStackTrace();

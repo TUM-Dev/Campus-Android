@@ -212,7 +212,7 @@ public class TUMCabeClient {
 
     private interface TUMCabeAPIService {
 
-        @POST(API_OWN_QUESTIONS)
+        @GET(API_OWN_QUESTIONS)
         ArrayList<Question> getOwnQuestions();
 
         @POST(API_ANSWER_QUESTION)
