@@ -47,8 +47,6 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
                 + "yes INTEGER,  no INTEGER, flags INTEGER)");
         db.execSQL("CREATE TABLE IF NOT EXISTS openQuestions (question INTEGER PRIMARY KEY, text VARCHAR, yes BOOLEAN, no BOOLEAN, flagged BOOLEAN, answered BOOLEAN, synced BOOLEAN)");
         db.execSQL("CREATE TABLE IF NOT EXISTS ownQuestions (question INTEGER PRIMARY KEY, text VARCHAR, yes INTEGER, no INTEGER, deleted BOOLEAN, synced BOOLEAN)");
-        //generateTestData(); // Untill the API is done
-        //dropTestData(); // untill the API is done
     }
 
     @Override
@@ -73,29 +71,8 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
     }
 
     public Cursor getUnansweredQuestions() {
-        Log.d("getUnansweredQuestions", "ichLebe");
         //return db.rawQuery("SELECT question, text FROM openQuestions WHERE answered=?",new String[]{"0"}); Irgendwie wenn man die App nochmal startet kommen die nochmal
         return db.rawQuery("SELECT question, text FROM openQuestions WHERE answered=0", null);
-    }
-
-    // For testing purposes untill the API is done
-    public void generateTestData() {
-        ContentValues cv = new ContentValues(7);
-        for (int i = 0; i < 10; i++) {
-            cv.put("id", i);
-            cv.put("question", "Question " + i);
-            cv.put("yes", 0);
-            cv.put("no", 0);
-            cv.put("flagged", 0);
-            cv.put("answered", 0);
-            cv.put("synced", 0);
-            db.insert("surveyQuestions", null, cv);
-        }
-    }
-
-    // For Testing Purposes untill the API is done
-    public void dropTestData() {
-        db.delete("surveyQuestions", null, null);
     }
 
     /**
@@ -111,15 +88,24 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
         //Handle that this card was finished and should not be shown again
         if (!updateField.equals("answered")) {
             cv.put("answered", 1);
+        } else {
+            cv.put("synced", 1); // Do not sync skipped questions
         }
 
         //Commit update to database
-        db.update("openQuestions", cv, "question = ?", new String[]{question.getQuestion().toString()});
-        Log.d("Question " + question.getQuestion() + "", updateField + " is set");
+        try {
+            db.beginTransaction();
+            db.update("openQuestions", cv, "question = ?", new String[]{question.getQuestion().toString()});
+            db.setTransactionSuccessful();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            db.endTransaction();
+        }
 
         //Tigger sync if we are connected currently
         if (NetUtils.isConnected(mContext)) {
-            Log.d("DeviceIsConnected", "true");
+            Utils.log("true");
             syncOpenQuestionsTable();
         }
 
@@ -137,22 +123,17 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
                     String flagged = cursor.getString(cursor.getColumnIndex("flagged"));
 
 
-                    Question answeredQuestion;
+                    Question answeredQuestion = null;
                     if (!"0".equals(yes) && "0".equals(no) && "0".equals(flagged)) {
                         answeredQuestion = new Question(question, yes);
-                        TUMCabeClient.getInstance(mContext).submitAnswer(answeredQuestion, new Callback<Question>() {
-                            @Override
-                            public void success(Question question, Response response) {
-                                Log.e("Test_resp_submitQues", "Succeeded: " + response.getBody().toString());
-                            }
-
-                            @Override
-                            public void failure(RetrofitError error) {
-                                Log.e("Test_resp_submitQues", "Failure");
-                            }
-                        });
                     } else if ("0".equals(yes) && !"0".equals(no) && "0".equals(flagged)) {
                         answeredQuestion = new Question(question, no);
+
+                    } else if ("0".equals(yes) && "0".equals(no) && !"0".equals(flagged)) { // until flagged is available in the API
+                        //answeredQuestion = new Question(question,flagged);
+                    }
+
+                    if (answeredQuestion != null) {
                         TUMCabeClient.getInstance(mContext).submitAnswer(answeredQuestion, new Callback<Question>() {
                             @Override
                             public void success(Question question, Response response) {
@@ -164,27 +145,15 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
                                 Log.e("Test_resp_submitQues", "Failure" + error.toString());
                             }
                         });
-                    } else if ("0".equals(yes) && "0".equals(no) && !"0".equals(flagged)) { // until flagged is available in the API
-                    /*answeredQuestion = new Question(question,flagged);
-                    TUMCabeClient.getInstance(mContext).submitAnswer(answeredQuestion, new Callback<Question>() {
-                        @Override
-                        public void success(Question question, Response response) {
-                            Log.e("Test_resp_submitQues","Succeeded: "+response.getBody().toString());
-                        }
-
-                        @Override
-                        public void failure(RetrofitError error) {
-                            Log.e("Test_resp_submitQues","Failure");
-                        }
-                    });*/
                     }
+
                     ContentValues cv = new ContentValues();
                     cv.put("synced", "1");
                     db.update("openQuestions", cv, "question = ?", new String[]{cursor.getString(cursor.getColumnIndex("question")) + ""});
                 } while (cursor.moveToNext());
             }
         } catch (Exception e) {
-            Log.d("SyncException", e.toString());
+            Utils.log(e.toString());
         }
     }
 
@@ -221,7 +190,6 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
     }
 
     public void downloadFromExternal(boolean force) throws Exception {
-
         if (!force && !SyncManager.needSync(db, this, TIME_TO_SYNC)) {
             return;
         }
@@ -265,8 +233,7 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
     }
 
     void replaceIntoOpenQuestions(Question q) {
-        db.execSQL("REPLACE INTO openQuestions (question, text, yes, no, flagged, answered, synced) VALUES (?, ?, ?, ?, ?, ?, ?)",
-                new Object[]{q.getQuestion(), q.getText(), 0, 0, 0, 0, 0});
+        db.execSQL("REPLACE INTO openQuestions (question, text) VALUES (?, ?)", new Object[]{q.getQuestion(), q.getText()});
     }
 
     void replaceIntoDb(Faculty f) {

@@ -1,20 +1,15 @@
 package de.tum.in.tumcampusapp.activities;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
-import android.os.AsyncTask;
-import android.os.Build;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AlertDialog;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,27 +26,19 @@ import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.zxing.common.StringUtils;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.BaseActivity;
-import de.tum.in.tumcampusapp.auxiliary.AuthenticationManager;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
-import de.tum.in.tumcampusapp.models.ChatRoom;
-import de.tum.in.tumcampusapp.models.Faculty;
 import de.tum.in.tumcampusapp.models.Question;
 import de.tum.in.tumcampusapp.models.TUMCabeClient;
-import de.tum.in.tumcampusapp.models.managers.CalendarManager;
 import de.tum.in.tumcampusapp.models.managers.SurveyManager;
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -319,7 +306,7 @@ public class SurveyActivity extends BaseActivity {
     }
 
     //get survey data (number of questions,departments,questions)
-    public boolean getSurveyrData() {
+    public boolean checkSurveyData() {
         int numberOfQuestion = aSpinner1.getSelectedItemPosition() + 1;
         boolean done = true;
         for (int i = 0; i < numberOfQuestion; i++) {
@@ -338,8 +325,9 @@ public class SurveyActivity extends BaseActivity {
             chosenFaculties = getSelectedFaculties(selectedFaculties);
             Toast.makeText(getApplicationContext(), getResources().getString(R.string.survey_submitted), Toast.LENGTH_SHORT).show();
             return true;
-        } else
+        } else {
             Toast.makeText(getApplicationContext(), getResources().getString(R.string.complete_question_form), Toast.LENGTH_SHORT).show();
+        }
 
         return false;
     }
@@ -350,8 +338,9 @@ public class SurveyActivity extends BaseActivity {
         chosenFaculties = "";
         questions.clear();
         newDate = "";
-        for (int i = 0; i < checked.length; i++)
+        for (int i = 0; i < checked.length; i++) {
             checked[i] = false;
+        }
         submitSurveyButton.setVisibility(View.GONE);
         selectTv.setVisibility(View.GONE);
         aSpinner1.setVisibility(View.GONE);
@@ -363,10 +352,11 @@ public class SurveyActivity extends BaseActivity {
     public String getSelectedFaculties(ArrayList<String> arrayList) {
         String facs = "";
         for (int i = 0; i < arrayList.size(); i++) {
-            if (i < arrayList.size() - 1)
+            if (i < arrayList.size() - 1) {
                 facs += arrayList.get(i) + ',';
-            else
+            } else {
                 facs += arrayList.get(i);
+            }
         }
 
         return facs;
@@ -378,53 +368,56 @@ public class SurveyActivity extends BaseActivity {
 
             @Override
             public void onClick(View view) {
-                if (getSurveyrData()) {
-                    //insert into database.
-                    Date date = Calendar.getInstance().getTime();
-                    ContentValues cv = new ContentValues(8);
-                    for (int i = 0; i < aSpinner1.getSelectedItemPosition() + 1; i++) {
+                if (!checkSurveyData()) {
+                    return;
+                }
 
-                        //
-                        final ArrayList<String> selectedFacIds = new ArrayList<String>();
-                        for (int j = 0; j < selectedFaculties.size(); j++) {
-                            for (int x = 0; x < fetchedFaculties.size(); x++) {
-                                if (selectedFaculties.get(j).equals(fetchedFaculties.get(x))) {
-                                    Cursor cursor = surveyManager.getFacultyID(selectedFaculties.get(j));
-                                    if (cursor.moveToFirst()) {
-                                        selectedFacIds.add(cursor.getString(cursor.getColumnIndex("faculty")));
-                                    }
+                //insert into database.
+                Date date = Calendar.getInstance().getTime();
+                ContentValues cv = new ContentValues(8);
+                for (int i = 0; i < aSpinner1.getSelectedItemPosition() + 1; i++) {
+
+                    //
+                    final ArrayList<String> selectedFacIds = new ArrayList<String>();
+                    for (int j = 0; j < selectedFaculties.size(); j++) {
+                        for (int x = 0; x < fetchedFaculties.size(); x++) {
+                            if (selectedFaculties.get(j).equals(fetchedFaculties.get(x))) {
+                                Cursor cursor = surveyManager.getFacultyID(selectedFaculties.get(j));
+                                if (cursor.moveToFirst()) {
+                                    selectedFacIds.add(cursor.getString(cursor.getColumnIndex("faculty")));
                                 }
                             }
                         }
-
-
-                        Question ques = new Question(questions.get(i), selectedFacIds);
-                        try {
-                            TUMCabeClient.getInstance(getApplicationContext()).createQuestion(ques, new Callback<Question>() {
-                                @Override
-                                public void success(Question question, Response response) {
-                                    Log.e("Test_resp", "Succeeded: " + response.getBody().toString());
-                                }
-
-                                @Override
-                                public void failure(RetrofitError error) {
-                                    Log.e("Test_resp", "Failure");
-                                }
-                            });
-
-                            //TUMCabeClient.getInstance(this).createQuestion("testquestion",new int[]{1,2});
-                        } catch (Exception e) {
-                            Log.e("Test_exception", e.toString());
-                        }
-
                     }
-                    clearData();
 
-                    Intent i = getIntent();
-                    i.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                    startActivity(i);
+
+                    Question ques = new Question(questions.get(i), selectedFacIds);
+                    try {
+                        TUMCabeClient.getInstance(getApplicationContext()).createQuestion(ques, new Callback<Question>() {
+                            @Override
+                            public void success(Question question, Response response) {
+                                Log.e("Test_resp", "Succeeded: " + response.getBody().toString());
+                            }
+
+                            @Override
+                            public void failure(RetrofitError error) {
+                                Log.e("Test_resp", "Failure");
+                            }
+                        });
+
+                        //TUMCabeClient.getInstance(this).createQuestion("testquestion",new int[]{1,2});
+                    } catch (Exception e) {
+                        Log.e("Test_exception", e.toString());
+                    }
+
                 }
+                clearData();
+
+                Intent i = getIntent();
+                i.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                startActivity(i);
             }
+
         });
     }
 
@@ -469,8 +462,9 @@ public class SurveyActivity extends BaseActivity {
         String weekAgo = getDateBefore1Week();
         //Cursor c = db.rawQuery("SELECT COUNT(*) FROM survey1 WHERE date >= '"+weekAgo+"'", null);
         Cursor c = surveyManager.numberOfQuestionsFrom(weekAgo);
-        if (c.getCount() > 0)
+        if (c.getCount() > 0) {
             c.moveToFirst();
+        }
 
         int x = c.getInt(0);
 
@@ -482,8 +476,9 @@ public class SurveyActivity extends BaseActivity {
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, numQues);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             aSpinner1.setAdapter(adapter);
-            if (x == 2)
+            if (x == 2) {
                 selectTv.setText(getResources().getString(R.string.one_question_left));
+            }
         } else {
             String strDate = getNextPossibleDate();
             selectTv.setVisibility(View.VISIBLE);
@@ -558,8 +553,9 @@ public class SurveyActivity extends BaseActivity {
 
         for (int i = 0; i < dates.size(); i++) {
             for (int z = 0; z < nextPossibleDate.length(); z++) {
-                if (dates.get(i).charAt(z) < nextPossibleDate.charAt(z))
+                if (dates.get(i).charAt(z) < nextPossibleDate.charAt(z)) {
                     nextPossibleDate = dates.get(i);
+                }
             }
         }
 
