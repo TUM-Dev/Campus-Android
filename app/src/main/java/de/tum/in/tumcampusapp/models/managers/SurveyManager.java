@@ -72,7 +72,7 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
 
     // "CREATE TABLE IF NOT EXISTS ownQuestions (question INTEGER PRIMARY KEY, text VARCHAR, yes INTEGER, no INTEGER, deleted BOOLEAN, synced BOOLEAN)"
     public Cursor getMyOwnQuestions() {
-        Cursor c = db.rawQuery("SELECT question FROM ownQuestions", null);
+        Cursor c = db.rawQuery("SELECT question FROM ownQuestions where deleted = 0", null);
         return c;
     }
 
