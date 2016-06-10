@@ -29,6 +29,10 @@ public class Question {
         this.synced = synced;
     }
 
+    public Question(String question){
+        this.question = question;
+    }
+
     public Question (String question, String text, boolean synced){
         this.question = question;
         this.text = text;

@@ -20,6 +20,7 @@ import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.OkClient;
 import retrofit.http.Body;
+import retrofit.http.DELETE;
 import retrofit.http.GET;
 import retrofit.http.POST;
 import retrofit.http.PUT;
@@ -99,6 +100,10 @@ public class TUMCabeClient {
             instance = new TUMCabeClient();
         }
         return instance;
+    }
+
+    public void deleteOwnQuestion(int question, Callback<Question> cb){
+        service.deleteOwnQuestion(question,cb);
     }
 
     public ArrayList<Question> getOwnQuestions(){ return service.getOwnQuestions();}
@@ -211,6 +216,9 @@ public class TUMCabeClient {
     }
 
     private interface TUMCabeAPIService {
+
+        @DELETE(API_QUESTION + "{question}")
+        void deleteOwnQuestion(@Path("question") int question,Callback<Question> cb);
 
         @GET(API_OWN_QUESTIONS)
         ArrayList<Question> getOwnQuestions();

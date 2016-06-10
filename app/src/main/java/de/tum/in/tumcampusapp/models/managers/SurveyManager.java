@@ -44,10 +44,10 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
 
     @Override
     public void onRequestCard(Context context) {
-        Cursor rows = getUnansweredQuestions();//getNextQuestions();
+        Cursor rows = getUnansweredQuestions();
         if (rows.moveToFirst()) {
             SurveyCard card = new SurveyCard(context);
-            card.seQuestions(rows); // Questions from local DB (that were downloaded using the API) should be given here.
+            card.seQuestions(rows);
             card.apply();
         }
     }
@@ -57,25 +57,30 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
     }
 
 
-    // Get the relevant Questions for the Survey Card (not answered)
-    public Cursor getNextQuestions() {
-        //return db.rawQuery("SELECT id, question, yes, no, flagged, answered, synced FROM surveyQuestions where answered=0", null);
-        return db.rawQuery("SELECT question, text FROM openQuestions", null);
-    }
-
+    // Get relevant questions for Card
     public Cursor getUnansweredQuestions() {
         Cursor c = db.rawQuery("SELECT question, text FROM openQuestions WHERE answered=0", null);
         return c;
     }
 
-
-    // "CREATE TABLE IF NOT EXISTS ownQuestions (question INTEGER PRIMARY KEY, text VARCHAR, yes INTEGER, no INTEGER, deleted BOOLEAN, synced BOOLEAN)"
     public Cursor getMyOwnQuestions() {
         Cursor c = db.rawQuery("SELECT * FROM ownQuestions where deleted = 0", null);
         return c;
     }
 
     public void deleteMyOwnQuestion(int id) {
+        TUMCabeClient.getInstance(mContext).deleteOwnQuestion(id, new Callback<Question>() {
+            @Override
+            public void success(Question q, Response response) {
+                Utils.log("TUMCabeClient_delete_question_successeed");
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Utils.log("TUMCabeClient_delete_question_failed. Error: " + error.toString());
+
+            }
+        });
         db.execSQL("UPDATE ownQuestions SET deleted=1 WHERE question=" + id);
     }
 
@@ -115,7 +120,7 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
 
     }
 
-    // Not done yet
+    // Send responses to server
     public void syncOpenQuestionsTable() {
         Cursor cursor = db.rawQuery("SELECT question, yes, no, flagged FROM openQuestions WHERE synced=0 AND answered=1", null);
         try {
