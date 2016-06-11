@@ -22,17 +22,7 @@ zur Verwendung auf Smartphones, wie auch Tablets und ist für Studierende, aber 
 Special thanks to everybody that has contributed to this project. https://github.com/TCA-Team/TumCampusApp/blob/master/CONTRIBUTORS.md
 
 #### Wichtiger Hinweis:
-Dies ist keine offizielle App der Technischen Universität München. Es
-erfolgt daher auch kein offizieller Support oder eine Haftung. Die App
-wird von und für Studierende entwickelt. Die Benutzung erfolgt auf
-eigene Gefahr und eine Haftung ist ausgeschlossen. Aus
-Sicherheitsgründen wird der Zugriff auf private Daten in TUMonline über
-Tokens realisiert, die jeweils in TUMonline durch den Nutzer freigegeben
-und mit den jeweiligen Rechten versehen werden müssen. Für die Nutzung
-der neuen Chat-Funktionen gelten nachfolgende Bedingungen, denen Sie
-separat auch in der App zustimmen müssen. Mit der Installation der App
-akzeptieren Sie zudem die Erfassung diverser, technischer Daten. Weitere
-Hinweise finden Sie unten unter "Datenschutzerklärung".
+Dies ist keine offizielle App der Technischen Universität München. Es erfolgt daher auch kein offizieller Support oder eine Haftung. Die App wird von und für Studierende entwickelt. Die Benutzung erfolgt auf eigene Gefahr und eine Haftung ist ausgeschlossen. AusSicherheitsgründen wird der Zugriff auf private Daten in TUMonline über Tokens realisiert, die jeweils in TUMonline durch den Nutzer freigegeben und mit den jeweiligen Rechten versehen werden müssen. Für die Nutzung der neuen Chat-Funktionen gelten nachfolgende Bedingungen, denen Sie separat auch in der App zustimmen müssen. Mit der Installation der App akzeptieren Sie zudem die Erfassung diverser, technischer Daten. Weitere Hinweise finden Sie unten unter "Datenschutzerklärung".
 
 #### Benötigte Berechtigungen
 + Standort abfragen: Um dir immer aktuelle Informationen zu deinem aktuellen Standort anzuzeigen, wie z.B. Mensa Menü, MVV Abfahrtszeiten, ....
@@ -45,7 +35,6 @@ Hinweise finden Sie unten unter "Datenschutzerklärung".
 
 #### Datenschutz/Chatbedingungen:
 Datenschutzerklärung: https://tumcabe.in.tum.de/landing/privacy/
-
 Chatbedingungen: https://tumcabe.in.tum.de/landing/chatterms/
 
 #### Support:
@@ -58,4 +47,4 @@ New BSD License - http://www.opensource.org/licenses/bsd-license.php
 
 Der Quellcode kann hier bezogen werden: https://github.com/TCA-Team/
 
-#### [Wir sind auch auf Facebook](https://www.facebook.com/TUMCampus)
+#### [Follow us on Facebook](https://www.facebook.com/TUMCampus)
