@@ -9,6 +9,7 @@ import de.tum.in.tumcampusapp.cards.ChatMessagesCard;
 import de.tum.in.tumcampusapp.cards.EduroamCard;
 import de.tum.in.tumcampusapp.cards.FirstUseCard1;
 import de.tum.in.tumcampusapp.cards.FirstUseCard2;
+import de.tum.in.tumcampusapp.cards.IkomCard;
 import de.tum.in.tumcampusapp.cards.MVVCard;
 import de.tum.in.tumcampusapp.cards.NewsCard;
 import de.tum.in.tumcampusapp.cards.NextLectureCard;
@@ -58,6 +59,8 @@ public class CardsAdapter extends RecyclerView.Adapter<Card.CardViewHolder> {
                 return Support.inflateViewHolder(viewGroup);
             case CardManager.CARD_SURVEY:
                 return SurveyCard.inflateViewHolder(viewGroup);
+            case CardManager.CARD_IKOM:
+                return IkomCard.inflateViewHolder(viewGroup);
             default:
                 throw new UnsupportedOperationException();
         }
