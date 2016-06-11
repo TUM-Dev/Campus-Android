@@ -12,7 +12,6 @@ import android.graphics.BitmapFactory;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,7 +28,6 @@ import java.util.Locale;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.CalendarActivity;
 import de.tum.in.tumcampusapp.activities.RoomFinderActivity;
-import de.tum.in.tumcampusapp.activities.RoomFinderDetailsActivity;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.managers.CardManager;
 
@@ -188,10 +186,11 @@ public class NextLectureCard extends Card {
 
             // Handle location
             item.location = cur.getString(3);
-            if (item.location != null)
+            if (item.location != null) {
                 item.location = item.location.replaceAll("\\([A-Z0-9\\.]+\\)", "").trim();
-            else
+            } else {
                 item.location = null;
+            }
             lectures.add(item);
         } while (cur.moveToNext());
         cur.close();

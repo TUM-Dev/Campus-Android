@@ -6,15 +6,13 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Typeface;
+import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AlertDialog;
-import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
 import android.view.inputmethod.EditorInfo;
@@ -62,7 +60,6 @@ public class SurveyActivity extends BaseActivity {
     String chosenFaculties = "", newDate = "", lrzId;
     ArrayList<String> fetchedFaculties = new ArrayList<>();
     ViewGroup parentView;
-    //private SQLiteDatabase db;
 
     String[] numQues = new String[3];
     private SurveyManager surveyManager;
@@ -90,31 +87,28 @@ public class SurveyActivity extends BaseActivity {
 
     //set up the respone tab layout dynamically depending on number of questions
     @SuppressLint("SetTextI18n")
-    public void setUpResponseTab()
-    {
-        Cursor c=surveyManager.getMyOwnQuestions();
-        int numberofquestion=c.getCount();
+    public void setUpResponseTab() {
+        Cursor c = surveyManager.getMyOwnQuestions();
+        int numberofquestion = c.getCount();
         //get response and question from database->set i<Number of question
         for (int i = 0; i < numberofquestion; i++) {
 
             c.moveToNext();
-            String questionText=c.getString(c.getColumnIndex("text"));
-            int yes=c.getInt(c.getColumnIndex("yes"));
-            int no=c.getInt(c.getColumnIndex("no"));
-            int total=yes+no;
-            int id=c.getInt(c.getColumnIndex("question"));
+            String questionText = c.getString(c.getColumnIndex("text"));
+            int yes = c.getInt(c.getColumnIndex("yes"));
+            int no = c.getInt(c.getColumnIndex("no"));
+            int total = yes + no;
+            int id = c.getInt(c.getColumnIndex("question"));
             //linear layout for every question
             LinearLayout ques = new LinearLayout(this);
-            LinearLayout.LayoutParams quesParams = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            LinearLayout.LayoutParams quesParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             ques.setOrientation(LinearLayout.VERTICAL);
             ques.setWeightSum(5);
             mainResponseLayout.addView(ques, quesParams);
 
 
             LinearLayout l = new LinearLayout(this);
-            LinearLayout.LayoutParams lParams = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            LinearLayout.LayoutParams lParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             l.setOrientation(LinearLayout.HORIZONTAL);
             l.setWeightSum(5);
             ques.addView(l, lParams);
@@ -130,8 +124,7 @@ public class SurveyActivity extends BaseActivity {
             l.addView(l2);
             //adding quesion tv
             TextView questionTv = new TextView(this);
-            LinearLayout.LayoutParams tvparams = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            LinearLayout.LayoutParams tvparams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             tvparams.setMargins(50, 0, 0, 0);
             questionTv.setLayoutParams(tvparams);
             questionTv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.color_primary_dark));
@@ -142,7 +135,7 @@ public class SurveyActivity extends BaseActivity {
             //adding button delete
             float inPixels = getResources().getDimension(R.dimen.dimen_buttonHeight_in_dp);
             Button deleteButton = new Button(this);
-            deleteButton.setLayoutParams(new LinearLayout.LayoutParams((int)inPixels, (int) inPixels));
+            deleteButton.setLayoutParams(new LinearLayout.LayoutParams((int) inPixels, (int) inPixels));
             deleteButton.setBackgroundResource((R.drawable.minusicon));
             deleteButton.setOnClickListener(clicks);
             deleteButton.setTag(id);
@@ -173,7 +166,7 @@ public class SurveyActivity extends BaseActivity {
             params.addRule(RelativeLayout.CENTER_IN_PARENT);
             yesAnswers.setPadding(15, 0, 0, 0);
             //set number of yes answers
-            yesAnswers.setText(yes+"");
+            yesAnswers.setText(yes + "");
             r.addView(yesAnswers, params);
 
             TextView noAnswers = new TextView(this);
@@ -182,16 +175,15 @@ public class SurveyActivity extends BaseActivity {
             params1.addRule(RelativeLayout.ALIGN_RIGHT, progress.getId());
             params1.addRule(RelativeLayout.CENTER_IN_PARENT);
             //set number of no answers
-            noAnswers.setText(no+"");
+            noAnswers.setText(no + "");
             noAnswers.setPadding(0, 0, 20, 0);
             r.addView(noAnswers, params1);
         }
 
     }
 
-    public void zoomOutanimation(View v)
-    {
-        ScaleAnimation zoomOut=new ScaleAnimation(1f, 0f, 1, 0f, Animation.RELATIVE_TO_SELF, (float)0.5,Animation.RELATIVE_TO_SELF, (float)0.5);
+    public void zoomOutanimation(View v) {
+        ScaleAnimation zoomOut = new ScaleAnimation(1f, 0f, 1, 0f, Animation.RELATIVE_TO_SELF, (float) 0.5, Animation.RELATIVE_TO_SELF, (float) 0.5);
         zoomOut.setDuration(500);
         zoomOut.setFillAfter(true);
         parentView = (ViewGroup) v.getParent().getParent().getParent();
@@ -219,10 +211,9 @@ public class SurveyActivity extends BaseActivity {
 
         @Override
         public void onClick(final View v) {
-            // TODO Auto-generated method stub
             //remove view and delete from database.
             v.setEnabled(false);
-            int tag=(int) v.getTag();
+            int tag = (int) v.getTag();
             surveyManager.deleteMyOwnQuestion(tag);
             zoomOutanimation(v);
             Snackbar snackbar = Snackbar
@@ -241,8 +232,6 @@ public class SurveyActivity extends BaseActivity {
         return sdf.format(calendar.getTime());
 
     }
-
-    //get day before 1month
 
     //get all views by IDs
     public void findViewsById() {
@@ -272,7 +261,6 @@ public class SurveyActivity extends BaseActivity {
 
         facultiesButton = (Button) findViewById(R.id.button_faculties);
         facultiesButton.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View view) {
 
@@ -290,39 +278,34 @@ public class SurveyActivity extends BaseActivity {
                             checked[i] = false;
                         }
                     }
-                }).
-                        //if ok show question EditText
-                                setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                if (selectedFaculties.size() > 0) {
-                                    submitSurveyButton.setVisibility(View.VISIBLE);
-                                    selectTv.setVisibility(View.VISIBLE);
-                                    aSpinner1.setVisibility(View.VISIBLE);
-                                    aSpinner1.setSelection(0);
+                }).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {//if ok show question EditText
+                        if (selectedFaculties.size() > 0) {
+                            submitSurveyButton.setVisibility(View.VISIBLE);
+                            selectTv.setVisibility(View.VISIBLE);
+                            aSpinner1.setVisibility(View.VISIBLE);
+                            aSpinner1.setSelection(0);
 
 
-                                }
-                                //show nothing , force him to choose Faculty
-                                else {
-                                    submitSurveyButton.setVisibility(View.GONE);
-                                    selectTv.setVisibility(View.GONE);
-                                    aSpinner1.setVisibility(View.GONE);
+                        } else {//show nothing , force him to choose Faculty
+                            submitSurveyButton.setVisibility(View.GONE);
+                            selectTv.setVisibility(View.GONE);
+                            aSpinner1.setVisibility(View.GONE);
 
 
-                                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.select_one_faculty), Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        }).
-                        setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                selectedFaculties.clear();
-                                for (int y = 0; y < checked.length; y++) {
-                                    checked[y] = false;
-                                }
-                            }
-                        });
+                            Toast.makeText(getApplicationContext(), getResources().getString(R.string.select_one_faculty), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        selectedFaculties.clear();
+                        for (int y = 0; y < checked.length; y++) {
+                            checked[y] = false;
+                        }
+                    }
+                });
 
                 dialog = builder.create();
                 dialog.show();
@@ -422,18 +405,16 @@ public class SurveyActivity extends BaseActivity {
                         TUMCabeClient.getInstance(getApplicationContext()).createQuestion(ques, new Callback<Question>() {
                             @Override
                             public void success(Question question, Response response) {
-                                Log.e("Test_resp", "Succeeded: " + response.getBody().toString());
+                                Utils.log("Succeeded: " + response.getBody().toString());
                             }
 
                             @Override
                             public void failure(RetrofitError error) {
-                                Log.e("Test_resp", "Failure");
+                                Utils.log("Failure");
                             }
                         });
-
-                        //TUMCabeClient.getInstance(this).createQuestion("testquestion",new int[]{1,2});
                     } catch (Exception e) {
-                        Log.e("Test_exception", e.toString());
+                        Utils.log(e.toString());
                     }
 
                 }
@@ -449,10 +430,6 @@ public class SurveyActivity extends BaseActivity {
 
 
     private String getDateTime() {
-       /* Date cDate = new Date();
-        String fDate = new SimpleDateFormat("yyyy-MM-dd").format(cDate);
-        return fDate;*/
-
         Calendar c = Calendar.getInstance();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.GERMANY);
         return sdf.format(c.getTime());
@@ -516,7 +493,6 @@ public class SurveyActivity extends BaseActivity {
 
     //spinner for number of questions selection
     public void setUpSpinner() {
-
         numQues[0] = "1";
         numQues[1] = "2";
         numQues[2] = "3";
@@ -534,8 +510,7 @@ public class SurveyActivity extends BaseActivity {
 
                 for (int y = 0; y <= numberOfQuestions; y++) {
                     EditText questionEt = new EditText(getApplicationContext());
-                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                            LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                     questionEt.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.color_primary));
                     questionEt.setInputType(EditorInfo.TYPE_CLASS_TEXT);
                     params.setMargins(0, 30, 0, 0);
@@ -554,28 +529,17 @@ public class SurveyActivity extends BaseActivity {
         });
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
-
     //show the user the next possible survey date.
     public String getNextPossibleDate() {
         String nextPossibleDate = "";
         ArrayList<String> dates = new ArrayList<String>();
         String weekAgo = getDateBefore1Week();
-        //Cursor c = db.rawQuery("SELECT date FROM survey1 WHERE date >= '"+weekAgo+"'", null);
         Cursor c = surveyManager.lastDateFromLastWeek(weekAgo);
+
         while (c.moveToNext()) {
             dates.add(c.getString(0));
             nextPossibleDate = c.getString(0);
         }
-
 
         for (int i = 0; i < dates.size(); i++) {
             for (int z = 0; z < nextPossibleDate.length(); z++) {
@@ -596,21 +560,9 @@ public class SurveyActivity extends BaseActivity {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.GERMANY);
             nextPossibleDate = sdf.format(a.getTime());
         } catch (ParseException e) {
-            // TODO Auto-generated catch block
 
         }
 
         return nextPossibleDate;
     }
-
-    /*public String getDateBefore1Month()
-    {
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.DAY_OF_YEAR, -30);
-        Date newDate = calendar.getTime();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",Locale.GERMANY);
-        return sdf.format(calendar.getTime());
-
-    }*/
-
 }

@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.util.Log;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -27,17 +26,16 @@ import retrofit.client.Response;
 
 public class SurveyManager extends AbstractManager implements Card.ProvidesCard {
 
-    private static int TIME_TO_SYNC = 1800; // weiss nicht wie oft
-    private static final String FACULTY_URL = "https://tumcabe.in.tum.de/Api/faculty";
-    private static final String OPEN_QUESTIONS_URL = "https://tumcabe.in.tum.de/Api/question/";
+    private static int answerYes = 1;
+    private static int answerNo = 2;
+    private static int answerFlag = -1;
 
     public SurveyManager(Context context) {
         super(context);
 
         db.execSQL("CREATE TABLE IF NOT EXISTS surveyQuestions (id INTEGER PRIMARY KEY, question VARCHAR, yes BOOLEAN, no BOOLEAN, flagged BOOLEAN, answered BOOLEAN, synced BOOLEAN)");
         db.execSQL("CREATE TABLE IF NOT EXISTS faculties (faculty INTEGER, name VARCHAR)");
-        db.execSQL("CREATE TABLE IF NOT EXISTS survey1 (id INTEGER PRIMARY KEY AUTOINCREMENT, date VARCHAR,userID VARCHAR, question TEXT, faculties TEXT, "
-                + "yes INTEGER,  no INTEGER, flags INTEGER)");
+        db.execSQL("CREATE TABLE IF NOT EXISTS survey1 (id INTEGER PRIMARY KEY AUTOINCREMENT, date VARCHAR,userID VARCHAR, question TEXT, faculties TEXT, yes INTEGER,  no INTEGER, flags INTEGER)");
         db.execSQL("CREATE TABLE IF NOT EXISTS openQuestions (question INTEGER PRIMARY KEY, text VARCHAR, yes BOOLEAN, no BOOLEAN, flagged BOOLEAN, answered BOOLEAN, synced BOOLEAN)");
         db.execSQL("CREATE TABLE IF NOT EXISTS ownQuestions (question INTEGER PRIMARY KEY, text VARCHAR, yes INTEGER, no INTEGER, deleted BOOLEAN, synced BOOLEAN)");
     }
@@ -128,18 +126,18 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
                 do {
                     String question = cursor.getString(cursor.getColumnIndex("question"));
                     String yes = cursor.getString(cursor.getColumnIndex("yes"));
-                    String no = cursor.getString(cursor.getColumnIndex("no"));
                     String flagged = cursor.getString(cursor.getColumnIndex("flagged"));
 
 
                     Question answeredQuestion = null;
-                    if (!"0".equals(yes) && "0".equals(no) && "0".equals(flagged)) {
-                        answeredQuestion = new Question(question, yes);
-                    } else if ("0".equals(yes) && !"0".equals(no) && "0".equals(flagged)) {
-                        answeredQuestion = new Question(question, no);
-
-                    } else if ("0".equals(yes) && "0".equals(no) && !"0".equals(flagged)) { // until flagged is available in the API
-                        //answeredQuestion = new Question(question,flagged);
+                    if (flagged.equals("1")) {
+                        answeredQuestion = new Question(question, answerFlag);
+                    } else {
+                        if (yes.equals("1")) {
+                            answeredQuestion = new Question(question, answerYes);
+                        } else {
+                            answeredQuestion = new Question(question, answerNo);
+                        }
                     }
 
                     if (answeredQuestion != null) {
@@ -163,6 +161,8 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
             }
         } catch (Exception e) {
             Utils.log(e.toString());
+        } finally {
+            cursor.close();
         }
     }
 
@@ -198,26 +198,14 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
         return db.rawQuery("SELECT faculty FROM faculties WHERE name=?", new String[]{facultyName});
     }
 
-    public void downloadFacultiesFromExternal(boolean force) throws Exception {
-        if (!force && !SyncManager.needSync(db, this, TIME_TO_SYNC)) {
-            return;
-        }
-
-        NetUtils net = new NetUtils(mContext);
-
-        // Load all faculties
-        JSONArray jsonArray = net.downloadJsonArray(FACULTY_URL, CacheManager.VALIDITY_ONE_DAY, force);
-        if (jsonArray == null) {
-            return;
-        }
+    public void downloadFacultiesFromExternal() throws Exception {
+        ArrayList<Faculty> faculties = TUMCabeClient.getInstance(mContext).getFaculties();
 
         db.beginTransaction();
         try {
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject obj = jsonArray.getJSONObject(i);
-                replaceIntoDb(getFromJson(obj));
+            for (int i = 0; i < faculties.size(); i++) {
+                replaceIntoDb(faculties.get(i));
             }
-            SyncManager.replaceIntoDb(db, this);
             db.setTransactionSuccessful();
         } finally {
             db.endTransaction();
@@ -258,34 +246,28 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
     void replaceIntoDbOwnQuestions(Question q) {
         Cursor c = db.rawQuery("SELECT question FROM ownQuestions WHERE question = ?", new String[]{q.getQuestion()});
 
-        // if question doesn't exist -> insert into DB
-        if (!c.moveToFirst()) {
-            ContentValues cv = setOwnQuestionFields(q,true);//new ContentValues();
-            try {
-                db.beginTransaction();
+        try {
+            db.beginTransaction();
+
+            // if question doesn't exist -> insert into DB
+            if (!c.moveToFirst()) {
+                ContentValues cv = setOwnQuestionFields(q, true);
                 db.insert("ownQuestions", null, cv);
-                db.setTransactionSuccessful();
-            } catch (Exception e) {
-                e.printStackTrace();
-            } finally {
-                db.endTransaction();
+            } else {// otherwise update question fields in the db
+                ContentValues cv = setOwnQuestionFields(q, false);
+                db.update("ownQuestions", cv, "question=" + q.getQuestion(), null);
             }
-            // otherwise upate question fields in the db
-        } else {
-            ContentValues cv = setOwnQuestionFields(q,false);
-            try {
-                db.beginTransaction();
-                db.update("ownQuestions",cv,"question="+q.getQuestion(),null);
-                db.setTransactionSuccessful();
-            } catch (Exception e) {
-                e.printStackTrace();
-            } finally {
-                db.endTransaction();
-            }
+
+            db.setTransactionSuccessful();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            db.endTransaction();
+            c.close();
         }
     }
 
-    public ContentValues setOwnQuestionFields(Question q, boolean setDeletedSynced){
+    public ContentValues setOwnQuestionFields(Question q, boolean setDeletedSynced) {
         Question.Answer[] answers = q.getResults();
         ContentValues cv = new ContentValues();
 
@@ -321,7 +303,7 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
             }
         }
 
-        if (setDeletedSynced){
+        if (setDeletedSynced) {
             cv.put("deleted", 0);
             cv.put("synced", 0);
         }
@@ -330,14 +312,12 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
 
     }
 
-    // Inserts new openQuestion if it doesnt't exist
+    // Inserts new openQuestion if it doesn't exist
     void replaceIntoDBOpenQuestions(Question q) {
-
         Cursor c = db.rawQuery("SELECT question FROM openQuestions WHERE question = ?", new String[]{q.getQuestion()});
 
         // if question doesn't exist
         if (!c.moveToFirst()) {
-
             ContentValues cv = new ContentValues();
             cv.put("question", q.getQuestion());
             cv.put("text", q.getText());
@@ -354,13 +334,13 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
                 e.printStackTrace();
             } finally {
                 db.endTransaction();
+                c.close();
             }
         }
     }
 
     void replaceIntoDb(Faculty f) {
-        db.execSQL("REPLACE INTO faculties (faculty, name) VALUES (?, ?)",
-                new String[]{f.getId(), f.getName()});
+        db.execSQL("REPLACE INTO faculties (faculty, name) VALUES (?, ?)", new String[]{f.getId(), f.getName()});
     }
 
     private static Faculty getFromJson(JSONObject json) throws Exception {

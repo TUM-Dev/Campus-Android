@@ -71,10 +71,9 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<Void,Boo
             @Override
             protected String[] doInBackground(Void... voids) {
                 ArrayList<String> fetchedFaculties = new ArrayList<>();
-                SyncManager syncManager = new SyncManager(getApplicationContext()); // Has to initialized here cuz otherwise the 'downloadFacultiesFromExternal' in SurveyManager will throw a failure as it comprises an operation from SyncManager.
                 SurveyManager sm = new SurveyManager(getApplicationContext());
                 try {
-                    sm.downloadFacultiesFromExternal(true);
+                    sm.downloadFacultiesFromExternal();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

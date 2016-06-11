@@ -24,12 +24,30 @@
             android:orientation="vertical"
             android:padding="10dp">
 
-            <TextView
-                android:id="@+id/card_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="20sp"
-                android:typeface="sans" />
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/card_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="20sp"
+                    android:typeface="sans"
+                    android:text="@string/research_quiz"
+                    android:layout_weight="1"/>
+
+                <ImageButton
+                    android:contentDescription="@string/flag_inappropriate"
+                    android:src="@drawable/flag"
+                    android:layout_width="27dp"
+                    android:layout_height="27dp"
+                    android:id="@+id/flagButton"
+                    android:layout_weight="0.1"
+                    />
+            </LinearLayout>
+
             <TextView
                 android:id="@+id/questionText"
                 android:layout_width="wrap_content"
@@ -81,14 +99,6 @@
                 android:textColor="#FFFFFF"
                 android:layout_margin="15dp"
                 android:adjustViewBounds="true"/>
-
-                <ImageButton
-                    android:contentDescription="@string/flag_inappropriate"
-                    android:src="@drawable/flag"
-                    android:layout_width="0dp"
-                    android:layout_height="27dp"
-                    android:id="@+id/flagButton"
-                    android:layout_weight="1"/>
 
             </LinearLayout>
 

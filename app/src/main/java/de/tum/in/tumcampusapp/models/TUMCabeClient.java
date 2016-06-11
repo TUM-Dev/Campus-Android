@@ -5,6 +5,7 @@ import android.content.Context;
 import com.squareup.okhttp.CertificatePinner;
 import com.squareup.okhttp.OkHttpClient;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -215,7 +216,14 @@ public class TUMCabeClient {
         service.deviceUploadGcmToken(verification, cb);
     }
 
+    public ArrayList<Faculty> getFaculties() {
+        return service.getFaculties();
+    }
+
     private interface TUMCabeAPIService {
+
+        @GET(API_FACULTIES)
+        ArrayList<Faculty> getFaculties();
 
         @DELETE(API_QUESTION + "{question}")
         void deleteOwnQuestion(@Path("question") int question,Callback<Question> cb);

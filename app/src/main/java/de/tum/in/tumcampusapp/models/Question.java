@@ -14,7 +14,7 @@ public class Question {
     private Boolean no;
     private String faculty;
     private Boolean flagged;
-    private String answer;
+    private int answer;
     private Boolean synced;
     private String[] facultyArr;
     private Answer[] results;
@@ -47,7 +47,7 @@ public class Question {
     }
 
     // Const. for submiting Answeres for openQuestions
-    public Question(String question, String answer){
+    public Question(String question, int answer){
         this.question=question;
         this.answer=answer;
     }
@@ -101,10 +101,6 @@ public class Question {
 
     public void setFlagged(Boolean flagged) {this.flagged = flagged;}
 
-    public String getAnswered() {return answer;}
-
-    public void setAnswered(String answered) {this.answer = answered;}
-
     public Boolean getSynced() {return synced;}
 
     public void setSynced(Boolean synced) {this.synced = synced;}
@@ -114,9 +110,9 @@ public class Question {
     public void setFaculty(String faculty) {this.faculty = faculty;}
 
 
-    public String getAnswer() { return answer;}
+    public int getAnswer() { return answer;}
 
-    public void setAnswer(String answer) {this.answer = answer;}
+    public void setAnswer(int answer) {this.answer = answer;}
 
     public String[] getFacultyArr() {return facultyArr;}
 

@@ -22,9 +22,8 @@ import de.tum.in.tumcampusapp.activities.OrganisationActivity;
 import de.tum.in.tumcampusapp.activities.PersonsSearchActivity;
 import de.tum.in.tumcampusapp.activities.PlansActivity;
 import de.tum.in.tumcampusapp.activities.RoomFinderActivity;
-import de.tum.in.tumcampusapp.activities.SurveyActivity;
 import de.tum.in.tumcampusapp.activities.StudyRoomsActivity;
-
+import de.tum.in.tumcampusapp.activities.SurveyActivity;
 import de.tum.in.tumcampusapp.activities.TransportationActivity;
 import de.tum.in.tumcampusapp.activities.TuitionFeesActivity;
 
@@ -85,7 +84,7 @@ public class DrawerMenuHelper implements NavigationView.OnNavigationItemSelected
             new SideNavigationItem(R.string.schedule, R.drawable.ic_calendar, CalendarActivity.class, true, false),
             new SideNavigationItem(R.string.my_lectures, R.drawable.ic_my_lectures, LecturesPersonalActivity.class, true, false),
             new SideNavigationItem(R.string.chat_rooms, R.drawable.ic_comment, ChatRoomsActivity.class, true, true),
-           // new SideNavigationItem(R.string.my_grades,R.drawable.ic_my_grades, true, GradesActivity.class),
+            // new SideNavigationItem(R.string.my_grades,R.drawable.ic_my_grades, true, GradesActivity.class),
             new SideNavigationItem(R.string.tuition_fees, R.drawable.ic_money, TuitionFeesActivity.class, true, false),
     };
 
@@ -95,10 +94,9 @@ public class DrawerMenuHelper implements NavigationView.OnNavigationItemSelected
             new SideNavigationItem(R.string.mvv, R.drawable.ic_mvv, TransportationActivity.class, false, false),
             new SideNavigationItem(R.string.plans, R.drawable.ic_plans, PlansActivity.class, false, false),
             new SideNavigationItem(R.string.roomfinder, R.drawable.ic_place, RoomFinderActivity.class, false, false),
-            new SideNavigationItem(R.string.study_rooms, R.drawable.ic_group_work,
-                    StudyRoomsActivity.class, false, false),
+            new SideNavigationItem(R.string.study_rooms, R.drawable.ic_group_work, StudyRoomsActivity.class, false, false),
             new SideNavigationItem(R.string.opening_hours, R.drawable.ic_time, OpeningHoursListActivity.class, false, false),
-            new SideNavigationItem(R.string.quiz_title, R.drawable.ic_group_work, SurveyActivity.class, true, false),
+            new SideNavigationItem(R.string.quiz_title, R.drawable.ic_pie_chart, SurveyActivity.class, true, false),
             new SideNavigationItem(R.string.person_search, R.drawable.ic_users, PersonsSearchActivity.class, true, false),
             new SideNavigationItem(R.string.organisations, R.drawable.ic_organisations, OrganisationActivity.class, true, false),
             new SideNavigationItem(R.string.study_plans, R.drawable.ic_study_plans, CurriculaActivity.class, false, false)
