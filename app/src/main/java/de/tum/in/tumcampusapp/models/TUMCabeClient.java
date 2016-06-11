@@ -5,6 +5,7 @@ import android.content.Context;
 import com.squareup.okhttp.CertificatePinner;
 import com.squareup.okhttp.OkHttpClient;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 

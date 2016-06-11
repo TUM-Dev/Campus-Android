@@ -107,7 +107,7 @@ public class DownloadService extends IntentService {
                     successful = service.downloadNews(force);
                     break;
                 case Const.FACULTIES:
-                    successful = service.downloadFaculties(force);
+                    successful = service.downloadFaculties();
                     break;
                 case Const.CAFETERIAS:
                     successful = service.downloadCafeterias(force);
@@ -204,7 +204,7 @@ public class DownloadService extends IntentService {
                 kino = downLoadKino(force),
                 news = downloadNews(force),
                 rooms = downloadStudyRooms(),
-                faculties = downloadFaculties(force);
+                faculties = downloadFaculties();
         return cafe && kino && news && rooms && faculties;
     }
 
@@ -243,10 +243,10 @@ public class DownloadService extends IntentService {
         }
     }
 
-    private boolean downloadFaculties(boolean force) {
+    private boolean downloadFaculties() {
         try {
             SurveyManager sm = new SurveyManager(this);
-            sm.downloadFacultiesFromExternal(force);
+            sm.downloadFacultiesFromExternal();
             sm.downLoadOpenQuestions();
             sm.downLoadOwnQuestions();
             return true;

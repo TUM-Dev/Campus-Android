@@ -104,11 +104,48 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<Void, Bo
 
                 userMajorSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
+
+    public void setUpSpinner()
+    {
+        // fetch facultyData from API
+        new AsyncTask<Void, Void, String[]>() {
+            @Override
+            protected String[] doInBackground(Void... voids) {
+                ArrayList<String> fetchedFaculties = new ArrayList<>();
+                SurveyManager sm = new SurveyManager(getApplicationContext());
+                try {
+                    sm.downloadFacultiesFromExternal();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                Cursor cursor = sm.getAllFaculties();
+                if(cursor.moveToFirst()){
+                    do{
+                        fetchedFaculties.add(cursor.getString(cursor.getColumnIndex("name")));
+                    }while (cursor.moveToNext());
+
+                }
+                fetchedFaculties.add(0,getResources().getString(R.string.choose_own_faculty));
+                final String[] majors = fetchedFaculties.toArray( new String[fetchedFaculties.size()]);
+
+                return majors;
+            }
+
+            @Override
+            protected void onPostExecute(String[] majors) {
+
+                ArrayAdapter<String> adapter = new ArrayAdapter<String>(getBaseContext(),
+                        android.R.layout.simple_list_item_1, majors);
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                userMajorSpinner.setAdapter(adapter);
+
+                userMajorSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
                     @Override
                     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                         SurveyManager sm = new SurveyManager(getApplicationContext());
                         Cursor c = sm.getFacultyID((String) adapterView.getItemAtPosition(i));
-                        if (c.moveToFirst()) {
+                        if(c.moveToFirst()){
                             Utils.setInternalSetting(getApplicationContext(), "user_major", c.getString(c.getColumnIndex("faculty")));
                         }
                         TextView selectedItem = (TextView) adapterView.getChildAt(0);
@@ -123,7 +160,7 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<Void, Bo
 
                     }
                 });
-                return;
+                return ;
             }
 
         }.execute();
@@ -159,7 +196,7 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<Void, Bo
         }
 
         //insert user major to db. Will be used in survey activity for sending questions to other users.
-        userMajor = userMajorSpinner.getSelectedItem().toString();
+        userMajor=userMajorSpinner.getSelectedItem().toString();
         lrzId = editText.getText().toString();
         Editor editor = sharedPrefs.edit();
         editor.putString(Const.LRZ_ID, lrzId);

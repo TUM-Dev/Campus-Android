@@ -41,7 +41,6 @@ public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<Vo
     private TUMRoomFinderRequest request;
     private NetUtils net;
 
-    private String location;
     private Bundle roomInfo;
     private String mapId = "";
     private ArrayList<HashMap<String, String>> mapsList;
@@ -61,8 +60,13 @@ public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<Vo
         mImage = ImageViewTouchFragment.newInstance();
         getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, mImage).commit();
 
-        location = getIntent().getExtras().getString(EXTRA_LOCATION);
         roomInfo = getIntent().getExtras().getBundle(EXTRA_ROOM_INFO);
+        if (roomInfo == null) {
+            Utils.showToast(this, "No room information passed");
+            this.finish();
+            return;
+        }
+
         request = new TUMRoomFinderRequest(this);
 
         startLoading();
@@ -185,7 +189,7 @@ public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<Vo
         String archId = roomInfo.getString(TUMRoomFinderRequest.KEY_ARCH_ID);
         String url;
 
-        if (mapId == null || mapId.isEmpty()){
+        if (mapId == null || mapId.isEmpty()) {
             url = request.fetchDefaultMap(archId);
         } else {
             url = request.fetchMap(archId, mapId);

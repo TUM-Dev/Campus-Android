@@ -37,7 +37,7 @@ public class SurveyCard extends Card
     }
 
     public static Card.CardViewHolder inflateViewHolder(final ViewGroup parent) {
-        final View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_test, parent, false);
+        final View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_survey, parent, false);
         return new Card.CardViewHolder(view);
     }
 

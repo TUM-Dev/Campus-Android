@@ -3,17 +3,17 @@ package de.tum.in.tumcampusapp.fragments;
 import android.annotation.SuppressLint;
 import android.database.Cursor;
 import android.graphics.Color;
-import android.graphics.drawable.GradientDrawable;
-import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SimpleCursorAdapter;
+import android.support.v7.widget.CardView;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
@@ -47,44 +47,67 @@ public class StudyRoomGroupDetailsFragment extends Fragment implements SimpleCur
 
         Cursor studyRoomCursor = new StudyRoomGroupManager(getActivity()).getStudyRoomsFromDb
                 (mStudyRoomGroupId);
-        SimpleCursorAdapter adapter = createStudyRoomCursorAdapter(studyRoomCursor);
-        adapter.setViewBinder(this);
 
-        ListView lv2 = (ListView) rootView.findViewById(R.id.fragment_item_detail_listview);
-        lv2.setDividerHeight(0);
-        lv2.setAdapter(adapter);
+        RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.fragment_item_detail_recyclerview);
+        recyclerView.setAdapter(new StudyRoomAdapter(studyRoomCursor));
+        final LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setHasFixedSize(true);
 
         return rootView;
+    }
+
+    private class StudyRoomAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+        private final SimpleCursorAdapter mCursorAdapter;
+
+        StudyRoomAdapter(Cursor studyRoomCursor) {
+            mCursorAdapter = createStudyRoomCursorAdapter(studyRoomCursor);
+            mCursorAdapter.setViewBinder(StudyRoomGroupDetailsFragment.this);
+        }
+
+        @Override
+        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View view = mCursorAdapter.newView(getContext(), mCursorAdapter.getCursor(), parent);
+            return new RecyclerView.ViewHolder(view) {
+            };
+        }
+
+        @Override
+        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+            mCursorAdapter.getCursor().moveToPosition(position);
+            mCursorAdapter.bindView(holder.itemView, getContext(), mCursorAdapter.getCursor());
+
+            CardView cardView = (CardView) holder.itemView.findViewById(R.id.card_view);
+            TextView text = (TextView) holder.itemView.findViewById(android.R.id.text2);
+
+            int color;
+            if (text.getText().toString().contains(getString(R.string.free))) {
+                color = Color.rgb(200, 230, 201);
+            } else {
+                color = Color.rgb(255, 205, 210);
+            }
+
+            cardView.setCardBackgroundColor(color);
+        }
+
+        @Override
+        public int getItemCount() {
+            return mCursorAdapter.getCount();
+        }
+
     }
 
     @NonNull
     private SimpleCursorAdapter createStudyRoomCursorAdapter(final Cursor studyRoomCursor) {
         return new SimpleCursorAdapter(getActivity(),
-                R.layout.study_room_list_item, studyRoomCursor, studyRoomCursor.getColumnNames(),
+                R.layout.two_line_list_item, studyRoomCursor, studyRoomCursor.getColumnNames(),
                 new int[]{android.R.id.text1, android.R.id.text2, R.id.text3}, 0) {
 
             @Override
             public boolean isEnabled(int position) {
                 // disable onclick
                 return false;
-            }
-
-            @Override
-            public View getView(int position, View convertView, ViewGroup parent) {
-                View view = super.getView(position, convertView, parent);
-                View cardView = view.findViewById(R.id.card_view);
-                TextView text = (TextView) view.findViewById(android.R.id.text2);
-
-                LayerDrawable bgDrawable = (LayerDrawable) cardView.getBackground();
-                GradientDrawable shape = (GradientDrawable) bgDrawable.findDrawableByLayerId(R.id
-                        .study_room_card_body);
-                if (text.getText().toString().contains(getString(R.string.free))) {
-                    shape.setColor(Color.rgb(200, 230, 201));
-                } else {
-                    shape.setColor(Color.rgb(255, 205, 210));
-                }
-
-                return view;
             }
         };
     }

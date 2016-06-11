@@ -231,7 +231,9 @@ public class TUMRoomFinderRequest {
 
     public String fetchRoomStreet(String apiCode) throws IOException, JSONException {
         JSONObject res = net.downloadJson(API_BASE_URL + "room/streetForMVG/" + encodeUrl(apiCode));
-        if (res.has("street") && res.getBoolean("supported")) return res.getString("street");
+        if (res.has("street") && res.getBoolean("supported")) {
+            return res.getString("street");
+        }
 
         return null;
     }
@@ -297,9 +299,10 @@ public class TUMRoomFinderRequest {
      * encodes an url
      *
      * @param url input url
-     * @return ecoded url
+     * @return encoded url
      */
     private String encodeUrl(String url) {
+        url = url.replace("/", ""); //remove slashes in queries as this breaks the url
         try {
             url = URLEncoder.encode(url, "UTF-8");
         } catch (UnsupportedEncodingException e) {

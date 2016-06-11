@@ -1,6 +1,7 @@
 package de.tum.in.tumcampusapp.cards;
 
 import android.app.Notification;
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -27,7 +28,7 @@ import java.util.Locale;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.CalendarActivity;
-import de.tum.in.tumcampusapp.activities.RoomFinderDetailsActivity;
+import de.tum.in.tumcampusapp.activities.RoomFinderActivity;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.managers.CardManager;
 
@@ -119,8 +120,8 @@ public class NextLectureCard extends Card {
             mLocation.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent i = new Intent(mContext, RoomFinderDetailsActivity.class);
-                    i.putExtra(RoomFinderDetailsActivity.EXTRA_LOCATION, item.location);
+                    Intent i = new Intent(mContext, RoomFinderActivity.class);
+                    i.putExtra(SearchManager.QUERY, item.location);
                     mContext.startActivity(i);
                 }
             });
@@ -186,10 +187,11 @@ public class NextLectureCard extends Card {
 
             // Handle location
             item.location = cur.getString(3);
-            if (item.location != null)
+            if (item.location != null) {
                 item.location = item.location.replaceAll("\\([A-Z0-9\\.]+\\)", "").trim();
-            else
+            } else {
                 item.location = null;
+            }
             lectures.add(item);
         } while (cur.moveToNext());
         cur.close();

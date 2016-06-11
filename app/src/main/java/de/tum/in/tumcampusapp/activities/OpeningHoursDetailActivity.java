@@ -20,6 +20,7 @@ import de.tum.in.tumcampusapp.fragments.OpeningHoursDetailFragment;
  */
 public class OpeningHoursDetailActivity extends AppCompatActivity {
 
+	//TODO: implement BaseActivity
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
