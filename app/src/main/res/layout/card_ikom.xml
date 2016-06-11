@@ -33,7 +33,7 @@
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Mehr informationen"
+                android:text="@string/more_info"
                 android:id="@+id/bttnIkom"
                 android:layout_gravity="right"
                 />

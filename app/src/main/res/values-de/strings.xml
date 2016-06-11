@@ -403,4 +403,5 @@ Signatur: %5$s</string>
     <string name="survey_submitted">Die Umfrage wurde eingereicht</string>
     <string name="tab_responses">Antworten</string>
     <string name="tab_survey">Umfrage</string>
+    <string name="more_info">Mehr Informationen</string>
 </resources>
