@@ -217,7 +217,6 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
                 JSONObject obj = jsonArray.getJSONObject(i);
                 replaceIntoDb(getFromJson(obj));
             }
-            SyncManager.replaceIntoDb(db, this);
             db.setTransactionSuccessful();
         } finally {
             db.endTransaction();

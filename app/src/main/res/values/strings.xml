@@ -101,7 +101,7 @@
     <!-- Startup Wizard -->
     <string name="token_not_enabled">TUMOnline-Access-Token is not enabled</string>
     <string name="startup_wizard_uppercase">STARTUP-WIZARD</string>
-    <string name="welcome_msg"><b>Welcome to TUM Campus App!</b>\n\nIn order to setup the TUMOnline access, you need to provide your <b>LRZ Identification</b>.\n\nThis Id has the following format:\n<i>xx00xxx</i>\n(2 letters, 2 digits, 3 letters)</string>
+    <string name="welcome_msg"><b>Welcome to TUM Campus App!</b>\n\nIn order to setup the TUMOnline access, you need to provide your <b>LRZ Identification</b> and your <b>major of studies</b>.\n\nThis LRZ Id has the following format:\n<i>xx00xxx</i>\n(2 letters, 2 digits, 3 letters)</string>
     <string name="button_skip">Skip</string>
     <string name="button_next">Next</string>
     <string name="need_to_enable"><b>The TUMOnline-Access-Token was successfully generated</b>\n\nYou can now enable the Token in TUMOnline via <i>Services/Token-Management</i>. Make sure the rights you want to gain the App are set as well under <i>Active Rights</i>.</string>
@@ -472,7 +472,7 @@ Signature: %5$s</string>
     <string name="complete_question_form">Please complete question form</string>
     <string name="select_one_faculty">At least select one faculty</string>
     <string name="question_deleted">Question has been deleted</string>
-    <string name="choose_own_faculty" translatable="false">Please choose your faculty:</string>
+    <string name="choose_own_faculty" translatable="false">Please choose your major:</string>
     <string name="mvv_download" translatable="false">Please press ok to download MVV-Plans otherwise you can\'t use this feature</string>
 </resources>
 

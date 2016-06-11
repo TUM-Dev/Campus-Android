@@ -26,52 +26,57 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.ActivityForLoadingInBackground;
 import de.tum.in.tumcampusapp.auxiliary.AccessTokenManager;
 import de.tum.in.tumcampusapp.auxiliary.Const;
+import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.managers.SurveyManager;
-import de.tum.in.tumcampusapp.models.managers.SyncManager;
 
 /**
  * Displays the first page of the startup wizard, where the user can enter his lrz-id.
  */
-public class WizNavStartActivity extends ActivityForLoadingInBackground<Void,Boolean> implements OnClickListener {
-	private final AccessTokenManager accessTokenManager = new AccessTokenManager(this);
-	private EditText editText;
+public class WizNavStartActivity extends ActivityForLoadingInBackground<Void, Boolean> implements OnClickListener {
+    private final AccessTokenManager accessTokenManager = new AccessTokenManager(this);
+    private EditText editText;
     private Spinner userMajorSpinner;
-	private String lrzId;
-	private SharedPreferences sharedPrefs;
-    String userMajor="";
+    private String lrzId;
+    private SharedPreferences sharedPrefs;
+    private String userMajor = "";
 
     public WizNavStartActivity() {
         super(R.layout.activity_wiznav_start);
     }
 
     @Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         disableRefresh();
 
-		sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
 
-		LinearLayout layout = (LinearLayout) findViewById(R.id.wizard_start_layout);
-		layout.requestFocus();
+        LinearLayout layout = (LinearLayout) findViewById(R.id.wizard_start_layout);
+        layout.requestFocus();
 
-        userMajorSpinner=(Spinner)  findViewById(R.id.majorSpinner);
-		editText = (EditText) findViewById(R.id.lrd_id);
-        setUpSpinner();
-		lrzId = sharedPrefs.getString(Const.LRZ_ID, "");
-		if (lrzId != null) {
-			editText.setText(lrzId);
-		}
-	}
+        userMajorSpinner = (Spinner) findViewById(R.id.majorSpinner);
+        editText = (EditText) findViewById(R.id.lrd_id);
 
-    public void setUpSpinner()
-    {
-        // fetch facultyData from API
+        // Fetch faculties data only if connected
+        if(!NetUtils.isConnected(this)){
+            Utils.log("NoInternet!");
+            Toast.makeText(getApplicationContext(),"Please connect to internet to proceed the first App start", Toast.LENGTH_LONG).show();
+        }else{
+            setupFacultiesSpinner();
+            lrzId = sharedPrefs.getString(Const.LRZ_ID, "");
+            if (lrzId != null) {
+                editText.setText(lrzId);
+            }
+        }
+    }
+
+    public void setupFacultiesSpinner() {
+        // fetch facultyData directly from API
         new AsyncTask<Void, Void, String[]>() {
             @Override
             protected String[] doInBackground(Void... voids) {
                 ArrayList<String> fetchedFaculties = new ArrayList<>();
-                SyncManager syncManager = new SyncManager(getApplicationContext()); // Has to initialized here cuz otherwise the 'downloadFacultiesFromExternal' in SurveyManager will throw a failure as it comprises an operation from SyncManager.
                 SurveyManager sm = new SurveyManager(getApplicationContext());
                 try {
                     sm.downloadFacultiesFromExternal(true);
@@ -79,16 +84,14 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<Void,Boo
                     e.printStackTrace();
                 }
                 Cursor cursor = sm.getAllFaculties();
-                if(cursor.moveToFirst()){
-                    do{
+                if (cursor.moveToFirst()) {
+                    do {
                         fetchedFaculties.add(cursor.getString(cursor.getColumnIndex("name")));
-                    }while (cursor.moveToNext());
+                    } while (cursor.moveToNext());
 
                 }
-                fetchedFaculties.add(0,getResources().getString(R.string.choose_own_faculty));
-                final String[] majors = fetchedFaculties.toArray( new String[fetchedFaculties.size()]);
-
-                return majors;
+                fetchedFaculties.add(0, getResources().getString(R.string.choose_own_faculty));
+                return fetchedFaculties.toArray(new String[fetchedFaculties.size()]);
             }
 
             @Override
@@ -105,7 +108,7 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<Void,Boo
                     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                         SurveyManager sm = new SurveyManager(getApplicationContext());
                         Cursor c = sm.getFacultyID((String) adapterView.getItemAtPosition(i));
-                        if(c.moveToFirst()){
+                        if (c.moveToFirst()) {
                             Utils.setInternalSetting(getApplicationContext(), "user_major", c.getString(c.getColumnIndex("faculty")));
                         }
                         TextView selectedItem = (TextView) adapterView.getChildAt(0);
@@ -120,7 +123,7 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<Void,Boo
 
                     }
                 });
-                return ;
+                return;
             }
 
         }.execute();
@@ -128,6 +131,7 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<Void,Boo
 
     /**
      * Handle click on skip button
+     *
      * @param skip Skip button handle
      */
     @SuppressWarnings("UnusedParameters")
@@ -143,46 +147,47 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<Void,Boo
 
     /**
      * Handle click on next button
+     *
      * @param next Next button handle
      */
     @SuppressWarnings("UnusedParameters")
     public void onClickNext(View next) {
 
-        if(userMajorSpinner.getSelectedItemPosition()==0)
-        {
-            Toast.makeText(getApplicationContext(),"Please select your major",Toast.LENGTH_SHORT).show();
+        if (userMajorSpinner.getSelectedItemPosition() == 0) {
+            Toast.makeText(getApplicationContext(), "Please select your major", Toast.LENGTH_SHORT).show();
             return;
         }
 
         //insert user major to db. Will be used in survey activity for sending questions to other users.
-        userMajor=userMajorSpinner.getSelectedItem().toString();
+        userMajor = userMajorSpinner.getSelectedItem().toString();
         lrzId = editText.getText().toString();
         Editor editor = sharedPrefs.edit();
         editor.putString(Const.LRZ_ID, lrzId);
         editor.apply();
 
-		// check if lrz could be valid?
-		if (lrzId.length() >= AccessTokenManager.MIN_LRZ_LENGTH) {
-			// is access token already set?
-			if (accessTokenManager.hasValidAccessToken()) {
-				// show Dialog first
-				new AlertDialog.Builder(this)
-				        .setMessage(getString(R.string.dialog_new_token))
-						.setPositiveButton(getString(R.string.yes), this)
-						.setNegativeButton(getString(R.string.no), this)
-						.show();
-			} else {
+        // check if lrz could be valid?
+        if (lrzId.length() >= AccessTokenManager.MIN_LRZ_LENGTH) {
+            // is access token already set?
+            if (accessTokenManager.hasValidAccessToken()) {
+                // show Dialog first
+                new AlertDialog.Builder(this)
+                        .setMessage(getString(R.string.dialog_new_token))
+                        .setPositiveButton(getString(R.string.yes), this)
+                        .setNegativeButton(getString(R.string.no), this)
+                        .show();
+            } else {
                 startLoading();
-			}
-		} else {
-			Utils.showToast(this, R.string.error_lrz_wrong);
-		}
-	}
+            }
+        } else {
+            Utils.showToast(this, R.string.error_lrz_wrong);
+        }
+    }
 
     /**
      * Handle click in dialog buttons
+     *
      * @param dialog Dialog handle
-     * @param which Button clicked
+     * @param which  Button clicked
      */
     @Override
     public void onClick(DialogInterface dialog, int which) {
@@ -196,6 +201,7 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<Void,Boo
 
     /**
      * Requests an access-token from the TumOnline server in background
+     *
      * @param arg Unused
      * @return True if the access token was successfully created
      */
@@ -206,11 +212,12 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<Void,Boo
 
     /**
      * Opens second wizard page if access token available
+     *
      * @param result Was access token successfully created
      */
     @Override
     protected void onLoadFinished(Boolean result) {
-        if(result) {
+        if (result) {
             finish();
             startActivity(new Intent(this, WizNavCheckTokenActivity.class));
             overridePendingTransition(R.anim.fadein, R.anim.fadeout);
