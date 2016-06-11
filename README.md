@@ -18,20 +18,8 @@ zur Verwendung auf Smartphones, wie auch Tablets und ist für Studierende, aber 
 - automatische Stummschaltung während der Vorlesung
 - und und und ...
 
-#### Projektmanagement:
-+ TUM - Computer Science / F13
-+ Prof. Dr. Uwe Baumgarten
-+ Nils T. Kannengiesser
-
-#### Aktive Entwickler (Sommersemester 2016):
-+ Kordian Bruck
-+ Philipp Fent
-+ Ralf Baun
-+ Aser Abdelrahman
-+ Mohamad Ayad
-
-#### Weitere Entwickler:
-Enrico Gigantiello, Carlo Di Domenico, Arash Khatayee, Michael Hesse, Thomas Mauerer, Florian Dreier, Jana Pejic, Marko Lalic, Sascha Moecker, Haris Iltifat, Anas Chakfeh, Thomas Krex, Marius Muntean, Christoph Richter, Thomas Bley, Vincenz Dölle, Daniel Mayr, Thomas Behrens, Florian Schulz, Vasyl Malinskyi, Andreas Bernhofer (IT-Support/TUMonline), Nils T. Kannengiesser (F13)
+#### [Contributors](https://github.com/TCA-Team/TumCampusApp/blob/master/CONTRIBUTORS.md)
+Special thanks to everybody that has contributed to this project. https://github.com/TCA-Team/TumCampusApp/blob/master/CONTRIBUTORS.md
 
 #### Wichtiger Hinweis:
 Dies ist keine offizielle App der Technischen Universität München. Es
