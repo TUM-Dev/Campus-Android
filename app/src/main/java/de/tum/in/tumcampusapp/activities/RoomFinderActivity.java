@@ -65,7 +65,7 @@ public class RoomFinderActivity extends ActivityForSearching implements TUMRoomF
     @Override
     protected void onStartSearch() {
         ArrayList<HashMap<String, String>> recents = getRecents();
-        if(recents.size()==0) {
+        if (recents.size() == 0) {
             finish();
             return;
         }
@@ -139,8 +139,9 @@ public class RoomFinderActivity extends ActivityForSearching implements TUMRoomF
                 String[] values = recentStations.getString(0).split(";");
                 HashMap<String, String> e = new HashMap<>();
                 for (String entry : values) {
-                    if (entry.isEmpty())
+                    if (entry.isEmpty()) {
                         continue;
+                    }
                     String[] kv = entry.split("=");
                     e.put(kv[0], kv[1]);
                 }
