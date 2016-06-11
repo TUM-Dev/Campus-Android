@@ -108,6 +108,10 @@ public class WizNavActivatePublicKeyActivity extends ActivityForLoadingInBackgro
         try {
             List<ChatRoom> rooms = TUMCabeClient.getInstance(this).getMemberRooms(member.getId(), new ChatVerification(this, member));
             manager.replaceIntoRooms(rooms);
+
+            //Store that this key was activated
+            Utils.setInternalSetting(this, Const.PRIVATE_KEY_ACTIVE, true);
+
             return true;
         } catch (RetrofitError e) {
             Utils.log(e);

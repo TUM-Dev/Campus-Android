@@ -102,7 +102,7 @@ public class WizNavChatActivity extends ActivityForLoadingInBackground<Void, Cha
      */
     @SuppressWarnings("UnusedParameters")
     public void onClickSkip(View skip) {
-        startNextActivity();
+        startNextActivity(true);
     }
 
     /**
@@ -125,13 +125,20 @@ public class WizNavChatActivity extends ActivityForLoadingInBackground<Void, Cha
     /**
      * Opens next wizard page
      */
-    private void startNextActivity() {
+    private void startNextActivity(boolean skip) {
+        //Stop the current
         finish();
+
+
         Intent intent;
-        if (!Utils.getInternalSettingBool(this, Const.PRIVATE_KEY_ACTIVE, false)) {
-            intent = new Intent(this, WizNavActivatePublicKeyActivity.class);
-        } else {
+        if(skip){
             intent = new Intent(this, WizNavExtrasActivity.class);
+        }else {
+            if (!Utils.getInternalSettingBool(this, Const.PRIVATE_KEY_ACTIVE, false)) {
+                intent = new Intent(this, WizNavActivatePublicKeyActivity.class);
+            } else {
+                intent = new Intent(this, WizNavExtrasActivity.class);
+            }
         }
         intent.putExtra(Const.TOKEN_IS_SETUP, tokenSetup);
         startActivity(intent);
@@ -201,7 +208,7 @@ public class WizNavChatActivity extends ActivityForLoadingInBackground<Void, Cha
             Utils.setSetting(this, Const.AUTO_JOIN_NEW_ROOMS, groupChatMode.isChecked() && autoJoin.isChecked());
             Utils.setSetting(this, Const.CHAT_MEMBER, member);
             Utils.log("Set member to settings: " + new Gson().toJson(member));
-            startNextActivity();
+            startNextActivity(false);
         } else {
             showLoadingEnded();
         }
