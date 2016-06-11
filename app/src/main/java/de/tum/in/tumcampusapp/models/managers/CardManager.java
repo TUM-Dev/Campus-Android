@@ -12,6 +12,7 @@ import de.tum.in.tumcampusapp.cards.Card;
 import de.tum.in.tumcampusapp.cards.EduroamCard;
 import de.tum.in.tumcampusapp.cards.FirstUseCard1;
 import de.tum.in.tumcampusapp.cards.FirstUseCard2;
+import de.tum.in.tumcampusapp.cards.IkomCard;
 import de.tum.in.tumcampusapp.cards.NoInternetCard;
 import de.tum.in.tumcampusapp.cards.RestoreCard;
 import de.tum.in.tumcampusapp.cards.Support;
@@ -24,7 +25,7 @@ public class CardManager {
     public static final String SHOW_TUTORIAL_1 = "show_tutorial_1";
     public static final String SHOW_TUTORIAL_2 = "show_tutorial_2";
     public static final String SHOW_SUPPORT = "show_support";
-    public static final String SHOW_TEST = "show_test";
+    public static final String SHOW_IKOM = "show_ikom";
 
     /**
      * Card typ constants
@@ -43,6 +44,7 @@ public class CardManager {
     public static final int CARD_CHAT = 12;
     public static final int CARD_SUPPORT = 13;
     public static final int CARD_SURVEY = 14;
+    public static final int CARD_IKOM = 15;
     public static boolean shouldRefresh = false;
     private static List<Card> cards;
     private static ArrayList<Card> newCards;
@@ -109,9 +111,9 @@ public class CardManager {
         new FirstUseCard2(context).apply();
         new Support(context).apply();
 
+        new IkomCard(context).apply();
+
         new EduroamCard(context).apply();
-
-
 
         List<Card.ProvidesCard> managers = new ArrayList<>();
 

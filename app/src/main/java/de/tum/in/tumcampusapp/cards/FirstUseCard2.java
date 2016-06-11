@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.managers.CardManager;
 
 /**
@@ -32,13 +33,11 @@ public class FirstUseCard2 extends Card {
 
     @Override
     public void discard(Editor editor) {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-        prefs.edit().putBoolean(CardManager.SHOW_TUTORIAL_2, false).apply();
+        Utils.setInternalSetting(mContext, CardManager.SHOW_TUTORIAL_2, false);
     }
 
     @Override
     public boolean shouldShow(SharedPreferences p) {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-        return prefs.getBoolean(CardManager.SHOW_TUTORIAL_2, true);
+        return Utils.getInternalSettingBool(mContext, CardManager.SHOW_TUTORIAL_2, true);
     }
 }

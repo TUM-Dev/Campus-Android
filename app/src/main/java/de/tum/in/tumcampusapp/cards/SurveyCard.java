@@ -48,7 +48,7 @@ public class SurveyCard extends Card
 
     @Override
     public void discard(SharedPreferences.Editor editor) {
-        Utils.setSetting(mContext, CardManager.SHOW_TEST, false);
+        //@todo
     }
 
     @Override
