@@ -1,4 +1,4 @@
-if(!window['googleLT_']){window['googleLT_']=(new Date()).getTime();}if (!window['google']) {
+99if(!window['googleLT_']){window['googleLT_']=(new Date()).getTime();}if (!window['google']) {
 window['google'] = {};
 }
 if (!window['google']['loader']) {

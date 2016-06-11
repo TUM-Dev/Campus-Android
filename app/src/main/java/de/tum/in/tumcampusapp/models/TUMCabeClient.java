@@ -12,6 +12,7 @@ import javax.net.ssl.SSLPeerUnverifiedException;
 
 import de.tum.in.tumcampusapp.auxiliary.AuthenticationManager;
 import de.tum.in.tumcampusapp.auxiliary.Const;
+import de.tum.in.tumcampusapp.cards.SurveyCard;
 import retrofit.Callback;
 import retrofit.ErrorHandler;
 import retrofit.RequestInterceptor;
@@ -19,6 +20,7 @@ import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.OkClient;
 import retrofit.http.Body;
+import retrofit.http.DELETE;
 import retrofit.http.GET;
 import retrofit.http.POST;
 import retrofit.http.PUT;
@@ -41,6 +43,12 @@ public class TUMCabeClient {
     private static final String API_NOTIFICATIONS = "/notifications/";
     private static final String API_LOCATIONS = "/locations/";
     private static final String API_DEVICE = "/device/";
+    private static final String API_QUESTION = "/question/";
+    private static final String API_FACULTIES = "/faculty/";
+    private static final String API_ANSWER_QUESTION = "/question/answer";
+    private static final String API_OWN_QUESTIONS = "/question/my";
+
+
 
 
     private static TUMCabeClient instance = null;
@@ -92,6 +100,23 @@ public class TUMCabeClient {
             instance = new TUMCabeClient();
         }
         return instance;
+    }
+
+    public void deleteOwnQuestion(int question, Callback<Question> cb){
+        service.deleteOwnQuestion(question,cb);
+    }
+
+    public ArrayList<Question> getOwnQuestions(){ return service.getOwnQuestions();}
+
+
+    public void submitAnswer(Question question, Callback<Question> cb){
+        service.answerQuestion(question,cb);
+    }
+
+    public ArrayList<Question> getOpenQuestions(){ return service.getOpenQuestions();}
+
+    public void createQuestion(Question question,Callback<Question> cb){
+        service.createQuestion(question,cb);
     }
 
     public void createRoom(ChatRoom chatRoom, ChatVerification verification, Callback<ChatRoom> cb) {
@@ -191,6 +216,22 @@ public class TUMCabeClient {
     }
 
     private interface TUMCabeAPIService {
+
+        @DELETE(API_QUESTION + "{question}")
+        void deleteOwnQuestion(@Path("question") int question,Callback<Question> cb);
+
+        @GET(API_OWN_QUESTIONS)
+        ArrayList<Question> getOwnQuestions();
+
+        @POST(API_ANSWER_QUESTION)
+        void answerQuestion(@Body Question question, Callback<Question> cb);
+
+        //Questions
+        @POST(API_QUESTION)
+        void createQuestion(@Body Question question,Callback<Question> cb);
+
+        @GET(API_QUESTION)
+        ArrayList<Question> getOpenQuestions();
 
         //Group chat
         @POST(API_CHAT_ROOMS)

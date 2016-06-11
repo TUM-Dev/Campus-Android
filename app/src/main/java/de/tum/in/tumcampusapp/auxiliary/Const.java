@@ -36,6 +36,7 @@ public final class Const {
 	public static final String NAME_COLUMN = "name";
 	public static final String NEWS = "news";
 	public static final String KINO = "kino";
+	public static final String FACULTIES = "faculties";
 	public static final String STUDY_ROOM_GROUP_ID = "study_room_group_id";
 	public static final String STUDY_ROOMS = "study_rooms";
 	public static final String ORG_ID = "orgId";
@@ -94,6 +95,11 @@ public final class Const {
 	public static final String JSON_COVER = "cover";
 	public static final String JSON_TRAILER = "trailer";
 	public static final String JSON_KINO = "kino";
+	public static final String JSON_FACULTY = "faculty";
+	public static final String JSON_FACULTY_NAME = "name";
+	public static final String JSON_QUESTION_ID = "question";
+	public static final String JSON_QUESTION_TEXT = "text";
+	public static final String JSON_QUESTION_FACULTY = "faculty";
 
     public static final String EVERYTHING_SETUP = "everything_setup";
     public static final String SYNC_CALENDAR_IMPORT = "calendar_import";

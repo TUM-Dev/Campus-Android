@@ -372,4 +372,24 @@
     <string name="free">Libre</string>
     <string name="occupied">Occupée jusqu\'á</string>
     <string name="study_rooms">Salles d\'études</string>
+    <string name="enter_first_question_survey">Entrez la premiere question s\'il vous plait</string>
+    <string name="enter_second_question_survey">Entrez la seconde question s\'il vous plait</string>
+    <string name="enter_third_question_survey">Entrez la troisième question s\'il vous plait</string>
+    <string name="next_possible_survey_date">La suivanlt date d\'enquête possible est</string>
+    <string name="no_questions_available">Pas de questions valable</string>
+    <string name="one_question_left">Reste seulement une question</string>
+    <string name="quiz_target_faculty">Choisir votre but facultés</string>
+    <string name="select_number_of_questions_survey">Choisir le nombre de questions</string>
+    <string name="select_target_faculties_survey">Choisir les but faculte</string>
+    <string name="submit_question_survey">Soumettre votre question</string>
+    <string name="survey_no">Non</string>
+    <string name="survey_yes">Qui</string>
+    <string name="survey_skip">Sauter</string>
+    <string name="enter_question_survey">Entrez question s\'il vous plait</string>
+    <string name="select_one_faculty">Wahle bitte mindestens eine Fakultat aus</string>
+    <string name="question_deleted">Die Frage wurde geloscht</string>
+    <string name="complete_question_form">Bitte fulle das Formular aus</string>
+    <string name="survey_submitted">Die Umfrage wurde eingereicht</string>
+    <string name="tab_responses">Antworten</string>
+    <string name="tab_survey">Umfrage</string>
 </resources>

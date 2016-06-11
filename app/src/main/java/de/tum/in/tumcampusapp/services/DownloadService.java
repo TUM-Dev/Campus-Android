@@ -22,6 +22,7 @@ import de.tum.in.tumcampusapp.models.managers.KinoManager;
 import de.tum.in.tumcampusapp.models.managers.NewsManager;
 import de.tum.in.tumcampusapp.models.managers.OpenHoursManager;
 import de.tum.in.tumcampusapp.models.managers.StudyRoomGroupManager;
+import de.tum.in.tumcampusapp.models.managers.SurveyManager;
 import de.tum.in.tumcampusapp.models.managers.SyncManager;
 import de.tum.in.tumcampusapp.trace.G;
 import de.tum.in.tumcampusapp.trace.Util;
@@ -104,6 +105,9 @@ public class DownloadService extends IntentService {
                     break;
                 case Const.NEWS:
                     successful = service.downloadNews(force);
+                    break;
+                case Const.FACULTIES:
+                    successful = service.downloadFaculties(force);
                     break;
                 case Const.CAFETERIAS:
                     successful = service.downloadCafeterias(force);
@@ -199,8 +203,9 @@ public class DownloadService extends IntentService {
         final boolean cafe = downloadCafeterias(force),
                 kino = downLoadKino(force),
                 news = downloadNews(force),
-                rooms = downloadStudyRooms();
-        return cafe && kino && news && rooms;
+                rooms = downloadStudyRooms(),
+                faculties = downloadFaculties(force);
+        return cafe && kino && news && rooms && faculties;
     }
 
     private boolean downloadCafeterias(boolean force) {
@@ -231,6 +236,19 @@ public class DownloadService extends IntentService {
         try {
             NewsManager nm = new NewsManager(this);
             nm.downloadFromExternal(force);
+            return true;
+        } catch (Exception e) {
+            Utils.log(e);
+            return false;
+        }
+    }
+
+    private boolean downloadFaculties(boolean force) {
+        try {
+            SurveyManager sm = new SurveyManager(this);
+            sm.downloadFacultiesFromExternal(force);
+            sm.downLoadOpenQuestions();
+            sm.downLoadOwnQuestions();
             return true;
         } catch (Exception e) {
             Utils.log(e);

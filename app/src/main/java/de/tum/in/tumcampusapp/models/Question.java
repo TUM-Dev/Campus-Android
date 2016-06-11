@@ -1,0 +1,156 @@
+package de.tum.in.tumcampusapp.models;
+
+
+import android.text.TextUtils;
+
+import java.util.ArrayList;
+
+public class Question {
+
+    private String question;
+    private int id;
+    private String text;
+    private Boolean yes;
+    private Boolean no;
+    private String faculty;
+    private Boolean flagged;
+    private String answer;
+    private Boolean synced;
+    private String[] facultyArr;
+    private Answer[] results;
+
+    public Question(String question, String text, Boolean yes, Boolean no, String faculties, Boolean flagged, Boolean synced) {
+        this.question = question;
+        this.text = text;
+        this.yes = yes;
+        this.no = no;
+        this.faculty = faculties;
+        this.flagged = flagged;
+        this.synced = synced;
+    }
+
+    public Question(String question){
+        this.question = question;
+    }
+
+    public Question (String question, String text, boolean synced){
+        this.question = question;
+        this.text = text;
+        this.synced = synced;
+    }
+
+    // For OwnQuestions
+    public Question (String question, String text, Answer[] results){
+        this.question = question;
+        this.text = text;
+        this.results = results;
+    }
+
+    // Const. for submiting Answeres for openQuestions
+    public Question(String question, String answer){
+        this.question=question;
+        this.answer=answer;
+    }
+
+    // Const. for fetching faculties
+    public Question(String text, ArrayList<String> faculties){
+        this.text = text;
+        this.faculty = TextUtils.join(",",faculties);
+    }
+
+    // Const. For fetching OpenQuestions
+    public Question(String question, String text, String[] faculties){
+        this.question = question;
+        this.text = text;
+        this.facultyArr = faculties;
+    }
+
+    public String[] getFacultiesOfOpenQuestions() {
+        return facultyArr;
+    }
+
+    public void setFacultiesOfOpenQuestions(String[] facultiesOfOpenQuestions) {
+        this.facultyArr = facultiesOfOpenQuestions;
+    }
+
+    public int getId() {return id;}
+
+    public void setId(int id) {this.id = id;}
+
+    public String getQuestion() {return question;}
+
+    public void setQuestion(String question) {this.text = question;}
+
+    public Boolean getYes() {return yes;}
+
+    public void setYes(Boolean yes) {this.yes = yes;}
+
+    public Boolean getNo() {return no;}
+
+    public void setNo(Boolean no) {this.no = no;}
+
+    public String getText() {return text;}
+
+    public void setText(String text) {this.text = text;}
+
+    public String getFaculties() {return faculty;}
+
+    public void setFaculties(String faculties) {this.faculty = faculties;}
+
+    public Boolean getFlagged() {return flagged;}
+
+    public void setFlagged(Boolean flagged) {this.flagged = flagged;}
+
+    public String getAnswered() {return answer;}
+
+    public void setAnswered(String answered) {this.answer = answered;}
+
+    public Boolean getSynced() {return synced;}
+
+    public void setSynced(Boolean synced) {this.synced = synced;}
+
+    public String getFaculty() {return faculty;}
+
+    public void setFaculty(String faculty) {this.faculty = faculty;}
+
+
+    public String getAnswer() { return answer;}
+
+    public void setAnswer(String answer) {this.answer = answer;}
+
+    public String[] getFacultyArr() {return facultyArr;}
+
+    public void setFacultyArr(String[] facultyArr) {this.facultyArr = facultyArr;}
+
+    public Answer[] getResults() {return results;}
+
+    public void setResults(Answer[] results) {this.results = results;}
+
+
+    public class Answer {
+        private String answer;
+        private int votes;
+
+        public Answer(String answer, int votes){
+            this.answer = answer;
+            this.votes = votes;
+        }
+
+        public int getVotes() {
+            return votes;
+        }
+
+        public void setVotes(int votes) {
+            this.votes = votes;
+        }
+
+        public String getAnswer() {
+            return answer;
+        }
+
+        public void setAnswer(String answer) {
+            this.answer = answer;
+        }
+
+    }
+}
