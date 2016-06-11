@@ -35,6 +35,7 @@ Dies ist keine offizielle App der Technischen Universität München. Es erfolgt 
 
 #### Datenschutz/Chatbedingungen:
 Datenschutzerklärung: https://tumcabe.in.tum.de/landing/privacy/
+
 Chatbedingungen: https://tumcabe.in.tum.de/landing/chatterms/
 
 #### Support:
