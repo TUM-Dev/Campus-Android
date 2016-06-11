@@ -384,5 +384,7 @@
     <string name="survey_submitted">Die Umfrage wurde eingereicht</string>
     <string name="tab_responses">Antworten</string>
     <string name="tab_survey">Umfrage</string>
+    <string name="more_info">Más información</string>
+    <string name="welcome_faculty">Para ofrecer la mejor experiencia posible, por favor indíquenos su mejor profesorado a juego:</string>
     <!-- END Translated, please do not change identifiers -->
 </resources>
