@@ -3,7 +3,6 @@ package de.tum.in.tumcampusapp.auxiliary;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Handler;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Menu;
@@ -29,7 +28,6 @@ import de.tum.in.tumcampusapp.activities.TuitionFeesActivity;
 
 public class DrawerMenuHelper implements NavigationView.OnNavigationItemSelectedListener {
 
-    private final Handler mDrawerHandler = new Handler();
     private final Context mContext;
     private final DrawerLayout mDrawerLayout;
 
@@ -40,23 +38,11 @@ public class DrawerMenuHelper implements NavigationView.OnNavigationItemSelected
 
     @Override
     public boolean onNavigationItemSelected(MenuItem menuItem) {
-        scheduleLaunchAndCloseDrawer(menuItem.getIntent());
-        return true;
-    }
-
-    private void scheduleLaunchAndCloseDrawer(final Intent intent) {
-        // Clears any previously posted runnables, for double clicks
-        mDrawerHandler.removeCallbacksAndMessages(null);
-
-        mDrawerHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mContext.startActivity(intent);
-            }
-        }, 100);
-        // The millisecond delay is arbitrary and was arrived at through trial and error
-
         mDrawerLayout.closeDrawers();
+        Intent intent = menuItem.getIntent();
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        mContext.startActivity(intent);
+        return true;
     }
 
     public void populateMenu(Menu navigationMenu) {
