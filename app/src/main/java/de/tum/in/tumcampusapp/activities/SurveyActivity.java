@@ -84,7 +84,7 @@ public class SurveyActivity extends BaseActivity {
         setUpSpinner();
         setUpSelectTargets();
         buttonsListener();
-        
+
         // Handle tab change -> When clicking responses, then fetch ownQuestionsAgain
         tabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
             @Override
@@ -456,11 +456,27 @@ public class SurveyActivity extends BaseActivity {
                 }
                 clearData();
 
-                Intent i = getIntent();
-                i.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                startActivity(i);
-            }
 
+                if(NetUtils.isConnected(getApplication())){
+                    // gets newly created questions, in order to show them directly in responses
+                    new AsyncTask<Void, Void, Void>() {
+
+                        @Override
+                        protected Void doInBackground(Void... voids) {
+                            surveyManager.downLoadOwnQuestions();
+                            return null;
+                        }
+
+                        @Override
+                        protected void onPostExecute(Void v){
+                            Intent i = getIntent();
+                            i.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                            startActivity(i);
+                        }
+                    }.execute();
+
+                }
+            }
         });
     }
 
@@ -500,6 +516,7 @@ public class SurveyActivity extends BaseActivity {
     public void userAllowed() {
 
         String weekAgo = getDateBefore1Week();
+        Utils.log("userAllowed- WeekAgo: " + weekAgo);
         //Cursor c = db.rawQuery("SELECT COUNT(*) FROM survey1 WHERE date >= '"+weekAgo+"'", null);
         Cursor c = surveyManager.numberOfQuestionsFrom(weekAgo);
         if (c.getCount() > 0) {
@@ -507,6 +524,7 @@ public class SurveyActivity extends BaseActivity {
         }
 
         int x = c.getInt(0);
+        Utils.log("Number of questions after the date " + weekAgo+ " is: " + x);
 
         if (x < 3) {
             numQues = new String[3 - x];
@@ -597,7 +615,7 @@ public class SurveyActivity extends BaseActivity {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.GERMANY);
             nextPossibleDate = sdf.format(a.getTime());
         } catch (ParseException e) {
-
+            Utils.log("getNextPossibleDate: " + e.toString());
         }
 
         return nextPossibleDate;

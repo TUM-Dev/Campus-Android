@@ -166,7 +166,7 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
 
     // Helpfunction used for testing in Survey Acitvity untill the API is implemented
     public Cursor numberOfQuestionsFrom(String weekago) {
-        return db.rawQuery("SELECT COUNT(*) FROM survey1 WHERE date >= '" + weekago + "'", null);
+        return db.rawQuery("SELECT COUNT(*) FROM ownQuestions WHERE created >= '" + weekago + "'", null);
     }
 
     public Cursor getMyQuestions() {
@@ -177,7 +177,7 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
 
     // Helpfunction used for testing in Survey Acitvity untill the API is implemented
     public Cursor lastDateFromLastWeek(String weekAgo) {
-        return db.rawQuery("SELECT date FROM survey1 WHERE date >= '" + weekAgo + "'", null);
+        return db.rawQuery("SELECT created FROM ownQuestions WHERE created >= '" + weekAgo + "'", null);
     }
 
     public Cursor getFacultyID(String facultyName) {
