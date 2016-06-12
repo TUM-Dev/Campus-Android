@@ -30,6 +30,10 @@ public class SurveyCard extends Card
     private Button bNo;
     private Button bSkip;
     private ImageButton bFlagged;
+    private static int answerYes = 1;
+    private static int answerNo = 2;
+    private static int answerFlag = -1;
+    private static int answerSkip = 3;
 
 
     public SurveyCard(Context context) {
@@ -78,7 +82,7 @@ public class SurveyCard extends Card
                 @Override
                 public void onClick(View view) {
                     Question updatedElement = questions.remove(0);
-                    manager.updateQuestion(updatedElement, "yes");
+                    manager.updateQuestion(updatedElement, answerYes);
                     showNextQuestions();
                 }
             });
@@ -86,7 +90,7 @@ public class SurveyCard extends Card
                 @Override
                 public void onClick(View view) {
                     Question updatedElement = questions.remove(0);
-                    manager.updateQuestion(updatedElement, "no");
+                    manager.updateQuestion(updatedElement, answerNo);
                     showNextQuestions();
                 }
             });
@@ -94,7 +98,7 @@ public class SurveyCard extends Card
                 @Override
                 public void onClick(View view) {
                     Question updatedElement = questions.remove(0);
-                    manager.updateQuestion(updatedElement, "answered");
+                    manager.updateQuestion(updatedElement, answerSkip);
                     showNextQuestions();
                 }
             });
@@ -102,7 +106,7 @@ public class SurveyCard extends Card
                 @Override
                 public void onClick(View view) {
                     Question updatedElement = questions.remove(0);
-                    manager.updateQuestion(updatedElement, "flagged");
+                    manager.updateQuestion(updatedElement, answerFlag);
                     showNextQuestions();
                 }
             });

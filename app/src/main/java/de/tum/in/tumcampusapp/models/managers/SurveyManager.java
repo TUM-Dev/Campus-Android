@@ -27,9 +27,7 @@ import retrofit.client.Response;
 
 public class SurveyManager extends AbstractManager implements Card.ProvidesCard {
 
-    private static int answerYes = 1;
-    private static int answerNo = 2;
-    private static int answerFlag = -1;
+
 
     public SurveyManager(Context context) {
         super(context);
@@ -37,7 +35,7 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
         db.execSQL("CREATE TABLE IF NOT EXISTS surveyQuestions (id INTEGER PRIMARY KEY, question VARCHAR, yes BOOLEAN, no BOOLEAN, flagged BOOLEAN, answered BOOLEAN, synced BOOLEAN)");
         db.execSQL("CREATE TABLE IF NOT EXISTS faculties (faculty INTEGER, name VARCHAR)");
         db.execSQL("CREATE TABLE IF NOT EXISTS survey1 (id INTEGER PRIMARY KEY AUTOINCREMENT, date VARCHAR,userID VARCHAR, question TEXT, faculties TEXT, yes INTEGER,  no INTEGER, flags INTEGER)");
-        db.execSQL("CREATE TABLE IF NOT EXISTS openQuestions (question INTEGER PRIMARY KEY, text VARCHAR, yes BOOLEAN, no BOOLEAN, flagged BOOLEAN, answered BOOLEAN, synced BOOLEAN)");
+        db.execSQL("CREATE TABLE IF NOT EXISTS openQuestions (question INTEGER PRIMARY KEY, text VARCHAR, answerid INTEGER, answered BOOLEAN, synced BOOLEAN)");
         db.execSQL("CREATE TABLE IF NOT EXISTS ownQuestions (question INTEGER PRIMARY KEY, text VARCHAR, yes INTEGER, no INTEGER, deleted BOOLEAN, synced BOOLEAN)");
     }
 
@@ -88,18 +86,19 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
      * updates the field of a given question
      *
      * @param question
-     * @param updateField: yes || no || flag
+     * @param answerTag: yes || no || flag || skip
      */
-    public void updateQuestion(Question question, String updateField) {
+    public void updateQuestion(Question question, int answerTag) {
         ContentValues cv = new ContentValues();
-        cv.put(updateField, 1);
 
-        //Handle that this card was finished and should not be shown again
-        if (!updateField.equals("answered")) {
-            cv.put("answered", 1);
-        } else {
-            cv.put("synced", 1); // Do not sync skipped questions
+        if(answerTag !=3){
+            cv.put("answerid",answerTag);
+        }else {
+            cv.put("synced",1);//Do not sync skipped questions later
         }
+
+        // Set as answered despite of the answerTag
+        cv.put("answered",1);
 
         //Commit update to database
         try {
@@ -112,45 +111,31 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
             db.endTransaction();
         }
 
-        //Tigger sync if we are connected currently
+        //Tiger sync if we are connected currently
         if (NetUtils.isConnected(mContext)) {
             syncOpenQuestionsTable();
         }
 
     }
 
-    // Send responses to server
+    // Syncs answered but not yet synced responses with server
     public void syncOpenQuestionsTable() {
-        Cursor cursor = db.rawQuery("SELECT question, yes, no, flagged FROM openQuestions WHERE synced=0 AND answered=1", null);
+        Cursor cursor = db.rawQuery("SELECT question, answerid FROM openQuestions WHERE synced=0 AND answered=1", null);
         try {
             if (cursor.moveToFirst()) {
                 do {
-                    String question = cursor.getString(cursor.getColumnIndex("question"));
-                    String yes = cursor.getString(cursor.getColumnIndex("yes"));
-                    String flagged = cursor.getString(cursor.getColumnIndex("flagged"));
-
-
-                    Question answeredQuestion = null;
-                    if (flagged.equals("1")) {
-                        answeredQuestion = new Question(question, answerFlag);
-                    } else {
-                        if (yes.equals("1")) {
-                            answeredQuestion = new Question(question, answerYes);
-                        } else {
-                            answeredQuestion = new Question(question, answerNo);
-                        }
-                    }
-
+                    Question answeredQuestion = new Question(cursor.getString(cursor.getColumnIndex("question")),cursor.getInt(cursor.getColumnIndex("answerid")));
+                    // Submit Answer to Server
                     if (answeredQuestion != null) {
                         TUMCabeClient.getInstance(mContext).submitAnswer(answeredQuestion, new Callback<Question>() {
                             @Override
                             public void success(Question question, Response response) {
-                                Log.e("Test_resp_submitQues", "Succeeded: " + response.getBody().toString());
+                                Utils.log("Test_resp_submitQues Succeeded: " + response.getBody().toString());
                             }
 
                             @Override
                             public void failure(RetrofitError error) {
-                                Log.e("Test_resp_submitQues", "Failure" + error.toString());
+                                Utils.log("Test_resp_submitQues Failure" + error.toString());
                             }
                         });
                     }
@@ -277,7 +262,6 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
 
         // In case of no votes
         if (answers.length == 0) {
-            Utils.log("answerlength = 0");
             cv.put("yes", 0);
             cv.put("no", 0);
             // In case of one vote -> get whether it is yes or no
@@ -315,16 +299,14 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
 
     // Inserts new openQuestion if it doesn't exist
     void replaceIntoDBOpenQuestions(Question q) {
-        Cursor c = db.rawQuery("SELECT question FROM openQuestions WHERE question = ?", new String[]{q.getQuestion()});
+        Cursor c = db.rawQuery("SELECT answerid FROM openQuestions WHERE question = ?", new String[]{q.getQuestion()});
 
         // if question doesn't exist
         if (!c.moveToFirst()) {
             ContentValues cv = new ContentValues();
             cv.put("question", q.getQuestion());
             cv.put("text", q.getText());
-            cv.put("yes", 0);
-            cv.put("no", 0);
-            cv.put("flagged", 0);
+            cv.put("answerid", 0);
             cv.put("answered", 0);
             cv.put("synced", 0);
             try {
@@ -341,12 +323,35 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
     }
 
     void replaceIntoDb(Faculty f) {
-        db.execSQL("REPLACE INTO faculties (faculty, name) VALUES (?, ?)", new String[]{f.getId(), f.getName()});
-    }
+        // Unfortunatly I had to do it like that and not with a Replace Into statment because for some reason the replace statement doesn't work correclty
+        Cursor c = db.rawQuery("SELECT * FROM faculties WHERE faculty = ?",new String[]{f.getId()});
+        if(c.moveToFirst()){
+            ContentValues cv = new ContentValues();
+            cv.put("name", f.getName());
+            try {
+                db.beginTransaction();
+                db.update("faculties", cv, "faculty = ?", new String[]{f.getId()});
+                db.setTransactionSuccessful();
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                db.endTransaction();
+            }
 
-    private static Faculty getFromJson(JSONObject json) throws Exception {
-        String id = json.getString(Const.JSON_FACULTY);
-        String name = json.getString(Const.JSON_FACULTY_NAME);
-        return new Faculty(id, name);
+        }else {
+            ContentValues cv = new ContentValues();
+            cv.put("faculty", f.getId());
+            cv.put("name", f.getName());
+            try {
+                db.beginTransaction();
+                db.insert("faculties", null, cv);
+                db.setTransactionSuccessful();
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                db.endTransaction();
+            }
+        }
+        //db.execSQL("REPLACE INTO faculties (faculty, name) VALUES (?, ?)", new String[]{f.getId(), f.getName()});
     }
 }

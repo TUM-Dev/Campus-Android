@@ -47,6 +47,8 @@ public class TUMCabeClient {
     private static final String API_QUESTION = "/question/";
     private static final String API_ANSWER_QUESTION = "/question/answer";
     private static final String API_OWN_QUESTIONS = "/question/my";
+    private static final String API_FACULTY = "/faculty";
+
 
 
 
@@ -101,6 +103,8 @@ public class TUMCabeClient {
         }
         return instance;
     }
+
+    public ArrayList<Faculty> getFaculties(){return service.getFaculties();}
 
     public void deleteOwnQuestion(int question, Callback<Question> cb){service.deleteOwnQuestion(question,cb);}
 
@@ -213,6 +217,9 @@ public class TUMCabeClient {
     }
 
     private interface TUMCabeAPIService {
+
+        @GET(API_FACULTY)
+        ArrayList<Faculty> getFaculties();
 
         @DELETE(API_QUESTION + "{question}")
         void deleteOwnQuestion(@Path("question") int question,Callback<Question> cb);
