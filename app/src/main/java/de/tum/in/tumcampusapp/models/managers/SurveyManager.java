@@ -36,7 +36,7 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
         db.execSQL("CREATE TABLE IF NOT EXISTS faculties (faculty INTEGER, name VARCHAR)");
         db.execSQL("CREATE TABLE IF NOT EXISTS survey1 (id INTEGER PRIMARY KEY AUTOINCREMENT, date VARCHAR,userID VARCHAR, question TEXT, faculties TEXT, yes INTEGER,  no INTEGER, flags INTEGER)");
         db.execSQL("CREATE TABLE IF NOT EXISTS openQuestions (question INTEGER PRIMARY KEY, text VARCHAR, answerid INTEGER, answered BOOLEAN, synced BOOLEAN)");
-        db.execSQL("CREATE TABLE IF NOT EXISTS ownQuestions (question INTEGER PRIMARY KEY, text VARCHAR, yes INTEGER, no INTEGER, deleted BOOLEAN, synced BOOLEAN)");
+        db.execSQL("CREATE TABLE IF NOT EXISTS ownQuestions (question INTEGER PRIMARY KEY, text VARCHAR, created VARCHAR, end VARCHAR, yes INTEGER, no INTEGER, deleted BOOLEAN, synced BOOLEAN)");
     }
 
     @Override
@@ -259,6 +259,9 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
 
         cv.put("question", q.getQuestion());
         cv.put("text", q.getText());
+        cv.put("created", q.getCreated());
+        cv.put("end", q.getEnd());
+
 
         // In case of no votes
         if (answers.length == 0) {
@@ -323,7 +326,7 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
     }
 
     void replaceIntoDb(Faculty f) {
-        // Unfortunatly I had to do it like that and not with a Replace Into statment because for some reason the replace statement doesn't work correclty
+        // Unfortunately I had to do it like that and not with a Replace Into statment because for some reason the replace statement doesn't work correctly
         Cursor c = db.rawQuery("SELECT * FROM faculties WHERE faculty = ?",new String[]{f.getId()});
         if(c.moveToFirst()){
             ContentValues cv = new ContentValues();

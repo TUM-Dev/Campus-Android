@@ -2,8 +2,8 @@ package de.tum.in.tumcampusapp.models;
 
 
 import android.text.TextUtils;
-
 import java.util.ArrayList;
+import java.util.Date;
 
 public class Question {
 
@@ -13,7 +13,8 @@ public class Question {
     private int answer;
     private String[] facultyArr;
     private Answer[] results;
-
+    private String created;
+    private String end;
 
     // Const. for setting questions for the Survey Card
     public Question (String question, String text){
@@ -49,6 +50,21 @@ public class Question {
 
     public void setResults(Answer[] results) {this.results = results;}
 
+    public String getCreated() {
+        return created;
+    }
+
+    public void setCreated(String created) {
+        this.created = created;
+    }
+
+    public String getEnd() {
+        return end;
+    }
+
+    public void setEnd(String end) {
+        this.end = end;
+    }
 
     public class Answer {
         private String answer;

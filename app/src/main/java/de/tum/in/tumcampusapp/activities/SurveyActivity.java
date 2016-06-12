@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Typeface;
+import android.os.AsyncTask;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.res.ResourcesCompat;
@@ -40,6 +41,7 @@ import java.util.Locale;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.BaseActivity;
 import de.tum.in.tumcampusapp.auxiliary.Const;
+import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.Question;
 import de.tum.in.tumcampusapp.models.TUMCabeClient;
@@ -82,7 +84,39 @@ public class SurveyActivity extends BaseActivity {
         setUpSpinner();
         setUpSelectTargets();
         buttonsListener();
-        setUpResponseTab();
+        
+        // Handle tab change -> When clicking responses, then fetch ownQuestionsAgain
+        tabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
+            @Override
+            public void onTabChanged(String s) {
+                int currentTab = tabHost.getCurrentTab();
+                Utils.log("Current tab: "+currentTab);
+                if(currentTab ==0 ){
+
+                }else{
+                    if(NetUtils.isConnected(getApplication())){
+                        // gets newly created questions, in order to show them directly in responses
+                        new AsyncTask<Void, Void, Void>() {
+
+                            @Override
+                            protected Void doInBackground(Void... voids) {
+                                surveyManager.downLoadOwnQuestions();
+                                return null;
+                            }
+
+                            @Override
+                            protected void onPostExecute(Void v){
+                                setUpResponseTab();
+                            }
+                        }.execute();
+
+                    }else {
+                        // Without newly created questions
+                        setUpResponseTab();
+                    }
+                }
+            }
+        });
         userAllowed();
 
     }
@@ -373,10 +407,9 @@ public class SurveyActivity extends BaseActivity {
         return facs;
     }
 
-    //submit survey listener
+    //submit survey listener --> Still have to handle if there is no internet
     public void buttonsListener() {
         submitSurveyButton.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View view) {
                 if (!checkSurveyData()) {
@@ -401,8 +434,9 @@ public class SurveyActivity extends BaseActivity {
                         }
                     }
 
-
                     Question ques = new Question(questions.get(i), selectedFacIds);
+
+                    // Submit Question to the survey
                     try {
                         TUMCabeClient.getInstance(getApplicationContext()).createQuestion(ques, new Callback<Question>() {
                             @Override
@@ -412,7 +446,7 @@ public class SurveyActivity extends BaseActivity {
 
                             @Override
                             public void failure(RetrofitError error) {
-                                Utils.log("Failure");
+                                Utils.log("Failure: " + error.toString());
                             }
                         });
                     } catch (Exception e) {
@@ -453,6 +487,7 @@ public class SurveyActivity extends BaseActivity {
         tabSpec.setContent(R.id.tabSeeResponses);
         tabSpec.setIndicator(getResources().getString(R.string.tab_responses));
         tabHost.addTab(tabSpec);
+
     }
 
     //check if edittext is empty
