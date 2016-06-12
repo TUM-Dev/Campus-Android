@@ -132,7 +132,7 @@ public class SurveyCard extends Card
 
     public void seQuestions(Cursor cur) {
         do {
-            Question item = new Question(cur.getString(0), cur.getString(1), false);
+            Question item = new Question(cur.getString(0), cur.getString(1));
             questions.add(item);
         } while (cur.moveToNext());
         cur.close();
