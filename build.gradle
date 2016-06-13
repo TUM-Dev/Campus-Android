@@ -29,8 +29,8 @@ allprojects {
                     minSdkVersion 10
                     targetSdkVersion 23
                     multiDexEnabled true
-                    versionCode 63
-                    versionName "1.4.1-dev"
+                    versionCode 65
+                    versionName "1.4.3-dev"
                 }
                 lintOptions {
                     checkAllWarnings true
