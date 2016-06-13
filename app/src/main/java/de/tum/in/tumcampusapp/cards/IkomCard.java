@@ -48,7 +48,7 @@ public class IkomCard extends Card {
             @Override
             public void onClick(View view) {
                 try {
-                    Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.ikom.tum.de"));
+                    Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.ikom.tum.de"));
                     parent.getContext().startActivity(myIntent);
                 } catch (ActivityNotFoundException e) {
                     e.printStackTrace();
