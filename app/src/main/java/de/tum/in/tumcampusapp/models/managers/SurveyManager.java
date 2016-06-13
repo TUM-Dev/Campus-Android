@@ -199,7 +199,11 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
         }
         for (int i = 0; i < openQuestions.size(); i++) {
             List<String> openQuestionFaculties = Arrays.asList(openQuestions.get(i).getFacultiesOfOpenQuestions());
-            if (openQuestionFaculties.contains(Utils.getInternalSettingString(mContext, "user_major", ""))) {
+
+            String userMajor= Utils.getInternalSettingString(mContext,"user_major","");
+
+            // Incase  the user selected the major upon app start, then save the major related questions. Otherwise save all questions
+            if(userMajor.equals("0") || openQuestionFaculties.contains(userMajor)){
                 replaceIntoDBOpenQuestions(openQuestions.get(i));
             }
         }

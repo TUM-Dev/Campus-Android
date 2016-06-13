@@ -97,6 +97,7 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<Void, Bo
                 ArrayAdapter<String> adapter = new ArrayAdapter<String>(getBaseContext(), android.R.layout.simple_list_item_1, majors);
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 userMajorSpinner.setAdapter(adapter);
+                Utils.setInternalSetting(getApplicationContext(), "user_major", "0"); // Without selection of faculty, the user has major 0 -> All faculties for questions in card
                 userMajorSpinner.setSelection(Integer.parseInt(Utils.getInternalSettingString(getApplicationContext(),"user_faculty_number","0")));
                 userMajorSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
@@ -147,12 +148,6 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<Void, Bo
      */
     @SuppressWarnings("UnusedParameters")
     public void onClickNext(View next) {
-
-        if (userMajorSpinner.getSelectedItemPosition() == 0) {
-            Toast.makeText(getApplicationContext(), "Please select your faculty", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
         lrzId = editTxtLrzId.getText().toString();
         Editor editor = sharedPrefs.edit();
         editor.putString(Const.LRZ_ID, lrzId);
