@@ -71,7 +71,7 @@
                                     android:textColor="@color/color_primary"
                                     android:layout_marginTop="10dp"
                                     android:textStyle="bold"
-                                    android:visibility="gone"
+                                    android:visibility="visible"
                                     android:textSize="14sp"
                                     android:id="@+id/selectTv" />
 
@@ -80,7 +80,7 @@
                                     android:layout_height="wrap_content"
                                     android:id="@+id/spinner"
                                     android:layout_weight="1"
-                                    android:visibility="gone"
+                                    android:visibility="visible"
                                     android:layout_marginTop="10dp"/>
                             </LinearLayout>
                             <LinearLayout
@@ -100,7 +100,7 @@
                                 android:layout_marginTop="15dp"
                                 android:textColor="#FFFFFF"
                                 android:padding="@dimen/padding_default"
-                                android:visibility="gone"
+                                android:visibility="visible"
                                 android:layout_gravity="center"/>
 
                         </LinearLayout>

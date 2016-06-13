@@ -40,6 +40,7 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<Void, Bo
     private String lrzId;
     private SharedPreferences sharedPrefs;
     String userMajor = "";
+    int index;
 
     public WizNavStartActivity() {
         super(R.layout.activity_wiznav_start);
@@ -105,6 +106,7 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<Void, Bo
                         }
                         TextView selectedItem = (TextView) adapterView.getChildAt(0);
                         if (selectedItem != null) {
+                            int index=adapterView.getSelectedItemPosition();
                             selectedItem.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.color_primary));
                         }
                     }

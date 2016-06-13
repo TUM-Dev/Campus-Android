@@ -317,21 +317,7 @@ public class SurveyActivity extends BaseActivity {
                 }).setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {//if ok show question EditText
-                        if (selectedFaculties.size() > 0) {
-                            submitSurveyButton.setVisibility(View.VISIBLE);
-                            selectTv.setVisibility(View.VISIBLE);
-                            aSpinner1.setVisibility(View.VISIBLE);
-                            aSpinner1.setSelection(0);
 
-
-                        } else {//show nothing , force him to choose Faculty
-                            submitSurveyButton.setVisibility(View.GONE);
-                            selectTv.setVisibility(View.GONE);
-                            aSpinner1.setVisibility(View.GONE);
-
-
-                            Toast.makeText(getApplicationContext(), getResources().getString(R.string.select_one_faculty), Toast.LENGTH_SHORT).show();
-                        }
                     }
                 }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
@@ -386,9 +372,6 @@ public class SurveyActivity extends BaseActivity {
         for (int i = 0; i < checked.length; i++) {
             checked[i] = false;
         }
-        submitSurveyButton.setVisibility(View.GONE);
-        selectTv.setVisibility(View.GONE);
-        aSpinner1.setVisibility(View.GONE);
         aSpinner1.setSelection(0);
         questionsLayout.removeAllViews();
     }
@@ -442,6 +425,7 @@ public class SurveyActivity extends BaseActivity {
                             @Override
                             public void success(Question question, Response response) {
                                 Utils.log("Succeeded: " + response.getBody().toString());
+                                clearData();
                             }
 
                             @Override
@@ -454,7 +438,7 @@ public class SurveyActivity extends BaseActivity {
                     }
 
                 }
-                clearData();
+
 
 
                 if (NetUtils.isConnected(getApplication())) {
@@ -526,24 +510,26 @@ public class SurveyActivity extends BaseActivity {
         int x = c.getInt(0);
         Utils.log("Number of questions after the date " + weekAgo + " is: " + x);
 
-        if (x < 3) {
-            numQues = new String[3 - x];
-            for (int i = 0; i < numQues.length; i++) {
-                numQues[i] = String.valueOf(i + 1);
-            }
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, numQues);
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            aSpinner1.setAdapter(adapter);
-            if (x == 2) {
-                selectTv.setText(getResources().getString(R.string.one_question_left));
-            }
-        } else {
+        numQues = new String[3 - x];
+        for (int i = 0; i < numQues.length; i++)
+            numQues[i] = String.valueOf(i + 1);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, numQues);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        aSpinner1.setAdapter(adapter);
+
+        if(x>=3)
+        {
             String strDate = getNextPossibleDate();
             selectTv.setVisibility(View.VISIBLE);
             selectTv.setText(getResources().getString(R.string.next_possible_survey_date) + " " + strDate);
+            submitSurveyButton.setVisibility(View.GONE);
+            questionsLayout.setVisibility(View.GONE);
             facultiesButton.setVisibility(View.GONE);
+            aSpinner1.setVisibility(View.GONE);
 
-        }
+          }
+
+
     }
 
     //spinner for number of questions selection
