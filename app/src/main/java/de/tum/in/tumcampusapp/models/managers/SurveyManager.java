@@ -41,6 +41,7 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
 
     @Override
     public void onRequestCard(Context context) {
+        downLoadOpenQuestions();
         Cursor rows = getUnansweredQuestions();
         if (rows.moveToFirst()) {
             SurveyCard card = new SurveyCard(context);
