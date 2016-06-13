@@ -105,7 +105,8 @@ public class SurveyActivity extends BaseActivity {
                             }
 
                             @Override
-                            protected void onPostExecute(Void v) {
+                            protected void onPostExecute(Void v)
+                            {
                                 setUpResponseTab();
                             }
                         }.execute();
@@ -422,7 +423,7 @@ public class SurveyActivity extends BaseActivity {
                                 public void success(Question question, Response response) {
                                     Utils.log("Succeeded: " + response.getBody().toString());
                                     Toast.makeText(getApplicationContext(), getResources().getString(R.string.survey_submitted), Toast.LENGTH_SHORT).show();
-                                    clearData();
+
                                 }
 
                                 @Override
@@ -433,8 +434,8 @@ public class SurveyActivity extends BaseActivity {
                         } catch (Exception e) {
                             Utils.log(e.toString());
                         }
-
                     }
+                    clearData();
 
                     // gets newly created questions, in order to show them directly in responses
                     new AsyncTask<Void, Void, Void>() {
@@ -449,6 +450,7 @@ public class SurveyActivity extends BaseActivity {
                         protected void onPostExecute(Void v) {
                             Intent i = getIntent();
                             i.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                            finish();
                             startActivity(i);
                         }
                     }.execute();
@@ -502,19 +504,20 @@ public class SurveyActivity extends BaseActivity {
         if (c.getCount() > 0) {
             c.moveToFirst();
         }
-
         int x = c.getInt(0);
-        Utils.log("Number of questions after the date " + weekAgo + " is: " + x);
 
-        numQues = new String[3 - x];
-        for (int i = 0; i < numQues.length; i++) {
-            numQues[i] = String.valueOf(i + 1);
-        }
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, numQues);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        aSpinner1.setAdapter(adapter);
-
-        if (x >= 3) {
+        if (x < 3) {
+            numQues = new String[3 - x];
+            for (int i = 0; i < numQues.length; i++) {
+                numQues[i] = String.valueOf(i + 1);
+            }
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, numQues);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            aSpinner1.setAdapter(adapter);
+            if (x == 2) {
+                selectTv.setText(getResources().getString(R.string.one_question_left));
+            }
+        } else {
             String strDate = getNextPossibleDate();
             selectTv.setVisibility(View.VISIBLE);
             selectTv.setText(getResources().getString(R.string.next_possible_survey_date) + " " + strDate);
@@ -525,6 +528,7 @@ public class SurveyActivity extends BaseActivity {
 
         }
 
+        Toast.makeText(getApplicationContext(),x+"",Toast.LENGTH_LONG).show();
 
     }
 

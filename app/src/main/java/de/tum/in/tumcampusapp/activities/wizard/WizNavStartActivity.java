@@ -29,6 +29,7 @@ import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.managers.SurveyManager;
+import de.tum.in.tumcampusapp.trace.Util;
 
 /**
  * Displays the first page of the startup wizard, where the user can enter his lrz-id.
@@ -96,6 +97,7 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<Void, Bo
                 ArrayAdapter<String> adapter = new ArrayAdapter<String>(getBaseContext(), android.R.layout.simple_list_item_1, majors);
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 userMajorSpinner.setAdapter(adapter);
+                userMajorSpinner.setSelection(Integer.parseInt(Utils.getInternalSettingString(getApplicationContext(),"user_faculty_number","0")));
                 userMajorSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -103,11 +105,11 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<Void, Bo
                         Cursor c = sm.getFacultyID((String) adapterView.getItemAtPosition(i));
                         if (c.moveToFirst()) {
                             Utils.setInternalSetting(getApplicationContext(), "user_major", c.getString(c.getColumnIndex("faculty")));
+                            Utils.setInternalSetting(getApplicationContext(), "user_faculty_number",userMajorSpinner.getSelectedItemPosition()+"");
                         }
                         TextView selectedItem = (TextView) adapterView.getChildAt(0);
                         if (selectedItem != null) {
-                            int index=adapterView.getSelectedItemPosition();
-                            selectedItem.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.color_primary));
+                             selectedItem.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.color_primary));
                         }
                     }
 
@@ -217,3 +219,4 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<Void, Bo
         }
     }
 }
+
