@@ -8,6 +8,7 @@ import android.util.Log;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -28,7 +29,6 @@ import retrofit.client.Response;
 public class SurveyManager extends AbstractManager implements Card.ProvidesCard {
 
 
-
     public SurveyManager(Context context) {
         super(context);
         db.execSQL("CREATE TABLE IF NOT EXISTS faculties (faculty INTEGER, name VARCHAR)");
@@ -38,7 +38,7 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
 
     @Override
     public void onRequestCard(Context context) {
-        if(NetUtils.isConnected(mContext)){
+        if (NetUtils.isConnected(mContext)) {
             downLoadOpenQuestions();
         }
         Cursor rows = getUnansweredQuestions();
@@ -93,14 +93,14 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
     public void updateQuestion(Question question, int answerTag) {
         ContentValues cv = new ContentValues();
 
-        if(answerTag !=3){
-            cv.put("answerid",answerTag);
-        }else {
-            cv.put("synced",1);//Do not sync skipped questions later
+        if (answerTag != 3) {
+            cv.put("answerid", answerTag);
+        } else {
+            cv.put("synced", 1);//Do not sync skipped questions later
         }
 
         // Set as answered despite of the answerTag
-        cv.put("answered",1);
+        cv.put("answered", 1);
 
         //Commit update to database
         try {
@@ -126,7 +126,7 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
         try {
             if (cursor.moveToFirst()) {
                 do {
-                    Question answeredQuestion = new Question(cursor.getString(cursor.getColumnIndex("question")),cursor.getInt(cursor.getColumnIndex("answerid")));
+                    Question answeredQuestion = new Question(cursor.getString(cursor.getColumnIndex("question")), cursor.getInt(cursor.getColumnIndex("answerid")));
                     // Submit Answer to Server
                     if (answeredQuestion != null) {
                         TUMCabeClient.getInstance(mContext).submitAnswer(answeredQuestion, new Callback<Question>() {
@@ -158,12 +158,6 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
     public Cursor numberOfQuestionsFrom(String weekago) {
         return db.rawQuery("SELECT COUNT(*) FROM ownQuestions WHERE created >= '" + weekago + "'", null);
     }
-
-    public Cursor getMyQuestions() {
-        return db.rawQuery("SELECT * FROM myQuestions", null);
-
-    }
-
 
     // Helpfunction used for testing in Survey Acitvity untill the API is implemented
     public Cursor lastDateFromLastWeek(String weekAgo) {
@@ -197,14 +191,58 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        delteFlaggedQuestions(openQuestions);
+
         for (int i = 0; i < openQuestions.size(); i++) {
             List<String> openQuestionFaculties = Arrays.asList(openQuestions.get(i).getFacultiesOfOpenQuestions());
-
-            String userMajor= Utils.getInternalSettingString(mContext,"user_major","");
-
+            String userMajor = Utils.getInternalSettingString(mContext, "user_major", "");
             // Incase  the user selected the major upon app start, then save the major related questions. Otherwise save all questions
-            if(userMajor.equals("0") || openQuestionFaculties.contains(userMajor)){
+            if (userMajor.equals("0") || openQuestionFaculties.contains(userMajor)) {
                 replaceIntoDBOpenQuestions(openQuestions.get(i));
+            }
+        }
+    }
+
+    // Questions from local Database that no longer exists in the fetched Questions (flagged questions) get deleted
+    void delteFlaggedQuestions(ArrayList<Question> fetchedOpenedQuestions) {
+        ArrayList<Question> downloadedQuestionsID = new ArrayList<Question>();
+        for (int x = 0; x < fetchedOpenedQuestions.size(); x++) {
+            downloadedQuestionsID.add(new Question(fetchedOpenedQuestions.get(x).getQuestion()));
+        }
+
+        Cursor c = db.rawQuery("SELECT question FROM openQuestions", null);
+        if (c != null && c.moveToFirst()) {
+            do {
+                if (!downloadedQuestionsID.contains(new Question(c.getString(c.getColumnIndex("question"))))) {
+                    // delete Question from database
+                    db.delete("openQuestions", "question = ?", new String[]{c.getString(c.getColumnIndex("question"))});
+                }
+            } while (c.moveToNext());
+        }
+    }
+
+    // Inserts new openQuestion if it doesn't exist
+    void replaceIntoDBOpenQuestions(Question q) {
+        Cursor c = db.rawQuery("SELECT answerid FROM openQuestions WHERE question = ?", new String[]{q.getQuestion()});
+
+        // if question doesn't exist
+        if (!c.moveToFirst()) {
+            ContentValues cv = new ContentValues();
+            cv.put("question", q.getQuestion());
+            cv.put("text", q.getText());
+            cv.put("answerid", 0);
+            cv.put("answered", 0);
+            cv.put("synced", 0);
+            try {
+                db.beginTransaction();
+                db.insert("openQuestions", null, cv);
+                db.setTransactionSuccessful();
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                db.endTransaction();
+                c.close();
             }
         }
     }
@@ -294,35 +332,11 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
 
     }
 
-    // Inserts new openQuestion if it doesn't exist
-    void replaceIntoDBOpenQuestions(Question q) {
-        Cursor c = db.rawQuery("SELECT answerid FROM openQuestions WHERE question = ?", new String[]{q.getQuestion()});
-
-        // if question doesn't exist
-        if (!c.moveToFirst()) {
-            ContentValues cv = new ContentValues();
-            cv.put("question", q.getQuestion());
-            cv.put("text", q.getText());
-            cv.put("answerid", 0);
-            cv.put("answered", 0);
-            cv.put("synced", 0);
-            try {
-                db.beginTransaction();
-                db.insert("openQuestions", null, cv);
-                db.setTransactionSuccessful();
-            } catch (Exception e) {
-                e.printStackTrace();
-            } finally {
-                db.endTransaction();
-                c.close();
-            }
-        }
-    }
 
     void replaceIntoDb(Faculty f) {
         // Unfortunately I had to do it like that and not with a Replace Into statment because for some reason the replace statement doesn't work correctly
-        Cursor c = db.rawQuery("SELECT * FROM faculties WHERE faculty = ?",new String[]{f.getId()});
-        if(c.moveToFirst()){
+        Cursor c = db.rawQuery("SELECT * FROM faculties WHERE faculty = ?", new String[]{f.getId()});
+        if (c.moveToFirst()) {
             ContentValues cv = new ContentValues();
             cv.put("name", f.getName());
             try {
@@ -335,7 +349,7 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
                 db.endTransaction();
             }
 
-        }else {
+        } else {
             ContentValues cv = new ContentValues();
             cv.put("faculty", f.getId());
             cv.put("name", f.getName());

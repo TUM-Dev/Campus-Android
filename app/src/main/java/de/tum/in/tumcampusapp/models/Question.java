@@ -16,6 +16,11 @@ public class Question {
     private String created;
     private String end;
 
+    // Needed in the help function for deleting flagged answers
+    public Question (String question){
+        this.question = question;
+    }
+
     // Const. for setting questions for the Survey Card
     public Question (String question, String text){
         this.question = question;
