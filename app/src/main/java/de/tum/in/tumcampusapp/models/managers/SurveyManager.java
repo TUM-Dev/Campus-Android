@@ -31,17 +31,16 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
 
     public SurveyManager(Context context) {
         super(context);
-
-        db.execSQL("CREATE TABLE IF NOT EXISTS surveyQuestions (id INTEGER PRIMARY KEY, question VARCHAR, yes BOOLEAN, no BOOLEAN, flagged BOOLEAN, answered BOOLEAN, synced BOOLEAN)");
         db.execSQL("CREATE TABLE IF NOT EXISTS faculties (faculty INTEGER, name VARCHAR)");
-        db.execSQL("CREATE TABLE IF NOT EXISTS survey1 (id INTEGER PRIMARY KEY AUTOINCREMENT, date VARCHAR,userID VARCHAR, question TEXT, faculties TEXT, yes INTEGER,  no INTEGER, flags INTEGER)");
         db.execSQL("CREATE TABLE IF NOT EXISTS openQuestions (question INTEGER PRIMARY KEY, text VARCHAR, answerid INTEGER, answered BOOLEAN, synced BOOLEAN)");
         db.execSQL("CREATE TABLE IF NOT EXISTS ownQuestions (question INTEGER PRIMARY KEY, text VARCHAR, created VARCHAR, end VARCHAR, yes INTEGER, no INTEGER, deleted BOOLEAN, synced BOOLEAN)");
     }
 
     @Override
     public void onRequestCard(Context context) {
-        downLoadOpenQuestions();
+        if(NetUtils.isConnected(mContext)){
+            downLoadOpenQuestions();
+        }
         Cursor rows = getUnansweredQuestions();
         if (rows.moveToFirst()) {
             SurveyCard card = new SurveyCard(context);
@@ -61,11 +60,13 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
         return c;
     }
 
+    // For displaying responses in surveyActivity
     public Cursor getMyOwnQuestions() {
         Cursor c = db.rawQuery("SELECT * FROM ownQuestions where deleted = 0", null);
         return c;
     }
 
+    // For deleting responses in response tab in surveyActivity
     public void deleteMyOwnQuestion(int id) {
         TUMCabeClient.getInstance(mContext).deleteOwnQuestion(id, new Callback<Question>() {
             @Override
@@ -84,7 +85,7 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
 
 
     /**
-     * updates the field of a given question
+     * updates the field of a given question in Survey Card
      *
      * @param question
      * @param answerTag: yes || no || flag || skip
@@ -151,18 +152,6 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
         } finally {
             cursor.close();
         }
-    }
-
-    public void insertOwnQuestions(String date, String userID, String question, String faculties) {
-        ContentValues cv = new ContentValues(8);
-        cv.put("date", date);
-        cv.put("userID", userID);
-        cv.put("question", question);
-        cv.put("faculties", faculties);
-        cv.put("yes", 0);
-        cv.put("no", 0);
-        cv.put("flags", 0);
-        db.insert("survey1", null, cv);
     }
 
     // Helpfunction used for testing in Survey Acitvity untill the API is implemented
