@@ -105,8 +105,7 @@ public class SurveyActivity extends BaseActivity {
                             }
 
                             @Override
-                            protected void onPostExecute(Void v)
-                            {
+                            protected void onPostExecute(Void v) {
                                 setUpResponseTab();
                             }
                         }.execute();
@@ -399,23 +398,34 @@ public class SurveyActivity extends BaseActivity {
                     return;
                 }
 
-                // Get selected faculties
                 final ArrayList<String> selectedFacIds = new ArrayList<String>();
-                for (int j = 0; j < selectedFaculties.size(); j++) {
-                    for (int x = 0; x < fetchedFaculties.size(); x++) {
-                        if (selectedFaculties.get(j).equals(fetchedFaculties.get(x))) {
-                            Cursor cursor = surveyManager.getFacultyID(selectedFaculties.get(j));
-                            if (cursor.moveToFirst()) {
-                                selectedFacIds.add(cursor.getString(cursor.getColumnIndex("faculty")));
+
+                // Get selected faculties to be sent with the question to the server
+                if (!selectedFaculties.isEmpty()) {
+                    for (int j = 0; j < selectedFaculties.size(); j++) {
+                        for (int x = 0; x < fetchedFaculties.size(); x++) {
+                            if (selectedFaculties.get(j).equals(fetchedFaculties.get(x))) {
+                                Cursor cursor = surveyManager.getFacultyID(selectedFaculties.get(j));
+                                if (cursor.moveToFirst()) {
+                                    selectedFacIds.add(cursor.getString(cursor.getColumnIndex("faculty")));
+                                }
                             }
                         }
                     }
+                } else { // no faculties selected -> all faculites.
+                    Cursor c = surveyManager.getAllFaculties();
+                    if (c.moveToFirst()) {
+                        do {
+                            selectedFacIds.add(c.getString(c.getColumnIndex("faculty")));
+                        } while (c.moveToNext());
+                    }
                 }
 
-                if (NetUtils.isConnected(getApplication())) {
 
+                if (NetUtils.isConnected(getApplication())) {
                     for (int i = 0; i < aSpinner1.getSelectedItemPosition() + 1; i++) {
                         Question ques = new Question(questions.get(i), selectedFacIds);
+
                         // Submit Question to the survey
                         try {
                             TUMCabeClient.getInstance(getApplicationContext()).createQuestion(ques, new Callback<Question>() {
@@ -455,8 +465,8 @@ public class SurveyActivity extends BaseActivity {
                         }
                     }.execute();
 
-                }else {
-                    Toast.makeText(getApplicationContext(),"Please connect to internet to submit question",Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(getApplicationContext(), "Please connect to internet to submit question", Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -527,9 +537,6 @@ public class SurveyActivity extends BaseActivity {
             aSpinner1.setVisibility(View.GONE);
 
         }
-
-        Toast.makeText(getApplicationContext(),x+"",Toast.LENGTH_LONG).show();
-
     }
 
     //spinner for number of questions selection
