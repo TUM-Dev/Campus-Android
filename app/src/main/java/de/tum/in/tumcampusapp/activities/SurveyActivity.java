@@ -354,7 +354,6 @@ public class SurveyActivity extends BaseActivity {
         if (done) {
             newDate = getDateTime();
             chosenFaculties = getSelectedFaculties(selectedFaculties);
-            Toast.makeText(getApplicationContext(), getResources().getString(R.string.survey_submitted), Toast.LENGTH_SHORT).show();
             return true;
         } else {
             Toast.makeText(getApplicationContext(), getResources().getString(R.string.complete_question_form), Toast.LENGTH_SHORT).show();
@@ -399,49 +398,44 @@ public class SurveyActivity extends BaseActivity {
                     return;
                 }
 
-                //insert into database.
-                Date date = Calendar.getInstance().getTime();
-                ContentValues cv = new ContentValues(8);
-                for (int i = 0; i < aSpinner1.getSelectedItemPosition() + 1; i++) {
-
-                    //
-                    final ArrayList<String> selectedFacIds = new ArrayList<String>();
-                    for (int j = 0; j < selectedFaculties.size(); j++) {
-                        for (int x = 0; x < fetchedFaculties.size(); x++) {
-                            if (selectedFaculties.get(j).equals(fetchedFaculties.get(x))) {
-                                Cursor cursor = surveyManager.getFacultyID(selectedFaculties.get(j));
-                                if (cursor.moveToFirst()) {
-                                    selectedFacIds.add(cursor.getString(cursor.getColumnIndex("faculty")));
-                                }
+                // Get selected faculties
+                final ArrayList<String> selectedFacIds = new ArrayList<String>();
+                for (int j = 0; j < selectedFaculties.size(); j++) {
+                    for (int x = 0; x < fetchedFaculties.size(); x++) {
+                        if (selectedFaculties.get(j).equals(fetchedFaculties.get(x))) {
+                            Cursor cursor = surveyManager.getFacultyID(selectedFaculties.get(j));
+                            if (cursor.moveToFirst()) {
+                                selectedFacIds.add(cursor.getString(cursor.getColumnIndex("faculty")));
                             }
                         }
                     }
-
-                    Question ques = new Question(questions.get(i), selectedFacIds);
-
-                    // Submit Question to the survey
-                    try {
-                        TUMCabeClient.getInstance(getApplicationContext()).createQuestion(ques, new Callback<Question>() {
-                            @Override
-                            public void success(Question question, Response response) {
-                                Utils.log("Succeeded: " + response.getBody().toString());
-                                clearData();
-                            }
-
-                            @Override
-                            public void failure(RetrofitError error) {
-                                Utils.log("Failure: " + error.toString());
-                            }
-                        });
-                    } catch (Exception e) {
-                        Utils.log(e.toString());
-                    }
-
                 }
 
-
-
                 if (NetUtils.isConnected(getApplication())) {
+
+                    for (int i = 0; i < aSpinner1.getSelectedItemPosition() + 1; i++) {
+                        Question ques = new Question(questions.get(i), selectedFacIds);
+                        // Submit Question to the survey
+                        try {
+                            TUMCabeClient.getInstance(getApplicationContext()).createQuestion(ques, new Callback<Question>() {
+                                @Override
+                                public void success(Question question, Response response) {
+                                    Utils.log("Succeeded: " + response.getBody().toString());
+                                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.survey_submitted), Toast.LENGTH_SHORT).show();
+                                    clearData();
+                                }
+
+                                @Override
+                                public void failure(RetrofitError error) {
+                                    Utils.log("Failure: " + error.toString());
+                                }
+                            });
+                        } catch (Exception e) {
+                            Utils.log(e.toString());
+                        }
+
+                    }
+
                     // gets newly created questions, in order to show them directly in responses
                     new AsyncTask<Void, Void, Void>() {
 
@@ -459,6 +453,8 @@ public class SurveyActivity extends BaseActivity {
                         }
                     }.execute();
 
+                }else {
+                    Toast.makeText(getApplicationContext(),"Please connect to internet to submit question",Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -511,14 +507,14 @@ public class SurveyActivity extends BaseActivity {
         Utils.log("Number of questions after the date " + weekAgo + " is: " + x);
 
         numQues = new String[3 - x];
-        for (int i = 0; i < numQues.length; i++)
+        for (int i = 0; i < numQues.length; i++) {
             numQues[i] = String.valueOf(i + 1);
+        }
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, numQues);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         aSpinner1.setAdapter(adapter);
 
-        if(x>=3)
-        {
+        if (x >= 3) {
             String strDate = getNextPossibleDate();
             selectTv.setVisibility(View.VISIBLE);
             selectTv.setText(getResources().getString(R.string.next_possible_survey_date) + " " + strDate);
@@ -527,7 +523,7 @@ public class SurveyActivity extends BaseActivity {
             facultiesButton.setVisibility(View.GONE);
             aSpinner1.setVisibility(View.GONE);
 
-          }
+        }
 
 
     }
