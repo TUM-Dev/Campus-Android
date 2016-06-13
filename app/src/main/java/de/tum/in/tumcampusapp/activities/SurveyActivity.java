@@ -90,11 +90,11 @@ public class SurveyActivity extends BaseActivity {
             @Override
             public void onTabChanged(String s) {
                 int currentTab = tabHost.getCurrentTab();
-                Utils.log("Current tab: "+currentTab);
-                if(currentTab ==0 ){
-
-                }else{
-                    if(NetUtils.isConnected(getApplication())){
+                Utils.log("Current tab: " + currentTab);
+                if (currentTab == 0) {
+                    mainResponseLayout.removeAllViews();
+                } else {
+                    if (NetUtils.isConnected(getApplication())) {
                         // gets newly created questions, in order to show them directly in responses
                         new AsyncTask<Void, Void, Void>() {
 
@@ -105,12 +105,12 @@ public class SurveyActivity extends BaseActivity {
                             }
 
                             @Override
-                            protected void onPostExecute(Void v){
+                            protected void onPostExecute(Void v) {
                                 setUpResponseTab();
                             }
                         }.execute();
 
-                    }else {
+                    } else {
                         // Without newly created questions
                         setUpResponseTab();
                     }
@@ -457,7 +457,7 @@ public class SurveyActivity extends BaseActivity {
                 clearData();
 
 
-                if(NetUtils.isConnected(getApplication())){
+                if (NetUtils.isConnected(getApplication())) {
                     // gets newly created questions, in order to show them directly in responses
                     new AsyncTask<Void, Void, Void>() {
 
@@ -468,7 +468,7 @@ public class SurveyActivity extends BaseActivity {
                         }
 
                         @Override
-                        protected void onPostExecute(Void v){
+                        protected void onPostExecute(Void v) {
                             Intent i = getIntent();
                             i.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                             startActivity(i);
@@ -524,7 +524,7 @@ public class SurveyActivity extends BaseActivity {
         }
 
         int x = c.getInt(0);
-        Utils.log("Number of questions after the date " + weekAgo+ " is: " + x);
+        Utils.log("Number of questions after the date " + weekAgo + " is: " + x);
 
         if (x < 3) {
             numQues = new String[3 - x];
