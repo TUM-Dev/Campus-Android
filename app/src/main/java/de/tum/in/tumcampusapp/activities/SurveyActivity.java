@@ -42,7 +42,6 @@ import java.util.Date;
 import java.util.Locale;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.activities.generic.BaseActivity;
 import de.tum.in.tumcampusapp.activities.generic.ProgressActivity;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
@@ -74,7 +73,13 @@ public class SurveyActivity extends ProgressActivity {
     BroadcastReceiver connectivityChangeReceiver=new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent)
-        { if(NetUtils.isConnected(context)){restartActivity();}}};
+        {
+            if(NetUtils.isConnected(getApplicationContext())) {
+                restartActivity();
+                unregisterReceiver(connectivityChangeReceiver);
+            }
+        }
+    };
 
     public SurveyActivity(){super(R.layout.activity_survey);}
 
@@ -225,14 +230,16 @@ public class SurveyActivity extends ProgressActivity {
 
         @Override
         public void onClick(final View v) {
+            if(NetUtils.isConnected(getApplicationContext())){
             //remove view and delete from database.
             v.setEnabled(false);
             int tag = (int) v.getTag();
             surveyManager.deleteMyOwnQuestion(tag);
             zoomOutanimation(v);
-            Snackbar snackbar = Snackbar
-                    .make(findViewById(R.id.drawer_layout), getResources().getString(R.string.question_deleted), Snackbar.LENGTH_LONG);
-            snackbar.show();
+             Snackbar.make(findViewById(R.id.drawer_layout), getResources().getString(R.string.question_deleted), Snackbar.LENGTH_LONG).show();
+            }
+            else
+                restartActivity();
         }
 
     };
@@ -437,7 +444,7 @@ public class SurveyActivity extends ProgressActivity {
                         protected void onPostExecute(Void v)
                         { restartActivity();}}.execute();
                 }else
-                    Toast.makeText(getApplicationContext(), "Please connect to internet to submit question", Toast.LENGTH_LONG).show();
+                    restartActivity();
             }
         });
 
