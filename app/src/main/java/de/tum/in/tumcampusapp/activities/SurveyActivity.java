@@ -49,6 +49,7 @@ import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.Question;
 import de.tum.in.tumcampusapp.models.TUMCabeClient;
 import de.tum.in.tumcampusapp.models.managers.SurveyManager;
+import de.tum.in.tumcampusapp.trace.Util;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -68,28 +69,29 @@ public class SurveyActivity extends ProgressActivity {
     ArrayList<String> fetchedFaculties = new ArrayList<>();
     ViewGroup parentView;
     String[] numQues = new String[3];
-    int numberOfQuestion=0;
+    int numberOfQuestion = 0;
     private SurveyManager surveyManager;
-    BroadcastReceiver connectivityChangeReceiver=new BroadcastReceiver() {
+    BroadcastReceiver connectivityChangeReceiver = new BroadcastReceiver() {
         @Override
-        public void onReceive(Context context, Intent intent)
-        {
-            if(NetUtils.isConnected(getApplicationContext())) {
+        public void onReceive(Context context, Intent intent) {
+            if (NetUtils.isConnected(getApplicationContext())) {
                 restartActivity();
                 unregisterReceiver(connectivityChangeReceiver);
             }
         }
     };
 
-    public SurveyActivity(){super(R.layout.activity_survey);}
+    public SurveyActivity() {
+        super(R.layout.activity_survey);
+    }
 
-   @Override
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         surveyManager = new SurveyManager(this);
         super.onCreate(savedInstanceState);
         lrzId = Utils.getSetting(this, Const.LRZ_ID, "");
-        registerReceiver(connectivityChangeReceiver,new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
-        if(NetUtils.isConnected(this)) {
+        registerReceiver(connectivityChangeReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+        if (NetUtils.isConnected(this)) {
             findViewsById();
             setUpTabHost();
             setUpSpinner();
@@ -97,16 +99,17 @@ public class SurveyActivity extends ProgressActivity {
             submitAndTabListeners();
             userAllowed();
             unregisterReceiver(connectivityChangeReceiver);
-        }
-        else
+        } else {
             setContentView(R.layout.layout_no_internet);
+        }
 
     }
 
     @Override
-    public void onRefresh(){}
+    public void onRefresh() {
+    }
 
-  //set up the respone tab layout dynamically depending on number of questions
+    //set up the respone tab layout dynamically depending on number of questions
     @SuppressLint("SetTextI18n")
     private void setUpResponseTab() {
         Cursor c = surveyManager.getMyOwnQuestionsSince(Utils.getDateTimeString(new Date()));
@@ -187,7 +190,7 @@ public class SurveyActivity extends ProgressActivity {
             params.addRule(RelativeLayout.CENTER_IN_PARENT);
             yesAnswers.setPadding(15, 0, 0, 0);
             //set number of yes answers
-            yesAnswers.setText("YES:"+yes);
+            yesAnswers.setText("YES:" + yes);
             r.addView(yesAnswers, params);
 
             TextView noAnswers = new TextView(this);
@@ -196,7 +199,7 @@ public class SurveyActivity extends ProgressActivity {
             params1.addRule(RelativeLayout.ALIGN_RIGHT, progress.getId());
             params1.addRule(RelativeLayout.CENTER_IN_PARENT);
             //set number of no answers
-            noAnswers.setText("NO:"+no);
+            noAnswers.setText("NO:" + no);
             noAnswers.setPadding(0, 0, 20, 0);
             r.addView(noAnswers, params1);
         }
@@ -211,7 +214,8 @@ public class SurveyActivity extends ProgressActivity {
         parentView.startAnimation(zoomOut);
         zoomOut.setAnimationListener(new Animation.AnimationListener() {
             @Override
-            public void onAnimationStart(Animation animation) {}
+            public void onAnimationStart(Animation animation) {
+            }
 
             @Override
             public void onAnimationEnd(Animation animation) {
@@ -230,16 +234,16 @@ public class SurveyActivity extends ProgressActivity {
 
         @Override
         public void onClick(final View v) {
-            if(NetUtils.isConnected(getApplicationContext())){
-            //remove view and delete from database.
-            v.setEnabled(false);
-            int tag = (int) v.getTag();
-            surveyManager.deleteMyOwnQuestion(tag);
-            zoomOutanimation(v);
-             Snackbar.make(findViewById(R.id.drawer_layout), getResources().getString(R.string.question_deleted), Snackbar.LENGTH_LONG).show();
-            }
-            else
+            if (NetUtils.isConnected(getApplicationContext())) {
+                //remove view and delete from database.
+                v.setEnabled(false);
+                int tag = (int) v.getTag();
+                surveyManager.deleteMyOwnQuestion(tag);
+                zoomOutanimation(v);
+                Snackbar.make(findViewById(R.id.drawer_layout), getResources().getString(R.string.question_deleted), Snackbar.LENGTH_LONG).show();
+            } else {
                 restartActivity();
+            }
         }
 
     };
@@ -340,8 +344,9 @@ public class SurveyActivity extends ProgressActivity {
             newDate = getDateTime();
             chosenFaculties = getSelectedFaculties(selectedFaculties);
             return true;
-        } else
+        } else {
             Toast.makeText(getApplicationContext(), getResources().getString(R.string.complete_question_form), Toast.LENGTH_SHORT).show();
+        }
 
         return false;
     }
@@ -356,7 +361,7 @@ public class SurveyActivity extends ProgressActivity {
             checked[i] = false;
         }
         aSpinner1.setSelection(0);
-        questionsLayout.removeAllViews();
+        //questionsLayout.removeAllViews();
     }
 
     //get selected faculties from spinner
@@ -407,44 +412,59 @@ public class SurveyActivity extends ProgressActivity {
 
 
                 if (NetUtils.isConnected(getApplication())) {
-                    for (int i = 0; i < aSpinner1.getSelectedItemPosition() + 1; i++) {
-                        Question ques = new Question(questions.get(i), selectedFacIds);
 
-                        // Submit Question to the survey
-                        try {
-                            TUMCabeClient.getInstance(getApplicationContext()).createQuestion(ques, new Callback<Question>() {
-                                @Override
-                                public void success(Question question, Response response) {
-                                    Utils.log("Succeeded: " + response.getBody().toString());
-                                    numberOfQuestion++;
-                                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.survey_submitted), Toast.LENGTH_SHORT).show();
-
-                                }
-
-                                @Override
-                                public void failure(RetrofitError error) {
-                                    Utils.log("Failure: " + error.toString());
-                                }
-                            });
-                        } catch (Exception e) {
-                            Utils.log(e.toString());
-                        }
-                    }
-                    clearData();
 
                     // gets newly created questions, in order to show them directly in responses
                     new AsyncTask<Void, Void, Void>() {
 
                         @Override
+                        protected void onPreExecute(){
+                            for (int i = 0; i < aSpinner1.getSelectedItemPosition() + 1; i++) {
+                                Question ques = new Question(questions.get(i), selectedFacIds);
+
+                                // Submit Question to the survey
+                                try {
+                                    TUMCabeClient.getInstance(getApplicationContext()).createQuestion(ques, new Callback<Question>() {
+                                        @Override
+                                        public void success(Question question, Response response) {
+                                            Utils.log("Succeeded: " + response.getBody().toString());
+                                            numberOfQuestion++;
+                                            Toast.makeText(getApplicationContext(), getResources().getString(R.string.survey_submitted), Toast.LENGTH_SHORT).show();
+
+                                        }
+
+                                        @Override
+                                        public void failure(RetrofitError error) {
+                                            Utils.log("Failure: " + error.toString());
+                                        }
+                                    });
+                                } catch (Exception e) {
+                                    Utils.log(e.toString());
+                                }
+                            }
+                        }
+
+                        @Override
                         protected Void doInBackground(Void... voids) {
+                            try {
+                                Thread.sleep(1000); // Waits to make sure that the questions got sent to the server in order to avoid fetching ownQuestions after the try/catch without the newly created questions
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
                             surveyManager.downLoadOwnQuestions();
                             return null;
                         }
+
                         @Override
-                        protected void onPostExecute(Void v)
-                        { restartActivity();}}.execute();
-                }else
+                        protected void onPostExecute(Void v) {
+                            finish();
+                            clearData();
+                            restartActivity();
+                        }
+                    }.execute();
+                } else {
                     restartActivity();
+                }
             }
         });
 
@@ -452,7 +472,6 @@ public class SurveyActivity extends ProgressActivity {
             @Override
             public void onTabChanged(String s) {
                 int currentTab = tabHost.getCurrentTab();
-                Utils.log("Current tab: " + currentTab);
                 if (currentTab == 0) {
                     mainResponseLayout.removeAllViews();
                 } else {
@@ -481,11 +500,12 @@ public class SurveyActivity extends ProgressActivity {
         });
     }
 
-    private void restartActivity()
-    {   Intent i = getIntent();
+    private void restartActivity() {
+        Intent i = getIntent();
         i.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         finish();
-        startActivity(i);}
+        startActivity(i);
+    }
 
     private String getDateTime() {
         Calendar c = Calendar.getInstance();
@@ -530,6 +550,7 @@ public class SurveyActivity extends ProgressActivity {
             c.moveToFirst();
         }
         int x = c.getInt(0);
+        Utils.log("Number Questions left (userallowed) " + x);
         if (x < 3) {
             numQues = new String[3 - x];
             for (int i = 0; i < numQues.length; i++) {
