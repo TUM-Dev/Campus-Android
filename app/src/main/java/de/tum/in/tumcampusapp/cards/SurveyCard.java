@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
@@ -127,7 +128,8 @@ public class SurveyCard extends Card
 
     @Override
     public boolean shouldShow(SharedPreferences p) {
-        return manager.getUnansweredQuestions().getCount() >= 1;
+        String currentDate = Utils.getDateTimeString(new Date());
+        return manager.getUnansweredQuestionsSince(currentDate).getCount() >= 1;
     }
 
     public void seQuestions(Cursor cur) {

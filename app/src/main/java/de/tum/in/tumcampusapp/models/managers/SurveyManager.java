@@ -3,17 +3,12 @@ package de.tum.in.tumcampusapp.models.managers;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.util.Log;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
-import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.cards.Card;
@@ -32,7 +27,7 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
     public SurveyManager(Context context) {
         super(context);
         db.execSQL("CREATE TABLE IF NOT EXISTS faculties (faculty INTEGER, name VARCHAR)");
-        db.execSQL("CREATE TABLE IF NOT EXISTS openQuestions (question INTEGER PRIMARY KEY, text VARCHAR, answerid INTEGER, answered BOOLEAN, synced BOOLEAN)");
+        db.execSQL("CREATE TABLE IF NOT EXISTS openQuestions (question INTEGER PRIMARY KEY, text VARCHAR, created VARCHAR, end VARCHAR, answerid INTEGER, answered BOOLEAN, synced BOOLEAN)");
         db.execSQL("CREATE TABLE IF NOT EXISTS ownQuestions (question INTEGER PRIMARY KEY, text VARCHAR, created VARCHAR, end VARCHAR, yes INTEGER, no INTEGER, deleted BOOLEAN, synced BOOLEAN)");
     }
 
@@ -41,7 +36,7 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
         if (NetUtils.isConnected(mContext)) {
             downLoadOpenQuestions();
         }
-        Cursor rows = getUnansweredQuestions();
+        Cursor rows = getUnansweredQuestionsSince(Utils.getDateTimeString(new Date()));
         if (rows.moveToFirst()) {
             SurveyCard card = new SurveyCard(context);
             card.seQuestions(rows);
@@ -54,15 +49,15 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
     }
 
 
-    // Get relevant questions for Card
-    public Cursor getUnansweredQuestions() {
-        Cursor c = db.rawQuery("SELECT question, text FROM openQuestions WHERE answered=0", null);
+    // Get relevant questions for Card: unanswered and their end date is still in the future
+    public Cursor getUnansweredQuestionsSince(String date) {
+        Cursor c = db.rawQuery("SELECT question, text FROM openQuestions WHERE answered=0 AND end >= '"+ date+ "'", null);
         return c;
     }
 
     // For displaying responses in surveyActivity
-    public Cursor getMyOwnQuestions() {
-        Cursor c = db.rawQuery("SELECT * FROM ownQuestions where deleted = 0", null);
+    public Cursor getMyOwnQuestionsSince(String date) {
+        Cursor c = db.rawQuery("SELECT * FROM ownQuestions where deleted = 0 AND end >= '"+ date+"'", null);
         return c;
     }
 
@@ -77,7 +72,6 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
             @Override
             public void failure(RetrofitError error) {
                 Utils.log("TUMCabeClient_delete_question_failed. Error: " + error.toString());
-
             }
         });
         db.execSQL("UPDATE ownQuestions SET deleted=1 WHERE question=" + id);
@@ -231,6 +225,8 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
             ContentValues cv = new ContentValues();
             cv.put("question", q.getQuestion());
             cv.put("text", q.getText());
+            cv.put("created", q.getCreated());
+            cv.put("end", q.getEnd());
             cv.put("answerid", 0);
             cv.put("answered", 0);
             cv.put("synced", 0);

@@ -1,7 +1,6 @@
 package de.tum.in.tumcampusapp.activities;
 
 import android.annotation.SuppressLint;
-import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -12,10 +11,8 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AlertDialog;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
 import android.view.inputmethod.EditorInfo;
@@ -124,7 +121,7 @@ public class SurveyActivity extends BaseActivity {
     //set up the respone tab layout dynamically depending on number of questions
     @SuppressLint("SetTextI18n")
     public void setUpResponseTab() {
-        Cursor c = surveyManager.getMyOwnQuestions();
+        Cursor c = surveyManager.getMyOwnQuestionsSince(Utils.getDateTimeString(new Date()));
         int numberofquestion = c.getCount();
         //get response and question from database->set i<Number of question
         for (int i = 0; i < numberofquestion; i++) {
