@@ -11,6 +11,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -99,6 +100,16 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<Void, Bo
                 userMajorSpinner.setAdapter(adapter);
                 Utils.setInternalSetting(getApplicationContext(), "user_major", "0"); // Without selection of faculty, the user has major 0 -> All faculties for questions in card
                 userMajorSpinner.setSelection(Integer.parseInt(Utils.getInternalSettingString(getApplicationContext(),"user_faculty_number","0")));
+
+                userMajorSpinner.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View view, MotionEvent motionEvent) {
+                        if(!NetUtils.isConnected(getApplicationContext())){
+                            Toast.makeText(getApplicationContext(),getString(R.string.please_connect_to_internet),Toast.LENGTH_LONG).show();
+                        }
+                        return false;
+                    }
+                });
                 userMajorSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -132,6 +143,11 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<Void, Bo
      */
     @SuppressWarnings("UnusedParameters")
     public void onClickSkip(View skip) {
+        if(!NetUtils.isConnected(getApplicationContext())){
+            Toast.makeText(getApplicationContext(),getString(R.string.please_connect_to_internet),Toast.LENGTH_LONG).show();
+            return;
+        }
+
         finish();
         if (new AccessTokenManager(this).hasValidAccessToken()) {
             startActivity(new Intent(this, WizNavChatActivity.class));
@@ -148,6 +164,11 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<Void, Bo
      */
     @SuppressWarnings("UnusedParameters")
     public void onClickNext(View next) {
+        if(!NetUtils.isConnected(getApplicationContext())){
+            Toast.makeText(getApplicationContext(),getString(R.string.please_connect_to_internet),Toast.LENGTH_LONG).show();
+            return;
+        }
+
         lrzId = editTxtLrzId.getText().toString();
         Editor editor = sharedPrefs.edit();
         editor.putString(Const.LRZ_ID, lrzId);
