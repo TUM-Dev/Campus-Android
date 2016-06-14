@@ -107,7 +107,7 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
             db.endTransaction();
         }
 
-        //Tiger sync if we are connected currently
+        //Trigger sync if we are connected currently
         if (NetUtils.isConnected(mContext)) {
             syncOpenQuestionsTable();
         }
@@ -332,33 +332,23 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
     void replaceIntoDb(Faculty f) {
         // Unfortunately I had to do it like that and not with a Replace Into statment because for some reason the replace statement doesn't work correctly
         Cursor c = db.rawQuery("SELECT * FROM faculties WHERE faculty = ?", new String[]{f.getId()});
-        if (c.moveToFirst()) {
+        try {
+            db.beginTransaction();
             ContentValues cv = new ContentValues();
-            cv.put("name", f.getName());
-            try {
-                db.beginTransaction();
+            if(c.moveToFirst()){
+                cv.put("name", f.getName());
                 db.update("faculties", cv, "faculty = ?", new String[]{f.getId()});
                 db.setTransactionSuccessful();
-            } catch (Exception e) {
-                e.printStackTrace();
-            } finally {
-                db.endTransaction();
-            }
-
-        } else {
-            ContentValues cv = new ContentValues();
-            cv.put("faculty", f.getId());
-            cv.put("name", f.getName());
-            try {
-                db.beginTransaction();
+            }else {
+                cv.put("faculty", f.getId());
+                cv.put("name", f.getName());
                 db.insert("faculties", null, cv);
                 db.setTransactionSuccessful();
-            } catch (Exception e) {
-                e.printStackTrace();
-            } finally {
-                db.endTransaction();
             }
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            db.endTransaction();
         }
-        //db.execSQL("REPLACE INTO faculties (faculty, name) VALUES (?, ?)", new String[]{f.getId(), f.getName()});
     }
 }
