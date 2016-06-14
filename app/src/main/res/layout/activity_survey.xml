@@ -10,8 +10,7 @@
 
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        >
+        android:orientation="vertical">
 
         <include layout="@layout/toolbar" />
 
@@ -31,10 +30,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"></TabWidget>
 
+
                 <FrameLayout
                     android:id="@android:id/tabcontent"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
+
                     <ScrollView
                         android:layout_width="fill_parent"
                         android:layout_height="fill_parent" >
@@ -127,5 +128,6 @@
             </LinearLayout>
         </TabHost>
     </LinearLayout>
+    <include layout="@layout/layout_all_errors"/>
     <include layout="@layout/navigation_drawer" />
 </android.support.v4.widget.DrawerLayout>
