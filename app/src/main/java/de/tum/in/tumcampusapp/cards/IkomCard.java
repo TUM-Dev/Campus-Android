@@ -17,6 +17,7 @@ import net.danlew.android.joda.JodaTimeAndroid;
 import org.joda.time.DateTime;
 
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.activities.EventActivity;
 import de.tum.in.tumcampusapp.models.managers.CardManager;
 
 /**
@@ -80,5 +81,10 @@ public class IkomCard extends Card {
         //Or discarded manually
         SharedPreferences prefs = mContext.getSharedPreferences(Card.DISCARD_SETTINGS_START, 0);
         return prefs.getBoolean(CardManager.SHOW_IKOM, true) || (today.isAfter(firstDay) && today.isBefore(firstDay.plusDays(7)));
+    }
+
+    @Override
+    public Intent getIntent() {
+        return new Intent(mContext, EventActivity.class);
     }
 }
