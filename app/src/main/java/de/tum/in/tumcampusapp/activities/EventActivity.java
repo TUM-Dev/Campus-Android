@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,16 +43,16 @@ public class EventActivity extends BaseActivity {
                     new EventScheduleEntry(parse("20.06.2016 15:30"), 30, ""),
                     new EventScheduleEntry(parse("20.06.2016 16:30"), 30, "Verlosung in Hof 0 und Ende des Forumstages")
             ), Arrays.asList(
-                    new EventScheduleEntry(parse("21.06.2016 09:30"), 30, "Eröffnung der IKOM"),
+                    new EventScheduleEntry(parse("21.06.2016 09:30"), 30, "Eröffnung der IKOM<br><font color=\"#84a115\">Eröffnung der IKOM Start Up</font>"),
                     new EventScheduleEntry(parse("21.06.2016 10:00"), 60, "IKOM Arena | Fahrzeugtechnik"),
-                    new EventScheduleEntry(parse("21.06.2016 11:00"), 45, "IKOM Arena | Logistics & Simulation Software"),
+                    new EventScheduleEntry(parse("21.06.2016 11:00"), 45, "IKOM Arena | Logistics & Simulation Software<br><font color=\"#84a115\">IKOM Start Up Pitch</font>"),
                     new EventScheduleEntry(parse("21.06.2016 11:45"), 15, "IKOM Arena | Patentanwälte"),
                     new EventScheduleEntry(parse("21.06.2016 12:30"), 30, ""),
                     new EventScheduleEntry(parse("21.06.2016 13:00"), 30, "Gastvortrag: Dominik Asam, Vorstand Finanzen, Infineon Techonologies AG, Hörsaal MW 0250"),
-                    new EventScheduleEntry(parse("21.06.2016 14:00"), 15, ""),
-                    new EventScheduleEntry(parse("21.06.2016 14:15"), 30, "IKOM Arena | High-Tech Entwicklung"),
-                    new EventScheduleEntry(parse("21.06.2016 15:00"), 30, ""),
-                    new EventScheduleEntry(parse("21.06.2016 15:30"), 30, "Gastvortrag | Markus Tischer, Vorstand International Operations and Services, KRONES AG"),
+                    new EventScheduleEntry(parse("21.06.2016 14:15"), 45, "IKOM Arena | High-Tech Entwicklung\nIKOM Start-Up: Gastvortrag: Yorck Hernandez, CEO CrowdPatent"),
+                    new EventScheduleEntry(parse("21.06.2016 15:00"), 30, "<font color=\"#84a115\">IKOM Start Up: Gastvortrag: Dominik Guber, Gründer Braufässchen</font>"),
+                    new EventScheduleEntry(parse("21.06.2016 15:30"), 90, "Gastvortrag | Markus Tischer, Vorstand International Operations and Services, KRONES AG"),
+                    new EventScheduleEntry(parse("21.06.2016 16:00"), 30, "<font color=\"#84a115\">IKOM Start Up: Ende des Messetages</font>"),
                     new EventScheduleEntry(parse("21.06.2016 16:30"), 30, "Verlosung in Hof 0 und Ende des Forumstages")
             ), Arrays.asList(
                     new EventScheduleEntry(parse("22.06.2016 09:30"), 30, "Eröffnung der IKOM"),
@@ -146,7 +147,7 @@ public class EventActivity extends BaseActivity {
 
                 tr.setLayoutParams(new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, 0, event.duration / (float) sumDuration));
                 timeView.setText(tf.format(event.startTime));
-                descriptionView.setText(event.title);
+                descriptionView.setText(Html.fromHtml(event.title));
                 table.addView(tr);
             }
             return view;
