@@ -323,7 +323,7 @@ public class LocationManager {
         }
 
         ArrayList<HashMap<String, String>> request = requestHandler.fetchRooms(loc);
-        if (request.size() > 0) {
+        if (request != null && request.size() > 0) {
             String room = request.get(0).get(TUMRoomFinderRequest.KEY_ARCH_ID);
             return requestHandler.fetchCoordinates(room);
         }
