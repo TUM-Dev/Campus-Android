@@ -9,9 +9,7 @@ import android.content.IntentFilter;
 import android.database.Cursor;
 import android.graphics.Typeface;
 import android.net.ConnectivityManager;
-import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
-import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.res.ResourcesCompat;
@@ -105,7 +103,7 @@ public class SurveyActivity extends ProgressActivity {
   //set up the respone tab layout dynamically depending on number of questions
     @SuppressLint("SetTextI18n")
     private void setUpResponseTab() {
-        Cursor c = surveyManager.getMyOwnQuestionsSince(Utils.getDateTimeString(new Date()));
+        Cursor c = surveyManager.getMyRelevantOwnQuestionsSince(Utils.getDateTimeString(new Date()));
         int numberofquestion = c.getCount();
         //get response and question from database->set i<Number of question
         for (int i = 0; i < numberofquestion; i++) {
@@ -482,11 +480,11 @@ public class SurveyActivity extends ProgressActivity {
     private void userAllowed() {
 
         String weekAgo = getDateBefore1Week();
-        Cursor c = surveyManager.numberOfQuestionsFrom(weekAgo);
+        Cursor c = surveyManager.ownQuestionsSince(weekAgo);
         if (c.getCount() > 0) {
             c.moveToFirst();
         }
-        int x = c.getInt(0);
+        int x = c.getCount();
         if (x < 3) {
             numQues = new String[3 - x];
             for (int i = 0; i < numQues.length; i++) {
@@ -554,7 +552,7 @@ public class SurveyActivity extends ProgressActivity {
         String nextPossibleDate = "";
         ArrayList<String> dates = new ArrayList<String>();
         String weekAgo = getDateBefore1Week();
-        Cursor c = surveyManager.lastDateFromLastWeek(weekAgo);
+        Cursor c = surveyManager.ownQuestionsSince(weekAgo);
 
         while (c.moveToNext()) {
             dates.add(c.getString(0));

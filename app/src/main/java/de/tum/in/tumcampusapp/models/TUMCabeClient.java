@@ -104,18 +104,24 @@ public class TUMCabeClient {
         return instance;
     }
 
+    // Fetches faculty data (facname, id).Relevant for the user to select own major in majorSpinner in WizNavStartActivity
     public ArrayList<Faculty> getFaculties(){return service.getFaculties();}
 
+    // Deletes ownQuestion..Relevant for allowing the user to delete own questions under responses in SurveyActivity
     public void deleteOwnQuestion(int question, Callback<Question> cb){service.deleteOwnQuestion(question,cb);}
 
+    // Fetches users ownQuestions and responses.Relevant for displaying results on ownQuestion under responses in SurveyActivity
     public ArrayList<Question> getOwnQuestions(){ return service.getOwnQuestions();}
 
+    // Submits user's answer on a given question.Gets triggered through in the survey card.
     public void submitAnswer(Question question, Callback<Question> cb){
         service.answerQuestion(question,cb);
     }
 
+    // Fetches openQuestions which are relevant for the surveyCard.
     public ArrayList<Question> getOpenQuestions(){ return service.getOpenQuestions();}
 
+    // Submits user's own question. Gets triggered from the SurveyActivity
     public void createQuestion(Question question,Callback<Question> cb){
         service.createQuestion(question,cb);
     }

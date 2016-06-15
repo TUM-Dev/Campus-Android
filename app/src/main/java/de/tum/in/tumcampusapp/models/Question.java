@@ -2,9 +2,13 @@ package de.tum.in.tumcampusapp.models;
 
 
 import android.text.TextUtils;
+
 import java.util.ArrayList;
 import java.util.Date;
 
+/**
+ * Question model class for communication with the API and needed constructors in the project.
+ */
 public class Question {
 
     private String question;
@@ -16,44 +20,72 @@ public class Question {
     private String created;
     private String end;
 
-    // Needed in the help function for deleting flagged answers
-    public Question (String question){
+    /**
+     * Used in the help function for deleting flagged questions in SurveyManager
+     *
+     * @param question
+     */
+    public Question(String question) {
         this.question = question;
     }
 
-    // Const. for setting questions for the Survey Card
-    public Question (String question, String text){
+    /**
+     * Used in setting collected openQuestions from the db in the surveyCard
+     *
+     * @param question
+     * @param text
+     */
+    public Question(String question, String text) {
         this.question = question;
         this.text = text;
     }
 
-
-    // Const. for submiting Answeres for openQuestions
-    public Question(String question, int answer){
-        this.question=question;
-        this.answer=answer;
+    /**
+     * Used for syncing answered openQuestions with the server
+     *
+     * @param question
+     * @param answer
+     */
+    public Question(String question, int answer) {
+        this.question = question;
+        this.answer = answer;
     }
 
-    // Const. for fetching faculties
-    public Question(String text, ArrayList<String> faculties){
+
+    /**
+     * Used for submitting ownQuestions to the server
+     *
+     * @param text
+     * @param faculties
+     */
+    public Question(String text, ArrayList<String> faculties) {
         this.text = text;
-        this.faculty = TextUtils.join(",",faculties);
+        this.faculty = TextUtils.join(",", faculties);
     }
-
 
     public String[] getFacultiesOfOpenQuestions() {
         return facultyArr;
     }
 
-    public String getQuestion() {return question;}
+    public String getQuestion() {
+        return question;
+    }
 
-    public String getText() {return text;}
+    public String getText() {
+        return text;
+    }
 
-    public void setText(String text) {this.text = text;}
+    public void setText(String text) {
+        this.text = text;
+    }
 
-    public Answer[] getResults() {return results;}
+    public Answer[] getResults() {
+        return results;
+    }
 
-    public void setResults(Answer[] results) {this.results = results;}
+    public void setResults(Answer[] results) {
+        this.results = results;
+    }
 
     public String getCreated() {
         return created;
@@ -71,11 +103,14 @@ public class Question {
         this.end = end;
     }
 
+    /**
+     * Presents answers structure for the questions used in receiving the answers on ownQuesitons from server
+     */
     public class Answer {
         private String answer;
         private int votes;
 
-        public Answer(String answer, int votes){
+        public Answer(String answer, int votes) {
             this.answer = answer;
             this.votes = votes;
         }

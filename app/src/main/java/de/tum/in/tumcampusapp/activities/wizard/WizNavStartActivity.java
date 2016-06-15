@@ -58,6 +58,7 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<Void, Bo
         LinearLayout layout = (LinearLayout) findViewById(R.id.wizard_start_layout);
         layout.requestFocus();
 
+        // Spinner for choosing the faculty of the user
         userMajorSpinner = (Spinner) findViewById(R.id.majorSpinner);
         setUpSpinner();
 
@@ -69,8 +70,11 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<Void, Bo
     }
 
     public void setUpSpinner() {
-        // fetch facultyData from API
+
+
         new AsyncTask<Void, Void, String[]>() {
+
+            // fetch facultyData from API
             @Override
             protected String[] doInBackground(Void... voids) {
                 ArrayList<String> fetchedFaculties = new ArrayList<>();
@@ -93,14 +97,18 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<Void, Bo
                 return majors;
             }
 
+            // Fill the fetched facultyData into the majorSpinner
             @Override
             protected void onPostExecute(String[] majors) {
                 ArrayAdapter<String> adapter = new ArrayAdapter<String>(getBaseContext(), android.R.layout.simple_list_item_1, majors);
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 userMajorSpinner.setAdapter(adapter);
-                Utils.setInternalSetting(getApplicationContext(), "user_major", "0"); // Without selection of faculty, the user has major 0 -> All faculties for questions in card
+
+                Utils.setInternalSetting(getApplicationContext(), "user_major", "0"); // Prior to faculty selection, the user has major 0 (which means) All faculties for faculty match in card
                 userMajorSpinner.setSelection(Integer.parseInt(Utils.getInternalSettingString(getApplicationContext(),"user_faculty_number","0")));
 
+
+                // Upon clicking on the faculty spinner and there is no internet connection -> toast to the user.
                 userMajorSpinner.setOnTouchListener(new View.OnTouchListener() {
                     @Override
                     public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -110,18 +118,22 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<Void, Bo
                         return false;
                     }
                 });
+
+                // When the user chooses a faculty
                 userMajorSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                         SurveyManager sm = new SurveyManager(getApplicationContext());
-                        Cursor c = sm.getFacultyID((String) adapterView.getItemAtPosition(i));
+
+                        Cursor c = sm.getFacultyID((String) adapterView.getItemAtPosition(i)); // Get the faculty number from DB for the chosen faculty name
+
                         if (c.moveToFirst()) {
-                            Utils.setInternalSetting(getApplicationContext(), "user_major", c.getString(c.getColumnIndex("faculty")));
-                            Utils.setInternalSetting(getApplicationContext(), "user_faculty_number",userMajorSpinner.getSelectedItemPosition()+"");
+                            Utils.setInternalSetting(getApplicationContext(), "user_major", c.getString(c.getColumnIndex("faculty"))); // save faculty number in shared preferences
+                            Utils.setInternalSetting(getApplicationContext(), "user_faculty_number",userMajorSpinner.getSelectedItemPosition()+""); // save choosen spinner poistion so that in case the user returns from the  WizNavCheckTokenActivity to WizNavStart activity, then we the faculty gets autm. choosen.
                         }
                         TextView selectedItem = (TextView) adapterView.getChildAt(0);
                         if (selectedItem != null) {
-                             selectedItem.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.color_primary));
+                             selectedItem.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.color_primary)); // set the colour of the selected item in the faculty spinner
                         }
                     }
 
@@ -143,6 +155,7 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<Void, Bo
      */
     @SuppressWarnings("UnusedParameters")
     public void onClickSkip(View skip) {
+        // Upon clicking on the skip button and there is no internet connection -> toast to the user
         if(!NetUtils.isConnected(getApplicationContext())){
             Toast.makeText(getApplicationContext(),getString(R.string.please_connect_to_internet),Toast.LENGTH_LONG).show();
             return;
@@ -164,6 +177,7 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<Void, Bo
      */
     @SuppressWarnings("UnusedParameters")
     public void onClickNext(View next) {
+        // Upon clicking on next button and there is no internet connection -> toast to the user.
         if(!NetUtils.isConnected(getApplicationContext())){
             Toast.makeText(getApplicationContext(),getString(R.string.please_connect_to_internet),Toast.LENGTH_LONG).show();
             return;

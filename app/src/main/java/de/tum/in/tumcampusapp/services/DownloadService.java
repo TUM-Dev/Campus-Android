@@ -247,9 +247,9 @@ public class DownloadService extends IntentService {
     private boolean downloadFacultiesAndSurveyData() {
         try {
             SurveyManager sm = new SurveyManager(this);
-            sm.downloadFacultiesFromExternal();
-            sm.downLoadOpenQuestions();
-            sm.downLoadOwnQuestions();
+            sm.downloadFacultiesFromExternal(); // Downloads the facultyData from the server in local db
+            sm.downLoadOpenQuestions(); // Downloads openQuestions relevant for the survey card
+            sm.downLoadOwnQuestions(); // Downloads ownQuestions relevant for displaying responses in surveyActivity
             return true;
         } catch (Exception e) {
             Utils.log(e);
