@@ -12,6 +12,10 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -51,10 +55,6 @@ public class SurveyCard extends Card
         return CardManager.CARD_SURVEY;
     }
 
-    @Override
-    public void discard(SharedPreferences.Editor editor) {
-        //@todo
-    }
 
     @Override
     public void updateViewHolder(RecyclerView.ViewHolder viewHolder) {
@@ -127,9 +127,20 @@ public class SurveyCard extends Card
     }
 
     @Override
+    public void discard(SharedPreferences.Editor editor) {
+        DateTime discardTime = DateTime.now();
+        DateTime added = discardTime.plusMinutes(1440); // 24 hours
+        DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
+        String discardTimeString = added.toString(fmt);
+        editor.putString("showIn5MinAgain",discardTimeString);
+    }
+
+    @Override
     public boolean shouldShow(SharedPreferences p) {
+        DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
         String currentDate = Utils.getDateTimeString(new Date());
-        return manager.getUnansweredQuestionsSince(currentDate).getCount() >= 1;
+        DateTime discardedTill = fmt.parseDateTime(p.getString("showIn5MinAgain",DateTime.now().toString(fmt)));
+        return ( discardedTill.isBeforeNow() && (manager.getUnansweredQuestionsSince(currentDate).getCount() >= 1));
     }
 
     public void seQuestions(Cursor cur) {
