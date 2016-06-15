@@ -30,7 +30,7 @@ allprojects {
                     targetSdkVersion 23
                     multiDexEnabled true
                     versionCode 65
-                    versionName "1.4.3-dev"
+                    versionName "1.4.3"
                 }
                 lintOptions {
                     checkAllWarnings true

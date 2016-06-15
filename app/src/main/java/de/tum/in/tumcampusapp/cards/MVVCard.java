@@ -75,7 +75,7 @@ public class MVVCard extends Card {
 
             DepartureView view = new DepartureView(mContext);
             view.setSymbol(curr.symbol);
-            view.setLine(curr.servingLine);
+            view.setLine(curr.direction);
             view.setTime(curr.countDown);
             mLinearLayout.addView(view);
         }
