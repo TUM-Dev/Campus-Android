@@ -1,12 +1,15 @@
 package de.tum.in.tumcampusapp.auxiliary.calendar;
 
+import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.CalendarContract;
 import android.provider.CalendarContract.Calendars;
+import android.support.v4.app.ActivityCompat;
 
 /**
  * Helper class for exporting to Google Calendar.
@@ -15,27 +18,30 @@ public class CalendarHelper {
 	private static final String ACCOUNT_NAME = "TUM_Campus_APP";
 	private static final String Calendar_Name = "TUM Campus";
 
-    /**
-     * Gets uri query to insert calendar TUM_Campus_APP to google calendar
-     * @param c Context
-     * @return Uri for insertion
-     */
+	/**
+	 * Gets uri query to insert calendar TUM_Campus_APP to google calendar
+	 * @param c Context
+	 * @return Uri for insertion
+	 */
 	public static Uri addCalendar(Context c) {
 		final ContentValues cv = buildContentValues();
 		Uri calUri = buildCalUri();
-        return c.getContentResolver().insert(calUri, cv);
+		return c.getContentResolver().insert(calUri, cv);
 	}
 
-    /**
-     * Deletes the calendar TUM_Campus_APP from google calendar
-     * @param c Context
-     * @return Number of rows deleted
-     */
-    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-    public static int deleteCalendar(Context c) {
-        Uri uri = CalendarContract.Calendars.CONTENT_URI;
-        return c.getContentResolver().delete(uri, " account_name = '" + ACCOUNT_NAME + "'", null);
-    }
+	/**
+	 * Deletes the calendar TUM_Campus_APP from google calendar
+	 * @param c Context
+	 * @return Number of rows deleted
+	 */
+	@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+	public static int deleteCalendar(Context c) {
+		Uri uri = CalendarContract.Calendars.CONTENT_URI;
+		if (ActivityCompat.checkSelfPermission(c, Manifest.permission.WRITE_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
+			return 0;
+		}
+		return c.getContentResolver().delete(uri, " account_name = '" + ACCOUNT_NAME + "'", null);
+	}
 
 	@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     private static Uri buildCalUri() {
