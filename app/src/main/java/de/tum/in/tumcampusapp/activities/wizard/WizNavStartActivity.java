@@ -30,7 +30,6 @@ import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.managers.SurveyManager;
-import de.tum.in.tumcampusapp.trace.Util;
 
 /**
  * Displays the first page of the startup wizard, where the user can enter his lrz-id.

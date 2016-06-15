@@ -453,7 +453,7 @@ Signature: %5$s</string>
     <string name="research_quiz" translatable="false">Research Quiz</string>
     <string name="no_questions_available">No Questions are available!</string>
     <string name="one_question_left">Only 1 question left</string>
-    <string name="next_possible_survey_date">Next possible survey date is </string>
+    <string name="next_possible_survey_date">You have reached the maximum number of questions per week. Next possible survey date is</string>
     <string name="flag_inappropriate" translatable="false">flag for inappropriate questions</string>
     <string name="survey_yes">Yes</string>
     <string name="select_target_faculties_survey">Select Target Faculties</string>

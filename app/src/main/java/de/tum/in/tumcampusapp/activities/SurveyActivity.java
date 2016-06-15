@@ -38,7 +38,6 @@ import java.util.Date;
 import java.util.Locale;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.ProgressActivity;
-import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.Question;
@@ -48,22 +47,26 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-
+/**
+ * SurveyActivity for handling submitting ownQuesitons and reviewing responses
+ */
 public class SurveyActivity extends ProgressActivity {
 
-    Spinner aSpinner1;
-    TextView selectTv;
-    TabHost tabHost;
-    Button submitSurveyButton, facultiesButton;
-    ArrayList<String> questions = new ArrayList<>();
-    ArrayList<String> selectedFaculties = new ArrayList<>();
-    boolean[] checked = new boolean[14];
-    LinearLayout mainResponseLayout, questionsLayout;
-    String chosenFaculties = "", lrzId;
-    ArrayList<String> fetchedFaculties = new ArrayList<>();
-    ViewGroup parentView;
-    String[] numQues = new String[3];
+    private Spinner aSpinner1;
+    private TextView selectTv;
+    private TabHost tabHost;
+    private Button submitSurveyButton, facultiesButton;
+    private ArrayList<String> questions = new ArrayList<>();
+    private ArrayList<String> selectedFaculties = new ArrayList<>();
+    private boolean[] checked = new boolean[14];
+    private LinearLayout mainResponseLayout, questionsLayout;
+    String chosenFaculties = "";
+    private ArrayList<String> fetchedFaculties = new ArrayList<>();
+    private ViewGroup parentView;
+    private String[] numQues = new String[3];
     private SurveyManager surveyManager;
+
+    // for handling change in internet connectivity. If initially had no connection, then connected, then restart activity
     BroadcastReceiver connectivityChangeReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -82,15 +85,14 @@ public class SurveyActivity extends ProgressActivity {
     public void onCreate(Bundle savedInstanceState) {
         surveyManager = new SurveyManager(this);
         super.onCreate(savedInstanceState);
-        lrzId = Utils.getSetting(this, Const.LRZ_ID, "");
         registerReceiver(connectivityChangeReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
-        if (NetUtils.isConnected(this)) {
+        if (NetUtils.isConnected(this)) { // Opening activity is possible with internet connection
             findViewsById();
             setUpTabHost();
-            setUpSpinner();
-            setUpSelectTargets();
-            submitAndTabListeners();
-            userAllowed();
+            setUpSpinnerForQuestionsNumber();
+            setUpSelectedTargetFacultiesSpinner();
+            submitAndHostTabListener();
+            numberOfQuestionsUserAllowed();
             unregisterReceiver(connectivityChangeReceiver);
         } else {
             setContentView(R.layout.layout_no_internet);
@@ -99,8 +101,10 @@ public class SurveyActivity extends ProgressActivity {
     }
 
     @Override
-    public void onRefresh() {}
-  //set up the respone tab layout dynamically depending on number of questions
+    public void onRefresh() {
+    }
+
+    //set up the respone tab layout dynamically depending on number of questions
     @SuppressLint("SetTextI18n")
     private void setUpResponseTab() {
         Cursor c = surveyManager.getMyRelevantOwnQuestionsSince(Utils.getDateTimeString(new Date()));
@@ -196,25 +200,7 @@ public class SurveyActivity extends ProgressActivity {
 
     }
 
-    private void zoomOutanimation(View v) {
-        ScaleAnimation zoomOut = new ScaleAnimation(1f, 0f, 1, 0f, Animation.RELATIVE_TO_SELF, (float) 0.5, Animation.RELATIVE_TO_SELF, (float) 0.5);
-        zoomOut.setDuration(500);
-        zoomOut.setFillAfter(true);
-        parentView = (ViewGroup) v.getParent().getParent().getParent();
-        parentView.startAnimation(zoomOut);
-        zoomOut.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {}
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                parentView.removeAllViews();}
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {}});
-    }
-
-    //delete button click
+    //Handels clicking on 'delete' button of an own question in responses tab
     View.OnClickListener clicks = new View.OnClickListener() {
 
         @Override
@@ -224,7 +210,7 @@ public class SurveyActivity extends ProgressActivity {
                 v.setEnabled(false);
                 int tag = (int) v.getTag();
                 surveyManager.deleteMyOwnQuestion(tag);
-                zoomOutanimation(v);
+                zoomOutanimation(v); // provides a smoth delete animation of the question
                 Snackbar.make(findViewById(R.id.drawer_layout), getResources().getString(R.string.question_deleted), Snackbar.LENGTH_LONG).show();
             } else {
                 restartActivity();
@@ -232,7 +218,48 @@ public class SurveyActivity extends ProgressActivity {
         }
 
     };
-    //get all views by IDs
+
+    /**
+     * provides a smoth delete animation of the question
+     * @param v: view to be deleted, where an ownQuestion with respective responses gets deleted
+     */
+    private void zoomOutanimation(View v) {
+        ScaleAnimation zoomOut = new ScaleAnimation(1f, 0f, 1, 0f, Animation.RELATIVE_TO_SELF, (float) 0.5, Animation.RELATIVE_TO_SELF, (float) 0.5);
+        zoomOut.setDuration(500);
+        zoomOut.setFillAfter(true);
+        parentView = (ViewGroup) v.getParent().getParent().getParent();
+        parentView.startAnimation(zoomOut);
+        zoomOut.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                parentView.removeAllViews();
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+            }
+        });
+    }
+
+
+
+    /**
+     * For restarting SurveyAcitivity. Used upon reconnecting to internet after no connection, or when submitting question(s)
+     */
+    private void restartActivity() {
+        Intent i = getIntent();
+        i.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        finish();
+        startActivity(i);
+    }
+
+    /**
+     * get all views by IDs
+     */
     private void findViewsById() {
         mainResponseLayout = (LinearLayout) findViewById(R.id.mainRes);
         aSpinner1 = (Spinner) findViewById(R.id.spinner);
@@ -241,8 +268,10 @@ public class SurveyActivity extends ProgressActivity {
         questionsLayout = (LinearLayout) findViewById(R.id.questionsEts);
     }
 
-    //Departments spinner.
-    private void setUpSelectTargets() {
+    /**
+     * Sets up the spinner for selecting target faculties and handles choosing them
+     */
+    private void setUpSelectedTargetFacultiesSpinner() {
 
         // fetch faulties from DB
         Cursor cursor = surveyManager.getAllFaculties();
@@ -258,6 +287,8 @@ public class SurveyActivity extends ProgressActivity {
         builder.setTitle(getResources().getString(R.string.quiz_target_faculty));
 
         facultiesButton = (Button) findViewById(R.id.button_faculties);
+
+        // Handls reserving chosen faculties in sponner
         facultiesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -279,7 +310,8 @@ public class SurveyActivity extends ProgressActivity {
                 }).setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     //if Ok do nothing-> keep selecte faculties
                     @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {}
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                    }
                 }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     //if cancel clear selected faculties
                     @Override
@@ -296,61 +328,25 @@ public class SurveyActivity extends ProgressActivity {
         });
     }
 
-    //get survey data (number of questions,faculties,questions)
-    private boolean checkSurveyData() {
-        boolean done = true;
-        for (int i = 0; i < aSpinner1.getSelectedItemPosition() + 1; i++) {
-            EditText v = (EditText) questionsLayout.findViewWithTag("question" + (i + 1));
-            if (hasQuestion(v)) {
-                questions.add(v.getText().toString());
-            } else {
-                done = false;
-                questions.clear();
-                break;}
-        }
-        if (done) {
-            chosenFaculties = getSelectedFaculties(selectedFaculties);
-            return true;}
-        else
-            Snackbar.make(findViewById(R.id.drawer_layout), getResources().getString(R.string.complete_question_form), Snackbar.LENGTH_LONG).show();
-        return false;
-    }
+    /**
+     * Handles submitting questions and changing hosttabs
+     */
+    private void submitAndHostTabListener() {
 
-    //clear data after submitting
-    private void clearData() {
-        selectedFaculties.clear();
-        chosenFaculties = "";
-        questions.clear();
-        for (int i = 0; i < checked.length; i++) {
-            checked[i] = false;
-        }
-        aSpinner1.setSelection(0);
-    }
-
-    //get selected faculties from spinner
-    public String getSelectedFaculties(ArrayList<String> arrayList) {
-        String facs = "";
-        for (int i = 0; i < arrayList.size(); i++) {
-            if (i < arrayList.size() - 1) {
-                facs += arrayList.get(i) + ',';
-            } else {
-                facs += arrayList.get(i);
-            }
-        }
-         return facs;
-    }
-
-    //submit survey listener && OnTabChange listener
-    private void submitAndTabListeners() {
+        // Upon submitting question(s)
         submitSurveyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!checkSurveyData()) {
+                if (!checkSurveyData()) { // plausibility check
                     return;
                 }
+
+                // facultyIds to be sent to server upon submitting question(s)
                 final ArrayList<String> selectedFacIds = new ArrayList<>();
-                // Get selected faculties to be sent with the question to the server
-                if (!selectedFaculties.isEmpty()) {
+
+
+                if (!selectedFaculties.isEmpty()) { // In case at least one faculty is selected
+                    // Adds the ids of selected faculties by match selected faculty names with fetched faculties names
                     for (int j = 0; j < selectedFaculties.size(); j++) {
                         for (int x = 0; x < fetchedFaculties.size(); x++) {
                             if (selectedFaculties.get(j).equals(fetchedFaculties.get(x))) {
@@ -361,7 +357,7 @@ public class SurveyActivity extends ProgressActivity {
                             }
                         }
                     }
-                } else { // no faculties selected -> all faculites.
+                } else { // if no faculty is selected, add faculties as target upon submitting question(s).
                     Cursor c = surveyManager.getAllFaculties();
                     if (c.moveToFirst()) {
                         do {
@@ -369,24 +365,33 @@ public class SurveyActivity extends ProgressActivity {
                         } while (c.moveToNext());
                     }
                 }
-                 //if connected to internet submit questions
-                 if (NetUtils.isConnected(getApplication())) {
-                  // gets newly created questions, in order to show them directly in responses
+
+                //if connected to internet submit questions
+                if (NetUtils.isConnected(getApplication())) {
+                    /**
+                     * 1. onPreExecute: submit the questions to the server
+                     * 2. doInBackGround: download the questions we just submitted to server, in order to show them directly in
+                     * responses tab in case the user changes tabs or to check if the user can still enter further questions this week
+                     * 3. onPostExecute: finish activity, cleardata(clear all layout entries) and restart activity (userallowed() gets called and it will be checked whether the user can enter further questions.
+                     */
                     new AsyncTask<Void, Void, Void>() {
                         @Override
-                        protected void onPreExecute(){
+                        protected void onPreExecute() {
                             for (int i = 0; i < aSpinner1.getSelectedItemPosition() + 1; i++) {
                                 Question ques = new Question(questions.get(i), selectedFacIds);
-                                // Submit Question to the survey
+                                // Submit Question to the server
                                 try {
                                     TUMCabeClient.getInstance(getApplicationContext()).createQuestion(ques, new Callback<Question>() {
                                         @Override
                                         public void success(Question question, Response response) {
-                                             Snackbar.make(findViewById(R.id.drawer_layout), getResources().getString(R.string.survey_submitted), Snackbar.LENGTH_LONG).show();
-                                         }
+                                            Snackbar.make(findViewById(R.id.drawer_layout), getResources().getString(R.string.survey_submitted), Snackbar.LENGTH_LONG).show();
+                                        }
+
                                         @Override
                                         public void failure(RetrofitError error) {
-                                            Utils.log("Failure: " + error.toString());}});
+                                            Utils.log("Failure: " + error.toString());
+                                        }
+                                    });
                                 } catch (Exception e) {
                                     Utils.log(e.toString());
                                 }
@@ -396,35 +401,42 @@ public class SurveyActivity extends ProgressActivity {
                         @Override
                         protected Void doInBackground(Void... voids) {
                             try {
-                                Thread.sleep(1000); // Waits to make sure that the questions got sent to the server in order to avoid fetching ownQuestions after the try/catch without the newly created questions
+                                Thread.sleep(1000); // Waits to make sure that the questions got sent to the server in order to avoid fetching ownQuestions without the newly created questions
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }
                             surveyManager.downLoadOwnQuestions();
                             return null;
                         }
+
                         @Override
                         protected void onPostExecute(Void v) {
                             finish();
-                            clearData();
-                            restartActivity();
+                            clearData(); // clear layout entries
+                            restartActivity(); // restart activity where it will be checked if the user can create further questions in this week (in numberOfQuestionsUserAllowed)
                         }
                     }.execute();
-                } else {
+                } else { // if not connected, then restartActivity and the broadcastreceiver for no connectivity will show the no internet layout.
                     restartActivity();
                 }
             }
         });
 
+        //
         tabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
             @Override
             public void onTabChanged(String s) {
                 int currentTab = tabHost.getCurrentTab();
-                if (currentTab == 0) {
-                    mainResponseLayout.removeAllViews();
-                } else {
+                if (currentTab == 0) { // when  the user is currently in first tab 'survey' the views of response tap shoud be removed in order to avoid any duplication in displaying ownQuestions upon tab change again
+                    mainResponseLayout.removeAllViews(); // to avoid
+                } else { // in case the user changes to 'responses' tab
                     if (NetUtils.isConnected(getApplication())) {
-                        // gets newly created questions, in order to show them directly in responses
+
+                        //gets newly created questions, in order to show them directly in responses
+                        /**
+                         * 1. doInBackground: downloadOwnQuestions so that the user can see uptodate answers on ownQuestions
+                         * 2. onPostExecute: setUpResponse tab
+                         */
                         new AsyncTask<Void, Void, Void>() {
 
                             @Override
@@ -440,21 +452,76 @@ public class SurveyActivity extends ProgressActivity {
                         }.execute();
 
                     } else {
-                        // Without newly created questions
-                        setUpResponseTab();
+                        setUpResponseTab(); // setup responses tab Without possible fresh answeres.
                     }
                 }
             }
         });
     }
-    private void restartActivity() {
-        Intent i = getIntent();
-        i.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-        finish();
-        startActivity(i);
+
+
+    /**
+     * Help function for plausibility check of the question form
+     *
+     * @return true if everything was entered correctly else snackbar for requesting to complete questions.
+     */
+    private boolean checkSurveyData() {
+        boolean done = true;
+        for (int i = 0; i < aSpinner1.getSelectedItemPosition() + 1; i++) { // Iterates on each questionEditText
+            EditText v = (EditText) questionsLayout.findViewWithTag("question" + (i + 1));
+            if (!v.getText().toString().isEmpty()) { // if textfield is not empty, add to questions
+                questions.add(v.getText().toString());
+            } else { // else plausibility check failed
+                done = false;
+                questions.clear();
+                break;
+            }
+        }
+        if (done) { // if plausibility passed, then save selected faculties as they will be needed upon submitting question
+            chosenFaculties = getSelectedFaculties(selectedFaculties);
+            return true;
+        } else { // else notify the user with a snackbar to complete the question form
+            Snackbar.make(findViewById(R.id.drawer_layout), getResources().getString(R.string.complete_question_form), Snackbar.LENGTH_LONG).show();
+        }
+        return false;
     }
 
-    //setup tab host (survey,Responses)
+    /**
+     * Help function for clearing data and layout entries after submitting questions
+     */
+    private void clearData() {
+        selectedFaculties.clear();
+        chosenFaculties = "";
+        questions.clear();
+        for (int i = 0; i < checked.length; i++) { // uncheck selected faculties
+            checked[i] = false;
+        }
+        aSpinner1.setSelection(0); //
+    }
+
+    //get selected faculties from spinner
+
+    /**
+     * Help function for getting all faculties as a string from the spinner
+     * @param arrayList: selected faculties in spinner as arraylist
+     * @return: selected faculties as String
+     */
+    public String getSelectedFaculties(ArrayList<String> arrayList) {
+        String facs = "";
+        for (int i = 0; i < arrayList.size(); i++) {
+            if (i < arrayList.size() - 1) {
+                facs += arrayList.get(i) + ',';
+            } else {
+                facs += arrayList.get(i);
+            }
+        }
+        return facs;
+    }
+
+
+    /**
+     * Sets up tabhost for submitting questions and reviewing responses
+     */
     private void setUpTabHost() {
         tabHost = (TabHost) findViewById(R.id.tabHost);
         tabHost.setup();
@@ -470,22 +537,20 @@ public class SurveyActivity extends ProgressActivity {
         tabHost.addTab(tabSpec);
     }
 
-    //check if edittext is empty
-    private boolean hasQuestion(EditText et) {
-        return !et.getText().toString().isEmpty();
-    }
 
-    //check if user is allowed to submit survey depending on the last survey date and number of question he submitted before
+    /**
+     * check if user is allowed to submit survey depending on the last survey date and number of question he submitted in the last week
+     */
     @SuppressLint("SetTextI18n")
-    private void userAllowed() {
+    private void numberOfQuestionsUserAllowed() {
 
         String weekAgo = getDateBefore1Week();
-        Cursor c = surveyManager.ownQuestionsSince(weekAgo);
+        Cursor c = surveyManager.ownQuestionsSince(weekAgo); // gets number of questions submitted during last week
         if (c.getCount() > 0) {
             c.moveToFirst();
         }
         int x = c.getCount();
-        if (x < 3) {
+        if (x < 3) { // if below 3, then set the spinner with the numbers of questions user allowed to ask respectively
             numQues = new String[3 - x];
             for (int i = 0; i < numQues.length; i++) {
                 numQues[i] = String.valueOf(i + 1);
@@ -496,7 +561,7 @@ public class SurveyActivity extends ProgressActivity {
             if (x == 2) {
                 selectTv.setText(getResources().getString(R.string.one_question_left));
             }
-        } else {
+        } else { // else notify user he reached the max. number of questions this week and show him the next possible date for entering questions
             String strDate = getNextPossibleDate();
             selectTv.setVisibility(View.VISIBLE);
             selectTv.setText(getResources().getString(R.string.next_possible_survey_date) + " " + strDate);
@@ -507,8 +572,9 @@ public class SurveyActivity extends ProgressActivity {
 
         }
     }
+
     //spinner for number of questions selection
-    private void setUpSpinner() {
+    private void setUpSpinnerForQuestionsNumber() {
         numQues[0] = "1";
         numQues[1] = "2";
         numQues[2] = "3";
@@ -537,9 +603,17 @@ public class SurveyActivity extends ProgressActivity {
                     questionsLayout.addView(questionEt);
                 }
             }
-              @Override
-            public void onNothingSelected(AdapterView<?> adapterView) { }});}
-    //getDate before 1 week to check if user allowed to submit survey
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+            }
+        });
+    }
+
+    /**
+     * Help function for get Date before 1 week to check if user allowed to submit survey
+     * @return return this date as a string
+     */
     private String getDateBefore1Week() {
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.DAY_OF_YEAR, -7);
@@ -547,7 +621,11 @@ public class SurveyActivity extends ProgressActivity {
         return sdf.format(calendar.getTime());
 
     }
-    //show the user the next possible survey date.
+
+    /**
+     * Get the next possible date for the user to enter survey questions
+     * @return this date as a string
+     */
     private String getNextPossibleDate() {
         String nextPossibleDate = "";
         ArrayList<String> dates = new ArrayList<String>();
@@ -556,13 +634,16 @@ public class SurveyActivity extends ProgressActivity {
 
         while (c.moveToNext()) {
             dates.add(c.getString(0));
-            nextPossibleDate = c.getString(0);}
+            nextPossibleDate = c.getString(0);
+        }
 
         for (int i = 0; i < dates.size(); i++) {
             for (int z = 0; z < nextPossibleDate.length(); z++) {
-                if (dates.get(i).charAt(z) < nextPossibleDate.charAt(z))
-                    nextPossibleDate = dates.get(i);}
-       }
+                if (dates.get(i).charAt(z) < nextPossibleDate.charAt(z)) {
+                    nextPossibleDate = dates.get(i);
+                }
+            }
+        }
 
         String dtStart = nextPossibleDate;
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.GERMANY);
