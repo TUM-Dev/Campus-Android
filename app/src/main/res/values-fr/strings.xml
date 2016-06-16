@@ -394,4 +394,5 @@
     <string name="tab_survey">Umfrage</string>
     <string name="more_info">Plus d\'information</string>
     <string name="welcome_faculty">Pour offrir la meilleure expérience possible s\'il vous plaît nous fournir votre meilleure faculté d\'adaptation:</string>
+    <string name="event_plan">Plan de l\'événement</string>
 </resources>

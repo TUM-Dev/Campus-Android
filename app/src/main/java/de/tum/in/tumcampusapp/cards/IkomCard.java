@@ -17,6 +17,7 @@ import net.danlew.android.joda.JodaTimeAndroid;
 import org.joda.time.DateTime;
 
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.activities.EventActivity;
 import de.tum.in.tumcampusapp.models.managers.CardManager;
 
 /**
@@ -24,13 +25,24 @@ import de.tum.in.tumcampusapp.models.managers.CardManager;
  */
 public class IkomCard extends Card {
 
+
     public IkomCard(Context context) {
         super(context);
     }
 
     public static CardViewHolder inflateViewHolder(final ViewGroup parent) {
-        JodaTimeAndroid.init(parent.getContext());
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_ikom, parent, false);
+        final Context c = parent.getContext();
+        JodaTimeAndroid.init(c);
+        View view = LayoutInflater.from(c).inflate(R.layout.card_ikom, parent, false);
+
+        //Create a click listener for the event agenda
+        View.OnClickListener openEventAgenda = new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent myIntent = new Intent(c, EventActivity.class);
+                c.startActivity(myIntent);
+            }
+        };
 
         //Check if we should switch the Image on certain days
         ImageView image = (ImageView) view.findViewById(R.id.imageIkom);
@@ -41,15 +53,19 @@ public class IkomCard extends Card {
                 (today.isAfter(thirdDay) && today.isBefore(thirdDay.plusDays(2)))) {
             image.setImageResource(R.drawable.ikom_2);
         }
+        image.setOnClickListener(openEventAgenda);
 
-        //Add a listener to the button
+        //Add a listener to the buttons
+        Button bttnPlan = (Button) view.findViewById(R.id.bttnOpenPlan);
+        bttnPlan.setOnClickListener(openEventAgenda);
+
         Button bttn = (Button) view.findViewById(R.id.bttnIkom);
         bttn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 try {
                     Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.ikom.tum.de"));
-                    parent.getContext().startActivity(myIntent);
+                    c.startActivity(myIntent);
                 } catch (ActivityNotFoundException e) {
                     e.printStackTrace();
                 }
@@ -80,5 +96,10 @@ public class IkomCard extends Card {
         //Or discarded manually
         SharedPreferences prefs = mContext.getSharedPreferences(Card.DISCARD_SETTINGS_START, 0);
         return prefs.getBoolean(CardManager.SHOW_IKOM, true) || (today.isAfter(firstDay) && today.isBefore(firstDay.plusDays(7)));
+    }
+
+    @Override
+    public Intent getIntent() {
+        return new Intent(mContext, EventActivity.class);
     }
 }

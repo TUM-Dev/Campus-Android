@@ -169,7 +169,7 @@ public class ChatRoomManager extends AbstractManager implements Card.ProvidesCar
                     currentChatRoom = TUMCabeClient.getInstance(context).createRoom(currentChatRoom, new ChatVerification(context, currentChatMember));
                     manager.join(currentChatRoom);
                 } catch (RetrofitError e) {
-                    Utils.log(e, "Room already exists");
+                    Utils.log(e, " - error occured while creating the room!");
                 }  catch (NoPrivateKey noPrivateKey) {
                     return;
                 }
