@@ -477,6 +477,8 @@ Signature: %5$s</string>
     <string name="more_info">More Information</string>
     <string name="welcome_faculty">To deliver the best possible experience please provide us with your best matching faculty:</string>
     <string name="event_plan">Event plan</string>
+    <string name="please_connect_to_internet" translatable="false">Please connect to internet in order to proceed the first app start</string>
+    <string name="card_survey_summary" translatable="false">enables you to participate in research related survey questions</string>
 </resources>
 
 
