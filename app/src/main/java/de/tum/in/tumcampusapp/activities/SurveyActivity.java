@@ -52,18 +52,13 @@ import retrofit.client.Response;
  */
 public class SurveyActivity extends ProgressActivity {
 
-    private Spinner aSpinner1;
-    private TextView selectTv;
-    private TabHost tabHost;
+    private Spinner numOfQuestionsSpinner;
     private Button submitSurveyButton, facultiesButton;
     private ArrayList<String> questions = new ArrayList<>();
     private ArrayList<String> selectedFaculties = new ArrayList<>();
-    private boolean[] checked = new boolean[14];
+    private boolean[] checkedFaculties = new boolean[14];
     private LinearLayout mainResponseLayout, questionsLayout;
-    String chosenFaculties = "";
     private ArrayList<String> fetchedFaculties = new ArrayList<>();
-    private ViewGroup parentView;
-    private String[] numQues = new String[3];
     private SurveyManager surveyManager;
 
     // for handling change in internet connectivity. If initially had no connection, then connected, then restart activity
@@ -89,10 +84,9 @@ public class SurveyActivity extends ProgressActivity {
         if (NetUtils.isConnected(this)) { // Opening activity is possible with internet connection
             findViewsById();
             setUpTabHost();
-            setUpSpinnerForQuestionsNumber();
             setUpSelectedTargetFacultiesSpinner();
-            submitAndHostTabListener();
-            numberOfQuestionsUserAllowed();
+            setUpSpinnerForQuestionsNumber();
+            submitSurveyButtonListener();
             unregisterReceiver(connectivityChangeReceiver);
         } else {
             setContentView(R.layout.layout_no_internet);
@@ -101,8 +95,7 @@ public class SurveyActivity extends ProgressActivity {
     }
 
     @Override
-    public void onRefresh() {
-    }
+    public void onRefresh() {}
 
     //set up the respone tab layout dynamically depending on number of questions
     @SuppressLint("SetTextI18n")
@@ -156,7 +149,7 @@ public class SurveyActivity extends ProgressActivity {
             Button deleteButton = new Button(this);
             deleteButton.setLayoutParams(new LinearLayout.LayoutParams((int) inPixels, (int) inPixels));
             deleteButton.setBackgroundResource((R.drawable.minusicon));
-            deleteButton.setOnClickListener(clicks);
+            deleteButton.setOnClickListener(deleteQuestion);
             deleteButton.setTag(id);
             l2.addView(deleteButton);
 
@@ -200,8 +193,8 @@ public class SurveyActivity extends ProgressActivity {
 
     }
 
-    //Handels clicking on 'delete' button of an own question in responses tab
-    View.OnClickListener clicks = new View.OnClickListener() {
+    //Handles clicking on 'delete' button of an own question in responses tab
+    View.OnClickListener deleteQuestion = new View.OnClickListener() {
 
         @Override
         public void onClick(final View v) {
@@ -220,15 +213,16 @@ public class SurveyActivity extends ProgressActivity {
     };
 
     /**
-     * provides a smoth delete animation of the question
+     * provides a smooth zoomOut delete animation of the question
      * @param v: view to be deleted, where an ownQuestion with respective responses gets deleted
      */
     private void zoomOutanimation(View v) {
         ScaleAnimation zoomOut = new ScaleAnimation(1f, 0f, 1, 0f, Animation.RELATIVE_TO_SELF, (float) 0.5, Animation.RELATIVE_TO_SELF, (float) 0.5);
         zoomOut.setDuration(500);
         zoomOut.setFillAfter(true);
-        parentView = (ViewGroup) v.getParent().getParent().getParent();
+        final ViewGroup parentView = (ViewGroup) v.getParent().getParent().getParent();
         parentView.startAnimation(zoomOut);
+        //Zooming out upon deleting question.
         zoomOut.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
@@ -262,9 +256,8 @@ public class SurveyActivity extends ProgressActivity {
      */
     private void findViewsById() {
         mainResponseLayout = (LinearLayout) findViewById(R.id.mainRes);
-        aSpinner1 = (Spinner) findViewById(R.id.spinner);
+        numOfQuestionsSpinner = (Spinner) findViewById(R.id.spinner);
         submitSurveyButton = (Button) findViewById(R.id.submitSurveyButton);
-        selectTv = (TextView) findViewById(R.id.selectTv);
         questionsLayout = (LinearLayout) findViewById(R.id.questionsEts);
     }
 
@@ -295,16 +288,16 @@ public class SurveyActivity extends ProgressActivity {
 
                 final AlertDialog dialog;
 
-                builder.setMultiChoiceItems(faculties, checked, new DialogInterface.OnMultiChoiceClickListener() {
+                builder.setMultiChoiceItems(faculties, checkedFaculties, new DialogInterface.OnMultiChoiceClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i, boolean b) {
                         //reserve the checked faculties when closing spinner
                         if (b && !selectedFaculties.contains(faculties[i])) {
                             selectedFaculties.add(faculties[i]);
-                            checked[i] = true;
+                            checkedFaculties[i] = true;
                         } else {
                             selectedFaculties.remove(faculties[i]);
-                            checked[i] = false;
+                            checkedFaculties[i] = false;
                         }
                     }
                 }).setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -317,8 +310,8 @@ public class SurveyActivity extends ProgressActivity {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         selectedFaculties.clear();
-                        for (int y = 0; y < checked.length; y++) {
-                            checked[y] = false;
+                        for (int y = 0; y < checkedFaculties.length; y++) {
+                            checkedFaculties[y] = false;
                         }
                     }
                 });
@@ -329,18 +322,19 @@ public class SurveyActivity extends ProgressActivity {
     }
 
     /**
-     * Handles submitting questions and changing hosttabs
+     * submit survey button listener
      */
-    private void submitAndHostTabListener() {
+    private void submitSurveyButtonListener() {
 
-        // Upon submitting question(s)
         submitSurveyButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                if (!checkSurveyData()) { // plausibility check
-                    return;
-                }
+            public void onClick(View v) {
 
+
+                //get user questions to submit them.
+                getSurveyData();
+                if (questions.isEmpty())
+                    return;
                 // facultyIds to be sent to server upon submitting question(s)
                 final ArrayList<String> selectedFacIds = new ArrayList<>();
 
@@ -377,7 +371,7 @@ public class SurveyActivity extends ProgressActivity {
                     new AsyncTask<Void, Void, Void>() {
                         @Override
                         protected void onPreExecute() {
-                            for (int i = 0; i < aSpinner1.getSelectedItemPosition() + 1; i++) {
+                            for (int i = 0; i < numOfQuestionsSpinner.getSelectedItemPosition() + 1; i++) {
                                 Question ques = new Question(questions.get(i), selectedFacIds);
                                 // Submit Question to the server
                                 try {
@@ -421,8 +415,63 @@ public class SurveyActivity extends ProgressActivity {
                 }
             }
         });
+    }
 
-        //
+    /**
+     * function to get user entered questions
+     *
+     * @return questions if everything was entered correctly else snackbar for requesting to complete questions.
+     */
+    private ArrayList<String> getSurveyData() {
+        boolean done = true;
+        for (int i = 0; i < numOfQuestionsSpinner.getSelectedItemPosition() + 1; i++) { // Iterates on each questionEditText
+            EditText v = (EditText) questionsLayout.findViewWithTag("question" + (i + 1));
+            if (!v.getText().toString().isEmpty()) { // if textfield is not empty, add to questions
+                questions.add(v.getText().toString());
+            } else { // else plausibility check failed
+                done = false;
+                questions.clear();
+                break;
+            }
+        }
+        if (done) { // if plausibility passed, then save selected faculties as they will be needed upon submitting question
+            return questions;
+        }
+        else { // else notify the user with a snackbar to complete the question form
+            Snackbar.make(findViewById(R.id.drawer_layout), getResources().getString(R.string.complete_question_form), Snackbar.LENGTH_LONG).show();
+            return questions;
+        }
+    }
+
+    /**
+     * Help function for clearing data and layout entries after submitting questions
+     */
+    private void clearData() {
+        selectedFaculties.clear();
+        questions.clear();
+        for (int i = 0; i < checkedFaculties.length; i++) { // uncheck selected faculties
+            checkedFaculties[i] = false;
+        }
+        numOfQuestionsSpinner.setSelection(0); //
+    }
+
+     /**
+     * Sets up tabhost for submitting questions and reviewing responses
+     */
+    private void setUpTabHost() {
+        final TabHost tabHost = (TabHost) findViewById(R.id.tabHost);
+        tabHost.setup();
+        // First Tab
+        TabHost.TabSpec tabSpec = tabHost.newTabSpec(getResources().getString(R.string.tab_survey));
+        tabSpec.setContent(R.id.tabAskQuestion);
+        tabSpec.setIndicator(getResources().getString(R.string.tab_survey));
+        tabHost.addTab(tabSpec);
+        // Second Tab
+        tabSpec = tabHost.newTabSpec(getResources().getString(R.string.tab_responses));
+        tabSpec.setContent(R.id.tabSeeResponses);
+        tabSpec.setIndicator(getResources().getString(R.string.tab_responses));
+        tabHost.addTab(tabSpec);
+        //On change tab listener for tabhost
         tabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
             @Override
             public void onTabChanged(String s) {
@@ -461,89 +510,13 @@ public class SurveyActivity extends ProgressActivity {
 
 
     /**
-     * Help function for plausibility check of the question form
-     *
-     * @return true if everything was entered correctly else snackbar for requesting to complete questions.
-     */
-    private boolean checkSurveyData() {
-        boolean done = true;
-        for (int i = 0; i < aSpinner1.getSelectedItemPosition() + 1; i++) { // Iterates on each questionEditText
-            EditText v = (EditText) questionsLayout.findViewWithTag("question" + (i + 1));
-            if (!v.getText().toString().isEmpty()) { // if textfield is not empty, add to questions
-                questions.add(v.getText().toString());
-            } else { // else plausibility check failed
-                done = false;
-                questions.clear();
-                break;
-            }
-        }
-        if (done) { // if plausibility passed, then save selected faculties as they will be needed upon submitting question
-            chosenFaculties = getSelectedFaculties(selectedFaculties);
-            return true;
-        } else { // else notify the user with a snackbar to complete the question form
-            Snackbar.make(findViewById(R.id.drawer_layout), getResources().getString(R.string.complete_question_form), Snackbar.LENGTH_LONG).show();
-        }
-        return false;
-    }
-
-    /**
-     * Help function for clearing data and layout entries after submitting questions
-     */
-    private void clearData() {
-        selectedFaculties.clear();
-        chosenFaculties = "";
-        questions.clear();
-        for (int i = 0; i < checked.length; i++) { // uncheck selected faculties
-            checked[i] = false;
-        }
-        aSpinner1.setSelection(0); //
-    }
-
-    //get selected faculties from spinner
-
-    /**
-     * Help function for getting all faculties as a string from the spinner
-     * @param arrayList: selected faculties in spinner as arraylist
-     * @return: selected faculties as String
-     */
-    public String getSelectedFaculties(ArrayList<String> arrayList) {
-        String facs = "";
-        for (int i = 0; i < arrayList.size(); i++) {
-            if (i < arrayList.size() - 1) {
-                facs += arrayList.get(i) + ',';
-            } else {
-                facs += arrayList.get(i);
-            }
-        }
-        return facs;
-    }
-
-
-    /**
-     * Sets up tabhost for submitting questions and reviewing responses
-     */
-    private void setUpTabHost() {
-        tabHost = (TabHost) findViewById(R.id.tabHost);
-        tabHost.setup();
-        // First Tab
-        TabHost.TabSpec tabSpec = tabHost.newTabSpec(getResources().getString(R.string.tab_survey));
-        tabSpec.setContent(R.id.tabAskQuestion);
-        tabSpec.setIndicator(getResources().getString(R.string.tab_survey));
-        tabHost.addTab(tabSpec);
-        // Second Tab
-        tabSpec = tabHost.newTabSpec(getResources().getString(R.string.tab_responses));
-        tabSpec.setContent(R.id.tabSeeResponses);
-        tabSpec.setIndicator(getResources().getString(R.string.tab_responses));
-        tabHost.addTab(tabSpec);
-    }
-
-
-    /**
      * check if user is allowed to submit survey depending on the last survey date and number of question he submitted in the last week
      */
     @SuppressLint("SetTextI18n")
-    private void numberOfQuestionsUserAllowed() {
+    private void setUpSpinnerForQuestionsNumber() {
+        TextView selectNumberOfQuesionsTV = (TextView) findViewById(R.id.selectTv);
 
+        String [] numQues=new String[]{"1","2","3"};
         String weekAgo = getDateBefore1Week();
         Cursor c = surveyManager.ownQuestionsSince(weekAgo); // gets number of questions submitted during last week
         if (c.getCount() > 0) {
@@ -555,35 +528,24 @@ public class SurveyActivity extends ProgressActivity {
             for (int i = 0; i < numQues.length; i++) {
                 numQues[i] = String.valueOf(i + 1);
             }
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, numQues);
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            aSpinner1.setAdapter(adapter);
-            if (x == 2) {
-                selectTv.setText(getResources().getString(R.string.one_question_left));
+        if (x == 2) {
+            selectNumberOfQuesionsTV.setText(getResources().getString(R.string.one_question_left));
             }
         } else { // else notify user he reached the max. number of questions this week and show him the next possible date for entering questions
             String strDate = getNextPossibleDate();
-            selectTv.setVisibility(View.VISIBLE);
-            selectTv.setText(getResources().getString(R.string.next_possible_survey_date) + " " + strDate);
+            selectNumberOfQuesionsTV.setVisibility(View.VISIBLE);
+            selectNumberOfQuesionsTV.setText(getResources().getString(R.string.next_possible_survey_date) + " " + strDate);
             submitSurveyButton.setVisibility(View.GONE);
             questionsLayout.setVisibility(View.GONE);
             facultiesButton.setVisibility(View.GONE);
-            aSpinner1.setVisibility(View.GONE);
-
+            numOfQuestionsSpinner.setVisibility(View.GONE);
         }
-    }
-
-    //spinner for number of questions selection
-    private void setUpSpinnerForQuestionsNumber() {
-        numQues[0] = "1";
-        numQues[1] = "2";
-        numQues[2] = "3";
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, numQues);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        aSpinner1.setAdapter(adapter);
+        numOfQuestionsSpinner.setAdapter(adapter);
 
-        aSpinner1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        numOfQuestionsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -609,6 +571,7 @@ public class SurveyActivity extends ProgressActivity {
             }
         });
     }
+
 
     /**
      * Help function for get Date before 1 week to check if user allowed to submit survey

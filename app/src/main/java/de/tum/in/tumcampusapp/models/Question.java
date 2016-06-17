@@ -6,6 +6,8 @@ import android.text.TextUtils;
 import java.util.ArrayList;
 import java.util.Date;
 
+import de.tum.in.tumcampusapp.auxiliary.Utils;
+
 /**
  * Question model class for communication with the API and needed constructors in the project.
  */
@@ -60,7 +62,8 @@ public class Question {
      */
     public Question(String text, ArrayList<String> faculties) {
         this.text = text;
-        this.faculty = TextUtils.join(",", faculties);
+        this.faculty = Utils.arrayListToString(faculties);
+
     }
 
     public String[] getFacultiesOfOpenQuestions() {
