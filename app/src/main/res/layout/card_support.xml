@@ -54,6 +54,8 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="80dp"
+                    android:paddingTop="15dp"
+                    android:paddingBottom="15dp"
                     android:id="@+id/github"
                     android:src="@drawable/github"
                     android:layout_weight="1"
