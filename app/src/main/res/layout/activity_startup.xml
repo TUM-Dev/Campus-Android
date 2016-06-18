@@ -12,7 +12,7 @@
     <ImageView
         android:id="@+id/startup_tum_logo"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="170dp"
         android:layout_centerInParent="true"
         android:paddingLeft="50dp"
         android:paddingRight="50dp"
