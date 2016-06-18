@@ -136,14 +136,12 @@
     <string name="extra">Extra</string>
     <string name="extra_name">Nombre extra</string>
     <string name="identifier">ID</string>
-    <string name="exception_sdcard">Error de acceso a la tarjeta SD</string>
     <string name="adress">Dirección</string>
     <string name="name">Nombre</string>
 
     <!-- MVV -->
     <string name="no_departures_found">No hay horarios de salida disponibles</string>
     <string name="exception_unknown">Error desconocido</string>
-    <string name="exception_timeout">Problemas con la conexión al Internet, por favor intente de nuevo más tarde.</string>
     <string name="search_station">Búsqueda a estaciones</string>
 
     <!-- Lectures -->

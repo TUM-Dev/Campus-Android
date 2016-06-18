@@ -151,14 +151,12 @@
     <string name="extra">Extra</string>
     <string name="extra_name">Extraname</string>
     <string name="identifier">Kennung</string>
-    <string name="exception_sdcard">Fehler beim Zugriff auf die SD-Karte</string>
     <string name="adress">Adresse</string>
     <string name="name">Name</string>
 
     <!-- MVV -->
     <string name="no_departures_found">Keine Abfahrtszeiten verfügbar</string>
     <string name="exception_unknown">Unbekannter Fehler</string>
-    <string name="exception_timeout">Probleme bei der Internetverbindung, bitte später erneut versuchen.</string>
     <string name="search_station">Suche nach Stationen</string>
 
     <!-- Lectures -->

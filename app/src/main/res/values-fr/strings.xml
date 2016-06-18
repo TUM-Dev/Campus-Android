@@ -137,14 +137,12 @@
     <string name="extra">Supplémentaire</string>
     <string name="extra_name">Nom supplémentaire</string>
     <string name="identifier">indicatif</string>
-    <string name="exception_sdcard">Erreur d’accès à la carte SD</string>
     <string name="adress">Adresse</string>
     <string name="name">Nom</string>
 
     <!-- MVV -->
     <string name="no_departures_found">Aucun horaire de départ disponible</string>
     <string name="exception_unknown">Erreur inconnue</string>
-    <string name="exception_timeout">Problèmes avec la connexion Internet, réessaye à nouveau.</string>
     <string name="search_station">Chercher des stations</string>
 
     <!-- Lectures -->

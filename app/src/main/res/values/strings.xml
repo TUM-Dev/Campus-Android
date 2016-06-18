@@ -154,14 +154,12 @@
     <string name="extra">Extra</string>
     <string name="extra_name">Extra Name</string>
     <string name="identifier">Identifier</string>
-    <string name="exception_sdcard">Error accessing the SD-Card</string>
     <string name="adress">Address</string>
     <string name="name">Name</string>
 
     <!-- MVV -->
     <string name="no_departures_found">No departures available</string>
     <string name="exception_unknown">Unknown error</string>
-    <string name="exception_timeout">Problems with internet connection, please try again later</string>
     <string name="search_station">Search station</string>
 
     <!-- Lectures -->
