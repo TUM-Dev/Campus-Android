@@ -7,8 +7,7 @@ android {
                 "Overdraw",
                 "ContentDescription",
                 "UnusedResources",    // unused resources get purged by shrinkResources
-                "SelectableText",     // disabled by default
-                "IconDensities"
+                "SelectableText"     // disabled by default
     }
     defaultConfig {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
