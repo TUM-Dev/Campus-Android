@@ -24,12 +24,12 @@ import de.tum.in.tumcampusapp.adapters.NoResultsAdapter;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.exceptions.NoPrivateKey;
-import de.tum.in.tumcampusapp.models.TUMCabeClient;
 import de.tum.in.tumcampusapp.models.ChatMember;
 import de.tum.in.tumcampusapp.models.ChatRoom;
 import de.tum.in.tumcampusapp.models.ChatVerification;
 import de.tum.in.tumcampusapp.models.LecturesSearchRow;
 import de.tum.in.tumcampusapp.models.LecturesSearchRowSet;
+import de.tum.in.tumcampusapp.models.TUMCabeClient;
 import de.tum.in.tumcampusapp.models.managers.ChatRoomManager;
 import de.tum.in.tumcampusapp.tumonline.TUMOnlineConst;
 import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequest;
@@ -75,7 +75,7 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.chat_rooms_tabs);
         // Create a tab listener that is called when the user changes tabs.
-        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 // show the given tab

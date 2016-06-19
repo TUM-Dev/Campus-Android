@@ -24,7 +24,6 @@ import android.provider.ContactsContract.RawContacts;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.text.Html;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
@@ -174,7 +173,7 @@ public class PersonsDetailsActivity extends ActivityForAccessingTumOnline<Employ
                 }
             }
         }
-        tvDetails2.setText(Html.fromHtml(contentText.toString()),
+        tvDetails2.setText(Utils.fromHtml(contentText.toString()),
                 TextView.BufferType.SPANNABLE);
 
         // start new section
@@ -203,7 +202,7 @@ public class PersonsDetailsActivity extends ActivityForAccessingTumOnline<Employ
                 .getBusinessContact().getMobilephone());
         contentText.appendField(getString(R.string.add_info), employee
                 .getBusinessContact().getAdditionalInfo());
-        tvDetails3.setText(Html.fromHtml(contentText.toString()),
+        tvDetails3.setText(Utils.fromHtml(contentText.toString()),
                 TextView.BufferType.SPANNABLE);
 
         // start new section
@@ -221,7 +220,7 @@ public class PersonsDetailsActivity extends ActivityForAccessingTumOnline<Employ
                     .getLocation() + " (" + rooms.get(0).getNumber() + ")");
         }
 
-        tvDetails4.setText(Html.fromHtml(contentText.toString()),
+        tvDetails4.setText(Utils.fromHtml(contentText.toString()),
                 TextView.BufferType.SPANNABLE);
 
     }

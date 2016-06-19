@@ -7,7 +7,6 @@ import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v4.widget.SimpleCursorAdapter.ViewBinder;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
 import android.view.LayoutInflater;
@@ -21,6 +20,7 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.OpeningHoursDetailActivity;
 import de.tum.in.tumcampusapp.activities.OpeningHoursListActivity;
 import de.tum.in.tumcampusapp.auxiliary.Const;
+import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.managers.OpenHoursManager;
 
 /**
@@ -114,7 +114,7 @@ public class OpeningHoursDetailFragment extends Fragment implements ViewBinder {
             if (url.length() > 0) {
                 url = "<a href=\"" + url + "\">" + getString(R.string.website) + "</a>";
                 tv.setMovementMethod(LinkMovementMethod.getInstance());
-                tv.setText(Html.fromHtml(url));
+                tv.setText(Utils.fromHtml(url));
             } else {
                 tv.setVisibility(View.GONE);
             }

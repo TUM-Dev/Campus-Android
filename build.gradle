@@ -23,11 +23,11 @@ allprojects {
     afterEvaluate { project ->
         if (project.hasProperty("android")) {
             android {
-                compileSdkVersion 23
-                buildToolsVersion '23.0.3'
+                compileSdkVersion 24
+                buildToolsVersion '24.0.0'
                 defaultConfig {
                     minSdkVersion 10
-                    targetSdkVersion 23
+                    targetSdkVersion 24
                     multiDexEnabled true
                     versionCode 66
                     versionName "1.4.4-dev"

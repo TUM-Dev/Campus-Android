@@ -3,7 +3,6 @@ package de.tum.in.tumcampusapp.activities.wizard;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.widget.TextView;
@@ -133,7 +132,7 @@ public class WizNavCheckTokenActivity extends ActivityForLoadingInBackground<Voi
         textView.setClickable(true);
         textView.setMovementMethod(LinkMovementMethod.getInstance());
         String url = "<a href='http://campus.tum.de'>TUMOnline</a>";
-        textView.setText(Html.fromHtml(url));
+        textView.setText(Utils.fromHtml(url));
     }
 
     /**

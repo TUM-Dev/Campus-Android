@@ -19,7 +19,6 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.Toolbar;
-import android.text.Html;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -50,13 +49,13 @@ import de.tum.in.tumcampusapp.auxiliary.ImplicitCounter;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.exceptions.NoPrivateKey;
-import de.tum.in.tumcampusapp.models.GCMChat;
-import de.tum.in.tumcampusapp.models.TUMCabeClient;
 import de.tum.in.tumcampusapp.models.ChatMember;
 import de.tum.in.tumcampusapp.models.ChatMessage;
 import de.tum.in.tumcampusapp.models.ChatPublicKey;
 import de.tum.in.tumcampusapp.models.ChatRoom;
 import de.tum.in.tumcampusapp.models.ChatVerification;
+import de.tum.in.tumcampusapp.models.GCMChat;
+import de.tum.in.tumcampusapp.models.TUMCabeClient;
 import de.tum.in.tumcampusapp.models.managers.CardManager;
 import de.tum.in.tumcampusapp.models.managers.ChatMessageManager;
 import de.tum.in.tumcampusapp.models.managers.ChatRoomManager;
@@ -551,7 +550,7 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
 
                 new AlertDialog.Builder(ChatActivity.this)
                         .setTitle(R.string.message_details)
-                        .setMessage(Html.fromHtml(messageStr))
+                        .setMessage(Utils.fromHtml(messageStr))
                         .create().show();
             }
 
