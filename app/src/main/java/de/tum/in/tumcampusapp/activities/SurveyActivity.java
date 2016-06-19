@@ -117,8 +117,6 @@ public class SurveyActivity extends ProgressActivity {
             DateTime endDate = fmt.parseDateTime(c.getString(c.getColumnIndex("end")));
             Duration tillDeleteDay = new Duration(DateTime.now(),endDate);
             long autoDeleteIn = tillDeleteDay.getStandardDays();
-            Utils.log("AutoDelete in: " + autoDeleteIn);
-
 
             String questionText = c.getString(c.getColumnIndex("text"));
             int yes = c.getInt(c.getColumnIndex("yes"));
@@ -154,9 +152,14 @@ public class SurveyActivity extends ProgressActivity {
             tvparams1.setMargins(50, 10, 0, 0);
             endDateTV.setLayoutParams(tvparams1);
             endDateTV.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.color_primary_dark));
+            endDateTV.setTextSize(10);
             endDateTV.setTypeface(null, Typeface.BOLD);
             //setText(question)
-            endDateTV.setText("Will be Automatically in " +autoDeleteIn+" days");
+            if(autoDeleteIn <= 0){
+                endDateTV.setText("This question will be automatically today");
+            }else {
+                endDateTV.setText("This question will be automatically in " +autoDeleteIn+" days");
+            }
             l1.addView(endDateTV);
 
             //adding quesion tv
