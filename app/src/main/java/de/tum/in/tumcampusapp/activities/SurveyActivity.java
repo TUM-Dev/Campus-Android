@@ -148,10 +148,21 @@ public class SurveyActivity extends ProgressActivity {
             l2.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 0.3f));
             l2.setOrientation(LinearLayout.VERTICAL);
             l.addView(l2);
+
+            TextView endDateTV = new TextView(this);
+            LinearLayout.LayoutParams tvparams1 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            tvparams1.setMargins(50, 10, 0, 0);
+            endDateTV.setLayoutParams(tvparams1);
+            endDateTV.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.color_primary_dark));
+            endDateTV.setTypeface(null, Typeface.BOLD);
+            //setText(question)
+            endDateTV.setText("Will be Automatically in " +autoDeleteIn+" days");
+            l1.addView(endDateTV);
+
             //adding quesion tv
             TextView questionTv = new TextView(this);
             LinearLayout.LayoutParams tvparams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-            tvparams.setMargins(50, 0, 0, 0);
+            tvparams.setMargins(50, 10, 0, 0);
             questionTv.setLayoutParams(tvparams);
             questionTv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.color_primary_dark));
             questionTv.setTypeface(null, Typeface.BOLD);
@@ -171,7 +182,7 @@ public class SurveyActivity extends ProgressActivity {
             RelativeLayout r = new RelativeLayout(this);
             LinearLayout.LayoutParams Params = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-            Params.setMargins(50, 50, 50, 50);
+            Params.setMargins(50, 10, 50, 50);
             ques.addView(r, Params);
 
             float inPixels2 = getResources().getDimension(R.dimen.dimen_progressHeight_in_dp);
