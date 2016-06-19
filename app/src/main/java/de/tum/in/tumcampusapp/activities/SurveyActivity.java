@@ -156,9 +156,9 @@ public class SurveyActivity extends ProgressActivity {
             endDateTV.setTypeface(null, Typeface.BOLD);
             //setText(question)
             if(autoDeleteIn <= 0){
-                endDateTV.setText("This question will be automatically today");
+                endDateTV.setText("This question will be automatically deleted today");
             }else {
-                endDateTV.setText("This question will be automatically in " +autoDeleteIn+" days");
+                endDateTV.setText("This question will be automatically deleted in " +autoDeleteIn+" days");
             }
             l1.addView(endDateTV);
 
