@@ -2,11 +2,10 @@ apply plugin: 'com.android.library'
 
 android {
     lintOptions {
-        disable "GoogleAppIndexingWarning",
-                "TrulyRandom",
+        disable "TrulyRandom",
                 "ContentDescription",
                 "UnusedResources",    // unused resources get purged by shrinkResources
-                "SelectableText"     // disabled by default
+                "SelectableText"      // disabled by default
     }
     defaultConfig {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
