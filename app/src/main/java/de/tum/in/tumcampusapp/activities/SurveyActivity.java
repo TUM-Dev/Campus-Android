@@ -113,12 +113,13 @@ public class SurveyActivity extends ProgressActivity {
         int numberofquestion = c.getCount();
         //get response and question from database->set i<Number of question
         for (int i = 0; i < numberofquestion; i++) {
-
-            DateTime endDate = fmt.parseDateTime(c.getString(c.getColumnIndex("end")));
-            Duration tillDeleteDay = new Duration(endDate,DateTime.now());
-            long autoDeleteIn = tillDeleteDay.getStandardDays();
-
             c.moveToNext();
+            DateTime endDate = fmt.parseDateTime(c.getString(c.getColumnIndex("end")));
+            Duration tillDeleteDay = new Duration(DateTime.now(),endDate);
+            long autoDeleteIn = tillDeleteDay.getStandardDays();
+            Utils.log("AutoDelete in: " + autoDeleteIn);
+
+
             String questionText = c.getString(c.getColumnIndex("text"));
             int yes = c.getInt(c.getColumnIndex("yes"));
             int no = c.getInt(c.getColumnIndex("no"));
