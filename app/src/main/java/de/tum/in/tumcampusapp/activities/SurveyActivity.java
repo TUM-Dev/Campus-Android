@@ -30,6 +30,14 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TabHost;
 import android.widget.TextView;
+
+import org.joda.time.DateTime;
+import org.joda.time.Duration;
+import org.joda.time.Instant;
+import org.joda.time.Interval;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -100,10 +108,15 @@ public class SurveyActivity extends ProgressActivity {
     //set up the respone tab layout dynamically depending on number of questions
     @SuppressLint("SetTextI18n")
     private void setUpResponseTab() {
+        DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss"); // For converting Jade DateTime into String & vic versa (see show and discard functions)
         Cursor c = surveyManager.getMyRelevantOwnQuestionsSince(Utils.getDateTimeString(new Date()));
         int numberofquestion = c.getCount();
         //get response and question from database->set i<Number of question
         for (int i = 0; i < numberofquestion; i++) {
+
+            DateTime endDate = fmt.parseDateTime(c.getString(c.getColumnIndex("end")));
+            Duration tillDeleteDay = new Duration(endDate,DateTime.now());
+            long autoDeleteIn = tillDeleteDay.getStandardDays();
 
             c.moveToNext();
             String questionText = c.getString(c.getColumnIndex("text"));
