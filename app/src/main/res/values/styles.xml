@@ -19,6 +19,22 @@
         <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
     </style>
 
+    <style name="AppTheme.WhiteBackground" parent="AppTheme">
+        <item name="android:background">#ffffffff</item>
+    </style>
+
+    <style name="AppTheme.SectionsBlueBackground" parent="AppTheme">
+        <item name="android:background">@color/sections_blue</item>
+    </style>
+
+    <style name="AppTheme.SectionsGreyBackground" parent="AppTheme">
+        <item name="android:background">@color/sections_gray</item>
+    </style>
+
+    <style name="AppTheme.DrawerHeaderBackground" parent="AppTheme">
+        <item name="android:background">@drawable/wear_tuition_fee</item>
+    </style>
+
     <style name="AppThemeStartup" parent="Theme.AppCompat.NoActionBar">
         <item name="colorPrimaryDark">@color/color_primary_dark</item>
         <item name="android:windowBackground">@color/color_primary</item>

@@ -4,7 +4,6 @@ android {
     lintOptions {
         disable "GoogleAppIndexingWarning",
                 "TrulyRandom",
-                "Overdraw",
                 "ContentDescription",
                 "UnusedResources",    // unused resources get purged by shrinkResources
                 "SelectableText"     // disabled by default
