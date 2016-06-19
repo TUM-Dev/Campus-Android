@@ -44,18 +44,7 @@
     <string name="dialog_access_token_invalid">TUMOnline-Access-Token not enabled</string>
     <string name="dialog_no_rights_function">No rights to access this function</string>
     <string name="empty_result">The operation delivered a faulty result</string>
-
-    <!-- Exam/Grades -->
-    <string name="average_grade">Average grade</string>
-    <string name="show_column_chart">Show Column Chart</string>
-    <string name="show_pie_chart">Show Pie Chart</string>
-    <string name="result_extra">Result:&#160;</string>
-    <string name="semester">Semester</string>
-    <string name="examiner">Examiner</string>
-    <string name="mode">Mode</string>
-    <string name="all_programs">All programs</string>
     <string name="date">Date</string>
-    <string name="credits" translatable="false">ECTS</string>
 
     <!-- Preferences -->
     <string name="lrz_id">LRZ Identification</string>
@@ -124,7 +113,6 @@
     <string name="my_tum">My TUM</string>
     <string name="schedule">Calendar</string>
     <string name="my_lectures">My Lectures</string>
-    <string name="my_grades">My Grades</string>
     <string name="chat_rooms">Chat rooms</string>
     <string name="tuition_fees">Tuition Fees</string>
     <string name="tum_common">General TUM</string>

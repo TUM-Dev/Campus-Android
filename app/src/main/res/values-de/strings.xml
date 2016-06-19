@@ -37,16 +37,6 @@
     <string name="dialog_access_token_invalid">TUMOnline-Access-Token nicht aktiviert</string>
     <string name="dialog_no_rights_function">Keine Rechte für diese Funktion</string>
     <string name="empty_result">Die Anfrage lieferte ein fehlerhaftes Ergebnis</string>
-
-    <!-- Exam/Grades -->
-    <string name="average_grade">Durchschnittsnote</string>
-    <string name="show_column_chart">Zeige als Balkendiagramm</string>
-    <string name="show_pie_chart">Zeige als Tortendiagramm</string>
-    <string name="result_extra">Ergebnis:&#160;</string>
-    <string name="semester">Semester</string>
-    <string name="examiner">Prüfer</string>
-    <string name="mode">Modus</string>
-    <string name="all_programs">Alle Programme</string>
     <string name="date">Datum</string>
 
     <!-- Preferences -->
@@ -122,7 +112,6 @@
     <string name="my_tum">Mein TUM</string>
     <string name="schedule">Kalender</string>
     <string name="my_lectures">Meine Vorlesungen</string>
-    <string name="my_grades">Meine Noten</string>
     <string name="chat_rooms">Chatrooms</string>
     <string name="tuition_fees">Rückmeldung</string>
     <string name="tum_common">TUM Allgemein</string>
