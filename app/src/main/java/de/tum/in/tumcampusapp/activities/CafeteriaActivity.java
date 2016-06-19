@@ -1,8 +1,11 @@
 package de.tum.in.tumcampusapp.activities;
 
+import android.app.AlarmManager;
 import android.app.AlertDialog;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -13,9 +16,11 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.ToggleButton;
 
+import java.util.Calendar;
 import java.util.List;
-
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.ActivityForDownloadingExternal;
 import de.tum.in.tumcampusapp.adapters.CafeteriaDetailsSectionsPagerAdapter;
@@ -24,6 +29,7 @@ import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.Cafeteria;
 import de.tum.in.tumcampusapp.models.managers.LocationManager;
+import de.tum.in.tumcampusapp.services.FavoriteDishReceiver;
 
 import static de.tum.in.tumcampusapp.fragments.CafeteriaDetailsSectionFragment.menuToSpan;
 
@@ -44,34 +50,55 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
     }
 
     @Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-		// Get id from intent if specified
+        // Get id from intent if specified
         final Intent intent = getIntent();
         if(intent!=null && intent.getExtras()!=null && intent.getExtras().containsKey(Const.CAFETERIA_ID))
-    		mCafeteriaId = intent.getExtras().getInt(Const.CAFETERIA_ID);
+            mCafeteriaId = intent.getExtras().getInt(Const.CAFETERIA_ID);
         mViewPager = (ViewPager) findViewById(R.id.pager);
-	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
+        /**
+         * when dish marked as favorite create an alarm on specific date using calendar and alarManager
+         * call the FavoriteDishReceiver
+
+         Calendar calendar = Calendar.getInstance();
+         calendar.set(Calendar.MONTH, 6);
+         calendar.set(Calendar.YEAR, 2016);
+         calendar.set(Calendar.DAY_OF_MONTH, 19);
+
+         calendar.set(Calendar.HOUR_OF_DAY, 5);
+         calendar.set(Calendar.MINUTE, 00);
+         calendar.set(Calendar.SECOND, 0);
+         calendar.set(Calendar.AM_PM,Calendar.AM);
+         Intent myIntent = new Intent(CafeteriaActivity.this, FavoriteDishReceiver.class);
+         PendingIntent pendingIntent = PendingIntent.getBroadcast(CafeteriaActivity.this, 0, myIntent,0);
+         AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
+         alarmManager.set(AlarmManager.RTC, System.currentTimeMillis()+5000, pendingIntent);
+
+         */
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
         // Add info icon to show ingredients
-		getMenuInflater().inflate(R.menu.menu_section_fragment_cafeteria_details, menu);
-		return true;
-	}
+        getMenuInflater().inflate(R.menu.menu_section_fragment_cafeteria_details, menu);
+        return true;
+    }
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		if(item.getItemId()==R.id.action_ingredients) {
-			// Build a alert dialog containing the mapping of ingredients to the numbers
-			new AlertDialog.Builder(this).setTitle(R.string.action_ingredients)
-			    .setMessage(menuToSpan(this, getResources().getString(R.string.cafeteria_ingredients)))
-                .setPositiveButton(android.R.string.ok, null).create().show();
-			return true;
-		}
-		return super.onOptionsItemSelected(item);
-	}
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId()==R.id.action_ingredients) {
+            // Build a alert dialog containing the mapping of ingredients to the numbers
+            new AlertDialog.Builder(this).setTitle(R.string.action_ingredients)
+                    .setMessage(menuToSpan(this, getResources().getString(R.string.cafeteria_ingredients)))
+                    .setPositiveButton(android.R.string.ok, null).create().show();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     /**
      * Setup action bar navigation (to switch between cafeterias)

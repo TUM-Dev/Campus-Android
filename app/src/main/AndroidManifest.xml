@@ -506,6 +506,13 @@
             </intent-filter>
         </receiver>
 
+        <!-- Used to set Notification for favoriteDish -->
+        <receiver android:name="de.tum.in.tumcampusapp.services.FavoriteDishReceiver"/>
+
+        <service
+            android:name="de.tum.in.tumcampusapp.services.FavoriteDishService"
+            android:enabled="true"/>
+
         <service
             android:name=".services.DownloadService"
             android:exported="false" />
