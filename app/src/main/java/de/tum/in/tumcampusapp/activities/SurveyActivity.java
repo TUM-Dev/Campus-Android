@@ -129,11 +129,11 @@ public class SurveyActivity extends ProgressActivity {
             String[] targetFacsIds = c.getString(c.getColumnIndex("targetFac")).split(",");
             Utils.log("Selectedfacs Arrays.String: " + Arrays.toString(targetFacsIds));
 
-            final ArrayList<String> targetFacsNames = new ArrayList<>();
+            final String[] targetFacsNames = new String[targetFacsIds.length];
             for (int x = 0; x < targetFacsIds.length; x++) {
                 Cursor cursor = surveyManager.getFacultyName(targetFacsIds[x]);
                 if (cursor.moveToFirst()) {
-                    targetFacsNames.add(cursor.getString(cursor.getColumnIndex("name")));
+                    targetFacsNames[x]=cursor.getString(cursor.getColumnIndex("name"));
                 }
             }
 
@@ -272,13 +272,13 @@ public class SurveyActivity extends ProgressActivity {
 
         @Override
         public void onClick(final View v) {
-            String[] faculties = (String[]) v.getTag();
+            String[] faculties = (String[])v.getTag();
             String chosenFaculties = "";
             for (int i = 0; i < faculties.length; i++) {
                 chosenFaculties += faculties[i] + "\n";
             }
 
-            new android.app.AlertDialog.Builder(context).setTitle("chosen facs")
+            new android.app.AlertDialog.Builder(context).setTitle(getResources().getString(R.string.selected_target_faculties))
                     .setMessage(chosenFaculties)
                     .setPositiveButton(android.R.string.ok, null).create().show();
         }
