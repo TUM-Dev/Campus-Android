@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -44,6 +45,7 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
     private int mCafeteriaId = -1;
     private CafeteriaDetailsSectionsPagerAdapter mSectionsPagerAdapter;
     private List<Cafeteria> mCafeterias;
+    ToggleButton favDish;
 
     public CafeteriaActivity() {
         super(Const.CAFETERIAS, R.layout.activity_cafeteria);
@@ -56,29 +58,8 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
         // Get id from intent if specified
         final Intent intent = getIntent();
         if(intent!=null && intent.getExtras()!=null && intent.getExtras().containsKey(Const.CAFETERIA_ID))
-            mCafeteriaId = intent.getExtras().getInt(Const.CAFETERIA_ID);
+        mCafeteriaId = intent.getExtras().getInt(Const.CAFETERIA_ID);
         mViewPager = (ViewPager) findViewById(R.id.pager);
-
-        /**
-         * when dish marked as favorite create an alarm on specific date using calendar and alarManager
-         * call the FavoriteDishReceiver
-
-         Calendar calendar = Calendar.getInstance();
-         calendar.set(Calendar.MONTH, 6);
-         calendar.set(Calendar.YEAR, 2016);
-         calendar.set(Calendar.DAY_OF_MONTH, 19);
-
-         calendar.set(Calendar.HOUR_OF_DAY, 5);
-         calendar.set(Calendar.MINUTE, 00);
-         calendar.set(Calendar.SECOND, 0);
-         calendar.set(Calendar.AM_PM,Calendar.AM);
-         Intent myIntent = new Intent(CafeteriaActivity.this, FavoriteDishReceiver.class);
-         PendingIntent pendingIntent = PendingIntent.getBroadcast(CafeteriaActivity.this, 0, myIntent,0);
-         AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
-         alarmManager.set(AlarmManager.RTC, System.currentTimeMillis()+5000, pendingIntent);
-
-         */
-
     }
 
     @Override
@@ -99,6 +80,7 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
         }
         return super.onOptionsItemSelected(item);
     }
+
 
     /**
      * Setup action bar navigation (to switch between cafeterias)
