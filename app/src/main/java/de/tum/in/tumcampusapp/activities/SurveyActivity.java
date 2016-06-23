@@ -15,6 +15,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AlertDialog;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -41,6 +42,7 @@ import org.joda.time.format.DateTimeFormatter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -119,6 +121,9 @@ public class SurveyActivity extends ProgressActivity {
             long autoDeleteIn = tillDeleteDay.getStandardDays();
 
             String questionText = c.getString(c.getColumnIndex("text"));
+            String [] targetFacs = c.getString(c.getColumnIndex("targetFac")).split(",");
+            Utils.log("Selectedfacs Arrays.String: " + Arrays.toString(targetFacs));
+
             int yes = c.getInt(c.getColumnIndex("yes"));
             int no = c.getInt(c.getColumnIndex("no"));
             int total = yes + no;
