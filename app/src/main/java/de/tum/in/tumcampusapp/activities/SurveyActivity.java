@@ -47,6 +47,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.ProgressActivity;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
@@ -108,7 +109,8 @@ public class SurveyActivity extends ProgressActivity {
     }
 
     @Override
-    public void onRefresh() {}
+    public void onRefresh() {
+    }
 
     //set up the respone tab layout dynamically depending on number of questions
     @SuppressLint("SetTextI18n")
@@ -120,12 +122,21 @@ public class SurveyActivity extends ProgressActivity {
         for (int i = 0; i < numberofquestion; i++) {
             c.moveToNext();
             DateTime endDate = fmt.parseDateTime(c.getString(c.getColumnIndex("end")));
-            Duration tillDeleteDay = new Duration(DateTime.now(),endDate);
+            Duration tillDeleteDay = new Duration(DateTime.now(), endDate);
             long autoDeleteIn = tillDeleteDay.getStandardDays();
 
             String questionText = c.getString(c.getColumnIndex("text"));
-            String [] targetFacsIds = c.getString(c.getColumnIndex("targetFac")).split(",");
+            String[] targetFacsIds = c.getString(c.getColumnIndex("targetFac")).split(",");
             Utils.log("Selectedfacs Arrays.String: " + Arrays.toString(targetFacsIds));
+
+            final ArrayList<String> targetFacsNames = new ArrayList<>();
+            for (int x = 0; x < targetFacsIds.length; x++) {
+                Cursor cursor = surveyManager.getFacultyName(targetFacsIds[x]);
+                if (cursor.moveToFirst()) {
+                    targetFacsNames.add(cursor.getString(cursor.getColumnIndex("name")));
+                }
+            }
+
 
             int yes = c.getInt(c.getColumnIndex("yes"));
             int no = c.getInt(c.getColumnIndex("no"));
@@ -163,10 +174,10 @@ public class SurveyActivity extends ProgressActivity {
             endDateTV.setTextSize(10);
             endDateTV.setTypeface(null, Typeface.BOLD);
             //setText(question)
-            if(autoDeleteIn <= 0){
+            if (autoDeleteIn <= 0) {
                 endDateTV.setText("This question will be automatically deleted today");
-            }else {
-                endDateTV.setText("This question will be automatically deleted in " +autoDeleteIn+" days");
+            } else {
+                endDateTV.setText("This question will be automatically deleted in " + autoDeleteIn + " days");
             }
             l1.addView(endDateTV);
 
@@ -190,12 +201,12 @@ public class SurveyActivity extends ProgressActivity {
             l2.addView(deleteButton);
 
             Button infoButton = new Button(this);
-            LinearLayout.LayoutParams infoButtonParams = new LinearLayout.LayoutParams((int) inPixels,(int) inPixels);
-            infoButtonParams.setMargins(0,10,0,0);
+            LinearLayout.LayoutParams infoButtonParams = new LinearLayout.LayoutParams((int) inPixels, (int) inPixels);
+            infoButtonParams.setMargins(0, 10, 0, 0);
             infoButton.setLayoutParams(infoButtonParams);
             infoButton.setBackgroundResource((R.drawable.ic_action_about_blue));
             infoButton.setOnClickListener(showFaculties);
-            infoButton.setTag(targetFacs);
+            infoButton.setTag(targetFacsNames);
             l2.addView(infoButton);
 
             //adding progress bar with answers
@@ -261,10 +272,11 @@ public class SurveyActivity extends ProgressActivity {
 
         @Override
         public void onClick(final View v) {
-            String [] faculties=(String[])v.getTag();
-            String chosenFaculties="";
-            for(int i=0;i<faculties.length;i++)
-                chosenFaculties+=faculties[i]+"\n";
+            String[] faculties = (String[]) v.getTag();
+            String chosenFaculties = "";
+            for (int i = 0; i < faculties.length; i++) {
+                chosenFaculties += faculties[i] + "\n";
+            }
 
             new android.app.AlertDialog.Builder(context).setTitle("chosen facs")
                     .setMessage(chosenFaculties)
@@ -275,6 +287,7 @@ public class SurveyActivity extends ProgressActivity {
 
     /**
      * provides a smooth zoomOut delete animation of the question
+     *
      * @param v: view to be deleted, where an ownQuestion with respective responses gets deleted
      */
     private void zoomOutanimation(View v) {
@@ -299,7 +312,6 @@ public class SurveyActivity extends ProgressActivity {
             }
         });
     }
-
 
 
     /**
@@ -394,8 +406,9 @@ public class SurveyActivity extends ProgressActivity {
 
                 //get user questions to submit them.
                 getSurveyData();
-                if (questions.isEmpty())
+                if (questions.isEmpty()) {
                     return;
+                }
                 // facultyIds to be sent to server upon submitting question(s)
                 final ArrayList<String> selectedFacIds = new ArrayList<>();
 
@@ -497,8 +510,7 @@ public class SurveyActivity extends ProgressActivity {
         }
         if (done) { // if plausibility passed, then save selected faculties as they will be needed upon submitting question
             return questions;
-        }
-        else { // else notify the user with a snackbar to complete the question form
+        } else { // else notify the user with a snackbar to complete the question form
             Snackbar.make(findViewById(R.id.drawer_layout), getResources().getString(R.string.complete_question_form), Snackbar.LENGTH_LONG).show();
             return questions;
         }
@@ -516,7 +528,7 @@ public class SurveyActivity extends ProgressActivity {
         numOfQuestionsSpinner.setSelection(0); //
     }
 
-     /**
+    /**
      * Sets up tabhost for submitting questions and reviewing responses
      */
     private void setUpTabHost() {
@@ -577,7 +589,7 @@ public class SurveyActivity extends ProgressActivity {
     private void setUpSpinnerForQuestionsNumber() {
         TextView selectNumberOfQuesionsTV = (TextView) findViewById(R.id.selectTv);
 
-        String [] numQues=new String[]{"1","2","3"};
+        String[] numQues = new String[]{"1", "2", "3"};
         String weekAgo = getDateBefore1Week();
         Cursor c = surveyManager.ownQuestionsSince(weekAgo); // gets number of questions submitted during last week
         if (c.getCount() > 0) {
@@ -589,8 +601,8 @@ public class SurveyActivity extends ProgressActivity {
             for (int i = 0; i < numQues.length; i++) {
                 numQues[i] = String.valueOf(i + 1);
             }
-        if (x == 2) {
-            selectNumberOfQuesionsTV.setText(getResources().getString(R.string.one_question_left));
+            if (x == 2) {
+                selectNumberOfQuesionsTV.setText(getResources().getString(R.string.one_question_left));
             }
         } else { // else notify user he reached the max. number of questions this week and show him the next possible date for entering questions
             String strDate = getNextPossibleDate();
@@ -636,6 +648,7 @@ public class SurveyActivity extends ProgressActivity {
 
     /**
      * Help function for get Date before 1 week to check if user allowed to submit survey
+     *
      * @return return this date as a string
      */
     private String getDateBefore1Week() {
@@ -648,6 +661,7 @@ public class SurveyActivity extends ProgressActivity {
 
     /**
      * Get the next possible date for the user to enter survey questions
+     *
      * @return this date as a string
      */
     private String getNextPossibleDate() {

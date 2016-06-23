@@ -119,7 +119,7 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
 
                             if(favDish.isChecked())
                             {
-                                new CafeteriaMenuManager(context).insertFavoriteDish(Integer.parseInt(favDish.getTag().toString()));
+                                //new CafeteriaMenuManager(context).insertFavoriteDish(Integer.parseInt(favDish.getTag().toString()));
 
                                /*Calendar calendar = Calendar.getInstance();
                                 calendar.set(Calendar.MONTH, 6);
@@ -142,7 +142,7 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
                              * remove alarms
                              */
                             else {
-                                new CafeteriaMenuManager(context).DeleteFavoriteDish(Integer.parseInt(favDish.getTag().toString()));
+                                //new CafeteriaMenuManager(context).DeleteFavoriteDish(Integer.parseInt(favDish.getTag().toString()));
                             }
                         }
                     });
