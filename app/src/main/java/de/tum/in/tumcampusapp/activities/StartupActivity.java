@@ -56,13 +56,7 @@ public class StartupActivity extends AppCompatActivity {
     private static String[] PERMISSIONS_LOCATION = {Manifest.permission.ACCESS_COARSE_LOCATION,
             Manifest.permission.ACCESS_FINE_LOCATION};
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState){
-        super.onCreate(savedInstanceState);
-
-        //Show a loading screen during boot
-        setContentView(R.layout.activity_startup);
-
+    private void init() {
         //Our own Custom exception handler
         ExceptionHandler.setup(getApplicationContext());
 
@@ -128,6 +122,21 @@ public class StartupActivity extends AppCompatActivity {
 
         //Request Permissions for Android 6.0
         requestLocationPermission();
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        //Show a loading screen during boot
+        setContentView(R.layout.activity_startup);
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                init();
+            }
+        }).start();
     }
 
     @Override

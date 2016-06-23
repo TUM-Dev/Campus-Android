@@ -1,13 +1,16 @@
 package de.tum.in.tumcampusapp.auxiliary;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.text.Html;
 import android.text.TextUtils;
+import android.text.Spanned;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -508,11 +511,12 @@ public final class Utils {
 
     /**
      * Removes all html tags from a string
+     *
      * @param html text which contains html tags
      * @return cleaned text without any tags
      */
     public static String stripHtml(String html) {
-        return Html.fromHtml(html).toString();
+        return fromHtml(html).toString();
     }
 
     public static boolean isBackgroundServicePermitted(Context context) {
@@ -535,5 +539,13 @@ public final class Utils {
     public static String arrayToString(String[] array)
     {
         return TextUtils.join(",",array);
+    }
+
+    @TargetApi(Build.VERSION_CODES.N)
+    @SuppressWarnings("deprecation")
+    public static Spanned fromHtml(String source) {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.N ?
+                Html.fromHtml(source, Html.FROM_HTML_MODE_LEGACY) :
+                Html.fromHtml(source);
     }
 }

@@ -60,7 +60,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/status_sent"
-                android:src="@drawable/message_got_receipt_from_server"
+                android:src="@drawable/ic_done"
                 android:textSize="12sp"
                 android:visibility="gone" />
         </LinearLayout>

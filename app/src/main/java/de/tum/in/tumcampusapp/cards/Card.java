@@ -1,5 +1,6 @@
 package de.tum.in.tumcampusapp.cards;
 
+import android.app.Activity;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -7,6 +8,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.widget.PopupMenu;
@@ -231,7 +234,7 @@ public abstract class Card {
             NotificationManagerCompat notificationManager = NotificationManagerCompat.from(mContext);
             try {
                 notificationManager.notify(getTyp(), notification);
-            }catch (IllegalArgumentException e){
+            } catch (IllegalArgumentException e) {
                 //Dismiss exception, as we want this to happen (Only work on wear)
             }
             // Showing a notification is handled as it would already be dismissed, so that it will not notify again.
@@ -313,11 +316,13 @@ public abstract class Card {
     public static class CardViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener, PopupMenu.OnMenuItemClickListener {
         private Card current;
         private List<View> addedViews = new ArrayList<>();
+        private final Activity mActivity;
 
         public CardViewHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
             itemView.setOnLongClickListener(this);
+            mActivity = (Activity) itemView.getContext();
         }
 
         public Card getCurrentCard() {
@@ -339,8 +344,12 @@ public abstract class Card {
         @Override
         public void onClick(View v) {
             Intent i = current.getIntent();
+            String transitionName = mActivity.getString(R.string.transition_card);
             if (i != null) {
-                itemView.getContext().startActivity(i);
+                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                        mActivity, v, transitionName
+                );
+                ActivityCompat.startActivity(mActivity, i, options.toBundle());
             }
         }
 

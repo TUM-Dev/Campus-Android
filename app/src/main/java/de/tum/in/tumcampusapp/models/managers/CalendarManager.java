@@ -1,16 +1,18 @@
 package de.tum.in.tumcampusapp.models.managers;
 
+import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.IntentService;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.CalendarContract;
-import android.util.Log;
+import android.support.v4.app.ActivityCompat;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -161,6 +163,9 @@ public class CalendarManager extends AbstractManager implements Card.ProvidesCar
 
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     private static void addEvents(Context c, Uri uri) {
+        if (ActivityCompat.checkSelfPermission(c, Manifest.permission.WRITE_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
         // Get ID
         ContentResolver contentResolver = c.getContentResolver();
         Cursor cursor2 = contentResolver.query(uri, projection, null, null, null);

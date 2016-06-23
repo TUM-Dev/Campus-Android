@@ -5,7 +5,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +21,7 @@ import java.util.Locale;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.BaseActivity;
+import de.tum.in.tumcampusapp.auxiliary.Utils;
 
 public class EventActivity extends BaseActivity {
     private static final DateFormat dtf = new SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.GERMANY);
@@ -147,7 +147,7 @@ public class EventActivity extends BaseActivity {
 
                 tr.setLayoutParams(new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, 0, event.duration / (float) sumDuration));
                 timeView.setText(tf.format(event.startTime));
-                descriptionView.setText(Html.fromHtml(event.title));
+                descriptionView.setText(Utils.fromHtml(event.title));
                 table.addView(tr);
             }
             return view;

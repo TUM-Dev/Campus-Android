@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    style="@style/AppTheme.DrawerHeaderBackground"
     android:layout_width="match_parent"
     android:layout_height="172dp"
-    android:background="@drawable/wear_tuition_fee"
     android:orientation="vertical"
     android:paddingTop="20dp"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
@@ -25,14 +25,15 @@
         android:layout_marginLeft="20dp"
         android:layout_marginStart="20dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+
     <TextView
         android:id="@+id/email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:layout_marginBottom="20dp"
         android:layout_marginLeft="20dp"
         android:layout_marginStart="20dp"
-        android:layout_marginBottom="20dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
 </RelativeLayout>
