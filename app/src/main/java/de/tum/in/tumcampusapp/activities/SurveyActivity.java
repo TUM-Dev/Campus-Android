@@ -16,6 +16,7 @@ import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AlertDialog;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -57,6 +58,8 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
+import static de.tum.in.tumcampusapp.fragments.CafeteriaDetailsSectionFragment.menuToSpan;
+
 /**
  * SurveyActivity for handling submitting ownQuesitons and reviewing responses
  */
@@ -70,7 +73,7 @@ public class SurveyActivity extends ProgressActivity {
     private LinearLayout mainResponseLayout, questionsLayout;
     private ArrayList<String> fetchedFaculties = new ArrayList<>();
     private SurveyManager surveyManager;
-
+    final Context context = this;
     // for handling change in internet connectivity. If initially had no connection, then connected, then restart activity
     BroadcastReceiver connectivityChangeReceiver = new BroadcastReceiver() {
         @Override
@@ -186,6 +189,15 @@ public class SurveyActivity extends ProgressActivity {
             deleteButton.setTag(id);
             l2.addView(deleteButton);
 
+            Button infoButton = new Button(this);
+            LinearLayout.LayoutParams infoButtonParams = new LinearLayout.LayoutParams((int) inPixels,(int) inPixels);
+            infoButtonParams.setMargins(0,10,0,0);
+            infoButton.setLayoutParams(infoButtonParams);
+            infoButton.setBackgroundResource((R.drawable.ic_action_about_blue));
+            infoButton.setOnClickListener(showFaculties);
+            infoButton.setTag(targetFacs);
+            l2.addView(infoButton);
+
             //adding progress bar with answers
             RelativeLayout r = new RelativeLayout(this);
             LinearLayout.LayoutParams Params = new LinearLayout.LayoutParams(
@@ -241,6 +253,22 @@ public class SurveyActivity extends ProgressActivity {
             } else {
                 restartActivity();
             }
+        }
+
+    };
+
+    View.OnClickListener showFaculties = new View.OnClickListener() {
+
+        @Override
+        public void onClick(final View v) {
+            String [] faculties=(String[])v.getTag();
+            String chosenFaculties="";
+            for(int i=0;i<faculties.length;i++)
+                chosenFaculties+=faculties[i]+"\n";
+
+            new android.app.AlertDialog.Builder(context).setTitle("chosen facs")
+                    .setMessage(chosenFaculties)
+                    .setPositiveButton(android.R.string.ok, null).create().show();
         }
 
     };
