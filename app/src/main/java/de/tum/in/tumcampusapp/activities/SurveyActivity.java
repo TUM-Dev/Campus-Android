@@ -202,7 +202,7 @@ public class SurveyActivity extends ProgressActivity {
 
             Button infoButton = new Button(this);
             LinearLayout.LayoutParams infoButtonParams = new LinearLayout.LayoutParams((int) inPixels, (int) inPixels);
-            infoButtonParams.setMargins(0, 10, 0, 0);
+            infoButtonParams.setMargins(0, 15, 0, 0);
             infoButton.setLayoutParams(infoButtonParams);
             infoButton.setBackgroundResource((R.drawable.ic_action_about_blue));
             infoButton.setOnClickListener(showFaculties);
@@ -275,7 +275,7 @@ public class SurveyActivity extends ProgressActivity {
             String[] faculties = (String[])v.getTag();
             String chosenFaculties = "";
             for (int i = 0; i < faculties.length; i++) {
-                chosenFaculties += faculties[i] + "\n";
+                chosenFaculties += "- " + faculties[i] + "\n";
             }
 
             new android.app.AlertDialog.Builder(context).setTitle(getResources().getString(R.string.selected_target_faculties))
