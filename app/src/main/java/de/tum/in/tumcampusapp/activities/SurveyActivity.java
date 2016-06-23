@@ -121,8 +121,8 @@ public class SurveyActivity extends ProgressActivity {
             long autoDeleteIn = tillDeleteDay.getStandardDays();
 
             String questionText = c.getString(c.getColumnIndex("text"));
-            String [] targetFacs = c.getString(c.getColumnIndex("targetFac")).split(",");
-            Utils.log("Selectedfacs Arrays.String: " + Arrays.toString(targetFacs));
+            String [] targetFacsIds = c.getString(c.getColumnIndex("targetFac")).split(",");
+            Utils.log("Selectedfacs Arrays.String: " + Arrays.toString(targetFacsIds));
 
             int yes = c.getInt(c.getColumnIndex("yes"));
             int no = c.getInt(c.getColumnIndex("no"));

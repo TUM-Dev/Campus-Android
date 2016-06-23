@@ -293,6 +293,9 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
         return db.rawQuery("SELECT faculty FROM faculties WHERE name=?", new String[]{facultyName});
     }
 
+    public Cursor getFacultyName(String facultyID) {
+        return db.rawQuery("SELECT name FROM faculties WHERE faculty=?", new String[]{facultyID});
+    }
 
     /**
      * Fetches the facultyData from the server and saves it in the local db
