@@ -12,23 +12,27 @@
         <item name="android:textSize">@dimen/section_text_size</item>
     </style>
 
-    <style name="TimeSectionLine">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">@dimen/time_line_thickness</item>
-        <item name="android:background">@color/sections_gray</item>
-    </style>
-
-    <style name="TimeSectionTime">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:gravity">center</item>
-    </style>
-
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/color_primary</item>
         <item name="colorPrimaryDark">@color/color_primary_dark</item>
         <item name="colorAccent">@color/color_primary</item>
         <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
+    </style>
+
+    <style name="AppTheme.WhiteBackground" parent="AppTheme">
+        <item name="android:background">#ffffffff</item>
+    </style>
+
+    <style name="AppTheme.SectionsBlueBackground" parent="AppTheme">
+        <item name="android:background">@color/sections_blue</item>
+    </style>
+
+    <style name="AppTheme.SectionsGreyBackground" parent="AppTheme">
+        <item name="android:background">@color/sections_gray</item>
+    </style>
+
+    <style name="AppTheme.DrawerHeaderBackground" parent="AppTheme">
+        <item name="android:background">@drawable/wear_tuition_fee</item>
     </style>
 
     <style name="AppThemeStartup" parent="Theme.AppCompat.NoActionBar">
@@ -76,11 +80,6 @@
 
     <style name="ButtonBarButton">
         <item name="android:minHeight">48dp</item>
-    </style>
-
-    <style name="fade_animation">
-        <item name="@android:windowEnterAnimation">@anim/fadein</item>
-        <item name="@android:windowExitAnimation">@anim/fadeout</item>
     </style>
 
     <style name="FlatButton" parent="@android:style/TextAppearance.Medium">

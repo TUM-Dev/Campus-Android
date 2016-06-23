@@ -44,18 +44,7 @@
     <string name="dialog_access_token_invalid">TUMOnline-Access-Token not enabled</string>
     <string name="dialog_no_rights_function">No rights to access this function</string>
     <string name="empty_result">The operation delivered a faulty result</string>
-
-    <!-- Exam/Grades -->
-    <string name="average_grade">Average grade</string>
-    <string name="show_column_chart">Show Column Chart</string>
-    <string name="show_pie_chart">Show Pie Chart</string>
-    <string name="result_extra">Result:&#160;</string>
-    <string name="semester">Semester</string>
-    <string name="examiner">Examiner</string>
-    <string name="mode">Mode</string>
-    <string name="all_programs">All programs</string>
     <string name="date">Date</string>
-    <string name="credits" translatable="false">ECTS</string>
 
     <!-- Preferences -->
     <string name="lrz_id">LRZ Identification</string>
@@ -124,7 +113,6 @@
     <string name="my_tum">My TUM</string>
     <string name="schedule">Calendar</string>
     <string name="my_lectures">My Lectures</string>
-    <string name="my_grades">My Grades</string>
     <string name="chat_rooms">Chat rooms</string>
     <string name="tuition_fees">Tuition Fees</string>
     <string name="tum_common">General TUM</string>
@@ -154,14 +142,12 @@
     <string name="extra">Extra</string>
     <string name="extra_name">Extra Name</string>
     <string name="identifier">Identifier</string>
-    <string name="exception_sdcard">Error accessing the SD-Card</string>
     <string name="adress">Address</string>
     <string name="name">Name</string>
 
     <!-- MVV -->
     <string name="no_departures_found">No departures available</string>
     <string name="exception_unknown">Unknown error</string>
-    <string name="exception_timeout">Problems with internet connection, please try again later</string>
     <string name="search_station">Search station</string>
 
     <!-- Lectures -->
@@ -479,6 +465,7 @@ Signature: %5$s</string>
     <string name="event_plan">Event plan</string>
     <string name="please_connect_to_internet" translatable="false">Please connect to internet in order to proceed the first app start</string>
     <string name="card_survey_summary" translatable="false">enables you to participate in research related survey questions</string>
+    <string name="transition_card" translatable="false">card_transition</string>
 </resources>
 
 

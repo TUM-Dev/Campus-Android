@@ -40,14 +40,18 @@ public class DownloadService extends IntentService {
     private static final String LAST_UPDATE = "last_update";
     private static final String CSV_LOCATIONS = "locations.csv";
 
-    private final LocalBroadcastManager broadcastManager;
+    private LocalBroadcastManager broadcastManager = null;
 
     /**
      * default init (run intent in new thread)
      */
     public DownloadService() {
         super(DOWNLOAD_SERVICE);
-        broadcastManager = LocalBroadcastManager.getInstance(this);
+        try {
+            broadcastManager = LocalBroadcastManager.getInstance(this);
+        } catch (NullPointerException e) { //Sometimes this will throw a NPE - dunno why @// TODO: 6/22/16
+            //Do nothing
+        }
     }
 
     /**
@@ -191,7 +195,10 @@ public class DownloadService extends IntentService {
         if (message != null) {
             intentSend.putExtra(Const.MESSAGE, message);
         }
-        broadcastManager.sendBroadcast(intentSend);
+
+        if (broadcastManager != null) {
+            broadcastManager.sendBroadcast(intentSend);
+        }
     }
 
     /**

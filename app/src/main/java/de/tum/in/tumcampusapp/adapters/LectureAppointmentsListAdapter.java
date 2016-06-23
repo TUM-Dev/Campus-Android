@@ -1,7 +1,6 @@
 package de.tum.in.tumcampusapp.adapters;
 
 import android.content.Context;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +15,7 @@ import java.util.List;
 import java.util.Locale;
 
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.LectureAppointmentsRow;
 
 /**
@@ -111,7 +111,7 @@ public class LectureAppointmentsListAdapter extends BaseAdapter {
                     output = "<font color=\"#444444\">" + output + "</font>";
                 }
 
-                holder.tvTerminZeit.setText(Html.fromHtml(output));
+                holder.tvTerminZeit.setText(Utils.fromHtml(output));
 
             } catch (ParseException e) {
                 holder.tvTerminZeit.setText(String.format("%s - %s",

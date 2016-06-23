@@ -3,7 +3,6 @@ package de.tum.in.tumcampusapp.tumonline;
 import de.tum.in.tumcampusapp.models.AccessToken;
 import de.tum.in.tumcampusapp.models.CalendarRowSet;
 import de.tum.in.tumcampusapp.models.Employee;
-import de.tum.in.tumcampusapp.models.ExamList;
 import de.tum.in.tumcampusapp.models.IdentitySet;
 import de.tum.in.tumcampusapp.models.LectureAppointmentsRowSet;
 import de.tum.in.tumcampusapp.models.LectureDetailsRowSet;
@@ -29,7 +28,6 @@ public class TUMOnlineConst<T> {
     public static final TUMOnlineConst<OrgDetailItemList> ORG_DETAILS = new TUMOnlineConst<>("orgDetails", CacheManager.VALIDITY_ONE_MONTH, OrgDetailItemList.class);
     public static final TUMOnlineConst<Employee> PERSON_DETAILS = new TUMOnlineConst<>("personenDetails", CacheManager.VALIDITY_FIFE_DAYS, Employee.class);
     public static final TUMOnlineConst<PersonList> PERSON_SEARCH = new TUMOnlineConst<>("personenSuche", CacheManager.VALIDITY_DO_NOT_CACHE, PersonList.class);
-    public static final TUMOnlineConst<ExamList> EXAMS = new TUMOnlineConst<>("noten", CacheManager.VALIDITY_TEN_DAYS, ExamList.class);
     public static final TUMOnlineConst<TokenConfirmation> TOKEN_CONFIRMED = new TUMOnlineConst<>("isTokenConfirmed", CacheManager.VALIDITY_DO_NOT_CACHE, TokenConfirmation.class);
     public static final TUMOnlineConst<AccessToken> REQUEST_TOKEN = new TUMOnlineConst<>("requestToken", CacheManager.VALIDITY_DO_NOT_CACHE, AccessToken.class);
     public static final TUMOnlineConst<IdentitySet> IDENTITY = new TUMOnlineConst<>("id", CacheManager.VALIDITY_DO_NOT_CACHE, IdentitySet.class);

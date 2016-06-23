@@ -117,6 +117,12 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
 
         // Set the drawer toggle as the DrawerListener
         mDrawerLayout.addDrawerListener(mDrawerToggle);
+
+        if (CardManager.shouldRefresh || CardManager.getCards() == null) {
+            refreshCards();
+        } else {
+            initAdapter();
+        }
     }
 
     @Override
@@ -124,17 +130,6 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
         // Inflate the menu; this adds items to the action bar if it is present.
         this.getMenuInflater().inflate(R.menu.menu_settings, menu);
         return true;
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (CardManager.shouldRefresh || CardManager.getCards() == null) {
-            refreshCards();
-        } else {
-            initAdapter();
-        }
-        showToolbar();
     }
 
     /**
@@ -263,7 +258,8 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
      * Smoothly scrolls the RecyclerView to the top and dispatches nestedScrollingEvents to show
      * the Toolbar
      */
-    @SuppressLint("NewApi") // Verified in a API 10 emulator that this works, even though AndroidLint reports otherwise
+    @SuppressLint("NewApi")
+    // Verified in a API 10 emulator that this works, even though AndroidLint reports otherwise
     private void showToolbar() {
         mCardsView.startNestedScroll(ViewCompat.SCROLL_AXIS_VERTICAL);
         mCardsView.dispatchNestedFling(0, Integer.MIN_VALUE, true);

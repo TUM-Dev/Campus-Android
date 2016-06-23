@@ -6,7 +6,7 @@ import org.simpleframework.xml.Root;
 import java.util.List;
 
 /**
- * Wrapper class holding a list of tuitions ; based on ExamList
+ * Wrapper class holding a list of tuitions
  *
  * Note: This model is based on the TUMOnline web service response format for a
  * corresponding request.

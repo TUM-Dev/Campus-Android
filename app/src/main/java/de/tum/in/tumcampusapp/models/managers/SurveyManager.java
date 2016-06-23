@@ -3,6 +3,7 @@ package de.tum.in.tumcampusapp.models.managers;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.text.TextUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,6 +17,7 @@ import de.tum.in.tumcampusapp.cards.SurveyCard;
 import de.tum.in.tumcampusapp.models.Faculty;
 import de.tum.in.tumcampusapp.models.Question;
 import de.tum.in.tumcampusapp.models.TUMCabeClient;
+import de.tum.in.tumcampusapp.trace.Util;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -35,7 +37,7 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
         super(context);
         db.execSQL("CREATE TABLE IF NOT EXISTS faculties (faculty INTEGER, name VARCHAR)"); // for facultyData
         db.execSQL("CREATE TABLE IF NOT EXISTS openQuestions (question INTEGER PRIMARY KEY, text VARCHAR, created VARCHAR, end VARCHAR, answerid INTEGER, answered BOOLEAN, synced BOOLEAN)"); // for SurveyCard
-        db.execSQL("CREATE TABLE IF NOT EXISTS ownQuestions (question INTEGER PRIMARY KEY, text VARCHAR, created VARCHAR, end VARCHAR, yes INTEGER, no INTEGER, deleted BOOLEAN, synced BOOLEAN)"); // for responses on ownQuestions
+        db.execSQL("CREATE TABLE IF NOT EXISTS ownQuestions (question INTEGER PRIMARY KEY, text VARCHAR, targetFac VARCHAR, created VARCHAR, end VARCHAR, yes INTEGER, no INTEGER, deleted BOOLEAN, synced BOOLEAN)"); // for responses on ownQuestions
     }
 
     /**
@@ -401,6 +403,8 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
         cv.put("text", q.getText());
         cv.put("created", q.getCreated());
         cv.put("end", q.getEnd());
+        cv.put("targetFac",TextUtils.join(",",q.getFacultiesOfOpenQuestions()));
+
 
         // In case of no votes
         if (answers.length == 0) {

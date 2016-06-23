@@ -93,10 +93,10 @@ public class PlansActivity extends BaseActivity implements OnItemClickListener {
 
         ListView list = (ListView) findViewById(R.id.activity_plans_list_view);
         ArrayList<PlanListEntry> listMenuEntrySet = new ArrayList<>();
-        listMenuEntrySet.add(new PlanListEntry(R.drawable.plan_mvv_icon, R.string.mvv_fast_train_net, R.string.empty_string, R.drawable.mvv));
-        listMenuEntrySet.add(new PlanListEntry(R.drawable.plan_mvv_night_icon, R.string.mvv_nightlines, R.string.empty_string, R.drawable.mvv_night));
-        listMenuEntrySet.add(new PlanListEntry(R.drawable.plan_tram_icon, R.string.mvv_tram, R.string.empty_string, R.drawable.mvg_tram));
-        listMenuEntrySet.add(new PlanListEntry(R.drawable.mvv_entire_net_icon, R.string.mvv_entire_net, R.string.empty_string, R.drawable.mvv_entire_net));
+        listMenuEntrySet.add(new PlanListEntry(R.drawable.plan_mvv_icon, R.string.mvv_fast_train_net, R.string.empty_string, 0));
+        listMenuEntrySet.add(new PlanListEntry(R.drawable.plan_mvv_night_icon, R.string.mvv_nightlines, R.string.empty_string, 0));
+        listMenuEntrySet.add(new PlanListEntry(R.drawable.plan_tram_icon, R.string.mvv_tram, R.string.empty_string, 0));
+        listMenuEntrySet.add(new PlanListEntry(R.drawable.mvv_entire_net_icon, R.string.mvv_entire_net, R.string.empty_string, 0));
         listMenuEntrySet.add(new PlanListEntry(R.drawable.plan_campus_garching_icon, R.string.campus_garching, R.string.campus_garching_adress, R.drawable.campus_garching));
         listMenuEntrySet.add(new PlanListEntry(R.drawable.plan_campus_klinikum_icon, R.string.campus_klinikum, R.string.campus_klinikum_adress, R.drawable.campus_klinikum));
         listMenuEntrySet.add(new PlanListEntry(R.drawable.plan_campus_olympiapark_icon, R.string.campus_olympiapark, R.string.campus_olympiapark_adress, R.drawable.campus_olympiapark));

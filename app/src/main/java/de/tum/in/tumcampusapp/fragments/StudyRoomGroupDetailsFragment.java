@@ -10,7 +10,6 @@ import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +20,7 @@ import java.util.Date;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.auxiliary.Const;
+import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.StudyRoom;
 import de.tum.in.tumcampusapp.models.managers.StudyRoomGroupManager;
 
@@ -133,7 +133,7 @@ public class StudyRoomGroupDetailsFragment extends Fragment implements SimpleCur
             }
 
             TextView tv = (TextView) view;
-            tv.setText(Html.fromHtml(stringBuilder.toString()));
+            tv.setText(Utils.fromHtml(stringBuilder.toString()));
         } else if (view.getId() == R.id.text3) {
             TextView tv = (TextView) view;
             tv.setText(studyRoom.code);
