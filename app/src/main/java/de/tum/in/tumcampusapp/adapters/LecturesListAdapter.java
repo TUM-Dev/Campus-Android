@@ -24,20 +24,22 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 
 public class LecturesListAdapter extends BaseAdapter implements StickyListHeadersAdapter {
 
-    // The list of lectures
     private static List<LecturesSearchRow> lecturesList;
     private final ArrayList<String> filters;
     private final LayoutInflater mInflater;
     private Context context;
 
-    // constructor
-    public LecturesListAdapter(Context context, List<LecturesSearchRow> results) {
+    public static LecturesListAdapter newInstance(Context context, List<LecturesSearchRow> results) {
         lecturesList = results;
+        return new LecturesListAdapter(context);
+    }
+
+    private LecturesListAdapter(Context context) {
         this.context = context;
         mInflater = LayoutInflater.from(context);
 
         filters = new ArrayList<>();
-        for (LecturesSearchRow result : results) {
+        for (LecturesSearchRow result : lecturesList) {
             String item = result.getSemester_id();
             if (filters.indexOf(item) == -1) {
                 filters.add(item);
