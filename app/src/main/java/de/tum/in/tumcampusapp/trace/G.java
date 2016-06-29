@@ -40,17 +40,17 @@ public class G {
     public static String appVersion = "unknown";
     public static String appPackage = "unknown";
     public static int appVersionCode = -1;
-    public static String tag = "TCA Error Reporting";
+    public static final String tag = "TCA Error Reporting";
     public static String androidVersion = null;
     public static String phoneModel = null;
     public static String deviceId = "unknown";
 
     public static final int MAX_TRACES = 5;
 
-    public static String traceVersion = "1.1";
+    public static final String traceVersion = "1.1";
 
     public static Context context = null;
 
     public static SharedPreferences preferences = null;
-    public static Boolean bugReportDefault = true;
+    public static final Boolean bugReportDefault = true;
 }
