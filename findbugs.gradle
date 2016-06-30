@@ -15,7 +15,7 @@ afterEvaluate {
         task.reportLevel = 'high'
         task.reports {
             xml {
-                enabled = false
+                enabled = true
             }
             html {
                 enabled = true
