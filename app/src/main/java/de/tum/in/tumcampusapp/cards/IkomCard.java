@@ -95,7 +95,8 @@ public class IkomCard extends Card {
 
         //Or discarded manually
         SharedPreferences prefs = mContext.getSharedPreferences(Card.DISCARD_SETTINGS_START, 0);
-        return prefs.getBoolean(CardManager.SHOW_IKOM, true) || (today.isAfter(firstDay) && today.isBefore(firstDay.plusDays(7)));
+        //return prefs.getBoolean(CardManager.SHOW_IKOM, true) || (today.isAfter(firstDay) && today.isBefore(firstDay.plusDays(7)));
+        return false;
     }
 
     @Override
