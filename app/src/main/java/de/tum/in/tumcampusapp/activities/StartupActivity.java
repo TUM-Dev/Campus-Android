@@ -108,7 +108,12 @@ public class StartupActivity extends AppCompatActivity {
         // On first setup show remark that loading could last longer than normally
         boolean isSetup = Utils.getInternalSettingBool(this, Const.EVERYTHING_SETUP, false);
         if (!isSetup) {
-            findViewById(R.id.startup_loading_first).setVisibility(View.VISIBLE);
+            this.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    findViewById(R.id.startup_loading_first).setVisibility(View.VISIBLE);
+                }
+            });
         }
 
         // Register receiver for background service
