@@ -216,7 +216,7 @@ public class ExceptionHandler {
      * stop the submission from occurring.
      */
     public static boolean hasStrackTraces() {
-        return (getStackTraces().size() > 0);
+        return !getStackTraces().isEmpty();
     }
 
     /**

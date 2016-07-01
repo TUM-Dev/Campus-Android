@@ -37,6 +37,7 @@
         <exclude name="AbstractNaming" />
         <exclude name="ShortVariable" />
         <exclude name="LongVariable" />
+        <exclude name="ShortClassName" />
     </rule>
     <rule ref="rulesets/java/optimizations.xml">
         <exclude name="MethodArgumentCouldBeFinal" />

@@ -23,18 +23,11 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-/**
- * Created by kordianbruck on 12/24/15.
- */
 public class GcmIdentificationService extends InstanceIDListenerService {
 
     private static final String senderId = "944892355389";
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     private final Context mContext;
-
-    public GcmIdentificationService() {
-        this.mContext = null;
-    }
 
     public GcmIdentificationService(Context c) {
         mContext = c;
@@ -136,7 +129,7 @@ public class GcmIdentificationService extends InstanceIDListenerService {
 
                     //Reset the lock in case we are updating and maybe failed
                     Utils.setInternalSetting(mContext, Const.GCM_REG_ID_SENT_TO_SERVER, false);
-                    Utils.setInternalSetting(mContext, Const.GCM_REG_ID_LAST_TRANSMISSION, (new Date()).getTime());
+                    Utils.setInternalSetting(mContext, Const.GCM_REG_ID_LAST_TRANSMISSION, new Date().getTime());
 
                     // Let the server know of our new registration id
                     GcmIdentificationService.this.sendTokenToBackend(token);

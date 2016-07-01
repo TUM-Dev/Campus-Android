@@ -46,7 +46,7 @@ public class ChatRoomListAdapter extends CursorAdapter implements StickyListHead
 
         this.mInflater = LayoutInflater.from(context);
         this.filters = new ArrayList<>();
-        this.showDateAndNumber = (mode == 1);
+        this.showDateAndNumber = mode == 1;
     }
 
     @Override

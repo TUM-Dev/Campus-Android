@@ -320,7 +320,7 @@ public class TUMRoomFinderRequest {
         double d2 = 0.0066943799999999998;
         double d4 = (1 - Math.sqrt(1 - d2)) / (1 + Math.sqrt(1 - d2));
         double d15 = east - 500000;
-        double d11 = ((zone - 1) * 6 - 180) + 3;
+        double d11 = (zone - 1) * 6 - 180 + 3;
         double d3 = d2 / (1 - d2);
         double d10 = north / d;
         double d12 = d10 / (d1 * (1 - d2 / 4 - (3 * d2 * d2) / 64 - (5 * Math.pow(d2, 3)) / 256));

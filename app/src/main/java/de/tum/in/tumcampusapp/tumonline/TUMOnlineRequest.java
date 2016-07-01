@@ -140,7 +140,7 @@ public class TUMOnlineRequest<T> {
 
         T res = null;
         try {
-            res = (new Persister()).read(method.getResponse(), result);
+            res = new Persister().read(method.getResponse(), result);
 
             // Only add to cache if data is valid
             if (addToCache) {

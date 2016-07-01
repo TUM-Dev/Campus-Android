@@ -75,7 +75,7 @@ public class Chat extends GenericNotification {
         }
 
         // parse data
-        this.extras = (new Gson()).fromJson(payload, GCMChat.class);
+        this.extras = new Gson().fromJson(payload, GCMChat.class);
 
         this.prepare();
     }

@@ -66,7 +66,7 @@ public abstract class EnhancedSearchRecentSuggestionsProvider extends ContentPro
             throw new IllegalArgumentException();
         }
         // unpack mode flags
-        mTwoLineDisplay = (0 != (EnhancedSearchRecentSuggestionsProvider.DATABASE_MODE_QUERIES & DATABASE_MODE_2LINES));
+        mTwoLineDisplay = 0 != (EnhancedSearchRecentSuggestionsProvider.DATABASE_MODE_QUERIES & DATABASE_MODE_2LINES);
 
         // saved values
         mId = "_"+id;

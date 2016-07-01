@@ -120,7 +120,7 @@ public class SilenceService extends IntentService {
     private static long getWaitDuration(String timeToEventString) {
         long timeToEvent = Long.MAX_VALUE;
         try {
-            timeToEvent = (new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.ENGLISH).parse(timeToEventString)).getTime();
+            timeToEvent = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.ENGLISH).parse(timeToEventString).getTime();
         } catch (ParseException e) {
             Utils.log(e, "");
         }

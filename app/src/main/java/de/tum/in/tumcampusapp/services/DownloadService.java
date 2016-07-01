@@ -126,7 +126,7 @@ public class DownloadService extends IntentService {
             }
         }
 
-        if ((action.equals(Const.DOWNLOAD_ALL_FROM_EXTERNAL))) {
+        if (action.equals(Const.DOWNLOAD_ALL_FROM_EXTERNAL)) {
             try {
                 service.importLocationsDefaults();
             } catch (Exception e) {
@@ -151,7 +151,7 @@ public class DownloadService extends IntentService {
         }
 
         // Do all other import stuff that is not relevant for creating the viewing the start page
-        if ((action.equals(Const.DOWNLOAD_ALL_FROM_EXTERNAL))) {
+        if (action.equals(Const.DOWNLOAD_ALL_FROM_EXTERNAL)) {
             service.startService(new Intent(service, FillCacheService.class));
         }
     }

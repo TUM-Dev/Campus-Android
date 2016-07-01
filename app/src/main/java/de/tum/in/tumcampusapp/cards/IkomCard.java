@@ -49,8 +49,8 @@ public class IkomCard extends Card {
         DateTime firstDay = new DateTime(2016, 6, 20, 0, 0);//Display for the full first day
         DateTime thirdDay = new DateTime(2016, 6, 22, 0, 0);//And for the third and fourth
         DateTime today = new DateTime();
-        if ((today.isAfter(firstDay) && today.isBefore(firstDay.plusDays(1))) ||
-                (today.isAfter(thirdDay) && today.isBefore(thirdDay.plusDays(2)))) {
+        if (today.isAfter(firstDay) && today.isBefore(firstDay.plusDays(1)) ||
+                today.isAfter(thirdDay) && today.isBefore(thirdDay.plusDays(2))) {
             image.setImageResource(R.drawable.ikom_2);
         }
         image.setOnClickListener(openEventAgenda);

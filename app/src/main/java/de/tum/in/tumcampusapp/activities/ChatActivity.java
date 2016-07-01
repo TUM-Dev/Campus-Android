@@ -66,7 +66,7 @@ import retrofit.client.Response;
 
 /**
  * Shows an ongoing chat conversation
- * <p/>
+ * <p>
  * NEEDS: Const.CURRENT_CHAT_ROOM set in incoming bundle (json serialised object of class ChatRoom)
  * Const.CURRENT_CHAT_MEMBER set in incoming bundle (json serialised object of class ChatMember)
  */
@@ -94,7 +94,7 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
         @Override
         public void onReceive(Context context, Intent intent) {
             GCMChat extras = (GCMChat) intent.getSerializableExtra("GCMChat");
-            if(extras == null) {
+            if (extras == null) {
                 return;
             }
             Utils.log("Broadcast receiver got room=" + extras.room + " member=" + extras.member);
@@ -387,7 +387,7 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
     @Override
     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
         //is the top item is visible & not loading more already ? Load more !
-        if ((firstVisibleItem == 0) && !loadingMore && chatHistoryAdapter != null) {
+        if (firstVisibleItem == 0 && !loadingMore && chatHistoryAdapter != null) {
             getNextHistoryFromServer(false);
         }
     }
@@ -439,7 +439,7 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
                         }
 
                         // If all messages are loaded hide header view
-                        if ((cur.moveToFirst() && cur.getLong(ChatMessageManager.COL_PREVIOUS) == 0) || cur.getCount() == 0) {
+                        if (cur.moveToFirst() && cur.getLong(ChatMessageManager.COL_PREVIOUS) == 0 || cur.getCount() == 0) {
                             lvMessageHistory.removeHeaderView(bar);
                         } else {
                             loadingMore = false;

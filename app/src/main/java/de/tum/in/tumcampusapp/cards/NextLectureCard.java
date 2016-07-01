@@ -152,7 +152,7 @@ public class NextLectureCard extends Card {
     protected boolean shouldShow(SharedPreferences prefs) {
         CalendarItem item = lectures.get(0);
         long prevTime = prefs.getLong(NEXT_LECTURE_DATE, 0);
-        return (item.start.getTime() > prevTime);
+        return item.start.getTime() > prevTime;
     }
 
     @Override

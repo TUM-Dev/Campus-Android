@@ -49,7 +49,7 @@ public class Alarm extends GenericNotification {
         this.info = TUMCabeClient.getInstance(this.context).getNotification(this.notification);
 
         // parse data
-        this.alert = (new Gson()).fromJson(payload, GCMAlert.class);
+        this.alert = new Gson().fromJson(payload, GCMAlert.class);
     }
 
     /**

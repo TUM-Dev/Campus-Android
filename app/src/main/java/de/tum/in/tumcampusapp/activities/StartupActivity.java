@@ -66,7 +66,7 @@ public class StartupActivity extends AppCompatActivity {
 
         //Upload stats
         ImplicitCounter.Counter(this);
-        (new ImplicitCounter()).submitCounter(this);
+        new ImplicitCounter().submitCounter(this);
 
         // For compatibility reasons: big update happened with version 35
         int prevVersion = Utils.getInternalSettingInt(this, Const.APP_VERSION, 35);
@@ -84,7 +84,7 @@ public class StartupActivity extends AppCompatActivity {
         boolean hideWizardOnStartup = Utils.getSettingBool(this, Const.HIDE_WIZARD_ON_STARTUP, false);
         String lrzId = Utils.getSetting(this, Const.LRZ_ID, ""); // If new version and LRZ ID is empty, start the full wizard
 
-        if (!hideWizardOnStartup || (newVersion && lrzId.isEmpty())) {
+        if (!hideWizardOnStartup || newVersion && lrzId.isEmpty()) {
             startActivity(new Intent(this, WizNavStartActivity.class));
             finish();
             return;
@@ -173,10 +173,10 @@ public class StartupActivity extends AppCompatActivity {
      */
     private void requestLocationPermission() {
         //Check, if we already have permission
-        if ((ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED)
-                || (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED)) {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED
+                || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
 
             // Provide an additional rationale to the user if the permission was not granted
             // and the user would benefit from additional context for the use of the permission.
