@@ -78,15 +78,16 @@ public class DownloadService extends IntentService {
             G.appVersionCode = pi.versionCode; //Version code e.g.: 45
         }
 
-        boolean successful = true;
         String action = intent.getStringExtra(Const.ACTION_EXTRA);
-        boolean force = intent.getBooleanExtra(Const.FORCE_DOWNLOAD, false);
-        boolean launch = intent.getBooleanExtra(Const.APP_LAUNCHES, false);
 
         // No action: leave service
         if (action == null) {
             return;
         }
+
+        boolean successful = true;
+        boolean force = intent.getBooleanExtra(Const.FORCE_DOWNLOAD, false);
+        boolean launch = intent.getBooleanExtra(Const.APP_LAUNCHES, false);
 
         // Check if device has a internet connection
 

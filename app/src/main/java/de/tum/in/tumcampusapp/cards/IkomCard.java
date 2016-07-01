@@ -90,11 +90,11 @@ public class IkomCard extends Card {
     public boolean shouldShow(SharedPreferences p) {
         //Either use day: display always when event is running
         JodaTimeAndroid.init(mContext);
-        DateTime firstDay = new DateTime(2016, 6, 18, 0, 0);
-        DateTime today = new DateTime();
+        //DateTime firstDay = new DateTime(2016, 6, 18, 0, 0);
+        //DateTime today = new DateTime();
 
         //Or discarded manually
-        SharedPreferences prefs = mContext.getSharedPreferences(Card.DISCARD_SETTINGS_START, 0);
+        //SharedPreferences prefs = mContext.getSharedPreferences(Card.DISCARD_SETTINGS_START, 0);
         //return prefs.getBoolean(CardManager.SHOW_IKOM, true) || (today.isAfter(firstDay) && today.isBefore(firstDay.plusDays(7)));
         return false;
     }

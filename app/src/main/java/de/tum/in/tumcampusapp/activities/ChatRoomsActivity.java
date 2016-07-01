@@ -182,7 +182,7 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
      * Works asynchronously.
      */
     private void createOrJoinChatRoom(String name) {
-        if(this.currentChatMember == null) {
+        if (this.currentChatMember == null) {
             Utils.showToast(this, getString(R.string.chat_not_setup));
             return;
         }
@@ -270,11 +270,10 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
      */
     @Override
     public void onItemClick(AdapterView<?> a, View v, int position, long id) {
-        Cursor item = (Cursor) lvMyChatRoomList.getItemAtPosition(position);
-
         if (firstLoad) {
             return;
         }
+        Cursor item = (Cursor) lvMyChatRoomList.getItemAtPosition(position);
 
         // set bundle for LectureDetails and show it
         Bundle bundle = new Bundle();

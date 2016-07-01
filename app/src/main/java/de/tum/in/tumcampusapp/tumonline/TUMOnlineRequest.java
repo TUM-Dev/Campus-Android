@@ -104,7 +104,6 @@ public class TUMOnlineRequest<T> {
      */
     public T fetch() {
         // set parameter on the TUMOnline request an fetch the results
-        String result;
         String url = this.getRequestURL();
 
         //Check for error lock
@@ -118,6 +117,7 @@ public class TUMOnlineRequest<T> {
         Utils.log("fetching URL " + url);
         boolean addToCache = false;
 
+        String result;
         try {
             result = cacheManager.getFromCache(url);
             if (result == null || fillCache) {
@@ -291,7 +291,7 @@ public class TUMOnlineRequest<T> {
         fillCache = force;
     }
 
-    public String getLastError(){
+    public String getLastError() {
         return this.lastError;
     }
 }

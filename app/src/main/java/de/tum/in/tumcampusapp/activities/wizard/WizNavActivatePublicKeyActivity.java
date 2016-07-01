@@ -97,7 +97,6 @@ public class WizNavActivatePublicKeyActivity extends ActivityForLoadingInBackgro
 
     @Override
     protected Boolean onLoadInBackground(Void... arg) {
-        ChatRoomManager manager = new ChatRoomManager(this);
 
         // Get member and private key from settings
         ChatMember member = Utils.getSetting(this, Const.CHAT_MEMBER, ChatMember.class);
@@ -108,7 +107,7 @@ public class WizNavActivatePublicKeyActivity extends ActivityForLoadingInBackgro
         // Try to restore already joined chat rooms from server
         try {
             List<ChatRoom> rooms = TUMCabeClient.getInstance(this).getMemberRooms(member.getId(), new ChatVerification(this, member));
-            manager.replaceIntoRooms(rooms);
+            new ChatRoomManager(this).replaceIntoRooms(rooms);
 
             //Store that this key was activated
             Utils.setInternalSetting(this, Const.PRIVATE_KEY_ACTIVE, true);
@@ -116,7 +115,7 @@ public class WizNavActivatePublicKeyActivity extends ActivityForLoadingInBackgro
             return true;
         } catch (RetrofitError e) {
             Utils.log(e);
-        } catch (NoPrivateKey e){
+        } catch (NoPrivateKey e) {
             Utils.log(e);
         }
         return false;

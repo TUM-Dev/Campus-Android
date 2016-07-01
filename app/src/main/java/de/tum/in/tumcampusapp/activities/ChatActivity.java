@@ -66,7 +66,7 @@ import retrofit.client.Response;
 
 /**
  * Shows an ongoing chat conversation
- * <p>
+ * <p/>
  * NEEDS: Const.CURRENT_CHAT_ROOM set in incoming bundle (json serialised object of class ChatRoom)
  * Const.CURRENT_CHAT_MEMBER set in incoming bundle (json serialised object of class ChatMember)
  */
@@ -400,17 +400,16 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
         new Thread(new Runnable() {
             @Override
             public void run() {
-
                 // Download chat messages in new Thread
-                ArrayList<ChatMessage> downloadedChatHistory;
 
                 // If currently nothing has been shown load newest messages from server
-                ChatVerification verification = null;
+                ChatVerification verification;
                 try {
                     verification = new ChatVerification(ChatActivity.this, currentChatMember);
                 } catch (NoPrivateKey noPrivateKey) {
                     return; //In this case we simply cannot do anything
                 }
+                ArrayList<ChatMessage> downloadedChatHistory;
                 if (chatHistoryAdapter == null || chatHistoryAdapter.getSentCount() == 0 || newMsg) {
                     downloadedChatHistory = TUMCabeClient.getInstance(ChatActivity.this).getNewMessages(currentChatRoom.getId(), verification);
                 } else {

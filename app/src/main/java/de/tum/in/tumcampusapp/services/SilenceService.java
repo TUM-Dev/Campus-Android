@@ -49,21 +49,19 @@ public class SilenceService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
+        //Abort, if the settings changed
+        if (!Utils.getSettingBool(this, Const.SILENCE_SERVICE, false)) {
+            // Don't schedule a new run, since the service is disabled
+            return;
+        }
+
         AlarmManager alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
         Intent newIntent = new Intent(this, SilenceService.class);
         PendingIntent pendingIntent = PendingIntent.getService(this, 0, newIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         long startTime = System.currentTimeMillis();
         long wait_duration = CHECK_INTERVAL;
-
-        //Abort, if the settings changed
-        if (!Utils.getSettingBool(this, Const.SILENCE_SERVICE, false)) {
-            // Don't schedule a new run, since the service is disabled
-            return;
-        }
         Utils.log("SilenceService enabled, checking for lectures ...");
-
-        AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
         CalendarManager calendarManager = new CalendarManager(this);
         if (!calendarManager.hasLectures()) {
@@ -72,6 +70,7 @@ public class SilenceService extends IntentService {
             return;
         }
 
+        AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         Cursor cursor = calendarManager.getCurrentFromDb();
         Utils.log("Current lectures: " + String.valueOf(cursor.getCount()));
 

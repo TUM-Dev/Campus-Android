@@ -101,14 +101,13 @@ public class TUMRoomFinderRequest {
      */
     public ArrayList<HashMap<String, String>> fetchRooms(String searchString) {
 
-        ArrayList<HashMap<String, String>> roomsList = new ArrayList<>();
         String url = API_URL_SEARCH + encodeUrl(searchString);
         JSONArray jsonArray = net.downloadJsonArray(url, CacheManager.VALIDITY_DO_NOT_CACHE, true);
-
         if (jsonArray == null) {
             return null;
         }
 
+        ArrayList<HashMap<String, String>> roomsList = new ArrayList<>();
         try {
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject obj = jsonArray.getJSONObject(i);
@@ -159,15 +158,14 @@ public class TUMRoomFinderRequest {
      */
     public ArrayList<HashMap<String, String>> fetchAvailableMaps(String archId) {
 
-        ArrayList<HashMap<String, String>> mapsList = new ArrayList<>();
         String url = API_URL_AVAILABLE_MAPS + encodeUrl(archId);
 
         JSONArray jsonArray = net.downloadJsonArray(url, CacheManager.VALIDITY_DO_NOT_CACHE, true);
-
         if (jsonArray == null) {
             return null;
         }
 
+        ArrayList<HashMap<String, String>> mapsList = new ArrayList<>();
         try {
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject obj = jsonArray.getJSONObject(i);

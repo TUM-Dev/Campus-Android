@@ -61,7 +61,6 @@ public class Alarm extends GenericNotification {
      * @return if the signature is valid
      */
     private static boolean isValidSignature(String title, String description, String signature) {
-        String text = title + description;
         PublicKey key = getCabePublicKey();
         if (key == null) {
             return false;
@@ -82,6 +81,7 @@ public class Alarm extends GenericNotification {
             return false;
         }
 
+        String text = title + description;
         byte[] textBytes;
         try {
             textBytes = text.getBytes("UTF8");
@@ -110,7 +110,6 @@ public class Alarm extends GenericNotification {
      */
     private static PublicKey getCabePublicKey() {
         // Base64 string -> Bytes
-        byte[] keyBytes = Base64.decode(pubKey, Base64.NO_WRAP);
         KeyFactory keyFactory;
         try {
             keyFactory = KeyFactory.getInstance("RSA");
@@ -119,6 +118,7 @@ public class Alarm extends GenericNotification {
             return null;
         }
 
+        byte[] keyBytes = Base64.decode(pubKey, Base64.NO_WRAP);
         // Bytes -> PublicKey
         try {
             return keyFactory.generatePublic(new X509EncodedKeySpec(keyBytes));
