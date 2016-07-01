@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply from: '../findbugs.gradle'
+apply from: '../pmd.gradle'
 
 android {
     defaultConfig {

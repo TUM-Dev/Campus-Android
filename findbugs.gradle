@@ -14,12 +14,8 @@ afterEvaluate {
         task.effort = 'max'
         task.reportLevel = 'high'
         task.reports {
-            xml {
-                enabled = true
-            }
-            html {
-                enabled = false
-            }
+            xml.enabled = true
+            html.enabled = false
         }
 
         def variantCompile = variant.javaCompile
