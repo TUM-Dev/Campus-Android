@@ -53,10 +53,8 @@ public class OpeningHoursDetailFragment extends Fragment implements ViewBinder {
             mItemId = getArguments().getInt(ARG_ITEM_ID);
             mItemContent = getArguments().getString(ARG_ITEM_CONTENT);
         }
-        if (getArguments().containsKey(TWO_PANE)) {
-            if (!getArguments().getBoolean(TWO_PANE)) {
-                getActivity().setTitle(mItemContent);
-            }
+        if (getArguments().containsKey(TWO_PANE) && !getArguments().getBoolean(TWO_PANE)) {
+            getActivity().setTitle(mItemContent);
         }
     }
 

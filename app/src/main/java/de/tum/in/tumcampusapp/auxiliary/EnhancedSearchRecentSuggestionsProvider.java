@@ -166,12 +166,10 @@ public abstract class EnhancedSearchRecentSuggestionsProvider extends ContentPro
         long rowID = -1;
         String base = uri.getPathSegments().get(0);
         Uri newUri = null;
-        if (base.equals(S_SUGGESTIONS)) {
-            if (length == 1) {
-                rowID = db.insert(S_SUGGESTIONS + mId, NULL_COLUMN, values);
-                if (rowID > 0) {
-                    newUri = Uri.withAppendedPath(mSuggestionsUri, String.valueOf(rowID));
-                }
+        if (base.equals(S_SUGGESTIONS) && length == 1) {
+            rowID = db.insert(S_SUGGESTIONS + mId, NULL_COLUMN, values);
+            if (rowID > 0) {
+                newUri = Uri.withAppendedPath(mSuggestionsUri, String.valueOf(rowID));
             }
         }
         if (rowID < 0) {

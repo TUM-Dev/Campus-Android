@@ -88,42 +88,8 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
     private ChatRoom currentChatRoom;
     private ChatMember currentChatMember;
     private boolean loadingMore;
-    private ChatMessageManager chatManager;
-    private final BroadcastReceiver receiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            GCMChat extras = (GCMChat) intent.getSerializableExtra("GCMChat");
-            if (extras == null) {
-                return;
-            }
-            Utils.log("Broadcast receiver got room=" + extras.room + " member=" + extras.member);
-
-            //If same room just refresh
-            if (extras.room == currentChatRoom.getId() && chatHistoryAdapter != null) {
-                if (extras.member == currentChatMember.getId()) {
-                    // Remove this message from the adapter
-                    chatHistoryAdapter.setUnsentMessages(chatManager.getAllUnsent());
-                } else if (extras.message == -1) {
-                    //Check first, if sounds are enabled
-                    AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-                    if (am.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
-
-                        //Play a nice notification sound
-                        MediaPlayer mediaPlayer = MediaPlayer.create(ChatActivity.this, R.raw.message);
-                        mediaPlayer.start();
-                    } else if (am.getRingerMode() == AudioManager.RINGER_MODE_VIBRATE) { //Possibly only vibration is enabled
-                        Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-                        v.vibrate(500);
-                    }
-                }
-
-                //Update the history
-                chatHistoryAdapter.changeCursor(chatManager.getAll());
-            }
-        }
-    };
-
     private ActionMode mActionMode;
+    private ChatMessageManager chatManager;
     private final ActionMode.Callback mActionModeCallback = new ActionMode.Callback() {
 
         // Called when the action mode is created; startActionMode() was called
@@ -181,6 +147,44 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
             chatHistoryAdapter.notifyDataSetChanged();
         }
     };
+    private final BroadcastReceiver receiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            GCMChat extras = (GCMChat) intent.getSerializableExtra("GCMChat");
+            if (extras == null) {
+                return;
+            }
+            Utils.log("Broadcast receiver got room=" + extras.room + " member=" + extras.member);
+            handleRoomBroadcast(extras);
+        }
+    };
+
+    private void handleRoomBroadcast(GCMChat extras) {
+        //If same room just refresh
+        if (!(extras.room == currentChatRoom.getId() && chatHistoryAdapter != null)) {
+            return;
+        }
+        if (extras.member == currentChatMember.getId()) {
+            // Remove this message from the adapter
+            chatHistoryAdapter.setUnsentMessages(chatManager.getAllUnsent());
+        } else if (extras.message == -1) {
+            //Check first, if sounds are enabled
+            AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+            if (am.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
+
+                //Play a nice notification sound
+                MediaPlayer mediaPlayer = MediaPlayer.create(ChatActivity.this, R.raw.message);
+                mediaPlayer.start();
+            } else if (am.getRingerMode() == AudioManager.RINGER_MODE_VIBRATE) { //Possibly only vibration is enabled
+                Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+                v.vibrate(500);
+            }
+        }
+
+        //Update the history
+        chatHistoryAdapter.changeCursor(chatManager.getAll());
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -241,17 +245,16 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
         final ChatRoom room = new Gson().fromJson(intent.getExtras().getString(Const.CURRENT_CHAT_ROOM), ChatRoom.class);
 
         //Check, maybe it wasn't there
-        if (room != null) {
+        if (room != null && room.getId() != currentChatRoom.getId()) {
             //If currently in a room which does not match the one from the notification --> Switch
-            if (room.getId() != currentChatRoom.getId()) {
-                currentChatRoom = room;
-                if (getSupportActionBar() != null) {
-                    getSupportActionBar().setSubtitle(currentChatRoom.getName().substring(4));
-                }
-                chatHistoryAdapter = null;
-                chatManager = new ChatMessageManager(this, currentChatRoom.getId());
-                getNextHistoryFromServer(true);
+            currentChatRoom = room;
+            if (getSupportActionBar() != null) {
+                getSupportActionBar().setSubtitle(currentChatRoom.getName().substring(4));
             }
+            chatHistoryAdapter = null;
+            chatManager = new ChatMessageManager(this, currentChatRoom.getId());
+            getNextHistoryFromServer(true);
+
         }
     }
 

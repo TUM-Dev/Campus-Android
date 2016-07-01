@@ -113,11 +113,9 @@ public class WizNavChatActivity extends ActivityForLoadingInBackground<Void, Cha
      */
     @SuppressWarnings("UnusedParameters")
     public void onClickNext(View next) {
-        if (groupChatMode.isChecked()) {
-            if (!acceptedTerms.isChecked()) {
-                Utils.showToast(this, R.string.have_to_accept_terms);
-                return;
-            }
+        if (groupChatMode.isChecked() && !acceptedTerms.isChecked()) {
+            Utils.showToast(this, R.string.have_to_accept_terms);
+            return;
         }
 
         startLoading();
@@ -132,9 +130,9 @@ public class WizNavChatActivity extends ActivityForLoadingInBackground<Void, Cha
 
 
         Intent intent;
-        if(skip){
+        if (skip) {
             intent = new Intent(this, WizNavExtrasActivity.class);
-        }else {
+        } else {
             if (!Utils.getInternalSettingBool(this, Const.PRIVATE_KEY_ACTIVE, false)) {
                 intent = new Intent(this, WizNavActivatePublicKeyActivity.class);
             } else {

@@ -93,16 +93,14 @@ public class NewsActivity extends ActivityForDownloadingExternal {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Cursor cur = nm.getNewsSources();
-        if (item.getItemId() < cur.getCount()) {
-            if (cur.moveToPosition(item.getItemId())) {
-                boolean checked = !item.isChecked();
-                Utils.setSetting(this, "news_source_" + cur.getString(0), checked);
-                item.setChecked(checked);
-                LinearLayoutManager layoutManager = (LinearLayoutManager) lv.getLayoutManager();
-                state = layoutManager.findFirstVisibleItemPosition();
-                requestDownload(false);
-                return true;
-            }
+        if (item.getItemId() < cur.getCount() && cur.moveToPosition(item.getItemId())) {
+            boolean checked = !item.isChecked();
+            Utils.setSetting(this, "news_source_" + cur.getString(0), checked);
+            item.setChecked(checked);
+            LinearLayoutManager layoutManager = (LinearLayoutManager) lv.getLayoutManager();
+            state = layoutManager.findFirstVisibleItemPosition();
+            requestDownload(false);
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
