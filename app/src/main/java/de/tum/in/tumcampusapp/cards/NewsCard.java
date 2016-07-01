@@ -26,7 +26,7 @@ public class NewsCard extends Card {
 
     private Cursor mCursor;
     private int mPosition;
-    private NetUtils net;
+    private final NetUtils net;
     private boolean isFilm = false;
 
     public NewsCard(Context context) {

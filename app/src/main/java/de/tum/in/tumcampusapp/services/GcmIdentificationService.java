@@ -30,7 +30,7 @@ public class GcmIdentificationService extends InstanceIDListenerService {
 
     private static final String senderId = "944892355389";
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
-    private Context mContext;
+    private final Context mContext;
 
     public GcmIdentificationService() {
         this.mContext = null;

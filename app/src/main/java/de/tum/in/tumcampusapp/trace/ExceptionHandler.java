@@ -22,11 +22,11 @@ import de.tum.in.tumcampusapp.models.TUMCabeClient;
 
 public class ExceptionHandler {
 
-    public static boolean sVerbose = false;
+    public static final boolean sVerbose = false;
     // Stores loaded stack traces in memory. Each element is contains a full stacktrace
     private static ArrayList<String[]> sStackTraces = null;
     private static ActivityAsyncTask<Processor, Object, Object, Object> sTask;
-    private static int sMinDelay = 0;
+    private static final int sMinDelay = 0;
     private static boolean sSetupCalled = false;
 
     /**

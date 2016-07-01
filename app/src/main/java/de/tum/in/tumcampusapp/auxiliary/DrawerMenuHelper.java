@@ -88,9 +88,11 @@ public class DrawerMenuHelper implements NavigationView.OnNavigationItemSelected
     };
 
     public static class SideNavigationItem {
-        int titleRes, iconRes;
-        Class<? extends Activity> activity;
-        boolean needsTUMOAccess, needsChatAccess;
+        final int titleRes;
+        final int iconRes;
+        final Class<? extends Activity> activity;
+        final boolean needsTUMOAccess;
+        final boolean needsChatAccess;
 
         public SideNavigationItem(int titleRes, int iconRes, Class<? extends Activity> activity, boolean needsTUMOAccess, boolean needsChatAccess) {
             this.titleRes = titleRes;

@@ -26,9 +26,9 @@ import retrofit.client.Response;
 
 public class SurveyManager extends AbstractManager implements Card.ProvidesCard {
 
-    private static int answerYes = 1;
-    private static int answerNo = 2;
-    private static int answerFlag = -1;
+    private static final int answerYes = 1;
+    private static final int answerNo = 2;
+    private static final int answerFlag = -1;
 
     public SurveyManager(Context context) {
         super(context);

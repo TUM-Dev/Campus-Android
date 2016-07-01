@@ -53,12 +53,12 @@ public class SurveyActivity extends BaseActivity {
     TextView selectTv;
     TabHost tabHost;
     Button submitSurveyButton, facultiesButton;
-    ArrayList<String> questions = new ArrayList<>();
-    ArrayList<String> selectedFaculties = new ArrayList<>();
-    boolean[] checked = new boolean[14];
+    final ArrayList<String> questions = new ArrayList<>();
+    final ArrayList<String> selectedFaculties = new ArrayList<>();
+    final boolean[] checked = new boolean[14];
     LinearLayout mainResponseLayout, questionsLayout;
     String chosenFaculties = "", newDate = "", lrzId;
-    ArrayList<String> fetchedFaculties = new ArrayList<>();
+    final ArrayList<String> fetchedFaculties = new ArrayList<>();
     ViewGroup parentView;
 
     String[] numQues = new String[3];
@@ -207,7 +207,7 @@ public class SurveyActivity extends BaseActivity {
     }
 
     //delete button click
-    View.OnClickListener clicks = new View.OnClickListener() {
+    final View.OnClickListener clicks = new View.OnClickListener() {
 
         @Override
         public void onClick(final View v) {

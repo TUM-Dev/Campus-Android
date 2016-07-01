@@ -42,7 +42,7 @@ public class NextLectureCard extends Card {
             R.id.lecture_4
     };
     private TextView mLocation;
-    private ArrayList<CalendarItem> lectures = new ArrayList<>();
+    private final ArrayList<CalendarItem> lectures = new ArrayList<>();
     private TextView mTimeView;
     private int mSelected = 0;
     private TextView mEvent;

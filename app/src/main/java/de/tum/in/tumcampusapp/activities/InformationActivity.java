@@ -26,7 +26,7 @@ import de.tum.in.tumcampusapp.auxiliary.Utils;
  */
 public class InformationActivity extends BaseActivity {
 
-    private TableRow.LayoutParams rowParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT);
+    private final TableRow.LayoutParams rowParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT);
     private int debugOptionsCount = 0;
 
     public InformationActivity() {

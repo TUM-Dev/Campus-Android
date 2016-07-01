@@ -155,9 +155,9 @@ public class EventActivity extends BaseActivity {
     }
 
     private static class EventScheduleEntry {
-        public Date startTime;
-        public int duration; // in minutes
-        public String title;
+        public final Date startTime;
+        public final int duration; // in minutes
+        public final String title;
 
         public EventScheduleEntry(Date startTime, int duration, String title) {
             this.startTime = startTime;

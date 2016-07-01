@@ -45,7 +45,7 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
     private RecyclerView mCardsView;
     private CardsAdapter mAdapter;
     private SwipeRefreshLayout mSwipeRefreshLayout;
-    BroadcastReceiver connectivityChangeReceiver = new BroadcastReceiver() {
+    final BroadcastReceiver connectivityChangeReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (NetUtils.isConnected(context)) {

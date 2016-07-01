@@ -55,7 +55,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
 
     private static final int REQUEST_SYNC = 0;
     private static final int REQUEST_DELETE = 1;
-    private static String[] PERMISSIONS_CALENDAR = {Manifest.permission.READ_CALENDAR,
+    private static final String[] PERMISSIONS_CALENDAR = {Manifest.permission.READ_CALENDAR,
             Manifest.permission.WRITE_CALENDAR};
 
     /**

@@ -17,8 +17,8 @@ import de.tum.in.tumcampusapp.fragments.KinoDetailsFragment;
  */
 public class KinoAdapter extends FragmentStatePagerAdapter{
 
-    private int count; //number of pages
-    private ArrayList<String> titles = new ArrayList<>();  // titles shown in the pagerStrip
+    private final int count; //number of pages
+    private final ArrayList<String> titles = new ArrayList<>();  // titles shown in the pagerStrip
 
     public KinoAdapter(FragmentManager fm, Cursor cursor){
         super(fm);

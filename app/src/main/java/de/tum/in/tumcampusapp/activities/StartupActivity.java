@@ -51,9 +51,9 @@ import de.tum.in.tumcampusapp.trace.ExceptionHandler;
  */
 public class StartupActivity extends AppCompatActivity {
 
-    AtomicBoolean initializationFinished = new AtomicBoolean(false);
+    final AtomicBoolean initializationFinished = new AtomicBoolean(false);
     private static final int REQUEST_LOCATION = 0;
-    private static String[] PERMISSIONS_LOCATION = {Manifest.permission.ACCESS_COARSE_LOCATION,
+    private static final String[] PERMISSIONS_LOCATION = {Manifest.permission.ACCESS_COARSE_LOCATION,
             Manifest.permission.ACCESS_FINE_LOCATION};
 
     private void init() {

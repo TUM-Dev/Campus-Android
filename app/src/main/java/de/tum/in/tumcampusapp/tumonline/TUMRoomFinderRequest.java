@@ -54,7 +54,7 @@ public class TUMRoomFinderRequest {
      */
     private AsyncTask<String, Void, ArrayList<HashMap<String, String>>> backgroundTask = null;
 
-    private NetUtils net;
+    private final NetUtils net;
 
     public TUMRoomFinderRequest(Context context) {
         net = new NetUtils(context);

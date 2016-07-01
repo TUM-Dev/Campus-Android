@@ -53,7 +53,7 @@ public class PersonsDetailsActivity extends ActivityForAccessingTumOnline<Employ
 
     private Employee mEmployee;
     private MenuItem mContact;
-    private static String[] PERMISSIONS_CONTACTS = {Manifest.permission.WRITE_CONTACTS};
+    private static final String[] PERMISSIONS_CONTACTS = {Manifest.permission.WRITE_CONTACTS};
 
 
     public PersonsDetailsActivity() {

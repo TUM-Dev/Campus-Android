@@ -16,7 +16,7 @@ import de.tum.in.tumcampusapp.auxiliary.Utils;
  */
 public class IntegratedCalendarEvent extends WeekViewEvent {
 
-    private String location;
+    private final String location;
 
     public IntegratedCalendarEvent(Cursor cEvents) {
         super(getEventIdFromCursor(cEvents),

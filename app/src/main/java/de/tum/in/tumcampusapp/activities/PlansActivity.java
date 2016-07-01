@@ -27,7 +27,7 @@ import de.tum.in.tumcampusapp.auxiliary.Utils;
  */
 public class PlansActivity extends BaseActivity implements OnItemClickListener {
 
-    private static String[][] filesToDownload = {
+    private static final String[][] filesToDownload = {
             {"http://www.mvv-muenchen.de/fileadmin/media/Dateien/plaene/pdf/Netz_2016_Version_MVG.PDF", "Schnellbahnnetz.pdf"},
             {"http://www.mvv-muenchen.de/fileadmin/media/Dateien/plaene/pdf/Nachtnetz_2016.pdf", "Nachtliniennetz.pdf"},
             {"http://www.mvv-muenchen.de/fileadmin/media/Dateien/plaene/pdf/Tramnetz_2016.pdf", "Tramnetz.pdf"},
@@ -35,7 +35,7 @@ public class PlansActivity extends BaseActivity implements OnItemClickListener {
     };
     ProgressBar progressBar;
     private PlanListAdapter mListAdapter;
-    private Thread downloadFiles = new Thread() {
+    private final Thread downloadFiles = new Thread() {
         public void run() {
             Utils.log("Starting download.");
             NetUtils netUtils = new NetUtils(getApplicationContext());

@@ -27,7 +27,7 @@ public class LecturesListAdapter extends BaseAdapter implements StickyListHeader
     private static List<LecturesSearchRow> lecturesList;
     private final ArrayList<String> filters;
     private final LayoutInflater mInflater;
-    private Context context;
+    private final Context context;
 
     public static LecturesListAdapter newInstance(Context context, List<LecturesSearchRow> results) {
         lecturesList = results;

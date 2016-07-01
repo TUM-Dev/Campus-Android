@@ -21,7 +21,7 @@ import de.tum.in.tumcampusapp.tumonline.TUMRoomFinderRequest;
 
 public class WeekViewFragment extends Fragment implements MonthLoader.MonthChangeListener {
 
-    private HashMap<Integer, List<WeekViewEvent>> loadedEvents = new HashMap<>();
+    private final HashMap<Integer, List<WeekViewEvent>> loadedEvents = new HashMap<>();
 
     private String roomApiCode;
     private WeekView mWeekView;
