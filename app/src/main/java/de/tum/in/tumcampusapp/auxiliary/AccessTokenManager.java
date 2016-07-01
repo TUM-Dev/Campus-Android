@@ -2,6 +2,7 @@ package de.tum.in.tumcampusapp.auxiliary;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.Build;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.models.AccessToken;
@@ -27,19 +28,19 @@ public class AccessTokenManager {
      * element using an xml-parser is simply to much... just extract the pattern
      * via regex
      *
-     * @param lrz_id lrz user id
+     * @param lrzId lrz user id
      * @return the access token
      */
-    String generateAccessToken(String lrz_id) throws TUMOException {
+    String generateAccessToken(String lrzId) throws TUMOException {
         // we don't have an access token yet, though we take the constructor
         // with only one parameter to set the method
         TUMOnlineRequest<AccessToken> request = new TUMOnlineRequest<>(TUMOnlineConst.REQUEST_TOKEN, context, false);
 
-        // add lrz_id to parameters
-        request.setParameter("pUsername", lrz_id);
+        // add lrzId to parameters
+        request.setParameter("pUsername", lrzId);
 
         // add readable name for TUMOnline
-        request.setParameter("pTokenName", "TUMCampusApp-" + android.os.Build.PRODUCT);
+        request.setParameter("pTokenName", "TUMCampusApp-" + Build.PRODUCT);
 
         // fetch the xml response of requestToken
         AccessToken token = request.fetch();

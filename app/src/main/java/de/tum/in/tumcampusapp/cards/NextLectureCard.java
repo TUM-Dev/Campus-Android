@@ -36,7 +36,7 @@ import de.tum.in.tumcampusapp.models.managers.CardManager;
 public class NextLectureCard extends Card {
 
     private static final String NEXT_LECTURE_DATE = "next_date";
-    private final static int[] ids = {
+    private final static int[] IDS = {
             R.id.lecture_1,
             R.id.lecture_2,
             R.id.lecture_3,
@@ -83,7 +83,7 @@ public class NextLectureCard extends Card {
         if (lectures.size() > 1) {
             for (; i < lectures.size(); i++) {
                 final int j = i;
-                Button text = (Button) mCard.findViewById(ids[i]);
+                Button text = (Button) mCard.findViewById(IDS[i]);
                 text.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -93,7 +93,7 @@ public class NextLectureCard extends Card {
             }
         }
         for (; i < 4; i++) {
-            View text = mCard.findViewById(ids[i]);
+            View text = mCard.findViewById(IDS[i]);
             text.setVisibility(View.GONE);
         }
     }
@@ -102,7 +102,7 @@ public class NextLectureCard extends Card {
         // Set selection on the buttons
         mSelected = sel;
         for (int i = 0; i < 4; i++) {
-            mCard.findViewById(ids[i]).setSelected(i == sel);
+            mCard.findViewById(IDS[i]).setSelected(i == sel);
         }
 
         final CalendarItem item = lectures.get(sel);

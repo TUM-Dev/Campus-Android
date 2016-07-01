@@ -24,7 +24,7 @@ import de.tum.in.tumcampusapp.models.LectureAppointmentsRow;
 public class LectureAppointmentsListAdapter extends BaseAdapter {
 
     // list of Appointments to one lecture
-    private static List<LectureAppointmentsRow> appointmentList;
+    private List<LectureAppointmentsRow> appointmentList;
     private final LayoutInflater mInflater;
 
     public LectureAppointmentsListAdapter(Context context, List<LectureAppointmentsRow> results) {

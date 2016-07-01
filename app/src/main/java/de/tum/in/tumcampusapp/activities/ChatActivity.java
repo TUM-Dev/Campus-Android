@@ -74,7 +74,7 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
 
     // Key for the string that's delivered in the action's intent
     public static final String EXTRA_VOICE_REPLY = "extra_voice_reply";
-    private static final int maxEditTimespan = 120000;
+    private static final int MAX_EDIT_TIMESPAN = 120000;
     public static ChatRoom mCurrentOpenChatRoom;
     private final Handler mUpdateHandler = new Handler();
     /**
@@ -515,7 +515,7 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
         ChatMessage message = (ChatMessage) chatHistoryAdapter.getItem(positionActual);
 
         // If we are in a certain timespan and its the users own message allow editing
-        if ((System.currentTimeMillis() - message.getTimestampDate().getTime()) < ChatActivity.maxEditTimespan && message.getMember().getId() == currentChatMember.getId()) {
+        if ((System.currentTimeMillis() - message.getTimestampDate().getTime()) < ChatActivity.MAX_EDIT_TIMESPAN && message.getMember().getId() == currentChatMember.getId()) {
 
             // Hide keyboard if opened
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);

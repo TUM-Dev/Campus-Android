@@ -31,8 +31,8 @@ import retrofit.client.Response;
  * This provides methods to authenticate this app installation with the tumcabe server and other instances requiring a pki
  */
 public class AuthenticationManager {
-    private final static String algorithm = "RSA";
-    private final static int rsaKeySize = 1024;
+    private final static String ALGORITHM = "RSA";
+    private final static int RSA_KEY_SIZE = 1024;
     private static String uniqueID;
     private final Context mContext;
 
@@ -43,6 +43,7 @@ public class AuthenticationManager {
     /**
      * Gets an unique id that identifies this device
      * should only reset after a reinstall or wiping of the settings
+     *
      * @return Unique device id
      */
     public static synchronized String getDeviceID(Context context) {
@@ -59,6 +60,7 @@ public class AuthenticationManager {
 
     /**
      * Get the private key as string
+     *
      * @return
      * @throws NoPrivateKey
      */
@@ -72,6 +74,7 @@ public class AuthenticationManager {
 
     /**
      * Gets the public key as string
+     *
      * @return
      * @throws NoPublicKey
      */
@@ -100,6 +103,7 @@ public class AuthenticationManager {
 
     /**
      * Sign a message with the currently stored private key
+     *
      * @param data String to be signed
      * @return signature used to verify this request
      * @throws NoPrivateKey
@@ -115,7 +119,7 @@ public class AuthenticationManager {
      * @return true if a private key is present
      */
     public boolean generatePrivateKey(ChatMember member) {
-        if(this.generatePrivateKey()) {
+        if (this.generatePrivateKey()) {
             try {
                 TUMCabeClient.getInstance(mContext).uploadPublicKey(member.getId(), new ChatPublicKey(this.getPublicKeyString()));
                 return true;
@@ -172,11 +176,12 @@ public class AuthenticationManager {
 
     /**
      * Try to upload the public key to the server and remember that state
+     *
      * @param publicKey
      */
-    private void uploadKey(String publicKey){
+    private void uploadKey(String publicKey) {
         //If we already uploaded it we don't need to redo that
-        if(Utils.getInternalSettingBool(mContext, Const.PUBLIC_KEY_UPLOADED, false)){
+        if (Utils.getInternalSettingBool(mContext, Const.PUBLIC_KEY_UPLOADED, false)) {
             this.tryToUploadGcmToken();
             return;
         }
@@ -211,7 +216,7 @@ public class AuthenticationManager {
         }
     }
 
-    private void tryToUploadGcmToken(){
+    private void tryToUploadGcmToken() {
         // Check device for Play Services APK. If check succeeds, proceed with GCM registration.
         // Can only be done after the public key has been uploaded
         if (Utils.getInternalSettingBool(mContext, Const.PUBLIC_KEY_UPLOADED, false) && GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(mContext) == ConnectionResult.SUCCESS) {
@@ -222,21 +227,23 @@ public class AuthenticationManager {
 
     /**
      * Convert a byte array to a more manageable base64 string to store it in the preferences
+     *
      * @param key
      * @return
      */
-    private String keyToBase64(byte[] key){
+    private String keyToBase64(byte[] key) {
         return Base64.encodeToString(key, Base64.DEFAULT);
     }
 
     /**
-     * Generates a keypair with the given algorithm & size
+     * Generates a keypair with the given ALGORITHM & size
+     *
      * @return
      * @throws NoSuchAlgorithmException
      */
     private KeyPair generateKeyPair() throws NoSuchAlgorithmException {
-        KeyPairGenerator keyGen = KeyPairGenerator.getInstance(AuthenticationManager.algorithm);
-        keyGen.initialize(AuthenticationManager.rsaKeySize);
+        KeyPairGenerator keyGen = KeyPairGenerator.getInstance(AuthenticationManager.ALGORITHM);
+        keyGen.initialize(AuthenticationManager.RSA_KEY_SIZE);
         return keyGen.generateKeyPair();
     }
 
@@ -252,8 +259,8 @@ public class AuthenticationManager {
     /**
      * Reset all keys generated - this should actually never happen
      */
-    private void clearKeys(){
-        this.saveKeys("","");
+    private void clearKeys() {
+        this.saveKeys("", "");
         Utils.setInternalSetting(mContext, Const.PUBLIC_KEY_UPLOADED, false);
     }
 }

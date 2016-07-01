@@ -20,7 +20,7 @@ public class PersonListAdapter extends BaseAdapter {
 		TextView tvName;
 	}
 
-	private static List<Person> employees;
+	private List<Person> employees;
 
 	private final LayoutInflater mInflater;
 

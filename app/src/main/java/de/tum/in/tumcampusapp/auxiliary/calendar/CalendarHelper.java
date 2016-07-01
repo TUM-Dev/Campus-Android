@@ -16,7 +16,7 @@ import android.support.v4.app.ActivityCompat;
  */
 public class CalendarHelper {
     private static final String ACCOUNT_NAME = "TUM_Campus_APP";
-    private static final String Calendar_Name = "TUM Campus";
+    private static final String CALENDAR_NAME = "TUM Campus";
 
     /**
      * Gets uri query to insert calendar TUM_Campus_APP to google calendar
@@ -56,12 +56,12 @@ public class CalendarHelper {
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     private static ContentValues buildContentValues() {
         int colorCalendar = 0x0066CC;
-        String intName = ACCOUNT_NAME + Calendar_Name;
+        String intName = ACCOUNT_NAME + CALENDAR_NAME;
         final ContentValues cv = new ContentValues();
         cv.put(Calendars.ACCOUNT_NAME, ACCOUNT_NAME);
         cv.put(Calendars.ACCOUNT_TYPE, CalendarContract.ACCOUNT_TYPE_LOCAL);
         cv.put(Calendars.NAME, intName);
-        cv.put(Calendars.CALENDAR_DISPLAY_NAME, Calendar_Name);
+        cv.put(Calendars.CALENDAR_DISPLAY_NAME, CALENDAR_NAME);
         cv.put(Calendars.CALENDAR_COLOR, colorCalendar);
         cv.put(Calendars.CALENDAR_ACCESS_LEVEL, Calendars.CAL_ACCESS_OWNER);
         cv.put(Calendars.OWNER_ACCOUNT, ACCOUNT_NAME);

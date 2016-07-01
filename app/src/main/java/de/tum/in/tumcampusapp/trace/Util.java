@@ -38,20 +38,20 @@ public class Util {
     }
 
     public static String isGPSOn() {
-        String gps_status = "true";
+        String gpsStatus = "true";
 
         PackageManager packageManager = G.context.getPackageManager();
         if (packageManager.checkPermission("android.permission.ACCESS_FINE_LOCATION", G.appPackage) == PackageManager.PERMISSION_GRANTED) {
             LocationManager locManager;
             locManager = (LocationManager) G.context.getSystemService(Context.LOCATION_SERVICE);
             if (!locManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-                gps_status = "false";
+                gpsStatus = "false";
             }
         } else {
-            gps_status = "not available [permissions]";
+            gpsStatus = "not available [permissions]";
         }
 
-        return gps_status;
+        return gpsStatus;
     }
 
     public static String[] ScreenProperties() {

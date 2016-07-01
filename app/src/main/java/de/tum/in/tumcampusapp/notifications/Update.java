@@ -20,7 +20,7 @@ import de.tum.in.tumcampusapp.models.TUMCabeClient;
 public class Update extends GenericNotification {
 
     public final GCMUpdate data;
-    private GCMNotification info;
+    private final GCMNotification info;
 
     public Update(String payload, Context context, int notfication) {
         super(context, 2, notfication, true);

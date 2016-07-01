@@ -17,7 +17,7 @@ import de.tum.in.tumcampusapp.models.managers.CacheManager;
 /**
  * Enum for all TUMOnline access possibilities
  */
-public class TUMOnlineConst<T> {
+public final class TUMOnlineConst<T> {
     public static final TUMOnlineConst<CalendarRowSet> CALENDER = new TUMOnlineConst<>("kalender", CacheManager.VALIDITY_FIFE_DAYS, CalendarRowSet.class);
     public static final TUMOnlineConst<TuitionList> TUITION_FEE_STATUS = new TUMOnlineConst<>("studienbeitragsstatus", CacheManager.VALIDITY_TWO_DAYS, TuitionList.class);
     public static final TUMOnlineConst<LecturesSearchRowSet> LECTURES_PERSONAL = new TUMOnlineConst<>("veranstaltungenEigene", CacheManager.VALIDITY_FIFE_DAYS, LecturesSearchRowSet.class);

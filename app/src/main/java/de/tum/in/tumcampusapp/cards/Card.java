@@ -38,12 +38,12 @@ public abstract class Card {
     private static final String DISCARD_SETTINGS_PHONE = "discard_settings_phone";
 
     // Context related stuff
-    Context mContext;
+    protected Context mContext;
     // UI Elements
-    View mCard;
-    LinearLayout mLinearLayout;
-    TextView mTitleView;
-    private String mSettings;
+    protected View mCard;
+    protected LinearLayout mLinearLayout;
+    protected TextView mTitleView;
+    private final String mSettings;
     // Settings for showing this card on start page or as notification
     // Default values set for restore card, no internet card, etc.
     private boolean mShowStart = true;
@@ -56,8 +56,7 @@ public abstract class Card {
      * @param context Context
      */
     Card(Context context) {
-        mSettings = null;
-        mContext = context;
+        this(context, null);
     }
 
     /**
@@ -67,8 +66,8 @@ public abstract class Card {
      * @param settings Preference key prefix used for all preferences belonging to that card
      */
     Card(Context context, String settings) {
-        this(context, settings, true, false);
         mSettings = settings;
+        mContext = context;
     }
 
     /**
@@ -80,8 +79,7 @@ public abstract class Card {
      * @param phoneDefault True if notifications should by default be displayed on the phone
      */
     Card(Context context, String settings, boolean wearDefault, boolean phoneDefault) {
-        this(context);
-        mSettings = settings;
+        this(context, settings);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
         mShowStart = prefs.getBoolean(settings + "_start", true);
         mShowWear = prefs.getBoolean(settings + "_wear", wearDefault);

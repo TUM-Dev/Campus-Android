@@ -17,7 +17,7 @@ import de.tum.in.tumcampusapp.models.TUMCabeClient;
  * Counts the usage of a specific activity
  */
 public class ImplicitCounter {
-    private static final String settings = "usage_counter";
+    private static final String USAGE_COUNTER = "usage_counter";
     private static Date lastSync;
 
     /**
@@ -28,7 +28,7 @@ public class ImplicitCounter {
      * @param c Pointer to the activity that has been opened
      */
     public static void Counter(Context c) {
-        SharedPreferences sp = c.getSharedPreferences(settings, Context.MODE_PRIVATE);
+        SharedPreferences sp = c.getSharedPreferences(USAGE_COUNTER, Context.MODE_PRIVATE);
         final String identifier = c.getClass().getSimpleName();
 
         final int currentUsages = sp.getInt(identifier, 0);
@@ -36,7 +36,7 @@ public class ImplicitCounter {
     }
 
     public static void CounterCard(Context c, Card card) {
-        SharedPreferences sp = c.getSharedPreferences(settings, Context.MODE_PRIVATE);
+        SharedPreferences sp = c.getSharedPreferences(USAGE_COUNTER, Context.MODE_PRIVATE);
         String identifier = card.getClass().getSimpleName();
 
         //Add the news id when showing a news card so we can check which feeds are used
@@ -66,7 +66,7 @@ public class ImplicitCounter {
         Context c1 = c;
 
         //Get the prefs
-        SharedPreferences sp = c1.getSharedPreferences(settings, Context.MODE_PRIVATE);
+        SharedPreferences sp = c1.getSharedPreferences(USAGE_COUNTER, Context.MODE_PRIVATE);
 
         // Get all current entries
         Map<String, ?> allEntries = sp.getAll();

@@ -60,13 +60,13 @@ public class SilenceService extends IntentService {
         PendingIntent pendingIntent = PendingIntent.getService(this, 0, newIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         long startTime = System.currentTimeMillis();
-        long wait_duration = CHECK_INTERVAL;
+        long waitDuration = CHECK_INTERVAL;
         Utils.log("SilenceService enabled, checking for lectures ...");
 
         CalendarManager calendarManager = new CalendarManager(this);
         if (!calendarManager.hasLectures()) {
             Utils.logv("No lectures available");
-            alarmManager.set(AlarmManager.RTC, startTime + wait_duration, pendingIntent);
+            alarmManager.set(AlarmManager.RTC, startTime + waitDuration, pendingIntent);
             return;
         }
 
@@ -94,7 +94,7 @@ public class SilenceService extends IntentService {
             }
             // refresh when event has ended
             cursor.moveToFirst();
-            wait_duration = getWaitDuration(cursor.getString(3));
+            waitDuration = getWaitDuration(cursor.getString(3));
         } else if (Utils.getInternalSettingBool(this, Const.SILENCE_ON, false)) {
             // default: old state
             Utils.log("set ringer mode to old state");
@@ -107,13 +107,13 @@ public class SilenceService extends IntentService {
             Cursor cursor2 = calendarManager.getNextCalendarItem();
             if (cursor.getCount() != 0) { //Check if we have a "next" item in the database and update the refresh interval until then. Otherwise use default interval.
                 // refresh when next event has started
-                wait_duration = getWaitDuration(cursor2.getString(1));
+                waitDuration = getWaitDuration(cursor2.getString(1));
             }
             cursor2.close();
         }
         cursor.close();
 
-        alarmManager.set(AlarmManager.RTC, startTime + wait_duration, pendingIntent);
+        alarmManager.set(AlarmManager.RTC, startTime + waitDuration, pendingIntent);
     }
 
     private static long getWaitDuration(String timeToEventString) {

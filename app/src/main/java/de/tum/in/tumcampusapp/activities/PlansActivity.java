@@ -27,7 +27,7 @@ import de.tum.in.tumcampusapp.auxiliary.Utils;
  */
 public class PlansActivity extends BaseActivity implements OnItemClickListener {
 
-    private static final String[][] filesToDownload = {
+    private static final String[][] FILES_TO_DOWNLOAD = {
             {"http://www.mvv-muenchen.de/fileadmin/media/Dateien/plaene/pdf/Netz_2016_Version_MVG.PDF", "Schnellbahnnetz.pdf"},
             {"http://www.mvv-muenchen.de/fileadmin/media/Dateien/plaene/pdf/Nachtnetz_2016.pdf", "Nachtliniennetz.pdf"},
             {"http://www.mvv-muenchen.de/fileadmin/media/Dateien/plaene/pdf/Tramnetz_2016.pdf", "Tramnetz.pdf"},
@@ -40,7 +40,7 @@ public class PlansActivity extends BaseActivity implements OnItemClickListener {
             Utils.log("Starting download.");
             NetUtils netUtils = new NetUtils(getApplicationContext());
 
-            for (String[] file : PlansActivity.filesToDownload) {
+            for (String[] file : PlansActivity.FILES_TO_DOWNLOAD) {
                 try {
                     netUtils.downloadToFile(file[0], getApplicationContext().getFilesDir().getPath() + "/" + file[1]);
                     Utils.log(getApplicationContext().getFilesDir() + file[1]);
@@ -114,7 +114,7 @@ public class PlansActivity extends BaseActivity implements OnItemClickListener {
         PlanListEntry entry = (PlanListEntry) mListAdapter.getItem(pos);
 
         if (pos <= 3) {
-            File pdfFile = new File(getFilesDir(), PlansActivity.filesToDownload[pos][1]);
+            File pdfFile = new File(getFilesDir(), PlansActivity.FILES_TO_DOWNLOAD[pos][1]);
 
             final Uri path = FileProvider.getUriForFile(getApplicationContext(), "de.tum.in.tumcampusapp.fileprovider", pdfFile);
 

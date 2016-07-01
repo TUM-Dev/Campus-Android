@@ -25,7 +25,7 @@ import retrofit.client.Response;
 
 public class GcmIdentificationService extends InstanceIDListenerService {
 
-    private static final String senderId = "944892355389";
+    private static final String SENDER_ID = "944892355389";
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     private final Context mContext;
 
@@ -40,7 +40,7 @@ public class GcmIdentificationService extends InstanceIDListenerService {
      */
     public String register() throws IOException {
         String iid = InstanceID.getInstance(mContext).getId();
-        String token = InstanceID.getInstance(mContext).getToken(senderId, GoogleCloudMessaging.INSTANCE_ID_SCOPE);
+        String token = InstanceID.getInstance(mContext).getToken(SENDER_ID, GoogleCloudMessaging.INSTANCE_ID_SCOPE);
         Utils.setInternalSetting(mContext, Const.GCM_INSTANCE_ID, iid);
         Utils.setInternalSetting(mContext, Const.GCM_TOKEN_ID, token);
 
@@ -60,7 +60,7 @@ public class GcmIdentificationService extends InstanceIDListenerService {
         InstanceID iid = InstanceID.getInstance(this);
 
         try {
-            String token = iid.getToken(GcmIdentificationService.senderId, GoogleCloudMessaging.INSTANCE_ID_SCOPE);
+            String token = iid.getToken(GcmIdentificationService.SENDER_ID, GoogleCloudMessaging.INSTANCE_ID_SCOPE);
             Utils.setInternalSetting(this, Const.GCM_TOKEN_ID, token);
         } catch (IOException e) {
             Utils.log(e, "Failed to refresh token");

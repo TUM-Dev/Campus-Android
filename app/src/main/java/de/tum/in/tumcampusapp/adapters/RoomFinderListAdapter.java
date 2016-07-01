@@ -25,7 +25,7 @@ public class RoomFinderListAdapter extends BaseAdapter implements StickyListHead
     }
 
     private final List<Map<String, String>> data;
-    private static LayoutInflater inflater;
+    private final LayoutInflater inflater;
 
     public RoomFinderListAdapter(Activity activity, List<Map<String, String>> d) {
         data = d;
@@ -92,18 +92,11 @@ public class RoomFinderListAdapter extends BaseAdapter implements StickyListHead
     @Override
     public long getHeaderId(int i) {
         String headerText = data.get(i).get(TUMRoomFinderRequest.KEY_CAMPUS_TITLE);
-        /*
-        if(headerText.equals("Garching-Hochbrück"))
-            return 'X';
-        if(headerText.equals("Sonstiges"))
-            return 'Z';
-            */
 
         if (headerText == null) {
             return 'Z';
         }
         return headerText.hashCode();
-        //return data.get(i).get(TUMRoomFinderRequest.KEY_CAMPUS_ID).charAt(0);
     }
 
     static class HeaderViewHolder {

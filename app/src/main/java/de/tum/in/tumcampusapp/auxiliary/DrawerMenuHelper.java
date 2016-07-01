@@ -28,7 +28,29 @@ import de.tum.in.tumcampusapp.activities.TuitionFeesActivity;
 
 public class DrawerMenuHelper implements NavigationView.OnNavigationItemSelectedListener {
 
+    private static final SideNavigationItem[] MY_TUM = {
+            new SideNavigationItem(R.string.schedule, R.drawable.ic_calendar, CalendarActivity.class, true, false),
+            new SideNavigationItem(R.string.my_lectures, R.drawable.ic_my_lectures, LecturesPersonalActivity.class, true, false),
+            new SideNavigationItem(R.string.chat_rooms, R.drawable.ic_comment, ChatRoomsActivity.class, true, true),
+            new SideNavigationItem(R.string.tuition_fees, R.drawable.ic_money, TuitionFeesActivity.class, true, false),
+    };
+
+    private static final SideNavigationItem[] COMMON_TUM = {
+            new SideNavigationItem(R.string.menues, R.drawable.ic_cutlery, CafeteriaActivity.class, false, false),
+            new SideNavigationItem(R.string.news, R.drawable.ic_rss, NewsActivity.class, false, false),
+            new SideNavigationItem(R.string.mvv, R.drawable.ic_mvv, TransportationActivity.class, false, false),
+            new SideNavigationItem(R.string.plans, R.drawable.ic_plans, PlansActivity.class, false, false),
+            new SideNavigationItem(R.string.roomfinder, R.drawable.ic_place, RoomFinderActivity.class, false, false),
+            new SideNavigationItem(R.string.study_rooms, R.drawable.ic_group_work, StudyRoomsActivity.class, false, false),
+            new SideNavigationItem(R.string.opening_hours, R.drawable.ic_time, OpeningHoursListActivity.class, false, false),
+            new SideNavigationItem(R.string.quiz_title, R.drawable.ic_pie_chart, SurveyActivity.class, true, false),
+            new SideNavigationItem(R.string.person_search, R.drawable.ic_users, PersonsSearchActivity.class, true, false),
+            new SideNavigationItem(R.string.organisations, R.drawable.ic_organisations, OrganisationActivity.class, true, false),
+            new SideNavigationItem(R.string.study_plans, R.drawable.ic_study_plans, CurriculaActivity.class, false, false)
+    };
+
     private final Context mContext;
+
     private final DrawerLayout mDrawerLayout;
 
     public DrawerMenuHelper(Context context, DrawerLayout drawerLayout) {
@@ -51,7 +73,7 @@ public class DrawerMenuHelper implements NavigationView.OnNavigationItemSelected
 
         if (hasTUMOAccess) {
             SubMenu myTumMenu = navigationMenu.addSubMenu(R.string.my_tum);
-            for (SideNavigationItem item : myTum) {
+            for (SideNavigationItem item : MY_TUM) {
                 if (!(item.needsChatAccess && !chatEnabled)) {
                     myTumMenu.add(item.titleRes).setIcon(item.iconRes).setIntent(new Intent(mContext, item.activity));
                 }
@@ -59,33 +81,12 @@ public class DrawerMenuHelper implements NavigationView.OnNavigationItemSelected
         }
 
         SubMenu commonTumMenu = navigationMenu.addSubMenu(R.string.tum_common);
-        for (SideNavigationItem item : commonTum) {
+        for (SideNavigationItem item : COMMON_TUM) {
             if (!(item.needsTUMOAccess && !hasTUMOAccess)) {
                 commonTumMenu.add(item.titleRes).setIcon(item.iconRes).setIntent(new Intent(mContext, item.activity));
             }
         }
     }
-
-    private static final SideNavigationItem[] myTum = {
-            new SideNavigationItem(R.string.schedule, R.drawable.ic_calendar, CalendarActivity.class, true, false),
-            new SideNavigationItem(R.string.my_lectures, R.drawable.ic_my_lectures, LecturesPersonalActivity.class, true, false),
-            new SideNavigationItem(R.string.chat_rooms, R.drawable.ic_comment, ChatRoomsActivity.class, true, true),
-            new SideNavigationItem(R.string.tuition_fees, R.drawable.ic_money, TuitionFeesActivity.class, true, false),
-    };
-
-    private static final SideNavigationItem[] commonTum = {
-            new SideNavigationItem(R.string.menues, R.drawable.ic_cutlery, CafeteriaActivity.class, false, false),
-            new SideNavigationItem(R.string.news, R.drawable.ic_rss, NewsActivity.class, false, false),
-            new SideNavigationItem(R.string.mvv, R.drawable.ic_mvv, TransportationActivity.class, false, false),
-            new SideNavigationItem(R.string.plans, R.drawable.ic_plans, PlansActivity.class, false, false),
-            new SideNavigationItem(R.string.roomfinder, R.drawable.ic_place, RoomFinderActivity.class, false, false),
-            new SideNavigationItem(R.string.study_rooms, R.drawable.ic_group_work, StudyRoomsActivity.class, false, false),
-            new SideNavigationItem(R.string.opening_hours, R.drawable.ic_time, OpeningHoursListActivity.class, false, false),
-            new SideNavigationItem(R.string.quiz_title, R.drawable.ic_pie_chart, SurveyActivity.class, true, false),
-            new SideNavigationItem(R.string.person_search, R.drawable.ic_users, PersonsSearchActivity.class, true, false),
-            new SideNavigationItem(R.string.organisations, R.drawable.ic_organisations, OrganisationActivity.class, true, false),
-            new SideNavigationItem(R.string.study_plans, R.drawable.ic_study_plans, CurriculaActivity.class, false, false)
-    };
 
     public static class SideNavigationItem {
         final int titleRes;
