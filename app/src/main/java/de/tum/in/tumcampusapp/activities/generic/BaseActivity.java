@@ -66,9 +66,9 @@ public abstract class BaseActivity extends AppCompatActivity {
             TextView emailText = (TextView) headerView.findViewById(R.id.email);
             nameText.setText(Utils.getSetting(this, Const.CHAT_ROOM_DISPLAY_NAME,
                     getString(R.string.token_not_enabled)));
-            String email = Utils.getSetting(this, Const.LRZ_ID, "");
-            if (!email.isEmpty()) {
-                email += "@mytum.de";
+            StringBuffer email = new StringBuffer(Utils.getSetting(this, Const.LRZ_ID, ""));
+            if (!email.toString().isEmpty()) {
+                email.append("@mytum.de");
             }
             emailText.setText(email);
 
@@ -99,21 +99,20 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
+        if (item.getItemId() == android.R.id.home) {
             // Respond to the action bar's Up/Home button
-            case android.R.id.home:
-                Intent upIntent = NavUtils.getParentActivityIntent(this);
-                upIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
-                    // This activity is NOT part of this apps task, so create a new task
-                    // when navigating up, with a synthesized back stack.
-                    TaskStackBuilder.create(this).addNextIntentWithParentStack(upIntent).startActivities();
-                } else {
-                    // This activity is part of this apps task, so simply
-                    // navigate up to the logical parent activity.
-                    NavUtils.navigateUpTo(this, upIntent);
-                }
-                return true;
+            Intent upIntent = NavUtils.getParentActivityIntent(this);
+            upIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
+                // This activity is NOT part of this apps task, so create a new task
+                // when navigating up, with a synthesized back stack.
+                TaskStackBuilder.create(this).addNextIntentWithParentStack(upIntent).startActivities();
+            } else {
+                // This activity is part of this apps task, so simply
+                // navigate up to the logical parent activity.
+                NavUtils.navigateUpTo(this, upIntent);
+            }
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
