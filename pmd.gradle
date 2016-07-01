@@ -25,7 +25,7 @@ afterEvaluate {
     variants.each { variant ->
         def task = tasks.create("pmd${variant.name.capitalize()}", Pmd)
 
-        task.ruleSetFiles = files("./qa-checks/pmd-ruleset.xml")
+        task.ruleSetFiles = files("../pmd-ruleset.xml")
         task.ruleSets = []
 
         task.source 'src'
