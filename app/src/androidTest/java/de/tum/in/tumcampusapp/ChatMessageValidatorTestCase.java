@@ -22,8 +22,8 @@ import static org.junit.Assert.assertTrue;
 public class ChatMessageValidatorTestCase {
 
     private ChatMessageValidator validator;
-    private ArrayList<ChatPublicKey> publicKeyFixtures;
-    private ArrayList<ChatMessage> messageFixtures;
+    private List<ChatPublicKey> publicKeyFixtures;
+    private List<ChatMessage> messageFixtures;
 
     @Before
     public void setUp() throws Exception {

@@ -14,6 +14,7 @@ import java.security.PrivateKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.ArrayList;
+import java.util.List;
 
 import de.tum.in.tumcampusapp.auxiliary.RSASigner;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
@@ -28,7 +29,7 @@ public class RSASignerTestCase {
 
     private RSASigner signer;
     private PrivateKey privateKeyFixture;
-    private ArrayList<ChatMessage> messageFixtures;
+    private List<ChatMessage> messageFixtures;
 
 
     private PrivateKey buildPrivateKey(String privateKeyString) {
@@ -93,7 +94,7 @@ public class RSASignerTestCase {
         signer = new RSASigner(privateKeyFixture);
         ChatMessage message = messageFixtures.get(0);
 
-        Utils.log("" + message.getSignature().equals(signer.sign(message.getText())));
+        Utils.log(Boolean.toString(message.getSignature().equals(signer.sign(message.getText()))));
         Utils.log(signer.sign(message.getText()));
         assertEquals(message.getSignature(), signer.sign(message.getText()));
     }
@@ -124,6 +125,7 @@ public class RSASignerTestCase {
      * Tests that when the private key associated with
      * the signer is null, the signer returns null.
      */
+    @Test
     public void testPrivateKeyNull() {
         signer = new RSASigner(null);
         ChatMessage message = messageFixtures.get(0);
