@@ -51,7 +51,7 @@ public class DefaultExceptionHandler implements UncaughtExceptionHandler {
 
         } catch (IOException ebos) {
             // Nothing much we can do about this - the game is over
-            Log.e(G.tag, "Error saving exception stacktrace", e);
+            Log.e(G.TAG, "Error saving exception stacktrace", e);
         }
 
         //call original handler

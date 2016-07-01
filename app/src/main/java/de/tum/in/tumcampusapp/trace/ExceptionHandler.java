@@ -61,7 +61,7 @@ public final class ExceptionHandler {
         }
         sSetupCalled = true;
 
-        Log.i(G.tag, "Registering default exceptions handler");
+        Log.i(G.TAG, "Registering default exceptions handler");
 
         //Remeber the context
         G.context = context;
@@ -286,7 +286,7 @@ public final class ExceptionHandler {
                     sStackTraces.add(a);
 
                 } catch (IOException e) {
-                    Log.e(G.tag, "Failed to load stack trace", e);
+                    Log.e(G.TAG, "Failed to load stack trace", e);
                 }
             }
 
@@ -299,7 +299,7 @@ public final class ExceptionHandler {
                     File file = new File(G.filesPath + '/' + aList);
                     file.delete();
                 } catch (Exception e) {
-                    Log.e(G.tag, "Error deleting trace file: " + aList, e);
+                    Log.e(G.TAG, "Error deleting trace file: " + aList, e);
                 }
             }
         }
@@ -311,7 +311,7 @@ public final class ExceptionHandler {
     private static void submitStackTraces(List<String[]> list) {
         //Check if we user gave permission to send these reports
         G.preferences = PreferenceManager.getDefaultSharedPreferences(G.context);
-        if (!G.preferences.getBoolean(Const.BUG_REPORTS, G.bugReportDefault)) {
+        if (!G.preferences.getBoolean(Const.BUG_REPORTS, G.BUG_REPORT_DEFAULT)) {
             return;
         }
 
@@ -335,7 +335,7 @@ public final class ExceptionHandler {
                 // We don't care about the response, so we just hope it went well and on with it.
             }
         } catch (Exception e) {
-            Log.e(G.tag, "Error submitting trace", e);
+            Log.e(G.TAG, "Error submitting trace", e);
         }
     }
 

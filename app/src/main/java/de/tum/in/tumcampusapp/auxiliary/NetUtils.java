@@ -113,7 +113,7 @@ public class NetUtils {
     private void setHttpConnectionParams(Request.Builder builder) {
         //Clearly identify all requests from this app
         String userAgent = "TCA Client";
-        if (G.appVersion != null && !G.appVersion.equals("unknown")) {
+        if (G.appVersion != null && !G.appVersion.equals(G.UNKNOWN)) {
             userAgent += " " + G.appVersion;
             if (G.appVersionCode != -1) {
                 userAgent += "/" + G.appVersionCode;
