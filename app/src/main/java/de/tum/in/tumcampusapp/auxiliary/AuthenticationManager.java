@@ -33,7 +33,7 @@ import retrofit.client.Response;
 public class AuthenticationManager {
     private final static String algorithm = "RSA";
     private final static int rsaKeySize = 1024;
-    private static String uniqueID = null;
+    private static String uniqueID;
     private final Context mContext;
 
     public AuthenticationManager(Context c) {

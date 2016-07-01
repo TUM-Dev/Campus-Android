@@ -25,7 +25,7 @@ public class PlanListAdapter extends BaseAdapter {
 	}
 
 	private final Activity activity;
-	private LayoutInflater inflater = null;
+	private LayoutInflater inflater;
 	private final ArrayList<PlanListEntry> planList;
 
     public PlanListAdapter(Activity activity, ArrayList<PlanListEntry> planList) {

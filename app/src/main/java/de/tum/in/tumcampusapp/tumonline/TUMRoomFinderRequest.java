@@ -52,7 +52,7 @@ public class TUMRoomFinderRequest {
     /**
      * asynchronous task for interactive fetch
      */
-    private AsyncTask<String, Void, ArrayList<HashMap<String, String>>> backgroundTask = null;
+    private AsyncTask<String, Void, ArrayList<HashMap<String, String>>> backgroundTask;
 
     private final NetUtils net;
 

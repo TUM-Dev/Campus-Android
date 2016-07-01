@@ -77,7 +77,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
      * Used as a flag, if there are results fetched from internet
      */
     private boolean isFetched;
-    private boolean mWeekMode = false;
+    private boolean mWeekMode;
     private Calendar mShowDate;
     private MenuItem menuItemSwitchView;
     private WeekView mWeekView;

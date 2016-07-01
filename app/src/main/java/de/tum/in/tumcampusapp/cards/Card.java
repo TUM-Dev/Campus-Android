@@ -47,8 +47,8 @@ public abstract class Card {
     // Settings for showing this card on start page or as notification
     // Default values set for restore card, no internet card, etc.
     private boolean mShowStart = true;
-    private boolean mShowWear = false;
-    private boolean mShowPhone = false;
+    private boolean mShowWear;
+    private boolean mShowPhone;
 
     /**
      * Card constructor for special cards that don't have a preference screen

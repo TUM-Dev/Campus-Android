@@ -40,7 +40,7 @@ public class DownloadService extends IntentService {
     private static final String LAST_UPDATE = "last_update";
     private static final String CSV_LOCATIONS = "locations.csv";
 
-    private LocalBroadcastManager broadcastManager = null;
+    private LocalBroadcastManager broadcastManager;
 
     /**
      * default init (run intent in new thread)

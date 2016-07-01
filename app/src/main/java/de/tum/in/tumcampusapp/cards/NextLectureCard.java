@@ -44,7 +44,7 @@ public class NextLectureCard extends Card {
     private TextView mLocation;
     private final ArrayList<CalendarItem> lectures = new ArrayList<>();
     private TextView mTimeView;
-    private int mSelected = 0;
+    private int mSelected;
     private TextView mEvent;
 
     public NextLectureCard(Context context) {

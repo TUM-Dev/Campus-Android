@@ -29,7 +29,7 @@ public abstract class ActivityForSearching extends ProgressActivity {
     /**
      * Last search query
      */
-    protected String mQuery = null;
+    protected String mQuery;
     /**
      * SearchView handle
      */

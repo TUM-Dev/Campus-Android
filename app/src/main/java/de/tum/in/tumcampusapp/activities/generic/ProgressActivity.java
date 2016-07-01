@@ -36,7 +36,7 @@ public abstract class ProgressActivity extends BaseActivity implements SwipeRefr
     private RelativeLayout noInternetLayout;
     private RelativeLayout failedTokenLayout;
     private SwipeRefreshLayout swipeRefreshLayout;
-    private boolean registered = false;
+    private boolean registered;
     private final Handler mLoadingHandler = new Handler();
 
     /**

@@ -75,20 +75,20 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
     // Key for the string that's delivered in the action's intent
     public static final String EXTRA_VOICE_REPLY = "extra_voice_reply";
     private static final int maxEditTimespan = 120000;
-    public static ChatRoom mCurrentOpenChatRoom = null;
+    public static ChatRoom mCurrentOpenChatRoom;
     private final Handler mUpdateHandler = new Handler();
     /**
      * UI elements
      */
     private ListView lvMessageHistory;
-    private ChatHistoryAdapter chatHistoryAdapter = null;
+    private ChatHistoryAdapter chatHistoryAdapter;
     private EditText etMessage;
     private ImageButton btnSend;
     private ProgressBar bar;
     private ChatRoom currentChatRoom;
     private ChatMember currentChatMember;
-    private boolean loadingMore = false;
-    private boolean iconShow = false;
+    private boolean loadingMore;
+    private boolean iconShow;
     private ChatMessageManager chatManager;
     private final BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
@@ -124,7 +124,7 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
         }
     };
 
-    private ActionMode mActionMode = null;
+    private ActionMode mActionMode;
     private final ActionMode.Callback mActionModeCallback = new ActionMode.Callback() {
 
         // Called when the action mode is created; startActionMode() was called

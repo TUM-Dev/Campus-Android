@@ -33,7 +33,7 @@ import retrofit.RetrofitError;
  */
 public class WizNavChatActivity extends ActivityForLoadingInBackground<Void, ChatMember> {
 
-    private boolean tokenSetup = false;
+    private boolean tokenSetup;
     private CheckBox groupChatMode, autoJoin, acceptedTerms;
 
     public WizNavChatActivity() {

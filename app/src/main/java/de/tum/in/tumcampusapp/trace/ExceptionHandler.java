@@ -24,10 +24,10 @@ public class ExceptionHandler {
 
     public static final boolean sVerbose = false;
     // Stores loaded stack traces in memory. Each element is contains a full stacktrace
-    private static ArrayList<String[]> sStackTraces = null;
+    private static ArrayList<String[]> sStackTraces;
     private static ActivityAsyncTask<Processor, Object, Object, Object> sTask;
     private static final int sMinDelay = 0;
-    private static boolean sSetupCalled = false;
+    private static boolean sSetupCalled;
 
     /**
      * Setup the handler for unhandled exceptions, and submit stack

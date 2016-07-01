@@ -44,7 +44,7 @@ public class CardManager {
     public static final int CARD_SUPPORT = 13;
     public static final int CARD_SURVEY = 14;
     public static final int CARD_IKOM = 15;
-    public static boolean shouldRefresh = false;
+    public static boolean shouldRefresh;
     private static List<Card> cards;
     private static ArrayList<Card> newCards;
     private static Context mContext;

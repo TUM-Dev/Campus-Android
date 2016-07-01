@@ -25,7 +25,7 @@ import retrofit.RetrofitError;
  */
 public class WizNavActivatePublicKeyActivity extends ActivityForLoadingInBackground<Void, Boolean> {
 
-    private boolean tokenSetup = false;
+    private boolean tokenSetup;
 
     public WizNavActivatePublicKeyActivity() {
         super(R.layout.activity_wiznav_activate_key);

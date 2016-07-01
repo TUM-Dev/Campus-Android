@@ -49,17 +49,17 @@ public class TUMOnlineRequest<T> {
      */
     private final Context mContext;
     // force to fetch data and fill cache
-    private boolean fillCache = false;
+    private boolean fillCache;
     // set to null, if not needed
-    private String accessToken = null;
+    private String accessToken;
     /**
      * asynchronous task for interactive fetch
      */
-    private AsyncTask<Void, Void, T> backgroundTask = null;
+    private AsyncTask<Void, Void, T> backgroundTask;
     /**
      * method to call
      */
-    private TUMOnlineConst<T> method = null;
+    private TUMOnlineConst<T> method;
     /**
      * a list/map for the needed parameters
      */

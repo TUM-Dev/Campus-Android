@@ -37,14 +37,14 @@ public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<Vo
 
     private ImageViewTouchFragment mImage;
 
-    private boolean mapsLoaded = false;
+    private boolean mapsLoaded;
     private TUMRoomFinderRequest request;
     private NetUtils net;
 
     private Bundle roomInfo;
     private String mapId = "";
     private ArrayList<HashMap<String, String>> mapsList;
-    private boolean infoLoaded = false;
+    private boolean infoLoaded;
     private Fragment fragment;
 
     public RoomFinderDetailsActivity() {

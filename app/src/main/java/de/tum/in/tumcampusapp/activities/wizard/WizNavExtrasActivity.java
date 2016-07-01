@@ -20,7 +20,7 @@ public class WizNavExtrasActivity extends BaseActivity {
     private CheckBox checkBackgroundMode;
     private CheckBox checkSilentMode;
     private CheckBox bugReport;
-    private boolean tokenSetup = false;
+    private boolean tokenSetup;
 
     public WizNavExtrasActivity() {
         super(R.layout.activity_wiznav_extras);
