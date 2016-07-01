@@ -29,6 +29,10 @@ public class GcmIdentificationService extends InstanceIDListenerService {
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     private final Context mContext;
 
+    public GcmIdentificationService() {
+        mContext = null;
+    }
+
     public GcmIdentificationService(Context c) {
         mContext = c;
     }
@@ -115,7 +119,7 @@ public class GcmIdentificationService extends InstanceIDListenerService {
 
     /**
      * Registers the application with GCM servers asynchronously.
-     * <p/>
+     * <p>
      * Stores the registration ID and app versionCode in the application's
      * shared preferences.
      */
