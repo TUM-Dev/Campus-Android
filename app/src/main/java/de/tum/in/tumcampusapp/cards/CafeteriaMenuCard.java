@@ -17,8 +17,8 @@ import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.CafeteriaActivity;
@@ -120,7 +120,7 @@ public class CafeteriaMenuCard extends Card {
 
     @Override
     protected Notification fillNotification(NotificationCompat.Builder notificationBuilder) {
-        HashMap<String, String> rolePrices = CafeteriaPrices.getRolePrices(mContext);
+        Map<String, String> rolePrices = CafeteriaPrices.getRolePrices(mContext);
 
         NotificationCompat.WearableExtender morePageNotification =
                 new NotificationCompat.WearableExtender();
