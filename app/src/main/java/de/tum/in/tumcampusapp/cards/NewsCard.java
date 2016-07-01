@@ -125,7 +125,7 @@ public class NewsCard extends Card {
             // Show regular news in browser
             mCursor.moveToPosition(mPosition);
             String url = mCursor.getString(3);
-            if (url.length() == 0) {
+            if (url.isEmpty()) {
                 Utils.showToast(mContext, R.string.no_link_existing);
                 return null;
             }

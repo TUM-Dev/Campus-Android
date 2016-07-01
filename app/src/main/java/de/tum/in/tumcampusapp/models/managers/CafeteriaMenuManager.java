@@ -172,13 +172,13 @@ public class CafeteriaMenuManager extends AbstractManager {
 		if (c.cafeteriaId <= 0) {
 			throw new Exception("Invalid cafeteriaId.");
 		}
-		if (c.name.length() == 0) {
+		if (c.name.isEmpty()) {
 			throw new Exception("Invalid name.");
 		}
-		if (c.typeLong.length() == 0) {
+		if (c.typeLong.isEmpty()) {
 			throw new Exception("Invalid typeLong.");
 		}
-		if (c.typeShort.length() == 0) {
+		if (c.typeShort.isEmpty()) {
 			throw new Exception("Invalid typeShort.");
 		}
 		if (c.date.before(Utils.getDate("2012-01-01"))) {

@@ -314,7 +314,7 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
         if (view.getId() == btnSend.getId()) {
 
             //Check if something was entered
-            if (etMessage.getText().toString().length() == 0) {
+            if (etMessage.getText().toString().isEmpty()) {
                 return;
             }
 

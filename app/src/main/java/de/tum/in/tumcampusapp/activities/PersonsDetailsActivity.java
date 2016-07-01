@@ -216,7 +216,7 @@ public class PersonsDetailsActivity extends ActivityForAccessingTumOnline<Employ
 
         // add all rooms
         List<Room> rooms = employee.getRooms();
-        if (rooms != null && rooms.size() > 0) {
+        if (rooms != null && !rooms.isEmpty()) {
             contentText.appendField(getString(R.string.room), rooms.get(0)
                     .getLocation() + " (" + rooms.get(0).getNumber() + ")");
         }
@@ -306,7 +306,7 @@ public class PersonsDetailsActivity extends ActivityForAccessingTumOnline<Employ
 
         // add all rooms
         List<Room> rooms = employee.getRooms();
-        if (rooms != null && rooms.size() > 0) {
+        if (rooms != null && !rooms.isEmpty()) {
             if (!notes.isEmpty()) {
                 notes += "\n";
             }

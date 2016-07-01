@@ -208,7 +208,7 @@ public class TUMOnlineRequest<T> {
                     } else if (lastError.contains(NO_FUNCTION_RIGHTS)) {
                         listener.onFetchError(context.getString(R.string.dialog_no_rights_function));
                         return;
-                    } else if (lastError.length() > 0) {
+                    } else if (!lastError.isEmpty()) {
                         listener.onFetchError(lastError);
                         return;
                     } else {

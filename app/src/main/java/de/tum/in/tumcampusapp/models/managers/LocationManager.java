@@ -277,7 +277,7 @@ public class LocationManager {
 
         // Get nearest cafeteria
         List<Cafeteria> list = getCafeterias();
-        if (list != null && list.size() > 0) {
+        if (list != null && !list.isEmpty()) {
             return list.get(0).id;
         } else {
             return -1;
@@ -325,7 +325,7 @@ public class LocationManager {
         }
 
         ArrayList<HashMap<String, String>> request = requestHandler.fetchRooms(loc);
-        if (request != null && request.size() > 0) {
+        if (request != null && !request.isEmpty()) {
             String room = request.get(0).get(TUMRoomFinderRequest.KEY_ARCH_ID);
             return requestHandler.fetchCoordinates(room);
         }

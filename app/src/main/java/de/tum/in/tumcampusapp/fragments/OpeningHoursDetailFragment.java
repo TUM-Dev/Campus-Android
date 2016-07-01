@@ -92,13 +92,13 @@ public class OpeningHoursDetailFragment extends Fragment implements ViewBinder {
             String room = c.getString(c.getColumnIndex(Const.ROOM_COLUMN));
 
             StringBuilder sb = new StringBuilder(hours + "\n" + address);
-            if (room.length() > 0) {
+            if (!room.isEmpty()) {
                 sb.append(", ").append(room);
             }
-            if (transport.length() > 0) {
+            if (!transport.isEmpty()) {
                 sb.append(" (").append(transport).append(")");
             }
-            if (remark.length() > 0) {
+            if (!remark.isEmpty()) {
                 sb.append("\n").append(remark.replaceAll("\\\\n", "\n"));
             }
             TextView tv = (TextView) view;
@@ -111,7 +111,7 @@ public class OpeningHoursDetailFragment extends Fragment implements ViewBinder {
         } else if (view.getId() == R.id.text3) {
             String url = c.getString(c.getColumnIndex(Const.URL_COLUMN));
             TextView tv = (TextView) view;
-            if (url.length() > 0) {
+            if (!url.isEmpty()) {
                 url = "<a href=\"" + url + "\">" + getString(R.string.website) + "</a>";
                 tv.setMovementMethod(LinkMovementMethod.getInstance());
                 tv.setText(Utils.fromHtml(url));

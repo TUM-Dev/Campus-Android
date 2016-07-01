@@ -281,7 +281,7 @@ public class SurveyActivity extends BaseActivity {
                 }).setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {//if ok show question EditText
-                        if (selectedFaculties.size() > 0) {
+                        if (!selectedFaculties.isEmpty()) {
                             submitSurveyButton.setVisibility(View.VISIBLE);
                             selectTv.setVisibility(View.VISIBLE);
                             aSpinner1.setVisibility(View.VISIBLE);

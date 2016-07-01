@@ -107,7 +107,7 @@ public class StudyRoomsActivity extends ActivityForLoadingInBackground<Void, Voi
     }
 
     private boolean hasGotStudyRoomGroups() {
-        return mStudyRoomGroupList != null && mStudyRoomGroupList.size() != 0;
+        return mStudyRoomGroupList != null && !mStudyRoomGroupList.isEmpty();
     }
 
     private void showCorrectErrorLayout() {

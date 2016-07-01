@@ -36,7 +36,7 @@ public class SendMessageService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         // Get all unsent messages from database
         ArrayList<ChatMessage> unsentMsg = ChatMessageManager.getAllUnsentUpdated(this);
-        if (unsentMsg.size() == 0) {
+        if (unsentMsg.isEmpty()) {
             return;
         }
 

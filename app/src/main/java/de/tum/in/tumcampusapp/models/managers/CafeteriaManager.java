@@ -113,7 +113,7 @@ public class CafeteriaManager extends AbstractManager implements Card.ProvidesCa
         if (c.id <= 0) {
             throw new Exception("Invalid id.");
         }
-        if (c.name.length() == 0) {
+        if (c.name.isEmpty()) {
             throw new Exception("Invalid name.");
         }
 
@@ -173,7 +173,7 @@ public class CafeteriaManager extends AbstractManager implements Card.ProvidesCa
         cursorCafeteriaDates.close();
 
         List<CafeteriaMenu> menus = cmm.getTypeNameFromDbCardList(cafeteriaId, dateStr, date);
-        if (menus.size() > 0) {
+        if (!menus.isEmpty()) {
             card.setCardMenus(cafeteriaId, cafeteriaName, dateStr, date, menus);
             card.apply();
         }

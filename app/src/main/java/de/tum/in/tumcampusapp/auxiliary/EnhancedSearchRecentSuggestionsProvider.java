@@ -254,7 +254,7 @@ public abstract class EnhancedSearchRecentSuggestionsProvider extends ContentPro
         }
 
         // Tack on the user's selection, if present
-        if (selection != null && selection.length() > 0) {
+        if (selection != null && !selection.isEmpty()) {
             if (whereClause.length() > 0) {
                 whereClause.append(" AND ");
             }

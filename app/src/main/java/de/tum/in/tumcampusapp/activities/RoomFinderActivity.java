@@ -65,7 +65,7 @@ public class RoomFinderActivity extends ActivityForSearching implements TUMRoomF
     @Override
     protected void onStartSearch() {
         ArrayList<HashMap<String, String>> recents = getRecents();
-        if (recents.size() == 0) {
+        if (recents.isEmpty()) {
             finish();
             return;
         }
@@ -80,7 +80,7 @@ public class RoomFinderActivity extends ActivityForSearching implements TUMRoomF
 
     @Override
     public void onFetch(ArrayList<HashMap<String, String>> result) {
-        if (result.size() == 0) {
+        if (result.isEmpty()) {
             list.setAdapter(new NoResultsAdapter(this));
         } else {
             adapter = new RoomFinderListAdapter(this, result);

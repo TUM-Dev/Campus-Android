@@ -85,7 +85,7 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
         mCafeterias = new LocationManager(this).getCafeterias();
 
         // If something went wrong or no cafeterias found
-        if (mCafeterias.size() == 0) {
+        if (mCafeterias.isEmpty()) {
             if(!NetUtils.isConnected(this)) {
                 showNoInternetLayout();
             } else {
