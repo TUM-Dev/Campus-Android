@@ -136,7 +136,7 @@ public class SurveyActivity extends BaseActivity {
             float inPixels = getResources().getDimension(R.dimen.dimen_buttonHeight_in_dp);
             Button deleteButton = new Button(this);
             deleteButton.setLayoutParams(new LinearLayout.LayoutParams((int) inPixels, (int) inPixels));
-            deleteButton.setBackgroundResource((R.drawable.minusicon));
+            deleteButton.setBackgroundResource(R.drawable.minusicon);
             deleteButton.setOnClickListener(clicks);
             deleteButton.setTag(id);
             l2.addView(deleteButton);
