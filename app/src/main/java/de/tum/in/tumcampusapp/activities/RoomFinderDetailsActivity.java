@@ -201,10 +201,10 @@ public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<Vo
     @Override
     protected void onLoadFinished(File result) {
         if (result == null) {
-            if (!NetUtils.isConnected(this)) {
-                showNoInternetLayout();
-            } else {
+            if (NetUtils.isConnected(this)) {
                 showErrorLayout();
+            } else {
+                showNoInternetLayout();
             }
             return;
         }

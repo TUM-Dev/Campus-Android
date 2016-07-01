@@ -62,10 +62,10 @@ public class CurriculaActivity extends ActivityForLoadingInBackground<Void, JSON
     @Override
     protected void onLoadFinished(JSONArray jsonData) {
         if (jsonData == null) {
-            if (!NetUtils.isConnected(this)) {
-                showNoInternetLayout();
-            } else {
+            if (NetUtils.isConnected(this)) {
                 showErrorLayout();
+            } else {
+                showNoInternetLayout();
             }
             return;
         }

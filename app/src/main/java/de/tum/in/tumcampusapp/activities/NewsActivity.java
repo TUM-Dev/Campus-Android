@@ -49,17 +49,17 @@ public class NewsActivity extends ActivityForDownloadingExternal {
             lv.setAdapter(adapter);
 
             /** Restore previous state (including selected item index and scroll position) */
-            if (state != -1) {
-                lv.scrollToPosition(state);
-            } else {
+            if (state == -1) {
                 lv.scrollToPosition(nm.getTodayIndex());
+            } else {
+                lv.scrollToPosition(state);
             }
 
 
-        } else if (!NetUtils.isConnected(this)) {
-            showNoInternetLayout();
-        } else {
+        } else if (NetUtils.isConnected(this)) {
             showErrorLayout();
+        } else {
+            showNoInternetLayout();
         }
     }
 
