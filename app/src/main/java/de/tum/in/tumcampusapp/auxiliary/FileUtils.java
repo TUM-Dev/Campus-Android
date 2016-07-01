@@ -3,13 +3,14 @@ package de.tum.in.tumcampusapp.auxiliary;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
 /**
  * Utility functions to ease the work with files and file contents.
  */
-public class FileUtils {
+public final class FileUtils {
 
     /**
      * Delete all files and folder contained in a folder
@@ -30,24 +31,29 @@ public class FileUtils {
 
     /**
      * Convert a stream to a string
+     *
      * @param is
      * @return
      * @throws Exception
      */
-    public static String convertStreamToString(InputStream is) throws Exception {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+    public static String convertStreamToString(InputStream is) throws IOException {
         StringBuilder sb = new StringBuilder();
-        String line = null;
-        while ((line = reader.readLine()) != null) {
-            sb.append(line).append("\n");
+        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+        try {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                sb.append(line).append('\n');
+            }
+        } finally {
+            reader.close();
         }
-        reader.close();
         return sb.toString();
     }
 
     /**
      * Read a file directly to a string
      * Fails silently
+     *
      * @param filePath
      * @return
      */
@@ -62,5 +68,9 @@ public class FileUtils {
             Utils.log(e);
             return "";
         }
+    }
+
+    private FileUtils() {
+        // FileUtils is a Utility class
     }
 }

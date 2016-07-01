@@ -14,7 +14,7 @@ import android.support.v4.app.ActivityCompat;
 /**
  * Helper class for exporting to Google Calendar.
  */
-public class CalendarHelper {
+public final class CalendarHelper {
     private static final String ACCOUNT_NAME = "TUM_Campus_APP";
     private static final String CALENDAR_NAME = "TUM Campus";
 
@@ -26,8 +26,7 @@ public class CalendarHelper {
      */
     public static Uri addCalendar(Context c) {
         final ContentValues cv = buildContentValues();
-        Uri calUri = buildCalUri();
-        return c.getContentResolver().insert(calUri, cv);
+        return c.getContentResolver().insert(buildCalUri(), cv);
     }
 
     /**
@@ -41,8 +40,8 @@ public class CalendarHelper {
         if (ActivityCompat.checkSelfPermission(c, Manifest.permission.WRITE_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
             return 0;
         }
-        Uri uri = CalendarContract.Calendars.CONTENT_URI;
-        return c.getContentResolver().delete(uri, " account_name = '" + ACCOUNT_NAME + "'", null);
+        final Uri uri = CalendarContract.Calendars.CONTENT_URI;
+        return c.getContentResolver().delete(uri, " account_name = '" + ACCOUNT_NAME + '\'', null);
     }
 
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
@@ -55,8 +54,8 @@ public class CalendarHelper {
 
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     private static ContentValues buildContentValues() {
-        int colorCalendar = 0x0066CC;
-        String intName = ACCOUNT_NAME + CALENDAR_NAME;
+        final int colorCalendar = 0x0066CC;
+        final String intName = ACCOUNT_NAME + CALENDAR_NAME;
         final ContentValues cv = new ContentValues();
         cv.put(Calendars.ACCOUNT_NAME, ACCOUNT_NAME);
         cv.put(Calendars.ACCOUNT_TYPE, CalendarContract.ACCOUNT_TYPE_LOCAL);
@@ -70,4 +69,7 @@ public class CalendarHelper {
         return cv;
     }
 
+    private CalendarHelper() {
+        // CalendarHelper is a utility class
+    }
 }
