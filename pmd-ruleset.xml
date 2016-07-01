@@ -6,6 +6,7 @@
     <exclude-pattern>.*/R.java</exclude-pattern>
     <exclude-pattern>.*/gen/.*</exclude-pattern>
     <exclude-pattern>.*/models/.*java</exclude-pattern>
+    <exclude-pattern>.*/ExceptionHandler.java</exclude-pattern>
 
     <rule ref="rulesets/java/android.xml" />
     <rule ref="rulesets/java/basic.xml" />
@@ -42,6 +43,7 @@
     <rule ref="rulesets/java/optimizations.xml">
         <exclude name="MethodArgumentCouldBeFinal" />
         <exclude name="LocalVariableCouldBeFinal" />
+        <exclude name="AvoidInstantiatingObjectsInLoops" />
     </rule>
     <rule ref="rulesets/java/strictexception.xml" />
     <rule ref="rulesets/java/strings.xml" />

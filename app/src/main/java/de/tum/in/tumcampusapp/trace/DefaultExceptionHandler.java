@@ -4,6 +4,7 @@ import android.util.Log;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
@@ -12,14 +13,15 @@ import java.util.Random;
 
 public class DefaultExceptionHandler implements UncaughtExceptionHandler {
 
-    private final UncaughtExceptionHandler defaultExceptionHandler;
+    private final UncaughtExceptionHandler mDefaultExceptionHandler;
 
     // constructor
     public DefaultExceptionHandler(UncaughtExceptionHandler pDefaultExceptionHandler) {
-        defaultExceptionHandler = pDefaultExceptionHandler;
+        mDefaultExceptionHandler = pDefaultExceptionHandler;
     }
 
     // Default exception handler
+    @Override
     public void uncaughtException(Thread t, Throwable e) {
 
         // Write the stacktrace to a variable using a PrintWriter, result contains the final stacktrace
@@ -34,9 +36,6 @@ public class DefaultExceptionHandler implements UncaughtExceptionHandler {
 
             // Embed version in stacktrace filename
             String filename = G.appVersion + "-" + Integer.toString(random);
-            if (ExceptionHandler.sVerbose) {
-                Log.d(G.tag, "Writing unhandled exception to: " + G.filesPath + "/" + filename + ExceptionHandler.STACKTRACE_ENDING);
-            }
 
             // Write the stacktrace to disk
             BufferedWriter bos = new BufferedWriter(new FileWriter(G.filesPath + "/" + filename + ExceptionHandler.STACKTRACE_ENDING));
@@ -50,12 +49,12 @@ public class DefaultExceptionHandler implements UncaughtExceptionHandler {
             bos.flush();
             bos.close();
 
-        } catch (Exception ebos) {
+        } catch (IOException ebos) {
             // Nothing much we can do about this - the game is over
             Log.e(G.tag, "Error saving exception stacktrace", e);
         }
 
         //call original handler
-        defaultExceptionHandler.uncaughtException(t, e);
+        mDefaultExceptionHandler.uncaughtException(t, e);
     }
 }

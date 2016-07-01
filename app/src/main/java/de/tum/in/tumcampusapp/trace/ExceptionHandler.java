@@ -2,6 +2,7 @@ package de.tum.in.tumcampusapp.trace;
 
 import android.content.Context;
 import android.content.pm.PackageInfo;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
@@ -12,6 +13,8 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import de.tum.in.tumcampusapp.auxiliary.AuthenticationManager;
 import de.tum.in.tumcampusapp.auxiliary.Const;
@@ -20,14 +23,19 @@ import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.BugReport;
 import de.tum.in.tumcampusapp.models.TUMCabeClient;
 
-public class ExceptionHandler {
+public final class ExceptionHandler {
 
-    public static final boolean sVerbose = false;
+    public static final String STACKTRACE_ENDING = ".stacktrace";
+    public static final String LINE_SEPARATOR = "line.separator";
     // Stores loaded stack traces in memory. Each element is contains a full stacktrace
-    private static ArrayList<String[]> sStackTraces;
+    private static List<String[]> sStackTraces;
     private static ActivityAsyncTask<Processor, Object, Object, Object> sTask;
-    private static final int sMinDelay = 0;
+    private static final int S_MIN_DELAY = 0;
     private static boolean sSetupCalled;
+
+    private ExceptionHandler() {
+        // ExceptionHandler is a utility class
+    }
 
     /**
      * Setup the handler for unhandled exceptions, and submit stack
@@ -62,10 +70,10 @@ public class ExceptionHandler {
         G.filesPath = context.getFilesDir().getAbsolutePath();
 
         // Device model
-        G.phoneModel = android.os.Build.MODEL;
+        G.phoneModel = Build.MODEL;
 
         // Android version
-        G.androidVersion = android.os.Build.VERSION.RELEASE;
+        G.androidVersion = Build.VERSION.RELEASE;
 
         //Get the device ID
         G.deviceId = AuthenticationManager.getDeviceID(context);
@@ -76,13 +84,6 @@ public class ExceptionHandler {
             G.appVersion = pi.versionName; // Version
             G.appPackage = pi.packageName; // Package name
             G.appVersionCode = pi.versionCode; //Version code e.g.: 45
-        }
-
-        if (sVerbose) {
-            Log.i(G.tag, "TRACE_VERSION: " + G.traceVersion);
-            Log.d(G.tag, "appVersion: " + G.appVersion);
-            Log.d(G.tag, "appPackage: " + G.appPackage);
-            Log.d(G.tag, "filesPath: " + G.filesPath);
         }
 
         // First, search for and load stack traces
@@ -106,31 +107,21 @@ public class ExceptionHandler {
      */
     public static boolean setup(Context context) {
         return setup(context, new Processor() {
+            @Override
             public boolean beginSubmit() {
                 return true;
             }
 
+            @Override
             public void submitDone() {
+                // NOP
             }
 
+            @Override
             public void handlerInstalled() {
+                // NOP
             }
         });
-    }
-
-    /**
-     * If your "Processor" depends on a specific context/activity, call
-     * this method at the appropriate time, for example in your activity
-     * "onDestroy". This will ensure that we'll hold off executing
-     * "submitDone" or "handlerInstalled" until setup() is called again
-     * with a new context.
-     */
-    public static void notifyContextGone() {
-        if (sTask == null) {
-            return;
-        }
-
-        sTask.connectTo(null);
     }
 
     /**
@@ -139,53 +130,50 @@ public class ExceptionHandler {
      */
     public static boolean submit(final Processor processor) {
         if (!sSetupCalled) {
-            throw new RuntimeException("you need to call setup() first");
+            throw new IllegalStateException("you need to call setup() first");
         }
 
         // If traces exist, we need to submit them
-        if (ExceptionHandler.hasStrackTraces()) {
-            boolean proceed = processor.beginSubmit();
-            if (proceed) {
-                // Move the list of traces to a private variable. This ensures that subsequent calls to hasStackTraces()
-                // while the submission thread is ongoing, will return false, or at least would refer to some new set of traces.
-                //
-                // Yes, it would not be a problem from our side to have two of these submission threads ongoing at the same time (although it wouldn't currently happen as no new
-                // traces can be added to the list besides through crashing the process); however, the user's callback processor might not be written to deal with that scenario.
-                final ArrayList<String[]> tracesNowSubmitting = sStackTraces;
-                sStackTraces = null;
+        if (ExceptionHandler.hasStrackTraces() && processor.beginSubmit()) {
+            // Move the list of traces to a private variable. This ensures that subsequent calls to hasStackTraces()
+            // while the submission thread is ongoing, will return false, or at least would refer to some new set of traces.
+            //
+            // Yes, it would not be a problem from our side to have two of these submission threads ongoing at the same time (although it wouldn't currently happen as no new
+            // traces can be added to the list besides through crashing the process); however, the user's callback processor might not be written to deal with that scenario.
+            final List<String[]> tracesNowSubmitting = sStackTraces;
+            sStackTraces = null;
 
-                sTask = new ActivityAsyncTask<Processor, Object, Object, Object>(processor) {
+            sTask = new ActivityAsyncTask<Processor, Object, Object, Object>(processor) {
 
-                    private long mTimeStarted;
+                private long mTimeStarted;
 
-                    @Override
-                    protected void onPreExecute() {
-                        super.onPreExecute();
-                        mTimeStarted = System.currentTimeMillis();
-                    }
+                @Override
+                protected void onPreExecute() {
+                    super.onPreExecute();
+                    mTimeStarted = System.currentTimeMillis();
+                }
 
-                    @Override
-                    protected Object doInBackground(Object... params) {
-                        ExceptionHandler.submitStackTraces(tracesNowSubmitting);
+                @Override
+                protected Object doInBackground(Object... params) {
+                    ExceptionHandler.submitStackTraces(tracesNowSubmitting);
 
-                        long rest = sMinDelay - (System.currentTimeMillis() - mTimeStarted);
-                        if (rest > 0) {
-                            try {
-                                Thread.sleep(rest);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
+                    long rest = S_MIN_DELAY - (System.currentTimeMillis() - mTimeStarted);
+                    if (rest > 0) {
+                        try {
+                            Thread.sleep(rest);
+                        } catch (InterruptedException e) {
+                            Utils.log(e);
                         }
-                        return null;
                     }
+                    return null;
+                }
 
-                    @Override
-                    protected void processPostExecute(Object result) {
-                        mWrapped.submitDone();
-                    }
-                };
-                sTask.execute();
-            }
+                @Override
+                protected void processPostExecute(Object result) {
+                    mWrapped.submitDone();
+                }
+            };
+            sTask.execute();
         }
 
         return ExceptionHandler.hasStrackTraces();
@@ -196,14 +184,19 @@ public class ExceptionHandler {
      */
     public static boolean submit() {
         return submit(new Processor() {
+            @Override
             public boolean beginSubmit() {
                 return true;
             }
 
+            @Override
             public void submitDone() {
+                // NOP
             }
 
+            @Override
             public void handlerInstalled() {
+                // NOP
             }
         });
     }
@@ -236,7 +229,7 @@ public class ExceptionHandler {
      * install the exception handler right away, and only then try
      * and submit the traces.
      */
-    private static ArrayList<String[]> getStackTraces() {
+    private static Collection<String[]> getStackTraces() {
         if (sStackTraces != null) {
             return sStackTraces;
         }
@@ -244,7 +237,7 @@ public class ExceptionHandler {
         Utils.logv("Looking for exceptions in: " + G.filesPath);
 
         // Find list of .stacktrace files
-        File dir = new File(G.filesPath + "/");
+        File dir = new File(G.filesPath + '/');
 
         // Try to create the files folder if it doesn't exist
         if (!dir.exists()) {
@@ -253,8 +246,9 @@ public class ExceptionHandler {
 
         //Look into the files folder to see if there are any "*.stacktrace" files.
         String[] list = dir.list(new FilenameFilter() {
+            @Override
             public boolean accept(File dir, String name) {
-                return name.endsWith(".stacktrace");
+                return name.endsWith(STACKTRACE_ENDING);
             }
         });
         Utils.logv("Found " + list.length + " stacktrace(s)");
@@ -271,7 +265,7 @@ public class ExceptionHandler {
                 }
 
                 //Full File path
-                String filePath = G.filesPath + "/" + aList;
+                String filePath = G.filesPath + '/' + aList;
 
                 try {
                     // Read contents of stacktrace
@@ -281,7 +275,7 @@ public class ExceptionHandler {
                         String line;
                         while ((line = input.readLine()) != null) {
                             stacktrace.append(line);
-                            stacktrace.append(System.getProperty("line.separator"));
+                            stacktrace.append(System.getProperty(LINE_SEPARATOR));
                         }
                     } finally {
                         input.close();
@@ -302,7 +296,7 @@ public class ExceptionHandler {
             // wrong above, it hopefully won't happen again the next time around (because the offending files are gone).
             for (String aList : list) {
                 try {
-                    File file = new File(G.filesPath + "/" + aList);
+                    File file = new File(G.filesPath + '/' + aList);
                     file.delete();
                 } catch (Exception e) {
                     Log.e(G.tag, "Error deleting trace file: " + aList, e);
@@ -314,7 +308,7 @@ public class ExceptionHandler {
     /**
      * If any are present, submit them to the trace server.
      */
-    private static void submitStackTraces(ArrayList<String[]> list) {
+    private static void submitStackTraces(List<String[]> list) {
         //Check if we user gave permission to send these reports
         G.preferences = PreferenceManager.getDefaultSharedPreferences(G.context);
         if (!G.preferences.getBoolean(Const.BUG_REPORTS, G.bugReportDefault)) {
@@ -333,9 +327,6 @@ public class ExceptionHandler {
 
             for (int i = 0; i < list.size(); i++) {
                 String stacktrace = list.get(i)[0];
-                if (ExceptionHandler.sVerbose) {
-                    Log.d(G.tag, "Transmitting stack trace: " + stacktrace);
-                }
 
                 // Transmit stack trace with PUT request
                 TUMCabeClient client = TUMCabeClient.getInstance(G.context);
@@ -350,9 +341,6 @@ public class ExceptionHandler {
 
     private static void installHandler() {
         UncaughtExceptionHandler currentHandler = Thread.getDefaultUncaughtExceptionHandler();
-        if (currentHandler != null && sVerbose) {
-            Log.d(G.tag, "current handler class=" + currentHandler.getClass().getName());
-        }
 
         // don't register again if already registered
         if (!(currentHandler instanceof DefaultExceptionHandler)) {
