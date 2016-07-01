@@ -88,7 +88,6 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
     private ChatRoom currentChatRoom;
     private ChatMember currentChatMember;
     private boolean loadingMore;
-    private boolean iconShow;
     private ChatMessageManager chatManager;
     private final BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override

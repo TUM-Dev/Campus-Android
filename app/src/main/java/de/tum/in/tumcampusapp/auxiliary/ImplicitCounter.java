@@ -18,7 +18,6 @@ import de.tum.in.tumcampusapp.models.TUMCabeClient;
  */
 public class ImplicitCounter {
     private static final String settings = "usage_counter";
-    private static final String TUMCABE_URL = "https://tumcabe.in.tum.de/Api/statistics/";
     private static Date lastSync;
 
     /**
