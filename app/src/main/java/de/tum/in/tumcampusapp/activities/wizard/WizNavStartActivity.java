@@ -113,7 +113,6 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<Void, Bo
 
                     }
                 });
-                return;
             }
 
         }.execute();

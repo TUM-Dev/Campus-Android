@@ -173,7 +173,7 @@ public class Chat extends GenericNotification {
                     .setStyle(new NotificationCompat.BigTextStyle().bigText(notificationText))
                     .setContentText(notificationText)
                     .setContentIntent(contentIntent)
-                    .setDefaults(android.app.Notification.DEFAULT_VIBRATE)
+                    .setDefaults(Notification.DEFAULT_VIBRATE)
                     .setLights(0xff0000ff, 500, 500)
                     .setSound(sound)
                     .setAutoCancel(true)
