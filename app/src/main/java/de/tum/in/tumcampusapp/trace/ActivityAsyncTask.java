@@ -35,26 +35,24 @@ import android.os.AsyncTask;
  * for mWrapped and setting mPostProcessingDone. We should fix those
  * by using a lock.
  */
-@SuppressWarnings("ALL")
-public abstract class ActivityAsyncTask<Connect, Params, Progress, Result>
-        extends AsyncTask<Params, Progress, Result> {
+public abstract class ActivityAsyncTask<Q, R, S, T> extends AsyncTask<R, S, T> {
 
-    protected volatile Connect mWrapped;
+    protected volatile Q mWrapped;
     private volatile boolean mPostProcessingDone;
-    private Result mResult;
+    private T mResult;
 
-    public ActivityAsyncTask(Connect initialConnect) {
+    public ActivityAsyncTask(Q initialConnect) {
         super();
         mPostProcessingDone = false;
         connectTo(initialConnect);
     }
 
     /**
-     * Connect to the given object, or "null" to disconnect.
+     * Q to the given object, or "null" to disconnect.
      * <p/>
      * Raises an exception if we are already connected.
      */
-    public void connectTo(Connect wrappedObject) {
+    public void connectTo(Q wrappedObject) {
         if (mWrapped != null && wrappedObject != null) {
             throw new IllegalStateException();
         }
@@ -85,7 +83,7 @@ public abstract class ActivityAsyncTask<Connect, Params, Progress, Result>
     }
 
     @Override
-    protected void onPostExecute(Result result) {
+    protected void onPostExecute(T result) {
         super.onPostExecute(result);
 
         // We need to make sure we only go on if an activity is
@@ -93,12 +91,12 @@ public abstract class ActivityAsyncTask<Connect, Params, Progress, Result>
         // change happens while we are running, it can happen that
         // there isn't one. If so, processPostExecute() will be
         // run the next time one is attached.
-        if (mWrapped != null) {
-            mPostProcessingDone = true;
-            processPostExecute(result);
-        } else {
+        if (mWrapped == null) {
             // Remember result for the next connect.
             mResult = result;
+        } else {
+            mPostProcessingDone = true;
+            processPostExecute(result);
         }
     }
 
@@ -107,5 +105,5 @@ public abstract class ActivityAsyncTask<Connect, Params, Progress, Result>
      * to ensure your handler will be called even if at the
      * time of a finish the task is not connected.
      */
-    protected abstract void processPostExecute(Result result);
+    protected abstract void processPostExecute(T result);
 }
