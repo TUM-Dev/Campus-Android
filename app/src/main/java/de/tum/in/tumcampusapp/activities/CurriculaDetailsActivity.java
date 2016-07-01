@@ -54,8 +54,9 @@ public class CurriculaDetailsActivity extends ActivityForLoadingInBackground<Str
      */
     private String fetchCurriculum(String url) {
         String results = extractResultsFromURL(url);
-        if(results==null)
+        if (results == null) {
             return null;
+        }
         String text = Utils.buildHTMLDocument(net.downloadStringAndCache(
                         "http://www.in.tum.de/fileadmin/_src/add.css", CacheManager.VALIDITY_ONE_MONTH, false),
                 "<div id=\"maincontent\"><div class=\"inner\">" + results + "</div></div>");

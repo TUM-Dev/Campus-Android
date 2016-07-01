@@ -206,8 +206,9 @@ public class ChatMessageManager extends AbstractManager {
         boolean read = memberId == m.getMember().getId();
         Cursor cur = db.rawQuery("SELECT read FROM chat_message WHERE _id=?", new String[]{"" + m.getId()});
         if (cur.moveToFirst()) {
-            if (cur.getInt(0) == 1)
+            if (cur.getInt(0) == 1) {
                 read = true;
+            }
         }
         cur.close();
         m.setStatus(ChatMessage.STATUS_SENT);

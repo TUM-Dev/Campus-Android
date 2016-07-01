@@ -122,10 +122,11 @@ public class Chat extends GenericNotification {
         notificationText = null;
         if (messages != null && messages.moveToFirst()) {
             do {
-                if (notificationText == null)
+                if (notificationText == null) {
                     notificationText = messages.getString(3);
-                else
+                } else {
                     notificationText += "\n" + messages.getString(3);
+                }
             } while (messages.moveToNext());
         }
 

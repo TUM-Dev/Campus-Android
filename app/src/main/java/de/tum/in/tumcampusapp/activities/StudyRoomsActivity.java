@@ -129,10 +129,11 @@ public class StudyRoomsActivity extends ActivityForLoadingInBackground<Void, Voi
     public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
         mSelectedStudyRoomGroupId = mStudyRoomGroupList.get(pos).id;
 
-        if (mSectionsPagerAdapter == null)
+        if (mSectionsPagerAdapter == null) {
             setupViewPagerAdapter(mSelectedStudyRoomGroupId);
-        else
+        } else {
             changeViewPagerAdapter(mSelectedStudyRoomGroupId);
+        }
     }
 
     private void changeViewPagerAdapter(int mSelectedStudyRoomGroupId) {

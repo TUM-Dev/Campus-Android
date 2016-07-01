@@ -56,8 +56,9 @@ public abstract class ActivityForSearchingInBackground<T> extends ActivityForSea
 
     @Override
     public final void onStartSearch() {
-        if(asyncTask!=null)
+        if (asyncTask != null) {
             asyncTask.cancel(true);
+        }
 
         asyncTask = new BackgroundSearch();
         asyncTask.execute();
@@ -65,8 +66,9 @@ public abstract class ActivityForSearchingInBackground<T> extends ActivityForSea
 
     @Override
     public final void onStartSearch(final String query) {
-        if(asyncTask!=null)
+        if (asyncTask != null) {
             asyncTask.cancel(true);
+        }
 
         asyncTask = new BackgroundSearch();
         asyncTask.execute(query);
@@ -99,8 +101,9 @@ public abstract class ActivityForSearchingInBackground<T> extends ActivityForSea
 
         @Override
         protected T doInBackground(String... arg) {
-            if(arg.length==0)
+            if (arg.length == 0) {
                 return onSearchInBackground();
+            }
             return onSearchInBackground(arg[0]);
         }
 

@@ -16,7 +16,6 @@ import de.tum.in.tumcampusapp.cards.IkomCard;
 import de.tum.in.tumcampusapp.cards.NoInternetCard;
 import de.tum.in.tumcampusapp.cards.RestoreCard;
 import de.tum.in.tumcampusapp.cards.Support;
-import de.tum.in.tumcampusapp.cards.SurveyCard;
 
 /**
  * Card manager, manages inserting, dismissing, updating and displaying of cards
@@ -67,8 +66,9 @@ public class CardManager {
      * @return Card count
      */
     public static int getCardCount() {
-        if (cards == null)
+        if (cards == null) {
             return 0;
+        }
         return cards.size();
     }
 

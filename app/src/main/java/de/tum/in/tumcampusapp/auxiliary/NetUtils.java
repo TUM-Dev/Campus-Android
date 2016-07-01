@@ -246,8 +246,9 @@ public class NetUtils {
      */
     public Bitmap downloadImageToBitmap(final String url) {
         File f = downloadImage(url);
-        if (f == null)
+        if (f == null) {
             return null;
+        }
         return BitmapFactory.decodeFile(f.getAbsolutePath());
     }
 
@@ -280,8 +281,9 @@ public class NetUtils {
 
             @Override
             protected void onPostExecute(Bitmap bitmap) {
-                if (bitmap == null)
+                if (bitmap == null) {
                     return;
+                }
                 synchronized (CacheManager.bitmapCache) {
                     CacheManager.bitmapCache.put(url, bitmap);
                 }
@@ -320,8 +322,9 @@ public class NetUtils {
     public JSONArray downloadJsonArray(String url, int validity, boolean force) {
         try {
             String result = downloadStringAndCache(url, validity, force);
-            if (result == null)
+            if (result == null) {
                 return null;
+            }
 
             return new JSONArray(result);
         } catch (Exception e) {
@@ -340,8 +343,9 @@ public class NetUtils {
     public JSONObject downloadJsonObject(String url, int validity, boolean force) {
         try {
             String result = downloadStringAndCache(url, validity, force);
-            if (result == null)
+            if (result == null) {
                 return null;
+            }
 
             return new JSONObject(result);
         } catch (Exception e) {

@@ -139,8 +139,9 @@ public class CafeteriaManager extends AbstractManager implements Card.ProvidesCa
 
         // Choose which mensa should be shown
         int cafeteriaId = locationManager.getCafeteria();
-        if (cafeteriaId == -1)
+        if (cafeteriaId == -1) {
             return;
+        }
 
         if (cursor.moveToFirst()) {
             do {

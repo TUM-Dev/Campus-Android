@@ -46,8 +46,9 @@ public abstract class ActivityForLoadingInBackground<T1,T2> extends ProgressActi
     @SafeVarargs
     @SuppressWarnings("varargs")
     protected final void startLoading(final T1... arg) {
-        if(asyncTask!=null)
+        if (asyncTask != null) {
             asyncTask.cancel(true);
+        }
 
         lastArg = arg;
 

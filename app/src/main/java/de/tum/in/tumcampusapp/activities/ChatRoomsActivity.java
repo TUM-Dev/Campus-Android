@@ -148,10 +148,11 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 1 && resultCode == RESULT_OK && data != null) {
             String name = data.getStringExtra("name");
-            if (name.charAt(3) == ':')
+            if (name.charAt(3) == ':') {
                 createOrJoinChatRoom(name);
-            else
+            } else {
                 Utils.showToast(this, R.string.invalid_chat_room);
+            }
         }
     }
 
@@ -271,8 +272,9 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
     public void onItemClick(AdapterView<?> a, View v, int position, long id) {
         Cursor item = (Cursor) lvMyChatRoomList.getItemAtPosition(position);
 
-        if (firstLoad)
+        if (firstLoad) {
             return;
+        }
 
         // set bundle for LectureDetails and show it
         Bundle bundle = new Bundle();

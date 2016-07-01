@@ -96,8 +96,9 @@ public class PersonsDetailsActivity extends ActivityForAccessingTumOnline<Employ
     public boolean onOptionsItemSelected(MenuItem item) {
         int i = item.getItemId();
         if (i == R.id.action_add_contact) {
-            if (mEmployee != null)
+            if (mEmployee != null) {
                 addContact(mEmployee);
+            }
             return true;
         } else {
             return super.onOptionsItemSelected(item);
@@ -306,8 +307,9 @@ public class PersonsDetailsActivity extends ActivityForAccessingTumOnline<Employ
         // add all rooms
         List<Room> rooms = employee.getRooms();
         if (rooms != null && rooms.size() > 0) {
-            if (!notes.isEmpty())
+            if (!notes.isEmpty()) {
                 notes += "\n";
+            }
             notes += getString(R.string.room) + ": " + rooms.get(0).getLocation() + " (" + rooms.get(0).getNumber() + ")";
         }
 

@@ -35,12 +35,13 @@ class MVVSymbolView extends Drawable {
                 case 'S':
                     int num = Integer.parseInt(line.substring(1));
                     mRounded = true;
-                    if (num <= 8)
+                    if (num <= 8) {
                         backgroundColor = sLineColor[num - 1];
-                    else if (num == 20)
+                    } else if (num == 20) {
                         backgroundColor = 0xffca536a;
-                    else if (num == 27)
+                    } else if (num == 27) {
                         backgroundColor = 0xffd99098;
+                    }
                     mTextColor = num == 8 ? 0xfff1cb00 : 0xffffffff;
                     break;
                 case 'U':

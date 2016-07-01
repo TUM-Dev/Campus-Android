@@ -99,8 +99,9 @@ public class LocationManager {
      */
     int getCurrentCampus() {
         Location loc = getCurrentLocation();
-        if (loc == null)
+        if (loc == null) {
             return -1;
+        }
         return getCampusFromLocation(loc);
     }
 
@@ -254,8 +255,9 @@ public class LocationManager {
      */
     int getCurrentOrNextCampus() {
         int campus = getCurrentCampus();
-        if (campus != -1)
+        if (campus != -1) {
             return campus;
+        }
         return getNextCampus();
     }
 

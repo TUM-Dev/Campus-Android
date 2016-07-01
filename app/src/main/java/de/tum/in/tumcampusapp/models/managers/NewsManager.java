@@ -2,7 +2,6 @@ package de.tum.in.tumcampusapp.models.managers;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -136,8 +135,9 @@ public class NewsManager extends AbstractManager implements Card.ProvidesCard {
                 int id = c.getInt(0);
                 boolean show = Utils.getSettingBool(context, "news_source_" + id, id<=7);
                 if (show) {
-                    if (!and.isEmpty())
+                    if (!and.isEmpty()) {
                         and += " OR ";
+                    }
                     and += "s.id=\"" + id + "\"";
                 }
             } while (c.moveToNext());
@@ -228,8 +228,9 @@ public class NewsManager extends AbstractManager implements Card.ProvidesCard {
                 int id = c.getInt(0);
                 boolean show = Utils.getSettingBool(context, "card_news_source_" + id, true);
                 if (show) {
-                    if (!and.isEmpty())
+                    if (!and.isEmpty()) {
                         and += " OR ";
+                    }
                     and += "s.id=\"" + id + "\"";
                 }
             } while (c.moveToNext());

@@ -69,8 +69,9 @@ public class PersonListAdapter extends BaseAdapter {
 				}
 			}
 
-            if(p != null)
-			    infoText += p.getName() + " " + p.getSurname();
+			if (p != null) {
+				infoText += p.getName() + " " + p.getSurname();
+			}
 
 			holder.tvName.setText(infoText);
 		}

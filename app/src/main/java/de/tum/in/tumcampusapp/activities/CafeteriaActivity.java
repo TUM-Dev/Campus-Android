@@ -49,8 +49,9 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
 
 		// Get id from intent if specified
         final Intent intent = getIntent();
-        if(intent!=null && intent.getExtras()!=null && intent.getExtras().containsKey(Const.CAFETERIA_ID))
-    		mCafeteriaId = intent.getExtras().getInt(Const.CAFETERIA_ID);
+        if (intent != null && intent.getExtras() != null && intent.getExtras().containsKey(Const.CAFETERIA_ID)) {
+            mCafeteriaId = intent.getExtras().getInt(Const.CAFETERIA_ID);
+        }
         mViewPager = (ViewPager) findViewById(R.id.pager);
 	}
 
@@ -132,8 +133,9 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
         spinner.setAdapter(adapterCafeterias);
         spinner.setOnItemSelectedListener(this);
         // Select item
-        if(selIndex>-1)
+        if (selIndex > -1) {
             spinner.setSelection(selIndex);
+        }
     }
 
     /**

@@ -91,8 +91,9 @@ public class ChatHistoryAdapter extends CursorAdapter {
 
     @Override
     public int getItemViewType(int position) {
-        if (position > super.getCount())
+        if (position > super.getCount()) {
             return 0;
+        }
         ChatMessage msg = (ChatMessage) getItem(position);
         return currentChatMember.getId() == msg.getMember().getId() ? 0 : 1;
     }
@@ -100,8 +101,9 @@ public class ChatHistoryAdapter extends CursorAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup viewGroup) {
         int count = super.getCount();
-        if (position < count)
+        if (position < count) {
             return super.getView(position, convertView, viewGroup);
+        }
 
         ChatMessage chatMessage = unsentMessages.get(position - count);
         View v = newView(mContext, null, viewGroup);

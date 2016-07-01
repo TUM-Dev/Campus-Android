@@ -169,15 +169,17 @@ public abstract class Card {
         // Should be shown on start page?
         if (mShowStart) {
             SharedPreferences prefs = mContext.getSharedPreferences(DISCARD_SETTINGS_START, 0);
-            if (shouldShow(prefs))
+            if (shouldShow(prefs)) {
                 CardManager.addCard(this);
+            }
         }
 
         // Should be shown on phone or watch?
         if (mShowWear || mShowPhone) {
             SharedPreferences prefs = mContext.getSharedPreferences(DISCARD_SETTINGS_PHONE, 0);
-            if (shouldShowNotification(prefs))
+            if (shouldShowNotification(prefs)) {
                 notifyUser();
+            }
         }
     }
 
@@ -372,8 +374,9 @@ public abstract class Card {
             int i = item.getItemId();
             if (i == R.id.open_card_setting) {// Open card's preference screen
                 String key = current.getSettings();
-                if (key == null)
+                if (key == null) {
                     return true;
+                }
                 Intent intent = new Intent(itemView.getContext(), UserPreferencesActivity.class);
                 intent.putExtra(Const.PREFERENCE_SCREEN, key);
                 itemView.getContext().startActivity(intent);

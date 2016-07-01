@@ -203,8 +203,9 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
         mUpdateHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (chatHistoryAdapter != null)
+                if (chatHistoryAdapter != null) {
                     chatHistoryAdapter.notifyDataSetChanged();
+                }
                 mUpdateHandler.postDelayed(this, 10000);
             }
         }, 10000);

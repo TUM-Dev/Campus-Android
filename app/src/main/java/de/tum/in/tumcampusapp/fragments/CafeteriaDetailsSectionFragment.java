@@ -72,8 +72,9 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
                 // Skip unchecked categories if showing card
                 boolean shouldShow = Utils.getSettingBool(context, "card_cafeteria_" + typeShort,
                         typeShort.equals("tg") || typeShort.equals("ae"));
-                if (!big && !shouldShow)
+                if (!big && !shouldShow) {
                     continue;
+                }
 
                 // Add header if we start with a new category
                 if (!typeShort.equals(curShort)) {

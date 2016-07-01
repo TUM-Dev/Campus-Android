@@ -125,11 +125,13 @@ public class CalendarManager extends AbstractManager implements Card.ProvidesCar
     }
 
     void replaceIntoDb(CalendarRow row) throws Exception {
-        if (row.getNr().length() == 0)
+        if (row.getNr().length() == 0) {
             throw new Exception("Invalid id.");
+        }
 
-        if (row.getTitle().length() == 0)
+        if (row.getTitle().length() == 0) {
             throw new Exception("Invalid lecture Title.");
+        }
 
         db.execSQL("REPLACE INTO calendar (nr, status, url, title, "
                         + "description, dtstart, dtend, location) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",

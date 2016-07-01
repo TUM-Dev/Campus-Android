@@ -13,10 +13,10 @@ import de.tum.in.tumcampusapp.activities.generic.ActivityForLoadingInBackground;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.exceptions.NoPrivateKey;
-import de.tum.in.tumcampusapp.models.TUMCabeClient;
 import de.tum.in.tumcampusapp.models.ChatMember;
 import de.tum.in.tumcampusapp.models.ChatRoom;
 import de.tum.in.tumcampusapp.models.ChatVerification;
+import de.tum.in.tumcampusapp.models.TUMCabeClient;
 import de.tum.in.tumcampusapp.models.managers.ChatRoomManager;
 import retrofit.RetrofitError;
 
@@ -101,8 +101,9 @@ public class WizNavActivatePublicKeyActivity extends ActivityForLoadingInBackgro
 
         // Get member and private key from settings
         ChatMember member = Utils.getSetting(this, Const.CHAT_MEMBER, ChatMember.class);
-        if (member == null)
+        if (member == null) {
             return false;
+        }
 
         // Try to restore already joined chat rooms from server
         try {
