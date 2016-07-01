@@ -23,6 +23,8 @@ import de.tum.in.tumcampusapp.models.managers.ChatMessageManager;
 public class ChatHistoryAdapter extends CursorAdapter {
 
     private final Context mContext;
+    private final LayoutInflater inflater;
+    private final ChatMember currentChatMember;
     private List<ChatMessage> unsentMessages = new ArrayList<>();
     public ChatMessage mCheckedItem;
     public ChatMessage mEditedItem;
@@ -44,10 +46,6 @@ public class ChatHistoryAdapter extends CursorAdapter {
         public ImageView ivSent;
         public LinearLayout layout;
     }
-
-    private final LayoutInflater inflater;
-
-    private final ChatMember currentChatMember;
 
     public ChatHistoryAdapter(Context context, Cursor messageHistory, ChatMember member) {
         super(context, messageHistory, false);

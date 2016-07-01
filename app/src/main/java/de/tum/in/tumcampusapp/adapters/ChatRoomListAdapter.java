@@ -27,6 +27,10 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 
 public class ChatRoomListAdapter extends CursorAdapter implements StickyListHeadersAdapter {
 
+    private final LayoutInflater mInflater;
+    private final boolean showDateAndNumber;
+    private final ArrayList<String> filters;
+
     // the layout of the list
     static class ViewHolder {
         TextView tvDozent;
@@ -34,11 +38,8 @@ public class ChatRoomListAdapter extends CursorAdapter implements StickyListHead
         TextView tvMembers;
         TextView tvLastmsg;
         LinearLayout llAdditionalInfo;
-    }
 
-    private final ArrayList<String> filters;
-    private final LayoutInflater mInflater;
-    private final boolean showDateAndNumber;
+    }
 
     // constructor
     public ChatRoomListAdapter(Context context, Cursor results, int mode) {
@@ -76,7 +77,7 @@ public class ChatRoomListAdapter extends CursorAdapter implements StickyListHead
             holder.tvMembers.setText(cursor.getString(ChatRoomManager.COL_MEMBERS));
             holder.tvLastmsg.setText(DateUtils.getTimeOrDay(cursor.getString(8), context));
             holder.llAdditionalInfo.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             holder.tvDozent.setText(cursor.getString(ChatRoomManager.COL_CONTRIBUTOR));
         }
 

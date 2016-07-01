@@ -18,15 +18,16 @@ import de.tum.in.tumcampusapp.R;
  */
 public class PlanListAdapter extends BaseAdapter {
 
+    private final Activity activity;
+
+    private final LayoutInflater inflater;
+    private final List<PlanListEntry> planList;
+
     public static class ViewHolder {
         public TextView detail;
         public ImageView icon;
         public TextView title;
     }
-
-    private final Activity activity;
-    private final LayoutInflater inflater;
-    private final List<PlanListEntry> planList;
 
     public PlanListAdapter(Activity activity, List<PlanListEntry> planList) {
         this.activity = activity;

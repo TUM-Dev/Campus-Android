@@ -16,65 +16,64 @@ import de.tum.in.tumcampusapp.models.Person;
  * Custom UI adapter for a list of employees.
  */
 public class PersonListAdapter extends BaseAdapter {
-	static class ViewHolder {
-		TextView tvName;
-	}
+    private final List<Person> employees;
+    private final LayoutInflater mInflater;
 
-	private List<Person> employees;
+    static class ViewHolder {
+        TextView tvName;
+    }
 
-	private final LayoutInflater mInflater;
+    public PersonListAdapter(Context context, List<Person> results) {
+        employees = results;
+        mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    }
 
-	public PersonListAdapter(Context context, List<Person> results) {
-		employees = results;
-		mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-	}
+    @Override
+    public int getCount() {
+        return employees.size();
+    }
 
-	@Override
-	public int getCount() {
-		return employees.size();
-	}
+    @Override
+    public Object getItem(int position) {
+        return employees.get(position);
+    }
 
-	@Override
-	public Object getItem(int position) {
-		return employees.get(position);
-	}
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
 
-	@Override
-	public long getItemId(int position) {
-		return position;
-	}
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        ViewHolder holder;
+        if (convertView == null) {
+            convertView = mInflater.inflate(android.R.layout.simple_list_item_1, parent, false);
 
-	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
-		ViewHolder holder;
-		if (convertView == null) {
-			convertView = mInflater.inflate(android.R.layout.simple_list_item_1, parent, false);
+            holder = new ViewHolder();
+            holder.tvName = (TextView) convertView.findViewById(android.R.id.text1);
+            convertView.setTag(holder);
+        } else {
+            holder = (ViewHolder) convertView.getTag();
+        }
 
-			holder = new ViewHolder();
-			holder.tvName = (TextView) convertView.findViewById(android.R.id.text1);
-			convertView.setTag(holder);
-		} else {
-			holder = (ViewHolder) convertView.getTag();
-		}
+        if (employees.get(position) != null) {
+            String infoText = "";
 
-		if (employees.get(position) != null) {
-			String infoText = "";
+            Person p = employees.get(position);
 
-			Person p = employees.get(position);
+            if (p instanceof Employee) {
+                String title = ((Employee) p).getTitle();
+                if (title != null) {
+                    infoText = title + ' ';
+                }
+            }
 
-			if (p != null && p instanceof Employee) {
-				String title = ((Employee) p).getTitle();
-				if (title != null) {
-					infoText = title + " ";
-				}
-			}
+            if (p != null) {
+                infoText += p.getName() + ' ' + p.getSurname();
+            }
 
-			if (p != null) {
-				infoText += p.getName() + " " + p.getSurname();
-			}
-
-			holder.tvName.setText(infoText);
-		}
-		return convertView;
-	}
+            holder.tvName.setText(infoText);
+        }
+        return convertView;
+    }
 }

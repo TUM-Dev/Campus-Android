@@ -19,13 +19,13 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
  */
 public class RoomFinderListAdapter extends BaseAdapter implements StickyListHeadersAdapter {
 
+    private final List<Map<String, String>> data;
+    private final LayoutInflater inflater;
+
     static class ViewHolder {
         TextView tvRoomTitle;
         TextView tvBuildingTitle;
     }
-
-    private final List<Map<String, String>> data;
-    private final LayoutInflater inflater;
 
     public RoomFinderListAdapter(Activity activity, List<Map<String, String>> d) {
         data = d;
