@@ -32,6 +32,7 @@ import android.widget.TextView;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
@@ -235,8 +236,7 @@ public class PersonsDetailsActivity extends ActivityForAccessingTumOnline<Employ
         if (!isPermissionGranted(0)) {
             return;
         }
-        ArrayList<ContentProviderOperation> ops =
-                new ArrayList<>();
+        ArrayList<ContentProviderOperation> ops = new ArrayList<>();
 
         int rawContactID = ops.size();
 
@@ -353,7 +353,7 @@ public class PersonsDetailsActivity extends ActivityForAccessingTumOnline<Employ
         }
     }
 
-    private static void addContact(ArrayList<ContentProviderOperation> ops, int rawContactID, Contact contact, boolean work) {
+    private static void addContact(Collection<ContentProviderOperation> ops, int rawContactID, Contact contact, boolean work) {
         if (contact != null) {
             // Add work telefon number
             if (contact.getTelefon() != null) {

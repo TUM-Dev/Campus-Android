@@ -14,9 +14,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.ActivityForLoadingInBackground;
@@ -43,7 +42,7 @@ public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<Vo
 
     private Bundle roomInfo;
     private String mapId = "";
-    private ArrayList<HashMap<String, String>> mapsList;
+    private List<Map<String, String>> mapsList;
     private boolean infoLoaded;
     private Fragment fragment;
 

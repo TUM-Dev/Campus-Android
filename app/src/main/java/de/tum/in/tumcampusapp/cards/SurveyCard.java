@@ -13,9 +13,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.Question;
 import de.tum.in.tumcampusapp.models.managers.CardManager;
 import de.tum.in.tumcampusapp.models.managers.SurveyManager;
@@ -23,7 +23,7 @@ import de.tum.in.tumcampusapp.models.managers.SurveyManager;
 public class SurveyCard extends Card
 
 {
-    private final ArrayList<Question> questions = new ArrayList<>();
+    private final List<Question> questions = new ArrayList<>();
     private final SurveyManager manager = new SurveyManager(mContext);
     private TextView mQuestion;
     private Button bYes;

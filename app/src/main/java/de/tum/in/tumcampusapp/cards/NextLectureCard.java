@@ -23,6 +23,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import de.tum.in.tumcampusapp.R;
@@ -42,7 +43,7 @@ public class NextLectureCard extends Card {
             R.id.lecture_4
     };
     private TextView mLocation;
-    private final ArrayList<CalendarItem> lectures = new ArrayList<>();
+    private final List<CalendarItem> lectures = new ArrayList<>();
     private TextView mTimeView;
     private int mSelected;
     private TextView mEvent;
@@ -114,7 +115,7 @@ public class NextLectureCard extends Card {
                 System.currentTimeMillis(), DateUtils.MINUTE_IN_MILLIS, DateUtils.FORMAT_ABBREV_RELATIVE));
 
         //Add location with link to room finder
-        if (item.location != null && !item.location.equals("")) {
+        if (item.location != null && !item.location.isEmpty()) {
             mLocation.setText(item.location);
             mLocation.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -160,15 +161,10 @@ public class NextLectureCard extends Card {
         CalendarItem item = lectures.get(0);
         final String time = DateUtils.getRelativeDateTimeString(mContext, item.start.getTime(),
                 DateUtils.MINUTE_IN_MILLIS, DateUtils.WEEK_IN_MILLIS, 0).toString();
-        notificationBuilder.setContentText(item.title + "\n" + time);
+        notificationBuilder.setContentText(item.title + '\n' + time);
         Bitmap bm = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.wear_next_lecture);
         notificationBuilder.extend(new NotificationCompat.WearableExtender().setBackground(bm));
         return notificationBuilder.build();
-    }
-
-    @Override
-    public Intent getIntent() {
-        return null;
     }
 
     public void setLectures(Cursor cur) {
@@ -196,7 +192,7 @@ public class NextLectureCard extends Card {
         cur.close();
     }
 
-    private class CalendarItem {
+    private static class CalendarItem {
         String title;
         Date start;
         Date end;

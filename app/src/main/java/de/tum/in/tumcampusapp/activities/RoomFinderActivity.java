@@ -10,6 +10,7 @@ import android.widget.AdapterView.OnItemClickListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -64,7 +65,7 @@ public class RoomFinderActivity extends ActivityForSearching implements TUMRoomF
 
     @Override
     protected void onStartSearch() {
-        ArrayList<HashMap<String, String>> recents = getRecents();
+        List<Map<String, String>> recents = getRecents();
         if (recents.isEmpty()) {
             finish();
             return;
@@ -79,7 +80,7 @@ public class RoomFinderActivity extends ActivityForSearching implements TUMRoomF
     }
 
     @Override
-    public void onFetch(ArrayList<HashMap<String, String>> result) {
+    public void onFetch(List<Map<String, String>> result) {
         if (result.isEmpty()) {
             list.setAdapter(new NoResultsAdapter(this));
         } else {
@@ -131,9 +132,9 @@ public class RoomFinderActivity extends ActivityForSearching implements TUMRoomF
     /**
      * Reconstruct recents from String
      */
-    private ArrayList<HashMap<String, String>> getRecents() {
+    private List<Map<String, String>> getRecents() {
         Cursor recentStations = recentsManager.getAllFromDb();
-        ArrayList<HashMap<String, String>> map = new ArrayList<>(recentStations.getCount());
+        List<Map<String, String>> map = new ArrayList<>(recentStations.getCount());
         if (recentStations.moveToFirst()) {
             do {
                 String[] values = recentStations.getString(0).split(";");

@@ -12,6 +12,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.auxiliary.DateUtils;
@@ -22,7 +23,7 @@ import de.tum.in.tumcampusapp.models.managers.ChatMessageManager;
 public class ChatHistoryAdapter extends CursorAdapter {
 
     private final Context mContext;
-    private ArrayList<ChatMessage> unsentMessages = new ArrayList<>();
+    private List<ChatMessage> unsentMessages = new ArrayList<>();
     public ChatMessage mCheckedItem;
     public ChatMessage mEditedItem;
 
@@ -178,7 +179,7 @@ public class ChatHistoryAdapter extends CursorAdapter {
         notifyDataSetChanged();
     }
 
-    public void setUnsentMessages(ArrayList<ChatMessage> unsent) {
+    public void setUnsentMessages(List<ChatMessage> unsent) {
         unsentMessages = unsent;
     }
 }

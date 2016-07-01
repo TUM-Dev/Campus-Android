@@ -15,8 +15,8 @@ import com.google.android.gms.common.GoogleApiAvailability;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
@@ -324,7 +324,7 @@ public class LocationManager {
             loc = loc.substring(0, loc.indexOf('(')).trim();
         }
 
-        ArrayList<HashMap<String, String>> request = requestHandler.fetchRooms(loc);
+        List<Map<String, String>> request = requestHandler.fetchRooms(loc);
         if (request != null && !request.isEmpty()) {
             String room = request.get(0).get(TUMRoomFinderRequest.KEY_ARCH_ID);
             return requestHandler.fetchCoordinates(room);

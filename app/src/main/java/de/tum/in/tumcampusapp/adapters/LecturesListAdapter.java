@@ -25,7 +25,7 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 public class LecturesListAdapter extends BaseAdapter implements StickyListHeadersAdapter {
 
     private static List<LecturesSearchRow> lecturesList;
-    private final ArrayList<String> filters;
+    private final List<String> filters;
     private final LayoutInflater mInflater;
     private final Context context;
 
@@ -41,7 +41,7 @@ public class LecturesListAdapter extends BaseAdapter implements StickyListHeader
         filters = new ArrayList<>();
         for (LecturesSearchRow result : lecturesList) {
             String item = result.getSemester_id();
-            if (filters.indexOf(item) == -1) {
+            if (!filters.contains(item)) {
                 filters.add(item);
             }
         }

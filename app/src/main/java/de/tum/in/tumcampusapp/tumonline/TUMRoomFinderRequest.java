@@ -13,6 +13,8 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
@@ -52,7 +54,7 @@ public class TUMRoomFinderRequest {
     /**
      * asynchronous task for interactive fetch
      */
-    private AsyncTask<String, Void, ArrayList<HashMap<String, String>>> backgroundTask;
+    private AsyncTask<String, Void, List<Map<String, String>>> backgroundTask;
 
     private final NetUtils net;
 
@@ -99,7 +101,7 @@ public class TUMRoomFinderRequest {
      * @param searchString string that was entered by the user
      * @return list of HashMaps representing rooms, Map: attributes -> values
      */
-    public ArrayList<HashMap<String, String>> fetchRooms(String searchString) {
+    public List<Map<String, String>> fetchRooms(String searchString) {
 
         String url = API_URL_SEARCH + encodeUrl(searchString);
         JSONArray jsonArray = net.downloadJsonArray(url, CacheManager.VALIDITY_DO_NOT_CACHE, true);
@@ -107,11 +109,11 @@ public class TUMRoomFinderRequest {
             return null;
         }
 
-        ArrayList<HashMap<String, String>> roomsList = new ArrayList<>();
+        List<Map<String, String>> roomsList = new ArrayList<>();
         try {
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject obj = jsonArray.getJSONObject(i);
-                HashMap<String, String> roomMap = new HashMap<>();
+                Map<String, String> roomMap = new HashMap<>();
                 roomMap.put(KEY_CAMPUS_ID, obj.getString(KEY_CAMPUS_ID));
                 roomMap.put(KEY_CAMPUS_TITLE, obj.getString(KEY_CAMPUS_TITLE));
                 roomMap.put(KEY_BUILDING_TITLE, obj.getString(KEY_BUILDING_TITLE));
@@ -156,7 +158,7 @@ public class TUMRoomFinderRequest {
      * @param archId architecture id
      * @return list of HashMap representing available maps
      */
-    public ArrayList<HashMap<String, String>> fetchAvailableMaps(String archId) {
+    public List<Map<String, String>> fetchAvailableMaps(String archId) {
 
         String url = API_URL_AVAILABLE_MAPS + encodeUrl(archId);
 
@@ -165,11 +167,11 @@ public class TUMRoomFinderRequest {
             return null;
         }
 
-        ArrayList<HashMap<String, String>> mapsList = new ArrayList<>();
+        List<Map<String, String>> mapsList = new ArrayList<>();
         try {
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject obj = jsonArray.getJSONObject(i);
-                HashMap<String, String> mapMap = new HashMap<>();
+                Map<String, String> mapMap = new HashMap<>();
                 mapMap.put(KEY_MAP_ID, obj.getString(KEY_MAP_ID));
                 mapMap.put(KEY_DESCRIPTION, obj.getString(KEY_DESCRIPTION));
 
@@ -189,7 +191,7 @@ public class TUMRoomFinderRequest {
      * @param roomId roomId
      * @return List of Events
      */
-    public ArrayList<IntegratedCalendarEvent> fetchRoomSchedule(String roomId, String startDate, String endDate, ArrayList<IntegratedCalendarEvent> scheduleList) {
+    public List<IntegratedCalendarEvent> fetchRoomSchedule(String roomId, String startDate, String endDate, List<IntegratedCalendarEvent> scheduleList) {
 
         String url = API_URL_SCHEDULE + encodeUrl(roomId) + "/" + encodeUrl(startDate) + "/" + encodeUrl(endDate);
 
@@ -251,13 +253,13 @@ public class TUMRoomFinderRequest {
 
         // fetch information in a background task and show progress dialog in
         // meantime
-        backgroundTask = new AsyncTask<String, Void, ArrayList<HashMap<String, String>>>() {
+        backgroundTask = new AsyncTask<String, Void, List<Map<String, String>>>() {
 
             /** property to determine if there is an internet connection */
             boolean isOnline;
 
             @Override
-            protected ArrayList<HashMap<String, String>> doInBackground(
+            protected List<Map<String, String>> doInBackground(
                     String... searchString) {
                 // set parameter on the TUMRoomFinder request an fetch the
                 // results
@@ -272,7 +274,7 @@ public class TUMRoomFinderRequest {
             }
 
             @Override
-            protected void onPostExecute(ArrayList<HashMap<String, String>> result) {
+            protected void onPostExecute(List<Map<String, String>> result) {
                 // handle result
                 if (!isOnline) {
                     listener.onNoInternetError();
