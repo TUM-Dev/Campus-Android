@@ -69,10 +69,6 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
 
     private CalendarManager calendarManager;
 
-    // Objects for disabling or enabling the options menu items
-    private MenuItem menuItemExportGoogle;
-    private MenuItem menuItemDeleteCalendar;
-
     /**
      * Used as a flag, if there are results fetched from internet
      */
@@ -169,8 +165,8 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        menuItemExportGoogle = menu.findItem(R.id.action_export_calendar);
-        menuItemDeleteCalendar = menu.findItem(R.id.action_delete_calendar);
+        MenuItem menuItemExportGoogle = menu.findItem(R.id.action_export_calendar);
+        MenuItem menuItemDeleteCalendar = menu.findItem(R.id.action_delete_calendar);
 
         // the Calendar export is not supported for API < 14
         if (Build.VERSION.SDK_INT < 14) {

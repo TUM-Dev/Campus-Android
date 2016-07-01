@@ -16,9 +16,6 @@ import de.tum.in.tumcampusapp.models.managers.KinoManager;
  */
 public class KinoActivity extends ActivityForDownloadingExternal {
 
-    private KinoManager km;
-    private ViewPager mpager;
-    private KinoAdapter kinoAdapter;
     private Cursor cursor;
 
     public KinoActivity(){
@@ -34,14 +31,14 @@ public class KinoActivity extends ActivityForDownloadingExternal {
     protected void onStart(){
         super.onStart();
 
-        km = new KinoManager(this);
+        KinoManager km = new KinoManager(this);
         cursor = km.getAllFromDb();
 
         if (cursor.getCount() > 0){
 
             // set up ViewPager and adapter
-            mpager = (ViewPager) findViewById(R.id.pager);
-            kinoAdapter = new KinoAdapter(getSupportFragmentManager(), cursor);
+            ViewPager mpager = (ViewPager) findViewById(R.id.pager);
+            KinoAdapter kinoAdapter = new KinoAdapter(getSupportFragmentManager(), cursor);
             mpager.setAdapter(kinoAdapter);
 
         } else {

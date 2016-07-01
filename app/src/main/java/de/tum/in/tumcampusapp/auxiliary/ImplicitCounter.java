@@ -21,8 +21,6 @@ public class ImplicitCounter {
     private static final String TUMCABE_URL = "https://tumcabe.in.tum.de/Api/statistics/";
     private static Date lastSync;
 
-    private Context c;
-
     /**
      * Counting number of the times that the user used this activity.
      * Only call this in the {@link android.support.v7.app.AppCompatActivity#onCreate(android.os.Bundle)}
@@ -66,16 +64,16 @@ public class ImplicitCounter {
             Utils.log("Stats submit: No context passed!");
             return;
         }
-        this.c = c;
+        Context c1 = c;
 
         //Get the prefs
-        SharedPreferences sp = this.c.getSharedPreferences(settings, Context.MODE_PRIVATE);
+        SharedPreferences sp = c1.getSharedPreferences(settings, Context.MODE_PRIVATE);
 
         // Get all current entries
         Map<String, ?> allEntries = sp.getAll();
 
         // Submit this to webservice via parent async class
-        TUMCabeClient.getInstance(this.c).putStatistics(new Statistics(new Gson().toJson(allEntries)));
+        TUMCabeClient.getInstance(c1).putStatistics(new Statistics(new Gson().toJson(allEntries)));
 
         // Delete / Reset
         SharedPreferences.Editor e = sp.edit();
