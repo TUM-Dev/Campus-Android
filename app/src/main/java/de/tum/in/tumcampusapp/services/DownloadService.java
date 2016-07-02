@@ -47,11 +47,6 @@ public class DownloadService extends IntentService {
      */
     public DownloadService() {
         super(DOWNLOAD_SERVICE);
-        try {
-            broadcastManager = LocalBroadcastManager.getInstance(this);
-        } catch (NullPointerException e) { //Sometimes this will throw a NPE - dunno why @// TODO: 6/22/16
-            //Do nothing
-        }
     }
 
     /**
@@ -161,6 +156,7 @@ public class DownloadService extends IntentService {
     public void onCreate() {
         super.onCreate();
         Utils.log("DownloadService service has started");
+        broadcastManager = LocalBroadcastManager.getInstance(this);
 
         // Init sync table
         new SyncManager(this);
