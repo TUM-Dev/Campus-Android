@@ -12,6 +12,7 @@ import android.support.v4.content.ContextCompat;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.common.base.Optional;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -79,7 +80,7 @@ public class LocationManager {
 
         // If location services are not available use default location if set
         final String defaultCampus = Utils.getSetting(mContext, Const.DEFAULT_CAMPUS, "G");
-        if (!defaultCampus.equals("X")) {
+        if (!"X".equals(defaultCampus)) {
             for (int i = 0; i < campusShort.length; i++) {
                 if (campusShort[i].equals(defaultCampus)) {
                     Location location = new Location("defaultLocation");
@@ -315,10 +316,11 @@ public class LocationManager {
      * Translates room title to Geo
      * HINT: Don't call from UI thread
      *
-     * @param loc Room title
+     * @param roomTitle Room title
      * @return Location or null on failure
      */
-    public Geo roomLocationStringToGeo(String loc) {
+    public Optional<Geo> roomLocationStringToGeo(String roomTitle) {
+        String loc = roomTitle;
         TUMRoomFinderRequest requestHandler = new TUMRoomFinderRequest(mContext);
         if (loc.contains("(")) {
             loc = loc.substring(0, loc.indexOf('(')).trim();
@@ -329,6 +331,6 @@ public class LocationManager {
             String room = request.get(0).get(TUMRoomFinderRequest.KEY_ARCH_ID);
             return requestHandler.fetchCoordinates(room);
         }
-        return null;
+        return Optional.absent();
     }
 }

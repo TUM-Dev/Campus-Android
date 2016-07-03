@@ -3,6 +3,8 @@ package de.tum.in.tumcampusapp.activities;
 import android.os.Bundle;
 import android.webkit.WebView;
 
+import com.google.common.base.Optional;
+
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.ActivityForLoadingInBackground;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
@@ -11,13 +13,13 @@ import de.tum.in.tumcampusapp.models.managers.CacheManager;
 
 /**
  * Activity to display the curricula details of different programs.
- *
+ * <p/>
  * NEEDS: CurriculaActivity.URL set in incoming bundle (url to load study plan from)
- *        CurriculaActivity.NAME set in incoming bundle (name of the study program)
+ * CurriculaActivity.NAME set in incoming bundle (name of the study program)
  */
-public class CurriculaDetailsActivity extends ActivityForLoadingInBackground<String,String> {
+public class CurriculaDetailsActivity extends ActivityForLoadingInBackground<String, Optional<String>> {
 
-	private WebView browser;
+    private WebView browser;
     private NetUtils net;
 
     public CurriculaDetailsActivity() {
@@ -43,53 +45,54 @@ public class CurriculaDetailsActivity extends ActivityForLoadingInBackground<Str
      * Fetch information in a background task and show progress dialog in meantime
      */
     @Override
-    protected String onLoadInBackground(String... params) {
+    protected Optional<String> onLoadInBackground(String... params) {
         return fetchCurriculum(params[0]);
     }
 
     /**
      * Fetches the curriculum document and extracts all relevant information.
-     *  @param url URL of the curriculum document
      *
+     * @param url URL of the curriculum document
      */
-    private String fetchCurriculum(String url) {
-        String results = extractResultsFromURL(url);
-        if (results == null) {
-            return null;
+    private Optional<String> fetchCurriculum(String url) {
+        Optional<String> results = extractResultsFromURL(url);
+        Optional<String> css = net.downloadStringAndCache("http://www.in.tum.de/fileadmin/_src/add.css", CacheManager.VALIDITY_ONE_MONTH, false);
+        if (!results.isPresent() || !css.isPresent()) {
+            return Optional.absent();
         }
-        String text = Utils.buildHTMLDocument(net.downloadStringAndCache(
-                        "http://www.in.tum.de/fileadmin/_src/add.css", CacheManager.VALIDITY_ONE_MONTH, false),
-                "<div id=\"maincontent\"><div class=\"inner\">" + results + "</div></div>");
-        return text.replace("href=\"fuer-studierende-der-tum", "href=\"http://www.in.tum.de/fuer-studierende-der-tum");
+        String text = Utils.buildHTMLDocument(css.get(), "<div id=\"maincontent\"><div class=\"inner\">" + results.get() + "</div></div>");
+        return Optional.of(text.replace("href=\"fuer-studierende-der-tum", "href=\"http://www.in.tum.de/fuer-studierende-der-tum"));
     }
 
     /**
-	 * Extract the results from a document fetched from the given URL.
-	 * 
-	 * @param url URL pointing to a document where the results are extracted from.
-	 * @return The results.
-	 */
-	private String extractResultsFromURL(String url) {
-		String text = net.downloadStringAndCache(url, CacheManager.VALIDITY_ONE_MONTH, false);
+     * Extract the results from a document fetched from the given URL.
+     *
+     * @param url URL pointing to a document where the results are extracted from.
+     * @return The results.
+     */
+    private Optional<String> extractResultsFromURL(String url) {
+        Optional<String> text = net.downloadStringAndCache(url, CacheManager.VALIDITY_ONE_MONTH, false);
 
-        if (text==null && !NetUtils.isConnected(this)) {
+        if (text.isPresent()) {
+            return Optional.of(Utils.cutText(text.get(), "<!--TYPO3SEARCH_begin-->", "<!--TYPO3SEARCH_end-->"));
+        }
+        if (NetUtils.isConnected(this)) {
+            showError(R.string.something_wrong);
+        } else {
             showNoInternetLayout();
-            return null;
-        } else if (text == null) {
-			showError(R.string.something_wrong);
-            return null;
-		}
-		return Utils.cutText(text, "<!--TYPO3SEARCH_begin-->", "<!--TYPO3SEARCH_end-->");
-	}
+        }
+        return Optional.absent();
+    }
 
     /**
      * When html data is loaded show it in webView
+     *
      * @param result File
      */
     @Override
-    protected void onLoadFinished(String result) {
-        if(result!=null) {
-            browser.loadData(result, "text/html; charset=UTF-8", null);
+    protected void onLoadFinished(Optional<String> result) {
+        if (result.isPresent()) {
+            browser.loadData(result.get(), "text/html; charset=UTF-8", null);
             showLoadingEnded();
         }
     }

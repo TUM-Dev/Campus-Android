@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
 
+import com.google.common.base.Optional;
+
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.models.AccessToken;
 import de.tum.in.tumcampusapp.tumonline.TUMOException;
@@ -43,13 +45,13 @@ public class AccessTokenManager {
         request.setParameter("pTokenName", "TUMCampusApp-" + Build.PRODUCT);
 
         // fetch the xml response of requestToken
-        AccessToken token = request.fetch();
+        Optional<AccessToken> token = request.fetch();
 
         //Try to get the token
-        if (token == null) {
-            throw new TUMOException(request.getLastError());
+        if (token.isPresent()) {
+            return token.get().getToken();
         }
-        return token.getToken();
+        throw new TUMOException(request.getLastError());
     }
 
     /**

@@ -3,6 +3,8 @@ package de.tum.in.tumcampusapp.tumonline;
 import android.content.Context;
 import android.os.AsyncTask;
 
+import com.google.common.base.Optional;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -17,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.auxiliary.calendar.IntegratedCalendarEvent;
@@ -75,24 +78,25 @@ public class TUMRoomFinderRequest {
      * @param archId architecture id
      * @return coordinates of the room
      */
-    public Geo fetchCoordinates(String archId) {
+    public Optional<Geo> fetchCoordinates(String archId) {
 
         String url = API_URL_COORDINATES + encodeUrl(archId);
+        Geo result = null;
 
         try {
-            JSONObject jsonObject = net.downloadJson(url);
-            double zone = jsonObject.getDouble(KEY_UTM_ZONE);
-            double easting = jsonObject.getDouble(KEY_UTM_EASTING);
-            double northing = jsonObject.getDouble(KEY_UTM_NORTHING);
-
-            return UTMtoLL(northing, easting, zone);
-
-        } catch (Exception e) {
+            Optional<JSONObject> jsonObject = net.downloadJson(url);
+            if (jsonObject.isPresent()) {
+                double zone = jsonObject.get().getDouble(KEY_UTM_ZONE);
+                double easting = jsonObject.get().getDouble(KEY_UTM_EASTING);
+                double northing = jsonObject.get().getDouble(KEY_UTM_NORTHING);
+                result = UTMtoLL(northing, easting, zone);
+            }
+        } catch (IOException | JSONException e) {
             Utils.log(String.valueOf(e));
         }
 
         // if something went wrong
-        return null;
+        return Optional.fromNullable(result);
     }
 
     /**
@@ -104,25 +108,25 @@ public class TUMRoomFinderRequest {
     public List<Map<String, String>> fetchRooms(String searchString) {
 
         String url = API_URL_SEARCH + encodeUrl(searchString);
-        JSONArray jsonArray = net.downloadJsonArray(url, CacheManager.VALIDITY_DO_NOT_CACHE, true);
-        if (jsonArray == null) {
-            return null;
-        }
+        Optional<JSONArray> jsonArray = net.downloadJsonArray(url, CacheManager.VALIDITY_DO_NOT_CACHE, true);
 
         List<Map<String, String>> roomsList = new ArrayList<>();
         try {
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject obj = jsonArray.getJSONObject(i);
-                Map<String, String> roomMap = new HashMap<>();
-                roomMap.put(KEY_CAMPUS_ID, obj.getString(KEY_CAMPUS_ID));
-                roomMap.put(KEY_CAMPUS_TITLE, obj.getString(KEY_CAMPUS_TITLE));
-                roomMap.put(KEY_BUILDING_TITLE, obj.getString(KEY_BUILDING_TITLE));
-                roomMap.put(KEY_ROOM_TITLE, obj.getString(KEY_ROOM_TITLE));
-                roomMap.put(KEY_ARCH_ID, obj.getString(KEY_ARCH_ID));
-                roomMap.put(KEY_ROOM_ID, obj.getString(KEY_ROOM_ID));
+            if (jsonArray.isPresent()) {
+                JSONArray arr = jsonArray.get();
+                for (int i = 0; i < arr.length(); i++) {
+                    JSONObject obj = arr.getJSONObject(i);
+                    Map<String, String> roomMap = new HashMap<>();
+                    roomMap.put(KEY_CAMPUS_ID, obj.getString(KEY_CAMPUS_ID));
+                    roomMap.put(KEY_CAMPUS_TITLE, obj.getString(KEY_CAMPUS_TITLE));
+                    roomMap.put(KEY_BUILDING_TITLE, obj.getString(KEY_BUILDING_TITLE));
+                    roomMap.put(KEY_ROOM_TITLE, obj.getString(KEY_ROOM_TITLE));
+                    roomMap.put(KEY_ARCH_ID, obj.getString(KEY_ARCH_ID));
+                    roomMap.put(KEY_ROOM_ID, obj.getString(KEY_ROOM_ID));
 
-                // adding HashList to ArrayList
-                roomsList.add(roomMap);
+                    // adding HashList to ArrayList
+                    roomsList.add(roomMap);
+                }
             }
         } catch (JSONException e) {
             Utils.log(e);
@@ -137,7 +141,7 @@ public class TUMRoomFinderRequest {
      * @param archId architecture id
      * @return url of default map
      */
-    public String fetchDefaultMap(String archId) {
+    public static String fetchDefaultMap(String archId) {
         return API_URL_DEFAULT_MAP + encodeUrl(archId);
     }
 
@@ -148,8 +152,8 @@ public class TUMRoomFinderRequest {
      * @param mapId  map id
      * @return url of map
      */
-    public String fetchMap(String archId, String mapId) {
-        return API_URL_MAP + encodeUrl(archId) + "/" + encodeUrl(mapId);
+    public static String fetchMap(String archId, String mapId) {
+        return API_URL_MAP + encodeUrl(archId) + '/' + encodeUrl(mapId);
     }
 
     /**
@@ -162,21 +166,21 @@ public class TUMRoomFinderRequest {
 
         String url = API_URL_AVAILABLE_MAPS + encodeUrl(archId);
 
-        JSONArray jsonArray = net.downloadJsonArray(url, CacheManager.VALIDITY_DO_NOT_CACHE, true);
-        if (jsonArray == null) {
-            return null;
-        }
-
+        Optional<JSONArray> jsonArray = net.downloadJsonArray(url, CacheManager.VALIDITY_DO_NOT_CACHE, true);
         List<Map<String, String>> mapsList = new ArrayList<>();
-        try {
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject obj = jsonArray.getJSONObject(i);
-                Map<String, String> mapMap = new HashMap<>();
-                mapMap.put(KEY_MAP_ID, obj.getString(KEY_MAP_ID));
-                mapMap.put(KEY_DESCRIPTION, obj.getString(KEY_DESCRIPTION));
 
-                // adding HashList to ArrayList
-                mapsList.add(mapMap);
+        try {
+            if (jsonArray.isPresent()) {
+                JSONArray arr = jsonArray.get();
+                for (int i = 0; i < arr.length(); i++) {
+                    JSONObject obj = arr.getJSONObject(i);
+                    Map<String, String> mapMap = new HashMap<>();
+                    mapMap.put(KEY_MAP_ID, obj.getString(KEY_MAP_ID));
+                    mapMap.put(KEY_DESCRIPTION, obj.getString(KEY_DESCRIPTION));
+
+                    // adding HashList to ArrayList
+                    mapsList.add(mapMap);
+                }
             }
         } catch (JSONException e) {
             Utils.log(String.valueOf(e));
@@ -193,17 +197,19 @@ public class TUMRoomFinderRequest {
      */
     public List<IntegratedCalendarEvent> fetchRoomSchedule(String roomId, String startDate, String endDate, List<IntegratedCalendarEvent> scheduleList) {
 
-        String url = API_URL_SCHEDULE + encodeUrl(roomId) + "/" + encodeUrl(startDate) + "/" + encodeUrl(endDate);
+        String url = API_URL_SCHEDULE + encodeUrl(roomId) + '/' + encodeUrl(startDate) + '/' + encodeUrl(endDate);
 
-        JSONArray jsonArray = net.downloadJsonArray(url, CacheManager.VALIDITY_DO_NOT_CACHE, true);
+        Optional<JSONArray> jsonArray = net.downloadJsonArray(url, CacheManager.VALIDITY_DO_NOT_CACHE, true);
 
-        if (jsonArray == null) {
+        if (!jsonArray.isPresent()) {
             return scheduleList;
         }
 
+        JSONArray arr = jsonArray.get();
+
         try {
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject obj = jsonArray.getJSONObject(i);
+            for (int i = 0; i < arr.length(); i++) {
+                JSONObject obj = arr.getJSONObject(i);
 
                 String start = obj.getString("start");
                 Calendar startCal = Calendar.getInstance();
@@ -214,7 +220,7 @@ public class TUMRoomFinderRequest {
                 endCal.setTime(Utils.getISODateTime(end));
                 IntegratedCalendarEvent event = new IntegratedCalendarEvent(
                         obj.getLong("event_id"),
-                        obj.getString("title"),
+                        obj.getString(Const.JSON_TITLE),
                         startCal,
                         endCal,
                         "",
@@ -227,15 +233,6 @@ public class TUMRoomFinderRequest {
         }
 
         return scheduleList;
-    }
-
-    public String fetchRoomStreet(String apiCode) throws IOException, JSONException {
-        JSONObject res = net.downloadJson(API_BASE_URL + "room/streetForMVG/" + encodeUrl(apiCode));
-        if (res.has("street") && res.getBoolean("supported")) {
-            return res.getString("street");
-        }
-
-        return null;
     }
 
     /**
@@ -298,11 +295,11 @@ public class TUMRoomFinderRequest {
     /**
      * encodes an url
      *
-     * @param url input url
+     * @param pUrl input url
      * @return encoded url
      */
-    private String encodeUrl(String url) {
-        url = url.replace("/", ""); //remove slashes in queries as this breaks the url
+    private static String encodeUrl(String pUrl) {
+        String url = pUrl.replace("/", ""); //remove slashes in queries as this breaks the url
         try {
             url = URLEncoder.encode(url, "UTF-8");
         } catch (UnsupportedEncodingException e) {

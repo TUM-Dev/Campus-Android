@@ -3,7 +3,10 @@ package de.tum.in.tumcampusapp.models.managers;
 import android.content.Context;
 import android.database.Cursor;
 
+import com.google.common.base.Optional;
+
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Date;
@@ -54,9 +57,9 @@ public class NewsManager extends AbstractManager implements Card.ProvidesCard {
      * Download news from external interface (JSON)
      *
      * @param force True to force download over normal sync period, else false
-     * @throws Exception
+     * @throws JSONException
      */
-    public void downloadFromExternal(boolean force) throws Exception {
+    public void downloadFromExternal(boolean force) throws JSONException {
 
         if (!force && !SyncManager.needSync(db, this, TIME_TO_SYNC)) {
             return;
@@ -64,13 +67,14 @@ public class NewsManager extends AbstractManager implements Card.ProvidesCard {
 
         NetUtils net = new NetUtils(mContext);
         // Load all news sources
-        JSONArray jsonArray = net.downloadJsonArray(NEWS_SOURCES_URL, CacheManager.VALIDITY_ONE_MONTH, force);
+        Optional<JSONArray> jsonArray = net.downloadJsonArray(NEWS_SOURCES_URL, CacheManager.VALIDITY_ONE_MONTH, force);
 
-        if(jsonArray!=null) {
+        if (jsonArray.isPresent()) {
+            JSONArray arr = jsonArray.get();
             db.beginTransaction();
             try {
-                for (int i = 0; i < jsonArray.length(); i++) {
-                    JSONObject obj = jsonArray.getJSONObject(i);
+                for (int i = 0; i < arr.length(); i++) {
+                    JSONObject obj = arr.getJSONObject(i);
                     replaceIntoSourcesDb(obj);
                 }
                 db.setTransactionSuccessful();
@@ -85,14 +89,15 @@ public class NewsManager extends AbstractManager implements Card.ProvidesCard {
         // Delete all too old items
         cleanupDb();
 
-        if(jsonArray==null) {
+        if (!jsonArray.isPresent()) {
             return;
         }
 
         db.beginTransaction();
         try {
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject obj = jsonArray.getJSONObject(i);
+            JSONArray arr = jsonArray.get();
+            for (int i = 0; i < arr.length(); i++) {
+                JSONObject obj = arr.getJSONObject(i);
                 replaceIntoDb(getFromJson(obj));
             }
             SyncManager.replaceIntoDb(db, this);
@@ -107,9 +112,9 @@ public class NewsManager extends AbstractManager implements Card.ProvidesCard {
      *
      * @param json see above
      * @return News
-     * @throws Exception
+     * @throws JSONException if the json is invalid
      */
-    private static News getFromJson(JSONObject json) throws Exception {
+    private static News getFromJson(JSONObject json) throws JSONException {
         String id = json.getString(Const.JSON_NEWS);
         String src = json.getString(Const.JSON_SRC);
         String title = json.getString(Const.JSON_TITLE);
@@ -133,7 +138,7 @@ public class NewsManager extends AbstractManager implements Card.ProvidesCard {
         if (c.moveToFirst()) {
             do {
                 int id = c.getInt(0);
-                boolean show = Utils.getSettingBool(context, "news_source_" + id, id<=7);
+                boolean show = Utils.getSettingBool(context, "news_source_" + id, id <= 7);
                 if (show) {
                     if (!and.isEmpty()) {
                         and += " OR ";
@@ -147,8 +152,8 @@ public class NewsManager extends AbstractManager implements Card.ProvidesCard {
                 "n.link, n.image, n.date, n.created, s.icon, s.title AS source, n.dismissed, " +
                 "(julianday('now') - julianday(date)) AS diff " +
                 "FROM news n, news_sources s " +
-                "WHERE n.src=s.id "+(and.isEmpty()?"":"AND (" + and + ") ") +
-                "AND (s.id < 7 OR s.id > 13 OR s.id=?) "+
+                "WHERE n.src=s.id " + (and.isEmpty() ? "" : "AND (" + and + ") ") +
+                "AND (s.id < 7 OR s.id > 13 OR s.id=?) " +
                 "ORDER BY date DESC", new String[]{selectedNewspread});
     }
 
@@ -202,9 +207,9 @@ public class NewsManager extends AbstractManager implements Card.ProvidesCard {
      * Replace or Insert a news source in the database
      *
      * @param n News source object
-     * @throws Exception
+     * @throws JSONException
      */
-    void replaceIntoSourcesDb(JSONObject n) throws Exception {
+    void replaceIntoSourcesDb(JSONObject n) throws JSONException {
         db.execSQL("REPLACE INTO news_sources (id, icon, title) VALUES (?, ?, ?)",
                 new String[]{n.getString(Const.JSON_SOURCE), n.has(Const.JSON_ICON) ? n.getString(Const.JSON_ICON) : "",
                         n.getString(Const.JSON_TITLE)});

@@ -12,6 +12,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.google.common.base.Optional;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.MainActivity;
@@ -129,13 +131,16 @@ public abstract class BaseActivity extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                final Employee result = request.fetch();
+                final Optional<Employee> result = request.fetch();
+                if (!result.isPresent()) {
+                    return;
+                }
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         CircleImageView picture = (CircleImageView) headerView.findViewById(R.id.profile_image);
-                        if (result != null && result.getImage() != null) {
-                            picture.setImageBitmap(result.getImage());
+                        if (result.get().getImage() != null) {
+                            picture.setImageBitmap(result.get().getImage());
                         }
                     }
                 });

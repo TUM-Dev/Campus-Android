@@ -4,6 +4,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.text.format.DateUtils;
 
+import com.google.common.base.Optional;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -30,10 +32,10 @@ public class CafeteriaManager extends AbstractManager implements Card.ProvidesCa
 
     /**
      * Get Cafeteria object by JSON object
-     * <p>
+     * <p/>
      * Example JSON: e.g.
-     * {"mensa":"4", "id":"411","name":"Mensa Leopoldstra\u00dfe","anschrift"
-     * :"Leopoldstra\u00dfe 13a, M\u00fcnchen", "latitude":0.0000, "longitude":0.0000}
+     * {"mensa":"4", "id":"411","name":"Mensa Leopoldstraße","anschrift"
+     * :"Leopoldstraße 13a, München", "latitude":0.0000, "longitude":0.0000}
      *
      * @param json See example
      * @return Cafeteria object
@@ -63,22 +65,26 @@ public class CafeteriaManager extends AbstractManager implements Card.ProvidesCa
      * Download cafeterias from external interface (JSON)
      *
      * @param force True to force download over normal sync period, else false
-     * @throws Exception
+     * @throws JSONException
      */
-    public void downloadFromExternal(boolean force) throws Exception {
+    public void downloadFromExternal(boolean force) throws JSONException {
         // Update table schemata if table exists
         if (!force && !SyncManager.needSync(db, this, TIME_TO_SYNC)) {
             return;
         }
 
-        JSONArray jsonArray = new NetUtils(mContext).downloadJsonArray(CAFETERIAS_URL, CacheManager.VALIDITY_ONE_MONTH, false);
+        Optional<JSONArray> jsonArray = new NetUtils(mContext).downloadJsonArray(CAFETERIAS_URL, CacheManager.VALIDITY_ONE_MONTH, false);
+        if (!jsonArray.isPresent()) {
+            return;
+        }
         removeCache();
 
         // write cafeterias into database, transaction = speedup
+        JSONArray arr = jsonArray.get();
         db.beginTransaction();
         try {
-            for (int i = 0; i < jsonArray.length(); i++) {
-                replaceIntoDb(getFromJson(jsonArray.getJSONObject(i)));
+            for (int i = 0; i < arr.length(); i++) {
+                replaceIntoDb(getFromJson(arr.getJSONObject(i)));
             }
             SyncManager.replaceIntoDb(db, this);
             db.setTransactionSuccessful();
@@ -109,12 +115,12 @@ public class CafeteriaManager extends AbstractManager implements Card.ProvidesCa
      * @param c Cafeteria object
      * @throws Exception
      */
-    void replaceIntoDb(Cafeteria c) throws Exception {
+    void replaceIntoDb(Cafeteria c) {
         if (c.id <= 0) {
-            throw new Exception("Invalid id.");
+            throw new IllegalArgumentException("Invalid id.");
         }
         if (c.name.isEmpty()) {
-            throw new Exception("Invalid name.");
+            throw new IllegalArgumentException("Invalid name.");
         }
 
         db.execSQL("REPLACE INTO cafeterias (id, name, address, latitude, longitude) VALUES (?, ?, ?, ?, ?)",

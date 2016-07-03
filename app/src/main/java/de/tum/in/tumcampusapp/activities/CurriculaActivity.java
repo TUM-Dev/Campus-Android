@@ -9,6 +9,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.common.base.Optional;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -25,7 +27,7 @@ import de.tum.in.tumcampusapp.models.managers.CacheManager;
 /**
  * Activity to fetch and display the curricula of different study programs.
  */
-public class CurriculaActivity extends ActivityForLoadingInBackground<Void, JSONArray> implements OnItemClickListener {
+public class CurriculaActivity extends ActivityForLoadingInBackground<Void, Optional<JSONArray>> implements OnItemClickListener {
     public static final String NAME = "name";
     public static final String URL = "url";
 
@@ -55,13 +57,13 @@ public class CurriculaActivity extends ActivityForLoadingInBackground<Void, JSON
     }
 
     @Override
-    protected JSONArray onLoadInBackground(Void... arg) {
+    protected Optional<JSONArray> onLoadInBackground(Void... arg) {
         return net.downloadJsonArray(CURRICULA_URL, CacheManager.VALIDITY_ONE_MONTH, false);
     }
 
     @Override
-    protected void onLoadFinished(JSONArray jsonData) {
-        if (jsonData == null) {
+    protected void onLoadFinished(Optional<JSONArray> jsonData) {
+        if (!jsonData.isPresent()) {
             if (NetUtils.isConnected(this)) {
                 showErrorLayout();
             } else {
@@ -69,10 +71,11 @@ public class CurriculaActivity extends ActivityForLoadingInBackground<Void, JSON
             }
             return;
         }
+        JSONArray arr = jsonData.get();
         try {
             options = new HashMap<>();
-            for (int i = 0; i < jsonData.length(); i++) {
-                JSONObject item = jsonData.getJSONObject(i);
+            for (int i = 0; i < arr.length(); i++) {
+                JSONObject item = arr.getJSONObject(i);
 
                 arrayAdapter.add(item.getString("name"));
                 options.put(item.getString("name"), item.getString("url"));

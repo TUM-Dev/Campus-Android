@@ -11,6 +11,8 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
+import com.google.common.base.Optional;
+
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.KinoActivity;
 import de.tum.in.tumcampusapp.adapters.NewsAdapter;
@@ -112,8 +114,10 @@ public class NewsCard extends Card {
         notificationBuilder.setContentText(mCursor.getString(2));
         notificationBuilder.setContentInfo(mCursor.getString(8));
         notificationBuilder.setTicker(mCursor.getString(2));
-        Bitmap img = net.downloadImageToBitmap(mCursor.getString(4));
-        notificationBuilder.extend(new NotificationCompat.WearableExtender().setBackground(img));
+        Optional<Bitmap> img = net.downloadImageToBitmap(mCursor.getString(4));
+        if (img.isPresent()) {
+            notificationBuilder.extend(new NotificationCompat.WearableExtender().setBackground(img.get()));
+        }
         return notificationBuilder.build();
     }
 

@@ -25,6 +25,8 @@ import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceManager;
 import android.view.View;
 
+import com.google.common.base.Optional;
+
 import de.psdev.licensesdialog.LicensesDialog;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.MainActivity;
@@ -123,12 +125,15 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
                         @Override
                         public void run() {
                             NetUtils net = new NetUtils(mContext);
-                            final Bitmap bmp = net.downloadImageToBitmap(url);
+                            final Optional<Bitmap> bmp = net.downloadImageToBitmap(url);
+                            if (!bmp.isPresent()) {
+                                return;
+                            }
                             mContext.runOnUiThread(new Runnable() {
                                 @TargetApi(11)
                                 @Override
                                 public void run() {
-                                    pref.setIcon(new BitmapDrawable(getResources(), bmp));
+                                    pref.setIcon(new BitmapDrawable(getResources(), bmp.get()));
                                 }
                             });
                         }

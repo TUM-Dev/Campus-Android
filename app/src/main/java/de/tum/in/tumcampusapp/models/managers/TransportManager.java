@@ -5,11 +5,12 @@ import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.util.Pair;
 
+import com.google.common.base.Optional;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -89,6 +90,8 @@ public class TransportManager implements Card.ProvidesCard {
     private static final String LANGUAGE = "language=";
     private static final String STATION_SEARCH_QUERY = "name_sf=";
     private static final String DEPARTURE_QUERY_STATION = "name_dm=";
+    private static final String POINTS = "points";
+    private static final String ERROR_INVALID_JSON = "invalid JSON from mvv ";
 
     static {
         StringBuilder stationSearch = new StringBuilder(MVV_API_BASE);
@@ -121,16 +124,18 @@ public class TransportManager implements Card.ProvidesCard {
 
             String query = DEPARTURE_QUERY_CONST + language + '&' + departureQuery;
             Utils.logv(query);
+            NetUtils net = new NetUtils(context);
+            List<Departure> result = new ArrayList<>();
 
             // Download departures
-            JSONArray departures = NetUtils.downloadJson(context, query).optJSONArray("departureList");
-            if (departures == null) {
-                return null;
+            Optional<JSONArray> departures = net.downloadJsonArray(query, CacheManager.VALIDITY_DO_NOT_CACHE, true);
+            if (!departures.isPresent()) {
+                return result;
             }
 
-            ArrayList<Departure> result = new ArrayList<>(departures.length());
-            for (int i = 0; i < departures.length(); i++) {
-                JSONObject departure = departures.getJSONObject(i);
+            JSONArray arr = departures.get();
+            for (int i = 0; i < arr.length(); i++) {
+                JSONObject departure = arr.getJSONObject(i);
                 JSONObject servingLine = departure.getJSONObject("servingLine");
                 result.add(new Departure(
                         servingLine.getString("name"),
@@ -151,9 +156,9 @@ public class TransportManager implements Card.ProvidesCard {
 
         } catch (UnsupportedEncodingException e) {
             throw new Error(e); // Programming error. Fail hard.
-        } catch (IOException | JSONException e) {
+        } catch (JSONException e) {
             //We got no valid JSON, mvg-live is probably bugged
-            Utils.log(e, "invalid JSON from mvv " + DEPARTURE_QUERY);
+            Utils.log(e, ERROR_INVALID_JSON + DEPARTURE_QUERY);
             return null;
         }
     }
@@ -186,26 +191,27 @@ public class TransportManager implements Card.ProvidesCard {
 
             String query = STATION_SEARCH_CONST + language + '&' + stationQuery;
             Utils.log(query);
+            NetUtils net = new NetUtils(context);
+            List<StationResult> results = new ArrayList<>();
 
-            // Download possinble stations
-            JSONObject jsonObj = NetUtils.downloadJson(context, query);
-            if (jsonObj == null) {
+            // Download possible stations
+            Optional<JSONObject> jsonObj = net.downloadJsonObject(query, CacheManager.VALIDITY_DO_NOT_CACHE, true);
+            if (!jsonObj.isPresent()) {
                 return null;
             }
 
-            List<StationResult> results = new ArrayList<>();
             MatrixCursor mc = new MatrixCursor(new String[]{Const.NAME_COLUMN, Const.ID_COLUMN});
-            JSONObject stopfinder = jsonObj.getJSONObject("stopFinder");
+            JSONObject stopfinder = jsonObj.get().getJSONObject("stopFinder");
 
             // Possible values for points: Object, Array or null
-            JSONArray pointsArray = stopfinder.optJSONArray("points");
+            JSONArray pointsArray = stopfinder.optJSONArray(POINTS);
             if (pointsArray != null) {
                 for (int i = 0; i < pointsArray.length(); i++) {
                     JSONObject point = pointsArray.getJSONObject(i);
                     addStationResult(results, point);
                 }
             } else {
-                JSONObject points = stopfinder.optJSONObject("points");
+                JSONObject points = stopfinder.optJSONObject(POINTS);
                 if (points == null) {
                     return null;
                 }
@@ -227,8 +233,8 @@ public class TransportManager implements Card.ProvidesCard {
             return mc;
         } catch (UnsupportedEncodingException e) {
             throw new Error(e); // Programming error. Fail hard.
-        } catch (JSONException | IOException e) {
-            Utils.log(e, "invalid JSON from mvv " + STATION_SEARCH);
+        } catch (JSONException e) {
+            Utils.log(e, ERROR_INVALID_JSON + STATION_SEARCH);
         }
         return null;
     }

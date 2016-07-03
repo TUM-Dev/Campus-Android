@@ -8,6 +8,7 @@ import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.CheckBox;
 
+import com.google.common.base.Optional;
 import com.google.gson.Gson;
 
 import java.util.List;
@@ -155,9 +156,9 @@ public class WizNavChatActivity extends ActivityForLoadingInBackground<Void, Cha
             // Get all of the users lectures and save them as possible chat rooms
             ChatRoomManager manager = new ChatRoomManager(this);
             TUMOnlineRequest<LecturesSearchRowSet> requestHandler = new TUMOnlineRequest<>(TUMOnlineConst.LECTURES_PERSONAL, this, true);
-            LecturesSearchRowSet lecturesList = requestHandler.fetch();
-            if (lecturesList != null && lecturesList.getLehrveranstaltungen() != null) {
-                List<LecturesSearchRow> lectures = lecturesList.getLehrveranstaltungen();
+            Optional<LecturesSearchRowSet> lecturesList = requestHandler.fetch();
+            if (lecturesList.isPresent() && lecturesList.get().getLehrveranstaltungen() != null) {
+                List<LecturesSearchRow> lectures = lecturesList.get().getLehrveranstaltungen();
                 manager.replaceInto(lectures);
             } else {
                 Utils.showToastOnUIThread(this, R.string.no_rights_to_access_lectures);
