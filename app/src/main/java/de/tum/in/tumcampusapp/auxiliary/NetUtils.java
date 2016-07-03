@@ -185,6 +185,7 @@ public class NetUtils {
         try {
             Optional<ResponseBody> body = getOkHttpResponse(url);
             if (!body.isPresent()) {
+                file.delete();
                 throw new IOException();
             }
             byte[] buffer = body.get().bytes();
