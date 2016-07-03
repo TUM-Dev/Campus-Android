@@ -20,7 +20,7 @@ public class WizNavExtrasActivity extends BaseActivity {
     private CheckBox checkBackgroundMode;
     private CheckBox checkSilentMode;
     private CheckBox bugReport;
-    private boolean tokenSetup = false;
+    private boolean tokenSetup;
 
     public WizNavExtrasActivity() {
         super(R.layout.activity_wiznav_extras);
@@ -82,10 +82,11 @@ public class WizNavExtrasActivity extends BaseActivity {
     public void onBackPressed() {
         finish();
         Intent intent = null;
-        if (tokenSetup && new AccessTokenManager(this).hasValidAccessToken())
+        if (tokenSetup && new AccessTokenManager(this).hasValidAccessToken()) {
             intent = new Intent(this, WizNavChatActivity.class);
-        else if (!tokenSetup)
+        } else if (!tokenSetup) {
             intent = new Intent(this, WizNavStartActivity.class);
+        }
 
         if (intent != null) {
             intent.putExtra(Const.TOKEN_IS_SETUP, tokenSetup);

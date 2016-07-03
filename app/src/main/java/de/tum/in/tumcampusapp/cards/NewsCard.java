@@ -26,8 +26,8 @@ public class NewsCard extends Card {
 
     private Cursor mCursor;
     private int mPosition;
-    private NetUtils net;
-    private boolean isFilm = false;
+    private final NetUtils net;
+    private boolean isFilm;
 
     public NewsCard(Context context) {
         super(context, "card_news", false, false);
@@ -125,7 +125,7 @@ public class NewsCard extends Card {
             // Show regular news in browser
             mCursor.moveToPosition(mPosition);
             String url = mCursor.getString(3);
-            if (url.length() == 0) {
+            if (url.isEmpty()) {
                 Utils.showToast(mContext, R.string.no_link_existing);
                 return null;
             }

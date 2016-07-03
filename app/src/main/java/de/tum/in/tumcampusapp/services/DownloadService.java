@@ -40,18 +40,13 @@ public class DownloadService extends IntentService {
     private static final String LAST_UPDATE = "last_update";
     private static final String CSV_LOCATIONS = "locations.csv";
 
-    private LocalBroadcastManager broadcastManager = null;
+    private LocalBroadcastManager broadcastManager;
 
     /**
      * default init (run intent in new thread)
      */
     public DownloadService() {
         super(DOWNLOAD_SERVICE);
-        try {
-            broadcastManager = LocalBroadcastManager.getInstance(this);
-        } catch (NullPointerException e) { //Sometimes this will throw a NPE - dunno why @// TODO: 6/22/16
-            //Do nothing
-        }
     }
 
     /**
@@ -78,15 +73,16 @@ public class DownloadService extends IntentService {
             G.appVersionCode = pi.versionCode; //Version code e.g.: 45
         }
 
-        boolean successful = true;
         String action = intent.getStringExtra(Const.ACTION_EXTRA);
-        boolean force = intent.getBooleanExtra(Const.FORCE_DOWNLOAD, false);
-        boolean launch = intent.getBooleanExtra(Const.APP_LAUNCHES, false);
 
         // No action: leave service
         if (action == null) {
             return;
         }
+
+        boolean successful = true;
+        boolean force = intent.getBooleanExtra(Const.FORCE_DOWNLOAD, false);
+        boolean launch = intent.getBooleanExtra(Const.APP_LAUNCHES, false);
 
         // Check if device has a internet connection
 
@@ -126,7 +122,7 @@ public class DownloadService extends IntentService {
             }
         }
 
-        if ((action.equals(Const.DOWNLOAD_ALL_FROM_EXTERNAL))) {
+        if (action.equals(Const.DOWNLOAD_ALL_FROM_EXTERNAL)) {
             try {
                 service.importLocationsDefaults();
             } catch (Exception e) {
@@ -151,7 +147,7 @@ public class DownloadService extends IntentService {
         }
 
         // Do all other import stuff that is not relevant for creating the viewing the start page
-        if ((action.equals(Const.DOWNLOAD_ALL_FROM_EXTERNAL))) {
+        if (action.equals(Const.DOWNLOAD_ALL_FROM_EXTERNAL)) {
             service.startService(new Intent(service, FillCacheService.class));
         }
     }
@@ -160,6 +156,7 @@ public class DownloadService extends IntentService {
     public void onCreate() {
         super.onCreate();
         Utils.log("DownloadService service has started");
+        broadcastManager = LocalBroadcastManager.getInstance(this);
 
         // Init sync table
         new SyncManager(this);

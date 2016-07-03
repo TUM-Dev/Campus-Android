@@ -49,8 +49,8 @@ public class IkomCard extends Card {
         DateTime firstDay = new DateTime(2016, 6, 20, 0, 0);//Display for the full first day
         DateTime thirdDay = new DateTime(2016, 6, 22, 0, 0);//And for the third and fourth
         DateTime today = new DateTime();
-        if ((today.isAfter(firstDay) && today.isBefore(firstDay.plusDays(1))) ||
-                (today.isAfter(thirdDay) && today.isBefore(thirdDay.plusDays(2)))) {
+        if (today.isAfter(firstDay) && today.isBefore(firstDay.plusDays(1)) ||
+                today.isAfter(thirdDay) && today.isBefore(thirdDay.plusDays(2))) {
             image.setImageResource(R.drawable.ikom_2);
         }
         image.setOnClickListener(openEventAgenda);
@@ -90,12 +90,13 @@ public class IkomCard extends Card {
     public boolean shouldShow(SharedPreferences p) {
         //Either use day: display always when event is running
         JodaTimeAndroid.init(mContext);
-        DateTime firstDay = new DateTime(2016, 6, 18, 0, 0);
-        DateTime today = new DateTime();
+        //DateTime firstDay = new DateTime(2016, 6, 18, 0, 0);
+        //DateTime today = new DateTime();
 
         //Or discarded manually
-        SharedPreferences prefs = mContext.getSharedPreferences(Card.DISCARD_SETTINGS_START, 0);
-        return prefs.getBoolean(CardManager.SHOW_IKOM, true) || (today.isAfter(firstDay) && today.isBefore(firstDay.plusDays(7)));
+        //SharedPreferences prefs = mContext.getSharedPreferences(Card.DISCARD_SETTINGS_START, 0);
+        //return prefs.getBoolean(CardManager.SHOW_IKOM, true) || (today.isAfter(firstDay) && today.isBefore(firstDay.plusDays(7)));
+        return false;
     }
 
     @Override

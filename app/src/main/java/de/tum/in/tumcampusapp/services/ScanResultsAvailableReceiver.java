@@ -34,8 +34,9 @@ public class ScanResultsAvailableReceiver extends BroadcastReceiver {
         // SurveyCard if user has eduroam configured already
         EduroamManager man = new EduroamManager(context);
         boolean show = Utils.getSettingBool(context, "card_eduroam_phone", true);
-        if(man.isConfigured() || NetUtils.isConnected(context) || Build.VERSION.SDK_INT<18 || !show)
+        if (man.isConfigured() || NetUtils.isConnected(context) || Build.VERSION.SDK_INT < 18 || !show) {
             return;
+        }
 
         // SurveyCard if eduroam is available
         WifiManager wifi = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
@@ -60,8 +61,9 @@ public class ScanResultsAvailableReceiver extends BroadcastReceiver {
     static void showNotification(Context context) {
         // If previous notification is still visible
 
-        if(!Utils.getInternalSettingBool(context, SHOULD_SHOW, true))
+        if (!Utils.getInternalSettingBool(context, SHOULD_SHOW, true)) {
             return;
+        }
 
         // Prepare intents for notification actions
         Intent intent = new Intent(context, SetupEduroamActivity.class);

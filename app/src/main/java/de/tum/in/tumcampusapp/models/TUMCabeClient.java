@@ -5,7 +5,6 @@ import android.content.Context;
 import com.squareup.okhttp.CertificatePinner;
 import com.squareup.okhttp.OkHttpClient;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +12,6 @@ import javax.net.ssl.SSLPeerUnverifiedException;
 
 import de.tum.in.tumcampusapp.auxiliary.AuthenticationManager;
 import de.tum.in.tumcampusapp.auxiliary.Const;
-import de.tum.in.tumcampusapp.cards.SurveyCard;
 import retrofit.Callback;
 import retrofit.ErrorHandler;
 import retrofit.RequestInterceptor;
@@ -51,10 +49,8 @@ public class TUMCabeClient {
 
 
 
-
-
-    private static TUMCabeClient instance = null;
-    private static Context context = null;
+    private static TUMCabeClient instance;
+    private static Context context;
     final RequestInterceptor requestInterceptor = new RequestInterceptor() {
         @Override
         public void intercept(RequestFacade request) {
@@ -74,7 +70,7 @@ public class TUMCabeClient {
             return cause;
         }
     };
-    private TUMCabeAPIService service = null;
+    private TUMCabeAPIService service;
 
     private TUMCabeClient() {
         //Pin our known fingerprints, which I retrieved on 28. June 2015

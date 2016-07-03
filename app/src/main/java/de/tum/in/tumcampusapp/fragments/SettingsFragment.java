@@ -67,7 +67,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
         }
 
         //Only do these things if we are in the root of the preferences
-        if(rootKey == null) {
+        if (rootKey == null) {
             // Click listener for preference list entries. Used to simulate a button
             // (since it is not possible to add a button to the preferences screen)
             findPreference("button_wizard").setOnPreferenceClickListener(this);
@@ -108,7 +108,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
     }
 
     private void populateNewsSources() {
-        PreferenceCategory news_sources = (PreferenceCategory) findPreference("card_news_sources");
+        PreferenceCategory newsSources = (PreferenceCategory) findPreference("card_news_sources");
         NewsManager cm = new NewsManager(mContext);
         Cursor cur = cm.getNewsSources();
         if (cur.moveToFirst()) {
@@ -135,7 +135,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
                     }).start();
                 }
                 pref.setTitle(cur.getString(2));
-                news_sources.addPreference(pref);
+                newsSources.addPreference(pref);
             } while (cur.moveToNext());
         }
         cur.close();

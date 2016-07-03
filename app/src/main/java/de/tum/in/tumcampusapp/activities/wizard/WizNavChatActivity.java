@@ -19,10 +19,10 @@ import de.tum.in.tumcampusapp.auxiliary.AuthenticationManager;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
-import de.tum.in.tumcampusapp.models.TUMCabeClient;
 import de.tum.in.tumcampusapp.models.ChatMember;
 import de.tum.in.tumcampusapp.models.LecturesSearchRow;
 import de.tum.in.tumcampusapp.models.LecturesSearchRowSet;
+import de.tum.in.tumcampusapp.models.TUMCabeClient;
 import de.tum.in.tumcampusapp.models.managers.ChatRoomManager;
 import de.tum.in.tumcampusapp.tumonline.TUMOnlineConst;
 import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequest;
@@ -33,7 +33,7 @@ import retrofit.RetrofitError;
  */
 public class WizNavChatActivity extends ActivityForLoadingInBackground<Void, ChatMember> {
 
-    private boolean tokenSetup = false;
+    private boolean tokenSetup;
     private CheckBox groupChatMode, autoJoin, acceptedTerms;
 
     public WizNavChatActivity() {
@@ -87,10 +87,11 @@ public class WizNavChatActivity extends ActivityForLoadingInBackground<Void, Cha
     public void onBackPressed() {
         finish();
         if (!tokenSetup) {
-            if (new AccessTokenManager(this).hasValidAccessToken())
+            if (new AccessTokenManager(this).hasValidAccessToken()) {
                 startActivity(new Intent(this, WizNavCheckTokenActivity.class));
-            else
+            } else {
                 startActivity(new Intent(this, WizNavStartActivity.class));
+            }
             overridePendingTransition(R.anim.fadein, R.anim.fadeout);
         }
     }
@@ -112,11 +113,9 @@ public class WizNavChatActivity extends ActivityForLoadingInBackground<Void, Cha
      */
     @SuppressWarnings("UnusedParameters")
     public void onClickNext(View next) {
-        if (groupChatMode.isChecked()) {
-            if (!acceptedTerms.isChecked()) {
-                Utils.showToast(this, R.string.have_to_accept_terms);
-                return;
-            }
+        if (groupChatMode.isChecked() && !acceptedTerms.isChecked()) {
+            Utils.showToast(this, R.string.have_to_accept_terms);
+            return;
         }
 
         startLoading();
@@ -131,9 +130,9 @@ public class WizNavChatActivity extends ActivityForLoadingInBackground<Void, Cha
 
 
         Intent intent;
-        if(skip){
+        if (skip) {
             intent = new Intent(this, WizNavExtrasActivity.class);
-        }else {
+        } else {
             if (!Utils.getInternalSettingBool(this, Const.PRIVATE_KEY_ACTIVE, false)) {
                 intent = new Intent(this, WizNavActivatePublicKeyActivity.class);
             } else {

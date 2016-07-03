@@ -38,8 +38,8 @@ public class JoinRoomScanActivity extends Activity implements ZXingScannerView.R
 
     @Override
     public void onPause() {
-        super.onPause();
         mScannerView.stopCamera();           // Stop camera on pause
+        super.onPause();
     }
 
     @Override

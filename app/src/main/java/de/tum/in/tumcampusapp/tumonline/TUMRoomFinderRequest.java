@@ -13,6 +13,8 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
@@ -52,9 +54,9 @@ public class TUMRoomFinderRequest {
     /**
      * asynchronous task for interactive fetch
      */
-    private AsyncTask<String, Void, ArrayList<HashMap<String, String>>> backgroundTask = null;
+    private AsyncTask<String, Void, List<Map<String, String>>> backgroundTask;
 
-    private NetUtils net;
+    private final NetUtils net;
 
     public TUMRoomFinderRequest(Context context) {
         net = new NetUtils(context);
@@ -99,20 +101,19 @@ public class TUMRoomFinderRequest {
      * @param searchString string that was entered by the user
      * @return list of HashMaps representing rooms, Map: attributes -> values
      */
-    public ArrayList<HashMap<String, String>> fetchRooms(String searchString) {
+    public List<Map<String, String>> fetchRooms(String searchString) {
 
-        ArrayList<HashMap<String, String>> roomsList = new ArrayList<>();
         String url = API_URL_SEARCH + encodeUrl(searchString);
         JSONArray jsonArray = net.downloadJsonArray(url, CacheManager.VALIDITY_DO_NOT_CACHE, true);
-
         if (jsonArray == null) {
             return null;
         }
 
+        List<Map<String, String>> roomsList = new ArrayList<>();
         try {
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject obj = jsonArray.getJSONObject(i);
-                HashMap<String, String> roomMap = new HashMap<>();
+                Map<String, String> roomMap = new HashMap<>();
                 roomMap.put(KEY_CAMPUS_ID, obj.getString(KEY_CAMPUS_ID));
                 roomMap.put(KEY_CAMPUS_TITLE, obj.getString(KEY_CAMPUS_TITLE));
                 roomMap.put(KEY_BUILDING_TITLE, obj.getString(KEY_BUILDING_TITLE));
@@ -157,21 +158,20 @@ public class TUMRoomFinderRequest {
      * @param archId architecture id
      * @return list of HashMap representing available maps
      */
-    public ArrayList<HashMap<String, String>> fetchAvailableMaps(String archId) {
+    public List<Map<String, String>> fetchAvailableMaps(String archId) {
 
-        ArrayList<HashMap<String, String>> mapsList = new ArrayList<>();
         String url = API_URL_AVAILABLE_MAPS + encodeUrl(archId);
 
         JSONArray jsonArray = net.downloadJsonArray(url, CacheManager.VALIDITY_DO_NOT_CACHE, true);
-
         if (jsonArray == null) {
             return null;
         }
 
+        List<Map<String, String>> mapsList = new ArrayList<>();
         try {
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject obj = jsonArray.getJSONObject(i);
-                HashMap<String, String> mapMap = new HashMap<>();
+                Map<String, String> mapMap = new HashMap<>();
                 mapMap.put(KEY_MAP_ID, obj.getString(KEY_MAP_ID));
                 mapMap.put(KEY_DESCRIPTION, obj.getString(KEY_DESCRIPTION));
 
@@ -191,7 +191,7 @@ public class TUMRoomFinderRequest {
      * @param roomId roomId
      * @return List of Events
      */
-    public ArrayList<IntegratedCalendarEvent> fetchRoomSchedule(String roomId, String startDate, String endDate, ArrayList<IntegratedCalendarEvent> scheduleList) {
+    public List<IntegratedCalendarEvent> fetchRoomSchedule(String roomId, String startDate, String endDate, List<IntegratedCalendarEvent> scheduleList) {
 
         String url = API_URL_SCHEDULE + encodeUrl(roomId) + "/" + encodeUrl(startDate) + "/" + encodeUrl(endDate);
 
@@ -253,13 +253,13 @@ public class TUMRoomFinderRequest {
 
         // fetch information in a background task and show progress dialog in
         // meantime
-        backgroundTask = new AsyncTask<String, Void, ArrayList<HashMap<String, String>>>() {
+        backgroundTask = new AsyncTask<String, Void, List<Map<String, String>>>() {
 
             /** property to determine if there is an internet connection */
             boolean isOnline;
 
             @Override
-            protected ArrayList<HashMap<String, String>> doInBackground(
+            protected List<Map<String, String>> doInBackground(
                     String... searchString) {
                 // set parameter on the TUMRoomFinder request an fetch the
                 // results
@@ -274,7 +274,7 @@ public class TUMRoomFinderRequest {
             }
 
             @Override
-            protected void onPostExecute(ArrayList<HashMap<String, String>> result) {
+            protected void onPostExecute(List<Map<String, String>> result) {
                 // handle result
                 if (!isOnline) {
                     listener.onNoInternetError();
@@ -320,7 +320,7 @@ public class TUMRoomFinderRequest {
         double d2 = 0.0066943799999999998;
         double d4 = (1 - Math.sqrt(1 - d2)) / (1 + Math.sqrt(1 - d2));
         double d15 = east - 500000;
-        double d11 = ((zone - 1) * 6 - 180) + 3;
+        double d11 = (zone - 1) * 6 - 180 + 3;
         double d3 = d2 / (1 - d2);
         double d10 = north / d;
         double d12 = d10 / (d1 * (1 - d2 / 4 - (3 * d2 * d2) / 64 - (5 * Math.pow(d2, 3)) / 256));
@@ -330,9 +330,9 @@ public class TUMRoomFinderRequest {
         double d7 = d3 * Math.cos(d14) * Math.cos(d14);
         double d8 = (d1 * (1 - d2)) / Math.pow(1 - d2 * Math.sin(d14) * Math.sin(d14), 1.5);
         double d9 = d15 / (d5 * d);
-        double d17 = d14 - ((d5 * Math.tan(d14)) / d8) * (((d9 * d9) / 2 - (((5 + 3 * d6 + 10 * d7) - 4 * d7 * d7 - 9 * d3) * Math.pow(d9, 4)) / 24) + (((61 + 90 * d6 + 298 * d7 + 45 * d6 * d6) - 252 * d3 - 3 * d7 * d7) * Math.pow(d9, 6)) / 720);
-        d17 = d17 * 180 / Math.PI;
-        double d18 = ((d9 - ((1 + 2 * d6 + d7) * Math.pow(d9, 3)) / 6) + (((((5 - 2 * d7) + 28 * d6) - 3 * d7 * d7) + 8 * d3 + 24 * d6 * d6) * Math.pow(d9, 5)) / 120) / Math.cos(d14);
+        double d17 = d14 - ((d5 * Math.tan(d14)) / d8) * ((d9 * d9) / 2 - ((5 + 3 * d6 + 10 * d7 - 4 * d7 * d7 - 9 * d3) * Math.pow(d9, 4)) / 24 + ((61 + 90 * d6 + 298 * d7 + 45 * d6 * d6 - 252 * d3 - 3 * d7 * d7) * Math.pow(d9, 6)) / 720);
+        d17 *= 180 / Math.PI;
+        double d18 = (d9 - ((1 + 2 * d6 + d7) * Math.pow(d9, 3)) / 6 + ((5 - 2 * d7 + 28 * d6 - 3 * d7 * d7 + 8 * d3 + 24 * d6 * d6) * Math.pow(d9, 5)) / 120) / Math.cos(d14);
         d18 = d11 + d18 * 180 / Math.PI;
         return new Geo(d17, d18);
     }

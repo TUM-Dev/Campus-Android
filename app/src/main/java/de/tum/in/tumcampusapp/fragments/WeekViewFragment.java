@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.auxiliary.calendar.IntegratedCalendarEvent;
@@ -21,7 +22,7 @@ import de.tum.in.tumcampusapp.tumonline.TUMRoomFinderRequest;
 
 public class WeekViewFragment extends Fragment implements MonthLoader.MonthChangeListener {
 
-    private HashMap<Integer, List<WeekViewEvent>> loadedEvents = new HashMap<>();
+    private final Map<Integer, List<WeekViewEvent>> loadedEvents = new HashMap<>();
 
     private String roomApiCode;
     private WeekView mWeekView;
@@ -71,7 +72,7 @@ public class WeekViewFragment extends Fragment implements MonthLoader.MonthChang
                 calendar.set(newYear, newMonth - 1, daysInMonth);
                 long endTime = calendar.getTimeInMillis();
 
-                ArrayList<IntegratedCalendarEvent> roomFinderResult = new ArrayList<>();
+                List<IntegratedCalendarEvent> roomFinderResult = new ArrayList<>();
                 TUMRoomFinderRequest request = new TUMRoomFinderRequest(getContext());
                 request.fetchRoomSchedule(roomApiCode, Long.toString(startTime), Long.toString(endTime), roomFinderResult);
 

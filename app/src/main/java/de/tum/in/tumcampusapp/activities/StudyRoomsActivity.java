@@ -107,7 +107,7 @@ public class StudyRoomsActivity extends ActivityForLoadingInBackground<Void, Voi
     }
 
     private boolean hasGotStudyRoomGroups() {
-        return mStudyRoomGroupList != null && mStudyRoomGroupList.size() != 0;
+        return mStudyRoomGroupList != null && !mStudyRoomGroupList.isEmpty();
     }
 
     private void showCorrectErrorLayout() {
@@ -129,10 +129,11 @@ public class StudyRoomsActivity extends ActivityForLoadingInBackground<Void, Voi
     public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
         mSelectedStudyRoomGroupId = mStudyRoomGroupList.get(pos).id;
 
-        if (mSectionsPagerAdapter == null)
+        if (mSectionsPagerAdapter == null) {
             setupViewPagerAdapter(mSelectedStudyRoomGroupId);
-        else
+        } else {
             changeViewPagerAdapter(mSelectedStudyRoomGroupId);
+        }
     }
 
     private void changeViewPagerAdapter(int mSelectedStudyRoomGroupId) {

@@ -20,7 +20,7 @@ import de.tum.in.tumcampusapp.models.TUMCabeClient;
 public class Update extends GenericNotification {
 
     public final GCMUpdate data;
-    private GCMNotification info;
+    private final GCMNotification info;
 
     public Update(String payload, Context context, int notfication) {
         super(context, 2, notfication, true);
@@ -31,7 +31,7 @@ public class Update extends GenericNotification {
         }
 
         // parse data
-        this.data = (new Gson()).fromJson(payload, GCMUpdate.class);
+        this.data = new Gson().fromJson(payload, GCMUpdate.class);
 
         //Get data from server
         this.info = TUMCabeClient.getInstance(this.context).getNotification(this.notification);

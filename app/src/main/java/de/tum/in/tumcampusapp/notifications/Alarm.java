@@ -32,10 +32,10 @@ public class Alarm extends GenericNotification {
     /**
      * This is the private key used to sign all messages sent by the alarm system - used to verify that the sent message is correct
      */
-    private static final String pubKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvSukueIrdowjJB/IHR6+tsCbYLF9kmC/2Sa8/kI9Ttq0aUyC0hDt2SBzuDDmp/RwnUap5/0xT/h3z+WgKOjrzWig4lmb7G2+RuuVn8466AErfp3YQVFiovNLGMqwfJzPZ9aV3sZBXCTeEbDkd/CLRp3kBYkAtL8NfIlbNaII9CWKdhS907JyEWRZO2DLiYLm37vK/hwg58eXHwL9jNYY3gFqGUlfWXwGC2a0yTOk9rgJejhUbU9GLWSL3OwiHVXlpPsvTC1Ry0H4kQQeisjCgpkPjOQAnAFRN9zZLtBZlIsssYvL3ohY/C1HfGzDwGTaELjhtzY9qHdFW/4GDZh8swIDAQAB";
+    private static final String PUB_KEY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvSukueIrdowjJB/IHR6+tsCbYLF9kmC/2Sa8/kI9Ttq0aUyC0hDt2SBzuDDmp/RwnUap5/0xT/h3z+WgKOjrzWig4lmb7G2+RuuVn8466AErfp3YQVFiovNLGMqwfJzPZ9aV3sZBXCTeEbDkd/CLRp3kBYkAtL8NfIlbNaII9CWKdhS907JyEWRZO2DLiYLm37vK/hwg58eXHwL9jNYY3gFqGUlfWXwGC2a0yTOk9rgJejhUbU9GLWSL3OwiHVXlpPsvTC1Ry0H4kQQeisjCgpkPjOQAnAFRN9zZLtBZlIsssYvL3ohY/C1HfGzDwGTaELjhtzY9qHdFW/4GDZh8swIDAQAB";
 
     public final GCMAlert alert;
-    private GCMNotification info;
+    private final GCMNotification info;
 
     public Alarm(String payload, Context context, int notification) {
         super(context, 3, notification, true); //Let the base class know which id this notification has
@@ -49,7 +49,7 @@ public class Alarm extends GenericNotification {
         this.info = TUMCabeClient.getInstance(this.context).getNotification(this.notification);
 
         // parse data
-        this.alert = (new Gson()).fromJson(payload, GCMAlert.class);
+        this.alert = new Gson().fromJson(payload, GCMAlert.class);
     }
 
     /**
@@ -61,7 +61,6 @@ public class Alarm extends GenericNotification {
      * @return if the signature is valid
      */
     private static boolean isValidSignature(String title, String description, String signature) {
-        String text = title + description;
         PublicKey key = getCabePublicKey();
         if (key == null) {
             return false;
@@ -82,6 +81,7 @@ public class Alarm extends GenericNotification {
             return false;
         }
 
+        String text = title + description;
         byte[] textBytes;
         try {
             textBytes = text.getBytes("UTF8");
@@ -110,7 +110,6 @@ public class Alarm extends GenericNotification {
      */
     private static PublicKey getCabePublicKey() {
         // Base64 string -> Bytes
-        byte[] keyBytes = Base64.decode(pubKey, Base64.NO_WRAP);
         KeyFactory keyFactory;
         try {
             keyFactory = KeyFactory.getInstance("RSA");
@@ -119,6 +118,7 @@ public class Alarm extends GenericNotification {
             return null;
         }
 
+        byte[] keyBytes = Base64.decode(PUB_KEY, Base64.NO_WRAP);
         // Bytes -> PublicKey
         try {
             return keyFactory.generatePublic(new X509EncodedKeySpec(keyBytes));

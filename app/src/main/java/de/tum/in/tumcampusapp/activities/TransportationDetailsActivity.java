@@ -59,7 +59,6 @@ public class TransportationDetailsActivity extends ActivityForLoadingInBackgroun
     @Override
     protected List<TransportManager.Departure> onLoadInBackground(String... arg) {
         final String location = arg[0];
-        final String locationID = arg[1];
 
         // save clicked station into db
         recentsManager.replaceIntoDb(location);
@@ -71,6 +70,7 @@ public class TransportationDetailsActivity extends ActivityForLoadingInBackgroun
         }
 
         // get departures from website
+        final String locationID = arg[1];
         List<TransportManager.Departure> departureCursor = TransportManager.getDeparturesFromExternal(this, locationID);
         if (departureCursor == null) {
             showError(R.string.no_departures_found);

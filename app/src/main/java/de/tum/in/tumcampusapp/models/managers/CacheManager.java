@@ -102,8 +102,9 @@ public class CacheManager extends AbstractManager {
         if (cur.moveToFirst()) {
             do {
                 String imgUrl = cur.getString(1);
-                if (!imgUrl.isEmpty() && !imgUrl.equals("null"))
+                if (!imgUrl.isEmpty() && !imgUrl.equals("null")) {
                     net.downloadImage(imgUrl);
+                }
             } while (cur.moveToNext());
         }
         cur.close();
@@ -113,8 +114,9 @@ public class CacheManager extends AbstractManager {
         if (cur.moveToFirst()) {
             do {
                 String imgUrl = cur.getString(4);
-                if (!imgUrl.equals("null"))
+                if (!imgUrl.equals("null")) {
                     net.downloadImage(imgUrl);
+                }
             } while (cur.moveToNext());
         }
         cur.close();
@@ -125,8 +127,9 @@ public class CacheManager extends AbstractManager {
         if (cur.moveToFirst()) {
             do {
                 String imgUrl = cur.getString(cur.getColumnIndex(Const.JSON_COVER));
-                if (!imgUrl.equals("null"))
+                if (!imgUrl.equals("null")) {
                     net.downloadImage(imgUrl);
+                }
             } while (cur.moveToNext());
         }
         cur.close();
@@ -222,8 +225,9 @@ public class CacheManager extends AbstractManager {
      * @param data result
      */
     public void addToCache(String url, String data, int validity, int typ) {
-        if (validity == VALIDITY_DO_NOT_CACHE)
+        if (validity == VALIDITY_DO_NOT_CACHE) {
             return;
+        }
         db.execSQL("REPLACE INTO cache (url, data, validity, max_age, typ) " +
                         "VALUES (?, ?, datetime('now','+" + (validity / 2) + " seconds'), " +
                         "datetime('now','+" + validity + " seconds'), ?)",
@@ -236,15 +240,18 @@ public class CacheManager extends AbstractManager {
     void importLecturesFromTUMOnline() {
         // get my lectures
         TUMOnlineRequest<LecturesSearchRowSet> requestHandler = new TUMOnlineRequest<>(TUMOnlineConst.LECTURES_PERSONAL, mContext);
-        if (!shouldRefresh(requestHandler.getRequestURL()))
+        if (!shouldRefresh(requestHandler.getRequestURL())) {
             return;
+        }
 
         LecturesSearchRowSet lecturesList = requestHandler.fetch();
-        if (lecturesList == null)
+        if (lecturesList == null) {
             return;
+        }
         List<LecturesSearchRow> lectures = lecturesList.getLehrveranstaltungen();
-        if (lectures == null)
+        if (lectures == null) {
             return;
+        }
         ChatRoomManager manager = new ChatRoomManager(mContext);
         manager.replaceInto(lectures);
     /*    if (myLecturesList == null)

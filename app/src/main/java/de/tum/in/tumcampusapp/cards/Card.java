@@ -38,17 +38,17 @@ public abstract class Card {
     private static final String DISCARD_SETTINGS_PHONE = "discard_settings_phone";
 
     // Context related stuff
-    Context mContext;
+    protected Context mContext;
     // UI Elements
-    View mCard;
-    LinearLayout mLinearLayout;
-    TextView mTitleView;
-    private String mSettings;
+    protected View mCard;
+    protected LinearLayout mLinearLayout;
+    protected TextView mTitleView;
+    private final String mSettings;
     // Settings for showing this card on start page or as notification
     // Default values set for restore card, no internet card, etc.
     private boolean mShowStart = true;
-    private boolean mShowWear = false;
-    private boolean mShowPhone = false;
+    private boolean mShowWear;
+    private boolean mShowPhone;
 
     /**
      * Card constructor for special cards that don't have a preference screen
@@ -56,8 +56,7 @@ public abstract class Card {
      * @param context Context
      */
     Card(Context context) {
-        mSettings = null;
-        mContext = context;
+        this(context, null);
     }
 
     /**
@@ -67,8 +66,8 @@ public abstract class Card {
      * @param settings Preference key prefix used for all preferences belonging to that card
      */
     Card(Context context, String settings) {
-        this(context, settings, true, false);
         mSettings = settings;
+        mContext = context;
     }
 
     /**
@@ -80,8 +79,7 @@ public abstract class Card {
      * @param phoneDefault True if notifications should by default be displayed on the phone
      */
     Card(Context context, String settings, boolean wearDefault, boolean phoneDefault) {
-        this(context);
-        mSettings = settings;
+        this(context, settings);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
         mShowStart = prefs.getBoolean(settings + "_start", true);
         mShowWear = prefs.getBoolean(settings + "_wear", wearDefault);
@@ -169,15 +167,17 @@ public abstract class Card {
         // Should be shown on start page?
         if (mShowStart) {
             SharedPreferences prefs = mContext.getSharedPreferences(DISCARD_SETTINGS_START, 0);
-            if (shouldShow(prefs))
+            if (shouldShow(prefs)) {
                 CardManager.addCard(this);
+            }
         }
 
         // Should be shown on phone or watch?
         if (mShowWear || mShowPhone) {
             SharedPreferences prefs = mContext.getSharedPreferences(DISCARD_SETTINGS_PHONE, 0);
-            if (shouldShowNotification(prefs))
+            if (shouldShowNotification(prefs)) {
                 notifyUser();
+            }
         }
     }
 
@@ -372,8 +372,9 @@ public abstract class Card {
             int i = item.getItemId();
             if (i == R.id.open_card_setting) {// Open card's preference screen
                 String key = current.getSettings();
-                if (key == null)
+                if (key == null) {
                     return true;
+                }
                 Intent intent = new Intent(itemView.getContext(), UserPreferencesActivity.class);
                 intent.putExtra(Const.PREFERENCE_SCREEN, key);
                 itemView.getContext().startActivity(intent);

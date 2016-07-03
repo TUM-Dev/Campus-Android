@@ -17,8 +17,8 @@ import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.CafeteriaActivity;
@@ -120,29 +120,32 @@ public class CafeteriaMenuCard extends Card {
 
     @Override
     protected Notification fillNotification(NotificationCompat.Builder notificationBuilder) {
-        HashMap<String, String> rolePrices = CafeteriaPrices.getRolePrices(mContext);
+        Map<String, String> rolePrices = CafeteriaPrices.getRolePrices(mContext);
 
         NotificationCompat.WearableExtender morePageNotification =
                 new NotificationCompat.WearableExtender();
 
         String allContent = "", firstContent = "";
         for (CafeteriaMenu menu : mMenus) {
-            if (menu.typeShort.equals("bei"))
+            if (menu.typeShort.equals("bei")) {
                 continue;
+            }
 
             NotificationCompat.Builder pageNotification =
                     new NotificationCompat.Builder(mContext)
                             .setContentTitle(menu.typeLong.replaceAll("[0-9]", "").trim());
 
             String content = menu.name;
-            if (rolePrices.containsKey(menu.typeLong))
+            if (rolePrices.containsKey(menu.typeLong)) {
                 content += "\n" + rolePrices.get(menu.typeLong) + " €";
+            }
 
             content = content.replaceAll("\\([^\\)]+\\)", "").trim();
             pageNotification.setContentText(content);
             if (menu.typeShort.equals("tg")) {
-                if (!allContent.isEmpty())
+                if (!allContent.isEmpty()) {
                     allContent += "\n";
+                }
                 allContent += content;
             }
             if (firstContent.isEmpty()) {

@@ -24,7 +24,7 @@ import de.tum.in.tumcampusapp.models.managers.KinoManager;
 /**
  * Fragment for KinoDetails. Manages content that gets shown on the pagerView
  */
-public class KinoDetailsFragment extends Fragment implements View.OnClickListener{
+public class KinoDetailsFragment extends Fragment implements View.OnClickListener {
 
     private Context context;
     private Cursor cursor;
@@ -32,7 +32,7 @@ public class KinoDetailsFragment extends Fragment implements View.OnClickListene
     private String url; // link to homepage
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_kinodetails_section, container, false);
         LinearLayout root = (LinearLayout) rootView.findViewById(R.id.layout);
 
@@ -49,10 +49,11 @@ public class KinoDetailsFragment extends Fragment implements View.OnClickListene
 
     /**
      * creates the content of the fragment
+     *
      * @param rootView view on which the content gets drawn
      * @param position position in database
      */
-    private void showDetails(LinearLayout rootView, int position){
+    private void showDetails(LinearLayout rootView, int position) {
         cursor.moveToPosition(position);
         url = cursor.getString(cursor.getColumnIndex(Const.JSON_LINK));
 
@@ -108,9 +109,9 @@ public class KinoDetailsFragment extends Fragment implements View.OnClickListene
         text.setText(cursor.getString(cursor.getColumnIndex(Const.JSON_DESCRIPTION)));
         // padding is done programmatically here because we need more padding at the end
         int padding = (int) context.getResources().getDimension(R.dimen.padding_kino);
-        int padding_right = (int) context.getResources().getDimension(R.dimen.padding_kino_right);
-        int padding_end = (int) context.getResources().getDimension(R.dimen.padding_kino_end);
-        text.setPadding(padding,padding,padding_right,padding_end);
+        int paddingRight = (int) context.getResources().getDimension(R.dimen.padding_kino_right);
+        int paddingEnd = (int) context.getResources().getDimension(R.dimen.padding_kino_end);
+        text.setPadding(padding, padding, paddingRight, paddingEnd);
         rootView.addView(view);
     }
 
@@ -133,7 +134,7 @@ public class KinoDetailsFragment extends Fragment implements View.OnClickListene
         runtime = (Button) headerView.findViewById(R.id.button_runtime);
 
         // set text for all buttons
-        date.setText(this.formDateString(cursor.getString(cursor.getColumnIndex(Const.JSON_DATE))));
+        date.setText(KinoDetailsFragment.formDateString(cursor.getString(cursor.getColumnIndex(Const.JSON_DATE))));
         link.setText(R.string.www);
         imdb.setText(cursor.getString(cursor.getColumnIndex(Const.JSON_RATING)));
         year.setText(cursor.getString(cursor.getColumnIndex(Const.JSON_YEAR)));
@@ -147,8 +148,8 @@ public class KinoDetailsFragment extends Fragment implements View.OnClickListene
         runtime.setOnClickListener(this);
 
         // cover
-        String cover_url = cursor.getString(cursor.getColumnIndex(Const.JSON_COVER));
-        net.loadAndSetImage(cover_url, cover);
+        String coverUrl = cursor.getString(cursor.getColumnIndex(Const.JSON_COVER));
+        net.loadAndSetImage(coverUrl, cover);
 
         rootView.addView(headerView);
     }
@@ -176,13 +177,12 @@ public class KinoDetailsFragment extends Fragment implements View.OnClickListene
 
     /**
      * formats the dateString
+     *
      * @param date Date string stored in database
      * @return formated dateString
      */
-    private String formDateString(String date){
-        String new_date;
-        new_date = date.substring(8, 10) + "." + date.substring(5,7) + ".";
-        return new_date;
+    private static CharSequence formDateString(String date) {
+        return date.substring(8, 10) + '.' + date.substring(5, 7) + '.';
     }
 
 }

@@ -24,6 +24,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import de.tum.in.tumcampusapp.R;
@@ -36,16 +37,16 @@ import de.tum.in.tumcampusapp.models.managers.CardManager;
 public class NextLectureCard extends Card {
 
     private static final String NEXT_LECTURE_DATE = "next_date";
-    private final static int[] ids = {
+    private final static int[] IDS = {
             R.id.lecture_1,
             R.id.lecture_2,
             R.id.lecture_3,
             R.id.lecture_4
     };
     private TextView mLocation;
-    private ArrayList<CalendarItem> lectures = new ArrayList<>();
+    private final List<CalendarItem> lectures = new ArrayList<>();
     private TextView mTimeView;
-    private int mSelected = 0;
+    private int mSelected;
     private TextView mEvent;
 
     public NextLectureCard(Context context) {
@@ -83,7 +84,7 @@ public class NextLectureCard extends Card {
         if (lectures.size() > 1) {
             for (; i < lectures.size(); i++) {
                 final int j = i;
-                Button text = (Button) mCard.findViewById(ids[i]);
+                Button text = (Button) mCard.findViewById(IDS[i]);
                 text.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -93,7 +94,7 @@ public class NextLectureCard extends Card {
             }
         }
         for (; i < 4; i++) {
-            View text = mCard.findViewById(ids[i]);
+            View text = mCard.findViewById(IDS[i]);
             text.setVisibility(View.GONE);
         }
     }
@@ -102,7 +103,7 @@ public class NextLectureCard extends Card {
         // Set selection on the buttons
         mSelected = sel;
         for (int i = 0; i < 4; i++) {
-            mCard.findViewById(ids[i]).setSelected(i == sel);
+            mCard.findViewById(IDS[i]).setSelected(i == sel);
         }
 
         final CalendarItem item = lectures.get(sel);
@@ -115,7 +116,7 @@ public class NextLectureCard extends Card {
                 System.currentTimeMillis(), DateUtils.MINUTE_IN_MILLIS, DateUtils.FORMAT_ABBREV_RELATIVE));
 
         //Add location with link to room finder
-        if (item.location != null && !item.location.equals("")) {
+        if (item.location != null && !item.location.isEmpty()) {
             mLocation.setText(item.location);
             mLocation.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -153,7 +154,7 @@ public class NextLectureCard extends Card {
     protected boolean shouldShow(SharedPreferences prefs) {
         CalendarItem item = lectures.get(0);
         long prevTime = prefs.getLong(NEXT_LECTURE_DATE, 0);
-        return (item.start.getTime() > prevTime);
+        return item.start.getTime() > prevTime;
     }
 
     @Override
@@ -161,15 +162,10 @@ public class NextLectureCard extends Card {
         CalendarItem item = lectures.get(0);
         final String time = DateUtils.getRelativeDateTimeString(mContext, item.start.getTime(),
                 DateUtils.MINUTE_IN_MILLIS, DateUtils.WEEK_IN_MILLIS, 0).toString();
-        notificationBuilder.setContentText(item.title + "\n" + time);
+        notificationBuilder.setContentText(item.title + '\n' + time);
         Bitmap bm = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.wear_next_lecture);
         notificationBuilder.extend(new NotificationCompat.WearableExtender().setBackground(bm));
         return notificationBuilder.build();
-    }
-
-    @Override
-    public Intent getIntent() {
-        return null;
     }
 
     public void setLectures(Cursor cur) {
@@ -197,7 +193,7 @@ public class NextLectureCard extends Card {
         cur.close();
     }
 
-    private class CalendarItem {
+    private static class CalendarItem {
         String title;
         Date start;
         Date end;

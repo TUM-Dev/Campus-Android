@@ -18,9 +18,9 @@ import org.joda.time.format.DateTimeFormatter;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.Question;
 import de.tum.in.tumcampusapp.models.managers.CardManager;
 import de.tum.in.tumcampusapp.models.managers.SurveyManager;

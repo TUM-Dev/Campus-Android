@@ -36,7 +36,7 @@ import static de.tum.in.tumcampusapp.fragments.CafeteriaDetailsSectionFragment.m
 
 /**
  * Lists all dishes at selected cafeteria
- *
+ * <p/>
  * OPTIONAL: Const.CAFETERIA_ID set in incoming bundle (cafeteria to show)
  */
 public class CafeteriaActivity extends ActivityForDownloadingExternal implements AdapterView.OnItemSelectedListener {
@@ -57,8 +57,9 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
 
         // Get id from intent if specified
         final Intent intent = getIntent();
-        if(intent!=null && intent.getExtras()!=null && intent.getExtras().containsKey(Const.CAFETERIA_ID))
-        mCafeteriaId = intent.getExtras().getInt(Const.CAFETERIA_ID);
+        if (intent != null && intent.getExtras() != null && intent.getExtras().containsKey(Const.CAFETERIA_ID)) {
+            mCafeteriaId = intent.getExtras().getInt(Const.CAFETERIA_ID);
+        }
         mViewPager = (ViewPager) findViewById(R.id.pager);
     }
 
@@ -71,7 +72,7 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId()==R.id.action_ingredients) {
+        if (item.getItemId() == R.id.action_ingredients) {
             // Build a alert dialog containing the mapping of ingredients to the numbers
             new AlertDialog.Builder(this).setTitle(R.string.action_ingredients)
                     .setMessage(menuToSpan(this, getResources().getString(R.string.cafeteria_ingredients)))
@@ -80,7 +81,6 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
         }
         return super.onOptionsItemSelected(item);
     }
-
 
     /**
      * Setup action bar navigation (to switch between cafeterias)
@@ -93,19 +93,19 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
         mCafeterias = new LocationManager(this).getCafeterias();
 
         // If something went wrong or no cafeterias found
-        if (mCafeterias.size() == 0) {
-            if(!NetUtils.isConnected(this)) {
-                showNoInternetLayout();
-            } else {
+        if (mCafeterias.isEmpty()) {
+            if (NetUtils.isConnected(this)) {
                 showErrorLayout();
+            } else {
+                showNoInternetLayout();
             }
             return;
         }
 
         int selIndex = -1;
-        for(int i=0;i<mCafeterias.size();i++) {
+        for (int i = 0; i < mCafeterias.size(); i++) {
             Cafeteria c = mCafeterias.get(i);
-            if(mCafeteriaId==-1 || mCafeteriaId == c.id) {
+            if (mCafeteriaId == -1 || mCafeteriaId == c.id) {
                 mCafeteriaId = c.id;
                 selIndex = i;
                 break;
@@ -113,7 +113,7 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
         }
 
         // Adapter for drop-down navigation
-        ArrayAdapter<Cafeteria> adapterCafeterias = new ArrayAdapter<Cafeteria>(this, R.layout.simple_spinner_item_actionbar, android.R.id.text1, mCafeterias ) {
+        ArrayAdapter<Cafeteria> adapterCafeterias = new ArrayAdapter<Cafeteria>(this, R.layout.simple_spinner_item_actionbar, android.R.id.text1, mCafeterias) {
             final LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(LAYOUT_INFLATER_SERVICE);
 
             @Override
@@ -141,15 +141,17 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
         spinner.setAdapter(adapterCafeterias);
         spinner.setOnItemSelectedListener(this);
         // Select item
-        if(selIndex>-1)
+        if (selIndex > -1) {
             spinner.setSelection(selIndex);
+        }
     }
 
     /**
      * Switch cafeteria if a new cafeteria has been selected
+     *
      * @param parent the parent view
-     * @param pos index of the new selection
-     * @param id id of the selected item
+     * @param pos    index of the new selection
+     * @param id     id of the selected item
      */
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {

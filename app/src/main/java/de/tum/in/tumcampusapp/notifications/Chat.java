@@ -11,15 +11,8 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.RemoteInput;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Base64;
 
 import com.google.gson.Gson;
-
-import java.security.KeyFactory;
-import java.security.NoSuchAlgorithmException;
-import java.security.PrivateKey;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.PKCS8EncodedKeySpec;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.ChatActivity;
@@ -75,28 +68,9 @@ public class Chat extends GenericNotification {
         }
 
         // parse data
-        this.extras = (new Gson()).fromJson(payload, GCMChat.class);
+        this.extras = new Gson().fromJson(payload, GCMChat.class);
 
         this.prepare();
-    }
-
-    /**
-     * Loads the private key from preferences
-     *
-     * @return The private key object
-     */
-    private static PrivateKey getPrivateKeyFromSharedPrefs(Context context) {
-        String privateKeyString = Utils.getInternalSettingString(context, Const.PRIVATE_KEY, "");
-        byte[] privateKeyBytes = Base64.decode(privateKeyString, Base64.DEFAULT);
-        KeyFactory keyFactory;
-        try {
-            keyFactory = KeyFactory.getInstance("RSA");
-            PKCS8EncodedKeySpec privateKeySpec = new PKCS8EncodedKeySpec(privateKeyBytes);
-            return keyFactory.generatePrivate(privateKeySpec);
-        } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-            Utils.log(e);
-        }
-        return null;
     }
 
     private void prepare() {
@@ -122,10 +96,11 @@ public class Chat extends GenericNotification {
         notificationText = null;
         if (messages != null && messages.moveToFirst()) {
             do {
-                if (notificationText == null)
+                if (notificationText == null) {
                     notificationText = messages.getString(3);
-                else
+                } else {
                     notificationText += "\n" + messages.getString(3);
+                }
             } while (messages.moveToNext());
         }
 
@@ -172,7 +147,7 @@ public class Chat extends GenericNotification {
                     .setStyle(new NotificationCompat.BigTextStyle().bigText(notificationText))
                     .setContentText(notificationText)
                     .setContentIntent(contentIntent)
-                    .setDefaults(android.app.Notification.DEFAULT_VIBRATE)
+                    .setDefaults(Notification.DEFAULT_VIBRATE)
                     .setLights(0xff0000ff, 500, 500)
                     .setSound(sound)
                     .setAutoCancel(true)

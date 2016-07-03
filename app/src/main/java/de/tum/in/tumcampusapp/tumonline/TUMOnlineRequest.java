@@ -49,17 +49,17 @@ public class TUMOnlineRequest<T> {
      */
     private final Context mContext;
     // force to fetch data and fill cache
-    private boolean fillCache = false;
+    private boolean fillCache;
     // set to null, if not needed
-    private String accessToken = null;
+    private String accessToken;
     /**
      * asynchronous task for interactive fetch
      */
-    private AsyncTask<Void, Void, T> backgroundTask = null;
+    private AsyncTask<Void, Void, T> backgroundTask;
     /**
      * method to call
      */
-    private TUMOnlineConst<T> method = null;
+    private TUMOnlineConst<T> method;
     /**
      * a list/map for the needed parameters
      */
@@ -104,7 +104,6 @@ public class TUMOnlineRequest<T> {
      */
     public T fetch() {
         // set parameter on the TUMOnline request an fetch the results
-        String result;
         String url = this.getRequestURL();
 
         //Check for error lock
@@ -118,6 +117,7 @@ public class TUMOnlineRequest<T> {
         Utils.log("fetching URL " + url);
         boolean addToCache = false;
 
+        String result;
         try {
             result = cacheManager.getFromCache(url);
             if (result == null || fillCache) {
@@ -140,7 +140,7 @@ public class TUMOnlineRequest<T> {
 
         T res = null;
         try {
-            res = (new Persister()).read(method.getResponse(), result);
+            res = new Persister().read(method.getResponse(), result);
 
             // Only add to cache if data is valid
             if (addToCache) {
@@ -208,7 +208,7 @@ public class TUMOnlineRequest<T> {
                     } else if (lastError.contains(NO_FUNCTION_RIGHTS)) {
                         listener.onFetchError(context.getString(R.string.dialog_no_rights_function));
                         return;
-                    } else if (lastError.length() > 0) {
+                    } else if (!lastError.isEmpty()) {
                         listener.onFetchError(lastError);
                         return;
                     } else {
@@ -291,7 +291,7 @@ public class TUMOnlineRequest<T> {
         fillCache = force;
     }
 
-    public String getLastError(){
+    public String getLastError() {
         return this.lastError;
     }
 }

@@ -185,7 +185,7 @@ public class OpenHoursManager extends AbstractManager {
         if (l.id <= 0) {
             throw new Exception("Invalid id.");
         }
-        if (l.name.length() == 0) {
+        if (l.name.isEmpty()) {
             throw new Exception("Invalid name.");
         }
         db.execSQL("REPLACE INTO locations (id, category, name, address, room, "

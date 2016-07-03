@@ -15,8 +15,8 @@ import com.google.android.gms.common.GoogleApiAvailability;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
@@ -99,8 +99,9 @@ public class LocationManager {
      */
     int getCurrentCampus() {
         Location loc = getCurrentLocation();
-        if (loc == null)
+        if (loc == null) {
             return -1;
+        }
         return getCampusFromLocation(loc);
     }
 
@@ -254,8 +255,9 @@ public class LocationManager {
      */
     int getCurrentOrNextCampus() {
         int campus = getCurrentCampus();
-        if (campus != -1)
+        if (campus != -1) {
             return campus;
+        }
         return getNextCampus();
     }
 
@@ -275,7 +277,7 @@ public class LocationManager {
 
         // Get nearest cafeteria
         List<Cafeteria> list = getCafeterias();
-        if (list != null && list.size() > 0) {
+        if (list != null && !list.isEmpty()) {
             return list.get(0).id;
         } else {
             return -1;
@@ -322,8 +324,8 @@ public class LocationManager {
             loc = loc.substring(0, loc.indexOf('(')).trim();
         }
 
-        ArrayList<HashMap<String, String>> request = requestHandler.fetchRooms(loc);
-        if (request != null && request.size() > 0) {
+        List<Map<String, String>> request = requestHandler.fetchRooms(loc);
+        if (request != null && !request.isEmpty()) {
             String room = request.get(0).get(TUMRoomFinderRequest.KEY_ARCH_ID);
             return requestHandler.fetchCoordinates(room);
         }

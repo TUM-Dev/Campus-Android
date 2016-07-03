@@ -1,6 +1,9 @@
 package de.tum.in.tumcampusapp.models;
 
-public class GCMNotificationLocation {
+import java.io.Serializable;
+
+public class GCMNotificationLocation implements Serializable {
+    private static final long serialVersionUID = 3617955892672212188L;
     private int location;
     private String name;
     private double lon;

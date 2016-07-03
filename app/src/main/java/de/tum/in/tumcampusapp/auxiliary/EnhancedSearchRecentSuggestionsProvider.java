@@ -13,7 +13,7 @@ import de.tum.in.tumcampusapp.models.managers.AbstractManager;
 
 /**
  * Slightly modified version of SearchRecentSuggestionsProvider taken from AOSP source code
- * */
+ */
 public abstract class EnhancedSearchRecentSuggestionsProvider extends ContentProvider {
     // client-provided configuration values
     private String mId;
@@ -23,7 +23,7 @@ public abstract class EnhancedSearchRecentSuggestionsProvider extends ContentPro
 
     // general database configuration and tables
     private SQLiteDatabase db;
-    private static final String sSuggestions = "suggestions";
+    private static final String S_SUGGESTIONS = "suggestions";
     private static final String ORDER_BY = "date DESC";
     private static final String NULL_COLUMN = "query";
 
@@ -55,8 +55,8 @@ public abstract class EnhancedSearchRecentSuggestionsProvider extends ContentPro
      * constructor.  In your application or activities, you must provide the same values when
      * you create the {@link android.provider.SearchRecentSuggestions} helper.
      *
-     * @param id String identifying the SuggestionProvider. Must not contain blanks or any
-     *           other special characters
+     * @param id        String identifying the SuggestionProvider. Must not contain blanks or any
+     *                  other special characters
      * @param authority This must match the authority that you've declared in your manifest.
      * @see #DATABASE_MODE_QUERIES
      * @see #DATABASE_MODE_2LINES
@@ -66,10 +66,10 @@ public abstract class EnhancedSearchRecentSuggestionsProvider extends ContentPro
             throw new IllegalArgumentException();
         }
         // unpack mode flags
-        mTwoLineDisplay = (0 != (EnhancedSearchRecentSuggestionsProvider.DATABASE_MODE_QUERIES & DATABASE_MODE_2LINES));
+        mTwoLineDisplay = 0 != (EnhancedSearchRecentSuggestionsProvider.DATABASE_MODE_QUERIES & DATABASE_MODE_2LINES);
 
         // saved values
-        mId = "_"+id;
+        mId = "_" + id;
         mAuthority = authority;
         mMode = EnhancedSearchRecentSuggestionsProvider.DATABASE_MODE_QUERIES;
 
@@ -81,7 +81,7 @@ public abstract class EnhancedSearchRecentSuggestionsProvider extends ContentPro
         if (mTwoLineDisplay) {
             mSuggestSuggestionClause = "display1 LIKE ? OR display2 LIKE ?";
 
-            mSuggestionProjection = new String [] {
+            mSuggestionProjection = new String[]{
                     "0 AS " + SearchManager.SUGGEST_COLUMN_FORMAT,
                     "'android.resource://system/"
                             + android.R.drawable.ic_menu_recent_history + "' AS "
@@ -94,7 +94,7 @@ public abstract class EnhancedSearchRecentSuggestionsProvider extends ContentPro
         } else {
             mSuggestSuggestionClause = "display1 LIKE ?";
 
-            mSuggestionProjection = new String [] {
+            mSuggestionProjection = new String[]{
                     "0 AS " + SearchManager.SUGGEST_COLUMN_FORMAT,
                     "'android.resource://system/"
                             + android.R.drawable.ic_menu_recent_history + "' AS "
@@ -119,9 +119,9 @@ public abstract class EnhancedSearchRecentSuggestionsProvider extends ContentPro
 
         final String base = uri.getPathSegments().get(0);
         int count;
-        if (base.equals(sSuggestions)) {
-            selection = selection.replace(sSuggestions,sSuggestions+mId);
-            count = db.delete(sSuggestions+mId, selection, selectionArgs);
+        if (base.equals(S_SUGGESTIONS)) {
+            selection = selection.replace(S_SUGGESTIONS, S_SUGGESTIONS + mId);
+            count = db.delete(S_SUGGESTIONS + mId, selection, selectionArgs);
         } else {
             throw new IllegalArgumentException("Unknown Uri");
         }
@@ -141,7 +141,7 @@ public abstract class EnhancedSearchRecentSuggestionsProvider extends ContentPro
         int length = uri.getPathSegments().size();
         if (length >= 1) {
             String base = uri.getPathSegments().get(0);
-            if (base.equals(sSuggestions)) {
+            if (base.equals(S_SUGGESTIONS)) {
                 if (length == 1) {
                     return "vnd.android.cursor.dir/suggestion";
                 } else if (length == 2) {
@@ -166,12 +166,10 @@ public abstract class EnhancedSearchRecentSuggestionsProvider extends ContentPro
         long rowID = -1;
         String base = uri.getPathSegments().get(0);
         Uri newUri = null;
-        if (base.equals(sSuggestions)) {
-            if (length == 1) {
-                rowID = db.insert(sSuggestions+mId, NULL_COLUMN, values);
-                if (rowID > 0) {
-                    newUri = Uri.withAppendedPath(mSuggestionsUri, String.valueOf(rowID));
-                }
+        if (base.equals(S_SUGGESTIONS) && length == 1) {
+            rowID = db.insert(S_SUGGESTIONS + mId, NULL_COLUMN, values);
+            if (rowID > 0) {
+                newUri = Uri.withAppendedPath(mSuggestionsUri, String.valueOf(rowID));
             }
         }
         if (rowID < 0) {
@@ -191,9 +189,9 @@ public abstract class EnhancedSearchRecentSuggestionsProvider extends ContentPro
             throw new IllegalArgumentException("Provider not configured");
         }
         db = AbstractManager.getDb(getContext());
-        final String create_table = "CREATE TABLE IF NOT EXISTS suggestions"+mId+" (" +
+        final String create_table = "CREATE TABLE IF NOT EXISTS suggestions" + mId + " (" +
                 "_id INTEGER PRIMARY KEY" +
-                ",display1 TEXT UNIQUE ON CONFLICT REPLACE"+
+                ",display1 TEXT UNIQUE ON CONFLICT REPLACE" +
                 ",query TEXT" +
                 ",date LONG );";
         db.execSQL(create_table);
@@ -217,14 +215,14 @@ public abstract class EnhancedSearchRecentSuggestionsProvider extends ContentPro
             } else {
                 String like = "%" + selectionArgs[0] + "%";
                 if (mTwoLineDisplay) {
-                    myArgs = new String [] { like, like };
+                    myArgs = new String[]{like, like};
                 } else {
-                    myArgs = new String [] { like };
+                    myArgs = new String[]{like};
                 }
                 suggestSelection = mSuggestSuggestionClause;
             }
             // Suggestions are always performed with the default sort order
-            Cursor c = db.query(sSuggestions+mId, mSuggestionProjection,
+            Cursor c = db.query(S_SUGGESTIONS + mId, mSuggestionProjection,
                     suggestSelection, myArgs, null, null, ORDER_BY, null);
             c.setNotificationUri(getContext().getContentResolver(), uri);
             return c;
@@ -237,7 +235,7 @@ public abstract class EnhancedSearchRecentSuggestionsProvider extends ContentPro
         }
 
         String base = uri.getPathSegments().get(0);
-        if (!base.equals(sSuggestions)) {
+        if (!base.equals(S_SUGGESTIONS)) {
             throw new IllegalArgumentException("Unknown Uri");
         }
 
@@ -254,7 +252,7 @@ public abstract class EnhancedSearchRecentSuggestionsProvider extends ContentPro
         }
 
         // Tack on the user's selection, if present
-        if (selection != null && selection.length() > 0) {
+        if (selection != null && !selection.isEmpty()) {
             if (whereClause.length() > 0) {
                 whereClause.append(" AND ");
             }
@@ -265,7 +263,7 @@ public abstract class EnhancedSearchRecentSuggestionsProvider extends ContentPro
         }
 
         // And perform the generic query as requested
-        Cursor c = db.query(base+mId, useProjection, whereClause.toString(),
+        Cursor c = db.query(base + mId, useProjection, whereClause.toString(),
                 selectionArgs, null, null, sortOrder,
                 null);
         c.setNotificationUri(getContext().getContentResolver(), uri);

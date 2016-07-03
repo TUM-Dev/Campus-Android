@@ -62,7 +62,7 @@ public class RecentsManager extends AbstractManager {
      */
     public void replaceIntoDb(String name) {
         Utils.log(name);
-        if (name.length() == 0) {
+        if (name.isEmpty()) {
             return;
         }
         db.execSQL("REPLACE INTO recents (typ,name) VALUES (?,?)", new String[]{""+typ, name});

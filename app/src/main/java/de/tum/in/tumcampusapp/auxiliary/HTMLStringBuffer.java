@@ -30,7 +30,7 @@ public class HTMLStringBuffer {
 	 * @param content The content labeled by the label.
 	 */
 	public void appendField(String label, String content) {
-		if (content != null && content.length() > 0) {
+		if (content != null && !content.isEmpty()) {
 			appendLine("<b>" + label + "</b>: " + content);
 		}
 	}

@@ -24,6 +24,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.auxiliary.CafeteriaPrices;
@@ -52,7 +53,7 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
     public static List<View> showMenu(LinearLayout rootView, int cafeteriaId, String dateStr, boolean big) {
         // initialize a few often used things
         final Context context = rootView.getContext();
-        final HashMap<String, String> rolePrices = CafeteriaPrices.getRolePrices(context);
+        final Map<String, String> rolePrices = CafeteriaPrices.getRolePrices(context);
         final int padding = (int) context.getResources().getDimension(R.dimen.card_text_padding);
         List<View> addedViews = new ArrayList<>();
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -82,8 +83,9 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
                 // Skip unchecked categories if showing card
                 boolean shouldShow = Utils.getSettingBool(context, "card_cafeteria_" + typeShort,
                         typeShort.equals("tg") || typeShort.equals("ae"));
-                if (!big && !shouldShow)
+                if (!big && !shouldShow) {
                     continue;
+                }
 
                 // Add header if we start with a new category
                 if (!typeShort.equals(curShort)) {

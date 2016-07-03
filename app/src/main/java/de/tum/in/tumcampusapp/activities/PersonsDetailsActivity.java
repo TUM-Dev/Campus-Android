@@ -32,6 +32,7 @@ import android.widget.TextView;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
@@ -53,7 +54,7 @@ public class PersonsDetailsActivity extends ActivityForAccessingTumOnline<Employ
 
     private Employee mEmployee;
     private MenuItem mContact;
-    private static String[] PERMISSIONS_CONTACTS = {Manifest.permission.WRITE_CONTACTS};
+    private static final String[] PERMISSIONS_CONTACTS = {Manifest.permission.WRITE_CONTACTS};
 
 
     public PersonsDetailsActivity() {
@@ -96,8 +97,9 @@ public class PersonsDetailsActivity extends ActivityForAccessingTumOnline<Employ
     public boolean onOptionsItemSelected(MenuItem item) {
         int i = item.getItemId();
         if (i == R.id.action_add_contact) {
-            if (mEmployee != null)
+            if (mEmployee != null) {
                 addContact(mEmployee);
+            }
             return true;
         } else {
             return super.onOptionsItemSelected(item);
@@ -215,7 +217,7 @@ public class PersonsDetailsActivity extends ActivityForAccessingTumOnline<Employ
 
         // add all rooms
         List<Room> rooms = employee.getRooms();
-        if (rooms != null && rooms.size() > 0) {
+        if (rooms != null && !rooms.isEmpty()) {
             contentText.appendField(getString(R.string.room), rooms.get(0)
                     .getLocation() + " (" + rooms.get(0).getNumber() + ")");
         }
@@ -234,8 +236,7 @@ public class PersonsDetailsActivity extends ActivityForAccessingTumOnline<Employ
         if (!isPermissionGranted(0)) {
             return;
         }
-        ArrayList<ContentProviderOperation> ops =
-                new ArrayList<>();
+        ArrayList<ContentProviderOperation> ops = new ArrayList<>();
 
         int rawContactID = ops.size();
 
@@ -305,9 +306,10 @@ public class PersonsDetailsActivity extends ActivityForAccessingTumOnline<Employ
 
         // add all rooms
         List<Room> rooms = employee.getRooms();
-        if (rooms != null && rooms.size() > 0) {
-            if (!notes.isEmpty())
+        if (rooms != null && !rooms.isEmpty()) {
+            if (!notes.isEmpty()) {
                 notes += "\n";
+            }
             notes += getString(R.string.room) + ": " + rooms.get(0).getLocation() + " (" + rooms.get(0).getNumber() + ")";
         }
 
@@ -351,7 +353,7 @@ public class PersonsDetailsActivity extends ActivityForAccessingTumOnline<Employ
         }
     }
 
-    private static void addContact(ArrayList<ContentProviderOperation> ops, int rawContactID, Contact contact, boolean work) {
+    private static void addContact(Collection<ContentProviderOperation> ops, int rawContactID, Contact contact, boolean work) {
         if (contact != null) {
             // Add work telefon number
             if (contact.getTelefon() != null) {

@@ -148,10 +148,11 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 1 && resultCode == RESULT_OK && data != null) {
             String name = data.getStringExtra("name");
-            if (name.charAt(3) == ':')
+            if (name.charAt(3) == ':') {
                 createOrJoinChatRoom(name);
-            else
+            } else {
                 Utils.showToast(this, R.string.invalid_chat_room);
+            }
         }
     }
 
@@ -181,7 +182,7 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
      * Works asynchronously.
      */
     private void createOrJoinChatRoom(String name) {
-        if(this.currentChatMember == null) {
+        if (this.currentChatMember == null) {
             Utils.showToast(this, getString(R.string.chat_not_setup));
             return;
         }
@@ -269,10 +270,10 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
      */
     @Override
     public void onItemClick(AdapterView<?> a, View v, int position, long id) {
-        Cursor item = (Cursor) lvMyChatRoomList.getItemAtPosition(position);
-
-        if (firstLoad)
+        if (firstLoad) {
             return;
+        }
+        Cursor item = (Cursor) lvMyChatRoomList.getItemAtPosition(position);
 
         // set bundle for LectureDetails and show it
         Bundle bundle = new Bundle();
