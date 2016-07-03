@@ -13,6 +13,7 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import de.tum.in.tumcampusapp.R;
@@ -42,10 +43,10 @@ public class PlansActivity extends BaseActivity implements OnItemClickListener {
 
             for (String[] file : PlansActivity.FILES_TO_DOWNLOAD) {
                 try {
-                    netUtils.downloadToFile(file[0], getApplicationContext().getFilesDir().getPath() + "/" + file[1]);
+                    netUtils.downloadToFile(file[0], getApplicationContext().getFilesDir().getPath() + '/' + file[1]);
                     Utils.log(getApplicationContext().getFilesDir() + file[1]);
-                } catch (Exception e) {
-                    e.printStackTrace();
+                } catch (IOException e) {
+                    Utils.log(e);
                 }
             }
 
