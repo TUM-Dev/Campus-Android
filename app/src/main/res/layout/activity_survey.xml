@@ -10,8 +10,7 @@
 
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        >
+        android:orientation="vertical">
 
         <include layout="@layout/toolbar" />
 
@@ -31,10 +30,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"></TabWidget>
 
+
                 <FrameLayout
                     android:id="@android:id/tabcontent"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
+
                     <ScrollView
                         android:layout_width="fill_parent"
                         android:layout_height="fill_parent" >
@@ -71,7 +72,7 @@
                                     android:textColor="@color/color_primary"
                                     android:layout_marginTop="10dp"
                                     android:textStyle="bold"
-                                    android:visibility="gone"
+                                    android:visibility="visible"
                                     android:textSize="14sp"
                                     android:id="@+id/selectTv" />
 
@@ -80,7 +81,7 @@
                                     android:layout_height="wrap_content"
                                     android:id="@+id/spinner"
                                     android:layout_weight="1"
-                                    android:visibility="gone"
+                                    android:visibility="visible"
                                     android:layout_marginTop="10dp"/>
                             </LinearLayout>
                             <LinearLayout
@@ -100,7 +101,7 @@
                                 android:layout_marginTop="15dp"
                                 android:textColor="#FFFFFF"
                                 android:padding="@dimen/padding_default"
-                                android:visibility="gone"
+                                android:visibility="visible"
                                 android:layout_gravity="center"/>
 
                         </LinearLayout>
@@ -127,5 +128,6 @@
             </LinearLayout>
         </TabHost>
     </LinearLayout>
+    <include layout="@layout/layout_all_errors"/>
     <include layout="@layout/navigation_drawer" />
 </android.support.v4.widget.DrawerLayout>

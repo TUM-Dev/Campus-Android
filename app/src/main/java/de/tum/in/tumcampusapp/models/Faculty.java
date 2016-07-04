@@ -1,5 +1,8 @@
 package de.tum.in.tumcampusapp.models;
 
+/**
+ * Presents the faculty model that is used in fetching the facultyData from server
+ */
 public class Faculty {
     private String faculty;
     private String name;

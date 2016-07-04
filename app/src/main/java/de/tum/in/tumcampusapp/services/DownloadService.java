@@ -108,7 +108,7 @@ public class DownloadService extends IntentService {
                     successful = service.downloadNews(force);
                     break;
                 case Const.FACULTIES:
-                    successful = service.downloadFaculties();
+                    successful = service.downloadFacultiesAndSurveyData();
                     break;
                 case Const.CAFETERIAS:
                     successful = service.downloadCafeterias(force);
@@ -209,7 +209,7 @@ public class DownloadService extends IntentService {
                 kino = downLoadKino(force),
                 news = downloadNews(force),
                 rooms = downloadStudyRooms(),
-                faculties = downloadFaculties();
+                faculties = downloadFacultiesAndSurveyData();
         return cafe && kino && news && rooms && faculties;
     }
 
@@ -248,12 +248,12 @@ public class DownloadService extends IntentService {
         }
     }
 
-    private boolean downloadFaculties() {
+    private boolean downloadFacultiesAndSurveyData() {
         try {
             SurveyManager sm = new SurveyManager(this);
-            sm.downloadFacultiesFromExternal();
-            sm.downLoadOpenQuestions();
-            sm.downLoadOwnQuestions();
+            sm.downloadFacultiesFromExternal(); // Downloads the facultyData from the server in local db
+            sm.downLoadOpenQuestions(); // Downloads openQuestions relevant for the survey card
+            sm.downLoadOwnQuestions(); // Downloads ownQuestions relevant for displaying responses in surveyActivity
             return true;
         } catch (Exception e) {
             Utils.log(e);

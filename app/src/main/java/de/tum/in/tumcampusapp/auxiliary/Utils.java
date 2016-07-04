@@ -9,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.text.Html;
+import android.text.TextUtils;
 import android.text.Spanned;
 import android.util.Log;
 import android.widget.Toast;
@@ -535,6 +536,16 @@ public final class Utils {
 
     private static boolean isBackgroundServiceAlwaysEnabled(Context context) {
         return "0".equals(Utils.getSetting(context, "background_mode_set_to", "0"));
+    }
+
+    public static String arrayListToString(ArrayList<String> array)
+    {
+       return TextUtils.join(",",array);
+    }
+
+    public static String arrayToString(String[] array)
+    {
+        return TextUtils.join(",",array);
     }
 
     @TargetApi(Build.VERSION_CODES.N)

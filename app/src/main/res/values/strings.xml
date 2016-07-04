@@ -439,7 +439,7 @@ Signature: %5$s</string>
     <string name="research_quiz" translatable="false">Research Quiz</string>
     <string name="no_questions_available">No Questions are available!</string>
     <string name="one_question_left">Only 1 question left</string>
-    <string name="next_possible_survey_date">Next possible survey date is </string>
+    <string name="next_possible_survey_date">You have reached the maximum number of questions per week. Next possible survey date is</string>
     <string name="flag_inappropriate" translatable="false">flag for inappropriate questions</string>
     <string name="survey_yes">Yes</string>
     <string name="select_target_faculties_survey">Select Target Faculties</string>
@@ -463,7 +463,10 @@ Signature: %5$s</string>
     <string name="more_info">More Information</string>
     <string name="welcome_faculty">To deliver the best possible experience please provide us with your best matching faculty:</string>
     <string name="event_plan">Event plan</string>
+    <string name="please_connect_to_internet" translatable="false">Please connect to internet in order to proceed the first app start</string>
+    <string name="card_survey_summary" translatable="false">enables you to participate in research related survey questions</string>
     <string name="transition_card" translatable="false">card_transition</string>
+    <string name="selected_target_faculties">Selected target faculties:</string>
 </resources>
 
 

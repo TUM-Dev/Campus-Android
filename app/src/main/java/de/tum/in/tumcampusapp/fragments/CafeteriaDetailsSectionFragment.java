@@ -1,6 +1,10 @@
 package de.tum.in.tumcampusapp.fragments;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,8 +16,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -23,6 +32,8 @@ import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.managers.CafeteriaMenuManager;
 import de.tum.in.tumcampusapp.models.managers.OpenHoursManager;
+import de.tum.in.tumcampusapp.services.FavoriteDishReceiver;
+import de.tum.in.tumcampusapp.trace.Util;
 
 /**
  * Fragment for each cafeteria-page.
@@ -88,11 +99,61 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
 
                 // Show menu item
                 SpannableString text = menuToSpan(context, big ? menu : prepare(menu));
+                int dishId=cursorCafeteriaMenu.getInt(2);
                 if (rolePrices.containsKey(typeLong)) {
                     // If price is available
-                    View view = inflater.inflate(big ? R.layout.price_line_big : R.layout.card_price_line, rootView, false);
+                    View view = inflater.inflate(big ? R.layout.price_line_big : R.layout.card_price_line , rootView, false);
                     textview = (TextView) view.findViewById(R.id.line_name);
                     TextView priceView = (TextView) view.findViewById(R.id.line_price);
+                     //toggle button (star) mark dish as favorite
+                    final ToggleButton favDish=(ToggleButton)view.findViewById(R.id.favortieDish);
+                    favDish.setOnClickListener(new View.OnClickListener() {
+                        /**
+                         * when dish marked as favorite create an alarm on specific date using calendar and alarmManager
+                         * call the FavoriteDishReceiver
+                         */
+                        @Override
+                        public void onClick(View v) {
+                            /**
+                             * if checked mark dish as favorite and create Notification on next valid date for dish
+                             * update local database set dish as favorite
+                             */
+
+                            if(favDish.isChecked())
+                            {
+                                //new CafeteriaMenuManager(context).insertFavoriteDish(Integer.parseInt(favDish.getTag().toString()));
+
+                               /*Calendar calendar = Calendar.getInstance();
+                                calendar.set(Calendar.MONTH, 6);
+                                calendar.set(Calendar.YEAR, 2016);
+                                calendar.set(Calendar.DAY_OF_MONTH, 19);
+                                calendar.set(Calendar.HOUR_OF_DAY, 5);
+                                calendar.set(Calendar.MINUTE, 00);
+                                calendar.set(Calendar.SECOND, 0);
+                                calendar.set(Calendar.AM_PM,Calendar.AM);
+                                */
+
+                                Intent myIntent = new Intent(context, FavoriteDishReceiver.class);
+                                PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, myIntent,0);
+                                AlarmManager alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+                                alarmManager.set(AlarmManager.RTC, System.currentTimeMillis()+5000, pendingIntent);
+                                Toast.makeText(context,favDish.getTag().toString(),Toast.LENGTH_SHORT).show();
+                            }
+                            /**
+                             *update local database set dish as not favorite
+                             * remove alarms
+                             */
+                            else {
+                                //new CafeteriaMenuManager(context).DeleteFavoriteDish(Integer.parseInt(favDish.getTag().toString()));
+                            }
+                        }
+                    });
+
+                    /**
+                     * saved dish id in the favoriteDishButton tag.
+                     * onButton checked getTag->DishID and mark it as favorite
+                     */
+                    favDish.setTag(dishId +"");
                     textview.setText(text);
                     priceView.setText(String.format("%s €", rolePrices.get(typeLong)));
                     rootView.addView(view);
@@ -161,12 +222,10 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_cafeteriadetails_section, container, false);
+        final View rootView = inflater.inflate(R.layout.fragment_cafeteriadetails_section, container, false);
         LinearLayout root = (LinearLayout) rootView.findViewById(R.id.layout);
-
         int cafeteriaId = getArguments().getInt(Const.CAFETERIA_ID);
         String date = getArguments().getString(Const.DATE);
-
         showMenu(root, cafeteriaId, date, true);
         return rootView;
     }

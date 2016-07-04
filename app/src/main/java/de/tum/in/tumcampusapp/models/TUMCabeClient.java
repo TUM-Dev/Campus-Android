@@ -43,9 +43,10 @@ public class TUMCabeClient {
     private static final String API_LOCATIONS = "/locations/";
     private static final String API_DEVICE = "/device/";
     private static final String API_QUESTION = "/question/";
-    private static final String API_FACULTIES = "/faculty/";
-    private static final String API_ANSWER_QUESTION = "/question/answer";
-    private static final String API_OWN_QUESTIONS = "/question/my";
+    private static final String API_ANSWER_QUESTION = "/question/answer/";
+    private static final String API_OWN_QUESTIONS = "/question/my/";
+    private static final String API_FACULTY = "/faculty/";
+
 
 
     private static TUMCabeClient instance;
@@ -99,19 +100,24 @@ public class TUMCabeClient {
         return instance;
     }
 
-    public void deleteOwnQuestion(int question, Callback<Question> cb){
-        service.deleteOwnQuestion(question,cb);
-    }
+    // Fetches faculty data (facname, id).Relevant for the user to select own major in majorSpinner in WizNavStartActivity
+    public ArrayList<Faculty> getFaculties(){return service.getFaculties();}
 
+    // Deletes ownQuestion..Relevant for allowing the user to delete own questions under responses in SurveyActivity
+    public void deleteOwnQuestion(int question, Callback<Question> cb){service.deleteOwnQuestion(question,cb);}
+
+    // Fetches users ownQuestions and responses.Relevant for displaying results on ownQuestion under responses in SurveyActivity
     public ArrayList<Question> getOwnQuestions(){ return service.getOwnQuestions();}
 
-
+    // Submits user's answer on a given question.Gets triggered through in the survey card.
     public void submitAnswer(Question question, Callback<Question> cb){
         service.answerQuestion(question,cb);
     }
 
+    // Fetches openQuestions which are relevant for the surveyCard.
     public ArrayList<Question> getOpenQuestions(){ return service.getOpenQuestions();}
 
+    // Submits user's own question. Gets triggered from the SurveyActivity
     public void createQuestion(Question question,Callback<Question> cb){
         service.createQuestion(question,cb);
     }
@@ -212,13 +218,9 @@ public class TUMCabeClient {
         service.deviceUploadGcmToken(verification, cb);
     }
 
-    public ArrayList<Faculty> getFaculties() {
-        return service.getFaculties();
-    }
-
     private interface TUMCabeAPIService {
 
-        @GET(API_FACULTIES)
+        @GET(API_FACULTY)
         ArrayList<Faculty> getFaculties();
 
         @DELETE(API_QUESTION + "{question}")

@@ -4,130 +4,116 @@ package de.tum.in.tumcampusapp.models;
 import android.text.TextUtils;
 
 import java.util.ArrayList;
+import java.util.Date;
 
+import de.tum.in.tumcampusapp.auxiliary.Utils;
+
+/**
+ * Question model class for communication with the API and needed constructors in the project.
+ */
 public class Question {
 
     private String question;
-    private int id;
     private String text;
-    private Boolean yes;
-    private Boolean no;
     private String faculty;
-    private Boolean flagged;
     private int answer;
-    private Boolean synced;
     private String[] facultyArr;
     private Answer[] results;
+    private String created;
+    private String end;
 
-    public Question(String question, String text, Boolean yes, Boolean no, String faculties, Boolean flagged, Boolean synced) {
-        this.question = question;
-        this.text = text;
-        this.yes = yes;
-        this.no = no;
-        this.faculty = faculties;
-        this.flagged = flagged;
-        this.synced = synced;
-    }
-
-    public Question(String question){
+    /**
+     * Used in the help function for deleting flagged questions in SurveyManager
+     *
+     * @param question
+     */
+    public Question(String question) {
         this.question = question;
     }
 
-    public Question (String question, String text, boolean synced){
+    /**
+     * Used in setting collected openQuestions from the db in the surveyCard
+     *
+     * @param question
+     * @param text
+     */
+    public Question(String question, String text) {
         this.question = question;
         this.text = text;
-        this.synced = synced;
     }
 
-    // For OwnQuestions
-    public Question (String question, String text, Answer[] results){
+    /**
+     * Used for syncing answered openQuestions with the server
+     *
+     * @param question
+     * @param answer
+     */
+    public Question(String question, int answer) {
         this.question = question;
-        this.text = text;
-        this.results = results;
+        this.answer = answer;
     }
 
-    // Const. for submiting Answeres for openQuestions
-    public Question(String question, int answer){
-        this.question=question;
-        this.answer=answer;
-    }
 
-    // Const. for fetching faculties
-    public Question(String text, ArrayList<String> faculties){
+    /**
+     * Used for submitting ownQuestions to the server
+     *
+     * @param text
+     * @param faculties
+     */
+    public Question(String text, ArrayList<String> faculties) {
         this.text = text;
-        this.faculty = TextUtils.join(",",faculties);
-    }
+        this.faculty = Utils.arrayListToString(faculties);
 
-    // Const. For fetching OpenQuestions
-    public Question(String question, String text, String[] faculties){
-        this.question = question;
-        this.text = text;
-        this.facultyArr = faculties;
     }
 
     public String[] getFacultiesOfOpenQuestions() {
         return facultyArr;
     }
 
-    public void setFacultiesOfOpenQuestions(String[] facultiesOfOpenQuestions) {
-        this.facultyArr = facultiesOfOpenQuestions;
+    public String getQuestion() {
+        return question;
     }
 
-    public int getId() {return id;}
+    public String getText() {
+        return text;
+    }
 
-    public void setId(int id) {this.id = id;}
+    public void setText(String text) {
+        this.text = text;
+    }
 
-    public String getQuestion() {return question;}
+    public Answer[] getResults() {
+        return results;
+    }
 
-    public void setQuestion(String question) {this.text = question;}
+    public void setResults(Answer[] results) {
+        this.results = results;
+    }
 
-    public Boolean getYes() {return yes;}
+    public String getCreated() {
+        return created;
+    }
 
-    public void setYes(Boolean yes) {this.yes = yes;}
+    public void setCreated(String created) {
+        this.created = created;
+    }
 
-    public Boolean getNo() {return no;}
+    public String getEnd() {
+        return end;
+    }
 
-    public void setNo(Boolean no) {this.no = no;}
+    public void setEnd(String end) {
+        this.end = end;
+    }
 
-    public String getText() {return text;}
-
-    public void setText(String text) {this.text = text;}
-
-    public String getFaculties() {return faculty;}
-
-    public void setFaculties(String faculties) {this.faculty = faculties;}
-
-    public Boolean getFlagged() {return flagged;}
-
-    public void setFlagged(Boolean flagged) {this.flagged = flagged;}
-
-    public Boolean getSynced() {return synced;}
-
-    public void setSynced(Boolean synced) {this.synced = synced;}
-
-    public String getFaculty() {return faculty;}
-
-    public void setFaculty(String faculty) {this.faculty = faculty;}
-
-
-    public int getAnswer() { return answer;}
-
-    public void setAnswer(int answer) {this.answer = answer;}
-
-    public String[] getFacultyArr() {return facultyArr;}
-
-    public void setFacultyArr(String[] facultyArr) {this.facultyArr = facultyArr;}
-
-    public Answer[] getResults() {return results;}
-
-    public void setResults(Answer[] results) {this.results = results;}
-
-
+    /**
+     * Presents answers structure for the questions used in receiving the answers on ownQuesitons from server
+     */
     public class Answer {
         private String answer;
         private int votes;
 
-        public Answer(String answer, int votes){
+        public Answer(String answer, int votes) {
             this.answer = answer;
             this.votes = votes;
         }
@@ -136,16 +122,8 @@ public class Question {
             return votes;
         }
 
-        public void setVotes(int votes) {
-            this.votes = votes;
-        }
-
         public String getAnswer() {
             return answer;
-        }
-
-        public void setAnswer(String answer) {
-            this.answer = answer;
         }
 
     }
