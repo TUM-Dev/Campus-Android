@@ -1,5 +1,7 @@
 package de.tum.in.tumcampusapp.auxiliary;
 
+import com.google.common.base.Charsets;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -14,8 +16,6 @@ public final class FileUtils {
 
     /**
      * Delete all files and folder contained in a folder
-     *
-     * @param fileOrDirectory
      */
     public static void deleteRecursive(File fileOrDirectory) {
         // Check if current item is a dir, then we need to delete all files inside
@@ -31,14 +31,10 @@ public final class FileUtils {
 
     /**
      * Convert a stream to a string
-     *
-     * @param is
-     * @return
-     * @throws Exception
      */
     public static String convertStreamToString(InputStream is) throws IOException {
         StringBuilder sb = new StringBuilder();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+        BufferedReader reader = new BufferedReader(new InputStreamReader(is, Charsets.UTF_8));
         try {
             String line;
             while ((line = reader.readLine()) != null) {
@@ -53,9 +49,6 @@ public final class FileUtils {
     /**
      * Read a file directly to a string
      * Fails silently
-     *
-     * @param filePath
-     * @return
      */
     public static String getStringFromFile(String filePath) {
         try {
@@ -64,7 +57,7 @@ public final class FileUtils {
             String ret = convertStreamToString(fin);
             fin.close();
             return ret;
-        } catch (Exception e) {
+        } catch (IOException e) {
             Utils.log(e);
             return "";
         }

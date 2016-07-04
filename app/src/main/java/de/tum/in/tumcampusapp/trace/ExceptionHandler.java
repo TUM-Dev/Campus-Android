@@ -6,11 +6,16 @@ import android.os.Build;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import com.google.common.base.Charsets;
+
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -100,7 +105,7 @@ public final class ExceptionHandler {
     /**
      * Setup the handler for unhandled exceptions, and submit stack
      * traces from a previous crash.
-     * <p/>
+     * <p>
      * Simplified version that uses a default processor.
      *
      * @param context context
@@ -203,7 +208,7 @@ public final class ExceptionHandler {
 
     /**
      * Return true if there are stacktraces that need to be submitted.
-     * <p/>
+     * <p>
      * Useful for example if you would like to ask the user's permission
      * before submitting. You can then use Processor.beginSubmit() to
      * stop the submission from occurring.
@@ -224,7 +229,7 @@ public final class ExceptionHandler {
     /**
      * Search for stack trace files, read them into memory and delete
      * them from disk.
-     * <p/>
+     * <p>
      * They are read into memory immediately so we can go ahead and
      * install the exception handler right away, and only then try
      * and submit the traces.
@@ -270,7 +275,7 @@ public final class ExceptionHandler {
                 try {
                     // Read contents of stacktrace
                     StringBuilder stacktrace = new StringBuilder();
-                    BufferedReader input = new BufferedReader(new FileReader(filePath));
+                    BufferedReader input = new BufferedReader(getFileReader(filePath));
                     try {
                         String line;
                         while ((line = input.readLine()) != null) {
@@ -355,5 +360,9 @@ public final class ExceptionHandler {
         void submitDone();
 
         void handlerInstalled();
+    }
+
+    private static Reader getFileReader(String path) throws FileNotFoundException {
+        return new InputStreamReader(new FileInputStream(path), Charsets.UTF_8.newDecoder());
     }
 }

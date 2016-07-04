@@ -13,9 +13,11 @@ import android.text.Spanned;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.google.common.base.Charsets;
 import com.google.gson.Gson;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -243,7 +245,7 @@ public final class Utils {
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");
             md.reset();
-            md.update(str.getBytes());
+            md.update(str.getBytes(Charsets.UTF_8));
             BigInteger bigInt = new BigInteger(1, md.digest());
             return bigInt.toString(16);
         } catch (NoSuchAlgorithmException e) {
@@ -261,7 +263,7 @@ public final class Utils {
     public static List<String[]> readCsv(InputStream fin) {
         List<String[]> list = new ArrayList<>();
         try {
-            BufferedReader in = new BufferedReader(new InputStreamReader(fin, "ISO-8859-1"));
+            BufferedReader in = new BufferedReader(new InputStreamReader(fin, Charsets.ISO_8859_1));
             try {
                 String reader;
                 while ((reader = in.readLine()) != null) {
@@ -270,7 +272,7 @@ public final class Utils {
             } finally {
                 in.close();
             }
-        } catch (Exception e) {
+        } catch (IOException e) {
             log(e);
         }
         return list;
@@ -332,7 +334,7 @@ public final class Utils {
 
     /**
      * Splits a line from a CSV file into column values
-     * <p/>
+     * <p>
      * e.g. "aaa;aaa";"bbb";1 gets aaa,aaa;bbb;1;
      *
      * @param str CSV line

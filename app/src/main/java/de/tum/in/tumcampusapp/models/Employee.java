@@ -4,20 +4,21 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Base64;
 
+import com.google.common.base.Charsets;
+
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.Root;
 
-import java.io.Serializable;
 import java.util.List;
 
 /**
  * An employee of the TUM.
- * <p/>
+ * <p>
  * Note: This model is based on the TUMOnline web service response format for a
  * corresponding request.
  */
 @Root(name = "person", strict = false)
-public class Employee extends Person implements Serializable {
+public class Employee extends Person {
 
     private static final long serialVersionUID = -6276330922677632119L;
 
@@ -72,10 +73,8 @@ public class Employee extends Person implements Serializable {
     }
 
     public Bitmap getImage() {
-        byte[] imageAsBytes = Base64.decode(imageData.getBytes(),
-                Base64.DEFAULT);
-        return BitmapFactory.decodeByteArray(imageAsBytes, 0,
-                imageAsBytes.length);
+        final byte[] imageAsBytes = Base64.decode(imageData.getBytes(Charsets.UTF_8), Base64.DEFAULT);
+        return BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length);
     }
 
     public String getImageData() {
@@ -124,11 +123,10 @@ public class Employee extends Person implements Serializable {
     public String toString() {
         String infoText = "";
 
-        String title = getTitle();
         if (title != null) {
-            infoText = title + " ";
+            infoText = title + ' ';
         }
 
-        return infoText + getName() + " " + getSurname();
+        return infoText + getName() + ' ' + getSurname();
     }
 }

@@ -2,9 +2,13 @@ package de.tum.in.tumcampusapp.trace;
 
 import android.util.Log;
 
+import com.google.common.base.Charsets;
+
 import java.io.BufferedWriter;
-import java.io.FileWriter;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
@@ -35,19 +39,25 @@ public class DefaultExceptionHandler implements UncaughtExceptionHandler {
             int random = generator.nextInt(9999999);
 
             // Embed version in stacktrace filename
-            String filename = G.appVersion + "-" + Integer.toString(random);
+            String filename = G.appVersion + '-' + Integer.toString(random);
 
             // Write the stacktrace to disk
-            BufferedWriter bos = new BufferedWriter(new FileWriter(G.filesPath + "/" + filename + ExceptionHandler.STACKTRACE_ENDING));
-            bos.write(result.toString());
-            bos.flush();
-            bos.close();
+            BufferedWriter bos = new BufferedWriter(getFileWriter(G.filesPath + '/' + filename + ExceptionHandler.STACKTRACE_ENDING));
+            try {
+                bos.write(result.toString());
+                bos.flush();
+            } finally {
+                bos.close();
+            }
 
             //Write the current log to file
-            bos = new BufferedWriter(new FileWriter(G.filesPath + "/" + filename + ".stacktrace.log"));
-            bos.write(Util.getLog());
-            bos.flush();
-            bos.close();
+            bos = new BufferedWriter(getFileWriter(G.filesPath + '/' + filename + ".stacktrace.log"));
+            try {
+                bos.write(Util.getLog());
+                bos.flush();
+            } finally {
+                bos.close();
+            }
 
         } catch (IOException ebos) {
             // Nothing much we can do about this - the game is over
@@ -56,5 +66,9 @@ public class DefaultExceptionHandler implements UncaughtExceptionHandler {
 
         //call original handler
         mDefaultExceptionHandler.uncaughtException(t, e);
+    }
+
+    private static Writer getFileWriter(String path) throws FileNotFoundException {
+        return new OutputStreamWriter(new FileOutputStream(path), Charsets.UTF_8.newEncoder());
     }
 }

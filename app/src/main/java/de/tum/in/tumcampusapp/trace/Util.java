@@ -11,7 +11,9 @@ import android.view.Surface;
 import android.view.WindowManager;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 
@@ -22,7 +24,7 @@ public final class Util {
     public static String getLog() {
         try {
             Process process = Runtime.getRuntime().exec("logcat -d");
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream(), Charset.defaultCharset()));
             try {
                 StringBuilder log = new StringBuilder();
                 String line;
@@ -36,7 +38,7 @@ public final class Util {
                 bufferedReader.close();
             }
 
-        } catch (Exception e) {
+        } catch (IOException e) {
             //Catch em all, we don't want any trouble here
         }
         return "";
