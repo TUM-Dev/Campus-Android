@@ -180,8 +180,8 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
                 }
                 e.putBoolean("card_news_source_" + i, false);
             }
-            String new_source = sharedPreferences.getString(key, "7");
-            e.putBoolean("card_news_source_" + new_source, value);
+            String newSource = sharedPreferences.getString(key, "7");
+            e.putBoolean("card_news_source_" + newSource, value);
             e.apply();
             CardManager.setShouldRefresh();
         }

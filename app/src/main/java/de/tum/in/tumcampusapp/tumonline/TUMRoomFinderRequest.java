@@ -89,7 +89,7 @@ public class TUMRoomFinderRequest {
                 double zone = jsonObject.get().getDouble(KEY_UTM_ZONE);
                 double easting = jsonObject.get().getDouble(KEY_UTM_EASTING);
                 double northing = jsonObject.get().getDouble(KEY_UTM_NORTHING);
-                result = UTMtoLL(northing, easting, zone);
+                result = convertUTMtoLL(northing, easting, zone);
             }
         } catch (IOException | JSONException e) {
             Utils.log(String.valueOf(e));
@@ -311,7 +311,7 @@ public class TUMRoomFinderRequest {
     /**
      * Converts UTM based coordinates to latitude and longitude based format
      */
-    private static Geo UTMtoLL(double north, double east, double zone) {
+    private static Geo convertUTMtoLL(double north, double east, double zone) {
         double d = 0.99960000000000004;
         double d1 = 6378137;
         double d2 = 0.0066943799999999998;

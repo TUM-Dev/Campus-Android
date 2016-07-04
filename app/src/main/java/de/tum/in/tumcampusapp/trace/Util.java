@@ -61,7 +61,7 @@ public final class Util {
         return gpsStatus;
     }
 
-    public static String[] ScreenProperties() {
+    public static String[] getScreenProperties() {
         String screen[] = {NOT_AVAILABLE, NOT_AVAILABLE, NOT_AVAILABLE, NOT_AVAILABLE, NOT_AVAILABLE};
 
         DisplayMetrics dm = new DisplayMetrics();

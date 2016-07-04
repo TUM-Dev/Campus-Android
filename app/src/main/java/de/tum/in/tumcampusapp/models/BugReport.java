@@ -37,7 +37,7 @@ public class BugReport {
         this.networkMobile = NetUtils.isConnectedMobileData(G.context) ? "true" : "false";
         this.gps= Util.isGPSOn();
 
-        String[] screenProperties = Util.ScreenProperties();
+        String[] screenProperties = Util.getScreenProperties();
         this.screenWidth = screenProperties[0];
         this.screenHeight = screenProperties[1];
         this.screenOrientation = screenProperties[2];
