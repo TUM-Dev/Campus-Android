@@ -2,7 +2,8 @@ package de.tum.in.tumcampusapp.auxiliary;
 
 import android.util.Base64;
 
-import java.io.UnsupportedEncodingException;
+import com.google.common.base.Charsets;
+
 import java.security.InvalidKeyException;
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
@@ -90,7 +91,7 @@ public class ChatMessageValidator {
      * @return Returns true if signature is valid
      */
     private static boolean verifySignature(String text, String signature,
-                                    PublicKey key) {
+                                           PublicKey key) {
 
         Signature sig;
         try {
@@ -107,13 +108,8 @@ public class ChatMessageValidator {
             return false;
         }
 
-        byte[] textBytes;
-        try {
-            textBytes = text.getBytes("UTF8");
-        } catch (UnsupportedEncodingException e) {
-            Utils.log(e);
-            return false;
-        }
+        byte[] textBytes = text.getBytes(Charsets.UTF_8);
+
         try {
             sig.update(textBytes);
         } catch (SignatureException e) {

@@ -8,9 +8,9 @@ import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 import android.util.Base64;
 
+import com.google.common.base.Charsets;
 import com.google.gson.Gson;
 
-import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
@@ -82,13 +82,8 @@ public class Alarm extends GenericNotification {
         }
 
         String text = title + description;
-        byte[] textBytes;
-        try {
-            textBytes = text.getBytes("UTF8");
-        } catch (UnsupportedEncodingException e) {
-            Utils.log(e);
-            return false;
-        }
+        byte[] textBytes = text.getBytes(Charsets.UTF_8);
+
         try {
             sig.update(textBytes);
         } catch (SignatureException e) {
