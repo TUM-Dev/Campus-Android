@@ -4,10 +4,10 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.auxiliary.AccessTokenManager;
-import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.cards.Card;
 import de.tum.in.tumcampusapp.cards.EduroamCard;
 import de.tum.in.tumcampusapp.cards.FirstUseCard1;
@@ -20,7 +20,7 @@ import de.tum.in.tumcampusapp.cards.Support;
 /**
  * Card manager, manages inserting, dismissing, updating and displaying of cards
  */
-public class CardManager {
+public final class CardManager {
     public static final String SHOW_TUTORIAL_1 = "show_tutorial_1";
     public static final String SHOW_TUTORIAL_2 = "show_tutorial_2";
     public static final String SHOW_SUPPORT = "show_support";
@@ -31,7 +31,7 @@ public class CardManager {
      */
     public static final int CARD_CAFETERIA = 1;
     public static final int CARD_TUITION_FEE = 2;
-    public static final int CARD_NEXT_LECTURE =3;
+    public static final int CARD_NEXT_LECTURE = 3;
     public static final int CARD_RESTORE = 4;
     public static final int CARD_FIRST_USE_1 = 5;
     public static final int CARD_FIRST_USE_2 = 6;
@@ -44,7 +44,7 @@ public class CardManager {
     public static final int CARD_SUPPORT = 13;
     public static final int CARD_SURVEY = 14;
     public static final int CARD_IKOM = 15;
-    public static boolean shouldRefresh;
+    private static boolean shouldRefresh;
     private static List<Card> cards;
     private static ArrayList<Card> newCards;
     private static Context mContext;
@@ -87,13 +87,13 @@ public class CardManager {
      * WARNING: Must not be called from UI thread.
      * <p/>
      * HOW TO ADD A NEW CARD:
-     * 1. Let the manager class implement {@link de.tum.in.tumcampusapp.cards.Card.ProvidesCard}
+     * 1. Let the manager class implement {@link Card.ProvidesCard}
      * 2. Create a new class extending {@link Card}
      * 3. Implement the getCardView method in this class
      * 4. Create a new instance of this card in the
-     * {@link de.tum.in.tumcampusapp.cards.Card.ProvidesCard#onRequestCard(android.content.Context)} method of the manager
+     * {@link Card.ProvidesCard#onRequestCard(Context)} method of the manager
      * 5. Add this card to the CardManager by calling {@link Card#apply()} from
-     * {@link de.tum.in.tumcampusapp.cards.Card.ProvidesCard#onRequestCard(android.content.Context)}
+     * {@link Card.ProvidesCard#onRequestCard(Context)}
      * 6. Add an instance of the manager class to the managers list below
      */
     public static synchronized void update(Context context) {
@@ -115,7 +115,7 @@ public class CardManager {
 
         new EduroamCard(context).apply();
 
-        List<Card.ProvidesCard> managers = new ArrayList<>();
+        Collection<Card.ProvidesCard> managers = new ArrayList<>();
 
         // Add those managers only if valid access token is available
         if (new AccessTokenManager(context).hasValidAccessToken()) {
@@ -131,11 +131,7 @@ public class CardManager {
         managers.add(new NewsManager(context));
 
         for (Card.ProvidesCard manager : managers) {
-            try {
-                manager.onRequestCard(context);
-            } catch (Exception ex) {
-                Utils.log(ex, "Error while creating card");
-            }
+            manager.onRequestCard(context);
         }
 
         // Always append the restore card at the end of our list
@@ -168,7 +164,6 @@ public class CardManager {
     /**
      * Removes card from the list
      *
-     *
      * @param card The card to delete
      * @return the last index of the card
      */
@@ -181,7 +176,7 @@ public class CardManager {
     /**
      * Resets dismiss settings for all cards
      */
-    public static void restoreCards(){
+    public static void restoreCards() {
         SharedPreferences prefs = mContext.getSharedPreferences(Card.DISCARD_SETTINGS_START, 0);
         prefs.edit().clear().apply();
         AbstractManager.getDb(mContext).execSQL("UPDATE news SET dismissed=0");
@@ -189,5 +184,17 @@ public class CardManager {
 
     public static List<Card> getCards() {
         return cards;
+    }
+
+    public static void setShouldRefresh() {
+        shouldRefresh = true;
+    }
+
+    public static boolean getShouldRefresh() {
+        return shouldRefresh;
+    }
+
+    private CardManager() {
+        // CardManager is a utility class
     }
 }

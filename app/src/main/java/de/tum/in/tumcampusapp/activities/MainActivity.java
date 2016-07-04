@@ -118,7 +118,7 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
         // Set the drawer toggle as the DrawerListener
         mDrawerLayout.addDrawerListener(mDrawerToggle);
 
-        if (CardManager.shouldRefresh || CardManager.getCards() == null) {
+        if (CardManager.getShouldRefresh() || CardManager.getCards() == null) {
             refreshCards();
         } else {
             initAdapter();

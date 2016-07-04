@@ -1,6 +1,7 @@
 package de.tum.in.tumcampusapp.activities;
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -11,6 +12,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import java.io.InputStream;
+import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 
@@ -37,10 +39,10 @@ public class SetupEduroamActivity extends AppCompatActivity {
         setContentView(R.layout.activity_setup_eduroam);
 
         // Enable 'More Info' links
-        ((TextView)findViewById(R.id.text_with_link_1)).setMovementMethod(LinkMovementMethod.getInstance());
-        ((TextView)findViewById(R.id.text_with_link_2)).setMovementMethod(LinkMovementMethod.getInstance());
+        ((TextView) findViewById(R.id.text_with_link_1)).setMovementMethod(LinkMovementMethod.getInstance());
+        ((TextView) findViewById(R.id.text_with_link_2)).setMovementMethod(LinkMovementMethod.getInstance());
 
-        if(Build.VERSION.SDK_INT>=18) {
+        if (Build.VERSION.SDK_INT >= 18) {
             findViewById(R.id.certificate).setVisibility(View.GONE);
         }
 
@@ -52,22 +54,23 @@ public class SetupEduroamActivity extends AppCompatActivity {
 
     /**
      * Start setting up the wifi connection
+     *
      * @param v Setup button handle
      */
     @SuppressWarnings("UnusedParameters")
     public void onClickSetup(View v) {
         EduroamManager manager = new EduroamManager(getApplicationContext());
         boolean success = manager.configureEduroam(lrz.getText().toString(), password.getText().toString());
-        if(success) {
+        if (success) {
             Utils.showToast(this, R.string.eduroam_success);
             finish();
 
             // Hide eduroam card and update cards list
             Utils.setSetting(this, "card_eduroam_start", false);
 
-            CardManager.shouldRefresh = true;
+            CardManager.setShouldRefresh();
         } else {
-            ((TextView)findViewById(R.id.pin_lock)).setTextColor(0xFFFF0000);
+            ((TextView) findViewById(R.id.pin_lock)).setTextColor(0xFFFF0000);
             findViewById(R.id.pin_lock_rem).setVisibility(View.VISIBLE);
         }
     }
@@ -76,6 +79,7 @@ public class SetupEduroamActivity extends AppCompatActivity {
      * Prompts the user with an install certificate dialog.
      * This is only needed for API level lower than 18.
      * API 18 and above allow automatic installation of certificate
+     *
      * @param v Certificate install button handle
      */
     @SuppressWarnings("UnusedParameters")
@@ -89,13 +93,14 @@ public class SetupEduroamActivity extends AppCompatActivity {
             intent.putExtra("name", "eduroam");
             intent.putExtra("CERT", cert.getEncoded());
             startActivityForResult(intent, 0);
-        } catch (Exception e) {
+        } catch (Resources.NotFoundException | CertificateException e) {
             Utils.log(e);
         }
     }
 
     /**
      * Open security settings
+     *
      * @param v Security settings button handle
      */
     @SuppressWarnings("UnusedParameters")
@@ -105,6 +110,7 @@ public class SetupEduroamActivity extends AppCompatActivity {
 
     /**
      * Open android settings
+     *
      * @param v Button handle
      */
     @SuppressWarnings("UnusedParameters")
