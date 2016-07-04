@@ -11,6 +11,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -101,12 +102,13 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<Void, Bo
 
 
                 // Upon clicking on the faculty spinner and there is no internet connection -> toast to the user.
-                userMajorSpinner.setOnClickListener(new View.OnClickListener() {
+                userMajorSpinner.setOnTouchListener(new View.OnTouchListener() {
                     @Override
-                    public void onClick(View view) {
-                        if (!NetUtils.isConnected(getApplicationContext())) {
-                            Toast.makeText(getApplicationContext(), getString(R.string.please_connect_to_internet), Toast.LENGTH_LONG).show();
+                    public boolean onTouch(View view, MotionEvent motionEvent) {
+                        if(!NetUtils.isConnected(getApplicationContext())){
+                            Toast.makeText(getApplicationContext(),getString(R.string.please_connect_to_internet),Toast.LENGTH_LONG).show();
                         }
+                        return false;
                     }
                 });
 
