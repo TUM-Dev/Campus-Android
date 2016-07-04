@@ -44,7 +44,7 @@ public class NetUtils {
         client.setReadTimeout(HTTP_TIMEOUT, TimeUnit.MILLISECONDS);
     }
 
-    public static Optional<JSONObject> downloadJson(Context context, String url) throws IOException, JSONException {
+    public static Optional<JSONObject> downloadJson(Context context, String url) {
         return new NetUtils(context).downloadJson(url);
     }
 
@@ -286,14 +286,16 @@ public class NetUtils {
      *
      * @param url Valid URL
      * @return JSONObject
-     * @throws IOException, JSONException
      */
-    public Optional<JSONObject> downloadJson(String url) throws IOException, JSONException {
-        Optional<String> data = downloadStringHttp(url);
-
-        if (data.isPresent()) {
-            Utils.logv("downloadJson " + data);
-            return Optional.of(new JSONObject(data.get()));
+    public Optional<JSONObject> downloadJson(String url) {
+        try {
+            Optional<String> data = downloadStringHttp(url);
+            if (data.isPresent()) {
+                Utils.logv("downloadJson " + data);
+                return Optional.of(new JSONObject(data.get()));
+            }
+        } catch (IOException | JSONException e) {
+            Utils.log(e);
         }
         return Optional.absent();
     }

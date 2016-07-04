@@ -117,6 +117,7 @@ public class TransportManager implements Card.ProvidesCard {
      * @return List of departures
      */
     public static List<Departure> getDeparturesFromExternal(Context context, String stationID) {
+        List<Departure> result = new ArrayList<>();
         try {
             String language = LANGUAGE + Locale.getDefault().getLanguage();
             // ISO-8859-1 is needed for mvv
@@ -125,15 +126,14 @@ public class TransportManager implements Card.ProvidesCard {
             String query = DEPARTURE_QUERY_CONST + language + '&' + departureQuery;
             Utils.logv(query);
             NetUtils net = new NetUtils(context);
-            List<Departure> result = new ArrayList<>();
 
             // Download departures
-            Optional<JSONArray> departures = net.downloadJsonArray(query, CacheManager.VALIDITY_DO_NOT_CACHE, true);
+            Optional<JSONObject> departures = net.downloadJson(query);
             if (!departures.isPresent()) {
                 return result;
             }
 
-            JSONArray arr = departures.get();
+            JSONArray arr = departures.get().getJSONArray("departureList");
             for (int i = 0; i < arr.length(); i++) {
                 JSONObject departure = arr.getJSONObject(i);
                 JSONObject servingLine = departure.getJSONObject("servingLine");
@@ -152,15 +152,13 @@ public class TransportManager implements Card.ProvidesCard {
                     return lhs.countDown - rhs.countDown;
                 }
             });
-            return result;
-
         } catch (UnsupportedEncodingException e) {
             throw new Error(e); // Programming error. Fail hard.
         } catch (JSONException e) {
             //We got no valid JSON, mvg-live is probably bugged
             Utils.log(e, ERROR_INVALID_JSON + DEPARTURE_QUERY);
-            return null;
         }
+        return result;
     }
 
     public static class Departure {

@@ -10,7 +10,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -83,7 +82,7 @@ public class CafeteriaMenuManager extends AbstractManager {
      *
      * @param force True to force download over normal sync period, else false
      */
-    public void downloadFromExternal(Context context, boolean force) throws JSONException, IOException {
+    public void downloadFromExternal(Context context, boolean force) throws JSONException {
 
         if (!force && !SyncManager.needSync(db, this, TIME_TO_SYNC)) {
             return;

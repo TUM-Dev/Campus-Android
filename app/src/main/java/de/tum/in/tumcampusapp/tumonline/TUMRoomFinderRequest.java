@@ -9,7 +9,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -91,7 +90,7 @@ public class TUMRoomFinderRequest {
                 double northing = jsonObject.get().getDouble(KEY_UTM_NORTHING);
                 result = convertUTMtoLL(northing, easting, zone);
             }
-        } catch (IOException | JSONException e) {
+        } catch (JSONException e) {
             Utils.log(String.valueOf(e));
         }
 

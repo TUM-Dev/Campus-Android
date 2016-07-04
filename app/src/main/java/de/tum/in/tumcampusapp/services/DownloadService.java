@@ -7,6 +7,8 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.support.v4.content.LocalBroadcastManager;
 
+import org.json.JSONException;
+
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
@@ -220,7 +222,7 @@ public class DownloadService extends IntentService {
             cm.downloadFromExternal(force);
             cmm.downloadFromExternal(this, force);
             return true;
-        } catch (Exception e) {
+        } catch (JSONException e) {
             Utils.log(e);
             return false;
         }
@@ -231,7 +233,7 @@ public class DownloadService extends IntentService {
             KinoManager km = new KinoManager(this);
             km.downloadFromExternal(force);
             return true;
-        } catch (Exception e) {
+        } catch (JSONException e) {
             Utils.log(e);
             return false;
         }
@@ -242,7 +244,7 @@ public class DownloadService extends IntentService {
             NewsManager nm = new NewsManager(this);
             nm.downloadFromExternal(force);
             return true;
-        } catch (Exception e) {
+        } catch (JSONException e) {
             Utils.log(e);
             return false;
         }
@@ -266,7 +268,7 @@ public class DownloadService extends IntentService {
             StudyRoomGroupManager sm = new StudyRoomGroupManager(this);
             sm.downloadFromExternal();
             return true;
-        } catch (Exception e) {
+        } catch (JSONException e) {
             Utils.log(e);
             return false;
         }
