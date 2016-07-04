@@ -114,7 +114,7 @@ public class TUMOnlineRequest<T> {
         if (error != null) {
             Utils.log("aborting fetch URL (" + error + ") " + url);
             lastError = error;
-            return null;
+            return Optional.absent();
         }
 
         Utils.log("fetching URL " + url);
