@@ -35,6 +35,16 @@ public class SilenceService extends IntentService {
         super(SILENCE_SERVICE);
     }
 
+    private static long getWaitDuration(String timeToEventString) {
+        long timeToEvent = Long.MAX_VALUE;
+        try {
+            timeToEvent = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.ENGLISH).parse(timeToEventString).getTime();
+        } catch (ParseException e) {
+            Utils.log(e, "");
+        }
+        return Math.min(CHECK_INTERVAL, timeToEvent - System.currentTimeMillis() + CHECK_DELAY);
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -87,6 +97,7 @@ public class SilenceService extends IntentService {
             String mode = Utils.getSetting(this, "silent_mode_set_to", "0");
             if (mode.equals("0")) {
                 Utils.log("set ringer mode: vibration");
+                // TODO fix SecurityException: Not allowed to change Do Not Disturb state in Android N
                 am.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
             } else {
                 Utils.log("set ringer mode: silent");
@@ -114,15 +125,5 @@ public class SilenceService extends IntentService {
         cursor.close();
 
         alarmManager.set(AlarmManager.RTC, startTime + waitDuration, pendingIntent);
-    }
-
-    private static long getWaitDuration(String timeToEventString) {
-        long timeToEvent = Long.MAX_VALUE;
-        try {
-            timeToEvent = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.ENGLISH).parse(timeToEventString).getTime();
-        } catch (ParseException e) {
-            Utils.log(e, "");
-        }
-        return Math.min(CHECK_INTERVAL, timeToEvent - System.currentTimeMillis() + CHECK_DELAY);
     }
 }
