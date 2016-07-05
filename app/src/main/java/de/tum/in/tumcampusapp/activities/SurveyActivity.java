@@ -70,7 +70,7 @@ public class SurveyActivity extends ProgressActivity {
     private Button submitSurveyButton, facultiesButton;
     private ArrayList<String> questions = new ArrayList<>();
     private ArrayList<String> selectedFaculties = new ArrayList<>();
-    private boolean[] checkedFaculties = new boolean[14];
+    private boolean[] checkedFaculties;
     private LinearLayout mainResponseLayout, questionsLayout;
     private ArrayList<String> fetchedFaculties = new ArrayList<>();
     private SurveyManager surveyManager;
@@ -348,6 +348,7 @@ public class SurveyActivity extends ProgressActivity {
 
         }
 
+        checkedFaculties = new boolean[fetchedFaculties.size()];
         final String[] faculties = fetchedFaculties.toArray(new String[fetchedFaculties.size()]);
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(getResources().getString(R.string.quiz_target_faculty));
