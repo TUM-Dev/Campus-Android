@@ -21,20 +21,24 @@ public class FavoriteDishService extends IntentService {
     public FavoriteDishService() {
         super(FAVORITEDISH_SERVICE);
     }
+
     @Override
     public void onCreate() {
         super.onCreate();
     }
+
     @Override
-    public void onDestroy() { super.onDestroy(); }
+    public void onDestroy() {
+        super.onDestroy();
+    }
 
     @Override
     protected void onHandleIntent(Intent intent) {
         /**
          * create a notification that dish is available.
          */
-        intent = new Intent(this, MainActivity.class);
-        PendingIntent pi = PendingIntent.getActivity(this, 1, intent, 0);
+        Intent notificationIntent = new Intent(this, MainActivity.class);
+        PendingIntent pi = PendingIntent.getActivity(this, 1, notificationIntent, 0);
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentTitle("TUM-MENSA")
@@ -46,6 +50,5 @@ public class FavoriteDishService extends IntentService {
         mBuilder.setAutoCancel(true);
         NotificationManager mNotificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
         mNotificationManager.notify(0, mBuilder.build());
-
     }
 }

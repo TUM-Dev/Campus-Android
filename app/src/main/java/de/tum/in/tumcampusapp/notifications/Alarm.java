@@ -43,7 +43,7 @@ public class Alarm extends GenericNotification {
 
         //Check if a payload was passed
         if (payload == null) {
-            throw new NullPointerException();
+            throw new IllegalArgumentException();
         }
 
         //Get data from server

@@ -26,7 +26,7 @@ import de.tum.in.tumcampusapp.models.managers.TumManager;
  * XML-RPC backend. ALl communications is based on the base-url which is
  * attached by the Token and additional parameters.
  */
-public class TUMOnlineRequest<T> {
+public final class TUMOnlineRequest<T> {
     // server address
     private static final String SERVICE_BASE_URL = "https://campus.tum.de/tumonline/wbservicesbasic.";
     //private static final String SERVICE_BASE_URL = "https://campusquality.tum.de/QSYSTEM_TUM/wbservicesbasic.";

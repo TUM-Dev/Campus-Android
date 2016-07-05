@@ -22,12 +22,12 @@ public class Update extends GenericNotification {
     public final GCMUpdate data;
     private final GCMNotification info;
 
-    public Update(String payload, Context context, int notfication) {
-        super(context, 2, notfication, true);
+    public Update(String payload, Context context, int notification) {
+        super(context, 2, notification, true);
 
         //Check if a payload was passed
         if (payload == null) {
-            throw new NullPointerException();
+            throw new IllegalArgumentException();
         }
 
         // parse data
