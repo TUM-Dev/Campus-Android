@@ -10,6 +10,8 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
+import com.google.common.base.Optional;
+
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.ActivityForSearchingInBackground;
 import de.tum.in.tumcampusapp.adapters.NoResultsAdapter;
@@ -76,14 +78,15 @@ public class TransportationActivity extends ActivityForSearchingInBackground<Cur
         startActivity(intent);
     }
 
+
     /**
      * Shows all recently used stations
      *
      * @return Cursor holding the recents information (name, _id)
      */
     @Override
-    public Cursor onSearchInBackground() {
-        return recentsManager.getAllFromDb();
+    public Optional<Cursor> onSearchInBackground() {
+        return Optional.of(recentsManager.getAllFromDb());
     }
 
     /**
@@ -93,16 +96,16 @@ public class TransportationActivity extends ActivityForSearchingInBackground<Cur
      * @return Cursor holding the stations (name, _id)
      */
     @Override
-    public Cursor onSearchInBackground(String query) {
+    public Optional<Cursor> onSearchInBackground(String query) {
         // Get Information
-        Cursor stationCursor = TransportManager.getStationsFromExternal(this, query);
-        if(stationCursor == null) {
+        Optional<Cursor> stationCursor = TransportManager.getStationsFromExternal(this, query);
+        if (!stationCursor.isPresent()) {
             showError(R.string.exception_unknown);
         }
 
         // Drop results if canceled
         if (asyncTask.isCancelled()) {
-            return null;
+            return Optional.absent();
         }
 
         return stationCursor;
@@ -111,13 +114,14 @@ public class TransportationActivity extends ActivityForSearchingInBackground<Cur
     /**
      * Shows the stations
      *
-     * @param stationCursor Cursor with stations (name, _id)
+     * @param possibleStationCursor Cursor with stations (name, _id)
      */
     @Override
-    protected void onSearchFinished(Cursor stationCursor) {
-        if (stationCursor == null) {
+    protected void onSearchFinished(Optional<Cursor> possibleStationCursor) {
+        if (!possibleStationCursor.isPresent()) {
             return;
         }
+        Cursor stationCursor = possibleStationCursor.get();
 
         showLoadingEnded();
 

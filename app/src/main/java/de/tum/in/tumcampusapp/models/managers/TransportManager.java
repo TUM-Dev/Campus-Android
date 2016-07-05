@@ -164,7 +164,7 @@ public class TransportManager implements Card.ProvidesCard {
      * @param prefix Name prefix
      * @return Database Cursor (name, _id)
      */
-    public static Cursor getStationsFromExternal(Context context, String prefix) {
+    public static Optional<Cursor> getStationsFromExternal(Context context, String prefix) {
         try {
             String language = LANGUAGE + Locale.getDefault().getLanguage();
             // ISO-8859-1 is needed for mvv
@@ -178,7 +178,7 @@ public class TransportManager implements Card.ProvidesCard {
             // Download possible stations
             Optional<JSONObject> jsonObj = net.downloadJsonObject(query, CacheManager.VALIDITY_DO_NOT_CACHE, true);
             if (!jsonObj.isPresent()) {
-                return null;
+                return Optional.absent();
             }
 
             MatrixCursor mc = new MatrixCursor(new String[]{Const.NAME_COLUMN, Const.ID_COLUMN});
@@ -194,7 +194,7 @@ public class TransportManager implements Card.ProvidesCard {
             } else {
                 JSONObject points = stopfinder.optJSONObject(POINTS);
                 if (points == null) {
-                    return null;
+                    return Optional.absent();
                 }
                 JSONObject point = points.getJSONObject("point");
                 addStationResult(results, point);
@@ -211,11 +211,11 @@ public class TransportManager implements Card.ProvidesCard {
             for (StationResult result : results) {
                 mc.addRow(new String[]{result.station, result.id});
             }
-            return mc;
+            return Optional.of((Cursor) mc);
         } catch (JSONException e) {
             Utils.log(e, ERROR_INVALID_JSON + STATION_SEARCH);
         }
-        return null;
+        return Optional.absent();
     }
 
     private static void addStationResult(Collection<StationResult> results, JSONObject point) throws JSONException {
