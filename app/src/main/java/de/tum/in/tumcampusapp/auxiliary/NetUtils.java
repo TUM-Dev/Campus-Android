@@ -208,7 +208,13 @@ public class NetUtils {
 
             Optional<String> file = cacheManager.getFromCache(url);
             if (file.isPresent()) {
-                return Optional.of(new File(file.get()));
+                File result = new File(file.get());
+
+                // TODO: remove this check when #391 is fixed
+                // The cache could have been cleaned manually, so we need an existence check
+                if (result.exists()) {
+                    return Optional.of(result);
+                }
             }
 
             file = Optional.of(mContext.getCacheDir().getAbsolutePath() + '/' + Utils.md5(url) + ".jpg");
