@@ -57,6 +57,23 @@ public class AuthenticationManager {
         return uniqueID;
     }
 
+    public static KeyPairGenerator getKeyPairGeneratorInstance() {
+        try {
+            return KeyPairGenerator.getInstance(ALGORITHM);
+        } catch (NoSuchAlgorithmException e) {
+            // We don't support platforms without RSA
+            throw new AssertionError("KeyPairGenerator for " + ALGORITHM + "could not be instantiated");
+        }
+    }
+
+    public static KeyFactory getKeyFactoryInstance() {
+        try {
+            return KeyFactory.getInstance(ALGORITHM);
+        } catch (NoSuchAlgorithmException e) {
+            // We don't support platforms without RSA
+            throw new AssertionError("KeyFactory for " + ALGORITHM + "could not be instantiated");
+        }
+    }
 
     /**
      * Get the private key as string
@@ -94,8 +111,8 @@ public class AuthenticationManager {
     private PrivateKey getPrivateKey() throws NoPrivateKey {
         byte[] privateKeyBytes = Base64.decode(this.getPrivateKeyString(), Base64.DEFAULT);
         try {
-            return KeyFactory.getInstance("RSA").generatePrivate(new PKCS8EncodedKeySpec(privateKeyBytes));
-        } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+            return getKeyFactoryInstance().generatePrivate(new PKCS8EncodedKeySpec(privateKeyBytes));
+        } catch (InvalidKeySpecException e) {
             Utils.log(e);
         }
         return null;
@@ -155,23 +172,16 @@ public class AuthenticationManager {
         this.clearKeys();
 
         // If the key is not in shared preferences, a new generate key-pair
-        try {
-            KeyPair keyPair = this.generateKeyPair();
+        KeyPair keyPair = this.generateKeyPair();
 
-            //In order to store the preferences we need to encode them as base64 string
-            String publicKeyString = this.keyToBase64(keyPair.getPublic().getEncoded());
-            String privateKeyString = this.keyToBase64(keyPair.getPrivate().getEncoded());
-            this.saveKeys(privateKeyString, publicKeyString);
+        //In order to store the preferences we need to encode them as base64 string
+        String publicKeyString = this.keyToBase64(keyPair.getPublic().getEncoded());
+        String privateKeyString = this.keyToBase64(keyPair.getPrivate().getEncoded());
+        this.saveKeys(privateKeyString, publicKeyString);
 
-            //New keys, need to re-upload
-            this.uploadKey(publicKeyString);
-            return true;
-        } catch (NoSuchAlgorithmException e) {
-            Utils.log(e);
-            this.clearKeys();
-        }
-
-        return false;
+        //New keys, need to re-upload
+        this.uploadKey(publicKeyString);
+        return true;
     }
 
     /**
@@ -239,10 +249,9 @@ public class AuthenticationManager {
      * Generates a keypair with the given ALGORITHM & size
      *
      * @return
-     * @throws NoSuchAlgorithmException
      */
-    private KeyPair generateKeyPair() throws NoSuchAlgorithmException {
-        KeyPairGenerator keyGen = KeyPairGenerator.getInstance(AuthenticationManager.ALGORITHM);
+    private KeyPair generateKeyPair() {
+        KeyPairGenerator keyGen = getKeyPairGeneratorInstance();
         keyGen.initialize(AuthenticationManager.RSA_KEY_SIZE);
         return keyGen.generateKeyPair();
     }

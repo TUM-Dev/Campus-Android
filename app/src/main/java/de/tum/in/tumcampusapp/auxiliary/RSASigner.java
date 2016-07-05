@@ -24,6 +24,16 @@ public class RSASigner {
         this.privateKey = privateKey;
     }
 
+    public static Signature getSignatureInstance() {
+        String signature = "SHA1WithRSA";
+        try {
+            return Signature.getInstance(signature);
+        } catch (NoSuchAlgorithmException e) {
+            // We don't support platforms without SHA1WithRSA
+            throw new AssertionError("Signature for " + signature + "could not be instantiated");
+        }
+    }
+
     /**
      * Sign the message given as the parameter and return it as a base64 encoded
      * {@link String}.
@@ -32,13 +42,7 @@ public class RSASigner {
      * @return A base64 encoded signature
      */
     public String sign(String message) {
-        Signature signer;
-        try {
-            signer = Signature.getInstance("SHA1WithRSA");
-        } catch (NoSuchAlgorithmException e) {
-            Utils.log(e);
-            return null;
-        }
+        Signature signer = getSignatureInstance();
 
         try {
             signer.initSign(privateKey);

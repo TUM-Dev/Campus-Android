@@ -6,7 +6,6 @@ import com.google.common.base.Charsets;
 
 import java.security.InvalidKeyException;
 import java.security.KeyFactory;
-import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
 import java.security.Signature;
 import java.security.SignatureException;
@@ -41,8 +40,6 @@ public class ChatMessageValidator {
      */
     private List<PublicKey> publicKeys;
 
-    private static final String KEY_ALGORITHM = "RSA";
-
     /**
      * Constructs a new validator for the given public keys.
      *
@@ -50,6 +47,82 @@ public class ChatMessageValidator {
      */
     public ChatMessageValidator(List<ChatPublicKey> publicKeys) {
         this.chatPublicKeys = publicKeys;
+    }
+
+    /**
+     * Private helper method which performs the actual validation of a signature
+     * attached to a particular text, given a {@link PublicKey}
+     *
+     * @param text      The text the signature has signed
+     * @param signature The signature encoded as a base64 string
+     * @param key       a {@link PublicKey} instance to use to verify the signature
+     * @return Returns true if signature is valid
+     */
+    private static boolean verifySignature(String text, String signature,
+                                           PublicKey key) {
+
+        Signature sig = RSASigner.getSignatureInstance();
+
+        try {
+            sig.initVerify(key);
+        } catch (InvalidKeyException e) {
+            Utils.log(e);
+            return false;
+        }
+
+        byte[] textBytes = text.getBytes(Charsets.UTF_8);
+
+        try {
+            sig.update(textBytes);
+        } catch (SignatureException e) {
+            Utils.log(e);
+            return false;
+        }
+        try {
+            return sig.verify(decodeByteRepresentation(signature));
+        } catch (SignatureException e) {
+            Utils.log(e);
+            return false;
+        }
+    }
+
+    /**
+     * Private helper method which converts the public key representation returned by the
+     * TCA endpoint to a {@link PublicKey} instance.
+     *
+     * @param chatPublicKey A model representing a TCA public key
+     * @return {@link PublicKey} which corresponds to the given TCA public key
+     */
+    private static PublicKey convertToPublicKey(ChatPublicKey chatPublicKey) {
+        // Base64 string -> Bytes
+        byte[] keyBytes = decodeByteRepresentation(chatPublicKey.getKey());
+        if (keyBytes == null) {
+            return null;
+        }
+        KeyFactory keyFactory = AuthenticationManager.getKeyFactoryInstance();
+
+        // Bytes -> PublicKey
+        try {
+            return keyFactory.generatePublic(new X509EncodedKeySpec(keyBytes));
+        } catch (InvalidKeySpecException e) {
+            Utils.log(e);
+            return null;
+        }
+
+    }
+
+    /**
+     * Private helper method decoding the given key text from its Base64 encoded
+     * representation into an array of bytes.
+     *
+     * @param text The text to be decoded as a String
+     * @return An array of bytes representing the given text
+     */
+    private static byte[] decodeByteRepresentation(String text) {
+        if (text == null) {
+            return null;
+        }
+        return Base64.decode(text.trim(), Base64.DEFAULT);
     }
 
     /**
@@ -82,49 +155,6 @@ public class ChatMessageValidator {
     }
 
     /**
-     * Private helper method which performs the actual validation of a signature
-     * attached to a particular text, given a {@link PublicKey}
-     *
-     * @param text      The text the signature has signed
-     * @param signature The signature encoded as a base64 string
-     * @param key       a {@link PublicKey} instance to use to verify the signature
-     * @return Returns true if signature is valid
-     */
-    private static boolean verifySignature(String text, String signature,
-                                           PublicKey key) {
-
-        Signature sig;
-        try {
-            sig = Signature.getInstance("SHA1WithRSA");
-        } catch (NoSuchAlgorithmException e) {
-            Utils.log(e);
-            return false;
-        }
-
-        try {
-            sig.initVerify(key);
-        } catch (InvalidKeyException e) {
-            Utils.log(e);
-            return false;
-        }
-
-        byte[] textBytes = text.getBytes(Charsets.UTF_8);
-
-        try {
-            sig.update(textBytes);
-        } catch (SignatureException e) {
-            Utils.log(e);
-            return false;
-        }
-        try {
-            return sig.verify(decodeByteRepresentation(signature));
-        } catch (SignatureException e) {
-            Utils.log(e);
-            return false;
-        }
-    }
-
-    /**
      * Private helper method which builds a list of valid {@link PublicKey}
      * instances based on the given list of TCA public keys.
      */
@@ -137,51 +167,6 @@ public class ChatMessageValidator {
                 publicKeys.add(key);
             }
         }
-    }
-
-    /**
-     * Private helper method which converts the public key representation returned by the
-     * TCA endpoint to a {@link PublicKey} instance.
-     *
-     * @param chatPublicKey A model representing a TCA public key
-     * @return {@link PublicKey} which corresponds to the given TCA public key
-     */
-    private static PublicKey convertToPublicKey(ChatPublicKey chatPublicKey) {
-        // Base64 string -> Bytes
-        byte[] keyBytes = decodeByteRepresentation(chatPublicKey.getKey());
-        if (keyBytes == null) {
-            return null;
-        }
-        KeyFactory keyFactory;
-        try {
-            keyFactory = KeyFactory.getInstance(KEY_ALGORITHM);
-        } catch (NoSuchAlgorithmException e) {
-            Utils.log(e);
-            return null;
-        }
-
-        // Bytes -> PublicKey
-        try {
-            return keyFactory.generatePublic(new X509EncodedKeySpec(keyBytes));
-        } catch (InvalidKeySpecException e) {
-            Utils.log(e);
-            return null;
-        }
-
-    }
-
-    /**
-     * Private helper method decoding the given key text from its Base64 encoded
-     * representation into an array of bytes.
-     *
-     * @param text The text to be decoded as a String
-     * @return An array of bytes representing the given text
-     */
-    private static byte[] decodeByteRepresentation(String text) {
-        if (text == null) {
-            return null;
-        }
-        return Base64.decode(text.trim(), Base64.DEFAULT);
     }
 
 }

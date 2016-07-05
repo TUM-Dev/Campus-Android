@@ -13,7 +13,6 @@ import com.google.gson.Gson;
 
 import java.security.InvalidKeyException;
 import java.security.KeyFactory;
-import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
 import java.security.Signature;
 import java.security.SignatureException;
@@ -22,6 +21,8 @@ import java.security.spec.X509EncodedKeySpec;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.AlarmActivity;
+import de.tum.in.tumcampusapp.auxiliary.AuthenticationManager;
+import de.tum.in.tumcampusapp.auxiliary.RSASigner;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.GCMAlert;
 import de.tum.in.tumcampusapp.models.GCMNotification;
@@ -66,13 +67,7 @@ public class Alarm extends GenericNotification {
             return false;
         }
 
-        Signature sig;
-        try {
-            sig = Signature.getInstance("SHA1WithRSA");
-        } catch (NoSuchAlgorithmException e) {
-            Utils.log(e);
-            return false;
-        }
+        Signature sig = RSASigner.getSignatureInstance();
 
         try {
             sig.initVerify(key);
@@ -105,13 +100,7 @@ public class Alarm extends GenericNotification {
      */
     private static PublicKey getCabePublicKey() {
         // Base64 string -> Bytes
-        KeyFactory keyFactory;
-        try {
-            keyFactory = KeyFactory.getInstance("RSA");
-        } catch (NoSuchAlgorithmException e) {
-            Utils.log(e);
-            return null;
-        }
+        KeyFactory keyFactory = AuthenticationManager.getKeyFactoryInstance();
 
         byte[] keyBytes = Base64.decode(PUB_KEY, Base64.NO_WRAP);
         // Bytes -> PublicKey
