@@ -10,13 +10,11 @@ import android.database.Cursor;
 import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AlertDialog;
-import android.os.Bundle;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -35,8 +33,6 @@ import android.widget.TextView;
 
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
-import org.joda.time.Instant;
-import org.joda.time.Interval;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
@@ -59,21 +55,11 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-import static de.tum.in.tumcampusapp.fragments.CafeteriaDetailsSectionFragment.menuToSpan;
-
 /**
  * SurveyActivity for handling submitting ownQuesitons and reviewing responses
  */
 public class SurveyActivity extends ProgressActivity {
 
-    private Spinner numOfQuestionsSpinner;
-    private Button submitSurveyButton, facultiesButton;
-    private ArrayList<String> questions = new ArrayList<>();
-    private ArrayList<String> selectedFaculties = new ArrayList<>();
-    private boolean[] checkedFaculties;
-    private LinearLayout mainResponseLayout, questionsLayout;
-    private ArrayList<String> fetchedFaculties = new ArrayList<>();
-    private SurveyManager surveyManager;
     final Context context = this;
     // for handling change in internet connectivity. If initially had no connection, then connected, then restart activity
     BroadcastReceiver connectivityChangeReceiver = new BroadcastReceiver() {
@@ -84,6 +70,48 @@ public class SurveyActivity extends ProgressActivity {
                 unregisterReceiver(connectivityChangeReceiver);
             }
         }
+    };
+    View.OnClickListener showFaculties = new View.OnClickListener() {
+
+        @Override
+        public void onClick(final View v) {
+            String[] faculties = (String[]) v.getTag();
+            String chosenFaculties = "";
+            for (int i = 0; i < faculties.length; i++) {
+                chosenFaculties += "- " + faculties[i] + "\n";
+            }
+
+            new android.app.AlertDialog.Builder(context).setTitle(getResources().getString(R.string.selected_target_faculties))
+                    .setMessage(chosenFaculties)
+                    .setPositiveButton(android.R.string.ok, null).create().show();
+        }
+
+    };
+    private Spinner numOfQuestionsSpinner;
+    private Button submitSurveyButton, facultiesButton;
+    private ArrayList<String> questions = new ArrayList<>();
+    private ArrayList<String> selectedFaculties = new ArrayList<>();
+    private boolean[] checkedFaculties;
+    private LinearLayout mainResponseLayout, questionsLayout;
+    private ArrayList<String> fetchedFaculties = new ArrayList<>();
+    private SurveyManager surveyManager;
+    //Handles clicking on 'delete' button of an own question in responses tab
+    View.OnClickListener deleteQuestion = new View.OnClickListener() {
+
+        @Override
+        public void onClick(final View v) {
+            if (NetUtils.isConnected(getApplicationContext())) {
+                //remove view and delete from database.
+                v.setEnabled(false);
+                int tag = (int) v.getTag();
+                surveyManager.deleteMyOwnQuestion(tag);
+                zoomOutanimation(v); // provides a smoth delete animation of the question
+                Snackbar.make(findViewById(R.id.drawer_layout), getResources().getString(R.string.question_deleted), Snackbar.LENGTH_LONG).show();
+            } else {
+                restartActivity();
+            }
+        }
+
     };
 
     public SurveyActivity() {
@@ -133,7 +161,7 @@ public class SurveyActivity extends ProgressActivity {
             for (int x = 0; x < targetFacsIds.length; x++) {
                 Cursor cursor = surveyManager.getFacultyName(targetFacsIds[x]);
                 if (cursor.moveToFirst()) {
-                    targetFacsNames[x]=cursor.getString(cursor.getColumnIndex("name"));
+                    targetFacsNames[x] = cursor.getString(cursor.getColumnIndex("name"));
                 }
             }
 
@@ -248,42 +276,6 @@ public class SurveyActivity extends ProgressActivity {
         }
 
     }
-
-    //Handles clicking on 'delete' button of an own question in responses tab
-    View.OnClickListener deleteQuestion = new View.OnClickListener() {
-
-        @Override
-        public void onClick(final View v) {
-            if (NetUtils.isConnected(getApplicationContext())) {
-                //remove view and delete from database.
-                v.setEnabled(false);
-                int tag = (int) v.getTag();
-                surveyManager.deleteMyOwnQuestion(tag);
-                zoomOutanimation(v); // provides a smoth delete animation of the question
-                Snackbar.make(findViewById(R.id.drawer_layout), getResources().getString(R.string.question_deleted), Snackbar.LENGTH_LONG).show();
-            } else {
-                restartActivity();
-            }
-        }
-
-    };
-
-    View.OnClickListener showFaculties = new View.OnClickListener() {
-
-        @Override
-        public void onClick(final View v) {
-            String[] faculties = (String[])v.getTag();
-            String chosenFaculties = "";
-            for (int i = 0; i < faculties.length; i++) {
-                chosenFaculties += "- " + faculties[i] + "\n";
-            }
-
-            new android.app.AlertDialog.Builder(context).setTitle(getResources().getString(R.string.selected_target_faculties))
-                    .setMessage(chosenFaculties)
-                    .setPositiveButton(android.R.string.ok, null).create().show();
-        }
-
-    };
 
     /**
      * provides a smooth zoomOut delete animation of the question
@@ -449,21 +441,17 @@ public class SurveyActivity extends ProgressActivity {
                             for (int i = 0; i < numOfQuestionsSpinner.getSelectedItemPosition() + 1; i++) {
                                 Question ques = new Question(questions.get(i), selectedFacIds);
                                 // Submit Question to the server
-                                try {
-                                    TUMCabeClient.getInstance(getApplicationContext()).createQuestion(ques, new Callback<Question>() {
-                                        @Override
-                                        public void success(Question question, Response response) {
-                                            Snackbar.make(findViewById(R.id.drawer_layout), getResources().getString(R.string.survey_submitted), Snackbar.LENGTH_LONG).show();
-                                        }
+                                TUMCabeClient.getInstance(getApplicationContext()).createQuestion(ques, new Callback<Question>() {
+                                    @Override
+                                    public void success(Question question, Response response) {
+                                        Snackbar.make(findViewById(R.id.drawer_layout), getResources().getString(R.string.survey_submitted), Snackbar.LENGTH_LONG).show();
+                                    }
 
-                                        @Override
-                                        public void failure(RetrofitError error) {
-                                            Utils.log("Failure: " + error.toString());
-                                        }
-                                    });
-                                } catch (Exception e) {
-                                    Utils.log(e.toString());
-                                }
+                                    @Override
+                                    public void failure(RetrofitError error) {
+                                        Utils.log("Failure: " + error.toString());
+                                    }
+                                });
                             }
                         }
 

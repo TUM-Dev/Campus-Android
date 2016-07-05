@@ -12,6 +12,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import org.json.JSONException;
+
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -20,6 +22,7 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.ActivityForLoadingInBackground;
 import de.tum.in.tumcampusapp.adapters.StudyRoomsPagerAdapter;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
+import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.StudyRoom;
 import de.tum.in.tumcampusapp.models.StudyRoomGroup;
 import de.tum.in.tumcampusapp.models.managers.StudyRoomGroupManager;
@@ -167,7 +170,8 @@ public class StudyRoomsActivity extends ActivityForLoadingInBackground<Void, Voi
         StudyRoomGroupManager sm = new StudyRoomGroupManager(this);
         try {
             sm.downloadFromExternal();
-        } catch (Exception e) {
+        } catch (JSONException e) {
+            Utils.log(e);
             // No error handling here
         }
         return null;

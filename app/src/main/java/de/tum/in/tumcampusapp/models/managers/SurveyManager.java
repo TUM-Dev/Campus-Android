@@ -302,7 +302,7 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
      *
      * @throws Exception
      */
-    public void downloadFacultiesFromExternal() throws Exception {
+    public void downloadFacultiesFromExternal() {
         ArrayList<Faculty> faculties = TUMCabeClient.getInstance(mContext).getFaculties();
 
         db.beginTransaction();

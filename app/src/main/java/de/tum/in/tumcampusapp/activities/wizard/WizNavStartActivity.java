@@ -74,11 +74,8 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<Void, Bo
             protected String[] doInBackground(Void... voids) {
                 ArrayList<String> fetchedFaculties = new ArrayList<>();
                 SurveyManager sm = new SurveyManager(getApplicationContext());
-                try {
-                    sm.downloadFacultiesFromExternal();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                sm.downloadFacultiesFromExternal();
+
                 Cursor cursor = sm.getAllFaculties();
                 if (cursor.moveToFirst()) {
                     do {
@@ -105,8 +102,8 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<Void, Bo
                 userMajorSpinner.setOnTouchListener(new View.OnTouchListener() {
                     @Override
                     public boolean onTouch(View view, MotionEvent motionEvent) {
-                        if(!NetUtils.isConnected(getApplicationContext())){
-                            Toast.makeText(getApplicationContext(),getString(R.string.please_connect_to_internet),Toast.LENGTH_LONG).show();
+                        if (!NetUtils.isConnected(getApplicationContext())) {
+                            Toast.makeText(getApplicationContext(), getString(R.string.please_connect_to_internet), Toast.LENGTH_LONG).show();
                         }
                         return false;
                     }
