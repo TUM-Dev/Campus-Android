@@ -5,12 +5,11 @@ import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 
 import com.google.common.base.Optional;
+import com.google.common.net.UrlEscapers;
 
 import org.simpleframework.xml.core.Persister;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -269,11 +268,7 @@ public class TUMOnlineRequest<T> {
      * @param value value of the parameter
      */
     public void setParameter(String name, String value) {
-        try {
-            parameters.put(name, URLEncoder.encode(value, "UTF-8"));
-        } catch (UnsupportedEncodingException e) {
-            Utils.log(e);
-        }
+        parameters.put(name, UrlEscapers.urlPathSegmentEscaper().escape(value));
     }
 
     public void setForce(boolean force) {

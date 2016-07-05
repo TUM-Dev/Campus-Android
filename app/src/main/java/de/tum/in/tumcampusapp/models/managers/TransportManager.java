@@ -6,13 +6,12 @@ import android.database.MatrixCursor;
 import android.util.Pair;
 
 import com.google.common.base.Optional;
+import com.google.common.net.UrlEscapers;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -121,7 +120,7 @@ public class TransportManager implements Card.ProvidesCard {
         try {
             String language = LANGUAGE + Locale.getDefault().getLanguage();
             // ISO-8859-1 is needed for mvv
-            String departureQuery = DEPARTURE_QUERY_STATION + URLEncoder.encode(stationID, "ISO-8859-1");
+            String departureQuery = DEPARTURE_QUERY_STATION + UrlEscapers.urlPathSegmentEscaper().escape(stationID);
 
             String query = DEPARTURE_QUERY_CONST + language + '&' + departureQuery;
             Utils.logv(query);
@@ -152,27 +151,11 @@ public class TransportManager implements Card.ProvidesCard {
                     return lhs.countDown - rhs.countDown;
                 }
             });
-        } catch (UnsupportedEncodingException e) {
-            throw new Error(e); // Programming error. Fail hard.
         } catch (JSONException e) {
             //We got no valid JSON, mvg-live is probably bugged
             Utils.log(e, ERROR_INVALID_JSON + DEPARTURE_QUERY);
         }
         return result;
-    }
-
-    public static class Departure {
-        final public String servingLine;
-        final public String direction;
-        final public String symbol;
-        final public int countDown;
-
-        public Departure(String servingLine, String direction, String symbol, int countDown) {
-            this.servingLine = servingLine;
-            this.direction = direction;
-            this.symbol = symbol;
-            this.countDown = countDown;
-        }
     }
 
     /**
@@ -185,7 +168,7 @@ public class TransportManager implements Card.ProvidesCard {
         try {
             String language = LANGUAGE + Locale.getDefault().getLanguage();
             // ISO-8859-1 is needed for mvv
-            String stationQuery = STATION_SEARCH_QUERY + URLEncoder.encode(prefix, "ISO-8859-1");
+            String stationQuery = STATION_SEARCH_QUERY + UrlEscapers.urlPathSegmentEscaper().escape(prefix);
 
             String query = STATION_SEARCH_CONST + language + '&' + stationQuery;
             Utils.log(query);
@@ -229,8 +212,6 @@ public class TransportManager implements Card.ProvidesCard {
                 mc.addRow(new String[]{result.station, result.id});
             }
             return mc;
-        } catch (UnsupportedEncodingException e) {
-            throw new Error(e); // Programming error. Fail hard.
         } catch (JSONException e) {
             Utils.log(e, ERROR_INVALID_JSON + STATION_SEARCH);
         }
@@ -243,18 +224,6 @@ public class TransportManager implements Card.ProvidesCard {
                 point.getJSONObject("ref").getString("id"),
                 point.getInt("quality")
         ));
-    }
-
-    public static class StationResult {
-        final String station;
-        final String id;
-        final int quality;
-
-        public StationResult(String station, String id, int quality) {
-            this.station = station;
-            this.id = id;
-            this.quality = quality;
-        }
     }
 
     /**
@@ -284,5 +253,31 @@ public class TransportManager implements Card.ProvidesCard {
         card.setDepartures(cur);
         card.apply();
 
+    }
+
+    public static class Departure {
+        final public String servingLine;
+        final public String direction;
+        final public String symbol;
+        final public int countDown;
+
+        public Departure(String servingLine, String direction, String symbol, int countDown) {
+            this.servingLine = servingLine;
+            this.direction = direction;
+            this.symbol = symbol;
+            this.countDown = countDown;
+        }
+    }
+
+    public static class StationResult {
+        final String station;
+        final String id;
+        final int quality;
+
+        public StationResult(String station, String id, int quality) {
+            this.station = station;
+            this.id = id;
+            this.quality = quality;
+        }
     }
 }

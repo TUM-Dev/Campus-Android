@@ -4,13 +4,12 @@ import android.content.Context;
 import android.os.AsyncTask;
 
 import com.google.common.base.Optional;
+import com.google.common.net.UrlEscapers;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -52,16 +51,72 @@ public class TUMRoomFinderRequest {
     private static final String API_URL_COORDINATES = API_BASE_URL + "room/coordinates/";
     private static final String API_URL_AVAILABLE_MAPS = API_BASE_URL + "room/availableMaps/";
     private static final String API_URL_SCHEDULE = API_BASE_URL + "room/scheduleById/";
-
+    private final NetUtils net;
     /**
      * asynchronous task for interactive fetch
      */
     private AsyncTask<String, Void, List<Map<String, String>>> backgroundTask;
 
-    private final NetUtils net;
-
     public TUMRoomFinderRequest(Context context) {
         net = new NetUtils(context);
+    }
+
+    /**
+     * returns the url to get the default map
+     *
+     * @param archId architecture id
+     * @return url of default map
+     */
+    public static String fetchDefaultMap(String archId) {
+        return API_URL_DEFAULT_MAP + encodeUrl(archId);
+    }
+
+    /**
+     * returns the url for any map
+     *
+     * @param archId architecture id
+     * @param mapId  map id
+     * @return url of map
+     */
+    public static String fetchMap(String archId, String mapId) {
+        return API_URL_MAP + encodeUrl(archId) + '/' + encodeUrl(mapId);
+    }
+
+    /**
+     * encodes an url
+     *
+     * @param pUrl input url
+     * @return encoded url
+     */
+    private static String encodeUrl(String pUrl) {
+        String url = pUrl.replace("/", ""); //remove slashes in queries as this breaks the url
+        return UrlEscapers.urlPathSegmentEscaper().escape(url);
+    }
+
+    /**
+     * Converts UTM based coordinates to latitude and longitude based format
+     */
+    private static Geo convertUTMtoLL(double north, double east, double zone) {
+        double d = 0.99960000000000004;
+        double d1 = 6378137;
+        double d2 = 0.0066943799999999998;
+        double d4 = (1 - Math.sqrt(1 - d2)) / (1 + Math.sqrt(1 - d2));
+        double d15 = east - 500000;
+        double d11 = (zone - 1) * 6 - 180 + 3;
+        double d3 = d2 / (1 - d2);
+        double d10 = north / d;
+        double d12 = d10 / (d1 * (1 - d2 / 4 - (3 * d2 * d2) / 64 - (5 * Math.pow(d2, 3)) / 256));
+        double d14 = d12 + ((3 * d4) / 2 - (27 * Math.pow(d4, 3)) / 32) * Math.sin(2 * d12) + ((21 * d4 * d4) / 16 - (55 * Math.pow(d4, 4)) / 32) * Math.sin(4 * d12) + ((151 * Math.pow(d4, 3)) / 96) * Math.sin(6 * d12);
+        double d5 = d1 / Math.sqrt(1 - d2 * Math.sin(d14) * Math.sin(d14));
+        double d6 = Math.tan(d14) * Math.tan(d14);
+        double d7 = d3 * Math.cos(d14) * Math.cos(d14);
+        double d8 = (d1 * (1 - d2)) / Math.pow(1 - d2 * Math.sin(d14) * Math.sin(d14), 1.5);
+        double d9 = d15 / (d5 * d);
+        double d17 = d14 - ((d5 * Math.tan(d14)) / d8) * ((d9 * d9) / 2 - ((5 + 3 * d6 + 10 * d7 - 4 * d7 * d7 - 9 * d3) * Math.pow(d9, 4)) / 24 + ((61 + 90 * d6 + 298 * d7 + 45 * d6 * d6 - 252 * d3 - 3 * d7 * d7) * Math.pow(d9, 6)) / 720);
+        d17 *= 180 / Math.PI;
+        double d18 = (d9 - ((1 + 2 * d6 + d7) * Math.pow(d9, 3)) / 6 + ((5 - 2 * d7 + 28 * d6 - 3 * d7 * d7 + 8 * d3 + 24 * d6 * d6) * Math.pow(d9, 5)) / 120) / Math.cos(d14);
+        d18 = d11 + d18 * 180 / Math.PI;
+        return new Geo(d17, d18);
     }
 
     public void cancelRequest(boolean mayInterruptIfRunning) {
@@ -132,27 +187,6 @@ public class TUMRoomFinderRequest {
         }
 
         return roomsList;
-    }
-
-    /**
-     * returns the url to get the default map
-     *
-     * @param archId architecture id
-     * @return url of default map
-     */
-    public static String fetchDefaultMap(String archId) {
-        return API_URL_DEFAULT_MAP + encodeUrl(archId);
-    }
-
-    /**
-     * returns the url for any map
-     *
-     * @param archId architecture id
-     * @param mapId  map id
-     * @return url of map
-     */
-    public static String fetchMap(String archId, String mapId) {
-        return API_URL_MAP + encodeUrl(archId) + '/' + encodeUrl(mapId);
     }
 
     /**
@@ -251,7 +285,9 @@ public class TUMRoomFinderRequest {
         // meantime
         backgroundTask = new AsyncTask<String, Void, List<Map<String, String>>>() {
 
-            /** property to determine if there is an internet connection */
+            /**
+             * property to determine if there is an internet connection
+             */
             boolean isOnline;
 
             @Override
@@ -289,47 +325,5 @@ public class TUMRoomFinderRequest {
         };
 
         backgroundTask.execute(searchString);
-    }
-
-    /**
-     * encodes an url
-     *
-     * @param pUrl input url
-     * @return encoded url
-     */
-    private static String encodeUrl(String pUrl) {
-        String url = pUrl.replace("/", ""); //remove slashes in queries as this breaks the url
-        try {
-            url = URLEncoder.encode(url, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            Utils.log(e);
-        }
-        return url;
-    }
-
-    /**
-     * Converts UTM based coordinates to latitude and longitude based format
-     */
-    private static Geo convertUTMtoLL(double north, double east, double zone) {
-        double d = 0.99960000000000004;
-        double d1 = 6378137;
-        double d2 = 0.0066943799999999998;
-        double d4 = (1 - Math.sqrt(1 - d2)) / (1 + Math.sqrt(1 - d2));
-        double d15 = east - 500000;
-        double d11 = (zone - 1) * 6 - 180 + 3;
-        double d3 = d2 / (1 - d2);
-        double d10 = north / d;
-        double d12 = d10 / (d1 * (1 - d2 / 4 - (3 * d2 * d2) / 64 - (5 * Math.pow(d2, 3)) / 256));
-        double d14 = d12 + ((3 * d4) / 2 - (27 * Math.pow(d4, 3)) / 32) * Math.sin(2 * d12) + ((21 * d4 * d4) / 16 - (55 * Math.pow(d4, 4)) / 32) * Math.sin(4 * d12) + ((151 * Math.pow(d4, 3)) / 96) * Math.sin(6 * d12);
-        double d5 = d1 / Math.sqrt(1 - d2 * Math.sin(d14) * Math.sin(d14));
-        double d6 = Math.tan(d14) * Math.tan(d14);
-        double d7 = d3 * Math.cos(d14) * Math.cos(d14);
-        double d8 = (d1 * (1 - d2)) / Math.pow(1 - d2 * Math.sin(d14) * Math.sin(d14), 1.5);
-        double d9 = d15 / (d5 * d);
-        double d17 = d14 - ((d5 * Math.tan(d14)) / d8) * ((d9 * d9) / 2 - ((5 + 3 * d6 + 10 * d7 - 4 * d7 * d7 - 9 * d3) * Math.pow(d9, 4)) / 24 + ((61 + 90 * d6 + 298 * d7 + 45 * d6 * d6 - 252 * d3 - 3 * d7 * d7) * Math.pow(d9, 6)) / 720);
-        d17 *= 180 / Math.PI;
-        double d18 = (d9 - ((1 + 2 * d6 + d7) * Math.pow(d9, 3)) / 6 + ((5 - 2 * d7 + 28 * d6 - 3 * d7 * d7 + 8 * d3 + 24 * d6 * d6) * Math.pow(d9, 5)) / 120) / Math.cos(d14);
-        d18 = d11 + d18 * 180 / Math.PI;
-        return new Geo(d17, d18);
     }
 }

@@ -33,10 +33,9 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
+import com.google.common.net.UrlEscapers;
 import com.google.gson.Gson;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -158,6 +157,17 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
             handleRoomBroadcast(extras);
         }
     };
+
+    /**
+     * Gets the text from speech input and returns null if no input was provided
+     */
+    private static CharSequence getMessageText(Intent intent) {
+        Bundle remoteInput = RemoteInput.getResultsFromIntent(intent);
+        if (remoteInput != null) {
+            return remoteInput.getCharSequence(EXTRA_VOICE_REPLY);
+        }
+        return null;
+    }
 
     private void handleRoomBroadcast(GCMChat extras) {
         //If same room just refresh
@@ -288,13 +298,8 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
     }
 
     private void showQRCode() {
-        String url = "http://chart.apis.google.com/chart?cht=qr&chs=500x500&chld=M&choe=UTF-8&chl=";
-        try {
-            url += URLEncoder.encode(currentChatRoom.getName(), "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            Utils.log(e);
-            return;
-        }
+        String url = "http://chart.apis.google.com/chart?cht=qr&chs=500x500&chld=M&choe=UTF-8&chl=" +
+                UrlEscapers.urlPathSegmentEscaper().escape(currentChatRoom.getName());
 
         final ImageView qrCode = new ImageView(this);
         new NetUtils(this).loadAndSetImage(url, qrCode);
@@ -484,17 +489,6 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
                 Utils.log(e, "Failure leaving chat room");
             }
         });
-    }
-
-    /**
-     * Gets the text from speech input and returns null if no input was provided
-     */
-    private static CharSequence getMessageText(Intent intent) {
-        Bundle remoteInput = RemoteInput.getResultsFromIntent(intent);
-        if (remoteInput != null) {
-            return remoteInput.getCharSequence(EXTRA_VOICE_REPLY);
-        }
-        return null;
     }
 
     /**
