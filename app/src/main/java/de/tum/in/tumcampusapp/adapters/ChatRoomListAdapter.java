@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.auxiliary.DateUtils;
@@ -29,7 +30,7 @@ public class ChatRoomListAdapter extends CursorAdapter implements StickyListHead
 
     private final LayoutInflater mInflater;
     private final boolean showDateAndNumber;
-    private final ArrayList<String> filters;
+    private final List<String> filters;
 
     // the layout of the list
     static class ViewHolder {

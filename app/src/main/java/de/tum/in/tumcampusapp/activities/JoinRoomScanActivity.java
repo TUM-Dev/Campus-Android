@@ -4,10 +4,10 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.google.common.collect.ImmutableList;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.auxiliary.Utils;
@@ -21,8 +21,7 @@ public class JoinRoomScanActivity extends Activity implements ZXingScannerView.R
         super.onCreate(state);
 
         mScannerView = new ZXingScannerView(this);   // Programmatically initialize the scanner view
-        List<BarcodeFormat> formats = new ArrayList<>();
-        formats.add(BarcodeFormat.QR_CODE);
+        List<BarcodeFormat> formats = ImmutableList.of(BarcodeFormat.QR_CODE);
         mScannerView.setFormats(formats);
 
         // Set the scanner inside the framelayout view as the content view

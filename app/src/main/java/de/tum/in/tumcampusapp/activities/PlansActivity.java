@@ -12,9 +12,11 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
+import com.google.common.collect.ImmutableList;
+
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.BaseActivity;
@@ -35,7 +37,6 @@ public class PlansActivity extends BaseActivity implements OnItemClickListener {
             {"http://www.mvv-muenchen.de/fileadmin/media/Dateien/3_Tickets_Preise/dokumente/TARIFPLAN_2016-Innenraum.pdf", "Tarifplan.pdf"},
     };
     ProgressBar progressBar;
-    private PlanListAdapter mListAdapter;
     private final Thread downloadFiles = new Thread() {
         public void run() {
             Utils.log("Starting download.");
@@ -59,6 +60,7 @@ public class PlansActivity extends BaseActivity implements OnItemClickListener {
             });
         }
     };
+    private PlanListAdapter mListAdapter;
 
     public PlansActivity() {
         super(R.layout.activity_plans);
@@ -93,17 +95,18 @@ public class PlansActivity extends BaseActivity implements OnItemClickListener {
 
 
         ListView list = (ListView) findViewById(R.id.activity_plans_list_view);
-        ArrayList<PlanListEntry> listMenuEntrySet = new ArrayList<>();
-        listMenuEntrySet.add(new PlanListEntry(R.drawable.plan_mvv_icon, R.string.mvv_fast_train_net, R.string.empty_string, 0));
-        listMenuEntrySet.add(new PlanListEntry(R.drawable.plan_mvv_night_icon, R.string.mvv_nightlines, R.string.empty_string, 0));
-        listMenuEntrySet.add(new PlanListEntry(R.drawable.plan_tram_icon, R.string.mvv_tram, R.string.empty_string, 0));
-        listMenuEntrySet.add(new PlanListEntry(R.drawable.mvv_entire_net_icon, R.string.mvv_entire_net, R.string.empty_string, 0));
-        listMenuEntrySet.add(new PlanListEntry(R.drawable.plan_campus_garching_icon, R.string.campus_garching, R.string.campus_garching_adress, R.drawable.campus_garching));
-        listMenuEntrySet.add(new PlanListEntry(R.drawable.plan_campus_klinikum_icon, R.string.campus_klinikum, R.string.campus_klinikum_adress, R.drawable.campus_klinikum));
-        listMenuEntrySet.add(new PlanListEntry(R.drawable.plan_campus_olympiapark_icon, R.string.campus_olympiapark, R.string.campus_olympiapark_adress, R.drawable.campus_olympiapark));
-        listMenuEntrySet.add(new PlanListEntry(R.drawable.plan_campus_olympiapark_hallenplan_icon, R.string.campus_olympiapark_gyms, R.string.campus_olympiapark_adress, R.drawable.campus_olympiapark_hallenplan));
-        listMenuEntrySet.add(new PlanListEntry(R.drawable.plan_campus_stammgelaende__icon, R.string.campus_main, R.string.campus_main_adress, R.drawable.campus_stammgelaende));
-        listMenuEntrySet.add(new PlanListEntry(R.drawable.plan_campus_weihenstephan_icon, R.string.campus_weihenstephan, R.string.campus_weihenstephan_adress, R.drawable.campus_weihenstephan));
+        List<PlanListEntry> listMenuEntrySet = ImmutableList.<PlanListEntry>builder()
+                .add(new PlanListEntry(R.drawable.plan_mvv_icon, R.string.mvv_fast_train_net, R.string.empty_string, 0))
+                .add(new PlanListEntry(R.drawable.plan_mvv_night_icon, R.string.mvv_nightlines, R.string.empty_string, 0))
+                .add(new PlanListEntry(R.drawable.plan_tram_icon, R.string.mvv_tram, R.string.empty_string, 0))
+                .add(new PlanListEntry(R.drawable.mvv_entire_net_icon, R.string.mvv_entire_net, R.string.empty_string, 0))
+                .add(new PlanListEntry(R.drawable.plan_campus_garching_icon, R.string.campus_garching, R.string.campus_garching_adress, R.drawable.campus_garching))
+                .add(new PlanListEntry(R.drawable.plan_campus_klinikum_icon, R.string.campus_klinikum, R.string.campus_klinikum_adress, R.drawable.campus_klinikum))
+                .add(new PlanListEntry(R.drawable.plan_campus_olympiapark_icon, R.string.campus_olympiapark, R.string.campus_olympiapark_adress, R.drawable.campus_olympiapark))
+                .add(new PlanListEntry(R.drawable.plan_campus_olympiapark_hallenplan_icon, R.string.campus_olympiapark_gyms, R.string.campus_olympiapark_adress, R.drawable.campus_olympiapark_hallenplan))
+                .add(new PlanListEntry(R.drawable.plan_campus_stammgelaende__icon, R.string.campus_main, R.string.campus_main_adress, R.drawable.campus_stammgelaende))
+                .add(new PlanListEntry(R.drawable.plan_campus_weihenstephan_icon, R.string.campus_weihenstephan, R.string.campus_weihenstephan_adress, R.drawable.campus_weihenstephan))
+                .build();
 
         mListAdapter = new PlanListAdapter(this, listMenuEntrySet);
         list.setAdapter(mListAdapter);
