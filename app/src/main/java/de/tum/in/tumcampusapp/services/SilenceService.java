@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.media.AudioManager;
+import android.os.Build;
+import android.provider.Settings;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -84,7 +86,7 @@ public class SilenceService extends IntentService {
         Cursor cursor = calendarManager.getCurrentFromDb();
         Utils.log("Current lectures: " + String.valueOf(cursor.getCount()));
 
-        if (cursor.getCount() != 0) {
+        if (cursor.getCount() != 0 && !isDoNotDisturbMode()) {
             // remember old state if just activated ; in doubt dont change
             if (!Utils.getInternalSettingBool(this, Const.SILENCE_ON, true)) {
                 Utils.setSetting(this, Const.SILENCE_OLD_STATE, am.getRingerMode());
@@ -97,7 +99,6 @@ public class SilenceService extends IntentService {
             String mode = Utils.getSetting(this, "silent_mode_set_to", "0");
             if (mode.equals("0")) {
                 Utils.log("set ringer mode: vibration");
-                // TODO fix SecurityException: Not allowed to change Do Not Disturb state in Android N
                 am.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
             } else {
                 Utils.log("set ringer mode: silent");
@@ -106,7 +107,7 @@ public class SilenceService extends IntentService {
             // refresh when event has ended
             cursor.moveToFirst();
             waitDuration = getWaitDuration(cursor.getString(3));
-        } else if (Utils.getInternalSettingBool(this, Const.SILENCE_ON, false)) {
+        } else if (Utils.getInternalSettingBool(this, Const.SILENCE_ON, false) && !isDoNotDisturbMode()) {
             // default: old state
             Utils.log("set ringer mode to old state");
             am.setRingerMode(Integer.parseInt(
@@ -125,5 +126,22 @@ public class SilenceService extends IntentService {
         cursor.close();
 
         alarmManager.set(AlarmManager.RTC, startTime + waitDuration, pendingIntent);
+    }
+
+    /**
+     * We can't and won't change the ringermodes, if the device is in DoNotDisturb mode. DnD requires
+     * explicit user interaction, so we are out of the game until DnD is off again
+     */
+    private boolean isDoNotDisturbMode() {
+        // see https://stackoverflow.com/questions/31387137/android-detect-do-not-disturb-status
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            try {
+                int mode = Settings.Global.getInt(getContentResolver(), "zen_mode");
+                return mode != 0;
+            } catch (Settings.SettingNotFoundException e) {
+                return false;
+            }
+        }
+        return false;
     }
 }
