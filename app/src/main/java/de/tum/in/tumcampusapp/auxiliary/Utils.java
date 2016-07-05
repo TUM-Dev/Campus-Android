@@ -9,12 +9,13 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.text.Html;
-import android.text.TextUtils;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.google.common.base.Charsets;
+import com.google.common.hash.Hashing;
 import com.google.gson.Gson;
 
 import java.io.BufferedReader;
@@ -23,9 +24,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.math.BigInteger;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -40,6 +38,10 @@ import de.tum.in.tumcampusapp.BuildConfig;
  */
 public final class Utils {
     private static final String LOGGING_REGEX = "[a-zA-Z0-9.]+\\.";
+
+    private Utils() {
+        // Utils is a utility class
+    }
 
     /**
      * Builds a HTML document out of a css file and the body content.
@@ -243,16 +245,7 @@ public final class Utils {
      * @return md5 hash as string
      */
     public static String md5(String str) {
-        try {
-            MessageDigest md = MessageDigest.getInstance("MD5");
-            md.reset();
-            md.update(str.getBytes(Charsets.UTF_8));
-            BigInteger bigInt = new BigInteger(1, md.digest());
-            return bigInt.toString(16);
-        } catch (NoSuchAlgorithmException e) {
-            log(e, str);
-        }
-        return "";
+        return Hashing.md5().hashBytes(str.getBytes(Charsets.UTF_8)).toString();
     }
 
     /**
@@ -335,7 +328,7 @@ public final class Utils {
 
     /**
      * Splits a line from a CSV file into column values
-     * <p>
+     * <p/>
      * e.g. "aaa;aaa";"bbb";1 gets aaa,aaa;bbb;1;
      *
      * @param str CSV line
@@ -483,7 +476,6 @@ public final class Utils {
         return prefs.getString(key, value);
     }
 
-
     /**
      * @return Application's version code from the {@code PackageManager}.
      */
@@ -538,14 +530,12 @@ public final class Utils {
         return "0".equals(Utils.getSetting(context, "background_mode_set_to", "0"));
     }
 
-    public static String arrayListToString(ArrayList<String> array)
-    {
-       return TextUtils.join(",",array);
+    public static String arrayListToString(ArrayList<String> array) {
+        return TextUtils.join(",", array);
     }
 
-    public static String arrayToString(String[] array)
-    {
-        return TextUtils.join(",",array);
+    public static String arrayToString(String[] array) {
+        return TextUtils.join(",", array);
     }
 
     @TargetApi(Build.VERSION_CODES.N)
@@ -554,9 +544,5 @@ public final class Utils {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.N ?
                 Html.fromHtml(source, Html.FROM_HTML_MODE_LEGACY) :
                 Html.fromHtml(source);
-    }
-
-    private Utils() {
-        // Utils is a utility class
     }
 }
