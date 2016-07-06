@@ -76,7 +76,7 @@ public class WizNavChatActivity extends ActivityForLoadingInBackground<Void, Cha
     }
 
     public void onClickTerms(View view) {
-        Uri uri = Uri.parse("https://tumcabe.in.tum.de/landing/chatterms/");
+        Uri uri = Uri.parse(Const.CHATTERMS_URL);
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         startActivity(intent);
     }
@@ -134,10 +134,10 @@ public class WizNavChatActivity extends ActivityForLoadingInBackground<Void, Cha
         if (skip) {
             intent = new Intent(this, WizNavExtrasActivity.class);
         } else {
-            if (!Utils.getInternalSettingBool(this, Const.PRIVATE_KEY_ACTIVE, false)) {
-                intent = new Intent(this, WizNavActivatePublicKeyActivity.class);
-            } else {
+            if (Utils.getInternalSettingBool(this, Const.PRIVATE_KEY_ACTIVE, false)) {
                 intent = new Intent(this, WizNavExtrasActivity.class);
+            } else {
+                intent = new Intent(this, WizNavActivatePublicKeyActivity.class);
             }
         }
         intent.putExtra(Const.TOKEN_IS_SETUP, tokenSetup);

@@ -112,7 +112,9 @@ public class NextLectureCard extends NotificationAwareCard {
                 System.currentTimeMillis(), DateUtils.MINUTE_IN_MILLIS, DateUtils.FORMAT_ABBREV_RELATIVE));
 
         //Add location with link to room finder
-        if (item.location != null && !item.location.isEmpty()) {
+        if (item.location == null || item.location.isEmpty()) {
+            mLocation.setVisibility(View.GONE);
+        } else {
             mLocation.setText(item.location);
             mLocation.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -122,8 +124,6 @@ public class NextLectureCard extends NotificationAwareCard {
                     mContext.startActivity(i);
                 }
             });
-        } else {
-            mLocation.setVisibility(View.GONE);
         }
 
         DateFormat week = new SimpleDateFormat("EEEE, ", Locale.getDefault());
@@ -191,8 +191,6 @@ public class NextLectureCard extends NotificationAwareCard {
             item.location = cur.getString(3);
             if (item.location != null) {
                 item.location = item.location.replaceAll("\\([A-Z0-9\\.]+\\)", "").trim();
-            } else {
-                item.location = null;
             }
             lectures.add(item);
         } while (cur.moveToNext());

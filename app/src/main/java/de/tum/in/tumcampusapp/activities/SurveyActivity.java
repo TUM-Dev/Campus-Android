@@ -406,7 +406,14 @@ public class SurveyActivity extends ProgressActivity {
                 final ArrayList<String> selectedFacIds = new ArrayList<>();
 
 
-                if (!selectedFaculties.isEmpty()) { // In case at least one faculty is selected
+                if (selectedFaculties.isEmpty()) { // if no faculty is selected, add faculties as target upon submitting question(s).
+                    Cursor c = surveyManager.getAllFaculties();
+                    if (c.moveToFirst()) {
+                        do {
+                            selectedFacIds.add(c.getString(c.getColumnIndex("faculty")));
+                        } while (c.moveToNext());
+                    }
+                } else { // In case at least one faculty is selected
                     // Adds the ids of selected faculties by match selected faculty names with fetched faculties names
                     for (int j = 0; j < selectedFaculties.size(); j++) {
                         for (int x = 0; x < fetchedFaculties.size(); x++) {
@@ -417,13 +424,6 @@ public class SurveyActivity extends ProgressActivity {
                                 }
                             }
                         }
-                    }
-                } else { // if no faculty is selected, add faculties as target upon submitting question(s).
-                    Cursor c = surveyManager.getAllFaculties();
-                    if (c.moveToFirst()) {
-                        do {
-                            selectedFacIds.add(c.getString(c.getColumnIndex("faculty")));
-                        } while (c.moveToNext());
                     }
                 }
 
@@ -489,12 +489,12 @@ public class SurveyActivity extends ProgressActivity {
         boolean done = true;
         for (int i = 0; i < numOfQuestionsSpinner.getSelectedItemPosition() + 1; i++) { // Iterates on each questionEditText
             EditText v = (EditText) questionsLayout.findViewWithTag("question" + (i + 1));
-            if (!v.getText().toString().isEmpty()) { // if textfield is not empty, add to questions
-                questions.add(v.getText().toString());
-            } else { // else plausibility check failed
+            if (v.getText().toString().isEmpty()) { // plausibility check failed
                 done = false;
                 questions.clear();
                 break;
+            } else { // textfield is not empty, add to questions
+                questions.add(v.getText().toString());
             }
         }
         if (done) { // if plausibility passed, then save selected faculties as they will be needed upon submitting question

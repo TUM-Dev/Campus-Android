@@ -102,10 +102,10 @@ public class WizNavCheckTokenActivity extends ActivityForLoadingInBackground<Voi
             }
             return null;
         } else {
-            if (!NetUtils.isConnected(this)) {
-                return R.string.no_internet_connection;
-            } else {
+            if (NetUtils.isConnected(this)) {
                 return R.string.token_not_enabled;
+            } else {
+                return R.string.no_internet_connection;
             }
         }
     }

@@ -197,10 +197,10 @@ public final class TUMOnlineRequest<T> {
                         error = context.getString(R.string.dialog_access_token_invalid);
                     } else if (lastError.contains(NO_FUNCTION_RIGHTS)) {
                         error = context.getString(R.string.dialog_no_rights_function);
-                    } else if (!lastError.isEmpty()) {
-                        error = lastError;
-                    } else {
+                    } else if (lastError.isEmpty()) {
                         error = context.getString(R.string.empty_result);
+                    } else {
+                        error = lastError;
                     }
                     listener.onFetchError(error);
                     return;

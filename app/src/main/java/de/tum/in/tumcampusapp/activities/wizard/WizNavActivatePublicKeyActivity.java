@@ -49,7 +49,7 @@ public class WizNavActivatePublicKeyActivity extends ActivityForLoadingInBackgro
     }
 
     public void onClickTerms(View view) {
-        Uri uri = Uri.parse("https://tumcabe.in.tum.de/landing/chatterms/");
+        Uri uri = Uri.parse(Const.CHATTERMS_URL);
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         startActivity(intent);
     }

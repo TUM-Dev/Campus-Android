@@ -89,15 +89,15 @@ public class OpeningHoursDetailFragment extends Fragment implements ViewBinder {
             String remark = c.getString(c.getColumnIndex(Const.REMARK_COLUMN));
             String room = c.getString(c.getColumnIndex(Const.ROOM_COLUMN));
 
-            StringBuilder sb = new StringBuilder(hours + "\n" + address);
+            StringBuilder sb = new StringBuilder(hours + '\n' + address);
             if (!room.isEmpty()) {
                 sb.append(", ").append(room);
             }
             if (!transport.isEmpty()) {
-                sb.append(" (").append(transport).append(")");
+                sb.append(" (").append(transport).append(')');
             }
             if (!remark.isEmpty()) {
-                sb.append("\n").append(remark.replaceAll("\\\\n", "\n"));
+                sb.append('\n').append(remark.replaceAll("\\\\n", "\n"));
             }
             TextView tv = (TextView) view;
             tv.setText(sb.toString());
@@ -109,12 +109,12 @@ public class OpeningHoursDetailFragment extends Fragment implements ViewBinder {
         } else if (view.getId() == R.id.text3) {
             String url = c.getString(c.getColumnIndex(Const.URL_COLUMN));
             TextView tv = (TextView) view;
-            if (!url.isEmpty()) {
+            if (url.isEmpty()) {
+                tv.setVisibility(View.GONE);
+            } else {
                 url = "<a href=\"" + url + "\">" + getString(R.string.website) + "</a>";
                 tv.setMovementMethod(LinkMovementMethod.getInstance());
                 tv.setText(Utils.fromHtml(url));
-            } else {
-                tv.setVisibility(View.GONE);
             }
             return true;
         }

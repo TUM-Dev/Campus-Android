@@ -39,10 +39,12 @@ import de.tum.in.tumcampusapp.notifications.Update;
  */
 public class GcmReceiverService extends GcmListenerService {
 
+    private static final String PAYLOAD = "payload";
+
     /**
      * Called when message is received.
      *
-     * @param from SenderID of the sender.
+     * @param from   SenderID of the sender.
      * @param extras Data bundle containing message data as key/value pairs.
      */
     // [START receive_message]
@@ -51,7 +53,7 @@ public class GcmReceiverService extends GcmListenerService {
         //Check that we have some data and the intent was indeed a gcm message (gcm might be subject to change in the future)
         if (!extras.isEmpty()) {  // has effect of un-parcelling Bundle
             //Legacy messages need to be handled - maybe some data is missing?
-            if (!extras.containsKey("payload") || !extras.containsKey("type")) {
+            if (!extras.containsKey(PAYLOAD) || !extras.containsKey("type")) {
 
                 //Try to match it as a legacy chat notification
                 try {
@@ -67,7 +69,7 @@ public class GcmReceiverService extends GcmListenerService {
                 //Initialize our outputs
                 GenericNotification n = null;
 
-                Utils.logv("Notification recieved: " + extras.toString());
+                Utils.logv("Notification recieved: " + extras);
 
                 //switch on the type as both the type and payload must be present
                 switch (type) { //https://github.com/TCA-Team/TumCampusApp/wiki/GCM-Message-format
@@ -75,13 +77,13 @@ public class GcmReceiverService extends GcmListenerService {
                         TUMCabeClient.getInstance(this).confirm(notification);
                         break;
                     case 1: //Chat
-                        n = new Chat(extras.getString("payload"), this, notification);
+                        n = new Chat(extras.getString(PAYLOAD), this, notification);
                         break;
                     case 2: //Update
-                        n = new Update(extras.getString("payload"), this, notification);
+                        n = new Update(extras.getString(PAYLOAD), this, notification);
                         break;
                     case 3: //Alert
-                        n = new Alarm(extras.getString("payload"), this, notification);
+                        n = new Alarm(extras.getString(PAYLOAD), this, notification);
                         break;
                 }
 
@@ -107,7 +109,7 @@ public class GcmReceiverService extends GcmListenerService {
             NotificationManager mNotificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
             Notification note = n.getNotification();
             if (note != null) {
-                mNotificationManager.notify(n.getNotificationIdentification(), n.getNotification());
+                mNotificationManager.notify(n.getNotificationIdentification(), note);
             }
         }
     }
