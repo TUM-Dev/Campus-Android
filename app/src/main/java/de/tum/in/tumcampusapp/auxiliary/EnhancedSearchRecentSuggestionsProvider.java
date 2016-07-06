@@ -111,7 +111,7 @@ public abstract class EnhancedSearchRecentSuggestionsProvider extends ContentPro
      * call from your own code.
      */
     @Override
-    public int delete(Uri uri, String selection, String[] selectionArgs) {
+    public int delete(Uri uri, String select, String[] selectionArgs) {
         final int length = uri.getPathSegments().size();
         if (length != 1) {
             throw new IllegalArgumentException("Unknown Uri");
@@ -120,7 +120,7 @@ public abstract class EnhancedSearchRecentSuggestionsProvider extends ContentPro
         final String base = uri.getPathSegments().get(0);
         int count;
         if (base.equals(S_SUGGESTIONS)) {
-            selection = selection.replace(S_SUGGESTIONS, S_SUGGESTIONS + mId);
+            String selection = select.replace(S_SUGGESTIONS, S_SUGGESTIONS + mId);
             count = db.delete(S_SUGGESTIONS + mId, selection, selectionArgs);
         } else {
             throw new IllegalArgumentException("Unknown Uri");

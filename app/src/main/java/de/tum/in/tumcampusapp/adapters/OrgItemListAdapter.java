@@ -66,8 +66,9 @@ public class OrgItemListAdapter extends BaseAdapter {
      * get a view in which the TextView elements have the values
      */
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View view, ViewGroup parent) {
         ViewHolder holder;
+        View convertView = view;
         // set up TextView elements if given TextView != null
         if (convertView == null) {
             convertView = mInflater.inflate(R.layout.activity_organisation_listview, parent, false);

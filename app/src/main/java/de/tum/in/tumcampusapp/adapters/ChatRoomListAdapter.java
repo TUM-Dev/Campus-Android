@@ -22,7 +22,7 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
  * This class handles the view output of the results for finding lectures via
  * TUMOnline used in {@link de.tum.in.tumcampusapp.activities.LecturesPersonalActivity}
  * and {@link de.tum.in.tumcampusapp.activities.ChatRoomsActivity}. It
- * implements {@link se.emilsjolander.stickylistheaders.StickyListHeadersAdapter} to
+ * implements {@link StickyListHeadersAdapter} to
  * show semester info as sticky header.
  */
 
@@ -82,13 +82,14 @@ public class ChatRoomListAdapter extends CursorAdapter implements StickyListHead
             holder.tvDozent.setText(cursor.getString(ChatRoomManager.COL_CONTRIBUTOR));
         }
 
-        Utils.logv("members " + cursor.getString(ChatRoomManager.COL_MEMBERS) + " " + cursor.getString(8));
+        Utils.logv("members " + cursor.getString(ChatRoomManager.COL_MEMBERS) + ' ' + cursor.getString(8));
     }
 
     // Generate header view
     @Override
-    public View getHeaderView(int pos, View convertView, ViewGroup parent) {
+    public View getHeaderView(int pos, View view, ViewGroup parent) {
         HeaderViewHolder holder;
+        View convertView = view;
         if (convertView == null) {
             holder = new HeaderViewHolder();
             convertView = mInflater.inflate(R.layout.header, parent, false);
