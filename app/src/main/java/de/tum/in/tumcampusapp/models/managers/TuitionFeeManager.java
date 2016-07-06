@@ -4,8 +4,8 @@ import android.content.Context;
 
 import com.google.common.base.Optional;
 
-import de.tum.in.tumcampusapp.cards.Card;
 import de.tum.in.tumcampusapp.cards.TuitionFeesCard;
+import de.tum.in.tumcampusapp.cards.generic.Card;
 import de.tum.in.tumcampusapp.models.TuitionList;
 import de.tum.in.tumcampusapp.tumonline.TUMOnlineConst;
 import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequest;

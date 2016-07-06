@@ -4,7 +4,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
 import de.tum.in.tumcampusapp.cards.CafeteriaMenuCard;
-import de.tum.in.tumcampusapp.cards.Card;
 import de.tum.in.tumcampusapp.cards.ChatMessagesCard;
 import de.tum.in.tumcampusapp.cards.EduroamCard;
 import de.tum.in.tumcampusapp.cards.FirstUseCard1;
@@ -18,6 +17,7 @@ import de.tum.in.tumcampusapp.cards.RestoreCard;
 import de.tum.in.tumcampusapp.cards.Support;
 import de.tum.in.tumcampusapp.cards.SurveyCard;
 import de.tum.in.tumcampusapp.cards.TuitionFeesCard;
+import de.tum.in.tumcampusapp.cards.generic.Card;
 import de.tum.in.tumcampusapp.models.managers.CardManager;
 
 /**
@@ -75,13 +75,13 @@ public class CardsAdapter extends RecyclerView.Adapter<Card.CardViewHolder> {
 
     @Override
     public int getItemViewType(int position) {
-        return CardManager.getCard(position).getTyp();
+        return CardManager.getCard(position).getType();
     }
 
     @Override
     public long getItemId(int i) {
         Card card = CardManager.getCard(i);
-        return card.getTyp() + card.getId() << 4;
+        return card.getType() + card.getId() << 4;
     }
 
     @Override

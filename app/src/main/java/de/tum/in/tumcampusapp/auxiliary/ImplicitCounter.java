@@ -8,8 +8,8 @@ import com.google.gson.Gson;
 import java.util.Date;
 import java.util.Map;
 
-import de.tum.in.tumcampusapp.cards.Card;
 import de.tum.in.tumcampusapp.cards.NewsCard;
+import de.tum.in.tumcampusapp.cards.generic.Card;
 import de.tum.in.tumcampusapp.models.Statistics;
 import de.tum.in.tumcampusapp.models.TUMCabeClient;
 

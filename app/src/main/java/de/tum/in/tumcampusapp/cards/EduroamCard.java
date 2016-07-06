@@ -13,26 +13,23 @@ import android.view.ViewGroup;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.SetupEduroamActivity;
+import de.tum.in.tumcampusapp.cards.generic.Card;
+import de.tum.in.tumcampusapp.cards.generic.NotificationAwareCard;
 import de.tum.in.tumcampusapp.models.managers.CardManager;
 import de.tum.in.tumcampusapp.models.managers.EduroamManager;
 
 /**
- * Card that can start {@link de.tum.in.tumcampusapp.activities.SetupEduroamActivity}
+ * Card that can start {@link SetupEduroamActivity}
  */
-public class EduroamCard extends Card {
+public class EduroamCard extends NotificationAwareCard {
 
     public EduroamCard(Context context) {
-        super(context, "card_eduroam", false, true);
+        super(CardManager.CARD_EDUROAM, context, "card_eduroam", false, true);
     }
 
     public static Card.CardViewHolder inflateViewHolder(ViewGroup parent) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_eduroam, parent, false);
         return new Card.CardViewHolder(view);
-    }
-
-    @Override
-    public int getTyp() {
-        return CardManager.CARD_EDUROAM;
     }
 
     @Override
@@ -58,7 +55,17 @@ public class EduroamCard extends Card {
     }
 
     @Override
+    public String getTitle() {
+        return mContext.getString(R.string.setup_eduroam);
+    }
+
+    @Override
     public Intent getIntent() {
         return new Intent(mContext, SetupEduroamActivity.class);
+    }
+
+    @Override
+    public int getId() {
+        return 0;
     }
 }

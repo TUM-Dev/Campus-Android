@@ -8,7 +8,6 @@ import java.util.Collection;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.auxiliary.AccessTokenManager;
-import de.tum.in.tumcampusapp.cards.Card;
 import de.tum.in.tumcampusapp.cards.EduroamCard;
 import de.tum.in.tumcampusapp.cards.FirstUseCard1;
 import de.tum.in.tumcampusapp.cards.FirstUseCard2;
@@ -16,6 +15,7 @@ import de.tum.in.tumcampusapp.cards.IkomCard;
 import de.tum.in.tumcampusapp.cards.NoInternetCard;
 import de.tum.in.tumcampusapp.cards.RestoreCard;
 import de.tum.in.tumcampusapp.cards.Support;
+import de.tum.in.tumcampusapp.cards.generic.Card;
 
 /**
  * Card manager, manages inserting, dismissing, updating and displaying of cards
