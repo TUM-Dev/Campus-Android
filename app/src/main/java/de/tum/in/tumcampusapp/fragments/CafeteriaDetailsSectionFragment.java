@@ -1,5 +1,6 @@
 package de.tum.in.tumcampusapp.fragments;
 
+import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -45,6 +46,7 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
      * @param dateStr     Date in yyyy-mm-dd format
      * @param big         True to show big lines
      */
+    @SuppressLint("ShowToast")
     public static List<View> showMenu(LinearLayout rootView, int cafeteriaId, String dateStr, boolean big) {
         // initialize a few often used things
         final Context context = rootView.getContext();

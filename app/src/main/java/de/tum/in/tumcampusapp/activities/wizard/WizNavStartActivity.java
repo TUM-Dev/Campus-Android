@@ -1,5 +1,6 @@
 package de.tum.in.tumcampusapp.activities.wizard;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -87,6 +88,7 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<Void, Bo
             }
 
             // Fill the fetched facultyData into the majorSpinner
+            @SuppressLint("ShowToast")
             @Override
             protected void onPostExecute(String[] majors) {
                 ArrayAdapter<String> adapter = new ArrayAdapter<>(getBaseContext(), android.R.layout.simple_list_item_1, majors);
