@@ -13,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 
+import com.google.common.base.Optional;
 import com.google.gson.Gson;
 
 import java.util.List;
@@ -148,10 +149,11 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 1 && resultCode == RESULT_OK && data != null) {
             String name = data.getStringExtra("name");
-            if (name.charAt(3) == ':')
+            if (name.charAt(3) == ':') {
                 createOrJoinChatRoom(name);
-            else
+            } else {
                 Utils.showToast(this, R.string.invalid_chat_room);
+            }
         }
     }
 
@@ -167,10 +169,11 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
                 .setMessage(R.string.new_chat_room_desc)
                 .setView(input)
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
                     public void onClick(DialogInterface dialog, int whichButton) {
                         String value = input.getText().toString();
                         String randId = Integer.toHexString((int) (Math.random() * 4096));
-                        createOrJoinChatRoom(randId + ":" + value);
+                        createOrJoinChatRoom(randId + ':' + value);
                     }
                 })
                 .setNegativeButton(android.R.string.cancel, null).show();
@@ -181,7 +184,7 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
      * Works asynchronously.
      */
     private void createOrJoinChatRoom(String name) {
-        if(this.currentChatMember == null) {
+        if (this.currentChatMember == null) {
             Utils.showToast(this, getString(R.string.chat_not_setup));
             return;
         }
@@ -194,7 +197,7 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
                 @Override
                 public void success(ChatRoom newlyCreatedChatRoom, Response arg1) {
                     // The POST request is successful: go to room. API should have auto joined it
-                    Utils.logv("Success creating&joining chat room: " + newlyCreatedChatRoom.toString());
+                    Utils.logv("Success creating&joining chat room: " + newlyCreatedChatRoom);
                     currentChatRoom = newlyCreatedChatRoom;
                     manager.join(currentChatRoom);
 
@@ -216,7 +219,7 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
                 @Override
                 public void failure(RetrofitError arg0) {
                     //Something went wrong while joining
-                    Utils.logv("Failure creating/joining chat room - trying to GET it from the server: " + arg0.toString());
+                    Utils.logv("Failure creating/joining chat room - trying to GET it from the server: " + arg0);
                     Utils.showToastOnUIThread(ChatRoomsActivity.this, R.string.activate_key);
                 }
             });
@@ -228,9 +231,9 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
     @Override
     protected Cursor onLoadInBackground(Void... arg) {
         if (!firstLoad) {
-            LecturesSearchRowSet lecturesList = requestHandler.fetch();
-            if (lecturesList != null) {
-                List<LecturesSearchRow> lectures = lecturesList.getLehrveranstaltungen();
+            Optional<LecturesSearchRowSet> lecturesList = requestHandler.fetch();
+            if (lecturesList.isPresent()) {
+                List<LecturesSearchRow> lectures = lecturesList.get().getLehrveranstaltungen();
                 manager.replaceInto(lectures);
             }
         }
@@ -269,17 +272,17 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
      */
     @Override
     public void onItemClick(AdapterView<?> a, View v, int position, long id) {
-        Cursor item = (Cursor) lvMyChatRoomList.getItemAtPosition(position);
-
-        if (firstLoad)
+        if (firstLoad) {
             return;
+        }
+        Cursor item = (Cursor) lvMyChatRoomList.getItemAtPosition(position);
 
         // set bundle for LectureDetails and show it
         Bundle bundle = new Bundle();
         final Intent intent = new Intent(this, ChatActivity.class);
         intent.putExtras(bundle);
 
-        String chatRoomUid = item.getString(ChatRoomManager.COL_SEMESTER_ID) + ":" + item.getString(ChatRoomManager.COL_NAME);
+        String chatRoomUid = item.getString(ChatRoomManager.COL_SEMESTER_ID) + ':' + item.getString(ChatRoomManager.COL_NAME);
         this.createOrJoinChatRoom(chatRoomUid);
     }
 

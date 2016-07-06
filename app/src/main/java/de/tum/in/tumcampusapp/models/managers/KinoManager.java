@@ -3,7 +3,10 @@ package de.tum.in.tumcampusapp.models.managers;
 import android.content.Context;
 import android.database.Cursor;
 
+import com.google.common.base.Optional;
+
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Date;
@@ -51,9 +54,9 @@ public class KinoManager extends AbstractManager {
      * download kino from external interface (JSON)
      *
      * @param force True to force download over normal sync period, else false
-     * @throws Exception
+     * @throws JSONException
      */
-    public void downloadFromExternal(boolean force) throws Exception {
+    public void downloadFromExternal(boolean force) throws JSONException {
 
         if (!force && !SyncManager.needSync(db, this, TIME_TO_SYNC)) {
             return;
@@ -62,17 +65,18 @@ public class KinoManager extends AbstractManager {
         NetUtils net = new NetUtils(mContext);
 
         // download from kino database
-        JSONArray jsonArray = net.downloadJsonArray(KINO_URL + getLastId(), CacheManager.VALIDITY_ONE_DAY, force);
+        Optional<JSONArray> jsonArray = net.downloadJsonArray(KINO_URL + getLastId(), CacheManager.VALIDITY_ONE_DAY, force);
 
-        if (jsonArray == null) {
+        if (!jsonArray.isPresent()) {
             return;
         }
 
+        JSONArray arr = jsonArray.get();
         // write data to database on device
         db.beginTransaction();
         try {
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject obj = jsonArray.getJSONObject(i);
+            for (int i = 0; i < arr.length(); i++) {
+                JSONObject obj = arr.getJSONObject(i);
                 replaceIntoDb(getFromJson(obj));
             }
             SyncManager.replaceIntoDb(db, this);
@@ -89,9 +93,9 @@ public class KinoManager extends AbstractManager {
      *
      * @param json JsonObject from external
      * @return Kino
-     * @throws Exception
+     * @throws JSONException
      */
-    private static Kino getFromJson(JSONObject json) throws Exception {
+    private static Kino getFromJson(JSONObject json) throws JSONException {
         String id = json.getString(Const.JSON_KINO);
         String title = json.getString(Const.JSON_TITLE);
         String year = json.getString(Const.JSON_YEAR);

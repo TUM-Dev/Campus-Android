@@ -9,7 +9,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
 
@@ -18,65 +18,66 @@ import de.tum.in.tumcampusapp.R;
  */
 public class PlanListAdapter extends BaseAdapter {
 
-	public static class ViewHolder {
-		public TextView detail;
-		public ImageView icon;
-		public TextView title;
-	}
+    private final Activity activity;
 
-	private final Activity activity;
-	private LayoutInflater inflater = null;
-	private final ArrayList<PlanListEntry> planList;
+    private final LayoutInflater inflater;
+    private final List<PlanListEntry> planList;
 
-    public PlanListAdapter(Activity activity, ArrayList<PlanListEntry> planList) {
-		this.activity = activity;
-		this.planList = planList;
-		this.inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-	}
+    public static class ViewHolder {
+        public TextView detail;
+        public ImageView icon;
+        public TextView title;
+    }
 
-	@Override
-	public int getCount() {
-		return planList.size();
-	}
+    public PlanListAdapter(Activity activity, List<PlanListEntry> planList) {
+        this.activity = activity;
+        this.planList = planList;
+        this.inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    }
 
-	@Override
-	public Object getItem(int position) {
-		return planList.get(position);
-	}
+    @Override
+    public int getCount() {
+        return planList.size();
+    }
 
-	@Override
-	public long getItemId(int position) {
-		return position;
-	}
+    @Override
+    public Object getItem(int position) {
+        return planList.get(position);
+    }
 
-	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
-		View vi = convertView;
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
 
-		ViewHolder holder;
-		if (convertView == null) {
-			vi = this.inflater.inflate(R.layout.activity_plans_listview, parent, false);
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        View vi = convertView;
 
-			holder = new ViewHolder();
-			holder.icon = (ImageView) vi.findViewById(R.id.list_menu_icon);
-			holder.title = (TextView) vi.findViewById(R.id.list_menu_title);
-			holder.detail = (TextView) vi.findViewById(R.id.list_menu_detail);
-			vi.setTag(holder);
-		} else {
-			holder = (ViewHolder) vi.getTag();
-		}
+        ViewHolder holder;
+        if (convertView == null) {
+            vi = this.inflater.inflate(R.layout.activity_plans_listview, parent, false);
+
+            holder = new ViewHolder();
+            holder.icon = (ImageView) vi.findViewById(R.id.list_menu_icon);
+            holder.title = (TextView) vi.findViewById(R.id.list_menu_title);
+            holder.detail = (TextView) vi.findViewById(R.id.list_menu_detail);
+            vi.setTag(holder);
+        } else {
+            holder = (ViewHolder) vi.getTag();
+        }
 
         PlanListEntry item = planList.get(position);
-		holder.icon.setImageResource(item.imageId);
-		holder.title.setText(activity.getResources().getText(item.titleId));
-        if(item.detailId==R.string.empty_string) {
+        holder.icon.setImageResource(item.imageId);
+        holder.title.setText(activity.getResources().getText(item.titleId));
+        if (item.detailId == R.string.empty_string) {
             holder.detail.setVisibility(View.GONE);
         } else {
             holder.detail.setVisibility(View.VISIBLE);
             holder.detail.setText(activity.getResources().getText(item.detailId));
         }
-		return vi;
-	}
+        return vi;
+    }
 
     public static class PlanListEntry {
         public final int imageId;

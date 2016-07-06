@@ -2,7 +2,8 @@ package de.tum.in.tumcampusapp.auxiliary;
 
 import android.util.Base64;
 
-import java.io.UnsupportedEncodingException;
+import com.google.common.base.Charsets;
+
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
@@ -14,63 +15,61 @@ import java.security.SignatureException;
  * Takes care of handling all unicode juggling and crypto algorithm selection.
  */
 public class RSASigner {
-	/**
-	 * A {@link PrivateKey} instance which will be used to generate the signature.
-	 */
-	private final PrivateKey privateKey;
+    /**
+     * A {@link PrivateKey} instance which will be used to generate the signature.
+     */
+    private final PrivateKey privateKey;
 
-	public RSASigner(PrivateKey privateKey) {
-		this.privateKey = privateKey;
-	}
+    public RSASigner(PrivateKey privateKey) {
+        this.privateKey = privateKey;
+    }
 
-	/**
-	 * Sign the message given as the parameter and return it as a base64 encoded
-	 * {@link String}.
-	 * 
-	 * @param message The message to be encoded
-	 * @return A base64 encoded signature
-	 */
-	public String sign(String message) {
-		Signature signer;
-		try {
-			signer = Signature.getInstance("SHA1WithRSA");
-		} catch (NoSuchAlgorithmException e) {
-			Utils.log(e);
-			return null;
-		}
+    public static Signature getSignatureInstance() {
+        String signature = "SHA1WithRSA";
+        try {
+            return Signature.getInstance(signature);
+        } catch (NoSuchAlgorithmException e) {
+            // We don't support platforms without SHA1WithRSA
+            throw new AssertionError("Signature for " + signature + "could not be instantiated");
+        }
+    }
 
-		try {
-			signer.initSign(privateKey);
-		} catch (InvalidKeyException e) {
-			Utils.log(e);
-			return null;
-		}
+    /**
+     * Sign the message given as the parameter and return it as a base64 encoded
+     * {@link String}.
+     *
+     * @param message The message to be encoded
+     * @return A base64 encoded signature
+     */
+    public String sign(String message) {
+        Signature signer = getSignatureInstance();
 
-		byte[] messageBytes;
-		try {
-			messageBytes = message.getBytes("UTF8");
-		} catch (UnsupportedEncodingException e) {
-			Utils.log(e);
-			return null;
-		}
+        try {
+            signer.initSign(privateKey);
+        } catch (InvalidKeyException e) {
+            Utils.log(e);
+            return null;
+        }
 
-		try {
-			signer.update(messageBytes);
-		} catch (SignatureException e) {
-			Utils.log(e);
-			return null;
-		}
+        byte[] messageBytes = message.getBytes(Charsets.UTF_8);
 
-		byte[] signature;
-		try {
-			signature = signer.sign();
-		} catch (SignatureException e) {
-			Utils.log(e);
-			return null;
-		}
+        try {
+            signer.update(messageBytes);
+        } catch (SignatureException e) {
+            Utils.log(e);
+            return null;
+        }
+
+        byte[] signature;
+        try {
+            signature = signer.sign();
+        } catch (SignatureException e) {
+            Utils.log(e);
+            return null;
+        }
 
         return Base64.encodeToString(
                 signature,
                 Base64.DEFAULT);
-	}
+    }
 }

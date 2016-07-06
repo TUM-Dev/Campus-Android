@@ -5,13 +5,13 @@ import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.util.Pair;
 
+import com.google.common.base.Optional;
+import com.google.common.net.UrlEscapers;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -89,6 +89,8 @@ public class TransportManager implements Card.ProvidesCard {
     private static final String LANGUAGE = "language=";
     private static final String STATION_SEARCH_QUERY = "name_sf=";
     private static final String DEPARTURE_QUERY_STATION = "name_dm=";
+    private static final String POINTS = "points";
+    private static final String ERROR_INVALID_JSON = "invalid JSON from mvv ";
 
     static {
         StringBuilder stationSearch = new StringBuilder(MVV_API_BASE);
@@ -114,23 +116,25 @@ public class TransportManager implements Card.ProvidesCard {
      * @return List of departures
      */
     public static List<Departure> getDeparturesFromExternal(Context context, String stationID) {
+        List<Departure> result = new ArrayList<>();
         try {
             String language = LANGUAGE + Locale.getDefault().getLanguage();
             // ISO-8859-1 is needed for mvv
-            String departureQuery = DEPARTURE_QUERY_STATION + URLEncoder.encode(stationID, "ISO-8859-1");
+            String departureQuery = DEPARTURE_QUERY_STATION + UrlEscapers.urlPathSegmentEscaper().escape(stationID);
 
             String query = DEPARTURE_QUERY_CONST + language + '&' + departureQuery;
             Utils.logv(query);
+            NetUtils net = new NetUtils(context);
 
             // Download departures
-            JSONArray departures = NetUtils.downloadJson(context, query).optJSONArray("departureList");
-            if (departures == null) {
-                return null;
+            Optional<JSONObject> departures = net.downloadJson(query);
+            if (!departures.isPresent()) {
+                return result;
             }
 
-            ArrayList<Departure> result = new ArrayList<>(departures.length());
-            for (int i = 0; i < departures.length(); i++) {
-                JSONObject departure = departures.getJSONObject(i);
+            JSONArray arr = departures.get().getJSONArray("departureList");
+            for (int i = 0; i < arr.length(); i++) {
+                JSONObject departure = arr.getJSONObject(i);
                 JSONObject servingLine = departure.getJSONObject("servingLine");
                 result.add(new Departure(
                         servingLine.getString("name"),
@@ -147,29 +151,11 @@ public class TransportManager implements Card.ProvidesCard {
                     return lhs.countDown - rhs.countDown;
                 }
             });
-            return result;
-
-        } catch (UnsupportedEncodingException e) {
-            throw new Error(e); // Programming error. Fail hard.
-        } catch (IOException | JSONException e) {
+        } catch (JSONException e) {
             //We got no valid JSON, mvg-live is probably bugged
-            Utils.log(e, "invalid JSON from mvv " + DEPARTURE_QUERY);
-            return null;
+            Utils.log(e, ERROR_INVALID_JSON + DEPARTURE_QUERY);
         }
-    }
-
-    public static class Departure {
-        final public String servingLine;
-        final public String direction;
-        final public String symbol;
-        final public int countDown;
-
-        public Departure(String servingLine, String direction, String symbol, int countDown) {
-            this.servingLine = servingLine;
-            this.direction = direction;
-            this.symbol = symbol;
-            this.countDown = countDown;
-        }
+        return result;
     }
 
     /**
@@ -178,36 +164,37 @@ public class TransportManager implements Card.ProvidesCard {
      * @param prefix Name prefix
      * @return Database Cursor (name, _id)
      */
-    public static Cursor getStationsFromExternal(Context context, String prefix) {
+    public static Optional<Cursor> getStationsFromExternal(Context context, String prefix) {
         try {
             String language = LANGUAGE + Locale.getDefault().getLanguage();
             // ISO-8859-1 is needed for mvv
-            String stationQuery = STATION_SEARCH_QUERY + URLEncoder.encode(prefix, "ISO-8859-1");
+            String stationQuery = STATION_SEARCH_QUERY + UrlEscapers.urlPathSegmentEscaper().escape(prefix);
 
             String query = STATION_SEARCH_CONST + language + '&' + stationQuery;
             Utils.log(query);
+            NetUtils net = new NetUtils(context);
+            List<StationResult> results = new ArrayList<>();
 
-            // Download possinble stations
-            JSONObject jsonObj = NetUtils.downloadJson(context, query);
-            if (jsonObj == null) {
-                return null;
+            // Download possible stations
+            Optional<JSONObject> jsonObj = net.downloadJsonObject(query, CacheManager.VALIDITY_DO_NOT_CACHE, true);
+            if (!jsonObj.isPresent()) {
+                return Optional.absent();
             }
 
-            List<StationResult> results = new ArrayList<>();
             MatrixCursor mc = new MatrixCursor(new String[]{Const.NAME_COLUMN, Const.ID_COLUMN});
-            JSONObject stopfinder = jsonObj.getJSONObject("stopFinder");
+            JSONObject stopfinder = jsonObj.get().getJSONObject("stopFinder");
 
             // Possible values for points: Object, Array or null
-            JSONArray pointsArray = stopfinder.optJSONArray("points");
+            JSONArray pointsArray = stopfinder.optJSONArray(POINTS);
             if (pointsArray != null) {
                 for (int i = 0; i < pointsArray.length(); i++) {
                     JSONObject point = pointsArray.getJSONObject(i);
                     addStationResult(results, point);
                 }
             } else {
-                JSONObject points = stopfinder.optJSONObject("points");
+                JSONObject points = stopfinder.optJSONObject(POINTS);
                 if (points == null) {
-                    return null;
+                    return Optional.absent();
                 }
                 JSONObject point = points.getJSONObject("point");
                 addStationResult(results, point);
@@ -224,13 +211,11 @@ public class TransportManager implements Card.ProvidesCard {
             for (StationResult result : results) {
                 mc.addRow(new String[]{result.station, result.id});
             }
-            return mc;
-        } catch (UnsupportedEncodingException e) {
-            throw new Error(e); // Programming error. Fail hard.
-        } catch (JSONException | IOException e) {
-            Utils.log(e, "invalid JSON from mvv " + STATION_SEARCH);
+            return Optional.of((Cursor) mc);
+        } catch (JSONException e) {
+            Utils.log(e, ERROR_INVALID_JSON + STATION_SEARCH);
         }
-        return null;
+        return Optional.absent();
     }
 
     private static void addStationResult(Collection<StationResult> results, JSONObject point) throws JSONException {
@@ -239,18 +224,6 @@ public class TransportManager implements Card.ProvidesCard {
                 point.getJSONObject("ref").getString("id"),
                 point.getInt("quality")
         ));
-    }
-
-    public static class StationResult {
-        final String station;
-        final String id;
-        final int quality;
-
-        public StationResult(String station, String id, int quality) {
-            this.station = station;
-            this.id = id;
-            this.quality = quality;
-        }
     }
 
     /**
@@ -280,5 +253,31 @@ public class TransportManager implements Card.ProvidesCard {
         card.setDepartures(cur);
         card.apply();
 
+    }
+
+    public static class Departure {
+        final public String servingLine;
+        final public String direction;
+        final public String symbol;
+        final public int countDown;
+
+        public Departure(String servingLine, String direction, String symbol, int countDown) {
+            this.servingLine = servingLine;
+            this.direction = direction;
+            this.symbol = symbol;
+            this.countDown = countDown;
+        }
+    }
+
+    public static class StationResult {
+        final String station;
+        final String id;
+        final int quality;
+
+        public StationResult(String station, String id, int quality) {
+            this.station = station;
+            this.id = id;
+            this.quality = quality;
+        }
     }
 }

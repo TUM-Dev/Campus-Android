@@ -13,10 +13,11 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.google.common.base.Optional;
+
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.ActivityForLoadingInBackground;
@@ -30,21 +31,21 @@ import de.tum.in.tumcampusapp.tumonline.TUMRoomFinderRequest;
 /**
  * Displays the map regarding the searched room.
  */
-public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<Void, File> implements DialogInterface.OnClickListener {
+public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<Void, Optional<File>> implements DialogInterface.OnClickListener {
 
     public static final String EXTRA_ROOM_INFO = "roomInfo";
     public static final String EXTRA_LOCATION = "location";
 
     private ImageViewTouchFragment mImage;
 
-    private boolean mapsLoaded = false;
+    private boolean mapsLoaded;
     private TUMRoomFinderRequest request;
     private NetUtils net;
 
     private Bundle roomInfo;
     private String mapId = "";
-    private ArrayList<HashMap<String, String>> mapsList;
-    private boolean infoLoaded = false;
+    private List<Map<String, String>> mapsList;
+    private boolean infoLoaded;
     private Fragment fragment;
 
     public RoomFinderDetailsActivity() {
@@ -153,8 +154,8 @@ public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<Vo
         new Thread(new Runnable() {
             @Override
             public void run() {
-                final Geo geo = request.fetchCoordinates(roomInfo.getString(TUMRoomFinderRequest.KEY_ARCH_ID));
-                if (geo == null) {
+                final Optional<Geo> geo = request.fetchCoordinates(roomInfo.getString(TUMRoomFinderRequest.KEY_ARCH_ID));
+                if (!geo.isPresent()) {
                     Utils.showToastOnUIThread(RoomFinderDetailsActivity.this, R.string.no_map_available);
                     return;
                 }
@@ -162,7 +163,7 @@ public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<Vo
                     @Override
                     public void run() {
                         // Build get directions intent and see if some app can handle it
-                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("google.navigation:q=" + geo.getLatitude() + "," + geo.getLongitude()));
+                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("google.navigation:q=" + geo.get().getLatitude() + ',' + geo.get().getLongitude()));
                         List<ResolveInfo> pkgAppsList = getApplicationContext().getPackageManager().queryIntentActivities(intent, PackageManager.GET_RESOLVED_FILTER);
 
                         // If some app can handle this intent start it
@@ -185,14 +186,14 @@ public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<Vo
     }
 
     @Override
-    protected File onLoadInBackground(Void... arg) {
+    protected Optional<File> onLoadInBackground(Void... arg) {
         String archId = roomInfo.getString(TUMRoomFinderRequest.KEY_ARCH_ID);
         String url;
 
         if (mapId == null || mapId.isEmpty()) {
-            url = request.fetchDefaultMap(archId);
+            url = TUMRoomFinderRequest.fetchDefaultMap(archId);
         } else {
-            url = request.fetchMap(archId, mapId);
+            url = TUMRoomFinderRequest.fetchMap(archId, mapId);
         }
 
         return net.downloadImage(url);
@@ -200,12 +201,12 @@ public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<Vo
 
 
     @Override
-    protected void onLoadFinished(File result) {
-        if (result == null) {
-            if (!NetUtils.isConnected(this)) {
-                showNoInternetLayout();
-            } else {
+    protected void onLoadFinished(Optional<File> result) {
+        if (!result.isPresent()) {
+            if (NetUtils.isConnected(this)) {
                 showErrorLayout();
+            } else {
+                showNoInternetLayout();
             }
             return;
         }
@@ -213,7 +214,7 @@ public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<Vo
         supportInvalidateOptionsMenu();
 
         //Update the fragment
-        mImage = ImageViewTouchFragment.newInstance(result);
+        mImage = ImageViewTouchFragment.newInstance(result.get());
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, mImage).commit();
 
         if (getSupportActionBar() != null) {

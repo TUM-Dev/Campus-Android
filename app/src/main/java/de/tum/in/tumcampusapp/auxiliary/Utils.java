@@ -9,20 +9,21 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.text.Html;
-import android.text.TextUtils;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.google.common.base.Charsets;
+import com.google.common.hash.Hashing;
 import com.google.gson.Gson;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.math.BigInteger;
-import java.security.MessageDigest;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -36,6 +37,11 @@ import de.tum.in.tumcampusapp.BuildConfig;
  * Class for common helper functions used by a lot of classes
  */
 public final class Utils {
+    private static final String LOGGING_REGEX = "[a-zA-Z0-9.]+\\.";
+
+    private Utils() {
+        // Utils is a utility class
+    }
 
     /**
      * Builds a HTML document out of a css file and the body content.
@@ -48,10 +54,10 @@ public final class Utils {
         String header = "<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"de\" lang=\"de\">" +
                 "<head><meta name=\"viewport\" content=\"width=device-width\" />" +
                 "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" /></head>";
-        css = "<style type=\"text/css\">" + css + "</style>";
-        body = "<body>" + body + "</body>";
+        String resultCss = "<style type=\"text/css\">" + css + "</style>";
+        String resultBody = "<body>" + body + "</body>";
         String footer = "</html>";
-        return header + css + body + footer;
+        return header + resultCss + resultBody + footer;
     }
 
     /**
@@ -184,8 +190,8 @@ public final class Utils {
     public static void log(Exception e) {
         StringWriter sw = new StringWriter();
         e.printStackTrace(new PrintWriter(sw));
-        String s = Thread.currentThread().getStackTrace()[3].getClassName().replaceAll("[a-zA-Z0-9.]+\\.", "");
-        Log.e(s, e + "\n" + sw.toString());
+        String s = Thread.currentThread().getStackTrace()[3].getClassName().replaceAll(LOGGING_REGEX, "");
+        Log.e(s, e + "\n" + sw);
     }
 
     /**
@@ -200,8 +206,8 @@ public final class Utils {
     public static void log(Exception e, String message) {
         StringWriter sw = new StringWriter();
         e.printStackTrace(new PrintWriter(sw));
-        String s = Thread.currentThread().getStackTrace()[3].getClassName().replaceAll("[a-zA-Z0-9.]+\\.", "");
-        Log.e(s, e + " " + message + "\n" + sw.toString());
+        String s = Thread.currentThread().getStackTrace()[3].getClassName().replaceAll(LOGGING_REGEX, "");
+        Log.e(s, e + " " + message + '\n' + sw);
     }
 
     /**
@@ -214,7 +220,7 @@ public final class Utils {
         if (!BuildConfig.DEBUG) {
             return;
         }
-        String s = Thread.currentThread().getStackTrace()[3].getClassName().replaceAll("[a-zA-Z0-9.]+\\.", "");
+        String s = Thread.currentThread().getStackTrace()[3].getClassName().replaceAll(LOGGING_REGEX, "");
         Log.d(s, message);
     }
 
@@ -228,7 +234,7 @@ public final class Utils {
         if (!BuildConfig.DEBUG) {
             return;
         }
-        String s = Thread.currentThread().getStackTrace()[3].getClassName().replaceAll("[a-zA-Z0-9.]+\\.", "");
+        String s = Thread.currentThread().getStackTrace()[3].getClassName().replaceAll(LOGGING_REGEX, "");
         Log.v(s, message);
     }
 
@@ -239,16 +245,7 @@ public final class Utils {
      * @return md5 hash as string
      */
     public static String md5(String str) {
-        try {
-            MessageDigest md = MessageDigest.getInstance("MD5");
-            md.reset();
-            md.update(str.getBytes());
-            BigInteger bigInt = new BigInteger(1, md.digest());
-            return bigInt.toString(16);
-        } catch (Exception e) {
-            log(e, str);
-        }
-        return "";
+        return Hashing.md5().hashBytes(str.getBytes(Charsets.UTF_8)).toString();
     }
 
     /**
@@ -260,14 +257,17 @@ public final class Utils {
     public static List<String[]> readCsv(InputStream fin) {
         List<String[]> list = new ArrayList<>();
         try {
-            BufferedReader in = new BufferedReader(new InputStreamReader(fin, "ISO-8859-1"));
-            String reader;
-            while ((reader = in.readLine()) != null) {
-                list.add(splitCsvLine(reader));
+            BufferedReader in = new BufferedReader(new InputStreamReader(fin, Charsets.ISO_8859_1));
+            try {
+                String reader;
+                while ((reader = in.readLine()) != null) {
+                    list.add(splitCsvLine(reader));
+                }
+            } finally {
+                in.close();
             }
-            in.close();
-        } catch (Exception e) {
-            log(e, "");
+        } catch (IOException e) {
+            log(e);
         }
         return list;
     }
@@ -322,7 +322,7 @@ public final class Utils {
      * @param context The activity where the toast is shown
      * @param msg     The toast message
      */
-    public static void showToast(Context context, String msg) {
+    public static void showToast(Context context, CharSequence msg) {
         Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
     }
 
@@ -334,7 +334,7 @@ public final class Utils {
      * @param str CSV line
      * @return String[] with CSV column values
      */
-    private static String[] splitCsvLine(String str) {
+    private static String[] splitCsvLine(CharSequence str) {
         StringBuilder result = new StringBuilder();
         boolean open = false;
         for (int i = 0; i < str.length(); i++) {
@@ -344,7 +344,7 @@ public final class Utils {
                 continue;
             }
             if (open && c == ';') {
-                result.append(",");
+                result.append(',');
             } else {
                 result.append(c);
             }
@@ -476,7 +476,6 @@ public final class Utils {
         return prefs.getString(key, value);
     }
 
-
     /**
      * @return Application's version code from the {@code PackageManager}.
      */
@@ -528,17 +527,15 @@ public final class Utils {
     }
 
     private static boolean isBackgroundServiceAlwaysEnabled(Context context) {
-        return Utils.getSetting(context, "background_mode_set_to", "0").equals("0");
+        return "0".equals(Utils.getSetting(context, "background_mode_set_to", "0"));
     }
 
-    public static String arrayListToString(ArrayList<String> array)
-    {
-       return TextUtils.join(",",array);
+    public static String arrayListToString(ArrayList<String> array) {
+        return TextUtils.join(",", array);
     }
 
-    public static String arrayToString(String[] array)
-    {
-        return TextUtils.join(",",array);
+    public static String arrayToString(String[] array) {
+        return TextUtils.join(",", array);
     }
 
     @TargetApi(Build.VERSION_CODES.N)

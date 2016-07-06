@@ -38,8 +38,9 @@ public class StartSyncReceiver extends BroadcastReceiver {
         final boolean backgroundServicePermitted = Utils.isBackgroundServicePermitted(context);
 
         // Set Alarm for next update, if background service is enabled
-        if (backgroundServicePermitted)
+        if (backgroundServicePermitted) {
             setAlarm(context);
+        }
 
         // Start BackgroundService
         if (launch || backgroundServicePermitted) {

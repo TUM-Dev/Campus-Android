@@ -7,8 +7,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.tumonline.TUMRoomFinderRequest;
@@ -19,36 +19,36 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
  */
 public class RoomFinderListAdapter extends BaseAdapter implements StickyListHeadersAdapter {
 
+    private final List<Map<String, String>> data;
+    private final LayoutInflater inflater;
+
     static class ViewHolder {
-		TextView tvRoomTitle;
+        TextView tvRoomTitle;
         TextView tvBuildingTitle;
-	}
+    }
 
-    private final ArrayList<HashMap<String, String>> data;
-	private static LayoutInflater inflater;
+    public RoomFinderListAdapter(Activity activity, List<Map<String, String>> d) {
+        data = d;
+        inflater = LayoutInflater.from(activity.getApplicationContext());
+    }
 
-	public RoomFinderListAdapter(Activity activity, ArrayList<HashMap<String, String>> d) {
-		data = d;
-		inflater = LayoutInflater.from(activity.getApplicationContext());
-	}
+    @Override
+    public int getCount() {
+        return data.size();
+    }
 
-	@Override
-	public int getCount() {
-		return data.size();
-	}
+    @Override
+    public Object getItem(int position) {
+        return data.get(position);
+    }
 
-	@Override
-	public Object getItem(int position) {
-		return data.get(position);
-	}
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
 
-	@Override
-	public long getItemId(int position) {
-		return position;
-	}
-
-	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.list_roomfinder_item, parent, false);
@@ -61,13 +61,13 @@ public class RoomFinderListAdapter extends BaseAdapter implements StickyListHead
             holder = (ViewHolder) convertView.getTag();
         }
 
-		HashMap<String, String> room = data.get(position);
+        Map<String, String> room = data.get(position);
 
-		// Setting all values in listView
-		holder.tvRoomTitle.setText(room.get(TUMRoomFinderRequest.KEY_ROOM_TITLE));
+        // Setting all values in listView
+        holder.tvRoomTitle.setText(room.get(TUMRoomFinderRequest.KEY_ROOM_TITLE));
         holder.tvBuildingTitle.setText(room.get(TUMRoomFinderRequest.KEY_BUILDING_TITLE));
-		return convertView;
-	}
+        return convertView;
+    }
 
     // Generate header view
     @Override
@@ -83,7 +83,7 @@ public class RoomFinderListAdapter extends BaseAdapter implements StickyListHead
         }
 
         //set header text as first char in name
-        HashMap<String, String> room = data.get(position);
+        Map<String, String> room = data.get(position);
         String headerText = room.get(TUMRoomFinderRequest.KEY_CAMPUS_TITLE);
         holder.text.setText(headerText);
         return convertView;
@@ -92,18 +92,11 @@ public class RoomFinderListAdapter extends BaseAdapter implements StickyListHead
     @Override
     public long getHeaderId(int i) {
         String headerText = data.get(i).get(TUMRoomFinderRequest.KEY_CAMPUS_TITLE);
-        /*
-        if(headerText.equals("Garching-Hochbrück"))
-            return 'X';
-        if(headerText.equals("Sonstiges"))
-            return 'Z';
-            */
 
-        if(headerText == null){
+        if (headerText == null) {
             return 'Z';
         }
         return headerText.hashCode();
-        //return data.get(i).get(TUMRoomFinderRequest.KEY_CAMPUS_ID).charAt(0);
     }
 
     static class HeaderViewHolder {

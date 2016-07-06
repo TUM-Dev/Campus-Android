@@ -31,10 +31,10 @@ import retrofit.client.Response;
  * This provides methods to authenticate this app installation with the tumcabe server and other instances requiring a pki
  */
 public class AuthenticationManager {
-    private final static String algorithm = "RSA";
-    private final static int rsaKeySize = 1024;
-    private static String uniqueID = null;
-    private Context mContext;
+    private final static String ALGORITHM = "RSA";
+    private final static int RSA_KEY_SIZE = 1024;
+    private static String uniqueID;
+    private final Context mContext;
 
     public AuthenticationManager(Context c) {
         mContext = c;
@@ -43,6 +43,7 @@ public class AuthenticationManager {
     /**
      * Gets an unique id that identifies this device
      * should only reset after a reinstall or wiping of the settings
+     *
      * @return Unique device id
      */
     public static synchronized String getDeviceID(Context context) {
@@ -56,9 +57,27 @@ public class AuthenticationManager {
         return uniqueID;
     }
 
+    public static KeyPairGenerator getKeyPairGeneratorInstance() {
+        try {
+            return KeyPairGenerator.getInstance(ALGORITHM);
+        } catch (NoSuchAlgorithmException e) {
+            // We don't support platforms without RSA
+            throw new AssertionError("KeyPairGenerator for " + ALGORITHM + "could not be instantiated");
+        }
+    }
+
+    public static KeyFactory getKeyFactoryInstance() {
+        try {
+            return KeyFactory.getInstance(ALGORITHM);
+        } catch (NoSuchAlgorithmException e) {
+            // We don't support platforms without RSA
+            throw new AssertionError("KeyFactory for " + ALGORITHM + "could not be instantiated");
+        }
+    }
 
     /**
      * Get the private key as string
+     *
      * @return
      * @throws NoPrivateKey
      */
@@ -72,6 +91,7 @@ public class AuthenticationManager {
 
     /**
      * Gets the public key as string
+     *
      * @return
      * @throws NoPublicKey
      */
@@ -91,8 +111,8 @@ public class AuthenticationManager {
     private PrivateKey getPrivateKey() throws NoPrivateKey {
         byte[] privateKeyBytes = Base64.decode(this.getPrivateKeyString(), Base64.DEFAULT);
         try {
-            return KeyFactory.getInstance("RSA").generatePrivate(new PKCS8EncodedKeySpec(privateKeyBytes));
-        } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+            return getKeyFactoryInstance().generatePrivate(new PKCS8EncodedKeySpec(privateKeyBytes));
+        } catch (InvalidKeySpecException e) {
             Utils.log(e);
         }
         return null;
@@ -100,6 +120,7 @@ public class AuthenticationManager {
 
     /**
      * Sign a message with the currently stored private key
+     *
      * @param data String to be signed
      * @return signature used to verify this request
      * @throws NoPrivateKey
@@ -115,7 +136,7 @@ public class AuthenticationManager {
      * @return true if a private key is present
      */
     public boolean generatePrivateKey(ChatMember member) {
-        if(this.generatePrivateKey()) {
+        if (this.generatePrivateKey()) {
             try {
                 TUMCabeClient.getInstance(mContext).uploadPublicKey(member.getId(), new ChatPublicKey(this.getPublicKeyString()));
                 return true;
@@ -151,32 +172,26 @@ public class AuthenticationManager {
         this.clearKeys();
 
         // If the key is not in shared preferences, a new generate key-pair
-        try {
-            KeyPair keyPair = this.generateKeyPair();
+        KeyPair keyPair = this.generateKeyPair();
 
-            //In order to store the preferences we need to encode them as base64 string
-            String publicKeyString = this.keyToBase64(keyPair.getPublic().getEncoded());
-            String privateKeyString = this.keyToBase64(keyPair.getPrivate().getEncoded());
-            this.saveKeys(privateKeyString, publicKeyString);
+        //In order to store the preferences we need to encode them as base64 string
+        String publicKeyString = this.keyToBase64(keyPair.getPublic().getEncoded());
+        String privateKeyString = this.keyToBase64(keyPair.getPrivate().getEncoded());
+        this.saveKeys(privateKeyString, publicKeyString);
 
-            //New keys, need to re-upload
-            this.uploadKey(publicKeyString);
-            return true;
-        } catch (NoSuchAlgorithmException e) {
-            Utils.log(e);
-            this.clearKeys();
-        }
-
-        return false;
+        //New keys, need to re-upload
+        this.uploadKey(publicKeyString);
+        return true;
     }
 
     /**
      * Try to upload the public key to the server and remember that state
+     *
      * @param publicKey
      */
-    private void uploadKey(String publicKey){
+    private void uploadKey(String publicKey) {
         //If we already uploaded it we don't need to redo that
-        if(Utils.getInternalSettingBool(mContext, Const.PUBLIC_KEY_UPLOADED, false)){
+        if (Utils.getInternalSettingBool(mContext, Const.PUBLIC_KEY_UPLOADED, false)) {
             this.tryToUploadGcmToken();
             return;
         }
@@ -211,7 +226,7 @@ public class AuthenticationManager {
         }
     }
 
-    private void tryToUploadGcmToken(){
+    private void tryToUploadGcmToken() {
         // Check device for Play Services APK. If check succeeds, proceed with GCM registration.
         // Can only be done after the public key has been uploaded
         if (Utils.getInternalSettingBool(mContext, Const.PUBLIC_KEY_UPLOADED, false) && GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(mContext) == ConnectionResult.SUCCESS) {
@@ -222,21 +237,22 @@ public class AuthenticationManager {
 
     /**
      * Convert a byte array to a more manageable base64 string to store it in the preferences
+     *
      * @param key
      * @return
      */
-    private String keyToBase64(byte[] key){
+    private String keyToBase64(byte[] key) {
         return Base64.encodeToString(key, Base64.DEFAULT);
     }
 
     /**
-     * Generates a keypair with the given algorithm & size
+     * Generates a keypair with the given ALGORITHM & size
+     *
      * @return
-     * @throws NoSuchAlgorithmException
      */
-    private KeyPair generateKeyPair() throws NoSuchAlgorithmException {
-        KeyPairGenerator keyGen = KeyPairGenerator.getInstance(AuthenticationManager.algorithm);
-        keyGen.initialize(AuthenticationManager.rsaKeySize);
+    private KeyPair generateKeyPair() {
+        KeyPairGenerator keyGen = getKeyPairGeneratorInstance();
+        keyGen.initialize(AuthenticationManager.RSA_KEY_SIZE);
         return keyGen.generateKeyPair();
     }
 
@@ -252,8 +268,8 @@ public class AuthenticationManager {
     /**
      * Reset all keys generated - this should actually never happen
      */
-    private void clearKeys(){
-        this.saveKeys("","");
+    private void clearKeys() {
+        this.saveKeys("", "");
         Utils.setInternalSetting(mContext, Const.PUBLIC_KEY_UPLOADED, false);
     }
 }

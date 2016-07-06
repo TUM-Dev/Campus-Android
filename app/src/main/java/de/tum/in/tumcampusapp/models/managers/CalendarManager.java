@@ -14,6 +14,8 @@ import android.os.Build;
 import android.provider.CalendarContract;
 import android.support.v4.app.ActivityCompat;
 
+import com.google.common.base.Optional;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -35,7 +37,7 @@ import de.tum.in.tumcampusapp.models.Geo;
  * Calendar Manager, handles database stuff, external imports
  */
 public class CalendarManager extends AbstractManager implements Card.ProvidesCard {
-    private static final String[] projection = new String[]{"_id", "name"};
+    private static final String[] projection = {"_id", "name"};
 
     private static final int TIME_TO_SYNC_CALENDAR = 604800; // 1 week
 
@@ -124,12 +126,14 @@ public class CalendarManager extends AbstractManager implements Card.ProvidesCar
         db.execSQL("DELETE FROM calendar");
     }
 
-    void replaceIntoDb(CalendarRow row) throws Exception {
-        if (row.getNr().length() == 0)
-            throw new Exception("Invalid id.");
+    void replaceIntoDb(CalendarRow row) {
+        if (row.getNr().isEmpty()) {
+            throw new IllegalArgumentException("Invalid id.");
+        }
 
-        if (row.getTitle().length() == 0)
-            throw new Exception("Invalid lecture Title.");
+        if (row.getTitle().isEmpty()) {
+            throw new IllegalArgumentException("Invalid lecture Title.");
+        }
 
         db.execSQL("REPLACE INTO calendar (nr, status, url, title, "
                         + "description, dtstart, dtend, location) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
@@ -294,18 +298,18 @@ public class CalendarManager extends AbstractManager implements Card.ProvidesCar
                     "GROUP BY c.location", null);
 
             // Retrieve geo from room name
-            if(cur.moveToFirst()) {
+            if (cur.moveToFirst()) {
                 do {
                     String location = cur.getString(0);
-                    if(location != null && !location.isEmpty()) {
-                        Geo geo = locationManager.roomLocationStringToGeo(location);
-                        if (geo != null) {
-                            Utils.logv("inserted "+location+" "+geo);
+                    if (location != null && !location.isEmpty()) {
+                        Optional<Geo> geo = locationManager.roomLocationStringToGeo(location);
+                        if (geo.isPresent()) {
+                            Utils.logv("inserted " + location + ' ' + geo);
                             db.execSQL("REPLACE INTO room_locations (title, latitude, longitude) VALUES (?, ?, ?)",
-                                    new String[]{location, geo.getLatitude(), geo.getLongitude()});
+                                    new String[]{location, geo.get().getLatitude(), geo.get().getLongitude()});
                         }
                     }
-                } while(cur.moveToNext());
+                } while (cur.moveToNext());
             }
             cur.close();
 

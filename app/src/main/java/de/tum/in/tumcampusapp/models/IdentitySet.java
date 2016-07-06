@@ -13,8 +13,9 @@ public class IdentitySet {
 
 	@Override
 	public String toString() {
-		if(ids==null || ids.size()==0)
-		     return null;
+		if (ids == null || ids.isEmpty()) {
+			return null;
+		}
 		return ids.get(0).toString();
 	}
 }

@@ -17,7 +17,6 @@ import de.tum.in.tumcampusapp.cards.SurveyCard;
 import de.tum.in.tumcampusapp.models.Faculty;
 import de.tum.in.tumcampusapp.models.Question;
 import de.tum.in.tumcampusapp.models.TUMCabeClient;
-import de.tum.in.tumcampusapp.trace.Util;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -108,6 +107,7 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
                     db.delete("openQuestions", "question = ?", new String[]{c.getString(c.getColumnIndex("question"))});
                 }
             } while (c.moveToNext());
+            c.close();
         }
     }
 
@@ -302,7 +302,7 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
      *
      * @throws Exception
      */
-    public void downloadFacultiesFromExternal() throws Exception {
+    public void downloadFacultiesFromExternal() {
         ArrayList<Faculty> faculties = TUMCabeClient.getInstance(mContext).getFaculties();
 
         db.beginTransaction();
@@ -340,6 +340,7 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
+            c.close();
             db.endTransaction();
         }
     }
@@ -406,7 +407,7 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
         cv.put("text", q.getText());
         cv.put("created", q.getCreated());
         cv.put("end", q.getEnd());
-        cv.put("targetFac",TextUtils.join(",",q.getFacultiesOfOpenQuestions()));
+        cv.put("targetFac", TextUtils.join(",", q.getFacultiesOfOpenQuestions()));
 
 
         // In case of no votes

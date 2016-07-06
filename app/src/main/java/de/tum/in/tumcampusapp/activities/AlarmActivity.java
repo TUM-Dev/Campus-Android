@@ -9,7 +9,6 @@ import android.widget.TextView;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.BaseActivity;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
-import de.tum.in.tumcampusapp.models.GCMAlert;
 import de.tum.in.tumcampusapp.models.GCMNotification;
 
 /**
@@ -44,7 +43,7 @@ public class AlarmActivity extends BaseActivity {
 
     private void processIntent(Intent intent) {
         GCMNotification notification = (GCMNotification) intent.getSerializableExtra("info");
-        GCMAlert alert = (GCMAlert) intent.getSerializableExtra("alert"); //Currently only has the silent flag, don't need it atm
+        //GCMAlert alert = (GCMAlert) intent.getSerializableExtra("alert"); //Currently only has the silent flag, don't need it atm
 
         Utils.log(notification.toString());
 

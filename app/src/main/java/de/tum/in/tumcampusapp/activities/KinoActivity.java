@@ -1,7 +1,6 @@
 package de.tum.in.tumcampusapp.activities;
 
 import android.database.Cursor;
-import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.widget.RelativeLayout;
 
@@ -16,32 +15,24 @@ import de.tum.in.tumcampusapp.models.managers.KinoManager;
  */
 public class KinoActivity extends ActivityForDownloadingExternal {
 
-    private KinoManager km;
-    private ViewPager mpager;
-    private KinoAdapter kinoAdapter;
     private Cursor cursor;
 
-    public KinoActivity(){
+    public KinoActivity() {
         super(Const.KINO, R.layout.activity_kino);
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState){
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    protected void onStart(){
+    protected void onStart() {
         super.onStart();
 
-        km = new KinoManager(this);
+        KinoManager km = new KinoManager(this);
         cursor = km.getAllFromDb();
 
-        if (cursor.getCount() > 0){
+        if (cursor.getCount() > 0) {
 
             // set up ViewPager and adapter
-            mpager = (ViewPager) findViewById(R.id.pager);
-            kinoAdapter = new KinoAdapter(getSupportFragmentManager(), cursor);
+            ViewPager mpager = (ViewPager) findViewById(R.id.pager);
+            KinoAdapter kinoAdapter = new KinoAdapter(getSupportFragmentManager(), cursor);
             mpager.setAdapter(kinoAdapter);
 
         } else {
@@ -52,7 +43,7 @@ public class KinoActivity extends ActivityForDownloadingExternal {
     }
 
     @Override
-    public void onDestroy(){
+    public void onDestroy() {
         super.onDestroy();
         cursor.close();
     }

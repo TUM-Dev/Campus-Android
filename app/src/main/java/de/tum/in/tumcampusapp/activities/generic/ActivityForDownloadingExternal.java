@@ -55,7 +55,7 @@ public abstract class ActivityForDownloadingExternal extends ProgressActivity {
             }
 
             String action = intent.getStringExtra(Const.ACTION_EXTRA);
-            if (action.length() != 0) {
+            if (!action.isEmpty()) {
                 Utils.logv("Broadcast received  <" + action + ">");
                 if (action.equals(Const.COMPLETED)) {
                     showLoadingEnded();

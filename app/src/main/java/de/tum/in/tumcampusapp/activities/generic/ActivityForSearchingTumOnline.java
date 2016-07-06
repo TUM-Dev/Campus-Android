@@ -17,13 +17,17 @@ import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequestFetchListener;
  * TUMOnline and implements a rich user feedback with error progress and token
  * related layouts. Generic class parameter specifies the type of data returned by TumOnline.
  */
-public abstract class ActivityForSearchingTumOnline<T> extends ActivityForSearching implements TUMOnlineRequestFetchListener<T>, SwipeRefreshLayout.OnRefreshListener {
+public abstract class ActivityForSearchingTumOnline<T> extends ActivityForSearching implements TUMOnlineRequestFetchListener<T> {
 
-	/** The method which should be invoked by the TUmOnline Fetcher */
-	private final TUMOnlineConst<T> method;
+    /**
+     * The method which should be invoked by the TUmOnline Fetcher
+     */
+    private final TUMOnlineConst<T> method;
 
-    /** Default layouts for user interaction */
-	protected TUMOnlineRequest<T> requestHandler;
+    /**
+     * Default layouts for user interaction
+     */
+    protected TUMOnlineRequest<T> requestHandler;
 
     /**
      * Standard constructor for ActivityForSearchingTumOnline.
@@ -31,16 +35,15 @@ public abstract class ActivityForSearchingTumOnline<T> extends ActivityForSearch
      * If the Activity should support Pull-To-Refresh it can also contain a
      * {@link SwipeRefreshLayout} named ptr_layout
      *
-     * @param method A identifier specifying what kind of data should be fetched from TumOnline
+     * @param method   A identifier specifying what kind of data should be fetched from TumOnline
      * @param layoutId Resource id of the xml layout that should be used to inflate the activity
-     * @param auth Authority for search suggestions declared in manifest file
-     * @param minLen Minimum text length that has to be entered by the user before a search quest can be submitted
-     *
+     * @param auth     Authority for search suggestions declared in manifest file
+     * @param minLen   Minimum text length that has to be entered by the user before a search quest can be submitted
      */
     public ActivityForSearchingTumOnline(TUMOnlineConst<T> method, int layoutId, String auth, int minLen) {
         super(layoutId, auth, minLen);
         this.method = method;
-	}
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +56,7 @@ public abstract class ActivityForSearchingTumOnline<T> extends ActivityForSearch
      * Starts fetching data from TumOnline in background
      * {@link #onLoadFinished(Object)} gets called if data was fetched successfully.
      * If an error occurred it is handled by {@link ActivityForSearchingTumOnline}.
-     * */
+     */
     protected void requestFetch() {
         requestFetch(false);
     }
@@ -64,17 +67,18 @@ public abstract class ActivityForSearchingTumOnline<T> extends ActivityForSearch
      * If an error occurred it is handled by {@link ActivityForSearchingTumOnline}.
      *
      * @param force force reload
-     * */
+     */
     void requestFetch(boolean force) {
         String accessToken = PreferenceManager.getDefaultSharedPreferences(this).getString(Const.ACCESS_TOKEN, null);
-        if (accessToken != null) {
-            Utils.logv("TUMOnline token is <" + accessToken + ">");
-            showLoadingStart();
-            requestHandler.setForce(force);
-            requestHandler.fetchInteractive(this, this);
-        } else {
+        if (accessToken == null) {
             showNoTokenLayout();
+            return;
         }
+        Utils.logv("TUMOnline token is <" + accessToken + ">");
+        showLoadingStart();
+        requestHandler.setForce(force);
+        requestHandler.fetchInteractive(this, this);
+
     }
 
     @Override
@@ -86,14 +90,15 @@ public abstract class ActivityForSearchingTumOnline<T> extends ActivityForSearch
 
     /**
      * Gets called when fetching data from TumOnline was successful
+     *
      * @param result Data from TumOnline
      */
     protected abstract void onLoadFinished(T result);
 
-	@Override
-	public void onNoInternetError() {
-		showNoInternetLayout();
-	}
+    @Override
+    public void onNoInternetError() {
+        showNoInternetLayout();
+    }
 
     @Override
     protected void onDestroy() {
@@ -102,14 +107,14 @@ public abstract class ActivityForSearchingTumOnline<T> extends ActivityForSearch
     }
 
     @Override
-	public void onFetchCancelled() {
-		finish();
-	}
+    public void onFetchCancelled() {
+        finish();
+    }
 
-	@Override
-	public void onFetchError(String errorReason) {
+    @Override
+    public void onFetchError(String errorReason) {
         showFailedTokenLayout(errorReason);
-	}
+    }
 
     @Override
     public void onRefresh() {

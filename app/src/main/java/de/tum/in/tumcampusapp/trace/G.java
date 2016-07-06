@@ -34,23 +34,27 @@ package de.tum.in.tumcampusapp.trace;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-public class G {
-    // Since the exception handler doesn't have access to the context, or anything really, the library prepares these values for when the handler needs them.
-    public static String filesPath = null;
-    public static String appVersion = "unknown";
-    public static String appPackage = "unknown";
-    public static int appVersionCode = -1;
-    public static String tag = "TCA Error Reporting";
-    public static String androidVersion = null;
-    public static String phoneModel = null;
-    public static String deviceId = "unknown";
-
+public final class G {
+    public static final String UNKNOWN = "unknown";
+    public static final Boolean BUG_REPORT_DEFAULT = true;
+    public static final String TAG = "TCA Error Reporting";
     public static final int MAX_TRACES = 5;
 
-    public static String traceVersion = "1.1";
+    // Since the exception handler doesn't have access to the context, or anything really, the library prepares these values for when the handler needs them.
+    public static String filesPath;
+    public static String appVersion = UNKNOWN;
+    public static String appPackage = UNKNOWN;
+    public static int appVersionCode = -1;
+    public static String androidVersion;
 
-    public static Context context = null;
+    public static String phoneModel;
 
-    public static SharedPreferences preferences = null;
-    public static Boolean bugReportDefault = true;
+    public static String deviceId = UNKNOWN;
+
+    public static Context context;
+    public static SharedPreferences preferences;
+
+    private G() {
+        // G is a utility class
+    }
 }

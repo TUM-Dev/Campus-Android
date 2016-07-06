@@ -26,10 +26,12 @@ public class FavoriteDishService extends IntentService {
     public FavoriteDishService() {
         super(FAVORITEDISH_SERVICE);
     }
+
     @Override
     public void onCreate() {
         super.onCreate();
     }
+
     @Override
     public void onDestroy() { super.onDestroy(); }
     @Override

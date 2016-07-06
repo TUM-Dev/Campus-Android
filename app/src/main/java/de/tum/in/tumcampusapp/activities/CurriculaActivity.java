@@ -9,11 +9,14 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.common.base.Optional;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Hashtable;
+import java.util.HashMap;
+import java.util.Map;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.ActivityForLoadingInBackground;
@@ -24,13 +27,13 @@ import de.tum.in.tumcampusapp.models.managers.CacheManager;
 /**
  * Activity to fetch and display the curricula of different study programs.
  */
-public class CurriculaActivity extends ActivityForLoadingInBackground<Void,JSONArray> implements OnItemClickListener {
+public class CurriculaActivity extends ActivityForLoadingInBackground<Void, Optional<JSONArray>> implements OnItemClickListener {
     public static final String NAME = "name";
     public static final String URL = "url";
 
     public static final String CURRICULA_URL = "https://tumcabe.in.tum.de/Api/curricula";
 
-    private Hashtable<String, String> options;
+    private Map<String, String> options;
     private ArrayAdapter<String> arrayAdapter;
     private NetUtils net;
 
@@ -54,27 +57,28 @@ public class CurriculaActivity extends ActivityForLoadingInBackground<Void,JSONA
     }
 
     @Override
-    protected JSONArray onLoadInBackground(Void... arg) {
+    protected Optional<JSONArray> onLoadInBackground(Void... arg) {
         return net.downloadJsonArray(CURRICULA_URL, CacheManager.VALIDITY_ONE_MONTH, false);
     }
 
     @Override
-    protected void onLoadFinished(JSONArray jsonData) {
-        if(jsonData==null) {
-            if(!NetUtils.isConnected(this)) {
-                showNoInternetLayout();
-            } else {
+    protected void onLoadFinished(Optional<JSONArray> jsonData) {
+        if (!jsonData.isPresent()) {
+            if (NetUtils.isConnected(this)) {
                 showErrorLayout();
+            } else {
+                showNoInternetLayout();
             }
             return;
         }
+        JSONArray arr = jsonData.get();
         try {
-            options = new Hashtable<>();
-            for (int i = 0; i < jsonData.length(); i++) {
-                JSONObject item = jsonData.getJSONObject(i);
+            options = new HashMap<>();
+            for (int i = 0; i < arr.length(); i++) {
+                JSONObject item = arr.getJSONObject(i);
 
                 arrayAdapter.add(item.getString("name"));
-                options.put(item.getString("name"),item.getString("url"));
+                options.put(item.getString("name"), item.getString("url"));
             }
         } catch (JSONException e) {
             Utils.log(e);

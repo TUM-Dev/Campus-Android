@@ -24,8 +24,16 @@ import de.tum.in.tumcampusapp.models.LectureAppointmentsRow;
 public class LectureAppointmentsListAdapter extends BaseAdapter {
 
     // list of Appointments to one lecture
-    private static List<LectureAppointmentsRow> appointmentList;
+    private List<LectureAppointmentsRow> appointmentList;
     private final LayoutInflater mInflater;
+    // date formats for the day output
+    private final DateFormat endHoursOutput = SimpleDateFormat.getTimeInstance();
+    private final DateFormat startDateOutput = SimpleDateFormat.getDateTimeInstance();
+    private final DateFormat endDateOutput = SimpleDateFormat.getDateTimeInstance();
+    // parse dates
+    // this is the template for the date in the xml file
+    private final SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.US);
+
 
     public LectureAppointmentsListAdapter(Context context, List<LectureAppointmentsRow> results) {
         appointmentList = results;
@@ -48,8 +56,9 @@ public class LectureAppointmentsListAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View view, ViewGroup parent) {
         ViewHolder holder;
+        View convertView = view;
         if (convertView == null) {
             convertView = mInflater.inflate(R.layout.activity_lecturesappointments_listview, parent, false);
 
@@ -75,14 +84,9 @@ public class LectureAppointmentsListAdapter extends BaseAdapter {
             }
             holder.tvTerminBetreff.setText(line2);
 
-            // zeitdarstellung setzen
-            // parse dates
-            // this is the template for the date in the xml file
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.US);
+            Calendar start = Calendar.getInstance();
+            Calendar ende = Calendar.getInstance();
             try {
-
-                Calendar start = Calendar.getInstance();
-                Calendar ende = Calendar.getInstance();
                 start.setTime(formatter.parse(lvItem.getBeginn_datum_zeitpunkt()));
                 ende.setTime(formatter.parse(lvItem.getEnde_datum_zeitpunkt()));
 
@@ -91,19 +95,14 @@ public class LectureAppointmentsListAdapter extends BaseAdapter {
                 Calendar cstart = Calendar.getInstance();
                 cstart.setTime(start.getTime());
 
-                // date formats for the day output
-                DateFormat endHoursOutput = SimpleDateFormat.getTimeInstance();
-                DateFormat StartDateOutput = SimpleDateFormat.getDateTimeInstance();
-                DateFormat EndDateOutput = SimpleDateFormat.getDateTimeInstance();
-
                 // output if same day: we only show the date once
                 String output;
                 if (start.get(Calendar.MONTH) == ende.get(Calendar.MONTH) &&
                         start.get(Calendar.DATE) == ende.get(Calendar.DATE)) {
-                    output = StartDateOutput.format(start.getTime()) + " - " + endHoursOutput.format(ende.getTime());
+                    output = startDateOutput.format(start.getTime()) + " - " + endHoursOutput.format(ende.getTime());
                 } else {
                     // show it normally
-                    output = StartDateOutput.format(start.getTime()) + " - " + EndDateOutput.format(ende.getTime());
+                    output = startDateOutput.format(start.getTime()) + " - " + endDateOutput.format(ende.getTime());
                 }
 
                 // grey it, if in past

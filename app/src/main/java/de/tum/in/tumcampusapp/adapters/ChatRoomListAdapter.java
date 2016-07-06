@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.auxiliary.DateUtils;
@@ -27,6 +28,10 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 
 public class ChatRoomListAdapter extends CursorAdapter implements StickyListHeadersAdapter {
 
+    private final LayoutInflater mInflater;
+    private final boolean showDateAndNumber;
+    private final List<String> filters;
+
     // the layout of the list
     static class ViewHolder {
         TextView tvDozent;
@@ -34,11 +39,8 @@ public class ChatRoomListAdapter extends CursorAdapter implements StickyListHead
         TextView tvMembers;
         TextView tvLastmsg;
         LinearLayout llAdditionalInfo;
-    }
 
-    private final ArrayList<String> filters;
-    private final LayoutInflater mInflater;
-    private final boolean showDateAndNumber;
+    }
 
     // constructor
     public ChatRoomListAdapter(Context context, Cursor results, int mode) {
@@ -46,7 +48,7 @@ public class ChatRoomListAdapter extends CursorAdapter implements StickyListHead
 
         this.mInflater = LayoutInflater.from(context);
         this.filters = new ArrayList<>();
-        this.showDateAndNumber = (mode == 1);
+        this.showDateAndNumber = mode == 1;
     }
 
     @Override
@@ -76,7 +78,7 @@ public class ChatRoomListAdapter extends CursorAdapter implements StickyListHead
             holder.tvMembers.setText(cursor.getString(ChatRoomManager.COL_MEMBERS));
             holder.tvLastmsg.setText(DateUtils.getTimeOrDay(cursor.getString(8), context));
             holder.llAdditionalInfo.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             holder.tvDozent.setText(cursor.getString(ChatRoomManager.COL_CONTRIBUTOR));
         }
 
@@ -98,8 +100,9 @@ public class ChatRoomListAdapter extends CursorAdapter implements StickyListHead
         //set header text as first char in name
         Cursor item = (Cursor) getItem(pos);
         String semester = item.getString(ChatRoomManager.COL_SEMESTER);
-        if (semester.isEmpty())
+        if (semester.isEmpty()) {
             semester = mContext.getString(R.string.my_chat_rooms);
+        }
         holder.text.setText(semester);
         return convertView;
     }

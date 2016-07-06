@@ -1,0 +1,47 @@
+apply plugin: 'pmd'
+
+task pmd(type: Pmd) {
+    description 'Run PMD'
+
+    ruleSetFiles = files("../pmd-ruleset.xml")
+    ruleSets = []
+
+    source 'src'
+    include '**/*.java'
+    exclude '**/gen/**'
+
+    reports {
+        xml.enabled = true
+        html.enabled = false
+    }
+
+    ignoreFailures = true
+}
+
+afterEvaluate {
+    def variants = plugins.hasPlugin('com.android.application') ?
+            android.applicationVariants : android.libraryVariants
+
+    variants.each { variant ->
+        def task = tasks.create("pmd${variant.name.capitalize()}", Pmd)
+
+        task.ruleSetFiles = files("../pmd-ruleset.xml")
+        task.ruleSets = []
+
+        task.source 'src'
+        task.include '**/*.java'
+        task.exclude '**/gen/**'
+
+        task.reports {
+            xml.enabled = false
+            html.enabled = true
+        }
+
+        task.ignoreFailures = true
+
+        def variantCompile = variant.javaCompile
+
+        task.dependsOn(variantCompile)
+        tasks.getByName('check').dependsOn(task)
+    }
+}

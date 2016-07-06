@@ -7,6 +7,8 @@ import android.graphics.Bitmap;
 import android.support.v4.util.LruCache;
 import android.widget.ImageView;
 
+import com.google.common.base.Optional;
+
 import java.io.File;
 import java.util.Collections;
 import java.util.List;
@@ -102,8 +104,9 @@ public class CacheManager extends AbstractManager {
         if (cur.moveToFirst()) {
             do {
                 String imgUrl = cur.getString(1);
-                if (!imgUrl.isEmpty() && !imgUrl.equals("null"))
+                if (!imgUrl.isEmpty() && !imgUrl.equals("null")) {
                     net.downloadImage(imgUrl);
+                }
             } while (cur.moveToNext());
         }
         cur.close();
@@ -113,8 +116,9 @@ public class CacheManager extends AbstractManager {
         if (cur.moveToFirst()) {
             do {
                 String imgUrl = cur.getString(4);
-                if (!imgUrl.equals("null"))
+                if (!imgUrl.equals("null")) {
                     net.downloadImage(imgUrl);
+                }
             } while (cur.moveToNext());
         }
         cur.close();
@@ -125,8 +129,9 @@ public class CacheManager extends AbstractManager {
         if (cur.moveToFirst()) {
             do {
                 String imgUrl = cur.getString(cur.getColumnIndex(Const.JSON_COVER));
-                if (!imgUrl.equals("null"))
+                if (!imgUrl.equals("null")) {
                     net.downloadImage(imgUrl);
+                }
             } while (cur.moveToNext());
         }
         cur.close();
@@ -162,10 +167,10 @@ public class CacheManager extends AbstractManager {
         requestHandler.setParameter("pMonateVor", "0");
         requestHandler.setParameter("pMonateNach", "3");
         if (shouldRefresh(requestHandler.getRequestURL())) {
-            CalendarRowSet set = requestHandler.fetch();
-            if (set != null) {
+            Optional<CalendarRowSet> set = requestHandler.fetch();
+            if (set.isPresent()) {
                 CalendarManager calendarManager = new CalendarManager(mContext);
-                calendarManager.importCalendar(set);
+                calendarManager.importCalendar(set.get());
                 CalendarManager.QueryLocationsService.loadGeo(mContext);
             }
         }
@@ -178,7 +183,7 @@ public class CacheManager extends AbstractManager {
      * @param url Url from which data was cached
      * @return Data if valid version was found, null if no data is available
      */
-    public String getFromCache(String url) {
+    public Optional<String> getFromCache(String url) {
         String result = null;
 
         try {
@@ -191,7 +196,7 @@ public class CacheManager extends AbstractManager {
         } catch (SQLiteException e) {
             Utils.log(e);
         }
-        return result;
+        return Optional.fromNullable(result);
     }
 
     /**
@@ -222,8 +227,9 @@ public class CacheManager extends AbstractManager {
      * @param data result
      */
     public void addToCache(String url, String data, int validity, int typ) {
-        if (validity == VALIDITY_DO_NOT_CACHE)
+        if (validity == VALIDITY_DO_NOT_CACHE) {
             return;
+        }
         db.execSQL("REPLACE INTO cache (url, data, validity, max_age, typ) " +
                         "VALUES (?, ?, datetime('now','+" + (validity / 2) + " seconds'), " +
                         "datetime('now','+" + validity + " seconds'), ?)",
@@ -233,36 +239,23 @@ public class CacheManager extends AbstractManager {
     /**
      * this function allows us to import all lecture items from TUMOnline
      */
-    void importLecturesFromTUMOnline() {
+    public void importLecturesFromTUMOnline() {
         // get my lectures
         TUMOnlineRequest<LecturesSearchRowSet> requestHandler = new TUMOnlineRequest<>(TUMOnlineConst.LECTURES_PERSONAL, mContext);
-        if (!shouldRefresh(requestHandler.getRequestURL()))
+        if (!shouldRefresh(requestHandler.getRequestURL())) {
             return;
+        }
 
-        LecturesSearchRowSet lecturesList = requestHandler.fetch();
-        if (lecturesList == null)
+        Optional<LecturesSearchRowSet> lecturesList = requestHandler.fetch();
+        if (!lecturesList.isPresent()) {
             return;
-        List<LecturesSearchRow> lectures = lecturesList.getLehrveranstaltungen();
-        if (lectures == null)
+        }
+        List<LecturesSearchRow> lectures = lecturesList.get().getLehrveranstaltungen();
+        if (lectures == null) {
             return;
+        }
         ChatRoomManager manager = new ChatRoomManager(mContext);
         manager.replaceInto(lectures);
-    /*    if (myLecturesList == null)
-            return;
-
-        // get schedule for my lectures
-        for (int i = 0; i < myLecturesList.getLehrveranstaltungen().size(); i++) {
-            LecturesSearchRow currentLecture = myLecturesList.getLehrveranstaltungen().get(i);
-
-            // now, get appointments for each lecture
-            TUMOnlineRequest<LectureAppointmentsRowSet> req = new TUMOnlineRequest<LectureAppointmentsRowSet>(TUMOnlineConst.LECTURES_APPOINTMENTS, mContext);
-            req.setParameter("pLVNr", currentLecture.getStp_sp_nr());
-            req.fetch();
-
-            TUMOnlineRequest<LectureDetailsRowSet> req2 = new TUMOnlineRequest<LectureDetailsRowSet>(TUMOnlineConst.LECTURES_DETAILS, mContext);
-            req2.setParameter("pLVNr", currentLecture.getStp_sp_nr());
-            req2.fetch();
-        }*/
     }
 
     public void clearCache() {

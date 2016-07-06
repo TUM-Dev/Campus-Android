@@ -3,54 +3,54 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:weightSum="100"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:weightSum="100">
 
     <TextView
         android:id="@+id/line_name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_weight="70"
         android:ellipsize="none"
         android:maxLines="5"
-        android:singleLine="false"
+        android:paddingBottom="5dp"
         android:paddingLeft="10dp"
         android:paddingRight="3dp"
         android:paddingTop="10dp"
-        android:paddingBottom="5dp"
         android:scrollHorizontally="false"
-        android:textSize="16sp"
-        android:layout_weight="70"/>
+        android:singleLine="false"
+        android:textSize="16sp" />
 
     <TextView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="5"/>
+        android:layout_weight="5" />
 
     <TextView
         android:id="@+id/line_price"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_weight="10"
         android:minWidth="50dp"
         android:paddingTop="10dp"
         android:textColor="@color/sections_green"
-        android:textSize="16sp"
-        android:layout_weight="10"/>
+        android:textSize="16sp" />
+
     <TextView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="5"/>
+        android:layout_weight="5" />
 
 
     <ToggleButton
         android:id="@+id/favortieDish"
-        android:button="@android:drawable/btn_star"
-        android:background="@android:color/transparent"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:textOn=""
-        android:textOff=""
-        android:layout_centerVertical="true"
+        android:layout_weight="10"
+        android:background="@android:color/transparent"
+        android:button="@android:drawable/btn_star"
         android:paddingTop="10dp"
-        android:layout_weight="10"/>
+        android:textOff=""
+        android:textOn="" />
 
 </LinearLayout>

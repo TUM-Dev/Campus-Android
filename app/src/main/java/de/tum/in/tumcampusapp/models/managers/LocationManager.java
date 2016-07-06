@@ -12,11 +12,12 @@ import android.support.v4.content.ContextCompat;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.common.base.Optional;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
@@ -79,7 +80,7 @@ public class LocationManager {
 
         // If location services are not available use default location if set
         final String defaultCampus = Utils.getSetting(mContext, Const.DEFAULT_CAMPUS, "G");
-        if (!defaultCampus.equals("X")) {
+        if (!"X".equals(defaultCampus)) {
             for (int i = 0; i < campusShort.length; i++) {
                 if (campusShort[i].equals(defaultCampus)) {
                     Location location = new Location("defaultLocation");
@@ -99,8 +100,9 @@ public class LocationManager {
      */
     int getCurrentCampus() {
         Location loc = getCurrentLocation();
-        if (loc == null)
+        if (loc == null) {
             return -1;
+        }
         return getCampusFromLocation(loc);
     }
 
@@ -254,8 +256,9 @@ public class LocationManager {
      */
     int getCurrentOrNextCampus() {
         int campus = getCurrentCampus();
-        if (campus != -1)
+        if (campus != -1) {
             return campus;
+        }
         return getNextCampus();
     }
 
@@ -275,7 +278,7 @@ public class LocationManager {
 
         // Get nearest cafeteria
         List<Cafeteria> list = getCafeterias();
-        if (list != null && list.size() > 0) {
+        if (list != null && !list.isEmpty()) {
             return list.get(0).id;
         } else {
             return -1;
@@ -313,20 +316,21 @@ public class LocationManager {
      * Translates room title to Geo
      * HINT: Don't call from UI thread
      *
-     * @param loc Room title
+     * @param roomTitle Room title
      * @return Location or null on failure
      */
-    public Geo roomLocationStringToGeo(String loc) {
+    public Optional<Geo> roomLocationStringToGeo(String roomTitle) {
+        String loc = roomTitle;
         TUMRoomFinderRequest requestHandler = new TUMRoomFinderRequest(mContext);
         if (loc.contains("(")) {
             loc = loc.substring(0, loc.indexOf('(')).trim();
         }
 
-        ArrayList<HashMap<String, String>> request = requestHandler.fetchRooms(loc);
-        if (request != null && request.size() > 0) {
+        List<Map<String, String>> request = requestHandler.fetchRooms(loc);
+        if (request != null && !request.isEmpty()) {
             String room = request.get(0).get(TUMRoomFinderRequest.KEY_ARCH_ID);
             return requestHandler.fetchCoordinates(room);
         }
-        return null;
+        return Optional.absent();
     }
 }

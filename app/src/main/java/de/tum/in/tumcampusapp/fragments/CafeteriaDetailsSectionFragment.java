@@ -3,7 +3,6 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -21,10 +20,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
+<<<<<<< HEAD
+=======
+import java.util.Map;
+
+>>>>>>> upstream/master
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.auxiliary.CafeteriaPrices;
 import de.tum.in.tumcampusapp.auxiliary.Const;
@@ -32,7 +33,11 @@ import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.managers.CafeteriaMenuManager;
 import de.tum.in.tumcampusapp.models.managers.OpenHoursManager;
 import de.tum.in.tumcampusapp.services.FavoriteDishReceiver;
+<<<<<<< HEAD
 import de.tum.in.tumcampusapp.trace.Util;
+=======
+
+>>>>>>> upstream/master
 /**
  * Fragment for each cafeteria-page.
  */
@@ -50,7 +55,7 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
     public static List<View> showMenu(LinearLayout rootView, final int cafeteriaId, String dateStr, boolean big) {
         // initialize a few often used things
         final Context context = rootView.getContext();
-        final HashMap<String, String> rolePrices = CafeteriaPrices.getRolePrices(context);
+        final Map<String, String> rolePrices = CafeteriaPrices.getRolePrices(context);
         final int padding = (int) context.getResources().getDimension(R.dimen.card_text_padding);
         List<View> addedViews = new ArrayList<>();
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -77,8 +82,13 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
                 // Skip unchecked categories if showing card
                 boolean shouldShow = Utils.getSettingBool(context, "card_cafeteria_" + typeShort,
                         typeShort.equals("tg") || typeShort.equals("ae"));
-                if (!big && !shouldShow)
+                if (!big && !shouldShow) {
                     continue;
+<<<<<<< HEAD
+=======
+                }
+
+>>>>>>> upstream/master
                 // Add header if we start with a new category
                 if (!typeShort.equals(curShort)) {
                     curShort = typeShort;
@@ -163,11 +173,12 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
      * Replaces all (v), ... annotations with images
      *
      * @param context Context
-     * @param menu    Text with annotations
+     * @param menuString    Text with annotations
      * @return Spannable text with images
      */
-    public static SpannableString menuToSpan(Context context, String menu) {
+    public static SpannableString menuToSpan(Context context, String menuString) {
         int len;
+        String menu = menuString;
         do {
             len = menu.length();
             menu = menu.replaceFirst("\\(([A-Za-z0-9]+),", "($1)(");
@@ -192,11 +203,12 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
     /**
      * Replaces all annotations that cannot be replaces with images such as (1), ...
      *
-     * @param menu Text to delete annotations from
+     * @param menuString Text to delete annotations from
      * @return Text without un-replaceable annotations
      */
-    private static String prepare(String menu) {
+    private static String prepare(String menuString) {
         int len;
+        String menu = menuString;
         do {
             len = menu.length();
             menu = menu.replaceFirst("\\(([A-Za-z0-9]+),", "($1)(");

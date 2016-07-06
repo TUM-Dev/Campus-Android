@@ -25,6 +25,8 @@ import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceManager;
 import android.view.View;
 
+import com.google.common.base.Optional;
+
 import de.psdev.licensesdialog.LicensesDialog;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.MainActivity;
@@ -46,18 +48,27 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
         SharedPreferences.OnSharedPreferenceChangeListener, Preference.OnPreferenceClickListener {
 
     public static final String FRAGMENT_TAG = "my_preference_fragment";
+    private static final String BUTTON_WIZARD = "button_wizard";
+    private static final String BUTTON_CLEAR_CACHE = "button_clear_cache";
+    private static final String FACEBOOK = "facebook";
+    private static final String GITHUB = "github";
+    private static final String FIRST_RUN = "first_run";
+    private static final String LICENSES = "licenses";
+    private static final String FEEDBACK = "feedback";
+    private static final String PRIVACY = "privacy";
     private FragmentActivity mContext;
 
     @Override
     public void onCreatePreferences(Bundle bundle, String rootKey) {
+        String rootKey1 = rootKey;
         // Open a card's preference screen if selected from it's context menu
         if (bundle != null && bundle.containsKey(Const.PREFERENCE_SCREEN)) {
-            rootKey = bundle.getString(Const.PREFERENCE_SCREEN);
+            rootKey1 = bundle.getString(Const.PREFERENCE_SCREEN);
         }
 
-        Utils.log("Opening settings: " + rootKey);
+        Utils.log("Opening settings: " + rootKey1);
         //Load the correct preference category
-        setPreferencesFromResource(R.xml.settings, rootKey);
+        setPreferencesFromResource(R.xml.settings, rootKey1);
         mContext = getActivity();
 
         // Disables silence service if the app is used without TUMOnline access
@@ -67,17 +78,17 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
         }
 
         //Only do these things if we are in the root of the preferences
-        if(rootKey == null) {
+        if (rootKey1 == null) {
             // Click listener for preference list entries. Used to simulate a button
             // (since it is not possible to add a button to the preferences screen)
-            findPreference("button_wizard").setOnPreferenceClickListener(this);
-            findPreference("button_clear_cache").setOnPreferenceClickListener(this);
-            findPreference("facebook").setOnPreferenceClickListener(this);
-            findPreference("github").setOnPreferenceClickListener(this);
-            findPreference("first_run").setOnPreferenceClickListener(this);
-            findPreference("licenses").setOnPreferenceClickListener(this);
-            findPreference("feedback").setOnPreferenceClickListener(this);
-            findPreference("privacy").setOnPreferenceClickListener(this);
+            findPreference(BUTTON_WIZARD).setOnPreferenceClickListener(this);
+            findPreference(BUTTON_CLEAR_CACHE).setOnPreferenceClickListener(this);
+            findPreference(FACEBOOK).setOnPreferenceClickListener(this);
+            findPreference(GITHUB).setOnPreferenceClickListener(this);
+            findPreference(FIRST_RUN).setOnPreferenceClickListener(this);
+            findPreference(LICENSES).setOnPreferenceClickListener(this);
+            findPreference(FEEDBACK).setOnPreferenceClickListener(this);
+            findPreference(PRIVACY).setOnPreferenceClickListener(this);
 
             // Set summary for these preferences
             setSummary("card_cafeteria_default_G");
@@ -108,7 +119,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
     }
 
     private void populateNewsSources() {
-        PreferenceCategory news_sources = (PreferenceCategory) findPreference("card_news_sources");
+        PreferenceCategory newsSources = (PreferenceCategory) findPreference("card_news_sources");
         NewsManager cm = new NewsManager(mContext);
         Cursor cur = cm.getNewsSources();
         if (cur.moveToFirst()) {
@@ -123,19 +134,22 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
                         @Override
                         public void run() {
                             NetUtils net = new NetUtils(mContext);
-                            final Bitmap bmp = net.downloadImageToBitmap(url);
+                            final Optional<Bitmap> bmp = net.downloadImageToBitmap(url);
+                            if (!bmp.isPresent()) {
+                                return;
+                            }
                             mContext.runOnUiThread(new Runnable() {
                                 @TargetApi(11)
                                 @Override
                                 public void run() {
-                                    pref.setIcon(new BitmapDrawable(getResources(), bmp));
+                                    pref.setIcon(new BitmapDrawable(getResources(), bmp.get()));
                                 }
                             });
                         }
                     }).start();
                 }
                 pref.setTitle(cur.getString(2));
-                news_sources.addPreference(pref);
+                newsSources.addPreference(pref);
             } while (cur.moveToNext());
         }
         cur.close();
@@ -151,7 +165,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
 
         //Refresh the cards after a change has been made to them
         if (key.startsWith("card_")) {
-            CardManager.shouldRefresh = true;
+            CardManager.setShouldRefresh();
         }
 
         // When newspread selection changes
@@ -166,10 +180,10 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
                 }
                 e.putBoolean("card_news_source_" + i, false);
             }
-            String new_source = sharedPreferences.getString(key, "7");
-            e.putBoolean("card_news_source_" + new_source, value);
+            String newSource = sharedPreferences.getString(key, "7");
+            e.putBoolean("card_news_source_" + newSource, value);
             e.apply();
-            CardManager.shouldRefresh = true;
+            CardManager.setShouldRefresh();
         }
 
         // If the silent mode was activated, start the service. This will invoke
@@ -195,7 +209,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
         }
     }
 
-    void setSummary(String key) {
+    private void setSummary(CharSequence key) {
         Preference t = findPreference(key);
         if (t instanceof ListPreference) {
             ListPreference pref = (ListPreference) t;
@@ -214,11 +228,11 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
         final String key = preference.getKey();
 
         switch (key) {
-            case "button_wizard":
+            case BUTTON_WIZARD:
                 mContext.finish();
                 startActivity(new Intent(mContext, WizNavStartActivity.class));
                 break;
-            case "button_clear_cache":
+            case BUTTON_CLEAR_CACHE:
                 // This button invokes the clear cache method
                 new AlertDialog.Builder(mContext)
                         .setMessage(R.string.delete_chache_sure)
@@ -231,28 +245,24 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
                         .setNegativeButton(R.string.no, null).show();
 
                 break;
-            case "facebook":
+            case FACEBOOK:
                 // Open the facebook app or view in a browser when not installed
                 Intent facebook;
                 try {
                     //Try to get facebook package to check if fb app is installed
                     mContext.getPackageManager().getPackageInfo("com.facebook.katana", 0);
                     facebook = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.facebook_link_app)));
-                } catch (Exception e) {
+                } catch (PackageManager.NameNotFoundException e) {
                     //otherwise just open the normal url
                     facebook = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.facebook_link)));
                 }
                 startActivity(facebook);
-
-
                 break;
-            case "github":
+            case GITHUB:
                 // Open TCA-github web page
                 startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.github_link))));
-
-
                 break;
-            case "first_run":
+            case FIRST_RUN:
                 // Show first use tutorial
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
                 SharedPreferences.Editor e = prefs.edit();
@@ -261,18 +271,15 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
                 e.apply();
                 CardManager.update(mContext);
                 startActivity(new Intent(mContext, MainActivity.class));
-
-
                 break;
-            case "licenses":
+            case LICENSES:
                 // Show licences
                 new LicensesDialog.Builder(mContext)
                         .setNotices(R.raw.notices)
                         .setShowFullLicenseText(false)
                         .setIncludeOwnLicense(true).build().show();
-
                 break;
-            case "feedback":
+            case FEEDBACK:
             /* Create the Intent */
                 Uri uri = Uri.parse("mailto:tca-support.os.in@tum.de?subject=" + getString(R.string.feedbackSubj));
 
@@ -282,7 +289,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
 		    /* Send it off to the Activity-Chooser */
                 startActivity(Intent.createChooser(sendIntent, getString(R.string.send_email)));
                 break;
-            case "privacy":
+            case PRIVACY:
                 Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.url_privacy_policy)));
                 startActivity(myIntent);
                 break;

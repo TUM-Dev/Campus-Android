@@ -4,58 +4,65 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
+import android.os.Build;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.Surface;
 import android.view.WindowManager;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 
-public class Util {
+public final class Util {
+
+    private static final String NOT_AVAILABLE = "Not available";
 
     public static String getLog() {
         try {
             Process process = Runtime.getRuntime().exec("logcat -d");
-            BufferedReader bufferedReader = new BufferedReader(
-                    new InputStreamReader(process.getInputStream()));
-
-            StringBuilder log = new StringBuilder();
-            String line;
-            String newLine = System.getProperty("line.separator");
-            while ((line = bufferedReader.readLine()) != null) {
-                log.append(line);
-                log.append(newLine);
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream(), Charset.defaultCharset()));
+            try {
+                StringBuilder log = new StringBuilder();
+                String line;
+                String newLine = System.getProperty(ExceptionHandler.LINE_SEPARATOR);
+                while ((line = bufferedReader.readLine()) != null) {
+                    log.append(line);
+                    log.append(newLine);
+                }
+                return log.toString();
+            } finally {
+                bufferedReader.close();
             }
-            return log.toString();
 
-        } catch (Exception e) {
+        } catch (IOException e) {
             //Catch em all, we don't want any trouble here
         }
         return "";
     }
 
     public static String isGPSOn() {
-        String gps_status = "true";
+        String gpsStatus = "true";
 
         PackageManager packageManager = G.context.getPackageManager();
         if (packageManager.checkPermission("android.permission.ACCESS_FINE_LOCATION", G.appPackage) == PackageManager.PERMISSION_GRANTED) {
             LocationManager locManager;
             locManager = (LocationManager) G.context.getSystemService(Context.LOCATION_SERVICE);
             if (!locManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-                gps_status = "false";
+                gpsStatus = "false";
             }
         } else {
-            gps_status = "not available [permissions]";
+            gpsStatus = "not available [permissions]";
         }
 
-        return gps_status;
+        return gpsStatus;
     }
 
-    public static String[] ScreenProperties() {
-        String screen[] = {"Not available", "Not available", "Not available", "Not available", "Not available"};
+    public static String[] getScreenProperties() {
+        String screen[] = {NOT_AVAILABLE, NOT_AVAILABLE, NOT_AVAILABLE, NOT_AVAILABLE, NOT_AVAILABLE};
 
         DisplayMetrics dm = new DisplayMetrics();
         Display display = ((WindowManager) G.context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
@@ -64,7 +71,7 @@ public class Util {
         int width = dm.widthPixels;
         int height = dm.heightPixels;
 
-        Utils.logv(android.os.Build.VERSION.RELEASE);
+        Utils.logv(Build.VERSION.RELEASE);
 
         int orientation = display.getRotation();
 
@@ -103,5 +110,9 @@ public class Util {
             Utils.log(e, "Error collecting trace information");
         }
         return null;
+    }
+
+    private Util() {
+        // Util is a utility class
     }
 }

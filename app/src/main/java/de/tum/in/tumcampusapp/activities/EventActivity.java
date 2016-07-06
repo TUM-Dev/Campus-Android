@@ -24,12 +24,12 @@ import de.tum.in.tumcampusapp.activities.generic.BaseActivity;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 
 public class EventActivity extends BaseActivity {
-    private static final DateFormat dtf = new SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.GERMANY);
-    private static final DateFormat tf = SimpleDateFormat.getTimeInstance(SimpleDateFormat.SHORT);
-    private static final DateFormat df = SimpleDateFormat.getDateInstance(SimpleDateFormat.FULL);
+    private static final DateFormat DTF = new SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.GERMANY);
+    private static final DateFormat TF = SimpleDateFormat.getTimeInstance(SimpleDateFormat.SHORT);
+    private static final DateFormat DF = SimpleDateFormat.getDateInstance(SimpleDateFormat.FULL);
 
-    private static final String title = "IKOM 2016";
-    private static final List<List<EventScheduleEntry>> schedule = Arrays.asList(
+    private static final String TITLE = "IKOM 2016";
+    private static final List<List<EventScheduleEntry>> SCHEDULE = Arrays.asList(
             Arrays.asList(
                     new EventScheduleEntry(parse("20.06.2016 09:30"), 30, "Eröffnung der IKOM"),
                     new EventScheduleEntry(parse("20.06.2016 10:00"), 60, "IKOM Arena | Elektro- & Medizintechnik"),
@@ -90,7 +90,7 @@ public class EventActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         ViewPager pager = (ViewPager) findViewById(R.id.pager);
         pager.setAdapter(new EventAdapter(getSupportFragmentManager()));
-        getSupportActionBar().setTitle(title);
+        getSupportActionBar().setTitle(TITLE);
     }
 
     private static class EventAdapter extends FragmentPagerAdapter {
@@ -106,24 +106,24 @@ public class EventActivity extends BaseActivity {
 
         @Override
         public int getCount() {
-            return schedule.size();
+            return SCHEDULE.size();
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
-            return df.format(schedule.get(position).get(0).startTime);
+            return DF.format(SCHEDULE.get(position).get(0).startTime);
         }
     }
 
     public static class EventDayFragment extends Fragment {
-        private static final String args_day = "day";
+        private static final String ARGS_DAY = "day";
         private int day;
         private TableLayout table;
 
         public static EventDayFragment newInstance(int day) {
             EventDayFragment res = new EventDayFragment();
             Bundle args = new Bundle();
-            args.putInt(args_day, day);
+            args.putInt(ARGS_DAY, day);
             res.setArguments(args);
             return res;
         }
@@ -131,9 +131,9 @@ public class EventActivity extends BaseActivity {
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View view = inflater.inflate(R.layout.content_event, container, false);
-            day = getArguments().getInt(args_day, 0);
+            day = getArguments().getInt(ARGS_DAY, 0);
             table = (TableLayout) view.findViewById(R.id.event_table);
-            List<EventScheduleEntry> events = schedule.get(day);
+            List<EventScheduleEntry> events = SCHEDULE.get(day);
 
             int sumDuration = 0;
             for (EventScheduleEntry event : events) {
@@ -146,7 +146,7 @@ public class EventActivity extends BaseActivity {
                 TextView descriptionView = (TextView) tr.findViewById(R.id.event_description);
 
                 tr.setLayoutParams(new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, 0, event.duration / (float) sumDuration));
-                timeView.setText(tf.format(event.startTime));
+                timeView.setText(TF.format(event.startTime));
                 descriptionView.setText(Utils.fromHtml(event.title));
                 table.addView(tr);
             }
@@ -155,9 +155,9 @@ public class EventActivity extends BaseActivity {
     }
 
     private static class EventScheduleEntry {
-        public Date startTime;
-        public int duration; // in minutes
-        public String title;
+        public final Date startTime;
+        public final int duration; // in minutes
+        public final String title;
 
         public EventScheduleEntry(Date startTime, int duration, String title) {
             this.startTime = startTime;
@@ -168,7 +168,7 @@ public class EventActivity extends BaseActivity {
 
     private static Date parse(String string) {
         try {
-            return dtf.parse(string);
+            return DTF.parse(string);
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
