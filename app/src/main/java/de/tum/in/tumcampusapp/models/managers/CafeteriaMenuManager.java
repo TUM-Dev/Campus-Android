@@ -82,29 +82,41 @@ public class CafeteriaMenuManager extends AbstractManager {
      * @param force True to force download over normal sync period, else false
      * @throws Exception
      */
-    public void downloadFromExternal(Context context, boolean force) throws Exception {
+    public void downloadFromExternal(Context context, boolean force) throws JSONException {
+
         if (!force && !SyncManager.needSync(db, this, TIME_TO_SYNC)) {
             return;
         }
+
         String url = "http://lu32kap.typo3.lrz.de/mensaapp/exportDB.php?mensa_id=all";
-        JSONObject json = NetUtils.downloadJson(context, url);
+        Optional<JSONObject> json = NetUtils.downloadJson(context, url);
+        if (!json.isPresent()) {
+            return;
+        }
+
+        JSONObject obj = json.get();
         db.beginTransaction();
         removeCache();
         try {
-            JSONArray menu = json.getJSONArray("mensa_menu");
+            JSONArray menu = obj.getJSONArray("mensa_menu");
             for (int j = 0; j < menu.length(); j++) {
                 replaceIntoDb(getFromJson(menu.getJSONObject(j)));
             }
-            JSONArray beilagen = json.getJSONArray("mensa_beilagen");
+
+            JSONArray beilagen = obj.getJSONArray("mensa_beilagen");
             for (int j = 0; j < beilagen.length(); j++) {
                 replaceIntoDb(getFromJsonAddendum(beilagen.getJSONObject(j)));
             }
             db.setTransactionSuccessful();
+        } catch (Exception e) {
+
         } finally {
             db.endTransaction();
         }
-        SyncManager.replaceIntoDb(db, this);
+
+        SyncManager.replaceIntoDb(db,this);
     }
+
 
     public void insertFavoriteDish(int mensaId, String dishName, String date) {
         db.execSQL("INSERT INTO favorite_dishes (mensaId, dishName ,date) VALUES (?, ?, ?)",
