@@ -102,7 +102,7 @@ public abstract class Card {
      */
     public void updateViewHolder(RecyclerView.ViewHolder viewHolder) {
         mContext = viewHolder.itemView.getContext();
-        ImplicitCounter.CounterCard(mContext, this);
+        ImplicitCounter.countCard(mContext, this);
     }
 
     /**

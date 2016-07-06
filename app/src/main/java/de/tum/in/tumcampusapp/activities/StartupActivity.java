@@ -65,8 +65,8 @@ public class StartupActivity extends AppCompatActivity {
         am.generatePrivateKey();
 
         //Upload stats
-        ImplicitCounter.Counter(this);
-        new ImplicitCounter().submitCounter(this);
+        ImplicitCounter.count(this);
+        ImplicitCounter.submitCounter(this);
 
         // For compatibility reasons: big update happened with version 35
         int prevVersion = Utils.getInternalSettingInt(this, Const.APP_VERSION, 35);

@@ -239,10 +239,10 @@ public class SurveyActivity extends ProgressActivity {
 
             //adding progress bar with answers
             RelativeLayout r = new RelativeLayout(this);
-            LinearLayout.LayoutParams Params = new LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams params2 = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-            Params.setMargins(50, 10, 50, 50);
-            ques.addView(r, Params);
+            params2.setMargins(50, 10, 50, 50);
+            ques.addView(r, params2);
 
             float inPixels2 = getResources().getDimension(R.dimen.dimen_progressHeight_in_dp);
             ProgressBar progress = new ProgressBar(this, null, android.R.attr.progressBarStyleHorizontal);

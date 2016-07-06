@@ -486,7 +486,7 @@ public final class Utils {
             return packageInfo.versionCode;
         } catch (PackageManager.NameNotFoundException e) {
             // should never happen
-            throw new RuntimeException("Could not get package name: " + e);
+            throw new AssertionError("Could not get package name: " + e);
         }
     }
 

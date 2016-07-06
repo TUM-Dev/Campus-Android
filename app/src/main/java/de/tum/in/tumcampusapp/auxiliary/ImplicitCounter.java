@@ -1,5 +1,6 @@
 package de.tum.in.tumcampusapp.auxiliary;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 
@@ -16,9 +17,13 @@ import de.tum.in.tumcampusapp.models.TUMCabeClient;
 /**
  * Counts the usage of a specific activity
  */
-public class ImplicitCounter {
+public final class ImplicitCounter {
     private static final String USAGE_COUNTER = "usage_counter";
     private static Date lastSync;
+
+    private ImplicitCounter() {
+        // ImplicitCounter is a utility class
+    }
 
     /**
      * Counting number of the times that the user used this activity.
@@ -27,7 +32,7 @@ public class ImplicitCounter {
      *
      * @param c Pointer to the activity that has been opened
      */
-    public static void Counter(Context c) {
+    public static void count(Activity c) {
         SharedPreferences sp = c.getSharedPreferences(USAGE_COUNTER, Context.MODE_PRIVATE);
         final String identifier = c.getClass().getSimpleName();
 
@@ -35,7 +40,7 @@ public class ImplicitCounter {
         sp.edit().putInt(identifier, currentUsages + 1).apply();
     }
 
-    public static void CounterCard(Context c, Card card) {
+    public static void countCard(Context c, Card card) {
         SharedPreferences sp = c.getSharedPreferences(USAGE_COUNTER, Context.MODE_PRIVATE);
         String identifier = card.getClass().getSimpleName();
 
@@ -49,7 +54,7 @@ public class ImplicitCounter {
     }
 
 
-    public void submitCounter(Context c) {
+    public static void submitCounter(Context c) {
         //Check first: sync only every so often - in this case one hour
         Date interval = new Date();
         interval.setTime(interval.getTime() - 1000 * 3600);
@@ -63,16 +68,14 @@ public class ImplicitCounter {
             Utils.log("Stats submit: No context passed!");
             return;
         }
-        Context c1 = c;
-
         //Get the prefs
-        SharedPreferences sp = c1.getSharedPreferences(USAGE_COUNTER, Context.MODE_PRIVATE);
+        SharedPreferences sp = c.getSharedPreferences(USAGE_COUNTER, Context.MODE_PRIVATE);
 
         // Get all current entries
         Map<String, ?> allEntries = sp.getAll();
 
         // Submit this to webservice via parent async class
-        TUMCabeClient.getInstance(c1).putStatistics(new Statistics(new Gson().toJson(allEntries)));
+        TUMCabeClient.getInstance(c).putStatistics(new Statistics(new Gson().toJson(allEntries)));
 
         // Delete / Reset
         SharedPreferences.Editor e = sp.edit();

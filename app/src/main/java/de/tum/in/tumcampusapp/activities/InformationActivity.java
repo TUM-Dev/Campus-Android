@@ -40,7 +40,7 @@ public class InformationActivity extends BaseActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
-        ImplicitCounter.Counter(this);
+        ImplicitCounter.count(this);
         this.displayVersionName();
     }
 
