@@ -20,12 +20,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
-<<<<<<< HEAD
-=======
 import java.util.Map;
-
->>>>>>> upstream/master
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.auxiliary.CafeteriaPrices;
 import de.tum.in.tumcampusapp.auxiliary.Const;
@@ -33,11 +30,6 @@ import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.managers.CafeteriaMenuManager;
 import de.tum.in.tumcampusapp.models.managers.OpenHoursManager;
 import de.tum.in.tumcampusapp.services.FavoriteDishReceiver;
-<<<<<<< HEAD
-import de.tum.in.tumcampusapp.trace.Util;
-=======
-
->>>>>>> upstream/master
 /**
  * Fragment for each cafeteria-page.
  */
@@ -84,11 +76,7 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
                         typeShort.equals("tg") || typeShort.equals("ae"));
                 if (!big && !shouldShow) {
                     continue;
-<<<<<<< HEAD
-=======
                 }
-
->>>>>>> upstream/master
                 // Add header if we start with a new category
                 if (!typeShort.equals(curShort)) {
                     curShort = typeShort;
