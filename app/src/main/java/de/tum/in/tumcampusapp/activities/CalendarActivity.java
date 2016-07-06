@@ -297,12 +297,9 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
                 // Display an AlertDialog with an explanation and a button to trigger the request.
                 new AlertDialog.Builder(this)
                         .setMessage(getString(R.string.permission_calendar_explanation))
-                        .setPositiveButton(R.string.ok, new OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int id) {
-                                ActivityCompat
-                                        .requestPermissions(CalendarActivity.this, PERMISSIONS_CALENDAR, id);
-                            }
+                        .setPositiveButton(R.string.ok, (dialog, id1) -> {
+                            ActivityCompat
+                                    .requestPermissions(CalendarActivity.this, PERMISSIONS_CALENDAR, id1);
                         }).show();
             } else {
                 ActivityCompat.requestPermissions(CalendarActivity.this, PERMISSIONS_CALENDAR, id);
@@ -359,18 +356,14 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
             return;
         }
         AlertDialog.Builder builder = new AlertDialog.Builder(CalendarActivity.this);
-        builder.setMessage(getString(R.string.dialog_delete_calendar)).setPositiveButton(getString(R.string.yes), new OnClickListener() {
-
-            @Override
-            public void onClick(DialogInterface arg0, int arg1) {
-                int deleted = CalendarManager.deleteLocalCalendar(CalendarActivity.this);
-                Utils.setInternalSetting(CalendarActivity.this, Const.SYNC_CALENDAR, false);
-                ActivityCompat.invalidateOptionsMenu(CalendarActivity.this);
-                if (deleted > 0) {
-                    Utils.showToast(CalendarActivity.this, R.string.calendar_deleted_toast);
-                } else {
-                    Utils.showToast(CalendarActivity.this, R.string.calendar_not_existing_toast);
-                }
+        builder.setMessage(getString(R.string.dialog_delete_calendar)).setPositiveButton(getString(R.string.yes), (arg0, arg1) -> {
+            int deleted = CalendarManager.deleteLocalCalendar(CalendarActivity.this);
+            Utils.setInternalSetting(CalendarActivity.this, Const.SYNC_CALENDAR, false);
+            ActivityCompat.invalidateOptionsMenu(CalendarActivity.this);
+            if (deleted > 0) {
+                Utils.showToast(CalendarActivity.this, R.string.calendar_deleted_toast);
+            } else {
+                Utils.showToast(CalendarActivity.this, R.string.calendar_not_existing_toast);
             }
         }).setNegativeButton(getString(R.string.no), null).show();
     }

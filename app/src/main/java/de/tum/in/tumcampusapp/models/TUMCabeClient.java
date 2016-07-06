@@ -57,18 +57,15 @@ public class TUMCabeClient {
             request.addHeader("X-DEVICE-ID", AuthenticationManager.getDeviceID(TUMCabeClient.context));
         }
     };
-    final ErrorHandler errorHandler = new ErrorHandler() {
-        @Override
-        public Throwable handleError(RetrofitError cause) {
-            Throwable t = cause.getCause();
-            if (t instanceof SSLPeerUnverifiedException) {
-                //TODO show a error message
-                //Toast.makeText(context, t.toString(), Toast.LENGTH_LONG).show();
-            }
-
-            //Return the same cause, so it can be handled by other activities
-            return cause;
+    final ErrorHandler errorHandler = cause -> {
+        Throwable t = cause.getCause();
+        if (t instanceof SSLPeerUnverifiedException) {
+            //TODO show a error message
+            //Toast.makeText(context, t.toString(), Toast.LENGTH_LONG).show();
         }
+
+        //Return the same cause, so it can be handled by other activities
+        return cause;
     };
     private TUMCabeAPIService service;
 

@@ -16,7 +16,6 @@ import android.widget.TextView;
 import org.json.JSONException;
 
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
@@ -70,12 +69,7 @@ public class StudyRoomsActivity extends ActivityForLoadingInBackground<Void, Voi
     }
 
     private static void sortStudyRoomsByOccupation(List<StudyRoom> studyRooms) {
-        Collections.sort(studyRooms, new Comparator<StudyRoom>() {
-            @Override
-            public int compare(StudyRoom lhs, StudyRoom rhs) {
-                return lhs.occupiedTill.compareTo(rhs.occupiedTill);
-            }
-        });
+        Collections.sort(studyRooms, (lhs, rhs) -> lhs.occupiedTill.compareTo(rhs.occupiedTill));
     }
 
     private Spinner getStudyRoomGroupsSpinner() {

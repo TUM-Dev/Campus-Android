@@ -104,13 +104,9 @@ public abstract class ActivityForLoadingInBackground<S, T> extends ProgressActiv
      *
      * @param errorReason Error text
      */
+    @Override
     protected void showError(final String errorReason) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                ActivityForLoadingInBackground.super.showError(errorReason);
-            }
-        });
+        runOnUiThread(() -> ActivityForLoadingInBackground.super.showError(errorReason));
     }
 
     /**
@@ -119,12 +115,7 @@ public abstract class ActivityForLoadingInBackground<S, T> extends ProgressActiv
      */
     @Override
     protected void showErrorLayout() {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                ActivityForLoadingInBackground.super.showErrorLayout();
-            }
-        });
+        runOnUiThread(ActivityForLoadingInBackground.super::showErrorLayout);
     }
 
     /**
@@ -133,12 +124,7 @@ public abstract class ActivityForLoadingInBackground<S, T> extends ProgressActiv
      */
     @Override
     protected void showFailedTokenLayout(final String error) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                ActivityForLoadingInBackground.super.showFailedTokenLayout(error);
-            }
-        });
+        runOnUiThread(() -> ActivityForLoadingInBackground.super.showFailedTokenLayout(error));
     }
 
     /**
@@ -146,12 +132,7 @@ public abstract class ActivityForLoadingInBackground<S, T> extends ProgressActiv
      */
     @Override
     protected void showNoTokenLayout() {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                ActivityForLoadingInBackground.super.showNoTokenLayout();
-            }
-        });
+        runOnUiThread(ActivityForLoadingInBackground.super::showNoTokenLayout);
     }
 
     /**
@@ -159,11 +140,6 @@ public abstract class ActivityForLoadingInBackground<S, T> extends ProgressActiv
      */
     @Override
     protected void showNoInternetLayout() {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                ActivityForLoadingInBackground.super.showNoInternetLayout();
-            }
-        });
+        runOnUiThread(ActivityForLoadingInBackground.super::showNoInternetLayout);
     }
 }

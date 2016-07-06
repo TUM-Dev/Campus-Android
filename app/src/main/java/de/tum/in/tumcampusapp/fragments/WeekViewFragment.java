@@ -59,39 +59,33 @@ public class WeekViewFragment extends Fragment implements MonthLoader.MonthChang
     }
 
     private void loadEventsInBackground(final int newYear, final int newMonth) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                // Populate the week view with the events of the month to display
-                Calendar calendar = Calendar.getInstance();
-                //Note the (-1), since the calendar starts with month 0, but we get months starting with 1
-                calendar.set(newYear, newMonth - 1, 1);
-                int daysInMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+        new Thread(() -> {
+            // Populate the week view with the events of the month to display
+            Calendar calendar = Calendar.getInstance();
+            //Note the (-1), since the calendar starts with month 0, but we get months starting with 1
+            calendar.set(newYear, newMonth - 1, 1);
+            int daysInMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
 
-                long startTime = calendar.getTimeInMillis();
-                calendar.set(newYear, newMonth - 1, daysInMonth);
-                long endTime = calendar.getTimeInMillis();
+            long startTime = calendar.getTimeInMillis();
+            calendar.set(newYear, newMonth - 1, daysInMonth);
+            long endTime = calendar.getTimeInMillis();
 
-                List<IntegratedCalendarEvent> roomFinderResult = new ArrayList<>();
-                TUMRoomFinderRequest request = new TUMRoomFinderRequest(getContext());
-                request.fetchRoomSchedule(roomApiCode, Long.toString(startTime), Long.toString(endTime), roomFinderResult);
+            List<IntegratedCalendarEvent> roomFinderResult = new ArrayList<>();
+            TUMRoomFinderRequest request = new TUMRoomFinderRequest(getContext());
+            request.fetchRoomSchedule(roomApiCode, Long.toString(startTime), Long.toString(endTime), roomFinderResult);
 
-                //Convert to the proper type
-                final List<WeekViewEvent> events = new ArrayList<>(roomFinderResult.size());
-                for (IntegratedCalendarEvent event : roomFinderResult) {
-                    events.add(event);
-                }
-
-                //Finish loading
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        loadedEvents.put(calculateLoadedKey(newYear, newMonth), events);
-                        //Trigger onMonthChange() again
-                        mWeekView.notifyDatasetChanged();
-                    }
-                });
+            //Convert to the proper type
+            final List<WeekViewEvent> events = new ArrayList<>(roomFinderResult.size());
+            for (IntegratedCalendarEvent event : roomFinderResult) {
+                events.add(event);
             }
+
+            //Finish loading
+            getActivity().runOnUiThread(() -> {
+                loadedEvents.put(calculateLoadedKey(newYear, newMonth), events);
+                //Trigger onMonthChange() again
+                mWeekView.notifyDatasetChanged();
+            });
         }).start();
     }
 

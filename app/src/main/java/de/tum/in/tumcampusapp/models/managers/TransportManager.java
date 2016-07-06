@@ -15,7 +15,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
@@ -145,12 +144,7 @@ public class TransportManager implements Card.ProvidesCard {
                 ));
             }
 
-            Collections.sort(result, new Comparator<Departure>() {
-                @Override
-                public int compare(Departure lhs, Departure rhs) {
-                    return lhs.countDown - rhs.countDown;
-                }
-            });
+            Collections.sort(result, (lhs, rhs) -> lhs.countDown - rhs.countDown);
         } catch (JSONException e) {
             //We got no valid JSON, mvg-live is probably bugged
             Utils.log(e, ERROR_INVALID_JSON + DEPARTURE_QUERY);
@@ -201,12 +195,7 @@ public class TransportManager implements Card.ProvidesCard {
             }
 
             //Sort by quality
-            Collections.sort(results, new Comparator<StationResult>() {
-                @Override
-                public int compare(StationResult lhs, StationResult rhs) {
-                    return rhs.quality - lhs.quality;
-                }
-            });
+            Collections.sort(results, (lhs, rhs) -> rhs.quality - lhs.quality);
 
             for (StationResult result : results) {
                 mc.addRow(new String[]{result.station, result.id});

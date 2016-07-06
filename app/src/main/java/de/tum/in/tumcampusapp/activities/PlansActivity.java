@@ -1,6 +1,5 @@
 package de.tum.in.tumcampusapp.activities;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -79,17 +78,13 @@ public class PlansActivity extends BaseActivity implements OnItemClickListener {
                     .setTitle("MVV plans")
                     .setMessage(getResources().getString(R.string.mvv_download))
                     .setIcon(android.R.drawable.ic_dialog_alert)
-                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            startActivity(back_intent);
-                        }
+                    .setNegativeButton(android.R.string.no, (dialog, which) -> {
+                        startActivity(back_intent);
                     })
-                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            progressBar.setVisibility(View.VISIBLE);
-                            downloadFiles.start();
-                            Utils.setInternalSetting(getApplicationContext(), "mvvplans_downloaded", 1);
-                        }
+                    .setPositiveButton(android.R.string.yes, (dialog, which) -> {
+                        progressBar.setVisibility(View.VISIBLE);
+                        downloadFiles.start();
+                        Utils.setInternalSetting(getApplicationContext(), "mvvplans_downloaded", 1);
                     }).show();
         }
 

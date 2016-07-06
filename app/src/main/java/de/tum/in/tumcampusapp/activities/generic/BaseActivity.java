@@ -128,23 +128,17 @@ public abstract class BaseActivity extends AppCompatActivity {
         final TUMOnlineRequest<Employee> request = new TUMOnlineRequest<>(TUMOnlineConst.PERSON_DETAILS, this, true);
         request.setParameter("pIdentNr", id);
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                final Optional<Employee> result = request.fetch();
-                if (!result.isPresent()) {
-                    return;
-                }
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        CircleImageView picture = (CircleImageView) headerView.findViewById(R.id.profile_image);
-                        if (result.get().getImage() != null) {
-                            picture.setImageBitmap(result.get().getImage());
-                        }
-                    }
-                });
+        new Thread(() -> {
+            final Optional<Employee> result = request.fetch();
+            if (!result.isPresent()) {
+                return;
             }
+            runOnUiThread(() -> {
+                CircleImageView picture = (CircleImageView) headerView.findViewById(R.id.profile_image);
+                if (result.get().getImage() != null) {
+                    picture.setImageBitmap(result.get().getImage());
+                }
+            });
         }).start();
     }
 }

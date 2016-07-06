@@ -140,8 +140,7 @@ public class AuthenticationManager {
             try {
                 TUMCabeClient.getInstance(mContext).uploadPublicKey(member.getId(), new ChatPublicKey(this.getPublicKeyString()));
                 return true;
-            } catch (NoPublicKey noPublicKey) {
-            } catch (RetrofitError e) {
+            } catch (NoPublicKey | RetrofitError noPublicKey) {
             }
         }
 
@@ -164,8 +163,7 @@ public class AuthenticationManager {
 
             // If we already have one don't create a new one
             return true;
-        } catch (NoPrivateKey noPrivateKey) {
-        } catch (NoPublicKey noPublicKey) {
+        } catch (NoPrivateKey | NoPublicKey noPrivateKey) {
         }
 
         //Something went wrong, generate a new pair

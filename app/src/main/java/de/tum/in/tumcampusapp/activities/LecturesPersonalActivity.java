@@ -2,9 +2,6 @@ package de.tum.in.tumcampusapp.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 
 import java.util.Collections;
 import java.util.List;
@@ -46,22 +43,18 @@ public class LecturesPersonalActivity extends ActivityForSearchingTumOnline<Lect
 		lvMyLecturesList = (StickyListHeadersListView) findViewById(R.id.lvMyLecturesList);
 
         // handle on click events by showing its LectureDetails
-        lvMyLecturesList.setOnItemClickListener(new OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> a, View v, int position,
-                                    long id) {
-                Object o = lvMyLecturesList.getItemAtPosition(position);
-                LecturesSearchRow item = (LecturesSearchRow) o;
+        lvMyLecturesList.setOnItemClickListener((a, v, position, id) -> {
+            Object o = lvMyLecturesList.getItemAtPosition(position);
+            LecturesSearchRow item = (LecturesSearchRow) o;
 
-                // set bundle for LectureDetails and show it
-                Bundle bundle = new Bundle();
-                // we need the stp_sp_nr
-                bundle.putString(LecturesSearchRow.STP_SP_NR, item.getStp_sp_nr());
-                Intent intent = new Intent(LecturesPersonalActivity.this, LecturesDetailsActivity.class);
-                intent.putExtras(bundle);
-                // start LectureDetails for given stp_sp_nr
-                startActivity(intent);
-            }
+            // set bundle for LectureDetails and show it
+            Bundle bundle = new Bundle();
+            // we need the stp_sp_nr
+            bundle.putString(LecturesSearchRow.STP_SP_NR, item.getStp_sp_nr());
+            Intent intent = new Intent(LecturesPersonalActivity.this, LecturesDetailsActivity.class);
+            intent.putExtras(bundle);
+            // start LectureDetails for given stp_sp_nr
+            startActivity(intent);
         });
 
         onStartSearch();

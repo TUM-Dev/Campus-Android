@@ -37,12 +37,9 @@ public class IkomCard extends Card {
         View view = LayoutInflater.from(c).inflate(R.layout.card_ikom, parent, false);
 
         //Create a click listener for the event agenda
-        View.OnClickListener openEventAgenda = new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent myIntent = new Intent(c, EventActivity.class);
-                c.startActivity(myIntent);
-            }
+        View.OnClickListener openEventAgenda = view1 -> {
+            Intent myIntent = new Intent(c, EventActivity.class);
+            c.startActivity(myIntent);
         };
 
         //Check if we should switch the Image on certain days
@@ -61,15 +58,12 @@ public class IkomCard extends Card {
         bttnPlan.setOnClickListener(openEventAgenda);
 
         Button bttn = (Button) view.findViewById(R.id.bttnIkom);
-        bttn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                try {
-                    Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.ikom.tum.de"));
-                    c.startActivity(myIntent);
-                } catch (ActivityNotFoundException e) {
-                    e.printStackTrace();
-                }
+        bttn.setOnClickListener(view1 -> {
+            try {
+                Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.ikom.tum.de"));
+                c.startActivity(myIntent);
+            } catch (ActivityNotFoundException e) {
+                e.printStackTrace();
             }
         });
 

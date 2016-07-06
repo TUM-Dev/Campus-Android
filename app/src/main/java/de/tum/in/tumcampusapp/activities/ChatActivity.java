@@ -285,11 +285,8 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
             new AlertDialog.Builder(this).setTitle(R.string.leave_chat_room)
                     .setMessage(getResources().getString(R.string.leave_chat_room_body))
                     .setPositiveButton(android.R.string.ok, this)
-                    .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
+                    .setNegativeButton(android.R.string.cancel, (dialog, which) -> {
+                        dialog.dismiss();
                     }).create().show();
             return true;
         } else {
@@ -404,55 +401,49 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
      */
     private void getNextHistoryFromServer(final boolean newMsg) {
         loadingMore = true;
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                // Download chat messages in new Thread
+        new Thread(() -> {
+            // Download chat messages in new Thread
 
-                // If currently nothing has been shown load newest messages from server
-                ChatVerification verification;
-                try {
-                    verification = new ChatVerification(ChatActivity.this, currentChatMember);
-                } catch (NoPrivateKey noPrivateKey) {
-                    return; //In this case we simply cannot do anything
-                }
-                ArrayList<ChatMessage> downloadedChatHistory;
-                if (chatHistoryAdapter == null || chatHistoryAdapter.getSentCount() == 0 || newMsg) {
-                    downloadedChatHistory = TUMCabeClient.getInstance(ChatActivity.this).getNewMessages(currentChatRoom.getId(), verification);
-                } else {
-                    long id = chatHistoryAdapter.getItemId(ChatMessageManager.COL_ID);
-                    downloadedChatHistory = TUMCabeClient.getInstance(ChatActivity.this).getMessages(currentChatRoom.getId(), id, verification);
-                }
-
-                //Save it to our local cache
-                chatManager.replaceInto(downloadedChatHistory);
-
-                // Got results from webservice
-                Utils.logv("Success loading additional chat history: " + downloadedChatHistory.size());
-
-                final Cursor cur = chatManager.getAll();
-
-                // Update results in UI
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (chatHistoryAdapter == null) {
-                            chatHistoryAdapter = new ChatHistoryAdapter(ChatActivity.this, cur, currentChatMember);
-                            lvMessageHistory.setAdapter(chatHistoryAdapter);
-                        } else {
-                            chatHistoryAdapter.changeCursor(cur);
-                            chatHistoryAdapter.notifyDataSetChanged();
-                        }
-
-                        // If all messages are loaded hide header view
-                        if (cur.moveToFirst() && cur.getLong(ChatMessageManager.COL_PREVIOUS) == 0 || cur.getCount() == 0) {
-                            lvMessageHistory.removeHeaderView(bar);
-                        } else {
-                            loadingMore = false;
-                        }
-                    }
-                });
+            // If currently nothing has been shown load newest messages from server
+            ChatVerification verification;
+            try {
+                verification = new ChatVerification(ChatActivity.this, currentChatMember);
+            } catch (NoPrivateKey noPrivateKey) {
+                return; //In this case we simply cannot do anything
             }
+            ArrayList<ChatMessage> downloadedChatHistory;
+            if (chatHistoryAdapter == null || chatHistoryAdapter.getSentCount() == 0 || newMsg) {
+                downloadedChatHistory = TUMCabeClient.getInstance(ChatActivity.this).getNewMessages(currentChatRoom.getId(), verification);
+            } else {
+                long id = chatHistoryAdapter.getItemId(ChatMessageManager.COL_ID);
+                downloadedChatHistory = TUMCabeClient.getInstance(ChatActivity.this).getMessages(currentChatRoom.getId(), id, verification);
+            }
+
+            //Save it to our local cache
+            chatManager.replaceInto(downloadedChatHistory);
+
+            // Got results from webservice
+            Utils.logv("Success loading additional chat history: " + downloadedChatHistory.size());
+
+            final Cursor cur = chatManager.getAll();
+
+            // Update results in UI
+            runOnUiThread(() -> {
+                if (chatHistoryAdapter == null) {
+                    chatHistoryAdapter = new ChatHistoryAdapter(ChatActivity.this, cur, currentChatMember);
+                    lvMessageHistory.setAdapter(chatHistoryAdapter);
+                } else {
+                    chatHistoryAdapter.changeCursor(cur);
+                    chatHistoryAdapter.notifyDataSetChanged();
+                }
+
+                // If all messages are loaded hide header view
+                if (cur.moveToFirst() && cur.getLong(ChatMessageManager.COL_PREVIOUS) == 0 || cur.getCount() == 0) {
+                    lvMessageHistory.removeHeaderView(bar);
+                } else {
+                    loadingMore = false;
+                }
+            });
         }).start();
     }
 

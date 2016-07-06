@@ -26,22 +26,15 @@ public class Support extends Card {
     public static Card.CardViewHolder inflateViewHolder(ViewGroup parent) {
         final View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_support, parent, false);
         //Add links to imageviews
-        view.findViewById(R.id.facebook).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW);
-                browserIntent.setData(Uri.parse(view.getContext().getString(R.string.facebook_link)));
-                view.getContext().startActivity(browserIntent);
-            }
-
+        view.findViewById(R.id.facebook).setOnClickListener(v -> {
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW);
+            browserIntent.setData(Uri.parse(view.getContext().getString(R.string.facebook_link)));
+            view.getContext().startActivity(browserIntent);
         });
-        view.findViewById(R.id.github).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW);
-                browserIntent.setData(Uri.parse(view.getContext().getString(R.string.github_link)));
-                view.getContext().startActivity(browserIntent);
-            }
+        view.findViewById(R.id.github).setOnClickListener(v -> {
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW);
+            browserIntent.setData(Uri.parse(view.getContext().getString(R.string.github_link)));
+            view.getContext().startActivity(browserIntent);
         });
         return new Card.CardViewHolder(view);
     }

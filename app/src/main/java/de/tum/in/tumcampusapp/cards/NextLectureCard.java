@@ -81,12 +81,7 @@ public class NextLectureCard extends NotificationAwareCard {
             for (; i < lectures.size(); i++) {
                 final int j = i;
                 Button text = (Button) mCard.findViewById(IDS[i]);
-                text.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        showItem(j);
-                    }
-                });
+                text.setOnClickListener(view -> showItem(j));
             }
         }
         for (; i < 4; i++) {
@@ -116,27 +111,21 @@ public class NextLectureCard extends NotificationAwareCard {
             mLocation.setVisibility(View.GONE);
         } else {
             mLocation.setText(item.location);
-            mLocation.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent i = new Intent(mContext, RoomFinderActivity.class);
-                    i.putExtra(SearchManager.QUERY, item.location);
-                    mContext.startActivity(i);
-                }
+            mLocation.setOnClickListener(v -> {
+                Intent i = new Intent(mContext, RoomFinderActivity.class);
+                i.putExtra(SearchManager.QUERY, item.location);
+                mContext.startActivity(i);
             });
         }
 
         DateFormat week = new SimpleDateFormat("EEEE, ", Locale.getDefault());
         DateFormat df = SimpleDateFormat.getTimeInstance(DateFormat.SHORT);
         mEvent.setText(String.format("%s%s - %s", week.format(item.start), df.format(item.start), df.format(item.end)));
-        mEvent.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(mContext, CalendarActivity.class);
-                CalendarItem item = lectures.get(mSelected);
-                i.putExtra(CalendarActivity.EVENT_TIME, item.start.getTime());
-                mContext.startActivity(i);
-            }
+        mEvent.setOnClickListener(view -> {
+            Intent i = new Intent(mContext, CalendarActivity.class);
+            CalendarItem item1 = lectures.get(mSelected);
+            i.putExtra(CalendarActivity.EVENT_TIME, item1.start.getTime());
+            mContext.startActivity(i);
         });
     }
 
