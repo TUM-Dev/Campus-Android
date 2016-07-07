@@ -11,6 +11,7 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
+import de.tum.in.tumcampusapp.tumonline.AlternateRequest;
 import de.tum.in.tumcampusapp.models.OrgDetailItemList;
 import de.tum.in.tumcampusapp.models.OrgDetailsItem;
 import de.tum.in.tumcampusapp.tumonline.TUMOnlineConst;
@@ -29,6 +30,15 @@ public class OrganisationDetailsActivity extends ActivityForAccessingTumOnline<O
 	 * Only for setting it in the caption at the top
 	 */
 	private String orgName;
+
+	/*
+	 * Variable to be fetched alternate way if they are empty
+	 */
+	private String contactName;
+	private String contactPhone;
+	private String contactEmail;
+	private String contactUrl;
+	private String contactRoom;
 
 	public OrganisationDetailsActivity() {
 		super(TUMOnlineConst.ORG_DETAILS, R.layout.activity_organisationdetails);
@@ -128,17 +138,47 @@ public class OrganisationDetailsActivity extends ActivityForAccessingTumOnline<O
 		TextView extra = (TextView) findViewById(R.id.extra);
 		TextView bib = (TextView) findViewById(R.id.bib);
 
+		contactName = organisation.getContactName();
+		contactPhone = organisation.getContactTelephone();
+		contactEmail = organisation.getContactEmail();
+		contactUrl = organisation.getContactLocationURL();
+		contactRoom = organisation.getContactLocality();
+		if(organisation.getContactName().length() == 0 && organisation.getContactStreet().length() == 0 &&
+				organisation.getContactLocationURL().length() == 0 && organisation.getContactEmail().length() == 0 &&
+				organisation.getContactTelephone().length() == 0 && organisation.getContactFax().length() ==0
+				&& organisation.getAdditionalInfoCaption().length() == 0 && organisation.getAdditionalInfoText().length() == 0
+				&& organisation.getContactLocality().length() == 0)
+		{
+			AlternateRequest alternateRequest =new AlternateRequest(this.getApplicationContext());
+			alternateRequest.fetchInteractive("pOrgNr", orgId);
+			try {
+				/*
+				 * Wait 1 second for data to be fetched
+				 */
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			contactName = alternateRequest.getContactName();
+			contactPhone = alternateRequest.getContactPhone();
+			contactEmail = alternateRequest.getContactEmail();
+			contactUrl = alternateRequest.getHomepage();
+			contactRoom = alternateRequest.getRoomNumber();
+
+			Utils.log("Successfully fetch information from alternate source! ");
+		}
+
 		identifier.setText(organisation.getCode());
 		name.setText(organisation.getName());
-		contact.setText(organisation.getContactName());
-		address.setText(organisation.getContactStreet());
-		homepage.setText(organisation.getContactLocationURL());
+		contact.setText(contactName);
+		address.setText(contactRoom);
+		homepage.setText(contactUrl);
         String mail = organisation.getContactEmail();
         mail = mail.replace("ä","ae");
         mail = mail.replace("ö","oe");
         mail = mail.replace("ü","ue");
-        email.setText(mail);
-		phone.setText(organisation.getContactTelephone());
+        email.setText(contactEmail);
+		phone.setText(contactPhone);
 		fax.setText(organisation.getContactFax());
 		secretary.setText(organisation.getContactLocality());
 		extraCaption.setText(organisation.getAdditionalInfoCaption());
@@ -181,5 +221,6 @@ public class OrganisationDetailsActivity extends ActivityForAccessingTumOnline<O
 		if (bib.getText().length() == 0) {
 			((View) bib.getParent()).setVisibility(View.GONE);
 		}
+
 	}
 }
