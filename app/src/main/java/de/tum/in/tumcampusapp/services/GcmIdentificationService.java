@@ -103,7 +103,11 @@ public class GcmIdentificationService extends InstanceIDListenerService {
         final int resultCode = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(a);
         if (resultCode != ConnectionResult.SUCCESS) {
             if (GoogleApiAvailability.getInstance().isUserResolvableError(resultCode)) {
-                a.runOnUiThread(() -> GoogleApiAvailability.getInstance().getErrorDialog(a, resultCode, PLAY_SERVICES_RESOLUTION_REQUEST).show());
+                a.runOnUiThread(new Runnable() {
+                    public void run() {
+                        GoogleApiAvailability.getInstance().getErrorDialog(a, resultCode, PLAY_SERVICES_RESOLUTION_REQUEST).show();
+                    }
+                });
             } else {
                 Utils.log("This device is not supported by Google Play services.");
             }

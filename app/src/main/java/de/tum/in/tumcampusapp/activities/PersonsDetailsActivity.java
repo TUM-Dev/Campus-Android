@@ -3,6 +3,7 @@ package de.tum.in.tumcampusapp.activities;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.content.ContentProviderOperation;
+import android.content.DialogInterface;
 import android.content.OperationApplicationException;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -412,9 +413,12 @@ public class PersonsDetailsActivity extends ActivityForAccessingTumOnline<Employ
                 new AlertDialog.Builder(this)
                         //.setMessage(getString(R.string.permission_calendar_explanation))
                         .setMessage("Lorem Ipsum")
-                        .setPositiveButton(R.string.ok, (dialog, id1) -> {
-                            ActivityCompat
-                                    .requestPermissions(PersonsDetailsActivity.this, PERMISSIONS_CONTACTS, id1);
+                        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int id) {
+                                ActivityCompat
+                                        .requestPermissions(PersonsDetailsActivity.this, PERMISSIONS_CONTACTS, id);
+                            }
                         }).show();
             } else {
                 ActivityCompat.requestPermissions(PersonsDetailsActivity.this, PERMISSIONS_CONTACTS, id);

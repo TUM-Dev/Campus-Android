@@ -6,8 +6,6 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.1.2'
-        // A modified version of lombok ast that allows lint to run on java 8 sources without error
-        classpath 'me.tatarka.retrolambda.projectlombok:lombok.ast:0.2.3.a2'
     }
 }
 

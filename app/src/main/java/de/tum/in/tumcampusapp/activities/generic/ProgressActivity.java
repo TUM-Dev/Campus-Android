@@ -186,7 +186,12 @@ public abstract class ProgressActivity extends BaseActivity implements SwipeRefr
             progressLayout.setVisibility(View.VISIBLE);
             allErrorsLayout.setVisibility(View.VISIBLE);
         } else {
-            mLoadingHandler.postDelayed(() -> swipeRefreshLayout.setRefreshing(true), 1000);
+            mLoadingHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    swipeRefreshLayout.setRefreshing(true);
+                }
+            }, 1000);
         }
     }
 

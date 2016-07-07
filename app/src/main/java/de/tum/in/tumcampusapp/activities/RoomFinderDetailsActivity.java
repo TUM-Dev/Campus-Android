@@ -151,31 +151,37 @@ public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<Vo
     }
 
     private void getDirections() {
-        new Thread(() -> {
-            final Optional<Geo> geo = request.fetchCoordinates(roomInfo.getString(TUMRoomFinderRequest.KEY_ARCH_ID));
-            if (!geo.isPresent()) {
-                Utils.showToastOnUIThread(this, R.string.no_map_available);
-                return;
-            }
-            runOnUiThread(() -> {
-                // Build get directions intent and see if some app can handle it
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("google.navigation:q=" + geo.get().getLatitude() + ',' + geo.get().getLongitude()));
-                List<ResolveInfo> pkgAppsList = getApplicationContext().getPackageManager().queryIntentActivities(intent, PackageManager.GET_RESOLVED_FILTER);
-
-                // If some app can handle this intent start it
-                if (!pkgAppsList.isEmpty()) {
-                    startActivity(intent);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                final Optional<Geo> geo = request.fetchCoordinates(roomInfo.getString(TUMRoomFinderRequest.KEY_ARCH_ID));
+                if (!geo.isPresent()) {
+                    Utils.showToastOnUIThread(RoomFinderDetailsActivity.this, R.string.no_map_available);
                     return;
                 }
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        // Build get directions intent and see if some app can handle it
+                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("google.navigation:q=" + geo.get().getLatitude() + ',' + geo.get().getLongitude()));
+                        List<ResolveInfo> pkgAppsList = getApplicationContext().getPackageManager().queryIntentActivities(intent, PackageManager.GET_RESOLVED_FILTER);
 
-                // If no app is capable of opening it link to google maps market entry
-                try {
-                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.google.android.apps.maps")));
-                } catch (ActivityNotFoundException e) {
-                    Utils.log(e);
-                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=com.google.android.apps.maps")));
-                }
-            });
+                        // If some app can handle this intent start it
+                        if (!pkgAppsList.isEmpty()) {
+                            startActivity(intent);
+                            return;
+                        }
+
+                        // If no app is capable of opening it link to google maps market entry
+                        try {
+                            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.google.android.apps.maps")));
+                        } catch (ActivityNotFoundException e) {
+                            Utils.log(e);
+                            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=com.google.android.apps.maps")));
+                        }
+                    }
+                });
+            }
         }).start();
     }
 
@@ -216,11 +222,19 @@ public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<Vo
             getSupportActionBar().setSubtitle(roomInfo.getString(TUMRoomFinderRequest.KEY_BUILDING_TITLE));
         }
         showLoadingEnded();
-        new Thread(() -> {
-            mapsList = request.fetchAvailableMaps(roomInfo.getString(TUMRoomFinderRequest.KEY_ARCH_ID));
-            if (mapsList.size() > 1) {
-                mapsLoaded = true;
-                runOnUiThread(this::supportInvalidateOptionsMenu);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                mapsList = request.fetchAvailableMaps(roomInfo.getString(TUMRoomFinderRequest.KEY_ARCH_ID));
+                if (mapsList.size() > 1) {
+                    mapsLoaded = true;
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            supportInvalidateOptionsMenu();
+                        }
+                    });
+                }
             }
         }).start();
     }

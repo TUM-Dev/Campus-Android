@@ -74,13 +74,16 @@ public class DepartureView extends LinearLayout {
 
         // Set up the ValueAnimator for animateOut()
         mValueAnimator = ValueAnimator.ofInt(getHeight(), 0).setDuration(500);
-        mValueAnimator.addUpdateListener(animation -> {
-            int value = (Integer) animation.getAnimatedValue();
-            if (getLayoutParams() != null) {
-                getLayoutParams().height = value;
-                requestLayout();
-                if (value == 0) {
-                    setVisibility(View.GONE);
+        mValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                int value = (Integer) animation.getAnimatedValue();
+                if (getLayoutParams() != null) {
+                    getLayoutParams().height = value;
+                    requestLayout();
+                    if (value == 0) {
+                        setVisibility(View.GONE);
+                    }
                 }
             }
         });
@@ -128,9 +131,12 @@ public class DepartureView extends LinearLayout {
         }
         // Keep countDown approximately in sync.
         if (mHandler != null) {
-            mHandler.postDelayed(() -> {
-                mCountDown--;
-                updateDepartureTime();
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mCountDown--;
+                    updateDepartureTime();
+                }
             }, 60000);
         }
     }

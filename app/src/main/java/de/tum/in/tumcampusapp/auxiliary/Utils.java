@@ -491,11 +491,21 @@ public final class Utils {
     }
 
     public static void showToastOnUIThread(final Activity activity, final int s) {
-        activity.runOnUiThread(() -> Utils.showToast(activity, s));
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Utils.showToast(activity, s);
+            }
+        });
     }
 
     public static void showToastOnUIThread(final Activity activity, final String s) {
-        activity.runOnUiThread(() -> Utils.showToast(activity, s));
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Utils.showToast(activity, s);
+            }
+        });
     }
 
     /**

@@ -104,37 +104,45 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
                     TextView priceView = (TextView) view.findViewById(R.id.line_price);
                      //toggle button (star) mark dish as favorite
                     final ToggleButton favDish=(ToggleButton)view.findViewById(R.id.favortieDish);
-                    favDish.setOnClickListener(v -> {
+                    favDish.setOnClickListener(new View.OnClickListener() {
                         /**
-                         * if checked mark dish as favorite and create Notification on next valid date for dish
-                         * update local database set dish as favorite
+                         * when dish marked as favorite create an alarm on specific date using calendar and alarmManager
+                         * call the FavoriteDishReceiver
                          */
+                        @Override
+                        public void onClick(View v) {
+                            /**
+                             * if checked mark dish as favorite and create Notification on next valid date for dish
+                             * update local database set dish as favorite
+                             */
 
-                        if (favDish.isChecked()) {
-                            //new CafeteriaMenuManager(context).insertFavoriteDish(Integer.parseInt(favDish.getTag().toString()));
+                            if(favDish.isChecked())
+                            {
+                                //new CafeteriaMenuManager(context).insertFavoriteDish(Integer.parseInt(favDish.getTag().toString()));
 
-                           /*Calendar calendar = Calendar.getInstance();
-                            calendar.set(Calendar.MONTH, 6);
-                            calendar.set(Calendar.YEAR, 2016);
-                            calendar.set(Calendar.DAY_OF_MONTH, 19);
-                            calendar.set(Calendar.HOUR_OF_DAY, 5);
-                            calendar.set(Calendar.MINUTE, 00);
-                            calendar.set(Calendar.SECOND, 0);
-                            calendar.set(Calendar.AM_PM,Calendar.AM);
-                            */
+                               /*Calendar calendar = Calendar.getInstance();
+                                calendar.set(Calendar.MONTH, 6);
+                                calendar.set(Calendar.YEAR, 2016);
+                                calendar.set(Calendar.DAY_OF_MONTH, 19);
+                                calendar.set(Calendar.HOUR_OF_DAY, 5);
+                                calendar.set(Calendar.MINUTE, 00);
+                                calendar.set(Calendar.SECOND, 0);
+                                calendar.set(Calendar.AM_PM,Calendar.AM);
+                                */
 
-                            Intent myIntent = new Intent(context, FavoriteDishReceiver.class);
-                            PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, myIntent, 0);
-                            AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-                            alarmManager.set(AlarmManager.RTC, System.currentTimeMillis() + 5000, pendingIntent);
-                            Toast.makeText(context, favDish.getTag().toString(), Toast.LENGTH_SHORT).show();
-                        }
-                        /**
-                         *update local database set dish as not favorite
-                         * remove alarms
-                         */
-                        else {
-                            //new CafeteriaMenuManager(context).DeleteFavoriteDish(Integer.parseInt(favDish.getTag().toString()));
+                                Intent myIntent = new Intent(context, FavoriteDishReceiver.class);
+                                PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, myIntent,0);
+                                AlarmManager alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+                                alarmManager.set(AlarmManager.RTC, System.currentTimeMillis()+5000, pendingIntent);
+                                Toast.makeText(context,favDish.getTag().toString(),Toast.LENGTH_SHORT).show();
+                            }
+                            /**
+                             *update local database set dish as not favorite
+                             * remove alarms
+                             */
+                            else {
+                                //new CafeteriaMenuManager(context).DeleteFavoriteDish(Integer.parseInt(favDish.getTag().toString()));
+                            }
                         }
                     });
 

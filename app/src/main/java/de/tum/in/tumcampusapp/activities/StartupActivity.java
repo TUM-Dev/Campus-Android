@@ -2,6 +2,7 @@ package de.tum.in.tumcampusapp.activities;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -109,7 +110,12 @@ public class StartupActivity extends AppCompatActivity {
         // On first setup show remark that loading could last longer than normally
         boolean isSetup = Utils.getInternalSettingBool(this, Const.EVERYTHING_SETUP, false);
         if (!isSetup) {
-            this.runOnUiThread(() -> findViewById(R.id.startup_loading_first).setVisibility(View.VISIBLE));
+            this.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    findViewById(R.id.startup_loading_first).setVisibility(View.VISIBLE);
+                }
+            });
         }
 
         // Register receiver for background service
@@ -132,7 +138,12 @@ public class StartupActivity extends AppCompatActivity {
         //Show a loading screen during boot
         setContentView(R.layout.activity_startup);
 
-        new Thread(this::init).start();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                init();
+            }
+        }).start();
     }
 
     @Override
@@ -182,10 +193,13 @@ public class StartupActivity extends AppCompatActivity {
             // Display an AlertDialog with an explanation and a button to trigger the request.
             new AlertDialog.Builder(this)
                     .setMessage(getString(R.string.permission_location_explanation))
-                    .setPositiveButton(R.string.ok, (dialog, id) -> {
-                        ActivityCompat
-                                .requestPermissions(StartupActivity.this, PERMISSIONS_LOCATION,
-                                        REQUEST_LOCATION);
+                    .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int id) {
+                            ActivityCompat
+                                    .requestPermissions(StartupActivity.this, PERMISSIONS_LOCATION,
+                                            REQUEST_LOCATION);
+                        }
                     }).show();
         } else {
             ActivityCompat.requestPermissions(StartupActivity.this, PERMISSIONS_LOCATION,

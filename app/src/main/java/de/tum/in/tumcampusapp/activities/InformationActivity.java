@@ -1,5 +1,6 @@
 package de.tum.in.tumcampusapp.activities;
 
+import android.annotation.TargetApi;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.SharedPreferences;
@@ -63,19 +64,23 @@ public class InformationActivity extends BaseActivity {
         tv.setText(versionName);
 
         //Setup showing of debug information
-        tv.setOnClickListener(v -> {
-            //Lock it after five clicks
-            if (debugOptionsCount > 5) {
-                return;
+        tv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Lock it after five clicks
+                if (debugOptionsCount > 5) {
+                    return;
+                }
+
+                //Increase
+                debugOptionsCount++;
+
+                //Show at five clicks
+                if (debugOptionsCount == 5) {
+                    InformationActivity.this.displayDebugInfo();
+                }
             }
 
-            //Increase
-            debugOptionsCount++;
-
-            //Show at five clicks
-            if (debugOptionsCount == 5) {
-                InformationActivity.this.displayDebugInfo();
-            }
         });
     }
 
@@ -112,15 +117,19 @@ public class InformationActivity extends BaseActivity {
         v.setClickable(true);
 
         //Copy to clipboard
-        v.setOnClickListener(v1 -> {
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
-                @SuppressWarnings("deprecation")
-                android.text.ClipboardManager clipboard = (android.text.ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-                clipboard.setText(value);
-            } else {
-                ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-                ClipData clip = ClipData.newPlainText(label, value);
-                clipboard.setPrimaryClip(clip);
+        v.setOnClickListener(new View.OnClickListener() {
+            @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+            @Override
+            public void onClick(View v) {
+                if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {
+                    @SuppressWarnings("deprecation")
+                    android.text.ClipboardManager clipboard = (android.text.ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+                    clipboard.setText(value);
+                } else {
+                    ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+                    ClipData clip = ClipData.newPlainText(label, value);
+                    clipboard.setPrimaryClip(clip);
+                }
             }
         });
         tableRow.addView(v);

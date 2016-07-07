@@ -45,7 +45,7 @@ public class CacheManager extends AbstractManager {
     public static final int VALIDITY_TEN_DAYS = 10 * 86400;
     public static final int VALIDITY_ONE_MONTH = 30 * 86400;
 
-    public static final Map<ImageView, String> imageViews = Collections.synchronizedMap(new WeakHashMap<>());
+    public static final Map<ImageView, String> imageViews = Collections.synchronizedMap(new WeakHashMap<ImageView, String>());
     public static final LruCache<String, Bitmap> bitmapCache;
 
     static {

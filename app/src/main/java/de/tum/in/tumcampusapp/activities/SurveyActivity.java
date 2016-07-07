@@ -3,6 +3,7 @@ package de.tum.in.tumcampusapp.activities;
 import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
@@ -70,16 +71,21 @@ public class SurveyActivity extends ProgressActivity {
             }
         }
     };
-    View.OnClickListener showFaculties = v -> {
-        String[] faculties = (String[]) v.getTag();
-        String chosenFaculties = "";
-        for (String faculty : faculties) {
-            chosenFaculties += "- " + faculty + "\n";
+    View.OnClickListener showFaculties = new View.OnClickListener() {
+
+        @Override
+        public void onClick(final View v) {
+            String[] faculties = (String[]) v.getTag();
+            String chosenFaculties = "";
+            for (int i = 0; i < faculties.length; i++) {
+                chosenFaculties += "- " + faculties[i] + "\n";
+            }
+
+            new android.app.AlertDialog.Builder(context).setTitle(getResources().getString(R.string.selected_target_faculties))
+                    .setMessage(chosenFaculties)
+                    .setPositiveButton(android.R.string.ok, null).create().show();
         }
 
-        new android.app.AlertDialog.Builder(context).setTitle(getResources().getString(R.string.selected_target_faculties))
-                .setMessage(chosenFaculties)
-                .setPositiveButton(android.R.string.ok, null).create().show();
     };
     private Spinner numOfQuestionsSpinner;
     private Button submitSurveyButton, facultiesButton;
@@ -342,28 +348,42 @@ public class SurveyActivity extends ProgressActivity {
         facultiesButton = (Button) findViewById(R.id.button_faculties);
 
         // Handls reserving chosen faculties in sponner
-        facultiesButton.setOnClickListener(view -> {
+        facultiesButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
-            final AlertDialog dialog;
+                final AlertDialog dialog;
 
-            builder.setMultiChoiceItems(faculties, checkedFaculties, (dialogInterface, i, b) -> {
-                //reserve the checked faculties when closing spinner
-                if (b && !selectedFaculties.contains(faculties[i])) {
-                    selectedFaculties.add(faculties[i]);
-                    checkedFaculties[i] = true;
-                } else {
-                    selectedFaculties.remove(faculties[i]);
-                    checkedFaculties[i] = false;
-                }
-            }).setPositiveButton("OK", (dialogInterface, i) -> {
-            }).setNegativeButton("Cancel", (dialogInterface, i) -> {
-                selectedFaculties.clear();
-                for (int y = 0; y < checkedFaculties.length; y++) {
-                    checkedFaculties[y] = false;
-                }
-            });
-            dialog = builder.create();
-            dialog.show();
+                builder.setMultiChoiceItems(faculties, checkedFaculties, new DialogInterface.OnMultiChoiceClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i, boolean b) {
+                        //reserve the checked faculties when closing spinner
+                        if (b && !selectedFaculties.contains(faculties[i])) {
+                            selectedFaculties.add(faculties[i]);
+                            checkedFaculties[i] = true;
+                        } else {
+                            selectedFaculties.remove(faculties[i]);
+                            checkedFaculties[i] = false;
+                        }
+                    }
+                }).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    //if Ok do nothing-> keep selecte faculties
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                    }
+                }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    //if cancel clear selected faculties
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        selectedFaculties.clear();
+                        for (int y = 0; y < checkedFaculties.length; y++) {
+                            checkedFaculties[y] = false;
+                        }
+                    }
+                });
+                dialog = builder.create();
+                dialog.show();
+            }
         });
     }
 
@@ -372,87 +392,90 @@ public class SurveyActivity extends ProgressActivity {
      */
     private void submitSurveyButtonListener() {
 
-        submitSurveyButton.setOnClickListener(v -> {
+        submitSurveyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
 
-            //get user questions to submit them.
-            getSurveyData();
-            if (questions.isEmpty()) {
-                return;
-            }
-            // facultyIds to be sent to server upon submitting question(s)
-            final ArrayList<String> selectedFacIds = new ArrayList<>();
-
-
-            if (selectedFaculties.isEmpty()) { // if no faculty is selected, add faculties as target upon submitting question(s).
-                Cursor c = surveyManager.getAllFaculties();
-                if (c.moveToFirst()) {
-                    do {
-                        selectedFacIds.add(c.getString(c.getColumnIndex("faculty")));
-                    } while (c.moveToNext());
+                //get user questions to submit them.
+                getSurveyData();
+                if (questions.isEmpty()) {
+                    return;
                 }
-            } else { // In case at least one faculty is selected
-                // Adds the ids of selected faculties by match selected faculty names with fetched faculties names
-                for (int j = 0; j < selectedFaculties.size(); j++) {
-                    for (int x = 0; x < fetchedFaculties.size(); x++) {
-                        if (selectedFaculties.get(j).equals(fetchedFaculties.get(x))) {
-                            Cursor cursor = surveyManager.getFacultyID(selectedFaculties.get(j));
-                            if (cursor.moveToFirst()) {
-                                selectedFacIds.add(cursor.getString(cursor.getColumnIndex("faculty")));
+                // facultyIds to be sent to server upon submitting question(s)
+                final ArrayList<String> selectedFacIds = new ArrayList<>();
+
+
+                if (selectedFaculties.isEmpty()) { // if no faculty is selected, add faculties as target upon submitting question(s).
+                    Cursor c = surveyManager.getAllFaculties();
+                    if (c.moveToFirst()) {
+                        do {
+                            selectedFacIds.add(c.getString(c.getColumnIndex("faculty")));
+                        } while (c.moveToNext());
+                    }
+                } else { // In case at least one faculty is selected
+                    // Adds the ids of selected faculties by match selected faculty names with fetched faculties names
+                    for (int j = 0; j < selectedFaculties.size(); j++) {
+                        for (int x = 0; x < fetchedFaculties.size(); x++) {
+                            if (selectedFaculties.get(j).equals(fetchedFaculties.get(x))) {
+                                Cursor cursor = surveyManager.getFacultyID(selectedFaculties.get(j));
+                                if (cursor.moveToFirst()) {
+                                    selectedFacIds.add(cursor.getString(cursor.getColumnIndex("faculty")));
+                                }
                             }
                         }
                     }
                 }
-            }
 
-            //if connected to internet submit questions
-            if (NetUtils.isConnected(getApplication())) {
-                /**
-                 * 1. onPreExecute: submit the questions to the server
-                 * 2. doInBackGround: download the questions we just submitted to server, in order to show them directly in
-                 * responses tab in case the user changes tabs or to check if the user can still enter further questions this week
-                 * 3. onPostExecute: finish activity, cleardata(clear all layout entries) and restart activity (userallowed() gets called and it will be checked whether the user can enter further questions.
-                 */
-                new AsyncTask<Void, Void, Void>() {
-                    @Override
-                    protected void onPreExecute() {
-                        for (int i = 0; i < numOfQuestionsSpinner.getSelectedItemPosition() + 1; i++) {
-                            Question ques = new Question(questions.get(i), selectedFacIds);
-                            // Submit Question to the server
-                            TUMCabeClient.getInstance(getApplicationContext()).createQuestion(ques, new Callback<Question>() {
-                                @Override
-                                public void success(Question question, Response response) {
-                                    Snackbar.make(findViewById(R.id.drawer_layout), getResources().getString(R.string.survey_submitted), Snackbar.LENGTH_LONG).show();
-                                }
+                //if connected to internet submit questions
+                if (NetUtils.isConnected(getApplication())) {
+                    /**
+                     * 1. onPreExecute: submit the questions to the server
+                     * 2. doInBackGround: download the questions we just submitted to server, in order to show them directly in
+                     * responses tab in case the user changes tabs or to check if the user can still enter further questions this week
+                     * 3. onPostExecute: finish activity, cleardata(clear all layout entries) and restart activity (userallowed() gets called and it will be checked whether the user can enter further questions.
+                     */
+                    new AsyncTask<Void, Void, Void>() {
+                        @Override
+                        protected void onPreExecute() {
+                            for (int i = 0; i < numOfQuestionsSpinner.getSelectedItemPosition() + 1; i++) {
+                                Question ques = new Question(questions.get(i), selectedFacIds);
+                                // Submit Question to the server
+                                TUMCabeClient.getInstance(getApplicationContext()).createQuestion(ques, new Callback<Question>() {
+                                    @Override
+                                    public void success(Question question, Response response) {
+                                        Snackbar.make(findViewById(R.id.drawer_layout), getResources().getString(R.string.survey_submitted), Snackbar.LENGTH_LONG).show();
+                                    }
 
-                                @Override
-                                public void failure(RetrofitError error) {
-                                    Utils.log("Failure: " + error.toString());
-                                }
-                            });
+                                    @Override
+                                    public void failure(RetrofitError error) {
+                                        Utils.log("Failure: " + error.toString());
+                                    }
+                                });
+                            }
                         }
-                    }
 
-                    @Override
-                    protected Void doInBackground(Void... voids) {
-                        try {
-                            Thread.sleep(1000); // Waits to make sure that the questions got sent to the server in order to avoid fetching ownQuestions without the newly created questions
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
+                        @Override
+                        protected Void doInBackground(Void... voids) {
+                            try {
+                                Thread.sleep(1000); // Waits to make sure that the questions got sent to the server in order to avoid fetching ownQuestions without the newly created questions
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                            surveyManager.downLoadOwnQuestions();
+                            return null;
                         }
-                        surveyManager.downLoadOwnQuestions();
-                        return null;
-                    }
 
-                    @Override
-                    protected void onPostExecute(Void v) {
-                        finish();
-                        clearData(); // clear layout entries
-                        restartActivity(); // restart activity where it will be checked if the user can create further questions in this week (in numberOfQuestionsUserAllowed)
-                    }
-                }.execute();
-            } else { // if not connected, then restartActivity and the broadcastreceiver for no connectivity will show the no internet layout.
-                restartActivity();
+                        @Override
+                        protected void onPostExecute(Void v) {
+                            finish();
+                            clearData(); // clear layout entries
+                            restartActivity(); // restart activity where it will be checked if the user can create further questions in this week (in numberOfQuestionsUserAllowed)
+                        }
+                    }.execute();
+                } else { // if not connected, then restartActivity and the broadcastreceiver for no connectivity will show the no internet layout.
+                    restartActivity();
+                }
             }
         });
     }
@@ -511,34 +534,37 @@ public class SurveyActivity extends ProgressActivity {
         tabSpec.setIndicator(getResources().getString(R.string.tab_responses));
         tabHost.addTab(tabSpec);
         //On change tab listener for tabhost
-        tabHost.setOnTabChangedListener(s -> {
-            int currentTab = tabHost.getCurrentTab();
-            if (currentTab == 0) { // when  the user is currently in first tab 'survey' the views of response tap shoud be removed in order to avoid any duplication in displaying ownQuestions upon tab change again
-                mainResponseLayout.removeAllViews(); // to avoid
-            } else { // in case the user changes to 'responses' tab
-                if (NetUtils.isConnected(getApplication())) {
+        tabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
+            @Override
+            public void onTabChanged(String s) {
+                int currentTab = tabHost.getCurrentTab();
+                if (currentTab == 0) { // when  the user is currently in first tab 'survey' the views of response tap shoud be removed in order to avoid any duplication in displaying ownQuestions upon tab change again
+                    mainResponseLayout.removeAllViews(); // to avoid
+                } else { // in case the user changes to 'responses' tab
+                    if (NetUtils.isConnected(getApplication())) {
 
-                    //gets newly created questions, in order to show them directly in responses
-                    /**
-                     * 1. doInBackground: downloadOwnQuestions so that the user can see uptodate answers on ownQuestions
-                     * 2. onPostExecute: setUpResponse tab
-                     */
-                    new AsyncTask<Void, Void, Void>() {
+                        //gets newly created questions, in order to show them directly in responses
+                        /**
+                         * 1. doInBackground: downloadOwnQuestions so that the user can see uptodate answers on ownQuestions
+                         * 2. onPostExecute: setUpResponse tab
+                         */
+                        new AsyncTask<Void, Void, Void>() {
 
-                        @Override
-                        protected Void doInBackground(Void... voids) {
-                            surveyManager.downLoadOwnQuestions();
-                            return null;
-                        }
+                            @Override
+                            protected Void doInBackground(Void... voids) {
+                                surveyManager.downLoadOwnQuestions();
+                                return null;
+                            }
 
-                        @Override
-                        protected void onPostExecute(Void v) {
-                            setUpResponseTab();
-                        }
-                    }.execute();
+                            @Override
+                            protected void onPostExecute(Void v) {
+                                setUpResponseTab();
+                            }
+                        }.execute();
 
-                } else {
-                    setUpResponseTab(); // setup responses tab Without possible fresh answeres.
+                    } else {
+                        setUpResponseTab(); // setup responses tab Without possible fresh answeres.
+                    }
                 }
             }
         });
@@ -577,7 +603,7 @@ public class SurveyActivity extends ProgressActivity {
             numOfQuestionsSpinner.setVisibility(View.GONE);
         }
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, numQues);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, numQues);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         numOfQuestionsSpinner.setAdapter(adapter);
 

@@ -304,9 +304,13 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
             final View coordinatorLayoutView = findViewById(R.id.coordinator);
 
             Snackbar.make(coordinatorLayoutView, R.string.card_dismissed, Snackbar.LENGTH_LONG)
-                    .setAction(R.string.undo, v -> {
-                        mAdapter.insert(lastPos, card);
-                        mCardsView.getLayoutManager().smoothScrollToPosition(mCardsView, null, lastPos);
+                    .setAction(R.string.undo, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            mAdapter.insert(lastPos, card);
+                            mCardsView.getLayoutManager().smoothScrollToPosition(mCardsView, null, lastPos);
+                        }
+
                     }).setCallback(new Snackbar.Callback() {
                 @Override
                 public void onDismissed(Snackbar snackbar, int event) {

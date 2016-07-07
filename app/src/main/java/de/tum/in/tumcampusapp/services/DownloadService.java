@@ -172,8 +172,11 @@ public class DownloadService extends IntentService {
 
     @Override
     protected void onHandleIntent(final Intent intent) {
-        new Thread(() -> {
-            download(intent, DownloadService.this);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                download(intent, DownloadService.this);
+            }
         }).start();
     }
 

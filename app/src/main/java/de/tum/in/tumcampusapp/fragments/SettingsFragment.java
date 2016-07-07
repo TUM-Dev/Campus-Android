@@ -1,7 +1,10 @@
 package de.tum.in.tumcampusapp.fragments;
 
 import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -127,13 +130,22 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
                 if (Build.VERSION.SDK_INT >= 11) {
                     // Load news source icon in background and set it
                     final String url = cur.getString(1);
-                    new Thread(() -> {
-                        NetUtils net = new NetUtils(mContext);
-                        final Optional<Bitmap> bmp = net.downloadImageToBitmap(url);
-                        if (!bmp.isPresent()) {
-                            return;
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            NetUtils net = new NetUtils(mContext);
+                            final Optional<Bitmap> bmp = net.downloadImageToBitmap(url);
+                            if (!bmp.isPresent()) {
+                                return;
+                            }
+                            mContext.runOnUiThread(new Runnable() {
+                                @TargetApi(11)
+                                @Override
+                                public void run() {
+                                    pref.setIcon(new BitmapDrawable(getResources(), bmp.get()));
+                                }
+                            });
                         }
-                        mContext.runOnUiThread(() -> pref.setIcon(new BitmapDrawable(getResources(), bmp.get())));
                     }).start();
                 }
                 pref.setTitle(cur.getString(2));
@@ -224,8 +236,11 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
                 // This button invokes the clear cache method
                 new AlertDialog.Builder(mContext)
                         .setMessage(R.string.delete_chache_sure)
-                        .setPositiveButton(R.string.yes, (dialogInterface, i) -> {
-                            clearCache();
+                        .setPositiveButton(R.string.yes, new Dialog.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                clearCache();
+                            }
                         })
                         .setNegativeButton(R.string.no, null).show();
 

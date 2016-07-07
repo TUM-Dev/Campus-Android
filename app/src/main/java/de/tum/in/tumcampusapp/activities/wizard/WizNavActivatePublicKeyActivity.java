@@ -113,7 +113,9 @@ public class WizNavActivatePublicKeyActivity extends ActivityForLoadingInBackgro
             Utils.setInternalSetting(this, Const.PRIVATE_KEY_ACTIVE, true);
 
             return true;
-        } catch (RetrofitError | NoPrivateKey e) {
+        } catch (RetrofitError e) {
+            Utils.log(e);
+        } catch (NoPrivateKey e) {
             Utils.log(e);
         }
         return false;
