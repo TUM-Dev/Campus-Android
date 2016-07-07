@@ -15,10 +15,6 @@ android {
             minifyEnabled false
         }
     }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
     defaultConfig {
         applicationId "de.tum.in.tumcampus"
         minSdkVersion 10
@@ -27,7 +23,6 @@ android {
         versionCode 67
         versionName "1.4.5-dev"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        jackOptions.enabled true
     }
     lintOptions {
         checkAllWarnings true
