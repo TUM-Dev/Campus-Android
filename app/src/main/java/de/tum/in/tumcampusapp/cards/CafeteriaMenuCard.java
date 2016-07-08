@@ -24,6 +24,8 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.CafeteriaActivity;
 import de.tum.in.tumcampusapp.auxiliary.CafeteriaPrices;
 import de.tum.in.tumcampusapp.auxiliary.Const;
+import de.tum.in.tumcampusapp.cards.generic.Card;
+import de.tum.in.tumcampusapp.cards.generic.NotificationAwareCard;
 import de.tum.in.tumcampusapp.models.CafeteriaMenu;
 
 import static de.tum.in.tumcampusapp.fragments.CafeteriaDetailsSectionFragment.showMenu;
@@ -32,7 +34,7 @@ import static de.tum.in.tumcampusapp.models.managers.CardManager.CARD_CAFETERIA;
 /**
  * Card that shows the cafeteria menu
  */
-public class CafeteriaMenuCard extends Card {
+public class CafeteriaMenuCard extends NotificationAwareCard {
     private static final String CAFETERIA_DATE = "cafeteria_date";
     private int mCafeteriaId;
     private String mCafeteriaName;
@@ -41,22 +43,12 @@ public class CafeteriaMenuCard extends Card {
     private List<CafeteriaMenu> mMenus;
 
     public CafeteriaMenuCard(Context context) {
-        super(context, "card_cafeteria");
+        super(CARD_CAFETERIA, context, "card_cafeteria");
     }
 
     public static Card.CardViewHolder inflateViewHolder(ViewGroup parent) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_item, parent, false);
         return new Card.CardViewHolder(view);
-    }
-
-    @Override
-    public int getTyp() {
-        return CARD_CAFETERIA;
-    }
-
-    @Override
-    public String getTitle() {
-        return mCafeteriaName;
     }
 
     @Override
@@ -101,6 +93,11 @@ public class CafeteriaMenuCard extends Card {
     }
 
     @Override
+    public String getTitle() {
+        return mCafeteriaName;
+    }
+
+    @Override
     public Intent getIntent() {
         Intent i = new Intent(mContext, CafeteriaActivity.class);
         i.putExtra(Const.CAFETERIA_ID, mCafeteriaId);
@@ -108,7 +105,12 @@ public class CafeteriaMenuCard extends Card {
     }
 
     @Override
-    protected void discard(Editor editor) {
+    public int getId() {
+        return 0;
+    }
+
+    @Override
+    public void discard(Editor editor) {
         editor.putLong(CAFETERIA_DATE, mDate.getTime());
     }
 

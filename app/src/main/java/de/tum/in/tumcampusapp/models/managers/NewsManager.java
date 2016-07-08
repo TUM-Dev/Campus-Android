@@ -14,8 +14,9 @@ import java.util.Date;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
-import de.tum.in.tumcampusapp.cards.Card;
+import de.tum.in.tumcampusapp.cards.FilmCard;
 import de.tum.in.tumcampusapp.cards.NewsCard;
+import de.tum.in.tumcampusapp.cards.generic.Card;
 import de.tum.in.tumcampusapp.models.News;
 
 /**
@@ -268,7 +269,12 @@ public class NewsManager extends AbstractManager implements Card.ProvidesCard {
             int i = 0;
             if (cur.moveToFirst()) {
                 do {
-                    NewsCard card = new NewsCard(context);
+                    NewsCard card;
+                    if (FilmCard.isNewsAFilm(cur, i)) {
+                        card = new FilmCard(context);
+                    } else {
+                        card = new NewsCard(context);
+                    }
                     card.setNews(cur, i);
                     card.apply();
                     i++;

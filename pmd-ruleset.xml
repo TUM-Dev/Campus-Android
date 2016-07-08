@@ -19,6 +19,7 @@
     <rule ref="rulesets/java/design.xml">
         <exclude name="GodClass" />
         <exclude name="UseVarargs" />
+        <exclude name="EmptyMethodInAbstractClassShouldBeAbstract" />
     </rule>
     <rule ref="rulesets/java/empty.xml" />
     <rule ref="rulesets/java/finalizers.xml" />

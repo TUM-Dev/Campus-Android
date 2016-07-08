@@ -486,7 +486,7 @@ public final class Utils {
             return packageInfo.versionCode;
         } catch (PackageManager.NameNotFoundException e) {
             // should never happen
-            throw new RuntimeException("Could not get package name: " + e);
+            throw new AssertionError("Could not get package name: " + e);
         }
     }
 
@@ -530,11 +530,7 @@ public final class Utils {
         return "0".equals(Utils.getSetting(context, "background_mode_set_to", "0"));
     }
 
-    public static String arrayListToString(ArrayList<String> array) {
-        return TextUtils.join(",", array);
-    }
-
-    public static String arrayToString(String[] array) {
+    public static String arrayListToString(Iterable<String> array) {
         return TextUtils.join(",", array);
     }
 

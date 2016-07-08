@@ -19,8 +19,8 @@ public class PlansDetailsActivity extends AppCompatActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-        ImplicitCounter.Counter(this);
-		setContentView(R.layout.activity_plans_details);
+        ImplicitCounter.count(this);
+        setContentView(R.layout.activity_plans_details);
 
         int title = getIntent().getExtras().getInt(PLAN_TITLE_ID);
         int img = getIntent().getExtras().getInt(PLAN_IMG_ID);

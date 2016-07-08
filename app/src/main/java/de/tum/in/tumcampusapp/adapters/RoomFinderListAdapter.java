@@ -48,8 +48,9 @@ public class RoomFinderListAdapter extends BaseAdapter implements StickyListHead
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View view, ViewGroup parent) {
         ViewHolder holder;
+        View convertView = view;
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.list_roomfinder_item, parent, false);
 
@@ -71,8 +72,9 @@ public class RoomFinderListAdapter extends BaseAdapter implements StickyListHead
 
     // Generate header view
     @Override
-    public View getHeaderView(int position, View convertView, ViewGroup parent) {
+    public View getHeaderView(int position, View view, ViewGroup parent) {
         HeaderViewHolder holder;
+        View convertView = view;
         if (convertView == null) {
             holder = new HeaderViewHolder();
             convertView = inflater.inflate(R.layout.header, parent, false);

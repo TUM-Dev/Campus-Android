@@ -199,7 +199,7 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ImplicitCounter.Counter(this);
+        ImplicitCounter.count(this);
         this.setContentView(R.layout.activity_chat);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.main_toolbar);

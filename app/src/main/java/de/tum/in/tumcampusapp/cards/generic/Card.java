@@ -1,8 +1,6 @@
-package de.tum.in.tumcampusapp.cards;
+package de.tum.in.tumcampusapp.cards.generic;
 
 import android.app.Activity;
-import android.app.Notification;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -10,8 +8,6 @@ import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
@@ -35,7 +31,7 @@ import de.tum.in.tumcampusapp.models.managers.CardManager;
  */
 public abstract class Card {
     public static final String DISCARD_SETTINGS_START = "discard_settings_start";
-    private static final String DISCARD_SETTINGS_PHONE = "discard_settings_phone";
+    public static final String DISCARD_SETTINGS_PHONE = "discard_settings_phone";
 
     // Context related stuff
     protected Context mContext;
@@ -47,16 +43,18 @@ public abstract class Card {
     // Settings for showing this card on start page or as notification
     // Default values set for restore card, no internet card, etc.
     private boolean mShowStart = true;
-    private boolean mShowWear;
-    private boolean mShowPhone;
+    protected boolean mShowWear;
+    protected boolean mShowPhone;
+
+    private final int cardType;
 
     /**
      * Card constructor for special cards that don't have a preference screen
      *
      * @param context Context
      */
-    Card(Context context) {
-        this(context, null);
+    public Card(int cardType, Context context) {
+        this(cardType, context, null);
     }
 
     /**
@@ -65,7 +63,8 @@ public abstract class Card {
      * @param context  Context
      * @param settings Preference key prefix used for all preferences belonging to that card
      */
-    Card(Context context, String settings) {
+    public Card(int cardType, Context context, String settings) {
+        this.cardType = cardType;
         mSettings = settings;
         mContext = context;
     }
@@ -78,8 +77,8 @@ public abstract class Card {
      * @param wearDefault  True if notifications should by default be displayed on android wear
      * @param phoneDefault True if notifications should by default be displayed on the phone
      */
-    Card(Context context, String settings, boolean wearDefault, boolean phoneDefault) {
-        this(context, settings);
+    public Card(int cardType, Context context, String settings, boolean wearDefault, boolean phoneDefault) {
+        this(cardType, context, settings);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
         mShowStart = prefs.getBoolean(settings + "_start", true);
         mShowWear = prefs.getBoolean(settings + "_wear", wearDefault);
@@ -87,11 +86,13 @@ public abstract class Card {
     }
 
     /**
-     * Gets the card typ
+     * Gets the card type
      *
-     * @return Returns an individual integer for each card typ
+     * @return Returns an individual integer for each card type
      */
-    public abstract int getTyp();
+    public final int getType() {
+        return cardType;
+    }
 
     /**
      * Updates the Cards content.
@@ -101,16 +102,16 @@ public abstract class Card {
      */
     public void updateViewHolder(RecyclerView.ViewHolder viewHolder) {
         mContext = viewHolder.itemView.getContext();
-        ImplicitCounter.CounterCard(mContext, this);
+        ImplicitCounter.countCard(mContext, this);
     }
 
     /**
      * Adds a new text view to the main card layout
      *
      * @param text Text that should be shown
-     * @return Handle to the {@link android.widget.TextView}
+     * @return Handle to the {@link TextView}
      */
-    TextView addTextView(String text) {
+    protected TextView addTextView(CharSequence text) {
         TextView textview = new TextView(mContext);
         textview.setText(text);
 
@@ -133,31 +134,11 @@ public abstract class Card {
     }
 
     /**
-     * Should be called if the notification has been dismissed
-     */
-    private void discardNotification() {
-        SharedPreferences prefs = mContext.getSharedPreferences(DISCARD_SETTINGS_PHONE, 0);
-        Editor editor = prefs.edit();
-        discardNotification(editor);
-        editor.apply();
-    }
-
-    /**
      * Save information about the dismissed card/notification to decide later if the card should be shown again
      *
      * @param editor Editor to be used for saving values
      */
-    void discard(Editor editor) {
-    }
-
-    /**
-     * Save information about the dismissed notification to don't shown again the notification
-     *
-     * @param editor Editor to be used for saving values
-     */
-    void discardNotification(Editor editor) {
-        discard(editor);
-    }
+    protected abstract void discard(Editor editor);
 
     /**
      * Must be called after information has been set
@@ -171,14 +152,6 @@ public abstract class Card {
                 CardManager.addCard(this);
             }
         }
-
-        // Should be shown on phone or watch?
-        if (mShowWear || mShowPhone) {
-            SharedPreferences prefs = mContext.getSharedPreferences(DISCARD_SETTINGS_PHONE, 0);
-            if (shouldShowNotification(prefs)) {
-                notifyUser();
-            }
-        }
     }
 
     /**
@@ -187,89 +160,22 @@ public abstract class Card {
      *
      * @return returns true if the card should be shown
      */
-    boolean shouldShow(SharedPreferences prefs) {
+    protected boolean shouldShow(SharedPreferences prefs) {
         return true;
-    }
-
-    /**
-     * Determines if the card should be shown. Decision is based on the given SharedPreferences.
-     * This method should be overridden in most cases.
-     *
-     * @return returns true if the card should be shown
-     */
-    boolean shouldShowNotification(SharedPreferences prefs) {
-        return shouldShow(prefs);
-    }
-
-    /**
-     * Shows the card as notification if settings allow it
-     */
-    private void notifyUser() {
-        // Start building our notification
-        NotificationCompat.Builder notificationBuilder =
-                new NotificationCompat.Builder(mContext)
-                        .setAutoCancel(true)
-                        .setContentTitle(getTitle());
-
-        // If intent is specified add the content intent to the notification
-        final Intent intent = getIntent();
-        if (intent != null) {
-            PendingIntent viewPendingIntent = PendingIntent.getActivity(mContext, 0, intent, 0);
-            notificationBuilder.setContentIntent(viewPendingIntent);
-        }
-
-        // Apply trick to hide card on phone if it the notification
-        // should only be present on the watch
-        if (mShowWear && !mShowPhone) {
-            notificationBuilder.setGroup("GROUP_" + getTyp());
-            notificationBuilder.setGroupSummary(false);
-        } else {
-            notificationBuilder.setSmallIcon(R.drawable.tum_logo);
-        }
-
-        // Let the card set detailed information
-        Notification notification = fillNotification(notificationBuilder);
-
-        if (notification != null) {
-            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(mContext);
-            try {
-                notificationManager.notify(getTyp(), notification);
-            } catch (IllegalArgumentException e) {
-                //Dismiss exception, as we want this to happen (Only work on wear)
-            }
-            // Showing a notification is handled as it would already be dismissed, so that it will not notify again.
-            discardNotification();
-        }
-    }
-
-    /**
-     * Should fill the given notification builder with content
-     */
-    Notification fillNotification(NotificationCompat.Builder notificationBuilder) {
-        return notificationBuilder.build();
     }
 
     /**
      * @return Should return the intent that should be launched if the card
      * or the notification gets clicked, null if nothing should happen
      */
-    public Intent getIntent() {
-        return null;
-    }
-
-    /**
-     * Gets the title of the card
-     */
-    String getTitle() {
-        return null;
-    }
+    public abstract Intent getIntent();
 
     /**
      * Tells the list adapter and indirectly the
-     * SwipeDismissList if the item is dismissable
-     * The restore card is not dismissable.
+     * SwipeDismissList if the item is dismissible
+     * The restore card is not dismissible.
      */
-    public boolean isDismissable() {
+    public boolean isDismissible() {
         return true;
     }
 
@@ -295,9 +201,10 @@ public abstract class Card {
         e.apply();
     }
 
-    public int getId() {
-        return 0;
-    }
+    /**
+     * @return a unique identifier among the type of the card
+     */
+    public abstract int getId();
 
     /**
      * Interface which has to be implemented by a manager class to add cards to the stream

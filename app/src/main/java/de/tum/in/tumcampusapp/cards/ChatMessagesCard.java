@@ -19,6 +19,8 @@ import java.util.List;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.ChatActivity;
 import de.tum.in.tumcampusapp.auxiliary.Const;
+import de.tum.in.tumcampusapp.cards.generic.Card;
+import de.tum.in.tumcampusapp.cards.generic.NotificationAwareCard;
 import de.tum.in.tumcampusapp.models.ChatMessage;
 import de.tum.in.tumcampusapp.models.ChatRoom;
 import de.tum.in.tumcampusapp.models.managers.ChatMessageManager;
@@ -28,7 +30,7 @@ import static de.tum.in.tumcampusapp.models.managers.CardManager.CARD_CHAT;
 /**
  * Card that shows the cafeteria menu
  */
-public class ChatMessagesCard extends Card {
+public class ChatMessagesCard extends NotificationAwareCard {
     private List<ChatMessage> mUnread;
     private ChatMessageManager manager;
     private String mRoomName;
@@ -36,17 +38,12 @@ public class ChatMessagesCard extends Card {
     private String mRoomIdString;
 
     public ChatMessagesCard(Context context) {
-        super(context, "card_chat");
+        super(CARD_CHAT, context, "card_chat");
     }
 
     public static Card.CardViewHolder inflateViewHolder(ViewGroup parent) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_item, parent, false);
         return new Card.CardViewHolder(view);
-    }
-
-    @Override
-    public int getTyp() {
-        return CARD_CHAT;
     }
 
     @Override
@@ -105,12 +102,17 @@ public class ChatMessagesCard extends Card {
     }
 
     @Override
+    public int getId() {
+        return mRoomId;
+    }
+
+    @Override
     protected void discard(Editor editor) {
         manager.markAsRead();
     }
 
     @Override
-    boolean shouldShowNotification(SharedPreferences prefs) {
+    protected boolean shouldShowNotification(SharedPreferences prefs) {
         return false;
     }
 }

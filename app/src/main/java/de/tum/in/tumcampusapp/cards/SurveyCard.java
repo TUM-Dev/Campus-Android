@@ -1,6 +1,7 @@
 package de.tum.in.tumcampusapp.cards;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
@@ -18,17 +19,18 @@ import org.joda.time.format.DateTimeFormatter;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
+import de.tum.in.tumcampusapp.cards.generic.Card;
 import de.tum.in.tumcampusapp.models.Question;
 import de.tum.in.tumcampusapp.models.managers.CardManager;
 import de.tum.in.tumcampusapp.models.managers.SurveyManager;
 
-public class SurveyCard extends Card
-
-{
-    private final ArrayList<Question> questions = new ArrayList<>(); // gets filled with the revelant openQuestions for the card
+public class SurveyCard extends Card {
+    private static final String SURVEY_CARD_DISCARDED_TILL = "survey_card_discarded_till";
+    private final List<Question> questions = new ArrayList<>(); // gets filled with the revelant openQuestions for the card
     private final SurveyManager manager = new SurveyManager(mContext);
     private TextView mQuestion;
     private Button bYes;
@@ -44,17 +46,12 @@ public class SurveyCard extends Card
     private static int answerSkip = 3;
 
     public SurveyCard(Context context) {
-        super(context, "card_survey");
+        super(CardManager.CARD_SURVEY, context, "card_survey");
     }
 
     public static Card.CardViewHolder inflateViewHolder(final ViewGroup parent) {
         final View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_survey, parent, false);
         return new Card.CardViewHolder(view);
-    }
-
-    @Override
-    public int getTyp() {
-        return CardManager.CARD_SURVEY;
     }
 
     /**
@@ -152,23 +149,29 @@ public class SurveyCard extends Card
     public void discard(SharedPreferences.Editor editor) {
         DateTime discardedTill = DateTime.now().plusMinutes(1440); // in 24 hours
         String discardTimeString = discardedTill.toString(fmt);
-        editor.putString("survey_card_discarded_till", discardTimeString);
+        editor.putString(SURVEY_CARD_DISCARDED_TILL, discardTimeString);
     }
 
     /**
      * Shows the card if there are releveant unansweredQuestions (not expired)
      * AND the discard grace period (if there is any) is finished
-     *
-     * @param p
-     * @return
      */
     @Override
-    public boolean shouldShow(SharedPreferences p) {
+    protected boolean shouldShow(SharedPreferences p) {
         String currentDate = Utils.getDateTimeString(new Date());
-        DateTime discardedTill = fmt.parseDateTime(p.getString("survey_card_discarded_till", DateTime.now().toString(fmt)));
+        DateTime discardedTill = fmt.parseDateTime(p.getString(SURVEY_CARD_DISCARDED_TILL, DateTime.now().toString(fmt)));
         return (discardedTill.isBeforeNow() && (manager.getUnansweredQuestionsSince(currentDate).getCount() >= 1));
     }
 
+    @Override
+    public Intent getIntent() {
+        return null;
+    }
+
+    @Override
+    public int getId() {
+        return 0;
+    }
 
     /**
      * Sets the openquestions (feteched from the server) in the  card

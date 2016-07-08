@@ -1,22 +1,65 @@
-apply plugin: 'com.android.library'
+apply plugin: 'com.android.application'
 apply from: '../findbugs.gradle'
 apply from: '../pmd.gradle'
 
 android {
-    lintOptions {
-        disable "TrulyRandom",
-                "ContentDescription",
-                "UnusedResources",    // unused resources get purged by shrinkResources
-                "SelectableText"      // disabled by default
+    compileSdkVersion 24
+    buildToolsVersion '24.0.0'
+    buildTypes {
+        debug {
+            debuggable true
+            minifyEnabled false
+        }
+        release {
+            debuggable false
+            minifyEnabled false
+        }
     }
     defaultConfig {
+        applicationId "de.tum.in.tumcampus"
+        minSdkVersion 10
+        targetSdkVersion 24
+        multiDexEnabled true
+        versionCode 67
+        versionName "1.4.5-dev"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    lintOptions {
+        checkAllWarnings true
+        htmlReport false
+        warningsAsErrors true
+        abortOnError true
+        lintConfig new File("lint.xml")
+        disable 'GoogleAppIndexingWarning',
+                'TrulyRandom',
+                'ContentDescription',
+                'UnusedResources',    // unused resources get purged by shrinkResources
+                'SelectableText'      // disabled by default
     }
     packagingOptions {
         exclude 'META-INF/maven/com.google.guava/guava/pom.properties'
         exclude 'META-INF/maven/com.google.guava/guava/pom.xml'
     }
+    productFlavors {
+        v10 {
+            minSdkVersion 10
+        }
+        v14 {
+            minSdkVersion 14
+            lintOptions.abortOnError false
+        }
+    }
+
     publishNonDefault true
+}
+
+configurations.all {
+    resolutionStrategy {
+        force 'com.android.support:appcompat-v7:24.0.0'
+        force 'com.android.support:design:24.0.0'
+        force 'com.android.support:recyclerview-v7:24.0.0'
+        force 'com.google.code.findbugs:jsr305:3.0.1'
+    }
 }
 
 dependencies {

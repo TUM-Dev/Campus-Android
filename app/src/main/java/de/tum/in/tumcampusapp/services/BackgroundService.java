@@ -44,6 +44,6 @@ public class BackgroundService extends IntentService {
         startService(service);
 
         //Upload Usage statistics
-        (new ImplicitCounter()).submitCounter(this);
+		ImplicitCounter.submitCounter(this);
 	}
 }

@@ -25,7 +25,7 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.BaseActivity;
 import de.tum.in.tumcampusapp.adapters.CardsAdapter;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
-import de.tum.in.tumcampusapp.cards.Card;
+import de.tum.in.tumcampusapp.cards.generic.Card;
 import de.tum.in.tumcampusapp.models.managers.CardManager;
 import de.tum.in.tumcampusapp.services.SilenceService;
 
@@ -279,7 +279,7 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
         @Override
         public int getSwipeDirs(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
             Card.CardViewHolder cardViewHolder = (Card.CardViewHolder) viewHolder;
-            if (!cardViewHolder.getCurrentCard().isDismissable()) {
+            if (!cardViewHolder.getCurrentCard().isDismissible()) {
                 return 0;
             }
             return super.getSwipeDirs(recyclerView, viewHolder);

@@ -24,7 +24,7 @@ public class OpeningHoursDetailActivity extends AppCompatActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-        ImplicitCounter.Counter(this);
+		ImplicitCounter.count(this);
 		setContentView(R.layout.activity_openinghoursdetails);
 
 		if (savedInstanceState == null) {

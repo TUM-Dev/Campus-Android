@@ -1,6 +1,7 @@
 package de.tum.in.tumcampusapp.cards;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
@@ -13,26 +14,23 @@ import java.util.Date;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
+import de.tum.in.tumcampusapp.cards.generic.Card;
+import de.tum.in.tumcampusapp.cards.generic.StickyCard;
 import de.tum.in.tumcampusapp.models.managers.CardManager;
 import de.tum.in.tumcampusapp.services.DownloadService;
 
 /**
  * Card that informs that no internet connection is available
  */
-public class NoInternetCard extends Card {
+public class NoInternetCard extends StickyCard {
 
     public NoInternetCard(Context context) {
-        super(context);
+        super(CardManager.CARD_NO_INTERNET, context);
     }
 
     public static Card.CardViewHolder inflateViewHolder(ViewGroup parent) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_no_internet, parent, false);
         return new Card.CardViewHolder(view);
-    }
-
-    @Override
-    public int getTyp() {
-        return CardManager.CARD_NO_INTERNET;
     }
 
     @Override
@@ -53,7 +51,12 @@ public class NoInternetCard extends Card {
     }
 
     @Override
-    public boolean isDismissable() {
-        return false;
+    public Intent getIntent() {
+        return null;
+    }
+
+    @Override
+    public int getId() {
+        return 0;
     }
 }

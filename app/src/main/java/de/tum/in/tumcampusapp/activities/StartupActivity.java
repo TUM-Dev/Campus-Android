@@ -1,13 +1,11 @@
 package de.tum.in.tumcampusapp.activities;
 
-import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.os.Environment;
@@ -46,6 +44,10 @@ import de.tum.in.tumcampusapp.services.DownloadService;
 import de.tum.in.tumcampusapp.services.StartSyncReceiver;
 import de.tum.in.tumcampusapp.trace.ExceptionHandler;
 
+import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
+import static android.Manifest.permission.ACCESS_FINE_LOCATION;
+import static android.content.pm.PackageManager.PERMISSION_GRANTED;
+
 /**
  * Entrance point of the App.
  */
@@ -53,8 +55,8 @@ public class StartupActivity extends AppCompatActivity {
 
     final AtomicBoolean initializationFinished = new AtomicBoolean(false);
     private static final int REQUEST_LOCATION = 0;
-    private static final String[] PERMISSIONS_LOCATION = {Manifest.permission.ACCESS_COARSE_LOCATION,
-            Manifest.permission.ACCESS_FINE_LOCATION};
+    private static final String[] PERMISSIONS_LOCATION = {ACCESS_COARSE_LOCATION,
+            ACCESS_FINE_LOCATION};
 
     private void init() {
         //Our own Custom exception handler
@@ -65,8 +67,8 @@ public class StartupActivity extends AppCompatActivity {
         am.generatePrivateKey();
 
         //Upload stats
-        ImplicitCounter.Counter(this);
-        new ImplicitCounter().submitCounter(this);
+        ImplicitCounter.count(this);
+        ImplicitCounter.submitCounter(this);
 
         // For compatibility reasons: big update happened with version 35
         int prevVersion = Utils.getInternalSettingInt(this, Const.APP_VERSION, 35);
@@ -173,39 +175,35 @@ public class StartupActivity extends AppCompatActivity {
      */
     private void requestLocationPermission() {
         //Check, if we already have permission
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED
-                || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-
-            // Provide an additional rationale to the user if the permission was not granted
-            // and the user would benefit from additional context for the use of the permission.
-            // For example, if the request has been denied previously.
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_COARSE_LOCATION) ||
-                    ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
-
-                // Display an AlertDialog with an explanation and a button to trigger the request.
-                new AlertDialog.Builder(this)
-                        .setMessage(getString(R.string.permission_location_explanation))
-                        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int id) {
-                                ActivityCompat
-                                        .requestPermissions(StartupActivity.this, PERMISSIONS_LOCATION,
-                                                REQUEST_LOCATION);
-                            }
-                        }).show();
-            } else {
-                ActivityCompat.requestPermissions(StartupActivity.this, PERMISSIONS_LOCATION,
-                        REQUEST_LOCATION);
-            }
-        } else {
+        if (ActivityCompat.checkSelfPermission(this, ACCESS_COARSE_LOCATION) == PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, ACCESS_FINE_LOCATION) == PERMISSION_GRANTED) {
             //We already got the permissions, to proceed normally
             //Only proceed to start the App, if initialization is finished
             if (initializationFinished.compareAndSet(false, true)) {
                 return;
             }
             startApp();
+        } else if (ActivityCompat.shouldShowRequestPermissionRationale(this, ACCESS_COARSE_LOCATION) ||
+                ActivityCompat.shouldShowRequestPermissionRationale(this, ACCESS_FINE_LOCATION)) {
+            // Provide an additional rationale to the user if the permission was not granted
+            // and the user would benefit from additional context for the use of the permission.
+            // For example, if the request has been denied previously.
+
+
+            // Display an AlertDialog with an explanation and a button to trigger the request.
+            new AlertDialog.Builder(this)
+                    .setMessage(getString(R.string.permission_location_explanation))
+                    .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int id) {
+                            ActivityCompat
+                                    .requestPermissions(StartupActivity.this, PERMISSIONS_LOCATION,
+                                            REQUEST_LOCATION);
+                        }
+                    }).show();
+        } else {
+            ActivityCompat.requestPermissions(StartupActivity.this, PERMISSIONS_LOCATION,
+                    REQUEST_LOCATION);
         }
     }
 

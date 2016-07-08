@@ -170,7 +170,7 @@ public class EventActivity extends BaseActivity {
         try {
             return DTF.parse(string);
         } catch (ParseException e) {
-            throw new RuntimeException(e);
+            throw new IllegalStateException(e);
         }
     }
 

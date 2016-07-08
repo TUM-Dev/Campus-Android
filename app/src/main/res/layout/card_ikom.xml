@@ -1,57 +1,50 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:card_view="http://schemas.android.com/apk/res-auto"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content">
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:layout_marginBottom="@dimen/card_padding_vertical"
+    android:layout_marginLeft="8dp"
+    android:layout_marginRight="8dp"
+    android:layout_marginTop="@dimen/card_padding_vertical"
+    android:elevation="@dimen/cardview_elevation"
+    card_view:cardBackgroundColor="#fff"
+    card_view:cardCornerRadius="3dp"
+    tools:ignore="UnusedAttribute">
 
-    <android.support.v7.widget.CardView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginBottom="@dimen/card_padding_vertical"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="@dimen/card_padding_vertical"
-        android:elevation="@dimen/cardview_elevation"
-        card_view:cardBackgroundColor="#fff"
-        card_view:cardCornerRadius="3dp"
-        tools:ignore="UnusedAttribute">
+        android:background="@drawable/card_selector"
+        android:orientation="vertical">
 
-        <LinearLayout
+        <ImageView
+            android:id="@+id/imageIkom"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/card_selector"
-            android:orientation="vertical">
+            android:adjustViewBounds="true"
+            android:src="@drawable/ikom_1" />
 
-            <ImageView
-                android:layout_width="match_parent"
+        <android.support.v7.widget.ButtonBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="right"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/bttnOpenPlan"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ikom_1"
-                android:id="@+id/imageIkom"
-                android:adjustViewBounds="true" />
+                android:layout_gravity="right"
+                android:text="@string/event_plan" />
 
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="right">
-
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/event_plan"
-                    android:id="@+id/bttnOpenPlan"
-                    android:layout_gravity="right"/>
-
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/more_info"
-                    android:id="@+id/bttnIkom"
-                    android:layout_gravity="right"
-                    />
-            </LinearLayout>
-
-        </LinearLayout>
-    </android.support.v7.widget.CardView>
-</FrameLayout>
+            <Button
+                android:id="@+id/bttnIkom"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:text="@string/more_info" />
+        </android.support.v7.widget.ButtonBarLayout>
+    </LinearLayout>
+</android.support.v7.widget.CardView>

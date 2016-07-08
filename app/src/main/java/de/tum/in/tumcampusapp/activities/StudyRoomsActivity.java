@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
 import org.json.JSONException;
@@ -68,7 +69,7 @@ public class StudyRoomsActivity extends ActivityForLoadingInBackground<Void, Voi
         }
     }
 
-    private void sortStudyRoomsByOccupation(List<StudyRoom> studyRooms) {
+    private static void sortStudyRoomsByOccupation(List<StudyRoom> studyRooms) {
         Collections.sort(studyRooms, new Comparator<StudyRoom>() {
             @Override
             public int compare(StudyRoom lhs, StudyRoom rhs) {
@@ -79,7 +80,7 @@ public class StudyRoomsActivity extends ActivityForLoadingInBackground<Void, Voi
 
     private Spinner getStudyRoomGroupsSpinner() {
         // Adapter for drop-down navigation
-        ArrayAdapter<StudyRoomGroup> adapterCafeterias =
+        SpinnerAdapter adapterCafeterias =
                 new ArrayAdapter<StudyRoomGroup>(this, R.layout.simple_spinner_item_actionbar,
                         android.R.id.text1, mStudyRoomGroupList) {
                     final LayoutInflater inflater = (LayoutInflater) getContext()
@@ -114,10 +115,10 @@ public class StudyRoomsActivity extends ActivityForLoadingInBackground<Void, Voi
     }
 
     private void showCorrectErrorLayout() {
-        if (!NetUtils.isConnected(this)) {
-            showNoInternetLayout();
-        } else {
+        if (NetUtils.isConnected(this)) {
             showErrorLayout();
+        } else {
+            showNoInternetLayout();
         }
     }
 

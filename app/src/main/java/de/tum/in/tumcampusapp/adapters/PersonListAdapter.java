@@ -44,8 +44,9 @@ public class PersonListAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View view, ViewGroup parent) {
         ViewHolder holder;
+        View convertView = view;
         if (convertView == null) {
             convertView = mInflater.inflate(android.R.layout.simple_list_item_1, parent, false);
 

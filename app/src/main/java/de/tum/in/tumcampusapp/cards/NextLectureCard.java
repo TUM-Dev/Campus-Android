@@ -12,7 +12,6 @@ import android.graphics.BitmapFactory;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,10 +30,12 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.CalendarActivity;
 import de.tum.in.tumcampusapp.activities.RoomFinderActivity;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
+import de.tum.in.tumcampusapp.cards.generic.Card;
+import de.tum.in.tumcampusapp.cards.generic.NotificationAwareCard;
 import de.tum.in.tumcampusapp.models.managers.CardManager;
 
 
-public class NextLectureCard extends Card {
+public class NextLectureCard extends NotificationAwareCard {
 
     private static final String NEXT_LECTURE_DATE = "next_date";
     private final static int[] IDS = {
@@ -50,17 +51,12 @@ public class NextLectureCard extends Card {
     private TextView mEvent;
 
     public NextLectureCard(Context context) {
-        super(context, "card_next_lecture");
+        super(CardManager.CARD_NEXT_LECTURE, context, "card_next_lecture");
     }
 
     public static Card.CardViewHolder inflateViewHolder(ViewGroup parent) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_next_lecture_item, parent, false);
         return new Card.CardViewHolder(view);
-    }
-
-    @Override
-    public int getTyp() {
-        return CardManager.CARD_NEXT_LECTURE;
     }
 
     @Override
@@ -116,7 +112,9 @@ public class NextLectureCard extends Card {
                 System.currentTimeMillis(), DateUtils.MINUTE_IN_MILLIS, DateUtils.FORMAT_ABBREV_RELATIVE));
 
         //Add location with link to room finder
-        if (item.location != null && !item.location.isEmpty()) {
+        if (item.location == null || item.location.isEmpty()) {
+            mLocation.setVisibility(View.GONE);
+        } else {
             mLocation.setText(item.location);
             mLocation.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -126,8 +124,6 @@ public class NextLectureCard extends Card {
                     mContext.startActivity(i);
                 }
             });
-        } else {
-            mLocation.setVisibility(View.GONE);
         }
 
         DateFormat week = new SimpleDateFormat("EEEE, ", Locale.getDefault());
@@ -158,6 +154,16 @@ public class NextLectureCard extends Card {
     }
 
     @Override
+    public Intent getIntent() {
+        return null;
+    }
+
+    @Override
+    public int getId() {
+        return 0;
+    }
+
+    @Override
     protected Notification fillNotification(NotificationCompat.Builder notificationBuilder) {
         CalendarItem item = lectures.get(0);
         final String time = DateUtils.getRelativeDateTimeString(mContext, item.start.getTime(),
@@ -185,8 +191,6 @@ public class NextLectureCard extends Card {
             item.location = cur.getString(3);
             if (item.location != null) {
                 item.location = item.location.replaceAll("\\([A-Z0-9\\.]+\\)", "").trim();
-            } else {
-                item.location = null;
             }
             lectures.add(item);
         } while (cur.moveToNext());

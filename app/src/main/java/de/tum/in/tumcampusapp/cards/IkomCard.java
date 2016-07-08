@@ -18,6 +18,7 @@ import org.joda.time.DateTime;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.EventActivity;
+import de.tum.in.tumcampusapp.cards.generic.Card;
 import de.tum.in.tumcampusapp.models.managers.CardManager;
 
 /**
@@ -27,7 +28,7 @@ public class IkomCard extends Card {
 
 
     public IkomCard(Context context) {
-        super(context);
+        super(CardManager.CARD_IKOM, context);
     }
 
     public static CardViewHolder inflateViewHolder(final ViewGroup parent) {
@@ -76,18 +77,13 @@ public class IkomCard extends Card {
     }
 
     @Override
-    public int getTyp() {
-        return CardManager.CARD_IKOM;
-    }
-
-    @Override
     public void discard(Editor editor) {
         SharedPreferences prefs = mContext.getSharedPreferences(Card.DISCARD_SETTINGS_START, 0);
         prefs.edit().putBoolean(CardManager.SHOW_IKOM, false).apply();
     }
 
     @Override
-    public boolean shouldShow(SharedPreferences p) {
+    protected boolean shouldShow(SharedPreferences p) {
         //Either use day: display always when event is running
         JodaTimeAndroid.init(mContext);
         //DateTime firstDay = new DateTime(2016, 6, 18, 0, 0);
@@ -102,5 +98,10 @@ public class IkomCard extends Card {
     @Override
     public Intent getIntent() {
         return new Intent(mContext, EventActivity.class);
+    }
+
+    @Override
+    public int getId() {
+        return 0;
     }
 }

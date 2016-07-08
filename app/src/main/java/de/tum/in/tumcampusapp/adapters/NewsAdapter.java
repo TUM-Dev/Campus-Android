@@ -16,8 +16,9 @@ import java.util.Date;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
-import de.tum.in.tumcampusapp.cards.Card;
+import de.tum.in.tumcampusapp.cards.FilmCard;
 import de.tum.in.tumcampusapp.cards.NewsCard;
+import de.tum.in.tumcampusapp.cards.generic.Card;
 
 public class NewsAdapter extends RecyclerView.Adapter<NewsCard.CardViewHolder> {
     private final NetUtils net;
@@ -88,7 +89,12 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsCard.CardViewHolder> {
     @Override
     public void onBindViewHolder(NewsCard.CardViewHolder holder, int position) {
         NewsViewHolder nHolder = (NewsViewHolder) holder;
-        NewsCard card = new NewsCard(mContext);
+        NewsCard card;
+        if (FilmCard.isNewsAFilm(c, position)) {
+            card = new FilmCard(mContext);
+        } else {
+            card = new NewsCard(mContext);
+        }
         card.setNews(c, position);
         nHolder.setCurrentCard(card);
 

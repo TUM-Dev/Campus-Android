@@ -26,7 +26,7 @@ public class UserPreferencesActivity extends BaseActivity  implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ImplicitCounter.Counter(this);
+        ImplicitCounter.count(this);
 
         //Enable the direct access of a specific sub section, e.g.: cards
         Intent intent = getIntent();

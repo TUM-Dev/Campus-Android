@@ -63,9 +63,9 @@ public class LecturesListAdapter extends BaseAdapter implements StickyListHeader
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View view, ViewGroup parent) {
         ViewHolder holder;
-
+        View convertView = view;
         if (convertView == null) {
             convertView = mInflater.inflate(R.layout.activity_lectures_listview, parent, false);
             holder = new ViewHolder();
@@ -97,8 +97,9 @@ public class LecturesListAdapter extends BaseAdapter implements StickyListHeader
 
     // Generate header view
     @Override
-    public View getHeaderView(int pos, View convertView, ViewGroup parent) {
+    public View getHeaderView(int pos, View view, ViewGroup parent) {
         HeaderViewHolder holder;
+        View convertView = view;
         if (convertView == null) {
             holder = new HeaderViewHolder();
             convertView = mInflater.inflate(R.layout.header, parent, false);
