@@ -2,7 +2,6 @@ package de.tum.in.tumcampusapp.models.managers;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.database.SQLException;
 
 import com.google.common.base.Optional;
 
@@ -22,6 +21,7 @@ import de.tum.in.tumcampusapp.models.CafeteriaMenu;
  * Cafeteria Menu Manager, handles database stuff, external imports
  */
 public class CafeteriaMenuManager extends AbstractManager {
+
     private static final int TIME_TO_SYNC = 86400; // 1 day
 
     /**
@@ -37,6 +37,7 @@ public class CafeteriaMenuManager extends AbstractManager {
      * @throws Exception
      */
     private static CafeteriaMenu getFromJson(JSONObject json) throws Exception {
+
         return new CafeteriaMenu(json.getInt("id"), json.getInt("mensa_id"),
                 Utils.getDate(json.getString("date")),
                 json.getString("type_short"), json.getString("type_long"),
@@ -56,6 +57,7 @@ public class CafeteriaMenuManager extends AbstractManager {
      */
     private static CafeteriaMenu getFromJsonAddendum(JSONObject json)
             throws Exception {
+
         return new CafeteriaMenu(0, json.getInt("mensa_id"), Utils.getDate(json
                 .getString("date")), json.getString("type_short"),
                 json.getString("type_long"), 10, json.getString("name"));
@@ -68,12 +70,14 @@ public class CafeteriaMenuManager extends AbstractManager {
      */
     public CafeteriaMenuManager(Context context) {
         super(context);
+
         // create table if needed
         db.execSQL("CREATE TABLE IF NOT EXISTS cafeterias_menus ("
                 + "id INTEGER PRIMARY KEY AUTOINCREMENT, mensaId INTEGER KEY, date VARCHAR, typeShort VARCHAR, "
                 + "typeLong VARCHAR, typeNr INTEGER, name VARCHAR)");
+
         db.execSQL("CREATE TABLE IF NOT EXISTS favorite_dishes ("
-                + "id INTEGER PRIMARY KEY AUTOINCREMENT, mensaId INTEGER KEY, dishName VARCHAR,date VARCHAR)");
+                + "id INTEGER PRIMARY KEY AUTOINCREMENT, mensaId INTEGER, dishName VARCHAR,date VARCHAR, tag VARCHAR)");
     }
 
     /**
@@ -109,27 +113,39 @@ public class CafeteriaMenuManager extends AbstractManager {
             }
             db.setTransactionSuccessful();
         } catch (Exception e) {
-
         } finally {
             db.endTransaction();
         }
-
-        SyncManager.replaceIntoDb(db,this);
+        SyncManager.replaceIntoDb(db, this);
     }
 
-
-    public void insertFavoriteDish(int mensaId, String dishName, String date) {
-        db.execSQL("INSERT INTO favorite_dishes (mensaId, dishName ,date) VALUES (?, ?, ?)",
-                new String[]{"" + mensaId, dishName, date});
+    public void insertFavoriteDish(int mensaId, String dishName, String date, String tag) {
+        db.execSQL("INSERT INTO favorite_dishes (mensaId, dishName, date, tag) VALUES (?, ?, ?,?)",
+                new String[]{"" + mensaId, dishName, date, tag});
     }
 
     public Cursor getFavoriteDishNextDates(int mensaId, String dishName) {
         return db.rawQuery("SELECT strftime('%d-%m-%Y', date) "
-                + "FROM cafeterias_menus WHERE date >= date('now','localtime') AND mensaId=? AND name=?", new String[]{"" + mensaId, dishName});
+                + "FROM cafeterias_menus WHERE date > date('now','localtime') AND mensaId=? AND name=?", new String[]{"" + mensaId, dishName});
     }
 
-    public Cursor checkIfFavoriteDish(int mensaId, String dishName) {
-        return db.rawQuery("SELECT dishName "
+    public Cursor getAllFavoriteDishes() {
+        return db.rawQuery("SELECT * "
+                + "FROM favorite_dishes", null);
+    }
+
+    public Cursor checkIfFavoriteDish(String tag) {
+        return db.rawQuery("SELECT * "
+                + "FROM favorite_dishes WHERE tag=? ", new String[]{tag});
+    }
+
+    public Cursor getLastInsertedDishId(int mensaId, String dishName) {
+        return db.rawQuery("SELECT MAX(id) "
+                + "FROM favorite_dishes WHERE mensaId=? AND dishName=?", new String[]{"" + mensaId, dishName});
+    }
+
+    public Cursor getFavoriteDishAllIds(int mensaId, String dishName) {
+        return db.rawQuery("SELECT id "
                 + "FROM favorite_dishes WHERE mensaId=? AND dishName=?", new String[]{"" + mensaId, dishName});
     }
 
@@ -139,7 +155,7 @@ public class CafeteriaMenuManager extends AbstractManager {
     }
 
     public Cursor getFavoriteDishToday() {
-        return db.rawQuery("SELECT dishName ,mensaId FROM favorite_dishes WHERE date = date('now','localtime')", null);
+        return db.rawQuery("SELECT dishName FROM favorite_dishes WHERE date = date('now','localtime')", null);
     }
 
     /**

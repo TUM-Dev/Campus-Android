@@ -1,12 +1,8 @@
 package de.tum.in.tumcampusapp.activities;
 
-import android.app.AlarmManager;
 import android.app.AlertDialog;
-import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -17,11 +13,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.ToggleButton;
-
-import java.util.Calendar;
 import java.util.List;
+
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.ActivityForDownloadingExternal;
 import de.tum.in.tumcampusapp.adapters.CafeteriaDetailsSectionsPagerAdapter;
@@ -29,14 +22,14 @@ import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.Cafeteria;
+import de.tum.in.tumcampusapp.models.managers.CafeteriaMenuManager;
 import de.tum.in.tumcampusapp.models.managers.LocationManager;
-import de.tum.in.tumcampusapp.services.FavoriteDishReceiver;
 
 import static de.tum.in.tumcampusapp.fragments.CafeteriaDetailsSectionFragment.menuToSpan;
 
 /**
  * Lists all dishes at selected cafeteria
- * <p/>
+ *
  * OPTIONAL: Const.CAFETERIA_ID set in incoming bundle (cafeteria to show)
  */
 public class CafeteriaActivity extends ActivityForDownloadingExternal implements AdapterView.OnItemSelectedListener {
@@ -45,7 +38,8 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
     private int mCafeteriaId = -1;
     private CafeteriaDetailsSectionsPagerAdapter mSectionsPagerAdapter;
     private List<Cafeteria> mCafeterias;
-    ToggleButton favDish;
+    private String mensaForFav="";
+    private CafeteriaMenuManager cmm;
 
     public CafeteriaActivity() {
         super(Const.CAFETERIAS, R.layout.activity_cafeteria);
@@ -54,13 +48,15 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         // Get id from intent if specified
+        cmm = new CafeteriaMenuManager(this);
         final Intent intent = getIntent();
-        if (intent != null && intent.getExtras() != null && intent.getExtras().containsKey(Const.CAFETERIA_ID)) {
+        if(intent!=null && intent.getExtras()!=null && intent.getExtras().containsKey(Const.CAFETERIA_ID))
             mCafeteriaId = intent.getExtras().getInt(Const.CAFETERIA_ID);
-        }
+
         mViewPager = (ViewPager) findViewById(R.id.pager);
+        mViewPager.setOffscreenPageLimit(50);
+
     }
 
     @Override
@@ -72,7 +68,7 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_ingredients) {
+        if(item.getItemId()==R.id.action_ingredients) {
             // Build a alert dialog containing the mapping of ingredients to the numbers
             new AlertDialog.Builder(this).setTitle(R.string.action_ingredients)
                     .setMessage(menuToSpan(this, getResources().getString(R.string.cafeteria_ingredients)))
@@ -81,6 +77,7 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
         }
         return super.onOptionsItemSelected(item);
     }
+
 
     /**
      * Setup action bar navigation (to switch between cafeterias)
@@ -93,19 +90,19 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
         mCafeterias = new LocationManager(this).getCafeterias();
 
         // If something went wrong or no cafeterias found
-        if (mCafeterias.isEmpty()) {
-            if (NetUtils.isConnected(this)) {
-                showErrorLayout();
-            } else {
+        if (mCafeterias.size() == 0) {
+            if(!NetUtils.isConnected(this)) {
                 showNoInternetLayout();
+            } else {
+                showErrorLayout();
             }
             return;
         }
 
         int selIndex = -1;
-        for (int i = 0; i < mCafeterias.size(); i++) {
+        for(int i=0;i<mCafeterias.size();i++) {
             Cafeteria c = mCafeterias.get(i);
-            if (mCafeteriaId == -1 || mCafeteriaId == c.id) {
+            if(mCafeteriaId==-1 || mCafeteriaId == c.id) {
                 mCafeteriaId = c.id;
                 selIndex = i;
                 break;
@@ -113,7 +110,7 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
         }
 
         // Adapter for drop-down navigation
-        ArrayAdapter<Cafeteria> adapterCafeterias = new ArrayAdapter<Cafeteria>(this, R.layout.simple_spinner_item_actionbar, android.R.id.text1, mCafeterias) {
+        ArrayAdapter<Cafeteria> adapterCafeterias = new ArrayAdapter<Cafeteria>(this, R.layout.simple_spinner_item_actionbar, android.R.id.text1, mCafeterias ) {
             final LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(LAYOUT_INFLATER_SERVICE);
 
             @Override
@@ -141,36 +138,60 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
         spinner.setAdapter(adapterCafeterias);
         spinner.setOnItemSelectedListener(this);
         // Select item
-        if (selIndex > -1) {
+        if(getIntent().getExtras()!=null && getIntent().getExtras().containsKey("pos"))
+            spinner.setSelection(getIntent().getExtras().getInt("pos"));
+        else if(selIndex>-1)
             spinner.setSelection(selIndex);
-        }
     }
 
     /**
      * Switch cafeteria if a new cafeteria has been selected
-     *
      * @param parent the parent view
-     * @param pos    index of the new selection
-     * @param id     id of the selected item
+     * @param pos index of the new selection
+     * @param id id of the selected item
      */
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-        mCafeteriaId = mCafeterias.get(pos).id;
+        final Intent in = getIntent();
+        if(in!=null && in.getExtras()!=null && in.getExtras().containsKey("cafId"))
+            mCafeteriaId = in.getExtras().getInt("cafId");
+        else
+            mCafeteriaId = mCafeterias.get(pos).id;
+
 
         // Create the adapter that will return a fragment for each of the primary sections of the app.
-        if (mSectionsPagerAdapter == null) {
+        if (mSectionsPagerAdapter == null ) {
             mSectionsPagerAdapter = new CafeteriaDetailsSectionsPagerAdapter(getSupportFragmentManager());
             mSectionsPagerAdapter.setCafeteriaId(this, mCafeteriaId);
             mViewPager.setAdapter(mSectionsPagerAdapter);
+
+        } else if (!mensaForFav.equals("")) {
+
+            mViewPager.setAdapter(null); //unset the adapter for updating
+            mSectionsPagerAdapter.setCafeteriaId(this, mCafeteriaId);
+            mViewPager.setAdapter(mSectionsPagerAdapter);
+            refreshActivity(mCafeterias.get(pos).id,pos);
         } else {
             mViewPager.setAdapter(null); //unset the adapter for updating
             mSectionsPagerAdapter.setCafeteriaId(this, mCafeteriaId);
             mViewPager.setAdapter(mSectionsPagerAdapter);
+            refreshActivity(mCafeterias.get(pos).id,pos);
         }
+
+        mViewPager.setOffscreenPageLimit(50);
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
         //Don't change anything
+    }
+
+    public void refreshActivity(int cafId,int selectedSpinnerPos) {
+        Intent i=getIntent();
+        i.putExtra("cafId",cafId);
+        i.putExtra("pos",selectedSpinnerPos);
+        i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        finish();
+        startActivity(i);
     }
 }

@@ -1,5 +1,6 @@
 package de.tum.in.tumcampusapp.activities.wizard;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -11,6 +12,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -87,6 +89,7 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<Void, Bo
             }
 
             // Fill the fetched facultyData into the majorSpinner
+            @SuppressLint("ShowToast")
             @Override
             protected void onPostExecute(String[] majors) {
                 ArrayAdapter<String> adapter = new ArrayAdapter<>(getBaseContext(), android.R.layout.simple_list_item_1, majors);
@@ -97,12 +100,13 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<Void, Bo
                 userMajorSpinner.setSelection(Integer.parseInt(Utils.getInternalSettingString(getApplicationContext(), "user_faculty_number", "0")));
 
                 // Upon clicking on the faculty spinner and there is no internet connection -> toast to the user.
-                userMajorSpinner.setOnClickListener(new View.OnClickListener() {
+                userMajorSpinner.setOnTouchListener(new View.OnTouchListener() {
                     @Override
-                    public void onClick(View view) {
+                    public boolean onTouch(View view, MotionEvent motionEvent) {
                         if (!NetUtils.isConnected(getApplicationContext())) {
                             Toast.makeText(getApplicationContext(), getString(R.string.please_connect_to_internet), Toast.LENGTH_LONG).show();
                         }
+                        return view.performClick();
                     }
                 });
 
@@ -235,4 +239,3 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<Void, Bo
         }
     }
 }
-
