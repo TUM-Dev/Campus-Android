@@ -11,6 +11,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import de.tum.in.tumcampusapp.auxiliary.Const;
@@ -27,7 +28,7 @@ public class CafeteriaDetailsSectionsPagerAdapter extends FragmentStatePagerAdap
     private Cursor cursorCafeteriaDates;
 
     /** Current Date selected (ISO format) */
-    private final ArrayList<String> dates = new ArrayList<>();
+    private final List<String> dates = new ArrayList<>();
 
     public CafeteriaDetailsSectionsPagerAdapter(FragmentManager fm) {
         super(fm);

@@ -16,8 +16,9 @@ import java.util.Date;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
-import de.tum.in.tumcampusapp.cards.Card;
+import de.tum.in.tumcampusapp.cards.FilmCard;
 import de.tum.in.tumcampusapp.cards.NewsCard;
+import de.tum.in.tumcampusapp.cards.generic.Card;
 
 public class NewsAdapter extends RecyclerView.Adapter<NewsCard.CardViewHolder> {
     private final NetUtils net;
@@ -40,9 +41,9 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsCard.CardViewHolder> {
         NewsViewHolder holder = new NewsViewHolder(card);
         holder.title = (TextView) card.findViewById(R.id.news_title);
         holder.img = (ImageView) card.findViewById(R.id.news_img);
-        holder.src_date = (TextView) card.findViewById(R.id.news_src_date);
-        holder.src_icon = (ImageView) card.findViewById(R.id.news_src_icon);
-        holder.src_title = (TextView) card.findViewById(R.id.news_src_title);
+        holder.srcDate = (TextView) card.findViewById(R.id.news_src_date);
+        holder.srcIcon = (ImageView) card.findViewById(R.id.news_src_icon);
+        holder.srcTitle = (TextView) card.findViewById(R.id.news_src_title);
         card.setTag(holder);
         return holder;
     }
@@ -61,7 +62,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsCard.CardViewHolder> {
 
         String title = cursor.getString(2);
         if (cursor.getInt(1) == 2) {
-            title = title.replaceAll("^[0-9]+\\. [0-9]+\\. [0-9]+:[ ]*","");
+            title = title.replaceAll("^[0-9]+\\. [0-9]+\\. [0-9]+:[ ]*", "");
         }
         holder.title.setText(title);
 
@@ -69,14 +70,14 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsCard.CardViewHolder> {
         String date = cursor.getString(5);
         Date d = Utils.getISODateTime(date);
         DateFormat sdf = SimpleDateFormat.getDateInstance();
-        holder.src_date.setText(sdf.format(d));
+        holder.srcDate.setText(sdf.format(d));
 
-        holder.src_title.setText(cursor.getString(8));
+        holder.srcTitle.setText(cursor.getString(8));
         String icon = cursor.getString(7);
         if (icon.isEmpty() || icon.equals("null")) {
-            holder.src_icon.setImageResource(R.drawable.ic_comment);
+            holder.srcIcon.setImageResource(R.drawable.ic_comment);
         } else {
-            net.loadAndSetImage(icon, holder.src_icon);
+            net.loadAndSetImage(icon, holder.srcIcon);
         }
     }
 
@@ -88,7 +89,12 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsCard.CardViewHolder> {
     @Override
     public void onBindViewHolder(NewsCard.CardViewHolder holder, int position) {
         NewsViewHolder nHolder = (NewsViewHolder) holder;
-        NewsCard card = new NewsCard(mContext);
+        NewsCard card;
+        if (FilmCard.isNewsAFilm(c, position)) {
+            card = new FilmCard(mContext);
+        } else {
+            card = new NewsCard(mContext);
+        }
         card.setNews(c, position);
         nHolder.setCurrentCard(card);
 
@@ -110,9 +116,9 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsCard.CardViewHolder> {
     public static class NewsViewHolder extends Card.CardViewHolder {
         ImageView img;
         TextView title;
-        TextView src_date;
-        TextView src_title;
-        ImageView src_icon;
+        TextView srcDate;
+        TextView srcTitle;
+        ImageView srcIcon;
 
         public NewsViewHolder(View itemView) {
             super(itemView);

@@ -14,12 +14,13 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.ChatActivity;
 import de.tum.in.tumcampusapp.auxiliary.Const;
+import de.tum.in.tumcampusapp.cards.generic.Card;
+import de.tum.in.tumcampusapp.cards.generic.NotificationAwareCard;
 import de.tum.in.tumcampusapp.models.ChatMessage;
 import de.tum.in.tumcampusapp.models.ChatRoom;
 import de.tum.in.tumcampusapp.models.managers.ChatMessageManager;
@@ -29,25 +30,20 @@ import static de.tum.in.tumcampusapp.models.managers.CardManager.CARD_CHAT;
 /**
  * Card that shows the cafeteria menu
  */
-public class ChatMessagesCard extends Card {
-    private ArrayList<ChatMessage> mUnread;
+public class ChatMessagesCard extends NotificationAwareCard {
+    private List<ChatMessage> mUnread;
     private ChatMessageManager manager;
     private String mRoomName;
     private int mRoomId;
     private String mRoomIdString;
 
     public ChatMessagesCard(Context context) {
-        super(context, "card_chat");
+        super(CARD_CHAT, context, "card_chat");
     }
 
-    public static Card.CardViewHolder inflateViewHolder(ViewGroup parent){
+    public static Card.CardViewHolder inflateViewHolder(ViewGroup parent) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_item, parent, false);
         return new Card.CardViewHolder(view);
-    }
-
-    @Override
-    public int getTyp() {
-        return CARD_CHAT;
     }
 
     @Override
@@ -63,7 +59,7 @@ public class ChatMessagesCard extends Card {
 
         mLinearLayout = (LinearLayout) mCard.findViewById(R.id.card_view);
         mTitleView = (TextView) mCard.findViewById(R.id.card_title);
-        mTitleView.setText(getTitle());
+        mTitleView.setText(mRoomName);
 
         //Remove additional views
         for (View view : addedViews) {
@@ -71,15 +67,16 @@ public class ChatMessagesCard extends Card {
         }
 
         // Show cafeteria menu
-        for(ChatMessage message : mUnread) {
+        for (ChatMessage message : mUnread) {
             addedViews.add(addTextView(message.getMember().getDisplayName() + ": " + message.getText()));
         }
     }
 
     /**
      * Sets the information needed to build the card
+     *
      * @param roomName Name of the chat room
-     * @param roomId Id of the chat room
+     * @param roomId   Id of the chat room
      */
     public void setChatRoom(String roomName, int roomId, String roomIdString) {
         mRoomName = roomName;
@@ -105,12 +102,17 @@ public class ChatMessagesCard extends Card {
     }
 
     @Override
+    public int getId() {
+        return mRoomId;
+    }
+
+    @Override
     protected void discard(Editor editor) {
         manager.markAsRead();
     }
 
     @Override
-    boolean shouldShowNotification(SharedPreferences prefs) {
+    protected boolean shouldShowNotification(SharedPreferences prefs) {
         return false;
     }
 }

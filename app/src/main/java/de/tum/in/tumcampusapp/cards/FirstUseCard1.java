@@ -1,6 +1,7 @@
 package de.tum.in.tumcampusapp.cards;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.view.LayoutInflater;
@@ -9,6 +10,7 @@ import android.view.ViewGroup;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
+import de.tum.in.tumcampusapp.cards.generic.Card;
 import de.tum.in.tumcampusapp.models.managers.CardManager;
 
 /**
@@ -17,7 +19,7 @@ import de.tum.in.tumcampusapp.models.managers.CardManager;
 public class FirstUseCard1 extends Card {
 
     public FirstUseCard1(Context context) {
-        super(context);
+        super(CardManager.CARD_FIRST_USE_1, context);
     }
 
     public static Card.CardViewHolder inflateViewHolder(ViewGroup parent) {
@@ -26,17 +28,22 @@ public class FirstUseCard1 extends Card {
     }
 
     @Override
-    public int getTyp() {
-        return CardManager.CARD_FIRST_USE_1;
-    }
-
-    @Override
     public void discard(Editor editor) {
         Utils.setInternalSetting(mContext, CardManager.SHOW_TUTORIAL_1, false);
     }
 
     @Override
-    public boolean shouldShow(SharedPreferences p) {
+    protected boolean shouldShow(SharedPreferences p) {
         return Utils.getInternalSettingBool(mContext, CardManager.SHOW_TUTORIAL_1, true);
+    }
+
+    @Override
+    public Intent getIntent() {
+        return null;
+    }
+
+    @Override
+    public int getId() {
+        return 0;
     }
 }

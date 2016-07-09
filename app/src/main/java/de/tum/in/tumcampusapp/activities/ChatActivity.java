@@ -19,7 +19,6 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.Toolbar;
-import android.text.Html;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -34,10 +33,9 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
+import com.google.common.net.UrlEscapers;
 import com.google.gson.Gson;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -50,13 +48,13 @@ import de.tum.in.tumcampusapp.auxiliary.ImplicitCounter;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.exceptions.NoPrivateKey;
-import de.tum.in.tumcampusapp.models.GCMChat;
-import de.tum.in.tumcampusapp.models.TUMCabeClient;
 import de.tum.in.tumcampusapp.models.ChatMember;
 import de.tum.in.tumcampusapp.models.ChatMessage;
 import de.tum.in.tumcampusapp.models.ChatPublicKey;
 import de.tum.in.tumcampusapp.models.ChatRoom;
 import de.tum.in.tumcampusapp.models.ChatVerification;
+import de.tum.in.tumcampusapp.models.GCMChat;
+import de.tum.in.tumcampusapp.models.TUMCabeClient;
 import de.tum.in.tumcampusapp.models.managers.CardManager;
 import de.tum.in.tumcampusapp.models.managers.ChatMessageManager;
 import de.tum.in.tumcampusapp.models.managers.ChatRoomManager;
@@ -75,57 +73,22 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
 
     // Key for the string that's delivered in the action's intent
     public static final String EXTRA_VOICE_REPLY = "extra_voice_reply";
-    private static final int maxEditTimespan = 120000;
-    public static ChatRoom mCurrentOpenChatRoom = null;
+    private static final int MAX_EDIT_TIMESPAN = 120000;
+    public static ChatRoom mCurrentOpenChatRoom;
     private final Handler mUpdateHandler = new Handler();
     /**
      * UI elements
      */
     private ListView lvMessageHistory;
-    private ChatHistoryAdapter chatHistoryAdapter = null;
+    private ChatHistoryAdapter chatHistoryAdapter;
     private EditText etMessage;
     private ImageButton btnSend;
     private ProgressBar bar;
     private ChatRoom currentChatRoom;
     private ChatMember currentChatMember;
-    private boolean loadingMore = false;
-    private boolean iconShow = false;
+    private boolean loadingMore;
+    private ActionMode mActionMode;
     private ChatMessageManager chatManager;
-    private final BroadcastReceiver receiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            GCMChat extras = (GCMChat) intent.getSerializableExtra("GCMChat");
-            if(extras == null) {
-                return;
-            }
-            Utils.log("Broadcast receiver got room=" + extras.room + " member=" + extras.member);
-
-            //If same room just refresh
-            if (extras.room == currentChatRoom.getId() && chatHistoryAdapter != null) {
-                if (extras.member == currentChatMember.getId()) {
-                    // Remove this message from the adapter
-                    chatHistoryAdapter.setUnsentMessages(chatManager.getAllUnsent());
-                } else if (extras.message == -1) {
-                    //Check first, if sounds are enabled
-                    AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-                    if (am.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
-
-                        //Play a nice notification sound
-                        MediaPlayer mediaPlayer = MediaPlayer.create(ChatActivity.this, R.raw.message);
-                        mediaPlayer.start();
-                    } else if (am.getRingerMode() == AudioManager.RINGER_MODE_VIBRATE) { //Possibly only vibration is enabled
-                        Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-                        v.vibrate(500);
-                    }
-                }
-
-                //Update the history
-                chatHistoryAdapter.changeCursor(chatManager.getAll());
-            }
-        }
-    };
-
-    private ActionMode mActionMode = null;
     private final ActionMode.Callback mActionModeCallback = new ActionMode.Callback() {
 
         // Called when the action mode is created; startActionMode() was called
@@ -183,11 +146,60 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
             chatHistoryAdapter.notifyDataSetChanged();
         }
     };
+    private final BroadcastReceiver receiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            GCMChat extras = (GCMChat) intent.getSerializableExtra("GCMChat");
+            if (extras == null) {
+                return;
+            }
+            Utils.log("Broadcast receiver got room=" + extras.room + " member=" + extras.member);
+            handleRoomBroadcast(extras);
+        }
+    };
+
+    /**
+     * Gets the text from speech input and returns null if no input was provided
+     */
+    private static CharSequence getMessageText(Intent intent) {
+        Bundle remoteInput = RemoteInput.getResultsFromIntent(intent);
+        if (remoteInput != null) {
+            return remoteInput.getCharSequence(EXTRA_VOICE_REPLY);
+        }
+        return null;
+    }
+
+    private void handleRoomBroadcast(GCMChat extras) {
+        //If same room just refresh
+        if (!(extras.room == currentChatRoom.getId() && chatHistoryAdapter != null)) {
+            return;
+        }
+        if (extras.member == currentChatMember.getId()) {
+            // Remove this message from the adapter
+            chatHistoryAdapter.setUnsentMessages(chatManager.getAllUnsent());
+        } else if (extras.message == -1) {
+            //Check first, if sounds are enabled
+            AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+            if (am.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
+
+                //Play a nice notification sound
+                MediaPlayer mediaPlayer = MediaPlayer.create(ChatActivity.this, R.raw.message);
+                mediaPlayer.start();
+            } else if (am.getRingerMode() == AudioManager.RINGER_MODE_VIBRATE) { //Possibly only vibration is enabled
+                Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+                v.vibrate(500);
+            }
+        }
+
+        //Update the history
+        chatHistoryAdapter.changeCursor(chatManager.getAll());
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ImplicitCounter.Counter(this);
+        ImplicitCounter.count(this);
         this.setContentView(R.layout.activity_chat);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.main_toolbar);
@@ -204,8 +216,9 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
         mUpdateHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (chatHistoryAdapter != null)
+                if (chatHistoryAdapter != null) {
                     chatHistoryAdapter.notifyDataSetChanged();
+                }
                 mUpdateHandler.postDelayed(this, 10000);
             }
         }, 10000);
@@ -242,17 +255,16 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
         final ChatRoom room = new Gson().fromJson(intent.getExtras().getString(Const.CURRENT_CHAT_ROOM), ChatRoom.class);
 
         //Check, maybe it wasn't there
-        if (room != null) {
+        if (room != null && room.getId() != currentChatRoom.getId()) {
             //If currently in a room which does not match the one from the notification --> Switch
-            if (room.getId() != currentChatRoom.getId()) {
-                currentChatRoom = room;
-                if (getSupportActionBar() != null) {
-                    getSupportActionBar().setSubtitle(currentChatRoom.getName().substring(4));
-                }
-                chatHistoryAdapter = null;
-                chatManager = new ChatMessageManager(this, currentChatRoom.getId());
-                getNextHistoryFromServer(true);
+            currentChatRoom = room;
+            if (getSupportActionBar() != null) {
+                getSupportActionBar().setSubtitle(currentChatRoom.getName().substring(4));
             }
+            chatHistoryAdapter = null;
+            chatManager = new ChatMessageManager(this, currentChatRoom.getId());
+            getNextHistoryFromServer(true);
+
         }
     }
 
@@ -286,13 +298,8 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
     }
 
     private void showQRCode() {
-        String url = "http://chart.apis.google.com/chart?cht=qr&chs=500x500&chld=M&choe=UTF-8&chl=";
-        try {
-            url += URLEncoder.encode(currentChatRoom.getName(), "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            Utils.log(e);
-            return;
-        }
+        String url = "http://chart.apis.google.com/chart?cht=qr&chs=500x500&chld=M&choe=UTF-8&chl=" +
+                UrlEscapers.urlPathSegmentEscaper().escape(currentChatRoom.getName());
 
         final ImageView qrCode = new ImageView(this);
         new NetUtils(this).loadAndSetImage(url, qrCode);
@@ -314,7 +321,7 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
         if (view.getId() == btnSend.getId()) {
 
             //Check if something was entered
-            if (etMessage.getText().toString().length() == 0) {
+            if (etMessage.getText().toString().isEmpty()) {
                 return;
             }
 
@@ -387,7 +394,7 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
     @Override
     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
         //is the top item is visible & not loading more already ? Load more !
-        if ((firstVisibleItem == 0) && !loadingMore && chatHistoryAdapter != null) {
+        if (firstVisibleItem == 0 && !loadingMore && chatHistoryAdapter != null) {
             getNextHistoryFromServer(false);
         }
     }
@@ -400,17 +407,16 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
         new Thread(new Runnable() {
             @Override
             public void run() {
-
                 // Download chat messages in new Thread
-                ArrayList<ChatMessage> downloadedChatHistory;
 
                 // If currently nothing has been shown load newest messages from server
-                ChatVerification verification = null;
+                ChatVerification verification;
                 try {
                     verification = new ChatVerification(ChatActivity.this, currentChatMember);
                 } catch (NoPrivateKey noPrivateKey) {
                     return; //In this case we simply cannot do anything
                 }
+                ArrayList<ChatMessage> downloadedChatHistory;
                 if (chatHistoryAdapter == null || chatHistoryAdapter.getSentCount() == 0 || newMsg) {
                     downloadedChatHistory = TUMCabeClient.getInstance(ChatActivity.this).getNewMessages(currentChatRoom.getId(), verification);
                 } else {
@@ -439,7 +445,7 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
                         }
 
                         // If all messages are loaded hide header view
-                        if ((cur.moveToFirst() && cur.getLong(ChatMessageManager.COL_PREVIOUS) == 0) || cur.getCount() == 0) {
+                        if (cur.moveToFirst() && cur.getLong(ChatMessageManager.COL_PREVIOUS) == 0 || cur.getCount() == 0) {
                             lvMessageHistory.removeHeaderView(bar);
                         } else {
                             loadingMore = false;
@@ -486,17 +492,6 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
     }
 
     /**
-     * Gets the text from speech input and returns null if no input was provided
-     */
-    private static CharSequence getMessageText(Intent intent) {
-        Bundle remoteInput = RemoteInput.getResultsFromIntent(intent);
-        if (remoteInput != null) {
-            return remoteInput.getCharSequence(EXTRA_VOICE_REPLY);
-        }
-        return null;
-    }
-
-    /**
      * Validates chat message if long clicked on an item
      *
      * @param parent   ListView
@@ -517,7 +512,7 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
         ChatMessage message = (ChatMessage) chatHistoryAdapter.getItem(positionActual);
 
         // If we are in a certain timespan and its the users own message allow editing
-        if ((System.currentTimeMillis() - message.getTimestampDate().getTime()) < ChatActivity.maxEditTimespan && message.getMember().getId() == currentChatMember.getId()) {
+        if ((System.currentTimeMillis() - message.getTimestampDate().getTime()) < ChatActivity.MAX_EDIT_TIMESPAN && message.getMember().getId() == currentChatMember.getId()) {
 
             // Hide keyboard if opened
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -551,7 +546,7 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
 
                 new AlertDialog.Builder(ChatActivity.this)
                         .setTitle(R.string.message_details)
-                        .setMessage(Html.fromHtml(messageStr))
+                        .setMessage(Utils.fromHtml(messageStr))
                         .create().show();
             }
 

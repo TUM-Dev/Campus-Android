@@ -1,7 +1,7 @@
 package de.tum.in.tumcampusapp.tumonline;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * this interface sets how to implement a variety of event listeners for the
@@ -18,7 +18,7 @@ public interface TUMRoomFinderRequestFetchListener {
 	 * 
 	 * @param result this will be the raw return of the fetch
 	 */
-	void onFetch(ArrayList<HashMap<String, String>> result);
+	void onFetch(List<Map<String, String>> result);
 
 	/**
 	 * if the fetchInteractive method will result in null or there is no

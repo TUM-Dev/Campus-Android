@@ -1,7 +1,5 @@
 package de.tum.in.tumcampusapp.activities;
 
-import android.support.test.espresso.matcher.ViewMatchers;
-
 import org.junit.Test;
 
 import de.tum.in.tumcampusapp.R;
@@ -17,7 +15,7 @@ public abstract class BaseActivityTest {
 
     @Test
     public void testDrawerLayout() throws InterruptedException {
-        onView(ViewMatchers.withId(R.id.drawer_layout))
+        onView(withId(R.id.drawer_layout))
                 .perform(open());
 
         onView(withId(R.id.left_drawer))

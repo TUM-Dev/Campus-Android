@@ -1,6 +1,10 @@
 package de.tum.in.tumcampusapp.fragments;
 
+import android.annotation.SuppressLint;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,10 +16,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.auxiliary.CafeteriaPrices;
@@ -23,6 +29,7 @@ import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.managers.CafeteriaMenuManager;
 import de.tum.in.tumcampusapp.models.managers.OpenHoursManager;
+import de.tum.in.tumcampusapp.services.FavoriteDishReceiver;
 
 /**
  * Fragment for each cafeteria-page.
@@ -39,10 +46,11 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
      * @param dateStr     Date in yyyy-mm-dd format
      * @param big         True to show big lines
      */
+    @SuppressLint("ShowToast")
     public static List<View> showMenu(LinearLayout rootView, int cafeteriaId, String dateStr, boolean big) {
         // initialize a few often used things
         final Context context = rootView.getContext();
-        final HashMap<String, String> rolePrices = CafeteriaPrices.getRolePrices(context);
+        final Map<String, String> rolePrices = CafeteriaPrices.getRolePrices(context);
         final int padding = (int) context.getResources().getDimension(R.dimen.card_text_padding);
         List<View> addedViews = new ArrayList<>();
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -72,8 +80,9 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
                 // Skip unchecked categories if showing card
                 boolean shouldShow = Utils.getSettingBool(context, "card_cafeteria_" + typeShort,
                         typeShort.equals("tg") || typeShort.equals("ae"));
-                if (!big && !shouldShow)
+                if (!big && !shouldShow) {
                     continue;
+                }
 
                 // Add header if we start with a new category
                 if (!typeShort.equals(curShort)) {
@@ -87,11 +96,61 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
 
                 // Show menu item
                 SpannableString text = menuToSpan(context, big ? menu : prepare(menu));
+                int dishId=cursorCafeteriaMenu.getInt(2);
                 if (rolePrices.containsKey(typeLong)) {
                     // If price is available
-                    View view = inflater.inflate(big ? R.layout.price_line_big : R.layout.card_price_line, rootView, false);
+                    View view = inflater.inflate(big ? R.layout.price_line_big : R.layout.card_price_line , rootView, false);
                     textview = (TextView) view.findViewById(R.id.line_name);
                     TextView priceView = (TextView) view.findViewById(R.id.line_price);
+                     //toggle button (star) mark dish as favorite
+                    final ToggleButton favDish=(ToggleButton)view.findViewById(R.id.favortieDish);
+                    favDish.setOnClickListener(new View.OnClickListener() {
+                        /**
+                         * when dish marked as favorite create an alarm on specific date using calendar and alarmManager
+                         * call the FavoriteDishReceiver
+                         */
+                        @Override
+                        public void onClick(View v) {
+                            /**
+                             * if checked mark dish as favorite and create Notification on next valid date for dish
+                             * update local database set dish as favorite
+                             */
+
+                            if(favDish.isChecked())
+                            {
+                                //new CafeteriaMenuManager(context).insertFavoriteDish(Integer.parseInt(favDish.getTag().toString()));
+
+                               /*Calendar calendar = Calendar.getInstance();
+                                calendar.set(Calendar.MONTH, 6);
+                                calendar.set(Calendar.YEAR, 2016);
+                                calendar.set(Calendar.DAY_OF_MONTH, 19);
+                                calendar.set(Calendar.HOUR_OF_DAY, 5);
+                                calendar.set(Calendar.MINUTE, 00);
+                                calendar.set(Calendar.SECOND, 0);
+                                calendar.set(Calendar.AM_PM,Calendar.AM);
+                                */
+
+                                Intent myIntent = new Intent(context, FavoriteDishReceiver.class);
+                                PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, myIntent,0);
+                                AlarmManager alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+                                alarmManager.set(AlarmManager.RTC, System.currentTimeMillis()+5000, pendingIntent);
+                                Toast.makeText(context,favDish.getTag().toString(),Toast.LENGTH_SHORT).show();
+                            }
+                            /**
+                             *update local database set dish as not favorite
+                             * remove alarms
+                             */
+                            else {
+                                //new CafeteriaMenuManager(context).DeleteFavoriteDish(Integer.parseInt(favDish.getTag().toString()));
+                            }
+                        }
+                    });
+
+                    /**
+                     * saved dish id in the favoriteDishButton tag.
+                     * onButton checked getTag->DishID and mark it as favorite
+                     */
+                    favDish.setTag(dishId +"");
                     textview.setText(text);
                     priceView.setText(String.format("%s €", rolePrices.get(typeLong)));
                     rootView.addView(view);
@@ -115,11 +174,12 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
      * Replaces all (v), ... annotations with images
      *
      * @param context Context
-     * @param menu    Text with annotations
+     * @param menuString    Text with annotations
      * @return Spannable text with images
      */
-    public static SpannableString menuToSpan(Context context, String menu) {
+    public static SpannableString menuToSpan(Context context, String menuString) {
         int len;
+        String menu = menuString;
         do {
             len = menu.length();
             menu = menu.replaceFirst("\\(([A-Za-z0-9]+),", "($1)(");
@@ -146,11 +206,12 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
     /**
      * Replaces all annotations that cannot be replaces with images such as (1), ...
      *
-     * @param menu Text to delete annotations from
+     * @param menuString Text to delete annotations from
      * @return Text without un-replaceable annotations
      */
-    private static String prepare(String menu) {
+    private static String prepare(String menuString) {
         int len;
+        String menu = menuString;
         do {
             len = menu.length();
             menu = menu.replaceFirst("\\(([A-Za-z0-9]+),", "($1)(");
@@ -160,12 +221,10 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_cafeteriadetails_section, container, false);
+        final View rootView = inflater.inflate(R.layout.fragment_cafeteriadetails_section, container, false);
         LinearLayout root = (LinearLayout) rootView.findViewById(R.id.layout);
-
         int cafeteriaId = getArguments().getInt(Const.CAFETERIA_ID);
         String date = getArguments().getString(Const.DATE);
-
         showMenu(root, cafeteriaId, date, true);
         return rootView;
     }

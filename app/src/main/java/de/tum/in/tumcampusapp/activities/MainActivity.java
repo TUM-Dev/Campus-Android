@@ -25,7 +25,7 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.BaseActivity;
 import de.tum.in.tumcampusapp.adapters.CardsAdapter;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
-import de.tum.in.tumcampusapp.cards.Card;
+import de.tum.in.tumcampusapp.cards.generic.Card;
 import de.tum.in.tumcampusapp.models.managers.CardManager;
 import de.tum.in.tumcampusapp.services.SilenceService;
 
@@ -45,7 +45,7 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
     private RecyclerView mCardsView;
     private CardsAdapter mAdapter;
     private SwipeRefreshLayout mSwipeRefreshLayout;
-    BroadcastReceiver connectivityChangeReceiver = new BroadcastReceiver() {
+    final BroadcastReceiver connectivityChangeReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (NetUtils.isConnected(context)) {
@@ -117,6 +117,12 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
 
         // Set the drawer toggle as the DrawerListener
         mDrawerLayout.addDrawerListener(mDrawerToggle);
+
+        if (CardManager.getShouldRefresh() || CardManager.getCards() == null) {
+            refreshCards();
+        } else {
+            initAdapter();
+        }
     }
 
     @Override
@@ -124,17 +130,6 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
         // Inflate the menu; this adds items to the action bar if it is present.
         this.getMenuInflater().inflate(R.menu.menu_settings, menu);
         return true;
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (CardManager.shouldRefresh || CardManager.getCards() == null) {
-            refreshCards();
-        } else {
-            initAdapter();
-        }
-        showToolbar();
     }
 
     /**
@@ -263,7 +258,8 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
      * Smoothly scrolls the RecyclerView to the top and dispatches nestedScrollingEvents to show
      * the Toolbar
      */
-    @SuppressLint("NewApi") // Verified in a API 10 emulator that this works, even though AndroidLint reports otherwise
+    @SuppressLint("NewApi")
+    // Verified in a API 10 emulator that this works, even though AndroidLint reports otherwise
     private void showToolbar() {
         mCardsView.startNestedScroll(ViewCompat.SCROLL_AXIS_VERTICAL);
         mCardsView.dispatchNestedFling(0, Integer.MIN_VALUE, true);
@@ -283,7 +279,7 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
         @Override
         public int getSwipeDirs(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
             Card.CardViewHolder cardViewHolder = (Card.CardViewHolder) viewHolder;
-            if (!cardViewHolder.getCurrentCard().isDismissable()) {
+            if (!cardViewHolder.getCurrentCard().isDismissible()) {
                 return 0;
             }
             return super.getSwipeDirs(recyclerView, viewHolder);

@@ -13,10 +13,10 @@ import de.tum.in.tumcampusapp.activities.generic.ActivityForLoadingInBackground;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.exceptions.NoPrivateKey;
-import de.tum.in.tumcampusapp.models.TUMCabeClient;
 import de.tum.in.tumcampusapp.models.ChatMember;
 import de.tum.in.tumcampusapp.models.ChatRoom;
 import de.tum.in.tumcampusapp.models.ChatVerification;
+import de.tum.in.tumcampusapp.models.TUMCabeClient;
 import de.tum.in.tumcampusapp.models.managers.ChatRoomManager;
 import retrofit.RetrofitError;
 
@@ -25,7 +25,7 @@ import retrofit.RetrofitError;
  */
 public class WizNavActivatePublicKeyActivity extends ActivityForLoadingInBackground<Void, Boolean> {
 
-    private boolean tokenSetup = false;
+    private boolean tokenSetup;
 
     public WizNavActivatePublicKeyActivity() {
         super(R.layout.activity_wiznav_activate_key);
@@ -49,7 +49,7 @@ public class WizNavActivatePublicKeyActivity extends ActivityForLoadingInBackgro
     }
 
     public void onClickTerms(View view) {
-        Uri uri = Uri.parse("https://tumcabe.in.tum.de/landing/chatterms/");
+        Uri uri = Uri.parse(Const.CHATTERMS_URL);
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         startActivity(intent);
     }
@@ -97,17 +97,17 @@ public class WizNavActivatePublicKeyActivity extends ActivityForLoadingInBackgro
 
     @Override
     protected Boolean onLoadInBackground(Void... arg) {
-        ChatRoomManager manager = new ChatRoomManager(this);
 
         // Get member and private key from settings
         ChatMember member = Utils.getSetting(this, Const.CHAT_MEMBER, ChatMember.class);
-        if (member == null)
+        if (member == null) {
             return false;
+        }
 
         // Try to restore already joined chat rooms from server
         try {
             List<ChatRoom> rooms = TUMCabeClient.getInstance(this).getMemberRooms(member.getId(), new ChatVerification(this, member));
-            manager.replaceIntoRooms(rooms);
+            new ChatRoomManager(this).replaceIntoRooms(rooms);
 
             //Store that this key was activated
             Utils.setInternalSetting(this, Const.PRIVATE_KEY_ACTIVE, true);
@@ -115,7 +115,7 @@ public class WizNavActivatePublicKeyActivity extends ActivityForLoadingInBackgro
             return true;
         } catch (RetrofitError e) {
             Utils.log(e);
-        } catch (NoPrivateKey e){
+        } catch (NoPrivateKey e) {
             Utils.log(e);
         }
         return false;

@@ -22,6 +22,8 @@ import java.util.List;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.TransportationDetailsActivity;
 import de.tum.in.tumcampusapp.auxiliary.DepartureView;
+import de.tum.in.tumcampusapp.cards.generic.Card;
+import de.tum.in.tumcampusapp.cards.generic.NotificationAwareCard;
 import de.tum.in.tumcampusapp.models.managers.TransportManager;
 
 import static de.tum.in.tumcampusapp.models.managers.CardManager.CARD_MVV;
@@ -29,23 +31,18 @@ import static de.tum.in.tumcampusapp.models.managers.CardManager.CARD_MVV;
 /**
  * Card that shows MVV departure times
  */
-public class MVVCard extends Card {
+public class MVVCard extends NotificationAwareCard {
     private static final String MVV_TIME = "mvv_time";
     private Pair<String, String> mStationNameIDPair;
     private List<TransportManager.Departure> mDepartures;
 
     public MVVCard(Context context) {
-        super(context, "card_mvv");
+        super(CARD_MVV, context, "card_mvv");
     }
 
     public static Card.CardViewHolder inflateViewHolder(ViewGroup parent) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_item, parent, false);
         return new Card.CardViewHolder(view);
-    }
-
-    @Override
-    public int getTyp() {
-        return CARD_MVV;
     }
 
     @Override
@@ -87,6 +84,11 @@ public class MVVCard extends Card {
         i.putExtra(TransportationDetailsActivity.EXTRA_STATION, mStationNameIDPair.first);
         i.putExtra(TransportationDetailsActivity.EXTRA_STATION_ID, mStationNameIDPair.second);
         return i;
+    }
+
+    @Override
+    public int getId() {
+        return 0;
     }
 
     @Override

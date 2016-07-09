@@ -12,6 +12,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.auxiliary.DateUtils;
@@ -22,7 +23,9 @@ import de.tum.in.tumcampusapp.models.managers.ChatMessageManager;
 public class ChatHistoryAdapter extends CursorAdapter {
 
     private final Context mContext;
-    private ArrayList<ChatMessage> unsentMessages = new ArrayList<>();
+    private final LayoutInflater inflater;
+    private final ChatMember currentChatMember;
+    private List<ChatMessage> unsentMessages = new ArrayList<>();
     public ChatMessage mCheckedItem;
     public ChatMessage mEditedItem;
 
@@ -43,10 +46,6 @@ public class ChatHistoryAdapter extends CursorAdapter {
         public ImageView ivSent;
         public LinearLayout layout;
     }
-
-    private final LayoutInflater inflater;
-
-    private final ChatMember currentChatMember;
 
     public ChatHistoryAdapter(Context context, Cursor messageHistory, ChatMember member) {
         super(context, messageHistory, false);
@@ -91,8 +90,9 @@ public class ChatHistoryAdapter extends CursorAdapter {
 
     @Override
     public int getItemViewType(int position) {
-        if (position > super.getCount())
+        if (position > super.getCount()) {
             return 0;
+        }
         ChatMessage msg = (ChatMessage) getItem(position);
         return currentChatMember.getId() == msg.getMember().getId() ? 0 : 1;
     }
@@ -100,8 +100,9 @@ public class ChatHistoryAdapter extends CursorAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup viewGroup) {
         int count = super.getCount();
-        if (position < count)
+        if (position < count) {
             return super.getView(position, convertView, viewGroup);
+        }
 
         ChatMessage chatMessage = unsentMessages.get(position - count);
         View v = newView(mContext, null, viewGroup);
@@ -161,10 +162,10 @@ public class ChatHistoryAdapter extends CursorAdapter {
             holder.tvTimestamp.setText("");
         }
 
-        if ((mCheckedItem != null && mCheckedItem.getId() == chatMessage.getId()
-                && mCheckedItem.getStatus() == chatMessage.getStatus()) ||
-                (mEditedItem != null && mEditedItem.getId() == chatMessage.getId()
-                        && mEditedItem.getStatus() == chatMessage.getStatus())) {
+        if (mCheckedItem != null && mCheckedItem.getId() == chatMessage.getId()
+                && mCheckedItem.getStatus() == chatMessage.getStatus() ||
+                mEditedItem != null && mEditedItem.getId() == chatMessage.getId()
+                        && mEditedItem.getStatus() == chatMessage.getStatus()) {
             holder.layout.setBackgroundResource(R.drawable.bg_message_outgoing_selected);
         } else if (holder.ivSent != null) {
             holder.layout.setBackgroundResource(R.drawable.bg_message_outgoing);
@@ -176,7 +177,7 @@ public class ChatHistoryAdapter extends CursorAdapter {
         notifyDataSetChanged();
     }
 
-    public void setUnsentMessages(ArrayList<ChatMessage> unsent) {
+    public void setUnsentMessages(List<ChatMessage> unsent) {
         unsentMessages = unsent;
     }
 }

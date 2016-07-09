@@ -23,31 +23,8 @@ allprojects {
     afterEvaluate { project ->
         if (project.hasProperty("android")) {
             android {
-                compileSdkVersion 23
-                buildToolsVersion '23.0.3'
-                defaultConfig {
-                    minSdkVersion 10
-                    targetSdkVersion 23
-                    multiDexEnabled true
-                    versionCode 66
-                    versionName "1.4.4-dev"
-                }
-                lintOptions {
-                    checkAllWarnings true
-                    htmlReport false
-                    warningsAsErrors true
-                    abortOnError true
-                    lintConfig new File("lint.xml")
-                }
                 buildTypes {
-                    debug {
-                        debuggable true
-                    }
-                    release {
-                        debuggable false
-                    }
                     all {
-                        minifyEnabled true
                         FileCollection proGuardFileCollection = files {
                             file('proguard').listFiles()
                         }

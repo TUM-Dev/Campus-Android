@@ -7,6 +7,8 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.support.v4.content.LocalBroadcastManager;
 
+import org.json.JSONException;
+
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
@@ -40,14 +42,13 @@ public class DownloadService extends IntentService {
     private static final String LAST_UPDATE = "last_update";
     private static final String CSV_LOCATIONS = "locations.csv";
 
-    private final LocalBroadcastManager broadcastManager;
+    private LocalBroadcastManager broadcastManager;
 
     /**
      * default init (run intent in new thread)
      */
     public DownloadService() {
         super(DOWNLOAD_SERVICE);
-        broadcastManager = LocalBroadcastManager.getInstance(this);
     }
 
     /**
@@ -74,15 +75,16 @@ public class DownloadService extends IntentService {
             G.appVersionCode = pi.versionCode; //Version code e.g.: 45
         }
 
-        boolean successful = true;
         String action = intent.getStringExtra(Const.ACTION_EXTRA);
-        boolean force = intent.getBooleanExtra(Const.FORCE_DOWNLOAD, false);
-        boolean launch = intent.getBooleanExtra(Const.APP_LAUNCHES, false);
 
         // No action: leave service
         if (action == null) {
             return;
         }
+
+        boolean successful = true;
+        boolean force = intent.getBooleanExtra(Const.FORCE_DOWNLOAD, false);
+        boolean launch = intent.getBooleanExtra(Const.APP_LAUNCHES, false);
 
         // Check if device has a internet connection
 
@@ -122,7 +124,7 @@ public class DownloadService extends IntentService {
             }
         }
 
-        if ((action.equals(Const.DOWNLOAD_ALL_FROM_EXTERNAL))) {
+        if (action.equals(Const.DOWNLOAD_ALL_FROM_EXTERNAL)) {
             try {
                 service.importLocationsDefaults();
             } catch (Exception e) {
@@ -147,7 +149,7 @@ public class DownloadService extends IntentService {
         }
 
         // Do all other import stuff that is not relevant for creating the viewing the start page
-        if ((action.equals(Const.DOWNLOAD_ALL_FROM_EXTERNAL))) {
+        if (action.equals(Const.DOWNLOAD_ALL_FROM_EXTERNAL)) {
             service.startService(new Intent(service, FillCacheService.class));
         }
     }
@@ -156,6 +158,7 @@ public class DownloadService extends IntentService {
     public void onCreate() {
         super.onCreate();
         Utils.log("DownloadService service has started");
+        broadcastManager = LocalBroadcastManager.getInstance(this);
 
         // Init sync table
         new SyncManager(this);
@@ -191,7 +194,10 @@ public class DownloadService extends IntentService {
         if (message != null) {
             intentSend.putExtra(Const.MESSAGE, message);
         }
-        broadcastManager.sendBroadcast(intentSend);
+
+        if (broadcastManager != null) {
+            broadcastManager.sendBroadcast(intentSend);
+        }
     }
 
     /**
@@ -216,7 +222,7 @@ public class DownloadService extends IntentService {
             cm.downloadFromExternal(force);
             cmm.downloadFromExternal(this, force);
             return true;
-        } catch (Exception e) {
+        } catch (JSONException e) {
             Utils.log(e);
             return false;
         }
@@ -227,7 +233,7 @@ public class DownloadService extends IntentService {
             KinoManager km = new KinoManager(this);
             km.downloadFromExternal(force);
             return true;
-        } catch (Exception e) {
+        } catch (JSONException e) {
             Utils.log(e);
             return false;
         }
@@ -238,7 +244,7 @@ public class DownloadService extends IntentService {
             NewsManager nm = new NewsManager(this);
             nm.downloadFromExternal(force);
             return true;
-        } catch (Exception e) {
+        } catch (JSONException e) {
             Utils.log(e);
             return false;
         }
@@ -262,7 +268,7 @@ public class DownloadService extends IntentService {
             StudyRoomGroupManager sm = new StudyRoomGroupManager(this);
             sm.downloadFromExternal();
             return true;
-        } catch (Exception e) {
+        } catch (JSONException e) {
             Utils.log(e);
             return false;
         }

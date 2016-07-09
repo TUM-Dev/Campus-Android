@@ -1,20 +1,21 @@
 package de.tum.in.tumcampusapp.auxiliary;
 
+import com.google.common.base.Charsets;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
 /**
  * Utility functions to ease the work with files and file contents.
  */
-public class FileUtils {
+public final class FileUtils {
 
     /**
      * Delete all files and folder contained in a folder
-     *
-     * @param fileOrDirectory
      */
     public static void deleteRecursive(File fileOrDirectory) {
         // Check if current item is a dir, then we need to delete all files inside
@@ -30,26 +31,24 @@ public class FileUtils {
 
     /**
      * Convert a stream to a string
-     * @param is
-     * @return
-     * @throws Exception
      */
-    public static String convertStreamToString(InputStream is) throws Exception {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+    public static String convertStreamToString(InputStream is) throws IOException {
         StringBuilder sb = new StringBuilder();
-        String line = null;
-        while ((line = reader.readLine()) != null) {
-            sb.append(line).append("\n");
+        BufferedReader reader = new BufferedReader(new InputStreamReader(is, Charsets.UTF_8));
+        try {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                sb.append(line).append('\n');
+            }
+        } finally {
+            reader.close();
         }
-        reader.close();
         return sb.toString();
     }
 
     /**
      * Read a file directly to a string
      * Fails silently
-     * @param filePath
-     * @return
      */
     public static String getStringFromFile(String filePath) {
         try {
@@ -58,9 +57,13 @@ public class FileUtils {
             String ret = convertStreamToString(fin);
             fin.close();
             return ret;
-        } catch (Exception e) {
+        } catch (IOException e) {
             Utils.log(e);
             return "";
         }
+    }
+
+    private FileUtils() {
+        // FileUtils is a Utility class
     }
 }

@@ -29,7 +29,7 @@ public abstract class ActivityForSearching extends ProgressActivity {
     /**
      * Last search query
      */
-    protected String mQuery = null;
+    protected String mQuery;
     /**
      * SearchView handle
      */
@@ -148,8 +148,9 @@ public abstract class ActivityForSearching extends ProgressActivity {
     @Override
     public void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        if (intent == null)
+        if (intent == null) {
             return;
+        }
         setIntent(intent);
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             requestSearch(intent.getStringExtra(SearchManager.QUERY));

@@ -4,10 +4,12 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 
+import com.google.common.base.Optional;
+import com.google.common.net.UrlEscapers;
+
 import org.simpleframework.xml.core.Persister;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -24,7 +26,7 @@ import de.tum.in.tumcampusapp.models.managers.TumManager;
  * XML-RPC backend. ALl communications is based on the base-url which is
  * attached by the Token and additional parameters.
  */
-public class TUMOnlineRequest<T> {
+public final class TUMOnlineRequest<T> {
     // server address
     private static final String SERVICE_BASE_URL = "https://campus.tum.de/tumonline/wbservicesbasic.";
     //private static final String SERVICE_BASE_URL = "https://campusquality.tum.de/QSYSTEM_TUM/wbservicesbasic.";
@@ -49,17 +51,17 @@ public class TUMOnlineRequest<T> {
      */
     private final Context mContext;
     // force to fetch data and fill cache
-    private boolean fillCache = false;
+    private boolean fillCache;
     // set to null, if not needed
-    private String accessToken = null;
+    private String accessToken;
     /**
      * asynchronous task for interactive fetch
      */
-    private AsyncTask<Void, Void, T> backgroundTask = null;
+    private AsyncTask<Void, Void, Optional<T>> backgroundTask;
     /**
      * method to call
      */
-    private TUMOnlineConst<T> method = null;
+    private TUMOnlineConst<T> method;
     /**
      * a list/map for the needed parameters
      */
@@ -102,9 +104,8 @@ public class TUMOnlineRequest<T> {
      *
      * @return output will be a raw String
      */
-    public T fetch() {
+    public Optional<T> fetch() {
         // set parameter on the TUMOnline request an fetch the results
-        String result;
         String url = this.getRequestURL();
 
         //Check for error lock
@@ -112,50 +113,39 @@ public class TUMOnlineRequest<T> {
         if (error != null) {
             Utils.log("aborting fetch URL (" + error + ") " + url);
             lastError = error;
-            return null;
+            return Optional.absent();
         }
 
         Utils.log("fetching URL " + url);
-        boolean addToCache = false;
 
+        Optional<String> result;
         try {
             result = cacheManager.getFromCache(url);
-            if (result == null || fillCache) {
-                boolean isOnline = NetUtils.isConnected(mContext);
-                if (!isOnline) {
-                    // not online, fetch does not make sense
-                    return null;
-                }
-
+            if (NetUtils.isConnected(mContext) && (!result.isPresent() || fillCache)) {
                 result = net.downloadStringHttp(url);
-                addToCache = true;
-            } else {
-                Utils.logv("loaded from cache " + url);
             }
-        } catch (Exception e) {
+        } catch (IOException e) {
             Utils.log(e, "FetchError");
             lastError = e.getMessage();
-            return null;
+            result = Optional.absent();
         }
 
         T res = null;
-        try {
-            res = (new Persister()).read(method.getResponse(), result);
-
-            // Only add to cache if data is valid
-            if (addToCache) {
-                cacheManager.addToCache(url, result, method.getValidity(), CacheManager.CACHE_TYP_DATA);
+        if (result.isPresent()) {
+            try {
+                res = new Persister().read(method.getResponse(), result.get());
+                cacheManager.addToCache(url, result.get(), method.getValidity(), CacheManager.CACHE_TYP_DATA);
                 Utils.logv("added to cache " + url);
-            }
 
-            //Release any lock present in the database
-            tumManager.releaseLock(url);
-        } catch (Exception e) {
-            //Serialisation failed - lock for a specific time, save the error message
-            lastError = tumManager.addLock(url, result);
+                //Release any lock present in the database
+                tumManager.releaseLock(url);
+            } catch (Exception e) {
+                //Serialisation failed - lock for a specific time, save the error message
+                lastError = tumManager.addLock(url, result.get());
+            }
         }
 
-        return res;
+        return Optional.fromNullable(res);
     }
 
     /**
@@ -174,58 +164,56 @@ public class TUMOnlineRequest<T> {
 
         // fetch information in a background task and show progress dialog in
         // meantime
-        backgroundTask = new AsyncTask<Void, Void, T>() {
+        backgroundTask = new AsyncTask<Void, Void, Optional<T>>() {
 
             @Override
-            protected T doInBackground(Void... params) {
+            protected Optional<T> doInBackground(Void... params) {
                 // we are online, return fetch result
                 return fetch();
             }
 
             @Override
-            protected void onPostExecute(T result) {
-                if (result != null) {
-                    Utils.logv("Received result <" + result + ">");
+            protected void onPostExecute(Optional<T> result) {
+                if (result.isPresent()) {
+                    Utils.logv("Received result <" + result + '>');
                 } else {
                     Utils.log("No result available");
                 }
 
                 // Handles result
                 if (!NetUtils.isConnected(mContext)) {
-                    if (result == null) {
+                    if (result.isPresent()) {
+                        Utils.showToast(mContext, R.string.no_internet_connection);
+                    } else {
                         listener.onNoInternetError();
                         return;
-                    } else {
-                        Utils.showToast(mContext, R.string.no_internet_connection);
                     }
                 }
 
                 //Check for common errors
-                if (result == null) {
+                if (!result.isPresent()) {
+                    String error;
                     if (lastError.contains(TOKEN_NOT_CONFIRMED)) {
-                        listener.onFetchError(context.getString(R.string.dialog_access_token_invalid));
-                        return;
+                        error = context.getString(R.string.dialog_access_token_invalid);
                     } else if (lastError.contains(NO_FUNCTION_RIGHTS)) {
-                        listener.onFetchError(context.getString(R.string.dialog_no_rights_function));
-                        return;
-                    } else if (lastError.length() > 0) {
-                        listener.onFetchError(lastError);
-                        return;
+                        error = context.getString(R.string.dialog_no_rights_function);
+                    } else if (lastError.isEmpty()) {
+                        error = context.getString(R.string.empty_result);
                     } else {
-                        listener.onFetchError(context.getString(R.string.empty_result));
-                        return;
+                        error = lastError;
                     }
+                    listener.onFetchError(error);
+                    return;
                 }
 
                 //Release any lock present in the database
                 tumManager.releaseLock(TUMOnlineRequest.this.getRequestURL());
 
                 // If there could not be found any problems return usual on Fetch method
-                listener.onFetch(result);
+                listener.onFetch(result.get());
             }
 
-        };
-        backgroundTask.execute();
+        }.execute();
     }
 
     /**
@@ -234,13 +222,13 @@ public class TUMOnlineRequest<T> {
      * @return a String URL
      */
     public String getRequestURL() {
-        String url = SERVICE_BASE_URL + method + "?";
+        StringBuilder url = new StringBuilder(SERVICE_BASE_URL).append(method).append('?');
 
         // Builds to be fetched URL based on the base-url and additional parameters
         for (Entry<String, String> pairs : parameters.entrySet()) {
-            url += pairs.getKey() + "=" + pairs.getValue() + "&";
+            url.append(pairs.getKey()).append('=').append(pairs.getValue()).append('&');
         }
-        return url;
+        return url.toString();
     }
 
     /**
@@ -280,18 +268,14 @@ public class TUMOnlineRequest<T> {
      * @param value value of the parameter
      */
     public void setParameter(String name, String value) {
-        try {
-            parameters.put(name, URLEncoder.encode(value, "UTF-8"));
-        } catch (UnsupportedEncodingException e) {
-            Utils.log(e);
-        }
+        parameters.put(name, UrlEscapers.urlPathSegmentEscaper().escape(value));
     }
 
     public void setForce(boolean force) {
         fillCache = force;
     }
 
-    public String getLastError(){
+    public String getLastError() {
         return this.lastError;
     }
 }

@@ -36,8 +36,8 @@ public abstract class ProgressActivity extends BaseActivity implements SwipeRefr
     private RelativeLayout noInternetLayout;
     private RelativeLayout failedTokenLayout;
     private SwipeRefreshLayout swipeRefreshLayout;
-    private boolean registered = false;
-    private Handler mLoadingHandler = new Handler();
+    private boolean registered;
+    private final Handler mLoadingHandler = new Handler();
 
     /**
      * Standard constructor for ProgressActivity.
@@ -262,7 +262,7 @@ public abstract class ProgressActivity extends BaseActivity implements SwipeRefr
         noInternetLayout.findViewById(R.id.progressWifi).setVisibility(View.VISIBLE);
     }
 
-    BroadcastReceiver connectivityChangeReceiver = new BroadcastReceiver() {
+    final BroadcastReceiver connectivityChangeReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (NetUtils.isConnected(context)) {

@@ -6,7 +6,10 @@ import android.support.v4.widget.SwipeRefreshLayout;
 /**
  * Generic class which handles can handle a long running background task
  */
-public abstract class ActivityForLoadingInBackground<T1,T2> extends ProgressActivity {
+public abstract class ActivityForLoadingInBackground<S, T> extends ProgressActivity {
+
+    private AsyncTask<S, Void, T> asyncTask;
+    private S[] lastArg;
 
     /**
      * Called in separate thread after {@link #startLoading(Object[])} gets called.
@@ -15,13 +18,13 @@ public abstract class ActivityForLoadingInBackground<T1,T2> extends ProgressActi
      * @return Result of the loading task
      */
     @SuppressWarnings("unchecked")
-    protected abstract T2 onLoadInBackground(T1... arg);
+    protected abstract T onLoadInBackground(S... arg);
 
     /**
      * Gets called from the UI thread after background task has finished.
      * @param result Result returned by {@link #onLoadInBackground(Object[])}
      */
-    protected abstract void onLoadFinished(T2 result);
+    protected abstract void onLoadFinished(T result);
 
     /**
      * Standard constructor for ActivityForLoadingInBackground.
@@ -35,9 +38,6 @@ public abstract class ActivityForLoadingInBackground<T1,T2> extends ProgressActi
 		super(layoutId);
 	}
 
-    private AsyncTask<T1, Void, T2> asyncTask;
-    private T1[] lastArg;
-
     /**
      * Starts a new background task.
      * The work that should be done in background must be specified in the {@link #onLoadInBackground(Object[])} method.
@@ -45,13 +45,14 @@ public abstract class ActivityForLoadingInBackground<T1,T2> extends ProgressActi
      */
     @SafeVarargs
     @SuppressWarnings("varargs")
-    protected final void startLoading(final T1... arg) {
-        if(asyncTask!=null)
+    protected final void startLoading(final S... arg) {
+        if (asyncTask != null) {
             asyncTask.cancel(true);
+        }
 
         lastArg = arg;
 
-        asyncTask = new AsyncTask<T1,Void,T2>() {
+        asyncTask = new AsyncTask<S, Void, T>() {
             @Override
             protected void onPreExecute() {
                 showLoadingStart();
@@ -59,12 +60,12 @@ public abstract class ActivityForLoadingInBackground<T1,T2> extends ProgressActi
 
             @SafeVarargs
             @Override
-            protected final T2 doInBackground(T1... arg) {
+            protected final T doInBackground(S... arg) {
                 return onLoadInBackground(arg);
             }
 
             @Override
-            protected void onPostExecute(T2 result) {
+            protected void onPostExecute(T result) {
                 showLoadingEnded();
                 onLoadFinished(result);
                 asyncTask = null;

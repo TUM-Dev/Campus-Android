@@ -24,22 +24,24 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 
 public class LecturesListAdapter extends BaseAdapter implements StickyListHeadersAdapter {
 
-    // The list of lectures
     private static List<LecturesSearchRow> lecturesList;
-    private final ArrayList<String> filters;
+    private final List<String> filters;
     private final LayoutInflater mInflater;
-    private Context context;
+    private final Context context;
 
-    // constructor
-    public LecturesListAdapter(Context context, List<LecturesSearchRow> results) {
+    public static LecturesListAdapter newInstance(Context context, List<LecturesSearchRow> results) {
         lecturesList = results;
+        return new LecturesListAdapter(context);
+    }
+
+    private LecturesListAdapter(Context context) {
         this.context = context;
         mInflater = LayoutInflater.from(context);
 
         filters = new ArrayList<>();
-        for (LecturesSearchRow result : results) {
+        for (LecturesSearchRow result : lecturesList) {
             String item = result.getSemester_id();
-            if (filters.indexOf(item) == -1) {
+            if (!filters.contains(item)) {
                 filters.add(item);
             }
         }
@@ -61,9 +63,9 @@ public class LecturesListAdapter extends BaseAdapter implements StickyListHeader
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View view, ViewGroup parent) {
         ViewHolder holder;
-
+        View convertView = view;
         if (convertView == null) {
             convertView = mInflater.inflate(R.layout.activity_lectures_listview, parent, false);
             holder = new ViewHolder();
@@ -95,8 +97,9 @@ public class LecturesListAdapter extends BaseAdapter implements StickyListHeader
 
     // Generate header view
     @Override
-    public View getHeaderView(int pos, View convertView, ViewGroup parent) {
+    public View getHeaderView(int pos, View view, ViewGroup parent) {
         HeaderViewHolder holder;
+        View convertView = view;
         if (convertView == null) {
             holder = new HeaderViewHolder();
             convertView = mInflater.inflate(R.layout.header, parent, false);

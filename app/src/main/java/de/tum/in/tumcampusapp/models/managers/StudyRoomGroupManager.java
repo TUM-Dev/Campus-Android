@@ -4,6 +4,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.google.common.base.Optional;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -48,14 +50,18 @@ public class StudyRoomGroupManager extends AbstractManager {
                 "group_id INTEGER)");
     }
 
-    public void downloadFromExternal() throws Exception {
-        JSONObject jsonObject = new NetUtils(mContext).downloadJsonObject(STUDYROOM_URL,
+    public void downloadFromExternal() throws JSONException {
+        Optional<JSONObject> jsonObject = new NetUtils(mContext).downloadJsonObject(STUDYROOM_URL,
                 CacheManager.VALIDITY_DO_NOT_CACHE, true);
+        if (!jsonObject.isPresent()) {
+            return;
+        }
+
         removeCache();
 
         db.beginTransaction();
         try {
-            List<StudyRoomGroup> groups = getAllFromJson(jsonObject);
+            List<StudyRoomGroup> groups = getAllFromJson(jsonObject.get());
             for (StudyRoomGroup group : groups) {
                 replaceIntoDb(group);
             }

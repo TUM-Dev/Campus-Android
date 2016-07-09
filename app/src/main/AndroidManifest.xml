@@ -159,25 +159,6 @@
                 android:value="de.tum.in.tumcampusapp.activities.PlansActivity" />
         </activity>
         <activity
-            android:name=".activities.GradeChartActivity"
-            android:configChanges="orientation|screenSize"
-            android:label="@string/my_grades"
-            android:parentActivityName=".activities.GradesActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.tum.in.tumcampusapp.activities.GradesActivity" />
-        </activity>
-        <activity
-            android:name=".activities.GradesActivity"
-            android:configChanges="orientation|screenSize"
-            android:label="@string/my_grades"
-            android:launchMode="singleTop"
-            android:parentActivityName=".activities.MainActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.tum.in.tumcampusapp.activities.MainActivity" />
-        </activity>
-        <activity
             android:name=".activities.UserPreferencesActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/settings"
@@ -505,6 +486,13 @@
                 <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
             </intent-filter>
         </receiver>
+
+        <!-- Used to set Notification for favoriteDish -->
+        <receiver android:name="de.tum.in.tumcampusapp.services.FavoriteDishReceiver"/>
+
+        <service
+            android:name="de.tum.in.tumcampusapp.services.FavoriteDishService"
+            android:enabled="true"/>
 
         <service
             android:name=".services.DownloadService"

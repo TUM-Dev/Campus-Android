@@ -7,9 +7,6 @@ import java.io.File;
 
 import de.tum.in.tumcampusapp.auxiliary.Const;
 
-/**
- * Created by philipp on 04.05.16.
- */
 public abstract class AbstractManager {
     protected static Context mContext;
     protected static SQLiteDatabase db;

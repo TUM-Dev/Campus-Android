@@ -49,8 +49,9 @@ public class EduroamManager {
     public boolean isConfigured() {
         WifiManager wifiManager = (WifiManager) mContext.getSystemService(Context.WIFI_SERVICE);
         List<WifiConfiguration> list = wifiManager.getConfiguredNetworks();
-        if (list == null)
+        if (list == null) {
             return true;
+        }
         for (WifiConfiguration i : list) {
             if (i.SSID != null && i.SSID.equals("\"" + networkSSID + "\"")) {
                 return true;
@@ -117,8 +118,9 @@ public class EduroamManager {
                     }
                 }
 
-                if(wcefSetValue==null)
+                if (wcefSetValue == null) {
                     return false;
+                }
 
                 Field[] wcefFields = WifiConfiguration.class.getFields();
                 for (Field wcefField : wcefFields) {

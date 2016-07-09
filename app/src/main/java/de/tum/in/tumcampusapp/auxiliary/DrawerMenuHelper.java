@@ -3,7 +3,6 @@ package de.tum.in.tumcampusapp.auxiliary;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Handler;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Menu;
@@ -29,66 +28,14 @@ import de.tum.in.tumcampusapp.activities.TuitionFeesActivity;
 
 public class DrawerMenuHelper implements NavigationView.OnNavigationItemSelectedListener {
 
-    private final Handler mDrawerHandler = new Handler();
-    private final Context mContext;
-    private final DrawerLayout mDrawerLayout;
-
-    public DrawerMenuHelper(Context context, DrawerLayout drawerLayout) {
-        mContext = context;
-        mDrawerLayout = drawerLayout;
-    }
-
-    @Override
-    public boolean onNavigationItemSelected(MenuItem menuItem) {
-        scheduleLaunchAndCloseDrawer(menuItem.getIntent());
-        return true;
-    }
-
-    private void scheduleLaunchAndCloseDrawer(final Intent intent) {
-        // Clears any previously posted runnables, for double clicks
-        mDrawerHandler.removeCallbacksAndMessages(null);
-
-        mDrawerHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mContext.startActivity(intent);
-            }
-        }, 100);
-        // The millisecond delay is arbitrary and was arrived at through trial and error
-
-        mDrawerLayout.closeDrawers();
-    }
-
-    public void populateMenu(Menu navigationMenu) {
-        boolean hasTUMOAccess = new AccessTokenManager(mContext).hasValidAccessToken();
-        boolean chatEnabled = Utils.getSettingBool(mContext, Const.GROUP_CHAT_ENABLED, false);
-
-        if (hasTUMOAccess) {
-            SubMenu myTumMenu = navigationMenu.addSubMenu(R.string.my_tum);
-            for (SideNavigationItem item : myTum) {
-                if (!(item.needsChatAccess && !chatEnabled)) {
-                    myTumMenu.add(item.titleRes).setIcon(item.iconRes).setIntent(new Intent(mContext, item.activity));
-                }
-            }
-        }
-
-        SubMenu commonTumMenu = navigationMenu.addSubMenu(R.string.tum_common);
-        for (SideNavigationItem item : commonTum) {
-            if (!(item.needsTUMOAccess && !hasTUMOAccess)) {
-                commonTumMenu.add(item.titleRes).setIcon(item.iconRes).setIntent(new Intent(mContext, item.activity));
-            }
-        }
-    }
-
-    private static final SideNavigationItem[] myTum = {
+    private static final SideNavigationItem[] MY_TUM = {
             new SideNavigationItem(R.string.schedule, R.drawable.ic_calendar, CalendarActivity.class, true, false),
             new SideNavigationItem(R.string.my_lectures, R.drawable.ic_my_lectures, LecturesPersonalActivity.class, true, false),
             new SideNavigationItem(R.string.chat_rooms, R.drawable.ic_comment, ChatRoomsActivity.class, true, true),
-            // new SideNavigationItem(R.string.my_grades,R.drawable.ic_my_grades, true, GradesActivity.class),
             new SideNavigationItem(R.string.tuition_fees, R.drawable.ic_money, TuitionFeesActivity.class, true, false),
     };
 
-    private static final SideNavigationItem[] commonTum = {
+    private static final SideNavigationItem[] COMMON_TUM = {
             new SideNavigationItem(R.string.menues, R.drawable.ic_cutlery, CafeteriaActivity.class, false, false),
             new SideNavigationItem(R.string.news, R.drawable.ic_rss, NewsActivity.class, false, false),
             new SideNavigationItem(R.string.mvv, R.drawable.ic_mvv, TransportationActivity.class, false, false),
@@ -102,10 +49,51 @@ public class DrawerMenuHelper implements NavigationView.OnNavigationItemSelected
             new SideNavigationItem(R.string.study_plans, R.drawable.ic_study_plans, CurriculaActivity.class, false, false)
     };
 
+    private final Context mContext;
+
+    private final DrawerLayout mDrawerLayout;
+
+    public DrawerMenuHelper(Context context, DrawerLayout drawerLayout) {
+        mContext = context;
+        mDrawerLayout = drawerLayout;
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(MenuItem menuItem) {
+        mDrawerLayout.closeDrawers();
+        Intent intent = menuItem.getIntent();
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        mContext.startActivity(intent);
+        return true;
+    }
+
+    public void populateMenu(Menu navigationMenu) {
+        boolean hasTUMOAccess = new AccessTokenManager(mContext).hasValidAccessToken();
+        boolean chatEnabled = Utils.getSettingBool(mContext, Const.GROUP_CHAT_ENABLED, false);
+
+        if (hasTUMOAccess) {
+            SubMenu myTumMenu = navigationMenu.addSubMenu(R.string.my_tum);
+            for (SideNavigationItem item : MY_TUM) {
+                if (!(item.needsChatAccess && !chatEnabled)) {
+                    myTumMenu.add(item.titleRes).setIcon(item.iconRes).setIntent(new Intent(mContext, item.activity));
+                }
+            }
+        }
+
+        SubMenu commonTumMenu = navigationMenu.addSubMenu(R.string.tum_common);
+        for (SideNavigationItem item : COMMON_TUM) {
+            if (!(item.needsTUMOAccess && !hasTUMOAccess)) {
+                commonTumMenu.add(item.titleRes).setIcon(item.iconRes).setIntent(new Intent(mContext, item.activity));
+            }
+        }
+    }
+
     public static class SideNavigationItem {
-        int titleRes, iconRes;
-        Class<? extends Activity> activity;
-        boolean needsTUMOAccess, needsChatAccess;
+        final int titleRes;
+        final int iconRes;
+        final Class<? extends Activity> activity;
+        final boolean needsTUMOAccess;
+        final boolean needsChatAccess;
 
         public SideNavigationItem(int titleRes, int iconRes, Class<? extends Activity> activity, boolean needsTUMOAccess, boolean needsChatAccess) {
             this.titleRes = titleRes;

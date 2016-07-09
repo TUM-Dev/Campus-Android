@@ -1,16 +1,20 @@
 package de.tum.in.tumcampusapp.models.managers;
 
+import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.IntentService;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.CalendarContract;
-import android.util.Log;
+import android.support.v4.app.ActivityCompat;
+
+import com.google.common.base.Optional;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -23,8 +27,8 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.auxiliary.calendar.CalendarHelper;
-import de.tum.in.tumcampusapp.cards.Card;
 import de.tum.in.tumcampusapp.cards.NextLectureCard;
+import de.tum.in.tumcampusapp.cards.generic.Card;
 import de.tum.in.tumcampusapp.models.CalendarRow;
 import de.tum.in.tumcampusapp.models.CalendarRowSet;
 import de.tum.in.tumcampusapp.models.Geo;
@@ -33,7 +37,7 @@ import de.tum.in.tumcampusapp.models.Geo;
  * Calendar Manager, handles database stuff, external imports
  */
 public class CalendarManager extends AbstractManager implements Card.ProvidesCard {
-    private static final String[] projection = new String[]{"_id", "name"};
+    private static final String[] projection = {"_id", "name"};
 
     private static final int TIME_TO_SYNC_CALENDAR = 604800; // 1 week
 
@@ -122,12 +126,14 @@ public class CalendarManager extends AbstractManager implements Card.ProvidesCar
         db.execSQL("DELETE FROM calendar");
     }
 
-    void replaceIntoDb(CalendarRow row) throws Exception {
-        if (row.getNr().length() == 0)
-            throw new Exception("Invalid id.");
+    void replaceIntoDb(CalendarRow row) {
+        if (row.getNr().isEmpty()) {
+            throw new IllegalArgumentException("Invalid id.");
+        }
 
-        if (row.getTitle().length() == 0)
-            throw new Exception("Invalid lecture Title.");
+        if (row.getTitle().isEmpty()) {
+            throw new IllegalArgumentException("Invalid lecture Title.");
+        }
 
         db.execSQL("REPLACE INTO calendar (nr, status, url, title, "
                         + "description, dtstart, dtend, location) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
@@ -161,6 +167,9 @@ public class CalendarManager extends AbstractManager implements Card.ProvidesCar
 
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     private static void addEvents(Context c, Uri uri) {
+        if (ActivityCompat.checkSelfPermission(c, Manifest.permission.WRITE_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
         // Get ID
         ContentResolver contentResolver = c.getContentResolver();
         Cursor cursor2 = contentResolver.query(uri, projection, null, null, null);
@@ -289,18 +298,18 @@ public class CalendarManager extends AbstractManager implements Card.ProvidesCar
                     "GROUP BY c.location", null);
 
             // Retrieve geo from room name
-            if(cur.moveToFirst()) {
+            if (cur.moveToFirst()) {
                 do {
                     String location = cur.getString(0);
-                    if(location != null && !location.isEmpty()) {
-                        Geo geo = locationManager.roomLocationStringToGeo(location);
-                        if (geo != null) {
-                            Utils.logv("inserted "+location+" "+geo);
+                    if (location != null && !location.isEmpty()) {
+                        Optional<Geo> geo = locationManager.roomLocationStringToGeo(location);
+                        if (geo.isPresent()) {
+                            Utils.logv("inserted " + location + ' ' + geo);
                             db.execSQL("REPLACE INTO room_locations (title, latitude, longitude) VALUES (?, ?, ?)",
-                                    new String[]{location, geo.getLatitude(), geo.getLongitude()});
+                                    new String[]{location, geo.get().getLatitude(), geo.get().getLongitude()});
                         }
                     }
-                } while(cur.moveToNext());
+                } while (cur.moveToNext());
             }
             cur.close();
 

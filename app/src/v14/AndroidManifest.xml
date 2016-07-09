@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="de.tum.in.tumcampusapp"
+    tools:ignore="AllowBackup">
+
+    <!-- TODO add additions for widgets -->
+    <!-- This is an example how fields in app/AndroidManifest.xml
+         can be replaced -->
+    <application
+        android:icon="@drawable/tum_logo"
+        tools:replace="android:icon" />
+</manifest>

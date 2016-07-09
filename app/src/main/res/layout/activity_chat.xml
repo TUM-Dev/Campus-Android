@@ -1,4 +1,5 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -7,7 +8,9 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:transitionName="@string/transition_card"
+        tools:ignore="UnusedAttribute">
 
         <ListView
             android:id="@+id/lvMessageHistory"
@@ -32,12 +35,12 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_marginBottom="3dp"
-                android:layout_marginTop="3dp"
                 android:layout_marginLeft="10dp"
+                android:layout_marginTop="3dp"
                 android:layout_toLeftOf="@+id/btnSend"
                 android:layout_toStartOf="@+id/btnSend"
-                android:inputType="textShortMessage"
-                android:hint="@string/send" />
+                android:hint="@string/send"
+                android:inputType="textShortMessage" />
 
             <ImageButton
                 android:id="@+id/btnSend"

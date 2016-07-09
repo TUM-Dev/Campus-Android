@@ -16,7 +16,7 @@ import de.tum.in.tumcampusapp.models.managers.TransportManager;
 
 /**
  * Activity to show transport departures for a specified station
- * <p/>
+ * <p>
  * NEEDS: EXTRA_STATION set in incoming bundle (station name)
  */
 public class TransportationDetailsActivity extends ActivityForLoadingInBackground<String, List<TransportManager.Departure>> {
@@ -59,7 +59,6 @@ public class TransportationDetailsActivity extends ActivityForLoadingInBackgroun
     @Override
     protected List<TransportManager.Departure> onLoadInBackground(String... arg) {
         final String location = arg[0];
-        final String locationID = arg[1];
 
         // save clicked station into db
         recentsManager.replaceIntoDb(location);
@@ -71,8 +70,9 @@ public class TransportationDetailsActivity extends ActivityForLoadingInBackgroun
         }
 
         // get departures from website
+        final String locationID = arg[1];
         List<TransportManager.Departure> departureCursor = TransportManager.getDeparturesFromExternal(this, locationID);
-        if (departureCursor == null) {
+        if (departureCursor.isEmpty()) {
             showError(R.string.no_departures_found);
         }
 

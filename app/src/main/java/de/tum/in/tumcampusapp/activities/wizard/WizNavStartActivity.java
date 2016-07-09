@@ -1,5 +1,6 @@
 package de.tum.in.tumcampusapp.activities.wizard;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -40,8 +41,6 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<Void, Bo
     private Spinner userMajorSpinner;
     private String lrzId;
     private SharedPreferences sharedPrefs;
-    String userMajor = "";
-    int index;
 
     public WizNavStartActivity() {
         super(R.layout.activity_wiznav_start);
@@ -63,9 +62,7 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<Void, Bo
 
         editTxtLrzId = (EditText) findViewById(R.id.lrd_id);
         lrzId = sharedPrefs.getString(Const.LRZ_ID, "");
-        if (lrzId != null) {
-            editTxtLrzId.setText(lrzId);
-        }
+        editTxtLrzId.setText(lrzId);
     }
 
     public void setUpSpinner() {
@@ -78,11 +75,8 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<Void, Bo
             protected String[] doInBackground(Void... voids) {
                 ArrayList<String> fetchedFaculties = new ArrayList<>();
                 SurveyManager sm = new SurveyManager(getApplicationContext());
-                try {
-                    sm.downloadFacultiesFromExternal();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                sm.downloadFacultiesFromExternal();
+
                 Cursor cursor = sm.getAllFaculties();
                 if (cursor.moveToFirst()) {
                     do {
@@ -91,30 +85,28 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<Void, Bo
 
                 }
                 fetchedFaculties.add(0, getResources().getString(R.string.choose_own_faculty));
-                final String[] majors = fetchedFaculties.toArray(new String[fetchedFaculties.size()]);
-
-                return majors;
+                return fetchedFaculties.toArray(new String[fetchedFaculties.size()]);
             }
 
             // Fill the fetched facultyData into the majorSpinner
+            @SuppressLint("ShowToast")
             @Override
             protected void onPostExecute(String[] majors) {
-                ArrayAdapter<String> adapter = new ArrayAdapter<String>(getBaseContext(), android.R.layout.simple_list_item_1, majors);
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(getBaseContext(), android.R.layout.simple_list_item_1, majors);
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 userMajorSpinner.setAdapter(adapter);
 
                 Utils.setInternalSetting(getApplicationContext(), "user_major", "0"); // Prior to faculty selection, the user has major 0 (which means) All faculties for faculty match in card
-                userMajorSpinner.setSelection(Integer.parseInt(Utils.getInternalSettingString(getApplicationContext(),"user_faculty_number","0")));
-
+                userMajorSpinner.setSelection(Integer.parseInt(Utils.getInternalSettingString(getApplicationContext(), "user_faculty_number", "0")));
 
                 // Upon clicking on the faculty spinner and there is no internet connection -> toast to the user.
                 userMajorSpinner.setOnTouchListener(new View.OnTouchListener() {
                     @Override
                     public boolean onTouch(View view, MotionEvent motionEvent) {
-                        if(!NetUtils.isConnected(getApplicationContext())){
-                            Toast.makeText(getApplicationContext(),getString(R.string.please_connect_to_internet),Toast.LENGTH_LONG).show();
+                        if (!NetUtils.isConnected(getApplicationContext())) {
+                            Toast.makeText(getApplicationContext(), getString(R.string.please_connect_to_internet), Toast.LENGTH_LONG).show();
                         }
-                        return false;
+                        return view.performClick();
                     }
                 });
 
@@ -128,11 +120,11 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<Void, Bo
 
                         if (c.moveToFirst()) {
                             Utils.setInternalSetting(getApplicationContext(), "user_major", c.getString(c.getColumnIndex("faculty"))); // save faculty number in shared preferences
-                            Utils.setInternalSetting(getApplicationContext(), "user_faculty_number",userMajorSpinner.getSelectedItemPosition()+""); // save choosen spinner poistion so that in case the user returns from the  WizNavCheckTokenActivity to WizNavStart activity, then we the faculty gets autm. choosen.
+                            Utils.setInternalSetting(getApplicationContext(), "user_faculty_number", userMajorSpinner.getSelectedItemPosition() + ""); // save choosen spinner poistion so that in case the user returns from the  WizNavCheckTokenActivity to WizNavStart activity, then we the faculty gets autm. choosen.
                         }
                         TextView selectedItem = (TextView) adapterView.getChildAt(0);
                         if (selectedItem != null) {
-                             selectedItem.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.color_primary)); // set the colour of the selected item in the faculty spinner
+                            selectedItem.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.color_primary)); // set the colour of the selected item in the faculty spinner
                         }
                     }
 
@@ -141,7 +133,6 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<Void, Bo
 
                     }
                 });
-                return;
             }
 
         }.execute();
@@ -155,8 +146,8 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<Void, Bo
     @SuppressWarnings("UnusedParameters")
     public void onClickSkip(View skip) {
         // Upon clicking on the skip button and there is no internet connection -> toast to the user
-        if(!NetUtils.isConnected(getApplicationContext())){
-            Toast.makeText(getApplicationContext(),getString(R.string.please_connect_to_internet),Toast.LENGTH_LONG).show();
+        if (!NetUtils.isConnected(getApplicationContext())) {
+            Toast.makeText(getApplicationContext(), getString(R.string.please_connect_to_internet), Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -177,8 +168,8 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<Void, Bo
     @SuppressWarnings("UnusedParameters")
     public void onClickNext(View next) {
         // Upon clicking on next button and there is no internet connection -> toast to the user.
-        if(!NetUtils.isConnected(getApplicationContext())){
-            Toast.makeText(getApplicationContext(),getString(R.string.please_connect_to_internet),Toast.LENGTH_LONG).show();
+        if (!NetUtils.isConnected(getApplicationContext())) {
+            Toast.makeText(getApplicationContext(), getString(R.string.please_connect_to_internet), Toast.LENGTH_LONG).show();
             return;
         }
 

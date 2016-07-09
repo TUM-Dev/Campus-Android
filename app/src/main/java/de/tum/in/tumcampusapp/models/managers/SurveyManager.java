@@ -3,6 +3,7 @@ package de.tum.in.tumcampusapp.models.managers;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.text.TextUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,8 +12,8 @@ import java.util.List;
 
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
-import de.tum.in.tumcampusapp.cards.Card;
 import de.tum.in.tumcampusapp.cards.SurveyCard;
+import de.tum.in.tumcampusapp.cards.generic.Card;
 import de.tum.in.tumcampusapp.models.Faculty;
 import de.tum.in.tumcampusapp.models.Question;
 import de.tum.in.tumcampusapp.models.TUMCabeClient;
@@ -35,7 +36,7 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
         super(context);
         db.execSQL("CREATE TABLE IF NOT EXISTS faculties (faculty INTEGER, name VARCHAR)"); // for facultyData
         db.execSQL("CREATE TABLE IF NOT EXISTS openQuestions (question INTEGER PRIMARY KEY, text VARCHAR, created VARCHAR, end VARCHAR, answerid INTEGER, answered BOOLEAN, synced BOOLEAN)"); // for SurveyCard
-        db.execSQL("CREATE TABLE IF NOT EXISTS ownQuestions (question INTEGER PRIMARY KEY, text VARCHAR, created VARCHAR, end VARCHAR, yes INTEGER, no INTEGER, deleted BOOLEAN, synced BOOLEAN)"); // for responses on ownQuestions
+        db.execSQL("CREATE TABLE IF NOT EXISTS ownQuestions (question INTEGER PRIMARY KEY, text VARCHAR, targetFac VARCHAR, created VARCHAR, end VARCHAR, yes INTEGER, no INTEGER, deleted BOOLEAN, synced BOOLEAN)"); // for responses on ownQuestions
     }
 
     /**
@@ -106,6 +107,7 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
                     db.delete("openQuestions", "question = ?", new String[]{c.getString(c.getColumnIndex("question"))});
                 }
             } while (c.moveToNext());
+            c.close();
         }
     }
 
@@ -291,13 +293,16 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
         return db.rawQuery("SELECT faculty FROM faculties WHERE name=?", new String[]{facultyName});
     }
 
+    public Cursor getFacultyName(String facultyID) {
+        return db.rawQuery("SELECT name FROM faculties WHERE faculty=?", new String[]{facultyID});
+    }
 
     /**
      * Fetches the facultyData from the server and saves it in the local db
      *
      * @throws Exception
      */
-    public void downloadFacultiesFromExternal() throws Exception {
+    public void downloadFacultiesFromExternal() {
         ArrayList<Faculty> faculties = TUMCabeClient.getInstance(mContext).getFaculties();
 
         db.beginTransaction();
@@ -335,6 +340,7 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
+            c.close();
             db.endTransaction();
         }
     }
@@ -401,6 +407,8 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
         cv.put("text", q.getText());
         cv.put("created", q.getCreated());
         cv.put("end", q.getEnd());
+        cv.put("targetFac", TextUtils.join(",", q.getFacultiesOfOpenQuestions()));
+
 
         // In case of no votes
         if (answers.length == 0) {

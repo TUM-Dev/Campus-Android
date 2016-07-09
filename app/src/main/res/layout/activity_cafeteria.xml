@@ -10,7 +10,7 @@
         android:orientation="vertical">
 
         <!-- The toolbar aka SupportActionBar -->
-        <android.support.design.widget.AppBarLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -33,7 +33,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:transitionName="@string/transition_card"
+            tools:ignore="UnusedAttribute">
 
             <include
                 layout="@layout/layout_all_errors"

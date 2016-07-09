@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.media.AudioManager;
+import android.os.Build;
+import android.provider.Settings;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -35,6 +37,16 @@ public class SilenceService extends IntentService {
         super(SILENCE_SERVICE);
     }
 
+    private static long getWaitDuration(String timeToEventString) {
+        long timeToEvent = Long.MAX_VALUE;
+        try {
+            timeToEvent = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.ENGLISH).parse(timeToEventString).getTime();
+        } catch (ParseException e) {
+            Utils.log(e, "");
+        }
+        return Math.min(CHECK_INTERVAL, timeToEvent - System.currentTimeMillis() + CHECK_DELAY);
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -49,33 +61,32 @@ public class SilenceService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        AlarmManager alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
-        Intent newIntent = new Intent(this, SilenceService.class);
-        PendingIntent pendingIntent = PendingIntent.getService(this, 0, newIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        long startTime = System.currentTimeMillis();
-        long wait_duration = CHECK_INTERVAL;
-
         //Abort, if the settings changed
         if (!Utils.getSettingBool(this, Const.SILENCE_SERVICE, false)) {
             // Don't schedule a new run, since the service is disabled
             return;
         }
-        Utils.log("SilenceService enabled, checking for lectures ...");
 
-        AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        AlarmManager alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
+        Intent newIntent = new Intent(this, SilenceService.class);
+        PendingIntent pendingIntent = PendingIntent.getService(this, 0, newIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        long startTime = System.currentTimeMillis();
+        long waitDuration = CHECK_INTERVAL;
+        Utils.log("SilenceService enabled, checking for lectures ...");
 
         CalendarManager calendarManager = new CalendarManager(this);
         if (!calendarManager.hasLectures()) {
             Utils.logv("No lectures available");
-            alarmManager.set(AlarmManager.RTC, startTime + wait_duration, pendingIntent);
+            alarmManager.set(AlarmManager.RTC, startTime + waitDuration, pendingIntent);
             return;
         }
 
+        AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         Cursor cursor = calendarManager.getCurrentFromDb();
         Utils.log("Current lectures: " + String.valueOf(cursor.getCount()));
 
-        if (cursor.getCount() != 0) {
+        if (cursor.getCount() != 0 && !isDoNotDisturbMode()) {
             // remember old state if just activated ; in doubt dont change
             if (!Utils.getInternalSettingBool(this, Const.SILENCE_ON, true)) {
                 Utils.setSetting(this, Const.SILENCE_OLD_STATE, am.getRingerMode());
@@ -95,8 +106,8 @@ public class SilenceService extends IntentService {
             }
             // refresh when event has ended
             cursor.moveToFirst();
-            wait_duration = getWaitDuration(cursor.getString(3));
-        } else if (Utils.getInternalSettingBool(this, Const.SILENCE_ON, false)) {
+            waitDuration = getWaitDuration(cursor.getString(3));
+        } else if (Utils.getInternalSettingBool(this, Const.SILENCE_ON, false) && !isDoNotDisturbMode()) {
             // default: old state
             Utils.log("set ringer mode to old state");
             am.setRingerMode(Integer.parseInt(
@@ -108,22 +119,29 @@ public class SilenceService extends IntentService {
             Cursor cursor2 = calendarManager.getNextCalendarItem();
             if (cursor.getCount() != 0) { //Check if we have a "next" item in the database and update the refresh interval until then. Otherwise use default interval.
                 // refresh when next event has started
-                wait_duration = getWaitDuration(cursor2.getString(1));
+                waitDuration = getWaitDuration(cursor2.getString(1));
             }
             cursor2.close();
         }
         cursor.close();
 
-        alarmManager.set(AlarmManager.RTC, startTime + wait_duration, pendingIntent);
+        alarmManager.set(AlarmManager.RTC, startTime + waitDuration, pendingIntent);
     }
 
-    private static long getWaitDuration(String timeToEventString) {
-        long timeToEvent = Long.MAX_VALUE;
-        try {
-            timeToEvent = (new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.ENGLISH).parse(timeToEventString)).getTime();
-        } catch (ParseException e) {
-            Utils.log(e, "");
+    /**
+     * We can't and won't change the ringermodes, if the device is in DoNotDisturb mode. DnD requires
+     * explicit user interaction, so we are out of the game until DnD is off again
+     */
+    private boolean isDoNotDisturbMode() {
+        // see https://stackoverflow.com/questions/31387137/android-detect-do-not-disturb-status
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            try {
+                int mode = Settings.Global.getInt(getContentResolver(), "zen_mode");
+                return mode != 0;
+            } catch (Settings.SettingNotFoundException e) {
+                return false;
+            }
         }
-        return Math.min(CHECK_INTERVAL, timeToEvent - System.currentTimeMillis() + CHECK_DELAY);
+        return false;
     }
 }

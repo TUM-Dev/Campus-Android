@@ -1,5 +1,4 @@
-# TumCampusApp [![Build Status](https://travis-ci.org/TCA-Team/TumCampusApp.svg?branch=master)](https://travis-ci.org/TCA-Team/TumCampusApp) [![Build Status](https://build.wdkk.de/job/TumCampusApp/badge/icon)](https://build.wdkk.de/job/TumCampusApp/) [![Dependency Status](https://www.versioneye.com/user/projects/5569427e63653200265a1500/badge.svg?style=flat)](https://www.versioneye.com/user/projects/5569427e63653200265a1500)
-
+# TumCampusApp [![Build Status](https://build.wdkk.de/job/TumCampusApp/badge/icon)](https://build.wdkk.de/job/TumCampusApp/) 
 Die inoffizielle TUM Campus App wird von Studierenden des Android Praktikums, freiwilligen Helfern und Lehrstuhlmitarbeitern entwickelt. Die App eignet sich sowohl zur Verwendung auf Smartphones, wie auch Tablets und ist für Studierende, aber auch Mitarbeiter gedacht.
 
 ### Features:

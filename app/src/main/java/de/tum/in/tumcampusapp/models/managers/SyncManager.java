@@ -82,7 +82,7 @@ public class SyncManager extends AbstractManager {
 	public static void replaceIntoDb(SQLiteDatabase db, String id) {
 		Utils.log(id);
 
-		if (id.length() == 0) {
+		if (id.isEmpty()) {
 			return;
 		}
 		db.execSQL("REPLACE INTO syncs (id, lastSync) VALUES (?, datetime())",

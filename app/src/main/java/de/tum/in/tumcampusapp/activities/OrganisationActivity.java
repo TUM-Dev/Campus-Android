@@ -31,28 +31,34 @@ public class OrganisationActivity extends ActivityForAccessingTumOnline<OrgItemL
      */
     private static final String TOP_LEVEL_ORG = "1";
 
-	private static boolean languageGerman;
+    private static boolean languageGerman;
 
-	/** List of Organisations shown on the Display */
-	private ListView lvOrg;
+    /**
+     * List of Organisations shown on the Display
+     */
+    private ListView lvOrg;
 
-	/** orgId is the ID of the organisation you click on */
-	private String orgId = TOP_LEVEL_ORG;
+    /**
+     * orgId is the ID of the organisation you click on
+     */
+    private String orgId = TOP_LEVEL_ORG;
 
-	/** orgName is the name of the parent organisation, whose folder is showed */
-	private String orgName;
+    /**
+     * orgName is the name of the parent organisation, whose folder is showed
+     */
+    private String orgName;
 
-	/**
-	 * parentId is the ID of the parent organisation, of which the
-	 * sub-organisations are showed
-	 */
-	private String parentId = TOP_LEVEL_ORG;
+    /**
+     * parentId is the ID of the parent organisation, of which the
+     * sub-organisations are showed
+     */
+    private String parentId = TOP_LEVEL_ORG;
 
     private OrgItemList result;
 
     public OrganisationActivity() {
-		super(TUMOnlineConst.ORG_TREE, R.layout.activity_organisation);
-	}
+        super(TUMOnlineConst.ORG_TREE, R.layout.activity_organisation);
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -80,144 +86,144 @@ public class OrganisationActivity extends ActivityForAccessingTumOnline<OrgItemL
         showLoadingEnded();
     }
 
-	/**
-	 * Returns true if there are one or more elements in the organisation tree
-	 * inside this organisation
-	 * 
-	 * @param organisationId organisation id
-	 * @return True if it exists, false otherwise
-	 */
-	private boolean existSubOrganisation(String organisationId) {
-        for(OrgItem item : result.getGroups()) {
-            if(item.getParentId().equals(organisationId)) {
+    /**
+     * Returns true if there are one or more elements in the organisation tree
+     * inside this organisation
+     *
+     * @param organisationId organisation id
+     * @return True if it exists, false otherwise
+     */
+    private boolean existSubOrganisation(String organisationId) {
+        for (OrgItem item : result.getGroups()) {
+            if (item.getParentId().equals(organisationId)) {
                 return true;
             }
         }
         return false;
-	}
+    }
 
-	/**
-	 * Searches for the parentId of an element, if it is already in the highest layer, it returns 1.
-	 * 
-	 * @param parentId parent id
-	 * @return organisation item
-	 */
+    /**
+     * Searches for the parentId of an element, if it is already in the highest layer, it returns 1.
+     *
+     * @param parentId parent id
+     * @return organisation item
+     */
     OrgItem getParent(String parentId) {
         OrgItem parentObject = new OrgItem();
-		for (OrgItem item : result.getGroups()) {
-			// if there is an organisation that has the given parentId as organisationId
-			// make a parent element and return it
-			if (item.getId().equals(parentId)) {
-				parentObject.setId(item.getParentId());
+        for (OrgItem item : result.getGroups()) {
+            // if there is an organisation that has the given parentId as organisationId
+            // make a parent element and return it
+            if (item.getId().equals(parentId)) {
+                parentObject.setId(item.getParentId());
                 parentObject.setNameDe(languageGerman ? item.getNameDe() : item.getNameEn());
-				return parentObject;
-			}
-		}
+                return parentObject;
+            }
+        }
 
-		// if no parent found => jump to start layer
-		parentObject.setId(TOP_LEVEL_ORG);
-		return parentObject;
-	}
+        // if no parent found => jump to start layer
+        parentObject.setId(TOP_LEVEL_ORG);
+        return parentObject;
+    }
 
-	/**
-	 * A click on the BackButton should show the parent class or go back to the main menu
-	 */
-	@Override
-	public void onBackPressed() {
-		// go back to the main menu, if the user is in the highest level
-		if (orgId.equals(TOP_LEVEL_ORG)) {
-			Intent intent = new Intent(this, MainActivity.class);
-			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
-					| Intent.FLAG_ACTIVITY_SINGLE_TOP);
-			startActivity(intent);
-			return;
-		}
+    /**
+     * A click on the BackButton should show the parent class or go back to the main menu
+     */
+    @Override
+    public void onBackPressed() {
+        // go back to the main menu, if the user is in the highest level
+        if (orgId.equals(TOP_LEVEL_ORG)) {
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+                    | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            startActivity(intent);
+            return;
+        }
 
-		// get one layer up
-		orgId = parentId;
-		OrgItem p = getParent(orgId);
-		parentId = p.getId();
+        // get one layer up
+        orgId = parentId;
+        OrgItem p = getParent(orgId);
+        parentId = p.getId();
 
-		// Switch language
-		if (languageGerman) {
-			orgName = getParent(parentId).getNameDe();
-		} else {
-			orgName = getParent(parentId).getNameEn();
-		}
-		showItems(orgId);
-	}
+        // Switch language
+        if (languageGerman) {
+            orgName = getParent(parentId).getNameDe();
+        } else {
+            orgName = getParent(parentId).getNameEn();
+        }
+        showItems(orgId);
+    }
 
-	/**
-	 * Show all items in a certain layer having a parent element with parent_id
-	 * parent.
-	 * 
-	 * @param parent all items with the same parent
-	 */
+    /**
+     * Show all items in a certain layer having a parent element with parent_id
+     * parent.
+     *
+     * @param parent all items with the same parent
+     */
     void showItems(String parent) {
 
-		// caption button gets caption
-		TextView tvCaption = (TextView) findViewById(R.id.tvCaption);
+        // caption button gets caption
+        TextView tvCaption = (TextView) findViewById(R.id.tvCaption);
 
-		// if no orgName -> highest level
-		if (orgName == null) {
-			orgName = getString(R.string.tum);
-		}
+        // if no orgName -> highest level
+        if (orgName == null) {
+            orgName = getString(R.string.tum);
+        }
 
-		// set caption (organisation "folder" name)
-		tvCaption.setText(orgName.toUpperCase(Locale.getDefault()));
+        // set caption (organisation "folder" name)
+        tvCaption.setText(orgName.toUpperCase(Locale.getDefault()));
 
-		List<OrgItem> organisationList = new ArrayList<>();
+        List<OrgItem> organisationList = new ArrayList<>();
 
-		// go through the XML file and give each organisation its Id, German
-		// name, English name and parent-Id
-		for (OrgItem item : result.getGroups()) {
-			if (item.getParentId().equals(parent)) {
-				organisationList.add(item);
-			}
-		}
+        // go through the XML file and give each organisation its Id, German
+        // name, English name and parent-Id
+        for (OrgItem item : result.getGroups()) {
+            if (item.getParentId().equals(parent)) {
+                organisationList.add(item);
+            }
+        }
 
-		lvOrg.setAdapter(new OrgItemListAdapter(this, organisationList));
+        lvOrg.setAdapter(new OrgItemListAdapter(this, organisationList));
 
-		// action for clicks on a list-item
-		lvOrg.setOnItemClickListener(new OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> a, View v, int position,
-					long id) {
-				Object o = lvOrg.getItemAtPosition(position);
-				OrgItem org = (OrgItem) o;
+        // action for clicks on a list-item
+        lvOrg.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> a, View v, int position,
+                                    long id) {
+                Object o = lvOrg.getItemAtPosition(position);
+                OrgItem org = (OrgItem) o;
 
-				// look if no subOrganisation exists, and if not make bundle and
-				// start OrganisationDetails
-				if (!existSubOrganisation(org.getId())) {
-					Bundle bundle = new Bundle();
-					bundle.putString(Const.ORG_PARENT_ID, org.getParentId());
-					bundle.putString(Const.ORG_ID, org.getId());
+                // look if no subOrganisation exists, and if not make bundle and
+                // start OrganisationDetails
+                if (existSubOrganisation(org.getId())) {
+                    // if subOrganisation exists, show subOrganisation structure
+                    parentId = orgId;
+                    orgId = org.getId();
+                    // switch correct language
+                    if (languageGerman) {
+                        orgName = org.getNameDe();
+                    } else {
+                        orgName = org.getNameEn();
+                    }
+                    showItems(orgId);
+                } else {
+                    Bundle bundle = new Bundle();
+                    bundle.putString(Const.ORG_PARENT_ID, org.getParentId());
+                    bundle.putString(Const.ORG_ID, org.getId());
 
-					// set orgName depending on language
-					if (languageGerman) {
-						bundle.putString(Const.ORG_NAME, org.getNameDe());
-					} else {
-						bundle.putString(Const.ORG_NAME, org.getNameEn());
-					}
+                    // set orgName depending on language
+                    if (languageGerman) {
+                        bundle.putString(Const.ORG_NAME, org.getNameDe());
+                    } else {
+                        bundle.putString(Const.ORG_NAME, org.getNameEn());
+                    }
 
-					// show organisation details
-					Intent i = new Intent(OrganisationActivity.this, OrganisationDetailsActivity.class);
-					i.putExtras(bundle);
-					startActivity(i);
+                    // show organisation details
+                    Intent i = new Intent(OrganisationActivity.this, OrganisationDetailsActivity.class);
+                    i.putExtras(bundle);
+                    startActivity(i);
 
-				} else {
-					// if subOrganisation exists, show subOrganisation structure
-					parentId = orgId;
-					orgId = org.getId();
-					// switch correct language
-					if (languageGerman) {
-						orgName = org.getNameDe();
-					} else {
-						orgName = org.getNameEn();
-					}
-					showItems(orgId);
-				}
-			}
-		});
-	}
+                }
+            }
+        });
+    }
 }

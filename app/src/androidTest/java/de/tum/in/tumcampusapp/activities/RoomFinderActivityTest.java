@@ -27,13 +27,14 @@ public class RoomFinderActivityTest extends BaseActivityTest {
     @Rule
     public ActivityTestRule<RoomFinderActivity> mActivityRule = new ActivityTestRule<>(RoomFinderActivity.class);
 
+    @Override
     @Test
     public void mainComponentDisplayedTest() {
         idIsDisplayed(R.id.list);
     }
 
     @Test
-    public void searchTest() throws Exception {
+    public void searchTest() throws InterruptedException {
         // Adapted from https://android.googlesource.com/platform/frameworks/testing/+/android-support-test/espresso/sample/src/androidTest/java/android/support/test/testapp/ActionBarSearchActivityTest.java
 
         onView(allOf(withId(R.id.action_search), isDisplayed()))
