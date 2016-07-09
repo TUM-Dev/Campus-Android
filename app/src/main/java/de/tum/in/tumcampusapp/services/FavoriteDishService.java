@@ -55,7 +55,7 @@ public class FavoriteDishService extends IntentService {
                 dishNames.add(c.getString(0));
             }
             while (c.moveToNext());
-            if(dishNames.size()>0) {
+            if (dishNames.size() > 0) {
 
                 intent = new Intent(this, CafeteriaActivity.class);
                 PendingIntent pi = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -70,7 +70,6 @@ public class FavoriteDishService extends IntentService {
                 mBuilder.setAutoCancel(true);
                 NotificationManager mNotificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
                 mNotificationManager.notify(0, mBuilder.build());
-
             }
         }
     }
