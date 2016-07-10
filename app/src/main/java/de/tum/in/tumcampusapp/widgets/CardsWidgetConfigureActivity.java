@@ -1,5 +1,6 @@
 package de.tum.in.tumcampusapp.widgets;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
@@ -15,6 +16,7 @@ import de.tum.in.tumcampusapp.models.managers.CardManager;
 /**
  * The configuration screen for the {@link CardsWidget CardsWidget} AppWidget.
  */
+@SuppressLint("Registered")
 public class CardsWidgetConfigureActivity extends Activity {
 
     public static final String PREFS_NAME = "de.tum.in.tumcampusapp.widgets.CardsWidget";

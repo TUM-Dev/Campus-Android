@@ -1,5 +1,6 @@
 package de.tum.in.tumcampusapp.widgets;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
@@ -16,6 +17,7 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.cards.generic.Card;
 import de.tum.in.tumcampusapp.models.managers.CardManager;
 
+@SuppressLint("Registered")
 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 public class CardsWidgetService extends RemoteViewsService {
     @Override
