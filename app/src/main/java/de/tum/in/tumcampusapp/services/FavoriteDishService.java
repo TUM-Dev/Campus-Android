@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.CafeteriaActivity;
 import de.tum.in.tumcampusapp.activities.MainActivity;
+import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.Cafeteria;
 import de.tum.in.tumcampusapp.models.managers.CafeteriaManager;
@@ -46,31 +47,29 @@ public class FavoriteDishService extends IntentService {
         /**
          * create a notification that dish is available.
          */
-        ArrayList<String> dishNames = new ArrayList<>();
-
         cafeteriaMenuManager = new CafeteriaMenuManager(this);
         Cursor c = cafeteriaMenuManager.getFavoriteDishToday();
+        int index = 0;
         if (c.getCount() > 0) {
+            c.moveToFirst();
             do {
-                dishNames.add(c.getString(0));
-            }
-            while (c.moveToNext());
-            if (dishNames.size() > 0) {
-
                 intent = new Intent(this, CafeteriaActivity.class);
-                PendingIntent pi = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                intent.putExtra(Const.MENSA_FOR_FAVORITEDISH, c.getInt(1));
+                PendingIntent pi = PendingIntent.getActivity(this, index, intent, PendingIntent.FLAG_UPDATE_CURRENT);
                 NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
                         .setSmallIcon(R.mipmap.ic_launcher)
                         .setContentTitle("Your Favorite Dish!")
-                        .setContentText(Utils.arrayListToString(dishNames))
+                        .setContentText(c.getString(0))
                         .setAutoCancel(true);
 
                 mBuilder.setContentIntent(pi);
                 mBuilder.setDefaults(Notification.DEFAULT_SOUND);
                 mBuilder.setAutoCancel(true);
                 NotificationManager mNotificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
-                mNotificationManager.notify(0, mBuilder.build());
+                mNotificationManager.notify(index, mBuilder.build());
+                index++;
             }
+            while (c.moveToNext());
         }
     }
 }

@@ -129,11 +129,6 @@ public class CafeteriaMenuManager extends AbstractManager {
                 + "FROM cafeterias_menus WHERE date > date('now','localtime') AND mensaId=? AND name=?", new String[]{"" + mensaId, dishName});
     }
 
-    public Cursor getAllFavoriteDishes() {
-        return db.rawQuery("SELECT * "
-                + "FROM favorite_dishes", null);
-    }
-
     public Cursor checkIfFavoriteDish(String tag) {
         return db.rawQuery("SELECT * "
                 + "FROM favorite_dishes WHERE tag=? ", new String[]{tag});
@@ -155,7 +150,7 @@ public class CafeteriaMenuManager extends AbstractManager {
     }
 
     public Cursor getFavoriteDishToday() {
-        return db.rawQuery("SELECT dishName FROM favorite_dishes WHERE date = date('now','localtime')", null);
+        return db.rawQuery("SELECT dishName,mensaId FROM favorite_dishes WHERE date = date('now','localtime')", null);
     }
 
     /**

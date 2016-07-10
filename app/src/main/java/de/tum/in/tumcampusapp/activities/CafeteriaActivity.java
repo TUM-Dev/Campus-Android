@@ -39,8 +39,6 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
     private int mCafeteriaId = -1;
     private CafeteriaDetailsSectionsPagerAdapter mSectionsPagerAdapter;
     private List<Cafeteria> mCafeterias;
-    private String mensaForFav = "";
-    private CafeteriaMenuManager cmm;
 
     public CafeteriaActivity() {
         super(Const.CAFETERIAS, R.layout.activity_cafeteria);
@@ -50,7 +48,6 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // Get id from intent if specified
-        cmm = new CafeteriaMenuManager(this);
         final Intent intent = getIntent();
         if (intent != null && intent.getExtras() != null && intent.getExtras().containsKey(Const.CAFETERIA_ID)) {
             mCafeteriaId = intent.getExtras().getInt(Const.CAFETERIA_ID);
@@ -159,10 +156,25 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
      */
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-        mCafeteriaId = mCafeterias.get(pos).id;
+        Intent intent=getIntent();
+        //check if Activity triggered from favoriteDish Notification
+        if (intent != null && intent.getExtras() != null && intent.getExtras().containsKey(Const.MENSA_FOR_FAVORITEDISH)) {
+            for(int i=0;i<parent.getCount();i++) {
+                //get mensaId from extra to redirct the user to it.
+                if (intent.getExtras().getInt(Const.MENSA_FOR_FAVORITEDISH) == mCafeterias.get(i).id) {
+                    mCafeteriaId = mCafeterias.get(i).id;
+                    parent.setSelection(i);
+                    intent.removeExtra(Const.MENSA_FOR_FAVORITEDISH);
+                    break;
+                }
+            }
+        }
+        else
+            mCafeteriaId = mCafeterias.get(pos).id;
+
+
         mSectionsPagerAdapter = null;
         mSectionsPagerAdapter = new CafeteriaDetailsSectionsPagerAdapter(getSupportFragmentManager());
-
         // Create the adapter that will return a fragment for each of the primary sections of the app.
         mViewPager.setAdapter(null); //unset the adapter for updating
         mSectionsPagerAdapter.setCafeteriaId(this, mCafeteriaId);
