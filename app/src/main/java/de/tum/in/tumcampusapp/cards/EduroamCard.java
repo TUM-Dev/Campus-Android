@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RemoteViews;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.SetupEduroamActivity;
@@ -67,5 +68,13 @@ public class EduroamCard extends NotificationAwareCard {
     @Override
     public int getId() {
         return 0;
+    }
+
+    @Override
+    public RemoteViews getRemoteViews(Context context) {
+        final RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.cards_widget_card);
+        remoteViews.setTextViewText(R.id.widgetCardTextView, this.getTitle());
+        remoteViews.setImageViewResource(R.id.widgetCardImageView, R.drawable.ic_action_network_wifi);
+        return remoteViews;
     }
 }

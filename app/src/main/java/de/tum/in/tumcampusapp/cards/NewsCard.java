@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
+import android.widget.RemoteViews;
 
 import com.google.common.base.Optional;
 
@@ -131,5 +132,18 @@ public class NewsCard extends NotificationAwareCard {
 
         // Opens url in browser
         return new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+    }
+
+    @Override
+    public RemoteViews getRemoteViews(Context context) {
+        mCursor.moveToPosition(mPosition);
+        final RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.cards_widget_card);
+        remoteViews.setTextViewText(R.id.widgetCardTextView, this.getTitle());
+        final String imgURL = mCursor.getString(4);
+        if(imgURL != null && !imgURL.trim().isEmpty()) {
+            Bitmap img = net.downloadImageToBitmap(mCursor.getString(4));
+            remoteViews.setImageViewBitmap(R.id.widgetCardImageView, img);
+        }
+        return remoteViews;
     }
 }
