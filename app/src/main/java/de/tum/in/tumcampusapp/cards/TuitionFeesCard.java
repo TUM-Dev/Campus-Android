@@ -72,7 +72,7 @@ public class TuitionFeesCard extends NotificationAwareCard {
             Date d = Utils.getDate(mTuition.getFrist());
             String date = SimpleDateFormat.getDateInstance().format(d);
             addedViews.add(addTextView(String.format(mContext.getString(R.string.reregister_todo), date)));
-            //addedViews.add(addTextView(viewHolder.itemView.getContext().getString(R.string.amount_dots) + ' ' + mTuition.getSoll() + '€'));
+            addedViews.add(addTextView(viewHolder.itemView.getContext().getString(R.string.amount_dots) + ' ' + mTuition.getSoll() + '€'));
         }
     }
 
