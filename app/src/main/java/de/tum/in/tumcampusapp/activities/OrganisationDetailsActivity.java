@@ -143,22 +143,12 @@ public class OrganisationDetailsActivity extends ActivityForAccessingTumOnline<O
 		contactEmail = organisation.getContactEmail();
 		contactUrl = organisation.getContactLocationURL();
 		contactRoom = organisation.getContactLocality();
-		if(organisation.getContactName().length() == 0 && organisation.getContactStreet().length() == 0 &&
-				organisation.getContactLocationURL().length() == 0 && organisation.getContactEmail().length() == 0 &&
-				organisation.getContactTelephone().length() == 0 && organisation.getContactFax().length() ==0
-				&& organisation.getAdditionalInfoCaption().length() == 0 && organisation.getAdditionalInfoText().length() == 0
-				&& organisation.getContactLocality().length() == 0)
+
+		if (isEmptyDetails(organisation))
 		{
 			AlternateRequest alternateRequest =new AlternateRequest(this.getApplicationContext());
 			alternateRequest.fetchInteractive("pOrgNr", orgId);
-			try {
-				/*
-				 * Wait 1 second for data to be fetched
-				 */
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+			waitForData();
 			contactName = alternateRequest.getContactName();
 			contactPhone = alternateRequest.getContactPhone();
 			contactEmail = alternateRequest.getContactEmail();
@@ -223,4 +213,29 @@ public class OrganisationDetailsActivity extends ActivityForAccessingTumOnline<O
 		}
 
 	}
+	/*
+	 * Check whether organization is empty or no except identifier and name
+	 */
+	private boolean isEmptyDetails(OrgDetailsItem organisation)
+	{
+		if(organisation.getContactName().length() == 0 && organisation.getContactStreet().length() == 0 && organisation.getContactLocationURL().length() == 0 && organisation.getContactEmail().length() == 0 &&  organisation.getContactTelephone().length() == 0 && organisation.getContactFax().length() ==0  && organisation.getAdditionalInfoCaption().length() == 0 && organisation.getAdditionalInfoText().length() == 0 && organisation.getContactLocality().length() == 0)
+		{
+			return  true;
+		}
+		else
+			return false;
+	}
+
+	private void waitForData()
+	{
+		try {
+				/*
+				 * Wait 1 second for data to be fetched
+				 */
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+
 }
