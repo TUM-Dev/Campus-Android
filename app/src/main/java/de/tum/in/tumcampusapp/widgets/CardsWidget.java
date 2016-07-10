@@ -1,24 +1,27 @@
 package de.tum.in.tumcampusapp.widgets;
 
+import android.annotation.TargetApi;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.widget.RemoteViews;
 
 import java.net.URISyntaxException;
 
-import de.tum.in.tumcampus.R;
-import de.tum.in.tumcampus.auxiliary.Utils;
+import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.auxiliary.Utils;
 
 /**
  * Implementation of App Widget functionality.
  * App Widget Configuration implemented in {@link CardsWidgetConfigureActivity CardsWidgetConfigureActivity}
  */
+@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 public class CardsWidget extends AppWidgetProvider {
 
     private static final String BROADCAST_NAME = "de.tum.in.newtumcampus.intent.action.BROADCAST_CARDSWIDGET";
@@ -53,7 +56,7 @@ public class CardsWidget extends AppWidgetProvider {
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId) {
-         // Set up the intent that starts the StackViewService, which will
+        // Set up the intent that starts the StackViewService, which will
         // provide the views for this collection.
         Intent intent = new Intent(context, CardsWidgetService.class);
         // Add the app widget ID to the intent extras.
@@ -85,7 +88,7 @@ public class CardsWidget extends AppWidgetProvider {
     public void onReceive(@NonNull Context context, @NonNull Intent intent) {
         if (intent.getAction().equals(BROADCAST_NAME)) {
             String targetIntent = intent.getStringExtra(TARGET_INTENT);
-            if(targetIntent != null) {
+            if (targetIntent != null) {
                 try {
                     //We try to recreate the targeted Intent from card.getIntent()
                     //CardsRemoteViewsFactory filled into this Broadcast

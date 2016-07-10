@@ -1,25 +1,26 @@
 package de.tum.in.tumcampusapp.widgets.RemoteViewFactories;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
 import java.util.List;
 import java.util.Map;
 
-import de.tum.in.tumcampus.R;
-import de.tum.in.tumcampus.auxiliary.CafeteriaPrices;
-import de.tum.in.tumcampus.auxiliary.Utils;
+import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.auxiliary.CafeteriaPrices;
+import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.CafeteriaMenu;
 import de.tum.in.tumcampusapp.models.managers.CafeteriaManager;
 
-public class MensaRemoteViewFactory implements RemoteViewsService.RemoteViewsFactory{
+@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+public class MensaRemoteViewFactory implements RemoteViewsService.RemoteViewsFactory {
 
     private Context applicationContext;
-    private CafeteriaManager mensaManager;
     private List<CafeteriaMenu> mensaMenu;
-    private String mensaName;
 
     public MensaRemoteViewFactory(Context applicationContext, Intent intent) {
         this.applicationContext = applicationContext;
@@ -27,14 +28,14 @@ public class MensaRemoteViewFactory implements RemoteViewsService.RemoteViewsFac
 
     @Override
     public void onCreate() {
-        mensaManager = new CafeteriaManager(applicationContext);
+        CafeteriaManager mensaManager = new CafeteriaManager(applicationContext);
 
         // Map of the name of the best mensa and list of its Menu
         Map<String, List<CafeteriaMenu>> currentMensa = mensaManager.getBestMatchMensaInfo(applicationContext);
         if (currentMensa != null) {
-            mensaName = currentMensa.keySet().iterator().next();
+            String mensaName = currentMensa.keySet().iterator().next();
             mensaMenu = currentMensa.get(mensaName);
-        }else
+        } else
             Utils.log("Error! Could not get list of menus for the mensa widget ");
     }
 
@@ -66,7 +67,7 @@ public class MensaRemoteViewFactory implements RemoteViewsService.RemoteViewsFac
             rv.setTextViewText(R.id.menu_content, menuContent);
 
             String price = CafeteriaPrices.getPrice(applicationContext, current_item.typeLong);
-            if ( price != null)
+            if (price != null)
                 price += " €";
             else
                 price = "____€";
@@ -76,7 +77,6 @@ public class MensaRemoteViewFactory implements RemoteViewsService.RemoteViewsFac
         }
         return null;
     }
-
 
 
     @Override

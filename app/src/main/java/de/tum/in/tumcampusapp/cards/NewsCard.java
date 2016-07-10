@@ -140,9 +140,11 @@ public class NewsCard extends NotificationAwareCard {
         final RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.cards_widget_card);
         remoteViews.setTextViewText(R.id.widgetCardTextView, this.getTitle());
         final String imgURL = mCursor.getString(4);
-        if(imgURL != null && !imgURL.trim().isEmpty()) {
-            Bitmap img = net.downloadImageToBitmap(mCursor.getString(4));
-            remoteViews.setImageViewBitmap(R.id.widgetCardImageView, img);
+        if (imgURL != null && !imgURL.trim().isEmpty() && !"null".equals(imgURL)) {
+            Optional<Bitmap> img = net.downloadImageToBitmap(imgURL);
+            if (img.isPresent()) {
+                remoteViews.setImageViewBitmap(R.id.widgetCardImageView, img.get());
+            }
         }
         return remoteViews;
     }

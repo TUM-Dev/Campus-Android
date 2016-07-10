@@ -1,19 +1,22 @@
 package de.tum.in.tumcampusapp.widgets;
 
+import android.annotation.TargetApi;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import de.tum.in.tumcampus.R;
-import de.tum.in.tumcampus.cards.Card;
+import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.cards.generic.Card;
 import de.tum.in.tumcampusapp.models.managers.CardManager;
 
+@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 public class CardsWidgetService extends RemoteViewsService {
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
@@ -22,6 +25,7 @@ public class CardsWidgetService extends RemoteViewsService {
     }
 }
 
+@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 class CardsRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 
     final private Context mContext;
@@ -84,7 +88,7 @@ class CardsRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
         CardManager.update(mContext);
         List<Card> cards = CardManager.getCards();
         for (Card card : cards) {
-            final boolean getsShown = prefs.getBoolean(prefix + card.getTyp(), false);
+            final boolean getsShown = prefs.getBoolean(prefix + card.getType(), false);
             if (getsShown) {
                 final RemoteViews remote = card.getRemoteViews(mContext);
 
@@ -97,7 +101,7 @@ class CardsRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 
                 if (remote != null && target != null) {
                     final Intent fillInIntent = new Intent();
-                    if(target.getExtras() != null) {
+                    if (target.getExtras() != null) {
                         fillInIntent.putExtras(target.getExtras());
                     }
                     fillInIntent.putExtra(CardsWidget.TARGET_INTENT, target.toUri(Intent.URI_INTENT_SCHEME));

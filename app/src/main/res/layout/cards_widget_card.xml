@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/cards_widget_card"
-    android:orientation="horizontal" android:layout_width="fill_parent"
+    android:orientation="horizontal"
+    android:layout_width="fill_parent"
     android:layout_height="match_parent"
     android:padding="5dp"
     android:background="@android:color/background_light">
@@ -15,7 +16,7 @@
         android:scrollHorizontally="false"
         android:singleLine="false"
         android:layout_weight="1"
-        android:textColor="@android:color/black"/>
+        android:textColor="@android:color/black" />
 
     <ImageView
         android:layout_width="wrap_content"

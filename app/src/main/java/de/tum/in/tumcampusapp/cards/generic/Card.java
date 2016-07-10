@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.PopupMenu;
@@ -15,6 +16,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.RemoteViews;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -205,6 +207,11 @@ public abstract class Card {
      * @return a unique identifier among the type of the card
      */
     public abstract int getId();
+
+    @Nullable
+    public RemoteViews getRemoteViews(Context context) {
+        return null;
+    }
 
     /**
      * Interface which has to be implemented by a manager class to add cards to the stream

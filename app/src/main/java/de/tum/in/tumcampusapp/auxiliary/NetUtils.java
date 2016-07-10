@@ -8,6 +8,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.widget.ImageView;
 
 import com.google.common.base.Optional;
@@ -236,7 +237,7 @@ public class NetUtils {
      * @param url Image url
      * @return Downloaded image as {@link Bitmap}
      */
-    public Optional<Bitmap> downloadImageToBitmap(final String url) {
+    public Optional<Bitmap> downloadImageToBitmap(@NonNull String url) {
         Optional<File> f = downloadImage(url);
         if (f.isPresent()) {
             return Optional.of(BitmapFactory.decodeFile(f.get().getAbsolutePath()));

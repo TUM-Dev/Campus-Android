@@ -9,7 +9,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.CheckBox;
 
-import de.tum.in.tumcampus.R;
+import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.models.managers.CardManager;
 
 /**
@@ -108,9 +108,7 @@ public class CardsWidgetConfigureActivity extends Activity {
         // If this activity was started with an intent without an app widget ID, finish with an error.
         if (mAppWidgetId == AppWidgetManager.INVALID_APPWIDGET_ID) {
             finish();
-            return;
         }
-
     }
 }
 

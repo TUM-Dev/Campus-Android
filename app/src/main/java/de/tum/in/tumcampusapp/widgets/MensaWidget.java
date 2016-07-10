@@ -7,7 +7,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.widget.RemoteViews;
 
-import de.tum.in.tumcampus.R;
+import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.models.managers.CafeteriaManager;
 import de.tum.in.tumcampusapp.services.MensaWidgetService;
 
@@ -18,7 +18,6 @@ import de.tum.in.tumcampusapp.services.MensaWidgetService;
  */
 public class MensaWidget extends AppWidgetProvider {
 
-    private RemoteViews rv;
     AppWidgetManager appWidgetManager;
 
 
@@ -29,11 +28,11 @@ public class MensaWidget extends AppWidgetProvider {
         final int N = appWidgetIds.length;
         this.appWidgetManager = appWidgetManager;
 
-        for (int i = 0; i < N; i++) {
+        for (int appWidgetId : appWidgetIds) {
             Intent intent = new Intent(context, MensaWidgetService.class);
-            intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetIds[i]);
+            intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
             intent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME)));
-            rv = new RemoteViews(context.getPackageName(), R.layout.mensa_widget);
+            RemoteViews rv = new RemoteViews(context.getPackageName(), R.layout.mensa_widget);
 
             // set the header for the Widget layout
             CafeteriaManager mensaManager = new CafeteriaManager(context);
@@ -43,7 +42,7 @@ public class MensaWidget extends AppWidgetProvider {
             // set the adapter for the list view in the mensaWidget
             rv.setRemoteAdapter(R.id.food_item, intent); //appWidgetIds[i],
             rv.setEmptyView(R.id.empty_view, R.id.empty_view);
-            appWidgetManager.updateAppWidget(appWidgetIds[i], rv);
+            appWidgetManager.updateAppWidget(appWidgetId, rv);
 
         }
         super.onUpdate(context, appWidgetManager, appWidgetIds);
