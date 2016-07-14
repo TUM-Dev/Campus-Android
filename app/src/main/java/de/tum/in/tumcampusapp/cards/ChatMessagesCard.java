@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.RemoteViews;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -114,5 +115,13 @@ public class ChatMessagesCard extends NotificationAwareCard {
     @Override
     protected boolean shouldShowNotification(SharedPreferences prefs) {
         return false;
+    }
+
+    @Override
+    public RemoteViews getRemoteViews(Context context) {
+        final RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.cards_widget_card);
+        remoteViews.setTextViewText(R.id.widgetCardTextView, this.getTitle());
+        remoteViews.setImageViewResource(R.id.widgetCardImageView, R.drawable.ic_comment);
+        return remoteViews;
     }
 }

@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.RemoteViews;
 import android.widget.TextView;
 
 import java.text.DateFormat;
@@ -202,5 +203,13 @@ public class NextLectureCard extends NotificationAwareCard {
         Date start;
         Date end;
         String location;
+    }
+
+    @Override
+    public RemoteViews getRemoteViews(Context context) {
+        final RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.cards_widget_card);
+        remoteViews.setTextViewText(R.id.widgetCardTextView, this.getTitle());
+        remoteViews.setImageViewResource(R.id.widgetCardImageView, R.drawable.ic_my_lectures);
+        return remoteViews;
     }
 }

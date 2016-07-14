@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.RemoteViews;
 import android.widget.TextView;
 
 import java.util.List;
@@ -133,5 +134,13 @@ public class MVVCard extends NotificationAwareCard {
 
     public void setDepartures(List<TransportManager.Departure> departures) {
         this.mDepartures = departures;
+    }
+
+    @Override
+    public RemoteViews getRemoteViews(Context context) {
+        final RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.cards_widget_card);
+        remoteViews.setTextViewText(R.id.widgetCardTextView, this.getTitle());
+        remoteViews.setImageViewResource(R.id.widgetCardImageView, R.drawable.ic_mvv);
+        return remoteViews;
     }
 }

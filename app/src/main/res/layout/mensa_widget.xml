@@ -1,0 +1,42 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:padding="@dimen/widget_margin">
+
+    <TextView
+        android:id="@+id/mensa_widget_header"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:minHeight="40dp"
+        android:padding="8dp"
+        android:textColor="#ff656865"
+        android:textSize="20sp"
+        android:typeface="sans" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/mensa_widget_header"
+        android:padding="8dp"
+        android:src="@drawable/ic_cutlery" />
+
+    <ListView
+        android:id="@+id/food_item"
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/mensa_widget_header"
+        android:divider="@android:color/darker_gray"
+        android:dividerHeight="1dp" />
+
+    <TextView
+        android:id="@+id/empty_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/food_item"
+        android:gravity="center"
+        android:textColor="#ff656865"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+</RelativeLayout>

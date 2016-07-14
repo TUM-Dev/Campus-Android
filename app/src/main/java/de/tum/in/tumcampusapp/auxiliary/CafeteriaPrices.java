@@ -146,4 +146,8 @@ public final class CafeteriaPrices {
                 return STUDENT_PRICES;
         }
     }
+
+    public static String getPrice(Context context, String menuType) {
+        return getRolePrices(context).get(menuType);
+    }
 }

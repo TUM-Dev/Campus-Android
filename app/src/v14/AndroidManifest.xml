@@ -4,10 +4,43 @@
     package="de.tum.in.tumcampusapp"
     tools:ignore="AllowBackup">
 
-    <!-- TODO add additions for widgets -->
-    <!-- This is an example how fields in app/AndroidManifest.xml
-         can be replaced -->
-    <application
-        android:icon="@drawable/tum_logo"
-        tools:replace="android:icon" />
+    <application>
+        <!-- receiver for the mensaWidget -->
+        <receiver
+            android:name=".widgets.MensaWidget"
+            android:label="@string/mensa_widget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/mensa_widget_info" />
+        </receiver>
+
+        <!-- receiver for the MVVWidget -->
+        <service
+            android:name=".services.MensaWidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
+
+        <service
+            android:name=".widgets.CardsWidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
+
+        <receiver android:name=".widgets.CardsWidget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/cards_widget_info" />
+        </receiver>
+
+        <activity android:name=".widgets.CardsWidgetConfigureActivity">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
+    </application>
 </manifest>
