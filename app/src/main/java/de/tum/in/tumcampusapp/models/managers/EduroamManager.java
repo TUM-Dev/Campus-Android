@@ -100,6 +100,12 @@ public class EduroamManager {
                 return false;
             }
             conf.enterpriseConfig.setCaCertificate(cert);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                conf.enterpriseConfig.setDomainSuffixMatch("radius.lrz.de");
+                conf.enterpriseConfig.setAltSubjectMatch("DNS:radius.lrz.de");
+            }else {
+                conf.enterpriseConfig.setSubjectMatch("radius.lrz.de");
+            }
         } else {
 
             try {
