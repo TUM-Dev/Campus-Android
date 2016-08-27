@@ -15,8 +15,8 @@ public class Exam {
     @Element(name = "lv_titel")
     private String course = "";
 
-    @Element(name = "lv_credits")
-    private String credits = "";
+    @Element(name = "lv_credits", required = false)
+    private String credits = "0";
 
     @Element(name = "datum", required = false)
     private String date = "";
