@@ -4,7 +4,7 @@ apply from: '../pmd.gradle'
 
 android {
     compileSdkVersion 24
-    buildToolsVersion '24.0.1'
+    buildToolsVersion '24.0.2'
     buildTypes {
         debug {
             debuggable true
@@ -55,21 +55,21 @@ android {
 
 configurations.all {
     resolutionStrategy {
-        force 'com.android.support:appcompat-v7:24.1.1'
-        force 'com.android.support:design:24.1.1'
-        force 'com.android.support:recyclerview-v7:24.1.1'
+        force 'com.android.support:appcompat-v7:24.2.1'
+        force 'com.android.support:design:24.2.1'
+        force 'com.android.support:recyclerview-v7:24.2.1'
         force 'com.google.code.findbugs:jsr305:3.0.1'
     }
 }
 
 dependencies {
-    compile 'com.android.support:appcompat-v7:24.1.1'
-    compile 'com.android.support:cardview-v7:24.1.1'
-    compile 'com.android.support:design:24.1.1'
+    compile 'com.android.support:appcompat-v7:24.2.1'
+    compile 'com.android.support:cardview-v7:24.2.1'
+    compile 'com.android.support:design:24.2.1'
     compile 'com.android.support:multidex:1.0.1'
-    compile 'com.android.support:preference-v7:24.1.1'
-    compile 'com.android.support:recyclerview-v7:24.1.1'
-    compile 'com.android.support:support-v4:24.1.1'
+    compile 'com.android.support:preference-v7:24.2.1'
+    compile 'com.android.support:recyclerview-v7:24.2.1'
+    compile 'com.android.support:support-v4:24.2.1'
     compile 'com.google.android.gms:play-services-gcm:9.4.0'
     compile 'com.google.code.gson:gson:2.7'
     compile 'com.google.guava:guava:19.0'
@@ -89,7 +89,7 @@ dependencies {
     compile 'de.hdodenhof:circleimageview:2.1.0'
     compile 'net.danlew:android.joda:2.9.4'
 
-    androidTestCompile 'com.android.support:support-annotations:24.1.1'
+    androidTestCompile 'com.android.support:support-annotations:24.2.1'
     androidTestCompile 'com.android.support.test:runner:0.5'
     androidTestCompile 'com.android.support.test:rules:0.4.1'
     androidTestCompile 'org.hamcrest:hamcrest-library:1.3'
