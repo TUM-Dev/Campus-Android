@@ -7,6 +7,9 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import java.text.DateFormat;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
@@ -17,11 +20,19 @@ import de.tum.in.tumcampusapp.models.Exam;
  */
 public class ExamListAdapter extends BaseAdapter {
     private static List<Exam> exams;
+    private static final DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM);
     private final Context context;
     private final LayoutInflater mInflater;
 
     public ExamListAdapter(Context context, List<Exam> results) {
         exams = results;
+        Collections.sort(exams, new Comparator<Exam>() {
+            @Override
+            public int compare(Exam exam, Exam other) {
+                // note the "-" to get a descending ordering
+                return -exam.getDate().compareTo(other.getDate());
+            }
+        });
         mInflater = LayoutInflater.from(context);
         this.context = context;
     }
@@ -67,7 +78,7 @@ public class ExamListAdapter extends BaseAdapter {
                     String.format("%s: %s, " +
                                     "%s: %s, " +
                                     "%s: %s",
-                            context.getString(R.string.date), exam.getDate(),
+                            context.getString(R.string.date), df.format(exam.getDate()),
                             context.getString(R.string.semester), exam.getSemester(),
                             context.getString(R.string.credits), exam.getCredits()));
 

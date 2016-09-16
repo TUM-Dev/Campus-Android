@@ -3,6 +3,8 @@ package de.tum.in.tumcampusapp.models;
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.Root;
 
+import java.util.Date;
+
 /**
  * Exam passed by the user.
  * <p/>
@@ -19,7 +21,7 @@ public class Exam {
     private String credits = "0";
 
     @Element(name = "datum", required = false)
-    private String date = "";
+    private Date date = new Date();
 
     @Element(name = "pruefer_nachname", required = false)
     private String examiner = "";
@@ -44,7 +46,7 @@ public class Exam {
         return credits;
     }
 
-    public String getDate() {
+    public Date getDate() {
         return date;
     }
 
@@ -66,13 +68,5 @@ public class Exam {
 
     public String getSemester() {
         return semester;
-    }
-
-    public void setDate(String date) {
-        this.date = date;
-    }
-
-    public void setSemester(String semester) {
-        this.semester = semester;
     }
 }
