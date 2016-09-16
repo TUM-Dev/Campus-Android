@@ -76,7 +76,7 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
         // Build content String
         return "<html>"
                 + "  <head>"
-                + "    <script type=\"text/javascript\" src=\"jsapi.js\"></script>"
+                + "    <script type=\"text/javascript\" src=\"https://www.google.com/jsapi\"></script>"
                 + "    <script type=\"text/javascript\">"
                 + "      google.load(\"visualization\", \"1\", {packages:[\"corechart\"]});"
                 + "      google.setOnLoadCallback(drawChart);"
@@ -126,7 +126,7 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
 
         return "<html>"
                 + "  <head>"
-                + "    <script type=\"text/javascript\" src=\"jsapi.js\"></script>"
+                + "    <script type=\"text/javascript\" src=\"https://www.google.com/jsapi\"></script>"
                 + "    <script type=\"text/javascript\">"
                 + "      google.load(\"visualization\", \"1\", {packages:[\"corechart\"]});"
                 + "      google.setOnLoadCallback(drawChart);"
