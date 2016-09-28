@@ -4,8 +4,12 @@ apply from: '../pmd.gradle'
 
 android {
     compileSdkVersion 24
-    buildToolsVersion '24.0.2'
+    buildToolsVersion '24.0.3'
     buildTypes {
+        all {
+            proguardFiles(file('../proguard').listFiles())
+            proguardFile getDefaultProguardFile('proguard-android.txt')
+        }
         debug {
             debuggable true
             minifyEnabled false
@@ -40,12 +44,8 @@ android {
         exclude 'META-INF/maven/com.google.guava/guava/pom.xml'
     }
     productFlavors {
-        v10 {
-            minSdkVersion 10
-        }
-        v14 {
-            minSdkVersion 14
-        }
+        v10.minSdkVersion 10
+        v14.minSdkVersion 14
     }
 
     publishNonDefault true
@@ -68,7 +68,7 @@ dependencies {
     compile 'com.android.support:preference-v7:24.2.1'
     compile 'com.android.support:recyclerview-v7:24.2.1'
     compile 'com.android.support:support-v4:24.2.1'
-    compile 'com.google.android.gms:play-services-gcm:9.6.0'
+    compile 'com.google.android.gms:play-services-gcm:9.6.1'
     compile 'com.google.code.gson:gson:2.7'
     compile 'com.google.guava:guava:19.0'
     compile 'com.nineoldandroids:library:2.4.0'
@@ -89,7 +89,7 @@ dependencies {
 
     androidTestCompile 'com.android.support:support-annotations:24.2.1'
     androidTestCompile 'com.android.support.test:runner:0.5'
-    androidTestCompile 'com.android.support.test:rules:0.4.1'
+    androidTestCompile 'com.android.support.test:rules:0.5'
     androidTestCompile 'org.hamcrest:hamcrest-library:1.3'
     androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.2'
     androidTestCompile 'com.android.support.test.espresso:espresso-contrib:2.2.2'
