@@ -33,11 +33,11 @@ public class BugReport {
         this.phoneModel = G.phoneModel;
         this.androidVersion = G.androidVersion;
 
-        this.networkWifi = NetUtils.isConnectedWifi(G.context) ? "true" : "false";
-        this.networkMobile = NetUtils.isConnectedMobileData(G.context) ? "true" : "false";
-        this.gps= Util.isGPSOn();
+        this.networkWifi = NetUtils.isConnectedWifi(c) ? "true" : "false";
+        this.networkMobile = NetUtils.isConnectedMobileData(c) ? "true" : "false";
+        this.gps = Util.isGPSOn(c);
 
-        String[] screenProperties = Util.getScreenProperties();
+        String[] screenProperties = Util.getScreenProperties(c);
         this.screenWidth = screenProperties[0];
         this.screenHeight = screenProperties[1];
         this.screenOrientation = screenProperties[2];
