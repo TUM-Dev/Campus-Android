@@ -5,6 +5,7 @@ package de.tum.in.tumcampusapp.auxiliary;
  */
 public final class Const {
 
+    public static final String MENSA_FOR_FAVORITEDISH ="FavoriteDishCafeteriaID";
     public static final String ACCESS_TOKEN = "access_token";
     public static final String ACTION_EXTRA = "action";
     public static final String ADDRESS_COLUMN = "address";
