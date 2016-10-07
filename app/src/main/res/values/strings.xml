@@ -33,21 +33,21 @@
 
     <!-- Auxiliary -->
     <string name="empty_string" translatable="false" />
-    <string name="error_fetching_tumonline">Error accessing TUMOnline.\nPlease make sure your TUMOnline-Access-Token has
+    <string name="error_fetching_tumonline">Error accessing TUMonline.\nPlease make sure your TUMonline-Access-Token has
 		been\nactivated and the corresponding rights are set.\n\n<b>Click here to retry.</b></string>
-    <string name="error_no_token_setup">No TUMOnline-Access-Token was set.\nPlease set your TUMOnline-Access-Token in the\n <i>Settings</i> screen to access TUMOnline features.\n\n<b>Click here for the <i>Settings</i> screen.</b></string>
+    <string name="error_no_token_setup">No TUMonline-Access-Token was set.\nPlease set your TUMonline-Access-Token in the\n <i>Settings</i> screen to access TUMonline features.\n\n<b>Click here for the <i>Settings</i> screen.</b></string>
     <string name="error_something_wrong">Sorry, something went wrong.</string>
     <string name="click_to_try_again"><b>Click here to retry.</b></string>
-    <string name="dialog_new_token">Your TUMOnline-Access-Token is already set.\n\nClick <i>Yes</i> to generate a new one. \nAs a result, the old Token becomes useless.</string>
-    <string name="error_lrz_wrong">Your LRZ Identification is invalid</string>
-    <string name="access_token_wasnt_generated">TUMOnline-Access-Token could not be generated</string>
-    <string name="dialog_access_token_invalid">TUMOnline-Access-Token not enabled</string>
+    <string name="dialog_new_token">Your TUMonline-Access-Token is already set.\n\nClick <i>Yes</i> to generate a new one. \nAs a result, the old Token becomes useless.</string>
+    <string name="error_lrz_wrong">Your TUM Identification is invalid</string>
+    <string name="access_token_wasnt_generated">TUMonline-Access-Token could not be generated</string>
+    <string name="dialog_access_token_invalid">TUMonline-Access-Token not enabled</string>
     <string name="dialog_no_rights_function">No rights to access this function</string>
     <string name="empty_result">The operation delivered a faulty result</string>
     <string name="date">Date</string>
 
     <!-- Preferences -->
-    <string name="lrz_id">LRZ Identification</string>
+    <string name="lrz_id">TUM Identification</string>
 
     <string name="role">Role</string>
     <string name="role_summary">Your role at TUM. Either student, employee or guest.</string>
@@ -60,7 +60,7 @@
 
     <string name="extras">Extras</string>
     <string name="open_wizard">Open Startup-Wizard</string>
-    <string name="open_wizard_detail">The Startup-Wizard helps you in order to set the basic preferences for accessing TUMOnline services and the layout of this App.</string>
+    <string name="open_wizard_detail">The Startup-Wizard helps you in order to set the basic preferences for accessing TUMonline services and the layout of this App.</string>
     <string name="clear_cache">Clear Cache</string>
     <string name="clear_cache_detail">Deletes all data which was downloaded by the TUM Campus App and stored on the SD-Card</string>
     <string name="delete_chache_sure">Are you sure you want to delete all data?</string>
@@ -88,12 +88,12 @@
     <string name="licences_summary">Legal notes to licences</string>
 
     <!-- Startup Wizard -->
-    <string name="token_not_enabled">TUMOnline-Access-Token is not enabled</string>
+    <string name="token_not_enabled">TUMonline-Access-Token is not enabled</string>
     <string name="startup_wizard_uppercase">STARTUP-WIZARD</string>
-    <string name="welcome_msg"><b>Welcome to TUM Campus App!</b>\n\nIn order to setup the TUMOnline access, you need to provide your <b>LRZ Identification</b>.\n\nThis Id has the following format:\n<i>xx00xxx</i>\n(2 letters, 2 digits, 3 letters)</string>
+    <string name="welcome_msg"><b>Welcome to TUM Campus App!</b>\n\nIn order to setup the TUMonline access, you need to provide your <b>TUM Identification</b>.\n\nThis Id has the following format:\n<i>xx00xxx</i>\n(2 letters, 2 digits, 3 letters)</string>
     <string name="button_skip">Skip</string>
     <string name="button_next">Next</string>
-    <string name="need_to_enable"><b>The TUMOnline-Access-Token was successfully generated</b>\n\nYou can now enable the Token in TUMOnline via <i>Services/Token-Management</i>. Make sure the rights you want to gain the App are set as well under <i>Active Rights</i>.</string>
+    <string name="need_to_enable"><b>The TUMonline-Access-Token was successfully generated</b>\n\nYou can now enable the Token in TUMonline via <i>Services/Token-Management</i>. Make sure the rights you want to gain the App are set as well under <i>Active Rights</i>.</string>
     <string name="step_1">Step 1</string>
     <string name="step_2">Step 2</string>
     <string name="step_3">Step 3</string>
@@ -351,7 +351,7 @@
     <string name="pin_lock_desc">To set up the wireless access a PIN lock is required.\nIf you don’t already use PIN lock you can set it up here.\n<a href="https://www.tum.de/index.php?id=1821&amp;tx_ttnews%5Btt_news%5D=31688">More Info</a></string>
     <string name="enable_pin_lock">Enable PIN-Lock</string>
     <string name="data_backup">Data-Backup</string>
-    <string name="data_backup_desc">For safety reasons, the data backup must be disabled to avoid that the LRZ credentials are stored unencrypted on the Google servers.\nUnder ‘Backup &amp; restore’ > ‘Back up my data’ to disable.\n<a href="https://www.tum.de/nc/en/print/studies/studinews/issue-052013/show/article/31130//neste/1/">More Info</a></string>
+    <string name="data_backup_desc">For safety reasons, the data backup must be disabled to avoid that the TUM credentials are stored unencrypted on the Google servers.\nUnder ‘Backup &amp; restore’ > ‘Back up my data’ to disable.\n<a href="https://www.tum.de/nc/en/print/studies/studinews/issue-052013/show/article/31130//neste/1/">More Info</a></string>
     <string name="disable_data_backup">Disable Data-Backup</string>
     <string name="eduroam_success">Eduroam successfully configured</string>
     <string name="pin_lock_rem"><b>Configuration failed!</b>\nDid you setup a PIN-Lock?</string>
@@ -383,7 +383,7 @@
     <string name="newspread" translatable="false" translateable="false">Newspread</string>
     <string name="newspread_summary">Select which newspread you want to be shown. This are the slides on the info monitors in your faculty buildings.</string>
     <string name="tuition_fee_more">Information on contributions and exemptions, loans, training assistance and scholarships, go to: <a href="https://www.tum.de/en/studies/fees-and-financial-aid/">Student Financial Aid</a></string>
-    <string name="no_rights_to_access_id">Identity could not be accessed. Please check the rights of your TUMOnline token!</string>
+    <string name="no_rights_to_access_id">Identity could not be accessed. Please check the rights of your TUMonline token!</string>
     <string name="vibration">Vibration</string>
     <string name="silent">Silent</string>
     <string name="mode_silent_mode">State during lectures</string>
@@ -413,7 +413,7 @@ Signature: %5$s</string>
     <string name="public_key_mail">Public key activation mail sent to %s@mytum.de.\n\n<b>Please activate it now!</b></string>
     <string name="failure_uploading_public_key">Failure uploading public key</string>
     <string name="key_not_activated">You have not activated your key!</string>
-    <string name="no_rights_to_access_lectures">Lectures could not be accessed. Please check the rights of your TUMOnline token!</string>
+    <string name="no_rights_to_access_lectures">Lectures could not be accessed. Please check the rights of your TUMonline token!</string>
     <string name="edit">Edit</string>
     <string name="auto_join_chat">Join new lecture rooms</string>
     <string name="set_auto_join_chat">If you subscribe for a new lecture the app will automatically add you to the lecture’s chat room.</string>
@@ -464,7 +464,7 @@ Signature: %5$s</string>
     <string name="complete_question_form">Please complete question form</string>
     <string name="select_one_faculty">At least select one faculty</string>
     <string name="question_deleted">Question has been deleted</string>
-    <string name="choose_own_faculty" translatable="false">Please choose your faculty:</string>
+    <string name="choose_own_faculty">Please choose your faculty</string>
     <string name="mvv_download" translatable="false">Please press ok to download MVV-Plans otherwise you can\'t use this feature</string>
     <string name="more_info">More Information</string>
     <string name="welcome_faculty">To deliver the best possible experience please provide us with your best matching faculty:</string>

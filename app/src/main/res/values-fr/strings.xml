@@ -75,7 +75,7 @@
     <!-- Startup Wizard -->
     <string name="token_not_enabled">TUMOnline-Access-Token n’est pas activé</string>
     <string name="startup_wizard_uppercase">Assistant de démarrage</string>
-    <string name="welcome_msg"><b>Bienvenue sur le TUM Campus App</b>\n\nPour permettre l’accès aux services à TUMOnline, ton <b>indicatif LRZ</b> est nécessaire.\n\nCet indicatif a le format suivant:\n<i>xx00xxx</i>\n(2 lettres, 2 chiffres, 3 lettres)</string>
+    <string name="welcome_msg"><b>Bienvenue sur le TUM Campus App</b>\n\nPour permettre l’accès aux services à TUMonline, ton <b>indicatif TUM</b> est nécessaire.\n\nCet indicatif a le format suivant:\n<i>xx00xxx</i>\n(2 lettres, 2 chiffres, 3 lettres)</string>
     <string name="button_skip">Sauter</string>
     <string name="button_next">Suivant</string>
     <string name="need_to_enable"><b>Le TUMOnline-Access-Token a été créé avec succès</b>\n\nMaintenant, tu peux activer le Token dans TUMOnline dans <i>Dienste/Token-administration</i>. Fais attention, tu dois aussi activer les droits d’accès pour chaque service individuellement sur <i>droits actifs</i></string>
@@ -382,4 +382,5 @@
     <string name="more_info">Plus d\'information</string>
     <string name="welcome_faculty">Pour offrir la meilleure expérience possible s\'il vous plaît nous fournir votre meilleure faculté d\'adaptation:</string>
     <string name="event_plan">Plan de l\'événement</string>
+    <string name="choose_own_faculty">S\'il vous plaît choisir votre faculté</string>
 </resources>
