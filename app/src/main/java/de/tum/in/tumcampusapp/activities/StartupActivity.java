@@ -64,7 +64,7 @@ public class StartupActivity extends AppCompatActivity {
 
         //Check that we have a private key setup in order to authenticate this device
         AuthenticationManager am = new AuthenticationManager(this);
-        am.generatePrivateKey();
+        am.generatePrivateKey(null);
 
         //Upload stats
         ImplicitCounter.count(this);
