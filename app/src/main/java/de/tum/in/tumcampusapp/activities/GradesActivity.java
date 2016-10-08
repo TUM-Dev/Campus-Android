@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.ActivityForAccessingTumOnline;
@@ -34,9 +35,9 @@ import de.tum.in.tumcampusapp.tumonline.TUMOnlineConst;
  * Activity to show the user's grades/exams passed.
  */
 public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
-    private static int LAST_CHOICE = 0;
+    private static int lastChoice;
     private final NumberFormat format = NumberFormat.getInstance(Locale.FRANCE);
-    private TextView average_tx;
+    private TextView averageTx;
     private double averageGrade;
     private String columnChartContent;
     private MenuItem columnMenuItem;
@@ -60,17 +61,19 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
      * @return content string
      */
     String buildColumnChartContentString(List<Exam> filteredExamList) {
-        HashMap<String, Integer> gradeDistribution_hash = calculateGradeDistribution(filteredExamList);
+        Map<String, Integer> gradeDistribution = calculateGradeDistribution(filteredExamList);
 
-        String datas = "";
+        StringBuilder datas = new StringBuilder(1024);
         // Build data string
         for (int i = 0; i < Const.GRADES.length; i++) {
-            if (i == Const.GRADES.length - 1)
-                datas += "['" + Const.GRADES[i] + "', "
-                        + gradeDistribution_hash.get(Const.GRADES[i]) + "]";
-            else
-                datas += "['" + Const.GRADES[i] + "', "
-                        + gradeDistribution_hash.get(Const.GRADES[i]) + "],";
+            datas.append("['")
+                    .append(Const.GRADES[i]).append("', ")
+                    .append(gradeDistribution.get(Const.GRADES[i]))
+                    .append(']');
+
+            if (i != Const.GRADES.length - 1) {
+                datas.append(',');
+            }
         }
 
         // Build content String
@@ -108,20 +111,20 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
      * @return content string
      */
     String buildPieChartContentString(List<Exam> filteredExamList) {
-        HashMap<String, Integer> gradeDistrubution_hash = calculateGradeDistribution(filteredExamList);
-        String datas = "";
+        Map<String, Integer> gradeDistrubution = calculateGradeDistribution(filteredExamList);
+        StringBuilder datas = new StringBuilder(1024);
 
         // build data String
         for (int i = 0; i < Const.GRADES.length; i++) {
-            if (i == Const.GRADES.length - 1) {
-                datas += "['" + Const.GRADES[i] + "', "
-                        + gradeDistrubution_hash.get(Const.GRADES[i]) + "]";
-            } else {
-                datas += "['" + Const.GRADES[i] + "', "
-                        + gradeDistrubution_hash.get(Const.GRADES[i]) + "],";
-
+            datas.append("['")
+                    .append(Const.GRADES[i]).append("', ")
+                    .append(gradeDistrubution.get(Const.GRADES[i]))
+                    .append(']');
+            if (i != Const.GRADES.length - 1) {
+                datas.append(',');
             }
         }
+
         // build content String
 
         return "<html>"
@@ -137,7 +140,10 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
                 + "        ]);"
                 + "        var options = {"
                 + "          title: 'Grades of "
-                + filteredExamList.get(0).getProgramID()
+                + filteredExamList.get(0).
+
+                getProgramID()
+
                 + "'"
                 + "        };"
                 + "        var chart = new google.visualization.PieChart(document.getElementById('chart_div'));"
@@ -181,17 +187,17 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
      * @param filteredExamList List of exams
      * @return HashMap with grade to grade count mapping
      */
-    HashMap<String, Integer> calculateGradeDistribution(
+    Map<String, Integer> calculateGradeDistribution(
             List<Exam> filteredExamList) {
-        HashMap<String, Integer> gradeDistribution_hash = new HashMap<>();
+        Map<String, Integer> gradeDistribution = new HashMap<>(128);
         for (Exam item : filteredExamList) {
             // increment hash value
-            int curCount = gradeDistribution_hash.containsKey(item.getGrade()) ? gradeDistribution_hash
+            int curCount = gradeDistribution.containsKey(item.getGrade()) ? gradeDistribution
                     .get(item.getGrade()) : 0;
 
-            gradeDistribution_hash.put(item.getGrade(), curCount + 1);
+            gradeDistribution.put(item.getGrade(), curCount + 1);
         }
-        return gradeDistribution_hash;
+        return gradeDistribution;
     }
 
     /**
@@ -215,7 +221,7 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
         ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(
                 this, android.R.layout.simple_list_item_checked, filters);
         spFilter.setAdapter(spinnerArrayAdapter);
-        spFilter.setSelection(LAST_CHOICE);
+        spFilter.setSelection(lastChoice);
 
         // handle if program choice is changed
         spFilter.setOnItemSelectedListener(new OnItemSelectedListener() {
@@ -225,14 +231,14 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
                                        int arg2, long arg3) {
 
                 String filter = spFilter.getItemAtPosition(arg2).toString();
-                LAST_CHOICE = arg2;
+                lastChoice = arg2;
 
                 if (filter.equals(getString(R.string.all_programs))) {
 
                     // display all grades
                     lvGrades.setAdapter(new ExamListAdapter(
                             GradesActivity.this, examList.getExams()));
-                    average_tx.setVisibility(View.GONE);
+                    averageTx.setVisibility(View.GONE);
                     // convert exam list
                     List<Exam> convertedList = new ArrayList<>();
                     for (int i = 0; i < examList.getExams().size(); i++) {
@@ -263,9 +269,9 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
 
                     averageGrade = Math.round(calculateAverageGrade(filteredExamList) * 1000.0) / 1000.0;
 
-                    average_tx.setText(String.format("%s: %s",
+                    averageTx.setText(String.format("%s: %s",
                             getResources().getString(R.string.average_grade), averageGrade));
-                    average_tx.setVisibility(View.VISIBLE);
+                    averageTx.setVisibility(View.VISIBLE);
                 }
             }
 
@@ -285,7 +291,7 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
 
         lvGrades = (ListView) findViewById(R.id.lstGrades);
         spFilter = (Spinner) findViewById(R.id.spFilter);
-        average_tx = (TextView) findViewById(R.id.avgGrade);
+        averageTx = (TextView) findViewById(R.id.avgGrade);
 
         requestFetch();
     }
@@ -353,7 +359,7 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
             }
         } else {
             showError(R.string.no_internet_connection);
-            average_tx.setVisibility(View.GONE);
+            averageTx.setVisibility(View.GONE);
             return true;
         }
     }
@@ -380,24 +386,26 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
 
         // find and remove duplicates
         for (int i = 0; i < filteredExamList.size(); i++) {
-            Exam item_one = filteredExamList.get(i);
+            Exam item1 = filteredExamList.get(i);
             boolean insert = true;
 
-            for (Exam item_two : filteredExamList) {
-                if (item_one.getCourse().equals(item_two.getCourse())) {
-                    Utils.logv("Double = " + item_one.getCourse());
+            for (Exam item2 : filteredExamList) {
+                if (item1.getCourse().equals(item2.getCourse())) {
+                    Utils.logv("Double = " + item1.getCourse());
                     try {
-                        if (format.parse(item_one.getGrade()).doubleValue() > format
-                                .parse(item_two.getGrade()).doubleValue())
+                        if (format.parse(item1.getGrade()).doubleValue() > format
+                                .parse(item2.getGrade()).doubleValue()) {
                             insert = false;
+                        }
                     } catch (ParseException e) {
                         Utils.log(e);
                     }
                 }
             }
 
-            if (insert)
-                removedDoubles.add(item_one);
+            if (insert) {
+                removedDoubles.add(item1);
+            }
         }
         return removedDoubles;
     }

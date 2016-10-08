@@ -25,16 +25,16 @@ public class GradeChartActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ImplicitCounter.count(this);
-        WebView Webview = (WebView) findViewById(R.id.webView1);
+        WebView webView = (WebView) findViewById(R.id.webView1);
 
         Bundle extras = getIntent().getExtras();
         String chartContent = extras.getString("chartContent");
 
-        WebSettings WebSettings = Webview.getSettings();
-        WebSettings.setJavaScriptEnabled(true);
-        WebSettings.setUseWideViewPort(true);
-        WebSettings.setLoadWithOverviewMode(true);
-        Webview.requestFocusFromTouch();
-        Webview.loadDataWithBaseURL("file:///android_asset/", chartContent, "text/html", "utf-8", null);
+        WebSettings webSettings = webView.getSettings();
+        webSettings.setJavaScriptEnabled(true);
+        webSettings.setUseWideViewPort(true);
+        webSettings.setLoadWithOverviewMode(true);
+        webView.requestFocusFromTouch();
+        webView.loadDataWithBaseURL("file:///android_asset/", chartContent, "text/html", "utf-8", null);
     }
 }
