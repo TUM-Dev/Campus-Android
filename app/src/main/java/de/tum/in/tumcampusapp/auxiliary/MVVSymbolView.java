@@ -82,6 +82,7 @@ class MVVSymbolView extends Drawable {
                     } else {
                         backgroundColor = 0xff004a5d;
                     }
+                    break;
             }
         } catch (NumberFormatException e) {
             //Leave default
@@ -148,12 +149,12 @@ class MVVSymbolView extends Drawable {
 
     @Override
     public void setAlpha(int i) {
-
+        // Noop
     }
 
     @Override
     public void setColorFilter(ColorFilter colorFilter) {
-
+        // Noop
     }
 
     @Override

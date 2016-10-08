@@ -78,8 +78,9 @@ public final class Util {
         screen[0] = Integer.toString(width);
         screen[1] = Integer.toString(height);
 
-        String rotation = "";
+        String rotation;
         switch (orientation) {
+            default:
             case Surface.ROTATION_0:
                 rotation = "normal";
                 break;

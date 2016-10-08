@@ -19,11 +19,11 @@ import de.tum.in.tumcampusapp.models.managers.CafeteriaManager;
 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 public class MensaRemoteViewFactory implements RemoteViewsService.RemoteViewsFactory {
 
-    private Context applicationContext;
+    private final Context applicationContext;
     private List<CafeteriaMenu> mensaMenu;
 
     public MensaRemoteViewFactory(Context applicationContext, Intent intent) {
-        this.applicationContext = applicationContext;
+        this.applicationContext = applicationContext.getApplicationContext();
     }
 
     @Override
@@ -32,50 +32,53 @@ public class MensaRemoteViewFactory implements RemoteViewsService.RemoteViewsFac
 
         // Map of the name of the best mensa and list of its Menu
         Map<String, List<CafeteriaMenu>> currentMensa = mensaManager.getBestMatchMensaInfo(applicationContext);
-        if (currentMensa != null) {
+        if (currentMensa == null) {
+            Utils.log("Error! Could not get list of menus for the mensa widget ");
+        } else {
             String mensaName = currentMensa.keySet().iterator().next();
             mensaMenu = currentMensa.get(mensaName);
-        } else
-            Utils.log("Error! Could not get list of menus for the mensa widget ");
+        }
     }
 
     @Override
     public void onDataSetChanged() {
-
+        // Noop
     }
 
     @Override
     public void onDestroy() {
+        // Noop
     }
 
     @Override
     public int getCount() {
-        if (mensaMenu != null)
-            return mensaMenu.size();
-        else
+        if (mensaMenu == null) {
             return 0;
+        }
+        return mensaMenu.size();
     }
 
     @Override
     public RemoteViews getViewAt(int position) {
         RemoteViews rv = new RemoteViews(applicationContext.getPackageName(), R.layout.mensa_widget_item);
         CafeteriaMenu currentItem = mensaMenu.get(position);
-        if (currentItem != null) {
-            rv.setTextViewText(R.id.menu_type, currentItem.typeShort);
-
-            String menuContent = currentItem.name.replaceAll("\\([^\\)]+\\)", "").trim();
-            rv.setTextViewText(R.id.menu_content, menuContent);
-
-            String price = CafeteriaPrices.getPrice(applicationContext, currentItem.typeLong);
-            if (price != null)
-                price += " €";
-            else
-                price = "____€";
-
-            rv.setTextViewText(R.id.menu_price, price);
-            return rv;
+        if (currentItem == null) {
+            return null;
         }
-        return null;
+        rv.setTextViewText(R.id.menu_type, currentItem.typeShort);
+
+        String menuContent = currentItem.name.replaceAll("\\([^\\)]+\\)", "").trim();
+        rv.setTextViewText(R.id.menu_content, menuContent);
+
+        String price = CafeteriaPrices.getPrice(applicationContext, currentItem.typeLong);
+        if (price != null) {
+            price += " €";
+        } else {
+            price = "____€";
+        }
+
+        rv.setTextViewText(R.id.menu_price, price);
+        return rv;
     }
 
 

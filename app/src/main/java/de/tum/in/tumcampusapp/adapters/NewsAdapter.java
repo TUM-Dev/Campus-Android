@@ -10,8 +10,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.regex.Pattern;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
@@ -20,7 +20,8 @@ import de.tum.in.tumcampusapp.cards.FilmCard;
 import de.tum.in.tumcampusapp.cards.NewsCard;
 import de.tum.in.tumcampusapp.cards.generic.Card;
 
-public class NewsAdapter extends RecyclerView.Adapter<NewsCard.CardViewHolder> {
+public class NewsAdapter extends RecyclerView.Adapter<Card.CardViewHolder> {
+    private static final Pattern COMPILE = Pattern.compile("^[0-9]+\\. [0-9]+\\. [0-9]+:[ ]*");
     private final NetUtils net;
     private final Cursor c;
     private final Context mContext;
@@ -62,14 +63,14 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsCard.CardViewHolder> {
 
         String title = cursor.getString(2);
         if (cursor.getInt(1) == 2) {
-            title = title.replaceAll("^[0-9]+\\. [0-9]+\\. [0-9]+:[ ]*", "");
+            title = COMPILE.matcher(title).replaceAll("");
         }
         holder.title.setText(title);
 
         // Adds date
         String date = cursor.getString(5);
         Date d = Utils.getISODateTime(date);
-        DateFormat sdf = SimpleDateFormat.getDateInstance();
+        DateFormat sdf = DateFormat.getDateInstance();
         holder.srcDate.setText(sdf.format(d));
 
         holder.srcTitle.setText(cursor.getString(8));
@@ -82,12 +83,12 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsCard.CardViewHolder> {
     }
 
     @Override
-    public NewsCard.CardViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public Card.CardViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return NewsCard.inflateViewHolder(parent, viewType);
     }
 
     @Override
-    public void onBindViewHolder(NewsCard.CardViewHolder holder, int position) {
+    public void onBindViewHolder(Card.CardViewHolder holder, int position) {
         NewsViewHolder nHolder = (NewsViewHolder) holder;
         NewsCard card;
         if (FilmCard.isNewsAFilm(c, position)) {
@@ -105,7 +106,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsCard.CardViewHolder> {
     @Override
     public int getItemViewType(int position) {
         c.moveToPosition(position);
-        return c.getString(1).equals("2") ? 0 : 1;
+        return "2".equals(c.getString(1)) ? 0 : 1;
     }
 
     @Override
@@ -113,14 +114,14 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsCard.CardViewHolder> {
         return c.getCount();
     }
 
-    public static class NewsViewHolder extends Card.CardViewHolder {
+    private static class NewsViewHolder extends Card.CardViewHolder {
         ImageView img;
         TextView title;
         TextView srcDate;
         TextView srcTitle;
         ImageView srcIcon;
 
-        public NewsViewHolder(View itemView) {
+        NewsViewHolder(View itemView) {
             super(itemView);
         }
     }
