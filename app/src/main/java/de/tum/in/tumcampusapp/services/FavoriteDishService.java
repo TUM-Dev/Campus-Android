@@ -23,16 +23,6 @@ public class FavoriteDishService extends IntentService {
     }
 
     @Override
-    public void onCreate() {
-        super.onCreate();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
-
-    @Override
     protected void onHandleIntent(Intent ignored) {
         /**
          * create a notification that dish is available.

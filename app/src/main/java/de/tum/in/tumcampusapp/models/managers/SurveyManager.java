@@ -162,8 +162,7 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
      * @return
      */
     public Cursor getUnansweredQuestionsSince(String date) {
-        Cursor c = db.rawQuery("SELECT question, text FROM openQuestions WHERE answered=0 AND end >= '" + date + "'", null);
-        return c;
+        return db.rawQuery("SELECT question, text FROM openQuestions WHERE answered=0 AND end >= '" + date + "'", null);
     }
 
     /**
@@ -175,8 +174,7 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
      * @return relevant ownQuestions
      */
     public Cursor getMyRelevantOwnQuestionsSince(String date) {
-        Cursor c = db.rawQuery("SELECT * FROM ownQuestions where deleted = 0 AND end >= '" + date + "'", null);
-        return c;
+        return db.rawQuery("SELECT * FROM ownQuestions where deleted = 0 AND end >= '" + date + "'", null);
     }
 
     /**

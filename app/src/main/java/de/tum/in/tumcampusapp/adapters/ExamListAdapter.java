@@ -20,7 +20,7 @@ import de.tum.in.tumcampusapp.models.Exam;
  */
 public class ExamListAdapter extends BaseAdapter {
     private static List<Exam> exams;
-    private static final DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM);
+    private static final DateFormat DF = DateFormat.getDateInstance(DateFormat.MEDIUM);
     private final Context context;
     private final LayoutInflater mInflater;
 
@@ -55,19 +55,20 @@ public class ExamListAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
+        View view = convertView;
 
         // find and init UI
-        if (convertView == null) {
-            convertView = mInflater.inflate(R.layout.activity_grades_listview, parent, false);
+        if (view == null) {
+            view = mInflater.inflate(R.layout.activity_grades_listview, parent, false);
             holder = new ViewHolder();
-            holder.tvName = (TextView) convertView.findViewById(R.id.name);
-            holder.tvGrade = (TextView) convertView.findViewById(R.id.grade);
-            holder.tvDetails1 = (TextView) convertView.findViewById(R.id.tv1);
-            holder.tvDetails2 = (TextView) convertView.findViewById(R.id.tv2);
+            holder.tvName = (TextView) view.findViewById(R.id.name);
+            holder.tvGrade = (TextView) view.findViewById(R.id.grade);
+            holder.tvDetails1 = (TextView) view.findViewById(R.id.tv1);
+            holder.tvDetails2 = (TextView) view.findViewById(R.id.tv2);
 
-            convertView.setTag(holder);
+            view.setTag(holder);
         } else {
-            holder = (ViewHolder) convertView.getTag();
+            holder = (ViewHolder) view.getTag();
         }
         // fill UI with data
         Exam exam = exams.get(position);
@@ -78,7 +79,7 @@ public class ExamListAdapter extends BaseAdapter {
                     String.format("%s: %s, " +
                                     "%s: %s, " +
                                     "%s: %s",
-                            context.getString(R.string.date), df.format(exam.getDate()),
+                            context.getString(R.string.date), DF.format(exam.getDate()),
                             context.getString(R.string.semester), exam.getSemester(),
                             context.getString(R.string.credits), exam.getCredits()));
 
@@ -89,7 +90,7 @@ public class ExamListAdapter extends BaseAdapter {
                             context.getString(R.string.mode), exam.getModus()));
         }
 
-        return convertView;
+        return view;
     }
 
     static class ViewHolder {

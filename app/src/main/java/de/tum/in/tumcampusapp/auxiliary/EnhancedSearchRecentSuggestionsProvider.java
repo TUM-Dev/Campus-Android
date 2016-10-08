@@ -69,7 +69,7 @@ public abstract class EnhancedSearchRecentSuggestionsProvider extends ContentPro
         mTwoLineDisplay = 0 != (EnhancedSearchRecentSuggestionsProvider.DATABASE_MODE_QUERIES & DATABASE_MODE_2LINES);
 
         // saved values
-        mId = "_" + id;
+        mId = '_' + id;
         mAuthority = authority;
         mMode = EnhancedSearchRecentSuggestionsProvider.DATABASE_MODE_QUERIES;
 
@@ -248,7 +248,7 @@ public abstract class EnhancedSearchRecentSuggestionsProvider extends ContentPro
 
         StringBuilder whereClause = new StringBuilder(256);
         if (length == 2) {
-            whereClause.append("(_id = ").append(uri.getPathSegments().get(1)).append(")");
+            whereClause.append("(_id = ").append(uri.getPathSegments().get(1)).append(')');
         }
 
         // Tack on the user's selection, if present
