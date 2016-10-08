@@ -46,7 +46,7 @@ public class AccessTokenManager {
             throw new TUMOException(request.getLastError());
         }
 
-        //Upload the Private key to the server: we don't need an activated token for that
+        //Upload the Private key to the tumo server: we don't need an activated token for that. We want this to happen immediately so that no one else can upload this secret.
         AuthenticationManager am = new AuthenticationManager(context);
         try {
             String publicKey = am.getPublicKeyString();

@@ -20,7 +20,10 @@ import de.tum.in.tumcampusapp.auxiliary.AuthenticationManager;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
+import de.tum.in.tumcampusapp.exceptions.NoPrivateKey;
 import de.tum.in.tumcampusapp.models.ChatMember;
+import de.tum.in.tumcampusapp.models.ChatRoom;
+import de.tum.in.tumcampusapp.models.ChatVerification;
 import de.tum.in.tumcampusapp.models.LecturesSearchRow;
 import de.tum.in.tumcampusapp.models.LecturesSearchRowSet;
 import de.tum.in.tumcampusapp.models.TUMCabeClient;
@@ -60,13 +63,10 @@ public class WizNavChatActivity extends ActivityForLoadingInBackground<Void, Cha
         autoJoin = (CheckBox) findViewById(R.id.chk_auto_join_chat);
         acceptedTerms = (CheckBox) findViewById(R.id.chk_group_chat_terms);
 
-
-        // Only make silent service selectable if access token exists
-        // Otherwise the app cannot load lectures so silence service makes no sense
         if (new AccessTokenManager(this).hasValidAccessToken()) {
             groupChatMode.setChecked(preferences.getBoolean(Const.GROUP_CHAT_ENABLED, true));
             autoJoin.setChecked(preferences.getBoolean(Const.AUTO_JOIN_NEW_ROOMS, true));
-            acceptedTerms.setChecked(preferences.getBoolean(Const.GROUP_CHAT_ENABLED, false));
+            acceptedTerms.setChecked(preferences.getBoolean(Const.GROUP_CHAT_ENABLED, true));
         } else {
             groupChatMode.setChecked(false);
             groupChatMode.setEnabled(false);
@@ -134,11 +134,7 @@ public class WizNavChatActivity extends ActivityForLoadingInBackground<Void, Cha
         if (skip) {
             intent = new Intent(this, WizNavExtrasActivity.class);
         } else {
-            if (Utils.getInternalSettingBool(this, Const.PRIVATE_KEY_ACTIVE, false)) {
-                intent = new Intent(this, WizNavExtrasActivity.class);
-            } else {
-                intent = new Intent(this, WizNavActivatePublicKeyActivity.class);
-            }
+            intent = new Intent(this, WizNavExtrasActivity.class);
         }
         intent.putExtra(Const.TOKEN_IS_SETUP, tokenSetup);
         startActivity(intent);
@@ -154,6 +150,7 @@ public class WizNavChatActivity extends ActivityForLoadingInBackground<Void, Cha
             }
 
             // Get all of the users lectures and save them as possible chat rooms
+            // TODO why do we need to do this here? Is this not done inside the updating of the cache?
             ChatRoomManager manager = new ChatRoomManager(this);
             TUMOnlineRequest<LecturesSearchRowSet> requestHandler = new TUMOnlineRequest<>(TUMOnlineConst.LECTURES_PERSONAL, this, true);
             Optional<LecturesSearchRowSet> lecturesList = requestHandler.fetch();
@@ -192,10 +189,23 @@ public class WizNavChatActivity extends ActivityForLoadingInBackground<Void, Cha
 
             // Generate the private key and upload the public key to the server
             AuthenticationManager am = new AuthenticationManager(this);
-            if (am.generatePrivateKey(member)) {
-                return member;
-            } else {
+            if (!am.generatePrivateKey(member)) {
                 Utils.showToastOnUIThread(this, getString(R.string.failure_uploading_public_key));
+            }
+
+            // Try to restore already joined chat rooms from server
+            try {
+                List<ChatRoom> rooms = TUMCabeClient.getInstance(this).getMemberRooms(member.getId(), new ChatVerification(this, member));
+                new ChatRoomManager(this).replaceIntoRooms(rooms);
+
+                //Store that this key was activated
+                Utils.setInternalSetting(this, Const.PRIVATE_KEY_ACTIVE, true);
+
+                return member;
+            } catch (RetrofitError e) {
+                Utils.log(e);
+            } catch (NoPrivateKey e) {
+                Utils.log(e);
             }
         }
         return null;

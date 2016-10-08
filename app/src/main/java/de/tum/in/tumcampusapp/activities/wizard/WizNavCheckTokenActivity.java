@@ -117,7 +117,9 @@ public class WizNavCheckTokenActivity extends ActivityForLoadingInBackground<Voi
     @Override
     protected void onLoadFinished(Integer errorMessageStrResId) {
         if (errorMessageStrResId == null) {
-            startNextActivity();
+            finish();
+            startActivity(new Intent(this, WizNavChatActivity.class));
+            overridePendingTransition(R.anim.fadein, R.anim.fadeout);
         } else {
             Utils.showToast(this, errorMessageStrResId);
             showLoadingEnded();
@@ -135,15 +137,6 @@ public class WizNavCheckTokenActivity extends ActivityForLoadingInBackground<Voi
         textView.setMovementMethod(LinkMovementMethod.getInstance());
         String url = "<a href='http://campus.tum.de'>TUMOnline</a>";
         textView.setText(Utils.fromHtml(url));
-    }
-
-    /**
-     * Opens next wizard page
-     */
-    private void startNextActivity() {
-        finish();
-        startActivity(new Intent(this, WizNavChatActivity.class));
-        overridePendingTransition(R.anim.fadein, R.anim.fadeout);
     }
 
     /**
