@@ -95,7 +95,7 @@ public class AuthenticationManager {
      * @return
      * @throws NoPublicKey
      */
-    private String getPublicKeyString() throws NoPublicKey {
+    public String getPublicKeyString() throws NoPublicKey {
         String key = Utils.getInternalSettingString(mContext, Const.PUBLIC_KEY, "");
         if (key.isEmpty()) {
             throw new NoPublicKey();

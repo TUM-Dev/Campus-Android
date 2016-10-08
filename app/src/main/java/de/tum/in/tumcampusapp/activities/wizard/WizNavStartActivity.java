@@ -35,12 +35,10 @@ import de.tum.in.tumcampusapp.models.managers.SurveyManager;
 /**
  * Displays the first page of the startup wizard, where the user can enter his lrz-id.
  */
-public class WizNavStartActivity extends ActivityForLoadingInBackground<Void, Boolean> implements OnClickListener {
+public class WizNavStartActivity extends ActivityForLoadingInBackground<String, Boolean> implements OnClickListener {
     private final AccessTokenManager accessTokenManager = new AccessTokenManager(this);
     private EditText editTxtLrzId;
-    private Spinner userMajorSpinner;
     private String lrzId;
-    private SharedPreferences sharedPrefs;
 
     public WizNavStartActivity() {
         super(R.layout.activity_wiznav_start);
@@ -50,23 +48,16 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<Void, Bo
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         disableRefresh();
+        findViewById(R.id.wizard_start_layout).requestFocus();
 
-        sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-
-        LinearLayout layout = (LinearLayout) findViewById(R.id.wizard_start_layout);
-        layout.requestFocus();
-
-        // Spinner for choosing the faculty of the user
-        userMajorSpinner = (Spinner) findViewById(R.id.majorSpinner);
-        setUpSpinner();
+        setUpSpinner(); // Faculty selector
 
         editTxtLrzId = (EditText) findViewById(R.id.lrd_id);
-        lrzId = sharedPrefs.getString(Const.LRZ_ID, "");
-        editTxtLrzId.setText(lrzId);
+        editTxtLrzId.setText(Utils.getSetting(this, Const.LRZ_ID, ""));
     }
 
     public void setUpSpinner() {
-
+        final Spinner userMajorSpinner = (Spinner) findViewById(R.id.majorSpinner);
 
         new AsyncTask<Void, Void, String[]>() {
 
@@ -174,9 +165,7 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<Void, Bo
         }
 
         lrzId = editTxtLrzId.getText().toString();
-        Editor editor = sharedPrefs.edit();
-        editor.putString(Const.LRZ_ID, lrzId);
-        editor.apply();
+        Utils.setSetting(this, Const.LRZ_ID, lrzId);
 
         // check if lrz could be valid?
         if (lrzId.length() >= AccessTokenManager.MIN_LRZ_LENGTH) {
@@ -189,7 +178,7 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<Void, Bo
                         .setNegativeButton(getString(R.string.no), this)
                         .show();
             } else {
-                startLoading();
+                startLoading(lrzId);
             }
         } else {
             Utils.showToast(this, R.string.error_lrz_wrong);
@@ -205,8 +194,7 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<Void, Bo
     @Override
     public void onClick(DialogInterface dialog, int which) {
         if (which == DialogInterface.BUTTON_POSITIVE) {
-            startLoading();
-
+            startLoading(lrzId);
         } else if (which == DialogInterface.BUTTON_NEGATIVE) {
             onLoadFinished(true);
         }
@@ -219,8 +207,8 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<Void, Bo
      * @return True if the access token was successfully created
      */
     @Override
-    protected Boolean onLoadInBackground(Void... arg) {
-        return accessTokenManager.requestAccessToken(WizNavStartActivity.this, lrzId);
+    protected Boolean onLoadInBackground(String... arg) {
+        return accessTokenManager.requestAccessToken(WizNavStartActivity.this, arg[0]);
     }
 
     /**
