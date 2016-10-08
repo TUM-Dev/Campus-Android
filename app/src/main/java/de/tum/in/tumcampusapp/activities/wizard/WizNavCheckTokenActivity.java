@@ -131,10 +131,7 @@ public class WizNavCheckTokenActivity extends ActivityForLoadingInBackground<Voi
     protected void onStart() {
         super.onStart();
         TextView textView = (TextView) findViewById(R.id.tvBrowse);
-        textView.setClickable(true);
         textView.setMovementMethod(LinkMovementMethod.getInstance());
-        String url = "<a href='http://campus.tum.de'>TUMOnline</a>";
-        textView.setText(Utils.fromHtml(url));
     }
 
     /**
