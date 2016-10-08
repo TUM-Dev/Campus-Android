@@ -389,6 +389,7 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
 
     @Override
     public void onScrollStateChanged(AbsListView view, int scrollState) {
+        // Noop
     }
 
     @Override
