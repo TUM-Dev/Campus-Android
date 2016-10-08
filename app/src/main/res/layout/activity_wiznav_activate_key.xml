@@ -48,12 +48,7 @@
                         android:id="@+id/tvSucc"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:padding="@dimen/padding_default" />
-
-                    <TextView
-                        android:id="@+id/tvBrowse"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:text="@string/public_key_mail"
                         android:padding="@dimen/padding_default" />
 
                     <ImageView
