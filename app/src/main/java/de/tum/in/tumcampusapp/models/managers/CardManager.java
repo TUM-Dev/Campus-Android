@@ -47,7 +47,6 @@ public final class CardManager {
     private static boolean shouldRefresh;
     private static List<Card> cards;
     private static ArrayList<Card> newCards;
-    private static Context mContext;
 
     /**
      * Adds the specified card to the card manager
@@ -97,8 +96,6 @@ public final class CardManager {
      * 6. Add an instance of the manager class to the managers list below
      */
     public static synchronized void update(Context context) {
-        mContext = context.getApplicationContext();
-
         // Use temporary array to avoid that the main thread is
         // trying to access an empty array
         newCards = new ArrayList<>();
@@ -176,10 +173,10 @@ public final class CardManager {
     /**
      * Resets dismiss settings for all cards
      */
-    public static void restoreCards() {
-        SharedPreferences prefs = mContext.getSharedPreferences(Card.DISCARD_SETTINGS_START, 0);
+    public static void restoreCards(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences(Card.DISCARD_SETTINGS_START, 0);
         prefs.edit().clear().apply();
-        AbstractManager.getDb(mContext).execSQL("UPDATE news SET dismissed=0");
+        AbstractManager.getDb(context).execSQL("UPDATE news SET dismissed=0");
     }
 
     public static List<Card> getCards() {

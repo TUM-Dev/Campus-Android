@@ -2,7 +2,6 @@ package de.tum.in.tumcampusapp.models.managers;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.database.SQLException;
 
 import com.google.common.base.Optional;
 
@@ -35,9 +34,9 @@ public class CafeteriaMenuManager extends AbstractManager {
      *
      * @param json see above
      * @return CafeteriaMenu
-     * @throws JSONException
+     * @throws Exception
      */
-    private static CafeteriaMenu getFromJson(JSONObject json) throws JSONException {
+    private static CafeteriaMenu getFromJson(JSONObject json) throws Exception {
 
         return new CafeteriaMenu(json.getInt("id"), json.getInt("mensa_id"),
                 Utils.getDate(json.getString("date")),
@@ -54,9 +53,10 @@ public class CafeteriaMenuManager extends AbstractManager {
      *
      * @param json see above
      * @return CafeteriaMenu
-     * @throws JSONException
+     * @throws Exception
      */
-    private static CafeteriaMenu getFromJsonAddendum(JSONObject json) throws JSONException {
+    private static CafeteriaMenu getFromJsonAddendum(JSONObject json)
+            throws Exception {
 
         return new CafeteriaMenu(0, json.getInt("mensa_id"), Utils.getDate(json
                 .getString("date")), json.getString("type_short"),
@@ -75,12 +75,16 @@ public class CafeteriaMenuManager extends AbstractManager {
         db.execSQL("CREATE TABLE IF NOT EXISTS cafeterias_menus ("
                 + "id INTEGER PRIMARY KEY AUTOINCREMENT, mensaId INTEGER KEY, date VARCHAR, typeShort VARCHAR, "
                 + "typeLong VARCHAR, typeNr INTEGER, name VARCHAR)");
+
+        db.execSQL("CREATE TABLE IF NOT EXISTS favorite_dishes ("
+                + "id INTEGER PRIMARY KEY AUTOINCREMENT, mensaId INTEGER, dishName VARCHAR,date VARCHAR, tag VARCHAR)");
     }
 
     /**
      * Download cafeteria menus from external interface (JSON)
      *
      * @param force True to force download over normal sync period, else false
+     * @throws Exception
      */
     public void downloadFromExternal(Context context, boolean force) throws JSONException {
 
@@ -108,10 +112,45 @@ public class CafeteriaMenuManager extends AbstractManager {
                 replaceIntoDb(getFromJsonAddendum(beilagen.getJSONObject(j)));
             }
             db.setTransactionSuccessful();
+        } catch (Exception e) {
         } finally {
             db.endTransaction();
         }
         SyncManager.replaceIntoDb(db, this);
+    }
+
+    public void insertFavoriteDish(int mensaId, String dishName, String date, String tag) {
+        db.execSQL("INSERT INTO favorite_dishes (mensaId, dishName, date, tag) VALUES (?, ?, ?,?)",
+                new String[]{"" + mensaId, dishName, date, tag});
+    }
+
+    public Cursor getFavoriteDishNextDates(int mensaId, String dishName) {
+        return db.rawQuery("SELECT strftime('%d-%m-%Y', date) "
+                + "FROM cafeterias_menus WHERE date > date('now','localtime') AND mensaId=? AND name=?", new String[]{"" + mensaId, dishName});
+    }
+
+    public Cursor checkIfFavoriteDish(String tag) {
+        return db.rawQuery("SELECT * "
+                + "FROM favorite_dishes WHERE tag=? ", new String[]{tag});
+    }
+
+    public Cursor getLastInsertedDishId(int mensaId, String dishName) {
+        return db.rawQuery("SELECT MAX(id) "
+                + "FROM favorite_dishes WHERE mensaId=? AND dishName=?", new String[]{"" + mensaId, dishName});
+    }
+
+    public Cursor getFavoriteDishAllIds(int mensaId, String dishName) {
+        return db.rawQuery("SELECT id "
+                + "FROM favorite_dishes WHERE mensaId=? AND dishName=?", new String[]{"" + mensaId, dishName});
+    }
+
+    public void deleteFavoriteDish(int mensaId, String dishName) {
+        db.execSQL("DELETE "
+                + "FROM favorite_dishes WHERE mensaId=? AND dishName=?", new String[]{"" + mensaId, dishName});
+    }
+
+    public Cursor getFavoriteDishToday() {
+        return db.rawQuery("SELECT dishName,mensaId FROM favorite_dishes WHERE date = date('now','localtime')", null);
     }
 
     /**
@@ -172,23 +211,23 @@ public class CafeteriaMenuManager extends AbstractManager {
      * Replace or Insert a cafeteria menu in the database
      *
      * @param c CafeteriaMenu object
-     * @throws SQLException
+     * @throws Exception
      */
-    void replaceIntoDb(CafeteriaMenu c) {
+    void replaceIntoDb(CafeteriaMenu c) throws Exception {
         if (c.cafeteriaId <= 0) {
-            throw new IllegalArgumentException("Invalid cafeteriaId.");
+            throw new Exception("Invalid cafeteriaId.");
         }
-        if (c.name.isEmpty()) {
-            throw new IllegalArgumentException("Invalid name.");
+        if (c.name.length() == 0) {
+            throw new Exception("Invalid name.");
         }
-        if (c.typeLong.isEmpty()) {
-            throw new IllegalArgumentException("Invalid typeLong.");
+        if (c.typeLong.length() == 0) {
+            throw new Exception("Invalid typeLong.");
         }
-        if (c.typeShort.isEmpty()) {
-            throw new IllegalArgumentException("Invalid typeShort.");
+        if (c.typeShort.length() == 0) {
+            throw new Exception("Invalid typeShort.");
         }
         if (c.date.before(Utils.getDate("2012-01-01"))) {
-            throw new IllegalArgumentException("Invalid date.");
+            throw new Exception("Invalid date.");
         }
         db.execSQL("REPLACE INTO cafeterias_menus (mensaId, date, typeShort, "
                         + "typeLong, typeNr, name) VALUES (?, ?, ?, ?, ?, ?)",

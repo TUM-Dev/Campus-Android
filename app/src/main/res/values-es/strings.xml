@@ -84,7 +84,7 @@
     <!-- Startup Wizard -->
     <string name="token_not_enabled">TUMOnline token de acceso no está activado</string>
     <string name="startup_wizard_uppercase">Asistente de inicio</string>
-    <string name="welcome_msg">!<b>Bienvenido al campus TUM App</b>\n\nPara habilitar el acceso a los servicios TUMOnline requiere su <b>identificador LRZ</b>\n identificador\nEste tiene el siguiente formato :.\n<i>xx00xxx</i>\n(2 letras, 2 números , 3 letras)</string>
+    <string name="welcome_msg">!<b>Bienvenido al campus TUM App</b>\n\nPara habilitar el acceso a los servicios TUMonline requiere su <b>identificador TUM</b>\n identificador\nEste tiene el siguiente formato :.\n<i>xx00xxx</i>\n(2 letras, 2 números , 3 letras)</string>
     <string name="button_skip">Salta</string>
     <string name="button_next">Siguiente</string>
     <string name="need_to_enable"><b>El token de acceso TUMOnline se ha creado con éxito</b>\n\n  Usted puede activar el token ahora en TUMOnline en <i>Servicios / Token Management</i>. Observe que usted también necesita habilitar los derechos de acceso a los servicios individuales en <i>Derechos activas</i>.</string>
@@ -385,5 +385,6 @@
     <string name="more_info">Más información</string>
     <string name="welcome_faculty">Para ofrecer la mejor experiencia posible, por favor indíquenos su mejor profesorado a juego:</string>
     <string name="event_plan">Plan de evento</string>
+    <string name="choose_own_faculty">Por favor elija su facultad</string>
     <!-- END Translated, please do not change identifiers -->
 </resources>

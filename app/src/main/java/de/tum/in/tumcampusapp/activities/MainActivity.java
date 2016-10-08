@@ -249,7 +249,7 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
      * Executed when the RestoreCard is pressed
      */
     public void restoreCards(View view) {
-        CardManager.restoreCards();
+        CardManager.restoreCards(this);
         refreshCards();
         showToolbar();
     }

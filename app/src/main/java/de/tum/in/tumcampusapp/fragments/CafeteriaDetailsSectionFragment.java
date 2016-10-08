@@ -19,6 +19,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -35,7 +39,6 @@ import de.tum.in.tumcampusapp.services.FavoriteDishReceiver;
  * Fragment for each cafeteria-page.
  */
 public class CafeteriaDetailsSectionFragment extends Fragment {
-
     /**
      * Inflates the cafeteria menu layout.
      * This is put into an extra static method to be able to
@@ -54,6 +57,7 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
         final int padding = (int) context.getResources().getDimension(R.dimen.card_text_padding);
         List<View> addedViews = new ArrayList<>();
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        final CafeteriaMenuManager cmm = new CafeteriaMenuManager(context);
 
         // Get menu items
         Cursor cursorCafeteriaMenu = new CafeteriaMenuManager(context).getTypeNameFromDbCard(cafeteriaId, dateStr);
@@ -75,7 +79,7 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
             do {
                 String typeShort = cursorCafeteriaMenu.getString(3);
                 String typeLong = cursorCafeteriaMenu.getString(0);
-                String menu = cursorCafeteriaMenu.getString(1);
+                final String menu = cursorCafeteriaMenu.getString(1);
 
                 // Skip unchecked categories if showing card
                 boolean shouldShow = Utils.getSettingBool(context, "card_cafeteria_" + typeShort,
@@ -95,66 +99,84 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
                 }
 
                 // Show menu item
-                SpannableString text = menuToSpan(context, big ? menu : prepare(menu));
-                int dishId=cursorCafeteriaMenu.getInt(2);
+
+                final SpannableString text = menuToSpan(context, big ? menu : prepare(menu));
                 if (rolePrices.containsKey(typeLong)) {
                     // If price is available
-                    View view = inflater.inflate(big ? R.layout.price_line_big : R.layout.card_price_line , rootView, false);
+                    View view = inflater.inflate(big ? R.layout.price_line_big : R.layout.card_price_line, rootView, false);
                     textview = (TextView) view.findViewById(R.id.line_name);
                     TextView priceView = (TextView) view.findViewById(R.id.line_price);
-                     //toggle button (star) mark dish as favorite
-                    final ToggleButton favDish=(ToggleButton)view.findViewById(R.id.favortieDish);
-                    favDish.setOnClickListener(new View.OnClickListener() {
-                        /**
-                         * when dish marked as favorite create an alarm on specific date using calendar and alarmManager
-                         * call the FavoriteDishReceiver
-                         */
-                        @Override
-                        public void onClick(View v) {
-                            /**
-                             * if checked mark dish as favorite and create Notification on next valid date for dish
-                             * update local database set dish as favorite
-                             */
-
-                            if(favDish.isChecked())
-                            {
-                                //new CafeteriaMenuManager(context).insertFavoriteDish(Integer.parseInt(favDish.getTag().toString()));
-
-                               /*Calendar calendar = Calendar.getInstance();
-                                calendar.set(Calendar.MONTH, 6);
-                                calendar.set(Calendar.YEAR, 2016);
-                                calendar.set(Calendar.DAY_OF_MONTH, 19);
-                                calendar.set(Calendar.HOUR_OF_DAY, 5);
-                                calendar.set(Calendar.MINUTE, 00);
-                                calendar.set(Calendar.SECOND, 0);
-                                calendar.set(Calendar.AM_PM,Calendar.AM);
-                                */
-
-                                Intent myIntent = new Intent(context, FavoriteDishReceiver.class);
-                                PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, myIntent,0);
-                                AlarmManager alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
-                                alarmManager.set(AlarmManager.RTC, System.currentTimeMillis()+5000, pendingIntent);
-                                Toast.makeText(context,favDish.getTag().toString(),Toast.LENGTH_SHORT).show();
-                            }
-                            /**
-                             *update local database set dish as not favorite
-                             * remove alarms
-                             */
-                            else {
-                                //new CafeteriaMenuManager(context).DeleteFavoriteDish(Integer.parseInt(favDish.getTag().toString()));
-                            }
-                        }
-                    });
-
+                    final ToggleButton favDish = (ToggleButton) view.findViewById(R.id.favortieDish);
+                    favDish.setTag(menu + "__" + cafeteriaId);
                     /**
                      * saved dish id in the favoriteDishButton tag.
-                     * onButton checked getTag->DishID and mark it as favorite
+                     * onButton checked getTag->DishID and mark it as favorite locally (favorite=1)
                      */
-                    favDish.setTag(dishId +"");
                     textview.setText(text);
                     priceView.setText(String.format("%s €", rolePrices.get(typeLong)));
                     rootView.addView(view);
                     addedViews.add(view);
+
+                    Cursor c = cmm.checkIfFavoriteDish(favDish.getTag().toString());
+                    if (c.getCount() > 0) {
+                        if (!favDish.isChecked()) {
+                            favDish.setChecked(true);
+                        }
+                    } else {
+                        if (favDish.isChecked()) {
+                            favDish.setChecked(false);
+                        }
+                    }
+
+                    View.OnClickListener favoriteToggleButtonListener = new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            String id = view.getTag().toString();
+                            String[] data = id.split("__");
+                            String dishname = data[0];
+                            int mensaId = Integer.parseInt(data[1]);
+                            AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+                            Intent myIntent = new Intent(context, FavoriteDishReceiver.class);
+
+                            if (((ToggleButton) view).isChecked()) {
+                                DateTimeFormatter formatter = DateTimeFormat.forPattern("dd-MM-yyyy");
+                                String currentDate = DateTime.now().toString(formatter);
+                                Cursor c = cmm.getFavoriteDishNextDates(mensaId, dishname);
+                                cmm.insertFavoriteDish(mensaId, dishname, currentDate, favDish.getTag().toString());
+
+                                if (c.getCount() > 0) {
+                                    while (c.moveToNext()) {
+
+                                        cmm.insertFavoriteDish(mensaId, dishname, c.getString(0), favDish.getTag().toString());
+                                        Cursor cur = cmm.getLastInsertedDishId(mensaId, dishname);
+                                        DateTime dt = formatter.parseDateTime(c.getString(0)).withHourOfDay(9);
+                                        long millsToAlarm = dt.getMillis() - DateTime.now().getMillis();
+
+                                        int alertID = 0;
+                                        if (cur.moveToFirst()) {
+                                            alertID = cur.getInt(0);
+                                        }
+
+                                        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, alertID, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                                        alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + millsToAlarm, pendingIntent);
+                                    }
+                                }
+                            } else {
+                                Cursor curs = cmm.getFavoriteDishAllIds(mensaId, dishname);
+                                while (curs.moveToNext()) {
+                                    int alertId = curs.getInt(0);
+                                    PendingIntent pendingIntent = PendingIntent.getBroadcast(context, alertId, myIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+                                    pendingIntent.cancel();
+                                    alarmManager.cancel(pendingIntent);
+                                }
+
+                                cmm.deleteFavoriteDish(mensaId, dishname);
+                            }
+                        }
+                    };
+
+                    favDish.setOnClickListener(favoriteToggleButtonListener);
+
                 } else {
                     // Without price
                     textview = new TextView(context);
@@ -174,12 +196,11 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
      * Replaces all (v), ... annotations with images
      *
      * @param context Context
-     * @param menuString    Text with annotations
+     * @param menu    Text with annotations
      * @return Spannable text with images
      */
-    public static SpannableString menuToSpan(Context context, String menuString) {
+    public static SpannableString menuToSpan(Context context, String menu) {
         int len;
-        String menu = menuString;
         do {
             len = menu.length();
             menu = menu.replaceFirst("\\(([A-Za-z0-9]+),", "($1)(");
@@ -206,12 +227,11 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
     /**
      * Replaces all annotations that cannot be replaces with images such as (1), ...
      *
-     * @param menuString Text to delete annotations from
+     * @param menu Text to delete annotations from
      * @return Text without un-replaceable annotations
      */
-    private static String prepare(String menuString) {
+    private static String prepare(String menu) {
         int len;
-        String menu = menuString;
         do {
             len = menu.length();
             menu = menu.replaceFirst("\\(([A-Za-z0-9]+),", "($1)(");

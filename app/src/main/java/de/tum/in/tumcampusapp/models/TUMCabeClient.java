@@ -48,31 +48,16 @@ public class TUMCabeClient {
     private static final String API_FACULTY = "/faculty/";
 
 
-
     private static TUMCabeClient instance;
-    private static Context context;
-    final RequestInterceptor requestInterceptor = new RequestInterceptor() {
-        @Override
-        public void intercept(RequestFacade request) {
-            request.addHeader("X-DEVICE-ID", AuthenticationManager.getDeviceID(TUMCabeClient.context));
-        }
-    };
-    final ErrorHandler errorHandler = new ErrorHandler() {
-        @Override
-        public Throwable handleError(RetrofitError cause) {
-            Throwable t = cause.getCause();
-            if (t instanceof SSLPeerUnverifiedException) {
-                //TODO show a error message
-                //Toast.makeText(context, t.toString(), Toast.LENGTH_LONG).show();
-            }
-
-            //Return the same cause, so it can be handled by other activities
-            return cause;
-        }
-    };
     private TUMCabeAPIService service;
 
-    private TUMCabeClient() {
+    private TUMCabeClient(final Context c) {
+        RequestInterceptor requestInterceptor = new RequestInterceptor() {
+            @Override
+            public void intercept(RequestFacade request) {
+                request.addHeader("X-DEVICE-ID", AuthenticationManager.getDeviceID(c));
+            }
+        };
         //Pin our known fingerprints, which I retrieved on 28. June 2015
         final CertificatePinner certificatePinner = new CertificatePinner.Builder()
                 .add(API_HOSTNAME, "sha1/eeoui1Gne7kkDN/6HlgoxHkD18s=") //Fakultaet fuer Informatik
@@ -83,6 +68,19 @@ public class TUMCabeClient {
         final OkHttpClient client = new OkHttpClient();
         client.setCertificatePinner(certificatePinner);
 
+        ErrorHandler errorHandler = new ErrorHandler() {
+            @Override
+            public Throwable handleError(RetrofitError cause) {
+                Throwable t = cause.getCause();
+                if (t instanceof SSLPeerUnverifiedException) {
+                    //TODO show a error message
+                    //Toast.makeText(context, t.toString(), Toast.LENGTH_LONG).show();
+                }
+
+                //Return the same cause, so it can be handled by other activities
+                return cause;
+            }
+        };
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setClient(new OkClient(client))
                 .setEndpoint("https://" + API_HOSTNAME + API_BASEURL)
@@ -93,33 +91,41 @@ public class TUMCabeClient {
     }
 
     public static TUMCabeClient getInstance(Context c) {
-        TUMCabeClient.context = c.getApplicationContext();
+        c.getApplicationContext();
         if (instance == null) {
-            instance = new TUMCabeClient();
+            instance = new TUMCabeClient(c);
         }
         return instance;
     }
 
     // Fetches faculty data (facname, id).Relevant for the user to select own major in majorSpinner in WizNavStartActivity
-    public ArrayList<Faculty> getFaculties(){return service.getFaculties();}
+    public ArrayList<Faculty> getFaculties() {
+        return service.getFaculties();
+    }
 
     // Deletes ownQuestion..Relevant for allowing the user to delete own questions under responses in SurveyActivity
-    public void deleteOwnQuestion(int question, Callback<Question> cb){service.deleteOwnQuestion(question,cb);}
+    public void deleteOwnQuestion(int question, Callback<Question> cb) {
+        service.deleteOwnQuestion(question, cb);
+    }
 
     // Fetches users ownQuestions and responses.Relevant for displaying results on ownQuestion under responses in SurveyActivity
-    public ArrayList<Question> getOwnQuestions(){ return service.getOwnQuestions();}
+    public ArrayList<Question> getOwnQuestions() {
+        return service.getOwnQuestions();
+    }
 
     // Submits user's answer on a given question.Gets triggered through in the survey card.
-    public void submitAnswer(Question question, Callback<Question> cb){
-        service.answerQuestion(question,cb);
+    public void submitAnswer(Question question, Callback<Question> cb) {
+        service.answerQuestion(question, cb);
     }
 
     // Fetches openQuestions which are relevant for the surveyCard.
-    public ArrayList<Question> getOpenQuestions(){ return service.getOpenQuestions();}
+    public ArrayList<Question> getOpenQuestions() {
+        return service.getOpenQuestions();
+    }
 
     // Submits user's own question. Gets triggered from the SurveyActivity
-    public void createQuestion(Question question,Callback<Question> cb){
-        service.createQuestion(question,cb);
+    public void createQuestion(Question question, Callback<Question> cb) {
+        service.createQuestion(question, cb);
     }
 
     public void createRoom(ChatRoom chatRoom, ChatVerification verification, Callback<ChatRoom> cb) {
@@ -224,7 +230,7 @@ public class TUMCabeClient {
         ArrayList<Faculty> getFaculties();
 
         @DELETE(API_QUESTION + "{question}")
-        void deleteOwnQuestion(@Path("question") int question,Callback<Question> cb);
+        void deleteOwnQuestion(@Path("question") int question, Callback<Question> cb);
 
         @GET(API_OWN_QUESTIONS)
         ArrayList<Question> getOwnQuestions();
@@ -234,7 +240,7 @@ public class TUMCabeClient {
 
         //Questions
         @POST(API_QUESTION)
-        void createQuestion(@Body Question question,Callback<Question> cb);
+        void createQuestion(@Body Question question, Callback<Question> cb);
 
         @GET(API_QUESTION)
         ArrayList<Question> getOpenQuestions();
