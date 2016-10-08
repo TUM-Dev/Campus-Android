@@ -96,7 +96,7 @@ public class WizNavCheckTokenActivity extends ActivityForLoadingInBackground<Voi
             Utils.setSetting(this, Const.CHAT_ROOM_DISPLAY_NAME, id.get().toString());
 
             // Save the TUMOnline id to preferences
-            String pID = getUserPIdentNr(id.toString());
+            String pID = getUserPIdentNr(id.get().toString());
             if (pID != null) {
                 Utils.setSetting(this, Const.TUMO_PIDENT_NR, pID);
             }
