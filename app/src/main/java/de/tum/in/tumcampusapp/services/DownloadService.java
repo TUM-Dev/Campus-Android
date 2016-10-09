@@ -124,6 +124,7 @@ public class DownloadService extends IntentService {
             }
         }
 
+        // Update the last run time saved in shared prefs
         if (action.equals(Const.DOWNLOAD_ALL_FROM_EXTERNAL)) {
             try {
                 service.importLocationsDefaults();
@@ -139,8 +140,7 @@ public class DownloadService extends IntentService {
             successful = true;
         }
 
-        // After done the job, create an broadcast intent and send it. The
-        // receivers will be informed that the download service has finished.
+        // After done the job, create an broadcast intent and send it. The receivers will be informed that the download service has finished.
         Utils.logv("Downloadservice was " + (successful ? "" : "not ") + "successful");
         if (successful) {
             service.broadcastDownloadCompleted();
