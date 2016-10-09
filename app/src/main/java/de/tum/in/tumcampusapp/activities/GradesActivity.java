@@ -3,6 +3,7 @@ package de.tum.in.tumcampusapp.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -45,6 +46,7 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
     private ExamList examList;
     private ListView lvGrades;
     private String pieChartContent;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
     private Spinner spFilter;
 
@@ -292,8 +294,20 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
         lvGrades = (ListView) findViewById(R.id.lstGrades);
         spFilter = (Spinner) findViewById(R.id.spFilter);
         averageTx = (TextView) findViewById(R.id.avgGrade);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
+        mSwipeRefreshLayout.setOnRefreshListener(this);
+        mSwipeRefreshLayout.setColorSchemeResources(
+                R.color.color_primary,
+                R.color.tum_A100,
+                R.color.tum_A200);
 
         requestFetch();
+    }
+
+    @Override
+    protected void requestFetch() {
+        super.requestFetch();
+        mSwipeRefreshLayout.setRefreshing(true);
     }
 
     @Override
@@ -334,6 +348,8 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
         // update the action bar to display the enabled menu options
 
         ActivityCompat.invalidateOptionsMenu(this);
+
+        mSwipeRefreshLayout.setRefreshing(false);
 
     }
 

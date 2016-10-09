@@ -28,11 +28,17 @@
                 android:background="@color/sections_blue"
                 android:drawSelectorOnTop="true" />
 
-            <ListView
-                android:id="@+id/lstGrades"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:listSelector="@android:color/transparent" />
+            <android.support.v4.widget.SwipeRefreshLayout
+                android:id="@+id/swipeRefreshLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ListView
+                    android:id="@+id/lstGrades"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:listSelector="@android:color/transparent" />
+            </android.support.v4.widget.SwipeRefreshLayout>
         </LinearLayout>
 
         <LinearLayout
