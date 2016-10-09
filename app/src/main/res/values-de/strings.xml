@@ -306,10 +306,9 @@
     <string name="news_sources">News Quellen</string>
     <string name="only_latest_article">Nur neusten Artikel</string>
     <string name="only_latest_article_summary">Zeigt jeweils nur den neusten Artikel. Ansonsten werden alle Artikel der ausgewählten Quellen angezeigt.</string>
-    <string name="lecture_chat">Vorlesungs-Chat</string>
+    <string name="lecture_chat">Vorlesungs-Chat &amp; Bedingungen akzeptieren</string>
     <string name="set_lecture_chat">Aktiviere oder deaktiviere <i>Vorlesungs-Chat</i>. Wenn es aktiviert ist kannst du Vorlesungs-Chatrooms beitreten und mit deinen Komilitonen diskutieren.</string>
     <string name="open_chat_terms">Chatbedingungen</string>
-    <string name="accept_chat_terms">Chatbedingungen akzeptieren</string>
     <string name="have_to_accept_terms">Chatbedingungen müssen akzeptiert werden, damit du den Vorlesungs-Chat verwenden kannst!</string>
     <string name="activate_key">Bitte aktiviere zuerst deinen Public Key</string>
     <string name="joined_chat_room">Du bist dem Chatroom beigetreten!</string>

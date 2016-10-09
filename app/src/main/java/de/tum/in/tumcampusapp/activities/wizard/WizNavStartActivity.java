@@ -143,11 +143,7 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<String, 
         }
 
         finish();
-        if (new AccessTokenManager(this).hasValidAccessToken()) {
-            startActivity(new Intent(this, WizNavChatActivity.class));
-        } else {
-            startActivity(new Intent(this, WizNavExtrasActivity.class));
-        }
+        startActivity(new Intent(this, WizNavExtrasActivity.class));
         overridePendingTransition(R.anim.fadein, R.anim.fadeout);
     }
 

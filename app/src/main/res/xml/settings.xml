@@ -310,6 +310,10 @@
             android:entryValues="@array/background_mode_values"
             android:key="background_mode_set_to"
             android:title="@string/mode_background_mode" />
+        <CheckBoxPreference
+            android:key="auto_join_new_rooms"
+            android:summary="@string/set_auto_join_chat"
+            android:title="@string/auto_join_chat" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/extras">
         <Preference

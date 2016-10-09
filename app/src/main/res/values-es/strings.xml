@@ -241,7 +241,6 @@
     <string name="status_sent">enviado</string>
     <string name="just_now">En este momento</string>
     <string name="yesterday">Ayer</string>
-    <string name="accept_chat_terms">Aceptar los términos de chat</string>
     <string name="activate_key">Por favor, primero activar su clave pública</string>
     <string name="add_chat_member">Añadir persona a la habitación de chat</string>
     <string name="add_chat_room">Nueva Sala de Chat</string>
@@ -286,7 +285,7 @@
     <string name="joined">Mi</string>
     <string name="joined_chat_room">Se unió a la sala de chat!</string>
     <string name="key_not_activated">Usted no ha activado su clave!</string>
-    <string name="lecture_chat">Conferencia de chat</string>
+    <string name="lecture_chat">Conferencia de chat &amp; Aceptar los términos</string>
     <string name="loading_first_time">El primer inicio puede tardar unos minutos</string>
     <string name="message_details">Info mensaje</string>
     <string name="min_search_len">Consulta debe ser de al menos %d caracteres de largo</string>

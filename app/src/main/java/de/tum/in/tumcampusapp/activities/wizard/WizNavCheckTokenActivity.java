@@ -118,7 +118,7 @@ public class WizNavCheckTokenActivity extends ActivityForLoadingInBackground<Voi
     protected void onLoadFinished(Integer errorMessageStrResId) {
         if (errorMessageStrResId == null) {
             finish();
-            startActivity(new Intent(this, WizNavChatActivity.class));
+            startActivity(new Intent(this, WizNavExtrasActivity.class));
             overridePendingTransition(R.anim.fadein, R.anim.fadeout);
         } else {
             Utils.showToast(this, errorMessageStrResId);

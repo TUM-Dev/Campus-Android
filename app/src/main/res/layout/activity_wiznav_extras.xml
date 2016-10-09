@@ -65,19 +65,27 @@
                         android:padding="@dimen/padding_default"
                         android:text="@string/set_silent_mode" />
 
+
                     <CheckBox
-                        android:id="@+id/chk_background_mode"
+                        android:id="@+id/chk_group_chat"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
-                        android:text="@string/background_mode"
+                        android:text="@string/lecture_chat"
                         android:textStyle="bold" />
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:padding="@dimen/padding_default"
-                        android:text="@string/set_background_mode" />
+                        android:text="@string/set_lecture_chat" />
+
+                    <Button
+                        style="@style/FlatButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:onClick="onClickTerms"
+                        android:text="@string/open_chat_terms" />
 
                     <CheckBox
                         android:id="@+id/chk_bug_reports"
