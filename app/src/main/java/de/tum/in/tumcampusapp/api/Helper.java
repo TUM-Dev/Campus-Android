@@ -19,7 +19,6 @@ import okhttp3.Response;
 
 import static de.tum.in.tumcampusapp.auxiliary.Const.API_HOSTNAME;
 import static de.tum.in.tumcampusapp.models.managers.StudyRoomGroupManager.STUDYROOM_HOST;
-import static de.tum.in.tumcampusapp.models.managers.StudyRoomGroupManager.STUDYROOM_URL;
 
 public class Helper {
     private static final int HTTP_TIMEOUT = 25000;
@@ -30,13 +29,17 @@ public class Helper {
             return client;
         }
 
-        //Pin our known fingerprints, which I retrieved on 28. June 2015
         final CertificatePinner certificatePinner = new CertificatePinner.Builder()
-                .add(API_HOSTNAME, "sha1/eeoui1Gne7kkDN/6HlgoxHkD18s=") //Fakultaet fuer Informatik
-                .add(API_HOSTNAME, "sha1/AC508zHZltt8Aa1ZpUg5C9tMNJ8=") //Technische Universitaet Muenchen
-                .add(API_HOSTNAME, "sha1/7+NhGLCLRZ1RDbncIhu3ksHeOok=") //DFN-Verein PCA Global
-                .add(API_HOSTNAME, "sha1/8GO6fJoWdEqc21TsI81nKY58SU0=") //Deutsche Telekom Root CA 2
-                .add(STUDYROOM_HOST, "sha1/8GO6fJoWdEqc21TsI81nKY58SU0=") //Add the DT Root for now
+                .add(API_HOSTNAME, "sha256/dVphPQ9xG7woPpEKXrNalw4eMUQ4Fw9r3OXTzxfuL5A=") //Fakultaet fuer Informatik
+                .add(API_HOSTNAME, "sha256/SwdQoHL7SB/6o12XsIhbQJ9bANVnbrJoHTLzlu/qXT0=") //Technische Universitaet Muenchen
+                .add(API_HOSTNAME, "sha256/VzL+FtAKvzb4N5igmFJyv83GD7CBK7Yyw+R6XdRRfmg=") //DFN-Verein PCA Global
+                .add(API_HOSTNAME, "sha256/0d4q5hyN8vpiOWYWPUxz1GC/xCjldYW+a/65pWMj0bY=") //Deutsche Telekom Root CA 2
+                .add(API_HOSTNAME, "sha256/YLh1dUR9y6Kja30RrAn7JKnbQG/uEtLMkBgFF2Fuihg=") //Let's Encrypt Authority X3
+                .add(API_HOSTNAME, "sha256/Vjs8r4z+80wjNcr1YKepWQboSIRi63WsWXhIMN+eWys=") //LE Cross Sign: DST Root CA X3
+                .add(STUDYROOM_HOST, "sha256/dVphPQ9xG7woPpEKXrNalw4eMUQ4Fw9r3OXTzxfuL5A=") //wwwv2.tum.de
+                .add(STUDYROOM_HOST, "sha256/SwdQoHL7SB/6o12XsIhbQJ9bANVnbrJoHTLzlu/qXT0=") //Zertifizierungsstelle der TUM
+                .add(STUDYROOM_HOST, "sha256/VzL+FtAKvzb4N5igmFJyv83GD7CBK7Yyw+R6XdRRfmg=") //DFN-Verein PCA Global - G01
+                .add(STUDYROOM_HOST, "sha256/0d4q5hyN8vpiOWYWPUxz1GC/xCjldYW+a/65pWMj0bY=") //Deutsche Telekom Root CA 2
                 .build();
 
         //We want to persist our cookies through app session
