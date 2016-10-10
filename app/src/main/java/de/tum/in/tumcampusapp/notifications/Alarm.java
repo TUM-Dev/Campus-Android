@@ -11,6 +11,7 @@ import android.util.Base64;
 import com.google.common.base.Charsets;
 import com.google.gson.Gson;
 
+import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.KeyFactory;
 import java.security.PublicKey;
@@ -26,7 +27,7 @@ import de.tum.in.tumcampusapp.auxiliary.RSASigner;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.GCMAlert;
 import de.tum.in.tumcampusapp.models.GCMNotification;
-import de.tum.in.tumcampusapp.models.TUMCabeClient;
+import de.tum.in.tumcampusapp.api.TUMCabeClient;
 
 public class Alarm extends GenericNotification {
 
@@ -36,7 +37,7 @@ public class Alarm extends GenericNotification {
     private static final String PUB_KEY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvSukueIrdowjJB/IHR6+tsCbYLF9kmC/2Sa8/kI9Ttq0aUyC0hDt2SBzuDDmp/RwnUap5/0xT/h3z+WgKOjrzWig4lmb7G2+RuuVn8466AErfp3YQVFiovNLGMqwfJzPZ9aV3sZBXCTeEbDkd/CLRp3kBYkAtL8NfIlbNaII9CWKdhS907JyEWRZO2DLiYLm37vK/hwg58eXHwL9jNYY3gFqGUlfWXwGC2a0yTOk9rgJejhUbU9GLWSL3OwiHVXlpPsvTC1Ry0H4kQQeisjCgpkPjOQAnAFRN9zZLtBZlIsssYvL3ohY/C1HfGzDwGTaELjhtzY9qHdFW/4GDZh8swIDAQAB";
 
     public final GCMAlert alert;
-    private final GCMNotification info;
+    private GCMNotification info;
 
     public Alarm(String payload, Context context, int notification) {
         super(context, 3, notification, true); //Let the base class know which id this notification has
@@ -47,7 +48,12 @@ public class Alarm extends GenericNotification {
         }
 
         //Get data from server
-        this.info = TUMCabeClient.getInstance(this.context).getNotification(this.notification);
+        info = null;
+        try {
+            this.info = TUMCabeClient.getInstance(this.context).getNotification(this.notification);
+        } catch (IOException e) {
+            Utils.log(e);
+        }
 
         // parse data
         this.alert = new Gson().fromJson(payload, GCMAlert.class);

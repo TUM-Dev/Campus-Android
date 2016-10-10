@@ -27,8 +27,8 @@ import de.tum.in.tumcampusapp.models.StudyRoomGroup;
  */
 public class StudyRoomGroupManager extends AbstractManager {
 
-    public static final String STUDYROOM_URL = "https://www.devapp.it.tum.de/iris/ris_api" +
-            ".php?format=json";
+    public static final String STUDYROOM_HOST = "www.devapp.it.tum.de";
+    public static final String STUDYROOM_URL = "https://" + STUDYROOM_HOST + "/iris/ris_api.php?format=json";
     public static final String DATEFORMAT = "yyyy-MM-dd HH:mm:ss";
 
     public StudyRoomGroupManager(Context context) {
@@ -51,8 +51,7 @@ public class StudyRoomGroupManager extends AbstractManager {
     }
 
     public void downloadFromExternal() throws JSONException {
-        Optional<JSONObject> jsonObject = new NetUtils(mContext).downloadJsonObject(STUDYROOM_URL,
-                CacheManager.VALIDITY_DO_NOT_CACHE, true);
+        Optional<JSONObject> jsonObject = new NetUtils(mContext).downloadJsonObject(STUDYROOM_URL, CacheManager.VALIDITY_DO_NOT_CACHE, true);
         if (!jsonObject.isPresent()) {
             return;
         }

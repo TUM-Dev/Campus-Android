@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.google.gson.Gson;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -19,7 +20,7 @@ import de.tum.in.tumcampusapp.exceptions.NoPrivateKey;
 import de.tum.in.tumcampusapp.models.ChatMember;
 import de.tum.in.tumcampusapp.models.ChatMessage;
 import de.tum.in.tumcampusapp.models.ChatVerification;
-import de.tum.in.tumcampusapp.models.TUMCabeClient;
+import de.tum.in.tumcampusapp.api.TUMCabeClient;
 
 /**
  * TUMOnline cache manager, allows caching of TUMOnline requests
@@ -244,7 +245,7 @@ public class ChatMessageManager extends AbstractManager {
         db.endTransaction();
     }
 
-    public Cursor getNewMessages(ChatMember member, int messageId) throws NoPrivateKey {
+    public Cursor getNewMessages(ChatMember member, int messageId) throws NoPrivateKey, IOException {
         ArrayList<ChatMessage> messages;
         if (messageId == -1) {
             messages = TUMCabeClient.getInstance(mContext).getNewMessages(mChatRoom, new ChatVerification(mContext, member));
