@@ -393,4 +393,7 @@
     <string name="welcome_faculty">Pour offrir la meilleure expérience possible s\'il vous plaît nous fournir votre meilleure faculté d\'adaptation:</string>
     <string name="event_plan">Plan de l\'événement</string>
     <string name="choose_own_faculty">S\'il vous plaît choisir votre faculté</string>
+    <string name="add_widget">Ajouter un widget</string>
+    <string name="mensa_widget">Mensa Widget TUM</string>
+    <string name="widget_configure_description">Configurez les cartes pour montrer</string>
 </resources>

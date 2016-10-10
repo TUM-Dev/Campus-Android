@@ -385,5 +385,8 @@
     <string name="welcome_faculty">Para ofrecer la mejor experiencia posible, por favor indíquenos su mejor profesorado a juego:</string>
     <string name="event_plan">Plan de evento</string>
     <string name="choose_own_faculty">Por favor elija su facultad</string>
+    <string name="add_widget">Agregar panel</string>
+    <string name="mensa_widget">Mensa Widget TUM</string>
+    <string name="widget_configure_description">Configurar las tarjetas para mostrar</string>
     <!-- END Translated, please do not change identifiers -->
 </resources>
