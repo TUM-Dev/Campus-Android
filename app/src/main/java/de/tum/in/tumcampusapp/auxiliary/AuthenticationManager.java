@@ -18,7 +18,6 @@ import java.util.UUID;
 import de.tum.in.tumcampusapp.exceptions.NoPrivateKey;
 import de.tum.in.tumcampusapp.exceptions.NoPublicKey;
 import de.tum.in.tumcampusapp.models.ChatMember;
-import de.tum.in.tumcampusapp.models.ChatPublicKey;
 import de.tum.in.tumcampusapp.models.DeviceRegister;
 import de.tum.in.tumcampusapp.models.TUMCabeClient;
 import de.tum.in.tumcampusapp.models.TUMCabeStatus;
@@ -190,7 +189,7 @@ public class AuthenticationManager {
                     Utils.log(response.getBody().toString());
 
                     //Remember that we are done, only if we have submitted with the member information
-                    if(s.getStatus() == "ok") {
+                    if (s.getStatus() == "ok") {
                         if (member != null) {
                             Utils.setInternalSetting(mContext, Const.PUBLIC_KEY_UPLOADED, true);
                         }

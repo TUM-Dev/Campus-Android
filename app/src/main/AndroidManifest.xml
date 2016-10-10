@@ -421,14 +421,6 @@
             android:configChanges="orientation|screenSize"
             android:label="@string/app_name" />
         <activity
-            android:name=".activities.wizard.WizNavChatActivity"
-            android:configChanges="orientation|screenSize"
-            android:label="@string/app_name" />
-        <activity
-            android:name=".activities.wizard.WizNavActivatePublicKeyActivity"
-            android:configChanges="orientation|screenSize"
-            android:label="@string/app_name" />
-        <activity
             android:name=".activities.wizard.WizNavExtrasActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/app_name"

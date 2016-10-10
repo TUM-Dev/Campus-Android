@@ -6,9 +6,6 @@ import android.os.Build;
 
 import com.google.common.base.Optional;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.exceptions.NoPublicKey;
 import de.tum.in.tumcampusapp.models.AccessToken;
@@ -53,7 +50,7 @@ public class AccessTokenManager {
         AuthenticationManager am = new AuthenticationManager(context);
         try {
             String publicKey = am.getPublicKeyString();
-            TUMOnlineRequest<TokenConfirmation>  requestSavePublicKey = new TUMOnlineRequest<>(TUMOnlineConst.SECRET_UPLOAD, context, false);
+            TUMOnlineRequest<TokenConfirmation> requestSavePublicKey = new TUMOnlineRequest<>(TUMOnlineConst.SECRET_UPLOAD, context, false);
             requestSavePublicKey.setParameter("pToken", token.get().getToken());
             requestSavePublicKey.setParameterEncoded("pSecret", publicKey);
             requestSavePublicKey.fetch();

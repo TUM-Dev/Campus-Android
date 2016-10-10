@@ -7,7 +7,6 @@ import java.security.SecureRandom;
 import java.util.Date;
 
 import de.tum.in.tumcampusapp.auxiliary.AuthenticationManager;
-import de.tum.in.tumcampusapp.auxiliary.calendar.IntegratedCalendarEvent;
 import de.tum.in.tumcampusapp.exceptions.NoPrivateKey;
 
 public class DeviceRegister {
@@ -31,7 +30,7 @@ public class DeviceRegister {
         if (member != null) {
             this.member = member;
             this.signature = am.sign(date + rand + this.device + this.member.getLrzId() + this.member.getId());
-        }else{
+        } else {
             this.signature = am.sign(date + rand + this.device);
         }
     }

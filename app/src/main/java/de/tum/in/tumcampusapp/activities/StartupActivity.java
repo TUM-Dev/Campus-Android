@@ -31,7 +31,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.wizard.WizNavExtrasActivity;
 import de.tum.in.tumcampusapp.activities.wizard.WizNavStartActivity;
-import de.tum.in.tumcampusapp.auxiliary.AccessTokenManager;
 import de.tum.in.tumcampusapp.auxiliary.AuthenticationManager;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.FileUtils;

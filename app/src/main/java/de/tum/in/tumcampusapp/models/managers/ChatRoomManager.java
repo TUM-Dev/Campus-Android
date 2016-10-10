@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.cards.ChatMessagesCard;
@@ -184,7 +183,7 @@ public class ChatRoomManager extends AbstractManager implements Card.ProvidesCar
                     manager.join(currentChatRoom);
                 } catch (RetrofitError e) {
                     Utils.log(e, " - error occured while creating the room!");
-                }  catch (NoPrivateKey noPrivateKey) {
+                } catch (NoPrivateKey noPrivateKey) {
                     return;
                 }
             }
