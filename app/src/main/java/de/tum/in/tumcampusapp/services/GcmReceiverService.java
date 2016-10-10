@@ -51,52 +51,53 @@ public class GcmReceiverService extends GcmListenerService {
     @Override
     public void onMessageReceived(String from, Bundle extras) {
         //Check that we have some data and the intent was indeed a gcm message (gcm might be subject to change in the future)
-        if (!extras.isEmpty()) {  // has effect of un-parcelling Bundle
-            //Legacy messages need to be handled - maybe some data is missing?
-            if (!extras.containsKey(PAYLOAD) || !extras.containsKey("type")) {
+        if (extras.isEmpty()) {
+            return;
+        }  // has effect of un-parcelling Bundle
+        //Legacy messages need to be handled - maybe some data is missing?
+        if (!extras.containsKey(PAYLOAD) || !extras.containsKey("type")) {
 
-                //Try to match it as a legacy chat notification
-                try {
-                    this.postNotification(new Chat(extras, this, -1));
-                } catch (Exception e) {
-                    //@todo do something
-                }
-            } else {
-                //Get some important values
-                int notification = Integer.parseInt(extras.getString("notification"));
-                int type = Integer.parseInt(extras.getString("type"));
+            //Try to match it as a legacy chat notification
+            try {
+                this.postNotification(new Chat(extras, this, -1));
+            } catch (Exception e) {
+                //@todo do something
+            }
+        } else {
+            //Get some important values
+            int notification = Integer.parseInt(extras.getString("notification"));
+            int type = Integer.parseInt(extras.getString("type"));
 
-                //Initialize our outputs
-                GenericNotification n = null;
+            //Initialize our outputs
+            GenericNotification n = null;
 
-                Utils.logv("Notification recieved: " + extras);
+            Utils.logv("Notification recieved: " + extras);
 
-                //switch on the type as both the type and payload must be present
-                switch (type) { //https://github.com/TCA-Team/TumCampusApp/wiki/GCM-Message-format
-                    case 0: //Nothing to do, just confirm the retrieved notification
-                        TUMCabeClient.getInstance(this).confirm(notification);
-                        break;
-                    case 1: //Chat
-                        n = new Chat(extras.getString(PAYLOAD), this, notification);
-                        break;
-                    case 2: //Update
-                        n = new Update(extras.getString(PAYLOAD), this, notification);
-                        break;
-                    case 3: //Alert
-                        n = new Alarm(extras.getString(PAYLOAD), this, notification);
-                        break;
-                }
+            //switch on the type as both the type and payload must be present
+            switch (type) { //https://github.com/TCA-Team/TumCampusApp/wiki/GCM-Message-format
+                case 0: //Nothing to do, just confirm the retrieved notification
+                    TUMCabeClient.getInstance(this).confirm(notification);
+                    break;
+                case 1: //Chat
+                    n = new Chat(extras.getString(PAYLOAD), this, notification);
+                    break;
+                case 2: //Update
+                    n = new Update(extras.getString(PAYLOAD), this, notification);
+                    break;
+                case 3: //Alert
+                    n = new Alarm(extras.getString(PAYLOAD), this, notification);
+                    break;
+            }
 
-                //Post & save the notification if it was of any significance
-                if (n != null) {
-                    this.postNotification(n);
+            //Post & save the notification if it was of any significance
+            if (n != null) {
+                this.postNotification(n);
 
-                    //Send confirmation if type requires it
-                    n.sendConfirmation();
+                //Send confirmation if type requires it
+                n.sendConfirmation();
 
-                    de.tum.in.tumcampusapp.models.managers.NotificationManager man = new de.tum.in.tumcampusapp.models.managers.NotificationManager(this);
-                    //@todo save to our notificationmanager
-                }
+                //de.tum.in.tumcampusapp.models.managers.NotificationManager man = new de.tum.in.tumcampusapp.models.managers.NotificationManager(this);
+                //@todo save to our notificationmanager
             }
         }
     }

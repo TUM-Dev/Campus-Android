@@ -93,10 +93,10 @@ public class WizNavCheckTokenActivity extends ActivityForLoadingInBackground<Voi
             }
 
             // Save the name to preferences
-            Utils.setSetting(this, Const.CHAT_ROOM_DISPLAY_NAME, id.toString());
+            Utils.setSetting(this, Const.CHAT_ROOM_DISPLAY_NAME, id.get().toString());
 
             // Save the TUMOnline id to preferences
-            String pID = getUserPIdentNr(id.toString());
+            String pID = getUserPIdentNr(id.get().toString());
             if (pID != null) {
                 Utils.setSetting(this, Const.TUMO_PIDENT_NR, pID);
             }
@@ -133,10 +133,7 @@ public class WizNavCheckTokenActivity extends ActivityForLoadingInBackground<Voi
     protected void onStart() {
         super.onStart();
         TextView textView = (TextView) findViewById(R.id.tvBrowse);
-        textView.setClickable(true);
         textView.setMovementMethod(LinkMovementMethod.getInstance());
-        String url = "<a href='http://campus.tum.de'>TUMOnline</a>";
-        textView.setText(Utils.fromHtml(url));
     }
 
     /**

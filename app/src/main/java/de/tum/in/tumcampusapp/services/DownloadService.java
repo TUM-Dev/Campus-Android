@@ -9,6 +9,7 @@ import android.support.v4.content.LocalBroadcastManager;
 
 import org.json.JSONException;
 
+import java.io.IOException;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
@@ -128,7 +129,7 @@ public class DownloadService extends IntentService {
         if (action.equals(Const.DOWNLOAD_ALL_FROM_EXTERNAL)) {
             try {
                 service.importLocationsDefaults();
-            } catch (Exception e) {
+            } catch (IOException e) {
                 Utils.log(e);
                 successful = false;
             }
@@ -277,7 +278,7 @@ public class DownloadService extends IntentService {
     /**
      * Import default location and opening hours from assets
      */
-    private void importLocationsDefaults() throws Exception {
+    private void importLocationsDefaults() throws IOException {
         OpenHoursManager lm = new OpenHoursManager(this);
         if (lm.empty()) {
             List<String[]> rows = Utils.readCsv(getAssets().open(CSV_LOCATIONS));

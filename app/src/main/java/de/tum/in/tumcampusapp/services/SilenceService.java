@@ -84,7 +84,7 @@ public class SilenceService extends IntentService {
 
         AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         Cursor cursor = calendarManager.getCurrentFromDb();
-        Utils.log("Current lectures: " + String.valueOf(cursor.getCount()));
+        Utils.log("Current lectures: " + cursor.getCount());
 
         if (cursor.getCount() != 0 && !isDoNotDisturbMode()) {
             // remember old state if just activated ; in doubt dont change

@@ -48,37 +48,37 @@
                         android:id="@+id/tvSucc"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:padding="@dimen/padding_default"
+                        android:padding="2dp"
                         android:text="@string/need_to_enable" />
 
                     <TextView
                         android:id="@+id/tvBrowse"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:padding="@dimen/padding_default" />
+                        android:layout_gravity="center_horizontal"
+                        android:padding="2dp"
+                        android:text="@string/tumonline_link" />
 
                     <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="135dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:paddingBottom="@dimen/padding_default"
-                        android:paddingTop="@dimen/padding_default"
+                        android:paddingBottom="2dp"
+                        android:paddingTop="2dp"
                         android:src="@drawable/tokenmanagement" />
 
                     <ImageView
                         android:layout_width="match_parent"
-                        android:layout_height="29dp"
+                        android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:paddingBottom="@dimen/padding_default"
-                        android:paddingTop="@dimen/padding_default"
+                        android:paddingBottom="4dp"
+                        android:paddingTop="4dp"
                         android:src="@drawable/wizz_activate_token" />
 
                     <ImageView
                         android:layout_width="match_parent"
-                        android:layout_height="177dp"
+                        android:layout_height="150dp"
                         android:layout_gravity="center"
-                        android:paddingBottom="@dimen/padding_default"
-                        android:paddingTop="@dimen/padding_default"
                         android:src="@drawable/wizz_activate_rights" />
 
                 </LinearLayout>

@@ -23,7 +23,6 @@ import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.Cafeteria;
-import de.tum.in.tumcampusapp.models.managers.CafeteriaMenuManager;
 import de.tum.in.tumcampusapp.models.managers.LocationManager;
 
 import static de.tum.in.tumcampusapp.fragments.CafeteriaDetailsSectionFragment.menuToSpan;
@@ -37,7 +36,6 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
 
     private ViewPager mViewPager;
     private int mCafeteriaId = -1;
-    private CafeteriaDetailsSectionsPagerAdapter mSectionsPagerAdapter;
     private List<Cafeteria> mCafeterias;
 
     public CafeteriaActivity() {
@@ -94,11 +92,11 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
         mCafeterias = new LocationManager(this).getCafeterias();
 
         // If something went wrong or no cafeterias found
-        if (mCafeterias.size() == 0) {
-            if (!NetUtils.isConnected(this)) {
-                showNoInternetLayout();
-            } else {
+        if (mCafeterias.isEmpty()) {
+            if (NetUtils.isConnected(this)) {
                 showErrorLayout();
+            } else {
+                showNoInternetLayout();
             }
             return;
         }
@@ -156,10 +154,10 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
      */
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-        Intent intent=getIntent();
+        Intent intent = getIntent();
         //check if Activity triggered from favoriteDish Notification
         if (intent != null && intent.getExtras() != null && intent.getExtras().containsKey(Const.MENSA_FOR_FAVORITEDISH)) {
-            for(int i=0;i<parent.getCount();i++) {
+            for (int i = 0; i < parent.getCount(); i++) {
                 //get mensaId from extra to redirct the user to it.
                 if (intent.getExtras().getInt(Const.MENSA_FOR_FAVORITEDISH) == mCafeterias.get(i).id) {
                     mCafeteriaId = mCafeterias.get(i).id;
@@ -168,13 +166,13 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
                     break;
                 }
             }
-        }
-        else
+        } else {
             mCafeteriaId = mCafeterias.get(pos).id;
+        }
 
 
-        mSectionsPagerAdapter = null;
-        mSectionsPagerAdapter = new CafeteriaDetailsSectionsPagerAdapter(getSupportFragmentManager());
+        CafeteriaDetailsSectionsPagerAdapter mSectionsPagerAdapter
+                = new CafeteriaDetailsSectionsPagerAdapter(getSupportFragmentManager());
         // Create the adapter that will return a fragment for each of the primary sections of the app.
         mViewPager.setAdapter(null); //unset the adapter for updating
         mSectionsPagerAdapter.setCafeteriaId(this, mCafeteriaId);

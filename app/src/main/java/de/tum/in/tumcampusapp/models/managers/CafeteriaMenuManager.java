@@ -6,7 +6,6 @@ import android.database.Cursor;
 import com.google.common.base.Optional;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -84,9 +83,8 @@ public class CafeteriaMenuManager extends AbstractManager {
      * Download cafeteria menus from external interface (JSON)
      *
      * @param force True to force download over normal sync period, else false
-     * @throws Exception
      */
-    public void downloadFromExternal(Context context, boolean force) throws JSONException {
+    public void downloadFromExternal(Context context, boolean force) {
 
         if (!force && !SyncManager.needSync(db, this, TIME_TO_SYNC)) {
             return;

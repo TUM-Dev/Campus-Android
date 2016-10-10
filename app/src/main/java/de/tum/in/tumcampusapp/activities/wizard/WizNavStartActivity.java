@@ -111,7 +111,7 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<String, 
 
                         if (c.moveToFirst()) {
                             Utils.setInternalSetting(getApplicationContext(), "user_major", c.getString(c.getColumnIndex("faculty"))); // save faculty number in shared preferences
-                            Utils.setInternalSetting(getApplicationContext(), "user_faculty_number", userMajorSpinner.getSelectedItemPosition() + ""); // save choosen spinner poistion so that in case the user returns from the  WizNavCheckTokenActivity to WizNavStart activity, then we the faculty gets autm. choosen.
+                            Utils.setInternalSetting(getApplicationContext(), "user_faculty_number", String.valueOf(userMajorSpinner.getSelectedItemPosition())); // save choosen spinner poistion so that in case the user returns from the  WizNavCheckTokenActivity to WizNavStart activity, then we the faculty gets autm. choosen.
                         }
                         TextView selectedItem = (TextView) adapterView.getChildAt(0);
                         if (selectedItem != null) {

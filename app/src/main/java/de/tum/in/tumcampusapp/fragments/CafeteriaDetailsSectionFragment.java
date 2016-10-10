@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.text.SpannableString;
@@ -16,7 +17,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import org.joda.time.DateTime;
@@ -26,11 +26,13 @@ import org.joda.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.auxiliary.CafeteriaPrices;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
+import de.tum.in.tumcampusapp.cards.CafeteriaMenuCard;
 import de.tum.in.tumcampusapp.models.managers.CafeteriaMenuManager;
 import de.tum.in.tumcampusapp.models.managers.OpenHoursManager;
 import de.tum.in.tumcampusapp.services.FavoriteDishReceiver;
@@ -39,10 +41,13 @@ import de.tum.in.tumcampusapp.services.FavoriteDishReceiver;
  * Fragment for each cafeteria-page.
  */
 public class CafeteriaDetailsSectionFragment extends Fragment {
+    private static final Pattern SPLIT_ANNOTATIONS_PATTERN = Pattern.compile("\\(([A-Za-z0-9]+),");
+    private static final Pattern NUMERICAL_ANNOTATIONS_PATTERN = Pattern.compile("\\(([1-9]|10|11)\\)");
+
     /**
      * Inflates the cafeteria menu layout.
      * This is put into an extra static method to be able to
-     * reuse it in {@link de.tum.in.tumcampusapp.cards.CafeteriaMenuCard}
+     * reuse it in {@link CafeteriaMenuCard}
      *
      * @param rootView    Parent layout
      * @param cafeteriaId Cafeteria id
@@ -55,7 +60,7 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
         final Context context = rootView.getContext();
         final Map<String, String> rolePrices = CafeteriaPrices.getRolePrices(context);
         final int padding = (int) context.getResources().getDimension(R.dimen.card_text_padding);
-        List<View> addedViews = new ArrayList<>();
+        List<View> addedViews = new ArrayList<>(32);
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         final CafeteriaMenuManager cmm = new CafeteriaMenuManager(context);
 
@@ -200,18 +205,14 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
      * @return Spannable text with images
      */
     public static SpannableString menuToSpan(Context context, String menu) {
-        int len;
-        do {
-            len = menu.length();
-            menu = menu.replaceFirst("\\(([A-Za-z0-9]+),", "($1)(");
-        } while (menu.length() > len);
-        SpannableString text = new SpannableString(menu);
-        replaceWithImg(context, menu, text, "(v)", R.drawable.meal_vegan);
-        replaceWithImg(context, menu, text, "(f)", R.drawable.meal_veggie);
-        replaceWithImg(context, menu, text, "(R)", R.drawable.meal_beef);
-        replaceWithImg(context, menu, text, "(S)", R.drawable.meal_pork);
-        replaceWithImg(context, menu, text, "(GQB)", R.drawable.ic_gqb);
-        replaceWithImg(context, menu, text, "(99)", R.drawable.meal_alcohol);
+        final String processedMenu = splitAnnotations(menu);
+        final SpannableString text = new SpannableString(processedMenu);
+        replaceWithImg(context, processedMenu, text, "(v)", R.drawable.meal_vegan);
+        replaceWithImg(context, processedMenu, text, "(f)", R.drawable.meal_veggie);
+        replaceWithImg(context, processedMenu, text, "(R)", R.drawable.meal_beef);
+        replaceWithImg(context, processedMenu, text, "(S)", R.drawable.meal_pork);
+        replaceWithImg(context, processedMenu, text, "(GQB)", R.drawable.ic_gqb);
+        replaceWithImg(context, processedMenu, text, "(99)", R.drawable.meal_alcohol);
         return text;
     }
 
@@ -231,12 +232,19 @@ public class CafeteriaDetailsSectionFragment extends Fragment {
      * @return Text without un-replaceable annotations
      */
     private static String prepare(String menu) {
+        final String tmp = splitAnnotations(menu);
+        return NUMERICAL_ANNOTATIONS_PATTERN.matcher(tmp).replaceAll("");
+    }
+
+    @NonNull
+    private static String splitAnnotations(String menu) {
         int len;
+        String tmp = menu;
         do {
-            len = menu.length();
-            menu = menu.replaceFirst("\\(([A-Za-z0-9]+),", "($1)(");
-        } while (menu.length() > len);
-        return menu.replaceAll("\\(([1-9]|10|11)\\)", "");
+            len = tmp.length();
+            tmp = SPLIT_ANNOTATIONS_PATTERN.matcher(tmp).replaceFirst("($1)(");
+        } while (tmp.length() > len);
+        return tmp;
     }
 
     @Override

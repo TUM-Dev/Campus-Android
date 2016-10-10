@@ -69,8 +69,8 @@ public class SendMessageService extends IntentService {
                     // Send broadcast to eventually open ChatActivity
                     Intent i = new Intent("chat-message-received");
                     Bundle extras = new Bundle();
-                    extras.putString("room", "" + message.getRoom());
-                    extras.putString("member", "" + message.getMember().getId());
+                    extras.putString("room", String.valueOf(message.getRoom()));
+                    extras.putString("member", String.valueOf(message.getMember().getId()));
                     i.putExtras(extras);
                     LocalBroadcastManager.getInstance(this).sendBroadcast(i);
                 }
