@@ -114,7 +114,8 @@ public class WizNavExtrasActivity extends ActivityForLoadingInBackground<Void, C
             // Generate the private key and upload the public key to the server
             AuthenticationManager am = new AuthenticationManager(this);
             if (!am.generatePrivateKey(member)) {
-                Utils.showToastOnUIThread(this, getString(R.string.failure_uploading_public_key));
+                Utils.showToastOnUIThread(this, getString(R.string.failure_uploading_public_key)); //We cannot continue if the upload of the Public Key doe not work
+                return null;
             }
 
             // Try to restore already joined chat rooms from server
