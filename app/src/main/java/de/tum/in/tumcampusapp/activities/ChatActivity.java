@@ -375,7 +375,6 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
     private void bindUIElements() {
         lvMessageHistory = (ListView) findViewById(R.id.lvMessageHistory);
         lvMessageHistory.setOnItemLongClickListener(this);
-        lvMessageHistory.setDividerHeight(0);
         lvMessageHistory.setOnScrollListener(this);
 
         // Add the button for loading more messages to list header
@@ -473,7 +472,7 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
     public void onClick(DialogInterface dialog, int which) {
 
         // Send request to the server to remove the user from this room
-        ChatVerification verification = null;
+        ChatVerification verification;
         try {
             verification = new ChatVerification(this, currentChatMember);
         } catch (NoPrivateKey noPrivateKey) {

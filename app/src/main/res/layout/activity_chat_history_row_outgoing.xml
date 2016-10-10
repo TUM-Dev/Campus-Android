@@ -1,14 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:paddingBottom="3dp"
-    android:paddingEnd="0dp"
-    android:paddingLeft="8dp"
-    android:paddingRight="0dp"
-    android:paddingStart="8dp"
-    android:paddingTop="3dp">
+    android:layout_height="wrap_content">
 
     <LinearLayout
         android:id="@+id/chatMessageLayout"
@@ -16,11 +11,15 @@
         android:layout_height="match_parent"
         android:layout_gravity="end"
         android:background="@drawable/bg_message_outgoing"
+        android:gravity="end"
         android:orientation="vertical"
         android:paddingBottom="5dp"
-        android:paddingLeft="18dp"
-        android:paddingRight="18dp"
-        android:paddingTop="5dp">
+        android:paddingEnd="12dp"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp"
+        android:paddingStart="12dp"
+        android:paddingTop="5dp"
+        tools:ignore="UselessParent">
 
         <TextView
             android:id="@+id/tvUser"
@@ -28,13 +27,13 @@
             android:layout_height="wrap_content"
             android:textColor="#7cbc49"
             android:textSize="12sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"/>
 
         <TextView
             android:id="@+id/tvMessage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="16sp" />
+            android:textSize="16sp"/>
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -47,24 +46,24 @@
                 android:layout_height="wrap_content"
                 android:paddingEnd="8dp"
                 android:paddingRight="8dp"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                tools:ignore="RtlSymmetry"/>
 
             <ProgressBar
                 android:id="@+id/progressBar"
                 style="?android:attr/progressBarStyleSmall"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="12sp"/>
 
             <ImageView
                 android:id="@+id/sentImage"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="12sp"
                 android:contentDescription="@string/status_sent"
                 android:src="@drawable/ic_done"
                 android:textSize="12sp"
-                android:visibility="gone" />
+                android:visibility="gone"/>
         </LinearLayout>
 
     </LinearLayout>
-
 </FrameLayout>
