@@ -18,6 +18,8 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 import static de.tum.in.tumcampusapp.auxiliary.Const.API_HOSTNAME;
+import static de.tum.in.tumcampusapp.models.managers.StudyRoomGroupManager.STUDYROOM_HOST;
+import static de.tum.in.tumcampusapp.models.managers.StudyRoomGroupManager.STUDYROOM_URL;
 
 public class Helper {
     private static final int HTTP_TIMEOUT = 25000;
@@ -34,6 +36,7 @@ public class Helper {
                 .add(API_HOSTNAME, "sha1/AC508zHZltt8Aa1ZpUg5C9tMNJ8=") //Technische Universitaet Muenchen
                 .add(API_HOSTNAME, "sha1/7+NhGLCLRZ1RDbncIhu3ksHeOok=") //DFN-Verein PCA Global
                 .add(API_HOSTNAME, "sha1/8GO6fJoWdEqc21TsI81nKY58SU0=") //Deutsche Telekom Root CA 2
+                .add(STUDYROOM_HOST, "sha1/8GO6fJoWdEqc21TsI81nKY58SU0=") //Add the DT Root for now
                 .build();
 
         //We want to persist our cookies through app session
