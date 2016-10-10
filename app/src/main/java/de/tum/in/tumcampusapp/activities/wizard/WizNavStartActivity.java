@@ -193,6 +193,7 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<String, 
         if (which == DialogInterface.BUTTON_POSITIVE) {
             AuthenticationManager am = new AuthenticationManager(this);
             am.clearKeys();
+            am.generatePrivateKey(null);
             startLoading(lrzId);
         } else if (which == DialogInterface.BUTTON_NEGATIVE) {
             onLoadFinished(true);
