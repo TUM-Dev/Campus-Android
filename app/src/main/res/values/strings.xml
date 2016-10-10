@@ -428,7 +428,7 @@ Signature: %5$s</string>
 
     <string name="add_widget">Add widget</string>
     <!-- Widget Mensa -->
-    <string name="mensa_widget">Mensa Widget TUM</string>
+    <string name="mensa_widget" translatable="false">Mensa Widget TUM</string>
     <string name="widget_configure_description">Configure the cards to show</string>
 
     <string name="update_notification_description">A new version of the Tum Campus App has been released on %s. Tap to download now.</string>
