@@ -171,7 +171,7 @@ public class AuthenticationManager {
      *
      * @param publicKey
      */
-    private void uploadKey(String publicKey, ChatMember member) {
+    private void uploadKey(String publicKey, final ChatMember member) {
         //If we already uploaded it we don't need to redo that
         if (Utils.getInternalSettingBool(mContext, Const.PUBLIC_KEY_UPLOADED, false)) {
             this.tryToUploadGcmToken();
@@ -189,10 +189,14 @@ public class AuthenticationManager {
                     Utils.log(s.getStatus());
                     Utils.log(response.getBody().toString());
 
-                    //Remember that we are done
-                    Utils.setInternalSetting(mContext, Const.PUBLIC_KEY_UPLOADED, true);
+                    //Remember that we are done, only if we have submitted with the member information
+                    if(s.getStatus() == "ok") {
+                        if (member != null) {
+                            Utils.setInternalSetting(mContext, Const.PUBLIC_KEY_UPLOADED, true);
+                        }
 
-                    AuthenticationManager.this.tryToUploadGcmToken();
+                        AuthenticationManager.this.tryToUploadGcmToken();
+                    }
                 }
 
                 @Override
@@ -248,9 +252,9 @@ public class AuthenticationManager {
     }
 
     /**
-     * Reset all keys generated - this should actually never happen
+     * Reset all keys generated - this should actually never happen other than when a token is reset
      */
-    private void clearKeys() {
+    public void clearKeys() {
         this.saveKeys("", "");
         Utils.setInternalSetting(mContext, Const.PUBLIC_KEY_UPLOADED, false);
     }

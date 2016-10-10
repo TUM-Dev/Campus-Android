@@ -1,6 +1,7 @@
 package de.tum.in.tumcampusapp.tumonline;
 
 import android.content.Context;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 
@@ -10,6 +11,7 @@ import com.google.common.net.UrlEscapers;
 import org.simpleframework.xml.core.Persister;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -269,6 +271,10 @@ public final class TUMOnlineRequest<T> {
      */
     public void setParameter(String name, String value) {
         parameters.put(name, UrlEscapers.urlPathSegmentEscaper().escape(value));
+    }
+
+    public void setParameterEncoded(String name, String value) {
+        parameters.put(name, Uri.encode(value));
     }
 
     public void setForce(boolean force) {

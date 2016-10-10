@@ -7,6 +7,7 @@ import java.security.SecureRandom;
 import java.util.Date;
 
 import de.tum.in.tumcampusapp.auxiliary.AuthenticationManager;
+import de.tum.in.tumcampusapp.auxiliary.calendar.IntegratedCalendarEvent;
 import de.tum.in.tumcampusapp.exceptions.NoPrivateKey;
 
 public class DeviceRegister {
@@ -16,7 +17,7 @@ public class DeviceRegister {
     private String rand;
     private String device;
     private String publicKey;
-    private String member = "";
+    private ChatMember member = null;
 
     public DeviceRegister(Context c, String publickey, ChatMember member) throws NoPrivateKey {
         //Create some data
@@ -24,12 +25,15 @@ public class DeviceRegister {
         this.rand = new BigInteger(130, new SecureRandom()).toString(32);
         this.device = AuthenticationManager.getDeviceID(c);
         this.publicKey = publickey;
-        if (member != null) {
-            this.member = member.getLrzId();
-        }
+
         //Sign this data for verification
         AuthenticationManager am = new AuthenticationManager(c);
-        this.signature = am.sign(date + rand + this.device + this.member);
+        if (member != null) {
+            this.member = member;
+            this.signature = am.sign(date + rand + this.device + this.member.getLrzId() + this.member.getId());
+        }else{
+            this.signature = am.sign(date + rand + this.device);
+        }
     }
 
 }

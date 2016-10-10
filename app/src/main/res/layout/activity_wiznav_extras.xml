@@ -47,7 +47,7 @@
                         style="?android:attr/listSeparatorTextViewStyle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/step_5"
+                        android:text="@string/step_3"
                         android:textColor="@color/text_light_gray" />
 
 

@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.ActivityForLoadingInBackground;
 import de.tum.in.tumcampusapp.auxiliary.AccessTokenManager;
+import de.tum.in.tumcampusapp.auxiliary.AuthenticationManager;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
@@ -190,6 +191,8 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<String, 
     @Override
     public void onClick(DialogInterface dialog, int which) {
         if (which == DialogInterface.BUTTON_POSITIVE) {
+            AuthenticationManager am = new AuthenticationManager(this);
+            am.clearKeys();
             startLoading(lrzId);
         } else if (which == DialogInterface.BUTTON_NEGATIVE) {
             onLoadFinished(true);
