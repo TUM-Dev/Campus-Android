@@ -18,7 +18,6 @@ import java.util.UUID;
 import de.tum.in.tumcampusapp.exceptions.NoPrivateKey;
 import de.tum.in.tumcampusapp.exceptions.NoPublicKey;
 import de.tum.in.tumcampusapp.models.ChatMember;
-import de.tum.in.tumcampusapp.models.ChatPublicKey;
 import de.tum.in.tumcampusapp.models.DeviceRegister;
 import de.tum.in.tumcampusapp.models.TUMCabeClient;
 import de.tum.in.tumcampusapp.models.TUMCabeStatus;
@@ -95,7 +94,7 @@ public class AuthenticationManager {
      * @return
      * @throws NoPublicKey
      */
-    private String getPublicKeyString() throws NoPublicKey {
+    public String getPublicKeyString() throws NoPublicKey {
         String key = Utils.getInternalSettingString(mContext, Const.PUBLIC_KEY, "");
         if (key.isEmpty()) {
             throw new NoPublicKey();
@@ -136,31 +135,13 @@ public class AuthenticationManager {
      * @return true if a private key is present
      */
     public boolean generatePrivateKey(ChatMember member) {
-        if (this.generatePrivateKey()) {
-            try {
-                TUMCabeClient.getInstance(mContext).uploadPublicKey(member.getId(), new ChatPublicKey(this.getPublicKeyString()));
-                return true;
-            } catch (NoPublicKey noPublicKey) {
-            } catch (RetrofitError e) {
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * Gets private key from preferences or generates one.
-     *
-     * @return true if a private key is present
-     */
-    public boolean generatePrivateKey() {
         // Try to retrieve private key
         try {
             //Try to get the private key
             this.getPrivateKeyString();
 
             //Reupload it in the case it was not yet transmitted to the server
-            this.uploadKey(this.getPublicKeyString());
+            this.uploadKey(this.getPublicKeyString(), member);
 
             // If we already have one don't create a new one
             return true;
@@ -180,7 +161,7 @@ public class AuthenticationManager {
         this.saveKeys(privateKeyString, publicKeyString);
 
         //New keys, need to re-upload
-        this.uploadKey(publicKeyString);
+        this.uploadKey(publicKeyString, member);
         return true;
     }
 
@@ -189,7 +170,7 @@ public class AuthenticationManager {
      *
      * @param publicKey
      */
-    private void uploadKey(String publicKey) {
+    private void uploadKey(String publicKey, final ChatMember member) {
         //If we already uploaded it we don't need to redo that
         if (Utils.getInternalSettingBool(mContext, Const.PUBLIC_KEY_UPLOADED, false)) {
             this.tryToUploadGcmToken();
@@ -197,7 +178,7 @@ public class AuthenticationManager {
         }
 
         try {
-            DeviceRegister dr = new DeviceRegister(mContext, publicKey);
+            DeviceRegister dr = new DeviceRegister(mContext, publicKey, member);
 
             // Upload public key to the server
             TUMCabeClient.getInstance(mContext).deviceRegister(dr, new Callback<TUMCabeStatus>() {
@@ -207,10 +188,14 @@ public class AuthenticationManager {
                     Utils.log(s.getStatus());
                     Utils.log(response.getBody().toString());
 
-                    //Remember that we are done
-                    Utils.setInternalSetting(mContext, Const.PUBLIC_KEY_UPLOADED, true);
+                    //Remember that we are done, only if we have submitted with the member information
+                    if (s.getStatus() == "ok") {
+                        if (member != null) {
+                            Utils.setInternalSetting(mContext, Const.PUBLIC_KEY_UPLOADED, true);
+                        }
 
-                    AuthenticationManager.this.tryToUploadGcmToken();
+                        AuthenticationManager.this.tryToUploadGcmToken();
+                    }
                 }
 
                 @Override
@@ -266,9 +251,9 @@ public class AuthenticationManager {
     }
 
     /**
-     * Reset all keys generated - this should actually never happen
+     * Reset all keys generated - this should actually never happen other than when a token is reset
      */
-    private void clearKeys() {
+    public void clearKeys() {
         this.saveKeys("", "");
         Utils.setInternalSetting(mContext, Const.PUBLIC_KEY_UPLOADED, false);
     }

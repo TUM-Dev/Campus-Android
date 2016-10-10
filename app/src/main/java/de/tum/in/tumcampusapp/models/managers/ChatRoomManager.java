@@ -3,6 +3,8 @@ package de.tum.in.tumcampusapp.models.managers;
 import android.content.Context;
 import android.database.Cursor;
 
+import com.google.common.base.Optional;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -16,7 +18,10 @@ import de.tum.in.tumcampusapp.models.ChatMember;
 import de.tum.in.tumcampusapp.models.ChatRoom;
 import de.tum.in.tumcampusapp.models.ChatVerification;
 import de.tum.in.tumcampusapp.models.LecturesSearchRow;
+import de.tum.in.tumcampusapp.models.LecturesSearchRowSet;
 import de.tum.in.tumcampusapp.models.TUMCabeClient;
+import de.tum.in.tumcampusapp.tumonline.TUMOnlineConst;
+import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequest;
 import retrofit.RetrofitError;
 
 /**
@@ -158,6 +163,14 @@ public class ChatRoomManager extends AbstractManager implements Card.ProvidesCar
         // Use this to make sure chat_message table exists
         new ChatMessageManager(context, 0);
 
+        // Get all of the users lectures and save them as possible chat rooms
+        TUMOnlineRequest<LecturesSearchRowSet> requestHandler = new TUMOnlineRequest<>(TUMOnlineConst.LECTURES_PERSONAL, context, true);
+        Optional<LecturesSearchRowSet> lecturesList = requestHandler.fetch();
+        if (lecturesList.isPresent() && lecturesList.get().getLehrveranstaltungen() != null) {
+            List<LecturesSearchRow> lectures = lecturesList.get().getLehrveranstaltungen();
+            manager.replaceInto(lectures);
+        }
+
         // Join all new chat rooms
         if (Utils.getSettingBool(context, Const.AUTO_JOIN_NEW_ROOMS, false)) {
             ArrayList<String> newRooms = manager.getNewUnjoined();
@@ -170,7 +183,7 @@ public class ChatRoomManager extends AbstractManager implements Card.ProvidesCar
                     manager.join(currentChatRoom);
                 } catch (RetrofitError e) {
                     Utils.log(e, " - error occured while creating the room!");
-                }  catch (NoPrivateKey noPrivateKey) {
+                } catch (NoPrivateKey noPrivateKey) {
                     return;
                 }
             }

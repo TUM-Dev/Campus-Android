@@ -166,10 +166,6 @@ public class TUMCabeClient {
         return service.getNewMessages(roomId, verification);
     }
 
-    public ChatPublicKey uploadPublicKey(int memberId, ChatPublicKey publicKey) {
-        return service.uploadPublicKey(memberId, publicKey);
-    }
-
     public List<ChatRoom> getMemberRooms(int memberId, ChatVerification verification) {
         return service.getMemberRooms(memberId, verification);
     }
@@ -277,9 +273,6 @@ public class TUMCabeClient {
 
         @GET(API_CHAT_MEMBERS + "{lrz_id}/")
         ChatMember getMember(@Path("lrz_id") String lrzId);
-
-        @POST(API_CHAT_MEMBERS + "{memberId}/pubkeys/")
-        ChatPublicKey uploadPublicKey(@Path("memberId") int memberId, @Body ChatPublicKey publicKey);
 
         @POST(API_CHAT_MEMBERS + "{memberId}/rooms/")
         List<ChatRoom> getMemberRooms(@Path("memberId") int memberId, @Body ChatVerification verification);

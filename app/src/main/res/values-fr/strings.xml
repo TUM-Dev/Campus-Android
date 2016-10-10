@@ -301,10 +301,9 @@
     <string name="news_sources">Les sources d’information</string>
     <string name="only_latest_article">Seulement le dernier article</string>
     <string name="only_latest_article_summary">Montre que le dernier article. Sinon, tous les articles des sources sélectionnées sont affichées.</string>
-    <string name="lecture_chat">Conférence de chat</string>
+    <string name="lecture_chat">Conférence de chat &amp; Accepter les conditions</string>
     <string name="set_lecture_chat">Activer ou désactiver <i>Conférence de chat</i>. Si elle est activée, vous serez en mesure de rejoindre les chambres conférence de discussion, où tu et tes collèges pouvez discuter.</string>
     <string name="open_chat_terms">Modalités de chat</string>
-    <string name="accept_chat_terms">Accepter les conditions de chat</string>
     <string name="have_to_accept_terms">Les termes doivent être acceptées pour utiliser le chat en groupe!</string>
     <string name="activate_key">S’il vous plaît activer votre clé publique première</string>
     <string name="joined_chat_room">Tu as rejoint la salle de chat!</string>
@@ -394,4 +393,7 @@
     <string name="welcome_faculty">Pour offrir la meilleure expérience possible s\'il vous plaît nous fournir votre meilleure faculté d\'adaptation:</string>
     <string name="event_plan">Plan de l\'événement</string>
     <string name="choose_own_faculty">S\'il vous plaît choisir votre faculté</string>
+    <string name="add_widget">Ajouter un widget</string>
+    <string name="mensa_widget">Mensa Widget TUM</string>
+    <string name="widget_configure_description">Configurez les cartes pour montrer</string>
 </resources>

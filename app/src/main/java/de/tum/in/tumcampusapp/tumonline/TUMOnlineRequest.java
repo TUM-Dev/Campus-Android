@@ -1,6 +1,7 @@
 package de.tum.in.tumcampusapp.tumonline;
 
 import android.content.Context;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 
@@ -269,6 +270,10 @@ public final class TUMOnlineRequest<T> {
      */
     public void setParameter(String name, String value) {
         parameters.put(name, UrlEscapers.urlPathSegmentEscaper().escape(value));
+    }
+
+    public void setParameterEncoded(String name, String value) {
+        parameters.put(name, Uri.encode(value));
     }
 
     public void setForce(boolean force) {

@@ -380,10 +380,9 @@
     <string name="news_sources">News sources</string>
     <string name="only_latest_article">Only latest article</string>
     <string name="only_latest_article_summary">Shows only the latest article. Otherwise all articles of the selected sources are shown.</string>
-    <string name="lecture_chat">Lecture chat</string>
+    <string name="lecture_chat">Lecture chat &amp; Accept terms</string>
     <string name="set_lecture_chat">Activate or deactivate <i>Lecture chat</i>. If activated, you will be able to join lecture chat rooms, where you and your colleges can discuss.</string>
     <string name="open_chat_terms">Chat terms</string>
-    <string name="accept_chat_terms">Accept chat terms</string>
     <string name="have_to_accept_terms">Terms must be accepted to use group chat!</string>
     <string name="activate_key">Please activate your public key first</string>
     <string name="joined_chat_room">You joined the chat room!</string>

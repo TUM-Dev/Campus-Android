@@ -60,15 +60,14 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
 
     @Override
     public void onCreatePreferences(Bundle bundle, String rootKey) {
-        String rootKey1 = rootKey;
         // Open a card's preference screen if selected from it's context menu
         if (bundle != null && bundle.containsKey(Const.PREFERENCE_SCREEN)) {
-            rootKey1 = bundle.getString(Const.PREFERENCE_SCREEN);
+            rootKey = bundle.getString(Const.PREFERENCE_SCREEN);
         }
 
-        Utils.log("Opening settings: " + rootKey1);
+        Utils.log("Opening settings: " + rootKey);
         //Load the correct preference category
-        setPreferencesFromResource(R.xml.settings, rootKey1);
+        setPreferencesFromResource(R.xml.settings, rootKey);
         mContext = getActivity();
 
         // Disables silence service if the app is used without TUMOnline access
@@ -78,7 +77,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
         }
 
         //Only do these things if we are in the root of the preferences
-        if (rootKey1 == null) {
+        if (rootKey == null) {
             // Click listener for preference list entries. Used to simulate a button
             // (since it is not possible to add a button to the preferences screen)
             findPreference(BUTTON_WIZARD).setOnPreferenceClickListener(this);

@@ -7,7 +7,9 @@ import android.os.Build;
 import com.google.common.base.Optional;
 
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.exceptions.NoPublicKey;
 import de.tum.in.tumcampusapp.models.AccessToken;
+import de.tum.in.tumcampusapp.models.TokenConfirmation;
 import de.tum.in.tumcampusapp.tumonline.TUMOException;
 import de.tum.in.tumcampusapp.tumonline.TUMOnlineConst;
 import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequest;
@@ -17,7 +19,6 @@ import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequest;
  */
 public class AccessTokenManager {
     public static final int MIN_LRZ_LENGTH = 7;
-
     private final Context context;
 
     public AccessTokenManager(Context context) {
@@ -34,24 +35,30 @@ public class AccessTokenManager {
      * @return the access token
      */
     String generateAccessToken(String lrzId) throws TUMOException {
-        // we don't have an access token yet, though we take the constructor
-        // with only one parameter to set the method
+        // we don't have an access token yet, though we take the constructor with only one parameter to set the method
         TUMOnlineRequest<AccessToken> request = new TUMOnlineRequest<>(TUMOnlineConst.REQUEST_TOKEN, context, false);
-
-        // add lrzId to parameters
-        request.setParameter("pUsername", lrzId);
-
-        // add readable name for TUMOnline
-        request.setParameter("pTokenName", "TUMCampusApp-" + Build.PRODUCT);
+        request.setParameter("pUsername", lrzId); // add lrzId to parameters
+        request.setParameter("pTokenName", "TUMCampusApp-" + Build.PRODUCT); // add readable name for TUMOnline
 
         // fetch the xml response of requestToken
         Optional<AccessToken> token = request.fetch();
-
-        //Try to get the token
-        if (token.isPresent()) {
-            return token.get().getToken();
+        if (!token.isPresent()) {
+            throw new TUMOException(request.getLastError());
         }
-        throw new TUMOException(request.getLastError());
+
+        //Upload the Private key to the tumo server: we don't need an activated token for that. We want this to happen immediately so that no one else can upload this secret.
+        AuthenticationManager am = new AuthenticationManager(context);
+        try {
+            String publicKey = am.getPublicKeyString();
+            TUMOnlineRequest<TokenConfirmation> requestSavePublicKey = new TUMOnlineRequest<>(TUMOnlineConst.SECRET_UPLOAD, context, false);
+            requestSavePublicKey.setParameter("pToken", token.get().getToken());
+            requestSavePublicKey.setParameterEncoded("pSecret", publicKey);
+            requestSavePublicKey.fetch();
+        } catch (NoPublicKey noPublicKey) {
+            noPublicKey.printStackTrace();
+        }
+
+        return token.get().getToken();
     }
 
     /**
@@ -79,7 +86,7 @@ public class AccessTokenManager {
                 return false;
             }
             // ok, do the request now
-            String strAccessToken = generateAccessToken(lrzId);
+            String strAccessToken = this.generateAccessToken(lrzId);
             Utils.log("AcquiredAccessToken = " + strAccessToken);
 
             // save access token to preferences

@@ -32,7 +32,9 @@ public final class TUMOnlineConst<T> {
     public static final TUMOnlineConst<ExamList> EXAMS = new TUMOnlineConst<>("noten", CacheManager.VALIDITY_TEN_DAYS, ExamList.class);
     public static final TUMOnlineConst<TokenConfirmation> TOKEN_CONFIRMED = new TUMOnlineConst<>("isTokenConfirmed", CacheManager.VALIDITY_DO_NOT_CACHE, TokenConfirmation.class);
     public static final TUMOnlineConst<AccessToken> REQUEST_TOKEN = new TUMOnlineConst<>("requestToken", CacheManager.VALIDITY_DO_NOT_CACHE, AccessToken.class);
+
     public static final TUMOnlineConst<IdentitySet> IDENTITY = new TUMOnlineConst<>("id", CacheManager.VALIDITY_DO_NOT_CACHE, IdentitySet.class);
+    public static final TUMOnlineConst<TokenConfirmation> SECRET_UPLOAD = new TUMOnlineConst<>("secretUpload", CacheManager.VALIDITY_DO_NOT_CACHE, TokenConfirmation.class);
 
     private final String webservice;
     private final int validity;

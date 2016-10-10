@@ -1,10 +1,7 @@
 package de.tum.in.tumcampusapp.models;
 
 
-import android.text.TextUtils;
-
 import java.util.ArrayList;
-import java.util.Date;
 
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 
