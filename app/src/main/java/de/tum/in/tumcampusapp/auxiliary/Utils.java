@@ -187,7 +187,7 @@ public final class Utils {
      *
      * @param e Exception (source for message and stack trace)
      */
-    public static void log(Exception e) {
+    public static void log(Throwable e) {
         StringWriter sw = new StringWriter();
         e.printStackTrace(new PrintWriter(sw));
         String s = Thread.currentThread().getStackTrace()[3].getClassName().replaceAll(LOGGING_REGEX, "");
@@ -203,7 +203,7 @@ public final class Utils {
      * @param e       Exception (source for message and stack trace)
      * @param message Additional information for exception message
      */
-    public static void log(Exception e, String message) {
+    public static void log(Throwable e, String message) {
         StringWriter sw = new StringWriter();
         e.printStackTrace(new PrintWriter(sw));
         String s = Thread.currentThread().getStackTrace()[3].getClassName().replaceAll(LOGGING_REGEX, "");

@@ -9,11 +9,13 @@ import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.CheckBox;
 
+import java.io.IOException;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.StartupActivity;
 import de.tum.in.tumcampusapp.activities.generic.ActivityForLoadingInBackground;
+import de.tum.in.tumcampusapp.api.TUMCabeClient;
 import de.tum.in.tumcampusapp.auxiliary.AccessTokenManager;
 import de.tum.in.tumcampusapp.auxiliary.AuthenticationManager;
 import de.tum.in.tumcampusapp.auxiliary.Const;
@@ -23,9 +25,7 @@ import de.tum.in.tumcampusapp.exceptions.NoPrivateKey;
 import de.tum.in.tumcampusapp.models.ChatMember;
 import de.tum.in.tumcampusapp.models.ChatRoom;
 import de.tum.in.tumcampusapp.models.ChatVerification;
-import de.tum.in.tumcampusapp.models.TUMCabeClient;
 import de.tum.in.tumcampusapp.models.managers.ChatRoomManager;
-import retrofit.RetrofitError;
 
 public class WizNavExtrasActivity extends ActivityForLoadingInBackground<Void, ChatMember> {
 
@@ -99,7 +99,7 @@ public class WizNavExtrasActivity extends ActivityForLoadingInBackground<Void, C
             try {
                 // After the user has entered their display name, send a request to the server to create the new member
                 member = TUMCabeClient.getInstance(this).createMember(currentChatMember);
-            } catch (RetrofitError e) {
+            } catch (IOException e) {
                 Utils.log(e);
                 Utils.showToastOnUIThread(this, R.string.error_setup_chat_member);
                 return null;
@@ -127,7 +127,7 @@ public class WizNavExtrasActivity extends ActivityForLoadingInBackground<Void, C
                 Utils.setInternalSetting(this, Const.PRIVATE_KEY_ACTIVE, true);
 
                 return member;
-            } catch (RetrofitError e) {
+            } catch (IOException e) {
                 Utils.log(e);
             } catch (NoPrivateKey e) {
                 Utils.log(e);

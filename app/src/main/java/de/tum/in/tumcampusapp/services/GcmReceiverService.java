@@ -23,8 +23,10 @@ import android.os.Bundle;
 
 import com.google.android.gms.gcm.GcmListenerService;
 
+import java.io.IOException;
+
 import de.tum.in.tumcampusapp.auxiliary.Utils;
-import de.tum.in.tumcampusapp.models.TUMCabeClient;
+import de.tum.in.tumcampusapp.api.TUMCabeClient;
 import de.tum.in.tumcampusapp.notifications.Alarm;
 import de.tum.in.tumcampusapp.notifications.Chat;
 import de.tum.in.tumcampusapp.notifications.GenericNotification;
@@ -76,7 +78,11 @@ public class GcmReceiverService extends GcmListenerService {
             //switch on the type as both the type and payload must be present
             switch (type) { //https://github.com/TCA-Team/TumCampusApp/wiki/GCM-Message-format
                 case 0: //Nothing to do, just confirm the retrieved notification
-                    TUMCabeClient.getInstance(this).confirm(notification);
+                    try {
+                        TUMCabeClient.getInstance(this).confirm(notification);
+                    } catch (IOException e) {
+                        Utils.log(e);
+                    }
                     break;
                 case 1: //Chat
                     n = new Chat(extras.getString(PAYLOAD), this, notification);
@@ -94,7 +100,11 @@ public class GcmReceiverService extends GcmListenerService {
                 this.postNotification(n);
 
                 //Send confirmation if type requires it
-                n.sendConfirmation();
+                try {
+                    n.sendConfirmation();
+                } catch (IOException e) {
+                    Utils.log(e);
+                }
 
                 //de.tum.in.tumcampusapp.models.managers.NotificationManager man = new de.tum.in.tumcampusapp.models.managers.NotificationManager(this);
                 //@todo save to our notificationmanager

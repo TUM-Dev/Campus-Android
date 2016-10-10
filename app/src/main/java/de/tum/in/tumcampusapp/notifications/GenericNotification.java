@@ -2,9 +2,11 @@ package de.tum.in.tumcampusapp.notifications;
 
 import android.content.Context;
 
+import java.io.IOException;
+
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
-import de.tum.in.tumcampusapp.models.TUMCabeClient;
+import de.tum.in.tumcampusapp.api.TUMCabeClient;
 
 public abstract class GenericNotification {
 
@@ -22,7 +24,7 @@ public abstract class GenericNotification {
         this.type=type;
     }
 
-    public void sendConfirmation() {
+    public void sendConfirmation() throws IOException {
         //Legacy support: notification id is -1 when old gcm messages arrive
         if (!this.confirmation || this.notification == -1) {
             return;

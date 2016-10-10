@@ -15,16 +15,16 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.UUID;
 
+import de.tum.in.tumcampusapp.api.TUMCabeClient;
 import de.tum.in.tumcampusapp.exceptions.NoPrivateKey;
 import de.tum.in.tumcampusapp.exceptions.NoPublicKey;
 import de.tum.in.tumcampusapp.models.ChatMember;
 import de.tum.in.tumcampusapp.models.DeviceRegister;
-import de.tum.in.tumcampusapp.models.TUMCabeClient;
 import de.tum.in.tumcampusapp.models.TUMCabeStatus;
 import de.tum.in.tumcampusapp.services.GcmIdentificationService;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * This provides methods to authenticate this app installation with the tumcabe server and other instances requiring a pki
@@ -184,12 +184,11 @@ public class AuthenticationManager {
             TUMCabeClient.getInstance(mContext).deviceRegister(dr, new Callback<TUMCabeStatus>() {
 
                 @Override
-                public void success(TUMCabeStatus s, Response response) {
-                    Utils.log(s.getStatus());
-                    Utils.log(response.getBody().toString());
+                public void onResponse(Call<TUMCabeStatus> call, Response<TUMCabeStatus> response) {
+                    Utils.log(response.body().getStatus());
 
                     //Remember that we are done, only if we have submitted with the member information
-                    if (s.getStatus() == "ok") {
+                    if (response.body().getStatus() == "ok") {
                         if (member != null) {
                             Utils.setInternalSetting(mContext, Const.PUBLIC_KEY_UPLOADED, true);
                         }
@@ -199,13 +198,11 @@ public class AuthenticationManager {
                 }
 
                 @Override
-                public void failure(RetrofitError error) {
+                public void onFailure(Call<TUMCabeStatus> call, Throwable t) {
+                    Utils.log(t, "Failure uploading public key");
                     Utils.setInternalSetting(mContext, Const.PUBLIC_KEY_UPLOADED, false);
                 }
             });
-        } catch (RetrofitError e) {
-            Utils.log(e, "Failure uploading public key");
-            Utils.setInternalSetting(mContext, Const.PUBLIC_KEY_UPLOADED, false);
         } catch (NoPrivateKey noPrivateKey) {
             this.clearKeys();
         }

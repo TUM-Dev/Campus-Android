@@ -5,10 +5,12 @@ import android.database.Cursor;
 
 import com.google.common.base.Optional;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+import de.tum.in.tumcampusapp.api.TUMCabeClient;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.cards.ChatMessagesCard;
@@ -19,10 +21,8 @@ import de.tum.in.tumcampusapp.models.ChatRoom;
 import de.tum.in.tumcampusapp.models.ChatVerification;
 import de.tum.in.tumcampusapp.models.LecturesSearchRow;
 import de.tum.in.tumcampusapp.models.LecturesSearchRowSet;
-import de.tum.in.tumcampusapp.models.TUMCabeClient;
 import de.tum.in.tumcampusapp.tumonline.TUMOnlineConst;
 import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequest;
-import retrofit.RetrofitError;
 
 /**
  * TUMOnline cache manager, allows caching of TUMOnline requests
@@ -181,7 +181,7 @@ public class ChatRoomManager extends AbstractManager implements Card.ProvidesCar
                     ChatRoom currentChatRoom = new ChatRoom(roomId);
                     currentChatRoom = TUMCabeClient.getInstance(context).createRoom(currentChatRoom, new ChatVerification(context, currentChatMember));
                     manager.join(currentChatRoom);
-                } catch (RetrofitError e) {
+                } catch (IOException e) {
                     Utils.log(e, " - error occured while creating the room!");
                 } catch (NoPrivateKey noPrivateKey) {
                     return;

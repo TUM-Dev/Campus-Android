@@ -5,15 +5,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
+import de.tum.in.tumcampusapp.api.TUMCabeClient;
 import de.tum.in.tumcampusapp.auxiliary.AuthenticationManager;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.exceptions.NoPrivateKey;
 import de.tum.in.tumcampusapp.models.ChatMessage;
-import de.tum.in.tumcampusapp.models.TUMCabeClient;
 import de.tum.in.tumcampusapp.models.managers.ChatMessageManager;
-import retrofit.RetrofitError;
 
 /**
  * Service used to silence the mobile during lectures
@@ -77,11 +77,11 @@ public class SendMessageService extends IntentService {
 
                 //Exit the loop
                 return;
-            } catch (RetrofitError e) {
-                Utils.log(e);
-                numberOfAttempts++;
             } catch (NoPrivateKey noPrivateKey) {
                 return; //Nothing can be done, just exit
+            } catch (IOException e) {
+                Utils.log(e);
+                numberOfAttempts++;
             }
 
             //Sleep for five seconds, maybe the server is currently really busy

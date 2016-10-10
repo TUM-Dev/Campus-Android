@@ -12,7 +12,7 @@ import java.util.Map;
 import de.tum.in.tumcampusapp.cards.NewsCard;
 import de.tum.in.tumcampusapp.cards.generic.Card;
 import de.tum.in.tumcampusapp.models.Statistics;
-import de.tum.in.tumcampusapp.models.TUMCabeClient;
+import de.tum.in.tumcampusapp.api.TUMCabeClient;
 
 /**
  * Counts the usage of a specific activity

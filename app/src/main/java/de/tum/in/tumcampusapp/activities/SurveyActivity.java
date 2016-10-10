@@ -46,14 +46,14 @@ import java.util.Locale;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.ProgressActivity;
+import de.tum.in.tumcampusapp.api.TUMCabeClient;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.Question;
-import de.tum.in.tumcampusapp.models.TUMCabeClient;
 import de.tum.in.tumcampusapp.models.managers.SurveyManager;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * SurveyActivity for handling submitting ownQuesitons and reviewing responses
@@ -443,13 +443,13 @@ public class SurveyActivity extends ProgressActivity {
                                 // Submit Question to the server
                                 TUMCabeClient.getInstance(getApplicationContext()).createQuestion(ques, new Callback<Question>() {
                                     @Override
-                                    public void success(Question question, Response response) {
+                                    public void onResponse(Call<Question> call, Response<Question> response) {
                                         Snackbar.make(findViewById(R.id.drawer_layout), getResources().getString(R.string.survey_submitted), Snackbar.LENGTH_LONG).show();
                                     }
 
                                     @Override
-                                    public void failure(RetrofitError error) {
-                                        Utils.log("Failure: " + error.toString());
+                                    public void onFailure(Call<Question> call, Throwable t) {
+                                        Utils.log(t);
                                     }
                                 });
                             }
