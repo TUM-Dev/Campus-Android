@@ -29,10 +29,8 @@ import java.io.File;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.activities.wizard.WizNavChatActivity;
 import de.tum.in.tumcampusapp.activities.wizard.WizNavExtrasActivity;
 import de.tum.in.tumcampusapp.activities.wizard.WizNavStartActivity;
-import de.tum.in.tumcampusapp.auxiliary.AccessTokenManager;
 import de.tum.in.tumcampusapp.auxiliary.AuthenticationManager;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.FileUtils;
@@ -64,7 +62,7 @@ public class StartupActivity extends AppCompatActivity {
 
         //Check that we have a private key setup in order to authenticate this device
         AuthenticationManager am = new AuthenticationManager(this);
-        am.generatePrivateKey();
+        am.generatePrivateKey(null);
 
         //Upload stats
         ImplicitCounter.count(this);
@@ -94,14 +92,8 @@ public class StartupActivity extends AppCompatActivity {
             Utils.setSetting(this, Const.BACKGROUND_MODE, true);
             Utils.setSetting(this, CardManager.SHOW_SUPPORT, true);
 
-            Intent intent;
-            if (new AccessTokenManager(this).hasValidAccessToken()) {
-                intent = new Intent(this, WizNavChatActivity.class);
-            } else {
-                intent = new Intent(this, WizNavExtrasActivity.class);
-            }
+            Intent intent = new Intent(this, WizNavExtrasActivity.class);
             intent.putExtra(Const.TOKEN_IS_SETUP, true);
-
             startActivity(intent);
             finish();
             return;

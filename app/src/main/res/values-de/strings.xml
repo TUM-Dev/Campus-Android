@@ -27,20 +27,30 @@
     <string name="search_rooms">Suche nach Räumen</string>
 
     <!-- Auxiliary -->
-    <string name="error_fetching_tumonline">Fehler beim Zugriff auf TUMOnline.\nBitte stelle sicher, dass das TUMOnline-Access-Token \nakzeptiert und die entsprechenden Rechte aktiviert wurden.\n\n<b>Klicke hier zum Wiederholen.</b></string>
-    <string name="error_no_token_setup">Kein TUMOnline-Access-Token gefunden.\nBitte erzeuge ein TUMOnline-Access-Token in den\n <i>Einstellungen</i>, um TUMOnline Dienste nutzen zu können.\n\n<b>Klicke hier, um zu den <i>Einstellungen</i> zu gelangen.</b></string>
+    <string name="error_fetching_tumonline">Fehler beim Zugriff auf TUMonline.\nBitte stelle sicher, dass das TUMonline-Access-Token \nakzeptiert und die entsprechenden Rechte aktiviert wurden.\n\n<b>Klicke hier zum Wiederholen.</b></string>
+    <string name="error_no_token_setup">Kein TUMonline-Access-Token gefunden.\nBitte erzeuge ein TUMonline-Access-Token in den\n <i>Einstellungen</i>, um TUMonline Dienste nutzen zu können.\n\n<b>Klicke hier, um zu den <i>Einstellungen</i> zu gelangen.</b></string>
     <string name="error_something_wrong">Entschuldigung, irgendetwas ist schief gegangen.</string>
     <string name="click_to_try_again"><b>Klicke hier zum Wiederholen.</b></string>
-    <string name="dialog_new_token">Dein TUMOnline-Access-Token ist bereits gesetzt.\n\nKlicke auf <i>Ja</i> um ein neues zu generieren.\nDabei wird dein altes Token unbrauchbar.</string>
-    <string name="error_lrz_wrong">Deine LRZ Kennung ist ungültig</string>
-    <string name="access_token_wasnt_generated">TUMOnline-Access-Token konnte nicht erzeugt werden</string>
-    <string name="dialog_access_token_invalid">TUMOnline-Access-Token nicht aktiviert</string>
+    <string name="dialog_new_token">Dein TUMonline-Access-Token ist bereits gesetzt.\n\nKlicke auf <i>Ja</i> um ein neues zu generieren.\nDabei wird dein altes Token unbrauchbar.</string>
+    <string name="error_lrz_wrong">Deine TUM Kennung ist ungültig</string>
+    <string name="access_token_wasnt_generated">TUMonline-Access-Token konnte nicht erzeugt werden</string>
+    <string name="dialog_access_token_invalid">TUMonline-Access-Token nicht aktiviert</string>
     <string name="dialog_no_rights_function">Keine Rechte für diese Funktion</string>
     <string name="empty_result">Die Anfrage lieferte ein fehlerhaftes Ergebnis</string>
+
+    <!-- Exam/Grades -->
+    <string name="average_grade">Durchschnittsnote</string>
+    <string name="show_column_chart">Zeige als Balkendiagramm</string>
+    <string name="show_pie_chart">Zeige als Tortendiagramm</string>
+    <string name="result_extra">Ergebnis:&#160;</string>
+    <string name="semester">Semester</string>
+    <string name="examiner">Prüfer</string>
+    <string name="mode">Modus</string>
+    <string name="all_programs">Alle Programme</string>
     <string name="date">Datum</string>
 
     <!-- Preferences -->
-    <string name="lrz_id">LRZ Kennung</string>
+    <string name="lrz_id">TUM Kennung</string>
 
     <string name="role">Rolle</string>
     <string name="role_summary">Deine Rolle an der TUM. Entweder Student, Mitarbeiter oder Gast.</string>
@@ -53,7 +63,7 @@
 
     <string name="extras">Extras</string>
     <string name="open_wizard">Öffne Startup-Wizard</string>
-    <string name="open_wizard_detail">Der Startup-Wizard hilft dir, grundlegende Einstellungen für den Zugriff auf TUMOnline Dienste einzurichten und das Farbschema der App festzulegen.</string>
+    <string name="open_wizard_detail">Der Startup-Wizard hilft dir, grundlegende Einstellungen für den Zugriff auf TUMonline Dienste einzurichten und das Farbschema der App festzulegen.</string>
     <string name="clear_cache">Lösche Daten</string>
     <string name="clear_cache_detail">Löscht alle durch die TUM Campus App heruntergeladenen, auf der SD-Karte gespeicherten Daten.</string>
     <string name="delete_chache_sure">Alle Daten wirklich löschen?</string>
@@ -62,9 +72,9 @@
     <string name="services">Dienste</string>
     <string name="silence_phone">Lautlos Service</string>
     <string name="silence_phone_info">Das Gerät wird während einer Vorlesung automatisch in den lautlosen Modus gestellt.</string>
-    <string name="background_mode">Hintergrund Modus (Empfohlen)</string>
+    <string name="background_mode">Hintergrundmodus (empfohlen)</string>
     <string name="background_info">Aktualisiert die Inhalte der App einmal täglich, um dich auf dem neusten Stand zu halten, sogar wenn die App nicht geöffnet ist.</string>
-    <string name="mode_background_mode">Aktivierung des Hintergrund Modus</string>
+    <string name="mode_background_mode">Aktivierung des Hintergrundmodus</string>
     <string name="always">Immer</string>
     <string name="wifi_only">Nur bei WLAN-Verbindung</string>
     <string name="demo_mode">In-App-Tutorial</string>
@@ -77,19 +87,19 @@
     <string name="licences_summary">Rechtliche Hinweise zu Lizenzen</string>
 
     <!-- Startup Wizard -->
-    <string name="token_not_enabled">TUMOnline-Access-Token ist nicht aktiviert</string>
+    <string name="token_not_enabled">TUMonline-Access-Token ist nicht aktiviert</string>
     <string name="startup_wizard_uppercase">STARTUP-WIZARD</string>
-    <string name="welcome_msg"><b>Willkommen zur TUM Campus App!</b>\n\nUm den Zugriff auf TUMOnline Dienste zu ermöglichen, wird deine <b>LRZ Kennung</b> benötigt.\n\nDiese Kennung hat das folgende Format:\n<i>xx00xxx</i>\n(2 Buchstaben, 2 Ziffern, 3 Buchstaben)</string>
+    <string name="welcome_msg"><b>Willkommen zur TUM Campus App!</b>\n\nUm den Zugriff auf TUMonline Dienste zu ermöglichen, wird deine <b>TUM Kennung</b> benötigt.\n\nDiese Kennung hat das folgende Format:\n<i>xx00xxx</i>\n(2 Buchstaben, 2 Ziffern, 3 Buchstaben)</string>
     <string name="button_skip">Überspringen</string>
     <string name="button_next">Weiter</string>
-    <string name="need_to_enable"><b>Das TUMOnline-Access-Token wurde erfolgreich erzeugt</b>\n\nDu kannst das Token nun in TUMOnline unter <i>Dienste/Token-Verwaltung</i> aktivieren. Beachte, dass du ebenfalls die Rechte zum Zugriff auf einzelne Dienste unter <i>Aktive Rechte</i> aktivieren musst.</string>
+    <string name="need_to_enable"><b>Das TUMonline-Access-Token wurde erfolgreich erzeugt</b>\n\nDu kannst das Token nun in TUMonline unter <i>Dienste/Token-Verwaltung</i> aktivieren. Beachte, dass du ebenfalls die Rechte zum Zugriff auf einzelne Dienste unter <i>Aktive Rechte</i> aktivieren musst.</string>
     <string name="step_1">Schritt 1</string>
     <string name="step_2">Schritt 2</string>
     <string name="step_3">Schritt 3</string>
     <string name="step_4">Schritt 4</string>
     <string name="step_5">Schritt 5</string>
     <string name="set_silent_mode">Aktiviere oder deaktiviere den <i>Lautlos Service</i>. Bei Aktivierung wird sich das Gerät bei einer aktuell stattfindenden Vorlesung lautlos schalten.</string>
-    <string name="set_background_mode">Aktiviere oder deaktiviere den <i>Hintergrund Modus</i>. Bei Aktivierung werden einmal am Tag im Hintergrund alle Inhalte heruntergeladen, um deine TUM Campus App auf den neusten Stand zu halten.</string>
+    <string name="set_background_mode">Aktiviere oder deaktiviere den <i>Hintergrundmodus</i>. Bei Aktivierung werden einmal am Tag im Hintergrund alle Inhalte heruntergeladen, um deine TUM Campus App auf den neusten Stand zu halten.</string>
     <string name="goto_tumcampus">Starte TUM Campus App</string>
 
     <!-- News -->
@@ -253,8 +263,8 @@
     <!-- END Translated, please do not change identifiers -->
 
     <string name="min_search_len">Text muss mindestens %d Zeichen lang sein</string>
-    <string name="default_cafeteria">Standard Mensa</string>
-    <string name="default_station">Standard Haltestelle</string>
+    <string name="default_cafeteria">Standardmensa</string>
+    <string name="default_station">Standardhaltestelle</string>
     <string name="campus_klinikum_großhadern">Klinikum Großhadern</string>
     <string name="cafeteria">Mensa</string>
     <string name="card_cafeteria_summary">Zeigt den Mensa-Speiseplan an</string>
@@ -286,7 +296,7 @@
     <a href="https://www.tum.de/index.php?id=1821&amp;tx_ttnews%5Btt_news%5D=31688">Mehr Infos</a></string>
     <string name="enable_pin_lock">PIN-Sperre aktivieren</string>
     <string name="data_backup">Daten-Backup</string>
-    <string name="data_backup_desc">Aus Sicherheitsgründen muss das Daten-Backup deaktiviert werden, damit die LRZ-Zugangsdaten nicht unverschlüsselt auf den Google Servern gespeichert werden.
+    <string name="data_backup_desc">Aus Sicherheitsgründen muss das Daten-Backup deaktiviert werden, damit die TUM-Zugangsdaten nicht unverschlüsselt auf den Google Servern gespeichert werden.
         Dazu unter ‘Sichern &amp; zurücksetzen’ > ‘Meine Daten sichern’ deaktivieren.
     <a href="https://www.tum.de/nc/en/print/studies/studinews/issue-052013/show/article/31130//neste/1/">Mehr Infos</a></string>
     <string name="disable_data_backup">Daten-Backup deaktivieren</string>
@@ -306,10 +316,9 @@
     <string name="news_sources">News Quellen</string>
     <string name="only_latest_article">Nur neusten Artikel</string>
     <string name="only_latest_article_summary">Zeigt jeweils nur den neusten Artikel. Ansonsten werden alle Artikel der ausgewählten Quellen angezeigt.</string>
-    <string name="lecture_chat">Vorlesungs-Chat</string>
+    <string name="lecture_chat">Vorlesungs-Chat &amp; Bedingungen akzeptieren</string>
     <string name="set_lecture_chat">Aktiviere oder deaktiviere <i>Vorlesungs-Chat</i>. Wenn es aktiviert ist kannst du Vorlesungs-Chatrooms beitreten und mit deinen Komilitonen diskutieren.</string>
     <string name="open_chat_terms">Chatbedingungen</string>
-    <string name="accept_chat_terms">Chatbedingungen akzeptieren</string>
     <string name="have_to_accept_terms">Chatbedingungen müssen akzeptiert werden, damit du den Vorlesungs-Chat verwenden kannst!</string>
     <string name="activate_key">Bitte aktiviere zuerst deinen Public Key</string>
     <string name="joined_chat_room">Du bist dem Chatroom beigetreten!</string>
@@ -320,7 +329,7 @@
     <string name="room_timetable">Belegungsplan</string>
     <string name="newspread_summary">Wähle aus welches newspread angezeigt werden soll. Das sind die Folien die auf den Info Monitoren in deiner Fakultät angezeigt werden.</string>
     <string name="tuition_fee_more">Informationen zu Beiträgen und Befreiungen, Darlehen, BAföG oder Stipendien finden Sie unter: <a href="https://www.tum.de/studium/studienfinanzierung/">Studienfinanzierung</a></string>
-    <string name="no_rights_to_access_id">Identität konnte nicht abgefragt werden. Bitte überprüfe die Rechte deines TUMOnline Tokens!</string>
+    <string name="no_rights_to_access_id">Identität konnte nicht abgefragt werden. Bitte überprüfe die Rechte deines TUMonline Tokens!</string>
     <string name="vibration">Vibration</string>
     <string name="silent">Leise</string>
     <string name="mode_silent_mode">Modus während Vorlesung</string>
@@ -339,12 +348,12 @@ Signatur: %5$s</string>
     <string name="status_sending_failed">Senden fehlgeschlagen</string>
     <string name="joined">Meine</string>
     <string name="not_joined">Weitere</string>
-    <string name="default_campus">Standard Campus</string>
-    <string name="no_default_campus">Kein Standard Campus</string>
+    <string name="default_campus">Standardcampus</string>
+    <string name="no_default_campus">Kein Standardcampus</string>
     <string name="public_key_mail">Public Key Aktivierungs-E-Mail wurde an %s@mytum.de gesendet!\n\n<b>Bitte aktiviere ihn jetzt!</b></string>
     <string name="failure_uploading_public_key">Fehler beim Hochladen des Public Key</string>
     <string name="key_not_activated">Du hast deinen Key noch nicht aktiviert!</string>
-    <string name="no_rights_to_access_lectures">Vorlesungen konnten nicht abgerufen werden. Bitte überprüfe die Rechte deines TUMOnline Tokens!</string>
+    <string name="no_rights_to_access_lectures">Vorlesungen konnten nicht abgerufen werden. Bitte überprüfe die Rechte deines TUMonline Tokens!</string>
     <string name="edit">Bearbeiten</string>
     <string name="auto_join_chat">Neuen Vorlesungs-Chats beitreten</string>
     <string name="set_auto_join_chat">Wenn du dich für eine neue Vorlesung einschreibst, wirst du automatisch zum Chatroom der Vorlesung hinzugefügt.</string>
@@ -391,6 +400,16 @@ Signatur: %5$s</string>
     <string name="tab_responses">Antworten</string>
     <string name="tab_survey">Umfrage</string>
     <string name="more_info">Mehr Informationen</string>
-    <string name="welcome_faculty">Um die bestmögliche Erfahrung zu liefern teil uns deine Fakultät mit:</string>
+    <string name="welcome_faculty">Um die bestmögliche Erfahrung zu liefern, teile uns bitte deine Fakultät mit:</string>
     <string name="event_plan">Tagesablauf</string>
+    <string name="choose_own_faculty">Bitte wähle deine Fakultät aus</string>
+    <string name="add_widget">Widget hinzufügen</string>
+    <string name="mensa_widget">Mensa Widget TUM</string>
+    <string name="my_grades">Meine Noten</string>
+    <string name="widget_configure_description">Anzeige der Karten einstellen</string>
+    <string name="add_widget">Widget hinzufügen</string>
+    <string name="all_programs">Alle Programme</string>
+    <string name="average_grade">Durchschnittsnote</string>
+    <string name="choose_own_faculty">Bitte wähle deine Fakultät aus</string>
+    <string name="widget_configure_description">Anzeige der Karten einstellen</string>
 </resources>

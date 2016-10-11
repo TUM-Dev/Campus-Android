@@ -47,8 +47,7 @@ public class OpeningHoursDetailActivity extends AppCompatActivity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case android.R.id.home:
+		if (item.getItemId() == android.R.id.home) {
 			NavUtils.navigateUpTo(this, new Intent(this, OpeningHoursListActivity.class));
 			return true;
 		}

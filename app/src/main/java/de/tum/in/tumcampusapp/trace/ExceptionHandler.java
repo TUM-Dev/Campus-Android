@@ -26,7 +26,7 @@ import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.FileUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.BugReport;
-import de.tum.in.tumcampusapp.models.TUMCabeClient;
+import de.tum.in.tumcampusapp.api.TUMCabeClient;
 
 public final class ExceptionHandler {
 
@@ -34,7 +34,7 @@ public final class ExceptionHandler {
     public static final String LINE_SEPARATOR = "line.separator";
     // Stores loaded stack traces in memory. Each element is contains a full stacktrace
     private static List<String[]> sStackTraces;
-    private static ActivityAsyncTask<Processor, Object, Object, Object> sTask;
+    private static ActivityAsyncTask<Processor, Void, Void, Void> sTask;
     private static final int S_MIN_DELAY = 0;
     private static boolean sSetupCalled;
 
@@ -68,9 +68,6 @@ public final class ExceptionHandler {
 
         Log.i(G.TAG, "Registering default exceptions handler");
 
-        //Remeber the context
-        G.context = context;
-
         // Files dir for storing the stack traces
         G.filesPath = context.getFilesDir().getAbsolutePath();
 
@@ -99,7 +96,7 @@ public final class ExceptionHandler {
         processor.handlerInstalled();
 
         // Third, submit any traces we may have found
-        return submit(processor);
+        return submit(processor, context);
     }
 
     /**
@@ -133,7 +130,7 @@ public final class ExceptionHandler {
      * Submit stack traces.
      * This is public because in some cases you might want to manually ask the traces to be submitted, for example after asking the user's permission.
      */
-    public static boolean submit(final Processor processor) {
+    public static boolean submit(final Processor processor, final Context context) {
         if (!sSetupCalled) {
             throw new IllegalStateException("you need to call setup() first");
         }
@@ -148,7 +145,7 @@ public final class ExceptionHandler {
             final List<String[]> tracesNowSubmitting = sStackTraces;
             sStackTraces = null;
 
-            sTask = new ActivityAsyncTask<Processor, Object, Object, Object>(processor) {
+            sTask = new ActivityAsyncTask<Processor, Void, Void, Void>(processor) {
 
                 private long mTimeStarted;
 
@@ -159,8 +156,8 @@ public final class ExceptionHandler {
                 }
 
                 @Override
-                protected Object doInBackground(Object... params) {
-                    ExceptionHandler.submitStackTraces(tracesNowSubmitting);
+                protected Void doInBackground(Void... params) {
+                    ExceptionHandler.submitStackTraces(tracesNowSubmitting, context);
 
                     long rest = S_MIN_DELAY - (System.currentTimeMillis() - mTimeStarted);
                     if (rest > 0) {
@@ -174,7 +171,7 @@ public final class ExceptionHandler {
                 }
 
                 @Override
-                protected void processPostExecute(Object result) {
+                protected void processPostExecute(Void result) {
                     mWrapped.submitDone();
                 }
             };
@@ -182,28 +179,6 @@ public final class ExceptionHandler {
         }
 
         return ExceptionHandler.hasStrackTraces();
-    }
-
-    /**
-     * Version of submit() that doesn't take a processor.
-     */
-    public static boolean submit() {
-        return submit(new Processor() {
-            @Override
-            public boolean beginSubmit() {
-                return true;
-            }
-
-            @Override
-            public void submitDone() {
-                // NOP
-            }
-
-            @Override
-            public void handlerInstalled() {
-                // NOP
-            }
-        });
     }
 
     /**
@@ -215,15 +190,6 @@ public final class ExceptionHandler {
      */
     public static boolean hasStrackTraces() {
         return !getStackTraces().isEmpty();
-    }
-
-    /**
-     * Delete loaded stack traces from memory. Normally, this will
-     * happen automatically after submission, but if you don't submit,
-     * this is for you.
-     */
-    public static void clear() {
-        sStackTraces = null;
     }
 
     /**
@@ -313,9 +279,9 @@ public final class ExceptionHandler {
     /**
      * If any are present, submit them to the trace server.
      */
-    private static void submitStackTraces(List<String[]> list) {
+    private static void submitStackTraces(List<String[]> list, Context context) {
         //Check if we user gave permission to send these reports
-        G.preferences = PreferenceManager.getDefaultSharedPreferences(G.context);
+        G.preferences = PreferenceManager.getDefaultSharedPreferences(context);
         if (!G.preferences.getBoolean(Const.BUG_REPORTS, G.BUG_REPORT_DEFAULT)) {
             return;
         }
@@ -334,8 +300,8 @@ public final class ExceptionHandler {
                 String stacktrace = list.get(i)[0];
 
                 // Transmit stack trace with PUT request
-                TUMCabeClient client = TUMCabeClient.getInstance(G.context);
-                BugReport r = new BugReport(G.context, stacktrace, list.get(i)[1]);
+                TUMCabeClient client = TUMCabeClient.getInstance(context);
+                BugReport r = new BugReport(context, stacktrace, list.get(i)[1]);
                 client.putBugReport(r);
                 // We don't care about the response, so we just hope it went well and on with it.
             }

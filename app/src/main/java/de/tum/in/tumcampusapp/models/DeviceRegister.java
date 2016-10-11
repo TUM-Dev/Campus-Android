@@ -16,8 +16,9 @@ public class DeviceRegister {
     private String rand;
     private String device;
     private String publicKey;
+    private ChatMember member = null;
 
-    public DeviceRegister(Context c, String publickey) throws NoPrivateKey {
+    public DeviceRegister(Context c, String publickey, ChatMember member) throws NoPrivateKey {
         //Create some data
         this.date = (new Date()).toString();
         this.rand = new BigInteger(130, new SecureRandom()).toString(32);
@@ -26,7 +27,12 @@ public class DeviceRegister {
 
         //Sign this data for verification
         AuthenticationManager am = new AuthenticationManager(c);
-        this.signature = am.sign(date + rand + this.device);
+        if (member != null) {
+            this.member = member;
+            this.signature = am.sign(date + rand + this.device + this.member.getLrzId() + this.member.getId());
+        } else {
+            this.signature = am.sign(date + rand + this.device);
+        }
     }
 
 }

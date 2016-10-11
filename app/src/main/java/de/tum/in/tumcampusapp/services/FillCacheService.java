@@ -8,7 +8,7 @@ import de.tum.in.tumcampusapp.models.managers.CacheManager;
 
 /**
  * Service used to fill caches in background, for faster/offline access
- * */
+ **/
 public class FillCacheService extends IntentService {
 
 	private static final String CACHE_SERVICE = "FillCacheService";
@@ -34,9 +34,6 @@ public class FillCacheService extends IntentService {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                // Send usage statistics
-
-
                 // Fill cache service
                 CacheManager cache = new CacheManager(FillCacheService.this);
                 cache.fillCache();

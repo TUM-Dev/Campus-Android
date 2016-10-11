@@ -8,14 +8,12 @@ import java.io.File;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 
 public abstract class AbstractManager {
-    protected static Context mContext;
+    protected Context mContext;
     protected static SQLiteDatabase db;
 
     protected AbstractManager(Context context) {
-        if (mContext == null) {
-            mContext = context.getApplicationContext();
-            db = getDb(context);
-        }
+        mContext = context.getApplicationContext();
+        db = getDb(context);
     }
 
     /**

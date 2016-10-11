@@ -36,6 +36,16 @@
     <string name="dialog_access_token_invalid">TUMOnline-Access-Token n’est pas activé</string>
     <string name="dialog_no_rights_function">Aucuns droits pour cette fonction</string>
     <string name="empty_result">La demande apporte un résultat erroné</string>
+
+    <!-- Exam/Grades -->
+    <string name="average_grade">Moyenne</string>
+    <string name="show_column_chart">Sous forme d\'histogramme</string>
+    <string name="show_pie_chart">Sous forme de diagramme circulaire</string>
+    <string name="result_extra">Résultat:&#160;</string>
+    <string name="semester">Semestre</string>
+    <string name="examiner">Examinateur</string>
+    <string name="mode">Mode</string>
+    <string name="all_programs">Tous les programmes</string>
     <string name="date">Date</string>
 
     <!-- Preferences -->
@@ -75,7 +85,7 @@
     <!-- Startup Wizard -->
     <string name="token_not_enabled">TUMOnline-Access-Token n’est pas activé</string>
     <string name="startup_wizard_uppercase">Assistant de démarrage</string>
-    <string name="welcome_msg"><b>Bienvenue sur le TUM Campus App</b>\n\nPour permettre l’accès aux services à TUMOnline, ton <b>indicatif LRZ</b> est nécessaire.\n\nCet indicatif a le format suivant:\n<i>xx00xxx</i>\n(2 lettres, 2 chiffres, 3 lettres)</string>
+    <string name="welcome_msg"><b>Bienvenue sur le TUM Campus App</b>\n\nPour permettre l’accès aux services à TUMonline, ton <b>indicatif TUM</b> est nécessaire.\n\nCet indicatif a le format suivant:\n<i>xx00xxx</i>\n(2 lettres, 2 chiffres, 3 lettres)</string>
     <string name="button_skip">Sauter</string>
     <string name="button_next">Suivant</string>
     <string name="need_to_enable"><b>Le TUMOnline-Access-Token a été créé avec succès</b>\n\nMaintenant, tu peux activer le Token dans TUMOnline dans <i>Dienste/Token-administration</i>. Fais attention, tu dois aussi activer les droits d’accès pour chaque service individuellement sur <i>droits actifs</i></string>
@@ -98,6 +108,7 @@
     <string name="my_tum">Mon TUM</string>
     <string name="schedule">Calendrier</string>
     <string name="my_lectures">Mes cours magistraux</string>
+    <string name="my_grades">Mes notes</string>
     <string name="chat_rooms">Forum de discussion</string>
     <string name="tuition_fees">Frais de scolarité</string>
     <string name="tum_common">TUM général</string>
@@ -290,10 +301,9 @@
     <string name="news_sources">Les sources d’information</string>
     <string name="only_latest_article">Seulement le dernier article</string>
     <string name="only_latest_article_summary">Montre que le dernier article. Sinon, tous les articles des sources sélectionnées sont affichées.</string>
-    <string name="lecture_chat">Conférence de chat</string>
+    <string name="lecture_chat">Conférence de chat &amp; Accepter les conditions</string>
     <string name="set_lecture_chat">Activer ou désactiver <i>Conférence de chat</i>. Si elle est activée, vous serez en mesure de rejoindre les chambres conférence de discussion, où tu et tes collèges pouvez discuter.</string>
     <string name="open_chat_terms">Modalités de chat</string>
-    <string name="accept_chat_terms">Accepter les conditions de chat</string>
     <string name="have_to_accept_terms">Les termes doivent être acceptées pour utiliser le chat en groupe!</string>
     <string name="activate_key">S’il vous plaît activer votre clé publique première</string>
     <string name="joined_chat_room">Tu as rejoint la salle de chat!</string>
@@ -382,4 +392,13 @@
     <string name="more_info">Plus d\'information</string>
     <string name="welcome_faculty">Pour offrir la meilleure expérience possible s\'il vous plaît nous fournir votre meilleure faculté d\'adaptation:</string>
     <string name="event_plan">Plan de l\'événement</string>
+    <string name="choose_own_faculty">S\'il vous plaît choisir votre faculté</string>
+    <string name="add_widget">Ajouter un widget</string>
+    <string name="mensa_widget">Mensa Widget TUM</string>
+    <string name="widget_configure_description">Configurez les cartes pour montrer</string>
+    <string name="add_widget">Ajouter un widget</string>
+    <string name="all_programs">Tous les programmes</string>
+    <string name="average_grade">Moyenne</string>
+    <string name="choose_own_faculty">S\\\'il vous plaît choisir votre faculté</string>
+    <string name="widget_configure_description"></string>
 </resources>

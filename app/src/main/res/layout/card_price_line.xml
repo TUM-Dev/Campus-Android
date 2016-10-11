@@ -18,19 +18,18 @@
         android:paddingRight="3dp"
         android:paddingTop="10dp"
         android:scrollHorizontally="false"
-        android:singleLine="false"
         android:textSize="16sp" />
 
     <TextView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="5" />
+        android:layout_weight="2" />
 
     <TextView
         android:id="@+id/line_price"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="10"
+        android:layout_weight="15"
         android:minWidth="50dp"
         android:paddingTop="10dp"
         android:textColor="@color/sections_green"
@@ -39,14 +38,14 @@
     <TextView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="5" />
+        android:layout_weight="3" />
 
 
     <ToggleButton
         android:id="@+id/favortieDish"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="10"
+        android:layout_weight="9"
         android:background="@android:color/transparent"
         android:button="@android:drawable/btn_star"
         android:paddingTop="10dp"

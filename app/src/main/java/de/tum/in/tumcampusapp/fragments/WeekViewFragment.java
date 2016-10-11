@@ -2,6 +2,7 @@ package de.tum.in.tumcampusapp.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,9 +13,7 @@ import com.alamkanak.weekview.WeekViewEvent;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.auxiliary.calendar.IntegratedCalendarEvent;
@@ -22,7 +21,7 @@ import de.tum.in.tumcampusapp.tumonline.TUMRoomFinderRequest;
 
 public class WeekViewFragment extends Fragment implements MonthLoader.MonthChangeListener {
 
-    private final Map<Integer, List<WeekViewEvent>> loadedEvents = new HashMap<>();
+    private final SparseArray<List<WeekViewEvent>> loadedEvents = new SparseArray<>();
 
     private String roomApiCode;
     private WeekView mWeekView;
@@ -96,7 +95,7 @@ public class WeekViewFragment extends Fragment implements MonthLoader.MonthChang
     }
 
     private boolean isLoaded(int year, int month) {
-        return loadedEvents.containsKey(calculateLoadedKey(year, month));
+        return loadedEvents.get(calculateLoadedKey(year, month)) != null;
     }
 
     private static int calculateLoadedKey(int year, int month) {

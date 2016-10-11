@@ -187,7 +187,7 @@ public final class Utils {
      *
      * @param e Exception (source for message and stack trace)
      */
-    public static void log(Exception e) {
+    public static void log(Throwable e) {
         StringWriter sw = new StringWriter();
         e.printStackTrace(new PrintWriter(sw));
         String s = Thread.currentThread().getStackTrace()[3].getClassName().replaceAll(LOGGING_REGEX, "");
@@ -203,7 +203,7 @@ public final class Utils {
      * @param e       Exception (source for message and stack trace)
      * @param message Additional information for exception message
      */
-    public static void log(Exception e, String message) {
+    public static void log(Throwable e, String message) {
         StringWriter sw = new StringWriter();
         e.printStackTrace(new PrintWriter(sw));
         String s = Thread.currentThread().getStackTrace()[3].getClassName().replaceAll(LOGGING_REGEX, "");
@@ -255,9 +255,9 @@ public final class Utils {
      * @return String[]-List with Columns matched to array values
      */
     public static List<String[]> readCsv(InputStream fin) {
-        List<String[]> list = new ArrayList<>();
+        List<String[]> list = new ArrayList<>(64);
         try {
-            BufferedReader in = new BufferedReader(new InputStreamReader(fin, Charsets.ISO_8859_1));
+            BufferedReader in = new BufferedReader(new InputStreamReader(fin, Charsets.UTF_8));
             try {
                 String reader;
                 while ((reader = in.readLine()) != null) {

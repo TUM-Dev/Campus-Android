@@ -105,9 +105,9 @@ public class LecturesDetailsActivity extends ActivityForAccessingTumOnline<Lectu
         currentItem = xmllv.getLehrveranstaltungenDetails().get(0);
         tvLDetailsName.setText(currentItem.getStp_sp_titel().toUpperCase(Locale.getDefault()));
 
-        String strLectureLanguage = currentItem.getSemester_name();
+        StringBuilder strLectureLanguage = new StringBuilder(currentItem.getSemester_name());
         if (currentItem.getHaupt_unterrichtssprache() != null) {
-            strLectureLanguage += " - " + currentItem.getHaupt_unterrichtssprache();
+            strLectureLanguage.append(" - ").append(currentItem.getHaupt_unterrichtssprache());
         }
         tvLDetailsSemester.setText(strLectureLanguage);
         tvLDetailsSWS.setText(String.format("%s - %s SWS", currentItem.getStp_lv_art_name(), currentItem.getDauer_info()));

@@ -18,8 +18,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ellipsize="marquee"
-            android:singleLine="true"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:maxLines="1" />
 
         <TextView
             android:id="@+id/distance"
@@ -27,8 +27,8 @@
             android:layout_height="wrap_content"
             android:ellipsize="marquee"
             android:gravity="end"
-            android:singleLine="true"
-            android:textSize="14sp" />
+            android:textSize="14sp"
+            android:maxLines="1" />
     </LinearLayout>
 
     <TextView
@@ -36,6 +36,6 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:ellipsize="marquee"
-        android:singleLine="true"
-        android:textSize="12sp" />
+        android:textSize="12sp"
+        android:maxLines="1" />
 </LinearLayout>

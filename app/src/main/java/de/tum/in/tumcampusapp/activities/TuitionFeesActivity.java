@@ -14,7 +14,7 @@ import de.tum.in.tumcampusapp.models.TuitionList;
 import de.tum.in.tumcampusapp.tumonline.TUMOnlineConst;
 
 /**
- * Activity to show the user's tuition
+ * Activity to show the user's tuition ; based on grades.java / quick solution
  */
 public class TuitionFeesActivity extends ActivityForAccessingTumOnline<TuitionList> {
 

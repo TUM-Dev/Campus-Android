@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.text.TextUtils;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -16,10 +17,10 @@ import de.tum.in.tumcampusapp.cards.SurveyCard;
 import de.tum.in.tumcampusapp.cards.generic.Card;
 import de.tum.in.tumcampusapp.models.Faculty;
 import de.tum.in.tumcampusapp.models.Question;
-import de.tum.in.tumcampusapp.models.TUMCabeClient;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
+import de.tum.in.tumcampusapp.api.TUMCabeClient;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * SurveyManager for handling database access and downloading external information via TUMCabeClient
@@ -162,8 +163,7 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
      * @return
      */
     public Cursor getUnansweredQuestionsSince(String date) {
-        Cursor c = db.rawQuery("SELECT question, text FROM openQuestions WHERE answered=0 AND end >= '" + date + "'", null);
-        return c;
+        return db.rawQuery("SELECT question, text FROM openQuestions WHERE answered=0 AND end >= '" + date + "'", null);
     }
 
     /**
@@ -175,8 +175,7 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
      * @return relevant ownQuestions
      */
     public Cursor getMyRelevantOwnQuestionsSince(String date) {
-        Cursor c = db.rawQuery("SELECT * FROM ownQuestions where deleted = 0 AND end >= '" + date + "'", null);
-        return c;
+        return db.rawQuery("SELECT * FROM ownQuestions where deleted = 0 AND end >= '" + date + "'", null);
     }
 
     /**
@@ -185,15 +184,15 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
      * @param id: QuestionID
      */
     public void deleteMyOwnQuestion(int id) {
-        TUMCabeClient.getInstance(mContext).deleteOwnQuestion(id, new Callback<Question>() { // Delete Question at server
+        TUMCabeClient.getInstance(mContext).deleteOwnQuestion(id, new Callback<Question>() {
             @Override
-            public void success(Question q, Response response) {
+            public void onResponse(Call<Question> call, Response<Question> response) {
                 Utils.log("TUMCabeClient_delete_question_successeed");
             }
 
             @Override
-            public void failure(RetrofitError error) {
-                Utils.log("TUMCabeClient_delete_question_failed. Error: " + error.toString());
+            public void onFailure(Call<Question> call, Throwable t) {
+                Utils.log(t, "TUMCabeClient_delete_question_failed. ");
             }
         });
         db.execSQL("UPDATE ownQuestions SET deleted=1 WHERE question=" + id); // Marks question as deleted in local db
@@ -249,13 +248,13 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
                     if (answeredQuestion != null) {
                         TUMCabeClient.getInstance(mContext).submitAnswer(answeredQuestion, new Callback<Question>() {
                             @Override
-                            public void success(Question question, Response response) {
-                                Utils.log("Test_resp_submitQues Succeeded: " + response.getBody().toString());
+                            public void onResponse(Call<Question> call, Response<Question> response) {
+                                Utils.log("Test_resp_submitQues Succeeded: " + response.body());
                             }
 
                             @Override
-                            public void failure(RetrofitError error) {
-                                Utils.log("Test_resp_submitQues Failure" + error.toString());
+                            public void onFailure(Call<Question> call, Throwable t) {
+                                Utils.log(t, "Test_resp_submitQues Failure");
                             }
                         });
                     }
@@ -303,7 +302,13 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
      * @throws Exception
      */
     public void downloadFacultiesFromExternal() {
-        ArrayList<Faculty> faculties = TUMCabeClient.getInstance(mContext).getFaculties();
+        ArrayList<Faculty> faculties = null;
+        try {
+            faculties = TUMCabeClient.getInstance(mContext).getFaculties();
+        } catch (IOException e) {
+            Utils.log(e);
+            return;
+        }
 
         db.beginTransaction();
         try {

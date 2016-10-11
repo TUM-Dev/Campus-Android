@@ -10,17 +10,20 @@ import android.support.v4.app.NotificationCompat;
 
 import com.google.gson.Gson;
 
+import java.io.IOException;
+
 import de.tum.in.tumcampusapp.BuildConfig;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.MainActivity;
+import de.tum.in.tumcampusapp.api.TUMCabeClient;
+import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.GCMNotification;
 import de.tum.in.tumcampusapp.models.GCMUpdate;
-import de.tum.in.tumcampusapp.models.TUMCabeClient;
 
 public class Update extends GenericNotification {
 
     public final GCMUpdate data;
-    private final GCMNotification info;
+    private GCMNotification info;
 
     public Update(String payload, Context context, int notification) {
         super(context, 2, notification, true);
@@ -34,7 +37,12 @@ public class Update extends GenericNotification {
         this.data = new Gson().fromJson(payload, GCMUpdate.class);
 
         //Get data from server
-        this.info = TUMCabeClient.getInstance(this.context).getNotification(this.notification);
+        this.info = null;
+        try {
+            this.info = TUMCabeClient.getInstance(this.context).getNotification(this.notification);
+        } catch (IOException e) {
+            Utils.log(e);
+        }
 
         if (BuildConfig.VERSION_CODE < data.packageVersion) {
             //TODO self deactivate

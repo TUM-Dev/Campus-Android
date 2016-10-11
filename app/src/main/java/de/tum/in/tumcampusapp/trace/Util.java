@@ -44,13 +44,13 @@ public final class Util {
         return "";
     }
 
-    public static String isGPSOn() {
+    public static String isGPSOn(Context context) {
         String gpsStatus = "true";
 
-        PackageManager packageManager = G.context.getPackageManager();
+        PackageManager packageManager = context.getPackageManager();
         if (packageManager.checkPermission("android.permission.ACCESS_FINE_LOCATION", G.appPackage) == PackageManager.PERMISSION_GRANTED) {
             LocationManager locManager;
-            locManager = (LocationManager) G.context.getSystemService(Context.LOCATION_SERVICE);
+            locManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
             if (!locManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
                 gpsStatus = "false";
             }
@@ -61,11 +61,11 @@ public final class Util {
         return gpsStatus;
     }
 
-    public static String[] getScreenProperties() {
+    public static String[] getScreenProperties(Context context) {
         String screen[] = {NOT_AVAILABLE, NOT_AVAILABLE, NOT_AVAILABLE, NOT_AVAILABLE, NOT_AVAILABLE};
 
         DisplayMetrics dm = new DisplayMetrics();
-        Display display = ((WindowManager) G.context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+        Display display = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
         display.getMetrics(dm);
 
         int width = dm.widthPixels;
@@ -78,8 +78,9 @@ public final class Util {
         screen[0] = Integer.toString(width);
         screen[1] = Integer.toString(height);
 
-        String rotation = "";
+        String rotation;
         switch (orientation) {
+            default:
             case Surface.ROTATION_0:
                 rotation = "normal";
                 break;

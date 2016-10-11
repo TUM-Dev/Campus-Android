@@ -12,10 +12,6 @@ import android.support.annotation.NonNull;
 import android.widget.ImageView;
 
 import com.google.common.base.Optional;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
-import com.squareup.okhttp.ResponseBody;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -26,14 +22,18 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
+import de.tum.in.tumcampusapp.api.Helper;
 import de.tum.in.tumcampusapp.models.managers.CacheManager;
 import de.tum.in.tumcampusapp.trace.G;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 public class NetUtils {
-    private static final int HTTP_TIMEOUT = 25000;
     private final Context mContext;
     private final CacheManager cacheManager;
-    private final OkHttpClient client = new OkHttpClient();
+    private final OkHttpClient client;
 
     public NetUtils(Context context) {
         //Manager caches all requests
@@ -41,8 +41,7 @@ public class NetUtils {
         cacheManager = new CacheManager(mContext);
 
         //Set our max wait time for each request
-        client.setConnectTimeout(HTTP_TIMEOUT, TimeUnit.MILLISECONDS);
-        client.setReadTimeout(HTTP_TIMEOUT, TimeUnit.MILLISECONDS);
+        client = Helper.getOkClient(context);
     }
 
     public static Optional<JSONObject> downloadJson(Context context, String url) {
