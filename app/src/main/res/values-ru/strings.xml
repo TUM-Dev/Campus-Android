@@ -52,7 +52,7 @@
     <string name="cards_settings">Карточки</string>
     <string name="categories_to_show">Отображаемые категории</string>
     <string name="certificate">Сертификат</string>
-    <string name="certificate_desc">Вы должны установить сертификат CA-Root для безопасного соединения с сервером. Просто выберите "Установить сертификат" и подтвердите, нажав на "ОК".</string>
+    <string name="certificate_desc">Вы должны установить сертификат CA-Root для безопасного соединения с сервером. Просто выберите “Установить сертификат” и подтвердите, нажав на “ОК”.</string>
     <string name="chat_rooms">Чаты</string>
     <string name="clear_cache">Удалить данные</string>
     <string name="clear_cache_detail">Удаляет все данные, загруженные приложением TUM Campus  и сохраненные на SD-Карте</string>
@@ -63,7 +63,7 @@
     <string name="contact_added">Контакт добавлен!</string>
     <string name="contact_person">Контактное лицо</string>
     <string name="data_backup">Резервное копирование данных</string>
-    <string name="data_backup_desc"><![CDATA[В целях безопасности необходимо отключить резервное копирование данных, чтобы незашифрованные данные для авторизации LRZ не были сохранены на серверах Google. Для отключения выберите "Создать резервные копии и восстановить данные" > "Создать резервные копии". Больше информации]]></string>
+    <string name="data_backup_desc"><![CDATA[В целях безопасности необходимо отключить резервное копирование данных, чтобы незашифрованные данные для авторизации LRZ не были сохранены на серверах Google. Для отключения выберите “Создать резервные копии и восстановить данные” > “Создать резервные копии”. Больше информации]]></string>
     <string name="date">Дата</string>
     <string name="deadline_dots">Конечный срок</string>
     <string name="default_cafeteria">Кафетерий по умолчанию</string>
@@ -148,7 +148,7 @@
     <string name="lectures_information">Информация о лекции</string>
     <string name="licences">Открыть исходные лицензии</string>
     <string name="licences_summary">Правовые заметки к лицензиям</string>
-    <string name="loading">Загрузка...</string>
+    <string name="loading">Загрузка…</string>
     <string name="loading_first_time">Первый запуск может занять несколько минут</string>
     <string name="lrz_id">Идентификация LRZ</string>
     <string name="mensa_city">Кафетерий Главный Кампус</string>
@@ -176,7 +176,7 @@
     <string name="my_tum">Мой TUM</string>
     <string name="name">Имя</string>
     <string name="navigate">Начать навигацию</string>
-    <string name="need_to_enable">Доступ к TUMOnline успешно создан \n\n Вы можете активировать доступ в TUMOnline в меню "Услуги/Управление доступом". Обратите внимание, что права доступа к отдельным услугам должны быть  активированы в меню "Активные права"</string>
+    <string name="need_to_enable">Доступ к TUMOnline успешно создан \n\n Вы можете активировать доступ в TUMOnline в меню “Услуги/Управление доступом”. Обратите внимание, что права доступа к отдельным услугам должны быть  активированы в меню “Активные права”</string>
     <string name="new_chat_room">Новый чат</string>
     <string name="new_chat_room_desc">Выберите название для чата. Впоследствии название не может быть изменено!</string>
     <string name="news">Новости</string>

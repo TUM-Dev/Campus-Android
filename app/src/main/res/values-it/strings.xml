@@ -47,7 +47,7 @@
     <string name="cards_settings">Carte</string>
     <string name="categories_to_show">Categorie da mostrare  </string>
     <string name="certificate">Certificato</string>
-    <string name="certificate_desc">Devi installare un certificato CA-Root per stabilire una connessione sicura con il server. Clicca su \'Installare certificato\' e conferma con ok </string>
+    <string name="certificate_desc">Devi installare un certificato CA-Root per stabilire una connessione sicura con il server. Clicca su \‘Installare certificato\’ e conferma con ok </string>
     <string name="chat_rooms">Chatrooms</string>
     <string name="clear_cache">Elimina dati</string>
     <string name="clear_cache_detail">Cancella tutti i dati salvati dall\'applicazione TUM-Campus sulla scheda SD</string>
@@ -58,7 +58,7 @@
     <string name="contact_added">Il contatto è stato aggiunto!</string>
     <string name="contact_person">Interlocutore</string>
     <string name="data_backup">Backup dei dati</string>
-    <string name="data_backup_desc">Per motivi di sicurezza il backup dei dati è stato disattivato, affinche i dati di accesso LRZ non codificati non vengano salvati  sul server Google. Sotto \'Backup e recupero\' disattiva \'Backup dei miei dati\'. Più informazioni</string>
+    <string name="data_backup_desc">Per motivi di sicurezza il backup dei dati è stato disattivato, affinche i dati di accesso LRZ non codificati non vengano salvati  sul server Google. Sotto \‘Backup e recupero\’ disattiva \‘Backup dei miei dati\’. Più informazioni</string>
     <string name="date">Data</string>
     <string name="deadline_dots">Deadline</string>
     <string name="default_cafeteria">Mensa standard</string>
@@ -172,7 +172,7 @@
     <string name="navigate">Direzioni per</string>
     <string name="need_to_enable"><b>Il token di accesso TUMOnline è stato generato con successo</b>\n\n Adesso puoi attivare il token su TUMOnline sotto <i>Servizi/Gestione Token</i>. Assicurati che i diritti che vuoi attivare per l\'applicazione siano selezionati sotto diritti attivi.</string>
     <string name="new_chat_room">Nuova chat</string>
-    <string name="new_chat_room_desc">Scegli un nome per la chat. Il nome non puo piu essere cambiato in seguito!\n\n</string>
+    <string name="new_chat_room_desc">Scegli un nome per la chat. Il nome non puo più essere cambiato in seguito!\n\n</string>
     <string name="news">Novita</string>
     <string name="news_sources">Fonti di notizie</string>
     <string name="newspread_summary">Newspread</string>
@@ -210,7 +210,7 @@
     <string name="organisations">Organizzazioni</string>
     <string name="password">Password</string>
     <string name="password_gets_not_saved">La password non viene salvata dall\'app TUM Campus ma dal WLAN Manager di Android.</string>
-    <string name="permission_calendar_explanation">Questa applicazione ha bisogno dell\'autorizzazione per accedere alla tua posizione per poterti dare informazioni utili, come il menu delle mense nelle tue vicinanze o gli orari della stazione MVV piu vicina a te. \n Se non lo desire, puoi configurare la tua posizione nelle impostazioni.</string>
+    <string name="permission_calendar_explanation">Questa applicazione ha bisogno dell\'autorizzazione per accedere alla tua posizione per poterti dare informazioni utili, come il menu delle mense nelle tue vicinanze o gli orari della stazione MVV più vicina a te. \n Se non lo desire, puoi configurare la tua posizione nelle impostazioni.</string>
     <string name="permission_location_explanation">Questa applicazione ha bisogno dell\'autorizzazione per accedere al tuo calendario, per poterlo sincronizzare con il tuo calendario TUM.</string>
     <string name="person_information">Informazioni personali</string>
     <string name="person_search">Ricerca persone</string>
@@ -275,7 +275,7 @@
     <string name="study_rooms">Stanze di studio</string>
     <string name="submit_question_survey">Poni una domanda</string>
     <string name="success_clear_cache">Dati eliminati con successo</string>
-    <string name="support_us">Aiutaci a migliorare l\'app TUM Campus! Dacci un "Mi piace" su Facebook, proponici nuove idee su Github o dicci la tua opinione per e-mail!</string>
+    <string name="support_us">Aiutaci a migliorare l\'app TUM Campus! Dacci un “Mi piace” su Facebook, proponici nuove idee su Github o dicci la tua opinione per e-mail!</string>
     <string name="support_us_title">Supportaci!</string>
     <string name="survey_no">No</string>
     <string name="survey_skip">Salta</string>
