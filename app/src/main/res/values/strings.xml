@@ -485,7 +485,8 @@ Signature: %5$s</string>
     <string name="selected_target_faculties" translatable="false">Selected target faculties:</string>
     <string name="transition_card" translatable="false">card_transition</string>
     <string name="tumonline_link" translatable="false" tools:ignore="TypographyQuotes"><a href='http://campus.tum.de'>TUMonline</a></string>
-    <string name="all_programs"></string>
+    <string name="accept_chat_terms">Terms must be accepted to use group chat!</string>
+    <string name="all_programs">All programs</string>
     <string name="average_grade">Average grade</string>
 </resources>
 

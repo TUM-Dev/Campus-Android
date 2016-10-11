@@ -404,12 +404,14 @@ Signatur: %5$s</string>
     <string name="event_plan">Tagesablauf</string>
     <string name="choose_own_faculty">Bitte wähle deine Fakultät aus</string>
     <string name="add_widget">Widget hinzufügen</string>
-    <string name="mensa_widget">Mensa Widget TUM</string>
     <string name="my_grades">Meine Noten</string>
     <string name="widget_configure_description">Anzeige der Karten einstellen</string>
     <string name="add_widget">Widget hinzufügen</string>
+    <string name="accept_chat_terms">Terms must be accepted to use group chat!</string>
     <string name="all_programs">Alle Programme</string>
     <string name="average_grade">Durchschnittsnote</string>
     <string name="choose_own_faculty">Bitte wähle deine Fakultät aus</string>
     <string name="widget_configure_description">Anzeige der Karten einstellen</string>
+
+
 </resources>
