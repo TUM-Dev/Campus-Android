@@ -60,9 +60,9 @@ import retrofit2.Response;
  */
 public class SurveyActivity extends ProgressActivity {
 
-    final Context context = this;
+    private final Context context = this;
     // for handling change in internet connectivity. If initially had no connection, then connected, then restart activity
-    BroadcastReceiver connectivityChangeReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver connectivityChangeReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (NetUtils.isConnected(getApplicationContext())) {
@@ -71,7 +71,7 @@ public class SurveyActivity extends ProgressActivity {
             }
         }
     };
-    View.OnClickListener showFaculties = new View.OnClickListener() {
+    private final View.OnClickListener showFaculties = new View.OnClickListener() {
 
         @Override
         public void onClick(final View v) {
@@ -89,14 +89,14 @@ public class SurveyActivity extends ProgressActivity {
     };
     private Spinner numOfQuestionsSpinner;
     private Button submitSurveyButton, facultiesButton;
-    private ArrayList<String> questions = new ArrayList<>();
-    private ArrayList<String> selectedFaculties = new ArrayList<>();
+    private final ArrayList<String> questions = new ArrayList<>();
+    private final ArrayList<String> selectedFaculties = new ArrayList<>();
     private boolean[] checkedFaculties;
     private LinearLayout mainResponseLayout, questionsLayout;
-    private ArrayList<String> fetchedFaculties = new ArrayList<>();
+    private final ArrayList<String> fetchedFaculties = new ArrayList<>();
     private SurveyManager surveyManager;
     //Handles clicking on 'delete' button of an own question in responses tab
-    View.OnClickListener deleteQuestion = new View.OnClickListener() {
+    private final View.OnClickListener deleteQuestion = new View.OnClickListener() {
 
         @Override
         public void onClick(final View v) {

@@ -24,12 +24,12 @@ import de.tum.in.tumcampusapp.models.LectureAppointmentsRow;
 public class LectureAppointmentsListAdapter extends BaseAdapter {
 
     // list of Appointments to one lecture
-    private List<LectureAppointmentsRow> appointmentList;
+    private final List<LectureAppointmentsRow> appointmentList;
     private final LayoutInflater mInflater;
     // date formats for the day output
-    private final DateFormat endHoursOutput = SimpleDateFormat.getTimeInstance();
-    private final DateFormat startDateOutput = SimpleDateFormat.getDateTimeInstance();
-    private final DateFormat endDateOutput = SimpleDateFormat.getDateTimeInstance();
+    private final DateFormat endHoursOutput = DateFormat.getTimeInstance();
+    private final DateFormat startDateOutput = DateFormat.getDateTimeInstance();
+    private final DateFormat endDateOutput = DateFormat.getDateTimeInstance();
     // parse dates
     // this is the template for the date in the xml file
     private final SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.US);

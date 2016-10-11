@@ -23,7 +23,7 @@ import de.tum.in.tumcampusapp.models.GCMUpdate;
 public class Update extends GenericNotification {
 
     public final GCMUpdate data;
-    private GCMNotification info;
+    private final GCMNotification info;
 
     public Update(String payload, Context context, int notification) {
         super(context, 2, notification, true);
@@ -37,18 +37,21 @@ public class Update extends GenericNotification {
         this.data = new Gson().fromJson(payload, GCMUpdate.class);
 
         //Get data from server
-        this.info = null;
-        try {
-            this.info = TUMCabeClient.getInstance(this.context).getNotification(this.notification);
-        } catch (IOException e) {
-            Utils.log(e);
-        }
+        this.info = getNotificationFromServer();
 
         if (BuildConfig.VERSION_CODE < data.packageVersion) {
             //TODO self deactivate
         }
     }
 
+    private GCMNotification getNotificationFromServer() {
+        try {
+            return TUMCabeClient.getInstance(this.context).getNotification(this.notification);
+        } catch (IOException e) {
+            Utils.log(e);
+            return null;
+        }
+    }
 
     @Override
     public Notification getNotification() {

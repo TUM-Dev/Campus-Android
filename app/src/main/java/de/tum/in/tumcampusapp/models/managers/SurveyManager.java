@@ -11,13 +11,13 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import de.tum.in.tumcampusapp.api.TUMCabeClient;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.cards.SurveyCard;
 import de.tum.in.tumcampusapp.cards.generic.Card;
 import de.tum.in.tumcampusapp.models.Faculty;
 import de.tum.in.tumcampusapp.models.Question;
-import de.tum.in.tumcampusapp.api.TUMCabeClient;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -53,7 +53,7 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
         Cursor rows = getUnansweredQuestionsSince(Utils.getDateTimeString(new Date()));
         if (rows.moveToFirst()) {
             SurveyCard card = new SurveyCard(context);
-            card.seQuestions(rows);
+            card.setQuestions(rows);
             card.apply();
         }
     }

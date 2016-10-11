@@ -21,7 +21,7 @@ public class OrgItemListAdapter extends BaseAdapter {
     /**
      * Organisation list, that is getting shown
      */
-    private List<OrgItem> organisationList;
+    private final List<OrgItem> organisationList;
 
     /**
      * To inflate the layout

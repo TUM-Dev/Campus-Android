@@ -60,7 +60,7 @@ public class TUMCabeClient {
 
 
     private static TUMCabeClient instance;
-    private TUMCabeAPIService service;
+    private final TUMCabeAPIService service;
 
     private TUMCabeClient(final Context c) {
         Retrofit.Builder builder = new Retrofit.Builder()
