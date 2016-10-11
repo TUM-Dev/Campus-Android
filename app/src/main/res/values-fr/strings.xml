@@ -395,5 +395,6 @@
     <string name="choose_own_faculty">S\'il vous plaît choisir votre faculté</string>
     <string name="add_widget">Ajouter un widget</string>
     <string name="widget_configure_description">Configurez les cartes pour montrer</string>
+    <string name="accept_chat_terms">Les termes doivent être acceptées pour utiliser le chat en groupe!</string>
 
 </resources>
