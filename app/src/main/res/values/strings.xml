@@ -439,7 +439,7 @@ Signature: %5$s</string>
 
     <string name="add_widget">Add widget</string>
     <!-- Widget Mensa -->
-    <string name="mensa_widget">Mensa Widget TUM</string>
+    <string name="mensa_widget" translatable="false">Mensa Widget TUM</string>
     <string name="widget_configure_description">Configure the cards to show</string>
 
     <string name="update_notification_description">A new version of the Tum Campus App has been released on %s. Tap to download now.</string>
@@ -485,6 +485,7 @@ Signature: %5$s</string>
     <string name="selected_target_faculties" translatable="false">Selected target faculties:</string>
     <string name="transition_card" translatable="false">card_transition</string>
     <string name="tumonline_link" translatable="false" tools:ignore="TypographyQuotes"><a href='http://campus.tum.de'>TUMonline</a></string>
+    <string name="accept_chat_terms">Terms must be accepted to use group chat!</string>
 </resources>
 
 

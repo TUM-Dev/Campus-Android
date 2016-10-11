@@ -386,7 +386,7 @@
     <string name="event_plan">Plan de evento</string>
     <string name="choose_own_faculty">Por favor elija su facultad</string>
     <string name="add_widget">Agregar panel</string>
-    <string name="mensa_widget">Mensa Widget TUM</string>
     <string name="widget_configure_description">Configurar las tarjetas para mostrar</string>
+    <string name="accept_chat_terms">Chatbedingungen müssen akzeptiert werden, damit du den Vorlesungs-Chat verwenden kannst!</string>
     <!-- END Translated, please do not change identifiers -->
 </resources>
