@@ -151,7 +151,7 @@
     <string name="mensa_pasing">Mensa Pasing</string>
     <string name="mensa_weihenstephan">Mensa Weihenstephan</string>
     <string name="menues">Mense</string>
-    <string name="message_detail_text"><b>Mittente</b><br> Nome: %1$s<br> E-Mail: %2$s@mytum.de<br><br> <b>Messaggio</b><br> Zeit: %3$s<br> Stato: %4$s<br> Firma: %5$s</string>
+    <string name="message_detail_text"><b>Mittente</b><br>Nome: %1$s</br>E-Mail: %2$s@mytum.de<b>Messaggio</b><br>Zeit: %3$s</br>Stato: %4$s<br> Firma: %5$s</br></string>
     <string name="message_details">Informazioni sul messaggio</string>
     <string name="min_search_len">Il testo deve avere almeno %d caratteri</string>
     <string name="mobile_phone">Numero di cellulare</string>

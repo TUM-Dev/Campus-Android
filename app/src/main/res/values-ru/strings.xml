@@ -157,7 +157,7 @@
     <string name="mensa_pasing">Кафетерий Пазинг</string>
     <string name="mensa_weihenstephan">Кафетерий Вайхенштефан</string>
     <string name="menues">Кафетерии</string>
-    <string name="message_detail_text"><b>Sender</b><br> Name: %1$s<br> E-Mail: %2$s@mytum.de<br><br> <b>Message</b><br> Time: %3$s<br> Status: %4$s<br> Signature: %5$s</string>
+    <string name="message_detail_text"><b>Sender</b><br> Name: %1$s</br>E-Mail: %2$s@mytum.de<b>Message</b><br> Time: %3$s</br> Status: %4$s<br> Signature: %5$s</br>br></string>
     <string name="message_details">Информация о сообщении</string>
     <string name="min_search_len">Текст должен содержать по меньшей мере %d знаков</string>
     <string name="mobile_phone">Номер мобильного телефона</string>
