@@ -5,7 +5,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.1.2'
+        classpath 'com.android.tools.build:gradle:2.2.1'
     }
 }
 
@@ -16,23 +16,6 @@ allprojects {
     }
     repositories {
         jcenter()
-    }
-
-    // Since not all modules have the same android plugin, we cannot apply the android plugin right
-    // now. In afterEvaluate, we can add common android properties for all modules
-    afterEvaluate { project ->
-        if (project.hasProperty("android")) {
-            android {
-                buildTypes {
-                    all {
-                        FileCollection proGuardFileCollection = files {
-                            file('proguard').listFiles()
-                        }
-                        proguardFiles(proGuardFileCollection)
-                        proguardFile getDefaultProguardFile('proguard-android.txt')
-                    }
-                }
-            }
-        }
+        maven { url "https://jitpack.io" }
     }
 }
