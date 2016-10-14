@@ -188,7 +188,7 @@ public class AuthenticationManager {
                     Utils.log(response.body().getStatus());
 
                     //Remember that we are done, only if we have submitted with the member information
-                    if (response.body().getStatus() == "ok") {
+                    if ("ok".equals(response.body().getStatus())) {
                         if (member != null) {
                             Utils.setInternalSetting(mContext, Const.PUBLIC_KEY_UPLOADED, true);
                         }
