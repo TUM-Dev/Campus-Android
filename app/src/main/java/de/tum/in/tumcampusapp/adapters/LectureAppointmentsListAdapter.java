@@ -77,12 +77,12 @@ public class LectureAppointmentsListAdapter extends BaseAdapter {
         // only show if lecture has a title and enough info
         if (lvItem != null) {
             holder.tvTerminOrt.setText(lvItem.getOrt());
-            String line2 = lvItem.getArt();
+            StringBuilder line2 = new StringBuilder(lvItem.getArt());
             // only show betreff if available
             if (lvItem.getTermin_betreff() != null) {
-                line2 += " - " + lvItem.getTermin_betreff();
+                line2.append(" - ").append(lvItem.getTermin_betreff());
             }
-            holder.tvTerminBetreff.setText(line2);
+            holder.tvTerminBetreff.setText(line2.toString());
 
             Calendar start = Calendar.getInstance();
             Calendar ende = Calendar.getInstance();
@@ -96,21 +96,22 @@ public class LectureAppointmentsListAdapter extends BaseAdapter {
                 cstart.setTime(start.getTime());
 
                 // output if same day: we only show the date once
-                String output;
+                StringBuilder output = new StringBuilder();
                 if (start.get(Calendar.MONTH) == ende.get(Calendar.MONTH) &&
                         start.get(Calendar.DATE) == ende.get(Calendar.DATE)) {
-                    output = startDateOutput.format(start.getTime()) + " - " + endHoursOutput.format(ende.getTime());
+                    output.append(startDateOutput.format(start.getTime())).append(" - ").append(endHoursOutput.format(ende.getTime()));
                 } else {
                     // show it normally
-                    output = startDateOutput.format(start.getTime()) + " - " + endDateOutput.format(ende.getTime());
+                    output.append(startDateOutput.format(start.getTime())).append(" - ").append(endDateOutput.format(ende.getTime()));
                 }
 
                 // grey it, if in past
                 if (cstart.before(cnow)) {
-                    output = "<font color=\"#444444\">" + output + "</font>";
+                    output.insert(0, "<font color=\"#444444\">");
+                    output.append("</font>");
                 }
 
-                holder.tvTerminZeit.setText(Utils.fromHtml(output));
+                holder.tvTerminZeit.setText(Utils.fromHtml(output.toString()));
 
             } catch (ParseException e) {
                 holder.tvTerminZeit.setText(String.format("%s - %s",

@@ -77,7 +77,7 @@ public class PersonsDetailsActivity extends ActivityForAccessingTumOnline<Employ
         }
 
         // Sets the current name as a title
-        setTitle(person.getName() + " " + person.getSurname());
+        setTitle(person.getName() + ' ' + person.getSurname());
         requestHandler.setParameter("pIdentNr", person.getId());
         super.requestFetch();
     }
@@ -140,19 +140,19 @@ public class PersonsDetailsActivity extends ActivityForAccessingTumOnline<Employ
         // get the right gender
         if (employee.getGender() != null
                 && employee.getGender().equals(Person.MALE)) {
-            contentText.append(getString(R.string.mr) + " ");
+            contentText.append(getString(R.string.mr) + ' ');
         } else if (employee.getGender() != null
                 && employee.getGender().equals(Person.FEMALE)) {
-            contentText.append(getString(R.string.mrs) + " ");
+            contentText.append(getString(R.string.mrs) + ' ');
         }
 
         // add title if available
         if (employee.getTitle() != null) {
-            contentText.append(employee.getTitle() + " ");
+            contentText.append(employee.getTitle() + ' ');
         }
 
         // add name
-        contentText.append(employee.getName() + " " + employee.getSurname());
+        contentText.append(employee.getName() + ' ' + employee.getSurname());
         tvDetails1.setText(contentText.toString());
 
         // start new information section
@@ -171,7 +171,7 @@ public class PersonsDetailsActivity extends ActivityForAccessingTumOnline<Employ
                     contentText.appendField(getString(R.string.group), group.getOrg()
                             + " ("
                             + group.getId()
-                            + ")" + "<br />");
+                            + ")<br />");
                 }
             }
         }
@@ -194,7 +194,7 @@ public class PersonsDetailsActivity extends ActivityForAccessingTumOnline<Employ
         if (substations != null) {
             for (int i = 0; i < substations.size(); i++) {
                 if (substations.get(i) != null) {
-                    contentText.appendField(getString(R.string.phone) + " "
+                    contentText.appendField(getString(R.string.phone) + ' '
                             + (i + 1), substations.get(i).getNumber());
                 }
 
@@ -219,7 +219,7 @@ public class PersonsDetailsActivity extends ActivityForAccessingTumOnline<Employ
         List<Room> rooms = employee.getRooms();
         if (rooms != null && !rooms.isEmpty()) {
             contentText.appendField(getString(R.string.room), rooms.get(0)
-                    .getLocation() + " (" + rooms.get(0).getNumber() + ")");
+                    .getLocation() + " (" + rooms.get(0).getNumber() + ')');
         }
 
         tvDetails4.setText(Utils.fromHtml(contentText.toString()),
@@ -299,26 +299,33 @@ public class PersonsDetailsActivity extends ActivityForAccessingTumOnline<Employ
         }
 
         // Add office hours
-        String notes = "";
+        StringBuilder notes = new StringBuilder();
         if (employee.getConsultationHours() != null) {
-            notes = getString(R.string.office_hours) + ": " + employee.getConsultationHours();
+            notes.append(getString(R.string.office_hours))
+                    .append(": ")
+                    .append(employee.getConsultationHours());
         }
 
         // add all rooms
         List<Room> rooms = employee.getRooms();
         if (rooms != null && !rooms.isEmpty()) {
-            if (!notes.isEmpty()) {
-                notes += "\n";
+            if (!notes.toString().isEmpty()) {
+                notes.append('\n');
             }
-            notes += getString(R.string.room) + ": " + rooms.get(0).getLocation() + " (" + rooms.get(0).getNumber() + ")";
+            notes.append(getString(R.string.room))
+                    .append(": ")
+                    .append(rooms.get(0).getLocation())
+                    .append(" (")
+                    .append(rooms.get(0).getNumber())
+                    .append(')');
         }
 
         // Finally add notes
-        if (!notes.isEmpty()) {
+        if (!notes.toString().isEmpty()) {
             ops.add(ContentProviderOperation.newInsert(Data.CONTENT_URI)
                     .withValueBackReference(Data.RAW_CONTACT_ID, rawContactID)
                     .withValue(Data.MIMETYPE, Note.CONTENT_ITEM_TYPE)
-                    .withValue(Note.NOTE, notes)
+                    .withValue(Note.NOTE, notes.toString())
                     .build());
         }
 

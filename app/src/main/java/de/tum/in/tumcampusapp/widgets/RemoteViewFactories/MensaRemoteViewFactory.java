@@ -9,6 +9,7 @@ import android.widget.RemoteViewsService;
 
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.auxiliary.CafeteriaPrices;
@@ -19,6 +20,7 @@ import de.tum.in.tumcampusapp.models.managers.CafeteriaManager;
 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 public class MensaRemoteViewFactory implements RemoteViewsService.RemoteViewsFactory {
 
+    private static final Pattern COMPILE = Pattern.compile("\\([^\\)]+\\)");
     private final Context applicationContext;
     private List<CafeteriaMenu> mensaMenu;
 
@@ -67,17 +69,15 @@ public class MensaRemoteViewFactory implements RemoteViewsService.RemoteViewsFac
         }
         rv.setTextViewText(R.id.menu_type, currentItem.typeShort);
 
-        String menuContent = currentItem.name.replaceAll("\\([^\\)]+\\)", "").trim();
+        String menuContent = COMPILE.matcher(currentItem.name).replaceAll("").trim();
         rv.setTextViewText(R.id.menu_content, menuContent);
 
         String price = CafeteriaPrices.getPrice(applicationContext, currentItem.typeLong);
-        if (price != null) {
-            price += " €";
-        } else {
-            price = "____€";
+        if (price == null) {
+            price = "____";
         }
 
-        rv.setTextViewText(R.id.menu_price, price);
+        rv.setTextViewText(R.id.menu_price, price + " €");
         return rv;
     }
 

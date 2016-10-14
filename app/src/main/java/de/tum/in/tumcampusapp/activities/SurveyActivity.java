@@ -76,13 +76,13 @@ public class SurveyActivity extends ProgressActivity {
         @Override
         public void onClick(final View v) {
             String[] faculties = (String[]) v.getTag();
-            String chosenFaculties = "";
+            StringBuilder chosenFaculties = new StringBuilder();
             for (int i = 0; i < faculties.length; i++) {
-                chosenFaculties += "- " + faculties[i] + "\n";
+                chosenFaculties.append("- ").append(faculties[i]).append('\n');
             }
 
             new android.app.AlertDialog.Builder(context).setTitle(getResources().getString(R.string.selected_target_faculties))
-                    .setMessage(chosenFaculties)
+                    .setMessage(chosenFaculties.toString())
                     .setPositiveButton(android.R.string.ok, null).create().show();
         }
 

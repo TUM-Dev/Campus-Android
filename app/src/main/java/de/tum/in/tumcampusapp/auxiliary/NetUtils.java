@@ -20,7 +20,6 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.concurrent.TimeUnit;
 
 import de.tum.in.tumcampusapp.api.Helper;
 import de.tum.in.tumcampusapp.models.managers.CacheManager;
@@ -91,16 +90,16 @@ public class NetUtils {
 
     private void setHttpConnectionParams(Request.Builder builder) {
         //Clearly identify all requests from this app
-        String userAgent = "TCA Client";
+        StringBuilder userAgent = new StringBuilder("TCA Client");
         if (G.appVersion != null && !G.appVersion.equals(G.UNKNOWN)) {
-            userAgent += ' ' + G.appVersion;
+            userAgent.append(' ').append(G.appVersion);
             if (G.appVersionCode != -1) {
-                userAgent += "/" + G.appVersionCode;
+                userAgent.append('/').append(G.appVersionCode);
             }
         }
 
         try {
-            builder.header("User-Agent", userAgent);
+            builder.header("User-Agent", userAgent.toString());
             builder.addHeader("X-DEVICE-ID", AuthenticationManager.getDeviceID(mContext));
             builder.addHeader("X-ANDROID-VERSION", Build.VERSION.RELEASE);
             builder.addHeader("X-APP-VERSION", mContext.getPackageManager().getPackageInfo(mContext.getPackageName(), 0).versionName);

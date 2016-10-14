@@ -121,7 +121,7 @@ public class StudyRoomGroupDetailsFragment extends Fragment implements SimpleCur
             TextView tv = (TextView) view;
             tv.setText(studyRoom.name);
         } else if (view.getId() == android.R.id.text2) {
-            StringBuilder stringBuilder = new StringBuilder(studyRoom.location + "<br>");
+            StringBuilder stringBuilder = new StringBuilder(studyRoom.location).append("<br>");
 
             if (studyRoom.occupiedTill.compareTo(new Date()) < 0) {
                 stringBuilder.append(getString(R.string.free));
