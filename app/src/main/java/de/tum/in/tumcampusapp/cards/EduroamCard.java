@@ -35,7 +35,7 @@ public class EduroamCard extends NotificationAwareCard {
 
     @Override
     public void updateViewHolder(RecyclerView.ViewHolder viewHolder) {
-
+        // NOOP
     }
 
     @Override

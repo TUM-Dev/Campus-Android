@@ -118,7 +118,7 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<String, 
 
                     @Override
                     public void onNothingSelected(AdapterView<?> adapterView) {
-
+                        // NOOP
                     }
                 });
             }

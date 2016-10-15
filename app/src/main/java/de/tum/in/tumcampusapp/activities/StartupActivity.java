@@ -244,6 +244,7 @@ public class StartupActivity extends AppCompatActivity {
         set.addListener(new Animator.AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animation) {
+                // NOOP
             }
 
             @Override
@@ -257,10 +258,12 @@ public class StartupActivity extends AppCompatActivity {
 
             @Override
             public void onAnimationCancel(Animator animation) {
+                // NOOP
             }
 
             @Override
             public void onAnimationRepeat(Animator animation) {
+                // NOOP
             }
         });
         set.start();

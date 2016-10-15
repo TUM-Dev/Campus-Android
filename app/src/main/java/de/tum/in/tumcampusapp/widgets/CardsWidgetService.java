@@ -43,6 +43,7 @@ class CardsRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 
     @Override
     public void onCreate() {
+        // NOOP
     }
 
     @Override
@@ -52,6 +53,7 @@ class CardsRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 
     @Override
     public void onDestroy() {
+        // NOOP
     }
 
     @Override

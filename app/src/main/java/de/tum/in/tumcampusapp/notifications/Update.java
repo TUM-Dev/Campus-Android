@@ -39,9 +39,9 @@ public class Update extends GenericNotification {
         //Get data from server
         this.info = getNotificationFromServer();
 
-        if (BuildConfig.VERSION_CODE < data.packageVersion) {
+        //if (BuildConfig.VERSION_CODE < data.packageVersion) {
             //TODO self deactivate
-        }
+        //}
     }
 
     private GCMNotification getNotificationFromServer() {

@@ -138,6 +138,7 @@ public class SurveyActivity extends ProgressActivity {
 
     @Override
     public void onRefresh() {
+        // TODO
     }
 
     //set up the respone tab layout dynamically depending on number of questions
@@ -292,6 +293,7 @@ public class SurveyActivity extends ProgressActivity {
         zoomOut.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
+                // NOOP
             }
 
             @Override
@@ -301,6 +303,7 @@ public class SurveyActivity extends ProgressActivity {
 
             @Override
             public void onAnimationRepeat(Animation animation) {
+                // NOOP
             }
         });
     }
@@ -367,9 +370,9 @@ public class SurveyActivity extends ProgressActivity {
                         }
                     }
                 }).setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    //if Ok do nothing-> keep selecte faculties
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
+                        //if Ok do nothing-> keep selected faculties
                     }
                 }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     //if cancel clear selected faculties
@@ -630,6 +633,7 @@ public class SurveyActivity extends ProgressActivity {
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
+                // NOOP
             }
         });
     }
@@ -655,7 +659,7 @@ public class SurveyActivity extends ProgressActivity {
      */
     private String getNextPossibleDate() {
         String nextPossibleDate = "";
-        ArrayList<String> dates = new ArrayList<String>();
+        ArrayList<String> dates = new ArrayList<>();
         String weekAgo = getDateBefore1Week();
         Cursor c = surveyManager.ownQuestionsSince(weekAgo);
 
