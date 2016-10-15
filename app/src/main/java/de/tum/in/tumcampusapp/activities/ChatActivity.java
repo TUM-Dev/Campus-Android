@@ -38,7 +38,6 @@ import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.text.DateFormat;
-import java.util.ArrayList;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
@@ -417,7 +416,7 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
                 } catch (NoPrivateKey noPrivateKey) {
                     return; //In this case we simply cannot do anything
                 }
-                ArrayList<ChatMessage> downloadedChatHistory;
+                List<ChatMessage> downloadedChatHistory;
                 try {
                     if (chatHistoryAdapter == null || chatHistoryAdapter.getSentCount() == 0 || newMsg) {
                         downloadedChatHistory = TUMCabeClient.getInstance(ChatActivity.this).getNewMessages(currentChatRoom.getId(), verification);

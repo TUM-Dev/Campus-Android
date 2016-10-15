@@ -65,7 +65,7 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
      * 3. save the questions in the db
      */
     public void downLoadOpenQuestions() {
-        ArrayList<Question> openQuestions = new ArrayList<>();
+        List<Question> openQuestions = new ArrayList<>();
         try {
             openQuestions = TUMCabeClient.getInstance(mContext).getOpenQuestions();
         } catch (IOException e) {
@@ -92,8 +92,8 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
      *
      * @param fetchedOpenedQuestions
      */
-    void delteFlaggedQuestions(ArrayList<Question> fetchedOpenedQuestions) {
-        ArrayList<Question> downloadedQuestionsID = new ArrayList<>(); // get the ids of all fetched openQuestions
+    void delteFlaggedQuestions(List<Question> fetchedOpenedQuestions) {
+        List<Question> downloadedQuestionsID = new ArrayList<>(); // get the ids of all fetched openQuestions
         for (int x = 0; x < fetchedOpenedQuestions.size(); x++) {
             downloadedQuestionsID.add(new Question(fetchedOpenedQuestions.get(x).getQuestion()));
         }
@@ -294,11 +294,9 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
 
     /**
      * Fetches the facultyData from the server and saves it in the local db
-     *
-     * @throws Exception
      */
     public void downloadFacultiesFromExternal() {
-        ArrayList<Faculty> faculties = null;
+        List<Faculty> faculties;
         try {
             faculties = TUMCabeClient.getInstance(mContext).getFaculties();
         } catch (IOException e) {
@@ -349,7 +347,7 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
      * saves them in local db if they don't exist
      */
     public void downLoadOwnQuestions() {
-        ArrayList<Question> ownQuestions = new ArrayList<>();
+        List<Question> ownQuestions = new ArrayList<>();
         try {
             ownQuestions = TUMCabeClient.getInstance(mContext).getOwnQuestions();
         } catch (IOException e) {

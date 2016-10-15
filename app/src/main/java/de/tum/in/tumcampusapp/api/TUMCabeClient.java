@@ -3,7 +3,6 @@ package de.tum.in.tumcampusapp.api;
 import android.content.Context;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.auxiliary.Const;
@@ -43,13 +42,13 @@ public class TUMCabeClient {
     private static final String API_CHAT = "chat/";
     private static final String API_CHAT_ROOMS = API_CHAT + "rooms/";
     private static final String API_CHAT_MEMBERS = API_CHAT + "members/";
-    private static final String API_SESSION = "session/";
-    private static final String API_NEWS = "news/";
-    private static final String API_MENSA = "mensen/";
-    private static final String API_CURRICULA = "curricula/";
+    //private static final String API_SESSION = "session/";
+    //private static final String API_NEWS = "news/";
+    //private static final String API_MENSA = "mensen/";
+    //private static final String API_CURRICULA = "curricula/";
     private static final String API_REPORT = "report/";
     private static final String API_STATISTICS = "statistics/";
-    private static final String API_CINEMA = "kino/";
+    //private static final String API_CINEMA = "kino/";
     private static final String API_NOTIFICATIONS = "notifications/";
     private static final String API_LOCATIONS = "locations/";
     private static final String API_DEVICE = "device/";
@@ -88,16 +87,15 @@ public class TUMCabeClient {
 
     }
 
-    public static TUMCabeClient getInstance(Context c) {
-        c.getApplicationContext();
+    public static synchronized TUMCabeClient getInstance(Context c) {
         if (instance == null) {
-            instance = new TUMCabeClient(c);
+            instance = new TUMCabeClient(c.getApplicationContext());
         }
         return instance;
     }
 
     // Fetches faculty data (facname, id).Relevant for the user to select own major in majorSpinner in WizNavStartActivity
-    public ArrayList<Faculty> getFaculties() throws IOException {
+    public List<Faculty> getFaculties() throws IOException {
         return service.getFaculties().execute().body();
     }
 
@@ -107,7 +105,7 @@ public class TUMCabeClient {
     }
 
     // Fetches users ownQuestions and responses.Relevant for displaying results on ownQuestion under responses in SurveyActivity
-    public ArrayList<Question> getOwnQuestions() throws IOException {
+    public List<Question> getOwnQuestions() throws IOException {
         return service.getOwnQuestions().execute().body();
     }
 
@@ -117,7 +115,7 @@ public class TUMCabeClient {
     }
 
     // Fetches openQuestions which are relevant for the surveyCard.
-    public ArrayList<Question> getOpenQuestions() throws IOException {
+    public List<Question> getOpenQuestions() throws IOException {
         return service.getOpenQuestions().execute().body();
     }
 
@@ -156,11 +154,11 @@ public class TUMCabeClient {
         return service.updateMessage(roomId, message.getId(), message).execute().body();
     }
 
-    public ArrayList<ChatMessage> getMessages(int roomId, long messageId, @Body ChatVerification verification) throws IOException {
+    public List<ChatMessage> getMessages(int roomId, long messageId, @Body ChatVerification verification) throws IOException {
         return service.getMessages(roomId, messageId, verification).execute().body();
     }
 
-    public ArrayList<ChatMessage> getNewMessages(int roomId, @Body ChatVerification verification) throws IOException {
+    public List<ChatMessage> getNewMessages(int roomId, @Body ChatVerification verification) throws IOException {
         return service.getNewMessages(roomId, verification).execute().body();
     }
 
@@ -223,13 +221,13 @@ public class TUMCabeClient {
     private interface TUMCabeAPIService {
 
         @GET(API_FACULTY)
-        Call<ArrayList<Faculty>> getFaculties();
+        Call<List<Faculty>> getFaculties();
 
         @DELETE(API_QUESTION + "{question}")
         Call<Question> deleteOwnQuestion(@Path("question") int question);
 
         @GET(API_OWN_QUESTIONS)
-        Call<ArrayList<Question>> getOwnQuestions();
+        Call<List<Question>> getOwnQuestions();
 
         @POST(API_ANSWER_QUESTION)
         Call<Question> answerQuestion(@Body Question question);
@@ -239,7 +237,7 @@ public class TUMCabeClient {
         Call<Question> createQuestion(@Body Question question);
 
         @GET(API_QUESTION)
-        Call<ArrayList<Question>> getOpenQuestions();
+        Call<List<Question>> getOpenQuestions();
 
         //Group chat
         @POST(API_CHAT_ROOMS)
@@ -260,10 +258,10 @@ public class TUMCabeClient {
 
         //Get all recent messages or older ones
         @POST(API_CHAT_ROOMS + "{room}/messages/{page}/")
-        Call<ArrayList<ChatMessage>> getMessages(@Path("room") int roomId, @Path("page") long messageId, @Body ChatVerification verification);
+        Call<List<ChatMessage>> getMessages(@Path("room") int roomId, @Path("page") long messageId, @Body ChatVerification verification);
 
         @POST(API_CHAT_ROOMS + "{room}/messages/")
-        Call<ArrayList<ChatMessage>> getNewMessages(@Path("room") int roomId, @Body ChatVerification verification);
+        Call<List<ChatMessage>> getNewMessages(@Path("room") int roomId, @Body ChatVerification verification);
 
         @POST(API_CHAT_MEMBERS)
         Call<ChatMember> createMember(@Body ChatMember chatMember);
