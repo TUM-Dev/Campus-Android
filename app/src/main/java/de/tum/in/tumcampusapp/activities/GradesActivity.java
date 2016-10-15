@@ -25,7 +25,6 @@ import java.util.Map;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampusapp.adapters.ExamListAdapter;
-import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.Exam;
@@ -36,8 +35,11 @@ import de.tum.in.tumcampusapp.tumonline.TUMOnlineConst;
  * Activity to show the user's grades/exams passed.
  */
 public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
-    private static int lastChoice;
+    private static final String[] GRADES = {"1,0", "1,3", "1,4", "1,7", "2,0",
+            "2,3", "2,4", "2,7", "3,0", "3,3", "3,4", "3,7", "4,0", "4,3",
+            "4,4", "4,7", "5,0"};
     private final NumberFormat format = NumberFormat.getInstance(Locale.FRANCE);
+    private static int lastChoice;
     private TextView averageTx;
     private double averageGrade;
     private String columnChartContent;
@@ -67,13 +69,13 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
 
         StringBuilder datas = new StringBuilder(1024);
         // Build data string
-        for (int i = 0; i < Const.GRADES.length; i++) {
+        for (int i = 0; i < GRADES.length; i++) {
             datas.append("['")
-                    .append(Const.GRADES[i]).append("', ")
-                    .append(gradeDistribution.get(Const.GRADES[i]))
+                    .append(GRADES[i]).append("', ")
+                    .append(gradeDistribution.get(GRADES[i]))
                     .append(']');
 
-            if (i != Const.GRADES.length - 1) {
+            if (i != GRADES.length - 1) {
                 datas.append(',');
             }
         }
@@ -117,12 +119,12 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
         StringBuilder datas = new StringBuilder(1024);
 
         // build data String
-        for (int i = 0; i < Const.GRADES.length; i++) {
+        for (int i = 0; i < GRADES.length; i++) {
             datas.append("['")
-                    .append(Const.GRADES[i]).append("', ")
-                    .append(gradeDistrubution.get(Const.GRADES[i]))
+                    .append(GRADES[i]).append("', ")
+                    .append(gradeDistrubution.get(GRADES[i]))
                     .append(']');
-            if (i != Const.GRADES.length - 1) {
+            if (i != GRADES.length - 1) {
                 datas.append(',');
             }
         }
