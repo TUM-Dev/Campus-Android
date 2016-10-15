@@ -88,7 +88,7 @@ public class SendMessageService extends IntentService {
             try {
                 Thread.sleep(5000);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                Utils.log(e);
             }
         }
     }

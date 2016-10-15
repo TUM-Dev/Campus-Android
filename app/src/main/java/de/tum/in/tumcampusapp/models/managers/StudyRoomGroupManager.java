@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Locale;
 
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
+import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.StudyRoom;
 import de.tum.in.tumcampusapp.models.StudyRoomGroup;
 
@@ -219,7 +220,7 @@ public class StudyRoomGroupManager extends AbstractManager {
                     (2), cursor.getString(3), new SimpleDateFormat(DATEFORMAT, Locale.US).parse(cursor
                     .getString(4)));
         } catch (ParseException e) {
-            e.printStackTrace();
+            Utils.log(e);
         }
         return studyRoom;
     }

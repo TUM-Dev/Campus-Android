@@ -460,7 +460,7 @@ public class SurveyActivity extends ProgressActivity {
                             try {
                                 Thread.sleep(1000); // Waits to make sure that the questions got sent to the server in order to avoid fetching ownQuestions without the newly created questions
                             } catch (InterruptedException e) {
-                                e.printStackTrace();
+                                Utils.log(e);
                             }
                             surveyManager.downLoadOwnQuestions();
                             return null;

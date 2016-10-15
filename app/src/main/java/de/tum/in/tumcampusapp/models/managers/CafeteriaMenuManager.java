@@ -6,6 +6,7 @@ import android.database.Cursor;
 import com.google.common.base.Optional;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -33,9 +34,9 @@ public class CafeteriaMenuManager extends AbstractManager {
      *
      * @param json see above
      * @return CafeteriaMenu
-     * @throws Exception
+     * @throws JSONException
      */
-    private static CafeteriaMenu getFromJson(JSONObject json) throws Exception {
+    private static CafeteriaMenu getFromJson(JSONObject json) throws JSONException {
 
         return new CafeteriaMenu(json.getInt("id"), json.getInt("mensa_id"),
                 Utils.getDate(json.getString("date")),
@@ -52,10 +53,10 @@ public class CafeteriaMenuManager extends AbstractManager {
      *
      * @param json see above
      * @return CafeteriaMenu
-     * @throws Exception
+     * @throws JSONException
      */
     private static CafeteriaMenu getFromJsonAddendum(JSONObject json)
-            throws Exception {
+            throws JSONException {
 
         return new CafeteriaMenu(0, json.getInt("mensa_id"), Utils.getDate(json
                 .getString("date")), json.getString("type_short"),
@@ -110,7 +111,8 @@ public class CafeteriaMenuManager extends AbstractManager {
                 replaceIntoDb(getFromJsonAddendum(beilagen.getJSONObject(j)));
             }
             db.setTransactionSuccessful();
-        } catch (Exception e) {
+        } catch (JSONException e) {
+            Utils.log(e);
         } finally {
             db.endTransaction();
         }
@@ -209,23 +211,22 @@ public class CafeteriaMenuManager extends AbstractManager {
      * Replace or Insert a cafeteria menu in the database
      *
      * @param c CafeteriaMenu object
-     * @throws Exception
      */
-    void replaceIntoDb(CafeteriaMenu c) throws Exception {
+    private void replaceIntoDb(CafeteriaMenu c) {
         if (c.cafeteriaId <= 0) {
-            throw new Exception("Invalid cafeteriaId.");
+            throw new RuntimeException("Invalid cafeteriaId.");
         }
         if (c.name.length() == 0) {
-            throw new Exception("Invalid name.");
+            throw new RuntimeException("Invalid name.");
         }
         if (c.typeLong.length() == 0) {
-            throw new Exception("Invalid typeLong.");
+            throw new RuntimeException("Invalid typeLong.");
         }
         if (c.typeShort.length() == 0) {
-            throw new Exception("Invalid typeShort.");
+            throw new RuntimeException("Invalid typeShort.");
         }
         if (c.date.before(Utils.getDate("2012-01-01"))) {
-            throw new Exception("Invalid date.");
+            throw new RuntimeException("Invalid date.");
         }
         db.execSQL("REPLACE INTO cafeterias_menus (mensaId, date, typeShort, "
                         + "typeLong, typeNr, name) VALUES (?, ?, ?, ?, ?, ?)",

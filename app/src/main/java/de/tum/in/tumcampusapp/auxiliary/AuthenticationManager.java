@@ -145,8 +145,8 @@ public class AuthenticationManager {
 
             // If we already have one don't create a new one
             return true;
-        } catch (NoPrivateKey noPrivateKey) {
-        } catch (NoPublicKey noPublicKey) {
+        } catch (NoPrivateKey | NoPublicKey e) {
+            Utils.log(e);
         }
 
         //Something went wrong, generate a new pair

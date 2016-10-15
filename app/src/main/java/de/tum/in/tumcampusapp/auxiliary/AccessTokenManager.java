@@ -55,7 +55,7 @@ public class AccessTokenManager {
             requestSavePublicKey.setParameterEncoded("pSecret", publicKey);
             requestSavePublicKey.fetch();
         } catch (NoPublicKey noPublicKey) {
-            noPublicKey.printStackTrace();
+            Utils.log(noPublicKey);
         }
 
         return token.get().getToken();

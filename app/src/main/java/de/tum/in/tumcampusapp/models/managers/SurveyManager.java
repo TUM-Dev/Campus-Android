@@ -65,11 +65,11 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
      * 3. save the questions in the db
      */
     public void downLoadOpenQuestions() {
-        ArrayList<Question> openQuestions = new ArrayList<Question>();
+        ArrayList<Question> openQuestions = new ArrayList<>();
         try {
             openQuestions = TUMCabeClient.getInstance(mContext).getOpenQuestions();
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (IOException e) {
+            Utils.log(e);
         }
 
         delteFlaggedQuestions(openQuestions);
@@ -93,7 +93,7 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
      * @param fetchedOpenedQuestions
      */
     void delteFlaggedQuestions(ArrayList<Question> fetchedOpenedQuestions) {
-        ArrayList<Question> downloadedQuestionsID = new ArrayList<Question>(); // get the ids of all fetched openQuestions
+        ArrayList<Question> downloadedQuestionsID = new ArrayList<>(); // get the ids of all fetched openQuestions
         for (int x = 0; x < fetchedOpenedQuestions.size(); x++) {
             downloadedQuestionsID.add(new Question(fetchedOpenedQuestions.get(x).getQuestion()));
         }
@@ -134,8 +134,6 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
                 db.beginTransaction();
                 db.insert("openQuestions", null, cv);
                 db.setTransactionSuccessful();
-            } catch (Exception e) {
-                e.printStackTrace();
             } finally {
                 db.endTransaction();
                 c.close();
@@ -222,8 +220,6 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
             db.beginTransaction();
             db.update("openQuestions", cv, "question = ?", new String[]{question.getQuestion().toString()});
             db.setTransactionSuccessful();
-        } catch (Exception e) {
-            e.printStackTrace();
         } finally {
             db.endTransaction();
         }
@@ -342,8 +338,6 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
                 db.insert("faculties", null, cv);
                 db.setTransactionSuccessful();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         } finally {
             c.close();
             db.endTransaction();
@@ -355,12 +349,11 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
      * saves them in local db if they don't exist
      */
     public void downLoadOwnQuestions() {
-        ArrayList<Question> ownQuestions = new ArrayList<Question>();
+        ArrayList<Question> ownQuestions = new ArrayList<>();
         try {
             ownQuestions = TUMCabeClient.getInstance(mContext).getOwnQuestions();
-        } catch (Exception e) {
-            e.printStackTrace();
-            Utils.log(e.toString());
+        } catch (IOException e) {
+            Utils.log(e);
         }
 
         for (int i = 0; i < ownQuestions.size(); i++) {
@@ -389,8 +382,6 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
             }
 
             db.setTransactionSuccessful();
-        } catch (Exception e) {
-            e.printStackTrace();
         } finally {
             db.endTransaction();
             c.close();

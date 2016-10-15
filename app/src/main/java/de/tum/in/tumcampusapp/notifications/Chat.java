@@ -95,7 +95,7 @@ public class Chat extends GenericNotification {
         try {
             messages = manager.getNewMessages(member, this.extras.message);
         } catch (NoPrivateKey noPrivateKey) {
-            noPrivateKey.printStackTrace();
+            Utils.log(noPrivateKey);
         }
 
         // Notify any open chat activity that a message has been received
