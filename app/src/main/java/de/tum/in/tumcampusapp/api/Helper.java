@@ -1,6 +1,8 @@
 package de.tum.in.tumcampusapp.api;
 
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.os.Build;
 
 import com.franmontiel.persistentcookiejar.ClearableCookieJar;
 import com.franmontiel.persistentcookiejar.PersistentCookieJar;
@@ -11,6 +13,8 @@ import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 import de.tum.in.tumcampusapp.auxiliary.AuthenticationManager;
+import de.tum.in.tumcampusapp.auxiliary.Utils;
+import de.tum.in.tumcampusapp.trace.G;
 import okhttp3.CertificatePinner;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -62,13 +66,29 @@ public class Helper {
     }
 
     private static Interceptor getDeviceInterceptor(final Context c) {
+        //Clearly identify all requests from this app
+        final StringBuilder userAgent = new StringBuilder("TCA Client");
+        if (G.appVersion != null && !G.appVersion.equals(G.UNKNOWN)) {
+            userAgent.append(' ').append(G.appVersion);
+            if (G.appVersionCode != -1) {
+                userAgent.append('/').append(G.appVersionCode);
+            }
+        }
+
         return new Interceptor() {
             @Override
             public Response intercept(Chain chain) throws IOException {
-                Request newRequest = chain.request().newBuilder()
+                Utils.log("Fetching: " + chain.request().url().toString());
+                Request.Builder newRequest = chain.request().newBuilder()
                         .addHeader("X-DEVICE-ID", AuthenticationManager.getDeviceID(c))
-                        .build();
-                return chain.proceed(newRequest);
+                        .addHeader("User-Agent", userAgent.toString())
+                        .addHeader("X-ANDROID-VERSION", Build.VERSION.RELEASE);
+                try {
+                    newRequest.addHeader("X-APP-VERSION", c.getPackageManager().getPackageInfo(c.getPackageName(), 0).versionName);
+                } catch (PackageManager.NameNotFoundException e) {
+                }
+
+                return chain.proceed(newRequest.build());
             }
         };
     }

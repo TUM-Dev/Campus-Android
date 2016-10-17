@@ -81,31 +81,10 @@ public class NetUtils {
      * @return true if available
      */
     public static boolean isConnectedWifi(Context con) {
-        ConnectivityManager cm = (ConnectivityManager) con
-                .getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager cm = (ConnectivityManager) con.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
 
         return netInfo != null && netInfo.isConnectedOrConnecting() && netInfo.getType() == ConnectivityManager.TYPE_WIFI;
-    }
-
-    private void setHttpConnectionParams(Request.Builder builder) {
-        //Clearly identify all requests from this app
-        StringBuilder userAgent = new StringBuilder("TCA Client");
-        if (G.appVersion != null && !G.appVersion.equals(G.UNKNOWN)) {
-            userAgent.append(' ').append(G.appVersion);
-            if (G.appVersionCode != -1) {
-                userAgent.append('/').append(G.appVersionCode);
-            }
-        }
-
-        try {
-            builder.header("User-Agent", userAgent.toString());
-            builder.addHeader("X-DEVICE-ID", AuthenticationManager.getDeviceID(mContext));
-            builder.addHeader("X-ANDROID-VERSION", Build.VERSION.RELEASE);
-            builder.addHeader("X-APP-VERSION", mContext.getPackageManager().getPackageInfo(mContext.getPackageName(), 0).versionName);
-        } catch (PackageManager.NameNotFoundException e) {
-            //Don't log any errors, as we don't really care!
-        }
     }
 
     private Optional<ResponseBody> getOkHttpResponse(String url) throws IOException {
@@ -116,13 +95,10 @@ public class NetUtils {
         }
 
         Utils.logv("Download URL: " + url);
-
         Request.Builder builder = new Request.Builder().url(url);
-        setHttpConnectionParams(builder);
 
         //Execute the request
-        Request req = builder.build();
-        Response res = client.newCall(req).execute();
+        Response res = client.newCall(builder.build()).execute();
         return Optional.of(res.body());
     }
 

@@ -119,6 +119,11 @@ public class ChatRoomManager extends AbstractManager implements Card.ProvidesCar
      * Saves the given chat rooms into database
      */
     public void replaceIntoRooms(List<ChatRoom> rooms) {
+        if(rooms == null) {
+            Utils.log("No rooms passed, can't insert anything.");
+            return;
+        }
+
         db.beginTransaction();
         db.execSQL("UPDATE chat_room SET joined=0 WHERE joined=1");
         Utils.log("reset join status of all rooms");

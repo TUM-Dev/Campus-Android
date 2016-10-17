@@ -195,16 +195,15 @@ public class TUMCabeClient {
     }
 
     public void putStatistics(Statistics s) {
-        service.putStatistics(s).enqueue(new Callback<String>() {
+        service.putStatistics(s).enqueue(new Callback<List<String>>() {
             @Override
-            public void onResponse(Call<String> call, Response<String> response) {
+            public void onResponse(Call<List<String>> call, Response<List<String>> response) {
                 //We don't care about any responses
             }
 
             @Override
-            public void onFailure(Call<String> call, Throwable t) {
+            public void onFailure(Call<List<String>> call, Throwable t) {
                 //Or if this fails
-                Utils.log(t);
             }
         });
 
@@ -297,7 +296,7 @@ public class TUMCabeClient {
 
         //Statistics
         @PUT(API_STATISTICS)
-        Call<String> putStatistics(@Body Statistics r);
+        Call<List<String>> putStatistics(@Body Statistics r);
 
         //Device
         @POST(API_DEVICE + "register/")

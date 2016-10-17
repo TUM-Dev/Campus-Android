@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.text.TextUtils;
 
 import java.io.IOException;
+import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -353,7 +354,9 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
         } catch (IOException e) {
             Utils.log(e);
         }
-
+        if(ownQuestions.size() == 0) {
+            return;
+        }
         for (int i = 0; i < ownQuestions.size(); i++) {
             replaceIntoDbOwnQuestions(ownQuestions.get(i));
         }

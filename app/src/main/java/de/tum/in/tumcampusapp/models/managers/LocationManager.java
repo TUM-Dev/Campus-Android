@@ -54,7 +54,7 @@ public class LocationManager {
             "Garching-Forschungszentrum",
             "Garching-Hochbrück",
             "Weihenstephan",
-            "Theresienstraße",
+            "Theresienstraße",//TODO need to use id instead of name, otherwise it does not work = 1000120
             "Klinikum Großhadern",
             "Max-Weber-Platz",
             "Giselastraße",
