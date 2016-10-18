@@ -132,6 +132,10 @@ public class TransportManager implements Card.ProvidesCard {
                 return result;
             }
 
+            if (departures.get().get("departureList") == null) {
+                return result;
+            }
+
             JSONArray arr = departures.get().getJSONArray("departureList");
             for (int i = 0; i < arr.length(); i++) {
                 JSONObject departure = arr.getJSONObject(i);

@@ -183,7 +183,7 @@ public class CalendarManager extends AbstractManager implements Card.ProvidesCar
         Date dtstart, dtend;
 
         // Get all calendar items from database
-        Cursor cursor = calendarManager.getAllFromDb();
+        cursor = calendarManager.getAllFromDb();
         while (cursor.moveToNext()) {
             // Get each table row
             //final String status = cursor.getString(1);
