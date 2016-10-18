@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.database.Cursor;
 
 import de.tum.in.tumcampusapp.activities.KinoActivity;
-import de.tum.in.tumcampusapp.models.managers.CardManager;
+import de.tum.in.tumcampusapp.managers.CardManager;
 
 public class FilmCard extends NewsCard {
     public FilmCard(Context context) {

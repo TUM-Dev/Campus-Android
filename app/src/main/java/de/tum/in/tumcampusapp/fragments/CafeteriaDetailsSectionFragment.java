@@ -33,8 +33,8 @@ import de.tum.in.tumcampusapp.auxiliary.CafeteriaPrices;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.cards.CafeteriaMenuCard;
-import de.tum.in.tumcampusapp.models.managers.CafeteriaMenuManager;
-import de.tum.in.tumcampusapp.models.managers.OpenHoursManager;
+import de.tum.in.tumcampusapp.managers.CafeteriaMenuManager;
+import de.tum.in.tumcampusapp.managers.OpenHoursManager;
 import de.tum.in.tumcampusapp.services.FavoriteDishReceiver;
 
 /**

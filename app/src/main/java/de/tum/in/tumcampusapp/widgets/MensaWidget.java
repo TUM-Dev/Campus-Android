@@ -10,7 +10,7 @@ import android.os.Build;
 import android.widget.RemoteViews;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.models.managers.CafeteriaManager;
+import de.tum.in.tumcampusapp.managers.CafeteriaManager;
 import de.tum.in.tumcampusapp.services.MensaWidgetService;
 
 

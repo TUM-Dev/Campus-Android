@@ -8,7 +8,7 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.ActivityForDownloadingExternal;
 import de.tum.in.tumcampusapp.adapters.KinoAdapter;
 import de.tum.in.tumcampusapp.auxiliary.Const;
-import de.tum.in.tumcampusapp.models.managers.KinoManager;
+import de.tum.in.tumcampusapp.managers.KinoManager;
 
 /**
  * Activity to show TU Kino details (e.g. imdb rating)

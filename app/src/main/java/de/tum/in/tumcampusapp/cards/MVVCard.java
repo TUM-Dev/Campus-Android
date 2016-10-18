@@ -25,9 +25,9 @@ import de.tum.in.tumcampusapp.activities.TransportationDetailsActivity;
 import de.tum.in.tumcampusapp.auxiliary.DepartureView;
 import de.tum.in.tumcampusapp.cards.generic.Card;
 import de.tum.in.tumcampusapp.cards.generic.NotificationAwareCard;
-import de.tum.in.tumcampusapp.models.managers.TransportManager;
+import de.tum.in.tumcampusapp.managers.TransportManager;
 
-import static de.tum.in.tumcampusapp.models.managers.CardManager.CARD_MVV;
+import static de.tum.in.tumcampusapp.managers.CardManager.CARD_MVV;
 
 /**
  * Card that shows MVV departure times

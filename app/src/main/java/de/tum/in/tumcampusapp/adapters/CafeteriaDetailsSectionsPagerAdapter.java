@@ -17,7 +17,7 @@ import java.util.Locale;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.fragments.CafeteriaDetailsSectionFragment;
-import de.tum.in.tumcampusapp.models.managers.CafeteriaMenuManager;
+import de.tum.in.tumcampusapp.managers.CafeteriaMenuManager;
 
 /**
  * A {@link FragmentStatePagerAdapter} that returns a fragment corresponding to one

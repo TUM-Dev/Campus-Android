@@ -17,7 +17,7 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.SetupEduroamActivity;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
-import de.tum.in.tumcampusapp.models.managers.EduroamManager;
+import de.tum.in.tumcampusapp.managers.EduroamManager;
 
 /**
  * Listens for android's ScanResultsAvailable broadcast and checks if eduroam is nearby.

@@ -18,7 +18,7 @@ import android.widget.Toast;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
-import de.tum.in.tumcampusapp.models.managers.KinoManager;
+import de.tum.in.tumcampusapp.managers.KinoManager;
 
 
 /**

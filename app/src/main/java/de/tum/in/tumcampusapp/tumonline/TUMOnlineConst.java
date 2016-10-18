@@ -1,5 +1,6 @@
 package de.tum.in.tumcampusapp.tumonline;
 
+import de.tum.in.tumcampusapp.managers.CacheManager;
 import de.tum.in.tumcampusapp.models.AccessToken;
 import de.tum.in.tumcampusapp.models.CalendarRowSet;
 import de.tum.in.tumcampusapp.models.Employee;
@@ -13,7 +14,6 @@ import de.tum.in.tumcampusapp.models.OrgItemList;
 import de.tum.in.tumcampusapp.models.PersonList;
 import de.tum.in.tumcampusapp.models.TokenConfirmation;
 import de.tum.in.tumcampusapp.models.TuitionList;
-import de.tum.in.tumcampusapp.models.managers.CacheManager;
 
 /**
  * Enum for all TUMOnline access possibilities

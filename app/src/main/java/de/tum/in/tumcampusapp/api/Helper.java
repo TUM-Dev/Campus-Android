@@ -22,7 +22,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 import static de.tum.in.tumcampusapp.auxiliary.Const.API_HOSTNAME;
-import static de.tum.in.tumcampusapp.models.managers.StudyRoomGroupManager.STUDYROOM_HOST;
+import static de.tum.in.tumcampusapp.managers.StudyRoomGroupManager.STUDYROOM_HOST;
 
 public class Helper {
     private static final int HTTP_TIMEOUT = 25000;

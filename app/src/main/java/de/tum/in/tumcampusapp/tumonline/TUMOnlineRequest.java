@@ -19,8 +19,8 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
-import de.tum.in.tumcampusapp.models.managers.CacheManager;
-import de.tum.in.tumcampusapp.models.managers.TumManager;
+import de.tum.in.tumcampusapp.managers.CacheManager;
+import de.tum.in.tumcampusapp.managers.TumManager;
 
 /**
  * This class will handle all action needed to communicate with the TUMOnline

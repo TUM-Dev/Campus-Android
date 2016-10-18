@@ -22,11 +22,11 @@ import de.tum.in.tumcampusapp.activities.ChatActivity;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.cards.generic.Card;
 import de.tum.in.tumcampusapp.cards.generic.NotificationAwareCard;
+import de.tum.in.tumcampusapp.managers.ChatMessageManager;
 import de.tum.in.tumcampusapp.models.ChatMessage;
 import de.tum.in.tumcampusapp.models.ChatRoom;
-import de.tum.in.tumcampusapp.models.managers.ChatMessageManager;
 
-import static de.tum.in.tumcampusapp.models.managers.CardManager.CARD_CHAT;
+import static de.tum.in.tumcampusapp.managers.CardManager.CARD_CHAT;
 
 /**
  * Card that shows the cafeteria menu

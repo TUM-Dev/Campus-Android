@@ -514,7 +514,7 @@
             android:name=".services.ScanResultsAvailableReceiver$NeverShowAgain"
             android:exported="false" />
         <service
-            android:name=".models.managers.CalendarManager$QueryLocationsService"
+            android:name=".managers.CalendarManager$QueryLocationsService"
             android:exported="false" />
         <service
             android:name=".services.GcmReceiverService"
