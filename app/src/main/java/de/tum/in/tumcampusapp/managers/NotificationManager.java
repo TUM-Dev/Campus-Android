@@ -48,11 +48,8 @@ public class NotificationManager extends AbstractManager {
         Cursor c = db.query(TABLE_NOTIFICATIONS, TABLE_NOTIFICATIONS_COLUMNS, "notification = ?",
                 new String[]{Integer.toString(notificationId)}, null, null, null);
         c.moveToFirst();
-        GCMNotification n;
-        if (c.getCount() == 0) {
-
-        } else {
-            n = new GCMNotification(c.getInt(alarmColumns.id.ordinal()),
+        if (c.getCount() != 0) {
+            return new GCMNotification(c.getInt(alarmColumns.id.ordinal()),
                     c.getInt(alarmColumns.type.ordinal()),
                     new GCMNotificationLocation(
                             c.getInt(alarmColumns.location.ordinal()),

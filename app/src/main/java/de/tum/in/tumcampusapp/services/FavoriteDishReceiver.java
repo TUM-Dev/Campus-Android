@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 
 /**
- * Created by Moh on 6/19/2016.
+ * Intent receiver for the dish alarm
  */
 public class FavoriteDishReceiver extends BroadcastReceiver {
     @Override

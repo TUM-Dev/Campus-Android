@@ -168,7 +168,7 @@ public class GcmIdentificationService extends InstanceIDListenerService {
         }
 
         //Try to create the message
-        DeviceUploadGcmToken dgcm = null;
+        DeviceUploadGcmToken dgcm;
         try {
             dgcm = new DeviceUploadGcmToken(mContext, token);
         } catch (NoPrivateKey noPrivateKey) {

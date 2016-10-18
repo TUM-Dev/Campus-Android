@@ -189,8 +189,8 @@ public class TUMCabeClient {
         return service.getLocation(locationId).execute().body();
     }
 
-    public List<String> putBugReport(BugReport r) throws IOException {
-        return service.putBugReport(r).execute().body();
+    public void putBugReport(BugReport r) throws IOException {
+        service.putBugReport(r).execute().body();
     }
 
     public void putStatistics(Statistics s) {

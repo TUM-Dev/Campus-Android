@@ -92,13 +92,13 @@ public class StudyRoomsActivity extends ActivityForLoadingInBackground<Void, Voi
                                 parent, false);
                         StudyRoomGroup studyRoomGroup = getItem(position);
 
-                        // Set name
-                        TextView name = (TextView) v.findViewById(android.R.id.text1);
-                        name.setText(studyRoomGroup.name);
+                        TextView name = (TextView) v.findViewById(android.R.id.text1); // Set name
+                        TextView details = (TextView) v.findViewById(android.R.id.text2); // Set detail
 
-                        // Set detail
-                        TextView details = (TextView) v.findViewById(android.R.id.text2);
-                        details.setText(studyRoomGroup.details);
+                        if (studyRoomGroup != null) {
+                            name.setText(studyRoomGroup.name);
+                            details.setText(studyRoomGroup.details);
+                        }
 
                         return v;
                     }

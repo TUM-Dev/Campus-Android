@@ -131,9 +131,7 @@ public class WizNavExtrasActivity extends ActivityForLoadingInBackground<Void, C
             Utils.setInternalSetting(this, Const.PRIVATE_KEY_ACTIVE, true);
 
             return member;
-        } catch (IOException e) {
-            Utils.log(e);
-        } catch (NoPrivateKey e) {
+        } catch (IOException | NoPrivateKey e) {
             Utils.log(e);
         }
 

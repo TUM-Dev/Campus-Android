@@ -86,6 +86,7 @@ public class Helper {
                 try {
                     newRequest.addHeader("X-APP-VERSION", c.getPackageManager().getPackageInfo(c.getPackageName(), 0).versionName);
                 } catch (PackageManager.NameNotFoundException e) {
+                    //We don't care. In that case we simply don't send the information
                 }
 
                 return chain.proceed(newRequest.build());

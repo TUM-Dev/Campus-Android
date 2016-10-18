@@ -46,7 +46,7 @@ public class RSASignerTestCase {
     }
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         privateKeyFixture = buildPrivateKey(
                 "MIICdgIBADANBgkqhkiG9w0BAQEFAASCAmAwggJcAgEAAoGBAM46wq9uOF7y1dmNO3nY8D1P6bCe" +
                         "t3izsm2GKQtvWmV78WbBxk1rZI2GNExvZ3aVg4mb6jOToGzm+jdNiWR07kBFSlrgNC5zq7Jmm0gz" +

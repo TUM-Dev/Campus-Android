@@ -26,7 +26,7 @@ public class ChatMessageValidatorTestCase {
     private List<ChatMessage> messageFixtures;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         publicKeyFixtures = new ArrayList<>();
         publicKeyFixtures.add(new ChatPublicKey(
                 "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDR4+3zbRYVRAecvMcn0vLswZAI1z7JqQ2Q0Mkq\n" +

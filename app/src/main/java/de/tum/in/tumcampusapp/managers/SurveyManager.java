@@ -218,7 +218,7 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
         //Commit update to database
         try {
             db.beginTransaction();
-            db.update("openQuestions", cv, "question = ?", new String[]{question.getQuestion().toString()});
+            db.update("openQuestions", cv, "question = ?", new String[]{question.getQuestion()});
             db.setTransactionSuccessful();
         } finally {
             db.endTransaction();
@@ -240,20 +240,19 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
             if (cursor.moveToFirst()) { // In case there are answered but not yet synced questions in local db
                 do {
                     Question answeredQuestion = new Question(cursor.getString(cursor.getColumnIndex("question")), cursor.getInt(cursor.getColumnIndex("answerid")));
-                    // Submit Answer to Server
-                    if (answeredQuestion != null) {
-                        TUMCabeClient.getInstance(mContext).submitAnswer(answeredQuestion, new Callback<Question>() {
-                            @Override
-                            public void onResponse(Call<Question> call, Response<Question> response) {
-                                Utils.log("Test_resp_submitQues Succeeded: " + response.body());
-                            }
 
-                            @Override
-                            public void onFailure(Call<Question> call, Throwable t) {
-                                Utils.log(t, "Test_resp_submitQues Failure");
-                            }
-                        });
-                    }
+                    // Submit Answer to Serve
+                    TUMCabeClient.getInstance(mContext).submitAnswer(answeredQuestion, new Callback<Question>() {
+                        @Override
+                        public void onResponse(Call<Question> call, Response<Question> response) {
+                            Utils.log("Test_resp_submitQues Succeeded: " + response.body());
+                        }
+
+                        @Override
+                        public void onFailure(Call<Question> call, Throwable t) {
+                            Utils.log(t, "Test_resp_submitQues Failure");
+                        }
+                    });
 
                     // Mark as synced in local db
                     ContentValues cv = new ContentValues();

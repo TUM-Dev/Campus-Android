@@ -237,6 +237,11 @@ public class ChatMessageManager extends AbstractManager {
      */
     public void replaceInto(List<ChatMessage> m) {
         ChatMember member = Utils.getSetting(mContext, Const.CHAT_MEMBER, ChatMember.class);
+
+        if (member == null) {
+            return;
+        }
+
         db.beginTransaction();
         for (ChatMessage msg : m) {
             replaceInto(msg, member.getId());

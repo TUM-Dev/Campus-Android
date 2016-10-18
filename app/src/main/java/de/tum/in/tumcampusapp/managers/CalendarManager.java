@@ -172,12 +172,12 @@ public class CalendarManager extends AbstractManager implements Card.ProvidesCar
         }
         // Get ID
         ContentResolver contentResolver = c.getContentResolver();
-        Cursor cursor2 = contentResolver.query(uri, projection, null, null, null);
+        Cursor cursor = contentResolver.query(uri, projection, null, null, null);
         String id = "0";
-        while (cursor2.moveToNext()) {
-            id = cursor2.getString(0);
+        while (cursor.moveToNext()) {
+            id = cursor.getString(0);
         }
-        cursor2.close();
+        cursor.close();
 
         CalendarManager calendarManager = new CalendarManager(c);
         Date dtstart, dtend;
