@@ -185,7 +185,9 @@ public class ChatRoomManager extends AbstractManager implements Card.ProvidesCar
                 try {
                     ChatRoom currentChatRoom = new ChatRoom(roomId);
                     currentChatRoom = TUMCabeClient.getInstance(context).createRoom(currentChatRoom, new ChatVerification(context, currentChatMember));
-                    manager.join(currentChatRoom);
+                    if (currentChatRoom != null) {
+                        manager.join(currentChatRoom);
+                    }
                 } catch (IOException e) {
                     Utils.log(e, " - error occured while creating the room!");
                 } catch (NoPrivateKey noPrivateKey) {
