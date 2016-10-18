@@ -17,8 +17,8 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.MainActivity;
 import de.tum.in.tumcampusapp.api.TUMCabeClient;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
-import de.tum.in.tumcampusapp.models.GCMNotification;
-import de.tum.in.tumcampusapp.models.GCMUpdate;
+import de.tum.in.tumcampusapp.models.gcm.GCMNotification;
+import de.tum.in.tumcampusapp.models.gcm.GCMUpdate;
 
 public class Update extends GenericNotification {
 

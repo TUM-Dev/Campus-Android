@@ -26,7 +26,7 @@ import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.cards.generic.Card;
 import de.tum.in.tumcampusapp.cards.generic.NotificationAwareCard;
 import de.tum.in.tumcampusapp.managers.CardManager;
-import de.tum.in.tumcampusapp.models.Tuition;
+import de.tum.in.tumcampusapp.models.tumo.Tuition;
 
 /**
  * Card that shows information about your fees that have to be paid or have been paid

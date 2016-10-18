@@ -21,12 +21,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import de.tum.in.tumcampusapp.api.TUMCabeClient;
 import de.tum.in.tumcampusapp.auxiliary.AuthenticationManager;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.FileUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
-import de.tum.in.tumcampusapp.models.BugReport;
-import de.tum.in.tumcampusapp.api.TUMCabeClient;
+import de.tum.in.tumcampusapp.models.tumcabe.BugReport;
 
 public final class ExceptionHandler {
 

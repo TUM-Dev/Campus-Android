@@ -12,7 +12,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.models.Location;
+import de.tum.in.tumcampusapp.models.cafeteria.Location;
 
 /**
  * Location manager, handles database stuff

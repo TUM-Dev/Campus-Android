@@ -7,8 +7,8 @@ import android.database.sqlite.SQLiteDatabase;
 
 import java.util.List;
 
-import de.tum.in.tumcampusapp.models.GCMNotification;
-import de.tum.in.tumcampusapp.models.GCMNotificationLocation;
+import de.tum.in.tumcampusapp.models.gcm.GCMNotification;
+import de.tum.in.tumcampusapp.models.gcm.GCMNotificationLocation;
 
 public class NotificationManager extends AbstractManager {
 

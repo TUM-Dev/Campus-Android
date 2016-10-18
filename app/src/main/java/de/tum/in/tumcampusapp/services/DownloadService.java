@@ -26,7 +26,7 @@ import de.tum.in.tumcampusapp.managers.OpenHoursManager;
 import de.tum.in.tumcampusapp.managers.StudyRoomGroupManager;
 import de.tum.in.tumcampusapp.managers.SurveyManager;
 import de.tum.in.tumcampusapp.managers.SyncManager;
-import de.tum.in.tumcampusapp.models.Location;
+import de.tum.in.tumcampusapp.models.cafeteria.Location;
 import de.tum.in.tumcampusapp.trace.G;
 import de.tum.in.tumcampusapp.trace.Util;
 

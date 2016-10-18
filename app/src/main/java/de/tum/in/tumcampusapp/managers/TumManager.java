@@ -10,7 +10,7 @@ import java.util.Date;
 
 import de.tum.in.tumcampusapp.auxiliary.DateUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
-import de.tum.in.tumcampusapp.models.Error;
+import de.tum.in.tumcampusapp.models.tumo.Error;
 
 /**
  * TUMOnline lock manager: prevent too many requests send to TUMO

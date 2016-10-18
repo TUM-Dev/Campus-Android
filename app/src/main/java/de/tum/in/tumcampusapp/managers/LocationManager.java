@@ -21,8 +21,8 @@ import java.util.Map;
 
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
-import de.tum.in.tumcampusapp.models.Cafeteria;
-import de.tum.in.tumcampusapp.models.Geo;
+import de.tum.in.tumcampusapp.models.cafeteria.Cafeteria;
+import de.tum.in.tumcampusapp.models.tumo.Geo;
 import de.tum.in.tumcampusapp.tumonline.TUMRoomFinderRequest;
 
 /**

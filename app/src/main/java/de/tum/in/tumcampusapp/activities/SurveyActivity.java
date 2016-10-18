@@ -50,7 +50,7 @@ import de.tum.in.tumcampusapp.api.TUMCabeClient;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.managers.SurveyManager;
-import de.tum.in.tumcampusapp.models.Question;
+import de.tum.in.tumcampusapp.models.tumcabe.Question;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;

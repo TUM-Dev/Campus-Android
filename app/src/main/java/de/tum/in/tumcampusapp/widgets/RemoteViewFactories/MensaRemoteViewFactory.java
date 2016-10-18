@@ -15,7 +15,7 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.auxiliary.CafeteriaPrices;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.managers.CafeteriaManager;
-import de.tum.in.tumcampusapp.models.CafeteriaMenu;
+import de.tum.in.tumcampusapp.models.cafeteria.CafeteriaMenu;
 
 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 public class MensaRemoteViewFactory implements RemoteViewsService.RemoteViewsFactory {

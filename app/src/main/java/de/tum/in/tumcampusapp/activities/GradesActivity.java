@@ -27,8 +27,8 @@ import de.tum.in.tumcampusapp.activities.generic.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampusapp.adapters.ExamListAdapter;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
-import de.tum.in.tumcampusapp.models.Exam;
-import de.tum.in.tumcampusapp.models.ExamList;
+import de.tum.in.tumcampusapp.models.tumo.Exam;
+import de.tum.in.tumcampusapp.models.tumo.ExamList;
 import de.tum.in.tumcampusapp.tumonline.TUMOnlineConst;
 
 /**

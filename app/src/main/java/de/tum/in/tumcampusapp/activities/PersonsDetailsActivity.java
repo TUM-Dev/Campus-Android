@@ -39,12 +39,12 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampusapp.auxiliary.HTMLStringBuffer;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
-import de.tum.in.tumcampusapp.models.Contact;
-import de.tum.in.tumcampusapp.models.Employee;
-import de.tum.in.tumcampusapp.models.Group;
-import de.tum.in.tumcampusapp.models.Person;
-import de.tum.in.tumcampusapp.models.Room;
-import de.tum.in.tumcampusapp.models.TelSubstation;
+import de.tum.in.tumcampusapp.models.tumo.Contact;
+import de.tum.in.tumcampusapp.models.tumo.Employee;
+import de.tum.in.tumcampusapp.models.tumo.Group;
+import de.tum.in.tumcampusapp.models.tumo.Person;
+import de.tum.in.tumcampusapp.models.tumo.Room;
+import de.tum.in.tumcampusapp.models.tumo.TelSubstation;
 import de.tum.in.tumcampusapp.tumonline.TUMOnlineConst;
 
 /**

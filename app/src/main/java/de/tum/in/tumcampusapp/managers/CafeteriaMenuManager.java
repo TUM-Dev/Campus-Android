@@ -15,7 +15,7 @@ import java.util.List;
 
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
-import de.tum.in.tumcampusapp.models.CafeteriaMenu;
+import de.tum.in.tumcampusapp.models.cafeteria.CafeteriaMenu;
 
 /**
  * Cafeteria Menu Manager, handles database stuff, external imports

@@ -29,9 +29,9 @@ import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.auxiliary.calendar.CalendarHelper;
 import de.tum.in.tumcampusapp.cards.NextLectureCard;
 import de.tum.in.tumcampusapp.cards.generic.Card;
-import de.tum.in.tumcampusapp.models.CalendarRow;
-import de.tum.in.tumcampusapp.models.CalendarRowSet;
-import de.tum.in.tumcampusapp.models.Geo;
+import de.tum.in.tumcampusapp.models.tumo.CalendarRow;
+import de.tum.in.tumcampusapp.models.tumo.CalendarRowSet;
+import de.tum.in.tumcampusapp.models.tumo.Geo;
 
 /**
  * Calendar Manager, handles database stuff, external imports

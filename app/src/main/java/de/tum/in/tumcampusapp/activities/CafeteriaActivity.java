@@ -23,7 +23,7 @@ import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.managers.LocationManager;
-import de.tum.in.tumcampusapp.models.Cafeteria;
+import de.tum.in.tumcampusapp.models.cafeteria.Cafeteria;
 
 import static de.tum.in.tumcampusapp.fragments.CafeteriaDetailsSectionFragment.menuToSpan;
 

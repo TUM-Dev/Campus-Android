@@ -20,8 +20,8 @@ import java.util.Locale;
 
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
-import de.tum.in.tumcampusapp.models.StudyRoom;
-import de.tum.in.tumcampusapp.models.StudyRoomGroup;
+import de.tum.in.tumcampusapp.models.tumcabe.StudyRoom;
+import de.tum.in.tumcampusapp.models.tumcabe.StudyRoomGroup;
 
 /**
  * Handles content for the study room feature, fetches external data.

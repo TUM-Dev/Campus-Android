@@ -20,11 +20,11 @@ import de.tum.in.tumcampusapp.auxiliary.AccessTokenManager;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
-import de.tum.in.tumcampusapp.models.CalendarRowSet;
-import de.tum.in.tumcampusapp.models.LecturesSearchRow;
-import de.tum.in.tumcampusapp.models.LecturesSearchRowSet;
-import de.tum.in.tumcampusapp.models.OrgItemList;
-import de.tum.in.tumcampusapp.models.TuitionList;
+import de.tum.in.tumcampusapp.models.tumo.CalendarRowSet;
+import de.tum.in.tumcampusapp.models.tumo.LecturesSearchRow;
+import de.tum.in.tumcampusapp.models.tumo.LecturesSearchRowSet;
+import de.tum.in.tumcampusapp.models.tumo.OrgItemList;
+import de.tum.in.tumcampusapp.models.tumo.TuitionList;
 import de.tum.in.tumcampusapp.tumonline.TUMOnlineConst;
 import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequest;
 

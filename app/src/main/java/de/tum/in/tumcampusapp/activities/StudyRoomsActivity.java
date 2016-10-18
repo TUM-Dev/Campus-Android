@@ -25,8 +25,8 @@ import de.tum.in.tumcampusapp.adapters.StudyRoomsPagerAdapter;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.managers.StudyRoomGroupManager;
-import de.tum.in.tumcampusapp.models.StudyRoom;
-import de.tum.in.tumcampusapp.models.StudyRoomGroup;
+import de.tum.in.tumcampusapp.models.tumcabe.StudyRoom;
+import de.tum.in.tumcampusapp.models.tumcabe.StudyRoomGroup;
 
 /**
  * Shows information about reservable study rooms.

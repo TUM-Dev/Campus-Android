@@ -12,8 +12,8 @@ import java.util.Locale;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampusapp.auxiliary.Const;
-import de.tum.in.tumcampusapp.models.LectureDetailsRow;
-import de.tum.in.tumcampusapp.models.LectureDetailsRowSet;
+import de.tum.in.tumcampusapp.models.tumo.LectureDetailsRow;
+import de.tum.in.tumcampusapp.models.tumo.LectureDetailsRowSet;
 import de.tum.in.tumcampusapp.tumonline.TUMOnlineConst;
 
 /**

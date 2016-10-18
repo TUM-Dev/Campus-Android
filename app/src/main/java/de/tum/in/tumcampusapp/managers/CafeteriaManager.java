@@ -21,8 +21,8 @@ import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.cards.CafeteriaMenuCard;
 import de.tum.in.tumcampusapp.cards.generic.Card;
-import de.tum.in.tumcampusapp.models.Cafeteria;
-import de.tum.in.tumcampusapp.models.CafeteriaMenu;
+import de.tum.in.tumcampusapp.models.cafeteria.Cafeteria;
+import de.tum.in.tumcampusapp.models.cafeteria.CafeteriaMenu;
 
 /**
  * Cafeteria Manager, handles database stuff, external imports

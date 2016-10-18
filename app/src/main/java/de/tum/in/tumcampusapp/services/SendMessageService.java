@@ -13,7 +13,7 @@ import de.tum.in.tumcampusapp.auxiliary.AuthenticationManager;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.exceptions.NoPrivateKey;
 import de.tum.in.tumcampusapp.managers.ChatMessageManager;
-import de.tum.in.tumcampusapp.models.ChatMessage;
+import de.tum.in.tumcampusapp.models.tumcabe.ChatMessage;
 
 /**
  * Service used to silence the mobile during lectures

@@ -22,7 +22,7 @@ import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.DrawerMenuHelper;
 import de.tum.in.tumcampusapp.auxiliary.ImplicitCounter;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
-import de.tum.in.tumcampusapp.models.Employee;
+import de.tum.in.tumcampusapp.models.tumo.Employee;
 import de.tum.in.tumcampusapp.tumonline.TUMOnlineConst;
 import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequest;
 

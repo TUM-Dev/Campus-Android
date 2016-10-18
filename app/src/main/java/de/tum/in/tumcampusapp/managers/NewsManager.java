@@ -17,7 +17,7 @@ import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.cards.FilmCard;
 import de.tum.in.tumcampusapp.cards.NewsCard;
 import de.tum.in.tumcampusapp.cards.generic.Card;
-import de.tum.in.tumcampusapp.models.News;
+import de.tum.in.tumcampusapp.models.tumcabe.News;
 
 /**
  * News Manager, handles database stuff, external imports

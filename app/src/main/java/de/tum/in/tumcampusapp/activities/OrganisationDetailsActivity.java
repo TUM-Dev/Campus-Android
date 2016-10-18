@@ -11,8 +11,8 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
-import de.tum.in.tumcampusapp.models.OrgDetailItemList;
-import de.tum.in.tumcampusapp.models.OrgDetailsItem;
+import de.tum.in.tumcampusapp.models.tumo.OrgDetailItemList;
+import de.tum.in.tumcampusapp.models.tumo.OrgDetailsItem;
 import de.tum.in.tumcampusapp.tumonline.TUMOnlineConst;
 
 /**

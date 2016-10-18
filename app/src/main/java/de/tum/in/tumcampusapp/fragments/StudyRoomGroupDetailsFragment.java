@@ -22,7 +22,7 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.managers.StudyRoomGroupManager;
-import de.tum.in.tumcampusapp.models.StudyRoom;
+import de.tum.in.tumcampusapp.models.tumcabe.StudyRoom;
 
 /**
  * Fragment for each study room group. Shows study room details in a list.

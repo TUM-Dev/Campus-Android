@@ -26,9 +26,9 @@ import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.exceptions.NoPrivateKey;
 import de.tum.in.tumcampusapp.managers.CardManager;
 import de.tum.in.tumcampusapp.managers.ChatMessageManager;
-import de.tum.in.tumcampusapp.models.ChatMember;
-import de.tum.in.tumcampusapp.models.ChatRoom;
-import de.tum.in.tumcampusapp.models.GCMChat;
+import de.tum.in.tumcampusapp.models.gcm.GCMChat;
+import de.tum.in.tumcampusapp.models.tumcabe.ChatMember;
+import de.tum.in.tumcampusapp.models.tumcabe.ChatRoom;
 
 public class Chat extends GenericNotification {
 

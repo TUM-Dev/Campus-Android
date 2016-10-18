@@ -23,8 +23,8 @@ import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.cards.generic.Card;
 import de.tum.in.tumcampusapp.cards.generic.NotificationAwareCard;
 import de.tum.in.tumcampusapp.managers.ChatMessageManager;
-import de.tum.in.tumcampusapp.models.ChatMessage;
-import de.tum.in.tumcampusapp.models.ChatRoom;
+import de.tum.in.tumcampusapp.models.tumcabe.ChatMessage;
+import de.tum.in.tumcampusapp.models.tumcabe.ChatRoom;
 
 import static de.tum.in.tumcampusapp.managers.CardManager.CARD_CHAT;
 
