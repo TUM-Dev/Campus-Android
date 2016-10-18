@@ -322,4 +322,11 @@
     <string name="show_column_chart">Показать столбиковую диаграмму</string>
     <string name="show_pie_chart">Показать круговую диаграмму</string>
     <string name="result_extra">результат:&#160;</string>
+    <string name="quiz">Исследования обследования</string>
+    <string name="selected_target_faculties">Отдельные целевые способности:</string>
+    <string name="card_survey_summary">позволяет принимать участие в вопросах, связанных с научно-исследовательскими обследования</string>
+    <string name="chat_not_setup">Чат не настроен должным образом, пожалуйста, заново запустить мастер через настройки!</string>
+    <string name="please_connect_to_internet">Пожалуйста, подключиться к Интернету, чтобы продолжить первый запуск приложения</string>
+    <string name="mvv_download">Пожалуйста, нажмите кнопку OK, чтобы загрузить MVV-планы в противном случае вы не можете использовать эту функцию</string>
+    <string name="flag_inappropriate">Флаг неуместный вопрос</string>
 </resources>

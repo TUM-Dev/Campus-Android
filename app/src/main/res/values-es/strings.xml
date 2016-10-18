@@ -388,5 +388,12 @@
     <string name="add_widget">Agregar panel</string>
     <string name="widget_configure_description">Configurar las tarjetas para mostrar</string>
     <string name="accept_chat_terms">Chatbedingungen müssen akzeptiert werden, damit du den Vorlesungs-Chat verwenden kannst!</string>
+    <string name="quiz">Encuesta de Investigación</string>
+    <string name="selected_target_faculties">facultades de destino seleccionados:</string>
+    <string name="card_survey_summary">le permite participar en la encuesta preguntas relacionadas con la investigación</string>
+    <string name="chat_not_setup">" El chat no está configurado correctamente, por favor, vuelva a ejecutar el asistente de configuración a través de las!"</string>
+    <string name="flag_inappropriate">Bandera inapropiada pregunta</string>
+    <string name="mvv_download">Por favor, pulse OK para descargar MVV-Planes de otro modo no se puede utilizar esta función</string>
+    <string name="please_connect_to_internet">Por favor, conectarse a Internet con el fin de proceder al primer inicio de aplicaciones</string>
     <!-- END Translated, please do not change identifiers -->
 </resources>

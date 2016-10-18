@@ -25,7 +25,7 @@
     <string name="calendar_not_existing_toast">No local calendar existing</string>
     <string name="semester_summer">Summer term</string>
     <string name="semester_winter">Winter term</string>
-    <string name="quiz_title">Quiz</string>
+    <string name="quiz_title" translatable="false">Quiz</string>
 
     <!-- Roomfinder -->
     <string name="no_map_available">No map available</string>
@@ -450,14 +450,14 @@ Signature: %5$s</string>
     <string name="permission_calendar_explanation">This App needs permission to access your location to display useful information, e.g. the menues of cafeterias around you or timetables of your nearest MVV station. \n If you do not grant this permission you will still be able to configure your location in the settings.</string>
     <string name="ok">OK</string>
     <string name="alarm_date_published_on">Published on:</string>
-    <string name="chat_not_setup">Chat is not setup properly, please re-run the wizzard via the settings!</string>
+    <string name="chat_not_setup">Chat is not setup properly, please rerun the wizard via the settings!</string>
     <string name="www" translatable="false">www</string>
     <string name="quiz">Research Survey</string>
-    <string name="research_quiz">Research Quiz</string>
+    <string name="research_quiz" translatable="false">Research Quiz</string>
     <string name="no_questions_available">No Questions are available!</string>
     <string name="one_question_left">Only 1 question left</string>
     <string name="next_possible_survey_date">You have reached the maximum number of questions per week. Next possible survey date is</string>
-    <string name="flag_inappropriate">flag for inappropriate questions</string>
+    <string name="flag_inappropriate">Flag inappropriate question</string>
     <string name="survey_yes">Yes</string>
     <string name="select_target_faculties_survey">Select Target Faculties</string>
     <string name="survey_no">No</string>
