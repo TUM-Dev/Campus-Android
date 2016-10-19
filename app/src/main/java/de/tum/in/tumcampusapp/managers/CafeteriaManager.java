@@ -147,7 +147,7 @@ public class CafeteriaManager extends AbstractManager implements Card.ProvidesCa
         Cursor cursor = getAllFromDb();
         String cafeteriaName = "";
 
-        if (cursor.moveToFirst()) {
+        if (cursor.moveToFirst() && cursor.getColumnCount() >= 2) {
             do {
                 final int key = cursor.getInt(0);
                 if (key == cafeteriaId) {
