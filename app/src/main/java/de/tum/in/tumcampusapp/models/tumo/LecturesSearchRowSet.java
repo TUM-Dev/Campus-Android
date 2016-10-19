@@ -3,6 +3,7 @@ package de.tum.in.tumcampusapp.models.tumo;
 import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.Root;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -15,7 +16,7 @@ import java.util.List;
 public class LecturesSearchRowSet {
 
 	@ElementList(inline = true, required = false)
-	private List<LecturesSearchRow> lehrveranstaltungen;
+	private List<LecturesSearchRow> lehrveranstaltungen = new ArrayList<>();
 
 	public List<LecturesSearchRow> getLehrveranstaltungen() {
 		return lehrveranstaltungen;
