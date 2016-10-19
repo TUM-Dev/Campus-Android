@@ -64,7 +64,7 @@ public class AuthenticationManager {
             return KeyPairGenerator.getInstance(ALGORITHM);
         } catch (NoSuchAlgorithmException e) {
             // We don't support platforms without RSA
-            throw new AssertionError("KeyPairGenerator for " + ALGORITHM + "could not be instantiated");
+            throw new AssertionError(e);
         }
     }
 
@@ -73,7 +73,7 @@ public class AuthenticationManager {
             return KeyFactory.getInstance(ALGORITHM);
         } catch (NoSuchAlgorithmException e) {
             // We don't support platforms without RSA
-            throw new AssertionError("KeyFactory for " + ALGORITHM + "could not be instantiated");
+            throw new AssertionError(e);
         }
     }
 

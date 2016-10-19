@@ -207,10 +207,10 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
     public void updateQuestion(Question question, int answerTag) {
         ContentValues cv = new ContentValues();
 
-        if (answerTag != 3) {
-            cv.put("answerid", answerTag);
-        } else {
+        if (answerTag == 3) {
             cv.put("synced", 1);//Do not sync skipped questions later
+        } else {
+            cv.put("answerid", answerTag);
         }
 
         // Set as answered independent of the answerTag
@@ -371,13 +371,13 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
         try {
             db.beginTransaction();
 
-            // if question doesn't exist -> insert into DB
-            if (!c.moveToFirst()) {
-                ContentValues cv = setOwnQuestionFields(q, true);
-                db.insert("ownQuestions", null, cv);
-            } else {// otherwise update question fields in the db (false means don't update 'delete' and 'synced' fields
+
+            if (c.moveToFirst()) {// update non-exsisting question fields in the db (false means don't update 'delete' and 'synced' fields
                 ContentValues cv = setOwnQuestionFields(q, false);
                 db.update("ownQuestions", cv, "question=" + q.getQuestion(), null);
+            } else { // if question doesn't exist -> insert into DB
+                ContentValues cv = setOwnQuestionFields(q, true);
+                db.insert("ownQuestions", null, cv);
             }
 
             db.setTransactionSuccessful();

@@ -23,7 +23,6 @@ import de.tum.in.tumcampusapp.managers.CardManager;
 import de.tum.in.tumcampusapp.managers.KinoManager;
 import de.tum.in.tumcampusapp.managers.NewsManager;
 import de.tum.in.tumcampusapp.managers.OpenHoursManager;
-import de.tum.in.tumcampusapp.managers.StudyRoomGroupManager;
 import de.tum.in.tumcampusapp.managers.SurveyManager;
 import de.tum.in.tumcampusapp.managers.SyncManager;
 import de.tum.in.tumcampusapp.models.cafeteria.Location;

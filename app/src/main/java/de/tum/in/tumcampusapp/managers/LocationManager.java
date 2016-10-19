@@ -278,11 +278,10 @@ public class LocationManager {
 
         // Get nearest cafeteria
         List<Cafeteria> list = getCafeterias();
-        if (list != null && !list.isEmpty()) {
-            return list.get(0).id;
-        } else {
+        if (list == null || list.isEmpty()) {
             return -1;
         }
+        return list.get(0).id;
     }
 
     /**
@@ -302,12 +301,12 @@ public class LocationManager {
         CalendarManager manager = new CalendarManager(mContext);
         Geo geo = manager.getNextCalendarItemGeo();
         Location location = new Location("roomfinder");
-        if (geo != null) {
-            location.setLatitude(Double.parseDouble(geo.getLatitude()));
-            location.setLongitude(Double.parseDouble(geo.getLongitude()));
-        } else {
+        if (geo == null) {
             location.setLatitude(48.2648424);
             location.setLongitude(11.6709511);
+        } else {
+            location.setLatitude(Double.parseDouble(geo.getLatitude()));
+            location.setLongitude(Double.parseDouble(geo.getLongitude()));
         }
         return location;
     }

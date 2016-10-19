@@ -57,15 +57,7 @@ public class GcmReceiverService extends GcmListenerService {
             return;
         }  // has effect of un-parcelling Bundle
         //Legacy messages need to be handled - maybe some data is missing?
-        if (!extras.containsKey(PAYLOAD) || !extras.containsKey("type")) {
-
-            //Try to match it as a legacy chat notification
-            try {
-                this.postNotification(new Chat(extras, this, -1));
-            } catch (Exception e) {
-                //@todo do something
-            }
-        } else {
+        if (extras.containsKey(PAYLOAD) && extras.containsKey("type")) {
             //Get some important values
             int notification = Integer.parseInt(extras.getString("notification"));
             int type = Integer.parseInt(extras.getString("type"));
@@ -108,6 +100,14 @@ public class GcmReceiverService extends GcmListenerService {
 
                 //de.tum.in.tumcampusapp.managers.NotificationManager man = new de.tum.in.tumcampusapp.managers.NotificationManager(this);
                 //@todo save to our notificationmanager
+            }
+        } else {
+
+            //Try to match it as a legacy chat notification
+            try {
+                this.postNotification(new Chat(extras, this, -1));
+            } catch (Exception e) {
+                //@todo do something
             }
         }
     }

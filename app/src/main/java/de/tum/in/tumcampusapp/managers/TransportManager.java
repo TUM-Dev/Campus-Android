@@ -190,18 +190,18 @@ public class TransportManager implements Card.ProvidesCard {
 
             // Possible values for points: Object, Array or null
             JSONArray pointsArray = stopfinder.optJSONArray(POINTS);
-            if (pointsArray != null) {
-                for (int i = 0; i < pointsArray.length(); i++) {
-                    JSONObject point = pointsArray.getJSONObject(i);
-                    addStationResult(results, point);
-                }
-            } else {
+            if (pointsArray == null) {
                 JSONObject points = stopfinder.optJSONObject(POINTS);
                 if (points == null) {
                     return Optional.absent();
                 }
                 JSONObject point = points.getJSONObject("point");
                 addStationResult(results, point);
+            } else {
+                for (int i = 0; i < pointsArray.length(); i++) {
+                    JSONObject point = pointsArray.getJSONObject(i);
+                    addStationResult(results, point);
+                }
             }
 
             //Sort by quality

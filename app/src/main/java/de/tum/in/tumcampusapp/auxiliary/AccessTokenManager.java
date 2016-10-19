@@ -7,10 +7,8 @@ import android.os.Build;
 import com.google.common.base.Optional;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.activities.wizard.WizNavStartActivity;
 import de.tum.in.tumcampusapp.exceptions.NoPublicKey;
 import de.tum.in.tumcampusapp.models.tumo.AccessToken;
-import de.tum.in.tumcampusapp.models.tumo.TokenConfirmation;
 import de.tum.in.tumcampusapp.tumonline.TUMOException;
 import de.tum.in.tumcampusapp.tumonline.TUMOnlineConst;
 import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequest;
@@ -86,7 +84,7 @@ public class AccessTokenManager {
             try {
                 am.uploadPublicKey();
             } catch (NoPublicKey noPublicKey) {
-                noPublicKey.printStackTrace();
+                Utils.log(noPublicKey);
             }
 
             return true;
