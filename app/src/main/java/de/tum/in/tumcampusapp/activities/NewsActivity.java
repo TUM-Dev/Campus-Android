@@ -97,8 +97,12 @@ public class NewsActivity extends ActivityForDownloadingExternal {
             boolean checked = !item.isChecked();
             Utils.setSetting(this, "news_source_" + cur.getString(0), checked);
             item.setChecked(checked);
-            LinearLayoutManager layoutManager = (LinearLayoutManager) lv.getLayoutManager();
-            state = layoutManager.findFirstVisibleItemPosition();
+
+            if(lv != null) { //We really don't care if the lv is null, if the position can't be saved. Rather not have the app crash here
+                LinearLayoutManager layoutManager = (LinearLayoutManager) lv.getLayoutManager();
+                state = layoutManager.findFirstVisibleItemPosition();
+            }
+
             requestDownload(false);
             return true;
         }
