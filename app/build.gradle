@@ -23,7 +23,7 @@ android {
         applicationId "de.tum.in.tumcampus"
         minSdkVersion 10
         targetSdkVersion 24
-        versionCode 508
+        versionCode 509
         versionName "1.4.6-dev"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
