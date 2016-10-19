@@ -119,9 +119,6 @@ public class DownloadService extends IntentService {
                 case Const.KINO:
                     successful = service.downLoadKino(force);
                     break;
-                case Const.STUDY_ROOMS:
-                    successful = service.downloadStudyRooms();
-                    break;
             }
         }
 
@@ -211,9 +208,8 @@ public class DownloadService extends IntentService {
         final boolean cafe = downloadCafeterias(force),
                 kino = downLoadKino(force),
                 news = downloadNews(force),
-                rooms = downloadStudyRooms(),
                 faculties = downloadFacultiesAndSurveyData();
-        return cafe && kino && news && rooms && faculties;
+        return cafe && kino && news && faculties;
     }
 
     private boolean downloadCafeterias(boolean force) {
@@ -259,16 +255,6 @@ public class DownloadService extends IntentService {
         return true;
     }
 
-    private boolean downloadStudyRooms() {
-        try {
-            StudyRoomGroupManager sm = new StudyRoomGroupManager(this);
-            sm.downloadFromExternal();
-            return true;
-        } catch (JSONException e) {
-            Utils.log(e);
-            return false;
-        }
-    }
 
     /**
      * Import default location and opening hours from assets
