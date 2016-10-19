@@ -28,7 +28,7 @@
         <Class name="~de\.tum\.in\.tumcampusapp\.Manifest.*" />
     </Match>
     <Match>
-        <Package name="de.tum.in.tumcampusapp.models" />
+        <Package name="~de\.tum\.in\.tumcampusapp\.models.*" />
         <Bug pattern="URF_UNREAD_FIELD" />
     </Match>
 </FindBugsFilter>
