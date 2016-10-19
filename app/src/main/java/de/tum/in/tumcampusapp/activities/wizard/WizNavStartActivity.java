@@ -27,11 +27,7 @@ import de.tum.in.tumcampusapp.auxiliary.AuthenticationManager;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
-import de.tum.in.tumcampusapp.exceptions.NoPublicKey;
 import de.tum.in.tumcampusapp.managers.SurveyManager;
-import de.tum.in.tumcampusapp.models.tumo.TokenConfirmation;
-import de.tum.in.tumcampusapp.tumonline.TUMOnlineConst;
-import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequest;
 
 /**
  * Displays the first page of the startup wizard, where the user can enter his lrz-id.

@@ -55,7 +55,7 @@ public class WizNavExtrasActivity extends ActivityForLoadingInBackground<Void, C
             try {
                 am.uploadPublicKey();
             } catch (NoPublicKey noPublicKey) {
-                noPublicKey.printStackTrace();
+                Utils.log(noPublicKey);
             }
 
             //Remember that we are only running through a limited setup

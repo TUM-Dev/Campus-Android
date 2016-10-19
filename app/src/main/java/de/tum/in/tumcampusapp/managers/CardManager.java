@@ -140,6 +140,9 @@ public final class CardManager {
      * @param item     Card to be inserted
      */
     public static void insert(int position, Card item) {
+        if (position < 0 || position > cards.size()) {
+            return;
+        }
         cards.add(position, item);
     }
 
