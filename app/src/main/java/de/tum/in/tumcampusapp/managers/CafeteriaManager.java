@@ -137,19 +137,15 @@ public class CafeteriaManager extends AbstractManager implements Card.ProvidesCa
      */
     @Override
     public void onRequestCard(Context context) {
-        CafeteriaMenuCard card = new CafeteriaMenuCard(context);
-        CafeteriaMenuManager cmm = new CafeteriaMenuManager(context);
-        LocationManager locationManager = new LocationManager(context);
+        // Choose which mensa should be shown
+        int cafeteriaId = new LocationManager(context).getCafeteria();
+        if (cafeteriaId == -1) {
+            return;
+        }
 
         // Get all available cafeterias from database
         Cursor cursor = getAllFromDb();
         String cafeteriaName = "";
-
-        // Choose which mensa should be shown
-        int cafeteriaId = locationManager.getCafeteria();
-        if (cafeteriaId == -1) {
-            return;
-        }
 
         if (cursor.moveToFirst()) {
             do {
@@ -163,6 +159,7 @@ public class CafeteriaManager extends AbstractManager implements Card.ProvidesCa
         cursor.close();
 
         // Get available dates for cafeteria menus
+        CafeteriaMenuManager cmm = new CafeteriaMenuManager(context);
         Cursor cursorCafeteriaDates = cmm.getDatesFromDb();
         final int idCol = cursorCafeteriaDates.getColumnIndex(Const.ID_COLUMN);
 
@@ -182,6 +179,7 @@ public class CafeteriaManager extends AbstractManager implements Card.ProvidesCa
 
         List<CafeteriaMenu> menus = cmm.getTypeNameFromDbCardList(cafeteriaId, dateStr, date);
         if (!menus.isEmpty()) {
+            CafeteriaMenuCard card = new CafeteriaMenuCard(context);
             card.setCardMenus(cafeteriaId, cafeteriaName, dateStr, date, menus);
             card.apply();
         }
@@ -191,19 +189,16 @@ public class CafeteriaManager extends AbstractManager implements Card.ProvidesCa
      * returns the menus of the best matching cafeteria
      */
     public Map<String, List<CafeteriaMenu>> getBestMatchMensaInfo(Context context) {
-        CafeteriaMenuManager cmm = new CafeteriaMenuManager(context);
-        LocationManager locationManager = new LocationManager(context);
-
-        // Get all available cafeterias from database
-        Cursor cursor = getAllFromDb();
-        String cafeteriaName = "";
-
         // Choose which mensa should be shown
-        int cafeteriaId = locationManager.getCafeteria();
+        int cafeteriaId = new LocationManager(context).getCafeteria();
         if (cafeteriaId == -1) {
             Utils.log("could not get a Cafeteria form locationManager!");
             return null;
         }
+
+        // Get all available cafeterias from database
+        Cursor cursor = getAllFromDb();
+        String cafeteriaName = "";
 
         // get the cafeteria's name
         if (cursor.moveToFirst()) {
@@ -218,6 +213,7 @@ public class CafeteriaManager extends AbstractManager implements Card.ProvidesCa
         cursor.close();
 
         // Get available dates for cafeteria menus
+        CafeteriaMenuManager cmm = new CafeteriaMenuManager(context);
         Cursor cursorCafeteriaDates = cmm.getDatesFromDb();
         final int idCol = cursorCafeteriaDates.getColumnIndex(Const.ID_COLUMN);
 
@@ -237,25 +233,22 @@ public class CafeteriaManager extends AbstractManager implements Card.ProvidesCa
 
         List<CafeteriaMenu> menus = cmm.getTypeNameFromDbCardList(cafeteriaId, dateStr, date);
         String mensaKey = cafeteriaName + ' ' + dateStr;
-        Map<String, List<CafeteriaMenu>> selectedMensaMenus = new HashMap<>();
+        Map<String, List<CafeteriaMenu>> selectedMensaMenus = new HashMap<>(1);
         selectedMensaMenus.put(mensaKey, menus);
         return selectedMensaMenus;
     }
 
     public String getBestMatchMensaName(Context context) {
-        CafeteriaMenuManager cmm = new CafeteriaMenuManager(context);
-        LocationManager locationManager = new LocationManager(context);
-
-        // Get all available cafeterias from database
-        Cursor cursor = getAllFromDb();
-        String cafeteriaName = "";
-
         // Choose which mensa should be shown
-        int cafeteriaId = locationManager.getCafeteria();
+        int cafeteriaId = new LocationManager(context).getCafeteria();
         if (cafeteriaId == -1) {
             Utils.log("could not get a Cafeteria form locationManager!");
             return null;
         }
+
+        // Get all available cafeterias from database
+        Cursor cursor = getAllFromDb();
+        String cafeteriaName = "";
 
         // get the cafeteria's name
         if (cursor.moveToFirst()) {
@@ -270,6 +263,7 @@ public class CafeteriaManager extends AbstractManager implements Card.ProvidesCa
         cursor.close();
 
         // Get available dates for cafeteria menus
+        CafeteriaMenuManager cmm = new CafeteriaMenuManager(context);
         Cursor cursorCafeteriaDates = cmm.getDatesFromDb();
         final int idCol = cursorCafeteriaDates.getColumnIndex(Const.ID_COLUMN);
 

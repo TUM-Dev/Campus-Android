@@ -223,8 +223,8 @@ public class NetUtils {
      * @param imageView Image
      */
     public void loadAndSetImage(final String url, final ImageView imageView) {
-        synchronized (CacheManager.bitmapCache) {
-            Bitmap bmp = CacheManager.bitmapCache.get(url);
+        synchronized (CacheManager.BITMAP_CACHE) {
+            Bitmap bmp = CacheManager.BITMAP_CACHE.get(url);
             if (bmp != null) {
                 imageView.setImageBitmap(bmp);
                 return;
@@ -234,7 +234,7 @@ public class NetUtils {
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
-                CacheManager.imageViews.put(imageView, url);
+                CacheManager.IMAGE_VIEWS.put(imageView, url);
                 imageView.setImageBitmap(null);
             }
 
@@ -248,10 +248,10 @@ public class NetUtils {
                 if (!bitmap.isPresent()) {
                     return;
                 }
-                synchronized (CacheManager.bitmapCache) {
-                    CacheManager.bitmapCache.put(url, bitmap.get());
+                synchronized (CacheManager.BITMAP_CACHE) {
+                    CacheManager.BITMAP_CACHE.put(url, bitmap.get());
                 }
-                String tag = CacheManager.imageViews.get(imageView);
+                String tag = CacheManager.IMAGE_VIEWS.get(imageView);
                 if (tag != null && tag.equals(url)) {
                     imageView.setImageBitmap(bitmap.get());
                 }

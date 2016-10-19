@@ -121,12 +121,12 @@ public class CafeteriaMenuManager extends AbstractManager {
 
     public void insertFavoriteDish(int mensaId, String dishName, String date, String tag) {
         db.execSQL("INSERT INTO favorite_dishes (mensaId, dishName, date, tag) VALUES (?, ?, ?,?)",
-                new String[]{"" + mensaId, dishName, date, tag});
+                new String[]{String.valueOf(mensaId), dishName, date, tag});
     }
 
     public Cursor getFavoriteDishNextDates(int mensaId, String dishName) {
         return db.rawQuery("SELECT strftime('%d-%m-%Y', date) "
-                + "FROM cafeterias_menus WHERE date > date('now','localtime') AND mensaId=? AND name=?", new String[]{"" + mensaId, dishName});
+                + "FROM cafeterias_menus WHERE date > date('now','localtime') AND mensaId=? AND name=?", new String[]{String.valueOf(mensaId), dishName});
     }
 
     public Cursor checkIfFavoriteDish(String tag) {
@@ -136,17 +136,17 @@ public class CafeteriaMenuManager extends AbstractManager {
 
     public Cursor getLastInsertedDishId(int mensaId, String dishName) {
         return db.rawQuery("SELECT MAX(id) "
-                + "FROM favorite_dishes WHERE mensaId=? AND dishName=?", new String[]{"" + mensaId, dishName});
+                + "FROM favorite_dishes WHERE mensaId=? AND dishName=?", new String[]{String.valueOf(mensaId), dishName});
     }
 
     public Cursor getFavoriteDishAllIds(int mensaId, String dishName) {
         return db.rawQuery("SELECT id "
-                + "FROM favorite_dishes WHERE mensaId=? AND dishName=?", new String[]{"" + mensaId, dishName});
+                + "FROM favorite_dishes WHERE mensaId=? AND dishName=?", new String[]{String.valueOf(mensaId), dishName});
     }
 
     public void deleteFavoriteDish(int mensaId, String dishName) {
         db.execSQL("DELETE "
-                + "FROM favorite_dishes WHERE mensaId=? AND dishName=?", new String[]{"" + mensaId, dishName});
+                + "FROM favorite_dishes WHERE mensaId=? AND dishName=?", new String[]{String.valueOf(mensaId), dishName});
     }
 
     public Cursor getFavoriteDishToday() {
@@ -174,7 +174,7 @@ public class CafeteriaMenuManager extends AbstractManager {
         return db.rawQuery("SELECT typeLong, group_concat(name, '\n') as names, id as _id, typeShort "
                         + "FROM cafeterias_menus WHERE mensaId = ? AND "
                         + "date = ? GROUP BY typeLong ORDER BY typeShort=\"tg\" DESC, typeShort ASC, typeNr",
-                new String[]{"" + mensaId, date});
+                new String[]{String.valueOf(mensaId), date});
     }
 
     /**
@@ -213,21 +213,6 @@ public class CafeteriaMenuManager extends AbstractManager {
      * @param c CafeteriaMenu object
      */
     private void replaceIntoDb(CafeteriaMenu c) {
-        if (c.cafeteriaId <= 0) {
-            throw new RuntimeException("Invalid cafeteriaId.");
-        }
-        if (c.name.length() == 0) {
-            throw new RuntimeException("Invalid name.");
-        }
-        if (c.typeLong.length() == 0) {
-            throw new RuntimeException("Invalid typeLong.");
-        }
-        if (c.typeShort.length() == 0) {
-            throw new RuntimeException("Invalid typeShort.");
-        }
-        if (c.date.before(Utils.getDate("2012-01-01"))) {
-            throw new RuntimeException("Invalid date.");
-        }
         db.execSQL("REPLACE INTO cafeterias_menus (mensaId, date, typeShort, "
                         + "typeLong, typeNr, name) VALUES (?, ?, ?, ?, ?, ?)",
                 new String[]{String.valueOf(c.cafeteriaId),

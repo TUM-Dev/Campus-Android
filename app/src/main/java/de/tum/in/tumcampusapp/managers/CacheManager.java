@@ -45,12 +45,12 @@ public class CacheManager extends AbstractManager {
     public static final int VALIDITY_TEN_DAYS = 10 * 86400;
     public static final int VALIDITY_ONE_MONTH = 30 * 86400;
 
-    public static final Map<ImageView, String> imageViews = Collections.synchronizedMap(new WeakHashMap<ImageView, String>());
-    public static final LruCache<String, Bitmap> bitmapCache;
+    public static final Map<ImageView, String> IMAGE_VIEWS = Collections.synchronizedMap(new WeakHashMap<ImageView, String>());
+    public static final LruCache<String, Bitmap> BITMAP_CACHE;
 
     static {
         int cacheSize = 4 * 1024 * 1024; // 4MiB
-        bitmapCache = new LruCache<String, Bitmap>(cacheSize) {
+        BITMAP_CACHE = new LruCache<String, Bitmap>(cacheSize) {
             @Override
             protected int sizeOf(String key, Bitmap bitmap) {
                 return bitmap.getRowBytes() * bitmap.getHeight();
@@ -104,7 +104,7 @@ public class CacheManager extends AbstractManager {
         if (cur.moveToFirst()) {
             do {
                 String imgUrl = cur.getString(1);
-                if (!imgUrl.isEmpty() && !imgUrl.equals("null")) {
+                if (!imgUrl.isEmpty() && !"null".equals(imgUrl)) {
                     net.downloadImage(imgUrl);
                 }
             } while (cur.moveToNext());
@@ -116,7 +116,7 @@ public class CacheManager extends AbstractManager {
         if (cur.moveToFirst()) {
             do {
                 String imgUrl = cur.getString(4);
-                if (!imgUrl.equals("null")) {
+                if (!"null".equals(imgUrl)) {
                     net.downloadImage(imgUrl);
                 }
             } while (cur.moveToNext());
@@ -129,7 +129,7 @@ public class CacheManager extends AbstractManager {
         if (cur.moveToFirst()) {
             do {
                 String imgUrl = cur.getString(cur.getColumnIndex(Const.JSON_COVER));
-                if (!imgUrl.equals("null")) {
+                if (!"null".equals(imgUrl)) {
                     net.downloadImage(imgUrl);
                 }
             } while (cur.moveToNext());
@@ -233,7 +233,7 @@ public class CacheManager extends AbstractManager {
         db.execSQL("REPLACE INTO cache (url, data, validity, max_age, typ) " +
                         "VALUES (?, ?, datetime('now','+" + (validity / 2) + " seconds'), " +
                         "datetime('now','+" + validity + " seconds'), ?)",
-                new String[]{url, data, "" + typ});
+                new String[]{url, data, String.valueOf(typ)});
     }
 
     /**
