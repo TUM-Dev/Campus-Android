@@ -42,7 +42,6 @@ import de.tum.in.tumcampusapp.activities.generic.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.auxiliary.calendar.IntegratedCalendarEvent;
-import de.tum.in.tumcampusapp.managers.AbstractManager;
 import de.tum.in.tumcampusapp.managers.CalendarManager;
 import de.tum.in.tumcampusapp.managers.SyncManager;
 import de.tum.in.tumcampusapp.models.tumo.CalendarRowSet;
@@ -117,7 +116,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
         // Dates after the current date
         requestHandler.setParameter("pMonateNach", String.valueOf(MONTH_AFTER));
 
-        if (SyncManager.needSync(AbstractManager.getDb(this), Const.SYNC_CALENDAR_IMPORT, TIME_TO_SYNC_CALENDAR)) {
+        if (new SyncManager(this).needSync(Const.SYNC_CALENDAR_IMPORT, TIME_TO_SYNC_CALENDAR)) {
             requestFetch();
         } else {
             isFetched = true;

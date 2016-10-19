@@ -57,8 +57,8 @@ public class KinoManager extends AbstractManager {
      * @throws JSONException
      */
     public void downloadFromExternal(boolean force) throws JSONException {
-
-        if (!force && !SyncManager.needSync(db, this, TIME_TO_SYNC)) {
+        SyncManager sync = new SyncManager(mContext);
+        if (!force && !sync.needSync(this, TIME_TO_SYNC)) {
             return;
         }
 
@@ -79,13 +79,11 @@ public class KinoManager extends AbstractManager {
                 JSONObject obj = arr.getJSONObject(i);
                 replaceIntoDb(getFromJson(obj));
             }
-            SyncManager.replaceIntoDb(db, this);
             db.setTransactionSuccessful();
-
         } finally {
             db.endTransaction();
         }
-
+        sync.replaceIntoDb(this);
     }
 
     /**

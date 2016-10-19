@@ -70,8 +70,9 @@ public class CafeteriaManager extends AbstractManager implements Card.ProvidesCa
      * @throws JSONException
      */
     public void downloadFromExternal(boolean force) throws JSONException {
+        SyncManager sync = new SyncManager(mContext);
         // Update table schemata if table exists
-        if (!force && !SyncManager.needSync(db, this, TIME_TO_SYNC)) {
+        if (!force && !sync.needSync(this, TIME_TO_SYNC)) {
             return;
         }
 
@@ -88,11 +89,11 @@ public class CafeteriaManager extends AbstractManager implements Card.ProvidesCa
             for (int i = 0; i < arr.length(); i++) {
                 replaceIntoDb(getFromJson(arr.getJSONObject(i)));
             }
-            SyncManager.replaceIntoDb(db, this);
             db.setTransactionSuccessful();
         } finally {
             db.endTransaction();
         }
+        sync.replaceIntoDb(this);
     }
 
     /**

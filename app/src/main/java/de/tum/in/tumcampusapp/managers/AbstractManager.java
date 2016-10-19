@@ -9,7 +9,9 @@ import de.tum.in.tumcampusapp.auxiliary.Const;
 
 public abstract class AbstractManager {
     protected Context mContext;
-    protected static SQLiteDatabase db;
+    private static final Object GLOBAL_DB_LOCK = new Object();
+    private static SQLiteDatabase globalDb;
+    protected final SQLiteDatabase db;
 
     protected AbstractManager(Context context) {
         mContext = context.getApplicationContext();
@@ -22,18 +24,20 @@ public abstract class AbstractManager {
      * @param c Context
      * @return SQLiteDatabase Db
      */
-    public static SQLiteDatabase getDb(Context c) {
-        if (db == null) {
-            File f = c.getDatabasePath(Const.DATABASE_NAME);
-            f.getParentFile().mkdirs();
-            db = SQLiteDatabase.openDatabase(f.toString(),
-                    null, SQLiteDatabase.CREATE_IF_NECESSARY);
+    public static SQLiteDatabase getDb(Context c) { // TODO: create a suggestionsmanager and make this protected
+        synchronized (GLOBAL_DB_LOCK) {
+            if (globalDb == null) {
+                File f = c.getDatabasePath(Const.DATABASE_NAME);
+                f.getParentFile().mkdirs();
+                globalDb = SQLiteDatabase.openDatabase(f.toString(),
+                        null, SQLiteDatabase.CREATE_IF_NECESSARY);
+            }
+            return globalDb;
         }
-        return db;
     }
 
     public static void resetDb(Context c) {
-        getDb(c);
+        SQLiteDatabase db = getDb(c);
         db.execSQL("DROP TABLE IF EXISTS cache");
         db.execSQL("DROP TABLE IF EXISTS cafeterias");
         db.execSQL("DROP TABLE IF EXISTS cafeterias_menus");

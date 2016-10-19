@@ -2,7 +2,6 @@ package de.tum.in.tumcampusapp.managers;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 
 import de.tum.in.tumcampusapp.auxiliary.Utils;
@@ -26,24 +25,22 @@ public class SyncManager extends AbstractManager {
 	/**
 	 * Checks if a new sync is needed or if data is up-to-date
 	 *
-	 * @param db Database connection
 	 * @param obj Gives class name as sync ID
 	 * @param seconds Sync period, e.g. 86400 for 1 day
 	 * @return true if sync is needed, else false
 	 */
-	public static boolean needSync(SQLiteDatabase db, Object obj, int seconds) {
-		return needSync(db, obj.getClass().getName(), seconds);
+	public boolean needSync(Object obj, int seconds) {
+		return needSync(obj.getClass().getName(), seconds);
 	}
 
 	/**
 	 * Checks if a new sync is needed or if data is up-to-date
 	 *
-	 * @param db Database connection
 	 * @param id Sync-ID (derived by originator class name)
 	 * @param seconds Sync period, e.g. 86400 for 1 day
 	 * @return true if sync is needed, else false
 	 */
-	public static boolean needSync(SQLiteDatabase db, String id, int seconds) {
+	public boolean needSync(String id, int seconds) {
 		boolean result = true;
 
 		try {
@@ -66,20 +63,18 @@ public class SyncManager extends AbstractManager {
 	/**
 	 * Replace or Insert a successful sync event in the database
 	 *
-	 * @param db Database connection
 	 * @param obj Gives class name as sync ID
 	 */
-	public static void replaceIntoDb(SQLiteDatabase db, Object obj) {
-		replaceIntoDb(db, obj.getClass().getName());
+	public void replaceIntoDb(Object obj) {
+		replaceIntoDb(obj.getClass().getName());
 	}
 
 	/**
 	 * Replace or Insert a successful sync event in the database
 	 *
-	 * @param db Database connection
 	 * @param id Sync-ID (derived by originator class name)
 	 */
-	public static void replaceIntoDb(SQLiteDatabase db, String id) {
+	public void replaceIntoDb(String id) {
 		Utils.log(id);
 
 		if (id.isEmpty()) {

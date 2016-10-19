@@ -86,8 +86,8 @@ public class CafeteriaMenuManager extends AbstractManager {
      * @param force True to force download over normal sync period, else false
      */
     public void downloadFromExternal(Context context, boolean force) {
-
-        if (!force && !SyncManager.needSync(db, this, TIME_TO_SYNC)) {
+        SyncManager sync = new SyncManager(mContext);
+        if (!force && !sync.needSync(this, TIME_TO_SYNC)) {
             return;
         }
 
@@ -116,7 +116,7 @@ public class CafeteriaMenuManager extends AbstractManager {
         } finally {
             db.endTransaction();
         }
-        SyncManager.replaceIntoDb(db, this);
+        sync.replaceIntoDb(this);
     }
 
     public void insertFavoriteDish(int mensaId, String dishName, String date, String tag) {

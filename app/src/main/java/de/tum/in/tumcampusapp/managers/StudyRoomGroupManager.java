@@ -39,12 +39,12 @@ public class StudyRoomGroupManager extends AbstractManager {
     }
 
 
-    private static void createStudyRoomGroupTable(SQLiteDatabase db) {
+    private void createStudyRoomGroupTable(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE IF NOT EXISTS study_room_groups " +
                 "(id INTEGER PRIMARY KEY, name VARCHAR, details VARCHAR)");
     }
 
-    private static void createStudyRoomTable(SQLiteDatabase db) {
+    private void createStudyRoomTable(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE IF NOT EXISTS study_rooms " +
                 "(id INTEGER PRIMARY KEY, code VARCHAR, name VARCHAR, location VARCHAR, " +
                 "occupied_till VARCHAR, " +
@@ -65,11 +65,11 @@ public class StudyRoomGroupManager extends AbstractManager {
             for (StudyRoomGroup group : groups) {
                 replaceIntoDb(group);
             }
-            SyncManager.replaceIntoDb(db, this);
             db.setTransactionSuccessful();
         } finally {
             db.endTransaction();
         }
+        new SyncManager(mContext).replaceIntoDb(this);
     }
 
     /**
@@ -193,7 +193,7 @@ public class StudyRoomGroupManager extends AbstractManager {
                 .valueOf(studyRoomGroupId)});
     }
 
-    public static List<StudyRoom> getStudyRoomsFromCursor(Cursor cursor) {
+    private static List<StudyRoom> getStudyRoomsFromCursor(Cursor cursor) {
         List<StudyRoom> studyRooms = new ArrayList<>(cursor.getCount());
 
         if (cursor.moveToFirst()) {

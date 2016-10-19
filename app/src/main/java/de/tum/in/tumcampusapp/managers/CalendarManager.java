@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.CalendarContract;
@@ -53,9 +54,6 @@ public class CalendarManager extends AbstractManager implements Card.ProvidesCar
                 + "nr VARCHAR PRIMARY KEY, status VARCHAR, url VARCHAR, "
                 + "title VARCHAR, description VARCHAR, dtstart VARCHAR, dtend VARCHAR, "
                 + "location VARCHAR REFERENCES room_locations)");
-
-        // Create a new sync table
-        new SyncManager(context);
     }
 
     /**
@@ -117,7 +115,7 @@ public class CalendarManager extends AbstractManager implements Card.ProvidesCar
                 }
             }
         }
-        SyncManager.replaceIntoDb(db, Const.SYNC_CALENDAR_IMPORT);
+        new SyncManager(mContext).replaceIntoDb(Const.SYNC_CALENDAR_IMPORT);
     }
 
     /**
@@ -291,6 +289,7 @@ public class CalendarManager extends AbstractManager implements Card.ProvidesCar
 
         public static void loadGeo(Context c) {
             LocationManager locationManager = new LocationManager(c);
+            SQLiteDatabase db = getDb(c);
 
             Cursor cur = db.rawQuery("SELECT c.location " +
                     "FROM calendar c LEFT JOIN room_locations r ON " +
@@ -317,9 +316,9 @@ public class CalendarManager extends AbstractManager implements Card.ProvidesCar
             // Do sync of google calendar if necessary
             boolean syncCalendar = Utils.getInternalSettingBool(c, Const.SYNC_CALENDAR, false)
                     && ContextCompat.checkSelfPermission(c, Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED;
-            if (syncCalendar && SyncManager.needSync(db, Const.SYNC_CALENDAR, TIME_TO_SYNC_CALENDAR)) {
+            if (syncCalendar && new SyncManager(c).needSync(Const.SYNC_CALENDAR, TIME_TO_SYNC_CALENDAR)) {
                 syncCalendar(c);
-                SyncManager.replaceIntoDb(db, Const.SYNC_CALENDAR);
+                new SyncManager(c).replaceIntoDb(Const.SYNC_CALENDAR);
             }
         }
     }
