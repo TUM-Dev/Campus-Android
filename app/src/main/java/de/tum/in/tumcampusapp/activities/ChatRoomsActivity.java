@@ -190,7 +190,7 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
                 @Override
                 public void onResponse(Call<ChatRoom> call, Response<ChatRoom> response) {
                     if (!response.isSuccessful()) {
-                        Utils.logv("Error creating&joining chat room: " + response.body());
+                        Utils.logv("Error creating&joining chat room: " + response.message());
                         return;
                     }
 
