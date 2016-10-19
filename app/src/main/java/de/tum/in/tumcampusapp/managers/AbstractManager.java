@@ -7,7 +7,7 @@ import java.io.File;
 
 import de.tum.in.tumcampusapp.auxiliary.Const;
 
-public abstract class AbstractManager {
+public class AbstractManager {
     protected Context mContext;
     private static final Object GLOBAL_DB_LOCK = new Object();
     private static SQLiteDatabase globalDb;

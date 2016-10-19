@@ -85,7 +85,7 @@ public class Helper {
                         .addHeader("X-ANDROID-VERSION", Build.VERSION.RELEASE);
                 try {
                     newRequest.addHeader("X-APP-VERSION", c.getPackageManager().getPackageInfo(c.getPackageName(), 0).versionName);
-                } catch (PackageManager.NameNotFoundException e) {
+                } catch (PackageManager.NameNotFoundException e) { //NOPMD
                     //We don't care. In that case we simply don't send the information
                 }
 

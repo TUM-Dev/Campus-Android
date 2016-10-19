@@ -38,7 +38,7 @@ public final class Util {
                 bufferedReader.close();
             }
 
-        } catch (IOException e) {
+        } catch (IOException e) { //NOPMD
             //Catch em all, we don't want any trouble here
         }
         return "";

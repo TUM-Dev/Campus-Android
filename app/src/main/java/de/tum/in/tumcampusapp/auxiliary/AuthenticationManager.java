@@ -15,7 +15,6 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.UUID;
 
-import de.tum.in.tumcampusapp.activities.wizard.WizNavStartActivity;
 import de.tum.in.tumcampusapp.api.TUMCabeClient;
 import de.tum.in.tumcampusapp.exceptions.NoPrivateKey;
 import de.tum.in.tumcampusapp.exceptions.NoPublicKey;
@@ -149,7 +148,7 @@ public class AuthenticationManager {
 
             // If we already have one don't create a new one
             return true;
-        } catch (NoPrivateKey | NoPublicKey e) {
+        } catch (NoPrivateKey | NoPublicKey e) { //NOPMD
             //Otherwise catch a not existing private key exception and proceed generation
         }
 
