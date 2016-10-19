@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.provider.CalendarContract;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 
 import com.google.common.base.Optional;
 
@@ -314,7 +315,8 @@ public class CalendarManager extends AbstractManager implements Card.ProvidesCar
             cur.close();
 
             // Do sync of google calendar if necessary
-            boolean syncCalendar = Utils.getInternalSettingBool(c, Const.SYNC_CALENDAR, false);
+            boolean syncCalendar = Utils.getInternalSettingBool(c, Const.SYNC_CALENDAR, false)
+                    && ContextCompat.checkSelfPermission(c, Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED;
             if (syncCalendar && SyncManager.needSync(db, Const.SYNC_CALENDAR, TIME_TO_SYNC_CALENDAR)) {
                 syncCalendar(c);
                 SyncManager.replaceIntoDb(db, Const.SYNC_CALENDAR);
