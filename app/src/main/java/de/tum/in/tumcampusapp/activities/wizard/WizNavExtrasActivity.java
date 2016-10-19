@@ -22,6 +22,7 @@ import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.exceptions.NoPrivateKey;
+import de.tum.in.tumcampusapp.exceptions.NoPublicKey;
 import de.tum.in.tumcampusapp.managers.ChatRoomManager;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatMember;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatRoom;
@@ -49,6 +50,15 @@ public class WizNavExtrasActivity extends ActivityForLoadingInBackground<Void, C
         // If called because app version changed remove "Step 4" and close on back pressed
         Intent i = getIntent();
         if (i != null && i.hasExtra(Const.TOKEN_IS_SETUP)) {
+            //If coming from a 6X version we need to upload the public key to TUMO
+            AuthenticationManager am = new AuthenticationManager(this);
+            try {
+                am.uploadPublicKey();
+            } catch (NoPublicKey noPublicKey) {
+                noPublicKey.printStackTrace();
+            }
+
+            //Remember that we are only running through a limited setup
             tokenSetup = i.getBooleanExtra(Const.TOKEN_IS_SETUP, false);
         }
 

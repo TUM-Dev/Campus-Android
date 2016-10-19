@@ -14,7 +14,7 @@ android {
             debuggable true
             minifyEnabled true
         }
-        release {
+        release {https://github.com/TCA-Team/TumCampusApp/releases/download/1.4.5/app-v10-release.apk
             debuggable false
             minifyEnabled true
         }
@@ -23,8 +23,8 @@ android {
         applicationId "de.tum.in.tumcampus"
         minSdkVersion 10
         targetSdkVersion 24
-        versionCode 507
-        versionName "1.4.5-dev"
+        versionCode 508
+        versionName "1.4.6-dev"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     lintOptions {

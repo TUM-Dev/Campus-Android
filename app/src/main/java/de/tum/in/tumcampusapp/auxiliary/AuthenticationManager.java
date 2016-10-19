@@ -15,13 +15,17 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.UUID;
 
+import de.tum.in.tumcampusapp.activities.wizard.WizNavStartActivity;
 import de.tum.in.tumcampusapp.api.TUMCabeClient;
 import de.tum.in.tumcampusapp.exceptions.NoPrivateKey;
 import de.tum.in.tumcampusapp.exceptions.NoPublicKey;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatMember;
 import de.tum.in.tumcampusapp.models.tumcabe.DeviceRegister;
 import de.tum.in.tumcampusapp.models.tumcabe.TUMCabeStatus;
+import de.tum.in.tumcampusapp.models.tumo.TokenConfirmation;
 import de.tum.in.tumcampusapp.services.GcmIdentificationService;
+import de.tum.in.tumcampusapp.tumonline.TUMOnlineConst;
+import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequest;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -206,6 +210,21 @@ public class AuthenticationManager {
         } catch (NoPrivateKey noPrivateKey) {
             this.clearKeys();
         }
+    }
+
+    public void uploadPublicKey() throws NoPublicKey {
+        final String publicKey = this.getPublicKeyString();
+        Thread thread = new Thread() {
+            @Override
+            public void run() {
+                //Upload the Private key to the tumo server: we don't need an activated token for that. We want this to happen immediately so that no one else can upload this secret.
+                TUMOnlineRequest<TokenConfirmation> requestSavePublicKey = new TUMOnlineRequest<>(TUMOnlineConst.SECRET_UPLOAD, AuthenticationManager.this.mContext, false);
+                requestSavePublicKey.setParameter("pToken", Utils.getSetting(AuthenticationManager.this.mContext, Const.ACCESS_TOKEN, ""));
+                requestSavePublicKey.setParameterEncoded("pSecret", publicKey);
+                requestSavePublicKey.fetch();
+            }
+        };
+        thread.start();
     }
 
     private void tryToUploadGcmToken() {
