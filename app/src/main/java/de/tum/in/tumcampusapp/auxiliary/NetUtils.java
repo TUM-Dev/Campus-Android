@@ -211,7 +211,7 @@ public class NetUtils {
     public Optional<Bitmap> downloadImageToBitmap(@NonNull String url) {
         Optional<File> f = downloadImage(url);
         if (f.isPresent()) {
-            return Optional.of(BitmapFactory.decodeFile(f.get().getAbsolutePath()));
+            return Optional.fromNullable(BitmapFactory.decodeFile(f.get().getAbsolutePath()));
         }
         return Optional.absent();
     }

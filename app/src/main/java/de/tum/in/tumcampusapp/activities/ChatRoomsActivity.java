@@ -189,9 +189,15 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
             TUMCabeClient.getInstance(this).createRoom(currentChatRoom, new ChatVerification(this, this.currentChatMember), new Callback<ChatRoom>() {
                 @Override
                 public void onResponse(Call<ChatRoom> call, Response<ChatRoom> response) {
+                    if (!response.isSuccessful()) {
+                        Utils.logv("Error creating&joining chat room: " + response.body());
+                        return;
+                    }
+
                     // The POST request is successful: go to room. API should have auto joined it
                     Utils.logv("Success creating&joining chat room: " + response.body());
                     currentChatRoom = response.body();
+
                     manager.join(currentChatRoom);
 
                     // When we show joined chat rooms open chat room directly
