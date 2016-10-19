@@ -56,6 +56,7 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
             card.setQuestions(rows);
             card.apply();
         }
+        rows.close();
     }
 
     /**
@@ -101,13 +102,13 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
         // get all already existing openQuestions in db
         Cursor c = db.rawQuery("SELECT question FROM openQuestions", null);
 
-        if (c != null && c.moveToFirst()) {
-            do { // iterates on each question in the db
+        if (c != null) {
+            while (c.moveToNext()) { // iterates on each question in the db
                 // Incase the question from the database is not contained in the list with the downloaded questions, the question gets deleted from db
                 if (!downloadedQuestionsID.contains(new Question(c.getString(c.getColumnIndex("question"))))) {
                     db.delete("openQuestions", "question = ?", new String[]{c.getString(c.getColumnIndex("question"))});
                 }
-            } while (c.moveToNext());
+            }
             c.close();
         }
     }
@@ -136,9 +137,9 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
                 db.setTransactionSuccessful();
             } finally {
                 db.endTransaction();
-                c.close();
             }
         }
+        c.close();
     }
 
     /**
@@ -237,28 +238,27 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
     public void syncOpenQuestionsTable() {
         Cursor cursor = db.rawQuery("SELECT question, answerid FROM openQuestions WHERE synced=0 AND answered=1", null);
         try {
-            if (cursor.moveToFirst()) { // In case there are answered but not yet synced questions in local db
-                do {
-                    Question answeredQuestion = new Question(cursor.getString(cursor.getColumnIndex("question")), cursor.getInt(cursor.getColumnIndex("answerid")));
+            // In case there are answered but not yet synced questions in local db
+            while (cursor.moveToNext()) {
+                Question answeredQuestion = new Question(cursor.getString(cursor.getColumnIndex("question")), cursor.getInt(cursor.getColumnIndex("answerid")));
 
-                    // Submit Answer to Serve
-                    TUMCabeClient.getInstance(mContext).submitAnswer(answeredQuestion, new Callback<Question>() {
-                        @Override
-                        public void onResponse(Call<Question> call, Response<Question> response) {
-                            Utils.log("Test_resp_submitQues Succeeded: " + response.body());
-                        }
+                // Submit Answer to Serve
+                TUMCabeClient.getInstance(mContext).submitAnswer(answeredQuestion, new Callback<Question>() {
+                    @Override
+                    public void onResponse(Call<Question> call, Response<Question> response) {
+                        Utils.log("Test_resp_submitQues Succeeded: " + response.body());
+                    }
 
-                        @Override
-                        public void onFailure(Call<Question> call, Throwable t) {
-                            Utils.log(t, "Test_resp_submitQues Failure");
-                        }
-                    });
+                    @Override
+                    public void onFailure(Call<Question> call, Throwable t) {
+                        Utils.log(t, "Test_resp_submitQues Failure");
+                    }
+                });
 
-                    // Mark as synced in local db
-                    ContentValues cv = new ContentValues();
-                    cv.put("synced", "1");
-                    db.update("openQuestions", cv, "question = ?", new String[]{cursor.getString(cursor.getColumnIndex("question")) + ""});
-                } while (cursor.moveToNext());
+                // Mark as synced in local db
+                ContentValues cv = new ContentValues();
+                cv.put("synced", "1");
+                db.update("openQuestions", cv, "question = ?", new String[]{cursor.getString(cursor.getColumnIndex("question")) + ""});
             }
         } catch (Exception e) {
             Utils.log(e.toString());
@@ -352,7 +352,7 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
         } catch (IOException e) {
             Utils.log(e);
         }
-        if(ownQuestions.size() == 0) {
+        if (ownQuestions.size() == 0) {
             return;
         }
         for (int i = 0; i < ownQuestions.size(); i++) {
