@@ -27,10 +27,10 @@ import de.tum.in.tumcampusapp.activities.CafeteriaActivity;
 import de.tum.in.tumcampusapp.auxiliary.CafeteriaPrices;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.cards.generic.NotificationAwareCard;
-import de.tum.in.tumcampusapp.models.CafeteriaMenu;
+import de.tum.in.tumcampusapp.models.cafeteria.CafeteriaMenu;
 
 import static de.tum.in.tumcampusapp.fragments.CafeteriaDetailsSectionFragment.showMenu;
-import static de.tum.in.tumcampusapp.models.managers.CardManager.CARD_CAFETERIA;
+import static de.tum.in.tumcampusapp.managers.CardManager.CARD_CAFETERIA;
 
 /**
  * Card that shows the cafeteria menu

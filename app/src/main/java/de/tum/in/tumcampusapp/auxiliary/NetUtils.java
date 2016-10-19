@@ -1,13 +1,11 @@
 package de.tum.in.tumcampusapp.auxiliary;
 
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.support.annotation.NonNull;
 import android.widget.ImageView;
 
@@ -22,8 +20,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 import de.tum.in.tumcampusapp.api.Helper;
-import de.tum.in.tumcampusapp.models.managers.CacheManager;
-import de.tum.in.tumcampusapp.trace.G;
+import de.tum.in.tumcampusapp.managers.CacheManager;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;

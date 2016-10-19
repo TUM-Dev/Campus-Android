@@ -36,8 +36,8 @@ import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.FileUtils;
 import de.tum.in.tumcampusapp.auxiliary.ImplicitCounter;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
-import de.tum.in.tumcampusapp.models.managers.AbstractManager;
-import de.tum.in.tumcampusapp.models.managers.CardManager;
+import de.tum.in.tumcampusapp.managers.AbstractManager;
+import de.tum.in.tumcampusapp.managers.CardManager;
 import de.tum.in.tumcampusapp.services.DownloadService;
 import de.tum.in.tumcampusapp.services.StartSyncReceiver;
 import de.tum.in.tumcampusapp.trace.ExceptionHandler;
@@ -183,19 +183,21 @@ public class StartupActivity extends AppCompatActivity {
 
 
             // Display an AlertDialog with an explanation and a button to trigger the request.
-            new AlertDialog.Builder(this)
-                    .setMessage(getString(R.string.permission_location_explanation))
-                    .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            StartupActivity.this.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    new AlertDialog.Builder(StartupActivity.this).setMessage(getString(R.string.permission_location_explanation)).setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int id) {
-                            ActivityCompat
-                                    .requestPermissions(StartupActivity.this, PERMISSIONS_LOCATION,
-                                            REQUEST_LOCATION);
+
+                            ActivityCompat.requestPermissions(StartupActivity.this, PERMISSIONS_LOCATION, REQUEST_LOCATION);
+
                         }
                     }).show();
+                }
+            });
         } else {
-            ActivityCompat.requestPermissions(StartupActivity.this, PERMISSIONS_LOCATION,
-                    REQUEST_LOCATION);
+            ActivityCompat.requestPermissions(StartupActivity.this, PERMISSIONS_LOCATION, REQUEST_LOCATION);
         }
     }
 

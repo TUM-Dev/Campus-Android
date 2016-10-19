@@ -12,7 +12,7 @@ import android.support.v4.app.NotificationCompat;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.CafeteriaActivity;
 import de.tum.in.tumcampusapp.auxiliary.Const;
-import de.tum.in.tumcampusapp.models.managers.CafeteriaMenuManager;
+import de.tum.in.tumcampusapp.managers.CafeteriaMenuManager;
 
 public class FavoriteDishService extends IntentService {
 

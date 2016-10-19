@@ -322,4 +322,11 @@
     <string name="show_column_chart">Visualizza istogramma</string>
     <string name="show_pie_chart">Visualizza Pie Chart</string>
     <string name="result_extra">Risultato:&#160;</string>
+    <string name="quiz">Survey Research</string>
+    <string name="selected_target_faculties">facoltà target selezionato:</string>
+    <string name="card_survey_summary">vous permet de participer à la recherche liée aux questions de l\'enquête</string>
+    <string name="chat_not_setup">Chat non è configurato correttamente, eseguire nuovamente la procedura guidata tramite le impostazioni!</string>
+    <string name="flag_inappropriate">Flag domanda inadeguato</string>
+    <string name="mvv_download">Si prega di premere OK per scaricare MVV-Piani altrimenti non è possibile utilizzare questa funzione</string>
+    <string name="please_connect_to_internet">Si prega di collegarsi a Internet al fine di procedere al primo avvio dell\'applicazione</string>
 </resources>

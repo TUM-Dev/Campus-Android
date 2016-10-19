@@ -10,7 +10,7 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampusapp.adapters.LectureAppointmentsListAdapter;
 import de.tum.in.tumcampusapp.auxiliary.Const;
-import de.tum.in.tumcampusapp.models.LectureAppointmentsRowSet;
+import de.tum.in.tumcampusapp.models.tumo.LectureAppointmentsRowSet;
 import de.tum.in.tumcampusapp.tumonline.TUMOnlineConst;
 
 /**

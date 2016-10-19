@@ -16,7 +16,7 @@ import java.util.Locale;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
-import de.tum.in.tumcampusapp.models.LectureAppointmentsRow;
+import de.tum.in.tumcampusapp.models.tumo.LectureAppointmentsRow;
 
 /**
  * Generates the output of the ListView on the {@link de.tum.in.tumcampusapp.activities.LecturesAppointmentsActivity} activity.

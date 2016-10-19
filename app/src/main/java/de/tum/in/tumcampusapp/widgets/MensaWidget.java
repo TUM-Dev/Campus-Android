@@ -10,7 +10,7 @@ import android.os.Build;
 import android.widget.RemoteViews;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.models.managers.CafeteriaManager;
+import de.tum.in.tumcampusapp.managers.CafeteriaManager;
 import de.tum.in.tumcampusapp.services.MensaWidgetService;
 
 
@@ -28,7 +28,6 @@ public class MensaWidget extends AppWidgetProvider {
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
 
         // There may be multiple widgets active, so update all of them
-        final int N = appWidgetIds.length;
         this.appWidgetManager = appWidgetManager;
 
         for (int appWidgetId : appWidgetIds) {

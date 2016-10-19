@@ -11,7 +11,7 @@ import android.view.View;
 import android.widget.CheckBox;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.models.managers.CardManager;
+import de.tum.in.tumcampusapp.managers.CardManager;
 
 /**
  * The configuration screen for the {@link CardsWidget CardsWidget} AppWidget.

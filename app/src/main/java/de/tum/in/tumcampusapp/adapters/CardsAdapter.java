@@ -17,7 +17,7 @@ import de.tum.in.tumcampusapp.cards.Support;
 import de.tum.in.tumcampusapp.cards.SurveyCard;
 import de.tum.in.tumcampusapp.cards.TuitionFeesCard;
 import de.tum.in.tumcampusapp.cards.generic.Card;
-import de.tum.in.tumcampusapp.models.managers.CardManager;
+import de.tum.in.tumcampusapp.managers.CardManager;
 
 /**
  * Adapter for the cards start page used in {@link de.tum.in.tumcampusapp.activities.MainActivity}

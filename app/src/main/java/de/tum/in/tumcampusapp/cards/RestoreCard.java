@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.cards.generic.Card;
 import de.tum.in.tumcampusapp.cards.generic.StickyCard;
-import de.tum.in.tumcampusapp.models.managers.CardManager;
+import de.tum.in.tumcampusapp.managers.CardManager;
 
 /**
  * Card that allows the user to reset the dismiss state of all cards

@@ -9,7 +9,7 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.ActivityForLoadingInBackground;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
-import de.tum.in.tumcampusapp.models.managers.CacheManager;
+import de.tum.in.tumcampusapp.managers.CacheManager;
 
 /**
  * Activity to display the curricula details of different programs.

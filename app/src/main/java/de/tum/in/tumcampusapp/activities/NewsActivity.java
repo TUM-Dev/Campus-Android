@@ -13,7 +13,7 @@ import de.tum.in.tumcampusapp.adapters.NewsAdapter;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
-import de.tum.in.tumcampusapp.models.managers.NewsManager;
+import de.tum.in.tumcampusapp.managers.NewsManager;
 
 /**
  * Activity to show News (message, image, date)

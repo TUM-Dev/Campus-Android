@@ -22,7 +22,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 import static de.tum.in.tumcampusapp.auxiliary.Const.API_HOSTNAME;
-import static de.tum.in.tumcampusapp.models.managers.StudyRoomGroupManager.STUDYROOM_HOST;
+import static de.tum.in.tumcampusapp.managers.StudyRoomGroupManager.STUDYROOM_HOST;
 
 public class Helper {
     private static final int HTTP_TIMEOUT = 25000;
@@ -86,6 +86,7 @@ public class Helper {
                 try {
                     newRequest.addHeader("X-APP-VERSION", c.getPackageManager().getPackageInfo(c.getPackageName(), 0).versionName);
                 } catch (PackageManager.NameNotFoundException e) {
+                    //We don't care. In that case we simply don't send the information
                 }
 
                 return chain.proceed(newRequest.build());

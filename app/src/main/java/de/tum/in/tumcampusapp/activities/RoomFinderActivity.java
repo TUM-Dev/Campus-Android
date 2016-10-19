@@ -19,7 +19,7 @@ import de.tum.in.tumcampusapp.activities.generic.ActivityForSearching;
 import de.tum.in.tumcampusapp.adapters.NoResultsAdapter;
 import de.tum.in.tumcampusapp.adapters.RoomFinderListAdapter;
 import de.tum.in.tumcampusapp.auxiliary.RoomFinderSuggestionProvider;
-import de.tum.in.tumcampusapp.models.managers.RecentsManager;
+import de.tum.in.tumcampusapp.managers.RecentsManager;
 import de.tum.in.tumcampusapp.tumonline.TUMRoomFinderRequest;
 import de.tum.in.tumcampusapp.tumonline.TUMRoomFinderRequestFetchListener;
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;

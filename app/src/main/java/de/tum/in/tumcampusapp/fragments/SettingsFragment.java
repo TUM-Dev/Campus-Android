@@ -36,11 +36,11 @@ import de.tum.in.tumcampusapp.auxiliary.AccessTokenManager;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
-import de.tum.in.tumcampusapp.models.managers.AbstractManager;
-import de.tum.in.tumcampusapp.models.managers.CacheManager;
-import de.tum.in.tumcampusapp.models.managers.CalendarManager;
-import de.tum.in.tumcampusapp.models.managers.CardManager;
-import de.tum.in.tumcampusapp.models.managers.NewsManager;
+import de.tum.in.tumcampusapp.managers.AbstractManager;
+import de.tum.in.tumcampusapp.managers.CacheManager;
+import de.tum.in.tumcampusapp.managers.CalendarManager;
+import de.tum.in.tumcampusapp.managers.CardManager;
+import de.tum.in.tumcampusapp.managers.NewsManager;
 import de.tum.in.tumcampusapp.services.BackgroundService;
 import de.tum.in.tumcampusapp.services.SilenceService;
 

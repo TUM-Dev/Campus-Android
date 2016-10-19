@@ -22,10 +22,10 @@ import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.exceptions.NoPrivateKey;
-import de.tum.in.tumcampusapp.models.ChatMember;
-import de.tum.in.tumcampusapp.models.ChatRoom;
-import de.tum.in.tumcampusapp.models.ChatVerification;
-import de.tum.in.tumcampusapp.models.managers.ChatRoomManager;
+import de.tum.in.tumcampusapp.managers.ChatRoomManager;
+import de.tum.in.tumcampusapp.models.tumcabe.ChatMember;
+import de.tum.in.tumcampusapp.models.tumcabe.ChatRoom;
+import de.tum.in.tumcampusapp.models.tumcabe.ChatVerification;
 
 public class WizNavExtrasActivity extends ActivityForLoadingInBackground<Void, ChatMember> {
 
@@ -131,9 +131,7 @@ public class WizNavExtrasActivity extends ActivityForLoadingInBackground<Void, C
             Utils.setInternalSetting(this, Const.PRIVATE_KEY_ACTIVE, true);
 
             return member;
-        } catch (IOException e) {
-            Utils.log(e);
-        } catch (NoPrivateKey e) {
+        } catch (IOException | NoPrivateKey e) {
             Utils.log(e);
         }
 

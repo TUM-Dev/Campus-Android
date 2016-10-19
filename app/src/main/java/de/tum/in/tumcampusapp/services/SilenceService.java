@@ -16,7 +16,7 @@ import java.util.Locale;
 
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
-import de.tum.in.tumcampusapp.models.managers.CalendarManager;
+import de.tum.in.tumcampusapp.managers.CalendarManager;
 
 /**
  * Service used to silence the mobile during lectures

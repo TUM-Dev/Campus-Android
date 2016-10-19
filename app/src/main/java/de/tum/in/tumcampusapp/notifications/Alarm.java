@@ -26,8 +26,8 @@ import de.tum.in.tumcampusapp.api.TUMCabeClient;
 import de.tum.in.tumcampusapp.auxiliary.AuthenticationManager;
 import de.tum.in.tumcampusapp.auxiliary.RSASigner;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
-import de.tum.in.tumcampusapp.models.GCMAlert;
-import de.tum.in.tumcampusapp.models.GCMNotification;
+import de.tum.in.tumcampusapp.models.gcm.GCMAlert;
+import de.tum.in.tumcampusapp.models.gcm.GCMNotification;
 
 public class Alarm extends GenericNotification {
 

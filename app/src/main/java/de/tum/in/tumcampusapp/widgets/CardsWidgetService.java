@@ -15,7 +15,7 @@ import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.cards.generic.Card;
-import de.tum.in.tumcampusapp.models.managers.CardManager;
+import de.tum.in.tumcampusapp.managers.CardManager;
 
 @SuppressLint("Registered")
 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)

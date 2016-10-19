@@ -13,7 +13,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.models.Exam;
+import de.tum.in.tumcampusapp.models.tumo.Exam;
 
 /**
  * Custom UI adapter for a list of exams.

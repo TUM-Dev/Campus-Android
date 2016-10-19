@@ -9,7 +9,7 @@ import android.widget.TextView;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.BaseActivity;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
-import de.tum.in.tumcampusapp.models.GCMNotification;
+import de.tum.in.tumcampusapp.models.gcm.GCMNotification;
 
 /**
  * Activity to show any alarms

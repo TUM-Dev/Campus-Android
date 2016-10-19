@@ -49,8 +49,8 @@ import de.tum.in.tumcampusapp.activities.generic.ProgressActivity;
 import de.tum.in.tumcampusapp.api.TUMCabeClient;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
-import de.tum.in.tumcampusapp.models.Question;
-import de.tum.in.tumcampusapp.models.managers.SurveyManager;
+import de.tum.in.tumcampusapp.managers.SurveyManager;
+import de.tum.in.tumcampusapp.models.tumcabe.Question;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -77,8 +77,8 @@ public class SurveyActivity extends ProgressActivity {
         public void onClick(final View v) {
             String[] faculties = (String[]) v.getTag();
             StringBuilder chosenFaculties = new StringBuilder();
-            for (int i = 0; i < faculties.length; i++) {
-                chosenFaculties.append("- ").append(faculties[i]).append('\n');
+            for (String faculty : faculties) {
+                chosenFaculties.append("- ").append(faculty).append('\n');
             }
 
             new android.app.AlertDialog.Builder(context).setTitle(getResources().getString(R.string.selected_target_faculties))
@@ -606,7 +606,7 @@ public class SurveyActivity extends ProgressActivity {
             numOfQuestionsSpinner.setVisibility(View.GONE);
         }
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, numQues);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, numQues);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         numOfQuestionsSpinner.setAdapter(adapter);
 

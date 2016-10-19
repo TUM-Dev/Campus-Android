@@ -21,7 +21,7 @@ import de.tum.in.tumcampusapp.activities.OpeningHoursDetailActivity;
 import de.tum.in.tumcampusapp.activities.OpeningHoursListActivity;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
-import de.tum.in.tumcampusapp.models.managers.OpenHoursManager;
+import de.tum.in.tumcampusapp.managers.OpenHoursManager;
 
 /**
  * A fragment representing a single Item detail screen. This fragment is either

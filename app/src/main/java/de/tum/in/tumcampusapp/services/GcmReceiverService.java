@@ -25,8 +25,8 @@ import com.google.android.gms.gcm.GcmListenerService;
 
 import java.io.IOException;
 
-import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.api.TUMCabeClient;
+import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.notifications.Alarm;
 import de.tum.in.tumcampusapp.notifications.Chat;
 import de.tum.in.tumcampusapp.notifications.GenericNotification;
@@ -106,7 +106,7 @@ public class GcmReceiverService extends GcmListenerService {
                     Utils.log(e);
                 }
 
-                //de.tum.in.tumcampusapp.models.managers.NotificationManager man = new de.tum.in.tumcampusapp.models.managers.NotificationManager(this);
+                //de.tum.in.tumcampusapp.managers.NotificationManager man = new de.tum.in.tumcampusapp.managers.NotificationManager(this);
                 //@todo save to our notificationmanager
             }
         }

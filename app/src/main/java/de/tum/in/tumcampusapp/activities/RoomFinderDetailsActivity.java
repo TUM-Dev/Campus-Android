@@ -25,7 +25,7 @@ import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.fragments.ImageViewTouchFragment;
 import de.tum.in.tumcampusapp.fragments.WeekViewFragment;
-import de.tum.in.tumcampusapp.models.Geo;
+import de.tum.in.tumcampusapp.models.tumo.Geo;
 import de.tum.in.tumcampusapp.tumonline.TUMRoomFinderRequest;
 
 /**

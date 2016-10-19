@@ -14,8 +14,8 @@ import java.security.spec.X509EncodedKeySpec;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.tum.in.tumcampusapp.models.ChatMessage;
-import de.tum.in.tumcampusapp.models.ChatPublicKey;
+import de.tum.in.tumcampusapp.models.tumcabe.ChatMessage;
+import de.tum.in.tumcampusapp.models.tumcabe.ChatPublicKey;
 
 
 /**

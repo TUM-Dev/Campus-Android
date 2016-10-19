@@ -16,10 +16,10 @@ import de.tum.in.tumcampusapp.activities.generic.ActivityForLoadingInBackground;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
-import de.tum.in.tumcampusapp.models.IdentitySet;
-import de.tum.in.tumcampusapp.models.Person;
-import de.tum.in.tumcampusapp.models.PersonList;
-import de.tum.in.tumcampusapp.models.TokenConfirmation;
+import de.tum.in.tumcampusapp.models.tumo.IdentitySet;
+import de.tum.in.tumcampusapp.models.tumo.Person;
+import de.tum.in.tumcampusapp.models.tumo.PersonList;
+import de.tum.in.tumcampusapp.models.tumo.TokenConfirmation;
 import de.tum.in.tumcampusapp.tumonline.TUMOnlineConst;
 import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequest;
 

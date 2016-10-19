@@ -42,10 +42,10 @@ import de.tum.in.tumcampusapp.activities.generic.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.auxiliary.calendar.IntegratedCalendarEvent;
-import de.tum.in.tumcampusapp.models.CalendarRowSet;
-import de.tum.in.tumcampusapp.models.managers.AbstractManager;
-import de.tum.in.tumcampusapp.models.managers.CalendarManager;
-import de.tum.in.tumcampusapp.models.managers.SyncManager;
+import de.tum.in.tumcampusapp.managers.AbstractManager;
+import de.tum.in.tumcampusapp.managers.CalendarManager;
+import de.tum.in.tumcampusapp.managers.SyncManager;
+import de.tum.in.tumcampusapp.models.tumo.CalendarRowSet;
 import de.tum.in.tumcampusapp.tumonline.TUMOnlineConst;
 
 /**

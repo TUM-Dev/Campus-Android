@@ -10,7 +10,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.models.OrgItem;
+import de.tum.in.tumcampusapp.models.tumo.OrgItem;
 
 /**
  * Adapter class for {@link OrgItem} list. The purpose is to get Items

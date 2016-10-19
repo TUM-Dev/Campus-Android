@@ -17,8 +17,8 @@ import de.tum.in.tumcampusapp.api.TUMCabeClient;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.exceptions.NoPrivateKey;
-import de.tum.in.tumcampusapp.models.DeviceUploadGcmToken;
-import de.tum.in.tumcampusapp.models.TUMCabeStatus;
+import de.tum.in.tumcampusapp.models.tumcabe.DeviceUploadGcmToken;
+import de.tum.in.tumcampusapp.models.tumcabe.TUMCabeStatus;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -168,7 +168,7 @@ public class GcmIdentificationService extends InstanceIDListenerService {
         }
 
         //Try to create the message
-        DeviceUploadGcmToken dgcm = null;
+        DeviceUploadGcmToken dgcm;
         try {
             dgcm = new DeviceUploadGcmToken(mContext, token);
         } catch (NoPrivateKey noPrivateKey) {

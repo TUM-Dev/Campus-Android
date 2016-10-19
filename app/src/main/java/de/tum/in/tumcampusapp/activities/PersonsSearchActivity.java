@@ -15,9 +15,9 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.ActivityForSearchingTumOnline;
 import de.tum.in.tumcampusapp.adapters.NoResultsAdapter;
 import de.tum.in.tumcampusapp.auxiliary.PersonSearchSuggestionProvider;
-import de.tum.in.tumcampusapp.models.Person;
-import de.tum.in.tumcampusapp.models.PersonList;
-import de.tum.in.tumcampusapp.models.managers.RecentsManager;
+import de.tum.in.tumcampusapp.managers.RecentsManager;
+import de.tum.in.tumcampusapp.models.tumo.Person;
+import de.tum.in.tumcampusapp.models.tumo.PersonList;
 import de.tum.in.tumcampusapp.tumonline.TUMOnlineConst;
 
 /**

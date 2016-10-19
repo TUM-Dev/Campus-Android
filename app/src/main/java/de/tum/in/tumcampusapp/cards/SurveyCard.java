@@ -24,9 +24,9 @@ import java.util.List;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.cards.generic.Card;
-import de.tum.in.tumcampusapp.models.Question;
-import de.tum.in.tumcampusapp.models.managers.CardManager;
-import de.tum.in.tumcampusapp.models.managers.SurveyManager;
+import de.tum.in.tumcampusapp.managers.CardManager;
+import de.tum.in.tumcampusapp.managers.SurveyManager;
+import de.tum.in.tumcampusapp.models.tumcabe.Question;
 
 public class SurveyCard extends Card {
     private static final String SURVEY_CARD_DISCARDED_TILL = "survey_card_discarded_till";
