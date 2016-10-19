@@ -53,7 +53,8 @@ public abstract class AbstractManager {
         db.execSQL("DROP TABLE IF EXISTS chat_message");
         db.execSQL("DROP TABLE IF EXISTS chat_room");
         db.execSQL("DROP TABLE IF EXISTS tumLocks");
-        db.execSQL("Drop TABLE IF EXISTS surveyQuestions");
+        db.execSQL("Drop TABLE IF EXISTS openQuestions");
+        db.execSQL("Drop TABLE IF EXISTS ownQuestions");
         db.execSQL("DROP TABLE IF EXISTS faculties");
     }
 }
