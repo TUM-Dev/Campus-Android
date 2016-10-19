@@ -111,11 +111,11 @@ public class ChatMessageManager extends AbstractManager {
                 "ORDER BY c1._id DESC " +
                 "LIMIT 1) AS until " +
                 "WHERE c._id>=until._id AND c.room=? " +
-                "ORDER BY c._id", new String[]{"" + mChatRoom, "" + mChatRoom});
+                "ORDER BY c._id", new String[]{String.valueOf(mChatRoom), String.valueOf(mChatRoom)});
     }
 
     public void markAsRead() {
-        db.execSQL("UPDATE chat_message SET read=1 WHERE read=0 AND room=?", new String[]{"" + mChatRoom});
+        db.execSQL("UPDATE chat_message SET read=1 WHERE read=0 AND room=?", new String[]{String.valueOf(mChatRoom)});
     }
 
     /**
@@ -144,14 +144,14 @@ public class ChatMessageManager extends AbstractManager {
         //TODO handle message with already set id
         Utils.logv("replace into unsent " + m.getText() + " " + m.getId() + " " + m.getPrevious() + " " + m.getStatus());
         db.execSQL("REPLACE INTO unsent_chat_message (text,room,member,msg_id) VALUES (?,?,?, ?)",
-                new String[]{"" + m.getText(), "" + mChatRoom, new Gson().toJson(m.getMember()), "" + m.getId()});
+                new String[]{m.getText(), String.valueOf(mChatRoom), new Gson().toJson(m.getMember()), String.valueOf(m.getId())});
     }
 
     /**
      * Removes the message from unsent database
      */
     public void removeFromUnsent(ChatMessage message) {
-        db.execSQL("DELETE FROM unsent_chat_message WHERE _id=?", new String[]{"" + message.internalID});
+        db.execSQL("DELETE FROM unsent_chat_message WHERE _id=?", new String[]{String.valueOf(message.internalID)});
     }
 
     /**
@@ -164,7 +164,7 @@ public class ChatMessageManager extends AbstractManager {
                 "ORDER BY c1._id DESC " +
                 "LIMIT 1) AS until " +
                 "WHERE c._id>until._id AND c.room=? " +
-                "ORDER BY c._id", new String[]{"" + mChatRoom, "" + mChatRoom});
+                "ORDER BY c._id", new String[]{String.valueOf(mChatRoom), String.valueOf(mChatRoom)});
     }
 
     /**
@@ -178,7 +178,7 @@ public class ChatMessageManager extends AbstractManager {
                 "LIMIT 1) AS until " +
                 "WHERE c._id>until._id AND c.room=? " +
                 "ORDER BY c._id DESC " +
-                "LIMIT 5", new String[]{"" + mChatRoom, "" + mChatRoom});
+                "LIMIT 5", new String[]{String.valueOf(mChatRoom), String.valueOf(mChatRoom)});
         ArrayList<ChatMessage> list = new ArrayList<>(cur.getCount());
         if (cur.moveToFirst()) {
             do {
@@ -205,7 +205,7 @@ public class ChatMessageManager extends AbstractManager {
         db.beginTransaction();
         // Query read status from the previous message and use this read status as well if it is "0"
         boolean read = memberId == m.getMember().getId();
-        Cursor cur = db.rawQuery("SELECT read FROM chat_message WHERE _id=?", new String[]{"" + m.getId()});
+        Cursor cur = db.rawQuery("SELECT read FROM chat_message WHERE _id=?", new String[]{String.valueOf(m.getId())});
         if (cur.moveToFirst()) {
             if (cur.getInt(0) == 1) {
                 read = true;
@@ -228,8 +228,8 @@ public class ChatMessageManager extends AbstractManager {
             date = new Date();
         }
         db.execSQL("REPLACE INTO chat_message (_id,previous,room,text,timestamp,signature,member,read,sending) VALUES (?,?,?,?,?,?,?,?,?)",
-                new String[]{"" + m.getId(), "" + m.getPrevious(), "" + mChatRoom, m.getText(), Utils.getDateTimeString(date),
-                        m.getSignature(), (new Gson().toJson(m.getMember())), m.getRead() ? "1" : "0", "" + m.getStatus()});
+                new String[]{String.valueOf(m.getId()), String.valueOf(m.getPrevious()), String.valueOf(mChatRoom), m.getText(), Utils.getDateTimeString(date),
+                        m.getSignature(), (new Gson().toJson(m.getMember())), m.getRead() ? "1" : "0", String.valueOf(m.getStatus())});
     }
 
     /**

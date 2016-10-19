@@ -38,7 +38,7 @@ public class RecentsManager extends AbstractManager {
      */
     public boolean empty() {
         boolean result = true;
-        Cursor c = db.rawQuery("SELECT name FROM recents WHERE typ=? LIMIT 1", new String[]{""+typ});
+        Cursor c = db.rawQuery("SELECT name FROM recents WHERE typ=? LIMIT 1", new String[]{String.valueOf(typ)});
         if (c.moveToNext()) {
             result = false;
         }
@@ -52,7 +52,7 @@ public class RecentsManager extends AbstractManager {
      * @return Database cursor (name, _id)
      */
     public Cursor getAllFromDb() {
-        return db.rawQuery("SELECT name, name as _id FROM recents WHERE typ=? ORDER BY name", new String[]{"" + typ});
+        return db.rawQuery("SELECT name, name as _id FROM recents WHERE typ=? ORDER BY name", new String[]{String.valueOf(typ)});
     }
 
     /**
@@ -65,6 +65,6 @@ public class RecentsManager extends AbstractManager {
         if (name.isEmpty()) {
             return;
         }
-        db.execSQL("REPLACE INTO recents (typ,name) VALUES (?,?)", new String[]{""+typ, name});
+        db.execSQL("REPLACE INTO recents (typ,name) VALUES (?,?)", new String[]{String.valueOf(typ), name});
     }
 }

@@ -118,7 +118,7 @@ public class TumManager extends AbstractManager {
         }
 
         //Enter it into the Databse
-        db.execSQL("REPLACE INTO tumLocks (url, error, timestamp, lockedFor, active) VALUES (?, ?, datetime('now'), ?, 1)", new String[]{url, msg, "" + lockTime});
+        db.execSQL("REPLACE INTO tumLocks (url, error, timestamp, lockedFor, active) VALUES (?, ?, datetime('now'), ?, 1)", new String[]{url, msg, String.valueOf(lockTime)});
 
         return msg;
     }

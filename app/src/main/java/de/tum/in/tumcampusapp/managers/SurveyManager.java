@@ -258,7 +258,7 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
                 // Mark as synced in local db
                 ContentValues cv = new ContentValues();
                 cv.put("synced", "1");
-                db.update("openQuestions", cv, "question = ?", new String[]{cursor.getString(cursor.getColumnIndex("question")) + ""});
+                db.update("openQuestions", cv, "question = ?", new String[]{cursor.getString(cursor.getColumnIndex("question"))});
             }
         } catch (Exception e) {
             Utils.log(e.toString());

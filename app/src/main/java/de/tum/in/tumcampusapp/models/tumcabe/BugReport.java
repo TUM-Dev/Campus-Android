@@ -28,7 +28,7 @@ public class BugReport {
         super();
         this.packageName = G.appPackage;
         this.packageVersion = G.appVersion;
-        this.packageVersionCode = "" + G.appVersionCode;
+        this.packageVersionCode = String.valueOf(G.appVersionCode);
 
         this.phoneModel = G.phoneModel;
         this.androidVersion = G.androidVersion;

@@ -140,10 +140,10 @@ public class ChatRoomManager extends AbstractManager implements Card.ProvidesCar
             cur.moveToFirst();
             if (cur.getCount() >= 1) {
                 db.execSQL("UPDATE chat_room SET room=?, joined=1, members=? WHERE name=? AND semester_id=?",
-                        new String[]{"" + room.getId(), "" + room.getMembers(), roomName, semester});
+                        new String[]{String.valueOf(room.getId()), String.valueOf(room.getMembers()), roomName, semester});
             } else {
                 db.execSQL("REPLACE INTO chat_room (room,name,semester_id,semester,joined,_id,contributor,members) " +
-                        "VALUES (?,?,?,'',1,0,'',?)", new String[]{"" + room.getId(), roomName, semester, "" + room.getMembers()});
+                        "VALUES (?,?,?,'',1,0,'',?)", new String[]{String.valueOf(room.getId()), roomName, semester, String.valueOf(room.getMembers())});
             }
             cur.close();
         }
@@ -153,12 +153,12 @@ public class ChatRoomManager extends AbstractManager implements Card.ProvidesCar
 
     public void join(ChatRoom currentChatRoom) {
         db.execSQL("UPDATE chat_room SET room=?, joined=1 WHERE name=? AND semester_id=?",
-                new String[]{"" + currentChatRoom.getId(), currentChatRoom.getName().substring(4), currentChatRoom.getName().substring(0, 3)});
+                new String[]{String.valueOf(currentChatRoom.getId()), currentChatRoom.getName().substring(4), currentChatRoom.getName().substring(0, 3)});
     }
 
     public void leave(ChatRoom currentChatRoom) {
         db.execSQL("UPDATE chat_room SET room=?, joined=0 WHERE name=? AND semester_id=?",
-                new String[]{"" + currentChatRoom.getId(), currentChatRoom.getName().substring(4), currentChatRoom.getName().substring(0, 3)});
+                new String[]{String.valueOf(currentChatRoom.getId()), currentChatRoom.getName().substring(4), currentChatRoom.getName().substring(0, 3)});
     }
 
     @Override

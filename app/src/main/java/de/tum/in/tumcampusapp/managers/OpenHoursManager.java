@@ -71,7 +71,7 @@ public class OpenHoursManager extends AbstractManager {
     String getHoursById(int id) {
         String result = "";
         Cursor c = db.rawQuery("SELECT hours FROM locations WHERE id=?",
-                new String[]{"" + id});
+                new String[]{String.valueOf(id)});
 
         if (c.moveToNext()) {
             result = c.getString(0);

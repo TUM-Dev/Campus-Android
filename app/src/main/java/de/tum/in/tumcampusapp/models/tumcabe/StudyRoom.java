@@ -23,6 +23,6 @@ public class StudyRoom {
 
     @Override
     public String toString() {
-        return "" + code;
+        return code;
     }
 }

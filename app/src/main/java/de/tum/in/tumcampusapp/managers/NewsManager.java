@@ -217,7 +217,7 @@ public class NewsManager extends AbstractManager implements Card.ProvidesCard {
     }
 
     public void setDismissed(String id, int d) {
-        db.execSQL("UPDATE news SET dismissed=? WHERE id=?", new String[]{"" + d, id});
+        db.execSQL("UPDATE news SET dismissed=? WHERE id=?", new String[]{String.valueOf(d), id});
     }
 
     /**
