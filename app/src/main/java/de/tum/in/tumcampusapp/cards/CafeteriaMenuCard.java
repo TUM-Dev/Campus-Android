@@ -132,7 +132,7 @@ public class CafeteriaMenuCard extends NotificationAwareCard {
 
         StringBuilder allContent = new StringBuilder(), firstContent = new StringBuilder();
         for (CafeteriaMenu menu : mMenus) {
-            if (menu.typeShort.equals("bei")) {
+            if ("bei".equals(menu.typeShort)) {
                 continue;
             }
 

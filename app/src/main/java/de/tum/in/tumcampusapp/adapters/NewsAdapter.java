@@ -75,7 +75,7 @@ public class NewsAdapter extends RecyclerView.Adapter<Card.CardViewHolder> {
 
         holder.srcTitle.setText(cursor.getString(8));
         String icon = cursor.getString(7);
-        if (icon.isEmpty() || icon.equals("null")) {
+        if (icon.isEmpty() || "null".equals(icon)) {
             holder.srcIcon.setImageResource(R.drawable.ic_comment);
         } else {
             net.loadAndSetImage(icon, holder.srcIcon);

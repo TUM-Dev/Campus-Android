@@ -114,7 +114,7 @@ public class SilenceService extends IntentService {
 
             // Set into silent mode
             String mode = Utils.getSetting(this, "silent_mode_set_to", "0");
-            if (mode.equals("0")) {
+            if ("0".equals(mode)) {
                 Utils.log("set ringer mode: vibration");
                 am.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
             } else {

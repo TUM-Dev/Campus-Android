@@ -177,7 +177,6 @@ public class TransportManager implements Card.ProvidesCard {
             String query = STATION_SEARCH_CONST + language + '&' + stationQuery;
             Utils.log(query);
             NetUtils net = new NetUtils(context);
-            List<StationResult> results = new ArrayList<>();
 
             // Download possible stations
             Optional<JSONObject> jsonObj = net.downloadJsonObject(query, CacheManager.VALIDITY_DO_NOT_CACHE, true);
@@ -185,7 +184,7 @@ public class TransportManager implements Card.ProvidesCard {
                 return Optional.absent();
             }
 
-            MatrixCursor mc = new MatrixCursor(new String[]{Const.NAME_COLUMN, Const.ID_COLUMN});
+            List<StationResult> results = new ArrayList<>();
             JSONObject stopfinder = jsonObj.get().getJSONObject("stopFinder");
 
             // Possible values for points: Object, Array or null
@@ -212,6 +211,7 @@ public class TransportManager implements Card.ProvidesCard {
                 }
             });
 
+            MatrixCursor mc = new MatrixCursor(new String[]{Const.NAME_COLUMN, Const.ID_COLUMN});
             for (StationResult result : results) {
                 mc.addRow(new String[]{result.station, result.id});
             }

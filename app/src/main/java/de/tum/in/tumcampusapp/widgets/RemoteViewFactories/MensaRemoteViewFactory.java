@@ -62,11 +62,11 @@ public class MensaRemoteViewFactory implements RemoteViewsService.RemoteViewsFac
 
     @Override
     public RemoteViews getViewAt(int position) {
-        RemoteViews rv = new RemoteViews(applicationContext.getPackageName(), R.layout.mensa_widget_item);
         CafeteriaMenu currentItem = mensaMenu.get(position);
         if (currentItem == null) {
             return null;
         }
+        RemoteViews rv = new RemoteViews(applicationContext.getPackageName(), R.layout.mensa_widget_item);
         rv.setTextViewText(R.id.menu_type, currentItem.typeShort);
 
         String menuContent = COMPILE.matcher(currentItem.name).replaceAll("").trim();

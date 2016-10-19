@@ -187,16 +187,16 @@ public class LocationManager {
      * @return The last location
      */
     Location getLastLocation() {
-        Location bestResult = null;
-        float bestAccuracy = Float.MAX_VALUE;
-        long bestTime = Long.MIN_VALUE;
-        long minTime = 0;
-
         //Check Location permission for Android 6.0
         if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                 ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return null;
         }
+
+        Location bestResult = null;
+        float bestAccuracy = Float.MAX_VALUE;
+        long bestTime = Long.MIN_VALUE;
+        long minTime = 0;
 
         android.location.LocationManager locationManager = (android.location.LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
         List<String> matchingProviders = locationManager.getAllProviders();

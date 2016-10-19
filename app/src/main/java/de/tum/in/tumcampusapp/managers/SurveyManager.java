@@ -81,7 +81,7 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
             String userMajor = Utils.getInternalSettingString(mContext, "user_major", "");
 
             // Incase  the user selected the major upon app start, then save the major related questions. Otherwise save all questions
-            if (userMajor.equals("0") || openQuestionFaculties.contains(userMajor)) {
+            if ("0".equals(userMajor) || openQuestionFaculties.contains(userMajor)) {
                 replaceIntoDBOpenQuestions(openQuestions.get(i));
             }
         }

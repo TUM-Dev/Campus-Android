@@ -176,7 +176,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
         // When newspread selection changes
         // deselect all newspread sources and select only the
         // selected source if one of all was selected before
-        if (key.equals("news_newspread")) {
+        if ("news_newspread".equals(key)) {
             SharedPreferences.Editor e = sharedPreferences.edit();
             boolean value = false;
             for (int i = 7; i < 14; i++) {
