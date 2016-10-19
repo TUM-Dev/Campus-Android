@@ -75,7 +75,10 @@ public class LocationManager {
      */
     Location getCurrentLocation() {
         if (servicesConnected()) {
-            return getLastLocation();
+            Location loc = getLastLocation();
+            if (loc != null) {
+                return loc;
+            }
         }
 
         // If location services are not available use default location if set
