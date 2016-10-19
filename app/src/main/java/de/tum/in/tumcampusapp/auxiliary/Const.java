@@ -112,4 +112,8 @@ public final class Const {
 
     public static final String PREF_UNIQUE_ID = "PREF_UNIQUE_ID";
     public static final String CHATTERMS_URL = "https://tumcabe.in.tum.de/landing/chatterms/";
+
+    private Const() {
+        // Const is a utility class
+    }
 }

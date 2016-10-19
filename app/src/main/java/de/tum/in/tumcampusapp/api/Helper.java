@@ -93,4 +93,8 @@ public class Helper {
             }
         };
     }
+
+    private Helper() {
+        // Helper is a utility class
+    }
 }

@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.List;
 
 import de.tum.in.tumcampusapp.api.TUMCabeClient;
 import de.tum.in.tumcampusapp.auxiliary.AuthenticationManager;
@@ -35,7 +35,7 @@ public class SendMessageService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         // Get all unsent messages from database
-        ArrayList<ChatMessage> unsentMsg = ChatMessageManager.getAllUnsentUpdated(this);
+        List<ChatMessage> unsentMsg = ChatMessageManager.getAllUnsentUpdated(this);
         if (unsentMsg.isEmpty()) {
             return;
         }

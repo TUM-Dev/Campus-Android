@@ -64,11 +64,11 @@ public class ChatMessageManager extends AbstractManager {
     /**
      * Gets all unsent chat messages
      */
-    public static ArrayList<ChatMessage> getAllUnsentUpdated(Context context) {
+    public static List<ChatMessage> getAllUnsentUpdated(Context context) {
         SQLiteDatabase db = AbstractManager.getDb(context);
         init(db);
         Cursor cur = db.rawQuery("SELECT member, text, room, msg_id, _id FROM unsent_chat_message ORDER BY _id", null);
-        ArrayList<ChatMessage> list = new ArrayList<>(cur.getCount());
+        List<ChatMessage> list = new ArrayList<>(cur.getCount());
         if (cur.moveToFirst()) {
             do {
                 ChatMember member = new Gson().fromJson(cur.getString(0), ChatMember.class);
@@ -121,9 +121,9 @@ public class ChatMessageManager extends AbstractManager {
     /**
      * Gets all unsent chat messages from the current room
      */
-    public ArrayList<ChatMessage> getAllUnsent() {
+    public List<ChatMessage> getAllUnsent() {
         Cursor cur = db.rawQuery("SELECT member, text, room, _id FROM unsent_chat_message WHERE msg_id=0 ORDER BY _id", null);
-        ArrayList<ChatMessage> list = new ArrayList<>(cur.getCount());
+        List<ChatMessage> list = new ArrayList<>(cur.getCount());
         if (cur.moveToFirst()) {
             do {
                 ChatMember member = new Gson().fromJson(cur.getString(0), ChatMember.class);
@@ -170,7 +170,7 @@ public class ChatMessageManager extends AbstractManager {
     /**
      * Gets all unread chat messages
      */
-    public ArrayList<ChatMessage> getLastUnread() {
+    public List<ChatMessage> getLastUnread() {
         Cursor cur = db.rawQuery("SELECT c.member, c.text FROM chat_message c, (SELECT c1._id " +
                 "FROM chat_message c1 LEFT JOIN chat_message c2 ON c2._id=c1.previous " +
                 "WHERE (c2._id IS NULL OR c1.read=1) AND c1.room=? " +
@@ -179,7 +179,7 @@ public class ChatMessageManager extends AbstractManager {
                 "WHERE c._id>until._id AND c.room=? " +
                 "ORDER BY c._id DESC " +
                 "LIMIT 5", new String[]{String.valueOf(mChatRoom), String.valueOf(mChatRoom)});
-        ArrayList<ChatMessage> list = new ArrayList<>(cur.getCount());
+        List<ChatMessage> list = new ArrayList<>(cur.getCount());
         if (cur.moveToFirst()) {
             do {
                 ChatMember member = new Gson().fromJson(cur.getString(0), ChatMember.class);

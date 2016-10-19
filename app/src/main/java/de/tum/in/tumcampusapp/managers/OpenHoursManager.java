@@ -163,8 +163,8 @@ public class OpenHoursManager extends AbstractManager {
         Calendar opens = Calendar.getInstance();
         opens.setTime(date);
         if (time.contains(".")) {
-            int hour = Integer.parseInt(time.substring(0, time.indexOf(".")));
-            int min = Integer.parseInt(time.substring(time.indexOf(".") + 1));
+            int hour = Integer.parseInt(time.substring(0, time.indexOf('.')));
+            int min = Integer.parseInt(time.substring(time.indexOf('.') + 1));
             opens.set(Calendar.HOUR_OF_DAY, hour);
             opens.set(Calendar.MINUTE, min);
         } else {

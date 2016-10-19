@@ -178,7 +178,7 @@ public class ChatRoomManager extends AbstractManager implements Card.ProvidesCar
 
         // Join all new chat rooms
         if (Utils.getSettingBool(context, Const.AUTO_JOIN_NEW_ROOMS, false)) {
-            ArrayList<String> newRooms = manager.getNewUnjoined();
+            List<String> newRooms = manager.getNewUnjoined();
             ChatMember currentChatMember = Utils.getSetting(context, Const.CHAT_MEMBER, ChatMember.class);
             for (String roomId : newRooms) {
                 // Join chat room
@@ -201,23 +201,23 @@ public class ChatRoomManager extends AbstractManager implements Card.ProvidesCar
         if (cur.moveToFirst()) {
             do {
                 ChatMessagesCard card = new ChatMessagesCard(context);
-                card.setChatRoom(cur.getString(0), cur.getInt(1), cur.getString(2) + ":" + cur.getString(0));
+                card.setChatRoom(cur.getString(0), cur.getInt(1), cur.getString(2) + ':' + cur.getString(0));
                 card.apply();
             } while (cur.moveToNext());
         }
         cur.close();
     }
 
-    private ArrayList<String> getNewUnjoined() {
+    private List<String> getNewUnjoined() {
         Cursor cursor = db.rawQuery("SELECT r.semester_id, r.name " +
                 "FROM chat_room r, (SELECT semester_id FROM chat_room " +
                 "WHERE (NOT semester_id IS NULL) AND semester_id!='' AND semester!='' " +
                 "ORDER BY semester_id DESC LIMIT 1) AS new " +
                 "WHERE r.semester_id=new.semester_id AND r.joined=-1", null);
-        ArrayList<String> list = new ArrayList<>();
+        List<String> list = new ArrayList<>(cursor.getCount());
         if (cursor.moveToFirst()) {
             do {
-                list.add(cursor.getString(0) + ":" + cursor.getString(1));
+                list.add(cursor.getString(0) + ':' + cursor.getString(1));
             } while (cursor.moveToNext());
         }
         cursor.close();

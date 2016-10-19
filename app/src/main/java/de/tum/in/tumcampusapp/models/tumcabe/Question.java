@@ -1,7 +1,7 @@
 package de.tum.in.tumcampusapp.models.tumcabe;
 
 
-import java.util.ArrayList;
+import java.util.List;
 
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 
@@ -53,11 +53,8 @@ public class Question {
 
     /**
      * Used for submitting ownQuestions to the server
-     *
-     * @param text
-     * @param faculties
      */
-    public Question(String text, ArrayList<String> faculties) {
+    public Question(String text, List<String> faculties) {
         this.text = text;
         this.faculty = Utils.arrayListToString(faculties);
 

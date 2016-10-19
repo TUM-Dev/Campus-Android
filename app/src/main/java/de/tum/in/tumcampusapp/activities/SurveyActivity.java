@@ -42,6 +42,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import de.tum.in.tumcampusapp.R;
@@ -89,11 +90,11 @@ public class SurveyActivity extends ProgressActivity {
     };
     private Spinner numOfQuestionsSpinner;
     private Button submitSurveyButton, facultiesButton;
-    private final ArrayList<String> questions = new ArrayList<>();
-    private final ArrayList<String> selectedFaculties = new ArrayList<>();
+    private final List<String> questions = new ArrayList<>();
+    private final List<String> selectedFaculties = new ArrayList<>();
     private boolean[] checkedFaculties;
     private LinearLayout mainResponseLayout, questionsLayout;
-    private final ArrayList<String> fetchedFaculties = new ArrayList<>();
+    private final List<String> fetchedFaculties = new ArrayList<>();
     private SurveyManager surveyManager;
     //Handles clicking on 'delete' button of an own question in responses tab
     private final View.OnClickListener deleteQuestion = new View.OnClickListener() {
@@ -488,7 +489,7 @@ public class SurveyActivity extends ProgressActivity {
      *
      * @return questions if everything was entered correctly else snackbar for requesting to complete questions.
      */
-    private ArrayList<String> getSurveyData() {
+    private List<String> getSurveyData() {
         boolean done = true;
         for (int i = 0; i < numOfQuestionsSpinner.getSelectedItemPosition() + 1; i++) { // Iterates on each questionEditText
             EditText v = (EditText) questionsLayout.findViewWithTag("question" + (i + 1));

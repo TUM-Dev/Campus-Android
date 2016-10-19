@@ -43,7 +43,7 @@ public final class CardManager {
     public static final int CARD_SURVEY = 14;
     private static boolean shouldRefresh;
     private static List<Card> cards;
-    private static ArrayList<Card> newCards;
+    private static List<Card> newCards;
 
     /**
      * Adds the specified card to the card manager
