@@ -57,6 +57,90 @@ public class CalendarManager extends AbstractManager implements Card.ProvidesCar
     }
 
     /**
+     * Replaces the current TUM_CAMPUS_APP calendar with a new version
+     *
+     * @param c Context
+     */
+    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+    public static void syncCalendar(Context c) {
+        // Deleting earlier calendar created by TUM Campus App
+        deleteLocalCalendar(c);
+        Uri uri = CalendarHelper.addCalendar(c);
+        addEvents(c, uri);
+    }
+
+    /**
+     * Deletes a local Google calendar
+     *
+     * @return Number of rows deleted
+     */
+    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+    public static int deleteLocalCalendar(Context c) {
+        return CalendarHelper.deleteCalendar(c);
+    }
+
+    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+    private static void addEvents(Context c, Uri uri) {
+        if (ActivityCompat.checkSelfPermission(c, Manifest.permission.WRITE_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        // Get ID
+        ContentResolver contentResolver = c.getContentResolver();
+        Cursor cursor = contentResolver.query(uri, PROJECTION, null, null, null);
+        String id = "0";
+        while (cursor.moveToNext()) {
+            id = cursor.getString(0);
+        }
+        cursor.close();
+
+        CalendarManager calendarManager = new CalendarManager(c);
+        Date dtstart, dtend;
+
+        // Get all calendar items from database
+        cursor = calendarManager.getAllFromDb();
+        while (cursor.moveToNext()) {
+            // Get each table row
+            //final String status = cursor.getString(1);
+            final String title = cursor.getString(3);
+            final String description = cursor.getString(4);
+            final String strStart = cursor.getString(5);
+            final String strEnd = cursor.getString(6);
+            final String location = cursor.getString(7);
+
+            try {
+                // Get the correct date and time from database
+                dtstart = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.ENGLISH).parse(strStart);
+                dtend = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.ENGLISH).parse(strEnd);
+
+                Calendar beginTime = Calendar.getInstance();
+                beginTime.setTime(dtstart);
+                Calendar endTime = Calendar.getInstance();
+                endTime.setTime(dtend);
+
+                // Get start and end time
+                long startMillis = beginTime.getTimeInMillis();
+                long endMillis = endTime.getTimeInMillis();
+
+                ContentValues values = new ContentValues();
+
+                // Put the received values into a contentResolver to
+                // transmit the to Google Calendar
+                values.put(CalendarContract.Events.DTSTART, startMillis);
+                values.put(CalendarContract.Events.DTEND, endMillis);
+                values.put(CalendarContract.Events.TITLE, title);
+                values.put(CalendarContract.Events.DESCRIPTION, description);
+                values.put(CalendarContract.Events.CALENDAR_ID, id);
+                values.put(CalendarContract.Events.EVENT_LOCATION, location);
+                values.put(CalendarContract.Events.EVENT_TIMEZONE, R.string.calendarTimeZone);
+                contentResolver.insert(CalendarContract.Events.CONTENT_URI, values);
+
+            } catch (ParseException e) {
+                Utils.log(e);
+            }
+        }
+    }
+
+    /**
      * Returns all stored events from db
      *
      * @return Cursor with all calendar events. Columns are
@@ -142,90 +226,6 @@ public class CalendarManager extends AbstractManager implements Card.ProvidesCar
     }
 
     /**
-     * Replaces the current TUM_CAMPUS_APP calendar with a new version
-     *
-     * @param c Context
-     */
-    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-    public static void syncCalendar(Context c) {
-        // Deleting earlier calendar created by TUM Campus App
-        deleteLocalCalendar(c);
-        Uri uri = CalendarHelper.addCalendar(c);
-        addEvents(c, uri);
-    }
-
-    /**
-     * Deletes a local Google calendar
-     *
-     * @return Number of rows deleted
-     */
-    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-    public static int deleteLocalCalendar(Context c) {
-        return CalendarHelper.deleteCalendar(c);
-    }
-
-    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-    private static void addEvents(Context c, Uri uri) {
-        if (ActivityCompat.checkSelfPermission(c, Manifest.permission.WRITE_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-        // Get ID
-        ContentResolver contentResolver = c.getContentResolver();
-        Cursor cursor = contentResolver.query(uri, PROJECTION, null, null, null);
-        String id = "0";
-        while (cursor.moveToNext()) {
-            id = cursor.getString(0);
-        }
-        cursor.close();
-
-        CalendarManager calendarManager = new CalendarManager(c);
-        Date dtstart, dtend;
-
-        // Get all calendar items from database
-        cursor = calendarManager.getAllFromDb();
-        while (cursor.moveToNext()) {
-            // Get each table row
-            //final String status = cursor.getString(1);
-            final String title = cursor.getString(3);
-            final String description = cursor.getString(4);
-            final String strStart = cursor.getString(5);
-            final String strEnd = cursor.getString(6);
-            final String location = cursor.getString(7);
-
-            try {
-                // Get the correct date and time from database
-                dtstart = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.ENGLISH).parse(strStart);
-                dtend = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.ENGLISH).parse(strEnd);
-
-                Calendar beginTime = Calendar.getInstance();
-                beginTime.setTime(dtstart);
-                Calendar endTime = Calendar.getInstance();
-                endTime.setTime(dtend);
-
-                // Get start and end time
-                long startMillis = beginTime.getTimeInMillis();
-                long endMillis = endTime.getTimeInMillis();
-
-                ContentValues values = new ContentValues();
-
-                // Put the received values into a contentResolver to
-                // transmit the to Google Calendar
-                values.put(CalendarContract.Events.DTSTART, startMillis);
-                values.put(CalendarContract.Events.DTEND, endMillis);
-                values.put(CalendarContract.Events.TITLE, title);
-                values.put(CalendarContract.Events.DESCRIPTION, description);
-                values.put(CalendarContract.Events.CALENDAR_ID, id);
-                values.put(CalendarContract.Events.EVENT_LOCATION, location);
-                values.put(CalendarContract.Events.EVENT_TIMEZONE, R.string.calendarTimeZone);
-                contentResolver.insert(CalendarContract.Events.CONTENT_URI, values);
-
-            } catch (ParseException e) {
-                Utils.log(e);
-            }
-        }
-    }
-
-    /**
      * Gets the next lectures that could be important to the user
      */
     public Cursor getNextCalendarItem() {
@@ -277,16 +277,6 @@ public class CalendarManager extends AbstractManager implements Card.ProvidesCar
             super(QUERY_LOCATIONS);
         }
 
-        @Override
-        protected void onHandleIntent(Intent intent) {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    loadGeo(QueryLocationsService.this);
-                }
-            }).start();
-        }
-
         public static void loadGeo(Context c) {
             LocationManager locationManager = new LocationManager(c);
             SQLiteDatabase db = getDb(c);
@@ -301,14 +291,16 @@ public class CalendarManager extends AbstractManager implements Card.ProvidesCar
             if (cur.moveToFirst()) {
                 do {
                     String location = cur.getString(0);
-                    if (location != null && !location.isEmpty()) {
-                        Optional<Geo> geo = locationManager.roomLocationStringToGeo(location);
-                        if (geo.isPresent()) {
-                            Utils.logv("inserted " + location + ' ' + geo);
-                            db.execSQL("REPLACE INTO room_locations (title, latitude, longitude) VALUES (?, ?, ?)",
-                                    new String[]{location, geo.get().getLatitude(), geo.get().getLongitude()});
-                        }
+                    if (location == null || location.isEmpty()) {
+                        continue;
                     }
+                    Optional<Geo> geo = locationManager.roomLocationStringToGeo(location);
+                    if (geo.isPresent()) {
+                        Utils.logv("inserted " + location + ' ' + geo);
+                        db.execSQL("REPLACE INTO room_locations (title, latitude, longitude) VALUES (?, ?, ?)",
+                                new String[]{location, geo.get().getLatitude(), geo.get().getLongitude()});
+                    }
+
                 } while (cur.moveToNext());
             }
             cur.close();
@@ -320,6 +312,16 @@ public class CalendarManager extends AbstractManager implements Card.ProvidesCar
                 syncCalendar(c);
                 new SyncManager(c).replaceIntoDb(Const.SYNC_CALENDAR);
             }
+        }
+
+        @Override
+        protected void onHandleIntent(Intent intent) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    loadGeo(QueryLocationsService.this);
+                }
+            }).start();
         }
     }
 }

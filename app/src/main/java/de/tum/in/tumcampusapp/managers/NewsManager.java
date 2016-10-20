@@ -25,10 +25,9 @@ import de.tum.in.tumcampusapp.models.tumcabe.News;
 public class NewsManager extends AbstractManager implements Card.ProvidesCard {
 
     private static final int TIME_TO_SYNC = 1800; // 1/2 hour
-    private final Context mContext;
-
     private static final String NEWS_URL = "https://tumcabe.in.tum.de/Api/news/";
     private static final String NEWS_SOURCES_URL = NEWS_URL + "sources";
+    private final Context mContext;
 
     /**
      * Constructor, open/create database, create table if necessary
@@ -45,6 +44,25 @@ public class NewsManager extends AbstractManager implements Card.ProvidesCard {
         // create table if needed
         db.execSQL("CREATE TABLE IF NOT EXISTS news (id INTEGER PRIMARY KEY, src INTEGER, title TEXT, link VARCHAR, "
                 + "image VARCHAR, date VARCHAR, created VARCHAR, dismissed INTEGER)");
+    }
+
+    /**
+     * Convert JSON object to News and download news image
+     *
+     * @param json see above
+     * @return News
+     * @throws JSONException if the json is invalid
+     */
+    private static News getFromJson(JSONObject json) throws JSONException {
+        String id = json.getString(Const.JSON_NEWS);
+        String src = json.getString(Const.JSON_SRC);
+        String title = json.getString(Const.JSON_TITLE);
+        String link = json.getString(Const.JSON_LINK);
+        String image = json.getString(Const.JSON_IMAGE);
+        Date date = Utils.getISODateTime(json.getString(Const.JSON_DATE));
+        Date created = Utils.getISODateTime(json.getString(Const.JSON_CREATED));
+
+        return new News(id, title, link, src, image, date, created);
     }
 
     /**
@@ -109,25 +127,6 @@ public class NewsManager extends AbstractManager implements Card.ProvidesCard {
     }
 
     /**
-     * Convert JSON object to News and download news image
-     *
-     * @param json see above
-     * @return News
-     * @throws JSONException if the json is invalid
-     */
-    private static News getFromJson(JSONObject json) throws JSONException {
-        String id = json.getString(Const.JSON_NEWS);
-        String src = json.getString(Const.JSON_SRC);
-        String title = json.getString(Const.JSON_TITLE);
-        String link = json.getString(Const.JSON_LINK);
-        String image = json.getString(Const.JSON_IMAGE);
-        Date date = Utils.getISODateTime(json.getString(Const.JSON_DATE));
-        Date created = Utils.getISODateTime(json.getString(Const.JSON_CREATED));
-
-        return new News(id, title, link, src, image, date, created);
-    }
-
-    /**
      * Get all news from the database
      *
      * @return Database cursor (_id, src, title, description, link, image, date, created, icon, source)
@@ -140,12 +139,13 @@ public class NewsManager extends AbstractManager implements Card.ProvidesCard {
             do {
                 int id = c.getInt(0);
                 boolean show = Utils.getSettingBool(context, "news_source_" + id, id <= 7);
-                if (show) {
-                    if (!and.toString().isEmpty()) {
-                        and.append(" OR ");
-                    }
-                    and.append("s.id=\"").append(id).append('\"');
+                if (!show) {
+                    continue;
                 }
+                if (!and.toString().isEmpty()) {
+                    and.append(" OR ");
+                }
+                and.append("s.id=\"").append(id).append('\"');
             } while (c.moveToNext());
         }
         c.close();
@@ -233,12 +233,13 @@ public class NewsManager extends AbstractManager implements Card.ProvidesCard {
             do {
                 int id = c.getInt(0);
                 boolean show = Utils.getSettingBool(context, "card_news_source_" + id, true);
-                if (show) {
-                    if (!and.toString().isEmpty()) {
-                        and.append(" OR ");
-                    }
-                    and.append("s.id=\"").append(id).append('\"');
+                if (!show) {
+                    continue;
                 }
+                if (!and.toString().isEmpty()) {
+                    and.append(" OR ");
+                }
+                and.append("s.id=\"").append(id).append('\"');
             } while (c.moveToNext());
         }
         c.close();

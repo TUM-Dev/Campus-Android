@@ -134,22 +134,16 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
                         @Override
                         public void run() {
                             NetUtils net = new NetUtils(mContext);
-                            try {
-                                final Optional<Bitmap> bmp = net.downloadImageToBitmap(url);
-                                if (!bmp.isPresent()) {
-                                    return;
-                                }
-                                mContext.runOnUiThread(new Runnable() {
-                                    @TargetApi(11)
-                                    @Override
-                                    public void run() {
+                            final Optional<Bitmap> bmp = net.downloadImageToBitmap(url);
+                            mContext.runOnUiThread(new Runnable() {
+                                @TargetApi(11)
+                                @Override
+                                public void run() {
+                                    if (bmp.isPresent()) {
                                         pref.setIcon(new BitmapDrawable(getResources(), bmp.get()));
                                     }
-                                });
-                            } catch (NullPointerException e) {
-                                //Maybe the image is not available right now
-                                //TODO proper error handling
-                            }
+                                }
+                            });
                         }
                     }).start();
                 }

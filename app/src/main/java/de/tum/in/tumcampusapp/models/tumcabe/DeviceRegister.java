@@ -27,11 +27,11 @@ public class DeviceRegister {
 
         //Sign this data for verification
         AuthenticationManager am = new AuthenticationManager(c);
-        if (member != null) {
+        if (member == null) {
+            this.signature = am.sign(date + rand + this.device);
+        } else {
             this.member = member;
             this.signature = am.sign(date + rand + this.device + this.member.getLrzId() + this.member.getId());
-        } else {
-            this.signature = am.sign(date + rand + this.device);
         }
     }
 

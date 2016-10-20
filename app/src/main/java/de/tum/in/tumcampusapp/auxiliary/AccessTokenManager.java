@@ -94,7 +94,7 @@ public class AccessTokenManager {
             Utils.setSetting(context, Const.ACCESS_TOKEN, null);
 
             Utils.showToastOnUIThread(activity, ex.errorMessage);
-        } catch (Exception ex) {
+        } catch (Exception ex) { //NOPMD
             Utils.log(ex, context.getString(R.string.access_token_wasnt_generated));
             // set access token to null
             Utils.setSetting(context, Const.ACCESS_TOKEN, null);
