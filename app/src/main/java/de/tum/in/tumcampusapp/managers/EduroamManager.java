@@ -26,7 +26,7 @@ import de.tum.in.tumcampusapp.auxiliary.Utils;
  * Eduroam manager, manages connecting to eduroam wifi network
  */
 public class EduroamManager {
-    public static final String networkSSID = "eduroam";
+    public static final String NETWORK_SSID = "eduroam";
     private static final String INT_PHASE2 = "phase2";
     private static final String INT_PASSWORD = "password";
     private static final String INT_IDENTITY = "identity";
@@ -53,7 +53,7 @@ public class EduroamManager {
             return true;
         }
         for (WifiConfiguration i : list) {
-            if (i.SSID != null && i.SSID.equals("\"" + networkSSID + "\"")) {
+            if (i.SSID != null && i.SSID.equals("\"" + NETWORK_SSID + "\"")) {
                 return true;
             }
         }
@@ -70,7 +70,7 @@ public class EduroamManager {
     public boolean configureEduroam(String lrzId, String networkPass) {
         // Configure Wifi
         WifiConfiguration conf = new WifiConfiguration();
-        conf.SSID = "\"" + networkSSID + "\"";
+        conf.SSID = "\"" + NETWORK_SSID + "\"";
         conf.allowedKeyManagement.set(KeyMgmt.WPA_EAP);
         conf.allowedKeyManagement.set(KeyMgmt.IEEE8021X);
         conf.allowedGroupCiphers.set(GroupCipher.TKIP);

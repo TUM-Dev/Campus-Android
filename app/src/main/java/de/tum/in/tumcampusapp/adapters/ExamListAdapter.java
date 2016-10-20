@@ -19,7 +19,7 @@ import de.tum.in.tumcampusapp.models.tumo.Exam;
  * Custom UI adapter for a list of exams.
  */
 public class ExamListAdapter extends BaseAdapter {
-    private static List<Exam> exams;
+    private List<Exam> exams;
     private static final DateFormat DF = DateFormat.getDateInstance(DateFormat.MEDIUM);
     private final Context context;
     private final LayoutInflater mInflater;

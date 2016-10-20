@@ -17,13 +17,13 @@ import de.tum.in.tumcampusapp.models.tumo.Error;
  */
 public class TumManager extends AbstractManager {
 
-    private static final int colUrl = 0;
-    private static final int colError = 1;
-    private static final int colTimestamp = 2;
-    private static final int colLockedFor = 3;
-    private static final int colActive = 4;
-    private static final int maxAge = CacheManager.VALIDITY_ONE_DAY / 4; //Maximum length of a lock
-    private static final int defaultLock = 60; //Base value for the first error: 60 seconds
+    private static final int COL_URL = 0;
+    private static final int COL_ERROR = 1;
+    private static final int COL_TIMESTAMP = 2;
+    private static final int COL_LOCKED_FOR = 3;
+    private static final int COL_ACTIVE = 4;
+    private static final int MAX_AGE = CacheManager.VALIDITY_ONE_DAY / 4; //Maximum length of a lock
+    private static final int DEFAULT_LOCK = 60; //Base value for the first error: 60 seconds
 
     public static class reqStatus {
         private String url;
@@ -44,7 +44,7 @@ public class TumManager extends AbstractManager {
         db.execSQL("CREATE TABLE IF NOT EXISTS tumLocks (url VARCHAR UNIQUE, error VARCHAR, timestamp VARCHAR, lockedFor INT, active INT)");
 
         // Delete obsolete entries
-        db.execSQL("DELETE FROM tumLocks WHERE datetime() > datetime(strftime('%s',timestamp) + " + TumManager.maxAge + ", 'unixepoch') AND active=0");
+        db.execSQL("DELETE FROM tumLocks WHERE datetime() > datetime(strftime('%s',timestamp) + " + TumManager.MAX_AGE + ", 'unixepoch') AND active=0");
     }
 
     public String checkLock(String url) {
@@ -80,11 +80,11 @@ public class TumManager extends AbstractManager {
             if (c.getCount() == 1) {
                 c.moveToFirst();
                 result = new reqStatus();
-                result.url = c.getString(colUrl);
-                result.error = c.getString(colError);
-                result.timestamp = DateUtils.parseSqlDate(c.getString(colTimestamp));
-                result.lockedFor = c.getInt(colLockedFor);
-                result.active = c.getInt(colActive);
+                result.url = c.getString(COL_URL);
+                result.error = c.getString(COL_ERROR);
+                result.timestamp = DateUtils.parseSqlDate(c.getString(COL_TIMESTAMP));
+                result.lockedFor = c.getInt(COL_LOCKED_FOR);
+                result.active = c.getInt(COL_ACTIVE);
             }
             c.close();
         } catch (SQLiteException e) {
@@ -96,14 +96,14 @@ public class TumManager extends AbstractManager {
     public String addLock(String url, String data) {
         //Check if we have a lock already
         reqStatus r = this.getLock(url);
-        int lockTime = TumManager.defaultLock;
+        int lockTime = TumManager.DEFAULT_LOCK;
         if (r != null) {
             //Double the lock time with each failed request
             lockTime = r.lockedFor * 2;
 
             //If we are above the limit reset to the limit
-            if (lockTime > TumManager.maxAge) {
-                lockTime = TumManager.maxAge;
+            if (lockTime > TumManager.MAX_AGE) {
+                lockTime = TumManager.MAX_AGE;
             }
         }
 

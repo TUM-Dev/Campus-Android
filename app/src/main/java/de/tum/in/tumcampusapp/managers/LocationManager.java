@@ -30,7 +30,7 @@ import de.tum.in.tumcampusapp.tumonline.TUMRoomFinderRequest;
  * the users current location, campus, next public transfer station and best cafeteria
  */
 public class LocationManager {
-    private static final double[][] campusLocations = {
+    private static final double[][] CAMPUS_LOCATIONS = {
             {48.2648424, 11.6709511}, // Garching Forschungszentrum
             {48.249432, 11.633905}, // Garching Hochbrück
             {48.397990, 11.722727}, // Weihenstephan
@@ -40,7 +40,7 @@ public class LocationManager {
             {48.155916, 11.583095}, // Leopoldstraße
             {48.150244, 11.580665} // Geschwister Schollplatz/Adalbertstraße
     };
-    private static final String[] campusShort = {
+    private static final String[] CAMPUS_SHORT = {
             "G", // Garching Forschungszentrum
             "H", // Garching Hochbrück
             "W", // Weihenstephan
@@ -50,7 +50,7 @@ public class LocationManager {
             "L", // Leopoldstraße
             "S" // Geschwister Schollplatz/Adalbertstraße
     };
-    private static final String[] defaultCampusStation = {
+    private static final String[] DEFAULT_CAMPUS_STATION = {
             "Garching-Forschungszentrum",
             "Garching-Hochbrück",
             "Weihenstephan",
@@ -61,7 +61,7 @@ public class LocationManager {
             "Universität"
     };
 
-    private static final String[] defaultCampusCafeteria = {"422", null, "423", "421", "414", null, "411", null};
+    private static final String[] DEFAULT_CAMPUS_CAFETERIA = {"422", null, "423", "421", "414", null, "411", null};
     private final Context mContext;
 
     public LocationManager(Context c) {
@@ -84,11 +84,11 @@ public class LocationManager {
         // If location services are not available use default location if set
         final String defaultCampus = Utils.getSetting(mContext, Const.DEFAULT_CAMPUS, "G");
         if (!"X".equals(defaultCampus)) {
-            for (int i = 0; i < campusShort.length; i++) {
-                if (campusShort[i].equals(defaultCampus)) {
+            for (int i = 0; i < CAMPUS_SHORT.length; i++) {
+                if (CAMPUS_SHORT[i].equals(defaultCampus)) {
                     Location location = new Location("defaultLocation");
-                    location.setLatitude(campusLocations[i][0]);
-                    location.setLongitude(campusLocations[i][1]);
+                    location.setLatitude(CAMPUS_LOCATIONS[i][0]);
+                    location.setLongitude(CAMPUS_LOCATIONS[i][1]);
                     return location;
                 }
             }
@@ -122,8 +122,8 @@ public class LocationManager {
         float results[] = new float[1];
         float bestDistance = Float.MAX_VALUE;
         int bestCampus = -1;
-        for (int i = 0; i < campusLocations.length; i++) {
-            Location.distanceBetween(campusLocations[i][0], campusLocations[i][1], lat, lng, results);
+        for (int i = 0; i < CAMPUS_LOCATIONS.length; i++) {
+            Location.distanceBetween(CAMPUS_LOCATIONS[i][0], CAMPUS_LOCATIONS[i][1], lat, lng, results);
             float distance = results[0];
             if (distance < bestDistance) {
                 bestDistance = distance;
@@ -236,8 +236,8 @@ public class LocationManager {
         }
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-        final String defaultVal = defaultCampusStation[campus];
-        return prefs.getString("card_stations_default_" + campusShort[campus], defaultVal);
+        final String defaultVal = DEFAULT_CAMPUS_STATION[campus];
+        return prefs.getString("card_stations_default_" + CAMPUS_SHORT[campus], defaultVal);
     }
 
     /**
@@ -272,8 +272,8 @@ public class LocationManager {
         int campus = getCurrentOrNextCampus();
         if (campus != -1) { // If the user is in university or a lecture has been recognized
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-            final String defaultVal = defaultCampusCafeteria[campus];
-            String cafeteria = prefs.getString("card_cafeteria_default_" + campusShort[campus], defaultVal);
+            final String defaultVal = DEFAULT_CAMPUS_CAFETERIA[campus];
+            String cafeteria = prefs.getString("card_cafeteria_default_" + CAMPUS_SHORT[campus], defaultVal);
             if (cafeteria != null) {
                 return Integer.parseInt(cafeteria);
             }

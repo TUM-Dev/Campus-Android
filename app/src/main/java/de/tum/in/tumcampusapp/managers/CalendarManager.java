@@ -39,7 +39,7 @@ import de.tum.in.tumcampusapp.models.tumo.Geo;
  * Calendar Manager, handles database stuff, external imports
  */
 public class CalendarManager extends AbstractManager implements Card.ProvidesCard {
-    private static final String[] projection = {"_id", "name"};
+    private static final String[] PROJECTION = {"_id", "name"};
 
     private static final int TIME_TO_SYNC_CALENDAR = 604800; // 1 week
 
@@ -171,7 +171,7 @@ public class CalendarManager extends AbstractManager implements Card.ProvidesCar
         }
         // Get ID
         ContentResolver contentResolver = c.getContentResolver();
-        Cursor cursor = contentResolver.query(uri, projection, null, null, null);
+        Cursor cursor = contentResolver.query(uri, PROJECTION, null, null, null);
         String id = "0";
         while (cursor.moveToNext()) {
             id = cursor.getString(0);

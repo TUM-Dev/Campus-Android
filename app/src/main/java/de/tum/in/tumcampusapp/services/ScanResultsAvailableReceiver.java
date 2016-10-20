@@ -42,7 +42,7 @@ public class ScanResultsAvailableReceiver extends BroadcastReceiver {
         WifiManager wifi = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
         List<ScanResult> scan = wifi.getScanResults();
         for(ScanResult network : scan) {
-            if(network.SSID.equals(EduroamManager.networkSSID)) {
+            if (network.SSID.equals(EduroamManager.NETWORK_SSID)) {
                 //Show notification
                 showNotification(context);
                 return;

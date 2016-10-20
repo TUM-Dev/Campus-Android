@@ -237,7 +237,7 @@ public class NewsManager extends AbstractManager implements Card.ProvidesCard {
                     if (!and.toString().isEmpty()) {
                         and.append(" OR ");
                     }
-                    and.append("s.id=\"").append(id).append("\"");
+                    and.append("s.id=\"").append(id).append('\"');
                 }
             } while (c.moveToNext());
         }
