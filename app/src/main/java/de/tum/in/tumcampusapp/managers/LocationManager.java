@@ -210,7 +210,7 @@ public class LocationManager {
                 float accuracy = location.getAccuracy();
                 long time = location.getTime();
 
-                if ((time > minTime && accuracy < bestAccuracy)) {
+                if (time > minTime && accuracy < bestAccuracy) {
                     bestResult = location;
                     bestAccuracy = accuracy;
                     bestTime = time;

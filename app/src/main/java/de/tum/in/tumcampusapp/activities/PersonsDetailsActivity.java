@@ -195,7 +195,7 @@ public class PersonsDetailsActivity extends ActivityForAccessingTumOnline<Employ
             for (int i = 0; i < substations.size(); i++) {
                 if (substations.get(i) != null) {
                     contentText.appendField(getString(R.string.phone) + ' '
-                            + (i + 1), substations.get(i).getNumber());
+                            + i + 1, substations.get(i).getNumber());
                 }
 
             }

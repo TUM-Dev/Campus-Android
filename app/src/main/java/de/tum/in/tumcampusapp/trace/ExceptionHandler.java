@@ -159,7 +159,7 @@ public final class ExceptionHandler {
                 protected Void doInBackground(Void... params) {
                     ExceptionHandler.submitStackTraces(tracesNowSubmitting, context);
 
-                    long rest = S_MIN_DELAY - (System.currentTimeMillis() - mTimeStarted);
+                    long rest = S_MIN_DELAY - System.currentTimeMillis() + mTimeStarted;
                     if (rest > 0) {
                         try {
                             Thread.sleep(rest);

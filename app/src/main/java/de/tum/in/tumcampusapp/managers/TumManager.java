@@ -111,7 +111,7 @@ public class TumManager extends AbstractManager {
         String msg = "";
         try {
 
-            Error res = (new Persister()).read(Error.class, data);
+            Error res = new Persister().read(Error.class, data);
             msg = res.getMessage();
         } catch (Exception e) {
             Utils.log(e);

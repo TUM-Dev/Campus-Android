@@ -26,7 +26,7 @@ import static de.tum.in.tumcampusapp.managers.StudyRoomGroupManager.STUDYROOM_HO
 
 public class Helper {
     private static final int HTTP_TIMEOUT = 25000;
-    private static OkHttpClient client = null;
+    private static OkHttpClient client;
 
     public static OkHttpClient getOkClient(Context c) {
         if (client != null) {

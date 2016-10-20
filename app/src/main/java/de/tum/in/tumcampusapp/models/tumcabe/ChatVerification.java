@@ -19,7 +19,7 @@ public class ChatVerification {
 
     public ChatVerification(Context c, ChatMember member) throws NoPrivateKey {
         //Create some data
-        this.date = (new Date()).toString();
+        this.date = new Date().toString();
         this.rand = new BigInteger(130, new SecureRandom()).toString(32);
         this.member = member.getId();
 

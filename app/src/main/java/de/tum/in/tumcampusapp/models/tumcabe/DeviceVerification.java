@@ -18,7 +18,7 @@ public class DeviceVerification {
 
     public DeviceVerification(Context c) throws NoPrivateKey {
         //Create some data
-        this.date = (new Date()).toString();
+        this.date = new Date().toString();
         this.rand = new BigInteger(130, new SecureRandom()).toString(32);
         this.device = AuthenticationManager.getDeviceID(c);
 

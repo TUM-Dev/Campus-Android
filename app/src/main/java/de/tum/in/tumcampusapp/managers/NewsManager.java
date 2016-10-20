@@ -134,17 +134,17 @@ public class NewsManager extends AbstractManager implements Card.ProvidesCard {
      */
     public Cursor getAllFromDb(Context context) {
         String selectedNewspread = Utils.getSetting(mContext, "news_newspread", "7");
-        String and = "";
+        StringBuilder and = new StringBuilder();
         Cursor c = getNewsSources();
         if (c.moveToFirst()) {
             do {
                 int id = c.getInt(0);
                 boolean show = Utils.getSettingBool(context, "news_source_" + id, id <= 7);
                 if (show) {
-                    if (!and.isEmpty()) {
-                        and += " OR ";
+                    if (!and.toString().isEmpty()) {
+                        and.append(" OR ");
                     }
-                    and += "s.id=\"" + id + "\"";
+                    and.append("s.id=\"").append(id).append('\"');
                 }
             } while (c.moveToNext());
         }
@@ -153,7 +153,7 @@ public class NewsManager extends AbstractManager implements Card.ProvidesCard {
                 "n.link, n.image, n.date, n.created, s.icon, s.title AS source, n.dismissed, " +
                 "(julianday('now') - julianday(date)) AS diff " +
                 "FROM news n, news_sources s " +
-                "WHERE n.src=s.id " + (and.isEmpty() ? "" : "AND (" + and + ") ") +
+                "WHERE n.src=s.id " + (and.toString().isEmpty() ? "" : "AND (" + and.toString() + ") ") +
                 "AND (s.id < 7 OR s.id > 13 OR s.id=?) " +
                 "ORDER BY date DESC", new String[]{selectedNewspread});
     }
@@ -227,44 +227,44 @@ public class NewsManager extends AbstractManager implements Card.ProvidesCard {
      */
     @Override
     public void onRequestCard(Context context) {
-        String and = "";
+        StringBuilder and = new StringBuilder();
         Cursor c = getNewsSources();
         if (c.moveToFirst()) {
             do {
                 int id = c.getInt(0);
                 boolean show = Utils.getSettingBool(context, "card_news_source_" + id, true);
                 if (show) {
-                    if (!and.isEmpty()) {
-                        and += " OR ";
+                    if (!and.toString().isEmpty()) {
+                        and.append(" OR ");
                     }
-                    and += "s.id=\"" + id + "\"";
+                    and.append("s.id=\"").append(id).append("\"");
                 }
             } while (c.moveToNext());
         }
         c.close();
 
         //boolean showImportant = Utils.getSettingBool(context, "card_news_alert", true);
-        if (!and.isEmpty()) {
+        if (!and.toString().isEmpty()) {
 
-            String query = "SELECT n.id AS _id, n.src, n.title, " +
+            StringBuilder query = new StringBuilder("SELECT n.id AS _id, n.src, n.title, " +
                     "n.link, n.image, n.date, n.created, s.icon, s.title AS source, n.dismissed, " +
-                    "ABS(julianday(date()) - julianday(n.date)) AS date_diff ";
+                    "ABS(julianday(date()) - julianday(n.date)) AS date_diff ");
 
             if (Utils.getSettingBool(context, "card_news_latest_only", true)) {
                 // Limit to one entry per source
-                query += "FROM (news n JOIN ( " +
+                query.append("FROM (news n JOIN ( " +
                         "SELECT src, MIN(abs(julianday(date()) - julianday(date))) AS diff " +
                         "FROM news WHERE src!=\"2\" OR (julianday(date()) - julianday(date))<0 " +
                         "GROUP BY src) last ON (n.src = last.src " +
                         "AND date_diff = last.diff) " +
-                        "), news_sources s ";
+                        "), news_sources s ");
             } else {
-                query += "FROM news n, news_sources s ";
+                query.append("FROM news n, news_sources s ");
             }
 
-            query += "WHERE n.src = s.id AND ((" + and + ") " +
-                    ") ORDER BY date_diff ASC";
-            Cursor cur = db.rawQuery(query, null);
+            query.append("WHERE n.src = s.id AND ((").append(and).append(") ")
+                    .append(") ORDER BY date_diff ASC");
+            Cursor cur = db.rawQuery(query.toString(), null);
 
             int i = 0;
             if (cur.moveToFirst()) {

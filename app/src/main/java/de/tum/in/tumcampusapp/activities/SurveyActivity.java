@@ -225,7 +225,7 @@ public class SurveyActivity extends ProgressActivity {
             float inPixels = getResources().getDimension(R.dimen.dimen_buttonHeight_in_dp);
             Button deleteButton = new Button(this);
             deleteButton.setLayoutParams(new LinearLayout.LayoutParams((int) inPixels, (int) inPixels));
-            deleteButton.setBackgroundResource((R.drawable.minusicon));
+            deleteButton.setBackgroundResource(R.drawable.minusicon);
             deleteButton.setOnClickListener(deleteQuestion);
             deleteButton.setTag(id);
             l2.addView(deleteButton);
@@ -234,7 +234,7 @@ public class SurveyActivity extends ProgressActivity {
             LinearLayout.LayoutParams infoButtonParams = new LinearLayout.LayoutParams((int) inPixels, (int) inPixels);
             infoButtonParams.setMargins(0, 15, 0, 0);
             infoButton.setLayoutParams(infoButtonParams);
-            infoButton.setBackgroundResource((R.drawable.ic_action_about_blue));
+            infoButton.setBackgroundResource(R.drawable.ic_action_about_blue);
             infoButton.setOnClickListener(showFaculties);
             infoButton.setTag(targetFacsNames);
             l2.addView(infoButton);
