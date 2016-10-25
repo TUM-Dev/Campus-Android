@@ -73,7 +73,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
 
         // Disables silence service if the app is used without TUMOnline access
         CheckBoxPreference silent = (CheckBoxPreference) findPreference("silent_mode");
-        if (!new AccessTokenManager(mContext).hasValidAccessToken()) {
+        if (silent != null && !new AccessTokenManager(mContext).hasValidAccessToken()) {
             silent.setEnabled(false);
         }
 

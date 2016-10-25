@@ -9,22 +9,21 @@ android {
         all {
             proguardFiles(file('../proguard').listFiles())
             proguardFile getDefaultProguardFile('proguard-android.txt')
+            minifyEnabled true
         }
         debug {
             debuggable true
-            minifyEnabled true
         }
         release {
             debuggable false
-            minifyEnabled true
         }
     }
     defaultConfig {
         applicationId "de.tum.in.tumcampus"
         minSdkVersion 10
-        targetSdkVersion 24
+        targetSdkVersion 25
         versionCode 510
-        versionName "1.4.6-dev"
+        versionName "1.5.0-dev"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     lintOptions {
@@ -66,7 +65,7 @@ dependencies {
     compile 'com.android.support:preference-v7:25.0.0'
     compile 'com.android.support:recyclerview-v7:25.0.0'
     compile 'com.android.support:support-v4:25.0.0'
-    compile 'com.google.android.gms:play-services-gcm:9.6.1'
+    compile 'com.google.android.gms:play-services-gcm:9.8.0'
     compile 'com.google.code.gson:gson:2.7'
     compile 'com.google.guava:guava:19.0'
     compile 'com.nineoldandroids:library:2.4.0'
