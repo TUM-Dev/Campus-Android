@@ -4,7 +4,7 @@ apply from: '../pmd.gradle'
 
 android {
     compileSdkVersion 25
-    buildToolsVersion '24.0.3'
+    buildToolsVersion '25.0.0'
     buildTypes {
         all {
             proguardFiles(file('../proguard').listFiles())
@@ -66,8 +66,8 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:25.0.0'
     compile 'com.android.support:support-v4:25.0.0'
     compile 'com.google.android.gms:play-services-gcm:9.8.0'
-    compile 'com.google.code.gson:gson:2.7'
-    compile 'com.google.guava:guava:19.0'
+    compile 'com.google.code.gson:gson:2.8.0'
+    compile 'com.google.guava:guava:20.0'
     compile 'com.nineoldandroids:library:2.4.0'
     compile 'se.emilsjolander:stickylistheaders:2.7.0'
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
