@@ -67,7 +67,7 @@ dependencies {
     compile 'com.android.support:support-v4:25.0.0'
     compile 'com.google.android.gms:play-services-gcm:9.8.0'
     compile 'com.google.code.gson:gson:2.8.0'
-    compile 'com.google.guava:guava:20.0'
+    compile 'com.google.guava:guava:19.0'
     compile 'com.nineoldandroids:library:2.4.0'
     compile 'se.emilsjolander:stickylistheaders:2.7.0'
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
