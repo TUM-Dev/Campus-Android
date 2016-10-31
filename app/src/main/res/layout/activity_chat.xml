@@ -42,7 +42,9 @@
                 android:layout_toLeftOf="@+id/btnSend"
                 android:layout_toStartOf="@+id/btnSend"
                 android:hint="@string/send"
-                android:inputType="textShortMessage"/>
+                android:inputType="textCapSentences|textMultiLine"
+                android:maxLines="4"
+                android:scrollbars="vertical"/>
 
             <ImageButton
                 android:id="@+id/btnSend"
