@@ -22,8 +22,8 @@ import de.tum.in.tumcampusapp.adapters.CafeteriaDetailsSectionsPagerAdapter;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
-import de.tum.in.tumcampusapp.models.Cafeteria;
-import de.tum.in.tumcampusapp.models.managers.LocationManager;
+import de.tum.in.tumcampusapp.managers.LocationManager;
+import de.tum.in.tumcampusapp.models.cafeteria.Cafeteria;
 
 import static de.tum.in.tumcampusapp.fragments.CafeteriaDetailsSectionFragment.menuToSpan;
 
@@ -120,17 +120,15 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
                 View v = inflater.inflate(R.layout.simple_spinner_dropdown_item_actionbar, parent, false);
                 Cafeteria c = getItem(position);
 
-                // Set name
-                TextView name = (TextView) v.findViewById(android.R.id.text1);
-                name.setText(c.name);
+                TextView name = (TextView) v.findViewById(android.R.id.text1); // Set name
+                TextView address = (TextView) v.findViewById(android.R.id.text2); // Set address
+                TextView dist = (TextView) v.findViewById(R.id.distance); // Set distance
 
-                // Set address
-                TextView address = (TextView) v.findViewById(android.R.id.text2);
-                address.setText(c.address);
-
-                // Set distance
-                TextView dist = (TextView) v.findViewById(R.id.distance);
-                dist.setText(Utils.formatDist(c.distance));
+                if (c != null) {
+                    name.setText(c.name);
+                    address.setText(c.address);
+                    dist.setText(Utils.formatDist(c.distance));
+                }
 
                 return v;
             }

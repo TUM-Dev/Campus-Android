@@ -9,7 +9,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.text.TextUtils;
 
-import de.tum.in.tumcampusapp.models.managers.AbstractManager;
+import de.tum.in.tumcampusapp.managers.AbstractManager;
 
 /**
  * Slightly modified version of SearchRecentSuggestionsProvider taken from AOSP source code

@@ -27,12 +27,12 @@ import de.tum.in.tumcampusapp.api.TUMCabeClient;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.exceptions.NoPrivateKey;
-import de.tum.in.tumcampusapp.models.ChatMember;
-import de.tum.in.tumcampusapp.models.ChatRoom;
-import de.tum.in.tumcampusapp.models.ChatVerification;
-import de.tum.in.tumcampusapp.models.LecturesSearchRow;
-import de.tum.in.tumcampusapp.models.LecturesSearchRowSet;
-import de.tum.in.tumcampusapp.models.managers.ChatRoomManager;
+import de.tum.in.tumcampusapp.managers.ChatRoomManager;
+import de.tum.in.tumcampusapp.models.tumcabe.ChatMember;
+import de.tum.in.tumcampusapp.models.tumcabe.ChatRoom;
+import de.tum.in.tumcampusapp.models.tumcabe.ChatVerification;
+import de.tum.in.tumcampusapp.models.tumo.LecturesSearchRow;
+import de.tum.in.tumcampusapp.models.tumo.LecturesSearchRowSet;
 import de.tum.in.tumcampusapp.tumonline.TUMOnlineConst;
 import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequest;
 import retrofit2.Call;
@@ -189,9 +189,15 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
             TUMCabeClient.getInstance(this).createRoom(currentChatRoom, new ChatVerification(this, this.currentChatMember), new Callback<ChatRoom>() {
                 @Override
                 public void onResponse(Call<ChatRoom> call, Response<ChatRoom> response) {
+                    if (!response.isSuccessful()) {
+                        Utils.logv("Error creating&joining chat room: " + response.message());
+                        return;
+                    }
+
                     // The POST request is successful: go to room. API should have auto joined it
                     Utils.logv("Success creating&joining chat room: " + response.body());
                     currentChatRoom = response.body();
+
                     manager.join(currentChatRoom);
 
                     // When we show joined chat rooms open chat room directly

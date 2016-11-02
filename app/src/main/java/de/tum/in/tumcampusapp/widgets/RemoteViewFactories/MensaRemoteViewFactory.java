@@ -9,16 +9,18 @@ import android.widget.RemoteViewsService;
 
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.auxiliary.CafeteriaPrices;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
-import de.tum.in.tumcampusapp.models.CafeteriaMenu;
-import de.tum.in.tumcampusapp.models.managers.CafeteriaManager;
+import de.tum.in.tumcampusapp.managers.CafeteriaManager;
+import de.tum.in.tumcampusapp.models.cafeteria.CafeteriaMenu;
 
 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 public class MensaRemoteViewFactory implements RemoteViewsService.RemoteViewsFactory {
 
+    private static final Pattern COMPILE = Pattern.compile("\\([^\\)]+\\)");
     private final Context applicationContext;
     private List<CafeteriaMenu> mensaMenu;
 
@@ -60,24 +62,22 @@ public class MensaRemoteViewFactory implements RemoteViewsService.RemoteViewsFac
 
     @Override
     public RemoteViews getViewAt(int position) {
-        RemoteViews rv = new RemoteViews(applicationContext.getPackageName(), R.layout.mensa_widget_item);
         CafeteriaMenu currentItem = mensaMenu.get(position);
         if (currentItem == null) {
             return null;
         }
+        RemoteViews rv = new RemoteViews(applicationContext.getPackageName(), R.layout.mensa_widget_item);
         rv.setTextViewText(R.id.menu_type, currentItem.typeShort);
 
-        String menuContent = currentItem.name.replaceAll("\\([^\\)]+\\)", "").trim();
+        String menuContent = COMPILE.matcher(currentItem.name).replaceAll("").trim();
         rv.setTextViewText(R.id.menu_content, menuContent);
 
         String price = CafeteriaPrices.getPrice(applicationContext, currentItem.typeLong);
-        if (price != null) {
-            price += " €";
-        } else {
-            price = "____€";
+        if (price == null) {
+            price = "____";
         }
 
-        rv.setTextViewText(R.id.menu_price, price);
+        rv.setTextViewText(R.id.menu_price, price + " €");
         return rv;
     }
 

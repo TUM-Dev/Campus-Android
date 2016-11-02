@@ -42,6 +42,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import de.tum.in.tumcampusapp.R;
@@ -49,8 +50,8 @@ import de.tum.in.tumcampusapp.activities.generic.ProgressActivity;
 import de.tum.in.tumcampusapp.api.TUMCabeClient;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
-import de.tum.in.tumcampusapp.models.Question;
-import de.tum.in.tumcampusapp.models.managers.SurveyManager;
+import de.tum.in.tumcampusapp.managers.SurveyManager;
+import de.tum.in.tumcampusapp.models.tumcabe.Question;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -60,9 +61,9 @@ import retrofit2.Response;
  */
 public class SurveyActivity extends ProgressActivity {
 
-    final Context context = this;
+    private final Context context = this;
     // for handling change in internet connectivity. If initially had no connection, then connected, then restart activity
-    BroadcastReceiver connectivityChangeReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver connectivityChangeReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (NetUtils.isConnected(getApplicationContext())) {
@@ -71,32 +72,32 @@ public class SurveyActivity extends ProgressActivity {
             }
         }
     };
-    View.OnClickListener showFaculties = new View.OnClickListener() {
+    private final View.OnClickListener showFaculties = new View.OnClickListener() {
 
         @Override
         public void onClick(final View v) {
             String[] faculties = (String[]) v.getTag();
-            String chosenFaculties = "";
-            for (int i = 0; i < faculties.length; i++) {
-                chosenFaculties += "- " + faculties[i] + "\n";
+            StringBuilder chosenFaculties = new StringBuilder();
+            for (String faculty : faculties) {
+                chosenFaculties.append("- ").append(faculty).append('\n');
             }
 
             new android.app.AlertDialog.Builder(context).setTitle(getResources().getString(R.string.selected_target_faculties))
-                    .setMessage(chosenFaculties)
+                    .setMessage(chosenFaculties.toString())
                     .setPositiveButton(android.R.string.ok, null).create().show();
         }
 
     };
     private Spinner numOfQuestionsSpinner;
     private Button submitSurveyButton, facultiesButton;
-    private ArrayList<String> questions = new ArrayList<>();
-    private ArrayList<String> selectedFaculties = new ArrayList<>();
+    private final List<String> questions = new ArrayList<>();
+    private final List<String> selectedFaculties = new ArrayList<>();
     private boolean[] checkedFaculties;
     private LinearLayout mainResponseLayout, questionsLayout;
-    private ArrayList<String> fetchedFaculties = new ArrayList<>();
+    private final List<String> fetchedFaculties = new ArrayList<>();
     private SurveyManager surveyManager;
     //Handles clicking on 'delete' button of an own question in responses tab
-    View.OnClickListener deleteQuestion = new View.OnClickListener() {
+    private final View.OnClickListener deleteQuestion = new View.OnClickListener() {
 
         @Override
         public void onClick(final View v) {
@@ -138,6 +139,7 @@ public class SurveyActivity extends ProgressActivity {
 
     @Override
     public void onRefresh() {
+        // TODO
     }
 
     //set up the respone tab layout dynamically depending on number of questions
@@ -223,7 +225,7 @@ public class SurveyActivity extends ProgressActivity {
             float inPixels = getResources().getDimension(R.dimen.dimen_buttonHeight_in_dp);
             Button deleteButton = new Button(this);
             deleteButton.setLayoutParams(new LinearLayout.LayoutParams((int) inPixels, (int) inPixels));
-            deleteButton.setBackgroundResource((R.drawable.minusicon));
+            deleteButton.setBackgroundResource(R.drawable.minusicon);
             deleteButton.setOnClickListener(deleteQuestion);
             deleteButton.setTag(id);
             l2.addView(deleteButton);
@@ -232,7 +234,7 @@ public class SurveyActivity extends ProgressActivity {
             LinearLayout.LayoutParams infoButtonParams = new LinearLayout.LayoutParams((int) inPixels, (int) inPixels);
             infoButtonParams.setMargins(0, 15, 0, 0);
             infoButton.setLayoutParams(infoButtonParams);
-            infoButton.setBackgroundResource((R.drawable.ic_action_about_blue));
+            infoButton.setBackgroundResource(R.drawable.ic_action_about_blue);
             infoButton.setOnClickListener(showFaculties);
             infoButton.setTag(targetFacsNames);
             l2.addView(infoButton);
@@ -292,6 +294,7 @@ public class SurveyActivity extends ProgressActivity {
         zoomOut.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
+                // NOOP
             }
 
             @Override
@@ -301,6 +304,7 @@ public class SurveyActivity extends ProgressActivity {
 
             @Override
             public void onAnimationRepeat(Animation animation) {
+                // NOOP
             }
         });
     }
@@ -367,9 +371,9 @@ public class SurveyActivity extends ProgressActivity {
                         }
                     }
                 }).setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    //if Ok do nothing-> keep selecte faculties
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
+                        //if Ok do nothing-> keep selected faculties
                     }
                 }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     //if cancel clear selected faculties
@@ -460,7 +464,7 @@ public class SurveyActivity extends ProgressActivity {
                             try {
                                 Thread.sleep(1000); // Waits to make sure that the questions got sent to the server in order to avoid fetching ownQuestions without the newly created questions
                             } catch (InterruptedException e) {
-                                e.printStackTrace();
+                                Utils.log(e);
                             }
                             surveyManager.downLoadOwnQuestions();
                             return null;
@@ -485,7 +489,7 @@ public class SurveyActivity extends ProgressActivity {
      *
      * @return questions if everything was entered correctly else snackbar for requesting to complete questions.
      */
-    private ArrayList<String> getSurveyData() {
+    private List<String> getSurveyData() {
         boolean done = true;
         for (int i = 0; i < numOfQuestionsSpinner.getSelectedItemPosition() + 1; i++) { // Iterates on each questionEditText
             EditText v = (EditText) questionsLayout.findViewWithTag("question" + (i + 1));
@@ -603,7 +607,7 @@ public class SurveyActivity extends ProgressActivity {
             numOfQuestionsSpinner.setVisibility(View.GONE);
         }
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, numQues);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, numQues);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         numOfQuestionsSpinner.setAdapter(adapter);
 
@@ -630,6 +634,7 @@ public class SurveyActivity extends ProgressActivity {
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
+                // NOOP
             }
         });
     }
@@ -655,7 +660,7 @@ public class SurveyActivity extends ProgressActivity {
      */
     private String getNextPossibleDate() {
         String nextPossibleDate = "";
-        ArrayList<String> dates = new ArrayList<String>();
+        ArrayList<String> dates = new ArrayList<>();
         String weekAgo = getDateBefore1Week();
         Cursor c = surveyManager.ownQuestionsSince(weekAgo);
 

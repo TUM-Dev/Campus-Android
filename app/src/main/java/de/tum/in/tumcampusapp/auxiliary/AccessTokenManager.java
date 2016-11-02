@@ -8,8 +8,7 @@ import com.google.common.base.Optional;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.exceptions.NoPublicKey;
-import de.tum.in.tumcampusapp.models.AccessToken;
-import de.tum.in.tumcampusapp.models.TokenConfirmation;
+import de.tum.in.tumcampusapp.models.tumo.AccessToken;
 import de.tum.in.tumcampusapp.tumonline.TUMOException;
 import de.tum.in.tumcampusapp.tumonline.TUMOnlineConst;
 import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequest;
@@ -46,18 +45,6 @@ public class AccessTokenManager {
             throw new TUMOException(request.getLastError());
         }
 
-        //Upload the Private key to the tumo server: we don't need an activated token for that. We want this to happen immediately so that no one else can upload this secret.
-        AuthenticationManager am = new AuthenticationManager(context);
-        try {
-            String publicKey = am.getPublicKeyString();
-            TUMOnlineRequest<TokenConfirmation> requestSavePublicKey = new TUMOnlineRequest<>(TUMOnlineConst.SECRET_UPLOAD, context, false);
-            requestSavePublicKey.setParameter("pToken", token.get().getToken());
-            requestSavePublicKey.setParameterEncoded("pSecret", publicKey);
-            requestSavePublicKey.fetch();
-        } catch (NoPublicKey noPublicKey) {
-            noPublicKey.printStackTrace();
-        }
-
         return token.get().getToken();
     }
 
@@ -91,15 +78,23 @@ public class AccessTokenManager {
 
             // save access token to preferences
             Utils.setSetting(context, Const.ACCESS_TOKEN, strAccessToken);
-            return true;
 
+            //Upload the secret to this new generated token
+            AuthenticationManager am = new AuthenticationManager(activity);
+            try {
+                am.uploadPublicKey();
+            } catch (NoPublicKey noPublicKey) {
+                Utils.log(noPublicKey);
+            }
+
+            return true;
         } catch (TUMOException ex) {
             Utils.log(ex, context.getString(R.string.access_token_wasnt_generated) + ex.errorMessage);
             // set access token to null
             Utils.setSetting(context, Const.ACCESS_TOKEN, null);
 
             Utils.showToastOnUIThread(activity, ex.errorMessage);
-        } catch (Exception ex) {
+        } catch (Exception ex) { //NOPMD
             Utils.log(ex, context.getString(R.string.access_token_wasnt_generated));
             // set access token to null
             Utils.setSetting(context, Const.ACCESS_TOKEN, null);

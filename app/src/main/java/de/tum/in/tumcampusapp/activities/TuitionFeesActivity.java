@@ -10,7 +10,7 @@ import java.util.Locale;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
-import de.tum.in.tumcampusapp.models.TuitionList;
+import de.tum.in.tumcampusapp.models.tumo.TuitionList;
 import de.tum.in.tumcampusapp.tumonline.TUMOnlineConst;
 
 /**

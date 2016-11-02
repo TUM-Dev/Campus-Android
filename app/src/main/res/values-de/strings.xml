@@ -404,7 +404,14 @@ Signatur: %5$s</string>
     <string name="event_plan">Tagesablauf</string>
     <string name="choose_own_faculty">Bitte wähle deine Fakultät aus</string>
     <string name="add_widget">Widget hinzufügen</string>
-    <string name="mensa_widget">Mensa Widget TUM</string>
     <string name="my_grades">Meine Noten</string>
     <string name="widget_configure_description">Anzeige der Karten einstellen</string>
+    <string name="accept_chat_terms">Chatbedingungen müssen akzeptiert werden, damit du den Vorlesungs-Chat verwenden kannst!</string>
+    <string name="quiz">Umfrage</string>
+    <string name="selected_target_faculties">Ausgewählte Fakultät:</string>
+    <string name="card_survey_summary">Ermöglicht es Ihnen, an forschungsbezogenen Umfragen teilzunehmen</string>
+    <string name="chat_not_setup">Chat ist nicht richtig eingerichtet, bitte den Assistenten über die Einstellungen neu starten!</string>
+    <string name="flag_inappropriate">Unangemessene Frage melden</string>
+    <string name="mvv_download">Bitte klicken Sie auf OK, um MVV-Pläne herunterzuladen, sonst können Sie diese Funktion nicht verwenden</string>
+    <string name="please_connect_to_internet">Bitte verbinden Sie sich mit dem Internet, um den ersten App-Start fortzusetzen</string>
 </resources>

@@ -20,23 +20,25 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.CafeteriaActivity;
 import de.tum.in.tumcampusapp.auxiliary.CafeteriaPrices;
 import de.tum.in.tumcampusapp.auxiliary.Const;
-import de.tum.in.tumcampusapp.cards.generic.Card;
 import de.tum.in.tumcampusapp.cards.generic.NotificationAwareCard;
-import de.tum.in.tumcampusapp.models.CafeteriaMenu;
+import de.tum.in.tumcampusapp.models.cafeteria.CafeteriaMenu;
 
 import static de.tum.in.tumcampusapp.fragments.CafeteriaDetailsSectionFragment.showMenu;
-import static de.tum.in.tumcampusapp.models.managers.CardManager.CARD_CAFETERIA;
+import static de.tum.in.tumcampusapp.managers.CardManager.CARD_CAFETERIA;
 
 /**
  * Card that shows the cafeteria menu
  */
 public class CafeteriaMenuCard extends NotificationAwareCard {
     private static final String CAFETERIA_DATE = "cafeteria_date";
+    private static final Pattern COMPILE = Pattern.compile("\\([^\\)]+\\)");
+    private static final Pattern PATTERN = Pattern.compile("[0-9]");
     private int mCafeteriaId;
     private String mCafeteriaName;
     private Date mDate;
@@ -47,9 +49,9 @@ public class CafeteriaMenuCard extends NotificationAwareCard {
         super(CARD_CAFETERIA, context, "card_cafeteria");
     }
 
-    public static Card.CardViewHolder inflateViewHolder(ViewGroup parent) {
+    public static CardViewHolder inflateViewHolder(ViewGroup parent) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_item, parent, false);
-        return new Card.CardViewHolder(view);
+        return new CardViewHolder(view);
     }
 
     @Override
@@ -128,31 +130,31 @@ public class CafeteriaMenuCard extends NotificationAwareCard {
         NotificationCompat.WearableExtender morePageNotification =
                 new NotificationCompat.WearableExtender();
 
-        String allContent = "", firstContent = "";
+        StringBuilder allContent = new StringBuilder(), firstContent = new StringBuilder();
         for (CafeteriaMenu menu : mMenus) {
-            if (menu.typeShort.equals("bei")) {
+            if ("bei".equals(menu.typeShort)) {
                 continue;
             }
 
             NotificationCompat.Builder pageNotification =
                     new NotificationCompat.Builder(mContext)
-                            .setContentTitle(menu.typeLong.replaceAll("[0-9]", "").trim());
+                            .setContentTitle(PATTERN.matcher(menu.typeLong).replaceAll("").trim());
 
-            String content = menu.name;
+            StringBuilder content = new StringBuilder(menu.name);
             if (rolePrices.containsKey(menu.typeLong)) {
-                content += "\n" + rolePrices.get(menu.typeLong) + " €";
+                content.append('\n').append(rolePrices.get(menu.typeLong)).append(" €");
             }
 
-            content = content.replaceAll("\\([^\\)]+\\)", "").trim();
-            pageNotification.setContentText(content);
-            if (menu.typeShort.equals("tg")) {
-                if (!allContent.isEmpty()) {
-                    allContent += "\n";
+            String contentString = COMPILE.matcher(content.toString()).replaceAll("").trim();
+            pageNotification.setContentText(contentString);
+            if ("tg".equals(menu.typeShort)) {
+                if (!allContent.toString().isEmpty()) {
+                    allContent.append('\n');
                 }
-                allContent += content;
+                allContent.append(contentString);
             }
-            if (firstContent.isEmpty()) {
-                firstContent = menu.name.replaceAll("\\([^\\)]+\\)", "").trim() + "...";
+            if (firstContent.toString().isEmpty()) {
+                firstContent.append(COMPILE.matcher(menu.name).replaceAll("").trim()).append('…');
             } else {
                 morePageNotification.addPage(pageNotification.build());
             }

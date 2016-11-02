@@ -21,8 +21,8 @@ import java.util.Date;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
-import de.tum.in.tumcampusapp.models.StudyRoom;
-import de.tum.in.tumcampusapp.models.managers.StudyRoomGroupManager;
+import de.tum.in.tumcampusapp.managers.StudyRoomGroupManager;
+import de.tum.in.tumcampusapp.models.tumcabe.StudyRoom;
 
 /**
  * Fragment for each study room group. Shows study room details in a list.
@@ -121,7 +121,7 @@ public class StudyRoomGroupDetailsFragment extends Fragment implements SimpleCur
             TextView tv = (TextView) view;
             tv.setText(studyRoom.name);
         } else if (view.getId() == android.R.id.text2) {
-            StringBuilder stringBuilder = new StringBuilder(studyRoom.location + "<br>");
+            StringBuilder stringBuilder = new StringBuilder(studyRoom.location).append("<br>");
 
             if (studyRoom.occupiedTill.compareTo(new Date()) < 0) {
                 stringBuilder.append(getString(R.string.free));

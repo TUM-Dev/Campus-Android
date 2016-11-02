@@ -25,19 +25,19 @@ import java.util.Map;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampusapp.adapters.ExamListAdapter;
-import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
-import de.tum.in.tumcampusapp.models.Exam;
-import de.tum.in.tumcampusapp.models.ExamList;
+import de.tum.in.tumcampusapp.models.tumo.Exam;
+import de.tum.in.tumcampusapp.models.tumo.ExamList;
 import de.tum.in.tumcampusapp.tumonline.TUMOnlineConst;
 
 /**
  * Activity to show the user's grades/exams passed.
  */
 public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
-    private static int lastChoice;
+    private static final String[] GRADES = {"1,0", "1,3", "1,4", "1,7", "2,0", "2,3", "2,4", "2,7", "3,0", "3,3", "3,4", "3,7", "4,0", "4,3", "4,4", "4,7", "5,0"};
     private final NumberFormat format = NumberFormat.getInstance(Locale.FRANCE);
+    private static int lastChoice;
     private TextView averageTx;
     private double averageGrade;
     private String columnChartContent;
@@ -67,13 +67,13 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
 
         StringBuilder datas = new StringBuilder(1024);
         // Build data string
-        for (int i = 0; i < Const.GRADES.length; i++) {
+        for (int i = 0; i < GRADES.length; i++) {
             datas.append("['")
-                    .append(Const.GRADES[i]).append("', ")
-                    .append(gradeDistribution.get(Const.GRADES[i]))
+                    .append(GRADES[i]).append("', ")
+                    .append(gradeDistribution.get(GRADES[i]))
                     .append(']');
 
-            if (i != Const.GRADES.length - 1) {
+            if (i != GRADES.length - 1) {
                 datas.append(',');
             }
         }
@@ -117,12 +117,12 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
         StringBuilder datas = new StringBuilder(1024);
 
         // build data String
-        for (int i = 0; i < Const.GRADES.length; i++) {
+        for (int i = 0; i < GRADES.length; i++) {
             datas.append("['")
-                    .append(Const.GRADES[i]).append("', ")
-                    .append(gradeDistrubution.get(Const.GRADES[i]))
+                    .append(GRADES[i]).append("', ")
+                    .append(gradeDistrubution.get(GRADES[i]))
                     .append(']');
-            if (i != Const.GRADES.length - 1) {
+            if (i != GRADES.length - 1) {
                 datas.append(',');
             }
         }
@@ -165,11 +165,11 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
      * @return Average grade
      */
     Double calculateAverageGrade(List<Exam> filteredExamList) {
-        List<Exam> removedDoubles = removeDuplicates(filteredExamList);
+        //List<Exam> removedDoubles = removeDuplicates(filteredExamList);
         double weightedGrade = 0.0;
         double creditSum = 0.0;
 
-        for (Exam item : removedDoubles) {
+        for (Exam item : filteredExamList) {
             creditSum += Double.valueOf(item.getCredits());
             try {
                 weightedGrade += format.parse(item.getGrade()).doubleValue()
@@ -220,8 +220,7 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
         }
 
         // init the spinner
-        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(
-                this, android.R.layout.simple_list_item_checked, filters);
+        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_checked, filters);
         spFilter.setAdapter(spinnerArrayAdapter);
         spFilter.setSelection(lastChoice);
 
@@ -229,8 +228,7 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
         spFilter.setOnItemSelectedListener(new OnItemSelectedListener() {
 
             @Override
-            public void onItemSelected(AdapterView<?> arg0, View arg1,
-                                       int arg2, long arg3) {
+            public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 
                 String filter = spFilter.getItemAtPosition(arg2).toString();
                 lastChoice = arg2;
@@ -296,10 +294,7 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
         averageTx = (TextView) findViewById(R.id.avgGrade);
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
         mSwipeRefreshLayout.setOnRefreshListener(this);
-        mSwipeRefreshLayout.setColorSchemeResources(
-                R.color.color_primary,
-                R.color.tum_A100,
-                R.color.tum_A200);
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.color_primary, R.color.tum_A100, R.color.tum_A200);
 
         requestFetch();
     }
@@ -334,6 +329,7 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
     public void onFetch(ExamList rawResponse) {
         examList = rawResponse;
 
+
         // initialize the program choice spinner
         initSpinner();
 
@@ -346,11 +342,13 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
         isFetched = true;
 
         // update the action bar to display the enabled menu options
-
         ActivityCompat.invalidateOptionsMenu(this);
-
         mSwipeRefreshLayout.setRefreshing(false);
+    }
 
+    public void onFetchError(String errorReason) {
+        super.onFetchError(errorReason);
+        Utils.log("Noten failed due to: " + errorReason);
     }
 
     @Override
@@ -396,33 +394,33 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
      *
      * @param filteredExamList List of exams
      * @return List with duplicate items removed
-     */
+
     List<Exam> removeDuplicates(List<Exam> filteredExamList) {
-        List<Exam> removedDoubles = new ArrayList<>();
+    List<Exam> removedDoubles = new ArrayList<>();
 
-        // find and remove duplicates
-        for (int i = 0; i < filteredExamList.size(); i++) {
-            Exam item1 = filteredExamList.get(i);
-            boolean insert = true;
+    // find and remove duplicates
+    for (int i = 0; i < filteredExamList.size(); i++) {
+    Exam item1 = filteredExamList.get(i);
+    boolean insert = true;
 
-            for (Exam item2 : filteredExamList) {
-                if (item1.getCourse().equals(item2.getCourse())) {
-                    Utils.logv("Double = " + item1.getCourse());
-                    try {
-                        if (format.parse(item1.getGrade()).doubleValue() > format
-                                .parse(item2.getGrade()).doubleValue()) {
-                            insert = false;
-                        }
-                    } catch (ParseException e) {
-                        Utils.log(e);
-                    }
-                }
-            }
-
-            if (insert) {
-                removedDoubles.add(item1);
-            }
-        }
-        return removedDoubles;
+    for (Exam item2 : filteredExamList) {
+    if (item1.getCourse().equals(item2.getCourse())) {
+    Utils.logv("Double = " + item1.getCourse());
+    try {
+    if (format.parse(item1.getGrade()).doubleValue() > format
+    .parse(item2.getGrade()).doubleValue()) {
+    insert = false;
     }
+    } catch (ParseException e) {
+    Utils.log(e);
+    }
+    }
+    }
+
+    if (insert) {
+    removedDoubles.add(item1);
+    }
+    }
+    return removedDoubles;
+    }*/
 }

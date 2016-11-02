@@ -21,9 +21,6 @@ public final class Const {
     public static final String ERROR = "error";
     public static final String MESSAGE = "message";
     public static final String FORCE_DOWNLOAD = "force_download";
-    public static final String[] GRADES = {"1,0", "1,3", "1,4", "1,7", "2,0",
-            "2,3", "2,4", "2,7", "3,0", "3,3", "3,4", "3,7", "4,0", "4,3",
-            "4,4", "4,7", "5,0"};
     public static final String HIDE_WIZARD_ON_STARTUP = "hide_wizard_on_startup";
     public static final String HOURS_COLUMN = "hours";
     public static final String ID_COLUMN = "_id";
@@ -115,4 +112,8 @@ public final class Const {
 
     public static final String PREF_UNIQUE_ID = "PREF_UNIQUE_ID";
     public static final String CHATTERMS_URL = "https://tumcabe.in.tum.de/landing/chatterms/";
+
+    private Const() {
+        // Const is a utility class
+    }
 }

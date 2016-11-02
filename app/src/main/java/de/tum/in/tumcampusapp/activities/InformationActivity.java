@@ -95,6 +95,12 @@ public class InformationActivity extends BaseActivity {
         this.addDebugRow(table, "REG ID", Utils.getInternalSettingString(this, Const.GCM_REG_ID, ""));
         this.addDebugRow(table, "REG Transmission", DateUtils.getRelativeDateTimeString(this, Utils.getInternalSettingLong(this, Const.GCM_REG_ID_LAST_TRANSMISSION, 0),
                 DateUtils.MINUTE_IN_MILLIS, DateUtils.DAY_IN_MILLIS * 2, 0).toString());
+        try {
+            PackageInfo packageInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+            this.addDebugRow(table, "VersionCode", String.valueOf(packageInfo.versionCode));
+        } catch (NameNotFoundException e) {
+            Utils.log(e);
+        }
 
         table.setVisibility(View.VISIBLE);
 

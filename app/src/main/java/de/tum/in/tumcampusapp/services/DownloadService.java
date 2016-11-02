@@ -16,17 +16,16 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
-import de.tum.in.tumcampusapp.models.Location;
-import de.tum.in.tumcampusapp.models.managers.CacheManager;
-import de.tum.in.tumcampusapp.models.managers.CafeteriaManager;
-import de.tum.in.tumcampusapp.models.managers.CafeteriaMenuManager;
-import de.tum.in.tumcampusapp.models.managers.CardManager;
-import de.tum.in.tumcampusapp.models.managers.KinoManager;
-import de.tum.in.tumcampusapp.models.managers.NewsManager;
-import de.tum.in.tumcampusapp.models.managers.OpenHoursManager;
-import de.tum.in.tumcampusapp.models.managers.StudyRoomGroupManager;
-import de.tum.in.tumcampusapp.models.managers.SurveyManager;
-import de.tum.in.tumcampusapp.models.managers.SyncManager;
+import de.tum.in.tumcampusapp.managers.CacheManager;
+import de.tum.in.tumcampusapp.managers.CafeteriaManager;
+import de.tum.in.tumcampusapp.managers.CafeteriaMenuManager;
+import de.tum.in.tumcampusapp.managers.CardManager;
+import de.tum.in.tumcampusapp.managers.KinoManager;
+import de.tum.in.tumcampusapp.managers.NewsManager;
+import de.tum.in.tumcampusapp.managers.OpenHoursManager;
+import de.tum.in.tumcampusapp.managers.SurveyManager;
+import de.tum.in.tumcampusapp.managers.SyncManager;
+import de.tum.in.tumcampusapp.models.cafeteria.Location;
 import de.tum.in.tumcampusapp.trace.G;
 import de.tum.in.tumcampusapp.trace.Util;
 
@@ -119,9 +118,6 @@ public class DownloadService extends IntentService {
                 case Const.KINO:
                     successful = service.downLoadKino(force);
                     break;
-                case Const.STUDY_ROOMS:
-                    successful = service.downloadStudyRooms();
-                    break;
             }
         }
 
@@ -211,9 +207,8 @@ public class DownloadService extends IntentService {
         final boolean cafe = downloadCafeterias(force),
                 kino = downLoadKino(force),
                 news = downloadNews(force),
-                rooms = downloadStudyRooms(),
                 faculties = downloadFacultiesAndSurveyData();
-        return cafe && kino && news && rooms && faculties;
+        return cafe && kino && news && faculties;
     }
 
     private boolean downloadCafeterias(boolean force) {
@@ -252,28 +247,13 @@ public class DownloadService extends IntentService {
     }
 
     private boolean downloadFacultiesAndSurveyData() {
-        try {
-            SurveyManager sm = new SurveyManager(this);
-            sm.downloadFacultiesFromExternal(); // Downloads the facultyData from the server in local db
-            sm.downLoadOpenQuestions(); // Downloads openQuestions relevant for the survey card
-            sm.downLoadOwnQuestions(); // Downloads ownQuestions relevant for displaying responses in surveyActivity
-            return true;
-        } catch (Exception e) {
-            Utils.log(e);
-            return false;
-        }
+        SurveyManager sm = new SurveyManager(this);
+        sm.downloadFacultiesFromExternal(); // Downloads the facultyData from the server in local db
+        sm.downLoadOpenQuestions(); // Downloads openQuestions relevant for the survey card
+        sm.downLoadOwnQuestions(); // Downloads ownQuestions relevant for displaying responses in surveyActivity
+        return true;
     }
 
-    private boolean downloadStudyRooms() {
-        try {
-            StudyRoomGroupManager sm = new StudyRoomGroupManager(this);
-            sm.downloadFromExternal();
-            return true;
-        } catch (JSONException e) {
-            Utils.log(e);
-            return false;
-        }
-    }
 
     /**
      * Import default location and opening hours from assets

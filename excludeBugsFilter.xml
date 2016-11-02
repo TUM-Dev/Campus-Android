@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<FindBugsFilter>
+    <Match>
+        <Package name="~android.*" />
+    </Match>
+    <Match>
+        <Package name="~com\..*" />
+    </Match>
+    <Match>
+        <Package name="~de\.hdodenhof\..*" />
+    </Match>
+    <Match>
+        <Package name="~de\.psdev\..*" />
+    </Match>
+    <Match>
+        <Package name="~me\...*" />
+    </Match>
+    <Match>
+        <Package name="~net\..*" />
+    </Match>
+    <Match>
+        <Package name="~se\..*" />
+    </Match>
+    <Match>
+        <Class name="~de\.tum\.in\.tumcampusapp\.R.*" />
+    </Match>
+    <Match>
+        <Class name="~de\.tum\.in\.tumcampusapp\.Manifest.*" />
+    </Match>
+    <Match>
+        <Package name="~de\.tum\.in\.tumcampusapp\.models.*" />
+        <Bug pattern="URF_UNREAD_FIELD" />
+    </Match>
+</FindBugsFilter>

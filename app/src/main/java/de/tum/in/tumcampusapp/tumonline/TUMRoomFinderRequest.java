@@ -21,8 +21,8 @@ import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.auxiliary.calendar.IntegratedCalendarEvent;
-import de.tum.in.tumcampusapp.models.Geo;
-import de.tum.in.tumcampusapp.models.managers.CacheManager;
+import de.tum.in.tumcampusapp.managers.CacheManager;
+import de.tum.in.tumcampusapp.models.tumo.Geo;
 
 /**
  * Base class for communication with TUMRoomFinder

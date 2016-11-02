@@ -64,6 +64,7 @@ public class OpeningHoursListFragment extends ListFragment {
     private static final Callbacks S_DUMMY_CALLBACKS = new Callbacks() {
         @Override
         public void onItemSelected(int id, String name) {
+            // Dummy callback
         }
     };
 

@@ -36,11 +36,11 @@ import de.tum.in.tumcampusapp.auxiliary.AccessTokenManager;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
-import de.tum.in.tumcampusapp.models.managers.AbstractManager;
-import de.tum.in.tumcampusapp.models.managers.CacheManager;
-import de.tum.in.tumcampusapp.models.managers.CalendarManager;
-import de.tum.in.tumcampusapp.models.managers.CardManager;
-import de.tum.in.tumcampusapp.models.managers.NewsManager;
+import de.tum.in.tumcampusapp.managers.AbstractManager;
+import de.tum.in.tumcampusapp.managers.CacheManager;
+import de.tum.in.tumcampusapp.managers.CalendarManager;
+import de.tum.in.tumcampusapp.managers.CardManager;
+import de.tum.in.tumcampusapp.managers.NewsManager;
 import de.tum.in.tumcampusapp.services.BackgroundService;
 import de.tum.in.tumcampusapp.services.SilenceService;
 
@@ -59,7 +59,8 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
     private FragmentActivity mContext;
 
     @Override
-    public void onCreatePreferences(Bundle bundle, String rootKey) {
+    public void onCreatePreferences(Bundle bundle, String rootKeyParam) {
+        String rootKey = rootKeyParam;
         // Open a card's preference screen if selected from it's context menu
         if (bundle != null && bundle.containsKey(Const.PREFERENCE_SCREEN)) {
             rootKey = bundle.getString(Const.PREFERENCE_SCREEN);
@@ -72,7 +73,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
 
         // Disables silence service if the app is used without TUMOnline access
         CheckBoxPreference silent = (CheckBoxPreference) findPreference("silent_mode");
-        if (!new AccessTokenManager(mContext).hasValidAccessToken()) {
+        if (silent != null && !new AccessTokenManager(mContext).hasValidAccessToken()) {
             silent.setEnabled(false);
         }
 
@@ -133,22 +134,16 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
                         @Override
                         public void run() {
                             NetUtils net = new NetUtils(mContext);
-                            try {
-                                final Optional<Bitmap> bmp = net.downloadImageToBitmap(url);
-                                if (!bmp.isPresent()) {
-                                    return;
-                                }
-                                mContext.runOnUiThread(new Runnable() {
-                                    @TargetApi(11)
-                                    @Override
-                                    public void run() {
+                            final Optional<Bitmap> bmp = net.downloadImageToBitmap(url);
+                            mContext.runOnUiThread(new Runnable() {
+                                @TargetApi(11)
+                                @Override
+                                public void run() {
+                                    if (bmp.isPresent()) {
                                         pref.setIcon(new BitmapDrawable(getResources(), bmp.get()));
                                     }
-                                });
-                            } catch (NullPointerException e) {
-                                //Maybe the image is not available right now
-                                //TODO proper error handling
-                            }
+                                }
+                            });
                         }
                     }).start();
                 }
@@ -175,7 +170,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
         // When newspread selection changes
         // deselect all newspread sources and select only the
         // selected source if one of all was selected before
-        if (key.equals("news_newspread")) {
+        if ("news_newspread".equals(key)) {
             SharedPreferences.Editor e = sharedPreferences.edit();
             boolean value = false;
             for (int i = 7; i < 14; i++) {

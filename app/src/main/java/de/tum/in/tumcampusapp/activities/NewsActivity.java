@@ -13,7 +13,7 @@ import de.tum.in.tumcampusapp.adapters.NewsAdapter;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
-import de.tum.in.tumcampusapp.models.managers.NewsManager;
+import de.tum.in.tumcampusapp.managers.NewsManager;
 
 /**
  * Activity to show News (message, image, date)
@@ -97,8 +97,12 @@ public class NewsActivity extends ActivityForDownloadingExternal {
             boolean checked = !item.isChecked();
             Utils.setSetting(this, "news_source_" + cur.getString(0), checked);
             item.setChecked(checked);
-            LinearLayoutManager layoutManager = (LinearLayoutManager) lv.getLayoutManager();
-            state = layoutManager.findFirstVisibleItemPosition();
+
+            if(lv != null) { //We really don't care if the lv is null, if the position can't be saved. Rather not have the app crash here
+                LinearLayoutManager layoutManager = (LinearLayoutManager) lv.getLayoutManager();
+                state = layoutManager.findFirstVisibleItemPosition();
+            }
+
             requestDownload(false);
             return true;
         }

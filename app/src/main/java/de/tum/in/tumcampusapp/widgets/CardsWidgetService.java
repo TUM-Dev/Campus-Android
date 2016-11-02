@@ -15,7 +15,7 @@ import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.cards.generic.Card;
-import de.tum.in.tumcampusapp.models.managers.CardManager;
+import de.tum.in.tumcampusapp.managers.CardManager;
 
 @SuppressLint("Registered")
 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
@@ -43,6 +43,7 @@ class CardsRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 
     @Override
     public void onCreate() {
+        // NOOP
     }
 
     @Override
@@ -52,6 +53,7 @@ class CardsRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 
     @Override
     public void onDestroy() {
+        // NOOP
     }
 
     @Override
@@ -91,26 +93,27 @@ class CardsRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
         List<Card> cards = CardManager.getCards();
         for (Card card : cards) {
             final boolean getsShown = prefs.getBoolean(prefix + card.getType(), false);
-            if (getsShown) {
-                final RemoteViews remote = card.getRemoteViews(mContext);
-
-                //So, here is what we do now:
-                //Since it is not guaranteed, that anything is running when the user clicks on
-                //any card, we need to make sure, we can start the targeted intent only with the
-                //data filled in via the FillInIntent.
-                //To do this, we try our best to fill in the targeted intent into the FillInIntent
-                final Intent target = card.getIntent();
-
-                if (remote != null && target != null) {
-                    final Intent fillInIntent = new Intent();
-                    if (target.getExtras() != null) {
-                        fillInIntent.putExtras(target.getExtras());
-                    }
-                    fillInIntent.putExtra(CardsWidget.TARGET_INTENT, target.toUri(Intent.URI_INTENT_SCHEME));
-                    remote.setOnClickFillInIntent(R.id.cards_widget_card, fillInIntent);
-                }
-                views.add(remote);
+            if (!getsShown) {
+                continue;
             }
+            final RemoteViews remote = card.getRemoteViews(mContext);
+
+            //So, here is what we do now:
+            //Since it is not guaranteed, that anything is running when the user clicks on
+            //any card, we need to make sure, we can start the targeted intent only with the
+            //data filled in via the FillInIntent.
+            //To do this, we try our best to fill in the targeted intent into the FillInIntent
+            final Intent target = card.getIntent();
+
+            if (remote != null && target != null) {
+                final Intent fillInIntent = new Intent();
+                if (target.getExtras() != null) {
+                    fillInIntent.putExtras(target.getExtras());
+                }
+                fillInIntent.putExtra(CardsWidget.TARGET_INTENT, target.toUri(Intent.URI_INTENT_SCHEME));
+                remote.setOnClickFillInIntent(R.id.cards_widget_card, fillInIntent);
+            }
+            views.add(remote);
         }
     }
 }

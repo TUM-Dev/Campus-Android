@@ -18,10 +18,13 @@ import java.util.UUID;
 import de.tum.in.tumcampusapp.api.TUMCabeClient;
 import de.tum.in.tumcampusapp.exceptions.NoPrivateKey;
 import de.tum.in.tumcampusapp.exceptions.NoPublicKey;
-import de.tum.in.tumcampusapp.models.ChatMember;
-import de.tum.in.tumcampusapp.models.DeviceRegister;
-import de.tum.in.tumcampusapp.models.TUMCabeStatus;
+import de.tum.in.tumcampusapp.models.tumcabe.ChatMember;
+import de.tum.in.tumcampusapp.models.tumcabe.DeviceRegister;
+import de.tum.in.tumcampusapp.models.tumcabe.TUMCabeStatus;
+import de.tum.in.tumcampusapp.models.tumo.TokenConfirmation;
 import de.tum.in.tumcampusapp.services.GcmIdentificationService;
+import de.tum.in.tumcampusapp.tumonline.TUMOnlineConst;
+import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequest;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -61,7 +64,7 @@ public class AuthenticationManager {
             return KeyPairGenerator.getInstance(ALGORITHM);
         } catch (NoSuchAlgorithmException e) {
             // We don't support platforms without RSA
-            throw new AssertionError("KeyPairGenerator for " + ALGORITHM + "could not be instantiated");
+            throw new AssertionError(e);
         }
     }
 
@@ -70,7 +73,7 @@ public class AuthenticationManager {
             return KeyFactory.getInstance(ALGORITHM);
         } catch (NoSuchAlgorithmException e) {
             // We don't support platforms without RSA
-            throw new AssertionError("KeyFactory for " + ALGORITHM + "could not be instantiated");
+            throw new AssertionError(e);
         }
     }
 
@@ -145,8 +148,8 @@ public class AuthenticationManager {
 
             // If we already have one don't create a new one
             return true;
-        } catch (NoPrivateKey noPrivateKey) {
-        } catch (NoPublicKey noPublicKey) {
+        } catch (NoPrivateKey | NoPublicKey e) { //NOPMD
+            //Otherwise catch a not existing private key exception and proceed generation
         }
 
         //Something went wrong, generate a new pair
@@ -188,7 +191,7 @@ public class AuthenticationManager {
                     Utils.log(response.body().getStatus());
 
                     //Remember that we are done, only if we have submitted with the member information
-                    if (response.body().getStatus() == "ok") {
+                    if ("ok".equals(response.body().getStatus())) {
                         if (member != null) {
                             Utils.setInternalSetting(mContext, Const.PUBLIC_KEY_UPLOADED, true);
                         }
@@ -206,6 +209,21 @@ public class AuthenticationManager {
         } catch (NoPrivateKey noPrivateKey) {
             this.clearKeys();
         }
+    }
+
+    public void uploadPublicKey() throws NoPublicKey {
+        final String publicKey = this.getPublicKeyString();
+        Thread thread = new Thread() {
+            @Override
+            public void run() {
+                //Upload the Private key to the tumo server: we don't need an activated token for that. We want this to happen immediately so that no one else can upload this secret.
+                TUMOnlineRequest<TokenConfirmation> requestSavePublicKey = new TUMOnlineRequest<>(TUMOnlineConst.SECRET_UPLOAD, AuthenticationManager.this.mContext, false);
+                requestSavePublicKey.setParameter("pToken", Utils.getSetting(AuthenticationManager.this.mContext, Const.ACCESS_TOKEN, ""));
+                requestSavePublicKey.setParameterEncoded("pSecret", publicKey);
+                requestSavePublicKey.fetch();
+            }
+        };
+        thread.start();
     }
 
     private void tryToUploadGcmToken() {

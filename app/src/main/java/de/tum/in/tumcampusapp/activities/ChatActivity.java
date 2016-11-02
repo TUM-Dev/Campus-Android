@@ -38,7 +38,6 @@ import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.text.DateFormat;
-import java.util.ArrayList;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
@@ -50,15 +49,15 @@ import de.tum.in.tumcampusapp.auxiliary.ImplicitCounter;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.exceptions.NoPrivateKey;
-import de.tum.in.tumcampusapp.models.ChatMember;
-import de.tum.in.tumcampusapp.models.ChatMessage;
-import de.tum.in.tumcampusapp.models.ChatPublicKey;
-import de.tum.in.tumcampusapp.models.ChatRoom;
-import de.tum.in.tumcampusapp.models.ChatVerification;
-import de.tum.in.tumcampusapp.models.GCMChat;
-import de.tum.in.tumcampusapp.models.managers.CardManager;
-import de.tum.in.tumcampusapp.models.managers.ChatMessageManager;
-import de.tum.in.tumcampusapp.models.managers.ChatRoomManager;
+import de.tum.in.tumcampusapp.managers.CardManager;
+import de.tum.in.tumcampusapp.managers.ChatMessageManager;
+import de.tum.in.tumcampusapp.managers.ChatRoomManager;
+import de.tum.in.tumcampusapp.models.gcm.GCMChat;
+import de.tum.in.tumcampusapp.models.tumcabe.ChatMember;
+import de.tum.in.tumcampusapp.models.tumcabe.ChatMessage;
+import de.tum.in.tumcampusapp.models.tumcabe.ChatPublicKey;
+import de.tum.in.tumcampusapp.models.tumcabe.ChatRoom;
+import de.tum.in.tumcampusapp.models.tumcabe.ChatVerification;
 import de.tum.in.tumcampusapp.services.SendMessageService;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -417,7 +416,7 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
                 } catch (NoPrivateKey noPrivateKey) {
                     return; //In this case we simply cannot do anything
                 }
-                ArrayList<ChatMessage> downloadedChatHistory;
+                List<ChatMessage> downloadedChatHistory;
                 try {
                     if (chatHistoryAdapter == null || chatHistoryAdapter.getSentCount() == 0 || newMsg) {
                         downloadedChatHistory = TUMCabeClient.getInstance(ChatActivity.this).getNewMessages(currentChatRoom.getId(), verification);

@@ -16,7 +16,7 @@ import java.util.Locale;
 
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
-import de.tum.in.tumcampusapp.models.managers.CalendarManager;
+import de.tum.in.tumcampusapp.managers.CalendarManager;
 
 /**
  * Service used to silence the mobile during lectures
@@ -73,7 +73,7 @@ public class SilenceService extends IntentService {
 
         long startTime = System.currentTimeMillis();
         long waitDuration = CHECK_INTERVAL;
-        Utils.log("SilenceService enabled, checking for lectures ...");
+        Utils.log("SilenceService enabled, checking for lectures …");
 
         CalendarManager calendarManager = new CalendarManager(this);
         if (!calendarManager.hasLectures()) {
@@ -86,7 +86,24 @@ public class SilenceService extends IntentService {
         Cursor cursor = calendarManager.getCurrentFromDb();
         Utils.log("Current lectures: " + cursor.getCount());
 
-        if (cursor.getCount() != 0 && !isDoNotDisturbMode()) {
+        if (cursor.getCount() == 0 || isDoNotDisturbMode()) {
+            if (Utils.getInternalSettingBool(this, Const.SILENCE_ON, false) && !isDoNotDisturbMode()) {
+                // default: old state
+                Utils.log("set ringer mode to old state");
+                am.setRingerMode(Integer.parseInt(
+                        Utils.getSetting(this, Const.SILENCE_OLD_STATE,
+                                Integer.toString(AudioManager.RINGER_MODE_NORMAL))));
+                Utils.setInternalSetting(this, Const.SILENCE_ON, false);
+
+
+                Cursor cursor2 = calendarManager.getNextCalendarItem();
+                if (cursor.getCount() != 0) { //Check if we have a "next" item in the database and update the refresh interval until then. Otherwise use default interval.
+                    // refresh when next event has started
+                    waitDuration = getWaitDuration(cursor2.getString(1));
+                }
+                cursor2.close();
+            }
+        } else {
             // remember old state if just activated ; in doubt dont change
             if (!Utils.getInternalSettingBool(this, Const.SILENCE_ON, true)) {
                 Utils.setSetting(this, Const.SILENCE_OLD_STATE, am.getRingerMode());
@@ -97,7 +114,7 @@ public class SilenceService extends IntentService {
 
             // Set into silent mode
             String mode = Utils.getSetting(this, "silent_mode_set_to", "0");
-            if (mode.equals("0")) {
+            if ("0".equals(mode)) {
                 Utils.log("set ringer mode: vibration");
                 am.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
             } else {
@@ -107,21 +124,6 @@ public class SilenceService extends IntentService {
             // refresh when event has ended
             cursor.moveToFirst();
             waitDuration = getWaitDuration(cursor.getString(3));
-        } else if (Utils.getInternalSettingBool(this, Const.SILENCE_ON, false) && !isDoNotDisturbMode()) {
-            // default: old state
-            Utils.log("set ringer mode to old state");
-            am.setRingerMode(Integer.parseInt(
-                    Utils.getSetting(this, Const.SILENCE_OLD_STATE,
-                            Integer.toString(AudioManager.RINGER_MODE_NORMAL))));
-            Utils.setInternalSetting(this, Const.SILENCE_ON, false);
-
-
-            Cursor cursor2 = calendarManager.getNextCalendarItem();
-            if (cursor.getCount() != 0) { //Check if we have a "next" item in the database and update the refresh interval until then. Otherwise use default interval.
-                // refresh when next event has started
-                waitDuration = getWaitDuration(cursor2.getString(1));
-            }
-            cursor2.close();
         }
         cursor.close();
 

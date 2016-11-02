@@ -16,9 +16,9 @@ import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.auxiliary.DateUtils;
-import de.tum.in.tumcampusapp.models.ChatMember;
-import de.tum.in.tumcampusapp.models.ChatMessage;
-import de.tum.in.tumcampusapp.models.managers.ChatMessageManager;
+import de.tum.in.tumcampusapp.managers.ChatMessageManager;
+import de.tum.in.tumcampusapp.models.tumcabe.ChatMember;
+import de.tum.in.tumcampusapp.models.tumcabe.ChatMessage;
 
 public class ChatHistoryAdapter extends CursorAdapter {
 

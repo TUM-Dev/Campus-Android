@@ -439,7 +439,7 @@ Signature: %5$s</string>
 
     <string name="add_widget">Add widget</string>
     <!-- Widget Mensa -->
-    <string name="mensa_widget">Mensa Widget TUM</string>
+    <string name="mensa_widget" translatable="false">Mensa Widget TUM</string>
     <string name="widget_configure_description">Configure the cards to show</string>
 
     <string name="update_notification_description">A new version of the Tum Campus App has been released on %s. Tap to download now.</string>
@@ -450,14 +450,14 @@ Signature: %5$s</string>
     <string name="permission_calendar_explanation">This App needs permission to access your location to display useful information, e.g. the menues of cafeterias around you or timetables of your nearest MVV station. \n If you do not grant this permission you will still be able to configure your location in the settings.</string>
     <string name="ok">OK</string>
     <string name="alarm_date_published_on">Published on:</string>
-    <string name="chat_not_setup" translatable="false">Chat is not setup properly, please re-run the wizzard via the settings!</string>
+    <string name="chat_not_setup">Chat is not setup properly, please rerun the wizard via the settings!</string>
     <string name="www" translatable="false">www</string>
-    <string name="quiz" translatable="false">Research Survey</string>
+    <string name="quiz">Research Survey</string>
     <string name="research_quiz" translatable="false">Research Quiz</string>
     <string name="no_questions_available">No Questions are available!</string>
     <string name="one_question_left">Only 1 question left</string>
     <string name="next_possible_survey_date">You have reached the maximum number of questions per week. Next possible survey date is</string>
-    <string name="flag_inappropriate" translatable="false">flag for inappropriate questions</string>
+    <string name="flag_inappropriate">Flag inappropriate question</string>
     <string name="survey_yes">Yes</string>
     <string name="select_target_faculties_survey">Select Target Faculties</string>
     <string name="survey_no">No</string>
@@ -476,15 +476,16 @@ Signature: %5$s</string>
     <string name="select_one_faculty">At least select one faculty</string>
     <string name="question_deleted">Question has been deleted</string>
     <string name="choose_own_faculty">Please choose your faculty</string>
-    <string name="mvv_download" translatable="false">Please press ok to download MVV-Plans otherwise you can\'t use this feature</string>
+    <string name="mvv_download">Please press OK to download MVV-Plans otherwise you can\'t use this feature</string>
     <string name="more_info">More Information</string>
     <string name="welcome_faculty">To deliver the best possible experience please provide us with your best matching faculty:</string>
     <string name="event_plan">Event plan</string>
-    <string name="please_connect_to_internet" translatable="false">Please connect to internet in order to proceed the first app start</string>
-    <string name="card_survey_summary" translatable="false">enables you to participate in research related survey questions</string>
-    <string name="selected_target_faculties" translatable="false">Selected target faculties:</string>
+    <string name="please_connect_to_internet">Please connect to internet in order to proceed the first app start</string>
+    <string name="card_survey_summary">enables you to participate in research related survey questions</string>
+    <string name="selected_target_faculties">Selected target faculties:</string>
     <string name="transition_card" translatable="false">card_transition</string>
-    <string name="tumonline_link" translatable="false" tools:ignore="TypographyQuotes"><a href='http://campus.tum.de'>TUMonline</a></string>
+    <string name="tumonline_link" translatable="false"><a href="http://campus.tum.de">TUMonline</a></string>
+    <string name="accept_chat_terms">Terms must be accepted to use group chat!</string>
 </resources>
 
 

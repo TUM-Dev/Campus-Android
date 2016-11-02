@@ -22,10 +22,11 @@ import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.exceptions.NoPrivateKey;
-import de.tum.in.tumcampusapp.models.ChatMember;
-import de.tum.in.tumcampusapp.models.ChatRoom;
-import de.tum.in.tumcampusapp.models.ChatVerification;
-import de.tum.in.tumcampusapp.models.managers.ChatRoomManager;
+import de.tum.in.tumcampusapp.exceptions.NoPublicKey;
+import de.tum.in.tumcampusapp.managers.ChatRoomManager;
+import de.tum.in.tumcampusapp.models.tumcabe.ChatMember;
+import de.tum.in.tumcampusapp.models.tumcabe.ChatRoom;
+import de.tum.in.tumcampusapp.models.tumcabe.ChatVerification;
 
 public class WizNavExtrasActivity extends ActivityForLoadingInBackground<Void, ChatMember> {
 
@@ -49,12 +50,22 @@ public class WizNavExtrasActivity extends ActivityForLoadingInBackground<Void, C
         // If called because app version changed remove "Step 4" and close on back pressed
         Intent i = getIntent();
         if (i != null && i.hasExtra(Const.TOKEN_IS_SETUP)) {
+            //If coming from a 6X version we need to upload the public key to TUMO
+            AuthenticationManager am = new AuthenticationManager(this);
+            try {
+                am.uploadPublicKey();
+            } catch (NoPublicKey noPublicKey) {
+                Utils.log(noPublicKey);
+            }
+
+            //Remember that we are only running through a limited setup
             tokenSetup = i.getBooleanExtra(Const.TOKEN_IS_SETUP, false);
         }
 
         // Get handles to all UI elements
         checkSilentMode = (CheckBox) findViewById(R.id.chk_silent_mode);
         bugReport = (CheckBox) findViewById(R.id.chk_bug_reports);
+        bugReport.setChecked(preferences.getBoolean(Const.BUG_REPORTS, true));
 
         // Only make silent service selectable if access token exists
         // Otherwise the app cannot load lectures so silence service makes no sense
@@ -84,78 +95,82 @@ public class WizNavExtrasActivity extends ActivityForLoadingInBackground<Void, C
 
     @Override
     protected ChatMember onLoadInBackground(Void... arg) {
-        if (groupChatMode.isChecked()) {
-            if (!NetUtils.isConnected(this)) {
-                showNoInternetLayout();
-                return null;
-            }
-
-            // Get the users lrzId and initialise chat member
-            ChatMember currentChatMember = new ChatMember(Utils.getSetting(this, Const.LRZ_ID, ""));
-            currentChatMember.setDisplayName(Utils.getSetting(this, Const.CHAT_ROOM_DISPLAY_NAME, ""));
-
-            // Tell the server the new member
-            ChatMember member;
-            try {
-                // After the user has entered their display name, send a request to the server to create the new member
-                member = TUMCabeClient.getInstance(this).createMember(currentChatMember);
-            } catch (IOException e) {
-                Utils.log(e);
-                Utils.showToastOnUIThread(this, R.string.error_setup_chat_member);
-                return null;
-            }
-
-            //Catch a possible error, when we didn't get something returned
-            if (member == null || member.getLrzId() == null) {
-                Utils.showToastOnUIThread(this, R.string.error_setup_chat_member);
-                return null;
-            }
-
-            // Generate the private key and upload the public key to the server
-            AuthenticationManager am = new AuthenticationManager(this);
-            if (!am.generatePrivateKey(member)) {
-                Utils.showToastOnUIThread(this, getString(R.string.failure_uploading_public_key)); //We cannot continue if the upload of the Public Key doe not work
-                return null;
-            }
-
-            // Try to restore already joined chat rooms from server
-            try {
-                List<ChatRoom> rooms = TUMCabeClient.getInstance(this).getMemberRooms(member.getId(), new ChatVerification(this, member));
-                new ChatRoomManager(this).replaceIntoRooms(rooms);
-
-                //Store that this key was activated
-                Utils.setInternalSetting(this, Const.PRIVATE_KEY_ACTIVE, true);
-
-                return member;
-            } catch (IOException e) {
-                Utils.log(e);
-            } catch (NoPrivateKey e) {
-                Utils.log(e);
-            }
+        if (!NetUtils.isConnected(this)) {
+            showNoInternetLayout();
+            return null;
         }
+
+        // Get the users lrzId and initialise chat member
+        ChatMember currentChatMember = new ChatMember(Utils.getSetting(this, Const.LRZ_ID, ""));
+        currentChatMember.setDisplayName(Utils.getSetting(this, Const.CHAT_ROOM_DISPLAY_NAME, ""));
+
+        if (currentChatMember.getLrzId().equals("")) {
+            return currentChatMember;
+        }
+
+        // Tell the server the new member
+        ChatMember member;
+        try {
+            // After the user has entered their display name, send a request to the server to create the new member
+            member = TUMCabeClient.getInstance(this).createMember(currentChatMember);
+        } catch (IOException e) {
+            Utils.log(e);
+            Utils.showToastOnUIThread(this, R.string.error_setup_chat_member);
+            return null;
+        }
+
+        //Catch a possible error, when we didn't get something returned
+        if (member == null || member.getLrzId() == null) {
+            Utils.showToastOnUIThread(this, R.string.error_setup_chat_member);
+            return null;
+        }
+
+        // Generate the private key and upload the public key to the server
+        AuthenticationManager am = new AuthenticationManager(this);
+        if (!am.generatePrivateKey(member)) {
+            Utils.showToastOnUIThread(this, getString(R.string.failure_uploading_public_key)); //We cannot continue if the upload of the Public Key does not work
+            return null;
+        }
+
+        // Try to restore already joined chat rooms from server
+        try {
+            List<ChatRoom> rooms = TUMCabeClient.getInstance(this).getMemberRooms(member.getId(), new ChatVerification(this, member));
+            new ChatRoomManager(this).replaceIntoRooms(rooms);
+
+            //Store that this key was activated
+            Utils.setInternalSetting(this, Const.PRIVATE_KEY_ACTIVE, true);
+
+            return member;
+        } catch (IOException | NoPrivateKey e) {
+            Utils.log(e);
+        }
+
         return null;
     }
 
     @Override
     protected void onLoadFinished(ChatMember member) {
-        if (member != null) {
-            // Gets the editor for editing preferences and
-            // updates the preference values with the chosen state
-            Editor editor = preferences.edit();
-            editor.putBoolean(Const.SILENCE_SERVICE, checkSilentMode.isChecked());
-            editor.putBoolean(Const.BACKGROUND_MODE, true); // Enable by default
-            editor.putBoolean(Const.BUG_REPORTS, bugReport.isChecked());
-            editor.putBoolean(Const.HIDE_WIZARD_ON_STARTUP, true);
+        if (member == null) {
+            showLoadingEnded();
+            return;
+        }
+
+        // Gets the editor for editing preferences and updates the preference values with the chosen state
+        Editor editor = preferences.edit();
+        editor.putBoolean(Const.SILENCE_SERVICE, checkSilentMode.isChecked());
+        editor.putBoolean(Const.BACKGROUND_MODE, true); // Enable by default
+        editor.putBoolean(Const.BUG_REPORTS, bugReport.isChecked());
+        editor.putBoolean(Const.HIDE_WIZARD_ON_STARTUP, true);
+
+        if (!member.getLrzId().equals("")) {
             Utils.setSetting(this, Const.GROUP_CHAT_ENABLED, groupChatMode.isChecked());
             Utils.setSetting(this, Const.AUTO_JOIN_NEW_ROOMS, groupChatMode.isChecked());
             Utils.setSetting(this, Const.CHAT_MEMBER, member);
-            editor.apply();
-
-            finish();
-            startActivity(new Intent(this, StartupActivity.class));
-        } else {
-            showLoadingEnded();
         }
+        editor.apply();
+
+        finish();
+        startActivity(new Intent(this, StartupActivity.class));
     }
 
     /**

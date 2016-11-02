@@ -17,8 +17,8 @@ import de.tum.in.tumcampusapp.activities.generic.ActivityForSearchingInBackgroun
 import de.tum.in.tumcampusapp.adapters.NoResultsAdapter;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.MVVStationSuggestionProvider;
-import de.tum.in.tumcampusapp.models.managers.RecentsManager;
-import de.tum.in.tumcampusapp.models.managers.TransportManager;
+import de.tum.in.tumcampusapp.managers.RecentsManager;
+import de.tum.in.tumcampusapp.managers.TransportManager;
 
 /**
  * Activity to show transport stations and departures

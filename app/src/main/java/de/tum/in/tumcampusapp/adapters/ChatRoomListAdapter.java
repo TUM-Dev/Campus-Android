@@ -15,7 +15,7 @@ import java.util.List;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.auxiliary.DateUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
-import de.tum.in.tumcampusapp.models.managers.ChatRoomManager;
+import de.tum.in.tumcampusapp.managers.ChatRoomManager;
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 
 /**

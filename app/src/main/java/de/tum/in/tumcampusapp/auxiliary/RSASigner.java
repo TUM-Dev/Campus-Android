@@ -30,7 +30,7 @@ public class RSASigner {
             return Signature.getInstance(signature);
         } catch (NoSuchAlgorithmException e) {
             // We don't support platforms without SHA1WithRSA
-            throw new AssertionError("Signature for " + signature + "could not be instantiated");
+            throw new AssertionError(e);
         }
     }
 

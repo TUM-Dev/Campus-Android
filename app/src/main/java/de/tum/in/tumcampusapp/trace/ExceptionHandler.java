@@ -21,12 +21,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import de.tum.in.tumcampusapp.api.TUMCabeClient;
 import de.tum.in.tumcampusapp.auxiliary.AuthenticationManager;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.FileUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
-import de.tum.in.tumcampusapp.models.BugReport;
-import de.tum.in.tumcampusapp.api.TUMCabeClient;
+import de.tum.in.tumcampusapp.models.tumcabe.BugReport;
 
 public final class ExceptionHandler {
 
@@ -159,7 +159,7 @@ public final class ExceptionHandler {
                 protected Void doInBackground(Void... params) {
                     ExceptionHandler.submitStackTraces(tracesNowSubmitting, context);
 
-                    long rest = S_MIN_DELAY - (System.currentTimeMillis() - mTimeStarted);
+                    long rest = S_MIN_DELAY - System.currentTimeMillis() + mTimeStarted;
                     if (rest > 0) {
                         try {
                             Thread.sleep(rest);

@@ -6,14 +6,14 @@ import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.List;
 
 import de.tum.in.tumcampusapp.api.TUMCabeClient;
 import de.tum.in.tumcampusapp.auxiliary.AuthenticationManager;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.exceptions.NoPrivateKey;
-import de.tum.in.tumcampusapp.models.ChatMessage;
-import de.tum.in.tumcampusapp.models.managers.ChatMessageManager;
+import de.tum.in.tumcampusapp.managers.ChatMessageManager;
+import de.tum.in.tumcampusapp.models.tumcabe.ChatMessage;
 
 /**
  * Service used to silence the mobile during lectures
@@ -35,7 +35,7 @@ public class SendMessageService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         // Get all unsent messages from database
-        ArrayList<ChatMessage> unsentMsg = ChatMessageManager.getAllUnsentUpdated(this);
+        List<ChatMessage> unsentMsg = ChatMessageManager.getAllUnsentUpdated(this);
         if (unsentMsg.isEmpty()) {
             return;
         }
@@ -88,7 +88,7 @@ public class SendMessageService extends IntentService {
             try {
                 Thread.sleep(5000);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                Utils.log(e);
             }
         }
     }

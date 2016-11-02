@@ -9,10 +9,10 @@ import com.google.gson.Gson;
 import java.util.Date;
 import java.util.Map;
 
+import de.tum.in.tumcampusapp.api.TUMCabeClient;
 import de.tum.in.tumcampusapp.cards.NewsCard;
 import de.tum.in.tumcampusapp.cards.generic.Card;
-import de.tum.in.tumcampusapp.models.Statistics;
-import de.tum.in.tumcampusapp.api.TUMCabeClient;
+import de.tum.in.tumcampusapp.models.tumcabe.Statistics;
 
 /**
  * Counts the usage of a specific activity
@@ -42,15 +42,15 @@ public final class ImplicitCounter {
 
     public static void countCard(Context c, Card card) {
         SharedPreferences sp = c.getSharedPreferences(USAGE_COUNTER, Context.MODE_PRIVATE);
-        String identifier = card.getClass().getSimpleName();
+        StringBuilder identifier = new StringBuilder(card.getClass().getSimpleName());
 
         //Add the news id when showing a news card so we can check which feeds are used
         if (card instanceof NewsCard) {
-            identifier += ((NewsCard) card).getSource();
+            identifier.append(((NewsCard) card).getSource());
         }
 
-        final int currentUsages = sp.getInt(identifier, 0);
-        sp.edit().putInt(identifier, currentUsages + 1).apply();
+        final int currentUsages = sp.getInt(identifier.toString(), 0);
+        sp.edit().putInt(identifier.toString(), currentUsages + 1).apply();
     }
 
 

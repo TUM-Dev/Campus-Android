@@ -9,6 +9,9 @@ import android.graphics.Point;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 
+import com.google.common.base.Optional;
+import com.google.common.primitives.Ints;
+
 /**
  * Subclass of drawable that can draw a subway line icon
  */
@@ -37,55 +40,58 @@ class MVVSymbolView extends Drawable {
         int textColor = 0xffffffff;
         int triangle = 0;
         int backgroundColor = 0;
+        int num;
 
-        try {
-            switch (line.charAt(0)) {
-                case 'S':
-                    int num = Integer.parseInt(line.substring(1));
-                    rounded = true;
-                    if (num <= 8) {
-                        backgroundColor = S_LINE_COLOR[num - 1];
-                    } else if (num == 20) {
-                        backgroundColor = 0xffca536a;
-                    } else if (num == 27) {
-                        backgroundColor = 0xffd99098;
-                    }
-                    textColor = num == 8 ? 0xfff1cb00 : 0xffffffff;
-                    break;
-                case 'U':
-                    num = Integer.parseInt(line.substring(1));
-                    if (num == 7) {
-                        triangle = 1;
-                        backgroundColor = 0xffc10134;
-                    } else if (num == 8) {
-                        triangle = 2;
-                        backgroundColor = 0xffeb6a27;
-                    } else {
-                        backgroundColor = U_LINE_COLOR[num - 1];
-                    }
+        switch (line.charAt(0)) {
+            case 'S':
+                num = Optional.fromNullable(
+                        Ints.tryParse(line.substring(1)))
+                        .or(0);
+                rounded = true;
+                if (num <= 8) {
+                    backgroundColor = S_LINE_COLOR[num - 1];
+                } else if (num == 20) {
+                    backgroundColor = 0xffca536a;
+                } else if (num == 27) {
+                    backgroundColor = 0xffd99098;
+                }
+                textColor = num == 8 ? 0xfff1cb00 : 0xffffffff;
+                break;
+            case 'U':
+                num = Optional.fromNullable(
+                        Ints.tryParse(line.substring(1)))
+                        .or(0);
+                if (num == 7) {
+                    triangle = 1;
+                    backgroundColor = 0xffc10134;
+                } else if (num == 8) {
+                    triangle = 2;
+                    backgroundColor = 0xffeb6a27;
+                } else {
+                    backgroundColor = U_LINE_COLOR[num - 1];
+                }
+                textColor = 0xfffcfefc;
+                break;
+            case 'N':
+                backgroundColor = 0xff000000;
+                textColor = 0xffebd22e;
+                break;
+            case 'X':
+                backgroundColor = 0xff477f70;
+                break;
+            default:
+                num = Optional.fromNullable(
+                        Ints.tryParse(line.substring(1)))
+                        .or(0);
+                if (num < 50) {
+                    backgroundColor = 0xffdc261c;
                     textColor = 0xfffcfefc;
-                    break;
-                case 'N':
-                    backgroundColor = 0xff000000;
-                    textColor = 0xffebd22e;
-                    break;
-                case 'X':
-                    backgroundColor = 0xff477f70;
-                    break;
-                default:
-                    num = Integer.parseInt(line);
-                    if (num < 50) {
-                        backgroundColor = 0xffdc261c;
-                        textColor = 0xfffcfefc;
-                    } else if (num < 90) {
-                        backgroundColor = 0xfffc6604;
-                    } else {
-                        backgroundColor = 0xff004a5d;
-                    }
-                    break;
-            }
-        } catch (NumberFormatException e) {
-            //Leave default
+                } else if (num < 90) {
+                    backgroundColor = 0xfffc6604;
+                } else {
+                    backgroundColor = 0xff004a5d;
+                }
+                break;
         }
         mBgPaint = new Paint();
         mBgPaint.setStyle(Paint.Style.FILL);

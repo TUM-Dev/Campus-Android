@@ -38,7 +38,7 @@ public final class Util {
                 bufferedReader.close();
             }
 
-        } catch (IOException e) {
+        } catch (IOException e) { //NOPMD
             //Catch em all, we don't want any trouble here
         }
         return "";
@@ -80,10 +80,6 @@ public final class Util {
 
         String rotation;
         switch (orientation) {
-            default:
-            case Surface.ROTATION_0:
-                rotation = "normal";
-                break;
             case Surface.ROTATION_180:
                 rotation = "180";
                 break;
@@ -92,6 +88,10 @@ public final class Util {
                 break;
             case Surface.ROTATION_90:
                 rotation = "90";
+                break;
+            case Surface.ROTATION_0:
+            default:
+                rotation = "normal";
                 break;
         }
         screen[2] = rotation;
