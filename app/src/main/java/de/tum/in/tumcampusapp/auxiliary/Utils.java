@@ -239,6 +239,19 @@ public final class Utils {
     }
 
     /**
+     * Logs a message with specified tag
+     * Use this to log a particular work
+     *
+     * @param message Information or Debug message
+     */
+    public static void logwithTag(String tag, String message) {
+        if (!BuildConfig.DEBUG) {
+            return;
+        }
+        Log.v(tag, message);
+    }
+
+    /**
      * Get md5 hash from string
      *
      * @param str String to hash

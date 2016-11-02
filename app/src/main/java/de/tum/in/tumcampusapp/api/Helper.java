@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 import de.tum.in.tumcampusapp.auxiliary.AuthenticationManager;
+import de.tum.in.tumcampusapp.auxiliary.Utils;
 import okhttp3.CertificatePinner;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -23,6 +24,7 @@ import static de.tum.in.tumcampusapp.models.managers.StudyRoomGroupManager.STUDY
 public class Helper {
     private static final int HTTP_TIMEOUT = 25000;
     private static OkHttpClient client = null;
+    private static final String TAG = "TUM_API_CALL";
 
     public static OkHttpClient getOkClient(Context c) {
         if (client != null) {
@@ -55,6 +57,13 @@ public class Helper {
 
         builder.connectTimeout(Helper.HTTP_TIMEOUT, TimeUnit.MILLISECONDS);
         builder.readTimeout(Helper.HTTP_TIMEOUT, TimeUnit.MILLISECONDS);
+
+        builder.addNetworkInterceptor(new TumHttpLoggingInterceptor(new TumHttpLoggingInterceptor.Logger() {
+            @Override
+            public void log(String message) {
+                Utils.logwithTag(TAG, message);
+            }
+        }));
 
         //Save it to the static handle and return
         client = builder.build();
