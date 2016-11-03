@@ -25,6 +25,7 @@ import static de.tum.in.tumcampusapp.auxiliary.Const.API_HOSTNAME;
 import static de.tum.in.tumcampusapp.managers.StudyRoomGroupManager.STUDYROOM_HOST;
 
 public final class Helper {
+    private static final String TAG = "TUM_API_CALL";
     private static final int HTTP_TIMEOUT = 25000;
     private static OkHttpClient client;
 
@@ -59,6 +60,13 @@ public final class Helper {
 
         builder.connectTimeout(Helper.HTTP_TIMEOUT, TimeUnit.MILLISECONDS);
         builder.readTimeout(Helper.HTTP_TIMEOUT, TimeUnit.MILLISECONDS);
+
+        builder.addNetworkInterceptor(new TumHttpLoggingInterceptor(new TumHttpLoggingInterceptor.Logger() {
+            @Override
+            public void log(String message) {
+                Utils.logwithTag(TAG, message);
+            }
+        }));
 
         //Save it to the static handle and return
         client = builder.build();
