@@ -9,25 +9,33 @@ import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.common.base.Utf8;
 
 import java.util.ArrayList;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.ActivityForLoadingInBackground;
+import de.tum.in.tumcampusapp.api.UCentralClient;
 import de.tum.in.tumcampusapp.auxiliary.AccessTokenManager;
 import de.tum.in.tumcampusapp.auxiliary.AuthenticationManager;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.managers.SurveyManager;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Displays the first page of the startup wizard, where the user can enter his lrz-id.
@@ -36,6 +44,7 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<String, 
     private final AccessTokenManager accessTokenManager = new AccessTokenManager(this);
     private EditText editTxtLrzId;
     private String lrzId;
+    private LinearLayout miLoginPassLayout;
 
     public WizNavStartActivity() {
         super(R.layout.activity_wiznav_start);
@@ -48,6 +57,8 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<String, 
         findViewById(R.id.wizard_start_layout).requestFocus();
 
         setUpSpinner(); // Faculty selector
+
+        miLoginPassLayout = (LinearLayout) findViewById(R.id.mi_login_and_pass);
 
         editTxtLrzId = (EditText) findViewById(R.id.lrd_id);
         editTxtLrzId.setText(Utils.getSetting(this, Const.LRZ_ID, ""));
@@ -113,6 +124,12 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<String, 
                         TextView selectedItem = (TextView) adapterView.getChildAt(0);
                         if (selectedItem != null) {
                             selectedItem.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.color_primary)); // set the colour of the selected item in the faculty spinner
+                            // TODO: Remove hard coded strings for Inf. and Math.
+                            if (selectedItem.getText().equals("Informatik") || selectedItem.getText().equals("Mathematik")) {
+                                miLoginPassLayout.setVisibility(View.VISIBLE);
+                            } else {
+                                miLoginPassLayout.setVisibility(View.INVISIBLE);
+                            }
                         }
                     }
 
@@ -159,6 +176,18 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<String, 
 
         lrzId = editTxtLrzId.getText().toString();
         Utils.setSetting(this, Const.LRZ_ID, lrzId);
+
+        // process MI credits
+        if (miLoginPassLayout.getVisibility() == View.VISIBLE) {
+            String login = ((EditText) miLoginPassLayout.findViewById(R.id.mi_login)).getText().toString();
+            String pass = ((EditText) miLoginPassLayout.findViewById(R.id.mi_pass)).getText().toString();
+
+            // TODO: We should check somehow the credits, or use a real API
+
+            // TODO: Check it if it's ok:
+            Utils.setInternalSetting(this.getApplicationContext(), getResources().getString(R.string.mi_login), login);
+            Utils.setInternalSetting(this.getApplicationContext(), getResources().getString(R.string.mi_pass), pass);
+        }
 
         // check if lrz could be valid?
         if (lrzId.length() >= AccessTokenManager.MIN_LRZ_LENGTH) {

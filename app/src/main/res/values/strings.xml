@@ -40,6 +40,7 @@
     <string name="click_to_try_again"><b>Click here to retry.</b></string>
     <string name="dialog_new_token">Your TUMonline-Access-Token is already set.\n\nClick <i>Yes</i> to generate a new one. \nAs a result, the old Token becomes useless.</string>
     <string name="error_lrz_wrong">Your TUM Identification is invalid</string>
+    <string name="error_mi_wrong">Your TUM Identification for MI Building is invalid</string>
     <string name="access_token_wasnt_generated">TUMonline-Access-Token could not be generated</string>
     <string name="dialog_access_token_invalid">TUMonline-Access-Token not enabled</string>
     <string name="dialog_no_rights_function">No rights to access this function</string>
@@ -113,6 +114,9 @@
     <string name="set_silent_mode">Activate or deactivate <i>Silent Service</i>. If activated, the device will go into silent mode if a lecture appointment has been recognized.</string>
     <string name="set_background_mode">Activate or deactivate <i>Background Mode</i>. If activated, content will be fetched once per day to keep your TUM Campus App up to date.</string>
     <string name="goto_tumcampus">Go to TUM Campus App</string>
+    <string name="welcome_informatics">MI Students can specify their faculty\'s login and password to print the document using the app.</string>
+    <string name="mi_login">Login</string>
+    <string name="mi_pass">Password</string>
 
     <!-- News -->
     <string name="no_link_existing">No link existing.</string>
