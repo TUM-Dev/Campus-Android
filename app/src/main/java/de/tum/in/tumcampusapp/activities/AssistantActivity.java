@@ -94,23 +94,7 @@ public class AssistantActivity extends AppCompatActivity implements View.OnClick
         user = Utils.getSetting(this, Const.CHAT_MEMBER, ChatMember.class);
         assistant = new ChatMember(0, "", getResources().getString(R.string.assistant_name));
 
-        // bindUIElements
-        rvMessageHistory = (RecyclerView) findViewById(R.id.rvMessageHistory);
-
-        // use a linear layout manager
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
-        rvMessageHistory.setLayoutManager(mLayoutManager);
-
-        assistantHistoryAdapter = new AssistantHistoryAdapter(new ArrayList<ChatMessage>());
-        rvMessageHistory.setAdapter(assistantHistoryAdapter);
-
-        etMessage = (EditText) findViewById(R.id.etMessage);
-
-        btnSend = (ImageButton) findViewById(R.id.btnSend);
-        btnSend.setOnClickListener(this);
-
-        btnSpeak = (ImageButton) findViewById(R.id.btnSpeak);
-        btnSpeak.setOnClickListener(this);
+        bindUIElements();
 
         // LocalBroadcastManager to handle the result from Azure
         BroadcastReceiver receiver = new BroadcastReceiver() {
@@ -142,13 +126,14 @@ public class AssistantActivity extends AppCompatActivity implements View.OnClick
             });
         }
 
-        String name = Utils.getSetting(this, Const.CHAT_ROOM_DISPLAY_NAME, getString(R.string.token_not_enabled));
 
-        if (name.contains(" ")){
-            name = name.substring(0, name.indexOf(" "));
-        }
+        String fullName = user.getDisplayName();
+        String firstName = fullName.substring(0, fullName.indexOf(" "));
 
-        String introductoryMessage = "Hi " + name + ", how can I help you?";
+        String introductoryMessage = String.format(
+                getResources().getString(R.string.assistant_intro_msg),
+                firstName
+        );
 
         assistantHistoryAdapter.addElement(new ChatMessage(introductoryMessage, assistant));
 
@@ -158,7 +143,7 @@ public class AssistantActivity extends AppCompatActivity implements View.OnClick
             sendMessage(extras.getString(Const.ASSISTANT_QUERY));
         }
 
-        // Text 2 speech feature for answers
+        // Text2speech feature for answers
         textToSpeech = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
@@ -167,6 +152,29 @@ public class AssistantActivity extends AppCompatActivity implements View.OnClick
                 }
             }
         });
+    }
+
+    private void bindUIElements() {
+        setUpAssistantHistory();
+
+        etMessage = (EditText) findViewById(R.id.etMessage);
+
+        btnSend = (ImageButton) findViewById(R.id.btnSend);
+        btnSend.setOnClickListener(this);
+
+        btnSpeak = (ImageButton) findViewById(R.id.btnSpeak);
+        btnSpeak.setOnClickListener(this);
+    }
+
+    private void setUpAssistantHistory() {
+        rvMessageHistory = (RecyclerView) findViewById(R.id.rvMessageHistory);
+
+        // use a linear layout manager
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
+        rvMessageHistory.setLayoutManager(mLayoutManager);
+
+        assistantHistoryAdapter = new AssistantHistoryAdapter(new ArrayList<ChatMessage>());
+        rvMessageHistory.setAdapter(assistantHistoryAdapter);
     }
 
     @Override
@@ -184,7 +192,6 @@ public class AssistantActivity extends AppCompatActivity implements View.OnClick
         }
     }
 
-    @SuppressWarnings("deprecation")
     private void receiveMessage(String text) {
         assistantHistoryAdapter.addElement(new ChatMessage(text, assistant));
         textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null);
