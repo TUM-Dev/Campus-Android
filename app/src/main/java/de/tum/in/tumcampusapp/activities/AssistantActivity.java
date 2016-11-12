@@ -1,6 +1,7 @@
 package de.tum.in.tumcampusapp.activities;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -56,6 +57,8 @@ public class AssistantActivity extends AppCompatActivity implements View.OnClick
     private ChatMember assistant;
     private ChatMember user;
 
+    private ProgressDialog progressDialog;
+
     private static final int READ_REQUEST_CODE = 42;
 
     private Callback<Void> stupidCB = new Callback<Void>() {
@@ -89,6 +92,11 @@ public class AssistantActivity extends AppCompatActivity implements View.OnClick
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setHomeButtonEnabled(true);
         }
+
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("Connecting to Skynet...");
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle(R.string.assistant_name);
@@ -204,6 +212,9 @@ public class AssistantActivity extends AppCompatActivity implements View.OnClick
 
     @SuppressWarnings("deprecation")
     private void receiveMessage(String text) {
+        if (progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
         assistantHistoryAdapter.addElement(new ChatMessage(text, assistant));
         int countWords = text.length() - text.replace(" ", "").length();
         if (countWords < 20) {
@@ -214,6 +225,7 @@ public class AssistantActivity extends AppCompatActivity implements View.OnClick
     }
 
     private void sendMessage(String text) {
+        progressDialog.show();
         assistantHistoryAdapter.addElement(new ChatMessage(text, user));
         AssistantService.startActionProcessQuery(getApplicationContext(), text);
     }
