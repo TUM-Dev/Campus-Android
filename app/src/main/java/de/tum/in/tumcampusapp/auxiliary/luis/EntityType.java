@@ -2,7 +2,6 @@ package de.tum.in.tumcampusapp.auxiliary.luis;
 
 // Created by Jimena Pose and Riccardo Padovani
 enum EntityType {
-
     // Mensa
     MENSA_LOCATION("mensa::location"),
     MENSA_MENU("mensa::menu"),
@@ -10,12 +9,14 @@ enum EntityType {
 
     // Transportation
     TRANSPORTATION_LOCATION("transportation::transportation.location"),
-    TRANSPORTATION_TRAINS("transportation::transportation.trains"),
+    TRANSPORTATION_TYPE("transportation::transportation.type"),
     TRANSPORTATION_TIME("transportation::transportation.time"),
 
     // Professor
     PROFESSOR_NAME("professor::name"),
-    PROFESSOR_INFORMATION("professor::information");
+    PROFESSOR_INFORMATION("professor::information")
+    ;
+
 
     private String entityName;
 

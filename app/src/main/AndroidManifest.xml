@@ -527,7 +527,7 @@
             android:name=".managers.CalendarManager$QueryLocationsService"
             android:exported="false" />
         <service
-            android:name=".services.AssistantService"
+            android:name=".services.assistantServices.AssistantService"
             android:exported="false"/>
         <service
             android:name=".services.GcmReceiverService"

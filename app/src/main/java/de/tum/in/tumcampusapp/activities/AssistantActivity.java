@@ -5,12 +5,16 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+<<<<<<< HEAD
 import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Build;
+=======
+>>>>>>> 2c3c04bf2be2ec29a437dfcf4365e509154d643a
 import android.os.Bundle;
 import android.os.Environment;
 import android.speech.RecognizerIntent;
+import android.speech.tts.TextToSpeech;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -25,6 +29,7 @@ import android.widget.Toast;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.adapters.AssistantHistoryAdapter;
@@ -36,11 +41,15 @@ import de.tum.in.tumcampusapp.auxiliary.ImplicitCounter;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatMember;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatMessage;
+<<<<<<< HEAD
 import de.tum.in.tumcampusapp.models.tumcabe.Question;
 import de.tum.in.tumcampusapp.services.AssistantService;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+=======
+import de.tum.in.tumcampusapp.services.assistantServices.AssistantService;
+>>>>>>> 2c3c04bf2be2ec29a437dfcf4365e509154d643a
 
 public class AssistantActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -56,6 +65,7 @@ public class AssistantActivity extends AppCompatActivity implements View.OnClick
     private ChatMember assistant;
     private ChatMember user;
 
+<<<<<<< HEAD
     private static final int READ_REQUEST_CODE = 42;
 
     private Callback<Void> stupidCB = new Callback<Void>() {
@@ -74,6 +84,9 @@ public class AssistantActivity extends AppCompatActivity implements View.OnClick
             Log.d("FAILED", t.getMessage());
         }
     };
+=======
+    private TextToSpeech textToSpeech;
+>>>>>>> 2c3c04bf2be2ec29a437dfcf4365e509154d643a
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,6 +136,7 @@ public class AssistantActivity extends AppCompatActivity implements View.OnClick
         LocalBroadcastManager.getInstance(this)
                 .registerReceiver(receiver, new IntentFilter(Const.ASSISTANT_BROADCAST_INTENT));
 
+<<<<<<< HEAD
         if (false) {
             FileUtils.performFileSearch(this, READ_REQUEST_CODE);
             UCentralClient.getInstance(this).login("UNAME", "PASS", new Callback<Void>() {
@@ -143,11 +157,33 @@ public class AssistantActivity extends AppCompatActivity implements View.OnClick
             });
         }
 
+=======
+        String name = Utils.getSetting(this, Const.CHAT_ROOM_DISPLAY_NAME, getString(R.string.token_not_enabled));
+
+        if (name.contains(" ")){
+            name = name.substring(0, name.indexOf(" "));
+        }
+
+        String introductoryMessage = "Hi " + name + ", how can I help you?";
+
+        assistantHistoryAdapter.addElement(new ChatMessage(introductoryMessage, assistant));
+
+>>>>>>> 2c3c04bf2be2ec29a437dfcf4365e509154d643a
         // handle the intent
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             sendMessage(extras.getString(Const.ASSISTANT_QUERY));
         }
+
+        // Text 2 speech feature for answers
+        textToSpeech = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if(status != TextToSpeech.ERROR) {
+                    textToSpeech.setLanguage(Locale.US);
+                }
+            }
+        });
     }
 
     @Override
@@ -165,8 +201,11 @@ public class AssistantActivity extends AppCompatActivity implements View.OnClick
         }
     }
 
+    @SuppressWarnings("deprecation")
     private void receiveMessage(String text) {
         assistantHistoryAdapter.addElement(new ChatMessage(text, assistant));
+        textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null);
+        rvMessageHistory.smoothScrollToPosition(rvMessageHistory.getAdapter().getItemCount());
     }
 
     private void sendMessage(String text) {
@@ -189,5 +228,14 @@ public class AssistantActivity extends AppCompatActivity implements View.OnClick
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (textToSpeech != null) {
+            textToSpeech.stop();
+            textToSpeech.shutdown();
+        }
+        super.onDestroy();
     }
 }
