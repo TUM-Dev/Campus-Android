@@ -106,6 +106,15 @@ public class CafeteriaManager extends AbstractManager implements Card.ProvidesCa
     }
 
     /**
+     * Returns a cafeteria by it's id
+     *
+     * @return Database cursor (id, name, address, latitude, longitude)
+     */
+    public Cursor getByIdFromDb(int id) {
+        return db.query("cafeterias", null, null, null, "id = " + id, null, null);
+    }
+
+    /**
      * Removes all cache items
      */
     public void removeCache() {
