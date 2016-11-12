@@ -104,7 +104,7 @@ public class AssistantService extends IntentService {
                 actionsResponseBuilder.append(ActionsProcessor.processAction(getApplicationContext(), action)+ " ");
             }
             if (actionsResponseBuilder.length() == 0) {
-                return "Didn't catch that, please repeat.";
+                return "I couldn't understand what you were trying to say.";
             }
             return actionsResponseBuilder.toString();
         }
