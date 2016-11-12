@@ -97,7 +97,6 @@ public class AssistantService extends IntentService {
             e.printStackTrace();
         }
         if (result != null && result.isPresent()) {
-            String r = "Sorry I didn't understand you, could you please ask again?";
             JSONObject resultJSON = result.get();
             LuisResponseReader luisResponseReader = new LuisResponseReader();
             List<Action> actions = luisResponseReader.readResponse(resultJSON);
@@ -105,7 +104,11 @@ public class AssistantService extends IntentService {
             for (Action action : actions) {
                 actionsResponseBuilder.append(ActionsProcessor.processAction(getApplicationContext(), action));
             }
+            if (actionsResponseBuilder.length() == 0) {
+                actionsResponseBuilder.append("Didn't catch that, please repeat.");
+            }
             return actionsResponseBuilder.toString();
+
         }
         return "Sorry, I am unable to reach the server, could you check your internet " +
                 "connection or try again later?";

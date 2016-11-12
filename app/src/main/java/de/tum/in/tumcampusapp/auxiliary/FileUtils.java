@@ -1,5 +1,11 @@
 package de.tum.in.tumcampusapp.auxiliary;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
+import android.provider.MediaStore;
+
 import com.google.common.base.Charsets;
 
 import java.io.BufferedReader;
@@ -60,6 +66,21 @@ public final class FileUtils {
         } catch (IOException e) {
             Utils.log(e);
             return "";
+        }
+    }
+
+    /**
+     * Fires an intent to spin up the "file chooser" UI and select an image.
+     */
+    public static void performFileSearch(Activity activity, int requestCode) {
+
+        // ACTION_OPEN_DOCUMENT is the intent to choose a file via the system's file
+        // browser.
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
+            Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+            intent.addCategory(Intent.CATEGORY_OPENABLE);
+            intent.setType("*/*");
+            activity.startActivityForResult(intent, requestCode);
         }
     }
 

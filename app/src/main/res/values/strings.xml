@@ -229,7 +229,8 @@
 
     <!-- Assistant -->
     <string name="assistant_name">TUM Assistant</string>
-    <string name="assistant_hint">Say something...</string>
+    <string name="assistant_hint">Say something…</string>
+    <string name="assistant_intro_msg">Hi %s, how can I help you?</string>
 
     <!-- Chat rooms -->
     <string name="my_chat_rooms">My Chat Rooms</string>

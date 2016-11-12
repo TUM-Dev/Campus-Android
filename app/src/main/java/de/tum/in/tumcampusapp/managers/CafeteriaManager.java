@@ -210,7 +210,7 @@ public class CafeteriaManager extends AbstractManager implements Card.ProvidesCa
         if (cafeteriaId == -1) {
             return null;
         }
-        
+
         // Get desired cafeteria
         Cursor cursor = getByIdFromDb(cafeteriaId);
         Cafeteria cafeteria = null;

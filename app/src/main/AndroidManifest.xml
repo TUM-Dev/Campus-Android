@@ -8,6 +8,7 @@
     <!-- Standard access rights -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <!-- For google calendar synchronisation -->
     <uses-permission android:name="android.permission.READ_CALENDAR" />
@@ -483,6 +484,10 @@
             android:label="@string/title_activity_assistant"
             android:launchMode="singleTop"
             android:parentActivityName=".activities.MainActivity">
+            <intent-filter>
+                <action android:name="com.google.android.gms.actions.SEARCH_ACTION"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.tum.in.tumcampusapp.activities.MainActivity" />
