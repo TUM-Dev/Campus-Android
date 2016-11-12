@@ -105,7 +105,7 @@ public class AssistantService extends IntentService {
             }
             return r;
         }
-        String answer = "Hi, how can I help you?" + new String(Character.toChars(0x1F60A));
-        return answer;
+        return "Sorry, I am unable to reach the server, could you check your internet " +
+                "connection or try again later?";
     }
 }

@@ -16,7 +16,7 @@ public class ActionsProcessor {
             case TRANSPORTATION_LOCATION:
                 return processTransLocationAction(context, a);
             default:
-                return "Sorry I didn't understand you, could you please ask again?";
+                return "Sorry I didn't understand you" + a.getActionType() +  " could you please ask again?";
         }
     }
 

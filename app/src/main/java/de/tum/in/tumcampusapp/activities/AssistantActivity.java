@@ -94,6 +94,16 @@ public class AssistantActivity extends AppCompatActivity implements View.OnClick
         if (extras != null) {
             sendMessage(extras.getString(Const.ASSISTANT_QUERY));
         }
+
+        String name = Utils.getSetting(this, Const.CHAT_ROOM_DISPLAY_NAME, getString(R.string.token_not_enabled));
+
+        if (name.contains(" ")){
+            name = name.substring(0, name.indexOf(" "));
+        }
+
+        String introductoryMessage = "Hi " + name + ", how can I help you?";
+
+        assistantHistoryAdapter.addElement(new ChatMessage(introductoryMessage, assistant));
     }
 
     @Override
