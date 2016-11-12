@@ -29,7 +29,7 @@ public class ActionsProcessor {
             departure = TransportManager.getLastDeparture(context, currentStation, type);
         }
         if(departure != null) {
-            return ("The " + time + " train will depart in " +
+            return ("The " + time + " " + type + " will depart in " +
                     printCountdown(departure.countDown) +
                     " , at " + departure.date.getHours() + ":" + departure.date.getMinutes() + ".");
         }
