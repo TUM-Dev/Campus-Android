@@ -124,6 +124,7 @@
     <string name="my_tum">My TUM</string>
     <string name="schedule">Calendar</string>
     <string name="my_lectures">My Lectures</string>
+    <string name="assistant">Assistant</string>
     <string name="my_grades">My Grades</string>
     <string name="chat_rooms">Chat rooms</string>
     <string name="tuition_fees">Tuition Fees</string>
@@ -225,6 +226,10 @@
     <string name="campus_olympiapark_adress">Connollystraße 32, 80809 Munich</string>
     <string name="campus_main_adress">Arcisstraße 21, 80333 Munich</string>
     <string name="campus_weihenstephan_adress">Liesel-Beckmann-Straße 6, 85354 Freising</string>
+
+    <!-- Assistant -->
+    <string name="assistant_name">TUM Assistant</string>
+    <string name="assistant_hint">Say something...</string>
 
     <!-- Chat rooms -->
     <string name="my_chat_rooms">My Chat Rooms</string>
@@ -486,6 +491,7 @@ Signature: %5$s</string>
     <string name="transition_card" translatable="false">card_transition</string>
     <string name="tumonline_link" translatable="false"><a href="http://campus.tum.de">TUMonline</a></string>
     <string name="accept_chat_terms">Terms must be accepted to use group chat!</string>
+    <string name="title_activity_assistant">AssistantActivity</string>
 </resources>
 
 

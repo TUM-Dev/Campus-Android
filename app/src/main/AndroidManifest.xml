@@ -477,6 +477,16 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.tum.in.tumcampusapp.activities.MainActivity" />
         </activity>
+        <activity
+            android:name=".activities.AssistantActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/title_activity_assistant"
+            android:launchMode="singleTop"
+            android:parentActivityName=".activities.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="de.tum.in.tumcampusapp.activities.MainActivity" />
+        </activity>
 
         <!-- Used to reset Alarm when device has been restarted -->
         <receiver android:name=".services.StartSyncReceiver">
@@ -489,12 +499,11 @@
         </receiver>
 
         <!-- Used to set Notification for favoriteDish -->
-        <receiver android:name="de.tum.in.tumcampusapp.services.FavoriteDishReceiver"/>
+        <receiver android:name=".services.FavoriteDishReceiver" />
 
         <service
-            android:name="de.tum.in.tumcampusapp.services.FavoriteDishService"
-            android:enabled="true"/>
-
+            android:name=".services.FavoriteDishService"
+            android:enabled="true" />
         <service
             android:name=".services.DownloadService"
             android:exported="false" />
@@ -516,6 +525,9 @@
         <service
             android:name=".managers.CalendarManager$QueryLocationsService"
             android:exported="false" />
+        <service
+            android:name=".services.AssistantService"
+            android:exported="false"/>
         <service
             android:name=".services.GcmReceiverService"
             android:exported="false">

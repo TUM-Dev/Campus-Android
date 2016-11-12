@@ -113,6 +113,10 @@ public final class Const {
     public static final String PREF_UNIQUE_ID = "PREF_UNIQUE_ID";
     public static final String CHATTERMS_URL = "https://tumcabe.in.tum.de/landing/chatterms/";
 
+    public static final int SPEECH_REQUEST_CODE = 0;
+    public static final String ASSISTANT_BROADCAST_INTENT = "AssistantBroadcastIntent";
+    public static final String ASSISTANT_QUERY = "query";
+
     private Const() {
         // Const is a utility class
     }

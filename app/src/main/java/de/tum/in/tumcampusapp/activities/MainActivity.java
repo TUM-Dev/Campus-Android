@@ -29,11 +29,14 @@ import java.util.List;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.BaseActivity;
 import de.tum.in.tumcampusapp.adapters.CardsAdapter;
+import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.cards.generic.Card;
 import de.tum.in.tumcampusapp.managers.CardManager;
+import de.tum.in.tumcampusapp.services.AssistantService;
 import de.tum.in.tumcampusapp.services.SilenceService;
+import okhttp3.internal.Util;
 
 /**
  * Main activity displaying the cards and providing navigation with navigation drawer
@@ -67,12 +70,6 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
         }
     };
 
-    /**
-     * Assistant
-     */
-    private FloatingActionButton mAssistantFAB;
-    private static final int SPEECH_REQUEST_CODE = 0;
-
     public MainActivity() {
         super(R.layout.activity_main);
     }
@@ -99,21 +96,11 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
         mCardsView.setHasFixedSize(true);
 
         // Setup Assistant FAB
-        mAssistantFAB = (FloatingActionButton) findViewById(R.id.assistant_fab);
-        mAssistantFAB.setOnClickListener(new View.OnClickListener() {
+        FloatingActionButton assistantFAB = (FloatingActionButton) findViewById(R.id.assistant_fab);
+        assistantFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
-                        RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-
-                intent.putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS,
-                        5000);
-                intent.putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_MINIMUM_LENGTH_MILLIS,
-                        5000);
-
-                intent.putExtra(RecognizerIntent.EXTRA_SUPPORTED_LANGUAGES, "de");
-                startActivityForResult(intent, SPEECH_REQUEST_CODE);
+                Utils.sendRecognizerIntent(MainActivity.this, Const.SPEECH_REQUEST_CODE);
             }
         });
 
@@ -304,10 +291,9 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
     @Override
     protected void onActivityResult(int requestCode, int resultCode,
                                     Intent data) {
-        if (requestCode == SPEECH_REQUEST_CODE && resultCode == RESULT_OK) {
+        if (requestCode == Const.SPEECH_REQUEST_CODE && resultCode == RESULT_OK) {
             List<String> results = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-            String spokenText = results.get(0);
-            Toast.makeText(this, spokenText, Toast.LENGTH_LONG).show();
+            startActivity(new Intent(this, AssistantActivity.class).putExtra(Const.ASSISTANT_QUERY, results.get(0)));
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
