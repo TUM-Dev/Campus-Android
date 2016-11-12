@@ -55,7 +55,7 @@ public class ActionsProcessor {
         Map<String, List<CafeteriaMenu>> cafeteria = cafeteriaManager.getBestMatchMensaInfo(context);
         StringBuilder builder = new StringBuilder();
         for (Map.Entry<String, List<CafeteriaMenu>> cafeteriaEntry: cafeteria.entrySet()) {
-            builder.append("The menu for " + cafeteriaEntry.getKey() + " is:\n");
+            builder.append("The menu for " + cafeteriaEntry.getKey() + ":\n");
             for (CafeteriaMenu menu : cafeteriaEntry.getValue()) {
                 builder.append(menu.name.replaceAll("\\(.*\\)", "") + "\n");
                 // TODO add menu price if we have time
