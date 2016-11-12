@@ -73,7 +73,6 @@ public class AssistantService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         if (intent != null) {
             final String action = intent.getAction();
-            final ResultReceiver resultReceiver = intent.getParcelableExtra(EXTRA_RESULT_RECEIVER);
 
             if (ACTION_PROCESS_QUERY.equals(action)) {
                 String answer = processQuery(intent.getStringExtra(EXTRA_QUERY));
@@ -107,8 +106,10 @@ public class AssistantService extends IntentService {
             if (actionsResponseBuilder.length() == 0) {
                 actionsResponseBuilder.append("Didn't catch that, please repeat.");
             }
+            if (actionsResponseBuilder.length() == 0) {
+                return "Didn't catch that, please repeat.";
+            }
             return actionsResponseBuilder.toString();
-
         }
         return "Sorry, I am unable to reach the server, could you check your internet " +
                 "connection or try again later?";

@@ -23,8 +23,11 @@ import de.tum.in.tumcampusapp.models.cafeteria.CafeteriaMenu;
 import de.tum.in.tumcampusapp.models.tumo.Employee;
 import de.tum.in.tumcampusapp.models.tumo.Person;
 import de.tum.in.tumcampusapp.models.tumo.PersonList;
+import de.tum.in.tumcampusapp.models.tumo.Room;
 import de.tum.in.tumcampusapp.tumonline.TUMOnlineConst;
 import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequest;
+
+import static de.tum.in.tumcampusapp.R.string.room;
 
 public class ActionsProcessor {
 
@@ -124,12 +127,37 @@ public class ActionsProcessor {
         String r = "";
         String query = a.getData(DataType.PROFESSOR_NAME);
         String info = a.getData(DataType.PROFESSOR_INFORMATION);
-        List<Person> persons = getPersons(context, query);
-        for(Person p: persons){
-            String name = p.getSurname() + " " + p.getName();
-            r = r + name + "\n";
+        List<Employee> employees = getEmployees(context, query);
+        if(employees != null) {
+            r = "Results:";
+            for (Employee e : employees) {
+                String title = e.getTitle().isEmpty() ? "": e.getTitle() + " ";
+                String name = e.getTitle() + e.getSurname() + " " + e.getName();
+                r = r + "\n\t\t" + name;
+                switch(info) {
+                    case "email":
+                    case "e-mail":
+                    case "mail":
+                        r = r + "\n\t\t\t\t" + "Email:";
+                        r = r + "\t" + e.getEmail();
+                        break;
+                    case "room":
+                        r = r + "\n\t\t\t\t" + "Rooms:";
+                        if(e.getRooms() != null) {
+                            for (Room room : e.getRooms()) {
+                                r = r + "\n\t\t\t\t " + room.getLocation();
+                            }
+                        }else{
+                            r = r + "\t" + "None found.";
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+            return r;
         }
-        return r;
+        return "";
     }
 
     private static List<Person> getPersons(Context context, String query){
@@ -137,5 +165,24 @@ public class ActionsProcessor {
         pl.setParameter("pSuche", query);
         List<Person> persons = pl.fetch().get().getPersons();
         return persons;
+    }
+
+    private static Employee getEmployee(Context context, String id){
+        TUMOnlineRequest<Employee> request = new TUMOnlineRequest<>(TUMOnlineConst.PERSON_DETAILS, context, true);
+        request.setParameter("pIdentNr", id);
+        Employee employee = request.fetch().get();
+        return employee;
+    }
+
+    private static List<Employee> getEmployees(Context context, String query){
+        List<Person> persons = getPersons(context, query);
+        if(persons != null) {
+            List<Employee> employees = new ArrayList<Employee>();
+            for (Person p : persons) {
+                employees.add(getEmployee(context, p.getId()));
+            }
+            return employees;
+        }
+        return null;
     }
 }
