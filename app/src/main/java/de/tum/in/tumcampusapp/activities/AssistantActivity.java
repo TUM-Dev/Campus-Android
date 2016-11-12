@@ -194,7 +194,11 @@ public class AssistantActivity extends AppCompatActivity implements View.OnClick
 
     private void receiveMessage(String text) {
         assistantHistoryAdapter.addElement(new ChatMessage(text, assistant));
-        textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null);
+        int countWords = text.length() - text.replace(" ", "").length();
+        if (countWords < 20) {
+            textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null);
+        }
+
         rvMessageHistory.smoothScrollToPosition(rvMessageHistory.getAdapter().getItemCount());
     }
 
