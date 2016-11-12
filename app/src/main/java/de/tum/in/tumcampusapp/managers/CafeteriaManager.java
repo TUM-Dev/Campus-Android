@@ -203,6 +203,33 @@ public class CafeteriaManager extends AbstractManager implements Card.ProvidesCa
         }
         return cafeteriaId;
     }
+
+    public Cafeteria getBestMatchMensa(Context context) {
+        // Choose which mensa should be shown
+        int cafeteriaId = getBestMatchMensaId(context);
+        if (cafeteriaId == -1) {
+            return null;
+        }
+        
+        // Get desired cafeteria
+        Cursor cursor = getByIdFromDb(cafeteriaId);
+        Cafeteria cafeteria = null;
+
+        // get the cafeteria's name
+        if (cursor.moveToFirst()) {
+            Utils.log(cursor.toString());
+            cafeteria = new Cafeteria(
+                cafeteriaId,
+                cursor.getString(cursor.getColumnIndex("name")),
+                cursor.getString(cursor.getColumnIndex("address")),
+                cursor.getDouble(cursor.getColumnIndex("latitude")),
+                cursor.getDouble(cursor.getColumnIndex("longitude"))
+            );
+        }
+        cursor.close();
+        return cafeteria;
+    }
+
     /**
      * returns the menus of the best matching cafeteria
      */
