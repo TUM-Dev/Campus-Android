@@ -3,18 +3,31 @@ package de.tum.in.tumcampusapp.services.assistantServices;
 import android.content.Context;
 import android.hardware.camera2.params.StreamConfigurationMap;
 
-import java.util.ArrayList;
-import java.util.List;
+import net.danlew.android.joda.JodaTimeAndroid;
 
+import org.joda.time.DateTime;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+
+import de.tum.in.tumcampusapp.auxiliary.DateUtils;
 import de.tum.in.tumcampusapp.auxiliary.luis.Action;
 import de.tum.in.tumcampusapp.auxiliary.luis.DataType;
+import de.tum.in.tumcampusapp.managers.CafeteriaManager;
 import de.tum.in.tumcampusapp.managers.TransportManager;
 import de.tum.in.tumcampusapp.managers.LocationManager;
+import de.tum.in.tumcampusapp.models.cafeteria.Cafeteria;
+import de.tum.in.tumcampusapp.models.cafeteria.CafeteriaMenu;
 import de.tum.in.tumcampusapp.models.tumo.Employee;
 import de.tum.in.tumcampusapp.models.tumo.Person;
 import de.tum.in.tumcampusapp.models.tumo.PersonList;
+import de.tum.in.tumcampusapp.models.tumo.Room;
 import de.tum.in.tumcampusapp.tumonline.TUMOnlineConst;
 import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequest;
+
+import static de.tum.in.tumcampusapp.R.string.room;
 
 public class ActionsProcessor {
 
@@ -26,9 +39,45 @@ public class ActionsProcessor {
                 return processTransLocationAction(context, a);
             case PROFESSOR_INFORMATION:
                 return processProfInfoAction(context, a);
+            case MENSA_MENU:
+                return processMensaMenu(context, a);
+            case MENSA_LOCATION:
+                return processMensaLocation(context, a);
+            case MENSA_TIME:
+                return processMensaTime(context, a);
             default:
                 return "ActionTypeError: "+ a.getActionType();
         }
+    }
+
+    private static String processMensaMenu(Context context, Action a) {
+        CafeteriaManager cafeteriaManager = new CafeteriaManager(context);
+        Map<String, List<CafeteriaMenu>> cafeteria = cafeteriaManager.getBestMatchMensaInfo(context);
+        StringBuilder builder = new StringBuilder();
+        for (Map.Entry<String, List<CafeteriaMenu>> cafeteriaEntry: cafeteria.entrySet()) {
+            builder.append("The menu for " + cafeteriaEntry.getKey() + ":\n");
+            for (CafeteriaMenu menu : cafeteriaEntry.getValue()) {
+                builder.append(menu.name.replaceAll("\\(.*\\)", "") + "\n");
+                // TODO add menu price if we have time
+            }
+        }
+        return builder.toString();
+    }
+
+    private static String processMensaLocation(Context context, Action a) {
+        CafeteriaManager cafeteriaManager = new CafeteriaManager(context);
+        Cafeteria cafeteria = cafeteriaManager.getBestMatchMensa(context);
+        return "The nearest cafeteria is at " + cafeteria.address
+            + " and it's called " + cafeteria.name;
+    }
+
+    private static String processMensaTime(Context context, Action a) {
+        CafeteriaManager cafeteriaManager = new CafeteriaManager(context);
+        Map<String, List<CafeteriaMenu>> cafeteria = cafeteriaManager.getBestMatchMensaInfo(context);
+        CafeteriaMenu cafeteriaMenu = cafeteria.values().iterator().next().get(0);
+        DateTime dateTime = new DateTime(cafeteriaMenu.date);
+        return "The cafeteria opens at " + dateTime.toString("EEE MMM d, HH:mm");
+
     }
 
     @SuppressWarnings("deprecation")
@@ -78,12 +127,37 @@ public class ActionsProcessor {
         String r = "";
         String query = a.getData(DataType.PROFESSOR_NAME);
         String info = a.getData(DataType.PROFESSOR_INFORMATION);
-        List<Person> persons = getPersons(context, query);
-        for(Person p: persons){
-            String name = p.getSurname() + " " + p.getName();
-            r = r + name + "\n";
+        List<Employee> employees = getEmployees(context, query);
+        if(employees != null) {
+            r = "Results:";
+            for (Employee e : employees) {
+                String title = e.getTitle().isEmpty() ? "" : e.getTitle() + " ";
+                String name = e.getTitle() + e.getSurname() + " " + e.getName();
+                r = r + "\n\t\t" + name;
+                switch (info) {
+                    case "email":
+                    case "e-mail":
+                    case "mail":
+                        r = r + "\n\t\t\t\t" + "Email:";
+                        r = r + "\t" + e.getEmail();
+                        break;
+                    case "room":
+                        r = r + "\n\t\t\t\t" + "Rooms:";
+                        if (e.getRooms() != null) {
+                            for (Room room : e.getRooms()) {
+                                r = r + "\n\t\t\t\t " + room.getLocation();
+                            }
+                        } else {
+                            r = r + "\t" + "None found.";
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+            return r;
         }
-        return r;
+        return "Could not complete request. Try refining your search.";
     }
 
     private static List<Person> getPersons(Context context, String query){
@@ -91,5 +165,24 @@ public class ActionsProcessor {
         pl.setParameter("pSuche", query);
         List<Person> persons = pl.fetch().get().getPersons();
         return persons;
+    }
+
+    private static Employee getEmployee(Context context, String id){
+        TUMOnlineRequest<Employee> request = new TUMOnlineRequest<>(TUMOnlineConst.PERSON_DETAILS, context, true);
+        request.setParameter("pIdentNr", id);
+        Employee employee = request.fetch().get();
+        return employee;
+    }
+
+    private static List<Employee> getEmployees(Context context, String query){
+        List<Person> persons = getPersons(context, query);
+        if(persons != null && persons.size() < 15) {
+            List<Employee> employees = new ArrayList<Employee>();
+            for (Person p : persons) {
+                employees.add(getEmployee(context, p.getId()));
+            }
+            return employees;
+        }
+        return null;
     }
 }

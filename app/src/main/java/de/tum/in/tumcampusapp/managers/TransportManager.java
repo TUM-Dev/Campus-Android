@@ -362,8 +362,8 @@ public class TransportManager implements Card.ProvidesCard {
         DepartureDetailed lastDeparture = departures.get(0);
         for(DepartureDetailed d: departures){
             //no checking for before since already sorted
-            //checking if time between departures greater than 3 hours
-            if(!(d.date.getTime() - lastDeparture.date.getTime() > 1000 * 60 * 60 * 3)){
+            //checking if time between departures less than 3 hours
+            if(d.date.getTime() - lastDeparture.date.getTime() < 1000 * 60 * 60 * 1){
                 lastDeparture = d;
             }
         }

@@ -13,6 +13,7 @@ import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.List;
+import java.util.Map;
 
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
@@ -20,7 +21,9 @@ import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.auxiliary.luis.Action;
 import de.tum.in.tumcampusapp.auxiliary.luis.DataType;
 import de.tum.in.tumcampusapp.auxiliary.luis.LuisResponseReader;
+import de.tum.in.tumcampusapp.managers.CafeteriaManager;
 import de.tum.in.tumcampusapp.managers.TransportManager;
+import de.tum.in.tumcampusapp.models.cafeteria.CafeteriaMenu;
 
 /**
  * An {@link IntentService} subclass for handling asynchronous task requests in
@@ -70,7 +73,6 @@ public class AssistantService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         if (intent != null) {
             final String action = intent.getAction();
-            final ResultReceiver resultReceiver = intent.getParcelableExtra(EXTRA_RESULT_RECEIVER);
 
             if (ACTION_PROCESS_QUERY.equals(action)) {
                 String answer = processQuery(intent.getStringExtra(EXTRA_QUERY));
@@ -94,17 +96,17 @@ public class AssistantService extends IntentService {
             e.printStackTrace();
         }
         if (result != null && result.isPresent()) {
-            String r = "";
             JSONObject resultJSON = result.get();
-            //return resultJSON.toString();
             LuisResponseReader luisResponseReader = new LuisResponseReader();
             List<Action> actions = luisResponseReader.readResponse(resultJSON);
-
-            for (Action a : actions) { //todo prettify "and" etc.
-                r = r + ActionsProcessor.processAction(getApplicationContext(), a) + " ";
+            StringBuilder actionsResponseBuilder = new StringBuilder();
+            for (Action action : actions) {
+                actionsResponseBuilder.append(ActionsProcessor.processAction(getApplicationContext(), action)+ " ");
             }
-            if(r.isEmpty()) r = "Didn't catch that, please repeat.";
-            return r;
+            if (actionsResponseBuilder.length() == 0) {
+                return "Didn't catch that, please repeat.";
+            }
+            return actionsResponseBuilder.toString();
         }
         return "Sorry, I am unable to reach the server, could you check your internet " +
                 "connection or try again later?";
