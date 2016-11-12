@@ -101,7 +101,7 @@ public class AssistantService extends IntentService {
             List<Action> actions = luisResponseReader.readResponse(resultJSON);
             StringBuilder actionsResponseBuilder = new StringBuilder();
             for (Action action : actions) {
-                actionsResponseBuilder.append(ActionsProcessor.processAction(getApplicationContext(), action));
+                actionsResponseBuilder.append(ActionsProcessor.processAction(getApplicationContext(), action)+ " ");
             }
             if (actionsResponseBuilder.length() == 0) {
                 actionsResponseBuilder.append("Didn't catch that, please repeat.");

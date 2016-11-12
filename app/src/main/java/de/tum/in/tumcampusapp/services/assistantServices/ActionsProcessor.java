@@ -131,10 +131,10 @@ public class ActionsProcessor {
         if(employees != null) {
             r = "Results:";
             for (Employee e : employees) {
-                String title = e.getTitle().isEmpty() ? "": e.getTitle() + " ";
+                String title = e.getTitle().isEmpty() ? "" : e.getTitle() + " ";
                 String name = e.getTitle() + e.getSurname() + " " + e.getName();
                 r = r + "\n\t\t" + name;
-                switch(info) {
+                switch (info) {
                     case "email":
                     case "e-mail":
                     case "mail":
@@ -143,11 +143,11 @@ public class ActionsProcessor {
                         break;
                     case "room":
                         r = r + "\n\t\t\t\t" + "Rooms:";
-                        if(e.getRooms() != null) {
+                        if (e.getRooms() != null) {
                             for (Room room : e.getRooms()) {
                                 r = r + "\n\t\t\t\t " + room.getLocation();
                             }
-                        }else{
+                        } else {
                             r = r + "\t" + "None found.";
                         }
                         break;
@@ -157,7 +157,7 @@ public class ActionsProcessor {
             }
             return r;
         }
-        return "";
+        return "Could not complete request. Try refining your search.";
     }
 
     private static List<Person> getPersons(Context context, String query){
@@ -176,7 +176,7 @@ public class ActionsProcessor {
 
     private static List<Employee> getEmployees(Context context, String query){
         List<Person> persons = getPersons(context, query);
-        if(persons != null) {
+        if(persons != null && persons.size() < 15) {
             List<Employee> employees = new ArrayList<Employee>();
             for (Person p : persons) {
                 employees.add(getEmployee(context, p.getId()));
