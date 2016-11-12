@@ -27,7 +27,7 @@ public class ActionsProcessor {
             case PROFESSOR_INFORMATION:
                 return processProfInfoAction(context, a);
             default:
-                return "Didn't catch that, please repeat.\n Action Type: "+ a.getActionType();
+                return "ActionTypeError: "+ a.getActionType();
         }
     }
 
