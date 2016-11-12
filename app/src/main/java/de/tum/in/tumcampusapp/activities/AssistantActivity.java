@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.support.v4.content.LocalBroadcastManager;
@@ -26,7 +25,7 @@ import de.tum.in.tumcampusapp.auxiliary.ImplicitCounter;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatMember;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatMessage;
-import de.tum.in.tumcampusapp.services.AssistantService;
+import de.tum.in.tumcampusapp.services.assistantServices.AssistantService;
 
 public class AssistantActivity extends AppCompatActivity implements View.OnClickListener {
 

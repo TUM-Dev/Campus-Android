@@ -1,14 +1,12 @@
-package de.tum.in.tumcampusapp.services;
+package de.tum.in.tumcampusapp.services.assistantServices;
 
 import android.app.IntentService;
 import android.content.Intent;
 import android.content.Context;
-import android.os.Bundle;
 import android.os.ResultReceiver;
 import android.support.v4.content.LocalBroadcastManager;
 
 import com.google.common.base.Optional;
-import com.google.common.base.Strings;
 
 import org.json.JSONObject;
 
@@ -20,7 +18,9 @@ import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.auxiliary.luis.Action;
+import de.tum.in.tumcampusapp.auxiliary.luis.DataType;
 import de.tum.in.tumcampusapp.auxiliary.luis.LuisResponseReader;
+import de.tum.in.tumcampusapp.managers.TransportManager;
 
 /**
  * An {@link IntentService} subclass for handling asynchronous task requests in
@@ -87,8 +87,6 @@ public class AssistantService extends IntentService {
      * TODO: Do this.
      */
     private String processQuery(String query) {
-        // This is a test
-        // 1. Make a request to Microsoft Azure (using NetUtils)
         Optional<JSONObject> result = null;
         try {
             result = NetUtils.downloadJson(getApplicationContext(), SERVER_URL.concat("&q=" + URLEncoder.encode(query, "UTF-8")));
@@ -96,27 +94,16 @@ public class AssistantService extends IntentService {
             e.printStackTrace();
         }
         if (result != null && result.isPresent()) {
+            String r = "";
             JSONObject resultJSON = result.get();
             //return resultJSON.toString();
             LuisResponseReader luisResponseReader = new LuisResponseReader();
             List<Action> actions = luisResponseReader.readResponse(resultJSON);
-            for(Action a: actions){
-                //// TODO: Action handling
+            for (Action a : actions) { //todo prettify "and" etc.
+                r = "" + ActionsProcessor.processAction(getApplicationContext(), a);
             }
+            return r;
         }
-//            LuisResponseReader luisResponseReader = new LuisResponseReader();
-//            Action a = luisResponseReader.readResponse(resultJSON);
-//            switch (a) {
-//                case MENSA_LOCATION:
-//                    break;
-//                case TRANSPORTATION_TIME:
-//                    break;
-//                default:
-//                    break;
-//            }
-//        }
-        // 4. Make calls to other services.
-        // 5. Update the activity.
         String answer = "Hi, how can I help you?" + new String(Character.toChars(0x1F60A));
         return answer;
     }

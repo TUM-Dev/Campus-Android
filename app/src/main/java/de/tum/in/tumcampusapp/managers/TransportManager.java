@@ -94,13 +94,15 @@ public class TransportManager implements Card.ProvidesCard {
     private static final String POINTS = "points";
     private static final String ERROR_INVALID_JSON = "invalid JSON from mvv ";
 
-    static String[] weekdays = new String[]{"Monday",
-            "Tuesday",
-            "Wednessday",
-            "Thursday",
-            "Friday",
-            "Saturday",
-            "Sunday"};
+    static String[] weekdays = new String[]{
+        "Suday",
+        "Monday",
+        "Tuesday",
+        "Wednessday",
+        "Thursday",
+        "Friday",
+        "Saturday"
+    };
 
     static {
         StringBuilder stationSearch = new StringBuilder(MVV_API_BASE);
@@ -320,19 +322,22 @@ public class TransportManager implements Card.ProvidesCard {
             for (int i = 0; i < arr.length(); i++) {
                 JSONObject departure = arr.getJSONObject(i);
                 JSONObject servingLine = departure.getJSONObject("servingLine");
-                result.add(new DepartureDetailed(
-                        servingLine.getString("name"), //U-Bahn
-                        servingLine.getString("direction"), //Klinikum Grosshadern
-                        // Limit symbol length to 3, longer symbols are pointless
-                        String.format("%3.3s", servingLine.getString("symbol")).trim(), //U6
-                        departure.getInt("countdown"), //Minutes until departure
-                        departure.getInt("year"),
-                        departure.getInt("month"),
-                        departure.getInt("day"),
-                        weekdays[departure.getInt("weekday")],
-                        departure.getInt("hour"),
-                        departure.getInt("minute")
-                ));
+                JSONObject dateTime = departure.getJSONObject("dateTime");
+                if(servingLine.getString("name").equals(type) || servingLine.getString("name").equals("all")) {
+                    result.add(new DepartureDetailed(
+                            servingLine.getString("name"), //U-Bahn
+                            servingLine.getString("direction"), //Klinikum Grosshadern
+                            // Limit symbol length to 3, longer symbols are pointless
+                            String.format("%3.3s", servingLine.getString("symbol")).trim(), //U6
+                            departure.getInt("countdown"), //Minutes until departure
+                            dateTime.getInt("year"),
+                            dateTime.getInt("month"),
+                            dateTime.getInt("day"),
+                            weekdays[dateTime.getInt("weekday") - 1],
+                            dateTime.getInt("hour"),
+                            dateTime.getInt("minute")
+                    ));
+                }
             }
 
             Collections.sort(result, new Comparator<DepartureDetailed>() {
@@ -365,9 +370,13 @@ public class TransportManager implements Card.ProvidesCard {
         return lastDeparture;
     }
 
-    public static DepartureDetailed getNextDeparture(Context context, String stationID, String type){
+    public static DepartureDetailed getNextDeparture(Context context, String stationID, String type) {
         //returning first element out of sorted list of departures
-        return getDeparturesDetailedFromExternal(context, stationID, type).get(0);
+        List<DepartureDetailed> departures = getDeparturesDetailedFromExternal(context, stationID, type);
+        if (!departures.isEmpty()){
+            return departures.get(0);
+        }
+        return null;
     }
 
     //more detailed version of Departure

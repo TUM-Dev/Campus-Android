@@ -11,7 +11,7 @@ import org.json.JSONObject;
 public class LuisResponseReader {
 
     public List<Action> readResponse(JSONObject response) {
-        List<Action> defaultActions = new ArrayList<>();
+        List<Action> actions = new ArrayList<>();
         try {
             JSONArray entities = response.getJSONArray("entities");
             String intentName = response.getJSONObject("topScoringIntent").getString("intent");
@@ -28,12 +28,12 @@ public class LuisResponseReader {
             return null;
         } catch (JSONException e) {
             e.printStackTrace();
-            defaultActions.add(new Action(ActionType.ERROR_BAD_INPUT));
+            actions.add(new Action(ActionType.ERROR_BAD_INPUT));
         } catch (NullPointerException e) {
             e.printStackTrace();
-            defaultActions.add(new Action(ActionType.ERROR));
+            actions.add(new Action(ActionType.ERROR));
         }
-        return defaultActions;
+        return actions;
     }
 
     private List<Action> findProfessorActions(JSONArray entities) throws JSONException {
@@ -116,7 +116,7 @@ public class LuisResponseReader {
     }
 
     private String getTransportDataMatch(String transportType) {
-        return transportType.equals("bus") ? "bus" : "U-Bahn";
+        return transportType.equals("bus") ? "MVV-Regionalbus" : "U-Bahn";
     }
 
     private void setDataForAllActions(List<Action> actions, DataType dataName, String data) {

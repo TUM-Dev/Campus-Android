@@ -22,7 +22,6 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import java.util.List;
 
@@ -34,9 +33,7 @@ import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.cards.generic.Card;
 import de.tum.in.tumcampusapp.managers.CardManager;
-import de.tum.in.tumcampusapp.services.AssistantService;
 import de.tum.in.tumcampusapp.services.SilenceService;
-import okhttp3.internal.Util;
 
 /**
  * Main activity displaying the cards and providing navigation with navigation drawer
