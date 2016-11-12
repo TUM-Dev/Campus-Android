@@ -192,6 +192,7 @@ public class AssistantActivity extends AppCompatActivity implements View.OnClick
         }
     }
 
+    @SuppressWarnings("deprecation")
     private void receiveMessage(String text) {
         assistantHistoryAdapter.addElement(new ChatMessage(text, assistant));
         int countWords = text.length() - text.replace(" ", "").length();
@@ -199,7 +200,7 @@ public class AssistantActivity extends AppCompatActivity implements View.OnClick
             textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null);
         }
 
-        rvMessageHistory.smoothScrollToPosition(rvMessageHistory.getAdapter().getItemCount());
+        rvMessageHistory.smoothScrollToPosition(rvMessageHistory.getAdapter().getItemCount() - 1);
     }
 
     private void sendMessage(String text) {
