@@ -14,6 +14,7 @@ import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.List;
 
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
@@ -88,14 +89,21 @@ public class AssistantService extends IntentService {
     private String processQuery(String query) {
         // This is a test
         // 1. Make a request to Microsoft Azure (using NetUtils)
-//        Optional<JSONObject> result = null;
-//        try {
-//            result = NetUtils.downloadJson(getApplicationContext(), SERVER_URL.concat("&q=" + URLEncoder.encode(query, "UTF-8")));
-//        } catch (UnsupportedEncodingException e) {
-//            e.printStackTrace();
-//        }
-//        if (result != null && result.isPresent()) {
-//            JSONObject resultJSON = result.get();
+        Optional<JSONObject> result = null;
+        try {
+            result = NetUtils.downloadJson(getApplicationContext(), SERVER_URL.concat("&q=" + URLEncoder.encode(query, "UTF-8")));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        if (result != null && result.isPresent()) {
+            JSONObject resultJSON = result.get();
+            //return resultJSON.toString();
+            LuisResponseReader luisResponseReader = new LuisResponseReader();
+            List<Action> actions = luisResponseReader.readResponse(resultJSON);
+            for(Action a: actions){
+                //// TODO: Action handling
+            }
+        }
 //            LuisResponseReader luisResponseReader = new LuisResponseReader();
 //            Action a = luisResponseReader.readResponse(resultJSON);
 //            switch (a) {
