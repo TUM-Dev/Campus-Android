@@ -34,7 +34,7 @@ public class ActionsProcessor {
     @SuppressWarnings("deprecation")
     private static String processTransTimeAction(Context context, Action a){
         String type = a.getData(DataType.TRANSPORTATION_TYPE);
-        String printType = type.equals("MVV-Regionalbus") ? "Bus" : type ;
+        String printType = type.equals("MVV-Regionalbus") ? "bus" : type ;
         String time = a.getData(DataType.TRANSPORTATION_TIME);
         LocationManager locMan = new LocationManager(context);
         String currentStation = locMan.getStationForAssistent();
