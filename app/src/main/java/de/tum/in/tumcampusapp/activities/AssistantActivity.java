@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
+import android.speech.tts.TextToSpeech;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,6 +18,7 @@ import android.widget.ImageButton;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.adapters.AssistantHistoryAdapter;
@@ -40,6 +42,8 @@ public class AssistantActivity extends AppCompatActivity implements View.OnClick
 
     private ChatMember assistant;
     private ChatMember user;
+
+    private TextToSpeech textToSpeech;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,17 +97,27 @@ public class AssistantActivity extends AppCompatActivity implements View.OnClick
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             sendMessage(extras.getString(Const.ASSISTANT_QUERY));
+        } else {
+            String name = Utils.getSetting(this, Const.CHAT_ROOM_DISPLAY_NAME, getString(R.string.token_not_enabled));
+
+            if (name.contains(" ")){
+                name = name.substring(0, name.indexOf(" "));
+            }
+
+            String introductoryMessage = "Hi " + name + ", how can I help you?";
+
+            assistantHistoryAdapter.addElement(new ChatMessage(introductoryMessage, assistant));
         }
 
-        String name = Utils.getSetting(this, Const.CHAT_ROOM_DISPLAY_NAME, getString(R.string.token_not_enabled));
-
-        if (name.contains(" ")){
-            name = name.substring(0, name.indexOf(" "));
-        }
-
-        String introductoryMessage = "Hi " + name + ", how can I help you?";
-
-        assistantHistoryAdapter.addElement(new ChatMessage(introductoryMessage, assistant));
+        // Text 2 speech feature for answers
+        textToSpeech = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if(status != TextToSpeech.ERROR) {
+                    textToSpeech.setLanguage(Locale.US);
+                }
+            }
+        });
     }
 
     @Override
@@ -121,8 +135,10 @@ public class AssistantActivity extends AppCompatActivity implements View.OnClick
         }
     }
 
+    @SuppressWarnings("deprecation")
     private void receiveMessage(String text) {
         assistantHistoryAdapter.addElement(new ChatMessage(text, assistant));
+        textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null);
         rvMessageHistory.smoothScrollToPosition(rvMessageHistory.getAdapter().getItemCount());
     }
 

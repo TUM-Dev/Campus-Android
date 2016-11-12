@@ -1,6 +1,7 @@
 package de.tum.in.tumcampusapp.services.assistantServices;
 
 import android.content.Context;
+import android.hardware.camera2.params.StreamConfigurationMap;
 
 import de.tum.in.tumcampusapp.auxiliary.luis.Action;
 import de.tum.in.tumcampusapp.auxiliary.luis.DataType;
@@ -16,15 +17,17 @@ public class ActionsProcessor {
             case TRANSPORTATION_LOCATION:
                 return processTransLocationAction(context, a);
             default:
-                return "Sorry I didn't understand you" + a.getActionType() +  " could you please ask again?";
+                return "Didn't catch that, please repeat";
         }
     }
 
     @SuppressWarnings("deprecation")
     private static String processTransTimeAction(Context context, Action a){
         String type = a.getData(DataType.TRANSPORTATION_TYPE);
+        String printType = type.equals("MVV-Regionalbus") ? "Bus" : type ;
         String time = a.getData(DataType.TRANSPORTATION_TIME);
-        String currentStation = "Garching-Forschungszentrum"; //todo replace with LocationManager
+        LocationManager locMan = new LocationManager(context);
+        String currentStation = locMan.getStationForAssistent();
         TransportManager.DepartureDetailed departure = null;
         if(time.equals("next")){
             departure = TransportManager.getNextDeparture(context, currentStation, type);
@@ -32,7 +35,7 @@ public class ActionsProcessor {
             departure = TransportManager.getLastDeparture(context, currentStation, type);
         }
         if(departure != null) {
-            return ("The " + time + " " + type + " will depart in " +
+            return ("The " + time + " " + printType + " will depart in " +
                     printCountdown(departure.countDown) +
                     " , at " + String.format("%02d", departure.date.getHours()) +
                     ":" + String.format("%02d", departure.date.getMinutes()) + ".");
@@ -52,10 +55,11 @@ public class ActionsProcessor {
 
     private static String processTransLocationAction(Context context, Action a){
         String type = a.getData(DataType.TRANSPORTATION_TYPE);
+        String printType = type.equals("MVV-Regionalbus") ? "bus" : type ;
         LocationManager locMan = new LocationManager(context);
         String location = locMan.getStationForAssistent();
         if(location != null) {
-            return "The nearest " + type + " station is " + location + ".";
+            return "The nearest " + printType + " station is " + location + ".";
         }
         return "Error parsing MVG data.";
     }
