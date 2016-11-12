@@ -39,6 +39,9 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.google.android.gms.actions.SearchIntents.ACTION_SEARCH;
+import static com.google.android.gms.actions.SearchIntents.EXTRA_QUERY;
+
 public class AssistantActivity extends AppCompatActivity implements View.OnClickListener {
 
     /**
@@ -137,11 +140,7 @@ public class AssistantActivity extends AppCompatActivity implements View.OnClick
 
         assistantHistoryAdapter.addElement(new ChatMessage(introductoryMessage, assistant));
 
-        // handle the intent
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            sendMessage(extras.getString(Const.ASSISTANT_QUERY));
-        }
+        handleIntent(getIntent());
 
         // Text2speech feature for answers
         textToSpeech = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
@@ -152,6 +151,17 @@ public class AssistantActivity extends AppCompatActivity implements View.OnClick
                 }
             }
         });
+    }
+
+    private void handleIntent(Intent intent) {
+        if (intent == null)
+            return;
+
+        if (ACTION_SEARCH.equals(intent.getAction()) && intent.hasExtra(EXTRA_QUERY)) {
+            sendMessage(intent.getStringExtra(EXTRA_QUERY));
+        } else if (intent.hasExtra(Const.ASSISTANT_QUERY)) {
+            sendMessage(intent.getStringExtra(Const.ASSISTANT_QUERY));
+        }
     }
 
     private void bindUIElements() {
