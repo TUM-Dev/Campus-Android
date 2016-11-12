@@ -40,9 +40,9 @@ public class ActionsProcessor {
             case PROFESSOR_INFORMATION:
                 return processProfInfoAction(context, a);
             case MENSA_MENU:
-                return processMensaMenu(context, a);
+                return processMensaMenu(context);
             case MENSA_LOCATION:
-                return processMensaLocation(context, a);
+                return processMensaLocation(context);
             case MENSA_TIME:
                 return processMensaTime(context, a);
             default:
@@ -50,7 +50,7 @@ public class ActionsProcessor {
         }
     }
 
-    private static String processMensaMenu(Context context, Action a) {
+    private static String processMensaMenu(Context context) {
         CafeteriaManager cafeteriaManager = new CafeteriaManager(context);
         Map<String, List<CafeteriaMenu>> cafeteria = cafeteriaManager.getBestMatchMensaInfo(context);
         StringBuilder builder = new StringBuilder();
@@ -64,7 +64,7 @@ public class ActionsProcessor {
         return builder.toString();
     }
 
-    private static String processMensaLocation(Context context, Action a) {
+    private static String processMensaLocation(Context context) {
         CafeteriaManager cafeteriaManager = new CafeteriaManager(context);
         Cafeteria cafeteria = cafeteriaManager.getBestMatchMensa(context);
         return "The nearest cafeteria is at " + cafeteria.address
