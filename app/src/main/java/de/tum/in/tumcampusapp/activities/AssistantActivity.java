@@ -78,7 +78,7 @@ public class AssistantActivity extends AppCompatActivity implements View.OnClick
 
         progressDialog = new ProgressDialog(this);
         progressDialog.setIndeterminate(true);
-        progressDialog.setMessage("Asking to Luis...");
+        progressDialog.setMessage("Asking Luis...");
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 
         if (getSupportActionBar() != null) {
