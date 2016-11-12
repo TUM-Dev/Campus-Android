@@ -243,4 +243,15 @@ public class AssistantActivity extends AppCompatActivity implements View.OnClick
         }
         super.onDestroy();
     }
+
+    @Override
+    protected void onStop()
+    {
+        super.onStop();
+
+        if (textToSpeech != null) {
+            textToSpeech.stop();
+            textToSpeech.shutdown();
+        }
+    }
 }
