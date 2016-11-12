@@ -21,7 +21,6 @@
             android:transcriptMode="normal"
             android:divider="@android:color/transparent"
             android:dividerHeight="5.0sp"
-            android:paddingTop="10dp"
             />
 
         <RelativeLayout
