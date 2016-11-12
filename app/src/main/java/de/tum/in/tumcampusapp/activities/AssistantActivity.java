@@ -5,12 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-<<<<<<< HEAD
-import android.content.res.Resources;
 import android.net.Uri;
-import android.os.Build;
-=======
->>>>>>> 2c3c04bf2be2ec29a437dfcf4365e509154d643a
 import android.os.Bundle;
 import android.os.Environment;
 import android.speech.RecognizerIntent;
@@ -24,7 +19,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.Toast;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -33,7 +27,6 @@ import java.util.Locale;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.adapters.AssistantHistoryAdapter;
-import de.tum.in.tumcampusapp.api.TUMCabeClient;
 import de.tum.in.tumcampusapp.api.UCentralClient;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.FileUtils;
@@ -41,15 +34,10 @@ import de.tum.in.tumcampusapp.auxiliary.ImplicitCounter;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatMember;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatMessage;
-<<<<<<< HEAD
-import de.tum.in.tumcampusapp.models.tumcabe.Question;
-import de.tum.in.tumcampusapp.services.AssistantService;
+import de.tum.in.tumcampusapp.services.assistantServices.AssistantService;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-=======
-import de.tum.in.tumcampusapp.services.assistantServices.AssistantService;
->>>>>>> 2c3c04bf2be2ec29a437dfcf4365e509154d643a
 
 public class AssistantActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -65,7 +53,6 @@ public class AssistantActivity extends AppCompatActivity implements View.OnClick
     private ChatMember assistant;
     private ChatMember user;
 
-<<<<<<< HEAD
     private static final int READ_REQUEST_CODE = 42;
 
     private Callback<Void> stupidCB = new Callback<Void>() {
@@ -84,9 +71,8 @@ public class AssistantActivity extends AppCompatActivity implements View.OnClick
             Log.d("FAILED", t.getMessage());
         }
     };
-=======
+
     private TextToSpeech textToSpeech;
->>>>>>> 2c3c04bf2be2ec29a437dfcf4365e509154d643a
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -136,7 +122,6 @@ public class AssistantActivity extends AppCompatActivity implements View.OnClick
         LocalBroadcastManager.getInstance(this)
                 .registerReceiver(receiver, new IntentFilter(Const.ASSISTANT_BROADCAST_INTENT));
 
-<<<<<<< HEAD
         if (false) {
             FileUtils.performFileSearch(this, READ_REQUEST_CODE);
             UCentralClient.getInstance(this).login("UNAME", "PASS", new Callback<Void>() {
@@ -157,7 +142,6 @@ public class AssistantActivity extends AppCompatActivity implements View.OnClick
             });
         }
 
-=======
         String name = Utils.getSetting(this, Const.CHAT_ROOM_DISPLAY_NAME, getString(R.string.token_not_enabled));
 
         if (name.contains(" ")){
@@ -168,7 +152,6 @@ public class AssistantActivity extends AppCompatActivity implements View.OnClick
 
         assistantHistoryAdapter.addElement(new ChatMessage(introductoryMessage, assistant));
 
->>>>>>> 2c3c04bf2be2ec29a437dfcf4365e509154d643a
         // handle the intent
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
