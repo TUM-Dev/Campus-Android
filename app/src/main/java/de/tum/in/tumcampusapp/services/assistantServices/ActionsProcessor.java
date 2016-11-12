@@ -3,13 +3,23 @@ package de.tum.in.tumcampusapp.services.assistantServices;
 import android.content.Context;
 import android.hardware.camera2.params.StreamConfigurationMap;
 
-import java.util.ArrayList;
-import java.util.List;
+import net.danlew.android.joda.JodaTimeAndroid;
 
+import org.joda.time.DateTime;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+
+import de.tum.in.tumcampusapp.auxiliary.DateUtils;
 import de.tum.in.tumcampusapp.auxiliary.luis.Action;
 import de.tum.in.tumcampusapp.auxiliary.luis.DataType;
+import de.tum.in.tumcampusapp.managers.CafeteriaManager;
 import de.tum.in.tumcampusapp.managers.TransportManager;
 import de.tum.in.tumcampusapp.managers.LocationManager;
+import de.tum.in.tumcampusapp.models.cafeteria.Cafeteria;
+import de.tum.in.tumcampusapp.models.cafeteria.CafeteriaMenu;
 import de.tum.in.tumcampusapp.models.tumo.Employee;
 import de.tum.in.tumcampusapp.models.tumo.Person;
 import de.tum.in.tumcampusapp.models.tumo.PersonList;
@@ -26,9 +36,45 @@ public class ActionsProcessor {
                 return processTransLocationAction(context, a);
             case PROFESSOR_INFORMATION:
                 return processProfInfoAction(context, a);
+            case MENSA_MENU:
+                return processMensaMenu(context, a);
+            case MENSA_LOCATION:
+                return processMensaLocation(context, a);
+            case MENSA_TIME:
+                return processMensaTime(context, a);
             default:
                 return "Didn't catch that, please repeat.\n Action Type: "+ a.getActionType();
         }
+    }
+
+    private static String processMensaMenu(Context context, Action a) {
+        CafeteriaManager cafeteriaManager = new CafeteriaManager(context);
+        Map<String, List<CafeteriaMenu>> cafeteria = cafeteriaManager.getBestMatchMensaInfo(context);
+        StringBuilder builder = new StringBuilder();
+        for (Map.Entry<String, List<CafeteriaMenu>> cafeteriaEntry: cafeteria.entrySet()) {
+            builder.append("The menu for " + cafeteriaEntry.getKey() + " is:\n");
+            for (CafeteriaMenu menu : cafeteriaEntry.getValue()) {
+                builder.append(menu.name.replaceAll("\\(.*\\)", "") + "\n");
+                // TODO add menu price if we have time
+            }
+        }
+        return builder.toString();
+    }
+
+    private static String processMensaLocation(Context context, Action a) {
+        CafeteriaManager cafeteriaManager = new CafeteriaManager(context);
+        Cafeteria cafeteria = cafeteriaManager.getBestMatchMensa(context);
+        return "The nearest cafeteria is at " + cafeteria.address
+            + " and it's called " + cafeteria.name;
+    }
+
+    private static String processMensaTime(Context context, Action a) {
+        CafeteriaManager cafeteriaManager = new CafeteriaManager(context);
+        Map<String, List<CafeteriaMenu>> cafeteria = cafeteriaManager.getBestMatchMensaInfo(context);
+        CafeteriaMenu cafeteriaMenu = cafeteria.values().iterator().next().get(0);
+        DateTime dateTime = new DateTime(cafeteriaMenu.date);
+        return "The cafeteria opens at " + dateTime.toString("EEE MMM d, HH:mm");
+
     }
 
     @SuppressWarnings("deprecation")
