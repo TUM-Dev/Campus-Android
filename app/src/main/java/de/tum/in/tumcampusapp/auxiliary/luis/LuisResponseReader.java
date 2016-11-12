@@ -1,5 +1,8 @@
 package de.tum.in.tumcampusapp.auxiliary.luis;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -7,79 +10,100 @@ import org.json.JSONObject;
 // Created by Jimena Pose and Riccardo Padovani
 public class LuisResponseReader {
 
-    public Action readResponse(JSONObject response) {
+    public List<Action> readResponse(JSONObject response) {
+        List<Action> defaultActions = new ArrayList<>();
         try {
             JSONArray entities = response.getJSONArray("entities");
             String intentName = response.getJSONObject("topScoringIntent").getString("intent");
             switch (LuisIntent.fromIntentName(intentName)) {
                 case TRANSPORTATION:
-                    return findTransportationAction(entities);
+                    return findTransportationActions(entities);
                 case PROFESSOR:
-                    return findProfessorAction(entities);
+                    return findProfessorActions(entities);
                 case MENSA:
-                    return findMensaAction(entities);
+                    return findMensaActions(entities);
                 default:
                     break;
             }
             return null;
         } catch (JSONException e) {
             e.printStackTrace();
-            return Action.ERROR_BAD_INPUT;
+            defaultActions.add(new Action(ActionType.ERROR_BAD_INPUT));
         } catch (NullPointerException e) {
             e.printStackTrace();
-            return Action.ERROR;
+            defaultActions.add(new Action(ActionType.ERROR));
         }
+        return defaultActions;
     }
 
-    private Action findProfessorAction(JSONArray entities) throws JSONException {
+    private List<Action> findProfessorActions(JSONArray entities) throws JSONException {
+        List<Action> professorActions = new ArrayList<>();
+        String professorName = "";
         for (int i = 0; i < entities.length(); i++) {
             JSONObject entity = entities.getJSONObject(i);
             switch (getEntityType(entity)) {
                 case PROFESSOR_INFORMATION:
-                    Action professorInformation = Action.TRANSPORTATION_LOCATION;
-                    professorInformation.setEntityInput(getEntityInput(entity));
-                    return professorInformation;
+                    Action infoAction = new Action(ActionType.PROFESSOR_INFORMATION);
+                    infoAction.addData(DataType.PROFESSOR_INFORMATION, getEntityInput(entity));
+                    professorActions.add(infoAction);
+                    break;
                 case PROFESSOR_NAME:
+                    professorName = getEntityInput(entity);
                     break;
                 default:
-                    return Action.ERROR_ENTITIES;
+                    professorActions.add(new Action(ActionType.ERROR_ENTITIES));
             }
         }
-        return Action.ERROR_ENTITIES;
+        setDataForAllActions(professorActions, DataType.PROFESSOR_NAME, professorName);
+        return professorActions;
     }
 
-    private Action findTransportationAction(JSONArray entities) throws JSONException {
+    private List<Action> findTransportationActions(JSONArray entities) throws JSONException {
+        List<Action> transportationActions = new ArrayList<>();
+        String transportationType = "all";
         for (int i = 0; i < entities.length(); i++) {
             JSONObject entity = entities.getJSONObject(i);
             switch (getEntityType(entity)) {
                 case TRANSPORTATION_LOCATION:
-                    return Action.TRANSPORTATION_LOCATION;
+                    Action locationAction = new Action(ActionType.TRANSPORTATION_LOCATION);
+                    locationAction.addData(DataType.TRANSPORTATION_LOCATION, getEntityInput(entity));
+                    transportationActions.add(locationAction);
+                    break;
                 case TRANSPORTATION_TIME:
-                    return Action.TRANSPORTATION_TIME;
-                case TRANSPORTATION_TRAINS:
+                    Action timeAction = new Action(ActionType.TRANSPORTATION_TIME);
+                    timeAction.addData(DataType.TRANSPORTATION_TIME, getEntityInput(entity));
+                    transportationActions.add(timeAction);
+                    break;
+                case TRANSPORTATION_TYPE:
+                    transportationType = getTransportDataMatch(getEntityInput(entity));
                     break;
                 default:
-                    return Action.ERROR_ENTITIES;
+                    transportationActions.add(new Action(ActionType.ERROR_ENTITIES));
             }
         }
-        return Action.ERROR_ENTITIES;
+        setDataForAllActions(transportationActions, DataType.TRANSPORTATION_TYPE, transportationType);
+        return transportationActions;
     }
 
-    private Action findMensaAction(JSONArray entities) throws JSONException {
+    private List<Action> findMensaActions(JSONArray entities) throws JSONException {
+        List<Action> mensaActions = new ArrayList<>();
         for (int i = 0; i < entities.length(); i++) {
             JSONObject entity = entities.getJSONObject(i);
             switch (getEntityType(entity)) {
                 case MENSA_LOCATION:
-                    return Action.MENSA_LOCATION;
+                    mensaActions.add(new Action(ActionType.MENSA_LOCATION));
+                    break;
                 case MENSA_TIME:
-                    return Action.MENSA_TIME;
+                    mensaActions.add(new Action(ActionType.MENSA_TIME));
+                    break;
                 case MENSA_MENU:
-                    return Action.MENSA_MENU;
+                    mensaActions.add(new Action(ActionType.MENSA_MENU));
+                    break;
                 default:
                     break;
             }
         }
-        return Action.ERROR_ENTITIES;
+        return mensaActions;
     }
 
     private EntityType getEntityType(JSONObject entity) throws JSONException {
@@ -89,5 +113,17 @@ public class LuisResponseReader {
 
     private String getEntityInput(JSONObject entity) throws JSONException {
         return entity.getString("entity");
+    }
+
+    private String getTransportDataMatch(String transportType) {
+        return transportType.equals("bus") ? "bus" : "U-Bahn";
+    }
+
+    private void setDataForAllActions(List<Action> actions, DataType dataName, String data) {
+        if (data != null) {
+            for (Action action : actions) {
+                action.addData(dataName, data);
+            }
+        }
     }
 }
