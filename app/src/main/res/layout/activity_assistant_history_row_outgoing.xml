@@ -9,21 +9,24 @@
         android:layout_alignParentRight="true"
         android:background="@drawable/bg_message_assistant_out"
         android:orientation="vertical"
-        android:paddingBottom="5dp"
-        android:paddingEnd="12dp"
-        android:paddingLeft="12dp"
-        android:paddingRight="12dp"
-        android:paddingStart="12dp"
-        android:minWidth="60dp"
-        android:paddingTop="5dp">
+        android:paddingBottom="5dip"
+        android:paddingEnd="12dip"
+        android:paddingLeft="12dip"
+        android:paddingRight="12dip"
+        android:paddingStart="12dip"
+        android:minWidth="60dip"
+        android:paddingTop="5dip"
+        android:layout_marginTop="5dip">
 
         <TextView
             android:layout_gravity="center"
             android:id="@+id/tvMessage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="5dip"
             android:textSize="16sp"
-            android:padding="5dp"
+            android:paddingLeft="10dip"
+            android:paddingRight="10dip"
             android:textColor="#FFF"
             android:text="hi"/>
 
