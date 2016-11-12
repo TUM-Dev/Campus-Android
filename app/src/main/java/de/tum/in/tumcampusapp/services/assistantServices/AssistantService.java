@@ -94,11 +94,12 @@ public class AssistantService extends IntentService {
             e.printStackTrace();
         }
         if (result != null && result.isPresent()) {
-            String r = "";
+            String r = "Sorry I didn't understand you, could you please ask again?";
             JSONObject resultJSON = result.get();
             //return resultJSON.toString();
             LuisResponseReader luisResponseReader = new LuisResponseReader();
             List<Action> actions = luisResponseReader.readResponse(resultJSON);
+
             for (Action a : actions) { //todo prettify "and" etc.
                 r = "" + ActionsProcessor.processAction(getApplicationContext(), a);
             }

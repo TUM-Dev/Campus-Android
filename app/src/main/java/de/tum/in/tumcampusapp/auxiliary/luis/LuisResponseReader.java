@@ -25,7 +25,6 @@ public class LuisResponseReader {
                 default:
                     break;
             }
-            return null;
         } catch (JSONException e) {
             e.printStackTrace();
             actions.add(new Action(ActionType.ERROR_BAD_INPUT));
