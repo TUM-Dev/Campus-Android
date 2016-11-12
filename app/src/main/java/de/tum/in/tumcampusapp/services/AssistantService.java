@@ -86,6 +86,7 @@ public class AssistantService extends IntentService {
      * TODO: Do this.
      */
     private String processQuery(String query) {
+        // This is a test
         // 1. Make a request to Microsoft Azure (using NetUtils)
 //        Optional<JSONObject> result = null;
 //        try {
