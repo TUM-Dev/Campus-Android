@@ -13,6 +13,7 @@ import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.List;
+import java.util.Map;
 
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
@@ -20,7 +21,9 @@ import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.auxiliary.luis.Action;
 import de.tum.in.tumcampusapp.auxiliary.luis.DataType;
 import de.tum.in.tumcampusapp.auxiliary.luis.LuisResponseReader;
+import de.tum.in.tumcampusapp.managers.CafeteriaManager;
 import de.tum.in.tumcampusapp.managers.TransportManager;
+import de.tum.in.tumcampusapp.models.cafeteria.CafeteriaMenu;
 
 /**
  * An {@link IntentService} subclass for handling asynchronous task requests in
@@ -96,14 +99,13 @@ public class AssistantService extends IntentService {
         if (result != null && result.isPresent()) {
             String r = "Sorry I didn't understand you, could you please ask again?";
             JSONObject resultJSON = result.get();
-            //return resultJSON.toString();
             LuisResponseReader luisResponseReader = new LuisResponseReader();
             List<Action> actions = luisResponseReader.readResponse(resultJSON);
-
-            for (Action a : actions) { //todo prettify "and" etc.
-                r = "" + ActionsProcessor.processAction(getApplicationContext(), a);
+            StringBuilder actionsResponseBuilder = new StringBuilder();
+            for (Action action : actions) {
+                actionsResponseBuilder.append(ActionsProcessor.processAction(getApplicationContext(), action));
             }
-            return r;
+            return actionsResponseBuilder.toString();
         }
         return "Sorry, I am unable to reach the server, could you check your internet " +
                 "connection or try again later?";
