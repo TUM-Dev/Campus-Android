@@ -78,7 +78,7 @@ public class AssistantActivity extends AppCompatActivity implements View.OnClick
 
         progressDialog = new ProgressDialog(this);
         progressDialog.setIndeterminate(true);
-        progressDialog.setMessage("Connecting to Skynet...");
+        progressDialog.setMessage("Talking to Luis...");
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 
         if (getSupportActionBar() != null) {
@@ -191,7 +191,7 @@ public class AssistantActivity extends AppCompatActivity implements View.OnClick
             progressDialog.dismiss();
         }
         assistantHistoryAdapter.addElement(new ChatMessage(text, assistant));
-        int countWords = text.length() - text.replace(" ", "").length();
+        int countWords = text.length() - text.replace(" ", "").length() - text.replace("\n", "").length();
         if (countWords < 20) {
             textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null);
         }
