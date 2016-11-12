@@ -148,7 +148,7 @@ public class CafeteriaManager extends AbstractManager implements Card.ProvidesCa
     @Override
     public void onRequestCard(Context context) {
         // Choose which mensa should be shown
-        int cafeteriaId = new LocationManager(context).getCafeteria();
+        int cafeteriaId = getBestMatchMensaId(context);
         if (cafeteriaId == -1) {
             return;
         }
@@ -208,9 +208,8 @@ public class CafeteriaManager extends AbstractManager implements Card.ProvidesCa
      */
     public Map<String, List<CafeteriaMenu>> getBestMatchMensaInfo(Context context) {
         // Choose which mensa should be shown
-        int cafeteriaId = new LocationManager(context).getCafeteria();
+        int cafeteriaId = getBestMatchMensaId(context);
         if (cafeteriaId == -1) {
-            Utils.log("could not get a Cafeteria form locationManager!");
             return null;
         }
 
@@ -258,9 +257,8 @@ public class CafeteriaManager extends AbstractManager implements Card.ProvidesCa
 
     public String getBestMatchMensaName(Context context) {
         // Choose which mensa should be shown
-        int cafeteriaId = new LocationManager(context).getCafeteria();
+        int cafeteriaId = getBestMatchMensaId(context);
         if (cafeteriaId == -1) {
-            Utils.log("could not get a Cafeteria form locationManager!");
             return null;
         }
 
