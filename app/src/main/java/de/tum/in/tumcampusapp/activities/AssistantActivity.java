@@ -93,20 +93,20 @@ public class AssistantActivity extends AppCompatActivity implements View.OnClick
         LocalBroadcastManager.getInstance(this)
                 .registerReceiver(receiver, new IntentFilter(Const.ASSISTANT_BROADCAST_INTENT));
 
+        String name = Utils.getSetting(this, Const.CHAT_ROOM_DISPLAY_NAME, getString(R.string.token_not_enabled));
+
+        if (name.contains(" ")){
+            name = name.substring(0, name.indexOf(" "));
+        }
+
+        String introductoryMessage = "Hi " + name + ", how can I help you?";
+
+        assistantHistoryAdapter.addElement(new ChatMessage(introductoryMessage, assistant));
+
         // handle the intent
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             sendMessage(extras.getString(Const.ASSISTANT_QUERY));
-        } else {
-            String name = Utils.getSetting(this, Const.CHAT_ROOM_DISPLAY_NAME, getString(R.string.token_not_enabled));
-
-            if (name.contains(" ")){
-                name = name.substring(0, name.indexOf(" "));
-            }
-
-            String introductoryMessage = "Hi " + name + ", how can I help you?";
-
-            assistantHistoryAdapter.addElement(new ChatMessage(introductoryMessage, assistant));
         }
 
         // Text 2 speech feature for answers
@@ -158,5 +158,14 @@ public class AssistantActivity extends AppCompatActivity implements View.OnClick
             etMessage.setText(results.get(0));
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (textToSpeech != null) {
+            textToSpeech.stop();
+            textToSpeech.shutdown();
+        }
+        super.onDestroy();
     }
 }
