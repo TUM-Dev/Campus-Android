@@ -13,7 +13,7 @@ enum EntityType {
     TRANSPORTATION_TIME("transportation::transportation.time"),
 
     // Professor
-    PROFESSOR_NAME("professor::n                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            ame"),
+    PROFESSOR_NAME("professor::name"),
     PROFESSOR_INFORMATION("professor::information")
     ;
 

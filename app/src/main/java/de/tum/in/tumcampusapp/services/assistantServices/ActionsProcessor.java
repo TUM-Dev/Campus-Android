@@ -3,10 +3,18 @@ package de.tum.in.tumcampusapp.services.assistantServices;
 import android.content.Context;
 import android.hardware.camera2.params.StreamConfigurationMap;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import de.tum.in.tumcampusapp.auxiliary.luis.Action;
 import de.tum.in.tumcampusapp.auxiliary.luis.DataType;
 import de.tum.in.tumcampusapp.managers.TransportManager;
 import de.tum.in.tumcampusapp.managers.LocationManager;
+import de.tum.in.tumcampusapp.models.tumo.Employee;
+import de.tum.in.tumcampusapp.models.tumo.Person;
+import de.tum.in.tumcampusapp.models.tumo.PersonList;
+import de.tum.in.tumcampusapp.tumonline.TUMOnlineConst;
+import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequest;
 
 public class ActionsProcessor {
 
@@ -16,8 +24,10 @@ public class ActionsProcessor {
                 return processTransTimeAction(context, a);
             case TRANSPORTATION_LOCATION:
                 return processTransLocationAction(context, a);
+            case PROFESSOR_INFORMATION:
+                return processProfInfoAction(context, a);
             default:
-                return "Didn't catch that, please repeat";
+                return "Didn't catch that, please repeat.\n Action Type: "+ a.getActionType();
         }
     }
 
@@ -62,5 +72,24 @@ public class ActionsProcessor {
             return "The nearest " + printType + " station is " + location + ".";
         }
         return "Error parsing MVG data.";
+    }
+
+    private static String processProfInfoAction(Context context, Action a) {
+        String r = "";
+        String query = a.getData(DataType.PROFESSOR_NAME);
+        String info = a.getData(DataType.PROFESSOR_INFORMATION);
+        List<Person> persons = getPersons(context, query);
+        for(Person p: persons){
+            String name = p.getSurname() + " " + p.getName();
+            r = r + name + "\n";
+        }
+        return r;
+    }
+
+    private static List<Person> getPersons(Context context, String query){
+        TUMOnlineRequest<PersonList> pl = new TUMOnlineRequest<PersonList>(TUMOnlineConst.PERSON_SEARCH, context, true);
+        pl.setParameter("pSuche", query);
+        List<Person> persons = pl.fetch().get().getPersons();
+        return persons;
     }
 }
