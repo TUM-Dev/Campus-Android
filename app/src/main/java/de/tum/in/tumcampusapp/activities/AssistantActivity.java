@@ -123,6 +123,7 @@ public class AssistantActivity extends AppCompatActivity implements View.OnClick
 
     private void receiveMessage(String text) {
         assistantHistoryAdapter.addElement(new ChatMessage(text, assistant));
+        rvMessageHistory.smoothScrollToPosition(rvMessageHistory.getAdapter().getItemCount());
     }
 
     private void sendMessage(String text) {
