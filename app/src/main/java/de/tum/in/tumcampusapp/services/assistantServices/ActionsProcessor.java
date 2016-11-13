@@ -50,9 +50,9 @@ public class ActionsProcessor {
             case PROFESSOR_INFORMATION:
                 return processProfInfoAction(context, a);
             case MENSA_MENU:
-                return processMensaMenu(context, a);
+                return processMensaMenu(context);
             case MENSA_LOCATION:
-                return processMensaLocation(context, a);
+                return processMensaLocation(context);
             case MENSA_TIME:
                 return processMensaTime(context, a);
             case PRINT:
@@ -62,7 +62,7 @@ public class ActionsProcessor {
         }
     }
 
-    private static String processMensaMenu(Context context, Action a) {
+    private static String processMensaMenu(Context context) {
         CafeteriaManager cafeteriaManager = new CafeteriaManager(context);
         Map<String, List<CafeteriaMenu>> cafeteria = cafeteriaManager.getBestMatchMensaInfo(context);
         StringBuilder builder = new StringBuilder();
@@ -76,19 +76,35 @@ public class ActionsProcessor {
         return builder.toString();
     }
 
-    private static String processMensaLocation(Context context, Action a) {
+    private static String processMensaLocation(Context context) {
         CafeteriaManager cafeteriaManager = new CafeteriaManager(context);
         Cafeteria cafeteria = cafeteriaManager.getBestMatchMensa(context);
         return "The nearest cafeteria is at " + cafeteria.address
             + " and it's called " + cafeteria.name;
     }
 
-    private static String processMensaTime(Context context, Action a) {
+    private static String processMensaTime(Context context, Action action) {
         CafeteriaManager cafeteriaManager = new CafeteriaManager(context);
         Map<String, List<CafeteriaMenu>> cafeteria = cafeteriaManager.getBestMatchMensaInfo(context);
         CafeteriaMenu cafeteriaMenu = cafeteria.values().iterator().next().get(0);
-        DateTime dateTime = new DateTime(cafeteriaMenu.date);
-        return "The cafeteria opens at " + dateTime.toString("EEE MMM d, HH:mm");
+        // TODO fix the opening and closing hours if we have time
+        //String date = Utils.getDateTimeString(cafeteriaMenu.date);
+        DateTime nowDateTime = new DateTime();
+        String actionOutput = "";
+        if (action.getData(DataType.MENSA_TIME).contains("open")) {
+            if (Integer.valueOf(nowDateTime.getHourOfDay()) < 15) {
+                actionOutput = "The cafeteria is open";
+            } else {
+                actionOutput = "The cafeteria opens tomorrow";
+            }
+        } else {
+            if (Integer.valueOf(nowDateTime.getHourOfDay()) < 15) {
+                actionOutput = "The cafeteria closes around 15hs";
+            } else {
+                actionOutput = "The cafeteria is closed";
+            }
+        }
+        return actionOutput;
 
     }
 

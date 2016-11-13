@@ -220,8 +220,8 @@ public class CafeteriaManager extends AbstractManager implements Card.ProvidesCa
             Utils.log(cursor.toString());
             cafeteria = new Cafeteria(
                 cafeteriaId,
-                cursor.getString(cursor.getColumnIndex("name")),
-                cursor.getString(cursor.getColumnIndex("address")),
+                cursor.getString(cursor.getColumnIndex(Const.NAME_COLUMN)),
+                cursor.getString(cursor.getColumnIndex(Const.ADDRESS_COLUMN)),
                 cursor.getDouble(cursor.getColumnIndex("latitude")),
                 cursor.getDouble(cursor.getColumnIndex("longitude"))
             );
