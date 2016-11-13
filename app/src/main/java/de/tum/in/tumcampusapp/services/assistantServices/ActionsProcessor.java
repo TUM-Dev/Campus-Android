@@ -116,12 +116,12 @@ public class ActionsProcessor {
         LocationManager locMan = new LocationManager(context);
         String currentStation = locMan.getStationForAssistent();
         TransportManager.DepartureDetailed departure = null;
-        if(time.equals("next")){
+        if (time.equals("next")) {
             departure = TransportManager.getNextDeparture(context, currentStation, type);
         }else if(time.equals("last")) {
             departure = TransportManager.getLastDeparture(context, currentStation, type);
         }
-        if(departure != null) {
+        if (departure != null) {
             return ("The " + time + " " + printType + " will depart in " +
                     printCountdown(departure.countDown) +
                     " , at " + String.format("%02d", departure.date.getHours()) +
