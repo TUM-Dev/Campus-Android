@@ -93,7 +93,9 @@ public class LuisResponseReader {
                     mensaActions.add(new Action(ActionType.MENSA_LOCATION));
                     break;
                 case MENSA_TIME:
-                    mensaActions.add(new Action(ActionType.MENSA_TIME));
+                    Action mensaTimeAction = new Action(ActionType.MENSA_TIME);
+                    mensaTimeAction.addData(DataType.MENSA_TIME, getEntityInput(entity));
+                    mensaActions.add(mensaTimeAction);
                     break;
                 case MENSA_MENU:
                     mensaActions.add(new Action(ActionType.MENSA_MENU));

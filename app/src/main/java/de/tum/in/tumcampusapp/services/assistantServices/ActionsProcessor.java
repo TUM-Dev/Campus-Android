@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 import de.tum.in.tumcampusapp.auxiliary.DateUtils;
+import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.auxiliary.luis.Action;
 import de.tum.in.tumcampusapp.auxiliary.luis.DataType;
 import de.tum.in.tumcampusapp.managers.CafeteriaManager;
@@ -71,12 +72,28 @@ public class ActionsProcessor {
             + " and it's called " + cafeteria.name;
     }
 
-    private static String processMensaTime(Context context, Action a) {
+    private static String processMensaTime(Context context, Action action) {
         CafeteriaManager cafeteriaManager = new CafeteriaManager(context);
         Map<String, List<CafeteriaMenu>> cafeteria = cafeteriaManager.getBestMatchMensaInfo(context);
         CafeteriaMenu cafeteriaMenu = cafeteria.values().iterator().next().get(0);
-        DateTime dateTime = new DateTime(cafeteriaMenu.date);
-        return "The cafeteria opens at " + dateTime.toString("EEE MMM d, HH:mm");
+        // TODO fix the opening and closing hours if we have time
+        //String date = Utils.getDateTimeString(cafeteriaMenu.date);
+        DateTime nowDateTime = new DateTime();
+        String actionOutput = "";
+        if (action.getData(DataType.MENSA_TIME).contains("open")) {
+            if (Integer.valueOf(nowDateTime.getHourOfDay()) < 15) {
+                actionOutput = "The cafeteria is open";
+            } else {
+                actionOutput = "The cafeteria opens tomorrow";
+            }
+        } else {
+            if (Integer.valueOf(nowDateTime.getHourOfDay()) < 15) {
+                actionOutput = "The cafeteria closes around 15hs";
+            } else {
+                actionOutput = "The cafeteria is closed";
+            }
+        }
+        return actionOutput;
 
     }
 
