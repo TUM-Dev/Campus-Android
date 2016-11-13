@@ -114,16 +114,14 @@ public class LuisResponseReader {
         for (int i = 0; i < entities.length(); i++) {
             JSONObject entity = entities.getJSONObject(i);
             EntityType entityType = getEntityType(entity);
-            if (entityType != null) {
-                switch (entityType) {
-                    case PRINT_FILE:
-                        Action a = new Action(ActionType.PRINT);
-                        a.addData(DataType.FILE, getEntityInput(entity));
-                        printActions.add(a);
-                        break;
-                    default:
-                        break;
-                }
+            switch (entityType) {
+                case PRINT_FILE:
+                    Action a = new Action(ActionType.PRINT);
+                    a.addData(DataType.FILE, getEntityInput(entity));
+                    printActions.add(a);
+                    break;
+                default:
+                    break;
             }
         }
         return printActions;
