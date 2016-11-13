@@ -99,7 +99,7 @@ public class ActionsProcessor {
             }
         } else {
             if (Integer.valueOf(nowDateTime.getHourOfDay()) < 15) {
-                actionOutput = "The cafeteria closes around 15hs";
+                actionOutput = "The cafeteria closes around 15 hours";
             } else {
                 actionOutput = "The cafeteria is closed";
             }
