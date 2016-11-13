@@ -220,6 +220,7 @@ public class ActionsProcessor {
         String filename = a.getData(DataType.FILE).replaceAll(" ", "");
         String url = downloadPath + filename;
         Utils.log("URL:" + url);
+
         File f = new File(url);
         if(f.exists()){
             return sendFileToPrinter(context, f);
