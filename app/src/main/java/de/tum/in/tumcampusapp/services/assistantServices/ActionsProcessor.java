@@ -170,6 +170,7 @@ public class ActionsProcessor {
                         r = r + "\t" + e.getEmail();
                         break;
                     case "room":
+                    case "office":
                         r = r + "\n\t\t\t\t" + "Rooms:";
                         if (e.getRooms() != null) {
                             for (Room room : e.getRooms()) {
