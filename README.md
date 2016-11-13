@@ -11,6 +11,7 @@ Die inoffizielle TUM Campus App wird von Studierenden des Android Praktikums, fr
 - Öffnungszeiten
 - Wichtige Links
 - automatische Stummschaltung während der Vorlesung
+- Personal assistant using Language Understanding Intelligent Service (LUIS)
 - und und und ...
 
 #### [Contributors](https://github.com/TCA-Team/TumCampusApp/blob/master/CONTRIBUTORS.md)

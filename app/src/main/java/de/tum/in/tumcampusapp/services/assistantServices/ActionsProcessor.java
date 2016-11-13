@@ -99,7 +99,7 @@ public class ActionsProcessor {
             }
         } else {
             if (Integer.valueOf(nowDateTime.getHourOfDay()) < 15) {
-                actionOutput = "The cafeteria closes around 15hs";
+                actionOutput = "The cafeteria closes around 15 hours";
             } else {
                 actionOutput = "The cafeteria is closed";
             }
@@ -116,12 +116,12 @@ public class ActionsProcessor {
         LocationManager locMan = new LocationManager(context);
         String currentStation = locMan.getStationForAssistent();
         TransportManager.DepartureDetailed departure = null;
-        if(time.equals("next")){
+        if (time.equals("next")) {
             departure = TransportManager.getNextDeparture(context, currentStation, type);
-        }else if(time.equals("last")) {
+        } else if (time.equals("last") || time.equals("latest")) {
             departure = TransportManager.getLastDeparture(context, currentStation, type);
         }
-        if(departure != null) {
+        if (departure != null) {
             return ("The " + time + " " + printType + " will depart in " +
                     printCountdown(departure.countDown) +
                     " , at " + String.format("%02d", departure.date.getHours()) +
@@ -222,7 +222,7 @@ public class ActionsProcessor {
         Utils.log("URL:" + url);
 
         File f = new File(url);
-        if(f.exists()){
+        if (f.exists()){
             return sendFileToPrinter(context, f);
         }
         return "File not found.";
@@ -236,9 +236,14 @@ public class ActionsProcessor {
             return context.getResources().getString(R.string.error_mi_wrong);
         }
 
+        String answer;
         UCentralClient.getInstance(context).login(user, pass);
-        UCentralClient.getInstance(context).printFile(f);
+        if (!UCentralClient.getInstance(context).printFile(f)) {
+            answer = "Please, check storage permissions for the app.";
+        } else {
+            answer = "Print request sent.";
+        }
         UCentralClient.getInstance(context).logout();
-        return "Print request sent.";
+        return answer;
     }
 }
