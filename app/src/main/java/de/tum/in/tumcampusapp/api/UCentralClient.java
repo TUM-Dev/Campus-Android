@@ -2,17 +2,19 @@ package de.tum.in.tumcampusapp.api;
 
 import android.content.Context;
 import android.net.Uri;
+import android.util.Log;
 
 import java.io.File;
+import java.io.IOException;
 
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.tumcabe.Question;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
-import okhttp3.Request;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.Body;
@@ -60,8 +62,12 @@ public class UCentralClient {
     }
 
     public void login(String username, String password) {
-        Request r = service.login(username, password, "Login").request();
-        Utils.log(r.toString());
+        try {
+            Response r = service.login(username, password, "Login").execute();
+            Utils.log(r.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void logout(Callback<Void> cb) {
@@ -69,7 +75,12 @@ public class UCentralClient {
     }
 
     public void logout() {
-        service.logout("Logout").request();
+        try {
+            Response r = service.logout("Logout").execute();
+            Utils.log(r.message());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void printFile(File file, Callback<Void> cb) {
@@ -105,15 +116,21 @@ public class UCentralClient {
         RequestBody submit = RequestBody.create(MediaType.parse("form-data"), "Print");
 
         // finally, execute the request
-        service.printDocument(
-                printer,
-                printcount,
-                orientation,
-                duplex,
-                color,
-                pages,
-                body,
-                submit).request();
+        try {
+            Response r = service.printDocument(
+                    printer,
+                    printcount,
+                    orientation,
+                    duplex,
+                    color,
+                    pages,
+                    body,
+                    submit).execute();
+            Utils.log(r.message());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     private interface UCentralAPIService {
