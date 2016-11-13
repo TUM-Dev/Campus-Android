@@ -9,6 +9,8 @@ public enum ActionType {
 	TRANSPORTATION_TIME,
 	
 	PROFESSOR_INFORMATION,
+
+	PRINT,
 	
 	// Errors
 	ERROR_BAD_INPUT,

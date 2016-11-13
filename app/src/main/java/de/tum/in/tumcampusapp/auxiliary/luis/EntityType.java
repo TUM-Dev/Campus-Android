@@ -14,8 +14,10 @@ enum EntityType {
 
     // Professor
     PROFESSOR_NAME("professor::name"),
-    PROFESSOR_INFORMATION("professor::information")
-    ;
+    PROFESSOR_INFORMATION("professor::information"),
+
+    //Print
+    PRINT_FILE("print::file");
 
 
     private String entityName;

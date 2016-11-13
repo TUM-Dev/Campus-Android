@@ -5,6 +5,7 @@ public enum LuisIntent {
     TRANSPORTATION("transportation"),
     PROFESSOR("professor"),
     MENSA("Mensa"),
+    PRINT("print"),
     NONE("None");
 
     private String intentName;

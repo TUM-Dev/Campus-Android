@@ -22,6 +22,8 @@ public class LuisResponseReader {
                     return findProfessorActions(entities);
                 case MENSA:
                     return findMensaActions(entities);
+                case PRINT:
+                    return findPrintActions(entities);
                 default:
                     break;
             }
@@ -103,6 +105,26 @@ public class LuisResponseReader {
             }
         }
         return mensaActions;
+    }
+
+    private List<Action> findPrintActions(JSONArray entities) throws JSONException {
+        List<Action> printActions = new ArrayList<>();
+        for (int i = 0; i < entities.length(); i++) {
+            JSONObject entity = entities.getJSONObject(i);
+            EntityType entityType = getEntityType(entity);
+            if (entityType != null) {
+                switch (entityType) {
+                    case PRINT_FILE:
+                        Action a = new Action(ActionType.PRINT);
+                        a.addData(DataType.FILE, getEntityInput(entity));
+                        printActions.add(a);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+        return printActions;
     }
 
     private EntityType getEntityType(JSONObject entity) throws JSONException {

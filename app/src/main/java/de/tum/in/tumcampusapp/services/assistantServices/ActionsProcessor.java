@@ -2,17 +2,24 @@ package de.tum.in.tumcampusapp.services.assistantServices;
 
 import android.content.Context;
 import android.hardware.camera2.params.StreamConfigurationMap;
+import android.os.Environment;
+import android.util.Log;
 
 import net.danlew.android.joda.JodaTimeAndroid;
 
 import org.joda.time.DateTime;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.api.UCentralClient;
 import de.tum.in.tumcampusapp.auxiliary.DateUtils;
+import de.tum.in.tumcampusapp.auxiliary.FileUtils;
+import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.auxiliary.luis.Action;
 import de.tum.in.tumcampusapp.auxiliary.luis.DataType;
 import de.tum.in.tumcampusapp.managers.CafeteriaManager;
@@ -26,6 +33,9 @@ import de.tum.in.tumcampusapp.models.tumo.PersonList;
 import de.tum.in.tumcampusapp.models.tumo.Room;
 import de.tum.in.tumcampusapp.tumonline.TUMOnlineConst;
 import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequest;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static de.tum.in.tumcampusapp.R.string.room;
 
@@ -45,6 +55,8 @@ public class ActionsProcessor {
                 return processMensaLocation(context, a);
             case MENSA_TIME:
                 return processMensaTime(context, a);
+            case PRINT:
+                return processPrintRequest(context, a);
             default:
                 return "ActionTypeError: "+ a.getActionType();
         }
@@ -184,5 +196,28 @@ public class ActionsProcessor {
             return employees;
         }
         return null;
+    }
+
+    private static String processPrintRequest(Context context, Action a){
+        String downloadPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath() + "/";
+        String filename = a.getData(DataType.FILE).replaceAll(" ", "");
+        String url = downloadPath + filename;
+        Utils.log("URL:" + url);
+        File f = new File(url);
+        return sendFileToPrinter(context, f);
+    }
+
+    private static String sendFileToPrinter(final Context context, final File f) {
+        String user = Utils.getInternalSettingString(context, context.getResources().getString(R.string.mi_login), "");
+        String pass = Utils.getInternalSettingString(context, context.getResources().getString(R.string.mi_pass), "");
+
+        if (user.equals("") || pass.equals("")) {
+            return context.getResources().getString(R.string.error_mi_wrong);
+        }
+
+        UCentralClient.getInstance(context).login(user, pass);
+        //UCentralClient.getInstance(context).printFile(f);
+        UCentralClient.getInstance(context).logout();
+        return "Print request sent.";
     }
 }

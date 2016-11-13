@@ -8,6 +8,7 @@ import java.io.File;
 import de.tum.in.tumcampusapp.models.tumcabe.Question;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
+import okhttp3.Request;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -65,6 +66,10 @@ public class UCentralClient {
         service.logout("Logout").enqueue(cb);
     }
 
+    public void logout() {
+        service.logout("Logout").request();
+    }
+
     public void printFile(File file, Callback<Void> cb) {
         RequestBody body = RequestBody.create(MediaType.parse("application/pdf"), file);
         RequestBody printer = RequestBody.create(MediaType.parse("form-data"), "xerhalle");
@@ -85,6 +90,28 @@ public class UCentralClient {
                 pages,
                 body,
                 submit).enqueue(cb);
+    }
+
+    public void printFile(File file) {
+        RequestBody body = RequestBody.create(MediaType.parse("application/pdf"), file);
+        RequestBody printer = RequestBody.create(MediaType.parse("form-data"), "xerhalle");
+        RequestBody printcount = RequestBody.create(MediaType.parse("form-data"), "1");
+        RequestBody orientation = RequestBody.create(MediaType.parse("form-data"), "portrait");
+        RequestBody duplex = RequestBody.create(MediaType.parse("form-data"), "duplex");
+        RequestBody color = RequestBody.create(MediaType.parse("form-data"), "bw");
+        RequestBody pages = RequestBody.create(MediaType.parse("form-data"), "");
+        RequestBody submit = RequestBody.create(MediaType.parse("form-data"), "Print");
+
+        // finally, execute the request
+        service.printDocument(
+                printer,
+                printcount,
+                orientation,
+                duplex,
+                color,
+                pages,
+                body,
+                submit).request();
     }
 
     private interface UCentralAPIService {

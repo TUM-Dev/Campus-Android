@@ -27,7 +27,6 @@ public class AssistantService extends IntentService {
 
     private static final String EXTRA_QUERY = "de.tum.in.tumcampusapp.services.extra.QUERY";
     public static final String EXTRA_RESULT = "de.tum.in.tumcampusapp.services.extra.RESULT";
-    public static final String EXTRA_RESULT_TYPE_PRINT = "de.tum.in.tumcampusapp.services.extra.RESULT_PRINT";
 
     private static final String ACTION_PROCESS_QUERY = "de.tum.in.tumcampusapp.services.action.PROCESS_QUERY";
     private static final String ASSISTANT_SERVICE = "AssistantService";
@@ -75,9 +74,6 @@ public class AssistantService extends IntentService {
 
                 Intent i = new Intent(Const.ASSISTANT_BROADCAST_INTENT);
                 i.putExtra(EXTRA_RESULT, answer);
-                if (wasPrintCommand) {
-                    i.putExtra(EXTRA_RESULT_TYPE_PRINT, true);
-                }
 
                 LocalBroadcastManager.getInstance(this).sendBroadcast(i);
             }

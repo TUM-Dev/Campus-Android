@@ -133,9 +133,6 @@ public class AssistantActivity extends AppCompatActivity implements View.OnClick
         // Handle the result from AssistantService
         if (intent.hasExtra(AssistantService.EXTRA_RESULT)) {
             receiveMessage(intent.getStringExtra(AssistantService.EXTRA_RESULT));
-            if (intent.hasExtra(AssistantService.EXTRA_RESULT_TYPE_PRINT)) {
-                FileUtils.performFileSearch(this, READ_REQUEST_CODE);
-            }
 
         // Ok Google
         } else if (ACTION_SEARCH.equals(intent.getAction()) && intent.hasExtra(EXTRA_QUERY)) {
@@ -212,49 +209,8 @@ public class AssistantActivity extends AppCompatActivity implements View.OnClick
         if (requestCode == Const.SPEECH_REQUEST_CODE && resultCode == RESULT_OK) {
             List<String> results = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
             etMessage.setText(results.get(0));
-
-        // File picker
-        } else if (requestCode == READ_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            if (data != null) {
-                Uri uri = data.getData();
-                Log.d("FILE NAME", uri.getPath());
-                Log.d("FILE NAME", uri.getEncodedPath());
-                // sendFileToPrinter(new File(uri.getPath()));
-            }
         }
         super.onActivityResult(requestCode, resultCode, data);
-    }
-
-    private void sendFileToPrinter(final File f) {
-        String user = Utils.getInternalSettingString(this, getResources().getString(R.string.mi_login), "");
-        String pass = Utils.getInternalSettingString(this, getResources().getString(R.string.mi_pass), "");
-
-        if (user.equals("") || pass.equals("")) {
-            Utils.showToast(this.getApplicationContext(), getResources().getString(R.string.error_mi_wrong));
-        }
-
-        UCentralClient.getInstance(this).login(user, pass, new Callback<Void>() {
-            @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
-                Log.d("LOG IN", "SUCCESS");
-                UCentralClient.getInstance(getApplicationContext()).printFile(f, new Callback<Void>() {
-                    @Override
-                    public void onResponse(Call<Void> call, Response<Void> response) {
-                        receiveMessage("The file sent");
-                    }
-
-                    @Override
-                    public void onFailure(Call<Void> call, Throwable t) {
-                        Log.d("PRINT", "FAIL");
-                    }
-                });
-            }
-
-            @Override
-            public void onFailure(Call<Void> call, Throwable t) {
-                Log.d("LOG IN", "FAIL");
-            }
-        });
     }
 
     @Override
