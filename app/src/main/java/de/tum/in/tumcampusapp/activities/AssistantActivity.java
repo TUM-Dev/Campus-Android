@@ -57,7 +57,7 @@ public class AssistantActivity extends AppCompatActivity implements View.OnClick
     private ChatMember assistant;
     private ChatMember user;
 
-    private ProgressDialog progressDialog;
+//    private ProgressDialog progressDialog;
 
     private static final int READ_REQUEST_CODE = 42;
 
@@ -76,10 +76,10 @@ public class AssistantActivity extends AppCompatActivity implements View.OnClick
             getSupportActionBar().setHomeButtonEnabled(true);
         }
 
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setIndeterminate(true);
-        progressDialog.setMessage("Asking Luis...");
-        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+//        progressDialog = new ProgressDialog(this);
+//        progressDialog.setIndeterminate(true);
+//        progressDialog.setMessage("Asking Luis...");
+//        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle(R.string.assistant_name);
@@ -184,22 +184,35 @@ public class AssistantActivity extends AppCompatActivity implements View.OnClick
 
     @SuppressWarnings("deprecation")
     private void receiveMessage(String text) {
-        if (progressDialog.isShowing()) {
-            progressDialog.dismiss();
-        }
+        // if (progressDialog.isShowing()) {
+        //     progressDialog.dismiss();
+        // }
+
+        // Remove the animation with three dots
+        int position = assistantHistoryAdapter.getItemCount() - 1;
+        assistantHistoryAdapter.getElements().remove(position);
+        assistantHistoryAdapter.notifyItemRemoved(position);
+        assistantHistoryAdapter.notifyItemRangeChanged(position, assistantHistoryAdapter.getElements().size());
+
         assistantHistoryAdapter.addElement(new ChatMessage(text, assistant));
-        int countWords = text.length() - text.replace(" ", "").length() - text.replace("\n", "").length();
-        if (countWords < 20) {
+
+        int countWords = text.split("\\s+|\\n+|\\t+").length;
+        if (countWords < 20 && !text.contentEquals("...")) {
             textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null);
         }
 
-        rvMessageHistory.smoothScrollToPosition(rvMessageHistory.getAdapter().getItemCount() - 1);
+        rvMessageHistory.smoothScrollToPosition(assistantHistoryAdapter.getItemCount() - 1);
     }
 
     private void sendMessage(String text) {
-        progressDialog.show();
+        // progressDialog.show();
+        // Add a waiting message
         assistantHistoryAdapter.addElement(new ChatMessage(text, user));
         AssistantService.startActionProcessQuery(getApplicationContext(), text);
+        assistantHistoryAdapter.addElement(new ChatMessage("...", assistant));
+
+        rvMessageHistory.smoothScrollToPosition(assistantHistoryAdapter.getItemCount() - 1);
+
     }
 
     @Override
