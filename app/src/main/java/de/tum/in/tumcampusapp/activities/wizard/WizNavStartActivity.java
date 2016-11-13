@@ -127,8 +127,10 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<String, 
                             // TODO: Remove hard coded strings for Inf. and Math.
                             if (selectedItem.getText().equals("Informatik") || selectedItem.getText().equals("Mathematik")) {
                                 miLoginPassLayout.setVisibility(View.VISIBLE);
+                                findViewById(R.id.mi_login_and_pass_tv).setVisibility(View.VISIBLE);
                             } else {
                                 miLoginPassLayout.setVisibility(View.INVISIBLE);
+                                findViewById(R.id.mi_login_and_pass_tv).setVisibility(View.INVISIBLE);
                             }
                         }
                     }
