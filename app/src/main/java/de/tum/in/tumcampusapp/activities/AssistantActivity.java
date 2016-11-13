@@ -1,6 +1,7 @@
 package de.tum.in.tumcampusapp.activities;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -56,24 +57,9 @@ public class AssistantActivity extends AppCompatActivity implements View.OnClick
     private ChatMember assistant;
     private ChatMember user;
 
+    private ProgressDialog progressDialog;
+
     private static final int READ_REQUEST_CODE = 42;
-
-    private Callback<Void> stupidCB = new Callback<Void>() {
-        @Override
-        public void onResponse(Call<Void> call, Response<Void> response) {
-            if (response.isSuccessful()) {
-                Log.d("LOOOOOOL", "SUCCESSFULLY PRINTED");
-            } else {
-                Log.d("LOOOOOOL", "NOT PRINTED");
-            }
-        }
-
-        @Override
-        public void onFailure(Call<Void> call, Throwable t) {
-            Log.d("FAILED", ":(");
-            Log.d("FAILED", t.getMessage());
-        }
-    };
 
     private TextToSpeech textToSpeech;
 
@@ -90,6 +76,11 @@ public class AssistantActivity extends AppCompatActivity implements View.OnClick
             getSupportActionBar().setHomeButtonEnabled(true);
         }
 
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("Asking Luis...");
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+
         if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle(R.string.assistant_name);
         }
@@ -103,43 +94,13 @@ public class AssistantActivity extends AppCompatActivity implements View.OnClick
         BroadcastReceiver receiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                receiveMessage(intent.getStringExtra(AssistantService.EXTRA_RESULT));
+                handleIntent(intent);
             }
         };
         LocalBroadcastManager.getInstance(this)
                 .registerReceiver(receiver, new IntentFilter(Const.ASSISTANT_BROADCAST_INTENT));
 
-        if (false) {
-            FileUtils.performFileSearch(this, READ_REQUEST_CODE);
-            UCentralClient.getInstance(this).login("UNAME", "PASS", new Callback<Void>() {
-                @Override
-                public void onResponse(Call<Void> call, Response<Void> response) {
-                    Log.d("LOGGED IN", "SUCCESS");
-                    for (File f : Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).listFiles()) {
-                        if (f.getAbsolutePath().contains("tester")) {
-                            UCentralClient.getInstance(getApplicationContext()).printFile(f, stupidCB);
-                        }
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<Void> call, Throwable t) {
-                    Log.d("LOGGED IN", "FAIL");
-                }
-            });
-        }
-
-
-        String fullName = user.getDisplayName();
-        String firstName = fullName.substring(0, fullName.indexOf(" "));
-
-        String introductoryMessage = String.format(
-                getResources().getString(R.string.assistant_intro_msg),
-                firstName
-        );
-
-        assistantHistoryAdapter.addElement(new ChatMessage(introductoryMessage, assistant));
-
+        initAssistant();
         handleIntent(getIntent());
 
         // Text2speech feature for answers
@@ -153,12 +114,34 @@ public class AssistantActivity extends AppCompatActivity implements View.OnClick
         });
     }
 
+    private void initAssistant() {
+        String fullName = user.getDisplayName();
+        String firstName = fullName.substring(0, fullName.indexOf(" "));
+
+        String introductoryMessage = String.format(
+                getResources().getString(R.string.assistant_intro_msg),
+                firstName
+        );
+
+        assistantHistoryAdapter.addElement(new ChatMessage(introductoryMessage, assistant));
+    }
+
     private void handleIntent(Intent intent) {
         if (intent == null)
             return;
 
-        if (ACTION_SEARCH.equals(intent.getAction()) && intent.hasExtra(EXTRA_QUERY)) {
+        // Handle the result from AssistantService
+        if (intent.hasExtra(AssistantService.EXTRA_RESULT)) {
+            receiveMessage(intent.getStringExtra(AssistantService.EXTRA_RESULT));
+            if (intent.hasExtra(AssistantService.EXTRA_RESULT_TYPE_PRINT)) {
+                FileUtils.performFileSearch(this, READ_REQUEST_CODE);
+            }
+
+        // Ok Google
+        } else if (ACTION_SEARCH.equals(intent.getAction()) && intent.hasExtra(EXTRA_QUERY)) {
             sendMessage(intent.getStringExtra(EXTRA_QUERY));
+
+        // FAB Button
         } else if (intent.hasExtra(Const.ASSISTANT_QUERY)) {
             sendMessage(intent.getStringExtra(Const.ASSISTANT_QUERY));
         }
@@ -204,8 +187,11 @@ public class AssistantActivity extends AppCompatActivity implements View.OnClick
 
     @SuppressWarnings("deprecation")
     private void receiveMessage(String text) {
+        if (progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
         assistantHistoryAdapter.addElement(new ChatMessage(text, assistant));
-        int countWords = text.length() - text.replace(" ", "").length();
+        int countWords = text.length() - text.replace(" ", "").length() - text.replace("\n", "").length();
         if (countWords < 20) {
             textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null);
         }
@@ -214,6 +200,7 @@ public class AssistantActivity extends AppCompatActivity implements View.OnClick
     }
 
     private void sendMessage(String text) {
+        progressDialog.show();
         assistantHistoryAdapter.addElement(new ChatMessage(text, user));
         AssistantService.startActionProcessQuery(getApplicationContext(), text);
     }
@@ -221,18 +208,53 @@ public class AssistantActivity extends AppCompatActivity implements View.OnClick
     @Override
     protected void onActivityResult(int requestCode, int resultCode,
                                     Intent data) {
+        // Speech to Text
         if (requestCode == Const.SPEECH_REQUEST_CODE && resultCode == RESULT_OK) {
             List<String> results = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
             etMessage.setText(results.get(0));
+
+        // File picker
         } else if (requestCode == READ_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             if (data != null) {
                 Uri uri = data.getData();
                 Log.d("FILE NAME", uri.getPath());
                 Log.d("FILE NAME", uri.getEncodedPath());
-//                UCentralClient.getInstance(this).printFile(uri, stupidCB);
+                // sendFileToPrinter(new File(uri.getPath()));
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void sendFileToPrinter(final File f) {
+        String user = Utils.getInternalSettingString(this, getResources().getString(R.string.mi_login), "");
+        String pass = Utils.getInternalSettingString(this, getResources().getString(R.string.mi_pass), "");
+
+        if (user.equals("") || pass.equals("")) {
+            Utils.showToast(this.getApplicationContext(), getResources().getString(R.string.error_mi_wrong));
+        }
+
+        UCentralClient.getInstance(this).login(user, pass, new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                Log.d("LOG IN", "SUCCESS");
+                UCentralClient.getInstance(getApplicationContext()).printFile(f, new Callback<Void>() {
+                    @Override
+                    public void onResponse(Call<Void> call, Response<Void> response) {
+                        receiveMessage("The file sent");
+                    }
+
+                    @Override
+                    public void onFailure(Call<Void> call, Throwable t) {
+                        Log.d("PRINT", "FAIL");
+                    }
+                });
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.d("LOG IN", "FAIL");
+            }
+        });
     }
 
     @Override

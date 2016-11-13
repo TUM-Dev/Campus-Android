@@ -3,7 +3,6 @@ package de.tum.in.tumcampusapp.services.assistantServices;
 import android.app.IntentService;
 import android.content.Intent;
 import android.content.Context;
-import android.os.ResultReceiver;
 import android.support.v4.content.LocalBroadcastManager;
 
 import com.google.common.base.Optional;
@@ -13,17 +12,12 @@ import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.List;
-import java.util.Map;
 
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.auxiliary.luis.Action;
-import de.tum.in.tumcampusapp.auxiliary.luis.DataType;
 import de.tum.in.tumcampusapp.auxiliary.luis.LuisResponseReader;
-import de.tum.in.tumcampusapp.managers.CafeteriaManager;
-import de.tum.in.tumcampusapp.managers.TransportManager;
-import de.tum.in.tumcampusapp.models.cafeteria.CafeteriaMenu;
 
 /**
  * An {@link IntentService} subclass for handling asynchronous task requests in
@@ -33,12 +27,14 @@ public class AssistantService extends IntentService {
 
     private static final String EXTRA_QUERY = "de.tum.in.tumcampusapp.services.extra.QUERY";
     public static final String EXTRA_RESULT = "de.tum.in.tumcampusapp.services.extra.RESULT";
+    public static final String EXTRA_RESULT_TYPE_PRINT = "de.tum.in.tumcampusapp.services.extra.RESULT_PRINT";
 
     private static final String ACTION_PROCESS_QUERY = "de.tum.in.tumcampusapp.services.action.PROCESS_QUERY";
-    private static final String EXTRA_RESULT_RECEIVER = "de.tum.in.tumcampusapp.services.extra.RESULT_RECEIVER";
     private static final String ASSISTANT_SERVICE = "AssistantService";
 
     private final String SERVER_URL = "https://api.projectoxford.ai/luis/v2.0/apps/b23eef2a-f9c8-47a4-8eaf-e59ff5b8ea20?subscription-key=5d2b6cb3f9a6470f88e49a00aa0ef694";
+
+    private boolean wasPrintCommand;
 
     public AssistantService() {
         super(ASSISTANT_SERVICE);
@@ -74,11 +70,15 @@ public class AssistantService extends IntentService {
         if (intent != null) {
             final String action = intent.getAction();
 
-            if (ACTION_PROCESS_QUERY.equals(action)) {
+            if (ACTION_PROCESS_QUERY.equals(action)) { // process questions here
                 String answer = processQuery(intent.getStringExtra(EXTRA_QUERY));
 
                 Intent i = new Intent(Const.ASSISTANT_BROADCAST_INTENT);
                 i.putExtra(EXTRA_RESULT, answer);
+                if (wasPrintCommand) {
+                    i.putExtra(EXTRA_RESULT_TYPE_PRINT, true);
+                }
+
                 LocalBroadcastManager.getInstance(this).sendBroadcast(i);
             }
         }
@@ -101,10 +101,10 @@ public class AssistantService extends IntentService {
             List<Action> actions = luisResponseReader.readResponse(resultJSON);
             StringBuilder actionsResponseBuilder = new StringBuilder();
             for (Action action : actions) {
-                actionsResponseBuilder.append(ActionsProcessor.processAction(getApplicationContext(), action));
+                actionsResponseBuilder.append(ActionsProcessor.processAction(getApplicationContext(), action) + " ");
             }
             if (actionsResponseBuilder.length() == 0) {
-                return "Didn't catch that, please repeat.";
+                return "I couldn't understand what you were trying to say.";
             }
             return actionsResponseBuilder.toString();
         }
