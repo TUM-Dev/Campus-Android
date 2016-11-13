@@ -17,7 +17,9 @@ enum EntityType {
     PROFESSOR_INFORMATION("professor::information"),
 
     //Print
-    PRINT_FILE("print::file");
+    PRINT_FILE("print::file"),
+
+    UNKNOWN("unknown");
 
 
     private String entityName;
@@ -36,6 +38,6 @@ enum EntityType {
                 return entityType;
             }
         }
-        return null;
+        return UNKNOWN;
     }
 }
