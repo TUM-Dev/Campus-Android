@@ -5,6 +5,7 @@ import android.net.Uri;
 
 import java.io.File;
 
+import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.tumcabe.Question;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -59,7 +60,8 @@ public class UCentralClient {
     }
 
     public void login(String username, String password) {
-        service.login(username, password, "Login").request();
+        Request r = service.login(username, password, "Login").request();
+        Utils.log(r.toString());
     }
 
     public void logout(Callback<Void> cb) {

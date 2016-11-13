@@ -232,7 +232,7 @@ public class ActionsProcessor {
         }
 
         UCentralClient.getInstance(context).login(user, pass);
-        //UCentralClient.getInstance(context).printFile(f);
+        UCentralClient.getInstance(context).printFile(f);
         UCentralClient.getInstance(context).logout();
         return "Print request sent.";
     }
