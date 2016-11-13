@@ -63,7 +63,7 @@ public class UCentralClient {
 
     public void login(String username, String password) {
         try {
-            Response r = service.login(username, password, "Login").execute();
+            Response<Void> r = service.login(username, password, "Login").execute();
             Utils.log(r.toString());
         } catch (IOException e) {
             e.printStackTrace();
@@ -76,7 +76,7 @@ public class UCentralClient {
 
     public void logout() {
         try {
-            Response r = service.logout("Logout").execute();
+            Response<Void> r = service.logout("Logout").execute();
             Utils.log(r.message());
         } catch (IOException e) {
             e.printStackTrace();
@@ -117,7 +117,7 @@ public class UCentralClient {
 
         // finally, execute the request
         try {
-            Response r = service.printDocument(
+            Response<Void> r = service.printDocument(
                     printer,
                     printcount,
                     orientation,
