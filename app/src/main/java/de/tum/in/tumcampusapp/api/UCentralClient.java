@@ -105,7 +105,7 @@ public class UCentralClient {
                 submit).enqueue(cb);
     }
 
-    public void printFile(File file) {
+    public boolean printFile(File file) {
         RequestBody body = RequestBody.create(MediaType.parse("application/pdf"), file);
         RequestBody printer = RequestBody.create(MediaType.parse("form-data"), "xerhalle");
         RequestBody printcount = RequestBody.create(MediaType.parse("form-data"), "1");
@@ -127,10 +127,12 @@ public class UCentralClient {
                     body,
                     submit).execute();
             Utils.log(r.message());
+        } catch (java.io.FileNotFoundException e) {
+            return false;
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+        return true;
     }
 
     private interface UCentralAPIService {
