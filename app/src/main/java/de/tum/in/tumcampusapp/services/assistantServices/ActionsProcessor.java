@@ -220,7 +220,10 @@ public class ActionsProcessor {
         String url = downloadPath + filename;
         Utils.log("URL:" + url);
         File f = new File(url);
-        return sendFileToPrinter(context, f);
+        if(f.exists()){
+            return sendFileToPrinter(context, f);
+        }
+        return "File not found.";
     }
 
     private static String sendFileToPrinter(final Context context, final File f) {
