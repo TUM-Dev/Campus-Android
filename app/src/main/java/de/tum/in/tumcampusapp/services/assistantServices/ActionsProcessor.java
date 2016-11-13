@@ -118,7 +118,7 @@ public class ActionsProcessor {
         TransportManager.DepartureDetailed departure = null;
         if (time.equals("next")) {
             departure = TransportManager.getNextDeparture(context, currentStation, type);
-        }else if(time.equals("last")) {
+        } else if (time.equals("last") || time.equals("latest")) {
             departure = TransportManager.getLastDeparture(context, currentStation, type);
         }
         if (departure != null) {
