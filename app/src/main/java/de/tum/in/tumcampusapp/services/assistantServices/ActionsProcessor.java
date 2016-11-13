@@ -221,7 +221,7 @@ public class ActionsProcessor {
         String url = downloadPath + filename;
         Utils.log("URL:" + url);
         File f = new File(url);
-        if(f.exists()){
+        if (f.exists()){
             return sendFileToPrinter(context, f);
         }
         return "File not found.";
@@ -235,9 +235,14 @@ public class ActionsProcessor {
             return context.getResources().getString(R.string.error_mi_wrong);
         }
 
+        String answer;
         UCentralClient.getInstance(context).login(user, pass);
-        UCentralClient.getInstance(context).printFile(f);
+        if (!UCentralClient.getInstance(context).printFile(f)) {
+            answer = "Please, check storage permissions for the app.";
+        } else {
+            answer = "Print request sent.";
+        }
         UCentralClient.getInstance(context).logout();
-        return "Print request sent.";
+        return answer;
     }
 }
