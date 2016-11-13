@@ -44,6 +44,7 @@ import de.tum.in.tumcampusapp.trace.ExceptionHandler;
 
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
+import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 
 /**
@@ -53,8 +54,10 @@ public class StartupActivity extends AppCompatActivity {
 
     final AtomicBoolean initializationFinished = new AtomicBoolean(false);
     private static final int REQUEST_LOCATION = 0;
+    private static final int REQUEST_STORAGE = 0;
     private static final String[] PERMISSIONS_LOCATION = {ACCESS_COARSE_LOCATION,
             ACCESS_FINE_LOCATION};
+    private static final String[] PERMISSIONS_STORAGE = { READ_EXTERNAL_STORAGE };
 
     private void init() {
         //Our own Custom exception handler
@@ -121,6 +124,7 @@ public class StartupActivity extends AppCompatActivity {
 
         //Request Permissions for Android 6.0
         requestLocationPermission();
+        requestReadPermission();
     }
 
     @Override
@@ -198,6 +202,43 @@ public class StartupActivity extends AppCompatActivity {
             });
         } else {
             ActivityCompat.requestPermissions(StartupActivity.this, PERMISSIONS_LOCATION, REQUEST_LOCATION);
+        }
+    }
+
+    /**
+     * Request the Location Permission
+     */
+    private void requestReadPermission() {
+        //Check, if we already have permission
+        if (ActivityCompat.checkSelfPermission(this, READ_EXTERNAL_STORAGE) == PERMISSION_GRANTED) {
+            //We already got the permissions, to proceed normally
+            //Only proceed to start the App, if initialization is finished
+            if (initializationFinished.compareAndSet(false, true)) {
+                return;
+            }
+            startApp();
+        } else if (ActivityCompat.shouldShowRequestPermissionRationale(this, READ_EXTERNAL_STORAGE)) {
+            // Provide an additional rationale to the user if the permission was not granted
+            // and the user would benefit from additional context for the use of the permission.
+            // For example, if the request has been denied previously.
+
+
+            // Display an AlertDialog with an explanation and a button to trigger the request.
+            StartupActivity.this.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    new AlertDialog.Builder(StartupActivity.this).setMessage(getString(R.string.permission_read_explanation)).setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int id) {
+
+                            ActivityCompat.requestPermissions(StartupActivity.this, PERMISSIONS_LOCATION, REQUEST_LOCATION);
+
+                        }
+                    }).show();
+                }
+            });
+        } else {
+            ActivityCompat.requestPermissions(StartupActivity.this, PERMISSIONS_STORAGE, REQUEST_STORAGE);
         }
     }
 
