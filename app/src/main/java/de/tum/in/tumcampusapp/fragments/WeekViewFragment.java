@@ -1,5 +1,7 @@
 package de.tum.in.tumcampusapp.fragments;
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.SparseArray;
@@ -25,6 +27,8 @@ public class WeekViewFragment extends Fragment implements MonthLoader.MonthChang
 
     private String roomApiCode;
     private WeekView mWeekView;
+
+    private Activity context;
 
     public static WeekViewFragment newInstance(String roomApiCode) {
         WeekViewFragment fragment = new WeekViewFragment();
@@ -82,7 +86,7 @@ public class WeekViewFragment extends Fragment implements MonthLoader.MonthChang
                 }
 
                 //Finish loading
-                getActivity().runOnUiThread(new Runnable() {
+                context.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         loadedEvents.put(calculateLoadedKey(newYear, newMonth), events);
@@ -92,6 +96,15 @@ public class WeekViewFragment extends Fragment implements MonthLoader.MonthChang
                 });
             }
         }).start();
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof Activity) {
+            this.context = (Activity) context;
+        }
+
     }
 
     private boolean isLoaded(int year, int month) {
