@@ -178,10 +178,15 @@ public class GcmIdentificationService extends InstanceIDListenerService {
         TUMCabeClient.getInstance(mContext).deviceUploadGcmToken(dgcm, new Callback<TUMCabeStatus>() {
             @Override
             public void onResponse(Call<TUMCabeStatus> call, Response<TUMCabeStatus> response) {
-                Utils.logv("Success uploading GCM registration id: " + response.body().getStatus());
+                TUMCabeStatus s = response.body();
+                if (response.isSuccessful() && s != null) {
+                    Utils.logv("Success uploading GCM registration id: " + response.body().getStatus());
 
-                // Store in shared preferences the information that the GCM registration id was sent to the TCA server successfully
-                Utils.setInternalSetting(mContext, Const.GCM_REG_ID_SENT_TO_SERVER, true);
+                    // Store in shared preferences the information that the GCM registration id was sent to the TCA server successfully
+                    Utils.setInternalSetting(mContext, Const.GCM_REG_ID_SENT_TO_SERVER, true);
+                } else {
+                    Utils.logv("Uploading GCM registration failed...");
+                }
             }
 
             @Override

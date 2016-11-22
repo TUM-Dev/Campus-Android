@@ -303,6 +303,11 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
             return;
         }
 
+        if (faculties == null) {
+            Utils.logv("No faculties received...");
+            return;
+        }
+
         db.beginTransaction();
         try {
             for (int i = 0; i < faculties.size(); i++) {
