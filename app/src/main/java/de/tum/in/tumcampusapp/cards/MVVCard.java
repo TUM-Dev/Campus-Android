@@ -111,13 +111,13 @@ public class MVVCard extends NotificationAwareCard {
         for (TransportManager.Departure d : mDepartures) {
             if (firstTime.isEmpty()) {
                 firstTime = d.countDown + "min";
-                firstContent = d.servingLine;
+                firstContent = d.servingLine + " " + d.direction;
             }
 
             NotificationCompat.Builder pageNotification =
                     new NotificationCompat.Builder(mContext)
                             .setContentTitle(d.countDown + "min")
-                            .setContentText(d.servingLine);
+                            .setContentText(d.servingLine + " " + d.direction);
             morePageNotification.addPage(pageNotification.build());
         }
 

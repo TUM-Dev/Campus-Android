@@ -94,7 +94,7 @@ public class TransportationDetailsActivity extends ActivityForLoadingInBackgroun
         for (TransportManager.Departure d : result) {
             DepartureView view = new DepartureView(this, true);
             view.setSymbol(d.symbol);
-            view.setLine(d.servingLine);
+            view.setLine(d.direction);
             view.setTime(d.countDown);
             mViewResults.addView(view);
         }
