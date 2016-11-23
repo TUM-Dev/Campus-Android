@@ -4,7 +4,7 @@ apply from: '../pmd.gradle'
 
 android {
     compileSdkVersion 25
-    buildToolsVersion '25.0.0'
+    buildToolsVersion '25.0.1'
     buildTypes {
         all {
             proguardFiles(file('../proguard').listFiles())
@@ -40,10 +40,6 @@ android {
     packagingOptions {
         exclude 'META-INF/maven/com.google.guava/guava/pom.properties'
         exclude 'META-INF/maven/com.google.guava/guava/pom.xml'
-    }
-    productFlavors {
-        v10.minSdkVersion 10
-        v14.minSdkVersion 14
     }
 
     publishNonDefault true
