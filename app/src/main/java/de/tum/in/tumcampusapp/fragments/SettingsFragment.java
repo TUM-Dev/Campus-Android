@@ -57,14 +57,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
     private FragmentActivity mContext;
 
     @Override
-    public void onCreatePreferences(Bundle bundle, String rootKeyParam) {
-        String rootKey = rootKeyParam;
-        // Open a card's preference screen if selected from it's context menu
-        if (bundle != null && bundle.containsKey(Const.PREFERENCE_SCREEN)) {
-            rootKey = bundle.getString(Const.PREFERENCE_SCREEN);
-        }
-
-        Utils.log("Opening settings: " + rootKey);
+    public void onCreatePreferences(Bundle bundle, String rootKey) {
         //Load the correct preference category
         setPreferencesFromResource(R.xml.settings, rootKey);
         mContext = getActivity();
