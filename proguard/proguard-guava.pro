@@ -29,3 +29,6 @@
 -dontwarn java.lang.ClassValue
 -dontwarn com.google.j2objc.annotations.Weak
 -dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
+
+# Guava 20.0
+-dontwarn com.google.**
