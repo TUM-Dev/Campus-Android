@@ -137,7 +137,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
             protected void onPostExecute(Void result) {
                 showLoadingEnded();
                 // update the action bar to display the enabled menu options
-                CalendarActivity.thisinvalidateOptionsMenu();
+                CalendarActivity.this.invalidateOptionsMenu();
                 startService(new Intent(CalendarActivity.this, CalendarManager.QueryLocationsService.class));
             }
         }.execute();
@@ -351,7 +351,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
             public void onClick(DialogInterface arg0, int arg1) {
                 int deleted = CalendarManager.deleteLocalCalendar(CalendarActivity.this);
                 Utils.setInternalSetting(CalendarActivity.this, Const.SYNC_CALENDAR, false);
-                ActivityCompat.invalidateOptionsMenu(CalendarActivity.this);
+                CalendarActivity.this.invalidateOptionsMenu();
                 if (deleted > 0) {
                     Utils.showToast(CalendarActivity.this, R.string.calendar_deleted_toast);
                 } else {

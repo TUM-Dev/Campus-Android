@@ -2,7 +2,6 @@ package de.tum.in.tumcampusapp.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -336,7 +335,7 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
         isFetched = true;
 
         // update the action bar to display the enabled menu options
-        ActivityCompat.invalidateOptionsMenu(this);
+        this.invalidateOptionsMenu();
         mSwipeRefreshLayout.setRefreshing(false);
     }
 
