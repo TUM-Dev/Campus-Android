@@ -188,10 +188,8 @@ public class AuthenticationManager {
 
                 @Override
                 public void onResponse(Call<TUMCabeStatus> call, Response<TUMCabeStatus> response) {
-                    Utils.log(response.body().getStatus());
-
                     //Remember that we are done, only if we have submitted with the member information
-                    if ("ok".equals(response.body().getStatus())) {
+                    if (response.isSuccessful() && "ok".equals(response.body().getStatus())) {
                         if (member != null) {
                             Utils.setInternalSetting(mContext, Const.PUBLIC_KEY_UPLOADED, true);
                         }
