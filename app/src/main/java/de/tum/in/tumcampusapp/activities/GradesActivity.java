@@ -311,12 +311,6 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
         getMenuInflater().inflate(R.menu.menu_activity_grades, menu);
         columnMenuItem = menu.findItem(R.id.columnChart);
         pieMenuItem = menu.findItem(R.id.pieChart);
-
-        // Both features (Chart diagrams) are not available on older devices
-        if (android.os.Build.VERSION.SDK_INT < 11) {
-            columnMenuItem.setVisible(false);
-            pieMenuItem.setVisible(false);
-        }
         return true;
     }
 

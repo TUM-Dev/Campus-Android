@@ -11,7 +11,6 @@ import android.database.Cursor;
 import android.graphics.RectF;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.support.annotation.NonNull;
@@ -51,20 +50,17 @@ import de.tum.in.tumcampusapp.tumonline.TUMOnlineConst;
  */
 public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowSet> implements OnClickListener, MonthLoader.MonthChangeListener, WeekView.EventClickListener {
 
-    private static final int REQUEST_SYNC = 0;
-    private static final int REQUEST_DELETE = 1;
-    private static final String[] PERMISSIONS_CALENDAR = {Manifest.permission.READ_CALENDAR,
-            Manifest.permission.WRITE_CALENDAR};
-
     /**
      * The space between the first and the last date
      */
     public static final int MONTH_AFTER = 3;
     public static final int MONTH_BEFORE = 0;
-
-    private static final int TIME_TO_SYNC_CALENDAR = 604800; // 1 week
     public static final String EVENT_TIME = "event_time";
-
+    private static final int REQUEST_SYNC = 0;
+    private static final int REQUEST_DELETE = 1;
+    private static final String[] PERMISSIONS_CALENDAR = {Manifest.permission.READ_CALENDAR,
+            Manifest.permission.WRITE_CALENDAR};
+    private static final int TIME_TO_SYNC_CALENDAR = 604800; // 1 week
     private CalendarManager calendarManager;
 
     /**
@@ -141,9 +137,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
             protected void onPostExecute(Void result) {
                 showLoadingEnded();
                 // update the action bar to display the enabled menu options
-                if (Build.VERSION.SDK_INT >= 14) {
-                    ActivityCompat.invalidateOptionsMenu(CalendarActivity.this);
-                }
+                CalendarActivity.thisinvalidateOptionsMenu();
                 startService(new Intent(CalendarActivity.this, CalendarManager.QueryLocationsService.class));
             }
         }.execute();
@@ -167,17 +161,12 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
         MenuItem menuItemDeleteCalendar = menu.findItem(R.id.action_delete_calendar);
 
         // the Calendar export is not supported for API < 14
-        if (Build.VERSION.SDK_INT < 14) {
-            menuItemExportGoogle.setVisible(false);
-            menuItemDeleteCalendar.setVisible(false);
-        } else {
-            menuItemExportGoogle.setEnabled(isFetched);
-            menuItemDeleteCalendar.setEnabled(isFetched);
+        menuItemExportGoogle.setEnabled(isFetched);
+        menuItemDeleteCalendar.setEnabled(isFetched);
 
-            boolean bed = Utils.getInternalSettingBool(this, Const.SYNC_CALENDAR, false);
-            menuItemExportGoogle.setVisible(!bed);
-            menuItemDeleteCalendar.setVisible(bed);
-        }
+        boolean bed = Utils.getInternalSettingBool(this, Const.SYNC_CALENDAR, false);
+        menuItemExportGoogle.setVisible(!bed);
+        menuItemDeleteCalendar.setVisible(bed);
         return super.onPrepareOptionsMenu(menu);
     }
 
