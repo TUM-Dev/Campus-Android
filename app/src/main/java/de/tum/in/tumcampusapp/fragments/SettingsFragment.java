@@ -1,7 +1,6 @@
 package de.tum.in.tumcampusapp.fragments;
 
 import android.Manifest;
-import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -136,7 +135,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
                             NetUtils net = new NetUtils(mContext);
                             final Optional<Bitmap> bmp = net.downloadImageToBitmap(url);
                             mContext.runOnUiThread(new Runnable() {
-                                @TargetApi(11)
                                 @Override
                                 public void run() {
                                     if (bmp.isPresent()) {

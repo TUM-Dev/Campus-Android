@@ -1,7 +1,6 @@
 package de.tum.in.tumcampusapp.activities;
 
 import android.Manifest;
-import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.ContentUris;
 import android.content.DialogInterface;
@@ -337,7 +336,6 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
     /**
      * Starts the Google calendar Activity to display the exported calendar.
      */
-    @TargetApi(14)
     private void displayCalendarOnGoogleCalendar() {
         // displaying Calendar
         Calendar beginTime = Calendar.getInstance();
