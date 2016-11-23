@@ -1,7 +1,6 @@
 package de.tum.in.tumcampusapp.fragments;
 
 import android.Manifest;
-import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -13,7 +12,6 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
@@ -127,26 +125,24 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
                 final CheckBoxPreference pref = new CheckBoxPreference(mContext);
                 pref.setKey("card_news_source_" + cur.getString(0));
                 pref.setDefaultValue(true);
-                if (Build.VERSION.SDK_INT >= 11) {
-                    // Load news source icon in background and set it
-                    final String url = cur.getString(1);
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            NetUtils net = new NetUtils(mContext);
-                            final Optional<Bitmap> bmp = net.downloadImageToBitmap(url);
-                            mContext.runOnUiThread(new Runnable() {
-                                @TargetApi(11)
-                                @Override
-                                public void run() {
-                                    if (bmp.isPresent()) {
-                                        pref.setIcon(new BitmapDrawable(getResources(), bmp.get()));
-                                    }
+                // Load news source icon in background and set it
+                final String url = cur.getString(1);
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        NetUtils net = new NetUtils(mContext);
+                        final Optional<Bitmap> bmp = net.downloadImageToBitmap(url);
+                        mContext.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (bmp.isPresent()) {
+                                    pref.setIcon(new BitmapDrawable(getResources(), bmp.get()));
                                 }
-                            });
-                        }
-                    }).start();
-                }
+                            }
+                        });
+                    }
+                }).start();
+
                 pref.setTitle(cur.getString(2));
                 newsSources.addPreference(pref);
             } while (cur.moveToNext());
@@ -310,8 +306,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
 
         // delete local calendar
         Utils.setInternalSetting(mContext, Const.SYNC_CALENDAR, false);
-        if (Build.VERSION.SDK_INT >= 14 &&
-                ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_CALENDAR) == PackageManager.PERMISSION_GRANTED &&
+        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_CALENDAR) == PackageManager.PERMISSION_GRANTED &&
                 ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED) {
             CalendarManager.deleteLocalCalendar(mContext);
         }

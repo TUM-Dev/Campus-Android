@@ -1,7 +1,6 @@
 package de.tum.in.tumcampusapp.managers;
 
 import android.Manifest;
-import android.annotation.TargetApi;
 import android.app.IntentService;
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -11,7 +10,6 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
-import android.os.Build;
 import android.provider.CalendarContract;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -61,7 +59,6 @@ public class CalendarManager extends AbstractManager implements Card.ProvidesCar
      *
      * @param c Context
      */
-    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     public static void syncCalendar(Context c) {
         // Deleting earlier calendar created by TUM Campus App
         deleteLocalCalendar(c);
@@ -74,12 +71,10 @@ public class CalendarManager extends AbstractManager implements Card.ProvidesCar
      *
      * @return Number of rows deleted
      */
-    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     public static int deleteLocalCalendar(Context c) {
         return CalendarHelper.deleteCalendar(c);
     }
 
-    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     private static void addEvents(Context c, Uri uri) {
         if (ActivityCompat.checkSelfPermission(c, Manifest.permission.WRITE_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
             return;

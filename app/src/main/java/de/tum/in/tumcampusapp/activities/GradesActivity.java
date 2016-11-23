@@ -2,7 +2,6 @@ package de.tum.in.tumcampusapp.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -311,12 +310,6 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
         getMenuInflater().inflate(R.menu.menu_activity_grades, menu);
         columnMenuItem = menu.findItem(R.id.columnChart);
         pieMenuItem = menu.findItem(R.id.pieChart);
-
-        // Both features (Chart diagrams) are not available on older devices
-        if (android.os.Build.VERSION.SDK_INT < 11) {
-            columnMenuItem.setVisible(false);
-            pieMenuItem.setVisible(false);
-        }
         return true;
     }
 
@@ -342,7 +335,7 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
         isFetched = true;
 
         // update the action bar to display the enabled menu options
-        ActivityCompat.invalidateOptionsMenu(this);
+        this.invalidateOptionsMenu();
         mSwipeRefreshLayout.setRefreshing(false);
     }
 

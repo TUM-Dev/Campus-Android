@@ -1,12 +1,10 @@
 package de.tum.in.tumcampusapp.widgets;
 
 import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
@@ -18,7 +16,6 @@ import de.tum.in.tumcampusapp.cards.generic.Card;
 import de.tum.in.tumcampusapp.managers.CardManager;
 
 @SuppressLint("Registered")
-@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 public class CardsWidgetService extends RemoteViewsService {
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
@@ -27,7 +24,6 @@ public class CardsWidgetService extends RemoteViewsService {
     }
 }
 
-@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 class CardsRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 
     final private Context mContext;

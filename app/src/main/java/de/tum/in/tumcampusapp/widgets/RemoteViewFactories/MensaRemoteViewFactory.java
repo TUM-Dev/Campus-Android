@@ -1,9 +1,7 @@
 package de.tum.in.tumcampusapp.widgets.RemoteViewFactories;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
@@ -17,7 +15,6 @@ import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.managers.CafeteriaManager;
 import de.tum.in.tumcampusapp.models.cafeteria.CafeteriaMenu;
 
-@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 public class MensaRemoteViewFactory implements RemoteViewsService.RemoteViewsFactory {
 
     private static final Pattern COMPILE = Pattern.compile("\\([^\\)]+\\)");
