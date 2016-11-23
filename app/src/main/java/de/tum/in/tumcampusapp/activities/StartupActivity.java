@@ -1,5 +1,8 @@
 package de.tum.in.tumcampusapp.activities;
 
+import android.animation.Animator;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -19,11 +22,6 @@ import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.nineoldandroids.animation.Animator;
-import com.nineoldandroids.animation.AnimatorSet;
-import com.nineoldandroids.animation.ObjectAnimator;
-import com.nineoldandroids.view.ViewHelper;
 
 import java.io.File;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -51,10 +49,27 @@ import static android.content.pm.PackageManager.PERMISSION_GRANTED;
  */
 public class StartupActivity extends AppCompatActivity {
 
-    final AtomicBoolean initializationFinished = new AtomicBoolean(false);
     private static final int REQUEST_LOCATION = 0;
     private static final String[] PERMISSIONS_LOCATION = {ACCESS_COARSE_LOCATION,
             ACCESS_FINE_LOCATION};
+    final AtomicBoolean initializationFinished = new AtomicBoolean(false);
+    /**
+     * Broadcast receiver gets notified if {@link de.tum.in.tumcampusapp.services.BackgroundService}
+     * has prepared cards to be displayed
+     */
+    private final BroadcastReceiver receiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(DownloadService.BROADCAST_NAME)) {
+
+                //Only proceed to start the App, if initialization is finished
+                if (initializationFinished.compareAndSet(false, true)) {
+                    return;
+                }
+                startApp();
+            }
+        }
+    };
 
     private void init() {
         //Our own Custom exception handler
@@ -145,24 +160,6 @@ public class StartupActivity extends AppCompatActivity {
     }
 
     /**
-     * Broadcast receiver gets notified if {@link de.tum.in.tumcampusapp.services.BackgroundService}
-     * has prepared cards to be displayed
-     */
-    private final BroadcastReceiver receiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (intent.getAction().equals(DownloadService.BROADCAST_NAME)) {
-
-                //Only proceed to start the App, if initialization is finished
-                if (initializationFinished.compareAndSet(false, true)) {
-                    return;
-                }
-                startApp();
-            }
-        }
-    };
-
-    /**
      * Request the Location Permission
      */
     private void requestLocationPermission() {
@@ -234,7 +231,7 @@ public class StartupActivity extends AppCompatActivity {
         // Setup animation
         AnimatorSet set = new AnimatorSet();
         set.playTogether(
-                ObjectAnimator.ofFloat(background, "translationY", ViewHelper.getTranslationX(background), actionBarHeight - screenHeight),
+                ObjectAnimator.ofFloat(background, "translationY", background.getTranslationX(), actionBarHeight - screenHeight),
                 ObjectAnimator.ofFloat(tumLogo, "alpha", 1, 0, 0),
                 ObjectAnimator.ofFloat(loadingText, "alpha", 1, 0, 0),
                 ObjectAnimator.ofFloat(first, "alpha", 1, 0, 0),
