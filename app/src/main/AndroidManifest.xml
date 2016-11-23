@@ -40,6 +40,10 @@
     <!-- To start the Silence and Background service on Boot -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
+    <!-- To potentially change the Do Not Disturb mode -->
+    <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
+
+
     <!--
      Creates a custom permission so only this app can receive its messages.
 

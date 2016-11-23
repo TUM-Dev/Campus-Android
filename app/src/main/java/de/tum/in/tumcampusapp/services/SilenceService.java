@@ -136,7 +136,11 @@ public class SilenceService extends IntentService {
      */
     private boolean isDoNotDisturbMode() {
         // see https://stackoverflow.com/questions/31387137/android-detect-do-not-disturb-status
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+        //Settings.System.getInt(getContentResolver(), Settings.System.DO_NOT_DISTURB, 1);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            android.app.NotificationManager nm = (android.app.NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+            return (nm.getCurrentInterruptionFilter() != android.app.NotificationManager.INTERRUPTION_FILTER_ALL);
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             try {
                 int mode = Settings.Global.getInt(getContentResolver(), "zen_mode");
                 return mode != 0;
