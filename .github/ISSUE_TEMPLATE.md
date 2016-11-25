@@ -13,7 +13,7 @@
 ## Suggested Enhancement :sparkles:
 
 ### Environment
-*Phone: 
+* Phone: 
 * OS: 
 * TUMOnline App: v1.
 * Language: 
