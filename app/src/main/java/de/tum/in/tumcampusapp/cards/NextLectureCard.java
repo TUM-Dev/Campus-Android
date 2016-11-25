@@ -11,7 +11,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.widget.RecyclerView;
-import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +29,7 @@ import java.util.Locale;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.CalendarActivity;
 import de.tum.in.tumcampusapp.activities.RoomFinderActivity;
+import de.tum.in.tumcampusapp.auxiliary.DateUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.cards.generic.Card;
 import de.tum.in.tumcampusapp.cards.generic.NotificationAwareCard;
@@ -109,8 +109,7 @@ public class NextLectureCard extends NotificationAwareCard {
         mTitleView.setText(getTitle());
 
         //Add content
-        mTimeView.setText(DateUtils.getRelativeTimeSpanString(item.start.getTime(),
-                System.currentTimeMillis(), DateUtils.MINUTE_IN_MILLIS, DateUtils.FORMAT_ABBREV_RELATIVE));
+        mTimeView.setText(DateUtils.getFutureTime(item.start, mContext));
 
         //Add location with link to room finder
         if (item.location == null || item.location.isEmpty()) {
@@ -167,8 +166,7 @@ public class NextLectureCard extends NotificationAwareCard {
     @Override
     protected Notification fillNotification(NotificationCompat.Builder notificationBuilder) {
         CalendarItem item = lectures.get(0);
-        final String time = DateUtils.getRelativeDateTimeString(mContext, item.start.getTime(),
-                DateUtils.MINUTE_IN_MILLIS, DateUtils.WEEK_IN_MILLIS, 0).toString();
+        final String time = DateUtils.getFutureTime(item.start, mContext);
         notificationBuilder.setContentText(item.title + '\n' + time);
         Bitmap bm = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.wear_next_lecture);
         notificationBuilder.extend(new NotificationCompat.WearableExtender().setBackground(bm));

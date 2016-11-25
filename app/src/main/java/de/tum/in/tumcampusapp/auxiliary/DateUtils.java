@@ -2,6 +2,8 @@ package de.tum.in.tumcampusapp.auxiliary;
 
 import android.content.Context;
 
+import net.danlew.android.joda.JodaTimeAndroid;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -19,10 +21,38 @@ public final class DateUtils {
     private static final String FORMAT_SQL = "yyyy-MM-dd HH:mm:ss"; // 2014-06-30 16:31:57
     private static final String FORMAT_ISO = "yyyy-MM-dd'T'HH:mm:ss'Z'"; // 2014-06-30T16:31:57.878Z
 
-    private DateUtils() {
-        // DateUtils is a utility class
+
+    /*
+     * Format an upcoming string nicely by being more precise as time comes closer
+     */
+    public static String getFutureTime(Date time, Context context) {
+        if (time == null) {
+            return "";
+        }
+
+        long timeInMillis = time.getTime();
+        long now = Calendar.getInstance().getTimeInMillis();
+
+        //Catch future dates: current clock might be running behind
+        if (timeInMillis < now || timeInMillis <= 0) {
+            return DateUtils.getTimeOrDay(time, context);
+        }
+
+        final long diff =  timeInMillis - now;
+        if (diff < 60 * MINUTE_MILLIS) {
+            SimpleDateFormat formatter = new SimpleDateFormat("mm", Locale.ENGLISH);
+            return "in " + formatter.format(new Date(diff)) + " minuten";
+        } else if (diff < 3 * HOUR_MILLIS) { // Be more precise by telling the user the exact time if below 3 hours
+            SimpleDateFormat formatter = new SimpleDateFormat("HH:mm", Locale.ENGLISH);
+            return "um " + formatter.format(time);
+        } else {
+            return android.text.format.DateUtils.getRelativeTimeSpanString(timeInMillis, now, android.text.format.DateUtils.MINUTE_IN_MILLIS, android.text.format.DateUtils.FORMAT_ABBREV_RELATIVE).toString();
+        }
     }
 
+    /*
+     * Format any given timestamp in a relative matter using the android methods
+     */
     public static String getRelativeTimeISO(String timestamp, Context context) {
         return DateUtils.getRelativeTime(DateUtils.parseIsoDate(timestamp), context);
     }
@@ -32,8 +62,14 @@ public final class DateUtils {
             return "";
         }
 
-        return android.text.format.DateUtils.getRelativeDateTimeString(context, date.getTime(),
-                MINUTE_MILLIS, DAY_MILLIS * 2L, 0).toString();
+        return android.text.format.DateUtils.getRelativeDateTimeString(context, date.getTime(), MINUTE_MILLIS, DAY_MILLIS * 2L, 0).toString();
+    }
+
+    /*
+     * Format a past timestamp with degrading granularity
+     */
+    public static String getTimeOrDayISO(String datetime, Context context) {
+        return DateUtils.getTimeOrDay(DateUtils.parseIsoDate(datetime), context);
     }
 
     public static String getTimeOrDay(String datetime, Context context) {
@@ -67,6 +103,9 @@ public final class DateUtils {
         }
     }
 
+    /*
+     * Parsing string timestamps
+     */
     public static Date parseSqlDate(String datetime) {
         if (datetime == null) {
             return null;
