@@ -74,8 +74,10 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
     // Key for the string that's delivered in the action's intent
     public static final String EXTRA_VOICE_REPLY = "extra_voice_reply";
     private static final int MAX_EDIT_TIMESPAN = 120000;
+
     public static ChatRoom mCurrentOpenChatRoom;
     private final Handler mUpdateHandler = new Handler();
+
     /**
      * UI elements
      */
@@ -149,6 +151,7 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
     private final BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+            Utils.logv("Message send. Trying to parse...");
             GCMChat extras = (GCMChat) intent.getSerializableExtra("GCMChat");
             if (extras == null) {
                 return;

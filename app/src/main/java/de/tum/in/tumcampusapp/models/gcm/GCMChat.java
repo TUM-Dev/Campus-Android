@@ -11,4 +11,13 @@ public class GCMChat implements Serializable {
     public int room;
     public int member;
     public int message;
+
+    public GCMChat() {
+        //Do nothing
+    }
+
+    public GCMChat(int room, int member) {
+        this.room = room;
+        this.member = member;
+    }
 }

@@ -13,6 +13,7 @@ import de.tum.in.tumcampusapp.auxiliary.AuthenticationManager;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.exceptions.NoPrivateKey;
 import de.tum.in.tumcampusapp.managers.ChatMessageManager;
+import de.tum.in.tumcampusapp.models.gcm.GCMChat;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatMessage;
 
 /**
@@ -20,6 +21,8 @@ import de.tum.in.tumcampusapp.models.tumcabe.ChatMessage;
  */
 public class SendMessageService extends IntentService {
 
+
+    public static int MAX_SEND_TRIES = 5;
     /**
      * Interval in milliseconds to check for current lectures
      */
@@ -44,7 +47,7 @@ public class SendMessageService extends IntentService {
         AuthenticationManager am = new AuthenticationManager(this);
 
         //Try to send the message 5 times
-        while (numberOfAttempts < 5) {
+        while (numberOfAttempts < MAX_SEND_TRIES) {
             try {
                 for (ChatMessage message : unsentMsg) {
                     // Generate signature and store it in the message
@@ -69,8 +72,7 @@ public class SendMessageService extends IntentService {
                     // Send broadcast to eventually open ChatActivity
                     Intent i = new Intent("chat-message-received");
                     Bundle extras = new Bundle();
-                    extras.putString("room", String.valueOf(message.getRoom()));
-                    extras.putString("member", String.valueOf(message.getMember().getId()));
+                    extras.putSerializable("GCMChat", new GCMChat(message.getRoom(), message.getMember().getId()));
                     i.putExtras(extras);
                     LocalBroadcastManager.getInstance(this).sendBroadcast(i);
                 }

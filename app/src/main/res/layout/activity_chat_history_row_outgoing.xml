@@ -14,20 +14,12 @@
         android:gravity="end"
         android:orientation="vertical"
         android:paddingBottom="5dp"
-        android:paddingEnd="12dp"
-        android:paddingLeft="12dp"
-        android:paddingRight="12dp"
-        android:paddingStart="12dp"
+        android:paddingEnd="10dp"
+        android:paddingLeft="14dp"
+        android:paddingRight="14dp"
+        android:paddingStart="10dp"
         android:paddingTop="5dp"
         tools:ignore="UselessParent">
-
-        <TextView
-            android:id="@+id/tvUser"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="#7cbc49"
-            android:textSize="12sp"
-            android:textStyle="bold"/>
 
         <TextView
             android:id="@+id/tvMessage"
@@ -38,15 +30,19 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:gravity="end">
 
             <TextView
                 android:id="@+id/tvTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingEnd="8dp"
-                android:paddingRight="8dp"
+                android:paddingRight="0dp"
                 android:textSize="12sp"
+                android:text="123 test"
+                android:textColor="@color/text_light_gray"
+                android:includeFontPadding="false"
                 tools:ignore="RtlSymmetry"/>
 
             <ProgressBar
@@ -57,11 +53,14 @@
 
             <ImageView
                 android:id="@+id/sentImage"
-                android:layout_width="wrap_content"
-                android:layout_height="12sp"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
                 android:contentDescription="@string/status_sent"
+                android:layout_margin="0dp"
+                android:padding="0dp"
                 android:src="@drawable/ic_done"
-                android:textSize="12sp"
+                android:textColor="@color/text_light_gray"
+                android:layout_weight="1"
                 android:visibility="gone"/>
         </LinearLayout>
 
