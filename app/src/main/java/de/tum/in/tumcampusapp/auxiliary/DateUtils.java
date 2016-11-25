@@ -2,8 +2,6 @@ package de.tum.in.tumcampusapp.auxiliary;
 
 import android.content.Context;
 
-import net.danlew.android.joda.JodaTimeAndroid;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -40,7 +38,7 @@ public final class DateUtils {
 
         final long diff =  timeInMillis - now;
         if (diff < 60 * MINUTE_MILLIS) {
-            SimpleDateFormat formatter = new SimpleDateFormat("mm", Locale.ENGLISH);
+            SimpleDateFormat formatter = new SimpleDateFormat("m", Locale.ENGLISH);
             return "in " + formatter.format(new Date(diff)) + " minuten";
         } else if (diff < 3 * HOUR_MILLIS) { // Be more precise by telling the user the exact time if below 3 hours
             SimpleDateFormat formatter = new SimpleDateFormat("HH:mm", Locale.ENGLISH);
