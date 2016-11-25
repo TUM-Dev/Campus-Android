@@ -112,6 +112,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
     private void populateNewsSources() {
         PreferenceCategory newsSources = (PreferenceCategory) findPreference("card_news_sources");
         NewsManager cm = new NewsManager(mContext);
+        final NetUtils net = new NetUtils(mContext);
         Cursor cur = cm.getNewsSources();
         if (cur.moveToFirst()) {
             do {
@@ -120,21 +121,22 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
                 pref.setDefaultValue(true);
                 // Load news source icon in background and set it
                 final String url = cur.getString(1);
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        NetUtils net = new NetUtils(mContext);
-                        final Optional<Bitmap> bmp = net.downloadImageToBitmap(url);
-                        mContext.runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (bmp.isPresent()) {
-                                    pref.setIcon(new BitmapDrawable(getResources(), bmp.get()));
+                if (url != null) { // Skip News that do not have a image
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            final Optional<Bitmap> bmp = net.downloadImageToBitmap(url);
+                            mContext.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (bmp.isPresent()) {
+                                        pref.setIcon(new BitmapDrawable(getResources(), bmp.get()));
+                                    }
                                 }
-                            }
-                        });
-                    }
-                }).start();
+                            });
+                        }
+                    }).start();
+                }
 
                 pref.setTitle(cur.getString(2));
                 newsSources.addPreference(pref);
