@@ -329,4 +329,7 @@
     <string name="please_connect_to_internet">Пожалуйста, подключиться к Интернету, чтобы продолжить первый запуск приложения</string>
     <string name="mvv_download">Пожалуйста, нажмите кнопку OK, чтобы загрузить MVV-планы в противном случае вы не можете использовать эту функцию</string>
     <string name="flag_inappropriate">Флаг неуместный вопрос</string>
+    <string name="IN">в</string>
+    <string name="MINUTES">минут</string>
+    <string name="AT">в</string>
 </resources>

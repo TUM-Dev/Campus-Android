@@ -403,5 +403,8 @@
     <string name="please_connect_to_internet">S\'il vous plaît vous connecter à Internet afin de procéder au premier démarrage de l\'application</string>
     <string name="mvv_download">S\'il vous plaît appuyez sur OK pour télécharger MVV-plans, sinon vous ne pouvez pas utiliser cette fonctionnalité</string>
     <string name="flag_inappropriate">Flag question inappropriée</string>
+    <string name="IN">dans</string>
+    <string name="MINUTES">minutes</string>
+    <string name="AT">à</string>
 
 </resources>

@@ -414,4 +414,7 @@ Signatur: %5$s</string>
     <string name="flag_inappropriate">Unangemessene Frage melden</string>
     <string name="mvv_download">Bitte klicken Sie auf OK, um MVV-Pläne herunterzuladen, sonst können Sie diese Funktion nicht verwenden</string>
     <string name="please_connect_to_internet">Bitte verbinden Sie sich mit dem Internet, um den ersten App-Start fortzusetzen</string>
+    <string name="IN">in</string>
+    <string name="MINUTES">minuten</string>
+    <string name="AT">um</string>
 </resources>

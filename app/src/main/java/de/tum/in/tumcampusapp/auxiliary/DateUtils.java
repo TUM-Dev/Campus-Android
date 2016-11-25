@@ -36,13 +36,13 @@ public final class DateUtils {
             return DateUtils.getTimeOrDay(time, context);
         }
 
-        final long diff =  timeInMillis - now;
+        final long diff = timeInMillis - now;
         if (diff < 60 * MINUTE_MILLIS) {
             SimpleDateFormat formatter = new SimpleDateFormat("m", Locale.ENGLISH);
-            return "in " + formatter.format(new Date(diff)) + " minuten";
+            return context.getString(R.string.IN) + formatter.format(new Date(diff)) + " " + context.getString(R.string.MINUTES);
         } else if (diff < 3 * HOUR_MILLIS) { // Be more precise by telling the user the exact time if below 3 hours
             SimpleDateFormat formatter = new SimpleDateFormat("HH:mm", Locale.ENGLISH);
-            return "um " + formatter.format(time);
+            return context.getString(R.string.AT) + " " + formatter.format(time);
         } else {
             return android.text.format.DateUtils.getRelativeTimeSpanString(timeInMillis, now, android.text.format.DateUtils.MINUTE_IN_MILLIS, android.text.format.DateUtils.FORMAT_ABBREV_RELATIVE).toString();
         }
