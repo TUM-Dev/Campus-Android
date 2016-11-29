@@ -22,8 +22,8 @@ android {
         applicationId "de.tum.in.tumcampus"
         minSdkVersion 14
         targetSdkVersion 25
-        versionCode 510
-        versionName "1.4.6"
+        versionCode 511
+        versionName "1.5.0-dev"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     lintOptions {
