@@ -44,3 +44,9 @@
 + Florian Schulz
 + Vasyl Malinskyi
 + [DerGenaue](https://github.com/DerGenaue)
+
+#### HackaTUM 2016
++ Felix Fischer
++ Riccardo Padovani
++ Dmitrii Petukhov
++ Jimena Pose

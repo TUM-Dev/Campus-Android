@@ -74,6 +74,79 @@
                         android:layout_height="wrap_content">
                     </Spinner>
 
+                    <TextView
+                        android:id="@+id/mi_login_and_pass_tv"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/padding_default"
+                        android:layout_marginTop="4dp"
+                        android:text="@string/welcome_informatics"
+                        android:visibility="invisible"
+                        />
+
+                    <LinearLayout
+                        android:id="@+id/mi_login_and_pass"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="invisible">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal"
+                            android:paddingLeft="50dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:padding="@dimen/padding_default"
+                                android:layout_marginTop="1dp"
+                                android:text="@string/mi_login"
+                                android:gravity="center"
+                                android:minWidth="100dp" />
+
+                            <EditText
+                                android:id="@+id/mi_login"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:padding="@dimen/padding_default"
+                                android:layout_marginTop="1dp"
+                                android:hint="Enter login"/>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal"
+                            android:paddingLeft="50dp"
+                            >
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:padding="@dimen/padding_default"
+                                android:layout_marginTop="1dp"
+                                android:text="@string/mi_pass"
+                                android:textAlignment="center"
+                                android:minWidth="100dp"/>
+
+                            <EditText
+                                android:id="@+id/mi_pass"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:padding="@dimen/padding_default"
+                                android:layout_marginTop="1dp"
+                                android:inputType="textPassword"
+                                android:hint="Enter password"/>
+
+                        </LinearLayout>
+
+
+                    </LinearLayout>
+
+
                 </LinearLayout>
             </ScrollView>
 

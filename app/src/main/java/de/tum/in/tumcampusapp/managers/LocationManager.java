@@ -240,6 +240,17 @@ public class LocationManager {
         return prefs.getString("card_stations_default_" + CAMPUS_SHORT[campus], defaultVal);
     }
 
+    public String getStationForAssistent() {
+        int campus = getCurrentCampus();
+        if (campus == -1) {
+            return null;
+        }
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+        final String defaultVal = DEFAULT_CAMPUS_STATION[campus];
+        return defaultVal;
+    }
+
     /**
      * Checks that Google Play services are available
      */

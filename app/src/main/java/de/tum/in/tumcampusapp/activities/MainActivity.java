@@ -8,6 +8,8 @@ import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.speech.RecognizerIntent;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -19,9 +21,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import java.util.List;
+
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.BaseActivity;
 import de.tum.in.tumcampusapp.adapters.CardsAdapter;
+import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.cards.generic.Card;
 import de.tum.in.tumcampusapp.managers.CardManager;
@@ -83,6 +88,15 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mCardsView.setLayoutManager(layoutManager);
         mCardsView.setHasFixedSize(true);
+
+        // Setup Assistant FAB
+        FloatingActionButton assistantFAB = (FloatingActionButton) findViewById(R.id.assistant_fab);
+        assistantFAB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Utils.sendRecognizerIntent(MainActivity.this, Const.SPEECH_REQUEST_CODE);
+            }
+        });
 
         //Swipe gestures
         new ItemTouchHelper(new MainActivityTouchHelperCallback()).attachToRecyclerView(mCardsView);
@@ -261,6 +275,19 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
         mCardsView.dispatchNestedFling(0, Integer.MIN_VALUE, true);
         mCardsView.stopNestedScroll();
         mCardsView.getLayoutManager().smoothScrollToPosition(mCardsView, null, 0);
+    }
+
+    /**
+     * This callback is invoked when the Speech Recognizer returns.
+     */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode,
+                                    Intent data) {
+        if (requestCode == Const.SPEECH_REQUEST_CODE && resultCode == RESULT_OK) {
+            List<String> results = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+            startActivity(new Intent(this, AssistantActivity.class).putExtra(Const.ASSISTANT_QUERY, results.get(0)));
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     /**

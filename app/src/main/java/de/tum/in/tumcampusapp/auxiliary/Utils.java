@@ -3,11 +3,13 @@ package de.tum.in.tumcampusapp.auxiliary;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.preference.PreferenceManager;
+import android.speech.RecognizerIntent;
 import android.text.Html;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -553,5 +555,19 @@ public final class Utils {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.N ?
                 Html.fromHtml(source, Html.FROM_HTML_MODE_LEGACY) :
                 Html.fromHtml(source);
+    }
+
+    public static void sendRecognizerIntent(final Activity activity, final int requestCode) {
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+
+        intent.putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS,
+                5000);
+        intent.putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_MINIMUM_LENGTH_MILLIS,
+                5000);
+
+        intent.putExtra(RecognizerIntent.EXTRA_SUPPORTED_LANGUAGES, "de");
+        activity.startActivityForResult(intent, requestCode);
     }
 }

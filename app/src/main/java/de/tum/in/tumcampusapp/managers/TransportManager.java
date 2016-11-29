@@ -16,6 +16,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -91,6 +93,16 @@ public class TransportManager implements Card.ProvidesCard {
     private static final String DEPARTURE_QUERY_STATION = "name_dm=";
     private static final String POINTS = "points";
     private static final String ERROR_INVALID_JSON = "invalid JSON from mvv ";
+
+    static String[] weekdays = new String[]{
+        "Suday",
+        "Monday",
+        "Tuesday",
+        "Wednessday",
+        "Thursday",
+        "Friday",
+        "Saturday"
+    };
 
     static {
         StringBuilder stationSearch = new StringBuilder(MVV_API_BASE);
@@ -282,6 +294,107 @@ public class TransportManager implements Card.ProvidesCard {
             this.station = station;
             this.id = id;
             this.quality = quality;
+        }
+    }
+
+    public static List<DepartureDetailed> getDeparturesDetailedFromExternal(Context context, String stationID, String type) {
+        List<DepartureDetailed> result = new ArrayList<>();
+        try {
+            String language = LANGUAGE + Locale.getDefault().getLanguage();
+            // ISO-8859-1 is needed for mvv
+            String departureQuery = DEPARTURE_QUERY_STATION + UrlEscapers.urlPathSegmentEscaper().escape(stationID);
+
+            String query = DEPARTURE_QUERY_CONST + language + '&' + departureQuery;
+            Utils.logv(query);
+            NetUtils net = new NetUtils(context);
+
+            // Download departures
+            Optional<JSONObject> departures = net.downloadJson(query);
+            if (!departures.isPresent()) {
+                return result;
+            }
+
+            if (departures.get().get("departureList") == null) {
+                return result;
+            }
+
+            JSONArray arr = departures.get().getJSONArray("departureList");
+            for (int i = 0; i < arr.length(); i++) {
+                JSONObject departure = arr.getJSONObject(i);
+                JSONObject servingLine = departure.getJSONObject("servingLine");
+                JSONObject dateTime = departure.getJSONObject("dateTime");
+                if(servingLine.getString("name").equals(type) || servingLine.getString("name").equals("all")) {
+                    result.add(new DepartureDetailed(
+                            servingLine.getString("name"), //U-Bahn
+                            servingLine.getString("direction"), //Klinikum Grosshadern
+                            // Limit symbol length to 3, longer symbols are pointless
+                            String.format("%3.3s", servingLine.getString("symbol")).trim(), //U6
+                            departure.getInt("countdown"), //Minutes until departure
+                            dateTime.getInt("year"),
+                            dateTime.getInt("month"),
+                            dateTime.getInt("day"),
+                            weekdays[dateTime.getInt("weekday") - 1],
+                            dateTime.getInt("hour"),
+                            dateTime.getInt("minute")
+                    ));
+                }
+            }
+
+            Collections.sort(result, new Comparator<DepartureDetailed>() {
+                @Override
+                public int compare(DepartureDetailed lhs, DepartureDetailed rhs) {
+                    return lhs.countDown - rhs.countDown;
+                }
+            });
+        } catch (JSONException e) {
+            //We got no valid JSON, mvg-live is probably bugged
+            Utils.log(e, ERROR_INVALID_JSON + DEPARTURE_QUERY);
+        }
+        return result;
+    }
+
+    public static DepartureDetailed getLastDeparture(Context context, String stationID, String type){
+        //get list of departuress
+        List<DepartureDetailed> departures = getDeparturesDetailedFromExternal(context, stationID, type);
+        if(departures.isEmpty())return null;
+
+        //get first elements out of the list
+        DepartureDetailed lastDeparture = departures.get(0);
+        for(DepartureDetailed d: departures){
+            //no checking for before since already sorted
+            //checking if time between departures less than 3 hours
+            if(d.date.getTime() - lastDeparture.date.getTime() < 1000 * 60 * 60 * 1){
+                lastDeparture = d;
+            }
+        }
+        return lastDeparture;
+    }
+
+    public static DepartureDetailed getNextDeparture(Context context, String stationID, String type) {
+        //returning first element out of sorted list of departures
+        List<DepartureDetailed> departures = getDeparturesDetailedFromExternal(context, stationID, type);
+        if (!departures.isEmpty()){
+            return departures.get(0);
+        }
+        return null;
+    }
+
+    //more detailed version of Departure
+    public static class DepartureDetailed {
+        final public String name;
+        final public String direction;
+        final public String symbol;
+        final public int countDown;
+        final public String weekday;
+        final public Date date;
+
+        public DepartureDetailed(String name, String direction, String symbol, int countDown, int year, int month, int day, String weekday, int hour, int minute) {
+            this.name = name;
+            this.direction = direction;
+            this.symbol = symbol;
+            this.countDown = countDown;
+            this.weekday = weekday;
+            this.date = new GregorianCalendar(year + 1900, month, day, hour, minute, 0).getTime();
         }
     }
 }

@@ -106,6 +106,15 @@ public class CafeteriaManager extends AbstractManager implements Card.ProvidesCa
     }
 
     /**
+     * Returns a cafeteria by it's id
+     *
+     * @return Database cursor (id, name, address, latitude, longitude)
+     */
+    public Cursor getByIdFromDb(int id) {
+        return db.query("cafeterias", null, "id = ?", new String[]{String.valueOf(id)}, null, null, null);
+    }
+
+    /**
      * Removes all cache items
      */
     public void removeCache() {
@@ -139,7 +148,7 @@ public class CafeteriaManager extends AbstractManager implements Card.ProvidesCa
     @Override
     public void onRequestCard(Context context) {
         // Choose which mensa should be shown
-        int cafeteriaId = new LocationManager(context).getCafeteria();
+        int cafeteriaId = getBestMatchMensaId(context);
         if (cafeteriaId == -1) {
             return;
         }
@@ -186,14 +195,48 @@ public class CafeteriaManager extends AbstractManager implements Card.ProvidesCa
         }
     }
 
+    private int getBestMatchMensaId(Context context) {
+        int cafeteriaId = new LocationManager(context).getCafeteria();
+        if (cafeteriaId == -1) {
+            Utils.log("could not get a Cafeteria form locationManager!");
+            return -1;
+        }
+        return cafeteriaId;
+    }
+
+    public Cafeteria getBestMatchMensa(Context context) {
+        // Choose which mensa should be shown
+        int cafeteriaId = getBestMatchMensaId(context);
+        if (cafeteriaId == -1) {
+            return null;
+        }
+
+        // Get desired cafeteria
+        Cursor cursor = getByIdFromDb(cafeteriaId);
+        Cafeteria cafeteria = null;
+
+        // get the cafeteria's name
+        if (cursor.moveToFirst()) {
+            Utils.log(cursor.toString());
+            cafeteria = new Cafeteria(
+                cafeteriaId,
+                cursor.getString(cursor.getColumnIndex(Const.NAME_COLUMN)),
+                cursor.getString(cursor.getColumnIndex(Const.ADDRESS_COLUMN)),
+                cursor.getDouble(cursor.getColumnIndex("latitude")),
+                cursor.getDouble(cursor.getColumnIndex("longitude"))
+            );
+        }
+        cursor.close();
+        return cafeteria;
+    }
+
     /**
      * returns the menus of the best matching cafeteria
      */
     public Map<String, List<CafeteriaMenu>> getBestMatchMensaInfo(Context context) {
         // Choose which mensa should be shown
-        int cafeteriaId = new LocationManager(context).getCafeteria();
+        int cafeteriaId = getBestMatchMensaId(context);
         if (cafeteriaId == -1) {
-            Utils.log("could not get a Cafeteria form locationManager!");
             return null;
         }
 
@@ -241,9 +284,8 @@ public class CafeteriaManager extends AbstractManager implements Card.ProvidesCa
 
     public String getBestMatchMensaName(Context context) {
         // Choose which mensa should be shown
-        int cafeteriaId = new LocationManager(context).getCafeteria();
+        int cafeteriaId = getBestMatchMensaId(context);
         if (cafeteriaId == -1) {
-            Utils.log("could not get a Cafeteria form locationManager!");
             return null;
         }
 
