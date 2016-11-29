@@ -374,7 +374,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
         int daysInMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
 
         //Probably refactor this to a good SQL query
-        for (int curDay = 1; curDay < daysInMonth; curDay++) {
+        for (int curDay = 1; curDay <= daysInMonth; curDay++) {
             calendar.set(Calendar.DAY_OF_MONTH, curDay);
             Cursor cEvents = calendarManager.getFromDbForDate(new Date(calendar.getTimeInMillis()));
 
