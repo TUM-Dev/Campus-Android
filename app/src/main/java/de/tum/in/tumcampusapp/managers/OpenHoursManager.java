@@ -2,7 +2,6 @@ package de.tum.in.tumcampusapp.managers;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.text.format.DateUtils;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -12,6 +11,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.auxiliary.DateUtils;
 import de.tum.in.tumcampusapp.models.cafeteria.Location;
 
 /**
@@ -152,7 +152,7 @@ public class OpenHoursManager extends AbstractManager {
         }
 
         //Get the relative string
-        String relStr = DateUtils.getRelativeTimeSpanString(relativeTo.getTimeInMillis(), now.getTimeInMillis(), DateUtils.MINUTE_IN_MILLIS).toString();
+        String relStr = DateUtils.getFutureTime(relativeTo.getTime(), context);
 
         //Return an assembly
         return context.getString(relation) + " " + relStr.substring(0, 1).toLowerCase(Locale.getDefault()) + relStr.substring(1);

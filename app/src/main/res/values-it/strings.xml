@@ -329,4 +329,7 @@
     <string name="flag_inappropriate">Flag domanda inadeguato</string>
     <string name="mvv_download">Si prega di premere OK per scaricare MVV-Piani altrimenti non è possibile utilizzare questa funzione</string>
     <string name="please_connect_to_internet">Si prega di collegarsi a Internet al fine di procedere al primo avvio dell\'applicazione</string>
+    <string name="IN">in</string>
+    <string name="MINUTES">minuti</string>
+    <string name="AT">a</string>
 </resources>

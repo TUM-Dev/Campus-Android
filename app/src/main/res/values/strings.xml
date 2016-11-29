@@ -486,6 +486,9 @@ Signature: %5$s</string>
     <string name="transition_card" translatable="false">card_transition</string>
     <string name="tumonline_link" translatable="false"><a href="http://campus.tum.de">TUMonline</a></string>
     <string name="accept_chat_terms">Terms must be accepted to use group chat!</string>
+    <string name="IN">in</string>
+    <string name="MINUTES">minutes</string>
+    <string name="AT">at</string>
 </resources>
 
 

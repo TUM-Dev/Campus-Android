@@ -395,5 +395,8 @@
     <string name="flag_inappropriate">Bandera inapropiada pregunta</string>
     <string name="mvv_download">Por favor, pulse OK para descargar MVV-Planes de otro modo no se puede utilizar esta función</string>
     <string name="please_connect_to_internet">Por favor, conectarse a Internet con el fin de proceder al primer inicio de aplicaciones</string>
+    <string name="MINUTES">minutos</string>
+    <string name="IN">en</string>
+    <string name="AT">a</string>
     <!-- END Translated, please do not change identifiers -->
 </resources>
