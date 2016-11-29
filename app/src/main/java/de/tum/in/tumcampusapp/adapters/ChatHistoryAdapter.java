@@ -125,12 +125,15 @@ public class ChatHistoryAdapter extends CursorAdapter {
 
         // set UI elements
         holder.layout = (LinearLayout) view.findViewById(R.id.chatMessageLayout);
-        holder.tvUser = (TextView) view.findViewById(R.id.tvUser);
+
         holder.tvMessage = (TextView) view.findViewById(R.id.tvMessage);
         holder.tvTimestamp = (TextView) view.findViewById(R.id.tvTime);
         if (outgoing) {
             holder.pbSending = (ProgressBar) view.findViewById(R.id.progressBar);
             holder.ivSent = (ImageView) view.findViewById(R.id.sentImage);
+        } else {
+            //We only got the user on receiving things
+            holder.tvUser = (TextView) view.findViewById(R.id.tvUser);
         }
 
         view.setTag(holder);
@@ -146,15 +149,17 @@ public class ChatHistoryAdapter extends CursorAdapter {
     private void bindViewChatMessage(View view, ChatMessage chatMessage) {
         ViewHolder holder = (ViewHolder) view.getTag();
 
-        holder.tvUser.setText(chatMessage.getMember().getDisplayName());
+
         holder.tvMessage.setText(chatMessage.getText());
-        holder.tvTimestamp.setText(DateUtils.getRelativeTimeISO(chatMessage.getTimestamp(), mContext));
+        holder.tvTimestamp.setText(DateUtils.getTimeOrDayISO(chatMessage.getTimestamp(), mContext));
 
         // Set status for outgoing messages (ivSent is not null)
         if (holder.ivSent != null) {
             boolean sending = chatMessage.getStatus() == ChatMessage.STATUS_SENDING;
             holder.ivSent.setVisibility(sending ? View.GONE : View.VISIBLE);
             holder.pbSending.setVisibility(sending ? View.VISIBLE : View.GONE);
+        } else {
+            holder.tvUser.setText(chatMessage.getMember().getDisplayName());
         }
 
         if (chatMessage.getMember().getLrzId().equals("bot")) {

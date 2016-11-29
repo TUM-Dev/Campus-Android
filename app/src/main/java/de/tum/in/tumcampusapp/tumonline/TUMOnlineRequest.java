@@ -21,6 +21,7 @@ import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.managers.CacheManager;
 import de.tum.in.tumcampusapp.managers.TumManager;
+import de.tum.in.tumcampusapp.models.tumo.TokenConfirmation;
 
 /**
  * This class will handle all action needed to communicate with the TUMOnline
@@ -100,6 +101,21 @@ public final class TUMOnlineRequest<T> {
         }
     }
 
+    public static boolean checkTokenInactive(Context c) {
+        TUMOnlineRequest<TokenConfirmation> checkActiveToken = new TUMOnlineRequest<>(TUMOnlineConst.TOKEN_CONFIRMED, c, true);
+        Optional<TokenConfirmation> tc = checkActiveToken.fetch();
+        if (tc.isPresent()) { //Check that the token is actually active
+            if (tc.get().isConfirmed()) {
+                Utils.setSetting(c, Const.TUMO_DISABLED, false);
+            } else {
+                Utils.setSetting(c, Const.TUMO_DISABLED, true);//Nope its not, deactivate all requests to TUMOnline
+                return true;
+            }
+        }
+        //If we don't get anything, fail gracefully
+        return false;
+    }
+
     /**
      * Fetches the result of the HTTPRequest (which can be seen by using {@link #getRequestURL()})
      *
@@ -109,11 +125,23 @@ public final class TUMOnlineRequest<T> {
         // set parameter on the TUMOnline request an fetch the results
         String url = this.getRequestURL();
 
+        //If there were some requests that failed and we verified that the token is not active anymore, block all requests directly
+        if (!method.equals(TUMOnlineConst.TOKEN_CONFIRMED) && Utils.getSettingBool(mContext, Const.TUMO_DISABLED, false)) {
+            Utils.log("aborting fetch URL, as the token is not active any longer " + url);
+            return Optional.absent();
+        }
+
         //Check for error lock
-        String error = this.tumManager.checkLock(url);
-        if (error != null) {
-            Utils.log("aborting fetch URL (" + error + ") " + url);
-            lastError = error;
+        String lockedError = this.tumManager.checkLock(url);
+        if (lockedError != null) {
+            //If the token is not active, then fail hard and do not allow any further requests
+            if (lockedError.equals("Token ist nicht bestätigt oder ungültig!")) {
+                TUMOnlineRequest.checkTokenInactive(mContext);
+            }
+
+            //Set the error and return
+            Utils.log("aborting fetch URL (" + lockedError + ") " + url);
+            lastError = lockedError;
             return Optional.absent();
         }
 
@@ -137,6 +165,7 @@ public final class TUMOnlineRequest<T> {
                 res = new Persister().read(method.getResponse(), result.get());
                 cacheManager.addToCache(url, result.get(), method.getValidity(), CacheManager.CACHE_TYP_DATA);
                 Utils.logv("added to cache " + url);
+                Utils.logv(result.get() + " " + res.toString());
 
                 //Release any lock present in the database
                 tumManager.releaseLock(url);

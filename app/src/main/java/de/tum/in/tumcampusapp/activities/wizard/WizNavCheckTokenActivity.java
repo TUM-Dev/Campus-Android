@@ -19,7 +19,6 @@ import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.models.tumo.IdentitySet;
 import de.tum.in.tumcampusapp.models.tumo.Person;
 import de.tum.in.tumcampusapp.models.tumo.PersonList;
-import de.tum.in.tumcampusapp.models.tumo.TokenConfirmation;
 import de.tum.in.tumcampusapp.tumonline.TUMOnlineConst;
 import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequest;
 
@@ -80,10 +79,7 @@ public class WizNavCheckTokenActivity extends ActivityForLoadingInBackground<Voi
     @Override
     protected Integer onLoadInBackground(Void... arg) {
         // Check if token has been enabled
-        TUMOnlineRequest<TokenConfirmation> request = new TUMOnlineRequest<>(TUMOnlineConst.TOKEN_CONFIRMED, this, true);
-        Optional<TokenConfirmation> confirmation = request.fetch();
-
-        if (confirmation.isPresent() && confirmation.get().isConfirmed()) {
+        if (!TUMOnlineRequest.checkTokenInactive(this)) {
 
             // Get users full name
             TUMOnlineRequest<IdentitySet> request2 = new TUMOnlineRequest<>(TUMOnlineConst.IDENTITY, this, true);

@@ -62,6 +62,8 @@ public final class Const {
     public static final String PUBLIC_KEY_UPLOADED = "chat_member_public_key_uploaded";
 
     public static final String TUMO_PIDENT_NR = "pIdentNr";
+    public static final String TUMO_DISABLED = "tumo_is_disabled";
+
     public static final String GCM_REG_ID = "gcm_registration_id";
     public static final String GCM_REG_ID_SENT_TO_SERVER = "gcm_registration_id_sent_to_server";
     public static final String GCM_REG_ID_LAST_TRANSMISSION = "gcm_registration_id_last_transmission";
@@ -112,6 +114,7 @@ public final class Const {
 
     public static final String PREF_UNIQUE_ID = "PREF_UNIQUE_ID";
     public static final String CHATTERMS_URL = "https://tumcabe.in.tum.de/landing/chatterms/";
+
 
     private Const() {
         // Const is a utility class

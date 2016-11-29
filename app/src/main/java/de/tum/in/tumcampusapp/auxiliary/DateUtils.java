@@ -36,6 +36,10 @@ public final class DateUtils {
                 MINUTE_MILLIS, DAY_MILLIS * 2L, 0).toString();
     }
 
+    public static String getTimeOrDayISO(String datetime, Context context) {
+        return DateUtils.getTimeOrDay(DateUtils.parseIsoDate(datetime), context);
+    }
+
     public static String getTimeOrDay(String datetime, Context context) {
         return DateUtils.getTimeOrDay(DateUtils.parseSqlDate(datetime), context);
     }

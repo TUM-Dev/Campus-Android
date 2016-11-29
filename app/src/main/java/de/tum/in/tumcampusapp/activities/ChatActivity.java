@@ -74,8 +74,10 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
     // Key for the string that's delivered in the action's intent
     public static final String EXTRA_VOICE_REPLY = "extra_voice_reply";
     private static final int MAX_EDIT_TIMESPAN = 120000;
+
     public static ChatRoom mCurrentOpenChatRoom;
     private final Handler mUpdateHandler = new Handler();
+
     /**
      * UI elements
      */
@@ -100,8 +102,7 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
             return true;
         }
 
-        // Called each time the action mode is shown. Always called after onCreateActionMode, but
-        // may be called multiple times if the mode is invalidated.
+        // Called each time the action mode is shown. Always called after onCreateActionMode, but may be called multiple times if the mode is invalidated.
         @Override
         public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
             return false; // Return false if nothing is done
@@ -119,6 +120,7 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
                 } else { // set editing item
                     chatHistoryAdapter.mEditedItem = msg;
                 }
+
                 // Show soft keyboard
                 InputMethodManager imm = (InputMethodManager) ChatActivity.this.getSystemService(Service.INPUT_METHOD_SERVICE);
                 imm.showSoftInput(etMessage, 0);
@@ -149,6 +151,7 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
     private final BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+            Utils.logv("Message send. Trying to parse...");
             GCMChat extras = (GCMChat) intent.getSerializableExtra("GCMChat");
             if (extras == null) {
                 return;
@@ -211,18 +214,6 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
 
         this.getIntentData();
         this.bindUIElements();
-
-        // Update the times shown in the list every 10 seconds
-        mUpdateHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (chatHistoryAdapter != null) {
-                    chatHistoryAdapter.notifyDataSetChanged();
-                }
-                mUpdateHandler.postDelayed(this, 10000);
-            }
-        }, 10000);
-
     }
 
     @Override
