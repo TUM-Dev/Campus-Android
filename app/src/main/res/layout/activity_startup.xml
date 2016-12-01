@@ -11,27 +11,36 @@
 
     <ImageView
         android:id="@+id/startup_tum_logo"
-        android:layout_width="wrap_content"
-        android:layout_height="170dp"
+        android:layout_width="match_parent"
+        android:layout_height="160dp"
         android:layout_centerInParent="true"
-        android:paddingLeft="50dp"
-        android:paddingRight="50dp"
-        android:src="@drawable/tum_logo_splash_screen" />
+        android:src="@drawable/tum_logo" />
+
+    <TextView
+        android:id="@+id/startup_tum_motto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/startup_tum_logo"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:textSize="22dp"
+        android:textColor="#FFFFFF"
+        android:text="@string/startup_motto" />
 
     <TextView
         android:id="@+id/startup_loading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/startup_tum_logo"
+        android:layout_below="@id/startup_tum_motto"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="10dp"
         android:text="@string/loading" />
 
     <TextView
         android:id="@+id/startup_loading_first"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/startup_tum_logo"
+        android:layout_below="@id/startup_loading"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
         android:text="@string/loading_first_time"

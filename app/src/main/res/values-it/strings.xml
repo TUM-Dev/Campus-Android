@@ -311,7 +311,6 @@
     <string name="auto_join_chat">Partecipa nuove aule Chat</string>
     <string name="add_widget">Aggiungi widget</string>
     <string name="all_programs">Tutti i programmi</string>
-    <string name="app_name">TUM Campus App</string>
     <string name="average_grade">valutazione media</string>
     <string name="choose_own_faculty">Scegliere la vostra scuola</string>
     <string name="widget_configure_description">Configurare le carte per dimostrare</string>
@@ -332,4 +331,5 @@
     <string name="IN">in</string>
     <string name="MINUTES">minuti</string>
     <string name="AT">a</string>
+    <string name="startup_motto">Con gli studenti - Per gli studenti</string>
 </resources>
