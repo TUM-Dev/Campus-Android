@@ -64,6 +64,7 @@
         android:description="@string/app_short_description"
         android:fullBackupContent="true"
         android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:logo="@drawable/tum_logo"
         android:supportsRtl="false"
@@ -122,9 +123,11 @@
             android:theme="@style/AppThemeStartup">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <meta-data
+                android:name="android.app.shortcuts"
+                android:resource="@xml/shortcuts" />
         </activity>
         <activity
             android:name=".activities.MainActivity"
