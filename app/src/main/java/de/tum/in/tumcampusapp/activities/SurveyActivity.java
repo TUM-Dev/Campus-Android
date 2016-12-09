@@ -284,7 +284,7 @@ public class SurveyActivity extends ProgressActivity {
      *
      * @param v: view to be deleted, where an ownQuestion with respective responses gets deleted
      */
-    private void zoomOutanimation(View v) {
+    private static void zoomOutanimation(View v) {
         ScaleAnimation zoomOut = new ScaleAnimation(1f, 0f, 1, 0f, Animation.RELATIVE_TO_SELF, (float) 0.5, Animation.RELATIVE_TO_SELF, (float) 0.5);
         zoomOut.setDuration(500);
         zoomOut.setFillAfter(true);
@@ -645,7 +645,7 @@ public class SurveyActivity extends ProgressActivity {
      *
      * @return return this date as a string
      */
-    private String getDateBefore1Week() {
+    private static String getDateBefore1Week() {
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.DAY_OF_YEAR, -7);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.GERMANY);

@@ -32,7 +32,7 @@ public class RSASignerTestCase {
     private List<ChatMessage> messageFixtures;
 
 
-    private PrivateKey buildPrivateKey(String privateKeyString) {
+    private static PrivateKey buildPrivateKey(String privateKeyString) {
         byte[] privateKeyBytes = Base64.decode(privateKeyString, Base64.DEFAULT);
         KeyFactory keyFactory;
         try {

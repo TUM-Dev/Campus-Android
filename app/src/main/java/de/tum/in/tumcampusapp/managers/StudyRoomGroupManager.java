@@ -2,7 +2,6 @@ package de.tum.in.tumcampusapp.managers;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 
 import com.google.common.base.Optional;
 
@@ -34,17 +33,17 @@ public class StudyRoomGroupManager extends AbstractManager {
 
     public StudyRoomGroupManager(Context context) {
         super(context);
-        createStudyRoomGroupTable(db);
-        createStudyRoomTable(db);
+        createStudyRoomGroupTable();
+        createStudyRoomTable();
     }
 
 
-    private void createStudyRoomGroupTable(SQLiteDatabase db) {
+    private final void createStudyRoomGroupTable() {
         db.execSQL("CREATE TABLE IF NOT EXISTS study_room_groups " +
                 "(id INTEGER PRIMARY KEY, name VARCHAR, details VARCHAR)");
     }
 
-    private void createStudyRoomTable(SQLiteDatabase db) {
+    private final void createStudyRoomTable() {
         db.execSQL("CREATE TABLE IF NOT EXISTS study_rooms " +
                 "(id INTEGER PRIMARY KEY, code VARCHAR, name VARCHAR, location VARCHAR, " +
                 "occupied_till VARCHAR, " +
@@ -95,7 +94,7 @@ public class StudyRoomGroupManager extends AbstractManager {
     }
 
 
-    public List<StudyRoomGroup> getAllFromJson(JSONObject jsonObject) throws JSONException {
+    public static List<StudyRoomGroup> getAllFromJson(JSONObject jsonObject) throws JSONException {
         JSONArray groupsJsonArray = jsonObject.getJSONArray("gruppen");
         JSONArray roomsJsonArray = jsonObject.getJSONArray("raeume");
         List<StudyRoomGroup> studyRoomGroups = new ArrayList<>();
@@ -115,7 +114,7 @@ public class StudyRoomGroupManager extends AbstractManager {
         return studyRoomGroups;
     }
 
-    private List<StudyRoom> getStudyRoomsFromJson(JSONArray groupRoomList, JSONArray allRooms)
+    private static List<StudyRoom> getStudyRoomsFromJson(JSONArray groupRoomList, JSONArray allRooms)
             throws JSONException {
         List<StudyRoom> studyRooms = new ArrayList<>();
 

@@ -62,7 +62,7 @@ allprojects {
 //        options.compilerArgs << "-Xep:ConstantField" // Too noisy
         options.compilerArgs << "-Xep:EmptySetMultibindingContributions"
 //        options.compilerArgs << "-Xep:FieldMissingNullable" // Nope, doesn't work
-//        options.compilerArgs << "-Xep:MethodCanBeStatic" // TODO
+        options.compilerArgs << "-Xep:MethodCanBeStatic"
         options.compilerArgs << "-Xep:MixedArrayDimensions"
 //        options.compilerArgs << "-Xep:MultiVariableDeclaration" // TODO
 //        options.compilerArgs << "-Xep:MultipleTopLevelClasses" // TODO
