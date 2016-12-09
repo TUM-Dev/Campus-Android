@@ -23,7 +23,7 @@
         android:layout_below="@id/startup_tum_logo"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
-        android:textSize="22dp"
+        android:textSize="22sp"
         android:textColor="#FFFFFF"
         android:text="@string/startup_motto" />
 
