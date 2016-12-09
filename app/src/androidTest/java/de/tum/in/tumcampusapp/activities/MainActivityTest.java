@@ -23,6 +23,7 @@ public class MainActivityTest extends BaseActivityTest {
     public ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule<>(MainActivity.class);
 
     @Test
+    @Override
     public void mainComponentDisplayedTest() {
         idIsDisplayed(R.id.cards_view);
 

@@ -103,7 +103,7 @@ public class Question {
     /**
      * Presents answers structure for the questions used in receiving the answers on ownQuesitons from server
      */
-    public class Answer {
+    public static class Answer {
         private String answer;
         private int votes;
 

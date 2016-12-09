@@ -55,6 +55,7 @@ public final class TUMOnlineConst<T> {
         return response;
     }
 
+    @Override
     public String toString() {
         return webservice;
     }

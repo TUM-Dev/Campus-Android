@@ -339,6 +339,7 @@ public class GradesActivity extends ActivityForAccessingTumOnline<ExamList> {
         mSwipeRefreshLayout.setRefreshing(false);
     }
 
+    @Override
     public void onFetchError(String errorReason) {
         super.onFetchError(errorReason);
         Utils.log("Noten failed due to: " + errorReason);

@@ -103,6 +103,7 @@ public class IntegratedCalendarEvent extends WeekViewEvent {
         }
     }
 
+    @Override
     public String getLocation() {
         return location;
     }
