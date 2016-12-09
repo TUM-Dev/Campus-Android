@@ -129,4 +129,7 @@ public final class DateUtils {
         }
         return null;
     }
+
+    private DateUtils() {
+    } // Utility class
 }

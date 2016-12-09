@@ -22,7 +22,7 @@ import de.tum.in.tumcampusapp.models.tumcabe.ChatMessage;
 public class SendMessageService extends IntentService {
 
 
-    public static int MAX_SEND_TRIES = 5;
+    public static final int MAX_SEND_TRIES = 5;
     /**
      * Interval in milliseconds to check for current lectures
      */

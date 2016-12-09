@@ -11,7 +11,6 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.BaseActivity;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.ImplicitCounter;
-import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.fragments.SettingsFragment;
 
 /**
