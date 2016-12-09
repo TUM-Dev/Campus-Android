@@ -89,7 +89,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.main_toolbar);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null && (
-                parent != null && parent.equals(MainActivity.class.getName())
+                (parent != null && parent.equals(MainActivity.class.getName()))
                         || this instanceof MainActivity
                         || this instanceof UserPreferencesActivity
         )) {

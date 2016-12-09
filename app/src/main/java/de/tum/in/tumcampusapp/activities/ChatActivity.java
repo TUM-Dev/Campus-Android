@@ -222,7 +222,7 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
         getNextHistoryFromServer(true);
         mCurrentOpenChatRoom = currentChatRoom;
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.cancel(currentChatRoom.getId() << 4 + CardManager.CARD_CHAT);
+        notificationManager.cancel((currentChatRoom.getId() << 4) + CardManager.CARD_CHAT);
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter("chat-message-received"));
     }
 
@@ -441,7 +441,7 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
                         }
 
                         // If all messages are loaded hide header view
-                        if (cur.moveToFirst() && cur.getLong(ChatMessageManager.COL_PREVIOUS) == 0 || cur.getCount() == 0) {
+                        if ((cur.moveToFirst() && cur.getLong(ChatMessageManager.COL_PREVIOUS) == 0) || cur.getCount() == 0) {
                             lvMessageHistory.removeHeaderView(bar);
                         } else {
                             loadingMore = false;

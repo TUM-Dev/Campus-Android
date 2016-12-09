@@ -167,10 +167,12 @@ public class ChatHistoryAdapter extends CursorAdapter {
             holder.tvTimestamp.setText("");
         }
 
-        if (mCheckedItem != null && mCheckedItem.getId() == chatMessage.getId()
-                && mCheckedItem.getStatus() == chatMessage.getStatus() ||
-                mEditedItem != null && mEditedItem.getId() == chatMessage.getId()
-                        && mEditedItem.getStatus() == chatMessage.getStatus()) {
+        if ((mCheckedItem != null
+                && mCheckedItem.getId() == chatMessage.getId()
+                && (mCheckedItem.getStatus() == chatMessage.getStatus()))
+                || (mEditedItem != null
+                && mEditedItem.getId() == chatMessage.getId()
+                && mEditedItem.getStatus() == chatMessage.getStatus())) {
             holder.layout.setBackgroundResource(R.drawable.bg_message_outgoing_selected);
         } else if (holder.ivSent != null) {
             holder.layout.setBackgroundResource(R.drawable.bg_message_outgoing);

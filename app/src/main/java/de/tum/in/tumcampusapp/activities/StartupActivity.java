@@ -99,7 +99,7 @@ public class StartupActivity extends AppCompatActivity {
         boolean hideWizardOnStartup = Utils.getSettingBool(this, Const.HIDE_WIZARD_ON_STARTUP, false);
         String lrzId = Utils.getSetting(this, Const.LRZ_ID, ""); // If new version and LRZ ID is empty, start the full wizard
 
-        if (!hideWizardOnStartup || newVersion && lrzId.isEmpty()) {
+        if (!hideWizardOnStartup || (newVersion && lrzId.isEmpty())) {
             startActivity(new Intent(this, WizNavStartActivity.class));
             finish();
             return;

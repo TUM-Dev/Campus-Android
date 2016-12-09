@@ -171,6 +171,6 @@ public class Chat extends GenericNotification {
 
     @Override
     public int getNotificationIdentification() {
-        return this.extras.room << 4 + Chat.NOTIFICATION_ID;
+        return (this.extras.room << 4) + Chat.NOTIFICATION_ID;
     }
 }
