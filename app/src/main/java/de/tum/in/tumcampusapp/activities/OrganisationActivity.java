@@ -157,9 +157,9 @@ public class OrganisationActivity extends ActivityForAccessingTumOnline<OrgItemL
      * Show all items in a certain layer having a parent element with parent_id
      * parent.
      *
-     * @param parent all items with the same parent
+     * @param orgItem all items with the same parent
      */
-    void showItems(String parent) {
+    void showItems(String orgItem) {
 
         // caption button gets caption
         TextView tvCaption = (TextView) findViewById(R.id.tvCaption);
@@ -177,7 +177,7 @@ public class OrganisationActivity extends ActivityForAccessingTumOnline<OrgItemL
         // go through the XML file and give each organisation its Id, German
         // name, English name and parent-Id
         for (OrgItem item : result.getGroups()) {
-            if (item.getParentId().equals(parent)) {
+            if (item.getParentId().equals(orgItem)) {
                 organisationList.add(item);
             }
         }

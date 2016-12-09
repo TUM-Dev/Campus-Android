@@ -18,7 +18,7 @@ allprojects {
     tasks.withType(JavaCompile) {
         options.compilerArgs << "-Xlint:all"
         options.compilerArgs << "-Werror"
-        // errorprone experimental checks. See: http://errorprone.info/bugpatterns
+//      errorprone experimental checks. See: http://errorprone.info/bugpatterns
         options.compilerArgs << "-Xep:ArgumentParameterSwap"
         options.compilerArgs << "-Xep:AssistedInjectAndInjectOnSameConstructor"
         options.compilerArgs << "-Xep:AutoFactoryAtInject"
@@ -45,7 +45,7 @@ allprojects {
         options.compilerArgs << "-Xep:QualifierOnMethodWithoutProvides"
         options.compilerArgs << "-Xep:StaticOrDefaultInterfaceMethod"
         options.compilerArgs << "-Xep:UnlockMethod"
-//        options.compilerArgs << "-Xep:ArgumentParameterMismatch" // ??
+        options.compilerArgs << "-Xep:ArgumentParameterMismatch"
         options.compilerArgs << "-Xep:AssertFalse"
         options.compilerArgs << "-Xep:AssistedInjectAndInjectOnConstructors"
         options.compilerArgs << "-Xep:BigDecimalLiteralDouble"
@@ -61,13 +61,13 @@ allprojects {
 //        options.compilerArgs << "-Xep:Var" // Too noisy
 //        options.compilerArgs << "-Xep:ConstantField" // Too noisy
         options.compilerArgs << "-Xep:EmptySetMultibindingContributions"
-//        options.compilerArgs << "-Xep:FieldMissingNullable" // Nope, doesn't work
+//        options.compilerArgs << "-Xep:FieldMissingNullable" // Doesn't work
         options.compilerArgs << "-Xep:MethodCanBeStatic"
         options.compilerArgs << "-Xep:MixedArrayDimensions"
         options.compilerArgs << "-Xep:MultiVariableDeclaration"
         options.compilerArgs << "-Xep:MultipleTopLevelClasses"
         options.compilerArgs << "-Xep:PackageLocation"
-//        options.compilerArgs << "-Xep:ParameterNotNullable" // Nope, does not work
+//        options.compilerArgs << "-Xep:ParameterNotNullable" // Doesn't work
         options.compilerArgs << "-Xep:PrivateConstructorForNoninstantiableModuleTest"
 //        options.compilerArgs << "-Xep:PrivateConstructorForUtilityClass" // Too noisy
         options.compilerArgs << "-Xep:RemoveUnusedImports"

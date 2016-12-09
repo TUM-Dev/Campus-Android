@@ -61,7 +61,6 @@ import retrofit2.Response;
  */
 public class SurveyActivity extends ProgressActivity {
 
-    private final Context context = this;
     // for handling change in internet connectivity. If initially had no connection, then connected, then restart activity
     private final BroadcastReceiver connectivityChangeReceiver = new BroadcastReceiver() {
         @Override
@@ -82,7 +81,7 @@ public class SurveyActivity extends ProgressActivity {
                 chosenFaculties.append("- ").append(faculty).append('\n');
             }
 
-            new android.app.AlertDialog.Builder(context).setTitle(getResources().getString(R.string.selected_target_faculties))
+            new android.app.AlertDialog.Builder(SurveyActivity.this).setTitle(getResources().getString(R.string.selected_target_faculties))
                     .setMessage(chosenFaculties.toString())
                     .setPositiveButton(android.R.string.ok, null).create().show();
         }
