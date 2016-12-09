@@ -130,7 +130,8 @@ public class CafeteriaMenuCard extends NotificationAwareCard {
         NotificationCompat.WearableExtender morePageNotification =
                 new NotificationCompat.WearableExtender();
 
-        StringBuilder allContent = new StringBuilder(), firstContent = new StringBuilder();
+        StringBuilder allContent = new StringBuilder();
+        StringBuilder firstContent = new StringBuilder();
         for (CafeteriaMenu menu : mMenus) {
             if ("bei".equals(menu.typeShort)) {
                 continue;

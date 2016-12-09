@@ -89,11 +89,13 @@ public class SurveyActivity extends ProgressActivity {
 
     };
     private Spinner numOfQuestionsSpinner;
-    private Button submitSurveyButton, facultiesButton;
+    private Button submitSurveyButton;
+    private Button facultiesButton;
     private final List<String> questions = new ArrayList<>();
     private final List<String> selectedFaculties = new ArrayList<>();
     private boolean[] checkedFaculties;
-    private LinearLayout mainResponseLayout, questionsLayout;
+    private LinearLayout mainResponseLayout;
+    private LinearLayout questionsLayout;
     private final List<String> fetchedFaculties = new ArrayList<>();
     private SurveyManager surveyManager;
     //Handles clicking on 'delete' button of an own question in responses tab

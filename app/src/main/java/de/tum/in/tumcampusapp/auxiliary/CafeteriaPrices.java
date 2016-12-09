@@ -10,30 +10,29 @@ import java.util.Map;
  * Hardcoded cafeteria prices
  */
 public final class CafeteriaPrices {
-    private static final String
-            PRICE_100 = "1,00",
-            PRICE_155 = "1,55",
-            PRICE_190 = "1,90",
-            PRICE_220 = "2,20",
-            PRICE_240 = "2,40",
-            PRICE_260 = "2,60",
-            PRICE_270 = "2,70",
-            PRICE_280 = "2,80",
-            PRICE_290 = "2,90",
-            PRICE_300 = "3,00",
-            PRICE_320 = "3,20",
-            PRICE_330 = "3,30",
-            PRICE_340 = "3,40",
-            PRICE_350 = "3,50",
-            PRICE_360 = "3,60",
-            PRICE_370 = "3,70",
-            PRICE_390 = "3,90",
-            PRICE_400 = "4,00",
-            PRICE_410 = "4,10",
-            PRICE_440 = "4,40",
-            PRICE_450 = "4,50",
-            PRICE_490 = "4,90",
-            PRICE_540 = "5,40";
+    private static final String PRICE_100 = "1,00";
+    private static final String PRICE_155 = "1,55";
+    private static final String PRICE_190 = "1,90";
+    private static final String PRICE_220 = "2,20";
+    private static final String PRICE_240 = "2,40";
+    private static final String PRICE_260 = "2,60";
+    private static final String PRICE_270 = "2,70";
+    private static final String PRICE_280 = "2,80";
+    private static final String PRICE_290 = "2,90";
+    private static final String PRICE_300 = "3,00";
+    private static final String PRICE_320 = "3,20";
+    private static final String PRICE_330 = "3,30";
+    private static final String PRICE_340 = "3,40";
+    private static final String PRICE_350 = "3,50";
+    private static final String PRICE_360 = "3,60";
+    private static final String PRICE_370 = "3,70";
+    private static final String PRICE_390 = "3,90";
+    private static final String PRICE_400 = "4,00";
+    private static final String PRICE_410 = "4,10";
+    private static final String PRICE_440 = "4,40";
+    private static final String PRICE_450 = "4,50";
+    private static final String PRICE_490 = "4,90";
+    private static final String PRICE_540 = "5,40";
 
     private static final Map<String, String> STUDENT_PRICES = ImmutableMap.<String, String>builder()
             .put("Tagesgericht 1", PRICE_100)

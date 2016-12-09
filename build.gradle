@@ -64,7 +64,7 @@ allprojects {
 //        options.compilerArgs << "-Xep:FieldMissingNullable" // Nope, doesn't work
         options.compilerArgs << "-Xep:MethodCanBeStatic"
         options.compilerArgs << "-Xep:MixedArrayDimensions"
-//        options.compilerArgs << "-Xep:MultiVariableDeclaration" // TODO
+        options.compilerArgs << "-Xep:MultiVariableDeclaration"
         options.compilerArgs << "-Xep:MultipleTopLevelClasses"
         options.compilerArgs << "-Xep:PackageLocation"
 //        options.compilerArgs << "-Xep:ParameterNotNullable" // Nope, does not work

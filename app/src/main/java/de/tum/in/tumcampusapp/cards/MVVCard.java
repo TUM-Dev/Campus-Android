@@ -107,7 +107,8 @@ public class MVVCard extends NotificationAwareCard {
     protected Notification fillNotification(NotificationCompat.Builder notificationBuilder) {
         NotificationCompat.WearableExtender morePageNotification = new NotificationCompat.WearableExtender();
 
-        String firstContent = "", firstTime = "";
+        String firstContent = "";
+        String firstTime = "";
         for (TransportManager.Departure d : mDepartures) {
             if (firstTime.isEmpty()) {
                 firstTime = d.countDown + "min";
