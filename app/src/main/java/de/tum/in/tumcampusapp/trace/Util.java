@@ -62,7 +62,7 @@ public final class Util {
     }
 
     public static String[] getScreenProperties(Context context) {
-        String screen[] = {NOT_AVAILABLE, NOT_AVAILABLE, NOT_AVAILABLE, NOT_AVAILABLE, NOT_AVAILABLE};
+        String[] screen = {NOT_AVAILABLE, NOT_AVAILABLE, NOT_AVAILABLE, NOT_AVAILABLE, NOT_AVAILABLE};
 
         DisplayMetrics dm = new DisplayMetrics();
         Display display = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();

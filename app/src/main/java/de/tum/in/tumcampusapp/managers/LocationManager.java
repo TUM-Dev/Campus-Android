@@ -119,7 +119,7 @@ public class LocationManager {
     private static int getCampusFromLocation(Location location) {
         final double lat = location.getLatitude();
         final double lng = location.getLongitude();
-        float results[] = new float[1];
+        float[] results = new float[1];
         float bestDistance = Float.MAX_VALUE;
         int bestCampus = -1;
         for (int i = 0; i < CAMPUS_LOCATIONS.length; i++) {
@@ -149,7 +149,7 @@ public class LocationManager {
 
         final double lat = location.getLatitude();
         final double lng = location.getLongitude();
-        float results[] = new float[1];
+        float[] results = new float[1];
         CafeteriaManager manager = new CafeteriaManager(mContext);
         Cursor cur = manager.getAllFromDb();
         List<Cafeteria> list = new ArrayList<>(cur.getCount());

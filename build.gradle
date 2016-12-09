@@ -63,7 +63,7 @@ allprojects {
         options.compilerArgs << "-Xep:EmptySetMultibindingContributions"
 //        options.compilerArgs << "-Xep:FieldMissingNullable" // Nope, doesn't work
 //        options.compilerArgs << "-Xep:MethodCanBeStatic" // TODO
-//        options.compilerArgs << "-Xep:MixedArrayDimensions" // TODO
+        options.compilerArgs << "-Xep:MixedArrayDimensions"
 //        options.compilerArgs << "-Xep:MultiVariableDeclaration" // TODO
 //        options.compilerArgs << "-Xep:MultipleTopLevelClasses" // TODO
         options.compilerArgs << "-Xep:PackageLocation"
