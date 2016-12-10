@@ -166,6 +166,9 @@ public class CafeteriaManager extends AbstractManager implements Card.ProvidesCa
 
         // Try with next available date
         cursorCafeteriaDates.moveToFirst(); // Get today or tomorrow if today is sunday e.g.
+        if(cursorCafeteriaDates.getCount() == 0) {
+            return;
+        }
         String dateStr = cursorCafeteriaDates.getString(idCol);
         Date date = Utils.getDate(dateStr);
 
