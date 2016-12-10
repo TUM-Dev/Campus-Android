@@ -78,7 +78,7 @@ public class CardsAdapter extends RecyclerView.Adapter<Card.CardViewHolder> {
     @Override
     public long getItemId(int i) {
         Card card = CardManager.getCard(i);
-        return card.getType() + card.getId() << 4;
+        return card.getType() + (card.getId() << 4);
     }
 
     @Override

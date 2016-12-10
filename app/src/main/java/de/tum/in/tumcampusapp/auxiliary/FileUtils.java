@@ -17,6 +17,8 @@ public final class FileUtils {
     /**
      * Delete all files and folder contained in a folder
      */
+    @SuppressWarnings("ArgumentParameterMismatch")
+    // http://errorprone.info/bugpattern/ArgumentParameterMismatch
     public static void deleteRecursive(File fileOrDirectory) {
         // Check if current item is a dir, then we need to delete all files inside
         if (fileOrDirectory.isDirectory()) {

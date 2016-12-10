@@ -38,6 +38,7 @@ public class PlansActivity extends BaseActivity implements OnItemClickListener {
     };
     ProgressBar progressBar;
     private final Thread downloadFiles = new Thread() {
+        @Override
         public void run() {
             Utils.log("Starting download.");
             NetUtils netUtils = new NetUtils(getApplicationContext());
@@ -79,12 +80,14 @@ public class PlansActivity extends BaseActivity implements OnItemClickListener {
                     .setTitle("MVV plans")
                     .setMessage(getResources().getString(R.string.mvv_download))
                     .setIcon(android.R.drawable.ic_dialog_alert)
-                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                        @Override
                         public void onClick(DialogInterface dialog, int which) {
                             startActivity(back_intent);
                         }
                     })
-                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                        @Override
                         public void onClick(DialogInterface dialog, int which) {
                             progressBar.setVisibility(View.VISIBLE);
                             downloadFiles.start();

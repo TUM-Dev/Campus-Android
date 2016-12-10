@@ -16,10 +16,10 @@ import com.google.common.primitives.Ints;
  * Subclass of drawable that can draw a subway line icon
  */
 class MVVSymbolView extends Drawable {
-    private static final int S_LINE_COLOR[] = {
+    private static final int[] S_LINE_COLOR = {
             0xff6db9df, 0xff8db335, 0xff7d187b, 0xffc1003c, 0, 0xff00915e, 0xff7f3229, 0xff1f1e21
     };
-    private static final int U_LINE_COLOR[] = {
+    private static final int[] U_LINE_COLOR = {
             0xff44723c, 0xffcc263c, 0xffe4721c, 0xff04a27c, 0xffa4721c, 0xff045ea4
     };
     private final Paint mBgPaint;

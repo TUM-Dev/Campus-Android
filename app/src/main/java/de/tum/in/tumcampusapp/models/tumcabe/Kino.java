@@ -60,6 +60,7 @@ public class Kino {
         this.link = link;
     }
 
+    @Override
     public String toString(){
         return "id=" + id + " title=" + title + " year=" + year + " runtime=" + runtime +
                 " genre=" + genre + " director=" + director + " actors=" + actors + " rating=" + rating +

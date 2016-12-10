@@ -4,7 +4,7 @@
     <!-- START Translated, please do not change identifiers -->
 
     <!-- Generic -->
-    <string name="app_name">TUM Campus App</string>
+    <string name="app_name" translatable="false">TUM Campus App</string>
     <string name="search">Search</string>
     <string name="tum_logo">TUM Logo</string>
     <string name="update">Update</string>
@@ -489,6 +489,7 @@ Signature: %5$s</string>
     <string name="IN">in</string>
     <string name="MINUTES">minutes</string>
     <string name="AT">at</string>
+    <string name="startup_motto">By students - For students</string>
 </resources>
 
 

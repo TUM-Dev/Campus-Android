@@ -40,7 +40,6 @@
                 android:paddingEnd="8dp"
                 android:paddingRight="0dp"
                 android:textSize="12sp"
-                android:text="123 test"
                 android:textColor="@color/text_light_gray"
                 android:includeFontPadding="false"
                 tools:ignore="RtlSymmetry"/>

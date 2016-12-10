@@ -3,7 +3,6 @@
     <!-- START Translated, please do not change identifiers -->
 
     <!-- Generic -->
-    <string name="app_name">TUM Campus App</string>
     <string name="search">Recherche</string>
     <string name="tum_logo">TUM Logo</string>
     <string name="update">Mise à jour</string>
@@ -406,5 +405,6 @@
     <string name="IN">dans</string>
     <string name="MINUTES">minutes</string>
     <string name="AT">à</string>
+    <string name="startup_motto">Par étudiants - Pour les étudiants</string>
 
 </resources>

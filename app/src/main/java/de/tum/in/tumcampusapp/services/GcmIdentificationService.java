@@ -60,6 +60,7 @@ public class GcmIdentificationService extends InstanceIDListenerService {
     /**
      * Actual service routine which can use this as a context
      */
+    @Override
     public void onTokenRefresh() {
         InstanceID iid = InstanceID.getInstance(this);
 
@@ -104,6 +105,7 @@ public class GcmIdentificationService extends InstanceIDListenerService {
         if (resultCode != ConnectionResult.SUCCESS) {
             if (GoogleApiAvailability.getInstance().isUserResolvableError(resultCode)) {
                 a.runOnUiThread(new Runnable() {
+                    @Override
                     public void run() {
                         GoogleApiAvailability.getInstance().getErrorDialog(a, resultCode, PLAY_SERVICES_RESOLUTION_REQUEST).show();
                     }

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">TUM Campus App</string>
     <string name="about_tca">О TCA</string>
     <string name="accept_chat_terms">Принять условия чата</string>
     <string name="access_token_wasnt_generated">Не удалось создать TUMOnline-Access-Token</string>
@@ -332,4 +331,5 @@
     <string name="IN">в</string>
     <string name="MINUTES">минут</string>
     <string name="AT">в</string>
+    <string name="startup_motto">По студентов - Для студентов</string>
 </resources>

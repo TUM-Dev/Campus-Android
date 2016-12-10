@@ -202,7 +202,7 @@ public final class TumHttpLoggingInterceptor implements Interceptor {
         }
     }
 
-    private boolean bodyEncoded(Headers headers) {
+    private static boolean bodyEncoded(Headers headers) {
         String contentEncoding = headers.get("Content-Encoding");
         return contentEncoding != null && !contentEncoding.equalsIgnoreCase("identity");
     }

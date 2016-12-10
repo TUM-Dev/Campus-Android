@@ -22,9 +22,15 @@ public class CardsWidgetConfigureActivity extends Activity {
     public static final String PREFS_NAME = "de.tum.in.tumcampusapp.widgets.CardsWidget";
     public static final String PREF_PREFIX_KEY = "appwidget_";
     private int mAppWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
-    private CheckBox mCafeteriaCheck, mChatCheck, mEduroamCheck, mMVVCheck,
-            mNewsCheck, mLectureCheck, mTutionFeesCheck;
+    private CheckBox mCafeteriaCheck;
+    private CheckBox mChatCheck;
+    private CheckBox mEduroamCheck;
+    private CheckBox mMVVCheck;
+    private CheckBox mNewsCheck;
+    private CheckBox mLectureCheck;
+    private CheckBox mTutionFeesCheck;
     final private View.OnClickListener mOnClickListener = new View.OnClickListener() {
+        @Override
         public void onClick(View v) {
             final Context context = CardsWidgetConfigureActivity.this;
 

@@ -61,7 +61,6 @@ import retrofit2.Response;
  */
 public class SurveyActivity extends ProgressActivity {
 
-    private final Context context = this;
     // for handling change in internet connectivity. If initially had no connection, then connected, then restart activity
     private final BroadcastReceiver connectivityChangeReceiver = new BroadcastReceiver() {
         @Override
@@ -82,18 +81,20 @@ public class SurveyActivity extends ProgressActivity {
                 chosenFaculties.append("- ").append(faculty).append('\n');
             }
 
-            new android.app.AlertDialog.Builder(context).setTitle(getResources().getString(R.string.selected_target_faculties))
+            new android.app.AlertDialog.Builder(SurveyActivity.this).setTitle(getResources().getString(R.string.selected_target_faculties))
                     .setMessage(chosenFaculties.toString())
                     .setPositiveButton(android.R.string.ok, null).create().show();
         }
 
     };
     private Spinner numOfQuestionsSpinner;
-    private Button submitSurveyButton, facultiesButton;
+    private Button submitSurveyButton;
+    private Button facultiesButton;
     private final List<String> questions = new ArrayList<>();
     private final List<String> selectedFaculties = new ArrayList<>();
     private boolean[] checkedFaculties;
-    private LinearLayout mainResponseLayout, questionsLayout;
+    private LinearLayout mainResponseLayout;
+    private LinearLayout questionsLayout;
     private final List<String> fetchedFaculties = new ArrayList<>();
     private SurveyManager surveyManager;
     //Handles clicking on 'delete' button of an own question in responses tab
@@ -284,7 +285,7 @@ public class SurveyActivity extends ProgressActivity {
      *
      * @param v: view to be deleted, where an ownQuestion with respective responses gets deleted
      */
-    private void zoomOutanimation(View v) {
+    private static void zoomOutanimation(View v) {
         ScaleAnimation zoomOut = new ScaleAnimation(1f, 0f, 1, 0f, Animation.RELATIVE_TO_SELF, (float) 0.5, Animation.RELATIVE_TO_SELF, (float) 0.5);
         zoomOut.setDuration(500);
         zoomOut.setFillAfter(true);
@@ -645,7 +646,7 @@ public class SurveyActivity extends ProgressActivity {
      *
      * @return return this date as a string
      */
-    private String getDateBefore1Week() {
+    private static String getDateBefore1Week() {
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.DAY_OF_YEAR, -7);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.GERMANY);

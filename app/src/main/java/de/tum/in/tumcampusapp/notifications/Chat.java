@@ -124,6 +124,7 @@ public class Chat extends GenericNotification {
         sBuilder.addNextIntent(notificationIntent);
     }
 
+    @Override
     public Notification getNotification() {
         //Check if chat is currently open then don't show a notification if it is
         if (ChatActivity.mCurrentOpenChatRoom != null && this.extras.room == ChatActivity.mCurrentOpenChatRoom.getId()) {
@@ -170,6 +171,6 @@ public class Chat extends GenericNotification {
 
     @Override
     public int getNotificationIdentification() {
-        return this.extras.room << 4 + Chat.NOTIFICATION_ID;
+        return (this.extras.room << 4) + Chat.NOTIFICATION_ID;
     }
 }

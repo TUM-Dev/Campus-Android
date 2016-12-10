@@ -89,7 +89,8 @@ public class CalendarManager extends AbstractManager implements Card.ProvidesCar
         cursor.close();
 
         CalendarManager calendarManager = new CalendarManager(c);
-        Date dtstart, dtend;
+        Date dtstart;
+        Date dtend;
 
         // Get all calendar items from database
         cursor = calendarManager.getAllFromDb();

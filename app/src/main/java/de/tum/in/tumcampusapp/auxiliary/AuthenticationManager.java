@@ -156,11 +156,11 @@ public class AuthenticationManager {
         this.clearKeys();
 
         // If the key is not in shared preferences, a new generate key-pair
-        KeyPair keyPair = this.generateKeyPair();
+        KeyPair keyPair = generateKeyPair();
 
         //In order to store the preferences we need to encode them as base64 string
-        String publicKeyString = this.keyToBase64(keyPair.getPublic().getEncoded());
-        String privateKeyString = this.keyToBase64(keyPair.getPrivate().getEncoded());
+        String publicKeyString = keyToBase64(keyPair.getPublic().getEncoded());
+        String privateKeyString = keyToBase64(keyPair.getPrivate().getEncoded());
         this.saveKeys(privateKeyString, publicKeyString);
 
         //New keys, need to re-upload
@@ -235,20 +235,15 @@ public class AuthenticationManager {
 
     /**
      * Convert a byte array to a more manageable base64 string to store it in the preferences
-     *
-     * @param key
-     * @return
      */
-    private String keyToBase64(byte[] key) {
+    private static String keyToBase64(byte[] key) {
         return Base64.encodeToString(key, Base64.DEFAULT);
     }
 
     /**
      * Generates a keypair with the given ALGORITHM & size
-     *
-     * @return
      */
-    private KeyPair generateKeyPair() {
+    private static KeyPair generateKeyPair() {
         KeyPairGenerator keyGen = getKeyPairGeneratorInstance();
         keyGen.initialize(AuthenticationManager.RSA_KEY_SIZE);
         return keyGen.generateKeyPair();

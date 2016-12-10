@@ -204,10 +204,10 @@ public class DownloadService extends IntentService {
      * @return if all downloads were successful
      */
     private boolean downloadAll(boolean force) {
-        final boolean cafe = downloadCafeterias(force),
-                kino = downLoadKino(force),
-                news = downloadNews(force),
-                faculties = downloadFacultiesAndSurveyData();
+        final boolean cafe = downloadCafeterias(force);
+        final boolean kino = downLoadKino(force);
+        final boolean news = downloadNews(force);
+        final boolean faculties = downloadFacultiesAndSurveyData();
         return cafe && kino && news && faculties;
     }
 
