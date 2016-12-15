@@ -45,7 +45,7 @@ public class KinoManager extends AbstractManager {
     /**
      * Removes all old items
      */
-    void cleanupDb() {
+    final void cleanupDb() {
         db.execSQL("DELETE FROM kino WHERE date < date('now')");
     }
 

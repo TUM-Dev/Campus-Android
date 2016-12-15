@@ -469,7 +469,7 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
             return;
         }
 
-        TUMCabeClient.getInstance(ChatActivity.this).leaveChatRoom(currentChatRoom, verification, new Callback<ChatRoom>() {
+        TUMCabeClient.getInstance(this).leaveChatRoom(currentChatRoom, verification, new Callback<ChatRoom>() {
             @Override
             public void onResponse(Call<ChatRoom> call, Response<ChatRoom> room) {
                 Utils.logv("Success leaving chat room: " + room.body().getName());

@@ -292,7 +292,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
                             }
                         }).show();
             } else {
-                ActivityCompat.requestPermissions(CalendarActivity.this, PERMISSIONS_CALENDAR, id);
+                ActivityCompat.requestPermissions(this, PERMISSIONS_CALENDAR, id);
             }
         }
 
@@ -344,7 +344,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
         if (!isPermissionGranted(REQUEST_DELETE)) {
             return;
         }
-        AlertDialog.Builder builder = new AlertDialog.Builder(CalendarActivity.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(getString(R.string.dialog_delete_calendar)).setPositiveButton(getString(R.string.yes), new OnClickListener() {
 
             @Override

@@ -204,7 +204,7 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<String, 
      */
     @Override
     protected Boolean onLoadInBackground(String... arg) {
-        return accessTokenManager.requestAccessToken(WizNavStartActivity.this, arg[0]);
+        return accessTokenManager.requestAccessToken(this, arg[0]);
     }
 
     /**

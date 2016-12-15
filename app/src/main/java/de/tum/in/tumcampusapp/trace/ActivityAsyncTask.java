@@ -52,7 +52,7 @@ public abstract class ActivityAsyncTask<Q, R, S, T> extends AsyncTask<R, S, T> {
      * <p/>
      * Raises an exception if we are already connected.
      */
-    public void connectTo(Q wrappedObject) {
+    public final void connectTo(Q wrappedObject) {
         if (mWrapped != null && wrappedObject != null) {
             throw new IllegalStateException();
         }

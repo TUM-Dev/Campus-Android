@@ -52,13 +52,54 @@ import de.tum.in.tumcampusapp.tumonline.TUMOnlineConst;
  */
 public class PersonsDetailsActivity extends ActivityForAccessingTumOnline<Employee> {
 
+    private static final String[] PERMISSIONS_CONTACTS = {Manifest.permission.WRITE_CONTACTS};
     private Employee mEmployee;
     private MenuItem mContact;
-    private static final String[] PERMISSIONS_CONTACTS = {Manifest.permission.WRITE_CONTACTS};
 
 
     public PersonsDetailsActivity() {
         super(TUMOnlineConst.PERSON_DETAILS, R.layout.activity_personsdetails);
+    }
+
+    private static void addContact(Collection<ContentProviderOperation> ops, int rawContactID, Contact contact, boolean work) {
+        if (contact != null) {
+            // Add work telefon number
+            if (contact.getTelefon() != null) {
+                ops.add(ContentProviderOperation.newInsert(Data.CONTENT_URI)
+                        .withValueBackReference(Data.RAW_CONTACT_ID, rawContactID)
+                        .withValue(Data.MIMETYPE, Phone.CONTENT_ITEM_TYPE)
+                        .withValue(Phone.NUMBER, contact.getTelefon())
+                        .withValue(Phone.TYPE, work ? Phone.TYPE_WORK : Phone.TYPE_HOME)
+                        .build());
+            }
+            // Add work mobile number
+            if (contact.getMobilephone() != null) {
+                ops.add(ContentProviderOperation.newInsert(Data.CONTENT_URI)
+                        .withValueBackReference(Data.RAW_CONTACT_ID, rawContactID)
+                        .withValue(Data.MIMETYPE, Phone.CONTENT_ITEM_TYPE)
+                        .withValue(Phone.NUMBER, contact.getMobilephone())
+                        .withValue(Phone.TYPE, work ? Phone.TYPE_WORK_MOBILE : Phone.TYPE_MOBILE)
+                        .build());
+            }
+            // Add work fax number
+            if (contact.getFax() != null) {
+                ops.add(ContentProviderOperation.newInsert(Data.CONTENT_URI)
+                        .withValueBackReference(Data.RAW_CONTACT_ID, rawContactID)
+                        .withValue(Data.MIMETYPE, Phone.CONTENT_ITEM_TYPE)
+                        .withValue(Phone.NUMBER, contact.getFax())
+                        .withValue(Phone.TYPE, work ? Phone.TYPE_FAX_WORK : Phone.TYPE_FAX_HOME)
+                        .build());
+            }
+            // Add website
+            if (contact.getHomepage() != null) {
+                ops.add(ContentProviderOperation.newInsert(Data.CONTENT_URI)
+                        .withValueBackReference(Data.RAW_CONTACT_ID, rawContactID)
+                        .withValue(Data.MIMETYPE, Website.CONTENT_ITEM_TYPE)
+                        .withValue(Website.URL, contact.getHomepage())
+                        .withValue(Website.TYPE, work ? Website.TYPE_WORK : Website.TYPE_HOME)
+                        .build());
+            }
+        }
     }
 
     @Override
@@ -360,47 +401,6 @@ public class PersonsDetailsActivity extends ActivityForAccessingTumOnline<Employ
         }
     }
 
-    private static void addContact(Collection<ContentProviderOperation> ops, int rawContactID, Contact contact, boolean work) {
-        if (contact != null) {
-            // Add work telefon number
-            if (contact.getTelefon() != null) {
-                ops.add(ContentProviderOperation.newInsert(Data.CONTENT_URI)
-                        .withValueBackReference(Data.RAW_CONTACT_ID, rawContactID)
-                        .withValue(Data.MIMETYPE, Phone.CONTENT_ITEM_TYPE)
-                        .withValue(Phone.NUMBER, contact.getTelefon())
-                        .withValue(Phone.TYPE, work ? Phone.TYPE_WORK : Phone.TYPE_HOME)
-                        .build());
-            }
-            // Add work mobile number
-            if (contact.getMobilephone() != null) {
-                ops.add(ContentProviderOperation.newInsert(Data.CONTENT_URI)
-                        .withValueBackReference(Data.RAW_CONTACT_ID, rawContactID)
-                        .withValue(Data.MIMETYPE, Phone.CONTENT_ITEM_TYPE)
-                        .withValue(Phone.NUMBER, contact.getMobilephone())
-                        .withValue(Phone.TYPE, work ? Phone.TYPE_WORK_MOBILE : Phone.TYPE_MOBILE)
-                        .build());
-            }
-            // Add work fax number
-            if (contact.getFax() != null) {
-                ops.add(ContentProviderOperation.newInsert(Data.CONTENT_URI)
-                        .withValueBackReference(Data.RAW_CONTACT_ID, rawContactID)
-                        .withValue(Data.MIMETYPE, Phone.CONTENT_ITEM_TYPE)
-                        .withValue(Phone.NUMBER, contact.getFax())
-                        .withValue(Phone.TYPE, work ? Phone.TYPE_FAX_WORK : Phone.TYPE_FAX_HOME)
-                        .build());
-            }
-            // Add website
-            if (contact.getHomepage() != null) {
-                ops.add(ContentProviderOperation.newInsert(Data.CONTENT_URI)
-                        .withValueBackReference(Data.RAW_CONTACT_ID, rawContactID)
-                        .withValue(Data.MIMETYPE, Website.CONTENT_ITEM_TYPE)
-                        .withValue(Website.URL, contact.getHomepage())
-                        .withValue(Website.TYPE, work ? Website.TYPE_WORK : Website.TYPE_HOME)
-                        .build());
-            }
-        }
-    }
-
     /**
      * Check Calendar permission for Android 6.0
      *
@@ -428,7 +428,7 @@ public class PersonsDetailsActivity extends ActivityForAccessingTumOnline<Employ
                             }
                         }).show();
             } else {
-                ActivityCompat.requestPermissions(PersonsDetailsActivity.this, PERMISSIONS_CONTACTS, id);
+                ActivityCompat.requestPermissions(this, PERMISSIONS_CONTACTS, id);
             }
         }
 

@@ -93,7 +93,7 @@ public class LecturesPersonalActivity extends ActivityForSearchingTumOnline<Lect
             Collections.sort(lectures);
 
             // set ListView to data via the LecturesListAdapter
-            lvMyLecturesList.setAdapter(LecturesListAdapter.newInstance(LecturesPersonalActivity.this, lectures));
+            lvMyLecturesList.setAdapter(LecturesListAdapter.newInstance(this, lectures));
         }
     }
 }

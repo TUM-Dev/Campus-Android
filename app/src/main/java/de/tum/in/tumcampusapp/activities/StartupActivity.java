@@ -180,7 +180,7 @@ public class StartupActivity extends AppCompatActivity {
 
 
             // Display an AlertDialog with an explanation and a button to trigger the request.
-            StartupActivity.this.runOnUiThread(new Runnable() {
+            runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     new AlertDialog.Builder(StartupActivity.this).setMessage(getString(R.string.permission_location_explanation)).setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
@@ -194,7 +194,7 @@ public class StartupActivity extends AppCompatActivity {
                 }
             });
         } else {
-            ActivityCompat.requestPermissions(StartupActivity.this, PERMISSIONS_LOCATION, REQUEST_LOCATION);
+            ActivityCompat.requestPermissions(this, PERMISSIONS_LOCATION, REQUEST_LOCATION);
         }
     }
 
