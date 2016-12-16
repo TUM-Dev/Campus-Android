@@ -307,7 +307,7 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
                             mCardsView.getLayoutManager().smoothScrollToPosition(mCardsView, null, lastPos);
                         }
 
-                    }).setCallback(new Snackbar.Callback() {
+                    }).addCallback(new Snackbar.Callback() {
                 @Override
                 public void onDismissed(Snackbar snackbar, int event) {
                     super.onDismissed(snackbar, event);
