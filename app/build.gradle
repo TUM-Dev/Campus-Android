@@ -1,5 +1,4 @@
 apply plugin: 'com.android.application'
-apply plugin: 'net.ltgt.errorprone'
 apply from: '../findbugs.gradle'
 apply from: '../pmd.gradle'
 
@@ -52,9 +51,6 @@ configurations.all {
         force 'com.android.support:recyclerview-v7:25.0.1'
         force 'com.google.code.findbugs:jsr305:3.0.1'
     }
-}
-configurations.errorprone {
-    resolutionStrategy.force 'com.google.errorprone:error_prone_core:2.0.15'
 }
 
 dependencies {
