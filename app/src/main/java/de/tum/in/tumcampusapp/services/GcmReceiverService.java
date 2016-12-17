@@ -69,13 +69,6 @@ public class GcmReceiverService extends GcmListenerService {
 
             //switch on the type as both the type and payload must be present
             switch (type) { //https://github.com/TCA-Team/TumCampusApp/wiki/GCM-Message-format
-                case 0: //Nothing to do, just confirm the retrieved notification
-                    try {
-                        TUMCabeClient.getInstance(this).confirm(notification);
-                    } catch (IOException e) {
-                        Utils.log(e);
-                    }
-                    break;
                 case 1: //Chat
                     n = new Chat(extras.getString(PAYLOAD), this, notification);
                     break;
@@ -84,6 +77,14 @@ public class GcmReceiverService extends GcmListenerService {
                     break;
                 case 3: //Alert
                     n = new Alarm(extras.getString(PAYLOAD), this, notification);
+                    break;
+                case 0: //Nothing to do, just confirm the retrieved notification
+                default:
+                    try {
+                        TUMCabeClient.getInstance(this).confirm(notification);
+                    } catch (IOException e) {
+                        Utils.log(e);
+                    }
                     break;
             }
 

@@ -127,15 +127,15 @@ public class SurveyCard extends Card {
      * depending on the size of the question Array list
      */
     private void showNextQuestions() {
-        // if the question arraylist is not empty, show the first question (the answered question before got removed from the list)
-        if (questions.size() >= 1) {
-            showFirstQuestion();
-        } else { // show there are no questions available anymore
+        if (questions.isEmpty()) { // show there are no questions available anymore
             mQuestion.setText(R.string.no_questions_available);
             bYes.setVisibility(View.GONE);
             bNo.setVisibility(View.GONE);
             bSkip.setVisibility(View.GONE);
             bFlagged.setVisibility(View.GONE);
+        } else {
+            // if the question arraylist is not empty, show the first question (the answered question before got removed from the list)
+            showFirstQuestion();
         }
     }
 

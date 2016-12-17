@@ -44,6 +44,7 @@ public class OpeningHoursDetailFragment extends Fragment implements ViewBinder {
      * fragment (e.g. upon screen orientation changes).
      */
     public OpeningHoursDetailFragment() {
+        // NOP
     }
 
     @Override

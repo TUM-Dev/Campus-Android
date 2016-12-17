@@ -357,7 +357,7 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
         } catch (IOException e) {
             Utils.log(e);
         }
-        if (ownQuestions.size() == 0) {
+        if (ownQuestions.isEmpty()) {
             return;
         }
         for (int i = 0; i < ownQuestions.size(); i++) {

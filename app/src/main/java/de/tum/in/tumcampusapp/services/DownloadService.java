@@ -93,19 +93,6 @@ public class DownloadService extends IntentService {
         if (NetUtils.isConnected(service) && (launch || backgroundServicePermitted)) {
             Utils.logv("Handle action <" + action + ">");
             switch (action) {
-                case Const.DOWNLOAD_ALL_FROM_EXTERNAL:
-                    successful = service.downloadAll(force);
-
-                    boolean isSetup = Utils.getInternalSettingBool(service, Const.EVERYTHING_SETUP, false);
-                    if (isSetup) {
-                        break;
-                    }
-                    CacheManager cm = new CacheManager(service);
-                    cm.syncCalendar();
-                    if (successful) {
-                        Utils.setInternalSetting(service, Const.EVERYTHING_SETUP, true);
-                    }
-                    break;
                 case Const.NEWS:
                     successful = service.downloadNews(force);
                     break;
@@ -117,6 +104,20 @@ public class DownloadService extends IntentService {
                     break;
                 case Const.KINO:
                     successful = service.downLoadKino(force);
+                    break;
+                case Const.DOWNLOAD_ALL_FROM_EXTERNAL:
+                default:
+                    successful = service.downloadAll(force);
+
+                    boolean isSetup = Utils.getInternalSettingBool(service, Const.EVERYTHING_SETUP, false);
+                    if (isSetup) {
+                        break;
+                    }
+                    CacheManager cm = new CacheManager(service);
+                    cm.syncCalendar();
+                    if (successful) {
+                        Utils.setInternalSetting(service, Const.EVERYTHING_SETUP, true);
+                    }
                     break;
             }
         }
