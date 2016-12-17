@@ -20,14 +20,14 @@
     </style>
 
     <style name="AppTheme.WhiteBackground" parent="AppTheme">
-        <item name="android:background">#ffffffff</item>
+        <item name="android:background">@android:color/white</item>
     </style>
 
-    <style name="AppTheme.SectionsBlueBackground" parent="AppTheme">
+    <style name="AppTheme.BlueBackground" parent="AppTheme">
         <item name="android:background">@color/sections_blue</item>
     </style>
 
-    <style name="AppTheme.SectionsGreyBackground" parent="AppTheme">
+    <style name="AppTheme.GreyBackground" parent="AppTheme">
         <item name="android:background">@color/sections_gray</item>
     </style>
 

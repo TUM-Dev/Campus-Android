@@ -3,9 +3,9 @@
     android:id="@+id/cards_widget_card"
     android:layout_width="fill_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/background_light"
     android:orientation="horizontal"
-    android:padding="5dp">
+    android:padding="5dp"
+    android:theme="@style/AppTheme.WhiteBackground">
 
     <TextView
         android:id="@+id/widgetCardTextView"
