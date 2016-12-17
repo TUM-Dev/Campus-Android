@@ -135,7 +135,7 @@ public final class TUMOnlineRequest<T> {
         String lockedError = this.tumManager.checkLock(url);
         if (lockedError != null) {
             //If the token is not active, then fail hard and do not allow any further requests
-            if (lockedError.equals("Token ist nicht bestätigt oder ungültig!")) {
+            if ("Token ist nicht bestätigt oder ungültig!".equals(lockedError)) {
                 TUMOnlineRequest.checkTokenInactive(mContext);
             }
 

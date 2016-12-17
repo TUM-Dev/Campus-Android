@@ -79,8 +79,13 @@ public class WizNavCheckTokenActivity extends ActivityForLoadingInBackground<Voi
     @Override
     protected Integer onLoadInBackground(Void... arg) {
         // Check if token has been enabled
-        if (!TUMOnlineRequest.checkTokenInactive(this)) {
-
+        if (TUMOnlineRequest.checkTokenInactive(this)) {
+            if (NetUtils.isConnected(this)) {
+                return R.string.token_not_enabled;
+            } else {
+                return R.string.no_internet_connection;
+            }
+        } else {
             // Get users full name
             TUMOnlineRequest<IdentitySet> request2 = new TUMOnlineRequest<>(TUMOnlineConst.IDENTITY, this, true);
             Optional<IdentitySet> id = request2.fetch();
@@ -97,12 +102,6 @@ public class WizNavCheckTokenActivity extends ActivityForLoadingInBackground<Voi
                 Utils.setSetting(this, Const.TUMO_PIDENT_NR, pID);
             }
             return null;
-        } else {
-            if (NetUtils.isConnected(this)) {
-                return R.string.token_not_enabled;
-            } else {
-                return R.string.no_internet_connection;
-            }
         }
     }
 

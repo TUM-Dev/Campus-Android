@@ -162,13 +162,14 @@ public class CafeteriaManager extends AbstractManager implements Card.ProvidesCa
         // Get available dates for cafeteria menus
         CafeteriaMenuManager cmm = new CafeteriaMenuManager(context);
         Cursor cursorCafeteriaDates = cmm.getDatesFromDb();
-        final int idCol = cursorCafeteriaDates.getColumnIndex(Const.ID_COLUMN);
 
         // Try with next available date
         cursorCafeteriaDates.moveToFirst(); // Get today or tomorrow if today is sunday e.g.
         if(cursorCafeteriaDates.getCount() == 0) {
             return;
         }
+
+        final int idCol = cursorCafeteriaDates.getColumnIndex(Const.ID_COLUMN);
         String dateStr = cursorCafeteriaDates.getString(idCol);
         Date date = Utils.getDate(dateStr);
 

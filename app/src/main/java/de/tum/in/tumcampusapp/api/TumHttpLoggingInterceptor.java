@@ -22,10 +22,6 @@ import okio.BufferedSource;
 
 import static okhttp3.internal.Platform.INFO;
 
-/**
- * Created by deepeshpandey on 02/11/16.
- */
-
 public final class TumHttpLoggingInterceptor implements Interceptor {
 
     private static final Charset UTF8 = Charset.forName("UTF-8");
@@ -34,9 +30,12 @@ public final class TumHttpLoggingInterceptor implements Interceptor {
     public interface Logger {
         void log(String message);
 
-        /** A {@link Logger} defaults output appropriate for the current platform. */
+        /**
+         * A {@link Logger} defaults output appropriate for the current platform.
+         */
         Logger DEFAULT = new Logger() {
-            @Override public void log(String message) {
+            @Override
+            public void log(String message) {
                 Platform.get().log(INFO, message, null);
             }
         };
@@ -59,7 +58,7 @@ public final class TumHttpLoggingInterceptor implements Interceptor {
         boolean hasRequestBody = requestBody != null;
 
         Connection connection = chain.connection();
-        Protocol protocol = connection != null ? connection.protocol() : Protocol.HTTP_1_1;
+        Protocol protocol = connection == null ? Protocol.HTTP_1_1 : connection.protocol();
         String requestStartMessage = "--> " + request.method() + ' ' + request.url() + ' ' + protocol;
         if (!logHeaders && hasRequestBody) {
             requestStartMessage += " (" + requestBody.contentLength() + "-byte body)";
@@ -87,33 +86,34 @@ public final class TumHttpLoggingInterceptor implements Interceptor {
                 }
             }
 
-            if (!logBody || !hasRequestBody) {
-                logger.log("--> END " + request.method());
-            } else if (bodyEncoded(request.headers())) {
-                logger.log("--> END " + request.method() + " (encoded body omitted)");
-            } else {
-                Buffer buffer = new Buffer();
-                requestBody.writeTo(buffer);
-
-                Charset charset = UTF8;
-                MediaType contentType = requestBody.contentType();
-                if (contentType != null) {
-                    charset = contentType.charset(UTF8);
-                }
-
-                logger.log("");
-                if (isPlaintext(buffer)) {
-                    logger.log(buffer.readString(charset));
-                    logger.log("--> END " + request.method()
-                            + " (" + requestBody.contentLength() + "-byte body)");
+            if (logBody && hasRequestBody) {
+                if (bodyEncoded(request.headers())) {
+                    logger.log("--> END " + request.method() + " (encoded body omitted)");
                 } else {
-                    logger.log("--> END " + request.method() + " (binary "
-                            + requestBody.contentLength() + "-byte body omitted)");
+                    Buffer buffer = new Buffer();
+                    requestBody.writeTo(buffer);
+
+                    Charset charset = UTF8;
+                    MediaType contentType = requestBody.contentType();
+                    if (contentType != null) {
+                        charset = contentType.charset(UTF8);
+                    }
+
+                    logger.log("");
+                    if (isPlaintext(buffer)) {
+                        logger.log(buffer.readString(charset));
+                        logger.log("--> END " + request.method()
+                                + " (" + requestBody.contentLength() + "-byte body)");
+                    } else {
+                        logger.log("--> END " + request.method() + " (binary "
+                                + requestBody.contentLength() + "-byte body omitted)");
+                    }
                 }
+            } else {
+                logger.log("--> END " + request.method());
             }
         }
 
-        long startNs = System.nanoTime();
         Response response;
         try {
             response = chain.proceed(request);
@@ -121,14 +121,15 @@ public final class TumHttpLoggingInterceptor implements Interceptor {
             logger.log("<-- HTTP FAILED: " + e);
             throw e;
         }
+        long startNs = System.nanoTime();
         long tookMs = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startNs);
 
         ResponseBody responseBody = response.body();
         long contentLength = responseBody.contentLength();
-        String bodySize = contentLength != -1 ? contentLength + "-byte" : "unknown-length";
+        String bodySize = contentLength == -1 ? "unknown-length" : contentLength + "-byte";
         logger.log("<-- " + response.code() + ' ' + response.message() + ' '
-                + response.request().url() + " (" + tookMs + "ms" + (!logHeaders ? ", "
-                + bodySize + " body" : "") + ')');
+                + response.request().url() + " (" + tookMs + "ms" + (logHeaders ? "" : ", "
+                + bodySize + " body") + ')');
 
         if (logHeaders) {
             Headers headers = response.headers();
@@ -136,41 +137,43 @@ public final class TumHttpLoggingInterceptor implements Interceptor {
                 logger.log(headers.name(i) + ": " + headers.value(i));
             }
 
-            if (!logBody || !HttpEngine.hasBody(response)) {
-                logger.log("<-- END HTTP");
-            } else if (bodyEncoded(response.headers())) {
-                logger.log("<-- END HTTP (encoded body omitted)");
-            } else {
-                BufferedSource source = responseBody.source();
-                source.request(Long.MAX_VALUE); // Buffer the entire body.
-                Buffer buffer = source.buffer();
+            if (logBody && HttpEngine.hasBody(response)) {
+                if (bodyEncoded(response.headers())) {
+                    logger.log("<-- END HTTP (encoded body omitted)");
+                } else {
+                    BufferedSource source = responseBody.source();
+                    source.request(Long.MAX_VALUE); // Buffer the entire body.
 
-                Charset charset = UTF8;
-                MediaType contentType = responseBody.contentType();
-                if (contentType != null) {
-                    try {
-                        charset = contentType.charset(UTF8);
-                    } catch (UnsupportedCharsetException e) {
+                    Charset charset = UTF8;
+                    MediaType contentType = responseBody.contentType();
+                    if (contentType != null) {
+                        try {
+                            charset = contentType.charset(UTF8);
+                        } catch (UnsupportedCharsetException e) {
+                            logger.log("");
+                            logger.log("Couldn't decode the response body; charset is likely malformed.");
+                            logger.log("<-- END HTTP");
+
+                            return response;
+                        }
+                    }
+
+                    Buffer buffer = source.buffer();
+                    if (!isPlaintext(buffer)) {
                         logger.log("");
-                        logger.log("Couldn't decode the response body; charset is likely malformed.");
-                        logger.log("<-- END HTTP");
-
+                        logger.log("<-- END HTTP (binary " + buffer.size() + "-byte body omitted)");
                         return response;
                     }
-                }
 
-                if (!isPlaintext(buffer)) {
-                    logger.log("");
-                    logger.log("<-- END HTTP (binary " + buffer.size() + "-byte body omitted)");
-                    return response;
-                }
+                    if (contentLength != 0) {
+                        logger.log("");
+                        logger.log(buffer.clone().readString(charset));
+                    }
 
-                if (contentLength != 0) {
-                    logger.log("");
-                    logger.log(buffer.clone().readString(charset));
+                    logger.log("<-- END HTTP (" + buffer.size() + "-byte body)");
                 }
-
-                logger.log("<-- END HTTP (" + buffer.size() + "-byte body)");
+            } else {
+                logger.log("<-- END HTTP");
             }
         }
 

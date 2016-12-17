@@ -153,13 +153,12 @@ public class ChatHistoryAdapter extends CursorAdapter {
         holder.tvMessage.setText(chatMessage.getText());
         holder.tvTimestamp.setText(DateUtils.getTimeOrDayISO(chatMessage.getTimestamp(), mContext));
 
-        // Set status for outgoing messages (ivSent is not null)
-        if (holder.ivSent != null) {
+        if (holder.ivSent == null) {
+            holder.tvUser.setText(chatMessage.getMember().getDisplayName());
+        } else {// Set status for outgoing messages (ivSent is not null)
             boolean sending = chatMessage.getStatus() == ChatMessage.STATUS_SENDING;
             holder.ivSent.setVisibility(sending ? View.GONE : View.VISIBLE);
             holder.pbSending.setVisibility(sending ? View.VISIBLE : View.GONE);
-        } else {
-            holder.tvUser.setText(chatMessage.getMember().getDisplayName());
         }
 
         if (chatMessage.getMember().getLrzId().equals("bot")) {
