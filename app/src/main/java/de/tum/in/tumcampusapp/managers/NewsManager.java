@@ -263,8 +263,7 @@ public class NewsManager extends AbstractManager implements Card.ProvidesCard {
                 query.append("FROM news n, news_sources s ");
             }
 
-            query.append("WHERE n.src = s.id AND ((").append(and).append(") ")
-                    .append(") ORDER BY date_diff ASC");
+            query.append("WHERE n.src = s.id AND ((").append(and).append(") ) ORDER BY date_diff ASC");
             Cursor cur = db.rawQuery(query.toString(), null);
 
             int i = 0;

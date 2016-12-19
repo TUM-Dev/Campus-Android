@@ -157,7 +157,7 @@ public class ChatMessage {
         }
     }
 
-    public void setNow() {
+    public final void setNow() {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.ENGLISH); // 2014-06-30T16:31:57.878Z
         timestamp = formatter.format(new Date());
     }

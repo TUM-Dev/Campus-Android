@@ -206,10 +206,8 @@ public class ChatMessageManager extends AbstractManager {
         // Query read status from the previous message and use this read status as well if it is "0"
         boolean read = memberId == m.getMember().getId();
         Cursor cur = db.rawQuery("SELECT read FROM chat_message WHERE _id=?", new String[]{String.valueOf(m.getId())});
-        if (cur.moveToFirst()) {
-            if (cur.getInt(0) == 1) {
-                read = true;
-            }
+        if (cur.moveToFirst() && cur.getInt(0) == 1) {
+            read = true;
         }
         cur.close();
         m.setStatus(ChatMessage.STATUS_SENT);

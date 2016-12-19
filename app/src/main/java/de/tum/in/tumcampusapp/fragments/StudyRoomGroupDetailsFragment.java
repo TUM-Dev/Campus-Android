@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.auxiliary.Const;
@@ -128,7 +129,7 @@ public class StudyRoomGroupDetailsFragment extends Fragment implements SimpleCur
             } else {
                 stringBuilder.append(getString(R.string.occupied))
                         .append(" <b>")
-                        .append(new SimpleDateFormat("HH:mm").format(studyRoom.occupiedTill))
+                        .append(new SimpleDateFormat("HH:mm", Locale.getDefault()).format(studyRoom.occupiedTill))
                         .append("</b>");
             }
 

@@ -249,9 +249,6 @@ public class TransportManager implements Card.ProvidesCard {
         }
 
         List<Departure> cur = getDeparturesFromExternal(context, station);
-        if (cur == null) {
-            return;
-        }
         MVVCard card = new MVVCard(context);
         card.setStation(new Pair<>(station, station));
         card.setDepartures(cur);
