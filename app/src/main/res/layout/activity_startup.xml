@@ -12,7 +12,7 @@
     <ImageView
         android:id="@+id/startup_tum_logo"
         android:layout_width="match_parent"
-        android:layout_height="160dp"
+        android:layout_height="135dp"
         android:layout_centerInParent="true"
         android:src="@drawable/tum_logo" />
 
@@ -23,9 +23,9 @@
         android:layout_below="@id/startup_tum_logo"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
-        android:textSize="22sp"
+        android:text="@string/startup_motto"
         android:textColor="#FFFFFF"
-        android:text="@string/startup_motto" />
+        android:textSize="22sp" />
 
     <TextView
         android:id="@+id/startup_loading"
