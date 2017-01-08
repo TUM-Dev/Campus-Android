@@ -1,46 +1,43 @@
-# TumCampusApp [![Build Status](https://build.wdkk.de/job/TumCampusApp/badge/icon)](https://build.wdkk.de/job/TumCampusApp/) 
-Die inoffizielle TUM Campus App wird von Studierenden des Android Praktikums, freiwilligen Helfern und Lehrstuhlmitarbeitern entwickelt. Die App eignet sich sowohl zur Verwendung auf Smartphones, wie auch Tablets und ist für Studierende, aber auch Mitarbeiter gedacht.
+# TumCampusApp - an unoffical guide through uni life
+[![Build Status](https://build.wdkk.de/job/TumCampusApp/badge/icon)](https://build.wdkk.de/job/TumCampusApp/)  
+The TUM Campus App (TCA) is a open source project, mainly developed by volunteers with significant contributions by the Android Practical course. The TCA mostly targets phones, but can also be used on tablets or any other device that runs Android.
 
-### Features:
-- persönliche Vorlesungstermine
-- Nachrichten zur TUM, zur App und anderen Quellen
-- Veranstaltungshinweise
-- Mensa Speiseplan
-- MVV Abfahrtszeiten
-- Umgebungspläne
-- Öffnungszeiten
-- Wichtige Links
-- automatische Stummschaltung während der Vorlesung
-- und und und ...
+## Features:
+- lecture calendar (with in-app view and a syncing service to the device's calendar)
+- meal plans of various cafeterias (Studentenwerk München)
+- view all your grades
+- find empty study rooms (currently MI only)
+- MVV departure times
+- TUM and related News (mostly in german)
+- Roomfinder
+- automatic muting while lectures are held
+- available in english, french, german, italian, russian and spanish
 
-#### [Contributors](https://github.com/TCA-Team/TumCampusApp/blob/master/CONTRIBUTORS.md)
-Special thanks to everybody that has contributed to this project. https://github.com/TCA-Team/TumCampusApp/blob/master/CONTRIBUTORS.md
+## [Contributors](https://github.com/TCA-Team/TumCampusApp/blob/master/CONTRIBUTORS.md)
+Special thanks to everybody that has contributed to this project. If you also want to contribute to the TCA, don't hesitate to ask us about anything, open an issue or just correct our spelling mistakes. We've also collected a bunch of guidelines in the [Wiki](https://github.com/TCA-Team/TumCampusApp/wiki).  
+Just don't forget: Be excellent to each other :heart:
 
-#### Wichtiger Hinweis:
-Dies ist keine offizielle App der Technischen Universität München. Es erfolgt daher auch kein offizieller Support oder eine Haftung. Die App wird von und für Studierende entwickelt. Die Benutzung erfolgt auf eigene Gefahr und eine Haftung ist ausgeschlossen. AusSicherheitsgründen wird der Zugriff auf private Daten in TUMonline über Tokens realisiert, die jeweils in TUMonline durch den Nutzer freigegeben und mit den jeweiligen Rechten versehen werden müssen. Für die Nutzung der neuen Chat-Funktionen gelten nachfolgende Bedingungen, denen Sie separat auch in der App zustimmen müssen. Mit der Installation der App akzeptieren Sie zudem die Erfassung diverser, technischer Daten. Weitere Hinweise finden Sie unten unter "Datenschutzerklärung".
+## Used Permissions:
++ Location services: So we can show you the nearest Cafeteria / MVV departures
++ Access calendar: To sync your lecture calendar with your local calendar
++ Access contacts: So you can add people from the person search to your addressbook
++ Detailed WiFi information: So we can help you set up eduroam access
++ Camera: So you can join chat rooms by scanning a QR code
 
-#### Benötigte Berechtigungen
-+ Standort abfragen: Um dir immer aktuelle Informationen zu deinem aktuellen Standort anzuzeigen, wie z.B. Mensa Menü, MVV Abfahrtszeiten, ....
-+ Kontakte ändern: Damit du in der Personensuche mit einem Klick die Kontaktdaten eines Komilitonen oder TU Mitarbeiters in deine Kontakte einfügen kannst
-+ Kalendertermine lesen/ändern: Damit du deine Vorlesungstermine mit deinem Google Kalender synchronisieren lassen kannst
-+ SD-Karteninhalte ändern oder löschen: Damit die App Daten zwischenspeichern kann und damit das Laden beschleunigt wird.
-+ Konten auf dem Gerät suchen: Wird für die Chatfunktion benötigt, da dafür ein Google Account benötigt wird.
-+ Internetzugriff: Natürlich um die sämtliche Daten abrufen zu können.
-+ Ruhezustand deaktivieren: Um auch bei ausgeschaltetem Display Nachrichten empfangen zu können
+## Disclaimer:
+This is not an official app of the Technische Universität München. There's no support or warranty (you can however send us an email [tca-support.os.in@tum.de](mailto:tca-support.os.in@tum.de) or open an issue here on Github). The app is developed by students and for students, so use it at your own risk. We try to keep your data safe with only using TUMonline tokens and not saving your password. For further information you should have a look at our privacy policy and the terms and conditions of the lecture chat.
 
-#### Datenschutz/Chatbedingungen:
-Datenschutzerklärung: https://tumcabe.in.tum.de/landing/privacy/
+## Policies:
+[Privacy policy](https://tumcabe.in.tum.de/landing/privacy/)  
+[T&Cs of the lecture chat](https://tumcabe.in.tum.de/landing/chatterms/)
 
-Chatbedingungen: https://tumcabe.in.tum.de/landing/chatterms/
+## Support:
+You can reach us on [Facebook](https://www.facebook.com/TUMCampus), [Github](https://github.com/TCA-Team/TumCampusApp) or via E-Mail [tca-support.os.in@tum.de](mailto:tca-support.os.in@tum.de)
 
-#### Support:
-Auf [Facebook](https://www.facebook.com/TUMCampus) oder für besondere Anliegen erreichen Sie uns auch via E-Mail unter: "tca-support.os.in AT tum.de"
+## License:
+Dual licensed under  
+[GNU GPL v3](http://www.gnu.org/licenses/gpl.html)  
+and / or  
+[New BSD License](http://www.opensource.org/licenses/bsd-license.php)
 
-#### Lizenz:
-GNU GPL v3 - http://www.gnu.org/licenses/gpl.html
-oder
-New BSD License - http://www.opensource.org/licenses/bsd-license.php
-
-Der Quellcode kann hier bezogen werden: https://github.com/TCA-Team/
-
-#### [Follow us on Facebook](https://www.facebook.com/TUMCampus)
+## [Follow us on Facebook](https://www.facebook.com/TUMCampus)
