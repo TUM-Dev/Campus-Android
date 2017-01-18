@@ -38,19 +38,19 @@ public final class Util {
                 bufferedReader.close();
             }
 
-        } catch (IOException e) {
+        } catch (IOException e) { //NOPMD
             //Catch em all, we don't want any trouble here
         }
         return "";
     }
 
-    public static String isGPSOn() {
+    public static String isGPSOn(Context context) {
         String gpsStatus = "true";
 
-        PackageManager packageManager = G.context.getPackageManager();
+        PackageManager packageManager = context.getPackageManager();
         if (packageManager.checkPermission("android.permission.ACCESS_FINE_LOCATION", G.appPackage) == PackageManager.PERMISSION_GRANTED) {
             LocationManager locManager;
-            locManager = (LocationManager) G.context.getSystemService(Context.LOCATION_SERVICE);
+            locManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
             if (!locManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
                 gpsStatus = "false";
             }
@@ -61,11 +61,11 @@ public final class Util {
         return gpsStatus;
     }
 
-    public static String[] getScreenProperties() {
-        String screen[] = {NOT_AVAILABLE, NOT_AVAILABLE, NOT_AVAILABLE, NOT_AVAILABLE, NOT_AVAILABLE};
+    public static String[] getScreenProperties(Context context) {
+        String[] screen = {NOT_AVAILABLE, NOT_AVAILABLE, NOT_AVAILABLE, NOT_AVAILABLE, NOT_AVAILABLE};
 
         DisplayMetrics dm = new DisplayMetrics();
-        Display display = ((WindowManager) G.context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+        Display display = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
         display.getMetrics(dm);
 
         int width = dm.widthPixels;
@@ -78,11 +78,8 @@ public final class Util {
         screen[0] = Integer.toString(width);
         screen[1] = Integer.toString(height);
 
-        String rotation = "";
+        String rotation;
         switch (orientation) {
-            case Surface.ROTATION_0:
-                rotation = "normal";
-                break;
             case Surface.ROTATION_180:
                 rotation = "180";
                 break;
@@ -91,6 +88,10 @@ public final class Util {
                 break;
             case Surface.ROTATION_90:
                 rotation = "90";
+                break;
+            case Surface.ROTATION_0:
+            default:
+                rotation = "normal";
                 break;
         }
         screen[2] = rotation;

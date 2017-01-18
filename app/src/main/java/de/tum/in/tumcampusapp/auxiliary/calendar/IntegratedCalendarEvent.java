@@ -7,6 +7,7 @@ import android.os.Build;
 import com.alamkanak.weekview.WeekViewEvent;
 
 import java.util.Calendar;
+import java.util.regex.Pattern;
 
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 
@@ -17,6 +18,9 @@ import de.tum.in.tumcampusapp.auxiliary.Utils;
 public class IntegratedCalendarEvent extends WeekViewEvent {
     private static final float SATURATION_ADJUST = 1.3f;
     private static final float INTENSITY_ADJUST = 0.8f;
+    private static final Pattern COMPILE = Pattern.compile("[A-Z, 0-9(LV\\.Nr)=]+$");
+    private static final Pattern PATTERN = Pattern.compile("\\([A-Z]+[0-9]+\\)");
+    private static final Pattern COMPILE1 = Pattern.compile("\\([A-Z0-9\\.]+\\)");
     private final String location;
 
     public IntegratedCalendarEvent(Cursor cEvents) {
@@ -40,9 +44,9 @@ public class IntegratedCalendarEvent extends WeekViewEvent {
         if (eventTitle == null) {
             eventTitle = "";
         }
-        eventTitle = eventTitle.replaceAll("[A-Z, 0-9(LV\\.Nr)=]+$", "");
-        eventTitle = eventTitle.replaceAll("\\([A-Z]+[0-9]+\\)", "");
-        eventTitle = eventTitle.replaceAll("\\[[A-Z]+[0-9]+\\]", "");
+        eventTitle = COMPILE.matcher(eventTitle).replaceAll("");
+        eventTitle = PATTERN.matcher(eventTitle).replaceAll("");
+        eventTitle = PATTERN.matcher(eventTitle).replaceAll("");
         return eventTitle;
     }
 
@@ -65,7 +69,7 @@ public class IntegratedCalendarEvent extends WeekViewEvent {
         if (eventLocation == null) {
             eventLocation = "";
         }
-        eventLocation = eventLocation.replaceAll("\\([A-Z0-9\\.]+\\)", "");
+        eventLocation = COMPILE1.matcher(eventLocation).replaceAll("");
         return eventLocation.trim();
     }
 
@@ -88,17 +92,18 @@ public class IntegratedCalendarEvent extends WeekViewEvent {
     }
 
     public static int getDisplayColorFromColor(int color) {
-        if (!(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
             return color;
+        } else {
+            float[] hsv = new float[3];
+            Color.colorToHSV(color, hsv);
+            hsv[1] = Math.min(hsv[1] * SATURATION_ADJUST, 1.0f);
+            hsv[2] *= INTENSITY_ADJUST;
+            return Color.HSVToColor(hsv);
         }
-
-        float[] hsv = new float[3];
-        Color.colorToHSV(color, hsv);
-        hsv[1] = Math.min(hsv[1] * SATURATION_ADJUST, 1.0f);
-        hsv[2] *= INTENSITY_ADJUST;
-        return Color.HSVToColor(hsv);
     }
 
+    @Override
     public String getLocation() {
         return location;
     }

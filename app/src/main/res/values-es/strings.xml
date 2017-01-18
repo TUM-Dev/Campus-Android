@@ -3,7 +3,6 @@
     <!-- START Translated, please do not change identifiers -->
 
     <!-- Generic -->
-    <string name="app_name">TUM campus App</string>
     <string name="search">Buscar</string>
     <string name="tum_logo">TUM Logo</string>
     <string name="update">Aactualización</string>
@@ -36,6 +35,16 @@
     <string name="dialog_access_token_invalid">TUMOnline token de acceso no está activado</string>
     <string name="dialog_no_rights_function">No hay derechos para esta función</string>
     <string name="empty_result">La operación entregó un resultado defectuoso</string>
+
+    <!-- Exam/Grades -->
+    <string name="average_grade">Calificación media</string>
+    <string name="show_column_chart">Mostrando como un gráfico de barras</string>
+    <string name="show_pie_chart">Mostrar como un gráfico circular</string>
+    <string name="result_extra">Resultado:&#160;</string>
+    <string name="semester">Semestre</string>
+    <string name="examiner">Comprobador</string>
+    <string name="mode">Modo</string>
+    <string name="all_programs">Todos los programas</string>
     <string name="date">Fecha</string>
 
     <!-- Preferences -->
@@ -74,7 +83,7 @@
     <!-- Startup Wizard -->
     <string name="token_not_enabled">TUMOnline token de acceso no está activado</string>
     <string name="startup_wizard_uppercase">Asistente de inicio</string>
-    <string name="welcome_msg">!<b>Bienvenido al campus TUM App</b>\n\nPara habilitar el acceso a los servicios TUMOnline requiere su <b>identificador LRZ</b>\n identificador\nEste tiene el siguiente formato :.\n<i>xx00xxx</i>\n(2 letras, 2 números , 3 letras)</string>
+    <string name="welcome_msg">!<b>Bienvenido al campus TUM App</b>\n\nPara habilitar el acceso a los servicios TUMonline requiere su <b>identificador TUM</b>\n identificador\nEste tiene el siguiente formato :.\n<i>xx00xxx</i>\n(2 letras, 2 números , 3 letras)</string>
     <string name="button_skip">Salta</string>
     <string name="button_next">Siguiente</string>
     <string name="need_to_enable"><b>El token de acceso TUMOnline se ha creado con éxito</b>\n\n  Usted puede activar el token ahora en TUMOnline en <i>Servicios / Token Management</i>. Observe que usted también necesita habilitar los derechos de acceso a los servicios individuales en <i>Derechos activas</i>.</string>
@@ -97,6 +106,7 @@
     <string name="my_tum">Mi TUM</string>
     <string name="schedule">Calendario</string>
     <string name="my_lectures">Mis conferencias</string>
+    <string name="my_grades">Mis puntuaciones</string>
     <string name="chat_rooms">Salas de Chat</string>
     <string name="tuition_fees">Re-inscripción</string>
     <string name="tum_common">TUM general</string>
@@ -241,7 +251,6 @@
     <string name="status_sent">enviado</string>
     <string name="just_now">En este momento</string>
     <string name="yesterday">Ayer</string>
-    <string name="accept_chat_terms">Aceptar los términos de chat</string>
     <string name="activate_key">Por favor, primero activar su clave pública</string>
     <string name="add_chat_member">Añadir persona a la habitación de chat</string>
     <string name="add_chat_room">Nueva Sala de Chat</string>
@@ -286,7 +295,7 @@
     <string name="joined">Mi</string>
     <string name="joined_chat_room">Se unió a la sala de chat!</string>
     <string name="key_not_activated">Usted no ha activado su clave!</string>
-    <string name="lecture_chat">Conferencia de chat</string>
+    <string name="lecture_chat">Conferencia de chat &amp; Aceptar los términos</string>
     <string name="loading_first_time">El primer inicio puede tardar unos minutos</string>
     <string name="message_details">Info mensaje</string>
     <string name="min_search_len">Consulta debe ser de al menos %d caracteres de largo</string>
@@ -374,5 +383,20 @@
     <string name="more_info">Más información</string>
     <string name="welcome_faculty">Para ofrecer la mejor experiencia posible, por favor indíquenos su mejor profesorado a juego:</string>
     <string name="event_plan">Plan de evento</string>
+    <string name="choose_own_faculty">Por favor elija su facultad</string>
+    <string name="add_widget">Agregar panel</string>
+    <string name="widget_configure_description">Configurar las tarjetas para mostrar</string>
+    <string name="accept_chat_terms">Chatbedingungen müssen akzeptiert werden, damit du den Vorlesungs-Chat verwenden kannst!</string>
+    <string name="quiz">Encuesta de Investigación</string>
+    <string name="selected_target_faculties">facultades de destino seleccionados:</string>
+    <string name="card_survey_summary">le permite participar en la encuesta preguntas relacionadas con la investigación</string>
+    <string name="chat_not_setup">" El chat no está configurado correctamente, por favor, vuelva a ejecutar el asistente de configuración a través de las!"</string>
+    <string name="flag_inappropriate">Bandera inapropiada pregunta</string>
+    <string name="mvv_download">Por favor, pulse OK para descargar MVV-Planes de otro modo no se puede utilizar esta función</string>
+    <string name="please_connect_to_internet">Por favor, conectarse a Internet con el fin de proceder al primer inicio de aplicaciones</string>
+    <string name="MINUTES">minutos</string>
+    <string name="IN">en</string>
+    <string name="AT">a</string>
+    <string name="startup_motto">Por estudiantes - Para estudiantes</string>
     <!-- END Translated, please do not change identifiers -->
 </resources>

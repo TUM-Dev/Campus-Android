@@ -13,15 +13,15 @@ import com.google.android.gms.iid.InstanceIDListenerService;
 import java.io.IOException;
 import java.util.Date;
 
+import de.tum.in.tumcampusapp.api.TUMCabeClient;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.exceptions.NoPrivateKey;
-import de.tum.in.tumcampusapp.models.DeviceUploadGcmToken;
-import de.tum.in.tumcampusapp.models.TUMCabeClient;
-import de.tum.in.tumcampusapp.models.TUMCabeStatus;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
+import de.tum.in.tumcampusapp.models.tumcabe.DeviceUploadGcmToken;
+import de.tum.in.tumcampusapp.models.tumcabe.TUMCabeStatus;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class GcmIdentificationService extends InstanceIDListenerService {
 
@@ -60,6 +60,7 @@ public class GcmIdentificationService extends InstanceIDListenerService {
     /**
      * Actual service routine which can use this as a context
      */
+    @Override
     public void onTokenRefresh() {
         InstanceID iid = InstanceID.getInstance(this);
 
@@ -104,6 +105,7 @@ public class GcmIdentificationService extends InstanceIDListenerService {
         if (resultCode != ConnectionResult.SUCCESS) {
             if (GoogleApiAvailability.getInstance().isUserResolvableError(resultCode)) {
                 a.runOnUiThread(new Runnable() {
+                    @Override
                     public void run() {
                         GoogleApiAvailability.getInstance().getErrorDialog(a, resultCode, PLAY_SERVICES_RESOLUTION_REQUEST).show();
                     }
@@ -168,7 +170,7 @@ public class GcmIdentificationService extends InstanceIDListenerService {
         }
 
         //Try to create the message
-        DeviceUploadGcmToken dgcm = null;
+        DeviceUploadGcmToken dgcm;
         try {
             dgcm = new DeviceUploadGcmToken(mContext, token);
         } catch (NoPrivateKey noPrivateKey) {
@@ -177,16 +179,21 @@ public class GcmIdentificationService extends InstanceIDListenerService {
 
         TUMCabeClient.getInstance(mContext).deviceUploadGcmToken(dgcm, new Callback<TUMCabeStatus>() {
             @Override
-            public void success(TUMCabeStatus status, Response arg1) {
-                Utils.logv("Success uploading GCM registration id: " + status.getStatus());
+            public void onResponse(Call<TUMCabeStatus> call, Response<TUMCabeStatus> response) {
+                TUMCabeStatus s = response.body();
+                if (response.isSuccessful() && s != null) {
+                    Utils.logv("Success uploading GCM registration id: " + response.body().getStatus());
 
-                // Store in shared preferences the information that the GCM registration id was sent to the TCA server successfully
-                Utils.setInternalSetting(mContext, Const.GCM_REG_ID_SENT_TO_SERVER, true);
+                    // Store in shared preferences the information that the GCM registration id was sent to the TCA server successfully
+                    Utils.setInternalSetting(mContext, Const.GCM_REG_ID_SENT_TO_SERVER, true);
+                } else {
+                    Utils.logv("Uploading GCM registration failed...");
+                }
             }
 
             @Override
-            public void failure(RetrofitError e) {
-                Utils.log(e, "Failure uploading GCM registration id");
+            public void onFailure(Call<TUMCabeStatus> call, Throwable t) {
+                Utils.log(t, "Failure uploading GCM registration id");
                 Utils.setInternalSetting(mContext, Const.GCM_REG_ID_SENT_TO_SERVER, false);
             }
         });

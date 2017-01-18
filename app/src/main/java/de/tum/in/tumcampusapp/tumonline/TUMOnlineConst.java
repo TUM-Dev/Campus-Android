@@ -1,18 +1,19 @@
 package de.tum.in.tumcampusapp.tumonline;
 
-import de.tum.in.tumcampusapp.models.AccessToken;
-import de.tum.in.tumcampusapp.models.CalendarRowSet;
-import de.tum.in.tumcampusapp.models.Employee;
-import de.tum.in.tumcampusapp.models.IdentitySet;
-import de.tum.in.tumcampusapp.models.LectureAppointmentsRowSet;
-import de.tum.in.tumcampusapp.models.LectureDetailsRowSet;
-import de.tum.in.tumcampusapp.models.LecturesSearchRowSet;
-import de.tum.in.tumcampusapp.models.OrgDetailItemList;
-import de.tum.in.tumcampusapp.models.OrgItemList;
-import de.tum.in.tumcampusapp.models.PersonList;
-import de.tum.in.tumcampusapp.models.TokenConfirmation;
-import de.tum.in.tumcampusapp.models.TuitionList;
-import de.tum.in.tumcampusapp.models.managers.CacheManager;
+import de.tum.in.tumcampusapp.managers.CacheManager;
+import de.tum.in.tumcampusapp.models.tumo.AccessToken;
+import de.tum.in.tumcampusapp.models.tumo.CalendarRowSet;
+import de.tum.in.tumcampusapp.models.tumo.Employee;
+import de.tum.in.tumcampusapp.models.tumo.ExamList;
+import de.tum.in.tumcampusapp.models.tumo.IdentitySet;
+import de.tum.in.tumcampusapp.models.tumo.LectureAppointmentsRowSet;
+import de.tum.in.tumcampusapp.models.tumo.LectureDetailsRowSet;
+import de.tum.in.tumcampusapp.models.tumo.LecturesSearchRowSet;
+import de.tum.in.tumcampusapp.models.tumo.OrgDetailItemList;
+import de.tum.in.tumcampusapp.models.tumo.OrgItemList;
+import de.tum.in.tumcampusapp.models.tumo.PersonList;
+import de.tum.in.tumcampusapp.models.tumo.TokenConfirmation;
+import de.tum.in.tumcampusapp.models.tumo.TuitionList;
 
 /**
  * Enum for all TUMOnline access possibilities
@@ -28,9 +29,12 @@ public final class TUMOnlineConst<T> {
     public static final TUMOnlineConst<OrgDetailItemList> ORG_DETAILS = new TUMOnlineConst<>("orgDetails", CacheManager.VALIDITY_ONE_MONTH, OrgDetailItemList.class);
     public static final TUMOnlineConst<Employee> PERSON_DETAILS = new TUMOnlineConst<>("personenDetails", CacheManager.VALIDITY_FIFE_DAYS, Employee.class);
     public static final TUMOnlineConst<PersonList> PERSON_SEARCH = new TUMOnlineConst<>("personenSuche", CacheManager.VALIDITY_DO_NOT_CACHE, PersonList.class);
+    public static final TUMOnlineConst<ExamList> EXAMS = new TUMOnlineConst<>("noten", CacheManager.VALIDITY_TEN_DAYS, ExamList.class);
     public static final TUMOnlineConst<TokenConfirmation> TOKEN_CONFIRMED = new TUMOnlineConst<>("isTokenConfirmed", CacheManager.VALIDITY_DO_NOT_CACHE, TokenConfirmation.class);
     public static final TUMOnlineConst<AccessToken> REQUEST_TOKEN = new TUMOnlineConst<>("requestToken", CacheManager.VALIDITY_DO_NOT_CACHE, AccessToken.class);
+
     public static final TUMOnlineConst<IdentitySet> IDENTITY = new TUMOnlineConst<>("id", CacheManager.VALIDITY_DO_NOT_CACHE, IdentitySet.class);
+    public static final TUMOnlineConst<TokenConfirmation> SECRET_UPLOAD = new TUMOnlineConst<>("secretUpload", CacheManager.VALIDITY_DO_NOT_CACHE, TokenConfirmation.class);
 
     private final String webservice;
     private final int validity;
@@ -51,6 +55,7 @@ public final class TUMOnlineConst<T> {
         return response;
     }
 
+    @Override
     public String toString() {
         return webservice;
     }

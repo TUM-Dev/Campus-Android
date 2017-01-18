@@ -26,7 +26,7 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.UserPreferencesActivity;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.ImplicitCounter;
-import de.tum.in.tumcampusapp.models.managers.CardManager;
+import de.tum.in.tumcampusapp.managers.CardManager;
 
 /**
  * Base class for all cards
@@ -276,6 +276,7 @@ public abstract class Card {
             PopupMenu menu = new PopupMenu(v.getContext(), v, Gravity.CENTER_HORIZONTAL);
             MenuInflater inf = menu.getMenuInflater();
             inf.inflate(R.menu.card_popup_menu, menu.getMenu());
+            menu.setOnMenuItemClickListener(this);
 
             menu.show();
             return true;
@@ -289,6 +290,7 @@ public abstract class Card {
                 if (key == null) {
                     return true;
                 }
+
                 Intent intent = new Intent(itemView.getContext(), UserPreferencesActivity.class);
                 intent.putExtra(Const.PREFERENCE_SCREEN, key);
                 itemView.getContext().startActivity(intent);

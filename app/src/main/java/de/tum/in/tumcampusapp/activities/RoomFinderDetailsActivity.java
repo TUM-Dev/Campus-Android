@@ -25,7 +25,7 @@ import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.fragments.ImageViewTouchFragment;
 import de.tum.in.tumcampusapp.fragments.WeekViewFragment;
-import de.tum.in.tumcampusapp.models.Geo;
+import de.tum.in.tumcampusapp.models.tumo.Geo;
 import de.tum.in.tumcampusapp.tumonline.TUMRoomFinderRequest;
 
 /**
@@ -77,7 +77,7 @@ public class RoomFinderDetailsActivity extends ActivityForLoadingInBackground<Vo
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_roomfinder_detail, menu);
         MenuItem switchMap = menu.findItem(R.id.action_switch_map);
-        switchMap.setVisible(!mapId.equals("10") && mapsLoaded && fragment == null);
+        switchMap.setVisible(!"10".equals(mapId) && mapsLoaded && fragment == null);
         MenuItem timetable = menu.findItem(R.id.action_room_timetable);
         timetable.setVisible(infoLoaded);
         timetable.setIcon(fragment == null ? R.drawable.ic_room_timetable : R.drawable.ic_action_map);

@@ -1,6 +1,5 @@
 package de.tum.in.tumcampusapp.activities;
 
-import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -10,7 +9,6 @@ import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -26,7 +24,7 @@ import de.tum.in.tumcampusapp.activities.generic.BaseActivity;
 import de.tum.in.tumcampusapp.adapters.CardsAdapter;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.cards.generic.Card;
-import de.tum.in.tumcampusapp.models.managers.CardManager;
+import de.tum.in.tumcampusapp.managers.CardManager;
 import de.tum.in.tumcampusapp.services.SilenceService;
 
 /**
@@ -102,7 +100,7 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
             @Override
             public void onDrawerClosed(View view) {
                 super.onDrawerClosed(view);
-                ActivityCompat.invalidateOptionsMenu(MainActivity.this); // creates call to onPrepareOptionsMenu()
+                MainActivity.this.invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
             }
 
             /**
@@ -111,7 +109,7 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
             @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
-                ActivityCompat.invalidateOptionsMenu(MainActivity.this); // creates call to onPrepareOptionsMenu()
+                MainActivity.this.invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
             }
         };
 
@@ -249,7 +247,7 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
      * Executed when the RestoreCard is pressed
      */
     public void restoreCards(View view) {
-        CardManager.restoreCards();
+        CardManager.restoreCards(this);
         refreshCards();
         showToolbar();
     }
@@ -258,8 +256,6 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
      * Smoothly scrolls the RecyclerView to the top and dispatches nestedScrollingEvents to show
      * the Toolbar
      */
-    @SuppressLint("NewApi")
-    // Verified in a API 10 emulator that this works, even though AndroidLint reports otherwise
     private void showToolbar() {
         mCardsView.startNestedScroll(ViewCompat.SCROLL_AXIS_VERTICAL);
         mCardsView.dispatchNestedFling(0, Integer.MIN_VALUE, true);
@@ -311,7 +307,7 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
                             mCardsView.getLayoutManager().smoothScrollToPosition(mCardsView, null, lastPos);
                         }
 
-                    }).setCallback(new Snackbar.Callback() {
+                    }).addCallback(new Snackbar.Callback() {
                 @Override
                 public void onDismissed(Snackbar snackbar, int event) {
                     super.onDismissed(snackbar, event);

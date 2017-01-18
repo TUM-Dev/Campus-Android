@@ -31,5 +31,7 @@
 
     <color name="borderless_button_normal">@color/tum_300</color>
     <color name="borderless_button_pressed">@color/tum_400</color>
-    <color name="color_ikom">#84a115</color>
+
+    <color name="chat_border">#E0E0E0</color>
+    <color name="chat_outgoing">#D1EAFF</color>
 </resources>

@@ -18,7 +18,7 @@ import java.util.List;
 import de.tum.in.tumcampusapp.auxiliary.AuthenticationManager;
 import de.tum.in.tumcampusapp.auxiliary.RSASigner;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
-import de.tum.in.tumcampusapp.models.ChatMessage;
+import de.tum.in.tumcampusapp.models.tumcabe.ChatMessage;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -32,7 +32,7 @@ public class RSASignerTestCase {
     private List<ChatMessage> messageFixtures;
 
 
-    private PrivateKey buildPrivateKey(String privateKeyString) {
+    private static PrivateKey buildPrivateKey(String privateKeyString) {
         byte[] privateKeyBytes = Base64.decode(privateKeyString, Base64.DEFAULT);
         KeyFactory keyFactory;
         try {
@@ -46,7 +46,7 @@ public class RSASignerTestCase {
     }
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         privateKeyFixture = buildPrivateKey(
                 "MIICdgIBADANBgkqhkiG9w0BAQEFAASCAmAwggJcAgEAAoGBAM46wq9uOF7y1dmNO3nY8D1P6bCe" +
                         "t3izsm2GKQtvWmV78WbBxk1rZI2GNExvZ3aVg4mb6jOToGzm+jdNiWR07kBFSlrgNC5zq7Jmm0gz" +

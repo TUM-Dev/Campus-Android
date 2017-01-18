@@ -1,21 +1,15 @@
 package de.tum.in.tumcampusapp.auxiliary;
 
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.support.annotation.NonNull;
 import android.widget.ImageView;
 
 import com.google.common.base.Optional;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
-import com.squareup.okhttp.ResponseBody;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -24,16 +18,18 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.concurrent.TimeUnit;
 
-import de.tum.in.tumcampusapp.models.managers.CacheManager;
-import de.tum.in.tumcampusapp.trace.G;
+import de.tum.in.tumcampusapp.api.Helper;
+import de.tum.in.tumcampusapp.managers.CacheManager;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 public class NetUtils {
-    private static final int HTTP_TIMEOUT = 25000;
     private final Context mContext;
     private final CacheManager cacheManager;
-    private final OkHttpClient client = new OkHttpClient();
+    private final OkHttpClient client;
 
     public NetUtils(Context context) {
         //Manager caches all requests
@@ -41,8 +37,7 @@ public class NetUtils {
         cacheManager = new CacheManager(mContext);
 
         //Set our max wait time for each request
-        client.setConnectTimeout(HTTP_TIMEOUT, TimeUnit.MILLISECONDS);
-        client.setReadTimeout(HTTP_TIMEOUT, TimeUnit.MILLISECONDS);
+        client = Helper.getOkClient(context);
     }
 
     public static Optional<JSONObject> downloadJson(Context context, String url) {
@@ -83,31 +78,10 @@ public class NetUtils {
      * @return true if available
      */
     public static boolean isConnectedWifi(Context con) {
-        ConnectivityManager cm = (ConnectivityManager) con
-                .getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager cm = (ConnectivityManager) con.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
 
         return netInfo != null && netInfo.isConnectedOrConnecting() && netInfo.getType() == ConnectivityManager.TYPE_WIFI;
-    }
-
-    private void setHttpConnectionParams(Request.Builder builder) {
-        //Clearly identify all requests from this app
-        String userAgent = "TCA Client";
-        if (G.appVersion != null && !G.appVersion.equals(G.UNKNOWN)) {
-            userAgent += ' ' + G.appVersion;
-            if (G.appVersionCode != -1) {
-                userAgent += "/" + G.appVersionCode;
-            }
-        }
-
-        try {
-            builder.header("User-Agent", userAgent);
-            builder.addHeader("X-DEVICE-ID", AuthenticationManager.getDeviceID(mContext));
-            builder.addHeader("X-ANDROID-VERSION", Build.VERSION.RELEASE);
-            builder.addHeader("X-APP-VERSION", mContext.getPackageManager().getPackageInfo(mContext.getPackageName(), 0).versionName);
-        } catch (PackageManager.NameNotFoundException e) {
-            //Don't log any errors, as we don't really care!
-        }
     }
 
     private Optional<ResponseBody> getOkHttpResponse(String url) throws IOException {
@@ -118,13 +92,10 @@ public class NetUtils {
         }
 
         Utils.logv("Download URL: " + url);
-
         Request.Builder builder = new Request.Builder().url(url);
-        setHttpConnectionParams(builder);
 
         //Execute the request
-        Request req = builder.build();
-        Response res = client.newCall(req).execute();
+        Response res = client.newCall(builder.build()).execute();
         return Optional.of(res.body());
     }
 
@@ -240,7 +211,7 @@ public class NetUtils {
     public Optional<Bitmap> downloadImageToBitmap(@NonNull String url) {
         Optional<File> f = downloadImage(url);
         if (f.isPresent()) {
-            return Optional.of(BitmapFactory.decodeFile(f.get().getAbsolutePath()));
+            return Optional.fromNullable(BitmapFactory.decodeFile(f.get().getAbsolutePath()));
         }
         return Optional.absent();
     }
@@ -252,8 +223,8 @@ public class NetUtils {
      * @param imageView Image
      */
     public void loadAndSetImage(final String url, final ImageView imageView) {
-        synchronized (CacheManager.bitmapCache) {
-            Bitmap bmp = CacheManager.bitmapCache.get(url);
+        synchronized (CacheManager.BITMAP_CACHE) {
+            Bitmap bmp = CacheManager.BITMAP_CACHE.get(url);
             if (bmp != null) {
                 imageView.setImageBitmap(bmp);
                 return;
@@ -263,7 +234,7 @@ public class NetUtils {
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
-                CacheManager.imageViews.put(imageView, url);
+                CacheManager.IMAGE_VIEWS.put(imageView, url);
                 imageView.setImageBitmap(null);
             }
 
@@ -277,10 +248,10 @@ public class NetUtils {
                 if (!bitmap.isPresent()) {
                     return;
                 }
-                synchronized (CacheManager.bitmapCache) {
-                    CacheManager.bitmapCache.put(url, bitmap.get());
+                synchronized (CacheManager.BITMAP_CACHE) {
+                    CacheManager.BITMAP_CACHE.put(url, bitmap.get());
                 }
-                String tag = CacheManager.imageViews.get(imageView);
+                String tag = CacheManager.IMAGE_VIEWS.get(imageView);
                 if (tag != null && tag.equals(url)) {
                     imageView.setImageBitmap(bitmap.get());
                 }

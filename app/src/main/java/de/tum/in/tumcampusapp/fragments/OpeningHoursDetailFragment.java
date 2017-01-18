@@ -21,7 +21,7 @@ import de.tum.in.tumcampusapp.activities.OpeningHoursDetailActivity;
 import de.tum.in.tumcampusapp.activities.OpeningHoursListActivity;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
-import de.tum.in.tumcampusapp.models.managers.OpenHoursManager;
+import de.tum.in.tumcampusapp.managers.OpenHoursManager;
 
 /**
  * A fragment representing a single Item detail screen. This fragment is either
@@ -34,6 +34,7 @@ public class OpeningHoursDetailFragment extends Fragment implements ViewBinder {
     public static final String ARG_ITEM_ID = "item_id";
     public static final String ARG_ITEM_CONTENT = "item_content";
     public static final String TWO_PANE = "two_pane";
+    private static final Pattern COMPILE = Pattern.compile("\\\\n");
 
     private int mItemId;
     private String mItemContent;
@@ -43,6 +44,7 @@ public class OpeningHoursDetailFragment extends Fragment implements ViewBinder {
      * fragment (e.g. upon screen orientation changes).
      */
     public OpeningHoursDetailFragment() {
+        // NOP
     }
 
     @Override
@@ -89,7 +91,7 @@ public class OpeningHoursDetailFragment extends Fragment implements ViewBinder {
             String remark = c.getString(c.getColumnIndex(Const.REMARK_COLUMN));
             String room = c.getString(c.getColumnIndex(Const.ROOM_COLUMN));
 
-            StringBuilder sb = new StringBuilder(hours + '\n' + address);
+            StringBuilder sb = new StringBuilder(hours).append('\n').append(address);
             if (!room.isEmpty()) {
                 sb.append(", ").append(room);
             }
@@ -97,7 +99,7 @@ public class OpeningHoursDetailFragment extends Fragment implements ViewBinder {
                 sb.append(" (").append(transport).append(')');
             }
             if (!remark.isEmpty()) {
-                sb.append('\n').append(remark.replaceAll("\\\\n", "\n"));
+                sb.append('\n').append(COMPILE.matcher(remark).replaceAll("\n"));
             }
             TextView tv = (TextView) view;
             tv.setText(sb.toString());
@@ -107,14 +109,14 @@ public class OpeningHoursDetailFragment extends Fragment implements ViewBinder {
             Linkify.addLinks(tv, Pattern.compile("[0-9-]{6,}"), "tel:");
             return true;
         } else if (view.getId() == R.id.text3) {
-            String url = c.getString(c.getColumnIndex(Const.URL_COLUMN));
+            StringBuilder url = new StringBuilder(c.getString(c.getColumnIndex(Const.URL_COLUMN)));
             TextView tv = (TextView) view;
-            if (url.isEmpty()) {
+            if (url.toString().isEmpty()) {
                 tv.setVisibility(View.GONE);
             } else {
-                url = "<a href=\"" + url + "\">" + getString(R.string.website) + "</a>";
+                url.insert(0, "<a href=\"").append("\">").append(getString(R.string.website)).append("</a>");
                 tv.setMovementMethod(LinkMovementMethod.getInstance());
-                tv.setText(Utils.fromHtml(url));
+                tv.setText(Utils.fromHtml(url.toString()));
             }
             return true;
         }

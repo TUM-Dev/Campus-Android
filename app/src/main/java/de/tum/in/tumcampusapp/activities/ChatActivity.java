@@ -36,32 +36,32 @@ import android.widget.ProgressBar;
 import com.google.common.net.UrlEscapers;
 import com.google.gson.Gson;
 
+import java.io.IOException;
 import java.text.DateFormat;
-import java.util.ArrayList;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.adapters.ChatHistoryAdapter;
+import de.tum.in.tumcampusapp.api.TUMCabeClient;
 import de.tum.in.tumcampusapp.auxiliary.ChatMessageValidator;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.ImplicitCounter;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.exceptions.NoPrivateKey;
-import de.tum.in.tumcampusapp.models.ChatMember;
-import de.tum.in.tumcampusapp.models.ChatMessage;
-import de.tum.in.tumcampusapp.models.ChatPublicKey;
-import de.tum.in.tumcampusapp.models.ChatRoom;
-import de.tum.in.tumcampusapp.models.ChatVerification;
-import de.tum.in.tumcampusapp.models.GCMChat;
-import de.tum.in.tumcampusapp.models.TUMCabeClient;
-import de.tum.in.tumcampusapp.models.managers.CardManager;
-import de.tum.in.tumcampusapp.models.managers.ChatMessageManager;
-import de.tum.in.tumcampusapp.models.managers.ChatRoomManager;
+import de.tum.in.tumcampusapp.managers.CardManager;
+import de.tum.in.tumcampusapp.managers.ChatMessageManager;
+import de.tum.in.tumcampusapp.managers.ChatRoomManager;
+import de.tum.in.tumcampusapp.models.gcm.GCMChat;
+import de.tum.in.tumcampusapp.models.tumcabe.ChatMember;
+import de.tum.in.tumcampusapp.models.tumcabe.ChatMessage;
+import de.tum.in.tumcampusapp.models.tumcabe.ChatPublicKey;
+import de.tum.in.tumcampusapp.models.tumcabe.ChatRoom;
+import de.tum.in.tumcampusapp.models.tumcabe.ChatVerification;
 import de.tum.in.tumcampusapp.services.SendMessageService;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Shows an ongoing chat conversation
@@ -74,8 +74,10 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
     // Key for the string that's delivered in the action's intent
     public static final String EXTRA_VOICE_REPLY = "extra_voice_reply";
     private static final int MAX_EDIT_TIMESPAN = 120000;
+
     public static ChatRoom mCurrentOpenChatRoom;
     private final Handler mUpdateHandler = new Handler();
+
     /**
      * UI elements
      */
@@ -100,8 +102,7 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
             return true;
         }
 
-        // Called each time the action mode is shown. Always called after onCreateActionMode, but
-        // may be called multiple times if the mode is invalidated.
+        // Called each time the action mode is shown. Always called after onCreateActionMode, but may be called multiple times if the mode is invalidated.
         @Override
         public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
             return false; // Return false if nothing is done
@@ -119,6 +120,7 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
                 } else { // set editing item
                     chatHistoryAdapter.mEditedItem = msg;
                 }
+
                 // Show soft keyboard
                 InputMethodManager imm = (InputMethodManager) ChatActivity.this.getSystemService(Service.INPUT_METHOD_SERVICE);
                 imm.showSoftInput(etMessage, 0);
@@ -149,6 +151,7 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
     private final BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+            Utils.logv("Message send. Trying to parse...");
             GCMChat extras = (GCMChat) intent.getSerializableExtra("GCMChat");
             if (extras == null) {
                 return;
@@ -211,18 +214,6 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
 
         this.getIntentData();
         this.bindUIElements();
-
-        // Update the times shown in the list every 10 seconds
-        mUpdateHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (chatHistoryAdapter != null) {
-                    chatHistoryAdapter.notifyDataSetChanged();
-                }
-                mUpdateHandler.postDelayed(this, 10000);
-            }
-        }, 10000);
-
     }
 
     @Override
@@ -231,7 +222,7 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
         getNextHistoryFromServer(true);
         mCurrentOpenChatRoom = currentChatRoom;
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.cancel(currentChatRoom.getId() << 4 + CardManager.CARD_CHAT);
+        notificationManager.cancel((currentChatRoom.getId() << 4) + CardManager.CARD_CHAT);
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter("chat-message-received"));
     }
 
@@ -374,7 +365,6 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
     private void bindUIElements() {
         lvMessageHistory = (ListView) findViewById(R.id.lvMessageHistory);
         lvMessageHistory.setOnItemLongClickListener(this);
-        lvMessageHistory.setDividerHeight(0);
         lvMessageHistory.setOnScrollListener(this);
 
         // Add the button for loading more messages to list header
@@ -389,6 +379,7 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
 
     @Override
     public void onScrollStateChanged(AbsListView view, int scrollState) {
+        // Noop
     }
 
     @Override
@@ -416,12 +407,17 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
                 } catch (NoPrivateKey noPrivateKey) {
                     return; //In this case we simply cannot do anything
                 }
-                ArrayList<ChatMessage> downloadedChatHistory;
-                if (chatHistoryAdapter == null || chatHistoryAdapter.getSentCount() == 0 || newMsg) {
-                    downloadedChatHistory = TUMCabeClient.getInstance(ChatActivity.this).getNewMessages(currentChatRoom.getId(), verification);
-                } else {
-                    long id = chatHistoryAdapter.getItemId(ChatMessageManager.COL_ID);
-                    downloadedChatHistory = TUMCabeClient.getInstance(ChatActivity.this).getMessages(currentChatRoom.getId(), id, verification);
+                List<ChatMessage> downloadedChatHistory;
+                try {
+                    if (chatHistoryAdapter == null || chatHistoryAdapter.getSentCount() == 0 || newMsg) {
+                        downloadedChatHistory = TUMCabeClient.getInstance(ChatActivity.this).getNewMessages(currentChatRoom.getId(), verification);
+                    } else {
+                        long id = chatHistoryAdapter.getItemId(ChatMessageManager.COL_ID);
+                        downloadedChatHistory = TUMCabeClient.getInstance(ChatActivity.this).getMessages(currentChatRoom.getId(), id, verification);
+                    }
+                } catch (IOException e) {
+                    Utils.log(e);
+                    return;
                 }
 
                 //Save it to our local cache
@@ -445,7 +441,7 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
                         }
 
                         // If all messages are loaded hide header view
-                        if (cur.moveToFirst() && cur.getLong(ChatMessageManager.COL_PREVIOUS) == 0 || cur.getCount() == 0) {
+                        if ((cur.moveToFirst() && cur.getLong(ChatMessageManager.COL_PREVIOUS) == 0) || cur.getCount() == 0) {
                             lvMessageHistory.removeHeaderView(bar);
                         } else {
                             loadingMore = false;
@@ -466,17 +462,17 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
     public void onClick(DialogInterface dialog, int which) {
 
         // Send request to the server to remove the user from this room
-        ChatVerification verification = null;
+        ChatVerification verification;
         try {
             verification = new ChatVerification(this, currentChatMember);
         } catch (NoPrivateKey noPrivateKey) {
             return;
         }
 
-        TUMCabeClient.getInstance(ChatActivity.this).leaveChatRoom(currentChatRoom, verification, new Callback<ChatRoom>() {
+        TUMCabeClient.getInstance(this).leaveChatRoom(currentChatRoom, verification, new Callback<ChatRoom>() {
             @Override
-            public void success(ChatRoom room, Response arg1) {
-                Utils.logv("Success leaving chat room: " + room.getName());
+            public void onResponse(Call<ChatRoom> call, Response<ChatRoom> room) {
+                Utils.logv("Success leaving chat room: " + room.body().getName());
                 new ChatRoomManager(ChatActivity.this).leave(currentChatRoom);
 
                 // Move back to ChatRoomsActivity
@@ -485,8 +481,8 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
             }
 
             @Override
-            public void failure(RetrofitError e) {
-                Utils.log(e, "Failure leaving chat room");
+            public void onFailure(Call<ChatRoom> call, Throwable t) {
+                Utils.log(t, "Failure leaving chat room");
             }
         });
     }
@@ -532,8 +528,8 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
         //Verify the message with RSA
         TUMCabeClient.getInstance(ChatActivity.this).getPublicKeysForMember(message.getMember(), new Callback<List<ChatPublicKey>>() {
             @Override
-            public void success(List<ChatPublicKey> publicKeys, Response arg1) {
-                ChatMessageValidator validator = new ChatMessageValidator(publicKeys);
+            public void onResponse(Call<List<ChatPublicKey>> call, Response<List<ChatPublicKey>> response) {
+                ChatMessageValidator validator = new ChatMessageValidator(response.body());
                 final boolean result = validator.validate(message);
 
                 //Show a nice dialog with more information about the message
@@ -550,10 +546,12 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
                         .create().show();
             }
 
+
             @Override
-            public void failure(RetrofitError e) {
-                Utils.log(e, "Failure verifying message");
+            public void onFailure(Call<List<ChatPublicKey>> call, Throwable t) {
+                Utils.log(t, "Failure verifying message");
             }
+
         });
     }
 

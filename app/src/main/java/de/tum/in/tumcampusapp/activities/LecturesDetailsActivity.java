@@ -12,8 +12,8 @@ import java.util.Locale;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampusapp.auxiliary.Const;
-import de.tum.in.tumcampusapp.models.LectureDetailsRow;
-import de.tum.in.tumcampusapp.models.LectureDetailsRowSet;
+import de.tum.in.tumcampusapp.models.tumo.LectureDetailsRow;
+import de.tum.in.tumcampusapp.models.tumo.LectureDetailsRowSet;
 import de.tum.in.tumcampusapp.tumonline.TUMOnlineConst;
 
 /**
@@ -105,9 +105,9 @@ public class LecturesDetailsActivity extends ActivityForAccessingTumOnline<Lectu
         currentItem = xmllv.getLehrveranstaltungenDetails().get(0);
         tvLDetailsName.setText(currentItem.getStp_sp_titel().toUpperCase(Locale.getDefault()));
 
-        String strLectureLanguage = currentItem.getSemester_name();
+        StringBuilder strLectureLanguage = new StringBuilder(currentItem.getSemester_name());
         if (currentItem.getHaupt_unterrichtssprache() != null) {
-            strLectureLanguage += " - " + currentItem.getHaupt_unterrichtssprache();
+            strLectureLanguage.append(" - ").append(currentItem.getHaupt_unterrichtssprache());
         }
         tvLDetailsSemester.setText(strLectureLanguage);
         tvLDetailsSWS.setText(String.format("%s - %s SWS", currentItem.getStp_lv_art_name(), currentItem.getDauer_info()));

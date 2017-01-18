@@ -1,10 +1,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
     <!-- The toolbar aka SupportActionBar -->
-    <include layout="@layout/toolbar" />
+    <include layout="@layout/toolbar"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -17,10 +17,11 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@+id/relativeLayout"
-            android:dividerHeight="0px"
-            android:scrollbars="none"
             android:stackFromBottom="true"
-            android:transcriptMode="normal" />
+            android:transcriptMode="normal"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="5.0sp"
+            />
 
         <RelativeLayout
             android:id="@id/relativeLayout"
@@ -36,11 +37,14 @@
                 android:layout_alignParentTop="true"
                 android:layout_marginBottom="3dp"
                 android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginTop="3dp"
                 android:layout_toLeftOf="@+id/btnSend"
                 android:layout_toStartOf="@+id/btnSend"
                 android:hint="@string/send"
-                android:inputType="textShortMessage" />
+                android:inputType="textCapSentences|textMultiLine"
+                android:maxLines="4"
+                android:scrollbars="vertical"/>
 
             <ImageButton
                 android:id="@+id/btnSend"
@@ -55,7 +59,7 @@
                 android:contentDescription="@string/send"
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
-                android:src="@drawable/ic_action_send_now" />
+                android:src="@drawable/ic_action_send_now"/>
 
         </RelativeLayout>
 

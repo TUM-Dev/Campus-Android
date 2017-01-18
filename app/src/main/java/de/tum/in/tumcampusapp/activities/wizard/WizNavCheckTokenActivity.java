@@ -16,10 +16,9 @@ import de.tum.in.tumcampusapp.activities.generic.ActivityForLoadingInBackground;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
-import de.tum.in.tumcampusapp.models.IdentitySet;
-import de.tum.in.tumcampusapp.models.Person;
-import de.tum.in.tumcampusapp.models.PersonList;
-import de.tum.in.tumcampusapp.models.TokenConfirmation;
+import de.tum.in.tumcampusapp.models.tumo.IdentitySet;
+import de.tum.in.tumcampusapp.models.tumo.Person;
+import de.tum.in.tumcampusapp.models.tumo.PersonList;
 import de.tum.in.tumcampusapp.tumonline.TUMOnlineConst;
 import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequest;
 
@@ -80,11 +79,13 @@ public class WizNavCheckTokenActivity extends ActivityForLoadingInBackground<Voi
     @Override
     protected Integer onLoadInBackground(Void... arg) {
         // Check if token has been enabled
-        TUMOnlineRequest<TokenConfirmation> request = new TUMOnlineRequest<>(TUMOnlineConst.TOKEN_CONFIRMED, this, true);
-        Optional<TokenConfirmation> confirmation = request.fetch();
-
-        if (confirmation.isPresent() && confirmation.get().isConfirmed()) {
-
+        if (TUMOnlineRequest.checkTokenInactive(this)) {
+            if (NetUtils.isConnected(this)) {
+                return R.string.token_not_enabled;
+            } else {
+                return R.string.no_internet_connection;
+            }
+        } else {
             // Get users full name
             TUMOnlineRequest<IdentitySet> request2 = new TUMOnlineRequest<>(TUMOnlineConst.IDENTITY, this, true);
             Optional<IdentitySet> id = request2.fetch();
@@ -93,20 +94,14 @@ public class WizNavCheckTokenActivity extends ActivityForLoadingInBackground<Voi
             }
 
             // Save the name to preferences
-            Utils.setSetting(this, Const.CHAT_ROOM_DISPLAY_NAME, id.toString());
+            Utils.setSetting(this, Const.CHAT_ROOM_DISPLAY_NAME, id.get().toString());
 
             // Save the TUMOnline id to preferences
-            String pID = getUserPIdentNr(id.toString());
+            String pID = getUserPIdentNr(id.get().toString());
             if (pID != null) {
                 Utils.setSetting(this, Const.TUMO_PIDENT_NR, pID);
             }
             return null;
-        } else {
-            if (NetUtils.isConnected(this)) {
-                return R.string.token_not_enabled;
-            } else {
-                return R.string.no_internet_connection;
-            }
         }
     }
 
@@ -117,7 +112,9 @@ public class WizNavCheckTokenActivity extends ActivityForLoadingInBackground<Voi
     @Override
     protected void onLoadFinished(Integer errorMessageStrResId) {
         if (errorMessageStrResId == null) {
-            startNextActivity();
+            finish();
+            startActivity(new Intent(this, WizNavExtrasActivity.class));
+            overridePendingTransition(R.anim.fadein, R.anim.fadeout);
         } else {
             Utils.showToast(this, errorMessageStrResId);
             showLoadingEnded();
@@ -131,19 +128,7 @@ public class WizNavCheckTokenActivity extends ActivityForLoadingInBackground<Voi
     protected void onStart() {
         super.onStart();
         TextView textView = (TextView) findViewById(R.id.tvBrowse);
-        textView.setClickable(true);
         textView.setMovementMethod(LinkMovementMethod.getInstance());
-        String url = "<a href='http://campus.tum.de'>TUMOnline</a>";
-        textView.setText(Utils.fromHtml(url));
-    }
-
-    /**
-     * Opens next wizard page
-     */
-    private void startNextActivity() {
-        finish();
-        startActivity(new Intent(this, WizNavChatActivity.class));
-        overridePendingTransition(R.anim.fadein, R.anim.fadeout);
     }
 
     /**

@@ -1,11 +1,5 @@
 <notices>
     <notice>
-        <name>Nine Old Androids</name>
-        <url>http://nineoldandroids.com/</url>
-        <copyright>Copyright 2012 Jake Wharton</copyright>
-        <license>Apache Software License 2.0</license>
-    </notice>
-    <notice>
         <name>StickyListHeaders</name>
         <url>https://github.com/emilsjolander/StickyListHeaders</url>
         <copyright>Copyright 2014 Emil Sjölander</copyright>

@@ -1,7 +1,6 @@
 package de.tum.in.tumcampusapp.activities;
 
 import android.Manifest;
-import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.ContentUris;
 import android.content.DialogInterface;
@@ -12,7 +11,6 @@ import android.database.Cursor;
 import android.graphics.RectF;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.support.annotation.NonNull;
@@ -42,10 +40,9 @@ import de.tum.in.tumcampusapp.activities.generic.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.auxiliary.calendar.IntegratedCalendarEvent;
-import de.tum.in.tumcampusapp.models.CalendarRowSet;
-import de.tum.in.tumcampusapp.models.managers.AbstractManager;
-import de.tum.in.tumcampusapp.models.managers.CalendarManager;
-import de.tum.in.tumcampusapp.models.managers.SyncManager;
+import de.tum.in.tumcampusapp.managers.CalendarManager;
+import de.tum.in.tumcampusapp.managers.SyncManager;
+import de.tum.in.tumcampusapp.models.tumo.CalendarRowSet;
 import de.tum.in.tumcampusapp.tumonline.TUMOnlineConst;
 
 /**
@@ -53,20 +50,17 @@ import de.tum.in.tumcampusapp.tumonline.TUMOnlineConst;
  */
 public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowSet> implements OnClickListener, MonthLoader.MonthChangeListener, WeekView.EventClickListener {
 
-    private static final int REQUEST_SYNC = 0;
-    private static final int REQUEST_DELETE = 1;
-    private static final String[] PERMISSIONS_CALENDAR = {Manifest.permission.READ_CALENDAR,
-            Manifest.permission.WRITE_CALENDAR};
-
     /**
      * The space between the first and the last date
      */
     public static final int MONTH_AFTER = 3;
     public static final int MONTH_BEFORE = 0;
-
-    private static final int TIME_TO_SYNC_CALENDAR = 604800; // 1 week
     public static final String EVENT_TIME = "event_time";
-
+    private static final int REQUEST_SYNC = 0;
+    private static final int REQUEST_DELETE = 1;
+    private static final String[] PERMISSIONS_CALENDAR = {Manifest.permission.READ_CALENDAR,
+            Manifest.permission.WRITE_CALENDAR};
+    private static final int TIME_TO_SYNC_CALENDAR = 604800; // 1 week
     private CalendarManager calendarManager;
 
     /**
@@ -117,7 +111,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
         // Dates after the current date
         requestHandler.setParameter("pMonateNach", String.valueOf(MONTH_AFTER));
 
-        if (SyncManager.needSync(AbstractManager.getDb(this), Const.SYNC_CALENDAR_IMPORT, TIME_TO_SYNC_CALENDAR)) {
+        if (new SyncManager(this).needSync(Const.SYNC_CALENDAR_IMPORT, TIME_TO_SYNC_CALENDAR)) {
             requestFetch();
         } else {
             isFetched = true;
@@ -143,9 +137,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
             protected void onPostExecute(Void result) {
                 showLoadingEnded();
                 // update the action bar to display the enabled menu options
-                if (Build.VERSION.SDK_INT >= 14) {
-                    ActivityCompat.invalidateOptionsMenu(CalendarActivity.this);
-                }
+                CalendarActivity.this.invalidateOptionsMenu();
                 startService(new Intent(CalendarActivity.this, CalendarManager.QueryLocationsService.class));
             }
         }.execute();
@@ -169,17 +161,12 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
         MenuItem menuItemDeleteCalendar = menu.findItem(R.id.action_delete_calendar);
 
         // the Calendar export is not supported for API < 14
-        if (Build.VERSION.SDK_INT < 14) {
-            menuItemExportGoogle.setVisible(false);
-            menuItemDeleteCalendar.setVisible(false);
-        } else {
-            menuItemExportGoogle.setEnabled(isFetched);
-            menuItemDeleteCalendar.setEnabled(isFetched);
+        menuItemExportGoogle.setEnabled(isFetched);
+        menuItemDeleteCalendar.setEnabled(isFetched);
 
-            boolean bed = Utils.getInternalSettingBool(this, Const.SYNC_CALENDAR, false);
-            menuItemExportGoogle.setVisible(!bed);
-            menuItemDeleteCalendar.setVisible(bed);
-        }
+        boolean bed = Utils.getInternalSettingBool(this, Const.SYNC_CALENDAR, false);
+        menuItemExportGoogle.setVisible(!bed);
+        menuItemDeleteCalendar.setVisible(bed);
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -305,7 +292,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
                             }
                         }).show();
             } else {
-                ActivityCompat.requestPermissions(CalendarActivity.this, PERMISSIONS_CALENDAR, id);
+                ActivityCompat.requestPermissions(this, PERMISSIONS_CALENDAR, id);
             }
         }
 
@@ -338,7 +325,6 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
     /**
      * Starts the Google calendar Activity to display the exported calendar.
      */
-    @TargetApi(14)
     private void displayCalendarOnGoogleCalendar() {
         // displaying Calendar
         Calendar beginTime = Calendar.getInstance();
@@ -358,14 +344,14 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
         if (!isPermissionGranted(REQUEST_DELETE)) {
             return;
         }
-        AlertDialog.Builder builder = new AlertDialog.Builder(CalendarActivity.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(getString(R.string.dialog_delete_calendar)).setPositiveButton(getString(R.string.yes), new OnClickListener() {
 
             @Override
             public void onClick(DialogInterface arg0, int arg1) {
                 int deleted = CalendarManager.deleteLocalCalendar(CalendarActivity.this);
                 Utils.setInternalSetting(CalendarActivity.this, Const.SYNC_CALENDAR, false);
-                ActivityCompat.invalidateOptionsMenu(CalendarActivity.this);
+                CalendarActivity.this.invalidateOptionsMenu();
                 if (deleted > 0) {
                     Utils.showToast(CalendarActivity.this, R.string.calendar_deleted_toast);
                 } else {
@@ -388,7 +374,7 @@ public class CalendarActivity extends ActivityForAccessingTumOnline<CalendarRowS
         int daysInMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
 
         //Probably refactor this to a good SQL query
-        for (int curDay = 1; curDay < daysInMonth; curDay++) {
+        for (int curDay = 1; curDay <= daysInMonth; curDay++) {
             calendar.set(Calendar.DAY_OF_MONTH, curDay);
             Cursor cEvents = calendarManager.getFromDbForDate(new Date(calendar.getTimeInMillis()));
 

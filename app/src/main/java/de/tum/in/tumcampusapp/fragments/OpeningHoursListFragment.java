@@ -2,7 +2,6 @@ package de.tum.in.tumcampusapp.fragments;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.View;
@@ -64,14 +63,15 @@ public class OpeningHoursListFragment extends ListFragment {
     private static final Callbacks S_DUMMY_CALLBACKS = new Callbacks() {
         @Override
         public void onItemSelected(int id, String name) {
+            // Dummy callback
         }
     };
 
-    /**
-     * Mandatory empty constructor for the fragment manager to instantiate the
-     * fragment (e.g. upon screen orientation changes).
-     */
     public OpeningHoursListFragment() {
+        /*
+         * Mandatory empty constructor for the fragment manager to instantiate the
+         * fragment (e.g. upon screen orientation changes).
+         */
     }
 
     @Override
@@ -90,8 +90,7 @@ public class OpeningHoursListFragment extends ListFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        int layout = Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB ? android.R.layout.simple_list_item_activated_1
-                : android.R.layout.simple_list_item_1;
+        int layout = android.R.layout.simple_list_item_activated_1;
 
         String[] names = {getString(R.string.libraries),
                 getString(R.string.information),

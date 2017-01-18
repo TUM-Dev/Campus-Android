@@ -62,7 +62,7 @@ public abstract class NotificationAwareCard extends Card {
             NotificationManagerCompat notificationManager = NotificationManagerCompat.from(mContext);
             try {
                 notificationManager.notify(getType(), notification);
-            } catch (IllegalArgumentException e) {
+            } catch (IllegalArgumentException e) { //NOPMD
                 //Dismiss exception, as we want this to happen (Only work on wear)
             }
             // Showing a notification is handled as it would already be dismissed, so that it will not notify again.

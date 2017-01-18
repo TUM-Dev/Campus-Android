@@ -8,7 +8,6 @@ import de.tum.in.tumcampusapp.cards.ChatMessagesCard;
 import de.tum.in.tumcampusapp.cards.EduroamCard;
 import de.tum.in.tumcampusapp.cards.FirstUseCard1;
 import de.tum.in.tumcampusapp.cards.FirstUseCard2;
-import de.tum.in.tumcampusapp.cards.IkomCard;
 import de.tum.in.tumcampusapp.cards.MVVCard;
 import de.tum.in.tumcampusapp.cards.NewsCard;
 import de.tum.in.tumcampusapp.cards.NextLectureCard;
@@ -18,7 +17,7 @@ import de.tum.in.tumcampusapp.cards.Support;
 import de.tum.in.tumcampusapp.cards.SurveyCard;
 import de.tum.in.tumcampusapp.cards.TuitionFeesCard;
 import de.tum.in.tumcampusapp.cards.generic.Card;
-import de.tum.in.tumcampusapp.models.managers.CardManager;
+import de.tum.in.tumcampusapp.managers.CardManager;
 
 /**
  * Adapter for the cards start page used in {@link de.tum.in.tumcampusapp.activities.MainActivity}
@@ -59,8 +58,6 @@ public class CardsAdapter extends RecyclerView.Adapter<Card.CardViewHolder> {
                 return Support.inflateViewHolder(viewGroup);
             case CardManager.CARD_SURVEY:
                 return SurveyCard.inflateViewHolder(viewGroup);
-            case CardManager.CARD_IKOM:
-                return IkomCard.inflateViewHolder(viewGroup);
             default:
                 throw new UnsupportedOperationException();
         }
@@ -81,7 +78,7 @@ public class CardsAdapter extends RecyclerView.Adapter<Card.CardViewHolder> {
     @Override
     public long getItemId(int i) {
         Card card = CardManager.getCard(i);
-        return card.getType() + card.getId() << 4;
+        return card.getType() + (card.getId() << 4);
     }
 
     @Override

@@ -1,12 +1,10 @@
 package de.tum.in.tumcampusapp.activities;
 
-import android.annotation.TargetApi;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.format.DateUtils;
@@ -95,6 +93,12 @@ public class InformationActivity extends BaseActivity {
         this.addDebugRow(table, "REG ID", Utils.getInternalSettingString(this, Const.GCM_REG_ID, ""));
         this.addDebugRow(table, "REG Transmission", DateUtils.getRelativeDateTimeString(this, Utils.getInternalSettingLong(this, Const.GCM_REG_ID_LAST_TRANSMISSION, 0),
                 DateUtils.MINUTE_IN_MILLIS, DateUtils.DAY_IN_MILLIS * 2, 0).toString());
+        try {
+            PackageInfo packageInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+            this.addDebugRow(table, "VersionCode", String.valueOf(packageInfo.versionCode));
+        } catch (NameNotFoundException e) {
+            Utils.log(e);
+        }
 
         table.setVisibility(View.VISIBLE);
 
@@ -118,18 +122,11 @@ public class InformationActivity extends BaseActivity {
 
         //Copy to clipboard
         v.setOnClickListener(new View.OnClickListener() {
-            @TargetApi(Build.VERSION_CODES.HONEYCOMB)
             @Override
             public void onClick(View v) {
-                if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {
-                    @SuppressWarnings("deprecation")
-                    android.text.ClipboardManager clipboard = (android.text.ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-                    clipboard.setText(value);
-                } else {
-                    ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-                    ClipData clip = ClipData.newPlainText(label, value);
-                    clipboard.setPrimaryClip(clip);
-                }
+                ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+                ClipData clip = ClipData.newPlainText(label, value);
+                clipboard.setPrimaryClip(clip);
             }
         });
         tableRow.addView(v);

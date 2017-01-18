@@ -1,15 +1,13 @@
 package de.tum.in.tumcampusapp.auxiliary.calendar;
 
 import android.Manifest;
-import android.annotation.TargetApi;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.Build;
 import android.provider.CalendarContract;
 import android.provider.CalendarContract.Calendars;
-import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 
 /**
  * Helper class for exporting to Google Calendar.
@@ -35,16 +33,14 @@ public final class CalendarHelper {
      * @param c Context
      * @return Number of rows deleted
      */
-    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     public static int deleteCalendar(Context c) {
-        if (ActivityCompat.checkSelfPermission(c, Manifest.permission.WRITE_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(c, Manifest.permission.WRITE_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
             return 0;
         }
         final Uri uri = CalendarContract.Calendars.CONTENT_URI;
         return c.getContentResolver().delete(uri, " account_name = '" + ACCOUNT_NAME + '\'', null);
     }
 
-    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     private static Uri buildCalUri() {
         return CalendarContract.Calendars.CONTENT_URI.buildUpon()
                 .appendQueryParameter(CalendarContract.CALLER_IS_SYNCADAPTER, "true")
@@ -52,7 +48,6 @@ public final class CalendarHelper {
                 .appendQueryParameter(Calendars.ACCOUNT_TYPE, CalendarContract.ACCOUNT_TYPE_LOCAL).build();
     }
 
-    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     private static ContentValues buildContentValues() {
         final int colorCalendar = 0x0066CC;
         final String intName = ACCOUNT_NAME + CALENDAR_NAME;

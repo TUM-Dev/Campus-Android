@@ -19,7 +19,7 @@ import de.tum.in.tumcampusapp.activities.generic.ActivityForSearching;
 import de.tum.in.tumcampusapp.adapters.NoResultsAdapter;
 import de.tum.in.tumcampusapp.adapters.RoomFinderListAdapter;
 import de.tum.in.tumcampusapp.auxiliary.RoomFinderSuggestionProvider;
-import de.tum.in.tumcampusapp.models.managers.RecentsManager;
+import de.tum.in.tumcampusapp.managers.RecentsManager;
 import de.tum.in.tumcampusapp.tumonline.TUMRoomFinderRequest;
 import de.tum.in.tumcampusapp.tumonline.TUMRoomFinderRequestFetchListener;
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
@@ -110,13 +110,13 @@ public class RoomFinderActivity extends ActivityForSearching implements TUMRoomF
      */
     private void openRoomDetails(Map<String, String> room) {
         // Add to recents
-        String val = "";
+        StringBuilder val = new StringBuilder();
         Bundle b = new Bundle();
         for (Map.Entry<String, String> entry : room.entrySet()) {
-            val += entry.getKey() + "=" + entry.getValue() + ";";
+            val.append(entry.getKey()).append('=').append(entry.getValue()).append(';');
             b.putString(entry.getKey(), entry.getValue());
         }
-        recentsManager.replaceIntoDb(val);
+        recentsManager.replaceIntoDb(val.toString());
 
         // Start detail activity
         Intent intent = new Intent(this, RoomFinderDetailsActivity.class);

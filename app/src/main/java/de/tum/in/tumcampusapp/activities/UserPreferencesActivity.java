@@ -31,8 +31,8 @@ public class UserPreferencesActivity extends BaseActivity  implements
         //Enable the direct access of a specific sub section, e.g.: cards
         Intent intent = getIntent();
         Bundle args = new Bundle();
-        if (intent != null && intent.getExtras() != null && intent.getExtras().containsKey(Const.PREFERENCE_SCREEN)) {
-            args.putString(Const.PREFERENCE_SCREEN, intent.getExtras().getString(Const.PREFERENCE_SCREEN));
+        if (intent != null &&  intent.getExtras() != null) {
+            args.putString(PreferenceFragmentCompat.ARG_PREFERENCE_ROOT, intent.getExtras().getString(Const.PREFERENCE_SCREEN));
         }
 
         if (savedInstanceState == null) {
@@ -41,6 +41,7 @@ public class UserPreferencesActivity extends BaseActivity  implements
             if (fragment == null) {
                 fragment = new SettingsFragment();
             }
+            
             fragment.setArguments(args);
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.settings_frame, fragment, SettingsFragment.FRAGMENT_TAG);

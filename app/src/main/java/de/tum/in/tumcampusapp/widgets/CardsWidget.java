@@ -1,13 +1,11 @@
 package de.tum.in.tumcampusapp.widgets;
 
-import android.annotation.TargetApi;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.widget.RemoteViews;
@@ -21,7 +19,6 @@ import de.tum.in.tumcampusapp.auxiliary.Utils;
  * Implementation of App Widget functionality.
  * App Widget Configuration implemented in {@link CardsWidgetConfigureActivity CardsWidgetConfigureActivity}
  */
-@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 public class CardsWidget extends AppWidgetProvider {
 
     private static final String BROADCAST_NAME = "de.tum.in.newtumcampus.intent.action.BROADCAST_CARDSWIDGET";

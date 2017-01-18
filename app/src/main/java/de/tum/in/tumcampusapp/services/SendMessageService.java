@@ -5,21 +5,24 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 
-import java.util.ArrayList;
+import java.io.IOException;
+import java.util.List;
 
+import de.tum.in.tumcampusapp.api.TUMCabeClient;
 import de.tum.in.tumcampusapp.auxiliary.AuthenticationManager;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.exceptions.NoPrivateKey;
-import de.tum.in.tumcampusapp.models.ChatMessage;
-import de.tum.in.tumcampusapp.models.TUMCabeClient;
-import de.tum.in.tumcampusapp.models.managers.ChatMessageManager;
-import retrofit.RetrofitError;
+import de.tum.in.tumcampusapp.managers.ChatMessageManager;
+import de.tum.in.tumcampusapp.models.gcm.GCMChat;
+import de.tum.in.tumcampusapp.models.tumcabe.ChatMessage;
 
 /**
  * Service used to silence the mobile during lectures
  */
 public class SendMessageService extends IntentService {
 
+
+    public static final int MAX_SEND_TRIES = 5;
     /**
      * Interval in milliseconds to check for current lectures
      */
@@ -35,7 +38,7 @@ public class SendMessageService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         // Get all unsent messages from database
-        ArrayList<ChatMessage> unsentMsg = ChatMessageManager.getAllUnsentUpdated(this);
+        List<ChatMessage> unsentMsg = ChatMessageManager.getAllUnsentUpdated(this);
         if (unsentMsg.isEmpty()) {
             return;
         }
@@ -44,7 +47,7 @@ public class SendMessageService extends IntentService {
         AuthenticationManager am = new AuthenticationManager(this);
 
         //Try to send the message 5 times
-        while (numberOfAttempts < 5) {
+        while (numberOfAttempts < MAX_SEND_TRIES) {
             try {
                 for (ChatMessage message : unsentMsg) {
                     // Generate signature and store it in the message
@@ -69,26 +72,25 @@ public class SendMessageService extends IntentService {
                     // Send broadcast to eventually open ChatActivity
                     Intent i = new Intent("chat-message-received");
                     Bundle extras = new Bundle();
-                    extras.putString("room", "" + message.getRoom());
-                    extras.putString("member", "" + message.getMember().getId());
+                    extras.putSerializable("GCMChat", new GCMChat(message.getRoom(), message.getMember().getId()));
                     i.putExtras(extras);
                     LocalBroadcastManager.getInstance(this).sendBroadcast(i);
                 }
 
                 //Exit the loop
                 return;
-            } catch (RetrofitError e) {
-                Utils.log(e);
-                numberOfAttempts++;
             } catch (NoPrivateKey noPrivateKey) {
                 return; //Nothing can be done, just exit
+            } catch (IOException e) {
+                Utils.log(e);
+                numberOfAttempts++;
             }
 
             //Sleep for five seconds, maybe the server is currently really busy
             try {
                 Thread.sleep(5000);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                Utils.log(e);
             }
         }
     }

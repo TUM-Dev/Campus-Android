@@ -104,6 +104,7 @@ public abstract class ActivityForLoadingInBackground<S, T> extends ProgressActiv
      *
      * @param errorReason Error text
      */
+    @Override
     protected void showError(final String errorReason) {
         runOnUiThread(new Runnable() {
             @Override

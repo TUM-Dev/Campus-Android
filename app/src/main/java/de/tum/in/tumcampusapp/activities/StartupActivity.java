@@ -1,5 +1,8 @@
 package de.tum.in.tumcampusapp.activities;
 
+import android.animation.Animator;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -20,26 +23,19 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.nineoldandroids.animation.Animator;
-import com.nineoldandroids.animation.AnimatorSet;
-import com.nineoldandroids.animation.ObjectAnimator;
-import com.nineoldandroids.view.ViewHelper;
-
 import java.io.File;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.activities.wizard.WizNavChatActivity;
 import de.tum.in.tumcampusapp.activities.wizard.WizNavExtrasActivity;
 import de.tum.in.tumcampusapp.activities.wizard.WizNavStartActivity;
-import de.tum.in.tumcampusapp.auxiliary.AccessTokenManager;
 import de.tum.in.tumcampusapp.auxiliary.AuthenticationManager;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.FileUtils;
 import de.tum.in.tumcampusapp.auxiliary.ImplicitCounter;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
-import de.tum.in.tumcampusapp.models.managers.AbstractManager;
-import de.tum.in.tumcampusapp.models.managers.CardManager;
+import de.tum.in.tumcampusapp.managers.AbstractManager;
+import de.tum.in.tumcampusapp.managers.CardManager;
 import de.tum.in.tumcampusapp.services.DownloadService;
 import de.tum.in.tumcampusapp.services.StartSyncReceiver;
 import de.tum.in.tumcampusapp.trace.ExceptionHandler;
@@ -53,10 +49,27 @@ import static android.content.pm.PackageManager.PERMISSION_GRANTED;
  */
 public class StartupActivity extends AppCompatActivity {
 
-    final AtomicBoolean initializationFinished = new AtomicBoolean(false);
     private static final int REQUEST_LOCATION = 0;
     private static final String[] PERMISSIONS_LOCATION = {ACCESS_COARSE_LOCATION,
             ACCESS_FINE_LOCATION};
+    final AtomicBoolean initializationFinished = new AtomicBoolean(false);
+    /**
+     * Broadcast receiver gets notified if {@link de.tum.in.tumcampusapp.services.BackgroundService}
+     * has prepared cards to be displayed
+     */
+    private final BroadcastReceiver receiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(DownloadService.BROADCAST_NAME)) {
+
+                //Only proceed to start the App, if initialization is finished
+                if (initializationFinished.compareAndSet(false, true)) {
+                    return;
+                }
+                startApp();
+            }
+        }
+    };
 
     private void init() {
         //Our own Custom exception handler
@@ -64,7 +77,7 @@ public class StartupActivity extends AppCompatActivity {
 
         //Check that we have a private key setup in order to authenticate this device
         AuthenticationManager am = new AuthenticationManager(this);
-        am.generatePrivateKey();
+        am.generatePrivateKey(null);
 
         //Upload stats
         ImplicitCounter.count(this);
@@ -86,7 +99,7 @@ public class StartupActivity extends AppCompatActivity {
         boolean hideWizardOnStartup = Utils.getSettingBool(this, Const.HIDE_WIZARD_ON_STARTUP, false);
         String lrzId = Utils.getSetting(this, Const.LRZ_ID, ""); // If new version and LRZ ID is empty, start the full wizard
 
-        if (!hideWizardOnStartup || newVersion && lrzId.isEmpty()) {
+        if (!hideWizardOnStartup || (newVersion && lrzId.isEmpty())) {
             startActivity(new Intent(this, WizNavStartActivity.class));
             finish();
             return;
@@ -94,14 +107,8 @@ public class StartupActivity extends AppCompatActivity {
             Utils.setSetting(this, Const.BACKGROUND_MODE, true);
             Utils.setSetting(this, CardManager.SHOW_SUPPORT, true);
 
-            Intent intent;
-            if (new AccessTokenManager(this).hasValidAccessToken()) {
-                intent = new Intent(this, WizNavChatActivity.class);
-            } else {
-                intent = new Intent(this, WizNavExtrasActivity.class);
-            }
+            Intent intent = new Intent(this, WizNavExtrasActivity.class);
             intent.putExtra(Const.TOKEN_IS_SETUP, true);
-
             startActivity(intent);
             finish();
             return;
@@ -153,24 +160,6 @@ public class StartupActivity extends AppCompatActivity {
     }
 
     /**
-     * Broadcast receiver gets notified if {@link de.tum.in.tumcampusapp.services.BackgroundService}
-     * has prepared cards to be displayed
-     */
-    private final BroadcastReceiver receiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (intent.getAction().equals(DownloadService.BROADCAST_NAME)) {
-
-                //Only proceed to start the App, if initialization is finished
-                if (initializationFinished.compareAndSet(false, true)) {
-                    return;
-                }
-                startApp();
-            }
-        }
-    };
-
-    /**
      * Request the Location Permission
      */
     private void requestLocationPermission() {
@@ -191,19 +180,21 @@ public class StartupActivity extends AppCompatActivity {
 
 
             // Display an AlertDialog with an explanation and a button to trigger the request.
-            new AlertDialog.Builder(this)
-                    .setMessage(getString(R.string.permission_location_explanation))
-                    .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    new AlertDialog.Builder(StartupActivity.this).setMessage(getString(R.string.permission_location_explanation)).setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int id) {
-                            ActivityCompat
-                                    .requestPermissions(StartupActivity.this, PERMISSIONS_LOCATION,
-                                            REQUEST_LOCATION);
+
+                            ActivityCompat.requestPermissions(StartupActivity.this, PERMISSIONS_LOCATION, REQUEST_LOCATION);
+
                         }
                     }).show();
+                }
+            });
         } else {
-            ActivityCompat.requestPermissions(StartupActivity.this, PERMISSIONS_LOCATION,
-                    REQUEST_LOCATION);
+            ActivityCompat.requestPermissions(this, PERMISSIONS_LOCATION, REQUEST_LOCATION);
         }
     }
 
@@ -240,7 +231,7 @@ public class StartupActivity extends AppCompatActivity {
         // Setup animation
         AnimatorSet set = new AnimatorSet();
         set.playTogether(
-                ObjectAnimator.ofFloat(background, "translationY", ViewHelper.getTranslationX(background), actionBarHeight - screenHeight),
+                ObjectAnimator.ofFloat(background, "translationY", background.getTranslationX(), actionBarHeight - screenHeight),
                 ObjectAnimator.ofFloat(tumLogo, "alpha", 1, 0, 0),
                 ObjectAnimator.ofFloat(loadingText, "alpha", 1, 0, 0),
                 ObjectAnimator.ofFloat(first, "alpha", 1, 0, 0),
@@ -252,6 +243,7 @@ public class StartupActivity extends AppCompatActivity {
         set.addListener(new Animator.AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animation) {
+                // NOOP
             }
 
             @Override
@@ -265,10 +257,12 @@ public class StartupActivity extends AppCompatActivity {
 
             @Override
             public void onAnimationCancel(Animator animation) {
+                // NOOP
             }
 
             @Override
             public void onAnimationRepeat(Animator animation) {
+                // NOOP
             }
         });
         set.start();

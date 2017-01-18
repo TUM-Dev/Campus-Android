@@ -1,12 +1,8 @@
 package de.tum.in.tumcampusapp.activities;
 
-import android.app.AlarmManager;
 import android.app.AlertDialog;
-import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -17,35 +13,30 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.ToggleButton;
 
-import java.util.Calendar;
 import java.util.List;
+
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.ActivityForDownloadingExternal;
 import de.tum.in.tumcampusapp.adapters.CafeteriaDetailsSectionsPagerAdapter;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
-import de.tum.in.tumcampusapp.models.Cafeteria;
-import de.tum.in.tumcampusapp.models.managers.LocationManager;
-import de.tum.in.tumcampusapp.services.FavoriteDishReceiver;
+import de.tum.in.tumcampusapp.managers.LocationManager;
+import de.tum.in.tumcampusapp.models.cafeteria.Cafeteria;
 
 import static de.tum.in.tumcampusapp.fragments.CafeteriaDetailsSectionFragment.menuToSpan;
 
 /**
  * Lists all dishes at selected cafeteria
- * <p/>
+ * <p>
  * OPTIONAL: Const.CAFETERIA_ID set in incoming bundle (cafeteria to show)
  */
 public class CafeteriaActivity extends ActivityForDownloadingExternal implements AdapterView.OnItemSelectedListener {
 
     private ViewPager mViewPager;
     private int mCafeteriaId = -1;
-    private CafeteriaDetailsSectionsPagerAdapter mSectionsPagerAdapter;
     private List<Cafeteria> mCafeterias;
-    ToggleButton favDish;
 
     public CafeteriaActivity() {
         super(Const.CAFETERIAS, R.layout.activity_cafeteria);
@@ -54,13 +45,20 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         // Get id from intent if specified
         final Intent intent = getIntent();
         if (intent != null && intent.getExtras() != null && intent.getExtras().containsKey(Const.CAFETERIA_ID)) {
             mCafeteriaId = intent.getExtras().getInt(Const.CAFETERIA_ID);
         }
+
         mViewPager = (ViewPager) findViewById(R.id.pager);
+
+        /*
+         *set pagelimit to avoid losing toggle button state.
+         *by default it's 1.
+         */
+        mViewPager.setOffscreenPageLimit(50);
+
     }
 
     @Override
@@ -81,6 +79,7 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
         }
         return super.onOptionsItemSelected(item);
     }
+
 
     /**
      * Setup action bar navigation (to switch between cafeterias)
@@ -121,17 +120,15 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
                 View v = inflater.inflate(R.layout.simple_spinner_dropdown_item_actionbar, parent, false);
                 Cafeteria c = getItem(position);
 
-                // Set name
-                TextView name = (TextView) v.findViewById(android.R.id.text1);
-                name.setText(c.name);
+                TextView name = (TextView) v.findViewById(android.R.id.text1); // Set name
+                TextView address = (TextView) v.findViewById(android.R.id.text2); // Set address
+                TextView dist = (TextView) v.findViewById(R.id.distance); // Set distance
 
-                // Set address
-                TextView address = (TextView) v.findViewById(android.R.id.text2);
-                address.setText(c.address);
-
-                // Set distance
-                TextView dist = (TextView) v.findViewById(R.id.distance);
-                dist.setText(Utils.formatDist(c.distance));
+                if (c != null) {
+                    name.setText(c.name);
+                    address.setText(c.address);
+                    dist.setText(Utils.formatDist(c.distance));
+                }
 
                 return v;
             }
@@ -155,18 +152,30 @@ public class CafeteriaActivity extends ActivityForDownloadingExternal implements
      */
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-        mCafeteriaId = mCafeterias.get(pos).id;
-
-        // Create the adapter that will return a fragment for each of the primary sections of the app.
-        if (mSectionsPagerAdapter == null) {
-            mSectionsPagerAdapter = new CafeteriaDetailsSectionsPagerAdapter(getSupportFragmentManager());
-            mSectionsPagerAdapter.setCafeteriaId(this, mCafeteriaId);
-            mViewPager.setAdapter(mSectionsPagerAdapter);
+        Intent intent = getIntent();
+        //check if Activity triggered from favoriteDish Notification
+        if (intent != null && intent.getExtras() != null && intent.getExtras().containsKey(Const.MENSA_FOR_FAVORITEDISH)) {
+            for (int i = 0; i < parent.getCount(); i++) {
+                //get mensaId from extra to redirct the user to it.
+                if (intent.getExtras().getInt(Const.MENSA_FOR_FAVORITEDISH) == mCafeterias.get(i).id) {
+                    mCafeteriaId = mCafeterias.get(i).id;
+                    parent.setSelection(i);
+                    intent.removeExtra(Const.MENSA_FOR_FAVORITEDISH);
+                    break;
+                }
+            }
         } else {
-            mViewPager.setAdapter(null); //unset the adapter for updating
-            mSectionsPagerAdapter.setCafeteriaId(this, mCafeteriaId);
-            mViewPager.setAdapter(mSectionsPagerAdapter);
+            mCafeteriaId = mCafeterias.get(pos).id;
         }
+
+
+        CafeteriaDetailsSectionsPagerAdapter mSectionsPagerAdapter
+                = new CafeteriaDetailsSectionsPagerAdapter(getSupportFragmentManager());
+        // Create the adapter that will return a fragment for each of the primary sections of the app.
+        mViewPager.setAdapter(null); //unset the adapter for updating
+        mSectionsPagerAdapter.setCafeteriaId(this, mCafeteriaId);
+        mViewPager.setAdapter(mSectionsPagerAdapter);
+
     }
 
     @Override

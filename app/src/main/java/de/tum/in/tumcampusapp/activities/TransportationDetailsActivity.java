@@ -11,8 +11,8 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.ActivityForLoadingInBackground;
 import de.tum.in.tumcampusapp.auxiliary.DepartureView;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
-import de.tum.in.tumcampusapp.models.managers.RecentsManager;
-import de.tum.in.tumcampusapp.models.managers.TransportManager;
+import de.tum.in.tumcampusapp.managers.RecentsManager;
+import de.tum.in.tumcampusapp.managers.TransportManager;
 
 /**
  * Activity to show transport departures for a specified station
@@ -94,7 +94,7 @@ public class TransportationDetailsActivity extends ActivityForLoadingInBackgroun
         for (TransportManager.Departure d : result) {
             DepartureView view = new DepartureView(this, true);
             view.setSymbol(d.symbol);
-            view.setLine(d.servingLine);
+            view.setLine(d.direction);
             view.setTime(d.countDown);
             mViewResults.addView(view);
         }

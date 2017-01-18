@@ -24,9 +24,9 @@ import de.tum.in.tumcampusapp.activities.generic.ActivityForLoadingInBackground;
 import de.tum.in.tumcampusapp.adapters.StudyRoomsPagerAdapter;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
-import de.tum.in.tumcampusapp.models.StudyRoom;
-import de.tum.in.tumcampusapp.models.StudyRoomGroup;
-import de.tum.in.tumcampusapp.models.managers.StudyRoomGroupManager;
+import de.tum.in.tumcampusapp.managers.StudyRoomGroupManager;
+import de.tum.in.tumcampusapp.models.tumcabe.StudyRoom;
+import de.tum.in.tumcampusapp.models.tumcabe.StudyRoomGroup;
 
 /**
  * Shows information about reservable study rooms.
@@ -92,13 +92,13 @@ public class StudyRoomsActivity extends ActivityForLoadingInBackground<Void, Voi
                                 parent, false);
                         StudyRoomGroup studyRoomGroup = getItem(position);
 
-                        // Set name
-                        TextView name = (TextView) v.findViewById(android.R.id.text1);
-                        name.setText(studyRoomGroup.name);
+                        TextView name = (TextView) v.findViewById(android.R.id.text1); // Set name
+                        TextView details = (TextView) v.findViewById(android.R.id.text2); // Set detail
 
-                        // Set detail
-                        TextView details = (TextView) v.findViewById(android.R.id.text2);
-                        details.setText(studyRoomGroup.details);
+                        if (studyRoomGroup != null) {
+                            name.setText(studyRoomGroup.name);
+                            details.setText(studyRoomGroup.details);
+                        }
 
                         return v;
                     }

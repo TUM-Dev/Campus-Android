@@ -1,7 +1,6 @@
 package de.tum.in.tumcampusapp.fragments;
 
 import android.Manifest;
-import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -13,7 +12,6 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
@@ -36,11 +34,11 @@ import de.tum.in.tumcampusapp.auxiliary.AccessTokenManager;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
-import de.tum.in.tumcampusapp.models.managers.AbstractManager;
-import de.tum.in.tumcampusapp.models.managers.CacheManager;
-import de.tum.in.tumcampusapp.models.managers.CalendarManager;
-import de.tum.in.tumcampusapp.models.managers.CardManager;
-import de.tum.in.tumcampusapp.models.managers.NewsManager;
+import de.tum.in.tumcampusapp.managers.AbstractManager;
+import de.tum.in.tumcampusapp.managers.CacheManager;
+import de.tum.in.tumcampusapp.managers.CalendarManager;
+import de.tum.in.tumcampusapp.managers.CardManager;
+import de.tum.in.tumcampusapp.managers.NewsManager;
 import de.tum.in.tumcampusapp.services.BackgroundService;
 import de.tum.in.tumcampusapp.services.SilenceService;
 
@@ -60,25 +58,18 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
 
     @Override
     public void onCreatePreferences(Bundle bundle, String rootKey) {
-        String rootKey1 = rootKey;
-        // Open a card's preference screen if selected from it's context menu
-        if (bundle != null && bundle.containsKey(Const.PREFERENCE_SCREEN)) {
-            rootKey1 = bundle.getString(Const.PREFERENCE_SCREEN);
-        }
-
-        Utils.log("Opening settings: " + rootKey1);
         //Load the correct preference category
-        setPreferencesFromResource(R.xml.settings, rootKey1);
+        setPreferencesFromResource(R.xml.settings, rootKey);
         mContext = getActivity();
 
         // Disables silence service if the app is used without TUMOnline access
         CheckBoxPreference silent = (CheckBoxPreference) findPreference("silent_mode");
-        if (!new AccessTokenManager(mContext).hasValidAccessToken()) {
+        if (silent != null && !new AccessTokenManager(mContext).hasValidAccessToken()) {
             silent.setEnabled(false);
         }
 
         //Only do these things if we are in the root of the preferences
-        if (rootKey1 == null) {
+        if (rootKey == null) {
             // Click listener for preference list entries. Used to simulate a button
             // (since it is not possible to add a button to the preferences screen)
             findPreference(BUTTON_WIZARD).setOnPreferenceClickListener(this);
@@ -121,33 +112,32 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
     private void populateNewsSources() {
         PreferenceCategory newsSources = (PreferenceCategory) findPreference("card_news_sources");
         NewsManager cm = new NewsManager(mContext);
+        final NetUtils net = new NetUtils(mContext);
         Cursor cur = cm.getNewsSources();
         if (cur.moveToFirst()) {
             do {
                 final CheckBoxPreference pref = new CheckBoxPreference(mContext);
                 pref.setKey("card_news_source_" + cur.getString(0));
                 pref.setDefaultValue(true);
-                if (Build.VERSION.SDK_INT >= 11) {
-                    // Load news source icon in background and set it
-                    final String url = cur.getString(1);
+                // Load news source icon in background and set it
+                final String url = cur.getString(1);
+                if (url != null) { // Skip News that do not have a image
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            NetUtils net = new NetUtils(mContext);
                             final Optional<Bitmap> bmp = net.downloadImageToBitmap(url);
-                            if (!bmp.isPresent()) {
-                                return;
-                            }
                             mContext.runOnUiThread(new Runnable() {
-                                @TargetApi(11)
                                 @Override
                                 public void run() {
-                                    pref.setIcon(new BitmapDrawable(getResources(), bmp.get()));
+                                    if (bmp.isPresent()) {
+                                        pref.setIcon(new BitmapDrawable(getResources(), bmp.get()));
+                                    }
                                 }
                             });
                         }
                     }).start();
                 }
+
                 pref.setTitle(cur.getString(2));
                 newsSources.addPreference(pref);
             } while (cur.moveToNext());
@@ -171,7 +161,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
         // When newspread selection changes
         // deselect all newspread sources and select only the
         // selected source if one of all was selected before
-        if (key.equals("news_newspread")) {
+        if ("news_newspread".equals(key)) {
             SharedPreferences.Editor e = sharedPreferences.edit();
             boolean value = false;
             for (int i = 7; i < 14; i++) {
@@ -311,8 +301,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
 
         // delete local calendar
         Utils.setInternalSetting(mContext, Const.SYNC_CALENDAR, false);
-        if (Build.VERSION.SDK_INT >= 14 &&
-                ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_CALENDAR) == PackageManager.PERMISSION_GRANTED &&
+        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_CALENDAR) == PackageManager.PERMISSION_GRANTED &&
                 ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED) {
             CalendarManager.deleteLocalCalendar(mContext);
         }

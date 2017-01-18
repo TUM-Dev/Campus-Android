@@ -14,8 +14,8 @@ import de.tum.in.tumcampusapp.activities.generic.ActivityForSearchingTumOnline;
 import de.tum.in.tumcampusapp.adapters.LecturesListAdapter;
 import de.tum.in.tumcampusapp.adapters.NoResultsAdapter;
 import de.tum.in.tumcampusapp.auxiliary.LectureSearchSuggestionProvider;
-import de.tum.in.tumcampusapp.models.LecturesSearchRow;
-import de.tum.in.tumcampusapp.models.LecturesSearchRowSet;
+import de.tum.in.tumcampusapp.models.tumo.LecturesSearchRow;
+import de.tum.in.tumcampusapp.models.tumo.LecturesSearchRowSet;
 import de.tum.in.tumcampusapp.tumonline.TUMOnlineConst;
 import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequest;
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
@@ -93,7 +93,7 @@ public class LecturesPersonalActivity extends ActivityForSearchingTumOnline<Lect
             Collections.sort(lectures);
 
             // set ListView to data via the LecturesListAdapter
-            lvMyLecturesList.setAdapter(LecturesListAdapter.newInstance(LecturesPersonalActivity.this, lectures));
+            lvMyLecturesList.setAdapter(LecturesListAdapter.newInstance(this, lectures));
         }
     }
 }

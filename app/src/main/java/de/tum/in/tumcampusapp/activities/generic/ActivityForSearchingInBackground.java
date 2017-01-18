@@ -107,6 +107,7 @@ public abstract class ActivityForSearchingInBackground<T> extends ActivityForSea
      *
      * @param errorReason Error text
      */
+    @Override
     protected void showError(final String errorReason) {
         runOnUiThread(new Runnable() {
             @Override

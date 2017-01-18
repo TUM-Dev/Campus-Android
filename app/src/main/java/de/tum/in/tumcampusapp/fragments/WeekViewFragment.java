@@ -1,7 +1,10 @@
 package de.tum.in.tumcampusapp.fragments;
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,9 +15,7 @@ import com.alamkanak.weekview.WeekViewEvent;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.auxiliary.calendar.IntegratedCalendarEvent;
@@ -22,10 +23,12 @@ import de.tum.in.tumcampusapp.tumonline.TUMRoomFinderRequest;
 
 public class WeekViewFragment extends Fragment implements MonthLoader.MonthChangeListener {
 
-    private final Map<Integer, List<WeekViewEvent>> loadedEvents = new HashMap<>();
+    private final SparseArray<List<WeekViewEvent>> loadedEvents = new SparseArray<>();
 
     private String roomApiCode;
     private WeekView mWeekView;
+
+    private Activity context;
 
     public static WeekViewFragment newInstance(String roomApiCode) {
         WeekViewFragment fragment = new WeekViewFragment();
@@ -83,7 +86,7 @@ public class WeekViewFragment extends Fragment implements MonthLoader.MonthChang
                 }
 
                 //Finish loading
-                getActivity().runOnUiThread(new Runnable() {
+                context.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         loadedEvents.put(calculateLoadedKey(newYear, newMonth), events);
@@ -95,8 +98,17 @@ public class WeekViewFragment extends Fragment implements MonthLoader.MonthChang
         }).start();
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof Activity) {
+            this.context = (Activity) context;
+        }
+
+    }
+
     private boolean isLoaded(int year, int month) {
-        return loadedEvents.containsKey(calculateLoadedKey(year, month));
+        return loadedEvents.get(calculateLoadedKey(year, month)) != null;
     }
 
     private static int calculateLoadedKey(int year, int month) {

@@ -16,8 +16,8 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.SetupEduroamActivity;
 import de.tum.in.tumcampusapp.cards.generic.Card;
 import de.tum.in.tumcampusapp.cards.generic.NotificationAwareCard;
-import de.tum.in.tumcampusapp.models.managers.CardManager;
-import de.tum.in.tumcampusapp.models.managers.EduroamManager;
+import de.tum.in.tumcampusapp.managers.CardManager;
+import de.tum.in.tumcampusapp.managers.EduroamManager;
 
 /**
  * Card that can start {@link SetupEduroamActivity}
@@ -35,7 +35,7 @@ public class EduroamCard extends NotificationAwareCard {
 
     @Override
     public void updateViewHolder(RecyclerView.ViewHolder viewHolder) {
-
+        // NOOP
     }
 
     @Override

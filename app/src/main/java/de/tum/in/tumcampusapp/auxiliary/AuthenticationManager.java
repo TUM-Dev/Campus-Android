@@ -15,17 +15,19 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.UUID;
 
+import de.tum.in.tumcampusapp.api.TUMCabeClient;
 import de.tum.in.tumcampusapp.exceptions.NoPrivateKey;
 import de.tum.in.tumcampusapp.exceptions.NoPublicKey;
-import de.tum.in.tumcampusapp.models.ChatMember;
-import de.tum.in.tumcampusapp.models.ChatPublicKey;
-import de.tum.in.tumcampusapp.models.DeviceRegister;
-import de.tum.in.tumcampusapp.models.TUMCabeClient;
-import de.tum.in.tumcampusapp.models.TUMCabeStatus;
+import de.tum.in.tumcampusapp.models.tumcabe.ChatMember;
+import de.tum.in.tumcampusapp.models.tumcabe.DeviceRegister;
+import de.tum.in.tumcampusapp.models.tumcabe.TUMCabeStatus;
+import de.tum.in.tumcampusapp.models.tumo.TokenConfirmation;
 import de.tum.in.tumcampusapp.services.GcmIdentificationService;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
+import de.tum.in.tumcampusapp.tumonline.TUMOnlineConst;
+import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequest;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * This provides methods to authenticate this app installation with the tumcabe server and other instances requiring a pki
@@ -62,7 +64,7 @@ public class AuthenticationManager {
             return KeyPairGenerator.getInstance(ALGORITHM);
         } catch (NoSuchAlgorithmException e) {
             // We don't support platforms without RSA
-            throw new AssertionError("KeyPairGenerator for " + ALGORITHM + "could not be instantiated");
+            throw new AssertionError(e);
         }
     }
 
@@ -71,7 +73,7 @@ public class AuthenticationManager {
             return KeyFactory.getInstance(ALGORITHM);
         } catch (NoSuchAlgorithmException e) {
             // We don't support platforms without RSA
-            throw new AssertionError("KeyFactory for " + ALGORITHM + "could not be instantiated");
+            throw new AssertionError(e);
         }
     }
 
@@ -95,7 +97,7 @@ public class AuthenticationManager {
      * @return
      * @throws NoPublicKey
      */
-    private String getPublicKeyString() throws NoPublicKey {
+    public String getPublicKeyString() throws NoPublicKey {
         String key = Utils.getInternalSettingString(mContext, Const.PUBLIC_KEY, "");
         if (key.isEmpty()) {
             throw new NoPublicKey();
@@ -136,51 +138,33 @@ public class AuthenticationManager {
      * @return true if a private key is present
      */
     public boolean generatePrivateKey(ChatMember member) {
-        if (this.generatePrivateKey()) {
-            try {
-                TUMCabeClient.getInstance(mContext).uploadPublicKey(member.getId(), new ChatPublicKey(this.getPublicKeyString()));
-                return true;
-            } catch (NoPublicKey noPublicKey) {
-            } catch (RetrofitError e) {
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * Gets private key from preferences or generates one.
-     *
-     * @return true if a private key is present
-     */
-    public boolean generatePrivateKey() {
         // Try to retrieve private key
         try {
             //Try to get the private key
             this.getPrivateKeyString();
 
             //Reupload it in the case it was not yet transmitted to the server
-            this.uploadKey(this.getPublicKeyString());
+            this.uploadKey(this.getPublicKeyString(), member);
 
             // If we already have one don't create a new one
             return true;
-        } catch (NoPrivateKey noPrivateKey) {
-        } catch (NoPublicKey noPublicKey) {
+        } catch (NoPrivateKey | NoPublicKey e) { //NOPMD
+            //Otherwise catch a not existing private key exception and proceed generation
         }
 
         //Something went wrong, generate a new pair
         this.clearKeys();
 
         // If the key is not in shared preferences, a new generate key-pair
-        KeyPair keyPair = this.generateKeyPair();
+        KeyPair keyPair = generateKeyPair();
 
         //In order to store the preferences we need to encode them as base64 string
-        String publicKeyString = this.keyToBase64(keyPair.getPublic().getEncoded());
-        String privateKeyString = this.keyToBase64(keyPair.getPrivate().getEncoded());
+        String publicKeyString = keyToBase64(keyPair.getPublic().getEncoded());
+        String privateKeyString = keyToBase64(keyPair.getPrivate().getEncoded());
         this.saveKeys(privateKeyString, publicKeyString);
 
         //New keys, need to re-upload
-        this.uploadKey(publicKeyString);
+        this.uploadKey(publicKeyString, member);
         return true;
     }
 
@@ -189,7 +173,7 @@ public class AuthenticationManager {
      *
      * @param publicKey
      */
-    private void uploadKey(String publicKey) {
+    private void uploadKey(String publicKey, final ChatMember member) {
         //If we already uploaded it we don't need to redo that
         if (Utils.getInternalSettingBool(mContext, Const.PUBLIC_KEY_UPLOADED, false)) {
             this.tryToUploadGcmToken();
@@ -197,33 +181,47 @@ public class AuthenticationManager {
         }
 
         try {
-            DeviceRegister dr = new DeviceRegister(mContext, publicKey);
+            DeviceRegister dr = new DeviceRegister(mContext, publicKey, member);
 
             // Upload public key to the server
             TUMCabeClient.getInstance(mContext).deviceRegister(dr, new Callback<TUMCabeStatus>() {
 
                 @Override
-                public void success(TUMCabeStatus s, Response response) {
-                    Utils.log(s.getStatus());
-                    Utils.log(response.getBody().toString());
+                public void onResponse(Call<TUMCabeStatus> call, Response<TUMCabeStatus> response) {
+                    //Remember that we are done, only if we have submitted with the member information
+                    if (response.isSuccessful() && "ok".equals(response.body().getStatus())) {
+                        if (member != null) {
+                            Utils.setInternalSetting(mContext, Const.PUBLIC_KEY_UPLOADED, true);
+                        }
 
-                    //Remember that we are done
-                    Utils.setInternalSetting(mContext, Const.PUBLIC_KEY_UPLOADED, true);
-
-                    AuthenticationManager.this.tryToUploadGcmToken();
+                        AuthenticationManager.this.tryToUploadGcmToken();
+                    }
                 }
 
                 @Override
-                public void failure(RetrofitError error) {
+                public void onFailure(Call<TUMCabeStatus> call, Throwable t) {
+                    Utils.log(t, "Failure uploading public key");
                     Utils.setInternalSetting(mContext, Const.PUBLIC_KEY_UPLOADED, false);
                 }
             });
-        } catch (RetrofitError e) {
-            Utils.log(e, "Failure uploading public key");
-            Utils.setInternalSetting(mContext, Const.PUBLIC_KEY_UPLOADED, false);
         } catch (NoPrivateKey noPrivateKey) {
             this.clearKeys();
         }
+    }
+
+    public void uploadPublicKey() throws NoPublicKey {
+        final String publicKey = this.getPublicKeyString();
+        Thread thread = new Thread() {
+            @Override
+            public void run() {
+                //Upload the Private key to the tumo server: we don't need an activated token for that. We want this to happen immediately so that no one else can upload this secret.
+                TUMOnlineRequest<TokenConfirmation> requestSavePublicKey = new TUMOnlineRequest<>(TUMOnlineConst.SECRET_UPLOAD, AuthenticationManager.this.mContext, false);
+                requestSavePublicKey.setParameter("pToken", Utils.getSetting(AuthenticationManager.this.mContext, Const.ACCESS_TOKEN, ""));
+                requestSavePublicKey.setParameterEncoded("pSecret", publicKey);
+                requestSavePublicKey.fetch();
+            }
+        };
+        thread.start();
     }
 
     private void tryToUploadGcmToken() {
@@ -237,20 +235,15 @@ public class AuthenticationManager {
 
     /**
      * Convert a byte array to a more manageable base64 string to store it in the preferences
-     *
-     * @param key
-     * @return
      */
-    private String keyToBase64(byte[] key) {
+    private static String keyToBase64(byte[] key) {
         return Base64.encodeToString(key, Base64.DEFAULT);
     }
 
     /**
      * Generates a keypair with the given ALGORITHM & size
-     *
-     * @return
      */
-    private KeyPair generateKeyPair() {
+    private static KeyPair generateKeyPair() {
         KeyPairGenerator keyGen = getKeyPairGeneratorInstance();
         keyGen.initialize(AuthenticationManager.RSA_KEY_SIZE);
         return keyGen.generateKeyPair();
@@ -266,9 +259,9 @@ public class AuthenticationManager {
     }
 
     /**
-     * Reset all keys generated - this should actually never happen
+     * Reset all keys generated - this should actually never happen other than when a token is reset
      */
-    private void clearKeys() {
+    public void clearKeys() {
         this.saveKeys("", "");
         Utils.setInternalSetting(mContext, Const.PUBLIC_KEY_UPLOADED, false);
     }

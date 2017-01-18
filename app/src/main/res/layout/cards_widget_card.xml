@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/cards_widget_card"
     android:layout_width="fill_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/background_light"
     android:orientation="horizontal"
-    android:padding="5dp">
+    android:padding="5dp"
+    android:theme="@style/AppTheme.WhiteBackground"
+    tools:ignore="UseCompoundDrawables">
+    <!-- Compound drawables with RemoteViews.setTextViewCompoundDrawables() can only be used on API 16+ -->
 
     <TextView
         android:id="@+id/widgetCardTextView"
@@ -14,7 +17,6 @@
         android:layout_gravity="center_horizontal"
         android:layout_weight="1"
         android:scrollHorizontally="false"
-        android:singleLine="false"
         android:text="@string/loading"
         android:textColor="@android:color/black" />
 

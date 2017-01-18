@@ -25,9 +25,9 @@ import de.tum.in.tumcampusapp.activities.TransportationDetailsActivity;
 import de.tum.in.tumcampusapp.auxiliary.DepartureView;
 import de.tum.in.tumcampusapp.cards.generic.Card;
 import de.tum.in.tumcampusapp.cards.generic.NotificationAwareCard;
-import de.tum.in.tumcampusapp.models.managers.TransportManager;
+import de.tum.in.tumcampusapp.managers.TransportManager;
 
-import static de.tum.in.tumcampusapp.models.managers.CardManager.CARD_MVV;
+import static de.tum.in.tumcampusapp.managers.CardManager.CARD_MVV;
 
 /**
  * Card that shows MVV departure times
@@ -107,17 +107,18 @@ public class MVVCard extends NotificationAwareCard {
     protected Notification fillNotification(NotificationCompat.Builder notificationBuilder) {
         NotificationCompat.WearableExtender morePageNotification = new NotificationCompat.WearableExtender();
 
-        String firstContent = "", firstTime = "";
+        String firstContent = "";
+        String firstTime = "";
         for (TransportManager.Departure d : mDepartures) {
             if (firstTime.isEmpty()) {
                 firstTime = d.countDown + "min";
-                firstContent = d.servingLine;
+                firstContent = d.servingLine + " " + d.direction;
             }
 
             NotificationCompat.Builder pageNotification =
                     new NotificationCompat.Builder(mContext)
                             .setContentTitle(d.countDown + "min")
-                            .setContentText(d.servingLine);
+                            .setContentText(d.servingLine + " " + d.direction);
             morePageNotification.addPage(pageNotification.build());
         }
 

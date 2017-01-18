@@ -16,27 +16,28 @@ import android.widget.EditText;
 import com.google.common.base.Optional;
 import com.google.gson.Gson;
 
+import java.io.IOException;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.ActivityForLoadingInBackground;
 import de.tum.in.tumcampusapp.adapters.ChatRoomListAdapter;
 import de.tum.in.tumcampusapp.adapters.NoResultsAdapter;
+import de.tum.in.tumcampusapp.api.TUMCabeClient;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.exceptions.NoPrivateKey;
-import de.tum.in.tumcampusapp.models.ChatMember;
-import de.tum.in.tumcampusapp.models.ChatRoom;
-import de.tum.in.tumcampusapp.models.ChatVerification;
-import de.tum.in.tumcampusapp.models.LecturesSearchRow;
-import de.tum.in.tumcampusapp.models.LecturesSearchRowSet;
-import de.tum.in.tumcampusapp.models.TUMCabeClient;
-import de.tum.in.tumcampusapp.models.managers.ChatRoomManager;
+import de.tum.in.tumcampusapp.managers.ChatRoomManager;
+import de.tum.in.tumcampusapp.models.tumcabe.ChatMember;
+import de.tum.in.tumcampusapp.models.tumcabe.ChatRoom;
+import de.tum.in.tumcampusapp.models.tumcabe.ChatVerification;
+import de.tum.in.tumcampusapp.models.tumo.LecturesSearchRow;
+import de.tum.in.tumcampusapp.models.tumo.LecturesSearchRowSet;
 import de.tum.in.tumcampusapp.tumonline.TUMOnlineConst;
 import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequest;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
 /**
@@ -108,19 +109,11 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
     }
 
     /**
-     * Checks device for Play Services APK.
-     * Initializes current chat member, if not already initialized
-     * shows dialog to enter display name.
+     * Gets the saved local information for the user
      */
     private void populateCurrentChatMember() {
-        try {
-            if (currentChatMember == null) {
-
-                // Remember this locally
-                currentChatMember = Utils.getSetting(this, Const.CHAT_MEMBER, ChatMember.class);
-            }
-        } catch (RetrofitError e) {
-            Utils.log(e);
+        if (currentChatMember == null) {
+            currentChatMember = Utils.getSetting(this, Const.CHAT_MEMBER, ChatMember.class);
         }
     }
 
@@ -195,10 +188,16 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
         try {
             TUMCabeClient.getInstance(this).createRoom(currentChatRoom, new ChatVerification(this, this.currentChatMember), new Callback<ChatRoom>() {
                 @Override
-                public void success(ChatRoom newlyCreatedChatRoom, Response arg1) {
+                public void onResponse(Call<ChatRoom> call, Response<ChatRoom> response) {
+                    if (!response.isSuccessful()) {
+                        Utils.logv("Error creating&joining chat room: " + response.message());
+                        return;
+                    }
+
                     // The POST request is successful: go to room. API should have auto joined it
-                    Utils.logv("Success creating&joining chat room: " + newlyCreatedChatRoom);
-                    currentChatRoom = newlyCreatedChatRoom;
+                    Utils.logv("Success creating&joining chat room: " + response.body());
+                    currentChatRoom = response.body();
+
                     manager.join(currentChatRoom);
 
                     // When we show joined chat rooms open chat room directly
@@ -217,9 +216,8 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
                 }
 
                 @Override
-                public void failure(RetrofitError arg0) {
-                    //Something went wrong while joining
-                    Utils.logv("Failure creating/joining chat room - trying to GET it from the server: " + arg0);
+                public void onFailure(Call<ChatRoom> call, Throwable t) {
+                    Utils.log(t, "Failure creating/joining chat room - trying to GET it from the server");
                     Utils.showToastOnUIThread(ChatRoomsActivity.this, R.string.activate_key);
                 }
             });
@@ -245,10 +243,10 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
             try {
                 List<ChatRoom> rooms = TUMCabeClient.getInstance(this).getMemberRooms(currentChatMember.getId(), new ChatVerification(this, currentChatMember));
                 manager.replaceIntoRooms(rooms);
-            } catch (RetrofitError e) {
-                Utils.log(e);
             } catch (NoPrivateKey e) {
                 this.finish();
+            } catch (IOException e) {
+                Utils.log(e);
             }
         }
         firstLoad = false;

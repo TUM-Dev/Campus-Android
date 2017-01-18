@@ -24,20 +24,20 @@ import java.util.List;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.cards.generic.Card;
-import de.tum.in.tumcampusapp.models.Question;
-import de.tum.in.tumcampusapp.models.managers.CardManager;
-import de.tum.in.tumcampusapp.models.managers.SurveyManager;
+import de.tum.in.tumcampusapp.managers.CardManager;
+import de.tum.in.tumcampusapp.managers.SurveyManager;
+import de.tum.in.tumcampusapp.models.tumcabe.Question;
 
 public class SurveyCard extends Card {
     private static final String SURVEY_CARD_DISCARDED_TILL = "survey_card_discarded_till";
-    private final List<Question> questions = new ArrayList<>(); // gets filled with the revelant openQuestions for the card
+    private final List<Question> questions = new ArrayList<>(); // gets filled with the relevant openQuestions for the card
     private final SurveyManager manager = new SurveyManager(mContext);
     private TextView mQuestion;
     private Button bYes;
     private Button bNo;
     private Button bSkip;
     private ImageButton bFlagged;
-    private DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss"); // For converting Jade DateTime into String & vic versa (see show and discard functions)
+    private final DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss"); // For converting Jade DateTime into String & vic versa (see show and discard functions)
     // Answer flags relevant for updating the answered questions in the db
 
     private static int answerYes = 1;
@@ -55,7 +55,7 @@ public class SurveyCard extends Card {
     }
 
     /**
-     * Handls the changing content of the survey card
+     * Handles the changing content of the survey card
      *
      * @param viewHolder The Card specific view holder
      */
@@ -123,19 +123,19 @@ public class SurveyCard extends Card {
     }
 
     /**
-     * Help function which calls showfirstquestion recursively
+     * Help function which calls showFirstQuestion() recursively
      * depending on the size of the question Array list
      */
     private void showNextQuestions() {
-        // if the question arraylist is not empty, show the first question (the answered question before got removed from the list)
-        if (questions.size() >= 1) {
-            showFirstQuestion();
-        } else { // show there are no questions avaliable anymore
+        if (questions.isEmpty()) { // show there are no questions available anymore
             mQuestion.setText(R.string.no_questions_available);
             bYes.setVisibility(View.GONE);
             bNo.setVisibility(View.GONE);
             bSkip.setVisibility(View.GONE);
             bFlagged.setVisibility(View.GONE);
+        } else {
+            // if the question arraylist is not empty, show the first question (the answered question before got removed from the list)
+            showFirstQuestion();
         }
     }
 
@@ -153,14 +153,15 @@ public class SurveyCard extends Card {
     }
 
     /**
-     * Shows the card if there are releveant unansweredQuestions (not expired)
+     * Shows the card if there are relevant unansweredQuestions (not expired)
      * AND the discard grace period (if there is any) is finished
      */
     @Override
     protected boolean shouldShow(SharedPreferences p) {
         String currentDate = Utils.getDateTimeString(new Date());
         DateTime discardedTill = fmt.parseDateTime(p.getString(SURVEY_CARD_DISCARDED_TILL, DateTime.now().toString(fmt)));
-        return (discardedTill.isBeforeNow() && (manager.getUnansweredQuestionsSince(currentDate).getCount() >= 1));
+        return discardedTill.isBeforeNow() &&
+                manager.getUnansweredQuestionsSince(currentDate).getCount() >= 1;
     }
 
     @Override
@@ -174,11 +175,11 @@ public class SurveyCard extends Card {
     }
 
     /**
-     * Sets the openquestions (feteched from the server) in the  card
+     * Sets the open questions (fetched from the server) in the  card
      *
-     * @param cur: comprises the fetched openQuestions from the server
+     * @param cur: comprises the fetched open Questions from the server
      */
-    public void seQuestions(Cursor cur) {
+    public void setQuestions(Cursor cur) {
         do {
             Question item = new Question(cur.getString(0), cur.getString(1));
             questions.add(item);

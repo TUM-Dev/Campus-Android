@@ -14,19 +14,21 @@ import android.support.v4.content.LocalBroadcastManager;
 
 import com.google.gson.Gson;
 
+import java.io.IOException;
+
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.ChatActivity;
 import de.tum.in.tumcampusapp.activities.ChatRoomsActivity;
 import de.tum.in.tumcampusapp.activities.MainActivity;
+import de.tum.in.tumcampusapp.api.TUMCabeClient;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.exceptions.NoPrivateKey;
-import de.tum.in.tumcampusapp.models.ChatMember;
-import de.tum.in.tumcampusapp.models.ChatRoom;
-import de.tum.in.tumcampusapp.models.GCMChat;
-import de.tum.in.tumcampusapp.models.TUMCabeClient;
-import de.tum.in.tumcampusapp.models.managers.CardManager;
-import de.tum.in.tumcampusapp.models.managers.ChatMessageManager;
+import de.tum.in.tumcampusapp.managers.CardManager;
+import de.tum.in.tumcampusapp.managers.ChatMessageManager;
+import de.tum.in.tumcampusapp.models.gcm.GCMChat;
+import de.tum.in.tumcampusapp.models.tumcabe.ChatMember;
+import de.tum.in.tumcampusapp.models.tumcabe.ChatRoom;
 
 public class Chat extends GenericNotification {
 
@@ -56,7 +58,11 @@ public class Chat extends GenericNotification {
             this.extras.message = -1;
         }
 
-        this.prepare();
+        try {
+            this.prepare();
+        } catch (IOException e) {
+            Utils.log(e);
+        }
     }
 
     public Chat(String payload, Context context, int notfication) {
@@ -70,10 +76,14 @@ public class Chat extends GenericNotification {
         // parse data
         this.extras = new Gson().fromJson(payload, GCMChat.class);
 
-        this.prepare();
+        try {
+            this.prepare();
+        } catch (IOException e) {
+            Utils.log(e);
+        }
     }
 
-    private void prepare() {
+    private void prepare() throws IOException {
         Utils.logv("Received GCM notification: room=" + this.extras.room + " member=" + this.extras.member + " message=" + this.extras.message);
 
         // Get the data necessary for the ChatActivity
@@ -85,7 +95,7 @@ public class Chat extends GenericNotification {
         try {
             messages = manager.getNewMessages(member, this.extras.message);
         } catch (NoPrivateKey noPrivateKey) {
-            noPrivateKey.printStackTrace();
+            Utils.log(noPrivateKey);
         }
 
         // Notify any open chat activity that a message has been received
@@ -114,6 +124,7 @@ public class Chat extends GenericNotification {
         sBuilder.addNextIntent(notificationIntent);
     }
 
+    @Override
     public Notification getNotification() {
         //Check if chat is currently open then don't show a notification if it is
         if (ChatActivity.mCurrentOpenChatRoom != null && this.extras.room == ChatActivity.mCurrentOpenChatRoom.getId()) {
@@ -160,6 +171,6 @@ public class Chat extends GenericNotification {
 
     @Override
     public int getNotificationIdentification() {
-        return this.extras.room << 4 + Chat.NOTIFICATION_ID;
+        return (this.extras.room << 4) + Chat.NOTIFICATION_ID;
     }
 }

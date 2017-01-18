@@ -31,12 +31,11 @@ Peter Hewitt
 
 package de.tum.in.tumcampusapp.trace;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 
 public final class G {
     public static final String UNKNOWN = "unknown";
-    public static final Boolean BUG_REPORT_DEFAULT = true;
+    public static final boolean BUG_REPORT_DEFAULT = true;
     public static final String TAG = "TCA Error Reporting";
     public static final int MAX_TRACES = 5;
 
@@ -51,7 +50,6 @@ public final class G {
 
     public static String deviceId = UNKNOWN;
 
-    public static Context context;
     public static SharedPreferences preferences;
 
     private G() {

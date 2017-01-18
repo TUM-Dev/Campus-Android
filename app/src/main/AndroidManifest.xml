@@ -37,6 +37,13 @@
     <!-- For QR code scanner -->
     <uses-permission android:name="android.permission.CAMERA" />
 
+    <!-- To start the Silence and Background service on Boot -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
+    <!-- To potentially change the Do Not Disturb mode -->
+    <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
+
+
     <!--
      Creates a custom permission so only this app can receive its messages.
 
@@ -57,6 +64,7 @@
         android:description="@string/app_short_description"
         android:fullBackupContent="true"
         android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:logo="@drawable/tum_logo"
         android:supportsRtl="false"
@@ -78,11 +86,6 @@
         </receiver>
         <receiver android:name=".services.ScanResultsAvailableReceiver">
             <intent-filter>
-
-                <!--
-                <action android:name="android.net.wifi.STATE_CHANGED"/>
-                <action android:name="android.net.wifi.WIFI_STATE_CHANGED"/>
-                -->
                 <action android:name="android.net.wifi.SCAN_RESULTS" />
             </intent-filter>
         </receiver>
@@ -120,9 +123,11 @@
             android:theme="@style/AppThemeStartup">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <meta-data
+                android:name="android.app.shortcuts"
+                android:resource="@xml/shortcuts" />
         </activity>
         <activity
             android:name=".activities.MainActivity"
@@ -157,6 +162,25 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.tum.in.tumcampusapp.activities.PlansActivity" />
+        </activity>
+        <activity
+            android:name=".activities.GradeChartActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/my_grades"
+            android:parentActivityName=".activities.GradesActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="de.tum.in.tumcampusapp.activities.GradesActivity" />
+        </activity>
+        <activity
+            android:name=".activities.GradesActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/my_grades"
+            android:launchMode="singleTop"
+            android:parentActivityName=".activities.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="de.tum.in.tumcampusapp.activities.MainActivity" />
         </activity>
         <activity
             android:name=".activities.UserPreferencesActivity"
@@ -392,16 +416,6 @@
                 android:value="de.tum.in.tumcampusapp.activities.OrganisationActivity" />
         </activity>
         <activity
-            android:name=".activities.EventActivity"
-            android:label="@string/app_name"
-            android:theme="@style/AppTheme"
-            android:launchMode="singleTop"
-            android:parentActivityName=".activities.MainActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.tum.in.tumcampusapp.activities.MainActivity" />
-        </activity>
-        <activity
             android:name=".activities.SetupEduroamActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/app_name" />
@@ -411,14 +425,6 @@
             android:label="@string/app_name" />
         <activity
             android:name=".activities.wizard.WizNavCheckTokenActivity"
-            android:configChanges="orientation|screenSize"
-            android:label="@string/app_name" />
-        <activity
-            android:name=".activities.wizard.WizNavChatActivity"
-            android:configChanges="orientation|screenSize"
-            android:label="@string/app_name" />
-        <activity
-            android:name=".activities.wizard.WizNavActivatePublicKeyActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/app_name" />
         <activity
@@ -479,11 +485,51 @@
                 android:value="de.tum.in.tumcampusapp.activities.MainActivity" />
         </activity>
 
+        <!-- receiver for the mensaWidget -->
+        <receiver
+            android:name=".widgets.MensaWidget"
+            android:label="@string/mensa_widget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/mensa_widget_info" />
+        </receiver>
+
+        <!-- receiver for the MVVWidget -->
+        <service
+            android:name=".services.MensaWidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
+
+        <service
+            android:name=".widgets.CardsWidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
+
+        <receiver android:name=".widgets.CardsWidget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/cards_widget_info" />
+        </receiver>
+
+        <activity android:name=".widgets.CardsWidgetConfigureActivity">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
+
         <!-- Used to reset Alarm when device has been restarted -->
         <receiver android:name=".services.StartSyncReceiver">
             <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
                 <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
+                <action android:name="android.net.wifi.SCAN_RESULTS" />
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
             </intent-filter>
         </receiver>
 
@@ -513,7 +559,7 @@
             android:name=".services.ScanResultsAvailableReceiver$NeverShowAgain"
             android:exported="false" />
         <service
-            android:name=".models.managers.CalendarManager$QueryLocationsService"
+            android:name=".managers.CalendarManager$QueryLocationsService"
             android:exported="false" />
         <service
             android:name=".services.GcmReceiverService"

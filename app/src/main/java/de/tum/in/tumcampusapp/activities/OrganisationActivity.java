@@ -17,8 +17,8 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.ActivityForAccessingTumOnline;
 import de.tum.in.tumcampusapp.adapters.OrgItemListAdapter;
 import de.tum.in.tumcampusapp.auxiliary.Const;
-import de.tum.in.tumcampusapp.models.OrgItem;
-import de.tum.in.tumcampusapp.models.OrgItemList;
+import de.tum.in.tumcampusapp.models.tumo.OrgItem;
+import de.tum.in.tumcampusapp.models.tumo.OrgItemList;
 import de.tum.in.tumcampusapp.tumonline.TUMOnlineConst;
 
 /**
@@ -157,9 +157,9 @@ public class OrganisationActivity extends ActivityForAccessingTumOnline<OrgItemL
      * Show all items in a certain layer having a parent element with parent_id
      * parent.
      *
-     * @param parent all items with the same parent
+     * @param orgItem all items with the same parent
      */
-    void showItems(String parent) {
+    void showItems(String orgItem) {
 
         // caption button gets caption
         TextView tvCaption = (TextView) findViewById(R.id.tvCaption);
@@ -177,7 +177,7 @@ public class OrganisationActivity extends ActivityForAccessingTumOnline<OrgItemL
         // go through the XML file and give each organisation its Id, German
         // name, English name and parent-Id
         for (OrgItem item : result.getGroups()) {
-            if (item.getParentId().equals(parent)) {
+            if (item.getParentId().equals(orgItem)) {
                 organisationList.add(item);
             }
         }

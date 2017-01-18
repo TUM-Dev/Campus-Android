@@ -1,14 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:paddingBottom="3dp"
-    android:paddingEnd="0dp"
-    android:paddingLeft="8dp"
-    android:paddingRight="0dp"
-    android:paddingStart="8dp"
-    android:paddingTop="3dp">
+    android:layout_height="wrap_content">
 
     <LinearLayout
         android:id="@+id/chatMessageLayout"
@@ -16,55 +11,57 @@
         android:layout_height="match_parent"
         android:layout_gravity="end"
         android:background="@drawable/bg_message_outgoing"
+        android:gravity="end"
         android:orientation="vertical"
         android:paddingBottom="5dp"
-        android:paddingLeft="18dp"
-        android:paddingRight="18dp"
-        android:paddingTop="5dp">
-
-        <TextView
-            android:id="@+id/tvUser"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="#7cbc49"
-            android:textSize="12sp"
-            android:textStyle="bold" />
+        android:paddingEnd="10dp"
+        android:paddingLeft="14dp"
+        android:paddingRight="14dp"
+        android:paddingStart="10dp"
+        android:paddingTop="5dp"
+        tools:ignore="UselessParent">
 
         <TextView
             android:id="@+id/tvMessage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="16sp" />
+            android:textSize="16sp"/>
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:gravity="end">
 
             <TextView
                 android:id="@+id/tvTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingEnd="8dp"
-                android:paddingRight="8dp"
-                android:textSize="12sp" />
+                android:paddingRight="0dp"
+                android:textSize="12sp"
+                android:textColor="@color/text_light_gray"
+                android:includeFontPadding="false"
+                tools:ignore="RtlSymmetry"/>
 
             <ProgressBar
                 android:id="@+id/progressBar"
                 style="?android:attr/progressBarStyleSmall"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="12sp"/>
 
             <ImageView
                 android:id="@+id/sentImage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
                 android:contentDescription="@string/status_sent"
+                android:layout_margin="0dp"
+                android:padding="0dp"
                 android:src="@drawable/ic_done"
-                android:textSize="12sp"
-                android:visibility="gone" />
+                android:textColor="@color/text_light_gray"
+                android:layout_weight="1"
+                android:visibility="gone"/>
         </LinearLayout>
 
     </LinearLayout>
-
 </FrameLayout>

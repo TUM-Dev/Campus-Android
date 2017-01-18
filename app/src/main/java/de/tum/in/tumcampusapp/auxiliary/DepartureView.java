@@ -1,5 +1,6 @@
 package de.tum.in.tumcampusapp.auxiliary;
 
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.os.Handler;
 import android.view.Gravity;
@@ -10,8 +11,6 @@ import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
 import android.widget.TextSwitcher;
 import android.widget.TextView;
-
-import com.nineoldandroids.animation.ValueAnimator;
 
 import de.tum.in.tumcampusapp.R;
 
@@ -25,9 +24,9 @@ public class DepartureView extends LinearLayout {
     private final TextView mSymbolView;
     private final TextView mLineView;
     private final TextSwitcher mTimeSwitcher;
-    private int mCountDown;
     private final Handler mHandler;
     private final ValueAnimator mValueAnimator;
+    private int mCountDown;
 
     /**
      * Standard constructor for DepartureView
@@ -148,7 +147,7 @@ public class DepartureView extends LinearLayout {
     /**
      * Call this, when the DepartureView isn't needed anymore.
      */
-    public void removeAllCallbacksAndMessages(){
+    public void removeAllCallbacksAndMessages() {
         mHandler.removeCallbacksAndMessages(null);
         mValueAnimator.cancel();
         mValueAnimator.removeAllUpdateListeners();

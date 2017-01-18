@@ -7,7 +7,8 @@ import android.os.Build;
 import com.google.common.base.Optional;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.models.AccessToken;
+import de.tum.in.tumcampusapp.exceptions.NoPublicKey;
+import de.tum.in.tumcampusapp.models.tumo.AccessToken;
 import de.tum.in.tumcampusapp.tumonline.TUMOException;
 import de.tum.in.tumcampusapp.tumonline.TUMOnlineConst;
 import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequest;
@@ -17,7 +18,6 @@ import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequest;
  */
 public class AccessTokenManager {
     public static final int MIN_LRZ_LENGTH = 7;
-
     private final Context context;
 
     public AccessTokenManager(Context context) {
@@ -34,24 +34,18 @@ public class AccessTokenManager {
      * @return the access token
      */
     String generateAccessToken(String lrzId) throws TUMOException {
-        // we don't have an access token yet, though we take the constructor
-        // with only one parameter to set the method
+        // we don't have an access token yet, though we take the constructor with only one parameter to set the method
         TUMOnlineRequest<AccessToken> request = new TUMOnlineRequest<>(TUMOnlineConst.REQUEST_TOKEN, context, false);
-
-        // add lrzId to parameters
-        request.setParameter("pUsername", lrzId);
-
-        // add readable name for TUMOnline
-        request.setParameter("pTokenName", "TUMCampusApp-" + Build.PRODUCT);
+        request.setParameter("pUsername", lrzId); // add lrzId to parameters
+        request.setParameter("pTokenName", "TUMCampusApp-" + Build.PRODUCT); // add readable name for TUMOnline
 
         // fetch the xml response of requestToken
         Optional<AccessToken> token = request.fetch();
-
-        //Try to get the token
-        if (token.isPresent()) {
-            return token.get().getToken();
+        if (!token.isPresent()) {
+            throw new TUMOException(request.getLastError());
         }
-        throw new TUMOException(request.getLastError());
+
+        return token.get().getToken();
     }
 
     /**
@@ -79,20 +73,28 @@ public class AccessTokenManager {
                 return false;
             }
             // ok, do the request now
-            String strAccessToken = generateAccessToken(lrzId);
+            String strAccessToken = this.generateAccessToken(lrzId);
             Utils.log("AcquiredAccessToken = " + strAccessToken);
 
             // save access token to preferences
             Utils.setSetting(context, Const.ACCESS_TOKEN, strAccessToken);
-            return true;
 
+            //Upload the secret to this new generated token
+            AuthenticationManager am = new AuthenticationManager(activity);
+            try {
+                am.uploadPublicKey();
+            } catch (NoPublicKey noPublicKey) {
+                Utils.log(noPublicKey);
+            }
+
+            return true;
         } catch (TUMOException ex) {
             Utils.log(ex, context.getString(R.string.access_token_wasnt_generated) + ex.errorMessage);
             // set access token to null
             Utils.setSetting(context, Const.ACCESS_TOKEN, null);
 
             Utils.showToastOnUIThread(activity, ex.errorMessage);
-        } catch (Exception ex) {
+        } catch (Exception ex) { //NOPMD
             Utils.log(ex, context.getString(R.string.access_token_wasnt_generated));
             // set access token to null
             Utils.setSetting(context, Const.ACCESS_TOKEN, null);
