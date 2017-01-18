@@ -27,6 +27,7 @@ import de.tum.in.tumcampusapp.auxiliary.Utils;
  */
 public class EduroamManager {
     public static final String NETWORK_SSID = "eduroam";
+    public static final String RADIUS_DNS = "radius.lrz.de";
     private static final String INT_PHASE2 = "phase2";
     private static final String INT_PASSWORD = "password";
     private static final String INT_IDENTITY = "identity";
@@ -62,11 +63,11 @@ public class EduroamManager {
 
     /**
      * Configures eduroam wifi connection
-     * @param lrzId User's LRZ-ID
+     *
+     * @param lrzId       User's LRZ-ID
      * @param networkPass User's lrz password
      * @return Returns true if configuration was successful, false otherwise
      */
-    @TargetApi(18)
     public boolean configureEduroam(String lrzId, String networkPass) {
         // Configure Wifi
         WifiConfiguration conf = new WifiConfiguration();
@@ -83,69 +84,9 @@ public class EduroamManager {
         conf.status = WifiConfiguration.Status.ENABLED;
 
         if (Build.VERSION.SDK_INT >= 18) {
-            conf.enterpriseConfig.setIdentity(lrzId + "@eduroam.mwn.de");
-            conf.enterpriseConfig.setPassword(networkPass);
-            conf.enterpriseConfig.setEapMethod(WifiEnterpriseConfig.Eap.PEAP);
-            conf.enterpriseConfig.setPhase2Method(WifiEnterpriseConfig.Phase2.MSCHAPV2);
-            conf.enterpriseConfig.setAnonymousIdentity("anonymous@mwn.de");
-
-            // Install certificate
-            X509Certificate cert;
-            try {
-                InputStream is = mContext.getResources().openRawResource(R.raw.rootcert);
-                CertificateFactory certFactory = CertificateFactory.getInstance("X.509");
-                cert = (X509Certificate) certFactory.generateCertificate(is);
-            } catch (CertificateException e) {
-                Utils.log(e);
-                return false;
-            }
-            conf.enterpriseConfig.setCaCertificate(cert);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                conf.enterpriseConfig.setDomainSuffixMatch("radius.lrz.de");
-                conf.enterpriseConfig.setAltSubjectMatch("DNS:radius.lrz.de");
-            }else {
-                conf.enterpriseConfig.setSubjectMatch("radius.lrz.de");
-            }
+            setupEnterpriseConfigAPI18(conf, lrzId, networkPass);
         } else {
-
-            try {
-                // Get class instance for enterprise field class and than find setValue Method
-                Method wcefSetValue = null;
-                Class<?>[] wcClasses = WifiConfiguration.class.getClasses();
-                for (Class<?> wcClass : wcClasses) {
-                    if (wcClass.getName().equals(INT_ENTERPRISE_FIELD_NAME)) {
-                        for (Method m : wcClass.getMethods()) {
-                            if (m.getName().trim().equals("setValue")) {
-                                wcefSetValue = m;
-                                break;
-                            }
-                        }
-                        break;
-                    }
-                }
-
-                if (wcefSetValue == null) {
-                    return false;
-                }
-
-                Field[] wcefFields = WifiConfiguration.class.getFields();
-                for (Field wcefField : wcefFields) {
-                        if (wcefField.getName().trim().equals(INT_ANONYMOUS_IDENTITY)) {
-                            wcefSetValue.invoke(wcefField.get(conf), "anonymous@mwn.de");
-                        } else if (wcefField.getName().trim().equals(INT_CA_CERT)) {
-                            wcefSetValue.invoke(wcefField.get(conf), "keystore://CACERT_eduroam");
-                        } else if (wcefField.getName().trim().equals(INT_EAP)) {
-                            wcefSetValue.invoke(wcefField.get(conf), "PEAP");
-                        } else if (wcefField.getName().trim().equals(INT_IDENTITY)) {
-                            wcefSetValue.invoke(wcefField.get(conf), lrzId + "@eduroam.mwn.de");
-                        } else if (wcefField.getName().trim().equals(INT_PASSWORD)) {
-                            wcefSetValue.invoke(wcefField.get(conf), networkPass);
-                        } else if (wcefField.getName().trim().equals(INT_PHASE2)) {
-                            wcefSetValue.invoke(wcefField.get(conf), "MSCHAPV2");
-                        }
-                }
-            } catch (Exception e) {
-                Utils.log(e);
+            if (!setupEnterpriseConfigOld(conf, lrzId, networkPass)) {
                 return false;
             }
         }
@@ -158,5 +99,87 @@ public class EduroamManager {
             wifiManager.saveConfiguration();
         }
         return networkId != -1;
+    }
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
+    private void setupEnterpriseConfigAPI18(WifiConfiguration conf, String lrzId, String networkPass) {
+        conf.enterpriseConfig.setIdentity(lrzId + "@eduroam.mwn.de");
+        conf.enterpriseConfig.setPassword(networkPass);
+        conf.enterpriseConfig.setEapMethod(WifiEnterpriseConfig.Eap.PEAP);
+        conf.enterpriseConfig.setPhase2Method(WifiEnterpriseConfig.Phase2.MSCHAPV2);
+        conf.enterpriseConfig.setAnonymousIdentity("anonymous@mwn.de");
+
+        // Install certificate
+        X509Certificate cert;
+        try {
+            InputStream is = mContext.getResources().openRawResource(R.raw.rootcert);
+            CertificateFactory certFactory = CertificateFactory.getInstance("X.509");
+            cert = (X509Certificate) certFactory.generateCertificate(is);
+        } catch (CertificateException e) {
+            Utils.log(e);
+            throw new AssertionError("Certificate corrupt!");
+        }
+        conf.enterpriseConfig.setCaCertificate(cert);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            setSubjectMatchAPI23(conf);
+        } else {
+            setSubjectMatchOld(conf);
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.M)
+    private void setSubjectMatchAPI23(WifiConfiguration conf) {
+        conf.enterpriseConfig.setDomainSuffixMatch(RADIUS_DNS);
+        conf.enterpriseConfig.setAltSubjectMatch("DNS:" + RADIUS_DNS);
+    }
+
+    @TargetApi(18)
+    @SuppressWarnings("deprecation")
+    private void setSubjectMatchOld(WifiConfiguration conf) {
+        conf.enterpriseConfig.setSubjectMatch(RADIUS_DNS);
+    }
+
+    private boolean setupEnterpriseConfigOld(WifiConfiguration conf, String lrzId, String networkPass) {
+        try {
+            // Get class instance for enterprise field class and than find setValue Method
+            Method wcefSetValue = null;
+            Class<?>[] wcClasses = WifiConfiguration.class.getClasses();
+            for (Class<?> wcClass : wcClasses) {
+                if (wcClass.getName().equals(INT_ENTERPRISE_FIELD_NAME)) {
+                    for (Method m : wcClass.getMethods()) {
+                        if (m.getName().trim().equals("setValue")) {
+                            wcefSetValue = m;
+                            break;
+                        }
+                    }
+                    break;
+                }
+            }
+
+            if (wcefSetValue == null) {
+                return false;
+            }
+
+            Field[] wcefFields = WifiConfiguration.class.getFields();
+            for (Field wcefField : wcefFields) {
+                if (wcefField.getName().trim().equals(INT_ANONYMOUS_IDENTITY)) {
+                    wcefSetValue.invoke(wcefField.get(conf), "anonymous@mwn.de");
+                } else if (wcefField.getName().trim().equals(INT_CA_CERT)) {
+                    wcefSetValue.invoke(wcefField.get(conf), "keystore://CACERT_eduroam");
+                } else if (wcefField.getName().trim().equals(INT_EAP)) {
+                    wcefSetValue.invoke(wcefField.get(conf), "PEAP");
+                } else if (wcefField.getName().trim().equals(INT_IDENTITY)) {
+                    wcefSetValue.invoke(wcefField.get(conf), lrzId + "@eduroam.mwn.de");
+                } else if (wcefField.getName().trim().equals(INT_PASSWORD)) {
+                    wcefSetValue.invoke(wcefField.get(conf), networkPass);
+                } else if (wcefField.getName().trim().equals(INT_PHASE2)) {
+                    wcefSetValue.invoke(wcefField.get(conf), "MSCHAPV2");
+                }
+            }
+        } catch (Exception e) {
+            Utils.log(e);
+            return false;
+        }
+        return true;
     }
 }
