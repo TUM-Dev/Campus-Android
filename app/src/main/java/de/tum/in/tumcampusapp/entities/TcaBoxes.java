@@ -5,23 +5,23 @@ import android.content.Context;
 
 import io.objectbox.BoxStore;
 
-public class MyBoxStore {
+public class TcaBoxes {
 
-    private static MyBoxStore instance = null;
+    private static TcaBoxes instance = null;
     private BoxStore bs;
 
-    private MyBoxStore(Context c) {
+    private TcaBoxes(Context c) {
 
         //Build & attach the boxstore
         bs = MyObjectBox.builder().androidContext(c).build();
     }
 
-    public static MyBoxStore init(Context c) {
+    public static TcaBoxes init(Context c) {
         if (instance != null) {
             return instance;
         }
 
-        instance = new MyBoxStore(c);
+        instance = new TcaBoxes(c);
         return instance;
     }
 

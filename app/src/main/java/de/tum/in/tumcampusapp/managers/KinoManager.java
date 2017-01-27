@@ -10,7 +10,7 @@ import de.tum.in.tumcampusapp.api.TUMCabeClient;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.entities.Movie;
-import de.tum.in.tumcampusapp.entities.MyBoxStore;
+import de.tum.in.tumcampusapp.entities.TcaBoxes;
 import io.objectbox.Box;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -31,7 +31,7 @@ public class KinoManager extends AbstractManager {
      */
     public KinoManager(Context context) {
         super(context);
-        kinoBox = MyBoxStore.getBoxStore().boxFor(Movie.class);
+        kinoBox = TcaBoxes.getBoxStore().boxFor(Movie.class);
     }
 
     /**

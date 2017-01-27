@@ -21,7 +21,7 @@ import de.tum.in.tumcampusapp.auxiliary.AccessTokenManager;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.entities.CacheItem;
 import de.tum.in.tumcampusapp.entities.CacheItem_;
-import de.tum.in.tumcampusapp.entities.MyBoxStore;
+import de.tum.in.tumcampusapp.entities.TcaBoxes;
 import de.tum.in.tumcampusapp.models.tumo.CalendarRowSet;
 import de.tum.in.tumcampusapp.models.tumo.LecturesSearchRow;
 import de.tum.in.tumcampusapp.models.tumo.LecturesSearchRowSet;
@@ -73,7 +73,7 @@ public class CacheManager extends AbstractManager {
         super(context);
 
         // create table if needed
-        cacheBox = MyBoxStore.getBoxStore().boxFor(CacheItem.class);
+        cacheBox = TcaBoxes.getBoxStore().boxFor(CacheItem.class);
 
         // Delete all entries that are too old and delete corresponding image files
         this.clearCache(true);
