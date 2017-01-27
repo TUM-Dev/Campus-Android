@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'io.objectbox'
 apply from: '../findbugs.gradle'
 apply from: '../pmd.gradle'
 
@@ -74,6 +75,7 @@ dependencies {
     compile 'de.hdodenhof:circleimageview:2.1.0'
     compile 'net.danlew:android.joda:2.9.5'
     compile 'com.github.franmontiel:PersistentCookieJar:v1.0.0'
+    compile 'io.objectbox:objectbox-android:0.9.6'
 
     androidTestCompile 'com.android.support:support-annotations:25.1.0'
     androidTestCompile 'com.android.support.test:runner:0.5'

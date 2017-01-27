@@ -4,12 +4,12 @@ buildscript {
     repositories {
         jcenter()
         mavenCentral()
-        maven {
-            url "https://plugins.gradle.org/m2/"
-        }
+        maven { url "https://plugins.gradle.org/m2/" }
+        maven { url "http://objectbox.net/beta-repo/" }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.2.3'
+        classpath 'io.objectbox:objectbox-gradle-plugin:0.9.6'
     }
 }
 
@@ -20,6 +20,8 @@ allprojects {
     }
     repositories {
         jcenter()
+        mavenCentral()
         maven { url "https://jitpack.io" }
+        maven { url "http://objectbox.net/beta-repo/" }
     }
 }

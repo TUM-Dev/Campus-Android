@@ -1,7 +1,6 @@
 package de.tum.in.tumcampusapp.adapters;
 
 
-import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -11,24 +10,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.auxiliary.Const;
+import de.tum.in.tumcampusapp.entities.Movie;
 import de.tum.in.tumcampusapp.fragments.KinoDetailsFragment;
 
 /**
- * Adapter class for Kino. Handels content for KinoActivity
+ * Adapter class for Movie. Handels content for KinoActivity
  */
 public class KinoAdapter extends FragmentStatePagerAdapter {
 
     private final int count; //number of pages
     private final List<String> titles = new ArrayList<>();  // titles shown in the pagerStrip
 
-    public KinoAdapter(FragmentManager fm, Cursor cursor) {
+    public KinoAdapter(FragmentManager fm, List<Movie> allMovies) {
         super(fm);
-        count = cursor.getCount();
+        count = allMovies.size();
 
         // get all titles
         for (int i = 0; i < count; i++) {
-            cursor.moveToPosition(i);
-            titles.add(i, cursor.getString(cursor.getColumnIndex(Const.JSON_TITLE)));
+            titles.add(i, allMovies.get(i).getTitle());
         }
 
         this.notifyDataSetChanged();

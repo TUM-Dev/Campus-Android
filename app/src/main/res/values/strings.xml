@@ -339,7 +339,7 @@
     <string name="closes">Closes</string>
     <string name="closed">Closed</string>
 
-    <!-- Kino -->
+    <!-- Movie -->
     <string name="kino" translatable="false">TU Kino</string>
     <string name="imdb_rating">IMDb-Rating</string>
     <string name="year">Year of release</string>

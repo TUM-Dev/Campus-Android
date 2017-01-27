@@ -125,16 +125,7 @@ public class CacheManager extends AbstractManager {
 
         // Cache kino covers
         KinoManager km = new KinoManager(mContext);
-        cur = km.getAllFromDb();
-        if (cur.moveToFirst()) {
-            do {
-                String imgUrl = cur.getString(cur.getColumnIndex(Const.JSON_COVER));
-                if (!"null".equals(imgUrl)) {
-                    net.downloadImage(imgUrl);
-                }
-            } while (cur.moveToNext());
-        }
-        cur.close();
+        km.cacheCovers();
 
         // acquire access token
         if (!new AccessTokenManager(mContext).hasValidAccessToken()) {

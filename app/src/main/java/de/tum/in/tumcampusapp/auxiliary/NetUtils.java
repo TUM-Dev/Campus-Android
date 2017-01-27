@@ -246,6 +246,7 @@ public class NetUtils {
             @Override
             protected void onPostExecute(Optional<Bitmap> bitmap) {
                 if (!bitmap.isPresent()) {
+                    Utils.log("Download of image failed: " + url);
                     return;
                 }
                 synchronized (CacheManager.BITMAP_CACHE) {

@@ -34,11 +34,14 @@ import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.FileUtils;
 import de.tum.in.tumcampusapp.auxiliary.ImplicitCounter;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
+import de.tum.in.tumcampusapp.entities.MyBoxStore;
+import de.tum.in.tumcampusapp.entities.MyObjectBox;
 import de.tum.in.tumcampusapp.managers.AbstractManager;
 import de.tum.in.tumcampusapp.managers.CardManager;
 import de.tum.in.tumcampusapp.services.DownloadService;
 import de.tum.in.tumcampusapp.services.StartSyncReceiver;
 import de.tum.in.tumcampusapp.trace.ExceptionHandler;
+import io.objectbox.BoxStore;
 
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
@@ -82,6 +85,8 @@ public class StartupActivity extends AppCompatActivity {
         //Upload stats
         ImplicitCounter.count(this);
         ImplicitCounter.submitCounter(this);
+
+        MyBoxStore.init(this);
 
         // For compatibility reasons: big update happened with version 35
         int prevVersion = Utils.getInternalSettingInt(this, Const.APP_VERSION, 35);
