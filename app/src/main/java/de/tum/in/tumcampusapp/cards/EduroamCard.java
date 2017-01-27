@@ -17,7 +17,7 @@ import de.tum.in.tumcampusapp.activities.SetupEduroamActivity;
 import de.tum.in.tumcampusapp.cards.generic.Card;
 import de.tum.in.tumcampusapp.cards.generic.NotificationAwareCard;
 import de.tum.in.tumcampusapp.managers.CardManager;
-import de.tum.in.tumcampusapp.managers.EduroamManager;
+import de.tum.in.tumcampusapp.auxiliary.EduroamHelper;
 
 /**
  * Card that can start {@link SetupEduroamActivity}
@@ -40,7 +40,7 @@ public class EduroamCard extends NotificationAwareCard {
 
     @Override
     protected boolean shouldShow(SharedPreferences prefs) {
-        EduroamManager manager = new EduroamManager(mContext);
+        EduroamHelper manager = new EduroamHelper(mContext);
         return !manager.isConfigured();
     }
 

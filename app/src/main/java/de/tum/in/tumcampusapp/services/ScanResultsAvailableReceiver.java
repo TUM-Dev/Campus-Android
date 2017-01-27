@@ -17,7 +17,7 @@ import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.SetupEduroamActivity;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
-import de.tum.in.tumcampusapp.managers.EduroamManager;
+import de.tum.in.tumcampusapp.auxiliary.EduroamHelper;
 
 /**
  * Listens for android's ScanResultsAvailable broadcast and checks if eduroam is nearby.
@@ -32,7 +32,7 @@ public class ScanResultsAvailableReceiver extends BroadcastReceiver {
             return;
         }
         // SurveyCard if user has eduroam configured already
-        EduroamManager man = new EduroamManager(context);
+        EduroamHelper man = new EduroamHelper(context);
         boolean show = Utils.getSettingBool(context, "card_eduroam_phone", true);
         if (man.isConfigured() || NetUtils.isConnected(context) || Build.VERSION.SDK_INT < 18 || !show) {
             return;
@@ -42,7 +42,7 @@ public class ScanResultsAvailableReceiver extends BroadcastReceiver {
         WifiManager wifi = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
         List<ScanResult> scan = wifi.getScanResults();
         for(ScanResult network : scan) {
-            if (network.SSID.equals(EduroamManager.NETWORK_SSID)) {
+            if (network.SSID.equals(EduroamHelper.NETWORK_SSID)) {
                 //Show notification
                 showNotification(context);
                 return;
