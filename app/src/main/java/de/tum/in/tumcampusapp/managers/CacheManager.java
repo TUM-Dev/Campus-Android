@@ -2,12 +2,13 @@ package de.tum.in.tumcampusapp.managers;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteException;
 import android.graphics.Bitmap;
 import android.support.v4.util.LruCache;
 import android.widget.ImageView;
 
 import com.google.common.base.Optional;
+
+import org.joda.time.DateTime;
 
 import java.io.File;
 import java.util.Collections;
@@ -17,9 +18,10 @@ import java.util.WeakHashMap;
 
 import de.tum.in.tumcampusapp.activities.CurriculaActivity;
 import de.tum.in.tumcampusapp.auxiliary.AccessTokenManager;
-import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
-import de.tum.in.tumcampusapp.auxiliary.Utils;
+import de.tum.in.tumcampusapp.entities.CacheItem;
+import de.tum.in.tumcampusapp.entities.CacheItem_;
+import de.tum.in.tumcampusapp.entities.MyBoxStore;
 import de.tum.in.tumcampusapp.models.tumo.CalendarRowSet;
 import de.tum.in.tumcampusapp.models.tumo.LecturesSearchRow;
 import de.tum.in.tumcampusapp.models.tumo.LecturesSearchRowSet;
@@ -27,6 +29,8 @@ import de.tum.in.tumcampusapp.models.tumo.OrgItemList;
 import de.tum.in.tumcampusapp.models.tumo.TuitionList;
 import de.tum.in.tumcampusapp.tumonline.TUMOnlineConst;
 import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequest;
+import io.objectbox.Box;
+
 
 /**
  * TUMOnline cache manager, allows caching of TUMOnline requests
@@ -47,6 +51,7 @@ public class CacheManager extends AbstractManager {
 
     public static final Map<ImageView, String> IMAGE_VIEWS = Collections.synchronizedMap(new WeakHashMap<ImageView, String>());
     public static final LruCache<String, Bitmap> BITMAP_CACHE;
+    private Box<CacheItem> cacheBox;
 
     static {
         int cacheSize = 4 * 1024 * 1024; // 4MiB
@@ -59,7 +64,6 @@ public class CacheManager extends AbstractManager {
         };
     }
 
-
     /**
      * Constructor, open/create database, create table if necessary
      *
@@ -69,22 +73,10 @@ public class CacheManager extends AbstractManager {
         super(context);
 
         // create table if needed
-        db.execSQL("CREATE TABLE IF NOT EXISTS cache (url VARCHAR UNIQUE, data BLOB, " +
-                "validity VARCHAR, max_age VARCHAR, typ INTEGER)");
+        cacheBox = MyBoxStore.getBoxStore().boxFor(CacheItem.class);
 
         // Delete all entries that are too old and delete corresponding image files
-        db.beginTransaction();
-        Cursor cur = db.rawQuery("SELECT data FROM cache WHERE datetime()>max_age AND typ=1", null);
-        if (cur.moveToFirst()) {
-            do {
-                File f = new File(cur.getString(0));
-                f.delete();
-            } while (cur.moveToNext());
-        }
-        cur.close();
-        db.execSQL("DELETE FROM cache WHERE datetime()>max_age");
-        db.setTransactionSuccessful();
-        db.endTransaction();
+        this.clearCache(true);
     }
 
     /**
@@ -147,7 +139,21 @@ public class CacheManager extends AbstractManager {
         }
 
         // Sync lectures, details and appointments
-        importLecturesFromTUMOnline();
+        TUMOnlineRequest<LecturesSearchRowSet> requestHandler3 = new TUMOnlineRequest<>(TUMOnlineConst.LECTURES_PERSONAL, mContext);
+        if (!shouldRefresh(requestHandler3.getRequestURL())) {
+            return;
+        }
+
+        Optional<LecturesSearchRowSet> lecturesList = requestHandler3.fetch();
+        if (!lecturesList.isPresent()) {
+            return;
+        }
+        List<LecturesSearchRow> lectures = lecturesList.get().getLehrveranstaltungen();
+        if (lectures == null) {
+            return;
+        }
+        ChatRoomManager manager = new ChatRoomManager(mContext);
+        manager.replaceInto(lectures);
 
         // Sync calendar
         syncCalendar();
@@ -177,16 +183,11 @@ public class CacheManager extends AbstractManager {
     public Optional<String> getFromCache(String url) {
         String result = null;
 
-        try {
-            Cursor c = db.rawQuery("SELECT data FROM cache WHERE url=? AND datetime()<max_age", new String[]{url});
-            if (c.getCount() == 1) {
-                c.moveToFirst();
-                result = c.getString(0);
-            }
-            c.close();
-        } catch (SQLiteException e) {
-            Utils.log(e);
+        CacheItem e = cacheBox.query().equal(CacheItem_.url, url).build().findFirst();
+        if (e != null && isValidDate(e.getMaxAge())) {
+            result = e.getData();
         }
+
         return Optional.fromNullable(result);
     }
 
@@ -199,15 +200,11 @@ public class CacheManager extends AbstractManager {
     public boolean shouldRefresh(String url) {
         boolean result = true;
 
-        try {
-            Cursor c = db.rawQuery("SELECT url FROM cache WHERE url=? AND datetime() < validity", new String[]{url});
-            if (c.getCount() == 1) {
-                result = false;
-            }
-            c.close();
-        } catch (SQLiteException e) {
-            Utils.log(e);
+        CacheItem e = cacheBox.query().equal(CacheItem_.url, url).build().findFirst();
+        if (e != null && isValidDate(e.getMaxAge())) {
+            result = false;
         }
+
         return result;
     }
 
@@ -217,47 +214,41 @@ public class CacheManager extends AbstractManager {
      * @param url  url from where the data was fetched
      * @param data result
      */
-    public void addToCache(String url, String data, int validity, int typ) {
+    public void addToCache(String url, String data, int validity, int type) {
         if (validity == VALIDITY_DO_NOT_CACHE) {
             return;
         }
-        db.execSQL("REPLACE INTO cache (url, data, validity, max_age, typ) " +
-                        "VALUES (?, ?, datetime('now','+" + (validity / 2) + " seconds'), " +
-                        "datetime('now','+" + validity + " seconds'), ?)",
-                new String[]{url, data, String.valueOf(typ)});
+        DateTime maxAge = DateTime.now().plusSeconds(validity);
+        CacheItem e = new CacheItem(url, data, validity, maxAge, type);
+        this.cacheBox.put(e);
     }
 
     /**
-     * this function allows us to import all lecture items from TUMOnline
+     * @param onlyOld should all entries or only expired entries be removed?
      */
-    public void importLecturesFromTUMOnline() {
-        // get my lectures
-        TUMOnlineRequest<LecturesSearchRowSet> requestHandler = new TUMOnlineRequest<>(TUMOnlineConst.LECTURES_PERSONAL, mContext);
-        if (!shouldRefresh(requestHandler.getRequestURL())) {
-            return;
-        }
+    public void clearCache(boolean onlyOld) {
+        // Delete all entries that are too old and delete corresponding image files
+        List<CacheItem> all = cacheBox.getAll();
+        for (CacheItem e : all) {
+            if (onlyOld && isValidDate(e.getMaxAge())) {
+                continue;
+            }
 
-        Optional<LecturesSearchRowSet> lecturesList = requestHandler.fetch();
-        if (!lecturesList.isPresent()) {
-            return;
+            //Delete the file
+            if (e.getTyp() == CACHE_TYP_IMAGE) {
+                File f = new File(e.getData());
+                f.delete();
+            }
+
+            //Remove from db
+            cacheBox.remove(e);
         }
-        List<LecturesSearchRow> lectures = lecturesList.get().getLehrveranstaltungen();
-        if (lectures == null) {
-            return;
-        }
-        ChatRoomManager manager = new ChatRoomManager(mContext);
-        manager.replaceInto(lectures);
     }
 
-    public void clearCache() {
-        // Delete all entries that are too old and delete corresponding image files
-        Cursor cur = db.rawQuery("SELECT data FROM cache WHERE typ=1", null);
-        if (cur.moveToFirst()) {
-            do {
-                File f = new File(cur.getString(0));
-                f.delete();
-            } while (cur.moveToNext());
+    public boolean isValidDate(DateTime e) {
+        if (e.isAfterNow()) { //After now means the date is in the future
+            return true;
         }
-        cur.close();
+        return false;
     }
 }

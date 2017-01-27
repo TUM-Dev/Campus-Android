@@ -31,7 +31,6 @@ public class KinoManager extends AbstractManager {
      */
     public KinoManager(Context context) {
         super(context);
-
         kinoBox = MyBoxStore.getBoxStore().boxFor(Movie.class);
     }
 
@@ -47,9 +46,7 @@ public class KinoManager extends AbstractManager {
             return;
         }
 
-        NetUtils net = new NetUtils(mContext);
-
-        // download from kino database
+        // Download from the tumcabe api
         TUMCabeClient.getInstance(mContext).getMovies(new Callback<List<Movie>>() {
             @Override
             public void onResponse(Call<List<Movie>> call, Response<List<Movie>> response) {
