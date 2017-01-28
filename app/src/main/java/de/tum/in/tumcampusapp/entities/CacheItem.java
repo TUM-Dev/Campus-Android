@@ -3,7 +3,6 @@ package de.tum.in.tumcampusapp.entities;
 
 import org.joda.time.DateTime;
 
-import java.sql.Blob;
 import java.util.Date;
 
 import de.tum.in.tumcampusapp.entities.converters.DateTimeConverter;
@@ -20,11 +19,10 @@ public class CacheItem {
     private String url;
     private String data;
     private int validity;
-    
+
     @Convert(converter = DateTimeConverter.class, dbType = Date.class)
     private DateTime maxAge;
     private int typ;
-
 
 
     public CacheItem(String url, String data, int validity, DateTime maxAge, int typ) {
@@ -36,10 +34,9 @@ public class CacheItem {
     }
 
 
-
     @Generated(hash = 1650764347)
     public CacheItem(Long id, String url, String data, int validity, DateTime maxAge,
-            int typ) {
+                     int typ) {
         this.id = id;
         this.url = url;
         this.data = data;
@@ -47,7 +44,6 @@ public class CacheItem {
         this.maxAge = maxAge;
         this.typ = typ;
     }
-
 
 
     @Generated(hash = 508180393)
@@ -55,11 +51,9 @@ public class CacheItem {
     }
 
 
-
     public Long getId() {
         return id;
     }
-
 
 
     public void setId(Long id) {
@@ -67,11 +61,9 @@ public class CacheItem {
     }
 
 
-
     public String getUrl() {
         return url;
     }
-
 
 
     public void setUrl(String url) {
@@ -79,11 +71,9 @@ public class CacheItem {
     }
 
 
-
     public String getData() {
         return data;
     }
-
 
 
     public void setData(String data) {
@@ -91,11 +81,9 @@ public class CacheItem {
     }
 
 
-
     public int getValidity() {
         return validity;
     }
-
 
 
     public void setValidity(int validity) {
@@ -103,11 +91,9 @@ public class CacheItem {
     }
 
 
-
     public DateTime getMaxAge() {
         return maxAge;
     }
-
 
 
     public void setMaxAge(DateTime maxAge) {
@@ -115,11 +101,9 @@ public class CacheItem {
     }
 
 
-
     public int getTyp() {
         return typ;
     }
-
 
 
     public void setTyp(int typ) {
@@ -127,7 +111,4 @@ public class CacheItem {
     }
 
 
-
-
-    
 }

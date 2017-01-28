@@ -40,17 +40,20 @@ public class AbstractManager {
         SQLiteDatabase db = getDb(c);
         db.execSQL("DROP TABLE IF EXISTS cafeterias");
         db.execSQL("DROP TABLE IF EXISTS cafeterias_menus");
+
         db.execSQL("DROP TABLE IF EXISTS calendar");
-        db.execSQL("DROP TABLE IF EXISTS kalendar_events");
+
         db.execSQL("DROP TABLE IF EXISTS locations");
         db.execSQL("DROP TABLE IF EXISTS news");
         db.execSQL("DROP TABLE IF EXISTS news_sources");
-        db.execSQL("DROP TABLE IF EXISTS recents");
+
         db.execSQL("DROP TABLE IF EXISTS room_locations");
+
         db.execSQL("DROP TABLE IF EXISTS suggestions_lecture");
         db.execSQL("DROP TABLE IF EXISTS suggestions_mvv");
         db.execSQL("DROP TABLE IF EXISTS suggestions_persons");
         db.execSQL("DROP TABLE IF EXISTS suggestions_rooms");
+
         db.execSQL("DROP TABLE IF EXISTS unsent_chat_message");
         db.execSQL("DROP TABLE IF EXISTS chat_message");
         db.execSQL("DROP TABLE IF EXISTS chat_room");

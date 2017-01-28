@@ -296,9 +296,32 @@
         }
       ],
       "refId": 2487850412951448371
+    },
+    {
+      "id": 9,
+      "lastPropertyId": 3,
+      "name": "Recent",
+      "properties": [
+        {
+          "id": 1,
+          "name": "id",
+          "refId": 943053825927762066
+        },
+        {
+          "id": 2,
+          "name": "typ",
+          "refId": 3951905906547828219
+        },
+        {
+          "id": 3,
+          "name": "name",
+          "refId": 4739317961487156196
+        }
+      ],
+      "refId": 1835240976527559154
     }
   ],
-  "lastEntityId": 8,
+  "lastEntityId": 9,
   "lastIndexId": 3,
   "lastSequenceId": 0,
   "metaVersion": 1,
