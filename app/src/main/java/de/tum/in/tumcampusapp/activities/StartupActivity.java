@@ -23,6 +23,8 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import net.danlew.android.joda.JodaTimeAndroid;
+
 import java.io.File;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -73,6 +75,9 @@ public class StartupActivity extends AppCompatActivity {
     };
 
     private void init() {
+        JodaTimeAndroid.init(this);
+        TcaBoxes.init(this);
+
         //Our own Custom exception handler
         ExceptionHandler.setup(getApplicationContext());
 
@@ -83,8 +88,6 @@ public class StartupActivity extends AppCompatActivity {
         //Upload stats
         ImplicitCounter.count(this);
         ImplicitCounter.submitCounter(this);
-
-        TcaBoxes.init(this);
 
         // For compatibility reasons: big update happened with version 35
         int prevVersion = Utils.getInternalSettingInt(this, Const.APP_VERSION, 35);
