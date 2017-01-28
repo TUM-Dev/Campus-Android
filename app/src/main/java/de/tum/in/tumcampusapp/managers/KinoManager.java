@@ -41,7 +41,7 @@ public class KinoManager extends AbstractManager {
      * @throws JSONException
      */
     public void downloadFromExternal(boolean force) throws JSONException {
-        SyncManager sync = new SyncManager(mContext);
+        final SyncManager sync = new SyncManager(mContext);
         if (!force && !sync.needSync(this, TIME_TO_SYNC)) {
             return;
         }
@@ -52,6 +52,7 @@ public class KinoManager extends AbstractManager {
             public void onResponse(Call<List<Movie>> call, Response<List<Movie>> response) {
                 if(response.isSuccessful()) {
                     kinoBox.put(response.body());
+                    sync.replaceIntoDb(this);
                 }
             }
 
