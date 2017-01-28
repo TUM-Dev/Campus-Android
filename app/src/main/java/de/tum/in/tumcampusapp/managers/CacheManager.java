@@ -72,7 +72,6 @@ public class CacheManager extends AbstractManager {
     public CacheManager(Context context) {
         super(context);
 
-        // create table if needed
         cacheBox = TcaBoxes.getBoxStore().boxFor(CacheItem.class);
 
         // Delete all entries that are too old and delete corresponding image files
