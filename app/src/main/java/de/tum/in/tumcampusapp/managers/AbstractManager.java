@@ -38,7 +38,6 @@ public class AbstractManager {
 
     public static void resetDb(Context c) {
         SQLiteDatabase db = getDb(c);
-        db.execSQL("DROP TABLE IF EXISTS cache");
         db.execSQL("DROP TABLE IF EXISTS cafeterias");
         db.execSQL("DROP TABLE IF EXISTS cafeterias_menus");
         db.execSQL("DROP TABLE IF EXISTS calendar");
@@ -48,7 +47,6 @@ public class AbstractManager {
         db.execSQL("DROP TABLE IF EXISTS news_sources");
         db.execSQL("DROP TABLE IF EXISTS recents");
         db.execSQL("DROP TABLE IF EXISTS room_locations");
-        db.execSQL("DROP TABLE IF EXISTS syncs");
         db.execSQL("DROP TABLE IF EXISTS suggestions_lecture");
         db.execSQL("DROP TABLE IF EXISTS suggestions_mvv");
         db.execSQL("DROP TABLE IF EXISTS suggestions_persons");
@@ -56,7 +54,6 @@ public class AbstractManager {
         db.execSQL("DROP TABLE IF EXISTS unsent_chat_message");
         db.execSQL("DROP TABLE IF EXISTS chat_message");
         db.execSQL("DROP TABLE IF EXISTS chat_room");
-        db.execSQL("DROP TABLE IF EXISTS tumLocks");
         db.execSQL("Drop TABLE IF EXISTS openQuestions");
         db.execSQL("Drop TABLE IF EXISTS ownQuestions");
         db.execSQL("DROP TABLE IF EXISTS faculties");
