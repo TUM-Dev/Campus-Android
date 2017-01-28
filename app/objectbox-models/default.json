@@ -1,0 +1,328 @@
+{
+  "_note1": "KEEP THIS FILE! Check it into a version control system (VCS) like git.",
+  "_note2": "ObjectBox manages crucial IDs for your object model. See docs for details.",
+  "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
+  "entities": [
+    {
+      "id": 2,
+      "lastPropertyId": 14,
+      "name": "Movie",
+      "properties": [
+        {
+          "id": 1,
+          "name": "id",
+          "refId": 7033712400379575261
+        },
+        {
+          "id": 2,
+          "name": "title",
+          "refId": 3179823806923803732
+        },
+        {
+          "id": 3,
+          "name": "year",
+          "refId": 4460671132166228489
+        },
+        {
+          "id": 4,
+          "name": "runtime",
+          "refId": 8553958548893836109
+        },
+        {
+          "id": 5,
+          "name": "genre",
+          "refId": 2237328157104380580
+        },
+        {
+          "id": 6,
+          "name": "director",
+          "refId": 7562984396912248629
+        },
+        {
+          "id": 7,
+          "name": "actors",
+          "refId": 3543142202234523526
+        },
+        {
+          "id": 8,
+          "name": "rating",
+          "refId": 6453785105613012707
+        },
+        {
+          "id": 9,
+          "name": "description",
+          "refId": 7878815661748983172
+        },
+        {
+          "id": 10,
+          "name": "cover",
+          "refId": 7021815915937714740
+        },
+        {
+          "id": 11,
+          "name": "trailer",
+          "refId": 6835382996916233302
+        },
+        {
+          "id": 12,
+          "name": "date",
+          "refId": 5615089463908321936
+        },
+        {
+          "id": 13,
+          "name": "created",
+          "refId": 4170265660719101977
+        },
+        {
+          "id": 14,
+          "name": "link",
+          "refId": 3108986728430545627
+        }
+      ],
+      "refId": 2184444874432958132
+    },
+    {
+      "id": 3,
+      "lastPropertyId": 6,
+      "name": "CacheItem",
+      "properties": [
+        {
+          "id": 1,
+          "name": "id",
+          "refId": 2598858796333381544
+        },
+        {
+          "id": 2,
+          "name": "url",
+          "refId": 5720685409565988318
+        },
+        {
+          "id": 3,
+          "name": "data",
+          "refId": 465785776950457355
+        },
+        {
+          "id": 4,
+          "name": "validity",
+          "refId": 7557544668376187196
+        },
+        {
+          "id": 5,
+          "name": "maxAge",
+          "refId": 6794513533479855422
+        },
+        {
+          "id": 6,
+          "name": "typ",
+          "refId": 394710425292602369
+        }
+      ],
+      "refId": 3879489127091751092
+    },
+    {
+      "id": 4,
+      "lastPropertyId": 6,
+      "name": "TumLock",
+      "properties": [
+        {
+          "id": 1,
+          "name": "id",
+          "refId": 4971461251378166934
+        },
+        {
+          "id": 2,
+          "name": "url",
+          "refId": 6793344048216842250
+        },
+        {
+          "id": 3,
+          "name": "error",
+          "refId": 1627997132371817239
+        },
+        {
+          "id": 4,
+          "name": "timestamp",
+          "refId": 1334156867816875801
+        },
+        {
+          "id": 5,
+          "name": "lockedFor",
+          "refId": 7033024338553881135
+        }
+      ],
+      "refId": 6083842785152745190
+    },
+    {
+      "id": 5,
+      "lastPropertyId": 3,
+      "name": "SyncItem",
+      "properties": [
+        {
+          "id": 1,
+          "name": "id",
+          "refId": 2200321226968168983
+        },
+        {
+          "id": 2,
+          "indexId": 1,
+          "name": "identifier",
+          "refId": 3696726763733061984
+        },
+        {
+          "id": 3,
+          "name": "lastSync",
+          "refId": 6609168994848049088
+        }
+      ],
+      "refId": 4410670734314853048
+    },
+    {
+      "id": 6,
+      "lastPropertyId": 8,
+      "name": "OpenQuestion",
+      "properties": [
+        {
+          "id": 1,
+          "name": "id",
+          "refId": 6387700266046120034
+        },
+        {
+          "id": 2,
+          "indexId": 2,
+          "name": "question",
+          "refId": 3643011081786197804
+        },
+        {
+          "id": 3,
+          "name": "text",
+          "refId": 2318212275776975019
+        },
+        {
+          "id": 4,
+          "name": "created",
+          "refId": 8463627669151989834
+        },
+        {
+          "id": 5,
+          "name": "end",
+          "refId": 1817132454272480640
+        },
+        {
+          "id": 6,
+          "name": "answer",
+          "refId": 7022731888472287445
+        },
+        {
+          "id": 7,
+          "name": "answered",
+          "refId": 308674204286797647
+        },
+        {
+          "id": 8,
+          "name": "synced",
+          "refId": 1222681014699075215
+        }
+      ],
+      "refId": 1420463685016850807
+    },
+    {
+      "id": 7,
+      "lastPropertyId": 3,
+      "name": "Faculty",
+      "properties": [
+        {
+          "id": 2,
+          "name": "faculty",
+          "refId": 5564396692359194168
+        },
+        {
+          "id": 3,
+          "name": "name",
+          "refId": 6878258471737854882
+        }
+      ],
+      "refId": 1040225167856374239
+    },
+    {
+      "id": 8,
+      "lastPropertyId": 10,
+      "name": "OwnQuestion",
+      "properties": [
+        {
+          "id": 1,
+          "name": "id",
+          "refId": 8019396307997646098
+        },
+        {
+          "id": 2,
+          "indexId": 3,
+          "name": "question",
+          "refId": 3208839118440485477
+        },
+        {
+          "id": 3,
+          "name": "text",
+          "refId": 2613439711089970042
+        },
+        {
+          "id": 5,
+          "name": "created",
+          "refId": 8786931490096608397
+        },
+        {
+          "id": 6,
+          "name": "end",
+          "refId": 4436909989474400447
+        },
+        {
+          "id": 7,
+          "name": "yes",
+          "refId": 913230745105685968
+        },
+        {
+          "id": 8,
+          "name": "no",
+          "refId": 2196393393639823296
+        },
+        {
+          "id": 9,
+          "name": "deleted",
+          "refId": 5905089393173701549
+        },
+        {
+          "id": 10,
+          "name": "synced",
+          "refId": 7842634428769021711
+        }
+      ],
+      "refId": 2487850412951448371
+    }
+  ],
+  "lastEntityId": 8,
+  "lastIndexId": 3,
+  "lastSequenceId": 0,
+  "metaVersion": 1,
+  "retiredEntityRefIds": [
+    8579150983628598856
+  ],
+  "retiredPropertyRefIds": [
+    5175812741347374593,
+    7194393401057267816,
+    4955198643178250876,
+    6835404739660263319,
+    4878445488323697649,
+    6239228326886400616,
+    8940778750743850139,
+    8780266697980704410,
+    2243115992703428961,
+    1170033156684210108,
+    7786817177677876199,
+    2156608792592550720,
+    7574068111132155527,
+    6756067336664466426,
+    1124155724146209278,
+    1107209010945590432,
+    4661596508062620271
+  ],
+  "version": 1
+}

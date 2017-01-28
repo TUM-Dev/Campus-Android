@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -19,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.ActivityForLoadingInBackground;
@@ -27,6 +27,7 @@ import de.tum.in.tumcampusapp.auxiliary.AuthenticationManager;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
+import de.tum.in.tumcampusapp.entities.Faculty;
 import de.tum.in.tumcampusapp.managers.SurveyManager;
 
 /**
@@ -65,14 +66,12 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<String, 
                 SurveyManager sm = new SurveyManager(getApplicationContext());
                 sm.downloadFacultiesFromExternal();
 
-                Cursor cursor = sm.getAllFaculties();
-                if (cursor.moveToFirst()) {
-                    do {
-                        fetchedFaculties.add(cursor.getString(cursor.getColumnIndex("name")));
-                    } while (cursor.moveToNext());
-
-                }
                 fetchedFaculties.add(0, getResources().getString(R.string.choose_own_faculty));
+                List<Faculty> faculties= sm.getAllFaculties();
+                for ( Faculty e : faculties) {
+                    fetchedFaculties.add(e.getName());
+                }
+
                 return fetchedFaculties.toArray(new String[fetchedFaculties.size()]);
             }
 
@@ -104,10 +103,10 @@ public class WizNavStartActivity extends ActivityForLoadingInBackground<String, 
                     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                         SurveyManager sm = new SurveyManager(getApplicationContext());
 
-                        Cursor c = sm.getFacultyID((String) adapterView.getItemAtPosition(i)); // Get the faculty number from DB for the chosen faculty name
+                        Faculty c = sm.getFaculty((String) adapterView.getItemAtPosition(i)); // Get the faculty number from DB for the chosen faculty name
 
-                        if (c.moveToFirst()) {
-                            Utils.setInternalSetting(getApplicationContext(), "user_major", c.getString(c.getColumnIndex("faculty"))); // save faculty number in shared preferences
+                        if (c != null) {
+                            Utils.setInternalSetting(getApplicationContext(), "user_major", c.getFaculty()); // save faculty number in shared preferences
                             Utils.setInternalSetting(getApplicationContext(), "user_faculty_number", String.valueOf(userMajorSpinner.getSelectedItemPosition())); // save choosen spinner poistion so that in case the user returns from the  WizNavCheckTokenActivity to WizNavStart activity, then we the faculty gets autm. choosen.
                         }
                         TextView selectedItem = (TextView) adapterView.getChildAt(0);

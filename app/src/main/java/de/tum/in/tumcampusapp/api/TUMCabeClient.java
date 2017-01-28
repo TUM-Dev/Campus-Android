@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.auxiliary.Const;
+import de.tum.in.tumcampusapp.entities.Faculty;
 import de.tum.in.tumcampusapp.entities.Movie;
 import de.tum.in.tumcampusapp.models.gcm.GCMNotification;
 import de.tum.in.tumcampusapp.models.gcm.GCMNotificationLocation;
@@ -18,7 +19,6 @@ import de.tum.in.tumcampusapp.models.tumcabe.ChatRoom;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatVerification;
 import de.tum.in.tumcampusapp.models.tumcabe.DeviceRegister;
 import de.tum.in.tumcampusapp.models.tumcabe.DeviceUploadGcmToken;
-import de.tum.in.tumcampusapp.models.tumcabe.Faculty;
 import de.tum.in.tumcampusapp.models.tumcabe.Question;
 import de.tum.in.tumcampusapp.models.tumcabe.Statistics;
 import de.tum.in.tumcampusapp.models.tumcabe.TUMCabeStatus;

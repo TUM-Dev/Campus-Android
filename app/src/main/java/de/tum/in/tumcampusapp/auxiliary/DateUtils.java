@@ -2,6 +2,8 @@ package de.tum.in.tumcampusapp.auxiliary;
 
 import android.content.Context;
 
+import org.joda.time.DateTime;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -115,6 +117,10 @@ public final class DateUtils {
             Utils.log("Parsing SQL date failed");
         }
         return null;
+    }
+
+    public static DateTime parseSqlDateTime(String datetime) {
+        return new DateTime(parseSqlDate(datetime));
     }
 
     public static Date parseIsoDate(String datetime) {

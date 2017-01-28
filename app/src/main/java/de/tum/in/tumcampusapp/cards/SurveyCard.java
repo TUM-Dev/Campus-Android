@@ -3,7 +3,6 @@ package de.tum.in.tumcampusapp.cards;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,13 +23,13 @@ import java.util.List;
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.cards.generic.Card;
+import de.tum.in.tumcampusapp.entities.OpenQuestion;
 import de.tum.in.tumcampusapp.managers.CardManager;
 import de.tum.in.tumcampusapp.managers.SurveyManager;
-import de.tum.in.tumcampusapp.models.tumcabe.Question;
 
 public class SurveyCard extends Card {
     private static final String SURVEY_CARD_DISCARDED_TILL = "survey_card_discarded_till";
-    private final List<Question> questions = new ArrayList<>(); // gets filled with the relevant openQuestions for the card
+    private final List<OpenQuestion> questions = new ArrayList<>(); // gets filled with the relevant openQuestions for the card
     private final SurveyManager manager = new SurveyManager(mContext);
     private TextView mQuestion;
     private Button bYes;
@@ -71,7 +70,7 @@ public class SurveyCard extends Card {
         bSkip = (Button) mCard.findViewById(R.id.ignoreAnswerCard);
         bFlagged = (ImageButton) mCard.findViewById(R.id.flagButton);
 
-        showFirstQuestion();
+        showQuestion();
 
     }
 
@@ -79,51 +78,50 @@ public class SurveyCard extends Card {
      * 1. Updates the answered question in the db
      * 2. Changes the content of the survey card depending on the questions ArrayList
      */
-    private void showFirstQuestion() {
+    private void showQuestion() {
         mTitleView.setText(R.string.research_quiz);
 
         if (!questions.isEmpty()) {
-            final Question ques = questions.get(0);
-            mQuestion.setText(ques.getText()); // Sets the text of the question that should be shown first
+            mQuestion.setText(questions.get(0).getText()); // Sets the text of the question that should be shown first
 
             // Listens on the yes button in the card
             bYes.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Question updatedElement = questions.remove(0);
-                    manager.updateQuestion(updatedElement, answerYes); // update the answerID in the local db.
-                    showNextQuestions(); // handel showing next question(s)
+                    OpenQuestion updatedElement = questions.remove(0);
+                    manager.updateQuestion(updatedElement, answerYes);
+                    showNextQuestions();
                 }
             });
             bNo.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Question updatedElement = questions.remove(0);
-                    manager.updateQuestion(updatedElement, answerNo); // update the answerID in the local db.
-                    showNextQuestions(); // handel showing next question(s)
+                    OpenQuestion updatedElement = questions.remove(0);
+                    manager.updateQuestion(updatedElement, answerNo);
+                    showNextQuestions();
                 }
             });
             bSkip.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Question updatedElement = questions.remove(0);
-                    manager.updateQuestion(updatedElement, answerSkip); // update the answerID in the local db.
-                    showNextQuestions(); // handel showing next question(s)
+                    OpenQuestion updatedElement = questions.remove(0);
+                    manager.updateQuestion(updatedElement, answerSkip);
+                    showNextQuestions();
                 }
             });
             bFlagged.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Question updatedElement = questions.remove(0);
-                    manager.updateQuestion(updatedElement, answerFlag); // update the answerID in the local db.
-                    showNextQuestions(); // handel showing next question(s)
+                    OpenQuestion updatedElement = questions.remove(0);
+                    manager.updateQuestion(updatedElement, answerFlag);
+                    showNextQuestions();
                 }
             });
         }
     }
 
     /**
-     * Help function which calls showFirstQuestion() recursively
+     * Help function which calls showQuestion() recursively
      * depending on the size of the question Array list
      */
     private void showNextQuestions() {
@@ -135,7 +133,7 @@ public class SurveyCard extends Card {
             bFlagged.setVisibility(View.GONE);
         } else {
             // if the question arraylist is not empty, show the first question (the answered question before got removed from the list)
-            showFirstQuestion();
+            showQuestion();
         }
     }
 
@@ -160,8 +158,7 @@ public class SurveyCard extends Card {
     protected boolean shouldShow(SharedPreferences p) {
         String currentDate = Utils.getDateTimeString(new Date());
         DateTime discardedTill = fmt.parseDateTime(p.getString(SURVEY_CARD_DISCARDED_TILL, DateTime.now().toString(fmt)));
-        return discardedTill.isBeforeNow() &&
-                manager.getUnansweredQuestionsSince(currentDate).getCount() >= 1;
+        return discardedTill.isBeforeNow() && manager.getUnansweredQuestions().size() >= 1;
     }
 
     @Override
@@ -177,13 +174,10 @@ public class SurveyCard extends Card {
     /**
      * Sets the open questions (fetched from the server) in the  card
      *
-     * @param cur: comprises the fetched open Questions from the server
+     * @param e: comprises the fetched open Questions from the server
      */
-    public void setQuestions(Cursor cur) {
-        do {
-            Question item = new Question(cur.getString(0), cur.getString(1));
-            questions.add(item);
-        } while (cur.moveToNext());
-        cur.close();
+    public void setQuestion(List<OpenQuestion> e) {
+        questions.addAll(e);
+
     }
 }

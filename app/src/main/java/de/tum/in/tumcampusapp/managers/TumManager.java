@@ -39,7 +39,7 @@ public class TumManager extends AbstractManager {
         this.deleteExpired();
     }
 
-    private void deleteExpired () {
+    private void deleteExpired() {
         List<TumLock> all = lockBox.getAll();
         for (TumLock e : all) {
             if (e.getTimestamp().plusSeconds(e.getLockedFor()).isBeforeNow()) {
@@ -95,7 +95,7 @@ public class TumManager extends AbstractManager {
             Error res = new Persister().read(Error.class, data);
             r.setError(res.getMessage());
         } catch (Exception e) {
-            Utils.log(e);
+            Utils.log("Error getting message for TumLock: " + e.getMessage());
         }
 
         //Enter it into the Databse

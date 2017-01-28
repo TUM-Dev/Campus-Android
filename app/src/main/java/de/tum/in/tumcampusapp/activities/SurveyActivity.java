@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.database.Cursor;
 import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.os.AsyncTask;
@@ -36,20 +35,18 @@ import org.joda.time.Duration;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
-import java.util.Locale;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.ProgressActivity;
 import de.tum.in.tumcampusapp.api.TUMCabeClient;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
+import de.tum.in.tumcampusapp.entities.Faculty;
+import de.tum.in.tumcampusapp.entities.OwnQuestion;
 import de.tum.in.tumcampusapp.managers.SurveyManager;
 import de.tum.in.tumcampusapp.models.tumcabe.Question;
 import retrofit2.Call;
@@ -95,8 +92,9 @@ public class SurveyActivity extends ProgressActivity {
     private boolean[] checkedFaculties;
     private LinearLayout mainResponseLayout;
     private LinearLayout questionsLayout;
-    private final List<String> fetchedFaculties = new ArrayList<>();
+    private List<Faculty> fetchedFaculties;
     private SurveyManager surveyManager;
+
     //Handles clicking on 'delete' button of an own question in responses tab
     private final View.OnClickListener deleteQuestion = new View.OnClickListener() {
 
@@ -106,7 +104,7 @@ public class SurveyActivity extends ProgressActivity {
                 //remove view and delete from database.
                 v.setEnabled(false);
                 int tag = (int) v.getTag();
-                surveyManager.deleteMyOwnQuestion(tag);
+                surveyManager.deleteOwnQuestion(tag);
                 zoomOutanimation(v); // provides a smoth delete animation of the question
                 Snackbar.make(findViewById(R.id.drawer_layout), getResources().getString(R.string.question_deleted), Snackbar.LENGTH_LONG).show();
             } else {
@@ -146,33 +144,21 @@ public class SurveyActivity extends ProgressActivity {
     //set up the respone tab layout dynamically depending on number of questions
     @SuppressLint("SetTextI18n")
     private void setUpResponseTab() {
-        DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss"); // For converting Jade DateTime into String & vic versa (see show and discard functions)
-        Cursor c = surveyManager.getMyRelevantOwnQuestionsSince(Utils.getDateTimeString(new Date()));
-        int numberofquestion = c.getCount();
+        List<OwnQuestion> questions = surveyManager.getOwnQuestions();
+
         //get response and question from database->set i<Number of question
-        for (int i = 0; i < numberofquestion; i++) {
-            c.moveToNext();
-            DateTime endDate = fmt.parseDateTime(c.getString(c.getColumnIndex("end")));
+        for (OwnQuestion e : questions) {
+            DateTime endDate = e.getEnd();
             Duration tillDeleteDay = new Duration(DateTime.now(), endDate);
             long autoDeleteIn = tillDeleteDay.getStandardDays();
 
-            String questionText = c.getString(c.getColumnIndex("text"));
-            String[] targetFacsIds = c.getString(c.getColumnIndex("targetFac")).split(",");
-            Utils.log("Selectedfacs Arrays.String: " + Arrays.toString(targetFacsIds));
-
-            final String[] targetFacsNames = new String[targetFacsIds.length];
-            for (int x = 0; x < targetFacsIds.length; x++) {
-                Cursor cursor = surveyManager.getFacultyName(targetFacsIds[x]);
-                if (cursor.moveToFirst()) {
-                    targetFacsNames[x] = cursor.getString(cursor.getColumnIndex("name"));
-                }
+            List<Faculty> targetFacs = e.getTargetFac();
+            final ArrayList<String> targetFacsNames = new ArrayList<>();
+            for (Faculty f : targetFacs) {
+                targetFacsNames.add(f.getName());
             }
 
 
-            int yes = c.getInt(c.getColumnIndex("yes"));
-            int no = c.getInt(c.getColumnIndex("no"));
-            int total = yes + no;
-            int id = c.getInt(c.getColumnIndex("question"));
             //linear layout for every question
             LinearLayout ques = new LinearLayout(this);
             LinearLayout.LayoutParams quesParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -220,7 +206,7 @@ public class SurveyActivity extends ProgressActivity {
             questionTv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.color_primary_dark));
             questionTv.setTypeface(null, Typeface.BOLD);
             //setText(question)
-            questionTv.setText(questionText);
+            questionTv.setText(e.getText());
             l1.addView(questionTv);
             //adding button delete
             float inPixels = getResources().getDimension(R.dimen.dimen_buttonHeight_in_dp);
@@ -228,7 +214,7 @@ public class SurveyActivity extends ProgressActivity {
             deleteButton.setLayoutParams(new LinearLayout.LayoutParams((int) inPixels, (int) inPixels));
             deleteButton.setBackgroundResource(R.drawable.minusicon);
             deleteButton.setOnClickListener(deleteQuestion);
-            deleteButton.setTag(id);
+            deleteButton.setTag(e.getQuestion());
             l2.addView(deleteButton);
 
             Button infoButton = new Button(this);
@@ -252,8 +238,8 @@ public class SurveyActivity extends ProgressActivity {
             progress.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, (int) inPixels2));
             progress.setMinimumHeight((int) inPixels2);
             progress.setProgressDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.progressbar, null));
-            progress.setProgress(yes);
-            progress.setMax(total);
+            progress.setProgress(e.getYes());
+            progress.setMax(e.getNo() + e.getYes());
             progress.setId(R.id.p1);
             r.addView(progress);
             //add Yes asnwers inside progressbar
@@ -264,7 +250,7 @@ public class SurveyActivity extends ProgressActivity {
             params.addRule(RelativeLayout.CENTER_IN_PARENT);
             yesAnswers.setPadding(15, 0, 0, 0);
             //set number of yes answers
-            yesAnswers.setText("YES:" + yes);
+            yesAnswers.setText("YES:" + e.getYes());
             r.addView(yesAnswers, params);
             //add No asnwers inside progressbar
             TextView noAnswers = new TextView(this);
@@ -273,7 +259,7 @@ public class SurveyActivity extends ProgressActivity {
             params1.addRule(RelativeLayout.ALIGN_RIGHT, progress.getId());
             params1.addRule(RelativeLayout.CENTER_IN_PARENT);
             //set number of no answers
-            noAnswers.setText("NO:" + no);
+            noAnswers.setText("NO:" + e.getNo());
             noAnswers.setPadding(0, 0, 20, 0);
             r.addView(noAnswers, params1);
         }
@@ -337,16 +323,13 @@ public class SurveyActivity extends ProgressActivity {
     private void setUpSelectedTargetFacultiesSpinner() {
 
         // fetch faulties from DB
-        Cursor cursor = surveyManager.getAllFaculties();
-        if (fetchedFaculties.isEmpty() && cursor.moveToFirst()) {
-            do {
-                fetchedFaculties.add(cursor.getString(cursor.getColumnIndex("name")));
-            } while (cursor.moveToNext());
-
+        fetchedFaculties = surveyManager.getAllFaculties();
+        checkedFaculties = new boolean[fetchedFaculties.size()];
+        final String[] faculties = new String[fetchedFaculties.size()];
+        for ( int i = 0; i < fetchedFaculties.size(); i++) {
+            faculties[i] = fetchedFaculties.get(i).getName();
         }
 
-        checkedFaculties = new boolean[fetchedFaculties.size()];
-        final String[] faculties = fetchedFaculties.toArray(new String[fetchedFaculties.size()]);
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(getResources().getString(R.string.quiz_target_faculty));
 
@@ -407,26 +390,22 @@ public class SurveyActivity extends ProgressActivity {
                 if (questions.isEmpty()) {
                     return;
                 }
+
                 // facultyIds to be sent to server upon submitting question(s)
-                final ArrayList<String> selectedFacIds = new ArrayList<>();
+                final ArrayList<Long> selectedFacIds = new ArrayList<>();
 
 
                 if (selectedFaculties.isEmpty()) { // if no faculty is selected, add faculties as target upon submitting question(s).
-                    Cursor c = surveyManager.getAllFaculties();
-                    if (c.moveToFirst()) {
-                        do {
-                            selectedFacIds.add(c.getString(c.getColumnIndex("faculty")));
-                        } while (c.moveToNext());
+                    List<Faculty> all = surveyManager.getAllFaculties();
+                    for (Faculty e : all) {
+                        selectedFacIds.add(e.getFaculty());
                     }
                 } else { // In case at least one faculty is selected
                     // Adds the ids of selected faculties by match selected faculty names with fetched faculties names
-                    for (int j = 0; j < selectedFaculties.size(); j++) {
-                        for (int x = 0; x < fetchedFaculties.size(); x++) {
-                            if (selectedFaculties.get(j).equals(fetchedFaculties.get(x))) {
-                                Cursor cursor = surveyManager.getFacultyID(selectedFaculties.get(j));
-                                if (cursor.moveToFirst()) {
-                                    selectedFacIds.add(cursor.getString(cursor.getColumnIndex("faculty")));
-                                }
+                    for (String s : selectedFaculties) {
+                        for (Faculty f : fetchedFaculties) {
+                            if (f.getName().equals(s)) {
+                                selectedFacIds.add(f.getFaculty());
                             }
                         }
                     }
@@ -584,12 +563,8 @@ public class SurveyActivity extends ProgressActivity {
         TextView selectNumberOfQuesionsTV = (TextView) findViewById(R.id.selectTv);
 
         String[] numQues = new String[]{"1", "2", "3"};
-        String weekAgo = getDateBefore1Week();
-        Cursor c = surveyManager.ownQuestionsSince(weekAgo); // gets number of questions submitted during last week
-        if (c.getCount() > 0) {
-            c.moveToFirst();
-        }
-        int x = c.getCount();
+        List<OwnQuestion> c = surveyManager.ownQuestionsSince(getDateBefore1Week()); // gets number of questions submitted during last week
+        int x = c.size();
         if (x < 3) { // if below 3, then set the spinner with the numbers of questions user allowed to ask respectively
             numQues = new String[3 - x];
             for (int i = 0; i < numQues.length; i++) {
@@ -646,11 +621,8 @@ public class SurveyActivity extends ProgressActivity {
      *
      * @return return this date as a string
      */
-    private static String getDateBefore1Week() {
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.DAY_OF_YEAR, -7);
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.GERMANY);
-        return sdf.format(calendar.getTime());
+    private static DateTime getDateBefore1Week() {
+        return DateTime.now().minusDays(7);
 
     }
 
@@ -660,37 +632,19 @@ public class SurveyActivity extends ProgressActivity {
      * @return this date as a string
      */
     private String getNextPossibleDate() {
-        String nextPossibleDate = "";
-        ArrayList<String> dates = new ArrayList<>();
-        String weekAgo = getDateBefore1Week();
-        Cursor c = surveyManager.ownQuestionsSince(weekAgo);
+        DateTime nextPossibleDate = DateTime.now();
+        List<OwnQuestion> c = surveyManager.ownQuestionsSince(getDateBefore1Week());
 
-        while (c.moveToNext()) {
-            dates.add(c.getString(0));
-            nextPossibleDate = c.getString(0);
-        }
-
-        for (int i = 0; i < dates.size(); i++) {
-            for (int z = 0; z < nextPossibleDate.length(); z++) {
-                if (dates.get(i).charAt(z) < nextPossibleDate.charAt(z)) {
-                    nextPossibleDate = dates.get(i);
+        if( c != null && c.size() > 0) {
+            Collections.sort(c, new Comparator<OwnQuestion>() {
+                public int compare(OwnQuestion o1, OwnQuestion o2) {
+                    return o1.getCreated().compareTo(o2.getCreated());
                 }
-            }
+            });
+            nextPossibleDate = c.get(0).getCreated().plusDays(7);
         }
 
-        String dtStart = nextPossibleDate;
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.GERMANY);
-        try {
-            Date date = format.parse(dtStart);
-            Calendar a = Calendar.getInstance();
-            a.setTime(date);
-            a.add(Calendar.DAY_OF_MONTH, +7);
-
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.GERMANY);
-            nextPossibleDate = sdf.format(a.getTime());
-        } catch (ParseException e) {
-            Utils.log("getNextPossibleDate: " + e.toString());
-        }
-        return nextPossibleDate;
+        DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm");
+        return nextPossibleDate.toString(fmt);
     }
 }

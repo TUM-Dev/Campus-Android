@@ -70,7 +70,6 @@ public class SyncManager extends AbstractManager {
             return;
         }
 
-        SyncItem e = new SyncItem(identifier);
-        syncBox.put(e);
+        syncBox.put(new SyncItem(identifier));
     }
 }
