@@ -1,21 +1,23 @@
-
 #### Projektmanagement:
 + TUM - Computer Science / F13
 + Prof. Dr. Uwe Baumgarten
-+ Nils T. Kannengiesser
 
 #### Technische Unterstützung:
-+ Andreas Bernhofer (IT-Support/TUMonline), 
-+ Paul Nieleck (Administrator F13)
++ Andreas Bernhofer (IT-Support)
++ Bernhard Blieninger
 
 #### Aktive Entwickler (Ehrenamtlich)
 + Kordian Bruck
 + Philipp Fent
-+ Ralf Baun
+
+#### Ehemalige Unterstützer / Administratoren / Projektleiter
++ Nils T. Kannengiesser
++ Paul Nieleck
 
 #### Entwickler Sommersemester 2016
 + Aser Abdelrahman
 + Mohamad Ayad
++ Ralf Baun
 
 #### Entwickler Sommersemester 2015
 + Enrico Gigantiello
