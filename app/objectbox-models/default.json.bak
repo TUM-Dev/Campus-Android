@@ -296,9 +296,80 @@
         }
       ],
       "refId": 2487850412951448371
+    },
+    {
+      "id": 9,
+      "lastPropertyId": 3,
+      "name": "Recent",
+      "properties": [
+        {
+          "id": 1,
+          "name": "id",
+          "refId": 943053825927762066
+        },
+        {
+          "id": 2,
+          "name": "typ",
+          "refId": 3951905906547828219
+        },
+        {
+          "id": 3,
+          "name": "name",
+          "refId": 4739317961487156196
+        }
+      ],
+      "refId": 1835240976527559154
+    },
+    {
+      "id": 10,
+      "lastPropertyId": 8,
+      "name": "ChatRoom",
+      "properties": [
+        {
+          "id": 1,
+          "name": "room",
+          "refId": 6327997289815082631
+        },
+        {
+          "id": 2,
+          "name": "name",
+          "refId": 5646638821229515114
+        },
+        {
+          "id": 3,
+          "name": "semester",
+          "refId": 594148502901130718
+        },
+        {
+          "id": 4,
+          "name": "semesterId",
+          "refId": 2751963532902111045
+        },
+        {
+          "id": 5,
+          "name": "joined",
+          "refId": 5083932055919637467
+        },
+        {
+          "id": 6,
+          "name": "_id",
+          "refId": 1598277915506889770
+        },
+        {
+          "id": 7,
+          "name": "contributor",
+          "refId": 8317291198897737022
+        },
+        {
+          "id": 8,
+          "name": "members",
+          "refId": 7376340348625941284
+        }
+      ],
+      "refId": 8309853977406114311
     }
   ],
-  "lastEntityId": 8,
+  "lastEntityId": 10,
   "lastIndexId": 3,
   "lastSequenceId": 0,
   "metaVersion": 1,

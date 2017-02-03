@@ -319,9 +319,62 @@
         }
       ],
       "refId": 1835240976527559154
+    },
+    {
+      "id": 10,
+      "lastPropertyId": 9,
+      "name": "ChatRoom",
+      "properties": [
+        {
+          "id": 1,
+          "name": "room",
+          "refId": 6327997289815082631
+        },
+        {
+          "id": 2,
+          "name": "name",
+          "refId": 5646638821229515114
+        },
+        {
+          "id": 3,
+          "name": "semester",
+          "refId": 594148502901130718
+        },
+        {
+          "id": 4,
+          "name": "semesterId",
+          "refId": 2751963532902111045
+        },
+        {
+          "id": 5,
+          "name": "joined",
+          "refId": 5083932055919637467
+        },
+        {
+          "id": 6,
+          "name": "_id",
+          "refId": 1598277915506889770
+        },
+        {
+          "id": 7,
+          "name": "contributor",
+          "refId": 8317291198897737022
+        },
+        {
+          "id": 8,
+          "name": "members",
+          "refId": 7376340348625941284
+        },
+        {
+          "id": 9,
+          "name": "id",
+          "refId": 8505639058589300388
+        }
+      ],
+      "refId": 8309853977406114311
     }
   ],
-  "lastEntityId": 9,
+  "lastEntityId": 10,
   "lastIndexId": 3,
   "lastSequenceId": 0,
   "metaVersion": 1,

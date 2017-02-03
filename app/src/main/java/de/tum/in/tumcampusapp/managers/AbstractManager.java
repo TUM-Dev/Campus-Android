@@ -55,6 +55,5 @@ public class AbstractManager {
         //Chat manager
         db.execSQL("DROP TABLE IF EXISTS unsent_chat_message");
         db.execSQL("DROP TABLE IF EXISTS chat_message");
-        db.execSQL("DROP TABLE IF EXISTS chat_room");
     }
 }
