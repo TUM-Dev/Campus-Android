@@ -5,7 +5,6 @@ import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.support.v7.app.AppCompatActivity;
 import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.widget.EditText;
@@ -17,6 +16,7 @@ import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.activities.generic.BaseActivity;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.ImplicitCounter;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
@@ -27,10 +27,14 @@ import de.tum.in.tumcampusapp.managers.EduroamManager;
  * Activity that allows the user to easily setup eduroam.
  * Collects all the information needed.
  */
-public class SetupEduroamActivity extends AppCompatActivity {
+public class SetupEduroamActivity extends BaseActivity {
 
     private EditText lrz;
     private EditText password;
+
+    public SetupEduroamActivity() {
+        super(R.layout.activity_setup_eduroam);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

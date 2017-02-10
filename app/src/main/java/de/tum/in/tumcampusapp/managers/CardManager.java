@@ -9,6 +9,7 @@ import java.util.List;
 
 import de.tum.in.tumcampusapp.auxiliary.AccessTokenManager;
 import de.tum.in.tumcampusapp.cards.EduroamCard;
+import de.tum.in.tumcampusapp.cards.EduroamFixCard;
 import de.tum.in.tumcampusapp.cards.FirstUseCard1;
 import de.tum.in.tumcampusapp.cards.FirstUseCard2;
 import de.tum.in.tumcampusapp.cards.NoInternetCard;
@@ -41,6 +42,7 @@ public final class CardManager {
     public static final int CARD_CHAT = 12;
     public static final int CARD_SUPPORT = 13;
     public static final int CARD_SURVEY = 14;
+    public static final int CARD_EDUROAM_FIX = 15;
     private static boolean shouldRefresh;
     private static List<Card> cards;
     private static List<Card> newCards;
@@ -106,6 +108,7 @@ public final class CardManager {
         new Support(context).apply();
 
         new EduroamCard(context).apply();
+        new EduroamFixCard(context).apply();
 
         Collection<Card.ProvidesCard> managers = new ArrayList<>();
 
