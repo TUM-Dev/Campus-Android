@@ -31,17 +31,16 @@ public class ScanResultsAvailableReceiver extends BroadcastReceiver {
         if (!intent.getAction().equals(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION)) {
             return;
         }
-        // SurveyCard if user has eduroam configured already
-        EduroamManager man = new EduroamManager(context);
-        boolean show = Utils.getSettingBool(context, "card_eduroam_phone", true);
-        if (man.isConfigured() || NetUtils.isConnected(context) || Build.VERSION.SDK_INT < 18 || !show) {
+
+        // Test if user has eduroam configured already
+        if (EduroamManager.getEduroamConfig(context) != null || NetUtils.isConnected(context) || Build.VERSION.SDK_INT < 18) {
             return;
         }
 
-        // SurveyCard if eduroam is available
+        // Test if eduroam is available
         WifiManager wifi = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
         List<ScanResult> scan = wifi.getScanResults();
-        for(ScanResult network : scan) {
+        for (ScanResult network : scan) {
             if (network.SSID.equals(EduroamManager.NETWORK_SSID)) {
                 //Show notification
                 showNotification(context);
@@ -49,13 +48,14 @@ public class ScanResultsAvailableReceiver extends BroadcastReceiver {
             }
         }
 
-        if(!Utils.getInternalSettingBool(context, SHOULD_SHOW, true)) {
+        if (!Utils.getInternalSettingBool(context, SHOULD_SHOW, true)) {
             Utils.setInternalSetting(context, SHOULD_SHOW, true);
         }
     }
 
     /**
      * Shows notification if it is not already visible
+     *
      * @param context Context
      */
     static void showNotification(Context context) {

@@ -47,18 +47,21 @@ public class EduroamManager {
      *
      * @return true if eduroam is already setup, false otherwise
      */
-    public boolean isConfigured() {
-        WifiManager wifiManager = (WifiManager) mContext.getSystemService(Context.WIFI_SERVICE);
+    static public WifiConfiguration getEduroamConfig(Context c) {
+        WifiManager wifiManager = (WifiManager) c.getSystemService(Context.WIFI_SERVICE);
         List<WifiConfiguration> list = wifiManager.getConfiguredNetworks();
+
+        //We didn't get a list, so maybe theres no wifi?
         if (list == null) {
-            return true;
+            return null;
         }
-        for (WifiConfiguration i : list) {
-            if (i.SSID != null && i.SSID.equals("\"" + NETWORK_SSID + "\"")) {
-                return true;
+
+        for (WifiConfiguration config : list) {
+            if (config.SSID != null && config.SSID.equals("\"" + NETWORK_SSID + "\"")) {
+                return config;
             }
         }
-        return false;
+        return null;
     }
 
     /**
@@ -70,7 +73,14 @@ public class EduroamManager {
      */
     public boolean configureEduroam(String lrzId, String networkPass) {
         // Configure Wifi
-        WifiConfiguration conf = new WifiConfiguration();
+        boolean update = true;
+        WifiConfiguration conf = getEduroamConfig(mContext);
+        ;
+        if (conf == null) {
+            update = false;
+            conf = new WifiConfiguration();
+        }
+
         conf.SSID = "\"" + NETWORK_SSID + "\"";
         conf.allowedKeyManagement.set(KeyMgmt.WPA_EAP);
         conf.allowedKeyManagement.set(KeyMgmt.IEEE8021X);
@@ -93,12 +103,24 @@ public class EduroamManager {
 
         // Add eduroam to wifi networks
         WifiManager wifiManager = (WifiManager) mContext.getSystemService(Context.WIFI_SERVICE);
-        int networkId = wifiManager.addNetwork(conf);
-
-        if (networkId != -1) {
-            wifiManager.saveConfiguration();
+        int networkId;
+        if (update) {
+            networkId = wifiManager.updateNetwork(conf);
+            Utils.log("deleted " + conf.networkId);
+        } else {
+            networkId = wifiManager.addNetwork(conf);
         }
-        return networkId != -1;
+        Utils.log("added " + networkId);
+
+        //Check if update successful
+        if (networkId == -1) {
+            return false;
+        }
+
+        //Save, enable and exit
+        wifiManager.saveConfiguration();
+        wifiManager.enableNetwork(networkId, true);
+        return true;
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)

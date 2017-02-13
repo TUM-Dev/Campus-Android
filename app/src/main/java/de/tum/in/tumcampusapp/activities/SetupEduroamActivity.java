@@ -69,9 +69,6 @@ public class SetupEduroamActivity extends BaseActivity {
             Utils.showToast(this, R.string.eduroam_success);
             finish();
 
-            // Hide eduroam card and update cards list
-            Utils.setSetting(this, "card_eduroam_start", false);
-
             CardManager.setShouldRefresh();
         } else {
             ((TextView) findViewById(R.id.pin_lock)).setTextColor(0xFFFF0000);

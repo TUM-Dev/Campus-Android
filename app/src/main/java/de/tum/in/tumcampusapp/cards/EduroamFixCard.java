@@ -18,18 +18,13 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.io.InputStream;
-import java.security.cert.CertificateException;
-import java.security.cert.CertificateFactory;
-import java.security.cert.X509Certificate;
-import java.util.List;
 import java.util.Vector;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.SetupEduroamActivity;
-import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.cards.generic.NotificationAwareCard;
 import de.tum.in.tumcampusapp.managers.CardManager;
+import de.tum.in.tumcampusapp.managers.EduroamManager;
 
 import static de.tum.in.tumcampusapp.managers.EduroamManager.RADIUS_DNS;
 
@@ -86,7 +81,7 @@ public class EduroamFixCard extends NotificationAwareCard {
 
     @Override
     public Intent getIntent() {
-        if(eduroam != null) {
+        if (eduroam != null) {
             WifiManager wifi = (WifiManager) mContext.getSystemService(Context.WIFI_SERVICE);
             wifi.removeNetwork(eduroam.networkId);
         }
@@ -98,17 +93,10 @@ public class EduroamFixCard extends NotificationAwareCard {
         return 0;
     }
 
+
     private boolean isConfigValid() {
         errors = new Vector<>();
-        WifiManager wifi = (WifiManager) mContext.getSystemService(Context.WIFI_SERVICE);
-        List<WifiConfiguration> configList = wifi.getConfiguredNetworks();
-        eduroam = null;
-
-        for (WifiConfiguration e : configList) {
-            if (e.SSID.contains("eduroam")) {
-                eduroam = e;
-            }
-        }
+        eduroam = EduroamManager.getEduroamConfig(mContext);
 
         //If it is not configured then the config valid
         if (eduroam == null) {
@@ -135,17 +123,13 @@ public class EduroamFixCard extends NotificationAwareCard {
             }
 
             //Check certificate
-            try {
-                X509Certificate cert = eduroam.enterpriseConfig.getCaCertificate();
-                InputStream is = mContext.getResources().openRawResource(R.raw.rootcert);
-                CertificateFactory certFactory = CertificateFactory.getInstance("X.509");
-                X509Certificate certLocal = (X509Certificate) certFactory.generateCertificate(is);
-                if (cert == null || !certLocal.equals(cert)) {
-                    errors.add("No CA certificate set");
-                }
-            } catch (CertificateException e) {
-                Utils.log(e);
-            }
+            //TODO
+            /*if (eduroam.enterpriseConfig.getCaCertificate() == null) {
+                errors.add("No CA certificate set");
+            } else {
+                Utils.log(eduroam.enterpriseConfig.getCaCertificate().toString());
+            }*/
+
         }
 
         return errors.size() == 0;
