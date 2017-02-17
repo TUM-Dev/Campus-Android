@@ -398,5 +398,11 @@
     <string name="IN">en</string>
     <string name="AT">a</string>
     <string name="startup_motto">Por estudiantes - Para estudiantes</string>
+    <string name="eduroam_fix">Reparación Ahora!</string>
+    <string name="eduroam_insecure_configuration">Hemos detectado que la configuración WiFi eduroam inseguro. Usted está sujeto a la filtración de información sobre usted y su cuenta.</string>
+    <string name="fix_eduroam">Reparar Eduroam</string>
+    <string name="wifi_identity_zone">Identidad no contiene zona</string>
+    <string name="wifi_dns_name_not_set">El nombre DNS no está configurado</string>
+    <string name="wifi_anonymous_identity_not_set">La identidad anónima no es correcta</string>
     <!-- END Translated, please do not change identifiers -->
 </resources>

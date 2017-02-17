@@ -144,9 +144,8 @@ public class EduroamManager {
         conf.enterpriseConfig.setCaCertificate(cert);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             setSubjectMatchAPI23(conf);
-        } else {
-            setSubjectMatchOld(conf);
         }
+        setSubjectMatch18To23(conf); //Set both just to be sure
     }
 
     @TargetApi(Build.VERSION_CODES.M)
@@ -157,7 +156,7 @@ public class EduroamManager {
 
     @TargetApi(18)
     @SuppressWarnings("deprecation")
-    private void setSubjectMatchOld(WifiConfiguration conf) {
+    private void setSubjectMatch18To23(WifiConfiguration conf) {
         conf.enterpriseConfig.setSubjectMatch(RADIUS_DNS);
     }
 

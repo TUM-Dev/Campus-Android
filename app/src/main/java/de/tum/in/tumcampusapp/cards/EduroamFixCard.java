@@ -105,21 +105,25 @@ public class EduroamFixCard extends NotificationAwareCard {
 
         //Otherwise check attributes
         //Android 23+: check newer match for the radius server
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && (!eduroam.enterpriseConfig.getAltSubjectMatch().equals("DNS:" + RADIUS_DNS) || !eduroam.enterpriseConfig.getDomainSuffixMatch().equals(RADIUS_DNS))) {
-            errors.add("Radius is not set");
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
+                (!eduroam.enterpriseConfig.getAltSubjectMatch().equals("DNS:" + RADIUS_DNS) || !eduroam.enterpriseConfig.getDomainSuffixMatch().equals(RADIUS_DNS))
+                && !isValidSubjectMatchAPI18(eduroam)) {
+            errors.add(mContext.getString(R.string.wifi_dns_name_not_set));
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M && !isValidSubjectMatchAPI18(eduroam)) {
-                errors.add("Radius is not set");
+                errors.add(mContext.getString(R.string.wifi_dns_name_not_set));
             }
 
             //Check that the full quantifier and correct identity is used
             if (!eduroam.enterpriseConfig.getIdentity().contains("@eduroam.mwn.de") && !eduroam.enterpriseConfig.getIdentity().contains("@mytum.de") && !eduroam.enterpriseConfig.getIdentity().contains("@tum.de")) {
-                errors.add("Identity does not contain zone");
+                errors.add(mContext.getString(R.string.wifi_identity_zone));
             }
-            if (!eduroam.enterpriseConfig.getAnonymousIdentity().equals("anonymous@mwn.de") && !eduroam.enterpriseConfig.getAnonymousIdentity().equals("anonymous@mytum.de")) {
-                errors.add("Anonymous Identity not correct");
+            if (!eduroam.enterpriseConfig.getAnonymousIdentity().equals("anonymous@mwn.de") &&
+                    !eduroam.enterpriseConfig.getAnonymousIdentity().equals("anonymous@eduroam.mwn.de") &&
+                    !eduroam.enterpriseConfig.getAnonymousIdentity().equals("anonymous@mytum.de")) {
+                errors.add(mContext.getString(R.string.wifi_anonymous_identity_not_set));
             }
 
             //Check certificate
