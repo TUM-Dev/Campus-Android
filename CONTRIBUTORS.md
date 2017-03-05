@@ -1,18 +1,18 @@
 #### Projektmanagement:
-+ TUM - Computer Science / F13
-+ Prof. Dr. Uwe Baumgarten
++ [TUM - Computer Science / F13 Fachgebiet für Betriebssysteme](https://www.os.in.tum.de/startseite/)
++ [Prof. Dr. Uwe Baumgarten](https://www.os.in.tum.de/personen/baumgarten/)
 
 #### Technische Unterstützung:
 + Andreas Bernhofer (IT-Support)
 + Bernhard Blieninger
 
 #### Aktive Entwickler (Ehrenamtlich)
-+ Kordian Bruck
-+ Philipp Fent
++ [Kordian Bruck](https://github.com/kordianbruck)
++ [Philipp Fent](https://github.com/pfent)
 
 #### Ehemalige Unterstützer / Administratoren / Projektleiter
-+ Nils T. Kannengiesser
-+ Paul Nieleck
++ Nils T. Kannengiesser als Projektleiter und Initiator von 2012 bis 2016
++ Paul Nieleck als Administrator von 2015 bis 2016
 
 #### Entwickler Sommersemester 2016
 + Aser Abdelrahman
@@ -28,7 +28,7 @@
 
 #### Entwickler Sommersemester 2014
 + Florian Dreier
-+ Kordian Bruck
++ [Kordian Bruck](https://github.com/kordianbruck)
 + Jana Pejic
 + Marko Lalic
 
