@@ -1,12 +1,11 @@
 package de.tum.in.tumcampusapp.activities;
 
 import android.support.v4.view.ViewPager;
-import android.widget.RelativeLayout;
 
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.activities.generic.ActivityForDownloadingExternal;
+import de.tum.in.tumcampusapp.activities.generic.BaseActivity;
 import de.tum.in.tumcampusapp.adapters.KinoAdapter;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.entities.Movie;
@@ -15,10 +14,10 @@ import de.tum.in.tumcampusapp.managers.KinoManager;
 /**
  * Activity to show TU Movie details (e.g. imdb rating)
  */
-public class KinoActivity extends ActivityForDownloadingExternal {
+public class KinoActivity extends BaseActivity {
 
     public KinoActivity() {
-        super(Const.KINO, R.layout.activity_kino);
+        super(R.layout.activity_kino);
     }
 
     @Override

@@ -1,18 +1,25 @@
+## Ehrenamtliche Beitragende
+Hier sind alle jene aufgeführt, welche in Ihrer Freizeit sich dem Projekt widmen und auf freiwilliger Basis Beiträge leisten, damit diese App weiter existiert.
 
 #### Projektmanagement:
-+ TUM - Computer Science / F13
-+ Prof. Dr. Uwe Baumgarten
-+ Nils T. Kannengiesser
++ [TUM - Computer Science / F13 Fachgebiet für Betriebssysteme](https://www.os.in.tum.de/startseite/)
++ [Prof. Dr. Uwe Baumgarten](https://www.os.in.tum.de/personen/baumgarten/)
 
 #### Technische Unterstützung:
-+ Andreas Bernhofer (IT-Support/TUMonline), 
-+ Paul Nieleck (Administrator F13)
++ Andreas Bernhofer (IT-Support)
++ Bernhard Blieninger
 
-#### Aktive Entwickler (Ehrenamtlich)
-+ Kordian Bruck
-+ Philipp Fent
+#### Aktive Entwickler
++ [Kordian Bruck](https://github.com/kordianbruck)
++ [Philipp Fent](https://github.com/pfent)
+
+#### Ehemalige Unterstützer / Administratoren / Projektleiter
++ Nils T. Kannengiesser als Projektleiter und Initiator von 2012 bis 2016
++ Paul Nieleck als Administrator von 2015 bis 2016
 + Ralf Baun
 
+## Studenten aus dem Android Praktikum
+Jedes Semester tragen Studenten im Rahmen des Android Praktikums einiges dazu bei, dass die App neue Features bekommt. Diese Studenten haben über die Dauer eines Semester ein Projekt im Rahmen der TCA ausgeführt.
 #### Entwickler Sommersemester 2016
 + Aser Abdelrahman
 + Mohamad Ayad
@@ -26,7 +33,7 @@
 
 #### Entwickler Sommersemester 2014
 + Florian Dreier
-+ Kordian Bruck
++ [Kordian Bruck](https://github.com/kordianbruck)
 + Jana Pejic
 + Marko Lalic
 

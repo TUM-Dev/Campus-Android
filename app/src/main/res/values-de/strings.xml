@@ -417,4 +417,10 @@ Signatur: %5$s</string>
     <string name="MINUTES">minuten</string>
     <string name="AT">um</string>
     <string name="startup_motto">Von Studierenden - Für Studierende</string>
+    <string name="eduroam_fix">Jetzt reparieren!</string>
+    <string name="eduroam_insecure_configuration">Wir haben eine unsichere WLAN-eduroam Konfiguration erkannt. Sie könnten möglicherweise Informationen über Sie und Ihr Konto in dritte Hände geben.</string>
+    <string name="fix_eduroam">Eduroam Reparieren</string>
+    <string name="wifi_identity_zone">Identität enthält keine Zone</string>
+    <string name="wifi_dns_name_not_set">DNS-Name ist nicht festgelegt</string>
+    <string name="wifi_anonymous_identity_not_set">Anonyme Identität nicht korrekt</string>
 </resources>

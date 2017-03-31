@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import de.tum.in.tumcampusapp.cards.CafeteriaMenuCard;
 import de.tum.in.tumcampusapp.cards.ChatMessagesCard;
 import de.tum.in.tumcampusapp.cards.EduroamCard;
+import de.tum.in.tumcampusapp.cards.EduroamFixCard;
 import de.tum.in.tumcampusapp.cards.FirstUseCard1;
 import de.tum.in.tumcampusapp.cards.FirstUseCard2;
 import de.tum.in.tumcampusapp.cards.MVVCard;
@@ -52,6 +53,8 @@ public class CardsAdapter extends RecyclerView.Adapter<Card.CardViewHolder> {
                 return NewsCard.inflateViewHolder(viewGroup, viewType);
             case CardManager.CARD_EDUROAM:
                 return EduroamCard.inflateViewHolder(viewGroup);
+            case CardManager.CARD_EDUROAM_FIX:
+                return EduroamFixCard.inflateViewHolder(viewGroup);
             case CardManager.CARD_CHAT:
                 return ChatMessagesCard.inflateViewHolder(viewGroup);
             case CardManager.CARD_SUPPORT:

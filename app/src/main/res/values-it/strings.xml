@@ -332,4 +332,10 @@
     <string name="MINUTES">minuti</string>
     <string name="AT">a</string>
     <string name="startup_motto">Con gli studenti - Per gli studenti</string>
+    <string name="fix_eduroam">eduroam riparazione</string>
+    <string name="eduroam_insecure_configuration">Abbiamo rilevato alla configurazione wifi Eduroam insicuro. Sei soggetto a perdite di informazioni su di te e il tuo account.</string>
+    <string name="eduroam_fix">Riparazione Now!</string>
+    <string name="wifi_anonymous_identity_not_set">Anonymous identità non corretta</string>
+    <string name="wifi_dns_name_not_set">Nome DNS non è impostato</string>
+    <string name="wifi_identity_zone">Identità non contiene zona</string>
 </resources>

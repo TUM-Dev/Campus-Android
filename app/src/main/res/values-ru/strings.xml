@@ -332,4 +332,10 @@
     <string name="MINUTES">минут</string>
     <string name="AT">в</string>
     <string name="startup_motto">По студентов - Для студентов</string>
+    <string name="fix_eduroam">Eduroam Ремонт</string>
+    <string name="eduroam_insecure_configuration">Мы обнаружили в незащищенной конфигурации WiFi Eduroam. Вы подвержены утечке информации о вас и вашей учетной записи.</string>
+    <string name="eduroam_fix">Ремонт сейчас!</string>
+    <string name="wifi_anonymous_identity_not_set">Анонимный идентификатор не правильно</string>
+    <string name="wifi_dns_name_not_set">Имя DNS не установлен</string>
+    <string name="wifi_identity_zone">Идентичность не содержит зону</string>
 </resources>

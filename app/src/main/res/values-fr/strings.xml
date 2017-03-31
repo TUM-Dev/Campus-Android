@@ -406,5 +406,11 @@
     <string name="MINUTES">minutes</string>
     <string name="AT">à</string>
     <string name="startup_motto">Par étudiants - Pour les étudiants</string>
+    <string name="eduroam_fix">Réparer maintenant!</string>
+    <string name="eduroam_insecure_configuration">Nous avons détecté que la configuration wifi eduroam insécurité. Vous êtes soumis à des fuites d\'informations sur vous et votre compte.</string>
+    <string name="fix_eduroam">Eduroam réparation</string>
+    <string name="wifi_anonymous_identity_not_set">Anonymous Identity pas correct</string>
+    <string name="wifi_dns_name_not_set">Nom DNS est pas défini</string>
+    <string name="wifi_identity_zone">L\'identité ne contient pas de zone</string>
 
 </resources>
