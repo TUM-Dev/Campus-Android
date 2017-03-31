@@ -177,8 +177,12 @@ public class CafeteriaManager extends AbstractManager implements Card.ProvidesCa
         Calendar now = Calendar.getInstance();
         if (DateUtils.isToday(date.getTime()) && now.get(Calendar.HOUR_OF_DAY) >= 15) {
             cursorCafeteriaDates.moveToNext(); // Get following day
-            dateStr = cursorCafeteriaDates.getString(idCol);
-            date = Utils.getDate(dateStr);
+            try {
+                dateStr = cursorCafeteriaDates.getString(idCol);
+                date = Utils.getDate(dateStr);
+            }catch (Exception ignore) {
+                return;
+            }
         }
         cursorCafeteriaDates.close();
 
