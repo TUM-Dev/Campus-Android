@@ -40,7 +40,7 @@ public class EduroamCard extends NotificationAwareCard {
 
     @Override
     protected boolean shouldShow(SharedPreferences prefs) {
-        return EduroamManager.getEduroamConfig(mContext) == null;
+        return EduroamHelper.getEduroamConfig(mContext) == null;
     }
 
     @Override

@@ -25,11 +25,11 @@ import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.SetupEduroamActivity;
+import de.tum.in.tumcampusapp.auxiliary.EduroamHelper;
 import de.tum.in.tumcampusapp.cards.generic.NotificationAwareCard;
 import de.tum.in.tumcampusapp.managers.CardManager;
-import de.tum.in.tumcampusapp.managers.EduroamManager;
 
-import static de.tum.in.tumcampusapp.managers.EduroamManager.RADIUS_DNS;
+import static de.tum.in.tumcampusapp.auxiliary.EduroamHelper.RADIUS_DNS;
 
 
 public class EduroamFixCard extends NotificationAwareCard {
@@ -95,7 +95,7 @@ public class EduroamFixCard extends NotificationAwareCard {
 
     private boolean isConfigValid() {
         errors.clear();
-        eduroam = EduroamManager.getEduroamConfig(mContext);
+        eduroam = EduroamHelper.getEduroamConfig(mContext);
 
         //If it is not configured then the config valid
         if (eduroam == null) {

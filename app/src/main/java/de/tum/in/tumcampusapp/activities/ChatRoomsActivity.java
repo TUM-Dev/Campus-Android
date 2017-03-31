@@ -44,7 +44,7 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
  * This activity presents the chat rooms of user's
  * lectures using the TUMOnline web service
  */
-public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Cursor> implements OnItemClickListener {
+public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, List<de.tum.in.tumcampusapp.entities.ChatRoom>> implements OnItemClickListener {
     private static final String PROPERTY_APP_VERSION = "appVersion";
 
     private StickyListHeadersListView lvMyChatRoomList;
@@ -53,7 +53,7 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
     private ChatMember currentChatMember;
     private TUMOnlineRequest<LecturesSearchRowSet> requestHandler;
     private ChatRoomManager manager;
-    private int mCurrentMode = 1;
+    private boolean joinedOnly = true;
     private ChatRoomListAdapter adapter;
     private boolean firstLoad = true;
 
@@ -81,7 +81,10 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 // show the given tab
-                mCurrentMode = 1 - tab.getPosition();
+                joinedOnly = true;
+                if(tab.getPosition() == 2) {
+                    joinedOnly = false;
+                }
                 firstLoad = true;
                 startLoading();
             }
@@ -198,17 +201,18 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
                     Utils.logv("Success creating&joining chat room: " + response.body());
                     currentChatRoom = response.body();
 
-                    manager.join(currentChatRoom);
+                    manager.setJoined(currentChatRoom, 1);
 
                     // When we show joined chat rooms open chat room directly
-                    if (mCurrentMode == 1) {
+                    if (joinedOnly) {
                         moveToChatActivity();
                     } else { //Otherwise show a nice information, that we added the room
-                        final Cursor newCursor = manager.getAllByStatus(mCurrentMode);
+                        final List<de.tum.in.tumcampusapp.entities.ChatRoom> rooms = manager.getAllByStatus(joinedOnly);
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                adapter.changeCursor(newCursor);
+                                adapter = new ChatRoomListAdapter(ChatRoomsActivity.this, rooms, joinedOnly);
+                                lvMyChatRoomList.setAdapter(adapter);
                                 Utils.showToast(ChatRoomsActivity.this, R.string.joined_chat_room);
                             }
                         });
@@ -227,7 +231,7 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
     }
 
     @Override
-    protected Cursor onLoadInBackground(Void... arg) {
+    protected List<de.tum.in.tumcampusapp.entities.ChatRoom> onLoadInBackground(Void... arg) {
         if (!firstLoad) {
             Optional<LecturesSearchRowSet> lecturesList = requestHandler.fetch();
             if (lecturesList.isPresent()) {
@@ -250,17 +254,17 @@ public class ChatRoomsActivity extends ActivityForLoadingInBackground<Void, Curs
             }
         }
         firstLoad = false;
-        return manager.getAllByStatus(mCurrentMode);
+        return manager.getAllByStatus(joinedOnly);
     }
 
     @Override
-    protected void onLoadFinished(Cursor result) {
+    protected void onLoadFinished(List<de.tum.in.tumcampusapp.entities.ChatRoom> result) {
         showLoadingEnded();
-        if (result.getCount() == 0) {
+        if (result.size() == 0) {
             lvMyChatRoomList.setAdapter(new NoResultsAdapter(this));
         } else {
             // set ListView to data via the LecturesListAdapter
-            adapter = new ChatRoomListAdapter(this, result, mCurrentMode);
+            adapter = new ChatRoomListAdapter(this, result, joinedOnly);
             lvMyChatRoomList.setAdapter(adapter);
         }
     }

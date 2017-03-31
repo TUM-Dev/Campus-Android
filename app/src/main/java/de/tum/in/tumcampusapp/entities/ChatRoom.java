@@ -16,27 +16,28 @@ public class ChatRoom {
     private String semester;
     private String semesterId;
     private Integer joined = -1;
-    private Integer _id = 0;
+    private Integer lectureId = 0;
     private String contributor;
     private int members = 0;
 
-    @Generated(hash = 21543601)
+
+    @Generated(hash = 507512638)
+    public ChatRoom() {
+    }
+
+    @Generated(hash = 652411889)
     public ChatRoom(Long id, Integer room, String name, String semester,
-                    String semesterId, Integer joined, Integer _id, String contributor,
-                    int members) {
+            String semesterId, Integer joined, Integer lectureId,
+            String contributor, int members) {
         this.id = id;
         this.room = room;
         this.name = name;
         this.semester = semester;
         this.semesterId = semesterId;
         this.joined = joined;
-        this._id = _id;
+        this.lectureId = lectureId;
         this.contributor = contributor;
         this.members = members;
-    }
-
-    @Generated(hash = 507512638)
-    public ChatRoom() {
     }
 
     public Long getId() {
@@ -88,11 +89,11 @@ public class ChatRoom {
     }
 
     public Integer get_id() {
-        return _id;
+        return lectureId;
     }
 
     public void set_id(Integer _id) {
-        this._id = _id;
+        this.lectureId = _id;
     }
 
     public String getContributor() {
@@ -109,6 +110,14 @@ public class ChatRoom {
 
     public void setMembers(int members) {
         this.members = members;
+    }
+
+    public Integer getLectureId() {
+        return lectureId;
+    }
+
+    public void setLectureId(Integer lectureId) {
+        this.lectureId = lectureId;
     }
 
 }

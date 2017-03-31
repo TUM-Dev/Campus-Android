@@ -150,7 +150,7 @@ public class OwnQuestion {
      * To-many relationship, resolved on first access (and after reset).
      * Changes to to-many relations are not persisted, make changes to the target entity.
      */
-    @Generated(hash = 1095782774)
+    @Generated(hash = 1213237410)
     public List<Faculty> getTargetFac() {
         if (targetFac == null) {
             final BoxStore boxStore = this.__boxStore;
@@ -158,8 +158,8 @@ public class OwnQuestion {
                 throw new DbDetachedException();
             }
             Box<Faculty> box = boxStore.boxFor(Faculty.class);
-            int targetEntityId = boxStore.getEntityIdOrThrow(Faculty.class);
-            List<Faculty> targetFacNew = box.getBacklinkEntities(targetEntityId, Faculty_.faculty, id);
+            int targetTypeId = boxStore.getEntityTypeIdOrThrow(Faculty.class);
+            List<Faculty> targetFacNew = box.getBacklinkEntities(targetTypeId, Faculty_.faculty, id);
             synchronized (this) {
                 if (targetFac == null) {
                     targetFac = targetFacNew;

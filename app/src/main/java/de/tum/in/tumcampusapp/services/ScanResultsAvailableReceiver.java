@@ -34,7 +34,7 @@ public class ScanResultsAvailableReceiver extends BroadcastReceiver {
 
         // Test if user has eduroam configured already
         boolean show = Utils.getSettingBool(context, "card_eduroam_phone", true);
-        if (EduroamManager.getEduroamConfig(context) != null || NetUtils.isConnected(context) || Build.VERSION.SDK_INT < 18 || !show) {
+        if (EduroamHelper.getEduroamConfig(context) != null || NetUtils.isConnected(context) || Build.VERSION.SDK_INT < 18 || !show) {
             return;
         }
 
@@ -42,7 +42,7 @@ public class ScanResultsAvailableReceiver extends BroadcastReceiver {
         WifiManager wifi = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         List<ScanResult> scan = wifi.getScanResults();
         for (ScanResult network : scan) {
-            if (network.SSID.equals(EduroamManager.NETWORK_SSID)) {
+            if (network.SSID.equals(EduroamHelper.NETWORK_SSID)) {
                 //Show notification
                 showNotification(context);
                 return;
