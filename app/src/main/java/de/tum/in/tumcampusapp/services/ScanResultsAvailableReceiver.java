@@ -24,7 +24,7 @@ import de.tum.in.tumcampusapp.managers.EduroamManager;
  * If yes and eduroam has not been setup by now it shows an according notification.
  */
 public class ScanResultsAvailableReceiver extends BroadcastReceiver {
-    private static final String SHOULD_SHOW = "setup_notification_dismissed";
+    private static final String SHOULD_SHOW = "wifi_setup_notification_dismissed";
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -38,7 +38,7 @@ public class ScanResultsAvailableReceiver extends BroadcastReceiver {
         }
 
         // Test if eduroam is available
-        WifiManager wifi = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+        WifiManager wifi = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         List<ScanResult> scan = wifi.getScanResults();
         for (ScanResult network : scan) {
             if (network.SSID.equals(EduroamManager.NETWORK_SSID)) {
@@ -48,6 +48,7 @@ public class ScanResultsAvailableReceiver extends BroadcastReceiver {
             }
         }
 
+        //???
         if (!Utils.getInternalSettingBool(context, SHOULD_SHOW, true)) {
             Utils.setInternalSetting(context, SHOULD_SHOW, true);
         }
@@ -60,7 +61,6 @@ public class ScanResultsAvailableReceiver extends BroadcastReceiver {
      */
     static void showNotification(Context context) {
         // If previous notification is still visible
-
         if (!Utils.getInternalSettingBool(context, SHOULD_SHOW, true)) {
             return;
         }

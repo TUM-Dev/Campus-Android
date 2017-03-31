@@ -48,7 +48,7 @@ public class EduroamManager {
      * @return true if eduroam is already setup, false otherwise
      */
     static public WifiConfiguration getEduroamConfig(Context c) {
-        WifiManager wifiManager = (WifiManager) c.getSystemService(Context.WIFI_SERVICE);
+        WifiManager wifiManager = (WifiManager) c.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         List<WifiConfiguration> list = wifiManager.getConfiguredNetworks();
 
         //We didn't get a list, so maybe theres no wifi?
@@ -102,7 +102,7 @@ public class EduroamManager {
         }
 
         // Add eduroam to wifi networks
-        WifiManager wifiManager = (WifiManager) mContext.getSystemService(Context.WIFI_SERVICE);
+        WifiManager wifiManager = (WifiManager) mContext.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         int networkId;
         if (update) {
             networkId = wifiManager.updateNetwork(conf);
