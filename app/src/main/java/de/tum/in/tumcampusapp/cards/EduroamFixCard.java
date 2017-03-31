@@ -103,8 +103,7 @@ public class EduroamFixCard extends NotificationAwareCard {
             return true;
         }
 
-        //Otherwise check attributes
-        //Android 23+: check newer match for the radius server
+        //Otherwise check attributes - Android 23+: check newer match for the radius server
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
                 (!eduroam.enterpriseConfig.getAltSubjectMatch().equals("DNS:" + RADIUS_DNS) || !eduroam.enterpriseConfig.getDomainSuffixMatch().equals(RADIUS_DNS))
                 && !isValidSubjectMatchAPI18(eduroam)) {
