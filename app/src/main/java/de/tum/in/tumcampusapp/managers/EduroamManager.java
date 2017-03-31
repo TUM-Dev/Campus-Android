@@ -75,7 +75,7 @@ public class EduroamManager {
         // Configure Wifi
         boolean update = true;
         WifiConfiguration conf = getEduroamConfig(mContext);
-        ;
+
         if (conf == null) {
             update = false;
             conf = new WifiConfiguration();

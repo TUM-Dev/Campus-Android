@@ -18,7 +18,10 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.util.Vector;
+import com.google.common.base.Joiner;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.SetupEduroamActivity;
@@ -31,12 +34,13 @@ import static de.tum.in.tumcampusapp.managers.EduroamManager.RADIUS_DNS;
 
 public class EduroamFixCard extends NotificationAwareCard {
 
-    private Vector<String> errors;
+    private List<String> errors;
     private TextView errorsTv;
     private WifiConfiguration eduroam;
 
     public EduroamFixCard(Context context) {
         super(CardManager.CARD_EDUROAM_FIX, context, "card_eduroam_fix_start", false, true);
+        errors = new ArrayList<>();
     }
 
     public static CardViewHolder inflateViewHolder(ViewGroup parent) {
@@ -50,12 +54,7 @@ public class EduroamFixCard extends NotificationAwareCard {
         mCard = viewHolder.itemView;
         mLinearLayout = (LinearLayout) mCard.findViewById(R.id.card_view);
         errorsTv = (TextView) mCard.findViewById(R.id.eduroam_errors);
-
-        String txt = "";
-        for (String e : errors) {
-            txt += e + "\n";
-        }
-        errorsTv.setText(txt);
+        errorsTv.setText(Joiner.on("\n").join(errors));
     }
 
     @Override
@@ -95,7 +94,7 @@ public class EduroamFixCard extends NotificationAwareCard {
 
 
     private boolean isConfigValid() {
-        errors = new Vector<>();
+        errors.clear();
         eduroam = EduroamManager.getEduroamConfig(mContext);
 
         //If it is not configured then the config valid
