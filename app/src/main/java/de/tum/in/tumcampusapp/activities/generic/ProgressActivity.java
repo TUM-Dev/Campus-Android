@@ -152,7 +152,7 @@ public abstract class ProgressActivity extends BaseActivity implements SwipeRefr
         noInternetLayout.setVisibility(View.VISIBLE);
         allErrorsLayout.setVisibility(View.VISIBLE);
         noInternetLayout.findViewById(R.id.progressWifi).setVisibility(View.INVISIBLE);
-        WifiManager wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+        WifiManager wifi = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         Button but = (Button) findViewById(R.id.button_enable_wifi);
         but.setVisibility(wifi.isWifiEnabled() ? View.GONE : View.VISIBLE);
         registerReceiver(connectivityChangeReceiver,
@@ -257,7 +257,7 @@ public abstract class ProgressActivity extends BaseActivity implements SwipeRefr
      * Show wifi settings
      */
     public void onEnableWifi(View view) {
-        WifiManager wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+        WifiManager wifi = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         wifi.setWifiEnabled(true);
         noInternetLayout.findViewById(R.id.progressWifi).setVisibility(View.VISIBLE);
     }
