@@ -74,10 +74,10 @@ dependencies {
         exclude group: 'stax', module: 'stax-api'
         exclude group: 'xpp3', module: 'xpp3'
     }
-    compile 'de.psdev.licensesdialog:licensesdialog:1.8.1'
+    compile 'de.psdev.licensesdialog:licensesdialog:1.8.2'
     compile 'com.github.alamkanak:android-week-view:1.2.6'
     compile 'de.hdodenhof:circleimageview:2.1.0'
-    compile 'net.danlew:android.joda:2.9.5'
+    compile 'net.danlew:android.joda:2.9.9'
     compile 'com.github.franmontiel:PersistentCookieJar:v1.0.0'
 
     androidTestCompile "com.android.support:support-annotations:$androidSupportVersion"
