@@ -105,7 +105,7 @@
     <string name="no_link_existing">Kein Link gefunden.</string>
     <string name="info_title">Neuigkeiten:</string>
 
-    <!-- Kino -->
+    <!-- Movie -->
     <string name="imdb_rating">IMDb-Wertung</string>
     <string name="year">Erscheinungsjahr</string>
     <string name="runtime">Laufzeit</string>

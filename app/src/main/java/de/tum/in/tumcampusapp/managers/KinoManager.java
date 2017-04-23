@@ -1,28 +1,28 @@
 package de.tum.in.tumcampusapp.managers;
 
 import android.content.Context;
-import android.database.Cursor;
 
-import com.google.common.base.Optional;
-
-import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
-import java.util.Date;
+import java.util.List;
 
-import de.tum.in.tumcampusapp.auxiliary.Const;
+import de.tum.in.tumcampusapp.api.TUMCabeClient;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
-import de.tum.in.tumcampusapp.models.tumcabe.Kino;
+import de.tum.in.tumcampusapp.entities.Movie;
+import de.tum.in.tumcampusapp.entities.TcaBoxes;
+import io.objectbox.Box;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
- * TU Kino Manager, handles content
+ * TU Movie Manager, handles content
  */
 public class KinoManager extends AbstractManager {
 
-    private static final int TIME_TO_SYNC = 1800; // 1/2 hour
-    private static final String KINO_URL = "https://tumcabe.in.tum.de/Api/kino/";
+    private static final int TIME_TO_SYNC = CacheManager.VALIDITY_TWO_DAYS; // 1/2 hour
+    private Box<Movie> kinoBox;
 
     /**
      * Constructor open/create database
@@ -31,24 +31,8 @@ public class KinoManager extends AbstractManager {
      */
     public KinoManager(Context context) {
         super(context);
-
-        // create table if needed
-        db.execSQL("CREATE TABLE IF NOT EXISTS kino (id INTEGER PRIMARY KEY, title TEXT, year VARCHAR, runtime VARCHAR," +
-                "genre VARCHAR, director TEXT, actors TEXT, rating VARCHAR, description TEXT, cover TEXT, trailer TEXT, date VARCHAR, created VARCHAR," +
-                "link TEXT)");
-
-        // remove old items
-        cleanupDb();
+        kinoBox = TcaBoxes.getBoxStore().boxFor(Movie.class);
     }
-
-
-    /**
-     * Removes all old items
-     */
-    final void cleanupDb() {
-        db.execSQL("DELETE FROM kino WHERE date < date('now')");
-    }
-
 
     /**
      * download kino from external interface (JSON)
@@ -57,96 +41,41 @@ public class KinoManager extends AbstractManager {
      * @throws JSONException
      */
     public void downloadFromExternal(boolean force) throws JSONException {
-        SyncManager sync = new SyncManager(mContext);
+        final SyncManager sync = new SyncManager(mContext);
         if (!force && !sync.needSync(this, TIME_TO_SYNC)) {
             return;
         }
 
+        // Download from the tumcabe api
+        TUMCabeClient.getInstance(mContext).getMovies(new Callback<List<Movie>>() {
+            @Override
+            public void onResponse(Call<List<Movie>> call, Response<List<Movie>> response) {
+                if(response.isSuccessful()) {
+                    kinoBox.put(response.body());
+                    sync.replaceIntoDb(this);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Movie>> call, Throwable t) {
+                Utils.log(t, "Could not fetch movies");
+            }
+        });
+    }
+
+    public List<Movie> getAll() {
+        return kinoBox.getAll();
+    }
+
+
+    public void cacheCovers() {
+        List<Movie> allMovies = this.getAll();
         NetUtils net = new NetUtils(mContext);
 
-        // download from kino database
-        Optional<JSONArray> jsonArray = net.downloadJsonArray(KINO_URL + getLastId(), CacheManager.VALIDITY_ONE_DAY, force);
-
-        if (!jsonArray.isPresent()) {
-            return;
-        }
-
-        JSONArray arr = jsonArray.get();
-        // write data to database on device
-        db.beginTransaction();
-        try {
-            for (int i = 0; i < arr.length(); i++) {
-                JSONObject obj = arr.getJSONObject(i);
-                replaceIntoDb(getFromJson(obj));
+        for (Movie e : allMovies) {
+            if (e.getCover() != null && !e.getCover().equals("")) {
+                net.downloadImage(e.getCover());
             }
-            db.setTransactionSuccessful();
-        } finally {
-            db.endTransaction();
         }
-        sync.replaceIntoDb(this);
     }
-
-    /**
-     * Convert JSON object to Kino
-     *
-     * @param json JsonObject from external
-     * @return Kino
-     * @throws JSONException
-     */
-    private static Kino getFromJson(JSONObject json) throws JSONException {
-        String id = json.getString(Const.JSON_KINO);
-        String title = json.getString(Const.JSON_TITLE);
-        String year = json.getString(Const.JSON_YEAR);
-        String runtime = json.getString(Const.JSON_RUNTIME);
-        String genre = json.getString(Const.JSON_GENRE);
-        String director = json.getString(Const.JSON_DIRECTOR);
-        String actors = json.getString(Const.JSON_ACTORS);
-        String rating = json.getString(Const.JSON_RATING);
-        String description = json.getString(Const.JSON_DESCRIPTION).replaceAll("\n", "").trim();
-        String cover = json.getString(Const.JSON_COVER);
-        String trailer = json.getString(Const.JSON_TRAILER);
-        Date date = Utils.getISODateTime(json.getString(Const.JSON_DATE));
-        Date created = Utils.getISODateTime(json.getString(Const.JSON_CREATED));
-        String link = json.getString(Const.JSON_LINK);
-
-        return new Kino(id, title, year, runtime, genre, director, actors, rating, description, cover, trailer, date, created, link);
-    }
-
-
-    /**
-     * get everything from the database
-     *
-     * @return Cursor
-     */
-    public Cursor getAllFromDb() {
-        return db.rawQuery("SELECT * FROM kino", null);
-    }
-
-    /**
-     * replace or insert an event in the database
-     *
-     * @param k Kino obj
-     */
-    void replaceIntoDb(Kino k) {
-        Utils.logv(k.toString());
-
-        db.execSQL("REPLACE INTO kino (id, title, year, runtime, genre, director, actors, rating," +
-                        "description, cover, trailer, date, created, link) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
-                new String[]{k.id, k.title, k.year, k.runtime, k.genre, k.director, k.actors, k.rating,
-                        k.description, k.cover, k.trailer, Utils.getDateTimeString(k.date),
-                        Utils.getDateTimeString(k.created), k.link});
-    }
-
-
-    // returns the last id in the database
-    private String getLastId() {
-        String lastId = "";
-        Cursor c = db.rawQuery("SELECT id FROM kino ORDER BY id DESC LIMIT 1", null);
-        if (c.moveToFirst()) {
-            lastId = c.getString(0);
-        }
-        c.close();
-        return lastId;
-    }
-
 }

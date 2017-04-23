@@ -473,7 +473,7 @@ public class ChatActivity extends AppCompatActivity implements DialogInterface.O
             @Override
             public void onResponse(Call<ChatRoom> call, Response<ChatRoom> room) {
                 Utils.logv("Success leaving chat room: " + room.body().getName());
-                new ChatRoomManager(ChatActivity.this).leave(currentChatRoom);
+                new ChatRoomManager(ChatActivity.this).setJoined(currentChatRoom, 0);
 
                 // Move back to ChatRoomsActivity
                 Intent intent = new Intent(ChatActivity.this, ChatRoomsActivity.class);

@@ -7,7 +7,6 @@ import com.google.common.base.Optional;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.api.TUMCabeClient;
@@ -15,14 +14,18 @@ import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.cards.ChatMessagesCard;
 import de.tum.in.tumcampusapp.cards.generic.Card;
+import de.tum.in.tumcampusapp.entities.ChatRoom;
+import de.tum.in.tumcampusapp.entities.ChatRoom_;
+import de.tum.in.tumcampusapp.entities.TcaBoxes;
 import de.tum.in.tumcampusapp.exceptions.NoPrivateKey;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatMember;
-import de.tum.in.tumcampusapp.models.tumcabe.ChatRoom;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatVerification;
 import de.tum.in.tumcampusapp.models.tumo.LecturesSearchRow;
 import de.tum.in.tumcampusapp.models.tumo.LecturesSearchRowSet;
 import de.tum.in.tumcampusapp.tumonline.TUMOnlineConst;
 import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequest;
+import io.objectbox.Box;
+import io.objectbox.query.QueryBuilder;
 
 /**
  * TUMOnline cache manager, allows caching of TUMOnline requests
@@ -38,6 +41,8 @@ public class ChatRoomManager extends AbstractManager implements Card.ProvidesCar
     public static final int COL_CONTRIBUTOR = 6;
     public static final int COL_MEMBERS = 7;
 
+    private Box<ChatRoom> roomBox;
+
     /**
      * Constructor, open/create database, create table if necessary
      *
@@ -46,9 +51,7 @@ public class ChatRoomManager extends AbstractManager implements Card.ProvidesCar
     public ChatRoomManager(Context context) {
         super(context);
 
-        // create table if needed
-        db.execSQL("CREATE TABLE IF NOT EXISTS chat_room (room INTEGER, name VARCHAR, " +
-                "semester VARCHAR, semester_id VARCHAR, joined INTEGER, _id INTEGER, contributor VARCHAR, members INTEGER, PRIMARY KEY(name, semester_id))");
+        roomBox = TcaBoxes.getBoxStore().boxFor(ChatRoom.class);
     }
 
     /**
@@ -57,108 +60,92 @@ public class ChatRoomManager extends AbstractManager implements Card.ProvidesCar
      * @param joined chat room 1=joined, 0=not joined/left chat room, -1=not joined
      * @return List of chat messages
      */
-    public Cursor getAllByStatus(int joined) {
-        String condition = "joined=1";
-        if (joined == 0) {
-            condition = "joined=0 OR joined=-1";
+    public List<ChatRoom> getAllByStatus(boolean joined) {
+        QueryBuilder<ChatRoom> qb = roomBox.query();
+        if (joined) {
+            qb.equal(ChatRoom_.joined, 1);
+        } else {
+            qb.notEqual(ChatRoom_.joined, 1);
         }
 
-        return db.rawQuery("SELECT r.*, m.ts, m.text " +
-                "FROM chat_room r " +
-                "LEFT JOIN (SELECT MAX(timestamp) ts, text, room FROM chat_message GROUP BY room) m ON (m.room=r.room) " +
-                "WHERE " + condition + " " +
-                " " +
-                "ORDER BY r.semester!='', r.semester_id DESC, datetime(m.ts) DESC, r.name", null);
+        return qb.order(ChatRoom_.semesterId).order(ChatRoom_.name).build().find();
     }
 
     /**
      * Saves the given lecture into database
      */
     public void replaceInto(LecturesSearchRow lecture) {
+        ChatRoom r = roomBox.query().equal(ChatRoom_.name, lecture.getTitel()).equal(ChatRoom_.semesterId, lecture.getSemester_id()).build().findFirst();
+        if (r == null) {
+            r = new ChatRoom();
+            r.setRoom(-1);
+            r.setName(lecture.getTitel());
+            r.setSemesterId(lecture.getSemester_id());
+            r.setSemester(lecture.getSemester_name());
 
-        Cursor cur = db.rawQuery("SELECT _id FROM chat_room WHERE name=? AND semester_id=?",
-                new String[]{lecture.getTitel(), lecture.getSemester_id()});
-        cur.moveToFirst();
-        if (cur.getCount() >= 1) {
-            db.execSQL("UPDATE chat_room SET semester=?, _id=?, contributor=? WHERE name=? AND semester_id=?",
-                    new String[]{lecture.getSemester_name(), lecture.getStp_lv_nr(),
-                            lecture.getVortragende_mitwirkende(), lecture.getTitel(), lecture.getSemester_id()});
-        } else {
-            db.execSQL("REPLACE INTO chat_room (room,name,semester_id,semester,joined,_id,contributor,members) " +
-                            "VALUES (-1,?,?,?,-1,?,?,0)",
-                    new String[]{lecture.getTitel(), lecture.getSemester_id(),
-                            lecture.getSemester_name(), lecture.getStp_lv_nr(), lecture.getVortragende_mitwirkende()});
         }
-        cur.close();
+
+        r.setSemester(lecture.getSemester_name());
+        r.set_id(Integer.parseInt(lecture.getStp_lv_nr()));
+        r.setContributor(lecture.getVortragende_mitwirkende());
+
+        roomBox.put(r);
     }
 
     /**
      * Saves the given lectures into database
      */
     public void replaceInto(List<LecturesSearchRow> lectures) {
-        db.beginTransaction();
-        Cursor cur = db.rawQuery("SELECT _id FROM chat_room", null);
-        HashSet<String> set = new HashSet<>();
-        if (cur.moveToFirst()) {
-            do {
-                set.add(cur.getString(COL_ROOM));
-            } while (cur.moveToNext());
-        }
-        cur.close();
-
         for (LecturesSearchRow lecture : lectures) {
-            if (!set.contains(lecture.getStp_lv_nr())) {
-                replaceInto(lecture);
-            }
+            replaceInto(lecture);
         }
-        db.setTransactionSuccessful();
-        db.endTransaction();
     }
 
     /**
      * Saves the given chat rooms into database
      */
-    public void replaceIntoRooms(List<ChatRoom> rooms) {
-        if(rooms == null) {
+    public void replaceIntoRooms(List<de.tum.in.tumcampusapp.models.tumcabe.ChatRoom> rooms) {
+        if (rooms == null || rooms.size() == 0) {
             Utils.log("No rooms passed, can't insert anything.");
             return;
         }
 
-        db.beginTransaction();
-        db.execSQL("UPDATE chat_room SET joined=0 WHERE joined=1");
-        Utils.log("reset join status of all rooms");
-        for (ChatRoom room : rooms) {
-            Utils.log("Member of " + room.toString());
-            String roomName = room.getName();
-            String semester = "ZZZ";
-            if (roomName.contains(":")) {
-                semester = roomName.substring(0, 3);
-                roomName = roomName.substring(4);
+        for (de.tum.in.tumcampusapp.models.tumcabe.ChatRoom room : rooms) {
+            String[] nameSemester = splitName(room.getName());
+
+            ChatRoom r = get(nameSemester[0], nameSemester[1]);
+            if (r == null) {
+                r.setName(nameSemester[1]);
+                r.setSemesterId(nameSemester[0]);
             }
-            Utils.logv("members2 " + room.getMembers());
-            Cursor cur = db.rawQuery("SELECT _id FROM chat_room WHERE name=? AND semester_id=?", new String[]{roomName, semester});
-            cur.moveToFirst();
-            if (cur.getCount() >= 1) {
-                db.execSQL("UPDATE chat_room SET room=?, joined=1, members=? WHERE name=? AND semester_id=?",
-                        new String[]{String.valueOf(room.getId()), String.valueOf(room.getMembers()), roomName, semester});
-            } else {
-                db.execSQL("REPLACE INTO chat_room (room,name,semester_id,semester,joined,_id,contributor,members) " +
-                        "VALUES (?,?,?,'',1,0,'',?)", new String[]{String.valueOf(room.getId()), roomName, semester, String.valueOf(room.getMembers())});
-            }
-            cur.close();
+            r.setRoom(room.getId());
+            r.setJoined(1);
+
+            roomBox.put(r);
         }
-        db.setTransactionSuccessful();
-        db.endTransaction();
     }
 
-    public void join(ChatRoom currentChatRoom) {
-        db.execSQL("UPDATE chat_room SET room=?, joined=1 WHERE name=? AND semester_id=?",
-                new String[]{String.valueOf(currentChatRoom.getId()), currentChatRoom.getName().substring(4), currentChatRoom.getName().substring(0, 3)});
+    private String[] splitName(String name) {
+        String[] ret = new String[2];
+        ret[0] = "ZZZ";
+        ret[1] = name;
+        if (name.contains(":")) {
+            ret[0] = name.substring(0, 3);
+            ret[1] = name.substring(4);
+        }
+        return ret;
     }
 
-    public void leave(ChatRoom currentChatRoom) {
-        db.execSQL("UPDATE chat_room SET room=?, joined=0 WHERE name=? AND semester_id=?",
-                new String[]{String.valueOf(currentChatRoom.getId()), currentChatRoom.getName().substring(4), currentChatRoom.getName().substring(0, 3)});
+    private ChatRoom get(String semesterId, String name) {
+        return roomBox.query().equal(ChatRoom_.name, name).equal(ChatRoom_.semesterId, semesterId).build().findFirst();
+    }
+
+    public void setJoined(de.tum.in.tumcampusapp.models.tumcabe.ChatRoom room, int join) {
+        String[] nameSemester = splitName(room.getName());
+        ChatRoom r = get(nameSemester[0], nameSemester[1]);
+        r.setJoined(join == 1 ? 1 : 0);
+        r.setRoom(room.getId());
+        roomBox.put(r);
     }
 
     @Override
@@ -183,10 +170,10 @@ public class ChatRoomManager extends AbstractManager implements Card.ProvidesCar
             for (String roomId : newRooms) {
                 // Join chat room
                 try {
-                    ChatRoom currentChatRoom = new ChatRoom(roomId);
+                    de.tum.in.tumcampusapp.models.tumcabe.ChatRoom currentChatRoom = new de.tum.in.tumcampusapp.models.tumcabe.ChatRoom(roomId);
                     currentChatRoom = TUMCabeClient.getInstance(context).createRoom(currentChatRoom, new ChatVerification(context, currentChatMember));
                     if (currentChatRoom != null) {
-                        manager.join(currentChatRoom);
+                        manager.setJoined(currentChatRoom, 1);
                     }
                 } catch (IOException e) {
                     Utils.log(e, " - error occured while creating the room!");
@@ -209,6 +196,7 @@ public class ChatRoomManager extends AbstractManager implements Card.ProvidesCar
     }
 
     private List<String> getNewUnjoined() {
+        //TODO
         Cursor cursor = db.rawQuery("SELECT r.semester_id, r.name " +
                 "FROM chat_room r, (SELECT semester_id FROM chat_room " +
                 "WHERE (NOT semester_id IS NULL) AND semester_id!='' AND semester!='' " +
@@ -225,6 +213,7 @@ public class ChatRoomManager extends AbstractManager implements Card.ProvidesCar
     }
 
     private Cursor getUnreadRooms() {
+        //TODO
         return db.rawQuery("SELECT r.name,r.room,r.semester_id " +
                 "FROM chat_room r, (SELECT room FROM chat_message " +
                 "WHERE read=0 GROUP BY room) AS c " +

@@ -1,37 +1,29 @@
 package de.tum.in.tumcampusapp.managers;
 
 import android.content.Context;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteException;
 
+import org.joda.time.DateTime;
 import org.simpleframework.xml.core.Persister;
 
-import java.util.Date;
+import java.util.List;
 
-import de.tum.in.tumcampusapp.auxiliary.DateUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
+import de.tum.in.tumcampusapp.entities.TcaBoxes;
+import de.tum.in.tumcampusapp.entities.TumLock;
+import de.tum.in.tumcampusapp.entities.TumLock_;
 import de.tum.in.tumcampusapp.models.tumo.Error;
+import io.objectbox.Box;
 
 /**
  * TUMOnline lock manager: prevent too many requests send to TUMO
  */
 public class TumManager extends AbstractManager {
 
-    private static final int COL_URL = 0;
-    private static final int COL_ERROR = 1;
-    private static final int COL_TIMESTAMP = 2;
-    private static final int COL_LOCKED_FOR = 3;
-    private static final int COL_ACTIVE = 4;
+    private Box<TumLock> lockBox;
+
     private static final int MAX_AGE = CacheManager.VALIDITY_ONE_DAY / 4; //Maximum length of a lock
     private static final int DEFAULT_LOCK = 60; //Base value for the first error: 60 seconds
 
-    public static class reqStatus {
-        private String url;
-        public String error;
-        private Date timestamp;
-        private int lockedFor;
-        private int active;
-    }
 
     /**
      * Constructor, open/create database, create table if necessary
@@ -40,85 +32,75 @@ public class TumManager extends AbstractManager {
      */
     public TumManager(Context context) {
         super(context);
-        // create table if needed
-        db.execSQL("CREATE TABLE IF NOT EXISTS tumLocks (url VARCHAR UNIQUE, error VARCHAR, timestamp VARCHAR, lockedFor INT, active INT)");
+
+        lockBox = TcaBoxes.getBoxStore().boxFor(TumLock.class);
 
         // Delete obsolete entries
-        db.execSQL("DELETE FROM tumLocks WHERE datetime() > datetime(strftime('%s',timestamp) + " + TumManager.MAX_AGE + ", 'unixepoch') AND active=0");
+        this.deleteExpired();
+    }
+
+    private void deleteExpired() {
+        List<TumLock> all = lockBox.getAll();
+        for (TumLock e : all) {
+            if (e.getTimestamp().plusSeconds(e.getLockedFor()).isBeforeNow()) {
+                lockBox.remove(e);
+            }
+        }
     }
 
     public String checkLock(String url) {
         //Deactivate all expired locks
-        db.execSQL("UPDATE tumLocks SET active=0 WHERE datetime() > datetime(strftime('%s',timestamp) + lockedFor, 'unixepoch') AND active=1");
+        this.deleteExpired();
 
         //Try to get a result
-        reqStatus r = this.getLock(url);
+        TumLock r = this.getLock(url);
 
         //If we got nothing there is no lock - or if it isn't active
-        if (r == null || r.active == 0) {
+        if (r == null) {
             return null;
         }
 
         //Otherwise return the error message
-        return r.error;
+        return r.getError();
     }
 
     public void releaseLock(String url) {
-        //Enter it into the Databse
-        try {
-            db.execSQL("REPLACE INTO tumLocks (url,  active) VALUES (?, 0)", new String[]{url});
-        } catch (SQLiteException e) {
-            Utils.log(e);
-        }
+        lockBox.remove(getLock(url));
     }
 
-    public reqStatus getLock(String url) {
-        reqStatus result = null;
-
-        try {
-            Cursor c = db.rawQuery("SELECT * FROM tumLocks WHERE url=?", new String[]{url});
-            if (c.getCount() == 1) {
-                c.moveToFirst();
-                result = new reqStatus();
-                result.url = c.getString(COL_URL);
-                result.error = c.getString(COL_ERROR);
-                result.timestamp = DateUtils.parseSqlDate(c.getString(COL_TIMESTAMP));
-                result.lockedFor = c.getInt(COL_LOCKED_FOR);
-                result.active = c.getInt(COL_ACTIVE);
-            }
-            c.close();
-        } catch (SQLiteException e) {
-            Utils.log(e);
-        }
-        return result;
+    public TumLock getLock(String url) {
+        return lockBox.query().equal(TumLock_.url, url).build().findFirst();
     }
 
     public String addLock(String url, String data) {
         //Check if we have a lock already
-        reqStatus r = this.getLock(url);
-        int lockTime = TumManager.DEFAULT_LOCK;
-        if (r != null) {
+        TumLock r = this.getLock(url);
+        if (r == null) {
+            r = new TumLock();
+            r.setLockedFor(TumManager.DEFAULT_LOCK);
+            r.setUrl(url);
+        } else {
             //Double the lock time with each failed request
-            lockTime = r.lockedFor * 2;
+            r.setLockedFor(r.getLockedFor() * 2);
 
             //If we are above the limit reset to the limit
-            if (lockTime > TumManager.MAX_AGE) {
-                lockTime = TumManager.MAX_AGE;
+            if (r.getLockedFor() > TumManager.MAX_AGE) {
+                r.setLockedFor(TumManager.MAX_AGE);
             }
         }
 
         //Try to parse the error
         String msg = "";
         try {
-
             Error res = new Persister().read(Error.class, data);
-            msg = res.getMessage();
+            r.setError(res.getMessage());
         } catch (Exception e) {
-            Utils.log(e);
+            Utils.log("Error getting message for TumLock: " + e.getMessage());
         }
 
         //Enter it into the Databse
-        db.execSQL("REPLACE INTO tumLocks (url, error, timestamp, lockedFor, active) VALUES (?, ?, datetime('now'), ?, 1)", new String[]{url, msg, String.valueOf(lockTime)});
+        r.setTimestamp(DateTime.now());
+        lockBox.put(r); //Objectbox automatically updates the entries as it detects that it already has an ID assigned or not
 
         return msg;
     }

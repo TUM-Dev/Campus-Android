@@ -1,19 +1,21 @@
 package de.tum.in.tumcampusapp.activities;
 
-import android.database.Cursor;
 import android.support.v4.view.ViewPager;
+import android.view.View;
+import android.widget.RelativeLayout;
+
+import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.activities.generic.BaseActivity;
 import de.tum.in.tumcampusapp.adapters.KinoAdapter;
+import de.tum.in.tumcampusapp.entities.Movie;
 import de.tum.in.tumcampusapp.managers.KinoManager;
 
 /**
- * Activity to show TU Kino details (e.g. imdb rating)
+ * Activity to show TU Movie details (e.g. imdb rating)
  */
 public class KinoActivity extends BaseActivity {
-
-    private Cursor cursor;
 
     public KinoActivity() {
         super(R.layout.activity_kino);
@@ -24,18 +26,21 @@ public class KinoActivity extends BaseActivity {
         super.onStart();
 
         KinoManager km = new KinoManager(this);
-        cursor = km.getAllFromDb();
+        List<Movie> allMovies = km.getAll();
 
-        // set up ViewPager and adapter
-        ViewPager mpager = (ViewPager) findViewById(R.id.pager);
-        KinoAdapter kinoAdapter = new KinoAdapter(getSupportFragmentManager(), cursor);
-        mpager.setAdapter(kinoAdapter);
-    }
+        if (allMovies.size() > 0) {
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        cursor.close();
+            // set up ViewPager and adapter
+            ViewPager mpager = (ViewPager) findViewById(R.id.pager);
+            KinoAdapter kinoAdapter = new KinoAdapter(getSupportFragmentManager(), allMovies);
+            mpager.setAdapter(kinoAdapter);
+
+        } else {
+            // there are no movies in the semester holidays
+            RelativeLayout rl =((RelativeLayout) findViewById(R.id.no_movies_layout));
+            rl.setVisibility(View.VISIBLE);
+        }
+
     }
 
 }

@@ -10,7 +10,6 @@ import android.os.Build;
 import android.preference.PreferenceManager;
 import android.text.Html;
 import android.text.Spanned;
-import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -182,8 +181,6 @@ public final class Utils {
     /**
      * Logs an exception and additional information
      * Use this anywhere in the app when a fatal error occurred.
-     * If you can give a better description of what went wrong
-     * use {@link #log(Exception, String)} instead.
      *
      * @param e Exception (source for message and stack trace)
      */
@@ -197,8 +194,6 @@ public final class Utils {
     /**
      * Logs an exception and additional information
      * Use this anywhere in the app when a fatal error occurred.
-     * If you can't give an exact error description simply use
-     * {@link #log(Exception)} instead.
      *
      * @param e       Exception (source for message and stack trace)
      * @param message Additional information for exception message
@@ -541,10 +536,6 @@ public final class Utils {
 
     private static boolean isBackgroundServiceAlwaysEnabled(Context context) {
         return "0".equals(Utils.getSetting(context, "background_mode_set_to", "0"));
-    }
-
-    public static String arrayListToString(Iterable<String> array) {
-        return TextUtils.join(",", array);
     }
 
     @TargetApi(Build.VERSION_CODES.N)

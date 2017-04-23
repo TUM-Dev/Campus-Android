@@ -2,7 +2,6 @@ package de.tum.in.tumcampusapp.fragments;
 
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -15,9 +14,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.List;
+
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
+import de.tum.in.tumcampusapp.auxiliary.Utils;
+import de.tum.in.tumcampusapp.entities.Movie;
 import de.tum.in.tumcampusapp.managers.KinoManager;
 
 
@@ -27,7 +30,7 @@ import de.tum.in.tumcampusapp.managers.KinoManager;
 public class KinoDetailsFragment extends Fragment implements View.OnClickListener {
 
     private Context context;
-    private Cursor cursor;
+    private List<Movie> allMovies;
     private NetUtils net;
     private String url; // link to homepage
 
@@ -40,7 +43,7 @@ public class KinoDetailsFragment extends Fragment implements View.OnClickListene
         int position = getArguments().getInt(Const.POSITION);
 
         context = root.getContext();
-        cursor = new KinoManager(context).getAllFromDb();
+        allMovies = new KinoManager(context).getAll();
         net = new NetUtils(context);
 
         showDetails(root, position);
@@ -54,17 +57,14 @@ public class KinoDetailsFragment extends Fragment implements View.OnClickListene
      * @param position position in database
      */
     private void showDetails(LinearLayout rootView, int position) {
-        cursor.moveToPosition(position);
-        url = cursor.getString(cursor.getColumnIndex(Const.JSON_LINK));
+        Movie current = allMovies.get(position);
+        url = current.getLink();
 
-        createKinoHeader(rootView);
-        createKinoFooter(rootView);
-
-        cursor.close();
-
+        createKinoHeader(rootView, current);
+        createKinoFooter(rootView, current);
     }
 
-    private void createKinoFooter(LinearLayout rootView) {
+    private void createKinoFooter(LinearLayout rootView, Movie current) {
         View view;
         TextView text;
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -76,7 +76,7 @@ public class KinoDetailsFragment extends Fragment implements View.OnClickListene
         rootView.addView(view);
         view = inflater.inflate(R.layout.kino_content, rootView, false);
         text = (TextView) view.findViewById(R.id.line_name);
-        text.setText(cursor.getString(cursor.getColumnIndex(Const.JSON_GENRE)));
+        text.setText(current.getGenre());
         rootView.addView(view);
 
         // director
@@ -86,7 +86,7 @@ public class KinoDetailsFragment extends Fragment implements View.OnClickListene
         rootView.addView(view);
         view = inflater.inflate(R.layout.kino_content, rootView, false);
         text = (TextView) view.findViewById(R.id.line_name);
-        text.setText(cursor.getString(cursor.getColumnIndex(Const.JSON_DIRECTOR)));
+        text.setText(current.getDirector());
         rootView.addView(view);
 
         // actors
@@ -96,7 +96,7 @@ public class KinoDetailsFragment extends Fragment implements View.OnClickListene
         rootView.addView(view);
         view = inflater.inflate(R.layout.kino_content, rootView, false);
         text = (TextView) view.findViewById(R.id.line_name);
-        text.setText(cursor.getString(cursor.getColumnIndex(Const.JSON_ACTORS)));
+        text.setText(current.getActors());
         rootView.addView(view);
 
         // description
@@ -106,7 +106,7 @@ public class KinoDetailsFragment extends Fragment implements View.OnClickListene
         rootView.addView(view);
         view = inflater.inflate(R.layout.kino_content, rootView, false);
         text = (TextView) view.findViewById(R.id.line_name);
-        text.setText(cursor.getString(cursor.getColumnIndex(Const.JSON_DESCRIPTION)));
+        text.setText(current.getDescription());
         // padding is done programmatically here because we need more padding at the end
         int padding = (int) context.getResources().getDimension(R.dimen.padding_kino);
         int paddingRight = (int) context.getResources().getDimension(R.dimen.padding_kino_right);
@@ -115,7 +115,7 @@ public class KinoDetailsFragment extends Fragment implements View.OnClickListene
         rootView.addView(view);
     }
 
-    private void createKinoHeader(LinearLayout rootView) {
+    private void createKinoHeader(LinearLayout rootView, Movie current) {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         LinearLayout headerView = (LinearLayout) inflater.inflate(R.layout.kino_header, rootView, false);
 
@@ -124,7 +124,7 @@ public class KinoDetailsFragment extends Fragment implements View.OnClickListene
         Button imdb;
         Button year;
         Button runtime;
-        ImageView cover = (ImageView) headerView.findViewById(R.id.kino_cover);
+
 
         // initialize all buttons
         date = (Button) headerView.findViewById(R.id.button_date);
@@ -134,11 +134,11 @@ public class KinoDetailsFragment extends Fragment implements View.OnClickListene
         runtime = (Button) headerView.findViewById(R.id.button_runtime);
 
         // set text for all buttons
-        date.setText(KinoDetailsFragment.formDateString(cursor.getString(cursor.getColumnIndex(Const.JSON_DATE))));
+        date.setText(KinoDetailsFragment.formDateString(current.getDate()));
         link.setText(R.string.www);
-        imdb.setText(cursor.getString(cursor.getColumnIndex(Const.JSON_RATING)));
-        year.setText(cursor.getString(cursor.getColumnIndex(Const.JSON_YEAR)));
-        runtime.setText(cursor.getString(cursor.getColumnIndex(Const.JSON_RUNTIME)));
+        imdb.setText(current.getRating());
+        year.setText("" + current.getYear());
+        runtime.setText(current.getRuntime());
 
         // set onClickListener
         date.setOnClickListener(this);
@@ -147,9 +147,10 @@ public class KinoDetailsFragment extends Fragment implements View.OnClickListene
         year.setOnClickListener(this);
         runtime.setOnClickListener(this);
 
-        // cover
-        String coverUrl = cursor.getString(cursor.getColumnIndex(Const.JSON_COVER));
-        net.loadAndSetImage(coverUrl, cover);
+        // cover via URL
+        ImageView cover = (ImageView) headerView.findViewById(R.id.kino_cover);
+        Utils.log(current.getCover());
+        net.loadAndSetImage(current.getCover(), cover);
 
         rootView.addView(headerView);
     }

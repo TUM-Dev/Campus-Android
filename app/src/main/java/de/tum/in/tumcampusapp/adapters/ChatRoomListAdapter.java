@@ -2,10 +2,10 @@ package de.tum.in.tumcampusapp.adapters;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.support.v4.widget.CursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -13,8 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
-import de.tum.in.tumcampusapp.auxiliary.DateUtils;
-import de.tum.in.tumcampusapp.auxiliary.Utils;
+import de.tum.in.tumcampusapp.entities.ChatRoom;
 import de.tum.in.tumcampusapp.managers.ChatRoomManager;
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 
@@ -26,11 +25,14 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
  * show semester info as sticky header.
  */
 
-public class ChatRoomListAdapter extends CursorAdapter implements StickyListHeadersAdapter {
+public class ChatRoomListAdapter extends ArrayAdapter<ChatRoom> implements StickyListHeadersAdapter {
 
     private final LayoutInflater mInflater;
     private final boolean showDateAndNumber;
     private final List<String> filters;
+
+    private final List<ChatRoom> rooms;
+    private final Context context;
 
     // the layout of the list
     static class ViewHolder {
@@ -43,46 +45,50 @@ public class ChatRoomListAdapter extends CursorAdapter implements StickyListHead
     }
 
     // constructor
-    public ChatRoomListAdapter(Context context, Cursor results, int mode) {
-        super(context, results, false);
+    public ChatRoomListAdapter(Context context, List<ChatRoom> results, boolean joinedOnly) {
+        super(context, 0, results);
 
+        this.rooms = results;
+        this.context = context;
         this.mInflater = LayoutInflater.from(context);
         this.filters = new ArrayList<>();
-        this.showDateAndNumber = mode == 1;
+        this.showDateAndNumber = joinedOnly;
     }
 
     @Override
-    public View newView(Context context, Cursor cursor, ViewGroup viewGroup) {
-        View convertView = mInflater.inflate(R.layout.activity_lectures_listview, viewGroup, false);
-        ViewHolder holder = new ViewHolder();
+    public View getView(int pos, View convertView, ViewGroup viewGroup) {
+        ViewHolder holder;
+        if(convertView == null) {
+            convertView = mInflater.inflate(R.layout.activity_lectures_listview, viewGroup, false);
+            holder = new ViewHolder();
 
-        // set UI elements
-        holder.tvLectureName = (TextView) convertView.findViewById(R.id.tvLectureName);
-        holder.tvDozent = (TextView) convertView.findViewById(R.id.tvDozent);
-        holder.tvMembers = (TextView) convertView.findViewById(R.id.tvMembers);
-        holder.tvLastmsg = (TextView) convertView.findViewById(R.id.tvLastmsg);
-        holder.llAdditionalInfo = (LinearLayout) convertView.findViewById(R.id.llAdditionalInfo);
-        convertView.findViewById(R.id.tvTypeSWSSemester).setVisibility(View.GONE);
-
-        convertView.setTag(holder);
-        return convertView;
-    }
-
-    @Override
-    public void bindView(View view, Context context, Cursor cursor) {
-        ViewHolder holder = (ViewHolder) view.getTag();
-        holder.tvLectureName.setText(cursor.getString(ChatRoomManager.COL_NAME));
-        holder.tvDozent.setText(cursor.getString(9));
-
-        if (showDateAndNumber) {
-            holder.tvMembers.setText(cursor.getString(ChatRoomManager.COL_MEMBERS));
-            holder.tvLastmsg.setText(DateUtils.getTimeOrDay(cursor.getString(8), context));
-            holder.llAdditionalInfo.setVisibility(View.VISIBLE);
+            // set UI elements
+            holder.tvLectureName = (TextView) convertView.findViewById(R.id.tvLectureName);
+            holder.tvDozent = (TextView) convertView.findViewById(R.id.tvDozent);
+            holder.tvMembers = (TextView) convertView.findViewById(R.id.tvMembers);
+            holder.tvLastmsg = (TextView) convertView.findViewById(R.id.tvLastmsg);
+            holder.llAdditionalInfo = (LinearLayout) convertView.findViewById(R.id.llAdditionalInfo);
+            convertView.findViewById(R.id.tvTypeSWSSemester).setVisibility(View.GONE);
+            convertView.setTag(holder);
         } else {
-            holder.tvDozent.setText(cursor.getString(ChatRoomManager.COL_CONTRIBUTOR));
+            holder = (ViewHolder) convertView.getTag();
         }
 
-        Utils.logv("members " + cursor.getString(ChatRoomManager.COL_MEMBERS) + ' ' + cursor.getString(8));
+        holder.tvLectureName.setText(rooms.get(pos).getName());
+        holder.tvDozent.setText(rooms.get(pos).getContributor());
+
+        if (showDateAndNumber) {
+            holder.tvMembers.setText(rooms.get(pos).getMembers());
+            //holder.tvLastmsg.setText(DateUtils.getTimeOrDay(cursor.getString(8), context));
+            holder.llAdditionalInfo.setVisibility(View.VISIBLE);
+        } else {
+            holder.tvDozent.setText(rooms.get(pos).getContributor());
+        }
+
+
+
+
+        return convertView;
     }
 
     // Generate header view
@@ -102,7 +108,7 @@ public class ChatRoomListAdapter extends CursorAdapter implements StickyListHead
         Cursor item = (Cursor) getItem(pos);
         String semester = item.getString(ChatRoomManager.COL_SEMESTER);
         if (semester.isEmpty()) {
-            semester = mContext.getString(R.string.my_chat_rooms);
+            semester = context.getString(R.string.my_chat_rooms);
         }
         holder.text.setText(semester);
         return convertView;

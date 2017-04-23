@@ -1,4 +1,4 @@
-package de.tum.in.tumcampusapp.managers;
+package de.tum.in.tumcampusapp.auxiliary;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -25,7 +25,7 @@ import de.tum.in.tumcampusapp.auxiliary.Utils;
 /**
  * Eduroam manager, manages connecting to eduroam wifi network
  */
-public class EduroamManager {
+public class EduroamHelper {
     public static final String NETWORK_SSID = "eduroam";
     public static final String RADIUS_DNS = "radius.lrz.de";
     private static final String INT_PHASE2 = "phase2";
@@ -38,7 +38,7 @@ public class EduroamManager {
 
     private final Context mContext;
 
-    public EduroamManager(Context context) {
+    public EduroamHelper(Context context) {
         mContext = context;
     }
 

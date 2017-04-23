@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.auxiliary.Const;
+import de.tum.in.tumcampusapp.entities.Faculty;
+import de.tum.in.tumcampusapp.entities.Movie;
 import de.tum.in.tumcampusapp.models.gcm.GCMNotification;
 import de.tum.in.tumcampusapp.models.gcm.GCMNotificationLocation;
 import de.tum.in.tumcampusapp.models.tumcabe.BugReport;
@@ -17,7 +19,6 @@ import de.tum.in.tumcampusapp.models.tumcabe.ChatRoom;
 import de.tum.in.tumcampusapp.models.tumcabe.ChatVerification;
 import de.tum.in.tumcampusapp.models.tumcabe.DeviceRegister;
 import de.tum.in.tumcampusapp.models.tumcabe.DeviceUploadGcmToken;
-import de.tum.in.tumcampusapp.models.tumcabe.Faculty;
 import de.tum.in.tumcampusapp.models.tumcabe.Question;
 import de.tum.in.tumcampusapp.models.tumcabe.Statistics;
 import de.tum.in.tumcampusapp.models.tumcabe.TUMCabeStatus;
@@ -47,7 +48,7 @@ public class TUMCabeClient {
     //private static final String API_CURRICULA = "curricula/";
     private static final String API_REPORT = "report/";
     private static final String API_STATISTICS = "statistics/";
-    //private static final String API_CINEMA = "kino/";
+    private static final String API_MOVIES = "kino/";
     private static final String API_NOTIFICATIONS = "notifications/";
     private static final String API_LOCATIONS = "locations/";
     private static final String API_DEVICE = "device/";
@@ -208,6 +209,11 @@ public class TUMCabeClient {
 
     }
 
+
+    public void getMovies(Callback<List<Movie>> cb) {
+        service.getMovies().enqueue(cb);
+    }
+
     public void deviceRegister(DeviceRegister verification, Callback<TUMCabeStatus> cb) {
         service.deviceRegister(verification).enqueue(cb);
     }
@@ -281,6 +287,10 @@ public class TUMCabeClient {
 
         @GET(API_NOTIFICATIONS + "confirm/{notification}/")
         Call<String> confirm(@Path("notification") int notification);
+
+        //Movie
+        @GET(API_MOVIES)
+        Call<List<Movie>> getMovies();
 
         //Locations
         @GET(API_LOCATIONS)

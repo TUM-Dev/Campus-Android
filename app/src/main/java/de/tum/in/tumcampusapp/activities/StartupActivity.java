@@ -23,6 +23,8 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import net.danlew.android.joda.JodaTimeAndroid;
+
 import java.io.File;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -34,6 +36,7 @@ import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.FileUtils;
 import de.tum.in.tumcampusapp.auxiliary.ImplicitCounter;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
+import de.tum.in.tumcampusapp.entities.TcaBoxes;
 import de.tum.in.tumcampusapp.managers.AbstractManager;
 import de.tum.in.tumcampusapp.managers.CardManager;
 import de.tum.in.tumcampusapp.services.DownloadService;
@@ -72,6 +75,9 @@ public class StartupActivity extends AppCompatActivity {
     };
 
     private void init() {
+        JodaTimeAndroid.init(this);
+        TcaBoxes.init(this);
+
         //Our own Custom exception handler
         ExceptionHandler.setup(getApplicationContext());
 

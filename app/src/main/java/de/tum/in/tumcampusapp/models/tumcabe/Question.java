@@ -1,16 +1,16 @@
 package de.tum.in.tumcampusapp.models.tumcabe;
 
 
-import java.util.List;
+import android.text.TextUtils;
 
-import de.tum.in.tumcampusapp.auxiliary.Utils;
+import java.util.ArrayList;
 
 /**
  * Question model class for communication with the API and needed constructors in the project.
  */
 public class Question {
 
-    private String question;
+    private Integer question;
     private String text;
     private String faculty;
     private int answer;
@@ -24,7 +24,7 @@ public class Question {
      *
      * @param question
      */
-    public Question(String question) {
+    public Question(Integer question) {
         this.question = question;
     }
 
@@ -34,7 +34,7 @@ public class Question {
      * @param question
      * @param text
      */
-    public Question(String question, String text) {
+    public Question(Integer question, String text) {
         this.question = question;
         this.text = text;
     }
@@ -45,7 +45,7 @@ public class Question {
      * @param question
      * @param answer
      */
-    public Question(String question, int answer) {
+    public Question(Integer question, int answer) {
         this.question = question;
         this.answer = answer;
     }
@@ -54,17 +54,17 @@ public class Question {
     /**
      * Used for submitting ownQuestions to the server
      */
-    public Question(String text, List<String> faculties) {
+    public Question(String text, ArrayList<Long> faculties) {
         this.text = text;
-        this.faculty = Utils.arrayListToString(faculties);
+        this.faculty = TextUtils.join(",", faculties);
 
     }
 
-    public String[] getFacultiesOfOpenQuestions() {
+    public String[] getFaculties() {
         return facultyArr;
     }
 
-    public String getQuestion() {
+    public Integer getQuestion() {
         return question;
     }
 
@@ -120,5 +120,15 @@ public class Question {
             return answer;
         }
 
+    }
+
+    public int getVotesForAnswer (String answer) {
+        for(Answer e : results) {
+            if(e.equals(answer)) {
+                return e.votes;
+            }
+        }
+
+        return 0;
     }
 }

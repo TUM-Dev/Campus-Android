@@ -297,7 +297,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
         AbstractManager.resetDb(mContext);
 
         CacheManager manager = new CacheManager(mContext);
-        manager.clearCache();
+        manager.clearCache(false);
 
         // delete local calendar
         Utils.setInternalSetting(mContext, Const.SYNC_CALENDAR, false);

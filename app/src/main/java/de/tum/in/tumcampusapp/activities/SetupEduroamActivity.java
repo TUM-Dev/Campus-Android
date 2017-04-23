@@ -21,7 +21,7 @@ import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.ImplicitCounter;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.managers.CardManager;
-import de.tum.in.tumcampusapp.managers.EduroamManager;
+import de.tum.in.tumcampusapp.auxiliary.EduroamHelper;
 
 /**
  * Activity that allows the user to easily setup eduroam.
@@ -63,7 +63,7 @@ public class SetupEduroamActivity extends BaseActivity {
      */
     @SuppressWarnings("UnusedParameters")
     public void onClickSetup(View v) {
-        EduroamManager manager = new EduroamManager(getApplicationContext());
+        EduroamHelper manager = new EduroamHelper(getApplicationContext());
         boolean success = manager.configureEduroam(lrz.getText().toString(), password.getText().toString());
         if (success) {
             Utils.showToast(this, R.string.eduroam_success);
