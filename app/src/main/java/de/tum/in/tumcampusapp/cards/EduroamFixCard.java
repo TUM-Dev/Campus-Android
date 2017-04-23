@@ -81,7 +81,7 @@ public class EduroamFixCard extends NotificationAwareCard {
     @Override
     public Intent getIntent() {
         if (eduroam != null) {
-            WifiManager wifi = (WifiManager) mContext.getSystemService(Context.WIFI_SERVICE);
+            WifiManager wifi = (WifiManager) mContext.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
             wifi.removeNetwork(eduroam.networkId);
         }
         return new Intent(mContext, SetupEduroamActivity.class);
