@@ -2,6 +2,7 @@ package de.tum.in.tumcampusapp.managers;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.graphics.Bitmap;
 import android.support.v4.util.LruCache;
@@ -10,6 +11,7 @@ import android.widget.ImageView;
 import com.google.common.base.Optional;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -31,7 +33,7 @@ import de.tum.in.tumcampusapp.tumonline.TUMOnlineRequest;
 /**
  * TUMOnline cache manager, allows caching of TUMOnline requests
  */
-public class CacheManager extends AbstractManager {
+public class CacheManager {
     public static final int CACHE_TYP_DATA = 0;
     public static final int CACHE_TYP_IMAGE = 1;
 
@@ -48,6 +50,9 @@ public class CacheManager extends AbstractManager {
     public static final Map<ImageView, String> IMAGE_VIEWS = Collections.synchronizedMap(new WeakHashMap<ImageView, String>());
     public static final LruCache<String, Bitmap> BITMAP_CACHE;
 
+    private static SQLiteDatabase cacheDb;
+    private Context mContext;
+
     static {
         int cacheSize = 4 * 1024 * 1024; // 4MiB
         BITMAP_CACHE = new LruCache<String, Bitmap>(cacheSize) {
@@ -59,6 +64,14 @@ public class CacheManager extends AbstractManager {
         };
     }
 
+    private static synchronized void initCacheDb(Context c) {
+        if (cacheDb == null) {
+            File dbFile = new File(c.getCacheDir().getAbsolutePath() + "/cache.db");
+            dbFile.getParentFile().mkdirs();
+            cacheDb = SQLiteDatabase.openOrCreateDatabase(dbFile, null);
+        }
+    }
+
 
     /**
      * Constructor, open/create database, create table if necessary
@@ -66,15 +79,16 @@ public class CacheManager extends AbstractManager {
      * @param context Context
      */
     public CacheManager(Context context) {
-        super(context);
+        initCacheDb(context);
+        mContext = context;
 
         // create table if needed
-        db.execSQL("CREATE TABLE IF NOT EXISTS cache (url VARCHAR UNIQUE, data BLOB, " +
+        cacheDb.execSQL("CREATE TABLE IF NOT EXISTS cache (url VARCHAR UNIQUE, data BLOB, " +
                 "validity VARCHAR, max_age VARCHAR, typ INTEGER)");
 
         // Delete all entries that are too old and delete corresponding image files
-        db.beginTransaction();
-        Cursor cur = db.rawQuery("SELECT data FROM cache WHERE datetime()>max_age AND typ=1", null);
+        cacheDb.beginTransaction();
+        Cursor cur = cacheDb.rawQuery("SELECT data FROM cache WHERE datetime()>max_age AND typ=1", null);
         if (cur.moveToFirst()) {
             do {
                 File f = new File(cur.getString(0));
@@ -82,9 +96,9 @@ public class CacheManager extends AbstractManager {
             } while (cur.moveToNext());
         }
         cur.close();
-        db.execSQL("DELETE FROM cache WHERE datetime()>max_age");
-        db.setTransactionSuccessful();
-        db.endTransaction();
+        cacheDb.execSQL("DELETE FROM cache WHERE datetime()>max_age");
+        cacheDb.setTransactionSuccessful();
+        cacheDb.endTransaction();
     }
 
     /**
@@ -187,7 +201,7 @@ public class CacheManager extends AbstractManager {
         String result = null;
 
         try {
-            Cursor c = db.rawQuery("SELECT data FROM cache WHERE url=? AND datetime()<max_age", new String[]{url});
+            Cursor c = cacheDb.rawQuery("SELECT data FROM cache WHERE url=? AND datetime()<max_age", new String[]{url});
             if (c.getCount() == 1) {
                 c.moveToFirst();
                 result = c.getString(0);
@@ -209,7 +223,7 @@ public class CacheManager extends AbstractManager {
         boolean result = true;
 
         try {
-            Cursor c = db.rawQuery("SELECT url FROM cache WHERE url=? AND datetime() < validity", new String[]{url});
+            Cursor c = cacheDb.rawQuery("SELECT url FROM cache WHERE url=? AND datetime() < validity", new String[]{url});
             if (c.getCount() == 1) {
                 result = false;
             }
@@ -230,7 +244,7 @@ public class CacheManager extends AbstractManager {
         if (validity == VALIDITY_DO_NOT_CACHE) {
             return;
         }
-        db.execSQL("REPLACE INTO cache (url, data, validity, max_age, typ) " +
+        cacheDb.execSQL("REPLACE INTO cache (url, data, validity, max_age, typ) " +
                         "VALUES (?, ?, datetime('now','+" + (validity / 2) + " seconds'), " +
                         "datetime('now','+" + validity + " seconds'), ?)",
                 new String[]{url, data, String.valueOf(typ)});
@@ -258,15 +272,13 @@ public class CacheManager extends AbstractManager {
         manager.replaceInto(lectures);
     }
 
-    public void clearCache() {
-        // Delete all entries that are too old and delete corresponding image files
-        Cursor cur = db.rawQuery("SELECT data FROM cache WHERE typ=1", null);
-        if (cur.moveToFirst()) {
-            do {
-                File f = new File(cur.getString(0));
-                f.delete();
-            } while (cur.moveToNext());
+    public static synchronized void clearCache(Context context) {
+        cacheDb = null;
+        try {
+            Process proc = Runtime.getRuntime().exec("rm -r " + context.getCacheDir());
+            proc.waitFor();
+        } catch (InterruptedException | IOException e) {
+            Utils.log("couldn't delete cache files " + e.toString());
         }
-        cur.close();
     }
 }

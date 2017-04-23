@@ -35,7 +35,6 @@ import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.managers.AbstractManager;
-import de.tum.in.tumcampusapp.managers.CacheManager;
 import de.tum.in.tumcampusapp.managers.CalendarManager;
 import de.tum.in.tumcampusapp.managers.CardManager;
 import de.tum.in.tumcampusapp.managers.NewsManager;
@@ -295,9 +294,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
      */
     private void clearCache() {
         AbstractManager.resetDb(mContext);
-
-        CacheManager manager = new CacheManager(mContext);
-        manager.clearCache();
 
         // delete local calendar
         Utils.setInternalSetting(mContext, Const.SYNC_CALENDAR, false);
