@@ -66,14 +66,15 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
      * 3. save the questions in the db
      */
     public void downLoadOpenQuestions() {
-        List<Question> openQuestions = new ArrayList<>();
+        List<Question> openQuestions;
         try {
             openQuestions = TUMCabeClient.getInstance(mContext).getOpenQuestions();
         } catch (IOException e) {
             Utils.log(e);
+            return;
         }
 
-        delteFlaggedQuestions(openQuestions);
+        deleteFlaggedQuestions(openQuestions);
 
         // filters the questions relevant for the user
         for (int i = 0; i < openQuestions.size(); i++) {
@@ -88,12 +89,12 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
     }
 
     /**
-     * Question in local database tthat no longer exist in the fetched openQuestions from the
+     * Question in local database that no longer exist in the fetched openQuestions from the
      * Server are considered to be flagged and thus get deleted
      *
      * @param fetchedOpenedQuestions
      */
-    void delteFlaggedQuestions(List<Question> fetchedOpenedQuestions) {
+    void deleteFlaggedQuestions(List<Question> fetchedOpenedQuestions) {
         List<Question> downloadedQuestionsID = new ArrayList<>(); // get the ids of all fetched openQuestions
         for (int x = 0; x < fetchedOpenedQuestions.size(); x++) {
             downloadedQuestionsID.add(new Question(fetchedOpenedQuestions.get(x).getQuestion()));
@@ -156,7 +157,7 @@ public class SurveyManager extends AbstractManager implements Card.ProvidesCard 
 
     /**
      * Gets relevant questions to be shown in the card: unanswered and their end date is still in the future.
-     * Flagged questions get removed from the db @delteFlaggedQuestions()
+     * Flagged questions get removed from the db @deleteFlaggedQuestions()
      *
      * @param date: is usually today's date
      * @return
