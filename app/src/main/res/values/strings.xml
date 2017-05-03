@@ -496,6 +496,9 @@ Signature: %5$s</string>
     <string name="wifi_dns_name_not_set">DNS Name is not set</string>
     <string name="wifi_identity_zone">Identity does not contain zone</string>
     <string name="wifi_anonymous_identity_not_set">Anonymous Identity not correct</string>
+
+    <string name="transport_action_usage">Usage</string>
+    <string name="transport_help_text">Tap your favorite transportation lines to highlight them. Tap again to revert them back to normal.</string>
 </resources>
 
 
