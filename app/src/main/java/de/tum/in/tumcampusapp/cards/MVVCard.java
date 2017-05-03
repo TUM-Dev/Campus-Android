@@ -68,11 +68,16 @@ public class MVVCard extends NotificationAwareCard {
             }
         }
 
+        // Fetch transport favorites, can only be updated in the detailed view
+        TransportManager transportManager = new TransportManager(mContext);
         for (int i = 0; i < mDepartures.size() && i < 5; i++) {
             TransportManager.Departure curr = mDepartures.get(i);
-
             DepartureView view = new DepartureView(mContext);
-            view.setSymbol(curr.symbol);
+            if (transportManager.isFavorite(curr.symbol)) {
+                view.setSymbol(curr.symbol, true);
+            } else {
+                view.setSymbol(curr.symbol, false);
+            }
             view.setLine(curr.direction);
             view.setTime(curr.countDown);
             mLinearLayout.addView(view);

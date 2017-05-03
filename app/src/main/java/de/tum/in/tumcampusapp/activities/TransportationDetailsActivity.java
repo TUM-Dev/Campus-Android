@@ -1,7 +1,10 @@
 package de.tum.in.tumcampusapp.activities;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 
@@ -25,6 +28,7 @@ public class TransportationDetailsActivity extends ActivityForLoadingInBackgroun
 
     private LinearLayout mViewResults;
     private RecentsManager recentsManager;
+    private TransportManager transportManager;
 
     public TransportationDetailsActivity() {
         super(R.layout.activity_transportation_detail);
@@ -36,6 +40,7 @@ public class TransportationDetailsActivity extends ActivityForLoadingInBackgroun
 
         // get all stations from db
         recentsManager = new RecentsManager(this, RecentsManager.STATIONS);
+        transportManager = new TransportManager(this);
         mViewResults = (LinearLayout) this.findViewById(R.id.activity_transport_result);
 
         Intent intent = getIntent();
@@ -48,6 +53,25 @@ public class TransportationDetailsActivity extends ActivityForLoadingInBackgroun
         String locationID = intent.getStringExtra(EXTRA_STATION_ID);
 
         startLoading(location, locationID);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_transport, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_transport_usage) {
+            new AlertDialog.Builder(this)
+                    .setTitle(R.string.transport_action_usage)
+                    .setMessage(R.string.transport_help_text)
+                    .setPositiveButton(android.R.string.ok, null)
+                    .create().show();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     /**
@@ -93,7 +117,37 @@ public class TransportationDetailsActivity extends ActivityForLoadingInBackgroun
         mViewResults.removeAllViews();
         for (TransportManager.Departure d : result) {
             DepartureView view = new DepartureView(this, true);
-            view.setSymbol(d.symbol);
+
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    DepartureView departureView = (DepartureView) v;
+                    String symbol = departureView.getSymbol();
+                    boolean highlight;
+                    if (transportManager.isFavorite(symbol)) {
+                        transportManager.deleteFavorite(symbol);
+                        highlight = false;
+                    } else {
+                        transportManager.addFavorite(symbol);
+                        highlight = true;
+                    }
+
+                    // Update the other views with the same symbol
+                    for (int i = 0; i < mViewResults.getChildCount(); i++) {
+                        DepartureView child = (DepartureView) mViewResults.getChildAt(i);
+                        if (child.getSymbol().equals(symbol)) {
+                            child.setSymbol(symbol, highlight);
+                        }
+                    }
+                }
+            });
+
+            if (transportManager.isFavorite(d.symbol)) {
+                view.setSymbol(d.symbol, true);
+            } else {
+                view.setSymbol(d.symbol, false);
+            }
+
             view.setLine(d.direction);
             view.setTime(d.countDown);
             mViewResults.addView(view);

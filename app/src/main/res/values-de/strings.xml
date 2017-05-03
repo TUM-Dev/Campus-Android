@@ -423,4 +423,7 @@ Signatur: %5$s</string>
     <string name="wifi_identity_zone">Identität enthält keine Zone</string>
     <string name="wifi_dns_name_not_set">DNS-Name ist nicht festgelegt</string>
     <string name="wifi_anonymous_identity_not_set">Anonyme Identität nicht korrekt</string>
+
+    <string name="transport_action_usage">Hilfestellung</string>
+    <string name="transport_help_text">Tippe deine favorisierten Verkehrslinien an um sie hervorzuheben. Tippe erneut und sie sind wieder normal.</string>
 </resources>

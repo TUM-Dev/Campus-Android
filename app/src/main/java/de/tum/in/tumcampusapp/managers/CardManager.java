@@ -122,7 +122,7 @@ public final class CardManager {
 
         // Those don't need TUMOnline access
         managers.add(new CafeteriaManager(context));
-        managers.add(new TransportManager());
+        managers.add(new TransportManager(context));
         managers.add(new NewsManager(context));
 
         for (Card.ProvidesCard manager : managers) {
