@@ -111,6 +111,8 @@ class MVVSymbolView extends Drawable {
         return mTextColor;
     }
 
+    public int getBackgroundColor() { return mBgPaint.getColor(); }
+
     @Override
     public void draw(Canvas canvas) {
         final int width = canvas.getWidth();

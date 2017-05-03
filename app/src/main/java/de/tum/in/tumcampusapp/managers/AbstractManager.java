@@ -84,6 +84,7 @@ public class AbstractManager {
             db.execSQL("DROP TABLE IF EXISTS openQuestions");
             db.execSQL("DROP TABLE IF EXISTS ownQuestions");
             db.execSQL("DROP TABLE IF EXISTS faculties");
+            db.execSQL("DROP TABLE IF EXISTS transport_favorites");
             CacheManager.clearCache(c);
             db.setTransactionSuccessful();
         } finally {

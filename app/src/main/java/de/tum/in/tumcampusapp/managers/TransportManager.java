@@ -28,7 +28,7 @@ import de.tum.in.tumcampusapp.cards.generic.Card;
 /**
  * Transport Manager, handles querying data from mvv and card creation
  */
-public class TransportManager implements Card.ProvidesCard {
+public class TransportManager extends AbstractManager implements Card.ProvidesCard {
 
     /*  Documentation for using efa.mvv-muenchen.de
      *
@@ -106,6 +106,39 @@ public class TransportManager implements Card.ProvidesCard {
             departureQuery.append(param).append('&');
         }
         DEPARTURE_QUERY_CONST = departureQuery.toString();
+    }
+
+    public TransportManager(Context context) {
+        super(context);
+
+        // Create table if needed
+        db.execSQL("CREATE TABLE IF NOT EXISTS transport_favorites (" +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT, symbol VARCHAR)");
+    }
+
+    /**
+     * Check if the transport symbol is one of the user's favorites.
+     * @param symbol The transport symbol
+     * @return True, if favorite
+     */
+    public boolean isFavorite(String symbol) {
+        return db.rawQuery("SELECT * FROM transport_favorites WHERE symbol = ?", new String[]{symbol}).getCount() > 0;
+    }
+
+    /**
+     * Adds a transport symbol to the list of the user's favorites.
+     * @param symbol The transport symbol
+     */
+    public void addFavorite(String symbol) {
+        db.execSQL("INSERT INTO transport_favorites (symbol) VALUES (?)", new String[]{symbol});
+    }
+
+    /**
+     * Delete a user's favorite transport symbol.
+     * @param symbol The transport symbol
+     */
+    public void deleteFavorite(String symbol) {
+        db.execSQL("DELETE FROM transport_favorites WHERE symbol = ?", new String[]{symbol});
     }
 
     /**
