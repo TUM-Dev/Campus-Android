@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:minWidth="250dp"
     android:minHeight="110dp"
-    android:previewImage="@drawable/widget_mensa_preview"
     android:updatePeriodMillis="36000000"
     android:initialLayout="@layout/mensa_widget"
     android:resizeMode="horizontal|vertical"
