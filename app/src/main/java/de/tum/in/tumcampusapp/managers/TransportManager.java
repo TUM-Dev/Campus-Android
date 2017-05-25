@@ -1,5 +1,6 @@
 package de.tum.in.tumcampusapp.managers;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.MatrixCursor;
@@ -114,6 +115,9 @@ public class TransportManager extends AbstractManager implements Card.ProvidesCa
         // Create table if needed
         db.execSQL("CREATE TABLE IF NOT EXISTS transport_favorites (" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT, symbol VARCHAR)");
+
+        db.execSQL("CREATE TABLE IF NOT EXISTS transport_widgets (" +
+                "id INTEGER PRIMARY KEY, station VARCHAR, station_id VARCHAR, location BOOLEAN)");
     }
 
     /**
@@ -139,6 +143,40 @@ public class TransportManager extends AbstractManager implements Card.ProvidesCa
      */
     public void deleteFavorite(String symbol) {
         db.execSQL("DELETE FROM transport_favorites WHERE symbol = ?", new String[]{symbol});
+    }
+
+    /**
+     * Adds the settings of a widget to the widget list, replaces the existing settings if there are some
+     *
+     * @param widget_id    The id of the widget
+     * @param station      The station id which will be displayed on the widget
+     * @param use_location True if not a fixed station is displayed but the nearest station
+     */
+    public void addWidget(int widget_id, String station, String station_id, boolean use_location) {
+        ContentValues values = new ContentValues();
+        values.put("id", widget_id);
+        values.put("station", station);
+        values.put("station_id", station_id);
+        values.put("location", use_location);
+        db.replace("transport_widgets", null, values);
+    }
+
+    /**
+     * Deletes the settings of a widget to the widget list
+     *
+     * @param widget_id The id of the widget
+     */
+    public void deleteWidget(int widget_id) {
+        db.delete("transport_widgets", "id = ?", new String[]{String.valueOf(widget_id)});
+    }
+
+    /**
+     * Returns the settings of a widget to the widget list
+     *
+     * @param widget_id The id of the widget
+     */
+    public Cursor getWidget(int widget_id) {
+        return db.rawQuery("SELECT * FROM transport_widgets WHERE id = ?", new String[]{String.valueOf(widget_id)});
     }
 
     /**

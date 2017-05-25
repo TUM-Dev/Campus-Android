@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import de.tum.in.tumcampusapp.R;
@@ -22,11 +23,14 @@ public class MVVWidgetService extends RemoteViewsService {
 
     private class MVVRemoteViewFactory implements RemoteViewsService.RemoteViewsFactory {
 
+        private final String station_id;
         private final Context applicationContext;
-        private List<TransportManager.Departure> departures;
+        private List<TransportManager.Departure> departures = new ArrayList<>();
 
         MVVRemoteViewFactory(Context applicationContext, Intent intent) {
             this.applicationContext = applicationContext.getApplicationContext();
+            // Get the station from the Intent
+            station_id = intent.getStringExtra(MVVWidget.EXTRA_STATION_ID);
         }
 
         @Override
@@ -35,13 +39,14 @@ public class MVVWidgetService extends RemoteViewsService {
 
         @Override
         public void onDataSetChanged() {
-            this.departures = TransportManager.getDeparturesFromExternal(this.applicationContext, "München, Freimann");
-            System.out.println("loaded departures");
+            if (station_id.length() > 0) {
+                // load the departures for the station
+                this.departures = TransportManager.getDeparturesFromExternal(this.applicationContext, station_id);
+            }
         }
 
         @Override
         public void onDestroy() {
-
         }
 
         @Override
@@ -54,20 +59,23 @@ public class MVVWidgetService extends RemoteViewsService {
 
         @Override
         public RemoteViews getViewAt(int position) {
+            // get the departure for this view
             TransportManager.Departure currentItem = departures.get(position);
             if (currentItem == null) {
                 return null;
             }
 
             RemoteViews rv = new RemoteViews(applicationContext.getPackageName(), R.layout.departure_line_widget);
-            rv.setTextViewText(R.id.line_symbol, currentItem.symbol);
 
+            // Setup the line symbol
+            rv.setTextViewText(R.id.line_symbol, currentItem.symbol);
             MVVSymbolView d = new MVVSymbolView(currentItem.symbol);
             rv.setTextColor(R.id.line_symbol, d.getTextColor());
             rv.setInt(R.id.line_symbol, "setBackgroundColor", d.getBackgroundColor());
 
+            // Setup the line name and the departure time
             rv.setTextViewText(R.id.line_name, currentItem.direction);
-            rv.setTextViewText(R.id.line_switcher, currentItem.countDown + " min");
+            rv.setTextViewText(R.id.departure_time, currentItem.countDown + " min");
 
             return rv;
         }

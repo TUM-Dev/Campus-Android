@@ -7,10 +7,13 @@ import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.widget.RemoteViews;
+
 import de.tum.in.tumcampusapp.R;
+import de.tum.in.tumcampusapp.managers.TransportManager;
 
 /**
  * Implementation of App Widget functionality.
@@ -18,9 +21,8 @@ import de.tum.in.tumcampusapp.R;
  */
 public class MVVWidget extends AppWidgetProvider {
 
-    private static final String BROADCAST_NAME = "de.tum.in.newtumcampus.intent.action.BROADCAST_MVVWIDGET";
     private static final String BROADCAST_ALARM_NAME = "de.tum.in.newtumcampus.intent.action.BROADCAST_MVVWIDGET_ALARM";
-    static final String TARGET_INTENT = "TARGET_INTENT";
+    public static final String EXTRA_STATION_ID = "de.tum.in.newtumcampus.intent.action.MVV_WIDGET_EXTRA_STATION_ID";
     private static boolean alarmIsSet = false;
 
     @Override
@@ -34,7 +36,11 @@ public class MVVWidget extends AppWidgetProvider {
 
     @Override
     public void onDeleted(Context context, int[] appWidgetIds) {
-        // When the user deletes the widget, delete the preference associated with it.
+        // When the user deletes the widget, delete the associated setting from the database.
+        TransportManager transportManager = new TransportManager(context);
+        for (int appWidgetId : appWidgetIds) {
+            transportManager.deleteWidget(appWidgetId);
+        }
         super.onDeleted(context, appWidgetIds);
     }
 
@@ -46,7 +52,7 @@ public class MVVWidget extends AppWidgetProvider {
 
     @Override
     public void onDisabled(Context context) {
-        // Enter relevant functionality for when the last widget is disabled
+        // Cancel alarm as the last widget has been removed
         Intent intent = new Intent(context, MVVWidget.class);
         PendingIntent sender = PendingIntent.getBroadcast(context, 0, intent, 0);
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
@@ -55,6 +61,9 @@ public class MVVWidget extends AppWidgetProvider {
         super.onDisabled(context);
     }
 
+    /**
+     * If no alarm is running yet a new repeating alarm is started
+     */
     private static void setAlarm(Context context) {
         if (alarmIsSet) return;
         AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
@@ -66,62 +75,63 @@ public class MVVWidget extends AppWidgetProvider {
         alarmIsSet = true;
     }
 
+    /**
+     * Updates the content of the widget
+     *
+     * @param appWidgetId the id of the widget to update
+     */
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId) {
-        System.out.println("update MVVWidget " + appWidgetId);
+        String station = context.getString(R.string.mvv_widget_no_station);
+        String station_id = "";
 
-        // Set up the intent that starts the StackViewService, which will
-        // provide the views for this collection.
-        Intent intent = new Intent(context, MVVWidgetService.class);
-        // Add the app widget ID to the intent extras.
-        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
-        intent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME)));
+        // Get the settings for this widget from the database
+        TransportManager transportManager = new TransportManager(context);
+        Cursor c = transportManager.getWidget(appWidgetId);
+        if (c.getCount() >= 1) {
+            c.moveToFirst();
+            station = c.getString(c.getColumnIndex("station"));
+            station_id = c.getString(c.getColumnIndex("station_id"));
+            Boolean use_location = c.getInt(c.getColumnIndex("location")) != 0;
+            c.close();
+            if (use_location) {
+                // TODO implement nearest station (replace the station_id string with the calculated station)
+                station = "use location";
+            }
+        }
+
         // Instantiate the RemoteViews object for the app widget layout.
         RemoteViews rv = new RemoteViews(context.getPackageName(), R.layout.mvv_widget);
-        // Set up the RemoteViews object to use a RemoteViews adapter.
-        // This adapter connects to a RemoteViewsService  through the specified intent.
-        // This is how you populate the data.
+        rv.setTextViewText(R.id.mvv_widget_station, station);
+
+        // Set up the configuration activity listeners
+        Intent configIntent = new Intent(context, MVVWidgetConfigureActivity.class);
+        configIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, appWidgetId, configIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        rv.setOnClickPendingIntent(R.id.mvv_widget_header, pendingIntent);
+
+        // Set up the intent that starts the MVVWidgetService, which will
+        // provide the departure times for this station
+        Intent intent = new Intent(context, MVVWidgetService.class);
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+        intent.putExtra(EXTRA_STATION_ID, station_id);
+        intent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME)));
         rv.setRemoteAdapter(R.id.mvv_widget_listview, intent);
 
         // The empty view is displayed when the collection has no items.
         // It should be in the same layout used to instantiate the RemoteViews
         // object above.
-        rv.setEmptyView(R.id.mvv_widget_listview, R.layout.departure_line_widget);
-
-        //Set the pendingIntent Template
-        //Intent broadcastIntent = new Intent(context, CardsWidget.class);
-        //broadcastIntent.setAction(BROADCAST_NAME);
-        //PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, broadcastIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        //rv.setPendingIntentTemplate(R.id.card_widget_listview, pendingIntent);
+        // TODO add empty view
+        //rv.setEmptyView(R.id.mvv_widget_listview, R.layout.departure_line_widget);
 
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, rv);
         appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.mvv_widget_listview);
-
     }
 
     @Override
     public void onReceive(@NonNull Context context, @NonNull Intent intent) {
         switch (intent.getAction()) {
-            case BROADCAST_NAME:
-                /*
-                String targetIntent = intent.getStringExtra(TARGET_INTENT);
-                if (targetIntent != null) {
-                    try {
-                        //We try to recreate the targeted Intent from card.getIntent()
-                        //CardsRemoteViewsFactory filled into this Broadcast
-                        final Intent i = Intent.parseUri(targetIntent, Intent.URI_INTENT_SCHEME);
-                        final Bundle extras = intent.getExtras();
-                        extras.remove(TARGET_INTENT);
-                        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        i.putExtras(extras);
-                        context.startActivity(i);
-                    } catch (URISyntaxException e) {
-                        Utils.log(e);
-                    }
-                }
-                */
-                break;
             case BROADCAST_ALARM_NAME:
                 // There may be multiple widgets active, so update all of them
                 AppWidgetManager manager = AppWidgetManager.getInstance(context);

@@ -28,22 +28,21 @@
         android:layout_alignParentTop="true"
         android:layout_margin="4dp"
         android:layout_toEndOf="@id/line_symbol_ll"
-        android:layout_toLeftOf="@+id/line_switcher"
+        android:layout_toLeftOf="@+id/departure_time"
         android:layout_toRightOf="@id/line_symbol_ll"
         android:layout_toStartOf="@id/line_switcher"
         android:gravity="center_vertical"
         android:textSize="16sp" />
 
     <TextView
-        android:id="@id/line_switcher"
+        android:id="@+id/departure_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:layout_marginRight="10dp"
         android:layout_marginEnd="10dp"
-        android:textColor="@color/sections_green"
-        android:minWidth="50dp">
-    </TextView>
+        android:layout_marginRight="10dp"
+        android:minWidth="50dp"
+        android:textColor="@color/sections_green" />
 </RelativeLayout>
