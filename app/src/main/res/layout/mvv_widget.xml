@@ -9,7 +9,8 @@
         android:id="@+id/mvv_widget_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/tum_500"
+        android:background="@color/color_primary"
+        android:elevation="2dp"
         android:padding="10dp">
 
         <TextView
@@ -19,10 +20,10 @@
             android:layout_alignParentTop="true"
             android:layout_toLeftOf="@+id/mvv_widget_setting"
             android:layout_toStartOf="@+id/mvv_widget_setting"
+            android:background="@color/color_primary"
             android:textColor="@android:color/white"
             android:textSize="20sp"
-            android:typeface="sans"
-            android:background="@color/tum_500" />
+            android:typeface="sans" />
 
         <ImageView
             android:id="@+id/mvv_widget_setting"
@@ -30,9 +31,9 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
+            android:background="@color/color_primary"
             android:src="@drawable/ic_action_settings"
-            android:typeface="sans"
-            android:background="@color/tum_500" />
+            android:typeface="sans" />
     </RelativeLayout>
 
 
@@ -43,5 +44,24 @@
         android:layout_below="@+id/mvv_widget_header">
 
     </ListView>
+
+    <TextView
+        android:id="@+id/empty_list_item"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/mvv_widget_header"
+        android:gravity="center"
+        android:text="@string/mvv_widget_no_data"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/mvv_widget_offline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@android:color/transparent"
+        android:padding="10dp"
+        android:src="@drawable/ic_cloud_off"
+        android:visibility="invisible" />
 
 </RelativeLayout>

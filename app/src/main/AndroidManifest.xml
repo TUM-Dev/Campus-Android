@@ -535,7 +535,9 @@
         <activity android:name=".widgets.MVVWidgetConfigureActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/mvv_widget_select_station"
-            android:launchMode="singleTop">
+            android:launchMode="singleTop"
+            android:allowTaskReparenting="false"
+            android:taskAffinity="">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>

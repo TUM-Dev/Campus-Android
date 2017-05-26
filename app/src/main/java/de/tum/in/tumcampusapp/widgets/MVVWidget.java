@@ -7,10 +7,13 @@ import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.view.View;
 import android.widget.RemoteViews;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 import de.tum.in.tumcampusapp.R;
 import de.tum.in.tumcampusapp.managers.TransportManager;
@@ -22,14 +25,13 @@ import de.tum.in.tumcampusapp.managers.TransportManager;
 public class MVVWidget extends AppWidgetProvider {
 
     private static final String BROADCAST_ALARM_NAME = "de.tum.in.newtumcampus.intent.action.BROADCAST_MVVWIDGET_ALARM";
-    public static final String EXTRA_STATION_ID = "de.tum.in.newtumcampus.intent.action.MVV_WIDGET_EXTRA_STATION_ID";
     private static boolean alarmIsSet = false;
+    private static Timer timer;
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-        for (int appWidgetId : appWidgetIds) {
-            updateAppWidget(context, appWidgetManager, appWidgetId);
-        }
+        updateAppWidgets(context, appWidgetManager, appWidgetIds);
+        planUpdates(context, appWidgetManager, appWidgetIds);
         setAlarm(context);
         super.onUpdate(context, appWidgetManager, appWidgetIds);
     }
@@ -55,14 +57,14 @@ public class MVVWidget extends AppWidgetProvider {
         // Cancel alarm as the last widget has been removed
         Intent intent = new Intent(context, MVVWidget.class);
         PendingIntent sender = PendingIntent.getBroadcast(context, 0, intent, 0);
-        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        alarmManager.cancel(sender);
+        AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        am.cancel(sender);
         alarmIsSet = false;
         super.onDisabled(context);
     }
 
     /**
-     * If no alarm is running yet a new repeating alarm is started
+     * If no alarm is running yet a new alarm is started which repeats every minute
      */
     private static void setAlarm(Context context) {
         if (alarmIsSet) return;
@@ -70,9 +72,43 @@ public class MVVWidget extends AppWidgetProvider {
         Intent intent = new Intent(context, MVVWidget.class);
         intent.setAction(BROADCAST_ALARM_NAME);
         PendingIntent pi = PendingIntent.getBroadcast(context, 0, intent, 0);
-        //After after 30 or 60 (android may delay) seconds
-        am.setRepeating(AlarmManager.RTC, System.currentTimeMillis(), 30000, pi);
+        am.cancel(pi);
+        am.setRepeating(AlarmManager.RTC, 60000, 60000, pi);
         alarmIsSet = true;
+    }
+
+    /**
+     * Plans updates the widgets after 20s and 40s
+     *
+     * @param appWidgetIds the ids of the widgets to update
+     */
+    static void planUpdates(final Context context, final AppWidgetManager appWidgetManager, final int[] appWidgetIds) {
+        if (MVVWidget.timer == null) {
+            MVVWidget.timer = new Timer();
+        }
+        MVVWidget.timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                updateAppWidgets(context, appWidgetManager, appWidgetIds);
+            }
+        }, 20000);
+        MVVWidget.timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                updateAppWidgets(context, appWidgetManager, appWidgetIds);
+            }
+        }, 40000);
+    }
+
+    /**
+     * Updates the content of multiple widgets
+     *
+     * @param appWidgetIds the array of widget ids to update
+     */
+    static void updateAppWidgets(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
+        for (int widgetId : appWidgetIds) {
+            MVVWidget.updateAppWidget(context, appWidgetManager, widgetId);
+        }
     }
 
     /**
@@ -82,27 +118,21 @@ public class MVVWidget extends AppWidgetProvider {
      */
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId) {
-        String station = context.getString(R.string.mvv_widget_no_station);
-        String station_id = "";
 
         // Get the settings for this widget from the database
         TransportManager transportManager = new TransportManager(context);
-        Cursor c = transportManager.getWidget(appWidgetId);
-        if (c.getCount() >= 1) {
-            c.moveToFirst();
-            station = c.getString(c.getColumnIndex("station"));
-            station_id = c.getString(c.getColumnIndex("station_id"));
-            Boolean use_location = c.getInt(c.getColumnIndex("location")) != 0;
-            c.close();
-            if (use_location) {
-                // TODO implement nearest station (replace the station_id string with the calculated station)
-                station = "use location";
-            }
-        }
+        TransportManager.WidgetDepartures widgetDepartures = transportManager.getWidget(appWidgetId);
 
         // Instantiate the RemoteViews object for the app widget layout.
         RemoteViews rv = new RemoteViews(context.getPackageName(), R.layout.mvv_widget);
+        String station = widgetDepartures.getStation();
+        if (station == null) {
+            station = context.getString(R.string.mvv_widget_no_station);
+        }
         rv.setTextViewText(R.id.mvv_widget_station, station);
+
+        // Set up offline symbol (may be shown one update delayed)
+        rv.setViewVisibility(R.id.mvv_widget_offline, widgetDepartures.isOffline() ? View.VISIBLE : View.INVISIBLE);
 
         // Set up the configuration activity listeners
         Intent configIntent = new Intent(context, MVVWidgetConfigureActivity.class);
@@ -114,15 +144,13 @@ public class MVVWidget extends AppWidgetProvider {
         // provide the departure times for this station
         Intent intent = new Intent(context, MVVWidgetService.class);
         intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
-        intent.putExtra(EXTRA_STATION_ID, station_id);
         intent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME)));
         rv.setRemoteAdapter(R.id.mvv_widget_listview, intent);
 
         // The empty view is displayed when the collection has no items.
         // It should be in the same layout used to instantiate the RemoteViews
         // object above.
-        // TODO add empty view
-        //rv.setEmptyView(R.id.mvv_widget_listview, R.layout.departure_line_widget);
+        rv.setEmptyView(R.id.mvv_widget_listview, R.id.empty_list_item);
 
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, rv);
@@ -134,11 +162,11 @@ public class MVVWidget extends AppWidgetProvider {
         switch (intent.getAction()) {
             case BROADCAST_ALARM_NAME:
                 // There may be multiple widgets active, so update all of them
-                AppWidgetManager manager = AppWidgetManager.getInstance(context);
+                AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
                 ComponentName thisWidget = new ComponentName(context, MVVWidget.class);
-                for (int widgetId : manager.getAppWidgetIds(thisWidget)) {
-                    MVVWidget.updateAppWidget(context, manager, widgetId);
-                }
+                int[] appWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
+                updateAppWidgets(context, appWidgetManager, appWidgetIds);
+                planUpdates(context, appWidgetManager, appWidgetIds);
                 break;
         }
         super.onReceive(context, intent);

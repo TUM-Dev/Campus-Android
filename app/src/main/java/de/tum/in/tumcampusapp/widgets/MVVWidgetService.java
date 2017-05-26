@@ -1,6 +1,7 @@
 package de.tum.in.tumcampusapp.widgets;
 
 import android.annotation.SuppressLint;
+import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
 import android.widget.RemoteViews;
@@ -23,14 +24,13 @@ public class MVVWidgetService extends RemoteViewsService {
 
     private class MVVRemoteViewFactory implements RemoteViewsService.RemoteViewsFactory {
 
-        private final String station_id;
         private final Context applicationContext;
         private List<TransportManager.Departure> departures = new ArrayList<>();
+        private int appWidgetID;
 
         MVVRemoteViewFactory(Context applicationContext, Intent intent) {
             this.applicationContext = applicationContext.getApplicationContext();
-            // Get the station from the Intent
-            station_id = intent.getStringExtra(MVVWidget.EXTRA_STATION_ID);
+            this.appWidgetID = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, -1);
         }
 
         @Override
@@ -39,10 +39,9 @@ public class MVVWidgetService extends RemoteViewsService {
 
         @Override
         public void onDataSetChanged() {
-            if (station_id.length() > 0) {
-                // load the departures for the station
-                this.departures = TransportManager.getDeparturesFromExternal(this.applicationContext, station_id);
-            }
+            // load the departures for the widget
+            TransportManager transportManager = new TransportManager(applicationContext);
+            this.departures = transportManager.getWidget(this.appWidgetID).getDepartures(applicationContext);
         }
 
         @Override
@@ -51,21 +50,24 @@ public class MVVWidgetService extends RemoteViewsService {
 
         @Override
         public int getCount() {
-            if (departures == null) {
+            if (this.departures == null) {
                 return 0;
             }
-            return departures.size();
+            return this.departures.size();
         }
 
         @Override
         public RemoteViews getViewAt(int position) {
+            RemoteViews rv = new RemoteViews(applicationContext.getPackageName(), R.layout.departure_line_widget);
+            if (this.departures == null) {
+                return rv;
+            }
+
             // get the departure for this view
-            TransportManager.Departure currentItem = departures.get(position);
+            TransportManager.Departure currentItem = this.departures.get(position);
             if (currentItem == null) {
                 return null;
             }
-
-            RemoteViews rv = new RemoteViews(applicationContext.getPackageName(), R.layout.departure_line_widget);
 
             // Setup the line symbol
             rv.setTextViewText(R.id.line_symbol, currentItem.symbol);
@@ -75,7 +77,7 @@ public class MVVWidgetService extends RemoteViewsService {
 
             // Setup the line name and the departure time
             rv.setTextViewText(R.id.line_name, currentItem.direction);
-            rv.setTextViewText(R.id.departure_time, currentItem.countDown + " min");
+            rv.setTextViewText(R.id.departure_time, currentItem.getCalculatedCountDown() + " min");
 
             return rv;
         }

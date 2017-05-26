@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.util.Pair;
+import android.util.SparseArray;
 
 import com.google.common.base.Optional;
 import com.google.common.net.UrlEscapers;
@@ -17,8 +18,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 import de.tum.in.tumcampusapp.auxiliary.Const;
 import de.tum.in.tumcampusapp.auxiliary.NetUtils;
@@ -67,6 +72,7 @@ public class TransportManager extends AbstractManager implements Card.ProvidesCa
     private static final String COORD_OUTPUT_FORMAT = "coordOutputFormat=WGS84";
     private static final String LOCATION_SERVER = "locationServerActive=1";
     private static final String STATION_SEARCH_TYPE = "type_sf=any";
+    private static final String STATION_SEARCH_TYPE_COORD = "type_sf=coord";
     private static final String STATION_SEARCH_COMMON = "anyObjFilter_sf=126&reducedAnyPostcodeObjFilter_sf=64&reducedAnyTooManyObjFilter_sf=2&useHouseNumberList=true";
     private static final String STATION_SEARCH_HITLIST_SIZE = "anyMaxSizeHitList=10"; // 10 <=> what we can display on one page
     private static final String DEPARTURE_QUERY_TYPE = "type_dm=stop";
@@ -93,6 +99,8 @@ public class TransportManager extends AbstractManager implements Card.ProvidesCa
     private static final String POINTS = "points";
     private static final String ERROR_INVALID_JSON = "invalid JSON from mvv ";
 
+    private static SparseArray<WidgetDepartures> widgetDepartures;
+
     static {
         StringBuilder stationSearch = new StringBuilder(MVV_API_BASE);
         stationSearch.append(STATION_SEARCH).append('?');
@@ -118,6 +126,10 @@ public class TransportManager extends AbstractManager implements Card.ProvidesCa
 
         db.execSQL("CREATE TABLE IF NOT EXISTS transport_widgets (" +
                 "id INTEGER PRIMARY KEY, station VARCHAR, station_id VARCHAR, location BOOLEAN)");
+
+        if(TransportManager.widgetDepartures == null) {
+            TransportManager.widgetDepartures = new SparseArray<>();
+        }
     }
 
     /**
@@ -159,6 +171,7 @@ public class TransportManager extends AbstractManager implements Card.ProvidesCa
         values.put("station_id", station_id);
         values.put("location", use_location);
         db.replace("transport_widgets", null, values);
+        TransportManager.widgetDepartures.remove(widget_id);
     }
 
     /**
@@ -168,15 +181,40 @@ public class TransportManager extends AbstractManager implements Card.ProvidesCa
      */
     public void deleteWidget(int widget_id) {
         db.delete("transport_widgets", "id = ?", new String[]{String.valueOf(widget_id)});
+        TransportManager.widgetDepartures.remove(widget_id);
     }
 
     /**
-     * Returns the settings of a widget to the widget list
+     * A WidgetDepartures Object containing the settings of this widget.
+     * This object can provide the departures needed by this widget as well.
+     * The settings are cached, only the first time its loded from the database.
+     * If there is no widget with this id saved (in cache and the database) a new WidgetDepartures Object is generated
+     * containing a NULL for the station and an empty string for the station id. This is not cached or saved to the database.
      *
      * @param widget_id The id of the widget
+     * @return The WidgetDepartures Object
      */
-    public Cursor getWidget(int widget_id) {
-        return db.rawQuery("SELECT * FROM transport_widgets WHERE id = ?", new String[]{String.valueOf(widget_id)});
+    public WidgetDepartures getWidget(int widget_id) {
+        if(TransportManager.widgetDepartures.indexOfKey(widget_id) >= 0){
+            return TransportManager.widgetDepartures.get(widget_id);
+        }
+        Cursor c = db.rawQuery("SELECT * FROM transport_widgets WHERE id = ?", new String[]{String.valueOf(widget_id)});
+        String station = null;
+        String station_id = "";
+        if (c.getCount() >= 1) {
+            c.moveToFirst();
+            station = c.getString(c.getColumnIndex("station"));
+            station_id = c.getString(c.getColumnIndex("station_id"));
+            Boolean use_location = c.getInt(c.getColumnIndex("location")) != 0;
+            c.close();
+            if (use_location) {
+                // TODO implement nearest station (replace the station_id string with the calculated station)
+                station = "use location";
+            }
+        }
+        WidgetDepartures wD = new WidgetDepartures(station, station_id);
+        TransportManager.widgetDepartures.put(widget_id, wD);
+        return wD;
     }
 
     /**
@@ -203,7 +241,7 @@ public class TransportManager extends AbstractManager implements Card.ProvidesCa
                 return result;
             }
 
-            if (departures.get().get("departureList") == null) {
+            if (departures.get().isNull("departureList")) {
                 return result;
             }
 
@@ -211,12 +249,15 @@ public class TransportManager extends AbstractManager implements Card.ProvidesCa
             for (int i = 0; i < arr.length(); i++) {
                 JSONObject departure = arr.getJSONObject(i);
                 JSONObject servingLine = departure.getJSONObject("servingLine");
+                JSONObject time = departure.getJSONObject("dateTime");
+                Date date = new GregorianCalendar(time.getInt("year"), time.getInt("month") - 1, time.getInt("day"), time.getInt("hour"), time.getInt("minute")).getTime();
                 result.add(new Departure(
                         servingLine.getString("name"),
                         servingLine.getString("direction"),
                         // Limit symbol length to 3, longer symbols are pointless
                         String.format("%3.3s", servingLine.getString("symbol")).trim(),
-                        departure.getInt("countdown")
+                        departure.getInt("countdown"),
+                        date.getTime()
                 ));
             }
 
@@ -332,12 +373,23 @@ public class TransportManager extends AbstractManager implements Card.ProvidesCa
         final public String direction;
         final public String symbol;
         final public int countDown;
+        final public long departureTime;
 
-        public Departure(String servingLine, String direction, String symbol, int countDown) {
+        public Departure(String servingLine, String direction, String symbol, int countDown, long departureTime) {
             this.servingLine = servingLine;
             this.direction = direction;
             this.symbol = symbol;
             this.countDown = countDown;
+            this.departureTime = departureTime;
+        }
+
+        /**
+         * Calculates the countDown with the real departure time and the current time
+         *
+         * @return The calculated countDown in minutes
+         */
+        public long getCalculatedCountDown(){
+            return TimeUnit.MINUTES.convert(departureTime - System.currentTimeMillis(), TimeUnit.MILLISECONDS);
         }
     }
 
@@ -350,6 +402,73 @@ public class TransportManager extends AbstractManager implements Card.ProvidesCa
             this.station = station;
             this.id = id;
             this.quality = quality;
+        }
+    }
+
+    public static class WidgetDepartures {
+        String station;
+        String station_id;
+        List<Departure> departures;
+        long last_load;
+        boolean is_offline = false;
+
+        /**
+         * Create a new WidgetDepartures. It contains the widget settings and can load the according departure list
+         *
+         * @param station The station name
+         * @param station_id The station id
+         */
+        WidgetDepartures(String station, String station_id) {
+            this.station = station;
+            this.station_id = station_id;
+        }
+
+        /**
+         * The station which is set for this widget
+         * @return The station name
+         */
+        public String getStation() {
+            return this.station;
+        }
+
+        /**
+         * Are the departure information older than two minutes (because of any connection problems)
+         *
+         * @return True if only offline data available
+         */
+        public boolean isOffline(){
+            return this.is_offline;
+        }
+
+        /**
+         * Get the list of departures for this widget, download them if they are not cached
+         *
+         * @return The list of departures
+         */
+        public List<Departure> getDepartures(Context context) {
+            if(this.departures == null){
+                this.departures = new ArrayList<>();
+            }
+            // download only id there is no data or the last loading is more than 2min ago
+            if (this.departures.size() == 0 || System.currentTimeMillis() - this.last_load > 120000) {
+                List<Departure> departures = TransportManager.getDeparturesFromExternal(context, station_id);
+                if(departures.size() == 0){
+                    this.is_offline = true;
+                } else {
+                    this.departures = departures;
+                    this.last_load = System.currentTimeMillis();
+                    this.is_offline = false;
+                }
+            }
+
+            // remove Departures which have a negative countdown
+            for (Iterator<Departure> iterator = this.departures.iterator(); iterator.hasNext();) {
+                Departure departure = iterator.next();
+                if (departure.getCalculatedCountDown() < 0) {
+                    iterator.remove();
+                }
+            }
+            return this.departures;
         }
     }
 }

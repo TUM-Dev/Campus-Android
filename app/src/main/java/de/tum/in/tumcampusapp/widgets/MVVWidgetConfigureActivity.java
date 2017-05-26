@@ -155,6 +155,7 @@ public class MVVWidgetConfigureActivity extends ActivityForSearchingInBackground
         switch (item.getItemId()) {
             case android.R.id.home:
                 cancelAndReturn();
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
