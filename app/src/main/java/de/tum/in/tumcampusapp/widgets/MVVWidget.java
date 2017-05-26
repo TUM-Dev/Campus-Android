@@ -28,6 +28,10 @@ public class MVVWidget extends AppWidgetProvider {
     private static boolean alarmIsSet = false;
     private static Timer timer;
 
+    public final static int UPDATE_ALARM_DELAY = 60 * 1000;
+    public final static int UPDATE_TRIGGER_DELAY = 30 * 1000;
+    public final static int DOWNLOAD_DELAY = 2 * 60 * 1000;
+
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         updateAppWidgets(context, appWidgetManager, appWidgetIds);
@@ -73,12 +77,12 @@ public class MVVWidget extends AppWidgetProvider {
         intent.setAction(BROADCAST_ALARM_NAME);
         PendingIntent pi = PendingIntent.getBroadcast(context, 0, intent, 0);
         am.cancel(pi);
-        am.setRepeating(AlarmManager.RTC, 60000, 60000, pi);
+        am.setRepeating(AlarmManager.RTC, UPDATE_ALARM_DELAY, UPDATE_ALARM_DELAY, pi);
         alarmIsSet = true;
     }
 
     /**
-     * Plans updates the widgets after 20s and 40s
+     * Plans updates the widgets after 30s and 60s
      *
      * @param appWidgetIds the ids of the widgets to update
      */
@@ -91,13 +95,13 @@ public class MVVWidget extends AppWidgetProvider {
             public void run() {
                 updateAppWidgets(context, appWidgetManager, appWidgetIds);
             }
-        }, 20000);
+        }, UPDATE_TRIGGER_DELAY);
         MVVWidget.timer.schedule(new TimerTask() {
             @Override
             public void run() {
                 updateAppWidgets(context, appWidgetManager, appWidgetIds);
             }
-        }, 40000);
+        }, 2 * UPDATE_TRIGGER_DELAY);
     }
 
     /**

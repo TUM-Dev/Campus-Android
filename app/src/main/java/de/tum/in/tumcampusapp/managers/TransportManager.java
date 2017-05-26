@@ -30,6 +30,7 @@ import de.tum.in.tumcampusapp.auxiliary.NetUtils;
 import de.tum.in.tumcampusapp.auxiliary.Utils;
 import de.tum.in.tumcampusapp.cards.MVVCard;
 import de.tum.in.tumcampusapp.cards.generic.Card;
+import de.tum.in.tumcampusapp.widgets.MVVWidget;
 
 /**
  * Transport Manager, handles querying data from mvv and card creation
@@ -205,7 +206,7 @@ public class TransportManager extends AbstractManager implements Card.ProvidesCa
             c.moveToFirst();
             station = c.getString(c.getColumnIndex("station"));
             station_id = c.getString(c.getColumnIndex("station_id"));
-            Boolean use_location = c.getInt(c.getColumnIndex("location")) != 0;
+            boolean use_location = c.getInt(c.getColumnIndex("location")) != 0;
             c.close();
             if (use_location) {
                 // TODO implement nearest station (replace the station_id string with the calculated station)
@@ -450,7 +451,7 @@ public class TransportManager extends AbstractManager implements Card.ProvidesCa
                 this.departures = new ArrayList<>();
             }
             // download only id there is no data or the last loading is more than 2min ago
-            if (this.departures.size() == 0 || System.currentTimeMillis() - this.last_load > 120000) {
+            if (this.departures.size() == 0 || System.currentTimeMillis() - this.last_load > MVVWidget.DOWNLOAD_DELAY) {
                 List<Departure> departures = TransportManager.getDeparturesFromExternal(context, station_id);
                 if(departures.size() == 0){
                     this.is_offline = true;
